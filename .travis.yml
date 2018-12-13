@@ -33,7 +33,7 @@ before_install:
   # the version is less the 4.8 and we need to install the image package from
   # Octave Forge (possibly for other packages as well).
   # For now, lets just always say we do need to do this.
-  - UPGRADE_GCC="true"
+  #- UPGRADE_GCC="true"
   # ---------------------------------------------------------------------------
   # Add repository for octave
   - travis_retry sudo add-apt-repository -y ppa:octave/stable
@@ -75,7 +75,10 @@ before_install:
   - cd ${REPOPATH}
 
 ###############################################################################
-#install:
+install:
+  echo "addpath(pwd);";
+  # Original stuff below, using the MOPI package manager
+  #
   # Ensure external packages folder exists and is empty
   #- rm -rf external;
   #  mkdir -p external;
