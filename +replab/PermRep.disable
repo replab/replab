@@ -1,0 +1,24 @@
+classdef PermRep < URep
+    
+    properties (SetAccess = protected)
+        d;
+        field;
+        
+    end
+    
+    methods ()
+        
+    end
+    
+    methods (Static)
+        
+        function R = fromGenerators(permutations)
+            
+        end
+        
+    end
+    
+    methods (Static)
+    end
+    
+end

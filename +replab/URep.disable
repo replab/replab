@@ -1,0 +1,22 @@
+classdef URep < handle
+    
+    properties (Abstract, SetAccess = protected)
+        d; % Representation dimension
+        field; % either 'R' or 'C'
+    end
+    
+    methods (Abstract)
+       
+        rho1 = projectInvariantMatrix(rho)
+        
+        rho1 = projectSelfAdjointInvariantMatrix(rho)
+        
+        rho = sampleGroupElement
+        
+        rho = sampleGroupAlgebra
+        
+        P = coordinateOrbits
+        
+    end
+    
+end
