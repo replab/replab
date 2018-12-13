@@ -44,7 +44,8 @@ before_install:
   # Update apt-get to include the contents from the new locations
   - travis_retry sudo apt-get update -qq
   # Install octave with apt-get
-  - travis_retry sudo apt-get install -y octave liboctave-dev
+  - travis_retry sudo apt-get install -y octave
+  #- travis_retry sudo apt-get install -y octave liboctave-dev
   # Add a C++11 compiler so we can install image package
   #- if [ "$UPGRADE_GCC" = "true" ]; then
   #    travis_retry sudo apt-get install -y gcc-4.8 g++-4.8;
