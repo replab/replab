@@ -16,7 +16,7 @@ cache:
 env:
   matrix:
     - COVERAGE="false"
-    - COVERAGE="true"
+#    - COVERAGE="true"    # No code coverage test because we do not know how to display them
 
 matrix:
   allow_failures:
