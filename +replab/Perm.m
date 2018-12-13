@@ -11,7 +11,6 @@ classdef Perm
         % Constructs a permutation from a product of cycles, each
         % cycle being a row vector, and the sequence cycles being
         % given as variable arguments
-            import replab.*
             p = 1:n;
             for i = length(varargin):-1:1
                 cycle = varargin{i};
@@ -19,7 +18,7 @@ classdef Perm
                 cycleImage = [cycle(2:end) cycle(1)];
                 newEl = 1:n;
                 newEl(cycle) = cycleImage;
-                p = Perm.compose(newEl, p);
+                p = replab.Perm.compose(newEl, p);
             end
         end
         
