@@ -76,6 +76,15 @@ classdef PermGrp < replab.FiniteGrp
             end
         end
         
+        function G = cyclic(n)
+        % Constructs the cyclic group acting on n elements
+            if n == 1
+                G = replab.PermGrp.trivial(n);
+            else
+                G = replab.PermGrp.fromGenerators([2:n 1]);
+            end
+        end
+        
         function G = fromGeneratorsAsMatrix(genMat)
             errmsg = 'To create the trivial group, pass zeros(0, n) so that the domain size n is known';
             assert(size(genMat, 2) > 0, errmsg);
