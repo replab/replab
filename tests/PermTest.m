@@ -29,6 +29,20 @@ function test_compose()
     end
 end
 
+function test_pow()
+    n = 100;
+    for i = 1:100
+        x = replab.Perm.random(n);
+        m = randi(100);
+        y = replab.Perm.identity(n);
+        for j = 1:100
+            y = replab.Perm.compose(y, x);
+        end
+        z = replab.Perm.pow(x, n);
+        assertEqual(y, z);
+    end
+end
+
 function test_isIdentity_identity()
     n = 100;
     assert(replab.Perm.isIdentity(replab.Perm.identity(100)));

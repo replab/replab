@@ -31,7 +31,7 @@ classdef Perm
     
     methods (Static) % PROPERTIES
         
-            function b = isIdentity(perm)
+        function b = isIdentity(perm)
         % Tests whether the given permutation is the identity
             n = length(perm);
             b = true;
@@ -52,6 +52,29 @@ classdef Perm
         % Returns the composition of x and y
             assert(length(x) == length(y));
             z = x(y);
+        end
+        
+        function y = pow(x, e)
+        % Computes y = x^e by repeated squaring
+            n = length(x);
+            if e < 0
+                y = replab.Perm.pow(replab.Perm.inverse(x), -e);
+            elseif e == 0
+                y = replab.Perm.identity(n);
+            else
+                y = replab.Perm.identity(n);
+                while e > 1
+                    if mod(e, 2) == 0 % n even
+                        x = replab.Perm.compose(x, x);
+                        e = e / 2;
+                    else
+                        y = replab.Perm.compose(x, y);
+                        x = replab.Perm.compose(x, x);
+                        e = (e - 1)/2;
+                    end
+                end
+                y = replab.Perm.compose(x, y);
+            end
         end
         
         function y = inverse(x)
