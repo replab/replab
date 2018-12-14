@@ -1,4 +1,5 @@
 classdef Perm
+% Helper methods for permutations
     
     methods (Static) % CONSTRUCTION METHODS
         
@@ -113,7 +114,7 @@ classdef Perm
             vec(perm) = vec;
         end
         
-        function M = matrixAction(perm, M)
+        function M = selfAdjointMatrixAction(perm, M)
         % Returns the image under the action of perm on the columns and rows of M
         % i.e. Perm.matrix(perm)*M*Perm.matrix(perm)'
             n = length(perm);

@@ -1,4 +1,9 @@
 classdef Word
+% An associative word of the form 
+% w = x(i1)^e1 x(i2)^e2 ...
+% where indices = [i1 i2 ...] and exponents = [e1 e2 ...]
+%
+% Exponents are nonzero signed integers
     
     properties
         indices;
@@ -15,6 +20,16 @@ classdef Word
     end
     
     methods
+        
+        function l = length(self)
+        % Returns the length of the word, where each
+        % product by a generator or its inverse counts as one letter
+            l = sum(abs(self.exponents));
+        end
+        
+        function b = isGenerator(self)
+            b = (length(self.indices) == 1) && (self.exponents == 1);
+        end
         
         function disp(self)
             disp(self.toString);
@@ -55,7 +70,39 @@ classdef Word
             end
             newInd = [self.indices rhsInd];
             newExp = [self.exponents rhsExp];
-            W = replab.Word.reduce(newInd, newExp);
+            W = replab.Word.fromIndicesAndExponents(newInd, newExp);
+        end
+        
+        function W = mrdivide(self, rhs)
+            W = self * rhs.inverse;
+        end
+        
+        function W = inv(self)
+            newInd = fliplr(self.indices);
+            newExp = fliplr(-self.exponents);
+            W = replab.Word(newInd, newExp);
+        end
+        
+        function y = mpower(self, e)
+            if e < 0
+                y = self.mpower(self.inv, -e);
+            elseif e == 0
+                y = replab.Word.identity;
+            else
+                x = self;
+                y = replab.Word.identity;
+                while e > 1
+                    if mod(e, 2) == 0 % n even
+                        x = x * x;
+                        e = e / 2;
+                    else
+                        y = x * y;
+                        x = x * x;
+                        e = (e - 1)/2;
+                    end
+                end
+                y = x * y;
+            end
         end
         
     end
@@ -66,15 +113,8 @@ classdef Word
             W = replab.Word([], []);
         end
         
-        function W = generator(index, exponent)
-            if nargin < 2
-                exponent = 1;
-            end
-            if exponent == 0
-                W = replab.Word.identity;
-            else
-                W = replab.Word(index, exponent);
-            end
+        function W = generator(index)
+            W = replab.Word(index, 1);
         end
         
         function W = random(nGenerators, maxLength)
@@ -83,10 +123,11 @@ classdef Word
             e = randi(2, 1, l);
             e(e == 2) = -1;
             g = randi(nGenerators, 1, l); % generator indices
-            W = replab.Word.reduce(g, e);
+            W = replab.Word.fromIndicesAndExponents(g, e);
         end
         
-        function W = reduce(indices, exponents)
+        function W = fromIndicesAndExponents(indices, exponents)
+        % Reduces the given indices and exponents
             i = 1;
             while i < length(indices);
                 if indices(i) == indices(i+1)

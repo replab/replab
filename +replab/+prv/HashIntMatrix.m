@@ -1,5 +1,5 @@
 classdef HashIntMatrix
-% An integer matrix who supports fast lookup of columns
+% An int32 matrix who supports fast lookup of columns
     
     properties
         M;
@@ -92,7 +92,7 @@ classdef HashIntMatrix
             newHIM = replab.prv.HashIntMatrix(newM, self.mask, newSortedHashs, newHashIndices);
         end
         
-        function [newHIM, indices] = sorted(self)
+        function [newHIM, indices] = lexColSorted(self)
             [newM, indices] = sortrows(self.M');
             invIndices = replab.Perm.inverse(indices);
             newHIM = replab.prv.HashIntMatrix(newM');

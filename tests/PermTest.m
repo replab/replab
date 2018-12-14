@@ -92,16 +92,16 @@ function test_vectorAction()
     end
 end
 
-function test_matrixAction()
+function test_selfAdjointMatrixAction()
     n = 10;
     for i = 1:100
         M = rand(n, n);
         x = replab.Perm.random(n);
         y = replab.Perm.random(n);
         z = replab.Perm.compose(x, y);
-        imgy = replab.Perm.matrixAction(y, M);
-        imgxy = replab.Perm.matrixAction(x, imgy);
-        imgz = replab.Perm.matrixAction(z, M);
+        imgy = replab.Perm.selfAdjointMatrixAction(y, M);
+        imgxy = replab.Perm.selfAdjointMatrixAction(x, imgy);
+        imgz = replab.Perm.selfAdjointMatrixAction(z, M);
         assertEqual(imgz, imgxy);
         rhoz = replab.Perm.matrix(z);
         assertEqual(rhoz * M * rhoz', imgz);
