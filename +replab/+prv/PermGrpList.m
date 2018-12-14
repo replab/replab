@@ -3,7 +3,6 @@ classdef PermGrpList < replab.PermGrp
 % of all elements
     
     properties (Access = private)
-        cat;
         n; % domain size
         genMat; % m group generators in a int32 nGens x n matrix
            % one generator per row
@@ -37,23 +36,8 @@ classdef PermGrpList < replab.PermGrp
             p = double(self.genMat(i, :));
         end
 
-        function p = generatorInverse(self, i)
-            p = self.cat.inverse(double(self.generator(i)));
-        end
-
-        function gcell = generators(self)
-            gcell = cell(1, self.nGenerators);
-            for i = 1:self.nGenerators
-                gcell{i} = double(self.generator(i));
-            end
-        end
-        
         function genMat = generatorsAsMatrix(self)
             genMat = double(self.genMat);
-        end
-        
-        function p = randomElement(self)
-            p = double(self.randomBag.sample);
         end
         
         function p = uniformlyRandomElement(self)
@@ -109,9 +93,17 @@ classdef PermGrpList < replab.PermGrp
     end
     
     properties
-        randomBag_ = []; % Generator for random elements
         hashedSortedElements_ = []; % list of elements
-        words_ = {}; % list of short words corresponding to the above list
+        wordRhs_ = []; % wordRhs_ has size 1 x nElements; wordRhs_(ind) encodes compactly
+                       % the word representing el = self.element(ind)
+                       %
+                       % wordRhs_(ind) = 0  : el is the identity
+                       % otherwise el = lhs * rhs, where
+                       % wordRhs_(ind) = -i : rhs = self.generator(i)
+                       % wordRhs_(ind) = i  : rhs = self.element(i)
+                       %
+                       % and lhs is implicitly encoded by lhs = el * rhs.inverse
+        words_ = {};   % list of short words corresponding to the above list
     end
     
     methods
@@ -172,13 +164,6 @@ classdef PermGrpList < replab.PermGrp
     end
     
     methods (Access = private)
-                
-        function R = randomBag(self)
-            if isequal(self.randomBag_, [])
-                self.randomBag_ = replab.prv.RandomBag(self.generators, self.cat);
-            end
-            R = self.randomBag_;
-        end
                 
         function H = hashedSortedElements(self)
             if isequal(self.hashedSortedElements_, [])

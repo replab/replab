@@ -1,41 +1,25 @@
-classdef PermGrp < handle
+classdef PermGrp < replab.FiniteGrp
 % Represents a permutation group
 
     methods
         
-        function d = domainSize(self) % Returns d when this group acts on {1, ..., d}
+        function d = domainSize(self) 
+        % Returns d when this group acts on {1, ..., d}
             error('Not implemented');
         end
         
-        function b = contains(self, permutation) % Returns whether "permutation" is member of this group
+        function b = contains(self, permutation) 
+        % Returns whether "permutation" is member of this group
             error('Not implemented');
         end
 
-        function o = order(self)                  % Returns the order of the group as a vpi value
+        function o = order(self)
+        % Returns the order of the group as a vpi value
             error('Not implemented');
         end
 
-        function n = nGenerators(self) % Returns the number of generators
-            error('Not implemented');
-        end
-        
-        function p = generator(self, i) % Returns the i-th generator
-            error('Not implemented');
-        end
-        
-        function p = generatorInverse(self, i) % Returns the inverse of the i-th generator
-            error('Not implemented');
-        end
-        
-        function G = generators(self) % Returns a row cell vector of generators
-            error('Not implemented');
-        end
-        
-        function G = generatorsAsMatrix(self)     % Returns a double matrix whose rows are generators
-            error('Not implemented');
-        end
-        
-        function p = randomElement(self) % Returns a random element from the group
+        function G = generatorsAsMatrix(self)     
+        % Returns a double matrix whose rows are generators
             error('Not implemented');
         end
         
@@ -45,34 +29,31 @@ classdef PermGrp < handle
             error('Not implemented');
         end
         
-        function E = element(self, i) % Returns the i-th element in the lexicographic order
+        function E = element(self, i) 
+        % Returns the i-th element in the lexicographic order
         % i is either a double or a vpi
             error('Not implemented');
         end
 
-        function E = elements(self) % Enumerates the group permutations, sorted, in a row cell vector
+        function E = elements(self) 
+        % Enumerates the group permutations, sorted, in a row cell vector
             error('Not implemented');
         end
         
-        function E = elementsAsMatrix(self)    % Returns all permutations from the group as row
+        function E = elementsAsMatrix(self)    
+        % Returns all permutations from the group as row
         % vectors in a double matrix
             error('Not implemented');
         end
         
-        function w = factorization(self, permutation) % Return "permutation" as a word in the generators of this group
+        function w = factorization(self, permutation) 
+        % Return "permutation" as a word in the generators of this group
             error('Not implemented');
         end
         
-        function p = evaluateWord(self, word); % Evalutes the given word using this group generators
+        function p = evaluateWord(self, word); 
+        % Evalutes the given word using this group generators
             error('Not implemented');
-        end
-        
-    end
-    
-    methods
-        
-        function b = isTrivial(self)
-            b = self.nGenerators == 0;
         end
         
     end
@@ -85,6 +66,7 @@ classdef PermGrp < handle
         end
         
         function G = symmetric(n)
+        % Constructs the symmetric group acting on n elements
             if n == 1
                 G = replab.PermGrp.trivial(n);
             elseif n == 2
