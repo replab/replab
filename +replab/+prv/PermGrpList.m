@@ -66,7 +66,7 @@ classdef PermGrpList < replab.PermGrp
             if ind == 0
                 error(['Permutation ' num2str(permutation) ' is not contained in this group']);
             end
-            genInd = self.wordRhs(ind);
+            genInd = self.lastLetter(ind);
             if genInd == 0
                 w = replab.Word.identity;
             else
@@ -102,13 +102,9 @@ classdef PermGrpList < replab.PermGrp
     
     properties
         hashedSortedElements_ = []; % list of elements
-        wordRhs_ = []; % wordRhs_ has size 1 x nElements; wordRhs_(ind) encodes compactly
-                       % the word representing el = self.element(ind)
-                       %
-                       % wordRhs_(ind) = 0  : el is the identity
-                       % otherwise el = lhs * self.generator(wordRhs_(ind))
-                       %
-                       % and lhs is implicitly encoded by lhs = el * rhs.inverse
+        lastLetters_ = []; % lastLetters_ has size 1 x nElements and gives, for each
+                           % group element, the last letter of his factorization
+                           % as a word; except for the identity, where it provides 0
     end
     
     methods
@@ -177,11 +173,17 @@ classdef PermGrpList < replab.PermGrp
         H = self.hashedSortedElements_;
     end
     
-    function W = wordRhs(self, elementIndex)
-        if isequal(self.wordRhs_, [])
+    function L = lastLetters(self)
+        if isequal(self.lastLetters_, [])
             self.computeAllElements;
         end
-        W = self.wordRhs_(elementIndex);
+        L = self.lastLetters_;
+    end
+    function genInd = lastLetter(self, elementIndex)
+        if isequal(self.lastLetters_, [])
+            self.computeAllElements;
+        end
+        genInd = self.lastLetters_(elementIndex);
     end
     
     function H = subgroupRemovingLastGenerator(self)
@@ -204,8 +206,7 @@ classdef PermGrpList < replab.PermGrp
         gen = self.generator(genIndex);
         Hhse = H.hashedSortedElements;
         Horder = double(Hhse.nElements);
-        H.computeAllElements;
-        HwordRhs = H.wordRhs_;
+        HlastLetters = H.lastLetters;
 
         newElements = zeros(self.n, 0, 'int32');
         newWordRhs = [];
@@ -224,10 +225,10 @@ classdef PermGrpList < replab.PermGrp
             rep = rep(gen); % compose(rep, gen)
         end
         [Ghse, indices] = Hhse.append(newElements).lexColSorted;
-        wordRhs = horzcat(HwordRhs, newWordRhs);
-        wordRhs = wordRhs(indices);
+        lastLetters = horzcat(HlastLetters, newWordRhs);
+        lastLetters = lastLetters(indices);
         self.hashedSortedElements_ = Ghse;
-        self.wordRhs_ = wordRhs;
+        self.lastLetters_ = lastLetters;
     end
     
     function computeAllElementsDiminoStep(self, H, genIndex)
@@ -242,8 +243,7 @@ classdef PermGrpList < replab.PermGrp
         gen = self.generator(genIndex);
         Hhse = H.hashedSortedElements;
         Horder = double(Hhse.nElements);
-        H.computeAllElements;
-        HwordRhs = H.wordRhs_;
+        HlastLetters = H.lastLetters;
 
         % reps are the coset representatives having been already used
         % to generate parts of this group
@@ -251,7 +251,7 @@ classdef PermGrpList < replab.PermGrp
         % so we start the process with the identity
         reps = int32(self.cat.identity)';
         Ghse = Hhse; % G is self
-        GwordRhs = HwordRhs;
+        GlastLetters = HlastLetters;
         while size(reps, 2) > 0 % while there are representatives
             rep = reps(:, 1); % pop a representative
             reps = reps(:, 2:end);
@@ -262,7 +262,7 @@ classdef PermGrpList < replab.PermGrp
                     % the new elements are written H.element * rep * gen
                     newElements = zeros(self.n, Horder, 'int32');
                     % index of the first new element
-                    rgIndex = length(GwordRhs) + 1;
+                    rgIndex = length(GlastLetters) + 1;
                     newWordRhs = i*ones(1, Horder, 'int32');
                     for j = 1:Horder
                         e = Hhse.M(:,j);
@@ -270,13 +270,13 @@ classdef PermGrpList < replab.PermGrp
                     end
                     reps = [reps rg];
                     Ghse = Ghse.append(newElements);
-                    GwordRhs = horzcat(GwordRhs, newWordRhs);
+                    GlastLetters = horzcat(GlastLetters, newWordRhs);
                 end
             end
         end
         [Ghse, indices] = Ghse.lexColSorted;
         self.hashedSortedElements_ = Ghse;
-        self.wordRhs_ = GwordRhs(indices);
+        self.lastLetters_ = GlastLetters(indices);
     end
     
     function computeAllElements(self)
@@ -284,7 +284,7 @@ classdef PermGrpList < replab.PermGrp
             % trivial group
             M = int32(self.cat.identity)';
             self.hashedSortedElements_ = replab.prv.HashIntMatrix(M);
-            self.wordRhs_ = int32([0]);
+            self.lastLetters_ = int32(0);
         else
             H = self.subgroupRemovingLastGenerator;
             k = self.nGenerators;
