@@ -25,7 +25,7 @@ classdef PermGrpList < replab.PermGrp
         end
         
         function o = order(self)
-            o = vpi(length(self.words));
+            o = vpi(length(self.lastLetters));
         end
         
         function nG = nGenerators(self)
@@ -75,10 +75,7 @@ classdef PermGrpList < replab.PermGrp
                 lhs = self.cat.composeWithInverse(permutation, rhs);
                 w = self.factorization(lhs) * rhsW;
             end
-            assert(isequal(self.evaluateWord(w), permutation));
         end
-        
-        %    w = self.words{ind};
         
         function p = evaluateWord(self, word)
             p = self.cat.evaluateWord(word, self.generators);
@@ -112,7 +109,6 @@ classdef PermGrpList < replab.PermGrp
                        % otherwise el = lhs * self.generator(wordRhs_(ind))
                        %
                        % and lhs is implicitly encoded by lhs = el * rhs.inverse
-        words_ = {};   % list of short words corresponding to the above list
     end
     
     methods
@@ -181,13 +177,6 @@ classdef PermGrpList < replab.PermGrp
         H = self.hashedSortedElements_;
     end
     
-    function W = words(self)
-        if isequal(self.words_, {})
-            self.computeAllElements;
-        end
-        W = self.words_;
-    end
-    
     function W = wordRhs(self, elementIndex)
         if isequal(self.wordRhs_, [])
             self.computeAllElements;
@@ -215,38 +204,29 @@ classdef PermGrpList < replab.PermGrp
         gen = self.generator(genIndex);
         Hhse = H.hashedSortedElements;
         Horder = double(Hhse.nElements);
-        Hwords = H.words;
         H.computeAllElements;
         HwordRhs = H.wordRhs_;
 
         newElements = zeros(self.n, 0, 'int32');
-        newWords = {};
         newWordRhs = [];
         shift = 0;
         rep = gen;
-        repWord = genWord;
         while ~H.contains(rep)
             newElements = [newElements zeros(self.n, Horder, 'int32')];
-            newWords = horzcat(newWords, cell(1, Horder));
             newWordRhs = horzcat(newWordRhs, genIndex * ones(1, Horder, 'int32'));
             for i = 1:Horder
                 % we cannot have duplicates here
                 h = Hhse.M(:, i);
                 newEl = h(rep); % compose(h, rep)
                 newElements(:, shift+i) = h(rep);
-                newWords{shift+i} = Hwords{i} * repWord;
             end
             shift = shift + Horder;
             rep = rep(gen); % compose(rep, gen)
-            repWord = repWord * genWord;
         end
         [Ghse, indices] = Hhse.append(newElements).lexColSorted;
-        words = horzcat(Hwords, newWords);
-        words = words(indices);
         wordRhs = horzcat(HwordRhs, newWordRhs);
         wordRhs = wordRhs(indices);
         self.hashedSortedElements_ = Ghse;
-        self.words_ = words;
         self.wordRhs_ = wordRhs;
     end
     
@@ -262,7 +242,6 @@ classdef PermGrpList < replab.PermGrp
         gen = self.generator(genIndex);
         Hhse = H.hashedSortedElements;
         Horder = double(Hhse.nElements);
-        Hwords = H.words;
         H.computeAllElements;
         HwordRhs = H.wordRhs_;
 
@@ -271,45 +250,32 @@ classdef PermGrpList < replab.PermGrp
         % of course, the elements in H are contained in self,
         % so we start the process with the identity
         reps = int32(self.cat.identity)';
-        % with the associated words
-        repWords = {replab.Word.identity};
         Ghse = Hhse; % G is self
-        Gwords = Hwords;
         GwordRhs = HwordRhs;
         while size(reps, 2) > 0 % while there are representatives
             rep = reps(:, 1); % pop a representative
-            repWord = repWords{1};
             reps = reps(:, 2:end);
-            repWords = repWords(2:end);
             for i = 1:self.nGenerators
                 gen = self.generator(i);
-                genWord = replab.Word.generator(i);
                 rg = self.cat.compose(rep, gen);
-                rgWord = repWord * genWord;
                 if Ghse.find(rg) == 0
                     % the new elements are written H.element * rep * gen
                     newElements = zeros(self.n, Horder, 'int32');
                     % index of the first new element
                     rgIndex = length(GwordRhs) + 1;
                     newWordRhs = i*ones(1, Horder, 'int32');
-                    newWords = cell(1, Horder);
                     for j = 1:Horder
                         e = Hhse.M(:,j);
-                        eWord = Hwords{j};
                         newElements(:, j) = e(rg); % compose(e, rg)
-                        newWords{j} = eWord * rgWord;
                     end
                     reps = [reps rg];
-                    repWords = horzcat(repWords, {rgWord});
                     Ghse = Ghse.append(newElements);
-                    Gwords = horzcat(Gwords, newWords);
                     GwordRhs = horzcat(GwordRhs, newWordRhs);
                 end
             end
         end
         [Ghse, indices] = Ghse.lexColSorted;
         self.hashedSortedElements_ = Ghse;
-        self.words_ = Gwords(indices);
         self.wordRhs_ = GwordRhs(indices);
     end
     
@@ -318,14 +284,12 @@ classdef PermGrpList < replab.PermGrp
             % trivial group
             M = int32(self.cat.identity)';
             self.hashedSortedElements_ = replab.prv.HashIntMatrix(M);
-            self.words_ = {replab.Word.identity};
             self.wordRhs_ = int32([0]);
         else
             H = self.subgroupRemovingLastGenerator;
             k = self.nGenerators;
             if H.contains(self.generator(k))
                 self.hashedSortedElements_ = H.hashedSortedElements;
-                self.words_ = H.words;
             elseif H.isNormalizedByElement(self.generator(k))
                 self.computeAllElementsNormalizing(H, k);
             else
