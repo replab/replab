@@ -24,6 +24,10 @@ classdef PermGrpList < replab.PermGrp
             b = self.hashedSortedElements.find(permutation) ~= 0;
         end
         
+        function ind = findElement(self, permutation)
+            ind = self.hashedSortedElements.find(permutation);
+        end
+        
         function o = order(self)
             o = vpi(length(self.lastLetters));
         end

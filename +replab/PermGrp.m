@@ -29,6 +29,10 @@ classdef PermGrp < replab.FiniteGrp
             error('Not implemented');
         end
         
+        function ind = findElement(self, permutation)
+            error('Not implemented');
+        end
+        
         function E = element(self, i) 
         % Returns the i-th element in the lexicographic order
         % i is either a double or a vpi
@@ -54,6 +58,25 @@ classdef PermGrp < replab.FiniteGrp
         function p = evaluateWord(self, word); 
         % Evalutes the given word using this group generators
             error('Not implemented');
+        end
+        
+        function R = naturalRep(self, field)
+            R = replab.PermRep(self, self.generatorsAsMatrix, field);
+        end
+        
+        function R = regularRep(self, field)
+            images = [];
+            d = double(self.order);
+            for i = 1:self.nGenerators
+                g = self.generator(i);
+                image = zeros(1, d);
+                for j = 1:d
+                    image(j) = self.findElement(self.cat.compose(g, self.element(j)));
+                end
+                images = [images
+                          image];
+            end
+            R = replab.PermRep(self, images, field);
         end
         
     end

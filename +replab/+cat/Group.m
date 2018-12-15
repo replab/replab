@@ -1,7 +1,7 @@
 classdef Group
 % Defines a group
     
-    properties (Abstract, SetAccess = private)
+    properties (SetAccess = protected)
         identity;
     end
     
@@ -9,7 +9,7 @@ classdef Group
         function xInv = inverse(self, x)
             error('Not implemented');
         end
-            function z = compose(self, x, y, varargin)
+        function z = compose(self, x, y, varargin)
             error('Not implemented');
         end
         function b = isIdentity(self, x)
@@ -69,6 +69,36 @@ classdef Group
                 end
                 y = self.compose(x, y);
             end
+        end
+        
+    end
+    
+    methods % Verification of the laws
+        
+        function verifyLaws(self, randomG)
+            x = randomG();
+            y = randomG();
+            z = randomG();
+            % associativity
+            xy = self.compose(x, y);
+            yz = self.compose(y, z);
+            assertEqual(self.compose(xy, z), self.compose(x, yz));
+            % composeN
+            n = randi(10);
+            xn1 = self.identity;
+            for i = 1:n
+                xn1 = self.compose(xn1, x);
+            end
+            xn2 = self.compose(self.composeN(x, n - 1), x);
+            xn3 = self.composeN(x, n);
+            assertEqual(xn1, xn2);
+            assertEqual(xn1, xn3);
+            % identity
+            assertTrue(self.isIdentity(self.identity));
+            % inverse
+            yIxI = self.compose(self.inverse(y), self.inverse(x));
+            assertEqual(self.inverse(xy), yIxI);
+            
         end
         
     end

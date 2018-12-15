@@ -3,7 +3,6 @@ classdef MatAsGroup < replab.cat.Group
 % on a given domain size n
     
     properties (SetAccess = private)
-        identity;
         n;
     end
     

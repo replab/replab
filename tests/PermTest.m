@@ -17,15 +17,19 @@ function test_matrix()
     end
 end
 
-function test_compose()
+function test_group_laws()
     n = 100;
+    cat = replab.cat.PermAsGroup(n);
     for i = 1:100
-        x = replab.Perm.random(n);
-        y = replab.Perm.random(n);
-        z = replab.Perm.random(n);
-        xy = replab.Perm.compose(x, y);
-        yz = replab.Perm.compose(y, z);
-        assertEqual(replab.Perm.compose(x, yz), replab.Perm.compose(xy, z));
+        cat.verifyLaws(@() randperm(n));
+    end
+end
+
+function test_domain_action_laws()
+    n = 100;
+    cat = replab.cat.PermActingOnDomain(n);
+    for i = 1:100
+        cat.verifyLaws(@() randperm(n), @() randi(n));
     end
 end
 
@@ -47,18 +51,6 @@ function test_isIdentity_identity()
     n = 100;
     assert(replab.Perm.isIdentity(replab.Perm.identity(100)));
     assert(~replab.Perm.isIdentity([1 3 2 4 5]));
-end
-
-function test_inverse()
-    n = 100;
-    for i = 1:100
-        x = replab.Perm.random(n);
-        y = replab.Perm.random(n);
-        assertEqual(replab.Perm.identity(n), replab.Perm.compose(x, replab.Perm.inverse(x)));
-        xy = replab.Perm.compose(x, y);
-        yIxI = replab.Perm.compose(replab.Perm.inverse(y), replab.Perm.inverse(x));
-        assertEqual(replab.Perm.inverse(xy), yIxI);
-    end
 end
 
 function test_image()
