@@ -4,23 +4,13 @@ function test_suite = SignedPermTest()
     catch
     end
     initTestSuite;
-end
-
-function test_group_laws()
-    n = 100;
-    cat = replab.cat.SignedPermAsGroup(n);
-    randsp = @() randperm(n).*((randi(2, 1, n)-1)*2-1);
-    for i = 1:100
-        cat.verifyLaws(randsp);
-    end
-end
-
-function test_domain_action_laws()
-    n = 100;
-    cat = replab.cat.SignedPermActingOnDomain(n);
-    randsp = @() randperm(n).*((randi(2, 1, n)-1)*2-1);
-    randel = @() randi(n).*((randi(2)-1)*2-1);    
-    for i = 1:100
-        cat.verifyLaws(randsp, randel);
-    end
+    n = 10;
+    G = replab.SignedSymmetricGroup(n);
+    A = G.naturalAction;
+    M = G.permIsomorphism;
+    R = G.naturalRepresentation;
+    test_suite = G.lawsAddTestCases(test_suite);
+    test_suite = A.lawsAddTestCases(test_suite, 'name', 'natural action');
+    test_suite = M.lawsAddTestCases(test_suite, 'name', 'perm isomorphism');
+    test_suite = R.lawsAddTestCases(test_suite, 'name', 'natural representation');
 end

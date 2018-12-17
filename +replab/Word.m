@@ -19,6 +19,14 @@ classdef Word
         
     end
     
+    methods (Static)
+        
+        function b = eqv(w1, w2)
+            b = isequal(w1.indices, w2.indices) && isequal(w1.exponents, w2.exponents);
+        end
+                
+    end
+    
     methods
         
         function l = length(self)
@@ -56,21 +64,33 @@ classdef Word
     methods
         
         function W = mtimes(self, rhs)
-            if isnumeric(rhs)
-                if rhs > 0
-                    rhsInd = rhs;
-                    rhsExp = 1;
-                else
-                    rhsInd = -rhs;
-                    rhsExp = -1;
+            lhsInd = self.indices;
+            lhsExp = self.exponents;
+            rhsInd = rhs.indices;
+            rhsExp = rhs.exponents;
+            nL = length(lhsInd);
+            nR = length(rhsInd);
+            l = length(lhsInd);
+            r = 1;
+            while true
+                if l == 0 || r > nR || lhsInd(l) ~= rhsInd(r)
+                    midInd = [];
+                    midExp = [];
+                    break
                 end
-            else
-                rhsInd = rhs.indices;
-                rhsExp = rhs.exponents;
+                if lhsExp(l) ~= -rhsExp(r)
+                    midInd = lhsInd(l);
+                    midExp = lhsExp(l) + rhsExp(r);
+                    l = l - 1;
+                    r = r + 1;
+                    break
+                end
+                l = l - 1;
+                r = r + 1;
             end
-            newInd = [self.indices rhsInd];
-            newExp = [self.exponents rhsExp];
-            W = replab.Word.fromIndicesAndExponents(newInd, newExp);
+            newInd = [lhsInd(1:l) midInd rhsInd(r:end)];
+            newExp = [lhsExp(1:l) midExp rhsExp(r:end)];
+            W = replab.Word(newInd, newExp);
         end
         
         function W = mrdivide(self, rhs)
@@ -113,19 +133,10 @@ classdef Word
             W = replab.Word([], []);
         end
         
-        function W = generator(index)
-            W = replab.Word(index, 1);
+        function W = generator(i)
+            W = replab.Word(i, 1);
         end
-        
-        function W = random(nGenerators, maxLength)
-            l = randi(maxLength + 1) - 1;
-            % exponents are +1 or -1
-            e = randi(2, 1, l);
-            e(e == 2) = -1;
-            g = randi(nGenerators, 1, l); % generator indices
-            W = replab.Word.fromIndicesAndExponents(g, e);
-        end
-        
+                
         function W = fromIndicesAndExponents(indices, exponents)
         % Reduces the given indices and exponents
             i = 1;
@@ -140,6 +151,9 @@ classdef Word
                     end
                     indices = [indices(:,1:i-1) newI indices(:,i+2:end)];
                     exponents = [exponents(:,1:i-1) newE exponents(:,i+2:end)];
+                    if i > 1
+                        i = i - 1;
+                    end
                 else
                     i = i + 1;
                 end

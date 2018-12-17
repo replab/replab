@@ -1,14 +1,13 @@
-classdef PermGrp < replab.FiniteGrp
+classdef PermGroup < replab.FiniteGrp
 % Represents a permutation group
 
+    properties (SetAccess = protected)
+        domainSize; % d when this group acts on {1, ..., d}
+    end
+    
     methods
-        
-        function d = domainSize(self) 
-        % Returns d when this group acts on {1, ..., d}
-            error('Not implemented');
-        end
-        
-        function b = contains(self, permutation) 
+                
+        % function b = contains(self, permutation) 
         % Returns whether "permutation" is member of this group
             error('Not implemented');
         end
@@ -18,7 +17,7 @@ classdef PermGrp < replab.FiniteGrp
             error('Not implemented');
         end
 
-        function G = generatorsAsMatrix(self)     
+        function G = generatorsAsMatrix(self)
         % Returns a double matrix whose rows are generators
             error('Not implemented');
         end
@@ -54,12 +53,7 @@ classdef PermGrp < replab.FiniteGrp
         % Return "permutation" as a word in the generators of this group
             error('Not implemented');
         end
-        
-        function p = evaluateWord(self, word); 
-        % Evalutes the given word using this group generators
-            error('Not implemented');
-        end
-        
+                
         function R = naturalRep(self, field)
             R = replab.PermRep(self, self.generatorsAsMatrix, field);
         end

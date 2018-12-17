@@ -11,7 +11,7 @@
 classdef RandomBag < handle
     
     properties
-        cat % Group definition
+        G % Group definition
         x0 % Last generated sample
         x % 1 x r cell array representing the contents of the bag
     end
@@ -27,25 +27,24 @@ classdef RandomBag < handle
             end
             if randi(2) == 2
                 if randi(2) == 2 % e = 1
-                    self.x{s} = self.cat.compose(self.x{s}, self.x{t});
+                    self.x{s} = self.G.compose(self.x{s}, self.x{t});
                 else
-                    tinv = self.cat.inverse(self.x{t});
-                    self.x{s} = self.cat.compose(self.x{s}, tinv);
+                    self.x{s} = self.G.composeWithInverse(self.x{s}, self.x{t});
                 end
-                self.x0 = self.cat.compose(self.x0, self.x{s});
+                self.x0 = self.G.compose(self.x0, self.x{s});
             else
                 if randi(2) == 2 % e = 1
-                    self.x{s} = self.cat.compose(self.x{t}, self.x{s});
+                    self.x{s} = self.G.compose(self.x{t}, self.x{s});
                 else
-                    tinv = self.cat.inverse(self.x{t});
-                    self.x{s} = self.cat.compose(tinv, self.x{s});
+                    tinv = self.G.inverse(self.x{t});
+                    self.x{s} = self.G.compose(tinv, self.x{s});
                 end
-                self.x0 = self.cat.compose(self.x{s}, self.x0);
+                self.x0 = self.G.compose(self.x{s}, self.x0);
             end
             res = self.x0;
         end
         
-        function self = RandomBag(generators, cat, r, n)
+        function self = RandomBag(G, generators, r, n)
         % Constructs a random bag from the given generators, given
         % as a 1 x k cell array of group elements, where k >= 0.
         %
@@ -67,7 +66,7 @@ classdef RandomBag < handle
             if k == 0
                 % cater for the special case when generators are empty
                 for i = 1:r
-                    x{i} = cat.identity;
+                    x{i} = G.identity;
                 end
             else
                 g = 1;
@@ -79,8 +78,8 @@ classdef RandomBag < handle
                     end
                 end
             end
-            self.cat = cat;
-            self.x0 = cat.identity; % initially, the identity element
+            self.G = G;
+            self.x0 = G.identity; % initially, the identity element
             self.x = x;
             for i = 1:n
                 self.sample; % perform initial shuffles

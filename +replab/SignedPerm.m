@@ -1,8 +1,8 @@
 classdef SignedPerm
 % Helper methods for signed permutations
-    
+
     methods (Static) % CONSTRUCTION METHODS
-        
+               
         function x = identity(n)
         % Returns the identity signed permutation
             x = 1:n;
@@ -10,7 +10,7 @@ classdef SignedPerm
                 
         function x = random(n)
         % Returns a random permutation acting on 1..n
-            s = (randi(2, 1, n)-1)*2-1;
+            s = randi([0 1], 1, n)*2-1;
             x = randperm(n).*s;
         end
         
@@ -54,14 +54,28 @@ classdef SignedPerm
 
     methods (Static) % REPRESENTATIONS
         
-        function mat = matrix(signedPerm)
-        % Returns the permutation matrix corresponding to the given
+        function perm = toPerm(signedPerm)
+            n = length(signedPerm);
+            perm = zeros(1, 2*n);
+            for i = 1:length(signedPerm)
+                im = signedPerm(i);
+                if im > 0
+                    shift = [1 2];
+                else
+                    shift = [2 1];
+                end
+                perm((i-1)*2 + [1 2]) = (abs(im)-1)*2 + shift;
+            end
+        end
+
+        function mat = toMatrix(signedPerm)
+        % Returns the signed permutation matrix corresponding to the given
         % signed permutation such that matrix multiplication is
         % compatible with composition of permutations, i.e. 
         % SignedPerm.matrix(SignedPerm.compose(x, y)) = 
         % SignedPerm.matrix(x) * SignedPerm.matrix(y)
             n = length(signedPerm);
-            mat = sparse(signedPerm, 1:n, sign(signedPerm), n, n);
+            mat = sparse(abs(signedPerm), 1:n, sign(signedPerm), n, n);
         end
         
     end
@@ -73,14 +87,29 @@ classdef SignedPerm
             i = signedPerm(abs(p))*sign(p);
         end
         
-        function vec = vectorAction(signedPerm, vec)
+        function p = findMovedPoint(signedPerm)
+            for i = 1:length(signedPerm)
+                if i ~= signedPerm(i)
+                    p = i;
+                    return
+                end
+            end
+            p = [];
+        end
+
+        function i1 = invImage(i, signedPerm)
+            i1 = find(abs(signedPerm) == abs(i));
+            i1 = i1 * sign(signedPerm(i1)) * sign(i);
+        end
+        
+        function vec = vectorImage(signedPerm, vec)
         % Signed permutation of a column vector
         % equivalent to SignedPerm.matrix(signedPerm) * vec
             assert(length(signedPerm) == length(vec));
             vec(abs(signedPerm)) = vec .* sign(perm(:));
         end
         
-        function M = selfAdjointMatrixAction(signedPerm, M)
+        function M = selfAdjointMatrixImage(signedPerm, M)
         % Returns the image under the action of signedPerm on the 
         % columns and rows of M, i.e.
         % SignedPerm.matrix(perm)*M*SignedPerm.matrix(perm)'

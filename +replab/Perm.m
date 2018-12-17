@@ -1,13 +1,9 @@
 classdef Perm
 % Helper methods for permutations
+% duplicates some methods with SymmetricGroup
     
     methods (Static) % CONSTRUCTION METHODS
-        
-        function x = identity(n)
-        % Returns the identity permutation
-            x = 1:n;
-        end
-        
+                
         function p = fromCycles(n, varargin)
         % Constructs a permutation from a product of cycles, each
         % cycle being a row vector, and the sequence cycles being
@@ -48,36 +44,12 @@ classdef Perm
     
     methods (Static) % TRANSFORMATIONS
         
-        
         function z = compose(x, y)
         % Returns the composition of x and y
             assert(length(x) == length(y));
             z = x(y);
         end
-        
-        function y = pow(x, e)
-        % Computes y = x^e by repeated squaring
-            n = length(x);
-            if e < 0
-                y = replab.Perm.pow(replab.Perm.inverse(x), -e);
-            elseif e == 0
-                y = replab.Perm.identity(n);
-            else
-                y = replab.Perm.identity(n);
-                while e > 1
-                    if mod(e, 2) == 0 % n even
-                        x = replab.Perm.compose(x, x);
-                        e = e / 2;
-                    else
-                        y = replab.Perm.compose(x, y);
-                        x = replab.Perm.compose(x, x);
-                        e = (e - 1)/2;
-                    end
-                end
-                y = replab.Perm.compose(x, y);
-            end
-        end
-        
+                
         function y = inverse(x)
         % Returns the permutation y such that Perm.compose(x, y) == identity
             n = length(x);
@@ -89,7 +61,7 @@ classdef Perm
 
     methods (Static) % REPRESENTATIONS
         
-        function mat = matrix(perm)
+        function mat = toMatrix(perm)
         % Returns the permutation matrix corresponding to the given permutation
         % such that matrix multiplication is compatible with composition of
         % permutations, i.e. 
@@ -107,6 +79,20 @@ classdef Perm
             i = perm(p);
         end
         
+        function p = findMovedPoint(perm)
+            for i = 1:length(perm)
+                if i ~= perm(i)
+                    p = i;
+                    return
+                end
+            end
+            p = [];
+        end
+        
+        function i = invImage(p, perm)
+            i = find(perm == p);
+        end
+        
         function vec = vectorAction(perm, vec)
         % Permutation of a column vector
         % equivalent to Perm.matrix(perm) * vec
@@ -122,7 +108,7 @@ classdef Perm
             assert(size(M, 2) == n);
             M(perm, perm) = M;
         end
-        
+
     end
-    
+
 end

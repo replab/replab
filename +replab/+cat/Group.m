@@ -1,4 +1,4 @@
-classdef Group
+classdef Group < replab.cat.Domain
 % Defines a group
     
     properties (SetAccess = protected)
@@ -6,27 +6,14 @@ classdef Group
     end
     
     methods
-        function xInv = inverse(self, x)
-            error('Not implemented');
-        end
-        function z = compose(self, x, y, varargin)
-            error('Not implemented');
-        end
-        function b = isIdentity(self, x)
-            error('Not implemented');
-        end
-    end
-    
-    methods
         
-        function x = evaluateWord(self, word, generators)
-            x = self.identity;
-            for i = 1:length(word.indices)
-                g = generators{word.indices(i)};
-                e = word.exponents(i);
-                we = self.composeN(g, e);
-                x = self.compose(x, we);
-            end
+        % Implement
+        %
+        % function z = compose(self, x, y)
+        % function xInv = inverse(self, x)
+
+        function b = isIdentity(self, x)
+            b = self.eqv(x, self.identity);
         end
         
         function x = conjugate(self, by, on)
@@ -34,7 +21,7 @@ classdef Group
         % by * on * by.inverse
             x = self.composeWithInverse(self.compose(by, on), by);
         end
-
+        
         function z = composeWithInverse(self, x, y)
             z = self.compose(x, self.inverse(y));
         end
@@ -73,34 +60,50 @@ classdef Group
         
     end
     
-    methods % Verification of the laws
+    methods % LAWS
         
-        function verifyLaws(self, randomG)
-            x = randomG();
-            y = randomG();
-            z = randomG();
-            % associativity
+        function law_associativity_DDD(self, x, y, z)
+        % Checks associativity of group binary operation
             xy = self.compose(x, y);
             yz = self.compose(y, z);
-            assertEqual(self.compose(xy, z), self.compose(x, yz));
-            % composeN
-            n = randi(10);
+            self.assertEqv(self.compose(xy, z), self.compose(x, yz));
+        end
+
+        function law_composeN_DZ10(self, x, n)
             xn1 = self.identity;
-            for i = 1:n
-                xn1 = self.compose(xn1, x);
+            if n < 0
+                for i = 1:(-n)
+                    xn1 = self.composeWithInverse(xn1, x);
+                end
+            else
+                for i = 1:n
+                    xn1 = self.compose(xn1, x);
+                end
             end
             xn2 = self.compose(self.composeN(x, n - 1), x);
             xn3 = self.composeN(x, n);
-            assertEqual(xn1, xn2);
-            assertEqual(xn1, xn3);
-            % identity
-            assertTrue(self.isIdentity(self.identity));
-            % inverse
-            yIxI = self.compose(self.inverse(y), self.inverse(x));
-            assertEqual(self.inverse(xy), yIxI);
-            
+            self.assertEqv(xn1, xn2);
+            self.assertEqv(xn1, xn3);
+        end
+
+        function law_identity(self)
+            self.assertTrue(self.isIdentity(self.identity));
+        end
+
+        function law_inverse_D(self, x)
+            xI = self.inverse(x);
+            id1 = self.compose(x, xI);
+            id2 = self.compose(xI, x);
+            self.assertTrue(self.isIdentity(id1));
+            self.assertTrue(self.isIdentity(id2));
         end
         
+        function law_inverse_compatible_with_compose_DD(self, x, y)
+            xy = self.compose(x, y);
+            yIxI = self.compose(self.inverse(y), self.inverse(x));
+            self.assertEqv(self.inverse(xy), yIxI);
+        end
+                
     end
-    
+
 end
