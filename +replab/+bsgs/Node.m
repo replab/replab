@@ -6,6 +6,8 @@ classdef Node < replab.bsgs.Chain
         orbit; % orbit of beta stored as 1 x orbitSize cell array
         u; % transversal elements stored as 1 x orbitSize cell array
         uInv; % inverse of transversal elements stored as 1 x orbitSize cell array
+        
+        % we have leftAction(u(i), beta) = orbit(i)
         uWords;
         uInvWords;
         ownSG; % strong generators found at this node, stored as 1 x nStrongGens cell array
@@ -14,6 +16,17 @@ classdef Node < replab.bsgs.Chain
     end
         
     methods
+        
+        function check(self)
+            beta = self.beta;
+            for i = 1:length(self.orbit)
+                u = self.u{i};
+                uInv = self.uInv{i};
+                b = self.orbit{i};
+                self.P.assertEqv(self.A.leftAction(u, beta), b);
+                self.P.assertEqv(self.A.leftAction(uInv, b), beta);
+            end
+        end
         
         function self = Node(A, beta)
             self.A = A;
