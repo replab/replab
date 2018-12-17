@@ -2,12 +2,13 @@ classdef Node < replab.bsgs.Chain
 % A node with non-trivial orbit in the BSGS chain
     
     properties
+        % Invariants:
+        % we have leftAction(u(i), beta) = orbit(i)
+
         beta; % base point
         orbit; % orbit of beta stored as 1 x orbitSize cell array
         u; % transversal elements stored as 1 x orbitSize cell array
         uInv; % inverse of transversal elements stored as 1 x orbitSize cell array
-        
-        % we have leftAction(u(i), beta) = orbit(i)
         uWords;
         uInvWords;
         ownSG; % strong generators found at this node, stored as 1 x nStrongGens cell array
