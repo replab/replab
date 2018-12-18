@@ -199,6 +199,26 @@ classdef Chain < handle
             b = isa(self, 'replab.bsgs.Term');
         end
         
+        function s = orbitSizes(self)
+            s = zeros(1, self.baseLength);
+            it = self;
+            i = 1;
+            while ~it.isTerm
+                s(i) = it.orbitSize;
+                i = i + 1;
+                it = it.next;
+            end
+        end
+        
+        function l = baseLength(self)
+            l = 0;
+            it = self;
+            while ~it.isTerm
+                l = l + 1;
+                it = it.next;
+            end
+        end
+        
         function b = base(self)
             b = [];
             it = self;
@@ -236,36 +256,81 @@ classdef Chain < handle
         end
         
         function [word remaining] = factor(self, el)
-            it = self;
-            remaining = el;
-            word = replab.Word.identity;
-            while ~it.isTerm
-                b = self.A.leftAction(remaining, it.beta);
-            i = it.orbitIndex(b);
-            if i == 0
-                word = [];
-                remaining = [];
-                return
-            else
-                remaining = self.G.compose(it.uInv{i}, remaining);
-                word = word * inv(it.uInvW{i});
-            end
-            it = it.next;
+            word = [];
+            [remaining indices] = self.sift(el);
+            if ~isempty(indices)
+                word = self.wordFromIndices(indices);
             end
         end
+        
+        function el = elementFromIndices(self, indices)
+            G = self.G;
+            i = 1;
+            it = self;
+            el = G.identity;
+            while ~it.isTerm
+                el = G.compose(el, it.u{indices(i)});
+                it = it.next;
+                i = i + 1;
+            end
+        end
+        
+        function word = wordFromIndices(self, indices)
+            i = 1;
+            it = self;
+            word = replab.Word.identity;
+            while ~it.isTerm
+                word = word / it.uInvW{indices(i)};
+                it = it.next;
+                i = i + 1;
+            end
+        end
+        
+        function factors = indexFactors(self)
+            s = self.orbitSizes;
+            factors = fliplr(cumprod(vpi(fliplr(s))));
+            factors = [factors(2:end) vpi(1)];
+        end
+        
+        function indices = indicesFromIndex(self, index)
+            L = self.baseLength;
+            indices = zeros(1, L);
+            f = self.orbitSizes;
+            ind = index - 1;
+            for i = L:-1:1
+                r = mod(ind, f(i));
+                ind = (ind - r)/f(i);
+                indices(i) = double(r) + 1;
+            end
+        end
+        
+        function index = indexFromIndices(self, indices)
+            index = vpi(0);
+            L = self.baseLength;
+            f = self.orbitSizes;
+            for i = 1:L
+                index = index * f(i);
+                index = index + vpi(indices(i) - 1);
+            end
+            index = index + vpi(1);
+        end
 
-        function remaining = sift(self, el)
+        function [remaining indices] = sift(self, el)
             it = self;
             remaining = el;
+            indices = zeros(1, self.baseLength);
+            i = 1;
             while ~it.isTerm
                 b = self.A.leftAction(remaining, it.beta);
-                i = it.orbitIndex(b);
-                if i == 0
+                ind = it.orbitIndex(b);
+                if ind == 0
                     remaining = [];
                     return
                 else
-                    remaining = self.G.compose(it.uInv{i}, remaining);
+                    indices(i) = ind;
+                    remaining = self.G.compose(it.uInv{ind}, remaining);
                 end
+                i = i + 1;
                 it = it.next;
             end
         end
@@ -392,13 +457,13 @@ classdef Chain < handle
         % that algorithm can be unsatisfactory when the group is a direct product
         % of a large number of copies of the same finite simple group 
         % (see Holt et al. Handbook of Computational Group Theory (2005), p. 69).
-            numTests = ceil(-log2(replab.prv.Settings.bsgsFailureProbability));
+            numTests = ceil(-log2(replab.Settings.bsgsFailureProbability));
             if group.knownOrder
                 order = group.order;
             else
                 order = [];
             end
-            bag = replab.prv.RandomBag(group.G, group.generators);
+            bag = replab.RandomBag(group.G, group.generators);
             chain = replab.bsgs.Chain.randomConstruction(group.A, @() bag.sample, order, numTests);
         end
         

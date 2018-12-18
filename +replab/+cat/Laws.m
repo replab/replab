@@ -1,4 +1,4 @@
-classdef Laws < handle
+classdef Laws < replab.Str & handle
 % Describes a structure that obeys to algebraic laws
 %
 % Laws are described by methods called law_METHODNAME_TYPES

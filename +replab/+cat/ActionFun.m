@@ -1,11 +1,11 @@
 classdef ActionFun < replab.cat.Action
-    
+% 
     properties (SetAccess = protected)
         description;
         leftActionFun;
     end
     
-    methods % ABSTRACT
+    methods
         
         function self = ActionFun(description, G, P, leftActionFun)
             self.description = description;

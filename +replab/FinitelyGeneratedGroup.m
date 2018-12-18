@@ -1,4 +1,4 @@
-classdef FinitelyGeneratedGroup < handle
+classdef FinitelyGeneratedGroup < replab.Str
    
     properties
         generators; % 1 x nG cell array of generators

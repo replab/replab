@@ -72,7 +72,7 @@ classdef Partition
                     block = block + 1;
                 end
             end
-            P = replab.prv.Partition(n, blockIndex, start, next);
+            P = replab.Partition(n, blockIndex, start, next);
         end
                 
     end

@@ -1,16 +1,14 @@
-classdef FreeGroup < replab.cat.Group & replab.FinitelyGeneratedGroup
+classdef FreeGroup < replab.FinitelyGeneratedGroup
     
     properties (SetAccess = protected)
+        description;
         n; % number of generators
     end
     
     methods
         
-        function s = str(self)
-            s = sprintf('Free group on %d generators', self.n);
-        end
-
         function self = FreeGroup(n)
+            self.description = sprintf('Free group on %d generators', self.n);
             self.n = n;
             generators = cell(1, n);
             for i = 1:n

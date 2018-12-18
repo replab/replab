@@ -8,7 +8,7 @@
 % section 3.2.2, pp. 70-71 of Holt 2005 (Handbook of Computational Group Theory)
 %
 % Is generic in the group element type, using the replab.cat framework.
-classdef RandomBag < handle
+classdef RandomBag < replab.Str
     
     properties
         G % Group definition
@@ -17,6 +17,16 @@ classdef RandomBag < handle
     end
 
     methods
+        
+        function s = str(self, short)
+            msg = 'Random bag containing %d elements, last drawn element: %s';
+            s = sprintf(msg, length(self.x), replab.strOf(self.x0, true));
+            if nargin == 2 && ~short
+                for i = 1:length(self.x)
+                    s = [s newline '  - ' replab.strOf(self.x{i}, true)];
+                end
+            end
+        end
         
         function res = sample(self)
             r = length(self.x);
@@ -48,10 +58,11 @@ classdef RandomBag < handle
         % Constructs a random bag from the given generators, given
         % as a 1 x k cell array of group elements, where k >= 0.
         %
-        % self.cat must be an instance of replab.prv.Group
+        % G must be an instance of replab.Group
         %
-        % r is the number of elements in the bag (optional, self.catault: max(k, 10))
-        % n is the number of shuffles done during initialization (optional, self.catault: 50)
+        % r is the number of elements in the bag (optional, default: max(k, 10))
+        % n is the number of shuffles done during initialization (optional, default: 50)
+            assert(isa(G, 'replab.cat.Group'));
             if nargin < 4
                 r = -1;
             end

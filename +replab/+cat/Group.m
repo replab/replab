@@ -5,13 +5,15 @@ classdef Group < replab.cat.Domain
         identity;
     end
     
-    methods
+    methods % Abstract methods
         
-        % Implement
-        %
-        % function z = compose(self, x, y)
-        % function xInv = inverse(self, x)
+        %ABSTRACT z = compose(self, x, y)
+        %ABSTRACT xInv = inverse(self, x)
+        
+    end
 
+    methods % Methods with default implementations
+        
         function b = isIdentity(self, x)
             b = self.eqv(x, self.identity);
         end
@@ -60,7 +62,7 @@ classdef Group < replab.cat.Domain
         
     end
     
-    methods % LAWS
+    methods % Laws
         
         function law_associativity_DDD(self, x, y, z)
         % Checks associativity of group binary operation

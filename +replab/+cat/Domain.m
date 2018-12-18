@@ -1,7 +1,9 @@
 classdef Domain < replab.cat.Laws
     
-    properties
-        parentOption;
+    properties (Abstract, SetAccess = protected)
+        canEqv;
+        canHash;
+        canSample;
     end
     
     methods
@@ -12,18 +14,6 @@ classdef Domain < replab.cat.Laws
         % function h = hash(self, x)
         % function x = sample(self)
         
-        function b = hasParent(self)
-            b = ~isequal(self.parentOption, []);
-        end
-        
-        function p = parent(self)
-            if self.hasParent
-                p = self.parentOption;
-            else
-                p = self;
-            end
-        end
-            
     end
     
     methods

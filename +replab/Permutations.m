@@ -1,14 +1,19 @@
 classdef Permutations < replab.cat.Group
    
-    properties
+    properties (SetAccess = protected)
+        canEqv;
+        canHash;
+        canSample;
         domainSize;
     end
     
     methods
         
         function self = Permutations(domainSize)
+            self.canEqv = true;
+            self.canHash = true;
+            self.canSample = true;
             self.domainSize = domainSize;
-            self.parentOption = [];
             self.identity = 1:domainSize;
         end
         

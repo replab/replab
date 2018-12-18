@@ -12,15 +12,9 @@ classdef GroupFun < replab.cat.DomainFun & replab.cat.Group
             self.G = self;
             self.N = replab.cat.Domain.integerRange(-10, 10);
             self.description = description;
-            self.sampleFun = sampleFun;
-            self.eqvFun = eqvFun;
             self.composeFun = composeFun;
             self.identity = identity;
             self.inverseFun = inverseFun;
-        end
-        
-        function b = eqv(self, x, y)
-            b = self.eqvFun(x, y);
         end
 
         function xInv = inverse(self, x)

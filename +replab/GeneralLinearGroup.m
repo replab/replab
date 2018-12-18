@@ -26,7 +26,7 @@ classdef GeneralLinearGroup < replab.cat.Group
         end
         
         function b = eqv(self, x, y)
-            b = norm(x - y) < replab.prv.Settings.doubleEigTol;
+            b = norm(x - y) < replab.Settings.eigTol(self.field);
         end
         
         function h = hash(self, x)

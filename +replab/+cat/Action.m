@@ -1,15 +1,18 @@
 classdef Action < replab.cat.Laws
+% A group action describing the action of elements of type G upon elements of type P
     
     properties (SetAccess = protected)
         G; % group
         P; % set acted upon
     end
     
-    methods
+    methods % Abstract methods
         
-        % Implement
-        %
-        % function p1 = leftAction(self, g, p)
+        %ABSTRACT p1 = leftAction(self, g, p)
+        
+    end
+    
+    methods % Methods with default implementations
 
         function p1 = rightAction(self, p, g)
             p1 = self.leftAction(self.G.inverse(g), p);
@@ -17,7 +20,7 @@ classdef Action < replab.cat.Laws
 
     end
     
-    methods % LAWS
+    methods % Laws
         
         function law_leftAction_compose_GGP(self, g, h, p)
             gh = self.G.compose(g, h);

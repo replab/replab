@@ -27,7 +27,7 @@ classdef Vectors < replab.cat.Domain
         end
         
         function b = eqv(self, x, y)
-            b = norm(x - y) < replab.prv.Settings.doubleEigTol;
+            b = norm(x - y) < replab.Settings.eigTol;
         end
         
         function h = hash(self, x)

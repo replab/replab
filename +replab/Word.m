@@ -94,7 +94,7 @@ classdef Word
         end
         
         function W = mrdivide(self, rhs)
-            W = self * rhs.inverse;
+            W = self * inv(rhs);
         end
         
         function W = inv(self)
