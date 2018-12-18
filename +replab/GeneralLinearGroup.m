@@ -19,15 +19,14 @@ classdef GeneralLinearGroup < replab.cat.Group
                 error(sprintf('Unknown field %s', field));
             end
             self.parentOption = [];
-            self.identity = eye(n);
         end
         
         function s = str(self)
-            s = sprintf('Invertible %d x %d matrices', self.n, self.n);
+            s = sprintf('Invertible %d x %d matrices in ', self.n, self.n, self.field);
         end
         
         function b = eqv(self, x, y)
-            error('Cannot compare floating point matrices');
+            b = norm(x - y) < replab.prv.Settings.doubleEigTol;
         end
         
         function h = hash(self, x)

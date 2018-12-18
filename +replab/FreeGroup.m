@@ -1,4 +1,4 @@
-classdef FreeGroup < replab.FinitelyGeneratedGroup
+classdef FreeGroup < replab.cat.Group & replab.FinitelyGeneratedGroup
     
     properties (SetAccess = protected)
         n; % number of generators

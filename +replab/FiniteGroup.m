@@ -1,4 +1,4 @@
-classdef FiniteGroup < replab.FinGenGrp
+classdef FiniteGroup < replab.FinitelyGeneratedGroup
     
     methods
         
@@ -12,6 +12,7 @@ classdef FiniteGroup < replab.FinGenGrp
         % function g = sampleUniformly(self)
         %
         % function w = factorization(self, g)
+        
 
     end
 

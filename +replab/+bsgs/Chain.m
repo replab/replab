@@ -1,11 +1,188 @@
 classdef Chain < handle
 % Describes a (generalized) permutation group using a BSGS chain
 % constructed using randomized algorithms
-    properties
+    properties (Access = protected)
         A; % BSGS action
     end
     
     methods
+        
+        function check(self, group)
+            it = self;
+            A = self.A;
+            P = A.P;
+            G = A.G;
+            while ~it.isTerm
+                beta = it.beta;
+                it1 = it.next;
+                while ~it1.isTerm
+                    for i = 1:length(it1.orbit)
+                        P.assertEqv(A.leftAction(it1.u{i}, beta), beta);
+                    end
+                    it1 = it1.next;
+                end
+                for i = 1:length(it.orbit)
+                    u = it.u{i};
+                    uInv = it.uInv{i};
+                    uInvW = it.uInvW{i};
+                    G.assertEqv(uInv, group.evaluateWord(uInvW));
+                    G.assertEqv(G.compose(u, uInv), G.identity);
+                    b = it.orbit{i};
+                    P.assertEqv(A.leftAction(u, beta), b);
+                    P.assertEqv(A.leftAction(uInv, b), beta);
+                end
+                it = it.next;
+            end
+        end
+        
+        function b = areWordsCompleted(self)
+            it = self;
+            b = true;
+            while ~it.isTerm
+                if it.emptyWords > 0
+                    b = false;
+                    return
+                end
+                it = it.next;
+            end
+        end
+        
+        function [r rw] = wordsStep(self, t, tw)
+            assert(~self.isTerm);
+            G = self.G;
+            A = self.A;
+            b = A.leftAction(t, self.beta);
+            ind = self.orbitIndex(b);
+            assert(ind ~= 0);
+            uInvW = self.uInvW{ind};
+            if ~isequal(uInvW, [])
+                r = G.compose(self.uInv{ind}, t);
+                rw = uInvW * tw;
+                if tw.length < uInvW.length
+                    twInv = inv(tw);
+                    tInv = G.inverse(t);
+                    self.uInvW{ind} = twInv;
+                    self.uInv{ind} = tInv;
+                    self.u{ind} = G.inverse(tInv);
+                    self.newWord(ind) = true;
+                    self.wordsStep(tInv, twInv);
+                end
+            else
+                twInv = inv(tw);
+                tInv = G.inverse(t);
+                r = G.identity;
+                rw = replab.Word.identity;
+                self.uInvW{ind} = twInv;
+                self.uInv{ind} = tInv;
+                self.u{ind} = G.inverse(tInv);
+                self.newWord(ind) = true;
+                self.emptyWords = self.emptyWords - 1;
+                self.wordsStep(tInv, twInv);
+            end
+        end
+        
+        function [t tw] = wordsRound(self, l, t, tw)
+            G = self.G;
+            it = self;
+            while ~it.isTerm && ~G.isIdentity(t) && tw.length < l
+                [t tw] = it.wordsStep(t, tw);
+                it = it.next;
+            end
+        end
+        
+        function wordsImprove(self, l)
+            G = self.G;
+            it = self;
+            while ~it.isTerm
+                nonEmpty = [];
+                for i = 1:it.orbitSize
+                    if ~isequal(it.uInvW{i}, [])
+                        nonEmpty = [nonEmpty i];
+                    end
+                end
+                for i = nonEmpty
+                    for j = nonEmpty
+                        if it.newWord(i) || it.newWord(j)
+                            t = G.compose(it.uInv{i}, it.uInv{j});
+                            tw = it.uInvW{i} * it.uInvW{j};
+                            it.wordsRound(l, t, tw);
+                        end
+                    end
+                end
+                it.newWord(:) = false;
+                it = it.next;
+            end
+        end
+        
+        function wordsQuick(self, group, maxLength, s, l)
+            count = 1;
+            nGens = length(group.generators);
+            G = self.G;
+            for len = 1:maxLength
+                numWords = nGens^len;
+                indices = zeros(1, len);
+                for count = 1:numWords
+                    t = G.identity;
+                    rem = count - 1;
+                    for i = 1:len
+                        g = mod(rem, nGens);
+                        rem = (rem - g)/nGens;
+                        indices(i) = g + 1;
+                        t = G.compose(t, group.generators{g+1});
+                    end
+                    tw = replab.Word.fromIndicesAndExponents(indices, ones(1, len));
+                    G.assertEqv(t, group.evaluateWord(tw));
+                    self.wordsRound(l, t, tw);
+                    if mod(count, s) == 0
+                        self.wordsImprove(l);
+                        %replab.bsgs.Chain.fillOrbits(chain, l);
+                        l = l * 5/4;
+                    end
+                    if self.areWordsCompleted
+                        return
+                    end
+                end
+            end
+        end
+        
+        function wordsComplete(self)
+            if ~self.isTerm
+                self.next.wordsComplete;
+                A = self.A;
+                G = self.G;
+                while self.emptyWords > 0
+                    for i = 1:self.orbitSize
+                        if isempty(self.uInvW{i})
+                            b = self.orbit{i};
+                            it = self;
+                            solved = false;
+                            while ~solved && ~it.isTerm
+                                for j = 1:it.orbitSize
+                                    tw = it.uInvW{j};
+                                    if ~isempty(tw)
+                                        t = it.uInv{j};
+                                        newB = A.leftAction(t, b);
+                                        ind = self.orbitIndex(newB);
+                                        assert(ind > 0);
+                                        if ~isempty(self.uInvW{ind})
+                                            uInvW = self.uInvW{ind} * tw;
+                                            uInv = G.compose(self.uInv{ind}, t);
+                                            self.uInvW{i} = uInvW;
+                                            self.uInv{i} = uInv;
+                                            self.u{i} = G.inverse(uInv);
+                                            self.emptyWords = self.emptyWords - 1;
+                                            solved = true;
+                                            break
+                                        end
+                                    end
+                                end
+                                it = it.next;
+                            end
+                        end
+                    end
+                end
+            end
+        end
         
         function cat = G(self)
             cat = self.A.G;
@@ -22,6 +199,15 @@ classdef Chain < handle
             b = isa(self, 'replab.bsgs.Term');
         end
         
+        function b = base(self)
+            b = [];
+            it = self;
+            while ~it.isTerm
+                b(end+1) = it.beta;
+                it = it.next;
+            end
+        end
+        
         function l = length(self)
             l = 0;
             it = self;
@@ -33,7 +219,7 @@ classdef Chain < handle
         
         function r = random(self)
             it = self;
-            r = 1:self.n;
+            r = self.G.identity;
             while ~it.isTerm
                 r = self.A.G.compose(r, it.randomU);
                 it = it.next;
@@ -49,6 +235,25 @@ classdef Chain < handle
             end
         end
         
+        function [word remaining] = factor(self, el)
+            it = self;
+            remaining = el;
+            word = replab.Word.identity;
+            while ~it.isTerm
+                b = self.A.leftAction(remaining, it.beta);
+            i = it.orbitIndex(b);
+            if i == 0
+                word = [];
+                remaining = [];
+                return
+            else
+                remaining = self.G.compose(it.uInv{i}, remaining);
+                word = word * inv(it.uInvW{i});
+            end
+            it = it.next;
+            end
+        end
+
         function remaining = sift(self, el)
             it = self;
             remaining = el;
@@ -56,7 +261,7 @@ classdef Chain < handle
                 b = self.A.leftAction(remaining, it.beta);
                 i = it.orbitIndex(b);
                 if i == 0
-                    s = [];
+                    remaining = [];
                     return
                 else
                     remaining = self.G.compose(it.uInv{i}, remaining);
@@ -74,15 +279,6 @@ classdef Chain < handle
             end
         end
         
-        function s = strongGeneratingSetWords(self)
-            s = {};
-            it = self;
-            while ~it.isTerm
-                s = horzcat(s, it.ownSGWords);
-                it = it.next;
-            end
-        end
-
         function gd = groupDecomposition(self)
             gd = {};
             it = self;
@@ -93,9 +289,9 @@ classdef Chain < handle
         end
         
     end
-    
+
     methods (Static)
-      
+        
         function res = siftAndUpdateBaseFrom(A, at, g)
         % Returns an element obtained by sifting g through the chain starting at "at"
         % inserting new base points as required, returns either [],
@@ -186,9 +382,8 @@ classdef Chain < handle
             chain = start.next;
         end
         
-        function chain = fromGenerators(A, generators, order, numTests)
-        % Constructs a BSGS chain from a list of generators, given a row vectors
-        % in a matrix.
+        function chain = forBSGSGroup(group)
+        % Constructs a BSGS chain for a BSGS group.
         %
         % If the order of the group is provided, the algorithm is randomized but
         % cannot fail.
@@ -197,16 +392,65 @@ classdef Chain < handle
         % that algorithm can be unsatisfactory when the group is a direct product
         % of a large number of copies of the same finite simple group 
         % (see Holt et al. Handbook of Computational Group Theory (2005), p. 69).
-            if nargin < 4
-                numTests = 128;
-            end
-            if nargin < 3 || isequal(order, [])
+            numTests = ceil(-log2(replab.prv.Settings.bsgsFailureProbability));
+            if group.knownOrder
+                order = group.order;
+            else
                 order = [];
             end
-            bag = replab.prv.RandomBag(A.G, generators);
-            chain = replab.bsgs.Chain.randomConstruction(A, @() bag.sample, order, numTests);
+            bag = replab.prv.RandomBag(group.G, group.generators);
+            chain = replab.bsgs.Chain.randomConstruction(group.A, @() bag.sample, order, numTests);
         end
         
     end
     
 end
+        
+        
+% $$$         function fillOrbits(chain, l)
+% $$$             it = chain;
+% $$$             while ~it.isTerm
+% $$$                 orbit = {};
+% $$$                 for i = 1:it.orbitSize
+% $$$                     if ~isequal(it.uInvW{i}, [])
+% $$$                         orbit{end+1} = it.orbit{i};
+% $$$                     end
+% $$$                 end
+% $$$                 it1 = it.next;
+% $$$                 while ~it1.isTerm
+% $$$                     xs = {};
+% $$$                     for i = 1:it1.orbitSize
+% $$$                         xw = it1.uInvW{i};
+% $$$                         x = it1.uInv{i};
+% $$$                         if ~isequal(xw, [])
+% $$$                             for j = 1:length(orbit)
+% $$$                                 o = orbit{j};
+% $$$                                 p = chain.A.leftAction(x, o);
+% $$$                                 c = false;
+% $$$                                 for k = 1:length(orbit)
+% $$$                                     if chain.P.eqv(p, orbit{k})
+% $$$                                         c = true;
+% $$$                                         break
+% $$$                                     end
+% $$$                                 end
+% $$$                                 if ~c
+% $$$                                     xInv = chain.G.inverse(x);
+% $$$                                     p1 = chain.A.leftAction(xInv, p);
+% $$$                                     ind = it.orbitIndex(p1);
+% $$$                                     tw = it.uInvW{ind} * xw;
+% $$$                                     if tw.length < l
+% $$$                                         if isequal(it.uInv{ind}, [])
+% $$$                                             it.emptyWords = it.emptyWords - 1;
+% $$$                                         end
+% $$$                                         it.uInvW{ind} = inv(tw);
+% $$$                                     end
+% $$$                                 end
+% $$$                             end
+% $$$                         end
+% $$$                     end
+% $$$                     it1 = it1.next;
+% $$$                 end
+% $$$                 it = it.next;
+% $$$             end
+% $$$         end
+        

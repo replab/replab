@@ -1,4 +1,4 @@
-classdef FinitelyGeneratedGroup < replab.cat.Group
+classdef FinitelyGeneratedGroup < handle
    
     properties
         generators; % 1 x nG cell array of generators
@@ -25,13 +25,13 @@ classdef FinitelyGeneratedGroup < replab.cat.Group
             b = self.nGenerators == 0;
         end
         
-        function g = evaluateWord(self, word)
-            x = self.identity;
+        function x = evaluateWord(self, word)
+            x = self.G.identity;
             for i = 1:length(word.indices)
-                g = generators{word.indices(i)};
+                g = self.generators{word.indices(i)};
                 e = word.exponents(i);
-                we = self.composeN(g, e);
-                x = self.compose(x, we);
+                we = self.G.composeN(g, e);
+                x = self.G.compose(x, we);
             end
         end
         

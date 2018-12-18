@@ -40,12 +40,12 @@ classdef Word
         end
         
         function disp(self)
-            disp(self.toString);
+            disp(self.str);
         end
         
-        function str = toString(self)
+        function s = str(self)
             sep = '';
-            str = [];
+            s = [];
             for i = 1:length(self.indices)
                 letter = char('a' + self.indices(i) - 1);
                 e = self.exponents(i);
@@ -54,7 +54,7 @@ classdef Word
                 else
                     expString = ['^' num2str(e)];
                 end
-                str = [str sep letter expString];
+                s = [s sep letter expString];
                 sep = ' ';
             end
         end

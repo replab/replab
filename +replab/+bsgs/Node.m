@@ -9,26 +9,15 @@ classdef Node < replab.bsgs.Chain
         orbit; % orbit of beta stored as 1 x orbitSize cell array
         u; % transversal elements stored as 1 x orbitSize cell array
         uInv; % inverse of transversal elements stored as 1 x orbitSize cell array
-        uWords;
-        uInvWords;
+        uInvW;
+        newWord;
+        emptyWords;
         ownSG; % strong generators found at this node, stored as 1 x nStrongGens cell array
-        ownSGWords;
         next; % next node in chain, or [] for the terminal node
     end
         
     methods
-        
-        function check(self)
-            beta = self.beta;
-            for i = 1:length(self.orbit)
-                u = self.u{i};
-                uInv = self.uInv{i};
-                b = self.orbit{i};
-                self.P.assertEqv(self.A.leftAction(u, beta), b);
-                self.P.assertEqv(self.A.leftAction(uInv, b), beta);
-            end
-        end
-        
+                
         function self = Node(A, beta)
             self.A = A;
             self.beta = beta;
@@ -36,6 +25,9 @@ classdef Node < replab.bsgs.Chain
             self.u = {A.G.identity};
             self.uInv = {A.G.identity};
             self.ownSG = {};
+            self.uInvW = {replab.Word.identity};
+            self.newWord = [false];
+            self.emptyWords = 0;
         end
         
         function l = orbitSize(self)
@@ -75,6 +67,9 @@ classdef Node < replab.bsgs.Chain
                         self.orbit{end+1} = newB;
                         self.u{end+1} = newU;
                         self.uInv{end+1} = self.G.inverse(newU);
+                        self.uInvW{end+1} = [];
+                        self.newWord(end+1) = false;
+                        self.emptyWords = self.emptyWords + 1;
                     end
                 end
                 i = i + 1;

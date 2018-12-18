@@ -1,4 +1,8 @@
 classdef Rep < replab.cat.GroupMorphism
+
+    properties
+        group;
+    end
     
     methods
         
