@@ -1,0 +1,3 @@
+[submodule "external/MOxUnit"]
+	path = external/MOxUnit
+	url = git@github.com:MOxUnit/MOxUnit.git
