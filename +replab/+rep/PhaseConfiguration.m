@@ -242,7 +242,7 @@ classdef PhaseConfiguration
             assert(n > 0, 'Java code does not work with empty array, as Matlab will pass a null pointer.');
             % convert 1-based indices to 0-based indices
             generators(generators > 0) = generators(generators > 0) - 1;
-            B = com.faacets.qdimsum.PhaseConfigurationBuilder.fromSignedPerm(n, generators);
+            B = com.faacets.qdimsum.PhaseConfigurationBuilder.fromGenPerm(n, generators);
             phase = replab.rep.PhaseConfiguration.computePhase(double(B.shift), double(B.order));
             C = replab.rep.PhaseConfiguration(n, phase, B.orbitStart + 1, B.orbitRow + 1, B.orbitCol + 1, B.index + 1);
         end

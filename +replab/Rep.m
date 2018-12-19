@@ -1,14 +1,14 @@
 classdef Rep < replab.cat.GroupMorphism
 
     properties
-        d; % Representation dimension
+        dimension; % Representation dimension
         group; % Finite group represented
     end
     
     methods
         
         function str(self)
-            disp(sprintf('Representation of dimension %d', self.d));
+            disp(sprintf('Representation of dimension %d', self.dimension));
         end
         
         function disp(self)

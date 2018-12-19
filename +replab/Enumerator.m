@@ -14,7 +14,7 @@ classdef Enumerator < replab.Str
         % Returns a one line string that describes the i-th element
         % used by Enumerator.str
             msg = ['at(%' num2str(self.sizeNChars) 's) = %s'];
-            el = replab.strOf(self.at(i), true);
+            el = replab.strOf(self.at(i));
             s = sprintf(msg, strtrim(num2str(i)), el);
         end
         

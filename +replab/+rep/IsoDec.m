@@ -23,6 +23,17 @@ classdef IsoDec
     
     methods
         
+        function I1 = permuteComponents(self, order)
+            fromFiber1 = [];
+            U1 = [];
+            for i = 1:self.nComponents
+                range = self.compRange(order(i));
+                fromFiber1 = [fromFiber1 self.fromFiber(range)];
+                U1 = [U1 self.U(:,range)];
+            end
+            I1 = replab.rep.IsoDec(self.algebra, fromFiber1, U1, self.ordered, self.repDims(order), self.repMuls(order));
+        end
+        
         function self = IsoDec(algebra, fromFiber, U, ordered, repDims, repMuls)
         % Constructs an IsoDec from full data
             assert(isreal(U));
@@ -81,7 +92,7 @@ classdef IsoDec
             end
         end
         
-        function I = refine(self)
+        function I = refined(self)
         % Refine the change of basis by performing a second step of eigenvalue decomposition inside each
         % isotypic component. As a bonus, it orders the irreducible representations inside the isotypic
         % components, so that I.ordered = true.

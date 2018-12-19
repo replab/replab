@@ -13,7 +13,7 @@ classdef FiniteGroupRep < replab.Rep
             self.images = images;
             self.isUnitary = isUnitary;
             self.T = T;
-            self.d = T.n;
+            self.dimension = T.n;
         end
         
         function rho = image(self, g)
@@ -33,7 +33,7 @@ classdef FiniteGroupRep < replab.Rep
             else
                 t = 'Representation';
             end
-            s = sprintf('%s of dimension %d with generator images', t, self.d);
+            s = sprintf('%s of dimension %d with generator images', t, self.dimension);
             for i = 1:length(self.images)
                 gen = char('a' + i - 1);
                 s = [s char(10) '- ' gen ':' char(10)];
@@ -89,7 +89,7 @@ classdef FiniteGroupRep < replab.Rep
         % When the representation comes from a permutation group
         % this corresponds to the orbits.
             if isempty(self.fibers_)
-                d = self.d;
+                d = self.dimension;
                 mask = false(d, d);
                 for i = 1:length(self.images)
                     mask = mask | (self.images{i} ~= 0);

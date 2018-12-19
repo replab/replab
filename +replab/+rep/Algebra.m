@@ -39,7 +39,7 @@ classdef Algebra < replab.Str
         function A = forRep(rep)
             nG = rep.group.nGenerators;
             matrices = cell(1, nG);
-            d = rep.d;
+            d = rep.dimension;
             for i = 1:nG
                 matrices{i} = rep.image(rep.group.generator(i));
             end
