@@ -1,4 +1,4 @@
-function result = replab_runstests
+function result = replab_runtests
     initialPath = pwd;
     [pathStr, name, extension] = fileparts(which(mfilename));
     cd(pathStr)
