@@ -14,8 +14,8 @@ classdef IsotypicDecomposition < replab.Str
     methods
         
         function s = str(self)
-            reps = replab.prependLines(replab.strOf(self.rep));
-            s = sprintf('Isotypic decomposition with %d components of representation:\n%s', self.n, reps);
+            sz = num2str(self.isoDec.compDims);
+            s = sprintf('Isotypic decomposition with %d components of sizes %s', self.n, sz);
         end
         
         function self = IsotypicDecomposition(rep, isoDec)

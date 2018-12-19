@@ -1,6 +1,6 @@
 % Run first replab_addpaths;
 
-n = 9;
+n = 4;
 % construct Sn
 Sn = replab.PermutationGroup.fromGenerators([2:n 1], [2 1 3:n]);
 % sample permutation; alternative is to use Sn.sample or Sn.sampleUniformlyx
@@ -20,8 +20,11 @@ gh = g(h);
 rho.image(g) * rho.image(h)
 rho.image(gh)
 
-rho.nIsotypicComponents
-[subrho1 U1 dim1 mul1] = rho.isotypicComponent(1)
+[subrho1 U1] = rho.isotypic.component(1)
 
-rho.nIsotypicComponents
-[subrho2 U2 dim2 mul2] = rho.isotypicComponent(2)
+[subrho2 U2] = rho.isotypic.component(2)
+
+M = rho.centralizerAlgebra.project(rand(n,n))
+blocks = rho.isotypic.blocksOf(M)
+blocks{1}
+blocks{2}
