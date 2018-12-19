@@ -117,6 +117,22 @@ classdef BSGSGroup < replab.FiniteGroup
             w = self.chain.factor(g);
         end
         
+        function rho = representation(self, d, images, isUnitary)
+            T = replab.GeneralLinearGroup(d, false);
+            rho = replab.FiniteGroupRep(self, images, isUnitary, T);
+        end
+        
+        function rho = signedPermutationRepresentation(self, d, signedPermutations)
+            f = @(g) replab.SignedPermutations(self.domainSize).toMatrix(g);
+            images = cellfun(f, signedPermutations, 'UniformOutput', false);
+            rho = self.representation(d, images, true);
+        end
+        
+        function rho = permutationRepresentation(self, d, permutations)
+            f = @(g) replab.Permutations(self.domainSize).toMatrix(g);
+            images = cellfun(f, permutations, 'UniformOutput', false);
+            rho = self.representation(d, images, true);
+        end
     end
 
 end

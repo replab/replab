@@ -1,21 +1,14 @@
 classdef Rep < replab.cat.GroupMorphism
 
     properties
-        group;
+        d; % Representation dimension
+        group; % Finite group represented
     end
     
     methods
         
-        function d = dimension(self)
-            d = self.T.n;
-        end
-        
-        function f = field(self)
-            f = self.T.field;
-        end
-        
-        function str(self, spaces)
-            disp(sprintf('%s Representation of dimension %d in %s', spaces, self.d, self.field));
+        function str(self)
+            disp(sprintf('Representation of dimension %d', self.d));
         end
         
         function disp(self)

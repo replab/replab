@@ -1,4 +1,4 @@
-classdef Partition
+classdef Partition < replab.Str
    
     properties (SetAccess = protected)
         n;           % domain size
@@ -19,6 +19,23 @@ classdef Partition
     end
     
     methods
+        
+        function s = str(self)
+            s = 'Partition ';
+            for i = 1:self.nBlocks
+                if i > 1
+                    s = [s '|'];
+                end
+                b = self.block(i);
+                for j = 1:length(b)
+                    if j > 1 && self.n > 9
+                        s = sprintf('%s %d', s, b(j));
+                    else
+                        s = sprintf('%s%d', s, b(j));
+                    end
+                end
+            end
+        end
         
         function n = nBlocks(self)
             n = length(self.start);

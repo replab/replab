@@ -2,7 +2,7 @@ classdef GeneralLinearGroup < replab.cat.Group
     
     properties (SetAccess = protected)
         n;
-        field;
+        complex;
         canEqv = false;
         canHash = false;
         canSample = true;
@@ -10,21 +10,19 @@ classdef GeneralLinearGroup < replab.cat.Group
     
     methods
         
-        function self = GeneralLinearGroup(n, field)
+        function self = GeneralLinearGroup(n, complex)
             self.n = n;
-            self.field = field;
-            switch self.field
-              case {'R15', 'C15'}
-                self.identity = eye(n);
-              case {'R7', 'C7'}
-                self.identity = eye(n, 'single');
-              otherwise
-                error(sprintf('Unknown field %s', field));
-            end
+            self.complex = complex;
+            self.identity = eye(n);
         end
         
         function s = str(self)
-            s = sprintf('Invertible %d x %d matrices in ', self.n, self.n, self.field);
+            s = sprintf('Invertible %d x %d', self.n, self.n);
+            if self.complex
+                s = [s ' complex double matrices'];
+            else
+                s = [s ' real double matrices'];
+            end
         end
         
         function b = eqv(self, x, y)
@@ -37,15 +35,10 @@ classdef GeneralLinearGroup < replab.cat.Group
         
         function s = sample(self)
             n = self.n;
-            switch self.field
-              case 'R7'
-                s = single(randn(n, n));
-              case 'C7'
-                s = single(randn(n, n)) + 1i*single(randn(n, n));
-              case 'R15'
-                s = randn(n, n);
-              case 'C15'
+            if self.complex
                 s = randn(n, n) + 1i*randn(n, n);
+            else
+                s = randn(n, n);
             end
         end
         

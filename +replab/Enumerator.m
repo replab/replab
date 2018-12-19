@@ -1,19 +1,21 @@
 classdef Enumerator < replab.Str
     
     properties
-        D;
-        size;
-        sizeLength;
-        atFun;
-        findFun;
+        D; % Domain in which the elements are contained
+        size; % Number of elements contained in this enumerator
+        sizeNChars; % Number of chars required to represent any index as a string
+        atFun; % Handle that implements Enumerator.at
+        findFun; % Handle that implements Enumerator.find
     end
     
     methods (Access = protected)
         
-        function s = describe(self, ind)
-            msg = ['at(%' num2str(self.sizeLength) 's) = %s'];
-            el = replab.strOf(self.at(ind), true);
-            s = sprintf(msg, strtrim(num2str(ind)), el);
+        function s = describe(self, i)
+        % Returns a one line string that describes the i-th element
+        % used by Enumerator.str
+            msg = ['at(%' num2str(self.sizeNChars) 's) = %s'];
+            el = replab.strOf(self.at(i), true);
+            s = sprintf(msg, strtrim(num2str(i)), el);
         end
         
     end
@@ -23,7 +25,7 @@ classdef Enumerator < replab.Str
         function self = Enumerator(D, size, atFun, findFun)
             self.D = D;
             self.size = size;
-            self.sizeLength = length(strtrim(num2str(self.size)));
+            self.sizeNChars = length(strtrim(num2str(self.size)));
             self.atFun = atFun;
             self.findFun = findFun;
         end
@@ -46,11 +48,20 @@ classdef Enumerator < replab.Str
         end            
         
         function obj = at(self, ind)
+        % Returns the element at the "ind" position
+        % ind is an integer encoded as a double, string or vpi object
             obj = self.atFun(vpi(ind));
         end
         
         function ind = find(self, obj)
+        % Returns the position of the given element as a vpi object
+        % or [] if the element cannot be found
             ind = self.findFun(obj);
+        end
+        
+        function obj = sample(self)
+        % Returns an element uniformly sampled from this Enumerator
+            obj = self.at(randint(self.size));
         end
         
         function M = toMatrix(self)

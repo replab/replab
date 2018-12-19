@@ -16,15 +16,8 @@ classdef PermutationGroup < replab.bsgs.BSGSGroup
             self.domainSize = domainSize;
         end
         
-        function R = naturalRepresentation(self)
-            field = 'R15'; % TODO generalize
-            hom = @(g) replab.Permutations(self.domainSize).toMatrix(g);
-            images = cell(1, self.nGenerators);
-            for i = 1:self.nGenerators
-                images{i} = hom(self.generators{i});
-            end
-            target = replab.GeneralLinearGroup(self.domainSize, field);
-            R = replab.FiniteGroupRep(self, images, target);
+        function rho = naturalRepresentation(self)
+            rho = self.permutationRepresentation(self.domainSize, self.generators);
         end
         
     end

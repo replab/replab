@@ -1,5 +1,5 @@
 classdef PhaseConfigurationAlgebra < replab.rep.Algebra
-
+% Algebra of matrices invariant under a monomial representation
     properties (SetAccess = protected)
         description;
         phaseConfiguration;
@@ -7,11 +7,10 @@ classdef PhaseConfigurationAlgebra < replab.rep.Algebra
     
     methods
         
-        function self = PhaseConfigurationAlgebra(phaseConfiguration, partition)
+        function self = PhaseConfigurationAlgebra(phaseConfiguration)
             self.n = phaseConfiguration.n;
             self.phaseConfiguration = phaseConfiguration;
             self.description = sprintf('Algebra of %d x %d matrices of dimension %d', self.n, self.n, self.phaseConfiguration.nOrbits);
-            self.partition = partition;
         end
         
         function M = sample(self)
@@ -22,7 +21,7 @@ classdef PhaseConfigurationAlgebra < replab.rep.Algebra
             M = self.phaseConfiguration.sampleSymmetricGaussian;
         end
         
-        function M = project(self, T)
+        function T = project(self, T)
             T = self.phaseConfiguration.project(T);
         end
         
