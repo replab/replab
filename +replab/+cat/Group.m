@@ -1,9 +1,5 @@
-classdef Group < replab.cat.Domain
+classdef Group < replab.cat.Monoid
 % Defines a group
-    
-    properties (SetAccess = protected)
-        identity;
-    end
     
     methods % Abstract methods
         
@@ -14,22 +10,10 @@ classdef Group < replab.cat.Domain
             xInv = f(x);
         end
         
-        function z = compose(self, x, y)
-        % Returns the result of the group binary operation applied
-        % to x and y
-            f = self.composeFun;
-            z = f(x, y);
-        end
-        
     end
 
     methods % Methods with default implementations
-        
-        function b = isIdentity(self, x)
-        % Returns true if x is the identity, false otherwise
-            b = self.eqv(x, self.identity);
-        end
-        
+                
         function x = conjugate(self, by, on)
         % Returns "on" conjugated by "by", that is
         % x = by * on * by^-1 in multiplicative notation
@@ -41,25 +25,18 @@ classdef Group < replab.cat.Domain
             z = self.compose(x, self.inverse(y));
         end
         
-        function z = composeMany(self, varargin)
-        % For self.composeMany(x1, x2, ... xn), returns
-        % x1*x2*...*xn (shown here in multiplaticative notation)
-            if length(varargin) == 0
-                z = self.identity;
-            else
-                z = varargin{1};
-                for i = 2:length(varargin)
-                    z = self.compose(z, varargin{i});
-                end
-            end
-        end
-        
         function y = composeN(self, x, n)
         % Computes y = x^n by repeated squaring
+        % Duplicates code with Monoid due to bug? in Matlab
+        % handling of super method calls
             if n < 0
                 y = self.composeN(self.inverse(x), -n);
             elseif n == 0
                 y = self.identity;
+            elseif n == 1
+                y = x;
+            elseif n == 2
+                y = self.compose(x, x);
             else
                 y = self.identity;
                 while n > 1
@@ -79,13 +56,6 @@ classdef Group < replab.cat.Domain
     
     methods % Laws
         
-        function law_associativity_DDD(self, x, y, z)
-        % Checks associativity of group binary operation
-            xy = self.compose(x, y);
-            yz = self.compose(y, z);
-            self.assertEqv(self.compose(xy, z), self.compose(x, yz));
-        end
-
         function law_composeN_DZ10(self, x, n)
             xn1 = self.identity;
             if n < 0
@@ -101,10 +71,6 @@ classdef Group < replab.cat.Domain
             xn3 = self.composeN(x, n);
             self.assertEqv(xn1, xn2);
             self.assertEqv(xn1, xn3);
-        end
-
-        function law_identity(self)
-            self.assertTrue(self.isIdentity(self.identity));
         end
 
         function law_inverse_D(self, x)

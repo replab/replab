@@ -1,12 +1,16 @@
-classdef DivisionAlgebra < replab.Str
+classdef DivisionAlgebra < replab.cat.Monoid
 % Division algebra over the real numbers
     properties (SetAccess = protected)
+        canEqv = true;
+        canHash = true;
+        canSample = true;
+        
         description;
         
         % Description of the division algebra, see
         % E. de Klerk, C. Dobre, and D. V. Ṗasechnik, Math. Program. 129, 91 (2011).
         d; % Dimension of the algebra
-           
+        
         % Let now D(i) be a basis of the division algebra
         % such that every element is written sum_i w(i) D(i)
         gamma; % Multiplication parameters gamma(d,d,d) such that
@@ -18,25 +22,77 @@ classdef DivisionAlgebra < replab.Str
         m;
         basis; % basis(m,m,d)
         dualBasis; % basis(m,m,d)
-    end 
+    end
     
     methods
         
-        function self = DivisionAlgebra(description, gamma, basis, dualBasis)
+        function self = DivisionAlgebra(description, gamma, identity, basis, dualBasis)
             self.description = description;
             self.d = size(gamma, 1);
             self.gamma = gamma;
-            self.n = size(basis, 1);
+            self.identity = identity;
+            self.m = size(basis, 1);
             self.basis = basis;
             self.dualBasis = dualBasis;
         end
         
+        function b = eqv(self, x, y)
+            b = isequal(x, y);
+        end
+        
+        function h = hash(self, x)
+            h = replab.cat.Domain.hashIntegers(int32(double(x)));
+        end
+        
+        function s = sample(self)
+            s = randi([-10 10], self.d, 1);
+        end
+        
+        function X = toMatrix(self, x)
+            d = self.d;
+            m = self.m;
+            X = reshape(self.basis, [m*m d]) * x;
+            X = reshape(X, [m m]);
+        end
+        
+        function x = fromMatrix(self, X)
+            d = self.d;
+            m = self.m;
+            x = reshape(X.', [1 m*m]) * reshape(self.dualBasis, [m*m d]);
+            x = x.';
+        end
+            
+        function z = compose(self, x, y)
+            d = self.d;
+            z = x.'*reshape(self.gamma, [d d*d]);
+            z = y.'*reshape(z, [d d]);
+            z = z.';
+        end
+        
     end
-   
+    
+    methods
+        
+        function law_matrix_isomorphism_compose_DD(self, x, y)
+            X = self.toMatrix(x);
+            Y = self.toMatrix(y);
+            XY = X*Y;
+            XY1 = self.toMatrix(self.compose(x, y));
+            self.assertTrue(isequal(XY, XY1));
+        end
+        
+        function law_matrix_isomorphism_D(self, x)
+            X = self.toMatrix(x);
+            x1 = self.fromMatrix(X);
+            self.assertEqv(x, x1);
+        end
+        
+    end
+    
     methods (Static)
         
         function D = real
-            D = DivisionAlgebra('Real division algebra', 1, 1, 1);
+            D = replab.rep.DivisionAlgebra('Real division algebra', 1, 1, 1, 1);
         end
         
         function D = complex
@@ -53,8 +109,65 @@ classdef DivisionAlgebra < replab.Str
                             1  0];
             dualBasis(:,:,1) = [1 0
                                 0 1]/2;
-            dualBasis(:,:,2) = [0 -1
-                                1  0]/2;
-            D = DivisionAlgebra('Complex division algebra', gamma, basis, dualBasis)
-  
+            dualBasis(:,:,2) = [0  1
+                                -1 0]/2;
+            identity = [1; 0];
+            D = replab.rep.DivisionAlgebra('Complex division algebra', gamma, identity, basis, dualBasis);
+        end
+        
+        function D = quaternion
+        % Quaternion division algebra
+        %
+        % Multiplication table
+        %     1   i   j   k
+        % 1   1   i   j   k
+        % i   i  -1   k  -j
+        % j   j  -k  -1   i
+        % k   k   j  -i  -1
+            gamma = zeros(4,4,4);
+            gamma(:,:,1) = [ 1  0  0  0
+                             0 -1  0  0
+                             0  0 -1  0
+                             0  0  0 -1];
+            gamma(:,:,2) = [ 0  1  0  0
+                             1  0  0  0
+                             0  0  0  1
+                             0  0 -1  0];
+            gamma(:,:,3) = [ 0  0  1  0
+                             0  0  0 -1
+                             1  0  0  0
+                             0  1  0  0];
+            gamma(:,:,4) = [ 0  0  0  1
+                             0  0  1  0
+                             0 -1  0  0
+                             1  0  0  0];
+            % The matrix representation looks like
+            % [a -b -c -d
+            %  b  a -d  c
+            %  c  d  a -b
+            %  d -c  b  a]
+
+            basis(:,:,1) = [ 1  0  0  0
+                             0  1  0  0
+                             0  0  1  0
+                             0  0  0  1];
+            basis(:,:,2) = [ 0 -1  0  0
+                             1  0  0  0
+                             0  0  0 -1
+                             0  0  1  0];
+            basis(:,:,3) = [ 0  0 -1  0
+                             0  0  0  1
+                             1  0  0  0
+                             0 -1  0  0];
+            basis(:,:,4) = [ 0  0  0 -1
+                             0  0 -1  0
+                             0  1  0  0
+                             1  0  0  0];
+            dualBasis = permute(basis, [2 1 3])/4;
+            identity = [1;0;0;0];
+            D = replab.rep.DivisionAlgebra('Quaternion division algebra', gamma, identity, basis, dualBasis);
+        end
+        
+    end
+
 end
