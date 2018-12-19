@@ -96,6 +96,16 @@ classdef BSGSGroup < replab.FiniteGroup
         
         function w = factorization(self, g)
             if ~self.chain.areWordsCompleted
+                for i = 1:self.nGenerators
+                    if self.G.eqv(g, self.generator(i))
+                        w = replab.Word.generator(i);
+                        return
+                    elseif self.G.eqv(g, self.generatorInverse(i))
+                        w = inv(replab.Word.generator(i));
+                        return
+                    end
+                end
+                % TODO: tune parameters, inspiration from GAP homomorphisms?
                 maxCount = 2000;
                 maxLength = max(1, floor(log(maxCount)/log(self.nGenerators)));
                 B = length(self.chain.base);

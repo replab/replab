@@ -7,10 +7,11 @@ classdef GroupMorphism < replab.cat.Laws
     
     methods
         
-        % Implement
-        %
-        % function t = image(s)
-        
+        function t = image(self, s)
+            f = self.imageFun;
+            t = f(s);
+        end
+
     end
     
     methods % LAWS

@@ -1,14 +1,16 @@
 classdef SignedPermutations < replab.cat.Group
    
-    properties
+    properties (SetAccess = protected)
         n;
+        canEqv = true;
+        canHash = true;
+        canSample = true;
     end
     
     methods
         
         function self = SignedPermutations(n)
             self.n = n;
-            self.parentOption = [];
             self.identity = 1:n;
         end
         
@@ -46,7 +48,7 @@ classdef SignedPermutations < replab.cat.Group
             P = replab.cat.Domain.integerRange(1, n);
             A = replab.cat.BSGSActionFun(desc, self, P, ...
                                          @(g, p) g(abs(p))*sign(p), ...
-                                         @(g) replab.SignedPermutations.findMovedPoint_(g));
+                                         @(g) replab.SignedPermutations.findMovedPoint(g));
         end
         
         function A = vectorAction(self, field)
@@ -54,7 +56,7 @@ classdef SignedPermutations < replab.cat.Group
             desc = sprintf('Signed permutations acting on %d dimensional vectors in %s', n, field);
             P = replab.Vectors(n, field);
             A = replab.cat.ActionFun(desc, self, P, ...
-                                     @(g, p) replab.SignedPermutations.vectorImage_(g, p));
+                                     @(g, p) replab.SignedPermutations.vectorImage(g, p));
         end
         
         function A = selfAdjointMatrixAction(self, field)
@@ -62,33 +64,37 @@ classdef SignedPermutations < replab.cat.Group
             desc = sprintf('Signed permutations acting on %d x %d self-adjoint matrices in %s', n, field);
             P = replab.SelfAdjointMatrices(n, field);
             A = replab.cat.ActionFun(desc, self, P, ...
-                                     @(g, p) replab.SignedPermutations.selfAdjointMatrixImage_(g, p));
+                                     @(g, p) replab.SignedPermutations.selfAdjointMatrixImage(g, p));
         end
         
         function phi = permutationIsomorphism(self)
-            fun = @(x) replab.SignedPermutations.toPermutation_(x);
+            fun = @(x) replab.SignedPermutations.toPermutation(x);
             target = replab.Permutations(2*self.n);
             phi = replab.cat.GroupMorphismFun(fun, self, target);
         end
-        
-        function R = naturalRepresentation(self)
-            fun = @(x) replab.SignedPermutations.toMatrix_(x);
-            target = replab.SignedPermutationMatrices(self.n);
-            R = replab.RepFun(fun, self, target);
-        end
 
     end
-
-    methods (Static, Access = protected)
+    
+    methods
+       
+        function law_check_toMatrix_fromMatrix_D(self, signedPerm)
+            M = replab.SignedPermutations.toMatrix(signedPerm);
+            P = replab.SignedPermutations.fromMatrix(M);
+            self.assertEqv(signedPerm, P);
+        end
         
-        function vec = vectorImage_(signedPerm, vec)
+    end
+
+    methods (Static)
+        
+        function vec = vectorImage(signedPerm, vec)
         % Signed permutation of a column vector
         % equivalent to SignedPerm.matrix(signedPerm) * vec
             assert(length(signedPerm) == length(vec));
             vec(abs(signedPerm)) = vec .* sign(signedPerm(:));
         end
         
-        function M = selfAdjointMatrixImage_(signedPerm, M)
+        function M = selfAdjointMatrixImage(signedPerm, M)
         % Returns the image under the action of signedPerm on the 
         % columns and rows of M, i.e.
         % SignedPerm.matrix(perm)*M*SignedPerm.matrix(perm)'
@@ -102,7 +108,7 @@ classdef SignedPermutations < replab.cat.Group
             M(abs(signedPerm), abs(signedPerm)) = M;
         end
             
-        function mat = toMatrix_(signedPerm)
+        function mat = toMatrix(signedPerm)
         % Returns the signed permutation matrix corresponding to the given
         % signed permutation such that matrix multiplication is
         % compatible with composition of permutations, i.e. 
@@ -111,8 +117,27 @@ classdef SignedPermutations < replab.cat.Group
             n = length(signedPerm);
             mat = sparse(abs(signedPerm), 1:n, sign(signedPerm), n, n);
         end
+        
+        function signedPerm = fromMatrix(mat)
+            signedPerm = [];
+            n = size(mat, 1);
+            [I J S] = find(mat);
+            if length(I) ~= n
+                return
+            end
+            I = I';
+            J = J';
+            S = S';
+            sI = sort(I);
+            [sJ IJ] = sort(J);
+            if ~isequal(sI, 1:n) || ~isequal(sJ, 1:n)
+                return
+            end
+            signedPerm = I.*S;
+            signedPerm = signedPerm(IJ);
+        end
 
-        function perm = toPermutation_(signedPerm)
+        function perm = toPermutation(signedPerm)
             n = length(signedPerm);
             perm = zeros(1, 2*n);
             for i = 1:length(signedPerm)
@@ -126,7 +151,7 @@ classdef SignedPermutations < replab.cat.Group
             end
         end
 
-        function p = findMovedPoint_(signedPerm)
+        function p = findMovedPoint(signedPerm)
             for i = 1:length(signedPerm)
                 if i ~= signedPerm(i)
                     p = i;

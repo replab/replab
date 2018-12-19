@@ -23,7 +23,7 @@ classdef RandomBag < replab.Str
             s = sprintf(msg, length(self.x), replab.strOf(self.x0, true));
             if nargin == 2 && ~short
                 for i = 1:length(self.x)
-                    s = [s newline '  - ' replab.strOf(self.x{i}, true)];
+                    s = [s char(10) '  - ' replab.strOf(self.x{i}, true)];
                 end
             end
         end

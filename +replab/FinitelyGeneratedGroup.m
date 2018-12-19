@@ -5,6 +5,10 @@ classdef FinitelyGeneratedGroup < replab.Str
     end
     
     methods
+        %ABSTRACT w = factorization(self, g)
+    end
+
+    methods
                 
         function n = nGenerators(self) 
         % Returns the number of generators
@@ -13,12 +17,12 @@ classdef FinitelyGeneratedGroup < replab.Str
 
         function p = generator(self, i) 
         % Returns the i-th generator
-            p = self.generators(i);
+            p = self.generators{i};
         end
                 
         function p = generatorInverse(self, i)
         % Returns the inverse of the i-th generator of this group
-            p = self.inverse(self.generator(i));
+            p = self.G.inverse(self.generators{i});
         end
         
         function b = isTrivial(self)

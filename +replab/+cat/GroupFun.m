@@ -16,14 +16,6 @@ classdef GroupFun < replab.cat.DomainFun & replab.cat.Group
             self.identity = identity;
             self.inverseFun = inverseFun;
         end
-
-        function xInv = inverse(self, x)
-            xInv = self.inverseFun(x);
-        end
-        
-        function z = compose(self, x, y)
-            z = self.composeFun(x, y);
-        end
         
     end    
     

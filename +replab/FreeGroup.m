@@ -1,8 +1,11 @@
-classdef FreeGroup < replab.FinitelyGeneratedGroup
+classdef FreeGroup < replab.FinitelyGeneratedGroup & replab.cat.Group
     
     properties (SetAccess = protected)
         description;
         n; % number of generators
+        canEqv = true;
+        canHash = true;
+        canSample = true;
     end
     
     methods

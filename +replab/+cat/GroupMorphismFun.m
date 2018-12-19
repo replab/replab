@@ -1,21 +1,17 @@
 classdef GroupMorphismFun < replab.cat.GroupMorphism
     
     properties
-        fun; % morphism
+        imageFun; % morphism
     end
     
     methods
         
-        function self = GroupMorphismFun(fun, S, T)
-            self.fun = fun;
+        function self = GroupMorphismFun(imageFun, S, T)
+            self.imageFun = imageFun;
             self.S = S;
             self.T = T;
         end
-        
-        function t = image(self, s)
-            t = self.fun(s);
-        end
-    
+            
     end
     
 end

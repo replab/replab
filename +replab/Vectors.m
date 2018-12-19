@@ -1,9 +1,12 @@
 classdef Vectors < replab.cat.Domain
     
-    properties
+    properties (SetAccess = protected)
         n;
         field;
         origin;
+        canEqv = false;
+        canHash = false;
+        canSample = true;
     end
     
     methods
@@ -19,7 +22,6 @@ classdef Vectors < replab.cat.Domain
               otherwise
                 error(sprintf('Unknown field %s', field));
             end
-            self.parentOption = [];
         end
         
         function s = str(self)

@@ -63,7 +63,7 @@ classdef Permutations < replab.cat.Group
             P = replab.cat.Domain.integerRange(1, n);
             A = replab.cat.BSGSActionFun(desc, self, P, ...
                                          @(g, p) g(p), ...
-                                         @(g) replab.Permutations.findMovedPoint_(g));
+                                         @(g) replab.Permutations.findMovedPoint(g));
         end
 
         function A = vectorAction(self, field)
@@ -71,7 +71,7 @@ classdef Permutations < replab.cat.Group
             desc = sprintf('Permutations acting on %d dimensional vectors in %s', n, field);
             P = replab.Vectors(n, field);
             A = replab.cat.ActionFun(desc, self, P, ...
-                                     @(g, p) replab.Permutations.vectorImage_(g, p));
+                                     @(g, p) replab.Permutations.vectorImage(g, p));
         end
         
         function A = selfAdjointMatrixAction(self, field)
@@ -79,21 +79,14 @@ classdef Permutations < replab.cat.Group
             desc = sprintf('Permutations acting on %d x %d self-adjoint matrices in %s', n, field);
             P = replab.SelfAdjointMatrices(n, field);
             A = replab.cat.ActionFun(desc, self, P, ...
-                                     @(g, p) replab.Permutations.selfAdjointMatrixImage_(g, p));
+                                     @(g, p) replab.Permutations.selfAdjointMatrixImage(g, p));
         end
 
-        function R = naturalRepresentation(self)
-            group = replab.PermutationGroup.symmetric(self.domainSize);
-            fun = @(x) replab.Permutations.toMatrix_(x);
-            target = replab.PermutationMatrices(self.domainSize);
-            R = replab.RepFun(group, fun, self, target);
-        end
-        
     end
     
-    methods (Static, Access = protected)
+    methods (Static)
         
-        function p = findMovedPoint_(perm)
+        function p = findMovedPoint(perm)
             for i = 1:length(perm)
                 if i ~= perm(i)
                     p = i;
@@ -103,14 +96,14 @@ classdef Permutations < replab.cat.Group
             p = [];
         end
 
-        function vec = vectorImage_(perm, vec)
+        function vec = vectorImage(perm, vec)
         % Permutation of a column vector
         % equivalent to Perm.matrix(perm) * vec
             assert(length(perm) == length(vec));
             vec(perm) = vec;
         end
         
-        function M = selfAdjointMatrixImage_(perm, M)
+        function M = selfAdjointMatrixImage(perm, M)
         % Returns the image under the action of perm on the columns and rows of M
         % i.e. Perm.matrix(perm)*M*Perm.matrix(perm)'
             n = length(perm);
@@ -119,7 +112,7 @@ classdef Permutations < replab.cat.Group
             M(perm, perm) = M;
         end
         
-        function mat = toMatrix_(perm)
+        function mat = toMatrix(perm)
         % Returns the permutation matrix corresponding to the given permutation
         % such that matrix multiplication is compatible with composition of
         % permutations, i.e. 

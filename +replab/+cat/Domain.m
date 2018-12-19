@@ -8,11 +8,26 @@ classdef Domain < replab.cat.Laws
     
     methods
         
-        % Implement
-        %
-        % function b = eqv(self, x, y)
-        % function h = hash(self, x)
-        % function x = sample(self)
+        function b = eqv(self, x, y)
+        % Returns true when x and y are equivalent, and false otherwise
+            f = self.eqvFun;
+            b = f(x, y);
+        end
+
+        function h = hash(self, x)
+        % Returns a int32 encoded in a double representing the hash
+        % value of x
+            f = self.hashFun;
+            h = f(x);
+        end
+        
+        function x = sample(self)
+        % Returns a random element sampled from this domain;
+        % no particular guarantees are made about genericity, this
+        % method is mostly used for law checks
+            f = self.sampleFun;
+            x = f();
+        end
         
     end
     

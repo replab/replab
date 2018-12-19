@@ -1,6 +1,6 @@
 function message = lawsMessage(errorDesc, context, assertArgs, testVarNames, testVarValues)
     if ~isequal(context, '')
-        message = [errorDesc newline context];
+        message = [errorDesc char(10) context];
     else
         message = errorDesc;
     end
@@ -12,11 +12,11 @@ function message = lawsMessage(errorDesc, context, assertArgs, testVarNames, tes
         end
     end
     message = sprintf(message, assertArgs{:});
-    message = [message newline 'with variables' newline];
+    message = [message char(10) 'with variables' newline];
     maxLength = max(cellfun(@(x) length(x), testVarNames));
     for i = 1:length(testVarNames)
         vn = testVarNames{i};
-        vn = [blanks(maxLength - length(vn)) vn ':' newline];
+        vn = [blanks(maxLength - length(vn)) vn ':' char(10)];
         try
             vv = str(testVarValues{i});
         catch

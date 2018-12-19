@@ -32,21 +32,21 @@ classdef Enumerator < replab.Str
             s = sprintf('Enumerator of %s elements', strtrim(num2str(self.size)));
             if self.size < 10
                 for i = 1:double(self.size)
-                    s = [s newline self.describe(i)];
+                    s = [s char(10) self.describe(i)];
                 end
             else
                 for i = 1:3
-                    s = [s newline self.describe(i)];
+                    s = [s char(10) self.describe(i)];
                 end        
-                s = [s newline '..' strtrim(num2str(self.size - 6)) ' elements omitted..'];
+                s = [s char(10) '..' strtrim(num2str(self.size - 6)) ' elements omitted..'];
                 for i = 2:-1:0
-                    s = [s newline self.describe(self.size - i)];
+                    s = [s char(10) self.describe(self.size - i)];
                 end
             end
         end            
         
         function obj = at(self, ind)
-            obj = self.atFun(ind);
+            obj = self.atFun(vpi(ind));
         end
         
         function ind = find(self, obj)

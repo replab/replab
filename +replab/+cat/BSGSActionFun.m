@@ -11,10 +11,6 @@ classdef BSGSActionFun < replab.cat.ActionFun & replab.cat.BSGSAction
             self.findMovedElementFun = findMovedElementFun;
         end
         
-        function p = findMovedElement(self, g)
-            p = self.findMovedElementFun(g);
-        end
-        
     end
     
 end

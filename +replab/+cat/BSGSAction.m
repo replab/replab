@@ -1,12 +1,13 @@
 classdef BSGSAction < replab.cat.Action
     
     methods
-        
-        % Implement
-        %
-        % function p = findMovedElement(self, g)
-        % returns either p such that leftAction(g, p) != p
+
+        function p = findMovedElement(self, g)
+        % Returns either p such that leftAction(g, p) != p
         % or [] if no such p exists
+            f = self.findMovedElementFun;
+            p = f(g);
+        end
         
     end
     

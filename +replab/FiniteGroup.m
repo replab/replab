@@ -11,8 +11,6 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
         %
         %ABSTRACT g = sampleUniformly(self)
         %
-        %ABSTRACT w = factorization(self, g)
-        %
         %ABSTRACT enum = elements(self)
 
     end
@@ -30,7 +28,7 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
                 genName = char('a' + i - 1);
                 gens{end+1} = sprintf('  %s: %s', genName, replab.strOf(self.generators{i}));
             end
-            s = strjoin({h gens{:}}, newline);
+            s = strjoin({h gens{:}}, char(10));
         end
         
     end

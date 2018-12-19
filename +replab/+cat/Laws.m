@@ -15,10 +15,6 @@ classdef Laws < replab.Str & handle
     
     methods
         
-        function s = str(self)
-            s = sprintf('Instance of %s', class(self));
-        end
-        
         function assertTrue(self, predicate, context)
             if ~isscalar(predicate) || ~islogical(predicate)
                 errorDesc = 'input %s is not a logical scalar';

@@ -7,28 +7,43 @@ classdef Group < replab.cat.Domain
     
     methods % Abstract methods
         
-        %ABSTRACT z = compose(self, x, y)
-        %ABSTRACT xInv = inverse(self, x)
+        function xInv = inverse(self, x)
+        % Returns the inverse element xInv of x, such that
+        % x xInv = identity
+            f = self.inverseFun;
+            xInv = f(x);
+        end
+        
+        function z = compose(self, x, y)
+        % Returns the result of the group binary operation applied
+        % to x and y
+            f = self.composeFun;
+            z = f(x, y);
+        end
         
     end
 
     methods % Methods with default implementations
         
         function b = isIdentity(self, x)
+        % Returns true if x is the identity, false otherwise
             b = self.eqv(x, self.identity);
         end
         
         function x = conjugate(self, by, on)
-        % Returns "on" conjugated by "by", i.e.
-        % by * on * by.inverse
+        % Returns "on" conjugated by "by", that is
+        % x = by * on * by^-1 in multiplicative notation
             x = self.composeWithInverse(self.compose(by, on), by);
         end
         
         function z = composeWithInverse(self, x, y)
+        % Returns x * y^-1 (shown here in multiplicative notation)
             z = self.compose(x, self.inverse(y));
         end
         
         function z = composeMany(self, varargin)
+        % For self.composeMany(x1, x2, ... xn), returns
+        % x1*x2*...*xn (shown here in multiplaticative notation)
             if length(varargin) == 0
                 z = self.identity;
             else
@@ -40,7 +55,7 @@ classdef Group < replab.cat.Domain
         end
         
         function y = composeN(self, x, n)
-        % Computes y = x^e by repeated squaring
+        % Computes y = x^n by repeated squaring
             if n < 0
                 y = self.composeN(self.inverse(x), -n);
             elseif n == 0

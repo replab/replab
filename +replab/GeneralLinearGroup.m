@@ -1,8 +1,11 @@
 classdef GeneralLinearGroup < replab.cat.Group
     
-    properties
+    properties (SetAccess = protected)
         n;
         field;
+        canEqv = false;
+        canHash = false;
+        canSample = true;
     end
     
     methods
@@ -18,7 +21,6 @@ classdef GeneralLinearGroup < replab.cat.Group
               otherwise
                 error(sprintf('Unknown field %s', field));
             end
-            self.parentOption = [];
         end
         
         function s = str(self)
@@ -26,7 +28,7 @@ classdef GeneralLinearGroup < replab.cat.Group
         end
         
         function b = eqv(self, x, y)
-            b = norm(x - y) < replab.Settings.eigTol(self.field);
+            error('Cannot compare floating point matrices');
         end
         
         function h = hash(self, x)

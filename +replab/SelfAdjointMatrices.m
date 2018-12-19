@@ -1,9 +1,12 @@
 classdef SelfAdjointMatrices < replab.cat.Domain
     
-    properties
+    properties (SetAccess = protected)
         n;
         field;
         identity;
+        canEqv = false;
+        canHash = false;
+        canSample = true;
     end
     
     methods
@@ -19,7 +22,6 @@ classdef SelfAdjointMatrices < replab.cat.Domain
               otherwise
                 error(sprintf('Unknown field %s', field));
             end
-            self.parentOption = [];
         end
         
         function s = str(self)
@@ -27,7 +29,7 @@ classdef SelfAdjointMatrices < replab.cat.Domain
         end
         
         function b = eqv(self, x, y)
-            b = norm(x - y) < replab.Settings.eigTol(self.field);
+            error('Cannot test floating point matrices for equality');
         end
         
         function h = hash(self, x)

@@ -21,7 +21,7 @@ classdef Rep < replab.cat.GroupMorphism
         function disp(self)
             disp(self.str);
         end
-                
+
 % $$$         function M = sampleGroupElement(self)
 % $$$             M = self.image(self.group.randomElement);
 % $$$         end

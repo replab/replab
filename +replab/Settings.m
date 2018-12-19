@@ -11,20 +11,13 @@ classdef Settings
             end
             value = BsgsFailureProbability;
         end
-        
-        function value = matrixNormTol(m, n, field)
-            
-        end
-        
-        function value = vectorNormTol(d, field)
-        end
-        
+                
         function value = eigTol(field)
             switch field
               case {'R7', 'C7'}
                 value = sqrt(replab.doubleEigTol)
               case {'R15', 'C15'}
-                value = replab.doubleEigTol;
+                value = replab.Settings.doubleEigTol;
               otherwise
                 error('Not implemented');
             end

@@ -18,10 +18,6 @@ classdef ActionFun < replab.cat.Action
             s = self.description;
         end
         
-        function p1 = leftAction(self, g, p)
-            p1 = self.leftActionFun(g, p);
-        end
-
     end    
     
 end
