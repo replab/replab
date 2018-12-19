@@ -1,7 +1,8 @@
 classdef IsoDec
-% Isotypic decomposition of the natural action of a generalized permutation group
+% Comments are outdated
+% Isotypic decomposition of an associative algebra
 %
-% The change of basis matrix is adapted to the orbits of the group
+% The change of basis matrix is adapted to the fibers of the algebra
     
     properties (SetAccess = protected)
         algebra;      % Associative algebra which we decompose
@@ -55,16 +56,16 @@ classdef IsoDec
         function refinedBasis = refinedBasis(self, r)
         % Returns the refined basis elements for the r-th representation
             range = self.compRange(r); % basis indices
-            fibers = self.fromFiber(range); % fibers present in that component
-            n = self.group.n;
+            F = self.fromFiber(range); % fiber indices present in that component
+            n = self.algebra.n;
             refinedBasis = zeros(n, length(range));
-            for f = unique(fibers) % refine fibers individually
-                basisInd = range(fibers == f); % basis elements we refine
+            for f = unique(F) % refine fibers individually
+                basisInd = range(F == f); % basis elements we refine
                 n = length(basisInd);
-                % the b-th block elements
-                fFiber = self.fibers.block(f);
+                % the f-th fiber elements
+                fFiber = self.algebra.fibers.block(f);
                 % find restriction of group to the b-th block
-                resPC = self.phaseConfiguration.restrict(fFiber);
+                resPC = self.algebra.restricted(fFiber);
                 % basis for the r-th representation in the f-th fiber
                 basis = self.U(fFiber, basisInd);
                 % compute a sample
@@ -75,7 +76,7 @@ classdef IsoDec
                 % compute eigenvalues, the n largest eigenvalues correspond to the representation basis
                 [U, ~] = replab.rep.sortedEig(T, 'descend', true);
                 assert(isreal(U));
-                refinedBasis(fFiber, fibers == f) = U(:, 1:n); 
+                refinedBasis(fFiber, F == f) = U(:, 1:n); 
                 % replace basis cutting the possible additional eigenvectors
             end
         end
@@ -92,69 +93,55 @@ classdef IsoDec
             I = replab.rep.IsoDec(self.algebra, self.fromFiber, U, true, self.repDims, self.repMuls);
         end
         
-% $$$         function b = smallestOrbitInRep(self, r)
-% $$$         % Returns the smallest orbit present in the r-th representation
-% $$$             range = self.compRange(r);
-% $$$             % need only to consider one orbit
-% $$$             blocks = self.fromBlock(range);
-% $$$             B = unique(blocks(:));
-% $$$             % Compute number of elements in the orbit
-% $$$             B = [arrayfun(@(b) sum(blocks == b), B) B];
-% $$$             B = sortrows(B);
-% $$$             b = B(1, 2);
-% $$$         end
+        function b = smallestFiberInRep(self, r)
+        % Returns the smallest fiber present in the r-th representation
+            range = self.compRange(r);
+            % need only to consider one fiber
+            blocks = self.fromFiber(range);
+            B = unique(blocks(:));
+            % Compute number of elements in the fiber
+            B = [arrayfun(@(b) sum(blocks == b), B) B];
+            B = sortrows(B);
+            b = B(1, 2);
+        end
         
-% $$$         function r = repIsReal(self, r)
-% $$$         % Returns whether the r-th representation is real
-% $$$             import qdimsum.*
-% $$$             % Eigenvalue tolerance
-% $$$             tol = self.settings.blockDiagEigTol;
-% $$$             % Find smallest group orbit to perform the test in
-% $$$             o = self.smallestOrbitInRep(r);
-% $$$             range = self.compRange(r);
-% $$$             % Full orbit, can include other representations, used to select the
-% $$$             % phase configuration to be sampled
-% $$$             fullOrbit = self.group.permOrbits.orbits{o};
-% $$$             % Representation basis vectors corresponding to that orbit
-% $$$             repOrbit = range(self.fromOrbit(range) == o);
-% $$$             Urep = self.U(fullOrbit, repOrbit);
-% $$$             % Group restriction to the selected orbit
-% $$$             resGroup = self.group.permOrbitRestriction(o);
-% $$$             % Compute sample, transform in the representation space
-% $$$             sampleGen = Urep'*resGroup.phaseConfiguration.sampleRealGaussian*Urep;
-% $$$             sampleSym = sampleGen + sampleGen';
-% $$$             % Compute eigenvalues of both the nonsymmetric and the made-symmetric matrix
-% $$$             lambdaGen = eig(sampleGen);
-% $$$             lambdaSym = eig(sampleSym);
-% $$$             % Compute eigenvalues that are close
-% $$$             distGen = abs(bsxfun(@minus, lambdaGen, lambdaGen.'));
-% $$$             distSym = abs(bsxfun(@minus, lambdaSym, lambdaSym.'));
-% $$$             maskGen = distGen <= tol;
-% $$$             maskSym = distSym <= tol;
-% $$$             % Histogram update to check precision
-% $$$             if ~isequal(self.settings.blockDiagEigHist, [])
-% $$$                 self.settings.blockDiagEigHist.register(distGen(maskGen));
-% $$$                 self.settings.blockDiagEigHist.register(distSym(maskSym));
-% $$$             end
-% $$$             % Connect close eigenvalues
-% $$$             conGen = findConnectedComponents(maskGen);
-% $$$             conSym = findConnectedComponents(maskSym);
-% $$$             lenGen = cellfun(@(x) length(x), conGen);
-% $$$             lenSym = cellfun(@(x) length(x), conSym);
-% $$$             assert(all(lenGen == lenGen(1)));
-% $$$             assert(all(lenSym == lenSym(1)));
-% $$$             % Same number of distinct eigenvalues between nonsym and sym? Then the representation is real
-% $$$             r = length(conGen) == length(conSym);
-% $$$         end
+        function r = repIsReal(self, r)
+        % Returns whether the r-th representation is real
+            % Eigenvalue tolerance
+            tol = replab.Settings.eigTol('R15');
+            % Find smallest fiber to perform the test in
+            f = self.smallestFiberInRep(r);
+            range = self.compRange(r);
+            % Full fiber, can include other representations, used to select the
+            % phase configuration to be sampled
+            fullFiber = self.algebra.fibers.block(f);
+            % Basis vectors corresponding to that fiber
+            repFiber = range(self.fromFiber(range) == f);
+            Urep = self.U(fullFiber, repFiber);
+            % Group restriction to the selected orbit
+            resAlgebra = self.algebra.restricted(fullFiber);
+            % Compute sample, transform in the representation space
+            sampleGen = Urep'*resAlgebra.sample*Urep;
+            sampleSym = sampleGen + sampleGen';
+            % Compute eigenvalues of both the nonsymmetric and the made-symmetric matrix
+            lambdaGen = eig(sampleGen);
+            lambdaSym = eig(sampleSym);
+            % Compute eigenvalues that are close
+            distGen = abs(bsxfun(@minus, lambdaGen, lambdaGen.'));
+            distSym = abs(bsxfun(@minus, lambdaSym, lambdaSym.'));
+            maskGen = distGen <= tol;
+            maskSym = distSym <= tol;
+            % Connect close eigenvalues
+            conGen = replab.Partition.connectedComponents(maskGen).blocks;
+            conSym = replab.Partition.connectedComponents(maskSym).blocks;
+            lenGen = cellfun(@(x) length(x), conGen);
+            lenSym = cellfun(@(x) length(x), conSym);
+            assert(all(lenGen == lenGen(1)));
+            assert(all(lenSym == lenSym(1)));
+            % Same number of distinct eigenvalues between nonsym and sym? Then the representation is real
+            r = length(conGen) == length(conSym);
+        end
         
-% $$$         function blocks = projectInIsoBasis(self, M)
-% $$$             blocks = cell(1, self.nComponents);
-% $$$             for r = 1:self.nComponents
-% $$$                 range = self.compRange(r);
-% $$$                 blocks{r} = self.U(:, range)' * M * self.U(:, range);
-% $$$             end
-% $$$         end
-
 % $$$         function check(self)
 % $$$         % Checks the validity of this isotypic decomposition
 % $$$             import qdimsum.*
@@ -203,12 +190,12 @@ classdef IsoDec
 
     methods (Static)
        
-        function I = fromAlgebra(algebra, fibers)
+        function I = fromAlgebra(algebra)
         % Computes the isotypic decomposition of the given algebra
             tol = replab.Settings.eigTol('R15');
             % Get problem structure
             n = algebra.n;
-            nFibers = length(fibers);
+            nFibers = algebra.fibers.nBlocks;
             % Get first sample
             sample1 = algebra.sampleSelfAdjoint;
             % Data to be prepared
@@ -219,14 +206,14 @@ classdef IsoDec
             shift = 0;
             % Treat each fiber individually, to preserve some sparsity
             for b = 1:nFibers
-                fiber = fibers.block(b); % indices in the current fiber
+                fiber = algebra.fibers.block(b); % indices in the current fiber
                 fiberSize = length(fiber);
                 basisIndices = shift + (1:fiberSize); % indices of basis elements to compute
                 [Ub Db] = replab.rep.sortedEig(sample1(fiber, fiber), 'ascend', false);
                 Db = diag(Db);
                 Db = Db(:)';
                 U(fiber, basisIndices) = Ub;
-                fromBlock(basisIndices) = b;
+                fromFiber(basisIndices) = b;
                 % find subspaces corresponding to repeated eigenvalues
                 mask = bsxfun(@(x,y) abs(x-y)<tol, Db, Db');
                 runsb = replab.Partition.connectedComponents(mask).blocks;

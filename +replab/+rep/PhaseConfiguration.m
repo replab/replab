@@ -33,7 +33,7 @@ classdef PhaseConfiguration
         % indices in block; this is used for example to restrict
         % the representation decomposition algorithm to the orbits
         % of a permutation group
-            newN = length(rowBlock);
+            newN = length(block);
             newPhase = self.phase(block, block);
             oldIndex = self.index(block, block);
             oldOrbits = unique(self.index(:));
@@ -41,12 +41,16 @@ classdef PhaseConfiguration
             newOrbitStart = [];
             newOrbitRow = [];
             newOrbitCol = [];
-            for newO = 1:length(oldOrbits)
-                [R C] = find(oldIndex == oldOrbits(newO));
-                newOrbitStart = [newOrbitStart length(newOrbitRow)+1];
-                newOrbitRow = [newOrbitRow R(:)'];
-                newOrbitCol = [newOrbitCol C(:)'];
-                newIndex(oldIndex == oldOrbits(newO)) = newO;
+            newO = 1;
+            for oldO = 1:length(oldOrbits)
+                [R C] = find(oldIndex == oldOrbits(oldO));
+                if ~isempty(R)
+                    newOrbitStart = [newOrbitStart length(newOrbitRow)+1];
+                    newOrbitRow = [newOrbitRow R(:)'];
+                    newOrbitCol = [newOrbitCol C(:)'];
+                    newIndex(oldIndex == oldOrbits(newO)) = newO;
+                    newO = newO + 1;
+                end
             end
             newOrbitStart = [newOrbitStart length(newOrbitRow)+1];
             pc = replab.rep.PhaseConfiguration(newN, newPhase, ...

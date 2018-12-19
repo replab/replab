@@ -7,7 +7,7 @@ classdef IsotypicDecomposition < replab.Str
         n;   % Number of isotypic components
     end
     
-    properties (Access = protected)
+    properties
         isoDec; % Wrapper of IsoDec object during migration
     end
 
@@ -25,6 +25,14 @@ classdef IsotypicDecomposition < replab.Str
             blocks = arrayfun(@(n) replab.Matrices(n, n, false, false), blockSizes, 'UniformOutput', false);
             self.B = replab.BlockDiagonalMatrices(blocks);
             self.n = isoDec.nComponents;
+        end
+        
+        function I1 = refined(self)
+            I1 = replab.IsotypicDecomposition(self.rep, self.isoDec.refine);
+        end
+        
+        function U = adaptedBasis(self)
+            U = self.isoDec.U;
         end
         
         function [subRep U] = component(self, i)
@@ -58,7 +66,7 @@ classdef IsotypicDecomposition < replab.Str
     methods (Static)
         
         function I = ofRep(rep)
-            isoDec = replab.rep.IsoDec.fromAlgebra(rep.centralizerAlgebra, rep.fibers);
+            isoDec = replab.rep.IsoDec.fromAlgebra(rep.centralizerAlgebra);
             I = replab.IsotypicDecomposition(rep, isoDec);
         end
     end            

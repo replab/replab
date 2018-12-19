@@ -53,6 +53,7 @@ classdef FiniteGroupRep < replab.Rep
         centralizerAlgebra_ = [];
         fibers_ = [];
         isotypic_ = [];
+        irreducible_ = [];
     end
     
     methods
@@ -61,7 +62,14 @@ classdef FiniteGroupRep < replab.Rep
             if isempty(self.isotypic_)
                 self.isotypic_ = replab.IsotypicDecomposition.ofRep(self);
             end
-            I = replab.IsotypicDecomposition.ofRep(self);
+            I = self.isotypic_;
+        end
+        
+        function I = irreducible(self)
+            if isempty(self.irreducible_)
+                self.irreducible_ = replab.IrreducibleDecomposition.fromIsotypicDecomposition(self.isotypic);
+            end
+            I = self.irreducible_;
         end
         
         function a = centralizerAlgebra(self)
