@@ -84,12 +84,7 @@ classdef FiniteGroupRep < replab.Rep
         function M = irrepMultiplicities(self)
         end
         
-        function m = irrepMultiplicity(self, i)
-        end
-        
         function D = irrepDimensions(self)
-        end
-        function d = irrepDimension(self, i)
         end
         
         function [subrho U] = irrep(self, i, j)
