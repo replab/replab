@@ -16,6 +16,17 @@ classdef FiniteGroupRep < replab.Rep
             self.dimension = T.n;
         end
         
+        function R1 = leftConjugateByUnitary(self, U)
+        % Returns U * rep * U'
+        % Requirement: U is unitary
+            nG = length(self.images);
+            images1 = cell(1, nG);
+            for i = 1:nG
+                images1{i} = U * self.images{i} * U';
+            end
+            R1 = replab.FiniteGroupRep(self.group, images1, self.isUnitary, self.T);
+        end
+        
         function rho = image(self, g)
             word = self.group.factorization(g);
             rho = self.T.identity;

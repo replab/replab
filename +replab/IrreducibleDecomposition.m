@@ -41,7 +41,7 @@ classdef IrreducibleDecomposition < replab.Str
             self.groupAlgebraBlocks = arrayfun(blockFun, self.dimensions, 'UniformOutput', false);
             self.divisionAlgebras = divisionAlgebras;
         end
-
+        
         function U = adaptedBasis(self)
         % Returns the symmetry adapted change of basis matrix
             U = self.U;
@@ -95,7 +95,7 @@ classdef IrreducibleDecomposition < replab.Str
             end
             sizes = self.multiplicities.*self.dimensions;
             % Size of previous components to skip
-            shift = sum(sizes(1:r-1)); 
+            shift = sum(sizes(1:r-1));
             % Representation dimension
             d = self.dimensions(r); 
             % Representation multiplicity

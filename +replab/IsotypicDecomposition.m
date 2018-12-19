@@ -38,10 +38,14 @@ classdef IsotypicDecomposition < replab.Str
                     dev(i, j) = norm(U'*self.rep.images{j}*U - eye(d));
                 end
             end
-            [~, trivial] = min(sum(dev.^2, 2));
-            rest = setdiff(1:nC, trivial);
-            p = [trivial rest];
-            I = replab.IsotypicDecomposition(self.rep, self.isoDec.permuteComponents(p));
+            [m trivial] = min(sum(dev.^2, 2));
+            if m < replab.Settings.eigTol('R15')
+                rest = setdiff(1:nC, trivial);
+                p = [trivial rest];
+                I = replab.IsotypicDecomposition(self.rep, self.isoDec.permuteComponents(p));
+            else
+                I = self;
+            end
         end
         
         function I1 = refined(self)
@@ -84,7 +88,10 @@ classdef IsotypicDecomposition < replab.Str
         
         function I = ofRep(rep)
             isoDec = replab.rep.IsoDec.fromAlgebra(rep.centralizerAlgebra);
-            I = replab.IsotypicDecomposition(rep, isoDec).withTrivialFirst;
+            I = replab.IsotypicDecomposition(rep, isoDec);
+            if I.nComponents > 1
+                I = I.withTrivialFirst;
+            end
         end
     end            
     
