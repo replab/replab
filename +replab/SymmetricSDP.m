@@ -7,7 +7,7 @@ classdef SymmetricSDP
 % We only support a single SDP block, and no other cones
 % (so K.f = K.l = 0, K.q = K.r = [] and K.s = s).
 %
-% We provide the symmetry group acting on the SDP block, such that
+% We provide the symmetry group acting on the SDP block X, such that
 % rho(g) * X * rho(g)' = X for all elements g in the group G.
 %
 % The finite group G and its representation rho are jointly written as follows.
