@@ -1,6 +1,9 @@
+name: RepLab
+baseurl: /replab
+description: Finite representation theory
+highlighter: rouge
+docs: true
+replabVersion: 0.0.0
+version: 0.0.0
+org: net.alasc
 markdown: kramdown
-theme: jekyll-theme-minimal
-title: QDimSum
-description: Symmetric SDP relaxations for qudits systems
-logo: logo.png
-show_downloads: true

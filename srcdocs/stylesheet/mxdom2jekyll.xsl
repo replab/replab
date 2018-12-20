@@ -27,7 +27,7 @@ Copyright 1984-2012 The MathWorks, Inc.
 
 
 <xsl:template match="mscript">---
-layout: page
+layout: docs
 title: <xsl:value-of select="$title"/>
 category: posts
 comments: true
