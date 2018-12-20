@@ -1,0 +1,12 @@
+options:
+
+  - title: Installation
+    url: docs/installation.html
+
+  - title: Simple example
+    url: docs/simple-problem.html
+
+  - title: Example 
+    url: docs/publish/example.html
+
+
