@@ -61,7 +61,23 @@ classdef Partition < replab.Str
     end
 
     methods (Static)
-        
+
+        function P = fromBlockIndices(blockIndex)
+            n = length(blockIndex);
+            nBlocks = max(blockIndex);
+            start = zeros(1, nBlocks);
+            next = zeros(1, n);
+            for i = 1:nBlocks
+                blockInd = find(blockIndex == i);
+                assert(length(blockInd) > 0, 'Blocks cannot be empty');
+                start(i) = blockInd(1);
+                for j = 1:length(blockInd)-1
+                    next(blockInd(j)) = blockInd(j+1);
+                end
+            end
+            P = replab.Partition(n, blockIndex, start, next);
+        end
+                            
         function P = connectedComponents(adjacencyMatrix)
         % Given an adjacency matrix adj, returns the sets of
         % vertices corresponding to connected components

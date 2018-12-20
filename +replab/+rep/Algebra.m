@@ -1,11 +1,21 @@
 classdef Algebra < replab.Str
-
+% A n x n real matrix algebra
+    
     properties (SetAccess = protected)
-        n;
+        fibers; % A fiber is a subset of the coordinates 1..n
+                % such that { M(fiber, fiber) for M \in algebra }
+                % is also an algebra
+                % The finest decomposition of 1..n into fibers
+                % is stored as a replab.Partition into this variable
+        n; % Size of the n x n matrix representation of this algebra
     end
     
     methods
         
+        function A = restricted(self, fiber)
+        % Returns a restriction of this algebra to the given fiber
+            error('Not implemented');
+        end
         function M = sample(self)
             error('Not implemented');
         end
@@ -29,7 +39,7 @@ classdef Algebra < replab.Str
         function A = forRep(rep)
             nG = rep.group.nGenerators;
             matrices = cell(1, nG);
-            d = rep.d;
+            d = rep.dimension;
             for i = 1:nG
                 matrices{i} = rep.image(rep.group.generator(i));
             end
@@ -42,9 +52,8 @@ classdef Algebra < replab.Str
                 end
                 signedPerms(i,:) = sp;
             end
-            fibers = replab.Partition.permutationsOrbits(abs(signedPerms));
             phaseConfiguration = replab.rep.PhaseConfiguration.fromSignedPerm(signedPerms);
-            A = replab.rep.PhaseConfigurationAlgebra(phaseConfiguration);
+            A = replab.rep.PhaseConfigurationAlgebra(phaseConfiguration, rep.fibers);
         end
         
     end

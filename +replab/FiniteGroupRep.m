@@ -13,7 +13,18 @@ classdef FiniteGroupRep < replab.Rep
             self.images = images;
             self.isUnitary = isUnitary;
             self.T = T;
-            self.d = T.n;
+            self.dimension = T.n;
+        end
+        
+        function R1 = leftConjugateByUnitary(self, U)
+        % Returns U * rep * U'
+        % Requirement: U is unitary
+            nG = length(self.images);
+            images1 = cell(1, nG);
+            for i = 1:nG
+                images1{i} = U * self.images{i} * U';
+            end
+            R1 = replab.FiniteGroupRep(self.group, images1, self.isUnitary, self.T);
         end
         
         function rho = image(self, g)
@@ -33,7 +44,7 @@ classdef FiniteGroupRep < replab.Rep
             else
                 t = 'Representation';
             end
-            s = sprintf('%s of dimension %d with generator images', t, self.d);
+            s = sprintf('%s of dimension %d with generator images', t, self.dimension);
             for i = 1:length(self.images)
                 gen = char('a' + i - 1);
                 s = [s char(10) '- ' gen ':' char(10)];
@@ -53,6 +64,7 @@ classdef FiniteGroupRep < replab.Rep
         centralizerAlgebra_ = [];
         fibers_ = [];
         isotypic_ = [];
+        irreducible_ = [];
     end
     
     methods
@@ -61,7 +73,14 @@ classdef FiniteGroupRep < replab.Rep
             if isempty(self.isotypic_)
                 self.isotypic_ = replab.IsotypicDecomposition.ofRep(self);
             end
-            I = replab.IsotypicDecomposition.ofRep(self);
+            I = self.isotypic_;
+        end
+        
+        function I = irreducible(self)
+            if isempty(self.irreducible_)
+                self.irreducible_ = replab.IrreducibleDecomposition.fromIsotypicDecomposition(self.isotypic);
+            end
+            I = self.irreducible_;
         end
         
         function a = centralizerAlgebra(self)
@@ -81,7 +100,7 @@ classdef FiniteGroupRep < replab.Rep
         % When the representation comes from a permutation group
         % this corresponds to the orbits.
             if isempty(self.fibers_)
-                d = self.d;
+                d = self.dimension;
                 mask = false(d, d);
                 for i = 1:length(self.images)
                     mask = mask | (self.images{i} ~= 0);

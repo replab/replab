@@ -5,6 +5,7 @@ classdef DivisionAlgebra < replab.cat.Monoid
         canHash = true;
         canSample = true;
         
+        shortName;
         description;
         
         % Description of the division algebra, see
@@ -26,8 +27,9 @@ classdef DivisionAlgebra < replab.cat.Monoid
     
     methods
         
-        function self = DivisionAlgebra(description, gamma, identity, basis, dualBasis)
+        function self = DivisionAlgebra(description, shortName, gamma, identity, basis, dualBasis)
             self.description = description;
+            self.shortName = shortName;
             self.d = size(gamma, 1);
             self.gamma = gamma;
             self.identity = identity;
@@ -92,7 +94,7 @@ classdef DivisionAlgebra < replab.cat.Monoid
     methods (Static)
         
         function D = real
-            D = replab.rep.DivisionAlgebra('Real division algebra', 1, 1, 1, 1);
+            D = replab.rep.DivisionAlgebra('Real division algebra', 'R', 1, 1, 1, 1);
         end
         
         function D = complex
@@ -112,7 +114,7 @@ classdef DivisionAlgebra < replab.cat.Monoid
             dualBasis(:,:,2) = [0  1
                                 -1 0]/2;
             identity = [1; 0];
-            D = replab.rep.DivisionAlgebra('Complex division algebra', gamma, identity, basis, dualBasis);
+            D = replab.rep.DivisionAlgebra('Complex division algebra', 'C', gamma, identity, basis, dualBasis);
         end
         
         function D = quaternion
@@ -165,7 +167,7 @@ classdef DivisionAlgebra < replab.cat.Monoid
                              1  0  0  0];
             dualBasis = permute(basis, [2 1 3])/4;
             identity = [1;0;0;0];
-            D = replab.rep.DivisionAlgebra('Quaternion division algebra', gamma, identity, basis, dualBasis);
+            D = replab.rep.DivisionAlgebra('Quaternion division algebra', 'H', gamma, identity, basis, dualBasis);
         end
         
     end

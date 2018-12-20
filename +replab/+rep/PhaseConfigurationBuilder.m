@@ -99,6 +99,15 @@ classdef PhaseConfigurationBuilder < handle
             orbit = 1;
             for xr = 1:self.n
                 for xc = 1:self.n
+                    self.find(xr, xc);
+                end
+            end
+            % find root of zero element
+            [zr, zc, ~] = self.find(self.zr, self.zc);
+            self.zr = zr;
+            self.zc = zc;
+            for xr = 1:self.n
+                for xc = 1:self.n
                     [xr0, xc0, ~] = self.find(xr, xc);
                     if xr0 ~= self.zr || xc0 ~= self.zc
                         % nonzero element
@@ -106,12 +115,13 @@ classdef PhaseConfigurationBuilder < handle
                             % new orbit
                             self.index(xr0, xc0) = orbit;
                             orbits{orbit} = zeros(2, self.size(xr0, xc0));
+                            orbitIndex(orbit) = 1;
                             orbit = orbit + 1;
                         end
                         o = self.index(xr0, xc0);
                         self.index(xr, xc) = o;
                         orb = orbits{o};
-                        orb(:, orbitIndex(o)) = [xr xc];
+                        orb(:, orbitIndex(o)) = [xr; xc];
                         orbits{o} = orb;
                         orbitIndex(o) = orbitIndex(o) + 1;
                     end
@@ -121,7 +131,7 @@ classdef PhaseConfigurationBuilder < handle
             self.orbitCol = [];
             self.orbitStart = [];
             start = 1;
-            for o = 1:self.nOrbits
+            for o = 1:length(orbits)
                 orbit = orbits{o};
                 self.orbitStart = [self.orbitStart start];
                 self.orbitRow = [self.orbitRow orbit(1, :)];
@@ -216,7 +226,7 @@ classdef PhaseConfigurationBuilder < handle
                 else
                     % zero element present, so merge the current cell
                     % with the zero cell
-                    salf.shift(xr0, xc0) = 0;
+                    self.shift(xr0, xc0) = 0;
                     switch self.compareIndices(self.zr, self.zc, xr0, xc0)
                       case -1
                         % the zero representative stays the same
