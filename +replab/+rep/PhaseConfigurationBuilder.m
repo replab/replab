@@ -97,6 +97,8 @@ classdef PhaseConfigurationBuilder < handle
             orbits = cell(1, self.nOrbits);
             orbitIndex = ones(1, self.nOrbits);
             orbit = 1;
+            % find root of zero element
+            [self.zr, self.zc, ~] = self.find(self.zr, self.zc);
             for xr = 1:self.n
                 for xc = 1:self.n
                     [xr0, xc0, ~] = self.find(xr, xc);
@@ -111,7 +113,7 @@ classdef PhaseConfigurationBuilder < handle
                         o = self.index(xr0, xc0);
                         self.index(xr, xc) = o;
                         orb = orbits{o};
-                        orb(:, orbitIndex(o)) = [xr xc];
+                        orb(:, orbitIndex(o)) = [xr; xc];
                         orbits{o} = orb;
                         orbitIndex(o) = orbitIndex(o) + 1;
                     end
@@ -216,7 +218,7 @@ classdef PhaseConfigurationBuilder < handle
                 else
                     % zero element present, so merge the current cell
                     % with the zero cell
-                    salf.shift(xr0, xc0) = 0;
+                    self.shift(xr0, xc0) = 0;
                     switch self.compareIndices(self.zr, self.zc, xr0, xc0)
                       case -1
                         % the zero representative stays the same
