@@ -107,10 +107,10 @@ classdef IrreducibleDecomposition < replab.Str
             cbd = self.centralizerBlockDimensions(r);
             block = zeros(cbd, cbd);
             % Find indices of the c-th block
-            ind = bsxfun(@plus, 0:cbd:cbd*(sd-1), (1:ad)');
-            ind = ind(:)' + (i-1)*ad;
-            ind = shift + ind;
-            block = self.U(:,ind)'*M*self.U(:,ind);
+            ind = bsxfun(@plus, 0:sd:sd*(cbd-1), (1:ad)');
+            ind1 = ind(:)' + (c-1)*ad;
+            ind2 = shift + ind;
+            block = self.U(:,ind2)'*M*self.U(:,ind2);
         end
         
         function block = blockOfGroupAlgebraMatrix(self, M, r, c)
