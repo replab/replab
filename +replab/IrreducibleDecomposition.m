@@ -65,10 +65,8 @@ classdef IrreducibleDecomposition < replab.Str
         % Outputs:
         % subRep is the irreducible subrepresentation
         % U      is the change of basis matrix such that subRep = U'*rep*U
-            if nargin < 3 || c == 0
-                
-                assert(self.multiplicities(r) == 1, 'The copy index can be omitted only for multiplicity 1');
-                c = 1;
+            if nargin < 3
+                c = 0;
             end
             subImages = cellfun(@(X) self.blockOfGroupAlgebraMatrix(X, r), self.rep.images, 'UniformOutput', false);
             subT = replab.GeneralLinearGroup(self.dimensions(r), false);
