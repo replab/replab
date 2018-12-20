@@ -85,7 +85,6 @@ classdef Partition < replab.Str
         % For adj = [0 0 1; 0 0 0; 1 0 0], it returns the partition {[1 3] [2]}
             n = size(adjacencyMatrix, 1);
             assert(size(adjacencyMatrix, 2) == n);
-            rest = 1:n;
             blockIndex = zeros(1, n);
             start = [];
             next = zeros(1, n);
@@ -121,7 +120,6 @@ classdef Partition < replab.Str
         % where permutations are a nG x domainSize double matrix
             n = size(permutations, 2);
             nG = size(permutations, 1);
-            rest = 1:n;
             blockIndex = zeros(1, n);
             start = [];
             next = zeros(1, n);
