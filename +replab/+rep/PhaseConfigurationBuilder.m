@@ -97,8 +97,15 @@ classdef PhaseConfigurationBuilder < handle
             orbits = cell(1, self.nOrbits);
             orbitIndex = ones(1, self.nOrbits);
             orbit = 1;
+            for xr = 1:self.n
+                for xc = 1:self.n
+                    self.find(xr, xc);
+                end
+            end
             % find root of zero element
-            [self.zr, self.zc, ~] = self.find(self.zr, self.zc);
+            [zr, zc, ~] = self.find(self.zr, self.zc);
+            self.zr = zr;
+            self.zc = zc;
             for xr = 1:self.n
                 for xc = 1:self.n
                     [xr0, xc0, ~] = self.find(xr, xc);
@@ -108,6 +115,7 @@ classdef PhaseConfigurationBuilder < handle
                             % new orbit
                             self.index(xr0, xc0) = orbit;
                             orbits{orbit} = zeros(2, self.size(xr0, xc0));
+                            orbitIndex(orbit) = 1;
                             orbit = orbit + 1;
                         end
                         o = self.index(xr0, xc0);
@@ -123,7 +131,7 @@ classdef PhaseConfigurationBuilder < handle
             self.orbitCol = [];
             self.orbitStart = [];
             start = 1;
-            for o = 1:self.nOrbits
+            for o = 1:length(orbits)
                 orbit = orbits{o};
                 self.orbitStart = [self.orbitStart start];
                 self.orbitRow = [self.orbitRow orbit(1, :)];
