@@ -95,7 +95,7 @@ classdef BSGSGroup < replab.FiniteGroup
         end
         
         function w = factorization(self, g)
-            if ~self.chain.areWordsCompleted
+            if ~self.knownChain || ~self.chain.areWordsCompleted
                 for i = 1:self.nGenerators
                     if self.G.eqv(g, self.generator(i))
                         w = replab.Word.generator(i);

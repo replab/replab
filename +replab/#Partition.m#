@@ -80,7 +80,7 @@ classdef Partition < replab.Str
         % Permutes the indices of this permutation
             gI(g) = 1:self.n;
             blockIndex1 = self.blockIndex(gI);
-            
+            start1 = 
             
         end
         

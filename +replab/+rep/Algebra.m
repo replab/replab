@@ -52,7 +52,7 @@ classdef Algebra < replab.Str
                 end
                 signedPerms(i,:) = sp;
             end
-            phaseConfiguration = replab.rep.PhaseConfiguration.fromSignedPerm(signedPerms);
+            phaseConfiguration = replab.rep.SignedConfigurationBuilder(signedPerms).toPhaseConfiguration;
             A = replab.rep.PhaseConfigurationAlgebra(phaseConfiguration, rep.fibers);
         end
         

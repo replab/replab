@@ -2,6 +2,8 @@ classdef PhaseConfiguration
     
     properties
         n;          % matrix size
+        fibers;     % fibers of this configuration, partition of 1..n with F blocks
+        fiberOrbits;% FxF cell array of orbit indices present in a fiber block
         phase;      % phase array, containing roots of unity
                     %
                     % The o-th orbit has indices between position
@@ -18,8 +20,10 @@ classdef PhaseConfiguration
     
     methods
         
-        function self = PhaseConfiguration(n, phase, orbitStart, orbitRow, orbitCol, index)
+        function self = PhaseConfiguration(n, fibers, fiberOrbits, phase, orbitStart, orbitRow, orbitCol, index)
             self.n = double(n);
+            self.fibers = fibers;
+            self.fiberOrbits = fiberOrbits;
             self.phase = double(phase);
             self.orbitStart = int32(orbitStart(:)');
             self.orbitRow = int32(orbitRow(:)');
