@@ -2,6 +2,13 @@
 # available (as of January 2016)
 language: java
 
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:octave/stable'
+    packages:
+      - octave
+      
 ###############################################################################
 cache:
   # Downloading octave takes a while, so let's cache apt
@@ -15,31 +22,11 @@ cache:
 ###############################################################################
 # Command to install dependencies
 before_install:
-  # Remember the directory where our repository to test is located
-  - REPOPATH="$(pwd)" && pwd
-  # ---------------------------------------------------------------------------
-  # Check whether we need to upgrade the gcc and g++ versions. We do need to if
-  # the version is less the 4.8 and we need to install the image package from
-  # Octave Forge (possibly for other packages as well).
-  # For now, lets just always say we do need to do this.
-  #- UPGRADE_GCC="true"
-  # ---------------------------------------------------------------------------
-  # Add repository for octave
-  - travis_retry sudo add-apt-repository -y ppa:octave/stable
-  # Add repository for installing g++-4.8 on Ubuntu 12.04
-  #- if [ "$UPGRADE_GCC" = "true" ]; then
-  #    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
-  #  fi
-  # Update apt-get to include the contents from the new locations
-  - travis_retry sudo apt-get update -qq
-  # Install octave with apt-get
-  - travis_retry sudo apt-get install -y octave
   - git submodule update --init
-  # - cd ${REPOPATH}   not needed for now
 
 ###############################################################################
 install:
-  ADDPATH_COMMAND = "replab_addpaths;"
+  ADDPATH_COMMAND="replab_addpaths;"
 
 ###############################################################################
 before_script:
