@@ -107,7 +107,11 @@ classdef Domain < replab.cat.Laws
             if length(M) == 1
                 h = double(31 + int32(M));
             else
-                h = javaMethod('hashCode', 'java.util.Arrays', int32(M(:)));
+                M = M(:);
+                h = 0;
+                for i = 1:length(M)
+                    h = mod(31*h + double(M(i)), 2^32);
+                end
             end
         end
         
