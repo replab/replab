@@ -11,8 +11,8 @@ plot(x,sin(x));
 
 n = 4;
 % construct Sn
-Sn = replab.PermutationGroup.fromGenerators([2:n 1], [2 1 3:n]);
-% sample permutation; alternative is to use Sn.sample or Sn.sampleUniformlyx
+Sn = replab.PermutationGroup.fromGenerators({[2:n 1] [2 1 3:n]});
+% sample permutation; alternative is to use Sn.sample or Sn.sampleUniformly
 g = randperm(n);
 disp(sprintf('We factor %s\n', num2str(g)));
 w = Sn.factorization(g);

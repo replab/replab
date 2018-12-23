@@ -12,7 +12,7 @@ classdef PermutationGroup < replab.bsgs.BSGSGroup
                 orderOpt = [];
             end
             A = replab.Permutations(domainSize).naturalAction;
-            self@replab.bsgs.BSGSGroup(A, generators, orderOpt)
+            self@replab.bsgs.BSGSGroup(A, generators, orderOpt);
             self.domainSize = domainSize;
         end
         

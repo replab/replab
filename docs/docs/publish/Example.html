@@ -15,8 +15,8 @@ plot(x,sin(x));
 
 n = 4;
 <span class="comment">% construct Sn</span>
-Sn = replab.PermutationGroup.fromGenerators([2:n 1], [2 1 3:n]);
-<span class="comment">% sample permutation; alternative is to use Sn.sample or Sn.sampleUniformlyx</span>
+Sn = replab.PermutationGroup.fromGenerators({[2:n 1] [2 1 3:n]});
+<span class="comment">% sample permutation; alternative is to use Sn.sample or Sn.sampleUniformly</span>
 g = randperm(n);
 disp(sprintf(<span class="string">'We factor %s\n'</span>, num2str(g)));
 w = Sn.factorization(g);
@@ -26,11 +26,11 @@ disp(sprintf(<span class="string">'evaluated back to %s\n'</span>, num2str(g)));
 assert(isequal(g, g1));
 
 <span class="comment">% ceci est un commentaire</span>
-</pre><pre class="codeoutput">We factor 1  4  3  2
+</pre><pre class="codeoutput">We factor 4  2  3  1
 
-to obtain factor a^-1 b a^-1 b a b a^3
+to obtain factor a^-1 b^-1 a
 
-evaluated back to 1  4  3  2
+evaluated back to 4  2  3  1
 
 </pre><img vspace="5" hspace="5" src="Example_01.png" alt=""> <p>Un peu de texte ici</p><h2>Nouvelle section<a name="3"></a></h2><pre class="codeinput">disp(<span class="string">'We use this to construct representations and evaluate them'</span>);
 rho = Sn.naturalRepresentation;
@@ -43,18 +43,18 @@ rho.image(gh)
 
 ans =
 
-     0     0     0     1
-     0     0     1     0
      0     1     0     0
      1     0     0     0
+     0     0     1     0
+     0     0     0     1
 
 
 ans =
 
-     0     0     0     1
-     0     0     1     0
      0     1     0     0
      1     0     0     0
+     0     0     1     0
+     0     0     0     1
 
 </pre><p>Un peu de texte par l&agrave;</p><pre class="codeinput">[subrho1 U1] = rho.isotypic.component(1)
 
@@ -64,9 +64,7 @@ M = rho.centralizerAlgebra.project(rand(n,n))
 blocks = rho.isotypic.blocksOf(M)
 blocks{1}
 blocks{2}
-</pre><pre class="codeoutput">Warning: Warning: qdimsum.jar not in the Java path, using Matlab code as
-fallback. 
-
+</pre><pre class="codeoutput">
 subrho1 = 
 
 Unitary representation of dimension 1 with generator images
@@ -89,49 +87,51 @@ subrho2 =
 
 Unitary representation of dimension 3 with generator images
 - a:
-    -0.30325   -0.054172     0.95137
-     0.83295        -0.5     0.23704
-    -0.46284    -0.86433    -0.19675
+    -0.33333    -0.33789     0.88018
+      0.9312    -0.26402      0.2513
+    -0.14747     -0.9034    -0.40265
     
 
 - b:
-              1 -2.7756e-17 -5.5511e-17
-    -2.7756e-17          -1  1.1102e-16
-    -4.1633e-17  9.3599e-17           1
+              1 -2.7756e-17 -2.7756e-17
+    -2.7756e-17    -0.74312    -0.66916
+    -1.3878e-17    -0.66916     0.74312
     
 
 
 U2 =
 
-   -0.3136    0.7071   -0.3894
-   -0.3136   -0.7071   -0.3894
-   -0.2370   -0.0000    0.8330
-    0.8643         0   -0.0542
+    0.2887   -0.8064    0.1277
+    0.2887    0.5138    0.6345
+    0.2887    0.2926   -0.7623
+   -0.8660         0         0
 
 
 M =
 
-    0.6513    0.3803    0.3803    0.3803
-    0.3803    0.6513    0.3803    0.3803
-    0.3803    0.3803    0.6513    0.3803
-    0.3803    0.3803    0.3803    0.6513
+    0.4712    0.5640    0.5640    0.5640
+    0.5640    0.4712    0.5640    0.5640
+    0.5640    0.5640    0.4712    0.5640
+    0.5640    0.5640    0.5640    0.4712
 
 
-blocks = 
+blocks =
 
-    [1.7920]    [3x3 double]
+  1x2 cell array
 
-
-ans =
-
-    1.7920
+    {[2.1632]}    {3x3 double}
 
 
 ans =
 
-    0.2710   -0.0000         0
-   -0.0000    0.2710         0
-         0   -0.0000    0.2710
+    2.1632
+
+
+ans =
+
+   -0.0928    0.0000         0
+    0.0000   -0.0928         0
+   -0.0000   -0.0000   -0.0928
 
 <!--
 ##### SOURCE BEGIN #####
@@ -148,8 +148,8 @@ plot(x,sin(x));
 
 n = 4;
 % construct Sn
-Sn = replab.PermutationGroup.fromGenerators([2:n 1], [2 1 3:n]);
-% sample permutation; alternative is to use Sn.sample or Sn.sampleUniformlyx
+Sn = replab.PermutationGroup.fromGenerators({[2:n 1] [2 1 3:n]});
+% sample permutation; alternative is to use Sn.sample or Sn.sampleUniformly
 g = randperm(n);
 disp(sprintf('We factor %s\n', num2str(g)));
 w = Sn.factorization(g);
