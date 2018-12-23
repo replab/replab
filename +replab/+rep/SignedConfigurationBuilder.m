@@ -7,7 +7,6 @@ classdef SignedConfigurationBuilder < handle
         invGenerators; % inverses of generators in a matrix, one per row
         fibers; % fibers of this configuration, a partition with F blocks
         fiberOrbits; % FxF cell array of orbit indices present in a block
-                     % 
         zeroStartRow; % if a zero orbit is known, its starting row,col, otherwise 0,0
         zeroStartCol;
         zeroLastRow; % last cell added to the zero orbitx 

@@ -65,17 +65,16 @@ classdef PermutationGroup < replab.bsgs.BSGSGroup
             G = replab.PermutationGroup(domainSize, generators);
         end
         
-        function G = fromDomainSizeAndGenerators(domainSize, varargin)
-            generators = varargin;
+        function G = fromDomainSizeAndGenerators(domainSize, generators)
             G = replab.PermutationGroup(domainSize, generators);
         end
         
-        function G = fromGenerators(varargin)
+        function G = fromGenerators(generators)
             errmsg = 'Argument list cannot be empty. Use fromDomainSizeAndGenerators instead';
-            assert(nargin > 0, errmsg);
-            g = varargin{1};
+            assert(~isempty(generators), errmsg);
+            g = generators{1};
             domainSize = length(g);
-            G = replab.PermutationGroup.fromDomainSizeAndGenerators(domainSize, varargin{:});
+            G = replab.PermutationGroup.fromDomainSizeAndGenerators(domainSize, generators);
         end
         
     end

@@ -1,4 +1,7 @@
 classdef Partition < replab.Str
+% Represents an unordered partition of the set {1..n} into disjoint subsets
+%
+% Guarantees: 
    
     properties (SetAccess = protected)
         n;           % domain size
@@ -58,47 +61,71 @@ classdef Partition < replab.Str
             end
         end
         
-        function [P1 blockIndices p] = subPartitionForBlockMask(self, blockMask)
-            blocks = find(blockMask);
-            blockIndices = find(ismember(self.blockIndex, blocks));
-            rest = setdiff(1:self.n, blockIndices);
-            p = [blockIndices rest]; % original from sub
-            pI(p) = 1:self.n; % sub from original
-            pb = [blocks setdiff(1:self.nBlocks, blocks)]; % original block from sub
-            pbI(pb) = 1:self.nBlocks; % sub block from original
-            n1 = length(blockIndices);
-            blockIndex1 = pbI(self.blockIndex(blockIndices));
-            start1 = pI(self.start(blocks));
-            next1 = zeros(1, n1);
-            mask = self.next(blockIndices) > 0;
-            next1(mask) = pI(self.next(p(mask)));
+        function [P1 pind] = restrictedToBlocks(self, blocks)
+        % Returns the partition containing only the given blocks,
+        % where the selected blocks are ordered
+            pind = [];
+            n1 = 0;
+            blockIndex1 = [];
+            start1 = [];
+            next1 = [];
+            b1 = 1;
+            for b = blocks
+                block = self.block(b);
+                m = length(block);
+                blockIndex1 = [blockIndex1 b1 * ones(1, m)];
+                start1 = [start1 (n1 + 1)];
+                next1 = [next1 (n1+(2:m)) 0];
+                pind = [pind block];
+                b1 = b1 + 1;
+                n1 = n1 + m;
+            end
+            rest = setdiff(1:self.n, pind);
+            pind = [pind rest];
             P1 = replab.Partition(n1, blockIndex1, start1, next1);
         end
+
         
-        
-        function P1 = permutationLeftAction(self, g)
-        % Permutes the indices of this permutation
-            gI(g) = 1:self.n;
-            blockIndex1 = self.blockIndex(gI);
-            
-            
-        end
-        
-        function [P1 perm] = subPartitionForIndices(self, indices)
-        % perm: indexIntoSubPartition -> indexIntoOriginalPartition
-            blocks = unique(blockIndex(indices));
-            [P1 blockIndices p] = self.subPartitionForBlocks(blocks);
-            %                               p: ^blockIndices -> ^original
-            [s1, p1] = sort(indices);
-            [s2, p2] = sort(blockIndices);
-            assert(isequal(s1, s2), 'The given indices do not match blocks');
-            % indices(p1) is sorted      - p1: sorted -> ^indices
-            % blockIndices(p2) is sorted - p2: sorted -> ^blockIndices
-            pI1(p1) = 1:length(indices); %     ^indices -> sorted
-            pI2(p2) = 1:length(indices); %     ^blockIndices -> sorted
-            % 
-            
-        end
+% $$$         function [P1 blockIndices p] = subPartitionForBlockMask(self, blockMask)
+% $$$             blocks = find(blockMask);
+% $$$             blockIndices = find(ismember(self.blockIndex, blocks));
+% $$$             rest = setdiff(1:self.n, blockIndices);
+% $$$             p = [blockIndices rest]; % original from sub
+% $$$             pI(p) = 1:self.n; % sub from original
+% $$$             pb = [blocks setdiff(1:self.nBlocks, blocks)]; % original block from sub
+% $$$             pbI(pb) = 1:self.nBlocks; % sub block from original
+% $$$             n1 = length(blockIndices);
+% $$$             blockIndex1 = pbI(self.blockIndex(blockIndices));
+% $$$             start1 = pI(self.start(blocks));
+% $$$             next1 = zeros(1, n1);
+% $$$             mask = self.next(blockIndices) > 0;
+% $$$             next1(mask) = pI(self.next(p(mask)));
+% $$$             P1 = replab.Partition(n1, blockIndex1, start1, next1);
+% $$$         end
+% $$$         
+% $$$         function P1 = permutationLeftAction(self, g)
+% $$$         % Permutes the indices of this permutation
+% $$$             gI(g) = 1:self.n;
+% $$$             blockIndex1 = self.blockIndex(gI);
+% $$$             
+% $$$             
+% $$$         end
+% $$$         
+% $$$         function [P1 perm] = subPartitionForIndices(self, indices)
+% $$$         % perm: indexIntoSubPartition -> indexIntoOriginalPartition
+% $$$             blocks = unique(blockIndex(indices));
+% $$$             [P1 blockIndices p] = self.subPartitionForBlocks(blocks);
+% $$$             %                               p: ^blockIndices -> ^original
+% $$$             [s1, p1] = sort(indices);
+% $$$             [s2, p2] = sort(blockIndices);
+% $$$             assert(isequal(s1, s2), 'The given indices do not match blocks');
+% $$$             % indices(p1) is sorted      - p1: sorted -> ^indices
+% $$$             % blockIndices(p2) is sorted - p2: sorted -> ^blockIndices
+% $$$             pI1(p1) = 1:length(indices); %     ^indices -> sorted
+% $$$             pI2(p2) = 1:length(indices); %     ^blockIndices -> sorted
+% $$$             % 
+% $$$             
+% $$$         end
         
     end
 

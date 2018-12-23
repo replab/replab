@@ -4,7 +4,7 @@ classdef Algebra < replab.Str
     properties (SetAccess = protected)
         fibers; % A fiber is a subset of the coordinates 1..n
                 % such that { M(fiber, fiber) for M \in algebra }
-                % is also an algebra
+                % is also an algebra, and fiber = 1..nF
                 % The finest decomposition of 1..n into fibers
                 % is stored as a replab.Partition into this variable
         n; % Size of the n x n matrix representation of this algebra
@@ -12,19 +12,27 @@ classdef Algebra < replab.Str
     
     methods
         
-        function A = restricted(self, fiber)
-        % Returns a restriction of this algebra to the given fiber
+        function A = restrictedToFibers(self, fibers)
+        % Returns a restriction of this algebra to the given fibers,
+        % where the fibers is an ordered subset of {1..nF}
             error('Not implemented');
         end
+        
         function M = sample(self)
+        % Samples a generic random element of this algebra
             error('Not implemented');
         end
         
         function M = sampleSelfAdjoint(self)
+        % Samples a self-adjoint generic random element of this algebra
             error('Not implemented');
         end
         
         function M = project(self, T)
+        % Projects the matrix T on this algebra
+        %
+        % TODO: define properly what orthogonality means in the
+        % general context
             error('Not implemented');
         end
         

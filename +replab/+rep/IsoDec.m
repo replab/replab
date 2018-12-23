@@ -76,7 +76,7 @@ classdef IsoDec
                 % the f-th fiber elements
                 fFiber = self.algebra.fibers.block(f);
                 % find restriction of group to the b-th block
-                resPC = self.algebra.restricted(fFiber);
+                resPC = self.algebra.restrictedToFiber(f);
                 % basis for the r-th representation in the f-th fiber
                 basis = self.U(fFiber, basisInd);
                 % compute a sample
@@ -130,7 +130,7 @@ classdef IsoDec
             repFiber = range(self.fromFiber(range) == f);
             Urep = self.U(fullFiber, repFiber);
             % Group restriction to the selected orbit
-            resAlgebra = self.algebra.restricted(fullFiber);
+            resAlgebra = self.algebra.restrictedToFibers(f);
             % Compute sample, transform in the representation space
             sampleGen = Urep'*resAlgebra.sample*Urep;
             sampleSym = sampleGen + sampleGen';

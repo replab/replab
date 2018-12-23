@@ -105,9 +105,9 @@ classdef IrreducibleDecomposition < replab.Str
             cbd = self.centralizerBlockDimensions(r);
             block = zeros(cbd, cbd);
             % Find indices of the c-th block
-            ind = bsxfun(@plus, 0:sd:sd*(cbd-1), (1:ad)');
+            ind = bsxfun(@plus, 0:d:d*(m-1), (1:ad)');
             ind1 = ind(:)' + (c-1)*ad;
-            ind2 = shift + ind;
+            ind2 = shift + ind1;
             block = self.U(:,ind2)'*M*self.U(:,ind2);
         end
         

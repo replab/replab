@@ -101,7 +101,7 @@ classdef IrrDec
                 fFiber = iso.algebra.fibers.block(f);
                 n = length(fFiber);
                 % find restriction of algebra to the f-th fiber
-                resAlgebra = iso.algebra.restricted(fFiber);
+                resAlgebra = iso.algebra.restrictedToFibers(f);
                 % basis for the r-th representation in the f-th orbit
                 basis = iso.U(fFiber, basisInd);
                 % compute a generic invariant sample (non-symmetric matrix), restricted to fFiber x fFiber

@@ -1,3 +1,8 @@
+# Reuse of primitive types
+
+- Permutations are 1 x n vectors containing a permutation of the integers {1..n}, stored as double coefficients.
+- Signed permutations are 1 x n vectors containing the integers {+/-1..+/-n}, such that `abs(signedPerm)` is a permutation.
+
 # Abstract classes/methods
 
 As Octave does not support abstract methods, we use the following workaround.
@@ -29,7 +34,7 @@ Example: `replab.Permutations(10)` is the domain of permutations acting on 10 el
 
 ## Non-domain typeclasses
 
-Other typeclasses define relations between domains
+Other typeclasses define relations between domains.
 
 ## Type properties
 
@@ -41,7 +46,3 @@ There, `G` and `P` are domains, while `Action` itself is not.
 
 Typeclasses can define laws, which are methods of the form `law_name_of_the_law_TYPES`, where `TYPES` describes the parameters of the law (see `replab.cat.Laws`).
 
-# Reuse of primitive types
-
-- Permutations are 1 x n vectors containing a permutation of the integers {1..n}, stored as double coefficients.
-- Signed permutations are 1 x n vectors containing the integers {+/-1..+/-n}, such that `abs(signedPerm)` is a permutation.

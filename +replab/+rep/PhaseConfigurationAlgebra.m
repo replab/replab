@@ -14,17 +14,10 @@ classdef PhaseConfigurationAlgebra < replab.rep.Algebra
             self.description = sprintf('Algebra of %d x %d matrices of dimension %d', self.n, self.n, self.phaseConfiguration.nOrbits);
         end
         
-        function A = restricted(self, fiber)
-            r = self.fibers.blockIndex(fiber);
-            u = unique(r);
-            newBlockIndex = zeros(1, length(fiber));
-            for i = 1:length(u)
-                j = u(i);
-                newBlockIndex(r == j) = i;
-            end
-            newFibers = replab.Partition.fromBlockIndices(newBlockIndex);
-            newPC = self.phaseConfiguration.restrict(fiber);
-            A = replab.rep.PhaseConfigurationAlgebra(newPC, newFibers);
+        function A = restrictedToFibers(self, fibers)
+            fibers1 = self.fibers.restrictedToBlocks(fibers);
+            phaseConfiguration1 = self.phaseConfiguration.restrictedToFibers(fibers);
+            A = replab.rep.PhaseConfigurationAlgebra(phaseConfiguration1, fibers1);
         end
         
         function M = sample(self)
