@@ -58,13 +58,16 @@ classdef IrreducibleDecomposition < replab.Str
         
         function [subRep U] = representation(self, r, c)
         % Returns the c-th copy of the r-th representation, where
-        % c = 1...self.m(r)
+        % c = 1...self.multiplicities(r)
         %
         % If c is omitted or = 0, returns the average of all copies
         %
         % Outputs:
         % subRep is the irreducible subrepresentation
         % U      is the change of basis matrix such that subRep = U'*rep*U
+        %        Note: if c = 0, it returns the basis of the whole
+        %        isotypic component, that includes mul(r) copies
+        %        of the subrepresentation
             if nargin < 3
                 c = 0;
             end
@@ -72,6 +75,17 @@ classdef IrreducibleDecomposition < replab.Str
             subT = replab.GeneralLinearGroup(self.dimensions(r), false);
             isUnitary = true; %TODO
             subRep = replab.FiniteGroupRep(self.rep.group, subImages, isUnitary, subT);
+            sizes = self.multiplicities.*self.dimensions;
+            shift = sum(sizes(1:r-1));
+            if c == 0
+                ind = shift + 1:(self.dimensions(r)*self.multiplicities(r));
+            else
+                shift = shift + (c-1)*self.dimensions(r);
+                ind = shift+(1:self.dimensions(r));
+            end
+            if nargout > 1
+                U = self.U(:, ind);
+            end
         end
         
         function block = blockOfCentralizer(self, M, r, c)
