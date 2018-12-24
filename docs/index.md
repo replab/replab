@@ -5,45 +5,40 @@ section: "Home"
 position: 0
 ---
 
-![alt text](/replab/img/symdpoly_logo.png "RepLab")
-
-Current version: **{{site.replabVersion}}**. 
+Current version: **{{site.replabVersion}}**.
 
 [![Join the chat at https://gitter.im/denisrosset/replab](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/denisrosset/replab)
-[![Travis CI](https://travis-ci.org/denisrosset/replab.svg?branch=master)](https://travis-ci.org/denisrosset/replab)
+[![Travis CI](https://travis-ci.com/replab/replab.svg?branch=master)](https://travis-ci.com/replab/replab)
 
-**RepLab** provides a representation of groups to numerical platforms. It is compatible with Matlab and Octave.
+**RepLAB** provides tools to study representations of finite groups and decompose them numerically. It is compatible with both MATLAB and Octave.
 
 
 ## A simple example
 
 An evaluation of ... can be done in a few lines of code. See the [**full explanation**](docs/simple-example.html) ...
 
-
 ## How to start using RepLab
 
 See the [**Installation guide**](docs/installation.html).
 
-
 ## Work in progress
 
-**RepLab** is a work-in-progress. While the underlying framework handles ..., its interface is currently limited to ... .
+**RepLAB** is a work-in-progress. In particular:
 
-## Why RepLab?
+- Representations over the complex field are not supported, nor are monomial groups with complex roots of unity.
+- RepLAB only works in double floating-point precision.
+- When decomposing representations over the reals, irreducible representations of quaternionic type are detected but not yet decomposed.
+- Representations are handled by decomposing preimages in words over generators, which limits the order of groups that can be handled.
+- While RepLAB has a basic implementation of the BSGS construction, it does not offer much to work with permutation groups.
 
-**RepLab** differs from existing ... in a number of ways.
+## Why RepLAB?
 
-- It supports ...
-- It discovers ...
-- It interfaces ...
-- It works in exact arithmetic.
-- It is extremely fast.
+Because no open source library exists to decomposes arbitrary permutation/monomial representations into irreducible representations over the reals. RepLAB implements numerical methods that perform this decomposition up to machine precision.
 
-Other libraries working on the same problem space include:
+That said, other libraries working on the same problem space include:
 
-- ...
-- ...
-- ...
+- The [GAP System 3 package AREP](https://www.gap-system.org/Gap3/Packages3/arep.html) by Sebastian Egner and Markus Püschel. 
+- [NCSOStools](http://ncsostools.fis.unm.si/documentation/awbd) includes an implementation of the Murota-Kanno-Kojima-Kojima-Maehara algorithm to decompose matrix *-algebras.
 
 
 ## Documentation and Support
@@ -53,10 +48,16 @@ Other libraries working on the same problem space include:
 
 ## Contributors
 
-RepLab and the group theory/linear algebra libraries it depends on were written by [Denis Rosset](https://github.com/denisrosset) and [Jean-Daniel Bancal](https://github.com/jdbancal). For ..., we acknowledge contributions from the ... project.
+RepLAB and the group theory/linear algebra libraries it depends on were written by [Denis Rosset](https://github.com/denisrosset) and [Jean-Daniel Bancal](https://github.com/jdbancal).
+
+RepLAB references in the `/external` directory the following libraries:
+
+- As a Git submodule, the [MOxUnit](https://github.com/MOxUnit/MOxUnit) test framework by Nikolaas N. oosterhof.
+
+- A copy of the [VPI](https://www.mathworks.com/matlabcentral/fileexchange/22725-variable-precision-integer-arithmetic) big integer library by John D'Errico.
 
 Feedback and suggestions are always welcome. We ask participants to follow the guidelines of the [Typelevel Code of Conduct](https://typelevel.org/conduct.html).
 
 ## License
 
-RepLab is (C) 2018 Denis Rosset and licensed under the [Mozilla Public License 2.0](https://github.com/denisrosset/replab/LICENSE).
+RepLAB is (C) 2018 Denis Rosset, Jean-Daniel Bancal and licensed under the [Mozilla Public License 2.0](https://github.com/replab/replab/LICENSE).
