@@ -78,10 +78,10 @@ classdef IrreducibleDecomposition < replab.Str
             sizes = self.multiplicities.*self.dimensions;
             shift = sum(sizes(1:r-1));
             if c == 0
-                ind = shift + 1:(self.dimensions(r)*self.multiplicities(r));
+                ind = shift + (1:(self.dimensions(r)*self.multiplicities(r)));
             else
                 shift = shift + (c-1)*self.dimensions(r);
-                ind = shift+(1:self.dimensions(r));
+                ind = shift + (1:self.dimensions(r));
             end
             if nargout > 1
                 U = self.U(:, ind);
