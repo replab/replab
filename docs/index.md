@@ -15,7 +15,7 @@ Current version: **{{site.replabVersion}}**.
 
 ## A simple example
 
-An evaluation of ... can be done in a few lines of code. See the [**full explanation**](docs/simple-example.html) ...
+The construction of permutation groups and their representations can be achieved in a few lines of code, including the decomposition of their representations into irreducible representations. See the [**full explanation**](docs/publish/Example.html) ...
 
 ## How to start using RepLab
 
