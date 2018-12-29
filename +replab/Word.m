@@ -5,9 +5,9 @@ classdef Word
 %
 % Exponents are nonzero signed integers
     
-    properties
-        indices;
-        exponents;
+    properties (SetAccess = protected)
+        indices; % 1 x L double
+        exponents; % 1 x L double
     end
     
     methods (Access = private)

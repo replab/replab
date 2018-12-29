@@ -3,6 +3,17 @@
 - Permutations are 1 x n vectors containing a permutation of the integers {1..n}, stored as double coefficients.
 - Signed permutations are 1 x n vectors containing the integers {+/-1..+/-n}, such that `abs(signedPerm)` is a permutation.
 
+# Class structure
+
+For each algebraic structure (semigroup, monoid, group, ...), we define:
+
+- An abstract base class (Semigroup) with no constructor, but whose
+  abstract methods try to call handle function present as properties;
+  this is used in conjunction with the XXXFun implementation
+- A law checking class (SemigroupLaws)
+- A function handle quick implementation class SemigroupFun
+  that has a single constructor, calling all XXXFun superclasses
+
 # Abstract classes/methods
 
 As Octave does not support abstract methods, we use the following workaround.

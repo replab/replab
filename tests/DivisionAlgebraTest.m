@@ -4,11 +4,10 @@ function test_suite = DivisionAlgebraTest()
     catch
     end
     initTestSuite;
-    n = 10;
-    R = replab.rep.DivisionAlgebra.real;
-    C = replab.rep.DivisionAlgebra.complex;
-    H = replab.rep.DivisionAlgebra.quaternion;
-    test_suite = R.lawsAddTestCases(test_suite);
-    test_suite = C.lawsAddTestCases(test_suite);
-    test_suite = H.lawsAddTestCases(test_suite);
+    R = replab.DivisionAlgebra.real;
+    C = replab.DivisionAlgebra.complex;
+    H = replab.DivisionAlgebra.quaternion;
+    test_suite = replab.DivisionAlgebraLaws(R).addTestCases(test_suite);
+    test_suite = replab.DivisionAlgebraLaws(C).addTestCases(test_suite);
+    test_suite = replab.DivisionAlgebraLaws(H).addTestCases(test_suite);
 end

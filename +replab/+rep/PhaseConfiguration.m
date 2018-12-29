@@ -1,6 +1,6 @@
 classdef PhaseConfiguration
     
-    properties
+    properties (SetAccess = protected)
         n;          % matrix size
         fibers;     % fibers of this configuration, partition of 1..n with F blocks
         fiberOrbits;% FxF cell array of orbit indices present in a fiber block

@@ -7,10 +7,10 @@
 % Straight-forward implementation of PRINITIALIZE and PRRANDOM of 
 % section 3.2.2, pp. 70-71 of Holt 2005 (Handbook of Computational Group Theory)
 %
-% Is generic in the group element type, using the replab.cat framework.
+% Is generic in the group element type.
 classdef RandomBag < replab.Str
     
-    properties
+    properties (SetAccess = protected)
         G % Group definition
         x0 % Last generated sample
         x % 1 x r cell array representing the contents of the bag
@@ -62,7 +62,7 @@ classdef RandomBag < replab.Str
         %
         % r is the number of elements in the bag (optional, default: max(k, 10))
         % n is the number of shuffles done during initialization (optional, default: 50)
-            assert(isa(G, 'replab.cat.Group'));
+            assert(isa(G, 'replab.Group'));
             if nargin < 4
                 r = -1;
             end

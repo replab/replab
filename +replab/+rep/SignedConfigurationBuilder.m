@@ -1,6 +1,6 @@
 classdef SignedConfigurationBuilder < handle
     
-    properties
+    properties (SetAccess = protected)
         n; % this configuration has size n x n
         nGenerators; % number of generators in the group
         generators;  % generators in a matrix, one per row

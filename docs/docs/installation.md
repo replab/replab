@@ -12,7 +12,7 @@ In this chapter we cover the basics of starting to use RepLAB.
 
 To use the library, either:
 
-- Download the latest release on [GitHub](https://www.github.com/replab/replab/releases), but this download does not include the MOxUnit unit test frameowkr.
+- Download the latest release on [GitHub](https://www.github.com/replab/replab/releases), but this download does not include the MOxUnit unit test framework.
 
 - Clone the library from GitHub using the following commands:
 
