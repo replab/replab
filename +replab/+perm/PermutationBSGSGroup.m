@@ -1,4 +1,4 @@
-classdef PermutationBSGSGroup < replab.PermutationGroup & replab.BSGSGroup
+classdef PermutationBSGSGroup < replab.BSGSGroup & replab.PermutationGroup
     methods
         function self = PermutationBSGSGroup(parent, generators, orderOpt)
             if nargin < 3
