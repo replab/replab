@@ -44,7 +44,7 @@ classdef PermutationGroup < replab.FiniteGroup
                 for i = 1:self.nGenerators
                     G(i, :) = self.generators{i};
                 end
-                self.orbits_ = replab.domain.Partition.permutationsOrbits(G);
+                self.orbits_ = replab.Partition.permutationsOrbits(G);
             end
             o = self.orbits_;
         end

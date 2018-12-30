@@ -59,11 +59,11 @@ classdef FinitelyGeneratedGroup < replab.Group
             phi = @(w) self.evaluateWord(w);
         end
 
-        function rho = realRepresentation(self, dimension, images, invImages)
+        function rho = realRepresentation(self, dimension, images, imagesInv)
             if nargin < 4
-                invImages = cellfun(@(x) inv(x), images, 'UniformOutput', false);
+                imagesInv = cellfun(@(x) inv(x), images, 'UniformOutput', false);
             end
-            rho = replab.RealRep(self, dimension, images, invImages);
+            rho = replab.RealRep(self, dimension, images, imagesInv);
         end
 
         function rho = signedPermutationRepresentation(self, dimension, signedPermutations)
@@ -73,10 +73,10 @@ classdef FinitelyGeneratedGroup < replab.Group
         % signedPermutations: row cell array of images of the generators as signed permutations of size "dimension"
             S = replab.SignedPermutations(dimension);
             f = @(g) S.toMatrix(g);
-            invF = @(g) S.toMatrix(S.inverse(g));
+            fInv = @(g) S.toMatrix(S.inverse(g));
             images = cellfun(f, signedPermutations, 'UniformOutput', false);
-            invImages = cellfun(invF, signedPermutations, 'UniformOutput', false);
-            rho = self.realRepresentation(dimension, images, invImages);
+            imagesInv = cellfun(fInv, signedPermutations, 'UniformOutput', false);
+            rho = self.realRepresentation(dimension, images, imagesInv);
         end
         
         function rho = permutationRepresentation(self, dimension, permutations)
@@ -86,10 +86,10 @@ classdef FinitelyGeneratedGroup < replab.Group
         % permutation: row cell array of images of the generators as permutations of size "dimension"
             S = replab.Permutations(dimension);
             f = @(g) S.toMatrix(g);
-            invF = @(g) S.toMatrix(S.inverse(g));
+            fInv = @(g) S.toMatrix(S.inverse(g));
             images = cellfun(f, permutations, 'UniformOutput', false);
-            invImages = cellfun(invF, permutations, 'UniformOutput', false);
-            rho = self.realRepresentation(dimension, images, invImages);
+            imagesInv = cellfun(fInv, permutations, 'UniformOutput', false);
+            rho = self.realRepresentation(dimension, images, imagesInv);
         end
         
     end

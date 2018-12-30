@@ -133,6 +133,23 @@ classdef SignedPermutationGroup < replab.FiniteGroup
             mat = sparse(abs(signedPerm), 1:n, sign(signedPerm), n, n);
         end
         
+        function b = isSignedPermutationMatrix(mat)
+        % Returns true when "mat" is a signed permutation matrix, i.e. a monomial matrix
+        % with nonzero entries equal to +1 or -1
+            if isequal(size(mat), [0 0])
+                b = true;
+                return
+            end
+            n = size(mat, 1);
+            [I J S] = find(mat);
+            I = I';
+            J = J';
+            S = S';
+            sI = sort(I);
+            [sJ IJ] = sort(J);
+            b = isequal(sI, 1:n) && isequal(sJ, 1:n) && isequal(abs(S), ones(1, n));
+        end
+        
         function signedPerm = fromMatrix(mat)
         % Returns the signed permutation corresponding to the given matrix representation
         % or throws an error

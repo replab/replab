@@ -80,7 +80,7 @@ classdef Partition < replab.Str
             end
             rest = setdiff(1:self.n, pind);
             pind = [pind rest];
-            P1 = replab.domain.Partition(n1, blockIndex1, start1, next1);
+            P1 = replab.Partition(n1, blockIndex1, start1, next1);
         end
 
         
@@ -142,7 +142,7 @@ classdef Partition < replab.Str
                     next(blockInd(j)) = blockInd(j+1);
                 end
             end
-            P = replab.domain.Partition(n, blockIndex, start, next);
+            P = replab.Partition(n, blockIndex, start, next);
         end
                             
         function P = connectedComponents(adjacencyMatrix)
@@ -179,7 +179,7 @@ classdef Partition < replab.Str
                     block = block + 1;
                 end
             end
-            P = replab.domain.Partition(n, blockIndex, start, next);
+            P = replab.Partition(n, blockIndex, start, next);
         end
         
         function P = permutationsOrbits(permutations)
@@ -217,7 +217,7 @@ classdef Partition < replab.Str
                     block = block + 1;
                 end
             end
-            P = replab.domain.Partition(n, blockIndex, start, next);
+            P = replab.Partition(n, blockIndex, start, next);
         end
                 
     end

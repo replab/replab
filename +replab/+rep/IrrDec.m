@@ -86,7 +86,7 @@ classdef IrrDec
         % Reorder the components of a complex representation so that the complex structure is visible
         % or returns [] if the representation is quaternionic
         % Optimized for precision
-            tol = replab.Settings.eigTol('R15');
+            tol = replab.Settings.doubleEigTol;
             range = iso.compRange(r);
             d = iso.repDims(r);
             m = iso.repMuls(r);
@@ -101,11 +101,11 @@ classdef IrrDec
                 fFiber = iso.algebra.fibers.block(f);
                 n = length(fFiber);
                 % find restriction of algebra to the f-th fiber
-                resAlgebra = iso.algebra.restrictedToFibers(f);
+                resAlgebra = iso.algebra.fiber(f);
                 % basis for the r-th representation in the f-th orbit
                 basis = iso.U(fFiber, basisInd);
                 % compute a generic invariant sample (non-symmetric matrix), restricted to fFiber x fFiber
-                sample = basis*replab.Matrices(realRank, realRank, false, false).sample*basis';
+                sample = basis*replab.rep.sampleRealMatrix(realRank, realRank)*basis';
                 sample = resAlgebra.project(sample); % project in the invariant subspace
                 assert(isreal(sample));
                 % Perform the Schur decomposition
@@ -168,7 +168,7 @@ classdef IrrDec
         
         function I = fromIsoDec(iso)
         % Constructs an irreducible decomposition from an isotypic decomposition
-            sample = iso.algebra.sample;
+            sample = iso.algebra.sampleGeneric;
             U = iso.U;
             repTypes = zeros(1, iso.nComponents);
             for r = 1:iso.nComponents

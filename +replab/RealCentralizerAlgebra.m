@@ -1,4 +1,6 @@
-classdef RealCentralizerAlgebra < replab.Str
+classdef RealCentralizerAlgebra < replab.Domain
+% Describes an algebra of matrices that commute with the representation
+% of a group
     
     properties (SetAccess = protected)
         realRep; % representation of which this is the centralizer algebra
@@ -17,18 +19,34 @@ classdef RealCentralizerAlgebra < replab.Str
             self.n = realRep.dimension;
         end
         
-        function M = sampleUniformly(self)
+        function b = eqv(self, X, Y)
+        % TODO: replace by something better
+            b = replab.isNonZeroMatrix(X - Y, replab.Settings.doubleEigTol);
+        end
+        
+        function M = sample(self)
+            M = sampleGeneric(self); % for the domain sample, use the generic sampling
+        end
+        
+        function M = sampleGeneric(self)
+        % Samples a generic matrix from the algebra, with additional guarantees
+        %
+        % The genericity comes from good separation of eigenvalues
+        % TODO: define this genericity formally
             M = replab.rep.sampleRealMatrix(self.n, self.n);
             M = self.project(M);
         end
         
-        function M = sampleUniformlySelfAdjoint(self)
+        function M = sampleGenericSelfAdjoint(self)
+        % Samples a generic self-adjoint matrix from the algebra
             M = replab.rep.sampleSymmetricMatrix(self.n);
             M = self.project(M);
             M = (M + M')/2;
         end
         
         function T = transversalImages(self)
+        % Computes the transveral images, used to speed up the computation
+        % of the projection into the algebra
             if isempty(self.transversalImages_)
                 T = self.realRep.group.decomposition.transversals;
                 tFun = @(t) cellfun(@(x) self.realRep.image(x), t, ...
@@ -39,6 +57,9 @@ classdef RealCentralizerAlgebra < replab.Str
         end
         
         function M1 = project(self, M)
+        % Projects the matrix "M" in this centralizer algebra
+        % For centralizer algebras constructed from unitary group representations, this
+        % corresponds to an orthogonal projection
             T = self.transversalImages;
             M1 = M;
             for i = length(T):-1:1
@@ -50,7 +71,23 @@ classdef RealCentralizerAlgebra < replab.Str
                 M1 = S / length(t);
             end
         end
-            
+        
+        function f = fibers(self)
+        % Returns the fibers of this algebra, i.e. the partition of {1..n} into block of coordinates
+        % such that each block defines a subalgebra
+            f = self.realRep.fibers;
+        end
+        
+        function n = nFibers(self)
+        % Returns the number of fibers in this algebra
+            n = self.realRep.nFibers;
+        end
+        
+        function sub = fiber(self, f)
+        % Returns the subalgebra corresponding to the f-th fiber
+            sub = self.realRep.fiber(f).centralizerAlgebra;
+        end
+        
     end
     
 end
