@@ -77,6 +77,9 @@ classdef RealIrrep < replab.RealRep
     methods (Static)
         
         function rep = fromParentRealRep(parent, dimension1, multiplicity, divisionAlgebra, U, Uinv)
+        % Constructs a subrepresentation of (single copy) dimension "dimension1" and given "multiplicity" 
+        % in the given division algebra from a "parent" representation and change of basis matrices U and Uinv, 
+        % such that subrep.image(g) = Uinv*parent.image(g)*U
             nG = parent.group.nGenerators;
             images1 = cell(1, nG);
             imagesInv1 = cell(1, nG);

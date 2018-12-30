@@ -1,7 +1,8 @@
 classdef RealRep < replab.Str
 % A finitely generated group real representation on GL_d(R)
-
-    
+%
+% It optionally keeps track of itself being a subrepresentation of a larger parent
+% representation
     properties (SetAccess = protected)
         parent; % Either [], or a parent representation of which this is a subrepresentation
                 % when parent is not [], the two basis matrices below are defined
