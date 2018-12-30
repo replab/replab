@@ -74,4 +74,33 @@ classdef RealIrrep < replab.RealRep
         
     end
 
+    methods (Static)
+        
+        function rep = fromParentRealRep(parent, dimension1, multiplicity, divisionAlgebra, U, Uinv)
+            nG = parent.group.nGenerators;
+            images1 = cell(1, nG);
+            imagesInv1 = cell(1, nG);
+            for i = 1:nG
+                rho = parent.images{i};
+                rhoInv = parent.imagesInv{i};
+                img = zeros(dimension1, dimension1);
+                imgInv = zeros(dimension1, dimension1);
+                for j = 1:multiplicity
+                    ind = (j-1)*dimension1 + (1:dimension1);
+                    img = img + Uinv(ind,:)*rho*U(:,ind);
+                    imgInv = imgInv + Uinv(ind,:)*rhoInv*U(:,ind);
+                end
+                img = img / multiplicity;
+                imgInv = imgInv / multiplicity;
+                img = divisionAlgebra.projectMatrix(img);
+                imgInv = divisionAlgebra.projectMatrix(imgInv);
+                images1{i} = img;
+                imagesInv1{i} = imgInv;
+            end
+            rep = replab.RealIrrep(parent.group, dimension1, multiplicity, divisionAlgebra, ...
+                                   images1, imagesInv1, parent, U, Uinv);
+        end
+        
+    end
+    
 end

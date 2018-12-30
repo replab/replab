@@ -20,28 +20,8 @@ function rid = irreducibleDecomposition(realRep)
           otherwise
             error('Unknown type');
         end
-        images1 = cell(1, nG);
-        imagesInv1 = cell(1, nG);
-        for i = 1:nG
-            rho = realRep.images{i};
-            rhoInv = realRep.imagesInv{i};
-            img = zeros(d, d);
-            imgInv = zeros(d, d);
-            for j = 1:m
-                ind = shift + (j-1)*d + (1:d);
-                img = img + I.U(:,ind)'*rho*I.U(:,ind);
-                imgInv = imgInv + I.U(:,ind)'*rhoInv*I.U(:,ind);
-            end
-            img = img / m;
-            imgInv = imgInv / m;
-            img = da.projectMatrix(img);
-            imgInv = da.projectMatrix(imgInv);
-            images1{i} = img;
-            imagesInv1{i} = imgInv;
-        end
-        ind = shift + (1:m*d);
-        components{c} = replab.RealIrrep(realRep.group, d, m, da, images1, imagesInv1, ...
-                                         realRep, I.U(:,ind), I.U(:,ind)');
+        ind = shift + (1:m*d);        
+        components{c} = replab.RealIrrep.fromParentRealRep(realRep, d, m, da, I.U(:,ind), I.U(:,ind)');
         if components{c}.isTrivial
             % Put the trivial representation first
             assert(~foundTrivial);
