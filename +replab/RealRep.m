@@ -1,12 +1,20 @@
 classdef RealRep < replab.Str
 % A finitely generated group real representation on GL_d(R)
+
     
     properties (SetAccess = protected)
-        parent; % either [], or a parent representation of which this is a subrepresentation
+        parent; % Either [], or a parent representation of which this is a subrepresentation
                 % when parent is not [], the two basis matrices below are defined
+        
         U;    % U has size self.parent.dimension x self.dimension
         Uinv; % Uinv has size self.dimension x self.parent.dimension
               % such that self.image(g) = self.Uinv*self.parent.image(g)*self.U
+              %
+              % Note that we are not using parent in a recursive way: a subrepresentation
+              % of a subrepresentation will have its parent refering to the most general
+              % representation present. Also said: if self.parent is not [], we still have
+              % self.parent.parent = []
+        
         group; % Group represented
         dimension; % Representation dimension
         images; % Generator images
@@ -17,23 +25,38 @@ classdef RealRep < replab.Str
         M;
         centralizerAlgebra_;
         fibers_;
+        irreducible_;
     end
     
     methods
         
-        function self = RealRep(group, dimension, images, imagesInv)
+        function self = RealRep(group, dimension, images, imagesInv, parent, U, Uinv)
         % Constructs a representation from a group's generator images
             assert(isa(group, 'replab.FinitelyGeneratedGroup'));
             assert(length(images) == group.nGenerators);
+            if nargin < 5
+                parent = [];
+                U = [];
+                Uinv = [];
+            end
             self.group = group;
             self.dimension = dimension;
             self.images = images;
             self.imagesInv = imagesInv;
+            self.parent = parent;
+            self.U = U;
+            self.Uinv = Uinv;
             d = dimension;
             self.M = replab.GroupFun('Mat', @isequal, @() rand(d, d), @(x, y) x*y, eye(d), @(x) inv(x));
         end
 
+        function rr = forget(self)
+        % Returns a RealRep that forgot all its special structure
+            rr = replab.RealRep(self.group, self.dimension, self.images, self.imagesInv);
+        end
+
         function s = str(self)
+        % Nice string representation
             if self.isUnitary
                 t = 'Unitary representation';
             else
@@ -47,8 +70,9 @@ classdef RealRep < replab.Str
                 s = [s img char(10)];
             end
         end
-        
+                
         function rho = image(self, g)
+        % Computes the image of a group element g in this representation
             word = self.group.factorization(g);
             rho = self.M.identity;
             for i = 1:length(word.indices)
@@ -62,13 +86,25 @@ classdef RealRep < replab.Str
                 rho = self.M.compose(rho, ge);
             end
         end
+        
+        function rho = sample(self)
+        % Returns the representation image of a random group element
+            rho = self.image(self.group.sample);
+        end
 
         function b = isUnitary(self)
+        % Returns true if this representation is unitary
             b = all(cellfun(@(U) self.M.isIdentity(U*U'), self.images));
         end
         
         function b = isMonomial(self)
+        % Returns true if this representation is monomial (i.e. is composed of signed permutation matrices)
             b = all(cellfun(@(U) replab.SignedPermutations.isSignedPermutationMatrix(U), self.images));
+        end
+        
+        function b = isTrivial(self)
+        % Returns true if this representation is trivial, i.e. all its images are the identity matrix
+            b = all(cellfun(@(U) self.M.isIdentity(U), self.images));
         end
         
         function c = centralizerAlgebra(self)
@@ -122,10 +158,12 @@ classdef RealRep < replab.Str
             f = self.fibers_;
         end
         
-        function I = irreducible(self)
+        function rid = irreducible(self)
         % Returns the decomposition of this representation into irreducible representations
-            I = replab.rep.IsoDec.fromAlgebra(self.centralizerAlgebra);
-            I = replab.rep.IrrDec.fromIsoDec(I);
+            if isempty(self.irreducible_)
+                self.irreducible_ = replab.rep.irreducibleDecomposition(self);
+            end
+            rid = self.irreducible_;
         end
 
     end

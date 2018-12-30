@@ -151,6 +151,7 @@ classdef Chain < handle
                 A = self.A;
                 G = self.G;
                 while self.emptyWords > 0
+                    self
                     for i = 1:self.orbitSize
                         if isempty(self.uInvW{i})
                             b = self.orbit{i};

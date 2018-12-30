@@ -26,8 +26,9 @@ g2 = [2 1 3:n];
 % is compatible with MATLAB syntax:
 g2(3)
 %%
-% We construct the group by calling a static method on replab.PermutationGroup:
-S4 = replab.PermutationGroup.fromGenerators({g1 g2})
+% We construct the group by first accessing the group of
+% permutations on 4 elements, then constructing a subgroup
+S4 = replab.Permutations(4).subgroup({g1 g2})
 %%
 % noting that the generators of the group are named $a$, $b$,...
 %
@@ -57,7 +58,7 @@ S4.order
 S4.elements
 %%
 % a technique that works even for big groups.
-S30 = replab.PermutationGroup.fromGenerators({[2:30 1] [2 1 3:30]})
+S30 = replab.Permutations(30).subgroup({[2:30 1] [2 1 3:30]})
 S30.order
 %%
 %
@@ -84,8 +85,7 @@ rho.image(gh)
 % we define the sign representation (using a permutation
 % representation of it!).
 dim = 2;
-isUnitary = true;
-rho1 = S4.representation(dim, {[0 1; 1 0] [0 1; 1 0]}, isUnitary)
+rho1 = S4.realRepresentation(dim, {[0 1; 1 0] [0 1; 1 0]})
 rho2 = S4.permutationRepresentation(2, {[2 1] [2 1]})
 %%
 %
@@ -93,18 +93,20 @@ rho1.image(g)
 rho2.image(g)
 
 %% Decomposing group representations
-% RepLAB provides the isotypic decomposition over the real numbers:
-rho.isotypic
-%%
-% and the decomposition into irreducible representations over the
-% reals, identifying the representation type (real, complex or quaternionic):
+% RepLAB provides the irreducible decomposition of representations
+% over the real numbers, identifying the representation type
+% (real, complex or quaternionic):
 rho.irreducible
 %%
-% We can get subrepresentations with their bases:
-[subrho1 U1] = rho.irreducible.representation(1)
+% We can get subrepresentations
+subrho1 = rho.irreducible.component(1)
 %%
 %
-[subrho2 U2] = rho.irreducible.representation(2)
+subrho2 = rho.irreducible.component(2)
+%%
+% with their bases:
+subrho1.U
+subrho2.U
 
 %% The centralizer algebra
 % The centralizer algebra of $\rho$ is composed of all the matrices
@@ -126,11 +128,11 @@ Mgen = rand(n, n)
 M = A.project(rand(n,n))
 %%
 % Now, given $M$ in the algebra, we can get its blocks:
-blocks = rho.irreducible.blocksOfCentralizer(M)
+blocks = rho.irreducible.centralizerAlgebra.blocksOfParentElement(M)
 %%
 % which correspond to the block diagonalization of such matrices in
 % the symmetry adapted basis:
-U = rho.irreducible.adaptedBasis
+U = rho.irreducible.U
 %%
 %
 U'*M*U

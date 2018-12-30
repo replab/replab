@@ -64,10 +64,10 @@ classdef BSGSGroup < replab.FiniteGroup
                 end
                 % TODO: tune parameters, inspiration from GAP homomorphisms?
                 maxCount = 2000;
-                maxLength = max(1, floor(log(maxCount)/log(self.nGenerators)));
+                maxLength = max(1, floor(log(maxCount)/log(self.nGenerators+1)));
                 B = length(self.chain.base);
                 s = B^2;
-                l = B;
+                l = B + 1;
                 self.chain.wordsQuick(self, maxLength, s, l);
                 self.chain.wordsComplete;
             end

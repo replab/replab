@@ -57,27 +57,6 @@ classdef IrrDec
             end
         end
         
-% $$$         function check(self)
-% $$$         % Checks the validity of this irreducible decomposition
-% $$$             import qdimsum.*
-% $$$             % Perform isotypic checks
-% $$$             self.toIsoDec.check;
-% $$$             tol = self.settings.blockDiagMatTol;
-% $$$             % Checks that the isotypic components are correct by considering
-% $$$             % a sample from matrices that commute with the group
-% $$$             sampleI = self.group.phaseConfiguration.sampleRealGaussian;
-% $$$             collected = false;
-% $$$             blocks = self.projectInIrrBasis(sampleI, collected, true);
-% $$$             testI = self.U*blkdiag(blocks{:})*self.U';
-% $$$             assert(~isNonZeroMatrix(testI - sampleI, tol), 'Matrix that commutes with the group has not the proper form');
-% $$$             % Checks correctness by sampling from the group algebra
-% $$$             sampleG = randn*GenPerm.orthogonalMatrix(self.group.randomElement) + randn*GenPerm.orthogonalMatrix(self.group.randomElement);
-% $$$             collected = true;
-% $$$             blocks = self.projectInIrrBasis(sampleG, collected, true);
-% $$$             testG = self.U*blkdiag(blocks{:})*self.U';
-% $$$             assert(~isNonZeroMatrix(testG - sampleG, tol), 'Group algebra matrix has not the proper form');
-% $$$         end
-        
     end
 
     methods (Static)

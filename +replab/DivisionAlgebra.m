@@ -41,6 +41,25 @@ classdef DivisionAlgebra < replab.Monoid
             s = randi([-10 10], self.d, 1);
         end
         
+        function X = projectMatrix(self, X)
+            m = self.m;
+            d = self.d;
+            R = size(X, 1);
+            C = size(X, 2);
+            bR = R/m;
+            bC = C/m;
+            X = reshape(X, [m bR m bC]);
+            X = permute(X, [1 3 2 4]);
+            X = reshape(X, [m*m bR*bC]);
+            db = reshape(permute(self.dualBasis, [3 2 1]), [d m*m]);
+            % ^ transpose as we did not write [3 1 2]
+            b = reshape(self.basis, [m*m d]);
+            X = b*(db*X);
+            X = reshape(X, [m m bR bC]);
+            X = permute(X, [1 3 2 4]);
+            X = reshape(X, [m*bR m*bC]);
+        end
+        
         function X = toMatrix(self, x)
             d = self.d;
             m = self.m;

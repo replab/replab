@@ -19,6 +19,11 @@ classdef RealCentralizerAlgebra < replab.Domain
             self.n = realRep.dimension;
         end
         
+        function rca = forget(self)
+        % Returns a real centralizer algebra that "forgot" the special optimizations
+            rca = replab.RealCentralizerAlgebra(self.realRep);
+        end
+        
         function b = eqv(self, X, Y)
         % TODO: replace by something better
             b = replab.isNonZeroMatrix(X - Y, replab.Settings.doubleEigTol);
@@ -86,6 +91,19 @@ classdef RealCentralizerAlgebra < replab.Domain
         function sub = fiber(self, f)
         % Returns the subalgebra corresponding to the f-th fiber
             sub = self.realRep.fiber(f).centralizerAlgebra;
+        end
+        
+        function p = parent(self)
+        % When this centralizer 
+            if isempty(self.realRep.parent)
+                p = [];
+            else
+                p = self.realRep.parent.centralizerAlgebra;
+            end
+        end
+        
+        function blocks = blocksOfParentElement(self, M)
+            error('Must call blocksOfParentElement on a subrepresentation with a parent');
         end
         
     end

@@ -18,11 +18,11 @@ ans =
 
      3
 
-</pre><p>We construct the group by calling a static method on replab.PermutationGroup:</p><pre class="codeinput">S4 = replab.PermutationGroup.fromGenerators({g1 g2})
+</pre><p>We construct the group by first accessing the group of permutations on 4 elements, then constructing a subgroup</p><pre class="codeinput">S4 = replab.Permutations(4).subgroup({g1 g2})
 </pre><pre class="codeoutput">
 S4 = 
 
-replab.PermutationGroup instance with 2 generators
+replab.perm.PermutationBSGSGroup instance with 2 generators
   a: 2  3  4  1
   b: 2  1  3  4
 </pre><p>noting that the generators of the group are named <img src="Example_eq05508344529756732484.png" alt="$a$">, <img src="Example_eq02044268985122151499.png" alt="$b$">,...</p><p>We can perform a few operations on finite groups. Let <img src="Example_eq07585311203459331132.png" alt="$g$"> be a random permutation, which we can obtain in (mostly) equivalent ways by either</p><pre class="codeinput">g = randperm(n);
@@ -54,18 +54,18 @@ ans =
 
 Enumerator of 24 elements
 at( 1) = 1  2  3  4
-at( 2) = 4  2  3  1
-at( 3) = 3  2  4  1
+at( 2) = 1  4  3  2
+at( 3) = 1  3  4  2
 ..18 elements omitted..
-at(22) = 4  1  3  2
-at(23) = 3  1  4  2
-at(24) = 2  1  4  3
-</pre><p>a technique that works even for big groups.</p><pre class="codeinput">S30 = replab.PermutationGroup.fromGenerators({[2:30 1] [2 1 3:30]})
+at(22) = 3  4  2  1
+at(23) = 3  2  4  1
+at(24) = 3  1  4  2
+</pre><p>a technique that works even for big groups.</p><pre class="codeinput">S30 = replab.Permutations(30).subgroup({[2:30 1] [2 1 3:30]})
 S30.order
 </pre><pre class="codeoutput">
 S30 = 
 
-replab.PermutationGroup instance with 2 generators
+replab.perm.PermutationBSGSGroup instance with 2 generators
   a: 2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30   1
   b: 2   1   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30
 ans =
@@ -77,11 +77,11 @@ ans =
 Enumerator of 265252859812191058636308480000000 elements
 at(                                1) = 1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30
 at(                                2) = 1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  30  29
-at(                                3) = 1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  29  30  28
+at(                                3) = 1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  29  28  30
 ..265252859812191058636308479999994 elements omitted..
-at(265252859812191058636308479999998) = 10  22  15  27   4  21  23  29   2  18  26  20   1  16   9  19  28  12  24   8   3  14   5  25  13  30  17   6   7  11
-at(265252859812191058636308479999999) = 10  22  15  27   4  21  23  29   2  18  26  20   1  16   9  19  28  12  24   8   3  14   5  25  13  30  17  11   7   6
-at(265252859812191058636308480000000) = 10  22  15  27   4  21  23  29   2  18  26  20   1  16   9  19  28  12  24   8   3  14   5  25  13  30  17  11   6   7
+at(265252859812191058636308479999998) = 25  26  29  30   7  19   3   9  24  14   5   2  12   1  20   6  15  21  27  18  10  28   8  17  16  23  11  13  22   4
+at(265252859812191058636308479999999) = 25  26  29  30   7  19   3   9  24  14   5   2  12   1  20   6  15  21  27  18  10  28   8  17  16  23  11  22   4  13
+at(265252859812191058636308480000000) = 25  26  29  30   7  19   3   9  24  14   5   2  12   1  20   6  15  21  27  18  10  28   8  17  16  23  11  22  13   4
 </pre><h2>Group representations<a name="15"></a></h2><p>The natural representation of <img src="Example_eq04512613085109396518.png" alt="$S_4$"> simply permutes the coordinates of <img src="Example_eq13786275735700711008.png" alt="$R^4$">:</p><pre class="codeinput">rho = S4.naturalRepresentation
 </pre><pre class="codeoutput">
 rho = 
@@ -138,8 +138,7 @@ ans =
      0     0     1     0
 
 </pre><p>We can also define representations from their images. Here, we define the sign representation (using a permutation representation of it!).</p><pre class="codeinput">dim = 2;
-isUnitary = true;
-rho1 = S4.representation(dim, {[0 1; 1 0] [0 1; 1 0]}, isUnitary)
+rho1 = S4.realRepresentation(dim, {[0 1; 1 0] [0 1; 1 0]})
 rho2 = S4.permutationRepresentation(2, {[2 1] [2 1]})
 </pre><pre class="codeoutput">
 rho1 = 
@@ -183,117 +182,114 @@ ans =
      1     0
      0     1
 
-</pre><h2>Decomposing group representations<a name="21"></a></h2><p>RepLAB provides the isotypic decomposition over the real numbers:</p><pre class="codeinput">rho.isotypic
-</pre><pre class="codeoutput">
-ans = 
-
-Isotypic decomposition with 2 components of sizes 1  3
-</pre><p>and the decomposition into irreducible representations over the reals, identifying the representation type (real, complex or quaternionic):</p><pre class="codeinput">rho.irreducible
+</pre><h2>Decomposing group representations<a name="21"></a></h2><p>RepLAB provides the irreducible decomposition of representations over the real numbers, identifying the representation type (real, complex or quaternionic):</p><pre class="codeinput">rho.irreducible
 </pre><pre class="codeoutput">
 ans = 
 
 Irreducible decomposition with components I(1)xR(1) + I(1)xR(3)
-</pre><p>We can get subrepresentations with their bases:</p><pre class="codeinput">[subrho1 U1] = rho.irreducible.representation(1)
+</pre><p>We can get subrepresentations</p><pre class="codeinput">subrho1 = rho.irreducible.component(1)
 </pre><pre class="codeoutput">
 subrho1 = 
 
-Unitary representation of dimension 1 with generator images
-- a:
+Irreducible real-type representation of multiplicity 1, dimension 1 with generator images
+- a =&gt; kron(eye(1), .)
     1
 
-- b:
+- b =&gt; kron(eye(1), .)
     1
 
-
-U1 =
-
-   -0.5000
-   -0.5000
-   -0.5000
-   -0.5000
-
-</pre><pre class="codeinput">[subrho2 U2] = rho.irreducible.representation(2)
+</pre><pre class="codeinput">subrho2 = rho.irreducible.component(2)
 </pre><pre class="codeoutput">
 subrho2 = 
 
-Unitary representation of dimension 3 with generator images
-- a:
-    -0.53007    -0.11684     0.83986
-     0.83516    -0.24335     0.49325
-    -0.14675    -0.96288    -0.22657
+Irreducible real-type representation of multiplicity 1, dimension 3 with generator images
+- a =&gt; kron(eye(1), .)
+    -0.36904    -0.90571    -0.20854
+     0.23235    -0.30716     0.92286
+      0.8999    -0.29212     -0.3238
     
 
-- b:
-     0.94271     0.32404    0.079408
-     0.32404    -0.83265    -0.44911
-    0.079408    -0.44911     0.88994
+- b =&gt; kron(eye(1), .)
+     0.89217    -0.45114    0.022567
+    -0.45114    -0.88745    0.094413
+    0.022567    0.094413     0.99528
     
 
+</pre><p>with their bases:</p><pre class="codeinput">subrho1.U
+subrho2.U
+</pre><pre class="codeoutput">
+ans =
 
-U2 =
+    0.5000
+    0.5000
+    0.5000
+    0.5000
 
-   -0.3600    0.7407   -0.2679
-   -0.1207   -0.6131   -0.5996
-   -0.3680   -0.2474    0.7439
-    0.8487    0.1198    0.1236
+
+ans =
+
+   -0.2076    0.7595   -0.3607
+   -0.5360   -0.6144   -0.2919
+    0.8151   -0.2053   -0.2084
+   -0.0715    0.0601    0.8610
 
 </pre><h2>The centralizer algebra<a name="25"></a></h2><p>The centralizer algebra of <img src="Example_eq11905270608999804013.png" alt="$\rho$"> is composed of all the matrices <img src="Example_eq00802513524912003067.png" alt="$M$"> that commute with <img src="Example_eq11905270608999804013.png" alt="$\rho$">, that is <img src="Example_eq04980856141982846267.png" alt="$M \rho_g = \rho_g M$"> for all <img src="Example_eq07585311203459331132.png" alt="$g$"> in the group.</p><p>RepLAB gives an access to that algebra:</p><pre class="codeinput">A = rho.centralizerAlgebra
 </pre><pre class="codeoutput">
 A = 
 
-Algebra of 4 x 4 matrices of dimension 2
+replab.RealConfigurationAlgebra instance
 </pre><p>and we can sample generic matrices from that algebra</p><pre class="codeinput">A.sample
 </pre><pre class="codeoutput">
 ans =
 
-   -0.2248   -0.4342   -0.4342   -0.4342
-   -0.4342   -0.2248   -0.4342   -0.4342
-   -0.4342   -0.4342   -0.2248   -0.4342
-   -0.4342   -0.4342   -0.4342   -0.2248
+   -0.0919    0.2708    0.2708    0.2708
+    0.2708   -0.0919    0.2708    0.2708
+    0.2708    0.2708   -0.0919    0.2708
+    0.2708    0.2708    0.2708   -0.0919
 
 </pre><p>or perform an orthogonal projection of arbitrary matrices in that algebra</p><pre class="codeinput">Mgen = rand(n, n)
 </pre><pre class="codeoutput">
 Mgen =
 
-    0.3780    0.5220    0.4622    0.6988
-    0.1322    0.4586    0.8575    0.7928
-    0.2108    0.7002    0.1124    0.2846
-    0.3728    0.9000    0.2178    0.5405
+    0.6204    0.9764    0.8237    0.5765
+    0.9095    0.9571    0.3248    0.3982
+    0.8716    0.4548    0.5627    0.7306
+    0.9920    0.0097    0.3078    0.1048
 
 </pre><pre class="codeinput">M = A.project(rand(n,n))
 </pre><pre class="codeoutput">
 M =
 
-    0.5350    0.5412    0.5412    0.5412
-    0.5412    0.5350    0.5412    0.5412
-    0.5412    0.5412    0.5350    0.5412
-    0.5412    0.5412    0.5412    0.5350
+    0.4324    0.2514    0.2514    0.2514
+    0.2514    0.4324    0.2514    0.2514
+    0.2514    0.2514    0.4324    0.2514
+    0.2514    0.2514    0.2514    0.4324
 
-</pre><p>Now, given <img src="Example_eq00802513524912003067.png" alt="$M$"> in the algebra, we can get its blocks:</p><pre class="codeinput">blocks = rho.irreducible.blocksOfCentralizer(M)
+</pre><p>Now, given <img src="Example_eq00802513524912003067.png" alt="$M$"> in the algebra, we can get its blocks:</p><pre class="codeinput">blocks = rho.irreducible.centralizerAlgebra.blocksOfParentElement(M)
 </pre><pre class="codeoutput">
 blocks =
 
   1x2 cell array
 
-    {[2.1586]}    {[-0.0061]}
+    {[1.1865]}    {[0.1810]}
 
-</pre><p>which correspond to the block diagonalization of such matrices in the symmetry adapted basis:</p><pre class="codeinput">U = rho.irreducible.adaptedBasis
+</pre><p>which correspond to the block diagonalization of such matrices in the symmetry adapted basis:</p><pre class="codeinput">U = rho.irreducible.U
 </pre><pre class="codeoutput">
 U =
 
-   -0.5000   -0.3600    0.7407   -0.2679
-   -0.5000   -0.1207   -0.6131   -0.5996
-   -0.5000   -0.3680   -0.2474    0.7439
-   -0.5000    0.8487    0.1198    0.1236
+    0.5000   -0.0170    0.8649   -0.0417
+    0.5000    0.8069   -0.2650    0.1693
+    0.5000   -0.5303   -0.2692    0.6295
+    0.5000   -0.2596   -0.3306   -0.7572
 
 </pre><pre class="codeinput">U'*M*U
 </pre><pre class="codeoutput">
 ans =
 
-    2.1586   -0.0000    0.0000    0.0000
-   -0.0000   -0.0061   -0.0000   -0.0000
-    0.0000    0.0000   -0.0061   -0.0000
-    0.0000   -0.0000    0.0000   -0.0061
+    1.1865    0.0000    0.0000   -0.0000
+    0.0000    0.1810   -0.0000    0.0000
+    0.0000   -0.0000    0.1810   -0.0000
+   -0.0000    0.0000   -0.0000    0.1810
 
 <!--
 ##### SOURCE BEGIN #####
@@ -325,8 +321,9 @@ g2 = [2 1 3:n];
 % is compatible with MATLAB syntax:
 g2(3)
 %%
-% We construct the group by calling a static method on replab.PermutationGroup:
-S4 = replab.PermutationGroup.fromGenerators({g1 g2})
+% We construct the group by first accessing the group of
+% permutations on 4 elements, then constructing a subgroup
+S4 = replab.Permutations(4).subgroup({g1 g2})
 %%
 % noting that the generators of the group are named $a$, $b$,...
 %
@@ -356,7 +353,7 @@ S4.order
 S4.elements
 %%
 % a technique that works even for big groups.
-S30 = replab.PermutationGroup.fromGenerators({[2:30 1] [2 1 3:30]})
+S30 = replab.Permutations(30).subgroup({[2:30 1] [2 1 3:30]})
 S30.order
 %%
 %
@@ -383,8 +380,7 @@ rho.image(gh)
 % we define the sign representation (using a permutation
 % representation of it!).
 dim = 2;
-isUnitary = true;
-rho1 = S4.representation(dim, {[0 1; 1 0] [0 1; 1 0]}, isUnitary)
+rho1 = S4.realRepresentation(dim, {[0 1; 1 0] [0 1; 1 0]})
 rho2 = S4.permutationRepresentation(2, {[2 1] [2 1]})
 %%
 %
@@ -392,18 +388,20 @@ rho1.image(g)
 rho2.image(g)
 
 %% Decomposing group representations
-% RepLAB provides the isotypic decomposition over the real numbers:
-rho.isotypic
-%%
-% and the decomposition into irreducible representations over the
-% reals, identifying the representation type (real, complex or quaternionic):
+% RepLAB provides the irreducible decomposition of representations
+% over the real numbers, identifying the representation type
+% (real, complex or quaternionic):
 rho.irreducible
 %%
-% We can get subrepresentations with their bases:
-[subrho1 U1] = rho.irreducible.representation(1)
+% We can get subrepresentations
+subrho1 = rho.irreducible.component(1)
 %%
 %
-[subrho2 U2] = rho.irreducible.representation(2)
+subrho2 = rho.irreducible.component(2)
+%%
+% with their bases:
+subrho1.U
+subrho2.U
 
 %% The centralizer algebra
 % The centralizer algebra of $\rho$ is composed of all the matrices
@@ -425,11 +423,11 @@ Mgen = rand(n, n)
 M = A.project(rand(n,n))
 %%
 % Now, given $M$ in the algebra, we can get its blocks:
-blocks = rho.irreducible.blocksOfCentralizer(M)
+blocks = rho.irreducible.centralizerAlgebra.blocksOfParentElement(M)
 %%
 % which correspond to the block diagonalization of such matrices in
 % the symmetry adapted basis:
-U = rho.irreducible.adaptedBasis
+U = rho.irreducible.U
 %%
 %
 U'*M*U
