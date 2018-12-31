@@ -76,12 +76,12 @@ classdef IsoDec
                 % the f-th fiber elements
                 fFiber = self.algebra.fibers.block(f);
                 % find restriction of group to the b-th block
-                resPC = self.algebra.restricted(fFiber);
+                resPC = self.algebra.restrictedToFiber(f);
                 % basis for the r-th representation in the f-th fiber
                 basis = self.U(fFiber, basisInd);
                 % compute a sample
                 % range in the corresponding representation
-                T = basis*replab.Matrices(n, n, false, true).sample*basis';
+                T = basis*replab.rep.sampleSymmetricMatrix(n)*basis';
                 T = resPC.project(T); % project in the invariant subspace and force self adjoint
                 T = T + T';
                 % compute eigenvalues, the n largest eigenvalues correspond to the representation basis
@@ -119,7 +119,7 @@ classdef IsoDec
         function r = repIsReal(self, r)
         % Returns whether the r-th representation is real
             % Eigenvalue tolerance
-            tol = replab.Settings.eigTol('R15');
+            tol = replab.Settings.doubleEigTol;
             % Find smallest fiber to perform the test in
             f = self.smallestFiberInRep(r);
             range = self.compRange(r);
@@ -130,9 +130,9 @@ classdef IsoDec
             repFiber = range(self.fromFiber(range) == f);
             Urep = self.U(fullFiber, repFiber);
             % Group restriction to the selected orbit
-            resAlgebra = self.algebra.restricted(fullFiber);
+            resAlgebra = self.algebra.fiber(f);
             % Compute sample, transform in the representation space
-            sampleGen = Urep'*resAlgebra.sample*Urep;
+            sampleGen = Urep'*resAlgebra.sampleGeneric*Urep;
             sampleSym = sampleGen + sampleGen';
             % Compute eigenvalues of both the nonsymmetric and the made-symmetric matrix
             lambdaGen = eig(sampleGen);
@@ -153,62 +153,18 @@ classdef IsoDec
             r = length(conGen) == length(conSym);
         end
         
-% $$$         function check(self)
-% $$$         % Checks the validity of this isotypic decomposition
-% $$$             import qdimsum.*
-% $$$             tol = self.settings.blockDiagMatTol;
-% $$$             % Checks that the isotypic components are correct by considering
-% $$$             % a sample from matrices that commute with the group
-% $$$             sample = self.group.phaseConfiguration.sampleRealGaussian;
-% $$$             sample = self.U'*sample*self.U;
-% $$$             for i = 1:self.nComponents
-% $$$                 ir = self.compRange(i);
-% $$$                 for j = 1:self.nComponents
-% $$$                     jr = self.compRange(j);
-% $$$                     block = sample(ir, jr);
-% $$$                     assert(isNonZeroMatrix(block, tol) == (i == j));
-% $$$                 end
-% $$$             end
-% $$$             % Second check by using sampling from the group algebra
-% $$$             M1 = self.U'*GenPerm.orthogonalMatrix(self.group.randomElement)*self.U;
-% $$$             M2 = self.U'*GenPerm.orthogonalMatrix(self.group.randomElement)*self.U;
-% $$$             M = randn * M1 + randn * M2;
-% $$$             for i = 1:self.nComponents
-% $$$                 ir = self.compRange(i);
-% $$$                 for j = 1:self.nComponents
-% $$$                     jr = self.compRange(j);
-% $$$                     % standard check
-% $$$                     block = M(ir, jr);
-% $$$                     assert(isNonZeroMatrix(block, tol) == (i == j));
-% $$$                     if i == j && self.ordered
-% $$$                         % verify that irreducible representations are grouped correctly inside the
-% $$$                         % isotypic component
-% $$$                         m = self.repMuls(i);
-% $$$                         d = self.repDims(i);
-% $$$                         for k = 1:m
-% $$$                             kr = d*(k-1) + (1:d);
-% $$$                             for l = 1:m
-% $$$                                 lr = d*(l-1) + (1:d);
-% $$$                                 assert(isNonZeroMatrix(block(kr, lr), tol) == (k == l));
-% $$$                             end
-% $$$                         end 
-% $$$                     end
-% $$$                 end
-% $$$             end
-% $$$         end
-        
     end
 
     methods (Static)
        
         function I = fromAlgebra(algebra)
         % Computes the isotypic decomposition of the given algebra
-            tol = replab.Settings.eigTol('R15');
+            tol = replab.Settings.doubleEigTol;
             % Get problem structure
             n = algebra.n;
             nFibers = algebra.fibers.nBlocks;
             % Get first sample
-            sample1 = algebra.sampleSelfAdjoint;
+            sample1 = algebra.sampleGenericSelfAdjoint;
             % Data to be prepared
             fromFiber = zeros(1, n);
             runs = {}; % identify indices of repeated eigenvalues
@@ -236,7 +192,7 @@ classdef IsoDec
             end
             % Now, U provides a basis that splits isotypic components. Remains to group them
             % according to their equivalent representations.
-            sample2 = algebra.sampleSelfAdjoint;
+            sample2 = algebra.sampleGenericSelfAdjoint;
             sample2p = U'*sample2*U;
             % We are computing the block mask, where each block corresponds to a run of identical
             % eigenvalues.
@@ -249,7 +205,7 @@ classdef IsoDec
             for i = 1:nRuns
                 for j = 1:nRuns
                     block = sample2p(runs{i}, runs{j});
-                    blockMask(i, j) = replab.rep.isNonZeroMatrix(block, tol);
+                    blockMask(i, j) = replab.isNonZeroMatrix(block, tol);
                 end
             end
             % find the subspaces corresponding to the same irreducible representation

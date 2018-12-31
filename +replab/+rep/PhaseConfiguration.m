@@ -1,7 +1,9 @@
 classdef PhaseConfiguration
     
-    properties
+    properties (SetAccess = protected)
         n;          % matrix size
+        fibers;     % fibers of this configuration, partition of 1..n with F blocks
+        fiberOrbits;% FxF cell array of orbit indices present in a fiber block
         phase;      % phase array, containing roots of unity
                     %
                     % The o-th orbit has indices between position
@@ -13,13 +15,15 @@ classdef PhaseConfiguration
         orbitRow;   % row indices of orbits, flat array (int32)
         orbitCol;   % col indices of orbits, flat array (int32)
         orbitInd;   % flat indices of orbits, flat array (int32)
-        index;      % index of the cell for each element, or 0 if element is zero
+        index;      % orbit index of the cell for each element, or 0 if element is zero
     end
     
     methods
         
-        function self = PhaseConfiguration(n, phase, orbitStart, orbitRow, orbitCol, index)
+        function self = PhaseConfiguration(n, fibers, fiberOrbits, phase, orbitStart, orbitRow, orbitCol, index)
             self.n = double(n);
+            self.fibers = fibers;
+            self.fiberOrbits = fiberOrbits;
             self.phase = double(phase);
             self.orbitStart = int32(orbitStart(:)');
             self.orbitRow = int32(orbitRow(:)');
@@ -28,36 +32,54 @@ classdef PhaseConfiguration
             self.index = double(index);
         end
         
-        function pc = restrict(self, block)
-        % Takes a slice of this phase configuration for the
-        % indices in block; this is used for example to restrict
+        function [PC1 p] = restrictedToFibers(self, fInds)
+        % Returns the phase configuration corresponding to
+        % (indices, indices), where 
+        % indices = union_{f in fInds} fibers.block(f)
+        % This is used for example to restrict
         % the representation decomposition algorithm to the orbits
         % of a permutation group
-            newN = length(block);
-            newPhase = self.phase(block, block);
-            oldIndex = self.index(block, block);
-            oldOrbits = unique(self.index(:));
-            newIndex = zeros(newN, newN);
-            newOrbitStart = [];
-            newOrbitRow = [];
-            newOrbitCol = [];
-            newO = 1;
-            for oldO = 1:length(oldOrbits)
-                [R C] = find(oldIndex == oldOrbits(oldO));
-                if ~isempty(R)
-                    newOrbitStart = [newOrbitStart length(newOrbitRow)+1];
-                    newOrbitRow = [newOrbitRow R(:)'];
-                    newOrbitCol = [newOrbitCol C(:)'];
-                    newIndex(oldIndex == oldOrbits(newO)) = newO;
-                    newO = newO + 1;
+            block = [];
+            for f = fInds
+                fiber = self.fibers.block(f);
+                block = [block fiber];
+            end
+            n1 = length(block);
+            phase1 = self.phase(block, block);
+            [fibers1 p] = self.fibers.restrictedToBlocks(fInds);
+            pI(p) = 1:self.n;
+            nF1 = length(fInds);
+            fiberOrbits1 = cell(nF1, nF1);
+            orbitStart1 = zeros(1, 0, 'int32');
+            orbitRow1 = zeros(1, 0, 'int32');
+            orbitCol1 = zeros(1, 0, 'int32');
+            index1 = zeros(n1, n1);
+            elInd1 = 1;
+            oInd1 = 1;
+            for i = 1:length(fInds)
+                for j = 1:length(fInds)
+                    fi = fInds(i);
+                    fj = fInds(j);
+                    orbits = self.fiberOrbits{fi, fj};
+                    oInds1 = zeros(1, 0, 'int32');
+                    for k = 1:length(orbits)
+                        o = orbits(k);
+                        oinds = self.orbitStart(o):(self.orbitStart(o+1)-1);
+                        orows = pI(self.orbitRow(oinds));
+                        ocols = pI(self.orbitCol(oinds));
+                        index1(orows+(ocols-1)*n1) = oInd1;
+                        orbitRow1 = [orbitRow1 orows];
+                        orbitCol1 = [orbitCol1 ocols];
+                        orbitStart1(end+1) = elInd1;
+                        elInd1 = elInd1 + length(orows);
+                        oInds1(end+1) = oInd1;
+                        oInd1 = oInd1 + 1;
+                    end
+                    fiberOrbits1{i, j} = oInds1;
                 end
             end
-            newOrbitStart = [newOrbitStart length(newOrbitRow)+1];
-            pc = replab.rep.PhaseConfiguration(newN, newPhase, ...
-                                               newOrbitStart, ...
-                                               newOrbitRow, ...
-                                               newOrbitCol, ...
-                                               newIndex);
+            orbitStart1(end+1) = elInd1;
+            PC1 = replab.rep.PhaseConfiguration(n1, fibers1, fiberOrbits1, phase1, orbitStart1, orbitRow1, orbitCol1, index1);
         end
 
         function m = nOrbits(self)
@@ -227,36 +249,6 @@ classdef PhaseConfiguration
                         phase(r, c) = replab.rep.PhaseConfiguration.rootOfUnity(shift(r, c), order);
                     end
                 end
-            end
-        end
-        
-        function C = fromSignedPermMatlab(generators)
-            n = size(generators, 2);
-            B = replab.rep.PhaseConfigurationBuilder.fromSignedPerm(generators);
-            phase = replab.rep.PhaseConfiguration.computePhase(B.shift, B.order);
-            C = replab.rep.PhaseConfiguration(n, phase, B.orbitStart, B.orbitRow, B.orbitCol, B.index);
-        end
-        
-        function C = fromSignedPermJava(generators)
-            n = size(generators, 2);
-            assert(n > 0, 'Java code does not work with empty array, as Matlab will pass a null pointer.');
-            % convert 1-based indices to 0-based indices
-            generators(generators > 0) = generators(generators > 0) - 1;
-            B = com.faacets.qdimsum.PhaseConfigurationBuilder.fromGenPerm(n, generators);
-            phase = replab.rep.PhaseConfiguration.computePhase(double(B.shift), double(B.order));
-            C = replab.rep.PhaseConfiguration(n, phase, B.orbitStart + 1, B.orbitRow + 1, B.orbitCol + 1, B.index + 1);
-        end
-        
-        function C = fromSignedPerm(generators)
-            if exist('com.faacets.qdimsum.PhaseConfigurationBuilder')
-                if size(generators, 1) > 0
-                    C = replab.rep.PhaseConfiguration.fromSignedPermJava(generators);
-                else
-                    C = replab.rep.PhaseConfiguration.fromSignedPermMatlab(generators);
-                end
-            else
-                warning('Warning: qdimsum.jar not in the Java path, using Matlab code as fallback.');
-                C = replab.rep.PhaseConfiguration.fromSignedPermMatlab(generators);
             end
         end
         

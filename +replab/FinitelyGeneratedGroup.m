@@ -1,16 +1,22 @@
-classdef FinitelyGeneratedGroup < replab.Str
+classdef FinitelyGeneratedGroup < replab.Group
    
-    properties
+    properties (SetAccess = protected)
         generators; % 1 x nG cell array of generators
     end
     
-    methods
-        %ABSTRACT w = factorization(self, g)
+    methods % Abstract methods
+        
+        function w = factorization(self, g)
+        % Returns the factorization of an element of this group as a word in its generators
+            f = self.factorizationFun;
+            w = f(g);
+        end
+        
     end
 
     methods
                 
-        function n = nGenerators(self) 
+        function n = nGenerators(self)
         % Returns the number of generators
             n = length(self.generators);
         end
@@ -22,31 +28,70 @@ classdef FinitelyGeneratedGroup < replab.Str
                 
         function p = generatorInverse(self, i)
         % Returns the inverse of the i-th generator of this group
-            p = self.G.inverse(self.generators{i});
+            p = self.inverse(self.generators{i});
         end
         
         function b = isTrivial(self)
+        % Returns true if this group is trivial (i.e. has only one element)
             b = self.nGenerators == 0;
         end
         
         function x = evaluateWord(self, word)
-            x = self.G.identity;
+        % Evaluates the given word using the generators of this group
+            x = self.identity;
             for i = 1:length(word.indices)
                 g = self.generators{word.indices(i)};
                 e = word.exponents(i);
-                we = self.G.composeN(g, e);
-                x = self.G.compose(x, we);
+                we = self.composeN(g, e);
+                x = self.compose(x, we);
             end
         end
         
         function f = freeGroup(self)
+        % Returns the free group with the same number of generators
+        % as this group
             f = replab.FreeGroup(self.nGenerators);
         end
             
         function phi = morphismFromFreeGroup(self)
-            phi = replab.cat.GroupMorphismFun(@(w) self.evaluateWord(word), self.freeGroup, self);
+        % Returns a function handle that evaluates words in the
+        % generators of this group
+            phi = @(w) self.evaluateWord(w);
         end
 
+        function rho = realRepresentation(self, dimension, images, imagesInv)
+            if nargin < 4
+                imagesInv = cellfun(@(x) inv(x), images, 'UniformOutput', false);
+            end
+            rho = replab.RealRep(self, dimension, images, imagesInv);
+        end
+
+        function rho = signedPermutationRepresentation(self, dimension, signedPermutations)
+        % Returns a monomial representation of this group described by signed permutations
+        %
+        % dimension: dimension of the representation
+        % signedPermutations: row cell array of images of the generators as signed permutations of size "dimension"
+            S = replab.SignedPermutations(dimension);
+            f = @(g) S.toMatrix(g);
+            fInv = @(g) S.toMatrix(S.inverse(g));
+            images = cellfun(f, signedPermutations, 'UniformOutput', false);
+            imagesInv = cellfun(fInv, signedPermutations, 'UniformOutput', false);
+            rho = self.realRepresentation(dimension, images, imagesInv);
+        end
+        
+        function rho = permutationRepresentation(self, dimension, permutations)
+        % Returns a permutation representation of this group
+        %
+        % dimension: dimension of the representation
+        % permutation: row cell array of images of the generators as permutations of size "dimension"
+            S = replab.Permutations(dimension);
+            f = @(g) S.toMatrix(g);
+            fInv = @(g) S.toMatrix(S.inverse(g));
+            images = cellfun(f, permutations, 'UniformOutput', false);
+            imagesInv = cellfun(fInv, permutations, 'UniformOutput', false);
+            rho = self.realRepresentation(dimension, images, imagesInv);
+        end
+        
     end
     
 end

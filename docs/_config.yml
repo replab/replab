@@ -1,9 +1,7 @@
-name: RepLab
+name: RepLAB
 baseurl: /replab
-description: Finite representation theory
+description: RepLAB - a MATLAB/Octave toolbox for representation theory
 highlighter: rouge
 docs: true
-replabVersion: 0.0.0
-version: 0.0.0
-org: net.alasc
 markdown: kramdown
+replabVersion: 0.2.0

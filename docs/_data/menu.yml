@@ -3,10 +3,11 @@ options:
   - title: Installation
     url: docs/installation.html
 
-  - title: Simple example
-    url: docs/simple-problem.html
-
-  - title: Example 
+  - title: Quick start 
     url: docs/publish/Example.html
 
+  - title: Organization 
+    url: docs/organization.html
 
+  - title: Law checks 
+    url: docs/publish/LawChecks.html

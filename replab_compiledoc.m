@@ -9,7 +9,7 @@ function replab_compiledoc
     initialPath = pwd;
     [pathStr, name, extension] = fileparts(which(mfilename));
     cd(pathStr)
-    cd srcdocs
+    cd docs_src
 
     % delete existing output and tmp folders
     status = rmdir('tmp','s');

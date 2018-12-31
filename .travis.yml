@@ -2,6 +2,13 @@
 # available (as of January 2016)
 language: java
 
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:octave/stable'
+    packages:
+      - octave
+      
 ###############################################################################
 cache:
   # Downloading octave takes a while, so let's cache apt
@@ -13,104 +20,17 @@ cache:
     - $HOME/external_cache
 
 ###############################################################################
-env:
-  matrix:
-    - COVERAGE="false"
-#    - COVERAGE="true"    # No code coverage test because we do not know how to display them
-
-matrix:
-  allow_failures:
-    - env: COVERAGE="true"
-  fast_finish: true
-
-###############################################################################
 # Command to install dependencies
 before_install:
-  # Remember the directory where our repository to test is located
-  - REPOPATH="$(pwd)" && pwd
-  # ---------------------------------------------------------------------------
-  # Check whether we need to upgrade the gcc and g++ versions. We do need to if
-  # the version is less the 4.8 and we need to install the image package from
-  # Octave Forge (possibly for other packages as well).
-  # For now, lets just always say we do need to do this.
-  #- UPGRADE_GCC="true"
-  # ---------------------------------------------------------------------------
-  # Add repository for octave
-  - travis_retry sudo add-apt-repository -y ppa:octave/stable
-  # Add repository for installing g++-4.8 on Ubuntu 12.04
-  #- if [ "$UPGRADE_GCC" = "true" ]; then
-  #    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
-  #  fi
-  # Update apt-get to include the contents from the new locations
-  - travis_retry sudo apt-get update -qq
-  # Install octave with apt-get
-  - travis_retry sudo apt-get install -y octave
-  #- travis_retry sudo apt-get install -y octave liboctave-dev
-  # Add a C++11 compiler so we can install image package
-  #- if [ "$UPGRADE_GCC" = "true" ]; then
-  #    travis_retry sudo apt-get install -y gcc-4.8 g++-4.8;
-  #    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50;
-  #    sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50;
-  #  fi;
-  # Check which versions of g++ and gcc we are using
-  #- which g++;
-  #  g++ --version;
-  #  which gcc;
-  #  gcc --version;
-  # ---------------------------------------------------------------------------
-  # Go up one level and retrieve MOxUnit from its repository
-  - cd ..;
-    ls -alh;
-  # Remove directory if it is already there from previous build
-  - rm -rf MOxUnit;
-  - git clone https://github.com/MOxUnit/MOxUnit.git
-  # Install MOxUnit, which adds itself to the startup path
-  - make -C MOxUnit install
-  # Install MOcov, which adds itself to the startup path
-  - if [ "$COVERAGE" = "true" ]; then
-        rm -rf MOcov;
-        git clone https://github.com/MOcov/MOcov.git;
-        make -C MOcov install;
-    fi;
-  # Go back to the repository directory
-  - cd ${REPOPATH}
+  - git submodule update --init
 
 ###############################################################################
 install:
-  echo "addpath(pwd);";
-  # Original stuff below, using the MOPI package manager
-  #
-  # Ensure external packages folder exists and is empty
-  #- rm -rf external;
-  #  mkdir -p external;
-  # Install required packages for Octave
-  #- if [ -f requirements-octave.txt ]; then
-  #    mopi/mopi.sh requirements-octave.txt external "$HOME/external_cache";
-  #  fi;
-  # Install other required packages
-  #- if [ -f requirements.txt ]; then
-  #    mopi/mopi.sh requirements.txt external "$HOME/external_cache";
-  #  fi;
-  # Install developmental requirements
-  #- if [ -f requirements-dev.txt ]; then
-  #    mopi/mopi.sh requirements-dev.txt external "$HOME/external_cache";
-  #  fi;
-  # Before running the tests, we will have to add our package and our
-  # external dependencies to the octave path
-  #- PACKAGE_FOLDER="package_name";
-  #  ADDPATH_COMMAND="addpath(genpath(fullfile(pwd, '$PACKAGE_FOLDER')));";
-  #  ADDPATH_COMMAND+=" addpath(genpath(fullfile(pwd, 'external')));";
-  #  echo "ADDPATH_COMMAND| $ADDPATH_COMMAND";
+  ADDPATH_COMMAND="replab_addpaths;"
 
 ###############################################################################
 before_script:
   - TEST_ARGS="'-recursive', '-verbose', '-junit_xml_file', 'testresults.xml'";
-    if [ "$COVERAGE" = "true" ]; then
-        TEST_ARGS+=", '-with_coverage', '-cover', '.'";
-        TEST_ARGS+=", '-cover_exclude', 'tests'";
-        TEST_ARGS+=", '-cover_xml_file', 'coverage.xml'";
-        TEST_ARGS+=", '-cover_json_file', 'coveralls.json'";
-    fi;
     TEST_COMMAND="exit(~moxunit_runtests('tests', $TEST_ARGS));";
     echo "TEST_COMMAND| $TEST_COMMAND";
   # Double-check we are still in the right directory
@@ -120,16 +40,7 @@ before_script:
   # ---------------------------------------------------------------------------
   # Remove any cached results files from previous build, if present
   - rm -f testresults.xml;
-    rm -f coverage.xml;
-    rm -f .coverage;
-    rm -f coveralls.json;
   # ---------------------------------------------------------------------------
-  # Set up folders for test results on Shippable
-  - if [ "$SHIPPABLE" = "true" ]; then
-      rm -fr shippable;
-      mkdir -p shippable/testresults;
-      mkdir -p shippable/codecoverage;
-    fi;
 
 ###############################################################################
 script:
@@ -140,32 +51,3 @@ after_script:
   # Check where we ended up and what's going on where we are
   - pwd
   - ls -alh
-  # ---------------------------------------------------------------------------
-  # Move results and coverage files into appropriate places
-  - if [ "$SHIPPABLE" = "true" ] && [ -f testresults.xml ]; then
-      mv testresults.xml shippable/testresults/;
-    fi;
-    if [ "$SHIPPABLE" = "true" ] && [ -f coverage.xml ]; then
-      cp coverage.xml shippable/codecoverage/;
-    fi;
-
-###############################################################################
-after_success:
-  # Only run coveralls on Travis. When running on a public Travis-CI, the
-  # repo token is automatically inferred, but to run coveralls on Shippable
-  # the repo token needs to be specified in a .coveralls.yml or as an
-  # environment variable COVERALLS_REPO_TOKEN. This should be kept hidden
-  # from public viewing, either by encrypting the token or running on a
-  # private build.
-  # We ignore coverage push failures because the servers are not 100%
-  # reliable and we don't want the CI to report a failure just because the
-  # coverage report wasn't published.
-  # For Codecov, we use this https://github.com/codecov/codecov-bash
-  - if [ "$COVERAGE" = "true" ] && [ "$TRAVIS" = "true" ] && [ "$SHIPPABLE" != "true" ]; then
-      curl --verbose -F json_file=@`pwd`/coveralls.json https://coveralls.io/api/v1/jobs  || echo "Coveralls push failed";
-      bash <(curl -s https://codecov.io/bash) || echo "Codecov push failed";
-    fi;
-
-###############################################################################
-# Enable archiving of artifacts on Shippable (does nothing on Travis)
-archive: true

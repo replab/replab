@@ -135,7 +135,6 @@ classdef Chain < handle
                     self.wordsRound(l, t, tw);
                     if mod(count, s) == 0
                         self.wordsImprove(l);
-                        %replab.bsgs.Chain.fillOrbits(chain, l);
                         l = l * 5/4;
                     end
                     if self.areWordsCompleted
@@ -146,11 +145,13 @@ classdef Chain < handle
         end
         
         function wordsComplete(self)
+        % Completes the word decomposition in the BSGS chain
             if ~self.isTerm
                 self.next.wordsComplete;
                 A = self.A;
                 G = self.G;
                 while self.emptyWords > 0
+                    self
                     for i = 1:self.orbitSize
                         if isempty(self.uInvW{i})
                             b = self.orbit{i};
@@ -352,7 +353,7 @@ classdef Chain < handle
                 it = it.next;
             end
         end
-        
+
     end
 
     methods (Static)
@@ -463,59 +464,10 @@ classdef Chain < handle
             else
                 order = [];
             end
-            bag = replab.RandomBag(group.G, group.generators);
-            chain = replab.bsgs.Chain.randomConstruction(group.A, @() bag.sample, order, numTests);
+            bag = replab.RandomBag(group, group.generators);
+            chain = replab.bsgs.Chain.randomConstruction(group.action, @() bag.sample, order, numTests);
         end
         
     end
     
 end
-        
-        
-% $$$         function fillOrbits(chain, l)
-% $$$             it = chain;
-% $$$             while ~it.isTerm
-% $$$                 orbit = {};
-% $$$                 for i = 1:it.orbitSize
-% $$$                     if ~isequal(it.uInvW{i}, [])
-% $$$                         orbit{end+1} = it.orbit{i};
-% $$$                     end
-% $$$                 end
-% $$$                 it1 = it.next;
-% $$$                 while ~it1.isTerm
-% $$$                     xs = {};
-% $$$                     for i = 1:it1.orbitSize
-% $$$                         xw = it1.uInvW{i};
-% $$$                         x = it1.uInv{i};
-% $$$                         if ~isequal(xw, [])
-% $$$                             for j = 1:length(orbit)
-% $$$                                 o = orbit{j};
-% $$$                                 p = chain.A.leftAction(x, o);
-% $$$                                 c = false;
-% $$$                                 for k = 1:length(orbit)
-% $$$                                     if chain.P.eqv(p, orbit{k})
-% $$$                                         c = true;
-% $$$                                         break
-% $$$                                     end
-% $$$                                 end
-% $$$                                 if ~c
-% $$$                                     xInv = chain.G.inverse(x);
-% $$$                                     p1 = chain.A.leftAction(xInv, p);
-% $$$                                     ind = it.orbitIndex(p1);
-% $$$                                     tw = it.uInvW{ind} * xw;
-% $$$                                     if tw.length < l
-% $$$                                         if isequal(it.uInv{ind}, [])
-% $$$                                             it.emptyWords = it.emptyWords - 1;
-% $$$                                         end
-% $$$                                         it.uInvW{ind} = inv(tw);
-% $$$                                     end
-% $$$                                 end
-% $$$                             end
-% $$$                         end
-% $$$                     end
-% $$$                     it1 = it1.next;
-% $$$                 end
-% $$$                 it = it.next;
-% $$$             end
-% $$$         end
-        

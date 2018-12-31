@@ -1,0 +1,184 @@
+<html><head><title>RepLAB: Installation</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="Denis Rosset" /><meta name="description" content="Finite representation theory" /><meta name="og:image" content="http://localhost:4000/replab/img/poster.png" /><meta name="og:title" content="RepLab: Installation" /><meta name="og:site_name" content="RepLab" /><meta name="og:url" content="http://denisrosset.github.io/replab" /><meta name="og:type" content="website" /><meta name="og:description" content="Finite representation theory" /><link rel="icon" type="image/png" href="http://localhost:4000/replab/img/favicon.png" /><meta name="twitter:title" content="RepLab: Installation" /><meta name="twitter:image" content="http://denisrosset.github.io/symdpolyimg/poster.png" /><meta name="twitter:description" content="Finite representation theory" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" type="image/png" sizes="16x16" href="http://localhost:4000/replab/img/favicon16x16.png" /><link rel="icon" type="image/png" sizes="24x24" href="http://localhost:4000/replab/img/favicon24x24.png" /><link rel="icon" type="image/png" sizes="32x32" href="http://localhost:4000/replab/img/favicon32x32.png" /><link rel="icon" type="image/png" sizes="48x48" href="http://localhost:4000/replab/img/favicon48x48.png" /><link rel="icon" type="image/png" sizes="57x57" href="http://localhost:4000/replab/img/favicon57x57.png" /><link rel="icon" type="image/png" sizes="60x60" href="http://localhost:4000/replab/img/favicon60x60.png" /><link rel="icon" type="image/png" sizes="64x64" href="http://localhost:4000/replab/img/favicon64x64.png" /><link rel="icon" type="image/png" sizes="70x70" href="http://localhost:4000/replab/img/favicon70x70.png" /><link rel="icon" type="image/png" sizes="72x72" href="http://localhost:4000/replab/img/favicon72x72.png" /><link rel="icon" type="image/png" sizes="76x76" href="http://localhost:4000/replab/img/favicon76x76.png" /><link rel="icon" type="image/png" sizes="96x96" href="http://localhost:4000/replab/img/favicon96x96.png" /><link rel="icon" type="image/png" sizes="114x114" href="http://localhost:4000/replab/img/favicon114x114.png" /><link rel="icon" type="image/png" sizes="120x120" href="http://localhost:4000/replab/img/favicon120x120.png" /><link rel="icon" type="image/png" sizes="128x128" href="http://localhost:4000/replab/img/favicon128x128.png" /><link rel="icon" type="image/png" sizes="144x144" href="http://localhost:4000/replab/img/favicon144x144.png" /><link rel="icon" type="image/png" sizes="150x150" href="http://localhost:4000/replab/img/favicon150x150.png" /><link rel="icon" type="image/png" sizes="152x152" href="http://localhost:4000/replab/img/favicon152x152.png" /><link rel="icon" type="image/png" sizes="196x196" href="http://localhost:4000/replab/img/favicon196x196.png" /><link rel="icon" type="image/png" sizes="310x310" href="http://localhost:4000/replab/img/favicon310x310.png" /><link rel="icon" type="image/png" sizes="310x150" href="http://localhost:4000/replab/img/favicon310x150.png" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" /><link rel="stylesheet" href="http://localhost:4000/replab/highlight/styles/atom-one-light.css" /><link rel="stylesheet" href="/replab/css/style.css" /><link rel="stylesheet" href="/replab/css/palette.css" /><link rel="stylesheet" href="/replab/css/codemirror.css" /></head><body class="docs"><div id="wrapper"><div id="sidebar-wrapper"><ul id="sidebar" class="sidebar-nav"><li class="sidebar-brand"><a href="/replab/" class="brand"><div class="brand-wrapper"><span>RepLab</span></div></a></li> <li><a href="/replab/docs/installation.html" class=" active ">Installation</a></li> <li><a href="/replab/docs/publish/Example.html" class="">Quick start</a></li> <li><a href="/replab/docs/organization.html" class="">Organization</a></li> <li><a href="/replab/docs/publish/LawChecks.html" class="">Law checks</a></li></ul></div><div id="page-content-wrapper"><div class="nav"><div class="container-fluid"><div class="row"><div class="col-lg-12"><div class="action-menu pull-left clearfix"><a href="#menu-toggle" id="menu-toggle"><i class="fa fa-bars" aria-hidden="true"></i></a></div><ul class="pull-right"><li id="gh-eyes-item" class="hidden-xs"><a href="https://github.com/denisrosset/replab"><i class="fa fa-eye"></i><span>WATCH<span id="eyes" class="label label-default">--</span></span></a></li><li id="gh-stars-item" class="hidden-xs"><a href="https://github.com/denisrosset/replab"><i class="fa fa-star-o"></i><span>STARS<span id="stars" class="label label-default">--</span></span></a></li><li><a href="#" onclick="shareSiteTwitter('RepLab Finite representation theory');"><i class="fa fa-twitter"></i></a></li><li><a href="#" onclick="shareSiteFacebook('RepLab Finite representation theory');"><i class="fa fa-facebook"></i></a></li><li><a href="#" onclick="shareSiteGoogle();"><i class="fa fa-google-plus"></i></a></li></ul></div></div></div></div><div id="content" data-github-owner="denisrosset" data-github-repo="replab"><div class="content-wrapper"><section><h1 id="code-organization-in-replab">Code organization in RepLAB</h1>
+
+<h2 id="directories">Directories</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">docs</code>: compiled documentation ready to be served by Jekyll,</li>
+  <li><code class="highlighter-rouge">docs_src</code>: source files for the executable documentation, to be compiled by <code class="highlighter-rouge">replab_compiledoc.m</code>,</li>
+  <li><code class="highlighter-rouge">external</code>: external libraries, either included as a Git submodule (if available on a public repository such as Github), or vendored (like <code class="highlighter-rouge">vpi</code>),</li>
+  <li><code class="highlighter-rouge">+replab</code>: the main RepLAB package, containing the main classes/methods,</li>
+  <li><code class="highlighter-rouge">+replab/+subpackages</code>: implementation files for different submodules,</li>
+  <li><code class="highlighter-rouge">tests</code>: tests written using MOxUnit, augmented with our laws test framework.</li>
+</ul>
+
+<h2 id="no-abstract-methods-in-abstract-base-classes">No abstract methods in abstract base classes</h2>
+
+<p>As Octave does not support the <code class="highlighter-rouge">methods (Abstract)</code> syntax, we provide generic implementations for abstract methods in abstract base classes by either:</p>
+
+<ul>
+  <li>trying to retrieve and calling a function handle property (the <code class="highlighter-rouge">DomainFun</code>, <code class="highlighter-rouge">SemigroupFun</code>, … approach), or</li>
+  <li>throwing <code class="highlighter-rouge">error('Not implemented')</code>.</li>
+</ul>
+
+<h2 id="the-class-classfun-and-classlaws-triad">The <code class="highlighter-rouge">Class</code>, <code class="highlighter-rouge">ClassFun</code> and <code class="highlighter-rouge">ClassLaws</code> triad</h2>
+
+<p>This works for <code class="highlighter-rouge">Class</code> = <code class="highlighter-rouge">Domain</code>, <code class="highlighter-rouge">Class</code> = <code class="highlighter-rouge">Semigroup</code>, <code class="highlighter-rouge">Class</code> = <code class="highlighter-rouge">Action</code>, and so on.</p>
+
+<p>There, <code class="highlighter-rouge">Class</code> is an abstract base class, while <code class="highlighter-rouge">ClassFun</code> requires function handles that implement the abstract methods of <code class="highlighter-rouge">Class</code> as parameters to its constructor. This enables the creation of “anonymous” classes in the spirit of MATLAB’s “anonymous” functions.</p>
+
+<p>The <code class="highlighter-rouge">ClassLaws</code> class lists the algebraic laws that should be obeyed by a particular structure.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Laws</code>: abstract base class for the laws checking framework.</li>
+</ul>
+
+<h2 id="pretty-printing">Pretty printing</h2>
+
+<p>(Work in progress: should be improved! in particular to be able to control the amount of verbosity)</p>
+
+<p>Most all classes in RepLAB derive from the <code class="highlighter-rouge">Str</code> base class, which implements a <code class="highlighter-rouge">str</code> method that provides a text representation of a RepLAB object.</p>
+
+<p>RepLAB provides also a <code class="highlighter-rouge">strOf</code> function that calls the <code class="highlighter-rouge">str</code> method for instances of <code class="highlighter-rouge">Str</code>, and implements reasonable defaults for objects outside RepLAB (such as matrices / vectors).</p>
+
+<p>The <code class="highlighter-rouge">Str</code> class provides a default <code class="highlighter-rouge">disp</code> method.</p>
+
+<p>The default <code class="highlighter-rouge">str</code> method returns the content of the <code class="highlighter-rouge">description</code> property (if nonempty), or constructs a text representation.</p>
+
+<h2 id="structured-sets">Structured sets</h2>
+
+<p>Most classes in RepLAB describe sets of elements with additional structure.</p>
+
+<h3 id="domains">Domains</h3>
+
+<p>At the base of the hierarchy, the <code class="highlighter-rouge">Domain</code> describes a set of elements that can be tested for equality (<code class="highlighter-rouge">eqv</code>) and from which random samples can be taken (<code class="highlighter-rouge">sample</code>). Such sets are potentially infinite.</p>
+
+<p>As <code class="highlighter-rouge">Domain</code> is an abstract base class, it contains abstract methods (<code class="highlighter-rouge">eqv</code>, <code class="highlighter-rouge">sample</code>).</p>
+
+<p>To quickly create an instance of <code class="highlighter-rouge">Domain</code>, the helper class <code class="highlighter-rouge">DomainFun</code> can be used, passing the method implementations as function handles to the <code class="highlighter-rouge">DomainFun</code> constructor.</p>
+
+<h3 id="blackbox-groups">Blackbox groups</h3>
+
+<p>The following three classes provide basic group structures.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Semigroup</code>: structure with associative binary operation</li>
+  <li><code class="highlighter-rouge">Monoid</code>: + an identity element (property), and test for identity</li>
+  <li><code class="highlighter-rouge">Group</code>: + inverse elements</li>
+</ul>
+
+<h3 id="finitely-generated-groups">Finitely generated groups</h3>
+
+<p>All elements of finitely generated groups can be obtained by composition of a finite number of the group generators; and the set of those generators is also finite.</p>
+
+<p>In particular, such groups enable the factorization of their elements into words.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">FinitelyGeneratedGroup</code>: abstract base class for finitely generated groups,</li>
+  <li><code class="highlighter-rouge">FreeGroup</code>: the free group on <code class="highlighter-rouge">n</code> generators,</li>
+  <li><code class="highlighter-rouge">Word</code>: class describing elements of <code class="highlighter-rouge">FreeGroup</code>.</li>
+</ul>
+
+<h3 id="finite-groups">Finite groups</h3>
+
+<p>Finite groups contain a finite number of elements.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">FiniteGroup</code>: abstract base class for finite groups,</li>
+  <li><code class="highlighter-rouge">SignedPermutationGroup</code>: provides an abstract base class for all signed permutation groups,</li>
+  <li><code class="highlighter-rouge">SignedPermutations</code>: describes the signed permutations on ${-n,…,-1, 1,…,n}$,</li>
+  <li>
+    <p><code class="highlighter-rouge">SignedPermutationSubgroup</code>: describes a group generated by signed permutations.</p>
+  </li>
+  <li><code class="highlighter-rouge">FiniteGroupDecomposition</code>: describes the decomposition of a group into a product of sets.</li>
+</ul>
+
+<h3 id="permutation-groups">Permutation groups</h3>
+
+<p>Permutation groups are finite groups that are subgroups of the symmetric group acting on <code class="highlighter-rouge">n</code> elements.</p>
+
+<p>In particular, the decomposition into ${1,…,n}$ into orbits, the natural action and representation of the group are all defined.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">PermutationGroup</code>: abstract base class for permutation groups,</li>
+  <li><code class="highlighter-rouge">Permutations</code>: describes the symmetric group acting on <code class="highlighter-rouge">n</code> points.</li>
+</ul>
+
+<h3 id="actions">Actions</h3>
+
+<p>The following two classes in RepLAB do not define a domain, but rather express a relation between domains.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Action</code>: abstract base class that defines the action of elements of a group <code class="highlighter-rouge">G</code> on elements of a domain <code class="highlighter-rouge">P</code>,</li>
+  <li><code class="highlighter-rouge">FaithfulAction</code>: in addition, for any <code class="highlighter-rouge">g</code> in <code class="highlighter-rouge">G</code> which is not the identity, the class provides a <code class="highlighter-rouge">p</code> in <code class="highlighter-rouge">P</code> that is moved by <code class="highlighter-rouge">g</code>.</li>
+</ul>
+
+<h3 id="bsgs-groups">BSGS groups</h3>
+
+<p>Base and strong generating set structures enable powerful algorithms to study finite groups.</p>
+
+<p>Those algorithms are generic and rest on the availability of a <code class="highlighter-rouge">FaithfulAction</code> for the group.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">BSGSGroup</code>: generic implementation of BSGS algorithms,</li>
+  <li><code class="highlighter-rouge">perm.PermutationBSGSGroup</code>: implementation for permutation groups.</li>
+</ul>
+
+<h3 id="representations">Representations</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">RealRep</code> is a real representation of a finitely generated group. It is described by the (matrix) images of the group generators; the computation of images rests on the factorization of group elements.</li>
+</ul>
+
+<p>Once a <code class="highlighter-rouge">RealRep</code> has been constructed, it can be decomposed into irreducible representations using the <code class="highlighter-rouge">realRep.irreducible</code> method.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">RealIrrep</code> describes an irreducible representation with possible multiplicity. The instance can remember which representation it splits (as a <code class="highlighter-rouge">parent</code>) and the change of basis matrix (<code class="highlighter-rouge">U</code> and <code class="highlighter-rouge">Uinv</code>).</li>
+  <li><code class="highlighter-rouge">RealDecompositionRep</code> collects inequivalent subrepresentations in a decomposition. It corresponds to the direct sum of representations that are guaranteed to be inequivalent (even after further splitting).</li>
+</ul>
+
+<h3 id="centralizer-algebras">Centralizer algebras</h3>
+
+<p>The key to the simplification of invariant semidefinite programs is the decomposition of <em>matrices that commute with a group representation</em>; the set of all such matrices is the <em>centralizer algebra</em>.</p>
+
+<p>RepLAB has several classes to work with centralizer algebras.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">RealCentralizerAlgebra</code> describes a generic centralizer algebra.</li>
+  <li><code class="highlighter-rouge">RealConfigurationAlgebra</code> describes a centralizer algebra invariant under a monomial representation (thus faster projection algorithms are available),</li>
+  <li><code class="highlighter-rouge">RealDecompositionCentralizerAlgebra</code> collects centralizer algebras corresponding to inequivalent representations,</li>
+  <li><code class="highlighter-rouge">RealIrreducibleCentralizerAlgebra</code> corresponds to the centralizer algebra of an irreducible real representation. Note that irreducible real representations are of three types: real, complex and quaternionic, thus, see below,</li>
+  <li><code class="highlighter-rouge">DivisionAlgebra</code> describes a division algebra present in an irreducible representation.</li>
+</ul>
+
+<h2 id="sequences-of-elements">Sequences of elements</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">Enumerator</code>: describes an indexed sequence, whose index is a big integer (<code class="highlighter-rouge">vpi</code>).</li>
+</ul>
+
+<h2 id="utility-classes">Utility classes</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">Partition</code>: describes an unordered partition of the integers ${1,…,n}$,</li>
+  <li><code class="highlighter-rouge">DivisionAlgebra</code>: generic representation of the real, complex and quaternionic algebras over the reals,</li>
+  <li><code class="highlighter-rouge">rational</code>: a hacky implementation of rational matrices with double-representable integer coefficients,</li>
+  <li><code class="highlighter-rouge">Settings</code>: various global settings such as tolerances,</li>
+  <li><code class="highlighter-rouge">GroupMorphismLaws</code>: laws for function handles that are group homomorphisms.</li>
+</ul>
+
+<h2 id="methods">Methods</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">isNonZeroMatrix</code>, tests whether a matrix is nonzero up to a given tolerance using the 2-norm (singular value), with accelerations provided by matrix norm inequalities and cheap norms,</li>
+  <li><code class="highlighter-rouge">strOf</code>: prettyprints a generic object.</li>
+</ul>
+</section></div></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="http://localhost:4000/replab/highlight/highlight.pack.js"></script><script>hljs.configure({
+languages:['matlab']
+});
+      $(document).ready(function() {
+      $('pre.codeoutput').each(function(i, block) {
+      hljs.highlightBlock(block);
+      });
+      });
+    </script><script>((window.gitter = {}).chat = {}).options = {
+room: 'replab/replab'};</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js"></script><script src="/replab/js/main.js"></script></body></html>

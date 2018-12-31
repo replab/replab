@@ -1,21 +1,144 @@
-classdef Permutations < replab.cat.Group
-   
-    properties (SetAccess = protected)
-        canEqv;
-        canHash;
-        canSample;
-        domainSize;
-    end
+classdef Permutations < replab.PermutationGroup
+% Describes permutations over n = "domainSize" elements, i.e.
+% the symmetric group Sn
     
-    methods
+    methods % Implementations of abstract methods
         
         function self = Permutations(domainSize)
-            self.canEqv = true;
-            self.canHash = true;
-            self.canSample = true;
-            self.domainSize = domainSize;
-            self.identity = 1:domainSize;
+            self = self@replab.PermutationGroup(domainSize);
+            if self.domainSize < 2
+                self.generators = cell(1, 0);
+            elseif self.domainSize == 2
+                self.generators = {[2 1]};
+            else
+                self.generators = {[2:domainSize 1] [2 1 3:domainSize]};
+            end
         end
+        
+        % Str
+                
+        function s = str(self)
+            s = sprintf('Permutations acting on %d elements', self.domainSize);
+        end
+        
+        % Domain
+        
+        function b = eqv(self, x, y)
+            b = isequal(x, y);
+        end
+        
+        function s = sample(self)
+            s = randperm(self.domainSize);
+        end
+        
+        % Semigroup/Monoid/Group
+        
+        function z = compose(self, x, y)
+            z = x(y);
+        end
+        
+        function y = inverse(self, x)
+            y = zeros(1, self.domainSize);
+            y(x) = 1:self.domainSize;
+        end
+        
+        % FinitelyGeneratedGroup
+        
+        function w = factorization(self, x)
+        % Factorizes a permutation using bubble sort
+            if self.isIdentity(x)
+                w = replab.Word.identity;
+                return
+            elseif self.domainSize == 2
+                % not identity
+                w = replab.Word.generator(1);
+                return
+            end
+            n = length(x);
+            w = replab.Word.identity;
+            moved = true;
+            while moved
+                moved = false;
+                for i = 1:n-1
+                    if x(i) > x(i+1)
+                        t = x(i+1);
+                        x(i+1) = x(i);
+                        x(i) = t;
+                        moved = true;
+                        if i == 1
+                            shift = replab.Word.identity;
+                        else
+                            shift = replab.Word.fromIndicesAndExponents(1, i - 1);
+                        end
+                        w = shift * replab.Word.generator(2) * inv(shift) * w;
+                    end
+                end
+            end
+        end
+        
+        % FiniteGroup
+        
+        function b = contains(self, g)
+            b = (length(g) == self.domainSize) && all(g > 0);
+        end
+        
+        function b = knownOrder(self)
+            b = true;
+        end
+        
+        function o = order(self)
+            o = factorial(vpi(self.domainSize));
+        end
+        
+        function E = elements(self)
+            E = replab.EnumeratorFun(self.order, ...
+                                     @(ind) self.enumeratorAt(ind), ...
+                                     @(el) self.enumeratorFind(el));
+        end
+        
+        function d = decomposition(self)
+            G = self.subgroup(self.generators, self.order);
+            d = G.decomposition;
+        end
+        
+    end
+    
+    methods (Access = protected)
+        
+        function ind = enumeratorFind(self, g)
+            n = self.domainSize;
+            ind0 = vpi(0);
+            els = 1:n;
+            for i = 1:n
+                ind0 = ind0 * (n - i + 1);
+                ind0 = ind0 + (find(els == g(i)) - 1);
+                els = setdiff(els, g(i));
+            end
+            ind = ind0 + 1;
+        end
+        
+        function g = enumeratorAt(self, ind)
+            n = self.domainSize;
+            ind0 = ind - 1; % make it 0-based
+            inds = zeros(1, n);
+            for i = 1:n
+                r = mod(ind0, i);
+                ind0 = (ind0 - r)/i;
+                inds(i) = double(r + 1);
+            end
+            inds = fliplr(inds);
+            els = 1:n;
+            g = zeros(1, n);
+            for i = 1:n
+                e = els(inds(i));
+                g(i) = e;
+                els = setdiff(els, e);
+            end
+        end
+        
+    end
+
+    methods
         
         function p = fromCycles(varargin)
         % Constructs a permutation from a product of cycles, each
@@ -31,96 +154,85 @@ classdef Permutations < replab.cat.Group
                 p = replab.Perm.compose(newEl, p);
             end
         end
-        
-        function s = str(self)
-            s = sprintf('Permutations acting on %d elements', self.domainSize);
-        end
-        
-        function b = eqv(self, x, y)
-            b = isequal(x, y);
-        end
-        
-        function h = hash(self, x)
-            h = replab.cat.Domain.hashIntegers(x);
-        end
-        
-        function s = sample(self)
-            s = randperm(self.domainSize);
-        end
-        
-        function z = compose(self, x, y)
-            z = x(y);
-        end
-        
-        function y = inverse(self, x)
-            y = zeros(1, self.domainSize);
-            y(x) = 1:self.domainSize;
-        end
-        
-        function A = naturalAction(self)
-            n = self.domainSize;
-            desc = sprintf('Permutations of size %d acting on integers [1...%d]', n, n);
-            P = replab.cat.Domain.integerRange(1, n);
-            A = replab.cat.BSGSActionFun(desc, self, P, ...
-                                         @(g, p) g(p), ...
-                                         @(g) replab.Permutations.findMovedPoint(g));
-        end
 
-        function A = vectorAction(self, field)
-            n = self.domainSize;
-            desc = sprintf('Permutations acting on %d dimensional vectors in %s', n, field);
-            P = replab.Vectors(n, field);
-            A = replab.cat.ActionFun(desc, self, P, ...
-                                     @(g, p) replab.Permutations.vectorImage(g, p));
+        function grp = subgroup(self, generators, orderOpt)
+            if nargin < 3
+                orderOpt = [];
+            end
+            grp = replab.perm.PermutationBSGSGroup(self, generators, orderOpt);
         end
         
-        function A = selfAdjointMatrixAction(self, field)
-            n = self.domainSize;
-            desc = sprintf('Permutations acting on %d x %d self-adjoint matrices in %s', n, field);
-            P = replab.SelfAdjointMatrices(n, field);
-            A = replab.cat.ActionFun(desc, self, P, ...
-                                     @(g, p) replab.Permutations.selfAdjointMatrixImage(g, p));
+        function grp = trivialGroup(self)
+            grp = self.subgroup({}, vpi(1));
         end
-
+        
+        function grp = cyclicGroup(self)
+            n = self.domainSize;
+            if n == 1
+                grp = self.trivialGroup;
+            else
+                grp = self.subgroup({[2:n 1]}, vpi(n));
+            end
+        end
+        
+        function grp = alternatingGroup(self)
+            n = self.domainSize;
+            if n <= 2
+                grp = self.trivialGroup;
+            else
+                c3 = [2 3 1 4:n];
+                if mod(n, 2) == 0
+                    s = [1 3:n 2];
+                else
+                    s = [2:n 1];
+                end
+                grp = self.subgroup({c3 s}, self.order/2);
+            end
+        end
+        
+        function grp = symmetricGroup(self)
+            grp = self.subgroup(self.generators, self.order);
+        end
+        
     end
     
     methods (Static)
         
-        function p = findMovedPoint(perm)
-            for i = 1:length(perm)
-                if i ~= perm(i)
-                    p = i;
-                    return
-                end
-            end
-            p = [];
-        end
-
-        function vec = vectorImage(perm, vec)
-        % Permutation of a column vector
-        % equivalent to Perm.matrix(perm) * vec
-            assert(length(perm) == length(vec));
-            vec(perm) = vec;
-        end
-        
-        function M = selfAdjointMatrixImage(perm, M)
-        % Returns the image under the action of perm on the columns and rows of M
-        % i.e. Perm.matrix(perm)*M*Perm.matrix(perm)'
-            n = length(perm);
-            assert(size(M, 1) == n);
-            assert(size(M, 2) == n);
-            M(perm, perm) = M;
-        end
-        
         function mat = toMatrix(perm)
         % Returns the permutation matrix corresponding to the given permutation
         % such that matrix multiplication is compatible with composition of
-        % permutations, i.e. 
-        % Perm.matrix(Perm.compose(x, y)) = Perm.matrix(x) * Perm.matrix(y)
+        % permutations, i.e. for P = replab.Permutations(domainSize)
+        % P.toMatrix(P.compose(x, y)) = P.toMatrix(x) * P.toMatrix(y)
             n = length(perm);
             mat = sparse(perm, 1:n, ones(1, n), n, n);
         end
-
+        
+        function perm = fromMatrix(mat)
+        % Returns the signed permutation corresponding to the given matrix representation
+        % or throws an error
+            if isequal(size(mat), [0 0])
+                perm = zeros(1, 0);
+                return
+            end
+            perm = [];
+            n = size(mat, 1);
+            [I J V] = find(mat);
+            if length(I) ~= n
+                error('Not a monomial matrix');
+            end
+            I = I';
+            J = J';
+            V = V';
+            if ~isequal(V, ones(1, n))
+                error('Not a permutation matrix');
+            end
+            sI = sort(I);
+            [sJ IJ] = sort(J);
+            if ~isequal(sI, 1:n) || ~isequal(sJ, 1:n)
+                error('Not a monomial matrix');
+            end
+            perm = I(IJ);
+        end
     end
-
+    
 end
