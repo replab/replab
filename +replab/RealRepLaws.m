@@ -25,7 +25,9 @@ classdef RealRepLaws < replab.Laws
         function law_parent_G(self, g)
             if ~isempty(self.rep.parent)
                 parentRho = self.rep.parent.image(g);
+                proj = self.rep.U*self.rep.U';
                 rho = self.rep.image(g);
+                self.assert(~replab.isNonZeroMatrix(proj*parentRho - parentRho*proj, replab.Settings.doubleEigTol));
                 self.R.assertEqv(self.rep.Uinv*parentRho*self.rep.U, rho);
             end
         end
