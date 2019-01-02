@@ -92,3 +92,12 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+
+##---------------------------------------------------
+# Jekyll .gitignore
+##---------------------------------------------------
+
+# Files generated automatically by github
+docs/_site/
+
