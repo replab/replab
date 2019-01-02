@@ -109,7 +109,7 @@ classdef SignedPermutations < replab.SignedPermutationGroup
         
         function o = order(self)
             o = factorial(vpi(self.domainSize)) * vpi(2)^self.domainSize;
-        end
+        end        
         
         function E = elements(self)
             E = replab.EnumeratorFun(self.order, ...

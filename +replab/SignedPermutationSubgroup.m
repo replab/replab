@@ -19,8 +19,8 @@ classdef SignedPermutationSubgroup < replab.SignedPermutationGroup
         end
         
         function g = sample(self)
-            if self.knownChain
-                g = self.sampleUniformly;
+            if self.nice.knownChain
+                g = self.fromPermutation(self.nice.sampleUniformly);
             else
                 g = self.randomBag.sample;
             end
