@@ -65,6 +65,13 @@ classdef FinitelyGeneratedGroup < replab.Group
             end
             rho = replab.RealRep(self, dimension, images, imagesInv);
         end
+        
+        function rho = complexRepresentation(self, dimension, images, imagesInv)
+            if nargin < 4
+                imagesInv = cellfun(@(x) inv(x), images, 'UniformOutput', false);
+            end
+            rho = replab.ComplexRep(self, dimension, images, imagesInv);
+        end
 
         function rho = signedPermutationRepresentation(self, dimension, signedPermutations)
         % Returns a monomial representation of this group described by signed permutations
