@@ -154,6 +154,9 @@ classdef Word
                     if i > 1
                         i = i - 1;
                     end
+                elseif exponents(i) == 0
+                    indices = [indices(:,1:i-1) indices(:,i+1:end)];
+                    exponents = [exponents(:,1:i-1) exponents(:,i+1:end)];
                 else
                     i = i + 1;
                 end
