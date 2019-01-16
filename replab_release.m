@@ -13,9 +13,9 @@ function replab_release
     [major minor patch snapshot txt] = replab_version;
     snapshot = false;
     txt = textVersion(major, minor, patch, snapshot);
-    userTxt = input(sprintf('Release version [%s]:\n', txt), 's')
+    userTxt = input(sprintf('Release version [%s]:\n', txt), 's');
     if ~isempty(userTxt)
-        [major minor patch snapshot txt] = replab_version(userTxt);
+        [major minor patch snapshot txt] = replab_version(userTxt)
     end
     major1 = major;
     minor1 = minor;
