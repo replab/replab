@@ -3,12 +3,14 @@ function [major minor patch snapshot contents] = replab_version(contents)
 %
 % If contents is provided, then parses that string; otherwise reads the version
 % string from the replab_version.txt file.
-    [pathStr, name, extension] = fileparts(which(mfilename));
-    version_filename = fullfile(pathStr, 'replab_version.txt');
-    contents = fileread(version_filename);
-    contents = strrep(contents, sprintf('\n'), '');
-    contents = strrep(contents, sprintf('\r'), '');    
-    contents = strtrim(contents);
+    if nargin < 1
+        [pathStr, name, extension] = fileparts(which(mfilename));
+        version_filename = fullfile(pathStr, 'replab_version.txt');
+        contents = fileread(version_filename);
+        contents = strrep(contents, sprintf('\n'), '');
+        contents = strrep(contents, sprintf('\r'), '');    
+        contents = strtrim(contents);
+    end
     snapshotString = '-SNAPSHOT';
     if length(contents) > length(snapshotString) && isequal(contents(end-length(snapshotString)+1:end), snapshotString)
         snapshot = true;
