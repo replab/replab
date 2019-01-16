@@ -3,7 +3,6 @@ classdef BSGSGroup < replab.FiniteGroup
 %
 % Its construction requires a faithful BSGS action.
     properties (SetAccess = protected)
-        parent; % Parent group providing composition, inverse, etc...
         action; % faithful action
     end
 
@@ -14,12 +13,11 @@ classdef BSGSGroup < replab.FiniteGroup
     
     methods
         
-        function self = BSGSGroup(parent, action, generators, orderOpt)
+        function self = BSGSGroup(identity, action, generators, orderOpt)
             assert(isa(action, 'replab.FaithfulAction'));
-            self.parent = parent;
+            self.identity = identity;
             self.action = action;
             self.generators = generators;
-            self.identity = parent.identity;
             if nargin > 3 && ~isempty(orderOpt)
                 self.order_ = vpi(orderOpt);
             end
@@ -27,26 +25,12 @@ classdef BSGSGroup < replab.FiniteGroup
         
         % Domain
         
-        function b = eqv(self, x, y)
-            b = self.parent.eqv(x, y);
-        end
-        
         function g = sample(self)
             if self.knownChain
                 g = self.sampleUniformly;
             else
                 g = self.randomBag.sample;
             end
-        end
-        
-        % Semigroup/Monoid/Group
-        
-        function z = compose(self, x, y)
-            z = self.parent.compose(x, y);
-        end
-        
-        function y = inverse(self, x)
-            y = self.parent.inverse(x);
         end
         
         % FinitelyGeneratedGroup
