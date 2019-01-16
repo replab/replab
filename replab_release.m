@@ -15,7 +15,7 @@ function replab_release
     txt = textVersion(major, minor, patch, snapshot);
     userTxt = input(sprintf('Release version [%s]:\n', txt), 's');
     if ~isempty(userTxt)
-        [major minor patch snapshot txt] = replab_version(userTxt)
+        [major minor patch snapshot txt] = replab_version(userTxt);
     end
     major1 = major;
     minor1 = minor;
@@ -28,11 +28,7 @@ function replab_release
     end
     disp('Preparing release');
     disp(sprintf('Setting version to %s', txt));
-    fid = fopen('replab_version.txt', 'w');
-    assert(fid ~= -1);
-    fprintf(fid, '%s\n', txt);
-    status = fclose(fid);
-    assert(status == 0);
+    writeVersion(txt);
     disp('Committing version change.');
     status = system('git add replab_version.txt');
     assert(status == 0);
@@ -44,12 +40,8 @@ function replab_release
     assert(status == 0);
     status = system(sprintf('git push origin v%s', txt), '-echo');
     assert(status == 0);
-    disp(sprintf('Advancing to next version number %s', txt));
-    fid = fopen('replab_version.txt', 'w');
-    assert(fid ~= -1);
-    fprintf(fid, '%s\n', txt1);
-    status = fclose(fid);
-    assert(status == 0);
+    disp(sprintf('Advancing to next version number %s', txt1));
+    writeVersion(txt1);
     disp('Committing version change.');
     status = system('git add replab_version.txt');
     assert(status == 0);
@@ -57,6 +49,28 @@ function replab_release
     assert(status == 0);
     status = system('git push origin master', '-echo');
     assert(status == 0);
+    function writeVersion(txtV)
+        fid = fopen('replab_version.txt', 'w');
+        assert(fid ~= -1);
+        fprintf(fid, '%s\n', txt);
+        status = fclose(fid);
+        assert(status == 0);
+        contents = fileread('docs/_config.yml');
+        lines = strsplit(contents, '\n');
+        tag = 'replabVersion:';
+        for i = 1:length(lines)
+            L = lines{i};
+            if isequal(L(1:length(tag)), tag)
+                lines{i} = sprintf('replabVersion: %s', txtV);
+            end
+        end
+        contents = strjoin(lines, '\n');
+        fid = fopen('docs/_config.yml', 'w');
+        assert(fid ~= -1);
+        fprintf(fid, '%s', contents);
+        status = fclose(fid);
+        assert(status == 0);        
+    end
     function txtV = textVersion(majorV, minorV, patchV, snapshotV)
         if snapshotV
             suffixV = '-SNAPSHOT';
