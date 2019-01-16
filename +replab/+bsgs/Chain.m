@@ -221,10 +221,10 @@ classdef Chain < handle
         end
         
         function b = base(self)
-            b = [];
+            b = {};
             it = self;
             while ~it.isTerm
-                b(end+1) = it.beta;
+                b{end+1} = it.beta;
                 it = it.next;
             end
         end
