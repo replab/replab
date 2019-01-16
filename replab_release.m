@@ -11,6 +11,8 @@ function replab_release
     [status, originMasterRef] = system('git rev-parse --verify origin/master');
     assert(isequal(masterRef, originMasterRef), 'The repository has committed changes that have not been pushed.');
     [major minor patch snapshot txt] = replab_version;
+    snapshot = false;
+    txt = textVersion(major, minor, patch, snapshot);
     userTxt = input(sprintf('Release version [%s]:\n', txt), 's');
     if ~isempty(userTxt)
         [major minor patch snapshot txt] = replab_version(userCurrent);
