@@ -15,19 +15,19 @@ function replab_release
     txt = textVersion(major, minor, patch, snapshot);
     userTxt = input(sprintf('Release version [%s]:\n', txt), 's');
     if ~isempty(userTxt)
-        [major minor patch snapshot txt] = replab_version(userCurrent);
+        [major minor patch snapshot txt] = replab_version(userTxt);
     end
     major1 = major;
     minor1 = minor;
     patch1 = patch + 1;
     snapshot1 = true;
     txt1 = textVersion(major1, minor1, patch1, snapshot1);
-    userTxt1 = input(sprintf('Next version [%s]:\n', next), 's');
+    userTxt1 = input(sprintf('Next version [%s]:\n', txt1), 's');
     if ~isempty(userTxt1)
-        [major1 minor1 patch1 snapshot1 txt1] = replab_version(userNext);
+        [major1 minor1 patch1 snapshot1 txt1] = replab_version(userTxt1);
     end
     disp('Preparing release');
-    disp(sprintf('Setting version to %s'), txt);
+    disp(sprintf('Setting version to %s', txt));
     fid = fopen('replab_version.txt', 'w');
     assert(fid ~= -1);
     fprintf(fid, '%s\n', txt);
