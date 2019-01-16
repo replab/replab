@@ -5,7 +5,9 @@ classdef PermutationBSGSGroup < replab.BSGSGroup & replab.PermutationGroup
                 orderOpt = [];
             end
             self = self@replab.PermutationGroup(parent.domainSize);
-            self = self@replab.BSGSGroup(parent, parent.naturalAction, generators, orderOpt);
+            self.action = parent.naturalAction;
+            self.generators = generators;
+            self.order_ = orderOpt;
         end
     end
 end

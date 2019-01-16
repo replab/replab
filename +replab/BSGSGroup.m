@@ -1,7 +1,8 @@
 classdef BSGSGroup < replab.FiniteGroup
 % Represents a group described by a base and strong generating set
 %
-% Its construction requires a faithful BSGS action.
+% In the constructor of a subclass, you must set the following
+% properties: identity, generators, action
     properties (SetAccess = protected)
         action; % faithful action
     end
@@ -12,17 +13,7 @@ classdef BSGSGroup < replab.FiniteGroup
     end
     
     methods
-        
-        function self = BSGSGroup(identity, action, generators, orderOpt)
-            assert(isa(action, 'replab.FaithfulAction'));
-            self.identity = identity;
-            self.action = action;
-            self.generators = generators;
-            if nargin > 3 && ~isempty(orderOpt)
-                self.order_ = vpi(orderOpt);
-            end
-        end
-        
+                
         % Domain
         
         function g = sample(self)

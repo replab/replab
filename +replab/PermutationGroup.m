@@ -16,6 +16,23 @@ classdef PermutationGroup < replab.FiniteGroup
             self.identity = 1:domainSize;
         end
         
+        % Domain
+        
+        function b = eqv(self, x, y)
+            b = isequal(x, y);
+        end
+        
+        % Semigroup/Monoid/Group
+        
+        function z = compose(self, x, y)
+            z = x(y);
+        end
+        
+        function y = inverse(self, x)
+            n = self.domainSize;
+            y(x) = 1:n;
+        end
+        
         function A = naturalAction(self)
         % Returns the action of elements of this group on {1..self.domainSize}
             A = replab.perm.PermutationNaturalAction(self);
