@@ -1,4 +1,4 @@
-classdef SignedPermutations < replab.SignedPermutationGroup
+classdef SignedPermutations < replab.SignedPermutationGroup & replab.FiniteGroup
 % Describes the signed permutation group over
 % {-n...-1, 1...n} where n = domainSize
     

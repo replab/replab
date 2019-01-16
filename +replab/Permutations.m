@@ -1,4 +1,4 @@
-classdef Permutations < replab.PermutationGroup
+classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
 % Describes permutations over n = "domainSize" elements, i.e.
 % the symmetric group Sn
     
@@ -23,23 +23,8 @@ classdef Permutations < replab.PermutationGroup
         
         % Domain
         
-        function b = eqv(self, x, y)
-            b = isequal(x, y);
-        end
-        
         function s = sample(self)
             s = randperm(self.domainSize);
-        end
-        
-        % Semigroup/Monoid/Group
-        
-        function z = compose(self, x, y)
-            z = x(y);
-        end
-        
-        function y = inverse(self, x)
-            y = zeros(1, self.domainSize);
-            y(x) = 1:self.domainSize;
         end
         
         % FinitelyGeneratedGroup

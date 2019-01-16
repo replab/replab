@@ -1,4 +1,4 @@
-classdef PermutationGroup < replab.FiniteGroup
+classdef PermutationGroup < replab.Group
 % Represents a permutation group
 
     properties (SetAccess = protected)
