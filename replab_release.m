@@ -32,6 +32,8 @@ function replab_release
     disp('Committing version change.');
     status = system('git add replab_version.txt');
     assert(status == 0);
+    status = system('git add docs/_config.yml');
+    assert(status == 0);
     status = system(sprintf('git commit -m "Setting version to %s"', txt));
     assert(status == 0);
     status = system('git push origin', '-echo');
@@ -44,6 +46,8 @@ function replab_release
     writeVersion(txt1);
     disp('Committing version change.');
     status = system('git add replab_version.txt');
+    assert(status == 0);
+    status = system('git add docs/_config.yml');
     assert(status == 0);
     status = system(sprintf('git commit -m "Setting version to %s"', txt1));
     assert(status == 0);
