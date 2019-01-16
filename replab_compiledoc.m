@@ -1,6 +1,10 @@
 function replab_compiledoc
-    % Here we create all web pages for the documentation website
-
+    % Creates pages for the documentation microsite from the matlab files 
+    % listed in the folder 'srcdocs'.
+    %
+    % Script files with a name starting with 'MenuPositionXXX_' will appear
+    % on the main menu of the documentation website at position 'XXX'.
+    
     % Make sure we are in the right folder
     initialPath = pwd;
     [pathStr, name, extension] = fileparts(which(mfilename));
