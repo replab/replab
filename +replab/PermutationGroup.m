@@ -30,6 +30,7 @@ classdef PermutationGroup < replab.Group
         
         function y = inverse(self, x)
             n = self.domainSize;
+            y = zeros(1, n);
             y(x) = 1:n;
         end
         

@@ -13,7 +13,7 @@ function msg = message(errorDesc, context, assertArgs, testVarNames, testVarValu
         end
     end
     msg = sprintf(msg, assertArgs{:});
-    msg = [msg char(10) 'with variables' newline];
+    msg = [msg char(10) 'with variables' char(10)];
     maxLength = max(cellfun(@(x) length(x), testVarNames));
     for i = 1:length(testVarNames)
         vn = testVarNames{i};
