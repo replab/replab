@@ -34,7 +34,7 @@ function replab_release
     assert(status == 0);
     status = system(sprintf('git commit -m "Setting version to %s"', txt));
     assert(status == 0);
-    status = system('git push origin master', '-echo');
+    status = system('git push origin', '-echo');
     assert(status == 0);
     status = system(sprintf('git tag v%s', txt));
     assert(status == 0);
@@ -47,7 +47,7 @@ function replab_release
     assert(status == 0);
     status = system(sprintf('git commit -m "Setting version to %s"', txt1));
     assert(status == 0);
-    status = system('git push origin master', '-echo');
+    status = system('git push origin', '-echo');
     assert(status == 0);
     function writeVersion(txtV)
         fid = fopen('replab_version.txt', 'w');
