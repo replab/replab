@@ -24,6 +24,7 @@ classdef ComplexRep < replab.Str
     
     properties (Access = protected)
         M;
+        centralizerAlgebra_;
     end
     
     methods
@@ -94,7 +95,15 @@ classdef ComplexRep < replab.Str
         % Returns true if this representation is unitary
             b = all(cellfun(@(U) self.M.isIdentity(U*U'), self.images));
         end
-        
+
+        function c = centralizerAlgebra(self)
+        % Describes the algebra of matrices that commute with this representation
+            if isempty(self.centralizerAlgebra_)
+                self.centralizerAlgebra_ = replab.ComplexCentralizerAlgebra(self);
+            end
+            c = self.centralizerAlgebra_;
+        end
+
     end
     
 end
