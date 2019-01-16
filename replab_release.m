@@ -60,7 +60,7 @@ function replab_release
         tag = 'replabVersion:';
         for i = 1:length(lines)
             L = lines{i};
-            if isequal(L(1:length(tag)), tag)
+            if length(L) > length(tag) && isequal(L(1:length(tag)), tag)
                 lines{i} = sprintf('replabVersion: %s', txtV);
             end
         end
