@@ -1,4 +1,4 @@
-classdef SignedPermutationSubgroup < replab.SignedPermutationGroup
+classdef SignedPermutationSubgroup < replab.SignedPermutationGroup & replab.FiniteGroup
 % Represents a group of signed permutations
     
     properties (Access = protected)
