@@ -1,4 +1,4 @@
-%for reference see, 
+%for reference, see Rubik-3-facelet-48.png
 %note that moves in this case correspond o anti-clockwise rotations
 
 F = cycle([1:48], [38,17,43,8], [39,20,42,5], [40,22,41,3], [9,11,16,14], [10,13,15,12]);
