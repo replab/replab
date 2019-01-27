@@ -1,6 +1,6 @@
 function [input] = cycle(input, varargin)
 
-%convention used - cycle of (123) corresponds to 1 -> 2, 2 -> 3, 3 -> 1
+%convention used - cycle of (123) corresponds to 1 -> 3, 2 -> 1, 3 -> 2
 
 for j = 1:length(varargin)
     
