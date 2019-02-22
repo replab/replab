@@ -125,18 +125,19 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
 
     methods
         
-        function p = fromCycles(varargin)
+        function p = fromCycles(self, varargin)
         % Constructs a permutation from a product of cycles, each
         % cycle being a row vector, and the sequence cycles being
         % given as variable arguments
             n = self.domainSize;
+            p = self.identity;
             for i = length(varargin):-1:1
                 cycle = varargin{i};
                 % cycle 2 3 1 means that 2 -> 3, 3 -> 1, 1 -> 2
                 cycleImage = [cycle(2:end) cycle(1)];
                 newEl = 1:n;
                 newEl(cycle) = cycleImage;
-                p = replab.Perm.compose(newEl, p);
+                p = self.compose(newEl, p);
             end
         end
 
