@@ -9,10 +9,18 @@ classdef Enumerator < replab.Str
         function s = describe(self, i)
         % Returns a one line string that describes the i-th element
         % used by Enumerator.str
-            sizeNChars = length(strtrim(num2str(self.size)));
+            sizeNChars = length(strtrim(self.stringOnOneLine(num2str(self.size))));
             msg = ['at(%' num2str(sizeNChars) 's) = %s'];
             el = replab.strOf(self.at(i));
-            s = sprintf(msg, strtrim(num2str(i)), el);
+            s = sprintf(msg, strtrim(self.stringOnOneLine(num2str(i))), el);
+        end
+        
+        function s = stringOnOneLine(self, s)
+        % Helper function that returns a string possibly spanning several
+        % lines onto just one line
+            if (size(s,1) >= 2)
+                s = reshape(s', 1, numel(s));
+            end
         end
         
     end
@@ -40,7 +48,7 @@ classdef Enumerator < replab.Str
         end
         
         function s = str(self)
-            s = sprintf('Enumerator of %s elements', strtrim(num2str(self.size)));
+            s = sprintf('Enumerator of %s elements', strtrim(self.stringOnOneLine(num2str(self.size))));
             if self.size < 10
                 for i = 1:double(self.size)
                     s = [s char(10) self.describe(i)];
@@ -49,7 +57,7 @@ classdef Enumerator < replab.Str
                 for i = 1:3
                     s = [s char(10) self.describe(i)];
                 end        
-                s = [s char(10) '..' strtrim(num2str(self.size - 6)) ' elements omitted..'];
+                s = [s char(10) '..' strtrim(self.stringOnOneLine(num2str(self.size - 6))) ' elements omitted..'];
                 for i = 2:-1:0
                     s = [s char(10) self.describe(self.size - i)];
                 end
