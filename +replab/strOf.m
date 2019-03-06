@@ -9,7 +9,7 @@ function s = strOf(obj)
                 for i = 1:size(s, 1)
                     t = [t s(i,:) char(10)];
                 end
-                s = t;
+                s = t(1:end-1);
             end
         catch
             s = sprintf('%s instance', class(obj));
