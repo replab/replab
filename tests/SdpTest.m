@@ -26,53 +26,48 @@ function test_simple_structure
     end
 end
 
-% % Signed permutations doesn't seem to work yet
-% function test_SDP_CHSH
-%     indexMatrix = [  1   2   3   6   7   8  11  12  13
-%                      2   1   4   7   6   9  12  11  14
-%                      3   4   1   8   9   6  13  14  11
-%                      6   7   8   1   2   3  16  17  18
-%                      7   6   9   2   1   4  17  16  19
-%                      8   9   6   3   4   1  18  20  16
-%                     11  12  13  16  17  18   1   2   3
-%                     12  11  14  17  16  20   2   1   4
-%                     13  14  11  18  19  16   3   4   1];
-% 
-%     objective = [0 0 0 0 1 1 0 1 -1];
-% 
-%     generators = {[1  4  7  2  5  8  3  6  9]
-%                   [1 -2 -3 -4  5  6 -7  8  9]
-%                   [1  3  2  4  6  5 -7 -9 -8]}';
-% 	
-% 	% We formulate the non-symmetrized SDP:
-%     vars = [0; sdpvar(max(max(indexMatrix)),1)];
-%     tmp = sparse(1:numel(indexMatrix), reshape(1+indexMatrix,1,numel(indexMatrix)), true);
-%     sdpMatrix = reshape(tmp*vars, size(indexMatrix));
-%     obj = objective*sdpMatrix(:,1);
-%     solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
-%     obj1 = value(obj);
-%     disp(['The maximum value of CHSH obtained in terms of correlators without symmetrization is ', num2str(value(obj)), '.'])
-%     disp(' ');
-%     
-%     % Check of the generators:
-%     isok = true;
-%     for i = 1:length(generators)
-%         if norm(reshape(sign(generators{i}).*objective(abs(generators{i}))-objective, 3, 3)) ~= 0
-%             isok = false;
-%         end
-%     end
-%     assert(isok, 'The symetry generators don''t leave the objective function invariant');
-% 
-%     % We formulate the symmetrized SDP:
-%     symSdpMatrix = replab.Sdprep.fromGenerators(generators);
-%     solvesdp([symSdpMatrix >= 0, symSdpMatrix.fullMatrix == sdpMatrix, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
-%     obj2 = value(obj);
-%     disp(['The maximum value of CHSH obtained in terms of correlators with symmetrization is ', num2str(value(obj)), '.'])
-%     disp(' ');
-%     
-%     % We compare the result:
-%     assert(abs(obj1 - obj2) < replab.Settings.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
-% end
+function test_SDP_CHSH
+    indexMatrix = [  1   2   3   6   7   8  11  12  13
+                     2   1   4   7   6   9  12  11  14
+                     3   4   1   8   9   6  13  14  11
+                     6   7   8   1   2   3  16  17  18
+                     7   6   9   2   1   4  17  16  19
+                     8   9   6   3   4   1  18  20  16
+                    11  12  13  16  17  18   1   2   3
+                    12  11  14  17  16  20   2   1   4
+                    13  14  11  18  19  16   3   4   1];
+
+    objective = [0 0 0 0 1 1 0 1 -1];
+
+    generators = {[1  4  7  2  5  8  3  6  9]
+                  [1 -2 -3 -4  5  6 -7  8  9]
+                  [1  3  2  4  6  5 -7 -9 -8]}';
+	
+    % Check of the generators:
+    isok = true;
+    for i = 1:length(generators)
+        if norm(reshape(sign(generators{i}).*objective(abs(generators{i}))-objective, 3, 3)) ~= 0
+            isok = false;
+        end
+    end
+    assert(isok, 'The symetry generators don''t leave the objective function invariant');
+
+	% We formulate the non-symmetrized SDP:
+    vars = [0; sdpvar(max(max(indexMatrix)),1)];
+    tmp = sparse(1:numel(indexMatrix), reshape(1+indexMatrix,1,numel(indexMatrix)), true);
+    sdpMatrix = reshape(tmp*vars, size(indexMatrix));
+    obj = objective*sdpMatrix(:,1);
+    solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    obj1 = value(obj);
+    
+    % We formulate the symmetrized SDP:
+    symSdpMatrix = replab.Sdprep.fromGenerators(generators);
+    solvesdp([symSdpMatrix >= 0, symSdpMatrix.fullMatrix == sdpMatrix, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    obj2 = value(obj);
+    
+    % We compare the result:
+    assert(abs(obj1 - obj2) < replab.Settings.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
+end
 
 function test_SDP_CHSH_FullProb
     indexMatrix = [  1    2    4    3    5   14   15   17   16   18   40   41   43   42   44   27   28   30   29   31   53   54   56   55   57

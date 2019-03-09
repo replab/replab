@@ -93,7 +93,7 @@ classdef Sdprep < replab.Str
             assert(iscell(generators), 'Please specify generators in cell array.');
             
             n = size(generators{1},2);
-            group = replab.Permutations(n).subgroup(generators);
+            group = replab.SignedPermutations(n).subgroup(generators);
             
             irrDecomp = group.naturalRepresentation.irreducible;
             U = irrDecomp.U;
