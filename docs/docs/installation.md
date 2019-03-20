@@ -29,6 +29,8 @@ This will create a folder **RepLAB** with all the necessary code, including the 
 
 To use the library, the **RepLAB** folder must be added in Matlab or Octave. This can be done through the `replab_addpaths` scripts.
 
+## Additional resources
+**RepLAB** uses the [YALMIP](https://yalmip.github.io) interface to solve convex optimization problems. In order to use **RepLAB** for semidefinite programming, you will need to [install](https://yalmip.github.io/download/) and [configure](https://yalmip.github.io/tutorial/installation/) it on your system. At least one [SDP solver](https://yalmip.github.io/allsolvers/) is also needed, e.g. [SeDuMi](https://github.com/SQLP/SeDuMi). The proper functioning of YALMIP can be checked with the command `yalmiptest`.
 
 ## Testing
 
