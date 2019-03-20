@@ -6,7 +6,7 @@ position: 1
 
 # {{page.title}}
 
-In this chapter we cover the basics of starting to use RepLAB.
+In this chapter we cover the basics of starting to use **RepLAB**.
 
 ## Cloning the library
 

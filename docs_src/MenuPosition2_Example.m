@@ -1,9 +1,9 @@
 %% Short RepLAB tutorial
 %
-% This document will show some features of RepLAB.
+% This document will show some features of *RepLAB*.
 
 %%
-% Before trying any of the RepLAB commands, we must first add the paths:
+% Before trying any of the *RepLAB* commands, we must first add the paths:
 replab_addpaths
 
 %% Working with permutation groups
@@ -22,7 +22,7 @@ g2 = [2 1 3:n];
 %%
 % Remark that permutations in RepLAB are simply row vectors of
 % images. We use the convention that permutations act on indices
-% $i=1,2,3,4$ **on the left**, thus the image of 3 under $g_2$
+% $i=1,2,3,4$ *on the left*, thus the image of 3 under $g_2$
 % is compatible with MATLAB syntax:
 g2(3)
 %%
