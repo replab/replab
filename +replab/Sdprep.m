@@ -205,11 +205,11 @@ classdef Sdprep < replab.Str
             for i = 1:self.nComponents
                 switch self.types(i)
                     case 'R'
-                        s = [s, num2str(self.dimensions1(i)), 'x', num2str(self.multiplicities(i)), ' + '];
+                        s = [s, num2str(self.dimensions1(i)), '*', num2str(self.multiplicities(i)), 'x', num2str(self.multiplicities(i)), ' + '];
                     case 'C'
-                        s = [s, num2str(self.dimensions1(i)/2), 'x', num2str(2*self.multiplicities(i)), ' + '];
+                        s = [s, num2str(self.dimensions1(i)/2), '*', num2str(2*self.multiplicities(i)), 'x', num2str(2*self.multiplicities(i)), ' + '];
                     case 'H'
-                        s = [s, num2str(self.dimensions1(i)/4), 'x', num2str(4*self.multiplicities(i)), ' + '];
+                        s = [s, num2str(self.dimensions1(i)/4), '*', num2str(4*self.multiplicities(i)), 'x', num2str(4*self.multiplicities(i)), ' + '];
                     otherwise
                         error('Unknown type');
                 end
