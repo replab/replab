@@ -2,11 +2,10 @@ classdef Sdprep < replab.Str
 % A SDP matrix satisfying some symmetry constraints
 %
 % Current limitations:
-% - Signed permutations are not supported yet
 % - The sdp matrix produced is currently always square, real, and symmetric
 % - Only supports complex and quaternionic representations with dimension 2
 %   and 4 respectively.
-% - limited arythmetic, essentially we can just:
+% - limited arithmetic, essentially we can just:
 %   - access the elements of the matrix through the fullMatrix method
 %   - define an SDP constraint with a constant bound, such as "M >= 0"
 
