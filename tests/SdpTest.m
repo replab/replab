@@ -1,15 +1,15 @@
 function test_suite = SdpTest()
-    test_functions = cell(0);
     try
         yalmip('version');
         try
             test_functions = localfunctions();
         catch
         end
+        initTestSuite;
     catch
-        warning('Yalmip not found in the path, some tests are skipped');
+        warning('Yalmip not found in the path, some tests will be skipped');
+        test_suite=MOxUnitTestSuite();
     end
-    initTestSuite;
 end
 
 function test_simple_structure
