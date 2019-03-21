@@ -1,6 +1,8 @@
-classdef Sdprep < replab.Str
-% A SDP matrix satisfying some symmetry constraints
+classdef Centralvar < replab.Str
+% A matrix variable satisfying some symmetry constraints
 %
+% example: replab.Centralvar.fromGenerators({[3 1 2]})
+
 % Current limitations:
 % - The sdp matrix produced is currently always square, real, and symmetric
 % - Only supports complex and quaternionic representations with dimension 2
@@ -21,7 +23,7 @@ classdef Sdprep < replab.Str
 
     methods
         
-        function self = Sdprep(U, dimensions1, multiplicities, types)
+        function self = Centralvar(U, dimensions1, multiplicities, types)
             try
                 yalmip('version');
             catch
@@ -106,7 +108,7 @@ classdef Sdprep < replab.Str
                 types(i) = irrDecomp.component(i).divisionAlgebra.shortName;
             end
             
-            R = replab.Sdprep(U, dimensions1, multiplicities, types);
+            R = replab.Centralvar(U, dimensions1, multiplicities, types);
         end
         
     end
@@ -172,22 +174,22 @@ classdef Sdprep < replab.Str
         function F = ge(X,Y)
         % greater or equal constraint
             % We only support some simple cases for now
-            if isa(X, 'replab.Sdprep')
+            if isa(X, 'replab.Centralvar')
                 self = X;
                 other = Y;
-                if isa(Y, 'replab.Sdprep')
-                    error('Comparison between two replab.Sdprep not yet supported');
+                if isa(Y, 'replab.Centralvar')
+                    error('Comparison between two replab.Centralvar not yet supported');
                 elseif numel(Y) ~= 1
                     error('Only comparison with scalar supported');
                 end
-            elseif isa(Y, 'replab.Sdprep')
+            elseif isa(Y, 'replab.Centralvar')
                 self = Y;
                 other = X;
                 if numel(X) ~= 1
                     error('Only comparison with scalar supported');
                 end
             else
-                error('Neither of the two arguments is of type Sdprep');
+                error('Neither of the two arguments is of type Centralvar');
             end
             
             F = [self.blocks{1} >= other];

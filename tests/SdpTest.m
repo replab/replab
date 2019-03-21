@@ -12,10 +12,10 @@ function test_suite = SdpTest()
     end
 end
 
-function test_simple_structure
+function test_Centralvar_simple_structure
     % We do a sanity check with one group
     generators = {[2 3 4 5 1]};
-    matrix = replab.Sdprep.fromGenerators(generators);
+    matrix = replab.Centralvar.fromGenerators(generators);
     matrix = matrix.fullMatrix;
     for i = 1:length(generators)
         difference = matrix - matrix(generators{i}, generators{i});
@@ -62,7 +62,7 @@ function test_SDP_CHSH
     obj1 = value(obj);
     
     % We formulate the symmetrized SDP:
-    symSdpMatrix = replab.Sdprep.fromGenerators(generators);
+    symSdpMatrix = replab.Centralvar.fromGenerators(generators);
     solvesdp([symSdpMatrix >= 0, symSdpMatrix.fullMatrix == sdpMatrix, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
     obj2 = value(obj);
     
@@ -121,7 +121,7 @@ function test_SDP_CHSH_FullProb
     obj1 = value(obj);
     
     % We formulate the symmetrized SDP:
-    symSdpMatrix = replab.Sdprep.fromGenerators(generators);
+    symSdpMatrix = replab.Centralvar.fromGenerators(generators);
     solvesdp([symSdpMatrix >= 0, symSdpMatrix.fullMatrix == sdpMatrix, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
     obj2 = value(obj);
     
@@ -204,7 +204,7 @@ function test_SDP_CGLMP3_FullProb
     obj1 = value(obj);
     
     % We formulate the symmetrized SDP:
-    symSdpMatrix = replab.Sdprep.fromGenerators(generators);
+    symSdpMatrix = replab.Centralvar.fromGenerators(generators);
     solvesdp([symSdpMatrix >= 0, symSdpMatrix.fullMatrix == sdpMatrix, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
     obj2 = value(obj);
     
