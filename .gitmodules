@@ -1,9 +1,12 @@
 [submodule "MOxUnit"]
 	path = external/MOxUnit
 	url = https://github.com/MOxUnit/MOxUnit.git
+
 [submodule "YALMIP"]
 	path = external/YALMIP
 	url = https://github.com/yalmip/YALMIP
-[submodule "SeDuMi"]
-	path = external/SeDuMi
-	url = https://github.com/SQLP/SeDuMi
+
+[submodule "SDPT3"]
+	path = external/SDPT3
+	url = https://github.com/SQLP/SDPT3
+
