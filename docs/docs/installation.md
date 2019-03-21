@@ -19,8 +19,8 @@ To use the library, either:
 ```
 git clone https://www.github.com/replab/replab
 cd replab
-git submodules init
-git submodules update
+git submodule init
+git submodule update external/MOxUnit
 ```
 
 This will create a folder **RepLAB** with all the necessary code, including the [VPI](https://ch.mathworks.com/matlabcentral/fileexchange/22725-variable-precision-integer-arithmetic) library for large integers and the testing suite [MOxUnit](https://github.com/MOxUnit/MOxUnit).
@@ -30,7 +30,22 @@ This will create a folder **RepLAB** with all the necessary code, including the 
 To use the library, the **RepLAB** folder must be added in Matlab or Octave. This can be done through the `replab_addpaths` scripts.
 
 ## Additional resources
-**RepLAB** uses the [YALMIP](https://yalmip.github.io) interface to solve convex optimization problems. In order to use **RepLAB** for semidefinite programming, you will need to [install](https://yalmip.github.io/download/) and [configure](https://yalmip.github.io/tutorial/installation/) it on your system. At least one [SDP solver](https://yalmip.github.io/allsolvers/) is also needed, e.g. [SeDuMi](https://github.com/SQLP/SeDuMi). The proper functioning of YALMIP can be checked with the command `yalmiptest`.
+**RepLAB** uses the [YALMIP](https://yalmip.github.io) interface to solve convex optimization problems. In order to use **RepLAB** for semidefinite programming, you will need to [install](https://yalmip.github.io/download/) and [configure](https://yalmip.github.io/tutorial/installation/) it on your system. At least one [SDP solver](https://yalmip.github.io/allsolvers/), such as [SeDuMi](https://github.com/SQLP/SeDuMi), is also needed. The proper functioning of YALMIP can be checked with the command `yalmiptest`.
+
+If you do not wish to install these tools on you own, you can alternatively use the YALMIP and SDPT3 submodules that are included in **RepLAB** for testing purposes. For this, update all submodules by issuing the command
+
+```
+git submodule update
+```
+
+from within the replab folder. Within matlab/octave, use then the following commands to finish the installation of the solver:
+
+```
+replab_addpaths(1)
+cd external/SDPT3/
+install_sdpt3
+```
+On octave, the package `liboctave-dev` is required for this command to succeed.
 
 ## Testing
 
