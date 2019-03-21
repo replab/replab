@@ -22,8 +22,8 @@ diagnostic =
   struct with fields:
 
     yalmipversion: '20181012'
-       yalmiptime: 0.0372
-       solvertime: 0.0019
+       yalmiptime: 0.4040
+       solvertime: 0.0106
              info: 'Successfully solved (MOSEK)'
           problem: 0
 
@@ -36,7 +36,7 @@ MOpt =
 
 </pre><p>This shows that the lowest possible value of <img src="SDP_eq11726414244992110607.png" alt="$M(1,2)$"> which is compatible with a matrix <img src="SDP_eq00802513524912003067.png" alt="$M$"> having only positive eigenvalues is <img src="SDP_eq13230327389884360718.png" alt="$-1/6$">.</p><p>
 <h3>Symmetric formulation</h3>
-</p><p>Using <b>RepLAB</b>, we can solve this problem while taking into account the structure of the matrix <img src="SDP_eq00802513524912003067.png" alt="$M$">.</p><p>We start by defining a matrix which satisfies the desired symmetry</p><pre class="codeinput">MSym = replab.Sdprep.fromGenerators({permutation});
+</p><p>Using <b>RepLAB</b>, we can solve this problem while taking into account the structure of the matrix <img src="SDP_eq00802513524912003067.png" alt="$M$">.</p><p>We start by defining a matrix which satisfies the desired symmetry</p><pre class="codeinput">MSym = replab.Centralvar.fromGenerators({permutation});
 </pre><p>We can then perform the optimization with:</p><pre class="codeinput">constraintsSym = [MSym(1,1)+MSym(2,2)+MSym(3,3) == 1, MSym &gt;= 0];
 diagnosticSym = optimize(constraintsSym, MSym(1,2), sdpsettings(<span class="string">'verbose'</span>, 0))
 MSymOpt = value(MSym)
@@ -46,8 +46,8 @@ diagnosticSym =
   struct with fields:
 
     yalmipversion: '20181012'
-       yalmiptime: 0.0373
-       solvertime: 0.0016
+       yalmiptime: 0.0820
+       solvertime: 0.0015
              info: 'Successfully solved (MOSEK)'
           problem: 0
 
@@ -187,7 +187,7 @@ MOpt = value(M)
 % structure of the matrix $M$.
 %
 % We start by defining a matrix which satisfies the desired symmetry
-MSym = replab.Sdprep.fromGenerators({permutation});
+MSym = replab.Centralvar.fromGenerators({permutation});
 %%
 % We can then perform the optimization with:
 constraintsSym = [MSym(1,1)+MSym(2,2)+MSym(3,3) == 1, MSym >= 0];
