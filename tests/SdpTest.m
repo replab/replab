@@ -1,4 +1,5 @@
 function test_suite = SdpTest()
+    test_functions = cell(0);
     try
         yalmip('version');
         try
