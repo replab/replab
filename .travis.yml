@@ -27,7 +27,7 @@ before_install:
 
 ###############################################################################
 install:
-  ADDPATH_COMMAND="replab_addpaths(1);"
+  ADDPATH_COMMAND="replab_addpaths(2,1);"
 
 ###############################################################################
 before_script:
