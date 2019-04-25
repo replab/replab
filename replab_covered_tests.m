@@ -1,4 +1,4 @@
-function test_suite = test()
+function test_suite = replab_covered_tests()
     try
         test_functions = localfunctions();
     catch
@@ -24,7 +24,9 @@ function test_suite = test()
     % - finally, collect the coverage result (if requested)
     %
     % Here is a way to call this file to achieve this:
-    % moxunit_runtests('test.m', '-verbose', '-with_coverage', '-cover', '.', '-cover_exclude', 'external', '-cover_json_file', 'coverage.json', '-cover_xml_file', 'coverage.xml', '-cover_html_dir', 'coverage_html')
+    %   moxunit_runtests('test.m', '-verbose', '-with_coverage', '-cover', '.', '-cover_exclude', 'external', '-cover_json_file', 'coverage.json', '-cover_xml_file', 'coverage.xml', '-cover_html_dir', 'coverage_html')
+    % To rather run all tests without code coverage, use:
+    %   moxunit_runtests('tests', '-recursive', '-verbose', '-junit_xml_file', 'testresults.xml')
     
     % At this point it is important to remove the current path so that the
     % default location for the source code will be the one with activated
