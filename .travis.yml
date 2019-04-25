@@ -51,3 +51,5 @@ after_script:
   # Check where we ended up and what's going on where we are
   - pwd
   - ls -alh
+  - bash <(curl -s https://codecov.io/bash)
+
