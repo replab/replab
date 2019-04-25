@@ -101,3 +101,9 @@ Temporary Items
 # Files generated automatically by github
 docs/_site/
 
+##---------------------------------------------------
+# MOcov .gitignore
+##---------------------------------------------------
+coverage.*
+coverage_html
+

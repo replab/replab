@@ -7,4 +7,5 @@ function replab_addpaths
     addpath([pathStr '/external/vpi']);
     addpath([pathStr '/external/MOxUnit/MOxUnit']);
     addpath([pathStr '/external/MOxUnit/MOxUnit/util']);
+    addpath([pathStr '/external/MOcov/MOcov']);
 end

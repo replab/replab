@@ -30,7 +30,7 @@ install:
 
 ###############################################################################
 before_script:
-  - TEST_ARGS="'-recursive', '-verbose', '-junit_xml_file', 'testresults.xml'";
+  - TEST_ARGS="'-recursive', '-verbose', '-junit_xml_file', 'testresults.xml', '-with_coverage', '-cover', '+replab', '-cover_json_file', 'coverage.json', '-cover_xml_file', 'coverage.xml', '-cover_html_dir', 'coverage_html'";
     TEST_COMMAND="exit(~moxunit_runtests('tests', $TEST_ARGS));";
     echo "TEST_COMMAND| $TEST_COMMAND";
   # Double-check we are still in the right directory
@@ -51,5 +51,6 @@ after_script:
   # Check where we ended up and what's going on where we are
   - pwd
   - ls -alh
+  - cat coverage.json
   - bash <(curl -s https://codecov.io/bash)
 
