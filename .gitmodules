@@ -1,6 +1,6 @@
 [submodule "MOxUnit"]
 	path = external/MOxUnit
 	url = https://github.com/MOxUnit/MOxUnit.git
-[submodule "external/MOcov"]
+[submodule "MOcov"]
 	path = external/MOcov
-	url = https://github.com/MOcov/MOcov
+	url = https://github.com/MOcov/MOcov.git
