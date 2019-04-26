@@ -62,6 +62,31 @@ function replab_addpaths(verbose)
         disp('MOxUnit is already in the path');
     end
     
+    % Making sure MOcov is in the path and working
+    MOcovInPath = false;
+    try
+        mocov_get_absolute_path('.');
+        MOcovInPath = true;
+    catch
+    end
+    if ~MOcovInPath
+        if exist([pathStr '/external/MOcov/MOcov/mocov.m']) ~= 2
+            warning(['The MOcov library was not found in the folder ', pathStr, '/external/MOcov', char(10), ...
+                'Did you run ''git submodule init'' and ''git submodule update''?', char(10), ...
+                'It will not be possible to run the tests.']);
+        else
+            addpath([pathStr '/external/MOcov/MOcov']);
+            moxunit_set_path;
+            if verbose >= 1
+                disp('Adding MOcov to the path');
+            end
+        end
+    elseif verbose >= 2
+        disp('MOcov is already in the path');
+    end
+        addpath([pathStr '/external/MOcov/MOcov']);
+
+    
     % Making sure YALMIP is in the path and working
     YALMIPInPath = false;
     try
