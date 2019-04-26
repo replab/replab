@@ -30,8 +30,7 @@ install:
 
 ###############################################################################
 before_script:
-  - TEST_ARGS="'-verbose', '-with_coverage', '-cover', '.', '-cover_exclude', 'external', '-cover_exclude', 'tests', '-cover_exclude', 'docs_src', '-cover_json_file', 'coverage.json', '-cover_xml_file', 'coverage.xml', '-cover_html_dir', 'coverage_html'";
-    TEST_COMMAND="exit(~moxunit_runtests('replab_covered_tests.m', $TEST_ARGS));";
+  - TEST_COMMAND="exit(~replab_runtests(1));";
     echo "TEST_COMMAND| $TEST_COMMAND";
   # Double-check we are still in the right directory
   - pwd
@@ -51,6 +50,5 @@ after_script:
   # Check where we ended up and what's going on where we are
   - pwd
   - ls -alh
-  - cat coverage.json
   - bash <(curl -s https://codecov.io/bash)
 

@@ -1,4 +1,10 @@
-function test_suite = replab_covered_tests()
+function test_suite = codeCoverageHelperFunction()
+    % This file is a helper function for replab_runtests.m. To use it, call
+    % 'replab_runtests(1)'.
+    % 
+    % The name of this function should not contain the string "test"
+    % (otherwise, this will trigger an infinite loop of tests).
+    
     try
         test_functions = localfunctions();
     catch
@@ -12,8 +18,9 @@ function test_suite = replab_covered_tests()
     % monitored by MOxUnit.
     % 
     % This file avoids this behavior by defining a test suite which
-    % consists of all tests in the 'tests' folder. This way, calling
-    % MOxUnit on this file will do the following:
+    % consists of all tests in the 'tests' folder (this one is not included
+    % because its name doesn't contain the string 'test'). This way,
+    % calling MOxUnit on this file will do the following:
     % - define a test suite saying that we want to run MOxUnit on all tests
     %   in the 'tests' folder
     % - activate coverage of the source code in the replab package
@@ -23,24 +30,23 @@ function test_suite = replab_covered_tests()
     % - run the tests
     % - finally, collect the coverage result (if requested)
     %
-    % Here is a way to call this file to achieve this:
-    %   moxunit_runtests('test.m', '-verbose', '-with_coverage', '-cover', '.', '-cover_exclude', 'external', '-cover_json_file', 'coverage.json', '-cover_xml_file', 'coverage.xml', '-cover_html_dir', 'coverage_html')
-    % To rather run all tests without code coverage, use:
-    %   moxunit_runtests('tests', '-recursive', '-verbose', '-junit_xml_file', 'testresults.xml')
+    % This is what happens when calling replab_runtests with code coverage
+    % enabled.
     
-    % At this point it is important to remove the current path so that the
+    % At this point it is important to remove the replab path so that the
     % default location for the source code will be the one with activated
     % coverage
     [pathStr, name, extension] = fileparts(which(mfilename));
-    rmpath(pathStr);
+    replabFolder = pathStr(1:find(pathStr=='/',1,'last')-1);
+    rmpath(replabFolder);
     
     % We define a test which consists of all other tests
     f = @() moxunit_runtests('tests', '-recursive', '-verbose', '-junit_xml_file', 'testresults.xml');
-    testCase = MOxUnitFunctionHandleTestCase('All tests with coverage', pwd, f);
+    testCase = MOxUnitFunctionHandleTestCase('All tests with coverage', replabFolder, f);
     test_suite = addTest(test_suite, testCase);
     
     % We can restore the path
-    addpath(pathStr);
+    addpath(replabFolder);
 end
 
 

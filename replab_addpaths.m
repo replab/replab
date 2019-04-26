@@ -84,7 +84,6 @@ function replab_addpaths(verbose)
     elseif verbose >= 2
         disp('MOcov is already in the path');
     end
-        addpath([pathStr '/external/MOcov/MOcov']);
 
     
     % Making sure YALMIP is in the path and working
