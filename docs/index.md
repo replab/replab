@@ -8,7 +8,7 @@ position: 0
 Current version: **{{site.replabVersion}}**.
 
 [![Join the chat at https://gitter.im/denisrosset/replab](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/denisrosset/replab)
-[![Travis CI](https://travis-ci.com/replab/replab.svg?branch=master)](https://travis-ci.com/replab/replab)
+[![Travis CI](https://travis-ci.com/replab/replab.svg?branch=master)](https://travis-ci.com/replab/replab) [![codecov](https://codecov.io/gh/replab/replab/branch/master/graph/badge.svg)](https://codecov.io/gh/replab/replab)
 
 **RepLAB** provides tools to study representations of finite groups and decompose them numerically. It is compatible with both MATLAB and Octave.
 

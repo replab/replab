@@ -10,3 +10,6 @@
 	path = external/SDPT3
 	url = https://github.com/SQLP/SDPT3
 
+[submodule "MOcov"]
+	path = external/MOcov
+	url = https://github.com/MOcov/MOcov.git
