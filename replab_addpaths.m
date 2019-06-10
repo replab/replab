@@ -127,6 +127,8 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
             end
         elseif verbose >= 2
             disp('SDPT3 is already in the path');
+        end
+    end
 
     % Making sure MOcov is in the path and working
     MOcovInPath = false;
@@ -142,7 +144,6 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
                 'It will not be possible to run the tests.']);
         else
             addpath([pathStr '/external/MOcov/MOcov']);
-            moxunit_set_path;
             if verbose >= 1
                 disp('Adding MOcov to the path');
             end
