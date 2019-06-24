@@ -24,7 +24,7 @@ classdef Str < handle
         function s = str(self)
             s = self.description;
         end
-
+        
     end
     
 end
