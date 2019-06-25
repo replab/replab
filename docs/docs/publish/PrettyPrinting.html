@@ -1,0 +1,139 @@
+---
+layout: docs
+title: Pretty printing infrastructure
+category: posts
+comments: true
+---
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+--><div class="content"><h1>Pretty printing infrastructure</h1><p>Matlab has little support for consistent pretty printing of objects. Thus, RepLAB contains helper classes and functions to print arbitrary objects in a clear style.</p><p>Three styles of printing are used by default:</p><p>- a 'tiny' style that prints only the size and type of the object,</p><p>- a 'short' style that fits on a single display line,</p><p>- a 'long' style that can use multiple lines.</p><p>The style used when displaying objects in the REPL/command line is the 'long' style. For example:</p><pre class="codeinput">P = replab.Permutations(3)
+</pre><pre class="codeoutput">
+P = 
+
+replab.Permutations instance with six fields:
+ description: 'replab.Permutations instance'
+  domainSize: 3                             
+    identity: [1, 2, 3]                     
+generator(1): [2, 3, 1]                     
+generator(2): [2, 1, 3]                     
+       order: 6                             
+</pre><p>which is the output of the 'replab.longStr' function</p><pre class="codeinput">replab.longStr(P)
+</pre><pre class="codeoutput">
+ans =
+
+  7x1 cell array
+
+    {'replab.Permutations instance with six fields:'}
+    {' description: 'replab.Permutations instance'' }
+    {'  domainSize: 3                             ' }
+    {'    identity: [1, 2, 3]                     ' }
+    {'generator(1): [2, 3, 1]                     ' }
+    {'generator(2): [2, 1, 3]                     ' }
+    {'       order: 6                             ' }
+
+</pre><p>while the short version is much less informative.</p><pre class="codeinput">replab.shortStr(P)
+</pre><pre class="codeoutput">
+ans =
+
+    'replab.Permutations'
+
+</pre><p>All classes in RepLAB inherit the 'replab.Str' base class, which provides explicit 'longStr' and 'shortStr' methods. Those methods take a dimension limit for width (and possibly height). In contrast, the 'replab.shortStr' and 'replab.longStr' use default values when those arguments are not given (maxRows = 25, maxColumns = 80).</p><pre class="codeinput">P.longStr(80, 25)
+P.shortStr(80)
+</pre><pre class="codeoutput">
+ans =
+
+  7x1 cell array
+
+    {'1 x 1 replab.Permutations'}
+    {' description: 1 x 28 char'}
+    {'  domainSize: 3          '}
+    {'    identity: [1, 2, 3]  '}
+    {'generator(1): [2, 3, 1]  '}
+    {'generator(2): [2, 1, 3]  '}
+    {'       order: 6          '}
+
+
+ans =
+
+    'replab.Permutations'
+
+</pre><p>while implementing disp() using 'longStr'.</p><p>The default implementation of 'longStr' is to print a short description of the object on the first line, followed by public properties.</p><p>However, additional fields can be printed by overloading the 'additionalFields' method, while properties can be hidden from view by overriding the 'hiddenFields' method.</p><p>For example, 'FiniteGroup.order' is not a property, as it is computed on demand. Thus, when printing a permutation group, the output depends on whether the order is known</p><pre class="codeinput">P = replab.Permutations(3).subgroup({[2 3 1]})
+P.order
+P
+</pre><pre class="codeoutput">
+P = 
+
+replab.perm.PermutationBSGSGroup instance with five fields:
+      action: replab.perm.PermutationNaturalAction       
+ description: 'replab.perm.PermutationBSGSGroup instance'
+  domainSize: 3                                          
+    identity: [1, 2, 3]                                  
+generator(1): [2, 3, 1]                                  
+ans =
+    3
+
+P = 
+
+replab.perm.PermutationBSGSGroup instance with six fields:
+      action: replab.perm.PermutationNaturalAction       
+ description: 'replab.perm.PermutationBSGSGroup instance'
+  domainSize: 3                                          
+    identity: [1, 2, 3]                                  
+generator(1): [2, 3, 1]                                  
+       order: 3                                          
+<!--
+##### SOURCE BEGIN #####
+%% Pretty printing infrastructure
+%
+% Matlab has little support for consistent pretty printing of objects. Thus,
+% RepLAB contains helper classes and functions to print arbitrary objects in
+% a clear style.
+%
+% Three styles of printing are used by default:
+%
+% - a 'tiny' style that prints only the size and type of the object,
+%
+% - a 'short' style that fits on a single display line,
+%
+% - a 'long' style that can use multiple lines.
+%
+% The style used when displaying objects in the REPL/command line is the
+% 'long' style. For example:
+P = replab.Permutations(3)
+
+%%
+% which is the output of the 'replab.longStr' function
+replab.longStr(P)
+
+%%
+% while the short version is much less informative.
+replab.shortStr(P)
+
+%%
+% All classes in RepLAB inherit the 'replab.Str' base class, which provides
+% explicit 'longStr' and 'shortStr' methods. Those methods take a dimension
+% limit for width (and possibly height).
+% In contrast, the 'replab.shortStr' and 'replab.longStr' use default values
+% when those arguments are not given (maxRows = 25, maxColumns = 80).
+P.longStr(80, 25)
+P.shortStr(80)
+%%
+% while implementing disp() using 'longStr'.
+%
+% The default implementation of 'longStr' is to print a short description of
+% the object on the first line, followed by public properties.
+%
+% However, additional fields can be printed by overloading the
+% 'additionalFields' method, while properties can be hidden from view by
+% overriding the 'hiddenFields' method.
+%
+% For example, 'FiniteGroup.order' is not a property, as it is computed on
+% demand. Thus, when printing a permutation group, the output depends on
+% whether the order is known
+P = replab.Permutations(3).subgroup({[2 3 1]})
+P.order
+P
+
+##### SOURCE END #####
+-->

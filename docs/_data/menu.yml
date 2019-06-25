@@ -11,3 +11,6 @@ options:
 
   - title: Law checks 
     url: docs/publish/LawChecks.html
+
+  - title: Pretty printing 
+    url: docs/publish/PrettyPrinting.html

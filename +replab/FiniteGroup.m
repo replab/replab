@@ -2,6 +2,14 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
     
     methods
         
+        function [names values] = additionalFields(self)
+            [names values] = additionalFields@replab.FinitelyGeneratedGroup(self);
+            if self.knownOrder
+                names{end+1} = 'order';
+                values{end+1} = self.order;
+            end
+        end
+        
         function b = contains(self, g)
         % Returns true when this group contains the element "g"
         % and false otherwise
