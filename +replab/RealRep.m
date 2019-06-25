@@ -30,7 +30,21 @@ classdef RealRep < replab.Str
     end
     
     methods
+
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Str(self);
+            names{end+1} = 'images';
+            names{end+1} = 'imagesInv';
+        end
         
+        function [names values] = additionalFields(self)
+            [names values] = additionalFields@replab.Str(self);
+            for i = 1:self.group.nGenerators
+                names{end+1} = sprintf('images(%d)', i);
+                values{end+1} = self.images{i};
+            end
+        end
+
         function self = RealRep(group, dimension, images, imagesInv, parent, U, Uinv)
         % Constructs a representation from a group's generator images
             assert(isa(group, 'replab.FinitelyGeneratedGroup'));

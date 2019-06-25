@@ -82,9 +82,13 @@ function [lines overLimit] = longStr(obj, maxRows, maxColumns)
     end
     for i = 1:length(body)
         if length(body{i}) > maxColumns
-            b = body{i};
-            body{i} = [b(1:maxColumns-3) '...'];
-            overLimit = true;
+            b = deblank(body{i});
+            if length(b) > maxColumns
+                body{i} = [b(1:maxColumns-3) '...'];
+                overLimit = true;
+            else
+                body{i} = [b repmat(' ', [1 maxColumns-length(b)])];
+            end
         end
     end
     if isequal(header, [])

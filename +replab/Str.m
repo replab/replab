@@ -27,9 +27,18 @@ classdef Str < handle
         
         function [names values] = additionalFields(self)
         % Returns the name/value pairs corresponding to additional
-        % fields to be printed
+        % fields to be printed; given as column vectors
+        % Classes that override this method should call the
+        % superclass method
             names = {};
             values = {};
+        end
+        
+        function names = hiddenFields(self)
+        % Returns the names of the fields that are not printed
+        % Classes that override this method should call the
+        % superclass method
+            names = {};
         end
         
         function [s overLimit] = shortStr(self, maxColumns)
@@ -41,7 +50,7 @@ classdef Str < handle
         function [s overLimit] = longStr(self, maxRows, maxColumns)
         % Returns a multi line description of the current object
         % see replab.str.longStr for documentation
-            [s overLimit] = replab.str.longStr(self, maxColumns);
+            [s overLimit] = replab.str.longStr(self, maxRows, maxColumns);
         end
 
     end

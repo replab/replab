@@ -5,7 +5,9 @@ function [s overLimit] = shortStr(obj, maxColumns)
 % particular cases below.
     overLimit = false;
     if isscalar(obj) % prints scalars using the relevant method
-        if  isnumeric(obj)
+        if isa(obj, 'vpi')
+            s = strtrim(num2str(obj));
+        elseif isnumeric(obj)
             s = num2str(obj);
         elseif isa(obj, 'sym')
             s = char(obj);
