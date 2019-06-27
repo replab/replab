@@ -1,6 +1,8 @@
 function s = tinyStr(obj)
 % Returns a tiny string description -- class name and size (when relevant)
-    if isequal(obj, {})
+    if isa(obj, 'vpi')
+        s = sprintf('vpi ~ %e', double(obj));
+    elseif isequal(obj, {})
         s = '{}';
     elseif isequal(obj, [])
         s = '[]';

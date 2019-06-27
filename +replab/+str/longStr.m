@@ -80,17 +80,7 @@ function [lines overLimit] = longStr(obj, maxRows, maxColumns)
         warning('Pretty printing not implemented')
         header = replab.str.tinyStr(obj);
     end
-    for i = 1:length(body)
-        if length(body{i}) > maxColumns
-            b = deblank(body{i});
-            if length(b) > maxColumns
-                body{i} = [b(1:maxColumns-3) '...'];
-                overLimit = true;
-            else
-                body{i} = [b repmat(' ', [1 maxColumns-length(b)])];
-            end
-        end
-    end
+    [body overLimit] = replab.str.longFit(body, overLimit, maxRows-1, maxColumns);
     if isequal(header, [])
         lines = body;
     else

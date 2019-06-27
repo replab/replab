@@ -6,7 +6,12 @@ function [s overLimit] = shortStr(obj, maxColumns)
     overLimit = false;
     if isscalar(obj) % prints scalars using the relevant method
         if isa(obj, 'vpi')
-            s = strtrim(num2str(obj));
+            s = num2str(obj);
+            if size(s, 1) > 1
+                % corrects for multiline vpi num2str
+                s = s'; s = s(:)';
+            end
+            s = strtrim(s);
         elseif isnumeric(obj)
             s = num2str(obj);
         elseif isa(obj, 'sym')

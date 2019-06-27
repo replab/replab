@@ -39,23 +39,51 @@ classdef Enumerator < replab.Str
             self.size = size;
         end
         
-        function s = str(self)
-            s = sprintf('Enumerator of %s elements', strtrim(num2str(self.size)));
-            if self.size < 10
-                for i = 1:double(self.size)
-                    s = [s char(10) self.describe(i)];
-                end
-            else
-                for i = 1:3
-                    s = [s char(10) self.describe(i)];
-                end        
-                s = [s char(10) '..' strtrim(num2str(self.size - 6)) ' elements omitted..'];
-                for i = 2:-1:0
-                    s = [s char(10) self.describe(self.size - i)];
-                end
+        function s = shortStr(self, maxColumns)
+            s = sprintf('Enumerator of %s elements', replab.shortStr(self.size, maxColumns));
+            if length(s) > maxColumns
+                s = 'Enumerator';
             end
-        end            
+        end
         
+        function [lines overLimit] = longStr(self, maxRows, maxColumns)
+            if self.size > maxRows - 1
+                n = maxRows - 2;
+                start = ceil(n/2);
+                finish = n - start;
+                omit = self.size - start - finish;
+                omitting = 1;
+            else
+                start = self.size;
+                omit = [];
+                omitting = 0;
+                finish = 0;
+            end
+            table = cell(start + omitting + finish, 3);
+            ind = 1;
+            for i = 1:start
+                % TODO: we do not register the overLimit from inner printing
+                table{ind,1} = replab.shortStr(i, maxColumns);
+                table{ind,2} = ' = ';
+                table{ind,3} = replab.shortStr(self.at(i), maxColumns);
+                ind = ind + 1;
+            end
+            if omitting
+                table{ind,1} = ['.. ' replab.shortStr(omit, maxColumns)];
+                table{ind,2} = '';
+                table{ind,3} = 'elements omitted';
+                ind = ind + 1;
+            end
+            for i = 1:finish
+                index = self.size - finish + i;
+                table{ind,1} = replab.shortStr(index, maxColumns);
+                table{ind,2} = ' = ';
+                table{ind,3} = replab.shortStr(self.at(index), maxColumns);
+                ind = ind + 1;
+            end
+            lines = vertcat({self.shortStr(maxColumns)}, replab.str.align(table, 'rcl'));
+            [lines overLimit] = replab.str.longFit(lines, false, maxRows, maxColumns);
+        end
         
         function obj = sample(self)
         % Returns an element uniformly sampled from this Enumerator

@@ -4,8 +4,8 @@ function [lines overLimit] = longStr(obj, maxRows, maxColumns)
 %
 %        obj: Object to pretty print
 %
-%    maxRows: maximum number of rows
-% maxColumns: maximum number of columns
+%    maxRows: maximum number of rows (min. 3)
+% maxColumns: maximum number of columns (min. around 40)
 %
 % Returns a cell array of strings 'lines' and a Boolean 'overLimit' that states whether the output has been shortened
 % because it ran over limit.
