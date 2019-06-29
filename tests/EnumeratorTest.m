@@ -1,4 +1,4 @@
-function test_suite = DivisionAlgebraTest()
+function test_suite = EnumeratorTest()
     try
         test_functions = localfunctions();
     catch
@@ -8,6 +8,6 @@ end
 
 function test_display
     G = replab.Permutations(60);
-    description = G.elements.str;
+    description = replab.shortStr(G.elements);
     assert(~isempty(description));
 end
