@@ -76,7 +76,7 @@ Finite groups contain a finite number of elements.
 
 Permutation groups are finite groups that are subgroups of the symmetric group acting on `n` elements.
 
-In particular, the decomposition into $\{1,...,n\}$ into orbits, the natural action and representation of the group are all defined.
+In particular, the decomposition of $\{1,...,n\}$ into orbits, the natural action and representation of the group are all defined.
 
 - `PermutationGroup`: abstract base class for permutation groups,
 - `Permutations`: describes the symmetric group acting on `n` points.
