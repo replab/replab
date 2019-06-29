@@ -1,4 +1,4 @@
-classdef SignedPermutationVectorAction < replab.Action & replab.Str
+classdef SignedPermutationVectorAction < replab.Action & replab.StrFun
 % Describes the action of signed permutations on vectors by
 % permuting the coefficients and flipping their signs
     methods
@@ -6,7 +6,7 @@ classdef SignedPermutationVectorAction < replab.Action & replab.Str
             d = G.domainSize;
             assert(isa(G, 'replab.SignedPermutations'));
             desc = sprintf('Action of signed permutations on vectors of %d elements', d);
-            self = self@replab.Str(desc);
+            self = self@replab.StrFun(@(s, mc) desc);
             self.G = G;
             self.P = replab.domain.intAsDoubleMatrix(d, 1, 1, G.domainSize);
         end

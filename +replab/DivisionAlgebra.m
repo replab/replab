@@ -22,8 +22,7 @@ classdef DivisionAlgebra < replab.Monoid
     
     methods
         
-        function self = DivisionAlgebra(description, shortName, gamma, identity, basis, dualBasis)
-            self.description = description;
+        function self = DivisionAlgebra(shortName, gamma, identity, basis, dualBasis)
             self.shortName = shortName;
             self.d = size(gamma, 1);
             self.gamma = gamma;
@@ -31,6 +30,10 @@ classdef DivisionAlgebra < replab.Monoid
             self.m = size(basis, 1);
             self.basis = basis;
             self.dualBasis = dualBasis;
+        end
+        
+        function s = shortStr(self, maxColumns)
+            s = self.shortName;
         end
         
         function b = eqv(self, x, y)
@@ -104,7 +107,7 @@ classdef DivisionAlgebra < replab.Monoid
     methods (Static)
         
         function D = real
-            D = replab.DivisionAlgebra('Real division algebra', 'R', 1, 1, 1, 1);
+            D = replab.DivisionAlgebra('R', 1, 1, 1, 1);
         end
         
         function D = complex
@@ -124,7 +127,7 @@ classdef DivisionAlgebra < replab.Monoid
             dualBasis(:,:,2) = [0  1
                                 -1 0]/2;
             identity = [1; 0];
-            D = replab.DivisionAlgebra('Complex division algebra', 'C', gamma, identity, basis, dualBasis);
+            D = replab.DivisionAlgebra('C', gamma, identity, basis, dualBasis);
         end
         
         function D = quaternion
@@ -177,7 +180,7 @@ classdef DivisionAlgebra < replab.Monoid
                              1  0  0  0];
             dualBasis = permute(basis, [2 1 3])/4;
             identity = [1;0;0;0];
-            D = replab.DivisionAlgebra('Quaternion division algebra', 'H', gamma, identity, basis, dualBasis);
+            D = replab.DivisionAlgebra('H', gamma, identity, basis, dualBasis);
         end
         
     end

@@ -1,29 +1,29 @@
-function [lines overLimit] = longStr(obj, maxRows, maxColumns)
+function lines = longStr(obj, maxRows, maxColumns)
 % Returns a multiline description of the given object, that fits within the given width/height limit
-% (this is the fallback implementation; user  'replab.longStr'
 %
 %        obj: Object to pretty print
 %
-%    maxRows: maximum number of rows (min. 3)
-% maxColumns: maximum number of columns (min. around 40)
+%    maxRows: maximum number of rows
+% maxColumns: maximum number of columns
 %
-% Returns a cell array of strings 'lines' and a Boolean 'overLimit' that states whether the output has been shortened
-% because it ran over limit.
+% Returns a cell array of strings 'lines'; the output may be cut arbitrarily at columns
+% after 'maxColumns', and for rows after 'maxRows'. It is up to calling code to shape such
+% overflowing output before finally printing it.  
 %
-%    maxRows: maximum row size; optional parameter with default value 25
-% maxColumns: maximum column size; optional parameter with default value 120
+%    maxRows: maximum row size; optional parameter with default value given in Settings.m
+% maxColumns: maximum column size; optional parameter with default value given in Settings.m
     if nargin < 3
-        maxColumns = 120;
+        maxColumns = replab.Settings.strMaxColumns;
     end
     if nargin < 2
-        maxRows = 25;
+        maxRows = replab.Settings.strMaxRows;
     end
     if isa(obj, 'replab.Str')
         try
-            [lines overLimit] = obj.longStr(maxRows, maxColumns);
+            lines = obj.longStr(maxRows, maxColumns);
             return
         catch
         end
     end
-    [lines overLimit] = replab.str.longStr(obj, maxRows, maxColumns);
+    lines = replab.str.longStr(obj, maxRows, maxColumns);
 end

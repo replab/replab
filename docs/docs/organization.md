@@ -31,18 +31,6 @@ The `ClassLaws` class lists the algebraic laws that should be obeyed by a partic
 
 - `Laws`: abstract base class for the laws checking framework.
 
-## Pretty printing
-
-(Work in progress: should be improved! in particular to be able to control the amount of verbosity)
-
-Most all classes in RepLAB derive from the `Str` base class, which implements a `str` method that provides a text representation of a RepLAB object.
-
-RepLAB provides also a `strOf` function that calls the `str` method for instances of `Str`, and implements reasonable defaults for objects outside RepLAB (such as matrices / vectors).
-
-The `Str` class provides a default `disp` method.
-
-The default `str` method returns the content of the `description` property (if nonempty), or constructs a text representation.
-
 ## Structured sets
 
 Most classes in RepLAB describe sets of elements with additional structure.

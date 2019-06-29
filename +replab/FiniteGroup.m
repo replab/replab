@@ -49,21 +49,7 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
     end
     
     methods
-        
-        function s = str(self)
-            if self.knownOrder
-                h = sprintf('%s instance with %d generators of order %s', class(self), self.nGenerators, strtrim(num2str(self.order)));
-            else
-                h = sprintf('%s instance with %d generators', class(self), self.nGenerators);
-            end
-            gens = {};
-            for i = 1:self.nGenerators
-                genName = char('a' + i - 1);
-                gens{end+1} = sprintf('  %s: %s', genName, replab.strOf(self.generators{i}));
-            end
-            s = strjoin({h gens{:}}, char(10));
-        end
-        
+                
         function g = sample(self)
             g = self.randomBag.sample;
         end

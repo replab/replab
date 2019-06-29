@@ -49,26 +49,29 @@ classdef ComplexRep < replab.Str
             self.M = replab.GroupFun('Mat', @isequal, @() rand(d, d)+1i*rand(d, d), @(x, y) x*y, eye(d), @(x) inv(x));
         end
 
-        function rr = forget(self)
-        % Returns a ComplexRep that forgot all its special structure
-            rr = replab.ComplexRep(self.group, self.dimension, self.images, self.imagesInv);
-        end
-
-        function s = str(self)
-        % Nice string representation
+        % Str
+        
+        function s = shortStr(self, maxColumns)
             if self.isUnitary
                 t = 'Unitary representation';
             else
                 t = 'Representation';
             end
-            s = sprintf('%s of dimension %d with generator images', t, self.dimension);
-            for i = 1:length(self.images)
-                gen = char('a' + i - 1);
-                s = [s char(10) '- ' gen ':' char(10)];
-                img = replab.prependLines(replab.strOf(self.images{i}), '    ');
-                s = [s img char(10)];
-            end
+            s = sprintf('%s of dimension %d', t, self.dimension);
         end
+        
+        function lines = longStr(self, maxRows, maxColumns)
+            lines = replab.str.longStr(self, maxRows, maxColumns);
+            lines{1} = self.shortStr(maxColumns);
+        end
+        
+        % Own methods
+        
+        function rr = forget(self)
+        % Returns a ComplexRep that forgot all its special structure
+            rr = replab.ComplexRep(self.group, self.dimension, self.images, self.imagesInv);
+        end
+
                 
         function rho = image(self, g)
         % Computes the image of a group element g in this representation

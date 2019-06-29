@@ -17,8 +17,13 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
         
         % Str
                 
-        function s = str(self)
+        function s = shortStr(self, maxColumns)
             s = sprintf('Permutations acting on %d elements', self.domainSize);
+        end
+
+        function lines = longStr(self, maxRows, maxColumns)
+            lines = replab.str.longStr(self, maxRows, maxColumns);
+            lines{1} = self.shortStr(maxColumns);
         end
         
         % Domain

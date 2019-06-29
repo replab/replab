@@ -1,12 +1,13 @@
-function [lines overLimit] = longFit(lines, overLimit, maxRows, maxColumns)
+function [lines overLimit] = longFit(lines, maxRows, maxColumns)
 % Fits the string description given in 'lines' in the box of size maxRows x maxColumns
 %
 %      lines: column cell array where each cell element is a string representing a row
-%  overLimit: if we had to trim due to breaking a limit
-%             the return value is an 'or' of the previous 'overLimit' and whatever cut
-%             is done here
 %    maxRows: maximum number of rows
 % maxColumns: maximum number of columns
+%
+% Returns
+%      lines: the lines that now fit in maxRows x maxColumns
+%  overLimit: if we had to trim due to breaking a limit
     if length(lines) > maxRows
         lines = lines(1:maxRows-1);
         lines{maxRows} = '...';

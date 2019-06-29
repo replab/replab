@@ -11,7 +11,7 @@ classdef Enumerator < replab.Str
         % used by Enumerator.str
             sizeNChars = length(strtrim(num2str(self.size)));
             msg = ['at(%' num2str(sizeNChars) 's) = %s'];
-            el = replab.strOf(self.at(i));
+            el = replab.shortStr(self.at(i));
             s = sprintf(msg, strtrim(num2str(i)), el);
         end
         
@@ -41,12 +41,9 @@ classdef Enumerator < replab.Str
         
         function s = shortStr(self, maxColumns)
             s = sprintf('Enumerator of %s elements', replab.shortStr(self.size, maxColumns));
-            if length(s) > maxColumns
-                s = 'Enumerator';
-            end
         end
         
-        function [lines overLimit] = longStr(self, maxRows, maxColumns)
+        function lines = longStr(self, maxRows, maxColumns)
             if self.size > maxRows - 1
                 n = maxRows - 2;
                 start = ceil(n/2);
@@ -62,7 +59,6 @@ classdef Enumerator < replab.Str
             table = cell(start + omitting + finish, 3);
             ind = 1;
             for i = 1:start
-                % TODO: we do not register the overLimit from inner printing
                 table{ind,1} = replab.shortStr(i, maxColumns);
                 table{ind,2} = ' = ';
                 table{ind,3} = replab.shortStr(self.at(i), maxColumns);
@@ -82,7 +78,6 @@ classdef Enumerator < replab.Str
                 ind = ind + 1;
             end
             lines = vertcat({self.shortStr(maxColumns)}, replab.str.align(table, 'rcl'));
-            [lines overLimit] = replab.str.longFit(lines, false, maxRows, maxColumns);
         end
         
         function obj = sample(self)

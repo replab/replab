@@ -18,14 +18,14 @@ classdef RandomBag < replab.Str
 
     methods
         
-        function s = str(self, short)
-            msg = 'Random bag containing %d elements, last drawn element: %s';
+        function s = shortStr(self, maxColumns)
+            msg = 'Random bag of %d elements, last drawn element: %s';
             s = sprintf(msg, length(self.x), replab.strOf(self.x0));
-            if nargin == 2 && ~short
-                for i = 1:length(self.x)
-                    s = [s char(10) '  - ' replab.strOf(self.x{i})];
-                end
-            end
+        end
+        
+        function lines = longStr(self, maxRows, maxColumns)
+            lines = replab.str.longStr(self, maxRows, maxColumns);
+            lines{1} = self.shortStr(maxColumns);
         end
         
         function res = sample(self)

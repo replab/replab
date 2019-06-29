@@ -2,28 +2,22 @@ function [names values] = fieldsList(obj)
 % Returns a list of field names and values for the given object,
 % returned as column vectors
     if isstruct(obj) || isobject(obj)
-        if replab.platformIsOctave
-            % Octave has a bug in some versions: it prints a
-            % warning that the object is converted to a struct
-            % and lists private/protected properties as well
-            prev = warning('off'); % turn off warnings
-            candidates = fieldnames(obj);
-            warning(prev);
-            names = {};
-            values = {};
-            for i = 1:length(candidates)
-                name = candidates{i};
-                try
-                    value = obj.(name);
-                    names{end+1, 1} = name;
-                    values{end+1, 1} = value;
-                catch
-                end
+        % Octave has a bug in some versions: it prints a
+        % warning that the object is converted to a struct
+        % and lists private/protected properties as well
+        prev = warning('off'); % turn off warnings
+        candidates = fieldnames(obj);
+        warning(prev);
+        names = {};
+        values = {};
+        for i = 1:length(candidates)
+            name = candidates{i};
+            try
+                value = obj.(name);
+                names{end+1, 1} = name;
+                values{end+1, 1} = value;
+            catch
             end
-        else
-            % MATLAB is saner
-            names = fieldnames(obj);
-            values = cellfun(@(f) obj.(f), names, 'uniform', 0);
         end
     else
         names = {};
