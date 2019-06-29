@@ -39,12 +39,6 @@ classdef RealDecompositionRep < replab.RealRep
             end
         end
         
-        function lines = longStr(self, maxRows, maxColumns)
-            lines = replab.str.longStr(self, maxRows, maxColumns);
-            lines{1} = self.shortStr(maxColumns);
-        end
-
-        
         % Own methods
         function n = nComponents(self)
             n = length(self.components);

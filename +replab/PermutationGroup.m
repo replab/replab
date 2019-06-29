@@ -56,6 +56,11 @@ classdef PermutationGroup < replab.Group
             rho = self.permutationRepresentation(self.domainSize, self.generators);
         end
         
+        function rho = naturalRep(self)
+        % Returns the natural permutation representation of this permutation group
+            rho = self.permutationRep(self.domainSize, self.generators);
+        end
+        
         function o = orbits(self)
             if isempty(self.orbits_)
                 G = zeros(self.nGenerators, self.domainSize);

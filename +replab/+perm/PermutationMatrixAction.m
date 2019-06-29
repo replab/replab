@@ -6,7 +6,7 @@ classdef PermutationMatrixAction < replab.Action & replab.StrFun
             d = G.domainSize;
             assert(isa(G, 'replab.PermutationGroup'));
             desc = sprintf('Action of permutations on %d x %d matrices', d, d);
-            self = self@replab.StrFun(@(s, mc) desc);
+            self = self@replab.StrFun(desc, desc);
             self.G = G;
             self.P = replab.domain.intAsDoubleMatrix(d, d, 1, G.domainSize);
         end

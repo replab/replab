@@ -39,9 +39,8 @@ classdef Word < replab.Str
             b = (length(self.indices) == 1) && (self.exponents == 1);
         end
         
-        function lines = longStr(self, maxRows, maxColumns)
-            lines = replab.str.longStr(self, maxRows, maxColumns);
-            lines{1} = ['Word ''' self.shortStr(maxColumns) ''''];
+        function s = headerStr(self)
+            s = ['Word ''' self.shortStr(replab.Settings.maxColumns) ''''];
         end
         
         function s = shortStr(self, maxColumns)

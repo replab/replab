@@ -71,7 +71,27 @@ classdef FinitelyGeneratedGroup < replab.Group
         % generators of this group
             phi = @(w) self.evaluateWord(w);
         end
+        
+        function rho = representation(self, field, dimension, images)
+        % Constructs a finite dimensional real or complex representation of this group
+        %
+        %     field: 'R' or 'C' for real or complex
+        % dimension: representation dimension
+        %    images: 1 x n cell array of matrices providing the images
+        %            of the group generators
+            rho = replab.RepByImages(self, field, dimension, images);
+        end
 
+        function rho = permutationRep(self, dimension, permutations)
+        % Returns a permutation representation of this group
+        %
+        %  dimension: dimension of the representation
+        % permutation: row cell array of images of the generators as permutations of size "dimension"
+            S = replab.Permutations(dimension);
+            f = @(g) S.toMatrix(g);
+            images = cellfun(f, permutations, 'uniform', false);
+            rho = self.representation('R', dimension, images);
+        end
         function rho = realRepresentation(self, dimension, images, imagesInv)
             if nargin < 4
                 imagesInv = cellfun(@(x) inv(x), images, 'UniformOutput', false);

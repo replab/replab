@@ -62,23 +62,18 @@ classdef RealRep < replab.Str
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Str(self);
             for i = 1:self.group.nGenerators
-                names{end+1} = sprintf('images(%d)', i);
+                names{end+1} = sprintf('images{%d}', i);
                 values{end+1} = self.images{i};
             end
         end
 
-        function s = shortStr(self, maxColumns)
+        function s = headerStr(self)
             if self.isUnitary
                 t = 'Symmetric representation';
             else
                 t = 'Representation';
             end
             s = sprintf('%s of dimension %d', t, self.dimension);
-        end
-        
-        function lines = longStr(self, maxRows, maxColumns)
-            lines = replab.str.longStr(self, maxRows, maxColumns);
-            lines{1} = self.shortStr(maxColumns);
         end
 
         % Own methods

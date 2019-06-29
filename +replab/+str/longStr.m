@@ -16,7 +16,7 @@ function lines = longStr(obj, maxRows, maxColumns)
     if isscalar(obj) && (isobject(obj) || isstruct(obj))
         [names values] = replab.str.fieldsList(obj);
         n = length(names);
-        header = [class(obj) ' instance with ' replab.str.pluralize(n, 'field') ':'];
+        header = replab.headerStr(obj);
         table = cell(n, 3);
         for i = 1:n
             name = names{i};
@@ -24,7 +24,7 @@ function lines = longStr(obj, maxRows, maxColumns)
             maxLength = maxColumns - length(name) - 2;
             str = replab.shortStr(value, maxLength);
             if length(str) > maxLength
-                str = replab.str.tinyStr(value);
+                str = replab.headerStr(value);
             end
             table{i,1} = name;
             table{i,2} = ': ';
@@ -40,7 +40,7 @@ function lines = longStr(obj, maxRows, maxColumns)
     elseif isvector(obj)
         header = replab.shortStr(obj, maxColumns);
         if length(header) > maxColumns
-            header = replab.str.tinyStr(obj);
+            header = replab.str.headerStr(obj);
             n = length(obj);
             if n >= maxRows
                 n = maxRows + 1; % do not print more, but keep extra stuff to signal overflow
@@ -59,7 +59,7 @@ function lines = longStr(obj, maxRows, maxColumns)
     elseif ismatrix(obj)
         header = replab.shortStr(obj, maxColumns);
         if numel(obj) > 9 || length(header) > maxColumns
-            header = replab.str.tinyStr(obj);
+            header = replab.str.headerStr(obj);
             nR = size(obj, 1)
             nC = size(obj, 2)
             table = cell(nR, nC*2 + 1);
@@ -82,7 +82,7 @@ function lines = longStr(obj, maxRows, maxColumns)
         lines = body;
     else
         if length(header) > maxColumns
-            header = replab.str.tinyStr(obj);
+            header = replab.str.headerStr(obj);
         end
         lines = vertcat({header}, body);
     end

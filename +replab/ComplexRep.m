@@ -51,18 +51,13 @@ classdef ComplexRep < replab.Str
 
         % Str
         
-        function s = shortStr(self, maxColumns)
+        function s = headerStr(self)
             if self.isUnitary
                 t = 'Unitary representation';
             else
                 t = 'Representation';
             end
             s = sprintf('%s of dimension %d', t, self.dimension);
-        end
-        
-        function lines = longStr(self, maxRows, maxColumns)
-            lines = replab.str.longStr(self, maxRows, maxColumns);
-            lines{1} = self.shortStr(maxColumns);
         end
         
         % Own methods

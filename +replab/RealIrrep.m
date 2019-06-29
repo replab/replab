@@ -45,7 +45,7 @@ classdef RealIrrep < replab.RealRep
                                    parent1, U1, Uinv1);
         end
         
-        function s = shortStr(self, maxColumns)
+        function s = headerStr(self)
             switch self.divisionAlgebra.shortName
               case 'R'
                 adj = 'real-type';
@@ -60,11 +60,6 @@ classdef RealIrrep < replab.RealRep
                 t = sprintf('Irreducible %s representation', adj);
             end
             s = sprintf('%s of multiplicity %d, dimension %d', t, self.multiplicity, self.dimension1);
-        end
-        
-        function lines = longStr(self, maxRows, maxColumns)
-            lines = replab.str.longStr(self, maxRows, maxColumns);
-            lines{1} = self.shortStr(maxColumns);
         end
         
         function c = centralizerAlgebra(self)

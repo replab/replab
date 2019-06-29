@@ -1,5 +1,7 @@
-function s = tinyStr(obj)
-% Returns a tiny string description -- class name and size (when relevant)
+function s = headerStr(obj)
+% Returns a tiny string description containing just the class name and size (when relevant)
+%
+% Default implementation; user code should call replab.headerStr(obj) instead
     if isa(obj, 'vpi')
         s = sprintf('vpi(~%.2e)', double(obj));
     elseif isequal(obj, {})

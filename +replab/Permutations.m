@@ -17,15 +17,10 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
         
         % Str
                 
-        function s = shortStr(self, maxColumns)
+        function s = headerStr(self)
             s = sprintf('Permutations acting on %d elements', self.domainSize);
         end
 
-        function lines = longStr(self, maxRows, maxColumns)
-            lines = replab.str.longStr(self, maxRows, maxColumns);
-            lines{1} = self.shortStr(maxColumns);
-        end
-        
         % Domain
         
         function s = sample(self)
@@ -188,6 +183,16 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
     end
     
     methods (Static)
+        
+        function Q = quaternionGroup(self)
+        % Returns a permutation representation of the quaternion group
+        %
+        % (can be seen as the multiplication of quaternions +/- 1,i,j,k = 8 elements)
+            S8 = replab.Permutations(8);
+            g1 = S8.fromCycles([1 2 4 7], [3 6 8 5]);
+            g2 = S8.fromCycles([1 3 4 8], [2 5 7 6]);
+            Q = replab.Permutations(8).subgroup({g1 g2});
+        end
         
         function mat = toMatrix(perm)
         % Returns the permutation matrix corresponding to the given permutation

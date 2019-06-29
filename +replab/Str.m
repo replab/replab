@@ -36,11 +36,24 @@ classdef Str < handle
             if isfield(self, 'shortStrFun')
                 f = self.shortStrFun;
                 if ~isequal(f, [])
-                    str = f(self, maxColumns);
+                    s = f(self, maxColumns);
                     return
                 end
             end
             s = replab.str.shortStr(self, maxColumns);
+        end
+        
+        function s = headerStr(self, maxColumns)
+        % Returns a tiny single line description of the current object type
+        % see replab.headerStr for documentation
+            if isfield(self, 'headerStrFun')
+                f = self.headerStrFun;
+                if ~isequal(f, [])
+                    s = f(self);
+                    return
+                end
+            end
+            s = self.shortStr(maxColumns);
         end
         
         function s = longStr(self, maxRows, maxColumns)

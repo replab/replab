@@ -25,10 +25,11 @@ function s = shortStr(obj, maxColumns)
             s = char(obj);
         elseif isa(obj, 'char')
             s = ['''' obj ''''];
-        elseif isstruct(obj) || isobject(obj)
-            s = replab.str.tinyStr(obj);
+        elseif isobject(obj)
+            s = replab.headerStr(obj);
+        elseif isstruct(obj)
             [names values] = replab.str.fieldsList(obj);
-            s = [s ' with ' replab.str.pluralize(length(names), 'field') ': ' strjoin(names, ', ')];
+            s = ['struct with fields: ' strjoin(names, ', ')];
         else
             warning('Pretty printing not implemented')
             s = class(obj); % default print
@@ -36,9 +37,9 @@ function s = shortStr(obj, maxColumns)
     elseif ischar(obj) && length(obj) > 0 && size(obj, 1) == 1
         s = ['''' replab.str.escape(obj) ''''];
     elseif numel(obj) == 0 % prints an empty object using the tiny description which has nice defaults
-        s = replab.str.tinyStr(obj);
+        s = replab.str.headerStr(obj);
     elseif numel(obj) > maxColumns % prints too big to fit objects using the tiny description
-        s = replab.str.tinyStr(obj);
+        s = replab.str.headerStr(obj);
     elseif isvector(obj)
         [lp rp] = replab.str.brackets(obj);
         elements = arrayfun(@(i) replab.str.cellStr(obj, maxColumns, i), 1:length(obj), 'uniform', 0);
@@ -47,7 +48,7 @@ function s = shortStr(obj, maxColumns)
         [lp rp] = replab.str.brackets(obj);
         rowFun = @(r) strjoin(arrayfun(@(c) replab.str.cellStr(obj, maxColumns, r, c), 1:size(obj, 2), 'uniform', 0), ', ');
         s = [lp strjoin(arrayfun(rowFun, 1:size(obj, 1), 'uniform', 0), '; ') rp];
-    else
-        s = replab.str.tinyStr(obj);
+    else % fallback
+        s = replab.headerStr(obj);
     end
 end

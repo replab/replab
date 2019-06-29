@@ -5,7 +5,7 @@ classdef DomainFun < replab.Domain & replab.StrFun
     end
     methods
         function self = DomainFun(description, eqvFun, sampleFun)
-            self = self@replab.StrFun(@(s, mc) description);
+            self = self@replab.StrFun(description, description);
             self.eqvFun = eqvFun;
             self.sampleFun = sampleFun;
         end
