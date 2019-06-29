@@ -1,22 +1,21 @@
-function [str overLimit] = shortStr(obj, maxColumns)
+function str = shortStr(obj, maxColumns)
 % Returns a one-line description of the given object, that fits within the given width maxColumns
 %
 %        obj: Object to pretty print
 %
-% maxColumns: maximum column size before switching to crude string description
-%             optional parameter with default value 80
+% maxColumns: maximum column size; if the output does not fit, it may be returned cut at an arbitrary 
+%             place, provided that place is *after* the last column that fits.
+%             Optional parameter with default value given in Settings.m
 %
-% Returns the string 'str' and a Boolean 'overLimit' that states whether the output has been shortened
-% because it ran over maxColumns.
     if nargin < 2
-        maxColumns = 80;
+        maxColumns = replab.Settings.strMaxColumns;
     end
     if isa(obj, 'replab.Str')
         try
-            [str overLimit] = obj.shortStr(maxColumns);
+            str = obj.shortStr(maxColumns);
             return
         catch
         end
     end
-    [str overLimit] = replab.str.shortStr(obj, maxColumns);
+    str = replab.str.shortStr(obj, maxColumns);
 end

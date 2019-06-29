@@ -1,4 +1,4 @@
-classdef Word
+classdef Word < replab.Str
 % An associative word of the form 
 % w = x(i1)^e1 x(i2)^e2 ...
 % where indices = [i1 i2 ...] and exponents = [e1 e2 ...]
@@ -20,11 +20,11 @@ classdef Word
     end
     
     methods (Static)
-        
+
         function b = eqv(w1, w2)
             b = isequal(w1.indices, w2.indices) && isequal(w1.exponents, w2.exponents);
         end
-                
+
     end
     
     methods
@@ -39,11 +39,12 @@ classdef Word
             b = (length(self.indices) == 1) && (self.exponents == 1);
         end
         
-        function disp(self)
-            disp(self.str);
+        function lines = longStr(self, maxRows, maxColumns)
+            lines = replab.str.longStr(self, maxRows, maxColumns);
+            lines{1} = ['Word ''' self.shortStr(maxColumns) ''''];
         end
         
-        function s = str(self)
+        function s = shortStr(self, maxColumns)
             sep = '';
             s = [];
             for i = 1:length(self.indices)

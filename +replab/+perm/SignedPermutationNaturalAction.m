@@ -1,4 +1,4 @@
-classdef SignedPermutationNaturalAction < replab.FaithfulAction & replab.Str
+classdef SignedPermutationNaturalAction < replab.FaithfulAction & replab.StrFun
 % Describes the natural action of signed permutations on their domain
 %
 % i.e. a permutation described by a vector of images of length n,
@@ -9,7 +9,7 @@ classdef SignedPermutationNaturalAction < replab.FaithfulAction & replab.Str
         function self = SignedPermutationNaturalAction(G)
             assert(isa(G, 'replab.SignedPermutations'));
             desc = sprintf('Natural signed permutation action on 2*%d elements', G.domainSize);
-            self = self@replab.Str(desc);
+            self = self@replab.StrFun(@(s, mc) desc);
             self.G = G;
             self.P = replab.domain.signedIntAsDouble(1, G.domainSize);
         end

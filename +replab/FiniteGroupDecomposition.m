@@ -17,7 +17,6 @@ classdef FiniteGroupDecomposition < replab.Str
     end
     methods
         function self = FiniteGroupDecomposition(group, transversals)
-            self = self@replab.Str(sprintf('Decomposition of %s', group.str));
             self.group = group;
             self.transversals = transversals;
         end

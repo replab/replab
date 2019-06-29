@@ -1,28 +1,17 @@
 classdef Str < handle
 % Defines a 'str' default method and overloads 'disp'
 %
-% Also provides a 'description' property used as default 'str' output
-    
-    properties (SetAccess = protected)
-        description = [];
-    end
+% Also provides methods 'additionalFields' and 'hiddenFields' to
+% guide long form object pretty printg
     
     methods
-            
-        function self = Str(description)
-            if nargin < 1
-                self.description = sprintf('%s instance', class(self));
-            else
-                self.description = description;
-            end
-        end
         
         function disp(self)
-            disp(strjoin(replab.longStr(self), '\n'));
-        end
-        
-        function s = str(self)
-            s = self.description;
+            maxRows = replab.Settings.strMaxRows;
+            maxColumns = replab.Settings.strMaxColumns;
+            lines = replab.longStr(self, maxRows, maxColumns);
+            lines = replab.str.longFit(lines, maxRows, maxColumns);
+            disp(strjoin(lines, '\n'));
         end
         
         function [names values] = additionalFields(self)
@@ -35,22 +24,36 @@ classdef Str < handle
         end
         
         function names = hiddenFields(self)
-        % Returns the names of the fields that are not printed
+        % Returns the names of the fields that are not printed as a column vector
         % Classes that override this method should call the
         % superclass method
             names = {};
         end
         
-        function [s overLimit] = shortStr(self, maxColumns)
+        function s = shortStr(self, maxColumns)
         % Returns a single line description of the current object
-        % see replab.str.shortStr for documentation
-            [s overLimit] = replab.str.shortStr(self, maxColumns);
+        % see replab.shortStr for documentation
+            if isfield(self, 'shortStrFun')
+                f = self.shortStrFun;
+                if ~isequal(f, [])
+                    str = f(self, maxColumns);
+                    return
+                end
+            end
+            s = replab.str.shortStr(self, maxColumns);
         end
         
-        function [s overLimit] = longStr(self, maxRows, maxColumns)
+        function s = longStr(self, maxRows, maxColumns)
         % Returns a multi line description of the current object
-        % see replab.str.longStr for documentation
-            [s overLimit] = replab.str.longStr(self, maxRows, maxColumns);
+        % see replab.longStr for documentation
+            if isfield(self, 'longStrFun')
+                f = self.longStrFun;
+                if ~isequal(f, [])
+                    str = f(self, maxRows, maxColumns);
+                    return
+                end
+            end
+            s = replab.str.longStr(self, maxRows, maxColumns);
         end
 
     end

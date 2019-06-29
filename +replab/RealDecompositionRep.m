@@ -27,19 +27,30 @@ classdef RealDecompositionRep < replab.RealRep
             self = self@replab.RealRep(realRep.group, realRep.dimension, images, imagesInv, parent, U, Uinv);
             self.components = components;
         end
-        function n = nComponents(self)
-            n = length(self.components);
-        end
-        function c = component(self, r)
-            c = self.components{r};
-        end
-        function s = str(self)
+        
+        % Str
+        
+        function s = shortStr(self, maxColumns)
             s = 'Irreducible decomposition with components';
             sep = ' ';
             for i = 1:self.nComponents
                 s = sprintf('%s%sI(%d)x%s(%d)', s, sep, self.component(i).multiplicity, self.component(i).divisionAlgebra.shortName, self.component(i).dimension1);
                 sep = ' + ';
             end
+        end
+        
+        function lines = longStr(self, maxRows, maxColumns)
+            lines = replab.str.longStr(self, maxRows, maxColumns);
+            lines{1} = self.shortStr(maxColumns);
+        end
+
+        
+        % Own methods
+        function n = nComponents(self)
+            n = length(self.components);
+        end
+        function c = component(self, r)
+            c = self.components{r};
         end
         function c = centralizerAlgebra(self)
             c = replab.RealDecompositionCentralizerAlgebra(self);
