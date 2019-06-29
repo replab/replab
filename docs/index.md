@@ -17,7 +17,7 @@ Current version: **{{site.replabVersion}}**.
 
 The construction of permutation groups and their representations can be achieved in a few lines of code, including the decomposition of their representations into irreducible representations. See the [**full explanation**](docs/publish/Example.html) ...
 
-## How to start using RepLab
+## How to start using RepLAB
 
 See the [**Installation guide**](docs/installation.html).
 

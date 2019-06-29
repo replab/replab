@@ -41,7 +41,17 @@ classdef Settings
             end
             value = DoubleEigTol;
         end
-            
+
+        function value = doubleSdpTol(newValue)
+            persistent DoubleSdpTol;
+            if nargin == 1
+                DoubleSdpTol = newValue;
+            elseif isequal(DoubleSdpTol, [])
+                DoubleSdpTol = 1e-6;
+            end
+            value = DoubleSdpTol;
+        end
+        
     end
     
 end
