@@ -39,6 +39,8 @@ classdef Equivariant < replab.Domain
                 self.parent_ = replab.domain.RealMatrices(self.nR, self.nC);
               case 'C'
                 self.parent_ = replab.domain.ComplexMatrices(self.nR, self.nC);
+              case 'H'
+                self.parent_ = replab.domain.QuaternionMatrices(self.nR, self.nC);                
               otherwise
                 error('Unknown field');
             end
@@ -90,7 +92,7 @@ classdef Equivariant < replab.Domain
         function s = headerStr(self)
             s = sprintf('%d x %d %s equivariant matrices', ...
                         self.nR, self.nC, ...
-                        replab.str.realComplex(self.field));
+                        replab.str.field(self.field));
         end
         
         % Domain

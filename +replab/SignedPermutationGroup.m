@@ -60,8 +60,13 @@ classdef SignedPermutationGroup < replab.Group
         end
         
         function rho = naturalRepresentation(self)
-        % Natural representation of signed permutations on integer -d..-1, 1..d
+        % Natural representation on R^d of signed permutations on integers -d..-1, 1..d
             rho = self.signedPermutationRepresentation(self.domainSize, self.generators);
+        end
+        
+        function rho = naturalRep(self)
+        % Natural representation on R^d of signed permutations on integers -d..-1, 1..d
+            rho = self.signedPermutationRep(self.domainSize, self.generators);
         end
         
         function G = abs(self)

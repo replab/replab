@@ -27,9 +27,15 @@ classdef Commutant < replab.Domain
                 self.parent_ = replab.domain.RealMatrices(self.n, self.n);
               case 'C'
                 self.parent_ = replab.domain.ComplexMatrices(self.n, self.n);
+              case 'H'
+                self.parent_ = replab.domain.QuaternionMatrices(self.n, self.n);
               otherwise
                 error('Unknown field');
             end
+        end
+        
+        function C = quaternionification(self)
+            
         end
         
         function X = project(self, X)
@@ -79,7 +85,7 @@ classdef Commutant < replab.Domain
         function s = headerStr(self)
             s = sprintf('%d x %d %s commutant matrices', ...
                         self.n, self.n, ...
-                        replab.str.realComplex(self.field));
+                        replab.str.field(self.field));
         end
         
         % Domain
@@ -90,6 +96,13 @@ classdef Commutant < replab.Domain
         
         function X = sample(self)
             X = self.project(self.parent_.sample);
+        end
+        
+        function X = sampleHermitian(self)
+            X = self.parent_.sample;
+            X = (X + X')/2;
+            X = self.project(X);
+            X = (X + X')/2;
         end
         
     end

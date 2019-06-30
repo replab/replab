@@ -7,7 +7,7 @@ classdef Rep < replab.Str
     
     properties (SetAccess = protected)
         group;     % Group being represented
-        field;     % 'R' or 'C'
+        field;     % 'R', 'C' or 'H'
         dimension; % Representation dimension
     end
     
@@ -57,15 +57,8 @@ classdef Rep < replab.Str
         % Str
         
         function s = headerStr(self)
-            switch self.field
-              case 'R'
-                t = 'Orthogonal real';
-              case 'C'
-                t = 'Unitary complex';
-              otherwise
-                error('Unknown field');
-            end
-            s = sprintf('%s representation of dimension %d', t, self.dimension);
+            f = replab.str.field(self.field, 'Orthogonal real', 'Unitary complex', 'Unitary quaternion');
+            s = sprintf('%s representation of dimension %d', f, self.dimension);
         end
 
         % SAMPLING
@@ -98,8 +91,12 @@ classdef Rep < replab.Str
         
         function complexRep = complexification(self)
             assert(isequal(self.field, 'R'), 'Representation should be real to start with');
-            desc = sprintf('Complexification of:\n%s', replab.prependLines(self.str));
-            complexRep = replab.RepFun(self.group, 'C', self.dimension, @(g) self.image(g), desc);
+            complexRep = replab.RepFun(self.group, 'C', self.dimension, @(g) self.image(g));
+        end
+        
+        function quaternionRep = quaternionification(self)
+            assert(isequal(self.field, 'R'), 'Representation should be real to start with');
+            quaternionRep = replab.RepFun(self.group, 'H', self.dimension, @(g) self.image(g));
         end
         
 % $$$         % CHANGE OF BASIS
