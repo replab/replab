@@ -164,5 +164,7 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
         if verbose >= 1
             warning('YALMIP was not found in the path, some functionalities of the library might be disabled');
         end
+    elseif verbose >= 2
+        disp('YALMIP is already in the path');
     end
 end
