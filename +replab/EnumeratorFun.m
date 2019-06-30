@@ -9,5 +9,11 @@ classdef EnumeratorFun < replab.Enumerator
             self.atFun = atFun;
             self.findFun = findFun;            
         end
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Enumerator(self);
+            names{end+1, 1} = 'atFun';
+            names{end+1, 1} = 'sampleFun';
+            names = unique(names);
+        end
     end
 end

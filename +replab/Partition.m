@@ -21,8 +21,8 @@ classdef Partition < replab.Str
     
     methods
         
-        function s = str(self)
-            s = 'Partition ';
+        function s = shortStr(self, maxColumns)
+            s = '';
             for i = 1:self.nBlocks
                 if i > 1
                     s = [s '|'];
@@ -36,6 +36,11 @@ classdef Partition < replab.Str
                     end
                 end
             end
+        end
+        
+        function lines = longStr(self, maxRows, maxColumns)
+            lines = replab.str.longStr(self, maxRows, maxColumns);
+            lines{1} = ['Partition ''' self.shortStr(maxColumns) ''''];
         end
         
         function n = nBlocks(self)

@@ -15,6 +15,19 @@ classdef FinitelyGeneratedGroup < replab.Group
     end
 
     methods
+        
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Group(self);
+            names{end+1} = 'generators';
+        end
+        
+        function [names values] = additionalFields(self)
+            [names values] = additionalFields@replab.Group(self);
+            for i = 1:self.nGenerators
+                names{end+1} = sprintf('generator(%d)', i);
+                values{end+1} = self.generator(i);
+            end
+        end
                 
         function n = nGenerators(self)
         % Returns the number of generators

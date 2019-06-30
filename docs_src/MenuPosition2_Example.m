@@ -1,13 +1,13 @@
 %% Short RepLAB tutorial
 %
-% This document will show some features of RepLAB.
+% This document will show some features of *RepLAB*.
 
 %%
-% Before trying any of the RepLAB commands, we must first add the paths:
+% Before trying any of the *RepLAB* commands, we must first add the paths:
 replab_addpaths
 
 %% Working with permutation groups
-% RepLAB decomposes representations of permutation groups; this
+% *RepLAB* decomposes representations of permutation groups; this
 % does not lose generality as all finite groups can be represented
 % by permutation groups.
 %
@@ -20,9 +20,9 @@ g1 = [2:n 1];
 % and one transposition $g_2$:
 g2 = [2 1 3:n];
 %%
-% Remark that permutations in RepLAB are simply row vectors of
+% Remark that permutations in *RepLAB* are simply row vectors of
 % images. We use the convention that permutations act on indices
-% $i=1,2,3,4$ **on the left**, thus the image of 3 under $g_2$
+% $i=1,2,3,4$ *on the left*, thus the image of 3 under $g_2$
 % is compatible with MATLAB syntax:
 g2(3)
 %%
@@ -93,7 +93,7 @@ rho1.image(g)
 rho2.image(g)
 
 %% Decomposing group representations
-% RepLAB provides the irreducible decomposition of representations
+% *RepLAB* provides the irreducible decomposition of representations
 % over the real numbers, identifying the representation type
 % (real, complex or quaternionic):
 rho.irreducible
@@ -113,7 +113,7 @@ subrho2.U
 % $M$ that commute with $\rho$, that is $M \rho_g = \rho_g M$ for
 % all $g$ in the group.
 %
-% RepLAB gives an access to that algebra:
+% *RepLAB* gives an access to that algebra:
 A = rho.centralizerAlgebra
 %%
 % and we can sample generic matrices from that algebra

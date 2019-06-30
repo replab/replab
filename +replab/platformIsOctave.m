@@ -20,5 +20,3 @@ function tf = platformIsOctave
     tf = logical(exist('OCTAVE_VERSION', 'builtin'));
     cached_tf = tf;
 end
-
-

@@ -6,8 +6,14 @@ options:
   - title: Quick start 
     url: docs/publish/Example.html
 
-  - title: Organization 
+  - title: Semidefinite programming
+    url: docs/publish/SDP.html
+
+  - title: Code organization 
     url: docs/organization.html
 
   - title: Law checks 
     url: docs/publish/LawChecks.html
+
+  - title: Pretty printing 
+    url: docs/publish/PrettyPrinting.html

@@ -7,7 +7,6 @@ classdef FreeGroup < replab.FinitelyGeneratedGroup & replab.Str
     methods
         
         function self = FreeGroup(n)
-            self = self@replab.Str(sprintf('Free group on %d generators', n));
             self.n = n;
             generators = cell(1, n);
             for i = 1:n
