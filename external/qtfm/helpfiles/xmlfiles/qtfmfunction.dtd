@@ -1,0 +1,38 @@
+﻿<!-- Document type definition for QTFM function help document -->
+<!-- (c) Stephen J. Sangwine and Nicolas Le Bihan, 2008 -->
+<!--                                                          -->
+<!-- See the file 'readme.txt' for information about how this -->
+<!-- DTD file is used.                                        -->
+
+<!ELEMENT function (short, syntax, long, examples?, seealso?, references?)>
+<!ATTLIST function name      NMTOKEN #REQUIRED
+                   overload (false | true | both) "false">
+
+<!ENTITY  reg     '&#x00AE;'>
+<!ENTITY  matlab "MATLAB&reg;">
+<!ELEMENT short     (#PCDATA)><!-- Short description of QTFM function. -->
+<!ELEMENT syntax    (#PCDATA)><!-- Typical calling syntax. -->
+
+<!-- Description of what the function does. -->
+<!ELEMENT long      (#PCDATA | para | figure | www)*>
+
+<!ELEMENT examples  (#PCDATA | code | precode)*><!-- Command examples. -->
+<!ELEMENT para      (#PCDATA | code | italic | bold | www)*>
+<!ELEMENT code      (#PCDATA)><!-- Inline code snippet -->
+<!ELEMENT precode   (#PCDATA)><!-- Preformatted code-->
+<!ELEMENT figure    (#PCDATA)><!-- The image filename in the helpfiles directory -->
+<!ELEMENT references (reference*)>
+<!ELEMENT reference (#PCDATA | italic | bold | doi | www)*>
+<!ELEMENT italic    (#PCDATA)>
+<!ELEMENT bold      (#PCDATA)>
+<!ELEMENT doi       (#PCDATA)><!-- A hyperlink to a DOI. -->
+<!ELEMENT www       (#PCDATA)><!-- A hyperlink to a website. -->
+
+<!-- Optional section with a list of related Matlab and/or QTFM functions. -->
+<!ELEMENT seealso   (#PCDATA | matlabfun | qtfmfun)*>
+<!-- Ideally, the next two should be constrained to legal function names only. -->
+<!ELEMENT matlabfun EMPTY>
+<!ATTLIST matlabfun name NMTOKEN #REQUIRED>
+<!ELEMENT qtfmfun   EMPTY>
+<!ATTLIST qtfmfun   name NMTOKEN #REQUIRED alias NMTOKEN #IMPLIED>
+<!--$Id: qtfmfunction.dtd 1004 2017-11-15 17:14:09Z sangwine $-->

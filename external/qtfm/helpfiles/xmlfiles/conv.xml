@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "conv" overload = "true">
+<short>Convolution</short>
+<syntax>C = conv(A, B)</syntax>
+<long>
+<para>
+<code>conv(A, B)</code> computes the one-dimensional convolution of
+<code>A</code> and <code>B</code>. It operates in the same way as the
+overloaded &matlab; function, except that it provides a mechanism to
+support both left and right coefficients. (Since quaternion
+multiplication is not commutative, the general case requires both left
+and right multiplication in the convolution product/summation.) To supply
+left and right coefficients, use the calling profile <code>conv({L,R},v)</code>
+where <code>L</code> and <code>R</code> are vectors of the same length and
+orientation. If the first parameter is not a cell array, it is taken to be
+a left coefficient and the right coefficient array is implicitly ones.
+</para>
+</long>
+<seealso>
+<matlabfun name = "conv"/>
+<qtfmfun name = "conv2"/>
+</seealso>
+</function>
+
+<!--$Id: conv.xml 1004 2017-11-15 17:14:09Z sangwine $-->

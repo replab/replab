@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "exp" overload = "both">
+<short>Exponential</short>
+<syntax>Y = exp(X)</syntax>
+<long>
+<para>
+<code>exp(X)</code> computes the exponential of its argument.
+</para>
+</long>
+<examples>
+<precode>
+>> show(exp([qi, qj, qk]))
+ 
+S = 0.5403    0.5403    0.5403
+
+X = 0.8415         0         0
+
+Y =      0    0.8415         0
+
+Z =      0         0    0.8415
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "exp"/>
+<qtfmfun name = "axis"/>
+<qtfmfun name = "angle"/>
+<qtfmfun name = "log"/>
+</seealso>
+</function>
+
+<!--$Id: exp.xml 1004 2017-11-15 17:14:09Z sangwine $-->

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "qtfm_helpdb" overload = "false">
+<short>Build or rebuild QTFM searchable help database</short>
+<syntax>qtfm_helpdb</syntax>
+<long>
+<para>
+<code>qtfm_helpdb</code> runs a &matlab; function that constructs a
+searchable database from the QTFM help information. If the database already
+exists, it is replaced with a newly created version. These databases are
+specific to the version of &matlab; that created them, so if you upgrade to
+a new version of &matlab; you should re-run this function. The database is
+not distributed with the toolbox because of this specific link to the &matlab;
+version that created it.
+</para>
+</long>
+<seealso>
+<matlabfun name = "builddocsearchdb"/>
+</seealso>
+</function>
+<!--$Id: qtfm_helpdb.xml 1004 2017-11-15 17:14:09Z sangwine $-->

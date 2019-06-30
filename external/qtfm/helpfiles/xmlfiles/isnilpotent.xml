@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "isnilpotent" overload = "false">
+<short>Array elements that are nilpotents</short>
+<syntax>TF = isnilpotent(X, tol)</syntax>
+<long>
+<para>
+<code>isnilpotent(X, tol)</code> returns logical 1 (<code>true</code>) for array
+elements that are nilpotents (square to zero)
+</para>
+<para>
+    The second parameter specifies a tolerance. If omitted the default is
+    a small multiple of <code>eps</code> (see code).
+    </para>
+</long>
+    <references>
+        <reference>
+            Stephen J. Sangwine and Daniel Alfsmann,
+            'Determination of the Biquaternion Divisors of Zero, Including the
+            Idempotents and Nilpotents', <italic>Advances in Applied Clifford Algebras</italic>, <bold>20</bold>,
+            (2010), 401–410. <doi>10.1007/s00006-010-0202-3</doi>.
+        </reference>
+</references>
+</function>
+
+<!--$Id: isnilpotent.xml 1030 2019-04-19 13:14:36Z sangwine $-->

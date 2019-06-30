@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "cdpolar" overload = "false">
+<short>Polar Cayley-Dickson form</short>
+<syntax>[A, B] = cdpolar(q)</syntax>
+<long>
+<para>
+Computes a polar form inspired by the Cayley-Dickson construction of a
+quaternion from two complex numbers. A and B are complex numbers
+equivalent to q, such that: q = A exp(B j) in mathematical notation.
+In Matlab/QTFM, we must convert the complex numbers
+into equivalent quaternions like this:
+<precode>
+q = (real(A) + imag(A) .* qi) .* exp((real(B) .* imag(B) .* qi) .* qj)
+</precode>
+or by using the <code>dc</code> function (the inverse of the
+<code>cd</code> function):
+<precode>
+q = dc(A) .* exp(dc(B) .* qj)
+</precode>
+</para>
+</long>
+<examples>
+<precode>
+>> [A, B] = cdpolar(1 + qi + qj + qk)
+
+A = 1.4142 + 1.4142i
+
+B = 0.7854
+
+>>  dc(A) .* exp(dc(B) .* qj)
+ 
+ans = 1 + 1 * I + 1 * J + 1 * K
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "cd"/>
+</seealso>
+<references>
+<reference>Stephen J. Sangwine and Nicolas Le Bihan,
+'Quaternion polar representation with a complex modulus and
+complex argument inspired by the Cayley-Dickson form',
+<italic>Advances in Applied Clifford Algebras</italic>,
+<bold>20</bold> (1), March 2010, 111-120,
+<doi>10.1007/s00006-008-0128-1</doi>.
+</reference>
+<reference>Stephen J. Sangwine and Nicolas Le Bihan,
+'Quaternion polar representation with a complex modulus and
+complex argument inspired by the Cayley-Dickson form',
+preprint arXiv:0802.0852, 6 February 2008, available at
+<www>http://arxiv.org/abs/arxiv:0802.0852</www>.
+</reference>
+</references>
+</function>
+
+<!--$Id: cdpolar.xml 1004 2017-11-15 17:14:09Z sangwine $-->

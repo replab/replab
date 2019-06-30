@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "change_basis" overload = "false">
+<short>changes the basis of the quaternion Q, to the basis B.</short>
+<syntax>P = change_basis(Q, B)</syntax>
+<long>
+<para>
+This function is used to change the basis of a quaternion. The implicit
+basis (1, i, j, k) is the default, but if a different orthonormal basis
+is required, this function performs the conversion. The orthonormal basis
+is represented by a 3x3 orthogonal matrix B (which can be constructed using
+the function <code>orthonormal_basis</code>).
+</para>
+</long>
+<seealso>
+<qtfmfun name = "orthonormal_basis"/>
+</seealso>
+</function>
+
+<!--$Id: change_basis.xml 1004 2017-11-15 17:14:09Z sangwine $-->

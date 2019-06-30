@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "conj" overload = "both">
+<short>Quaternion or octonion conjugate.</short>
+<syntax>Y = conj(X, S)</syntax>
+<long>
+<para>
+This function implements three different conjugates: <code>conj(X)</code>
+with the second parameter omitted, returns the standard quaternion or
+Hamilton conjugate, that is for a quaternion <code>q = w + ix + jy + kz</code>
+it returns <code>q = w - ix - jy - kz</code>. The same result is obtained
+if the parameter S is supplied with the value 'hamilton'.
+</para>
+<para>
+If the second parameter has the value 'complex', the result is the complex
+conjugate, that is the quaternion in which all four components w, x, y and
+z have been replaced by their complex conjugates. Obviously this has no
+effect if the quaternion is real.
+</para>
+<para>
+Finally, if the second parameter has the value 'total', the result is
+equivalent to <code>conj(conj(X, 'complex'), 'hamilton')</code>, that is
+both conjugates are applied.
+</para>
+</long>
+<examples>
+<precode>
+>> conj(quaternion(1,2,3,4))
+ 
+ans = 1 - 2 * I - 3 * J - 4 * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "conj"/>
+<qtfmfun name = "complex"/>
+<qtfmfun name = "real"/>
+<qtfmfun name = "imag"/>
+</seealso>
+<references>
+<reference>Ward, J. P., "Quaternions and Cayley numbers", Kluwer, 1997.</reference>
+</references>
+</function>
+
+<!--$Id: conj.xml 1004 2017-11-15 17:14:09Z sangwine $-->

@@ -1,0 +1,30 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>conv2 :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>conv2</h2>
+<p>Two-dimensional convolution<br>(Quaternion overloading of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>C = conv2(A, B)</tt></p>
+<h2>Description</h2>
+<p>
+<tt>conv2(A, B)</tt> computes the two-dimensional convolution of matrices
+<tt>A</tt> and <tt>B</tt>. It operates in a similar way to the
+standard MATLAB&reg; function
+apart from supporting both left and right coefficients. (Since quaternion
+multiplication is not commutative, the general case requires both left
+and right multiplication in the convolution product/summation.) The
+MATLAB&reg; function allows the first two parameters to be vectors - this is
+not implemented as yet. Acceptable calling profiles are:
+<pre>
+C = conv2(A, B)      - A is convolved on the left of B, that is A * B
+C = conv2({L, R}, B) - The convolution is L * B * R. L and R must be of
+                       the same size.
+</pre>
+An optional last parameter can specify 'shape' as for the standard Matlab
+function. This is currently not implemented.
+</p>
+
+<h2>See Also</h2>QTFM function: <a href="conv.html">conv</a><br>MATLAB&reg; function: <a href="matlab:doc conv2">conv2</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "qtfm_test" overload = "false">
+<short>Run QTFM test code</short>
+<syntax>qtfm_test</syntax>
+<long>
+<para>
+<code>qtfm_test</code> runs the test code supplied with QTFM. The test code
+may also be run using the &matlab; Start menu in (older) versions of &matlab;
+that have a start menu. It is intended primarily
+for internal use, but may be used to run the test code from the command
+window.
+</para>
+</long>
+</function>
+<!--$Id: qtfm_test.xml 1004 2017-11-15 17:14:09Z sangwine $-->

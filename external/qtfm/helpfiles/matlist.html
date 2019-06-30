@@ -1,0 +1,64 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Matlab&reg; Functions that work with quaternion arrays</title><link rel="stylesheet" href="docstyle.css" type="text/css">
+<link rel="stylesheet" href="qtfmstyle.css" type="text/css">
+</head>
+<body>
+<h1>Matlab&reg; functions that are known to work with quaternion arrays</h1>
+<p>
+    This list contains Matlab&reg; functions that are known to work with
+    quaternion arrays. There are no quaternion documentation pages for these functions
+    because there is no special quaternion code. It is the Matlab&reg; code that
+    runs, using overloadings of quaternion functions as needed. It follows
+    that these functions only work because the necessary functions are overloaded
+    for quaternion arrays. It is possible that some functions may cease to work if
+a new release of Matlab&reg; uses a different algorithm or a new function
+that is not overloaded for quaternions.
+From QTFM version 2.3 we have implemented test code to check for this, so in
+most cases we should be aware of the problem as soon as we have installed
+the new Matlab&reg; version ourselves. If you find a
+function that ought to work, but which raises an error due to a missing
+overload, contact us. Even better, try to implement the overloading yourself
+and let us have your code to incorporate into the toolbox. Note the private
+functions overload.m in both the quaternion and octonion classes, which in
+some cases make implementation of an overloading trivial.
+</p>
+<p>The list given here may not be complete - please advise the toolbox
+authors of functions not listed here that work, or functions listed here that
+no longer work, and we will add them to the list or investigate the problem.
+Please tell us which Matlab&reg; release you are using.
+</p>
+<p>
+Most of these functions also work for octonion arrays (exceptions are noted
+below), but the results may be numerically incorrect. Beware!
+</p>
+<ul>
+<li><a href="matlab:doc circshift">circshift</a> - Shift array circularly
+<li><a href="matlab:doc cov">cov</a> - Covariance
+<li><a href="matlab:doc dot">dot</a> - Vector dot product (using the quaternion conjugate)
+<li><a href="matlab:doc flipdim">flipdim</a> - Flip matrix along specified dimension
+<li><a href="matlab:doc fliplr">fliplr</a> - Flip matrix in left/right direction
+<li><a href="matlab:doc flipud">flipud</a> - Flip matrix in up/down direction
+<li><a href="matlab:doc isequal">isequal</a> - True if arrays are numerically equal
+<li><a href="matlab:doc isscalar">isscalar</a> - True if array is a scalar
+<li><a href="matlab:doc iscolumn">iscolumn</a> - True if array is a column vector
+<li><a href="matlab:doc ismatrix">ismatrix</a> - True if array is a matrix
+<li><a href="matlab:doc isrow">isrow</a> - True if array is a row vector
+<li><a href="matlab:doc isvector">isvector</a> - True if array is a vector
+<li><a href="matlab:doc kron">kron</a> - Kronecker product of two arrays
+<li><a href="matlab:doc nchoosek">nchoosek</a> - Combinations of a vector
+<li><a href="matlab:doc perms">perms</a> - Permutations
+<li><a href="matlab:doc pinv">pinv</a> - Pseudoinverse (quaternion arrays only)
+<li><a href="matlab:doc rank">rank</a> - Matrix rank (quaternion arrays only)
+<li><a href="matlab:doc rot90">rot90</a> - Rotate matrix 90 degrees
+<li><a href="matlab:doc std">std</a> - Standard deviation
+<li><a href="matlab:doc trace">trace</a> - Sum of diagonal elements
+<li><a href="matlab:doc var">var</a> - Variance
+</ul>
+<h4>&copy; 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan.</h4>
+<p><a href="license.html">License terms.</a></p>
+</body>
+</html>
+<!--$Id: matlist.html 1018 2019-02-21 12:01:28Z sangwine $-->

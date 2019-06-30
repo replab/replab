@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "scalar_product" overload = "false">
+<short>Scalar product</short>
+<syntax>Y = scalar_product(A, B)</syntax>
+<long>
+<para>
+<code>scalar_product(A, B)</code> computes the scalar product of
+two quaternion arrays, elementwise on the components.
+</para>
+<para>
+The scalar product of two quaternions is the sum of the products of their
+respective components. It is defined for both pure and full quaternions and
+in both cases can also be defined as the product of the moduli multiplied
+by the cosine of the angle between the two quaternions (in 3-space for pure
+quaternions, 4-space for full quaternions). The scalar product of perpendicular
+quaternions is zero.
+</para>
+<para>
+The two operands must be of the same size.
+</para>
+<para>
+For the inner product of two quaternion vectors, see the &matlab; function
+<code>dot</code> which works for quaternions.
+</para>
+</long>
+<examples>
+<precode>
+>> scalar_product(qi, qj)
+
+ans = 0
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "dot"/>
+</seealso>
+</function>
+
+<!--$Id: scalar_product.xml 1004 2017-11-15 17:14:09Z sangwine $-->

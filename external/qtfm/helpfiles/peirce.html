@@ -1,0 +1,74 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>peirce :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>peirce</h2>
+<p>Peirce decomposition</p>
+<h2>Syntax</h2><p><tt>[chi, d, a, b] = peirce(q)</tt></p>
+<h2>Description</h2>
+    <p>
+        Computes a decomposition of a real quaternion into a pair of conjugate
+        complex eigenvalues. The eigenvalues permit functions of the quaternion
+        argument to be computed using complex functions (for example, powers,
+        trigonometric functions).
+    </p>
+    <p>
+        <tt>chi</tt> is the 'positive' eigenvalue.
+        The complex conjugate of <tt>chi</tt> gives the 'negative' eigenvalue.
+    </p>
+    <p><tt>d</tt> is the 'positive' idempotent. This is a biquaternion with real scalar
+        part and imaginary vector part. <tt>d.^2 = d</tt> (definition of an idempotent).
+    </p>
+    <p><tt>a</tt> and <tt>b</tt> are the products of the
+    eigenvalues and idempotents such that
+    <tt>q = a + b</tt> (see code for the formula).
+    </p>
+    <p>The utility of this decomposition is that it satisfies:
+        <tt>f(q) = f(chi) .* d* + f(chi*) .* d</tt>,
+        where <tt>d*</tt> is the complex conjugate of
+        <tt>d</tt> and <tt>chi*</tt> is the complex conjugate of <tt>chi</tt>,
+        for a wide range of functions, and the right-hand side may be evaluated using only
+        <i>complex</i> implementations of f(x).
+    </p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; q = randq .* randn
+ 
+q = -0.2071 + 0.308 * I + 0.5571 * J + 0.5434 * K
+ 
+&gt;&gt; [chi, d, a, b] = peirce(q)
+
+chi = -0.2071 + 0.8369i
+
+d = 0.5 + (0+0.184i) * I + (0+0.3328i) * J + (0+0.3246i) * K
+ 
+a = (-0.1035+0.4185i) + (0.154+0.0381i) * I + (0.2786+0.06892i) * J + (0.2717+0.06722i) * K
+ 
+b = (-0.1035-0.4185i) + (0.154-0.0381i) * I + (0.2786-0.06892i) * J + (0.2717-0.06722i) * K
+ 
+&gt;&gt; a + b - q
+ 
+ans = 0 + 0 * I + 0 * J + 0 * K
+ 
+&gt;&gt; d^2 - d
+ 
+ans = -5.551e-17 + 0 * I + 0 * J + 0 * K
+ 
+&gt;&gt; sin(q), sin(chi) .* conj(d) + sin(conj(chi)) .* d
+ 
+ans = -0.2819 + 0.3378 * I + 0.6111 * J + 0.5961 * K
+ 
+ans = -0.2819 + 0.3378 * I + 0.6111 * J + 0.5961 * K
+</pre>
+
+<h2>See Also</h2>
+<h2>References</h2><ol><li>
+        Roger M. Oba, 'Eigen-Decomposition of Quaternions',
+        <i>Advances in Applied Clifford Algebras</i>,
+        October 2018, <b>28</b>(5), p94.
+        
+DOI: <a href="http://dx.doi.org/10.1007/s00006-018-0911-6">10.1007/s00006-018-0911-6</a>.
+</li></ol>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

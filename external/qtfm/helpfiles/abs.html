@@ -1,0 +1,67 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>abs :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>abs</h2>
+<p>Absolute value, or modulus<br>(Quaternion and octonion overloadings of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>Y = abs(X)</tt></p>
+<h2>Description</h2>
+<p>
+<tt>abs(X)</tt> returns an array <tt>Y</tt> such that each element of
+<tt>Y</tt> is the absolute value, or modulus, of the corresponding element
+of <tt>X</tt>.
+</p>
+<p>
+If <tt>X</tt> is a complex quaternion, <tt>abs(X)</tt> returns
+the complex modulus, the square root of the complex semi-norm,
+computed in the same way (the square root of the sum of the squares of the
+components of the quaternion). The semi-norm of a complex quaternion
+can vanish (see references), and therefore so can the modulus.
+</p>
+
+<h2>Examples</h2>
+<pre>
+abs(quaternion(1,1,1,1))
+
+ans = 2
+</pre>
+<tt>abs</tt> is vectorized, and hence can operate on arrays:
+<pre>
+abs([qi, qj, qk, qi + qj])
+
+ans =
+
+    1.0000    1.0000    1.0000    1.4142
+</pre>
+It can also operate on complex quaternions, with complex modulus, in
+general:
+<pre>
+abs(1 + i + qi + qj + qk)
+
+ans = 1.8174 + 0.5503i
+</pre>
+The following shows that a complex quaternion can have a vanishing
+modulus (and semi-norm):
+<pre>
+abs(i + qi)
+
+ans = 0
+</pre>
+
+<h2>See Also</h2>MATLAB&reg; function: <a href="matlab:doc abs">abs</a><br>QTFM functions: <a href="normq.html">normq</a>, <a href="normo.html">normo</a><br>
+<h2>References</h2><ol><li>Sangwine, S. J. and Alfsmann, D.,
+'Determination of the biquaternion divisors of zero,
+including the idempotents and nilpotents',
+<i>Advances in Applied Clifford Algebras</i>, <b>20</b>, (2),
+May 2010, 401&#8211;410, 
+DOI: <a href="http://dx.doi.org/10.1007/s00006-010-0202-3">10.1007/s00006-010-0202-3</a>, also available as
+e-print arXiv:0812.1102, 8 December 2008, available at
+<a href="http://arxiv.org/abs/arxiv:0812.1102">http://arxiv.org/abs/arxiv:0812.1102</a>.
+</li><li>W. R. Hamilton,
+Lectures on Quaternions, Lecture VII, &sect;672, p669.
+Hodges and Smith, Dublin, 1853.
+Available online at: <a href="http://historical.library.cornell.edu/math/">http://historical.library.cornell.edu/math/</a>.
+</li></ol>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

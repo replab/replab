@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "neq" overload = "both">
+<short>~= Not equal</short>
+<syntax>r = neq(a, b)</syntax>
+<long>
+<para>
+<code>neq</code> implements the complement of the &matlab; equality
+operator <code>==</code> for quaternion arrays.
+</para>
+</long>
+<seealso>
+<matlabfun name = "neq"/>
+<qtfmfun name = "eq"/>
+</seealso>
+</function>
+
+
+<!--$Id: ne.xml 1004 2017-11-15 17:14:09Z sangwine $-->

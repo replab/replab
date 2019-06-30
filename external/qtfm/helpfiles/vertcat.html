@@ -1,0 +1,37 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>vertcat :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>vertcat</h2>
+<p>Vertical concatenation<br>(Quaternion overloading of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>Y = vertcat(A, B, C, ....)</tt></p>
+<h2>Description</h2>
+<p>
+<tt>vertcat</tt> overloads a fundamental MATLAB&reg; operation for quaternion
+arrays in order to make possible concatenation operations using the MATLAB&reg;
+square bracket notation. It is not normally called directly as a function.
+</p>
+<p>
+Quaternion arrays may be concatenated with non-quaternion
+arrays provided the non-quaternion arrays are numeric. The non-quaternion
+arrays will be converted to quaternion arrays by supplying a zero vector
+part.
+</p>
+
+<h2>Examples</h2>The example below shows explicit and implicit calls to the function, both
+of which will work. On the right hand side, MATLAB&reg; calls the function
+implicitly in order to implement the concatenation of quaternion operands.
+<pre>
+&gt;&gt; vertcat(qi, qj, qk) == [qi; qj; qk]
+
+ans =
+
+     1
+     1
+     1
+</pre>
+
+<h2>See Also</h2>QTFM function: <a href="horzcat.html">horzcat</a><br>MATLAB&reg; function: <a href="matlab:doc vertcat">vertcat</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

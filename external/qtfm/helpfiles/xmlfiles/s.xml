@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "S/SCALAR" overload = "false">
+<short>Scalar component of a quaternion</short>
+<syntax>r = s(q), r = scalar(q)</syntax>
+<long>
+<para>
+These two functions extract the scalar component of a quaternion or octonion.
+The result is a real (or a complex value if the quaternion/octonion has
+complex components).
+</para>
+<para>
+The two functions differ in their behaviour when given a pure array
+(that is a quaternion/octonion with no scalar part). The function <code>s</code>
+returns an empty array in this case, whereas <code>scalar</code> returns
+a zero array of the same size as the pure array, with the same class
+as the components of the array. For example if the pure quaternion/octonion
+has components of class <code>uint8</code> the array of zeros returned will
+also be of class <code>uint8</code>.
+</para>
+</long>
+<examples>
+<precode>
+>> q = eyeq(2)
+ 
+q = 2x2 quaternion array
+ 
+>> s(q)
+
+ans =
+
+     1     0
+     0     1
+
+>> scalar(qi)
+
+ans =  0
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "v"/>
+<qtfmfun name = "vector" alias = "v"/>
+<qtfmfun name = "x" alias = "xyz"/>
+<qtfmfun name = "y" alias = "xyz"/>
+<qtfmfun name = "z" alias = "xyz"/>
+<qtfmfun name = "part"/>
+</seealso>
+</function>
+
+<!--$Id: s.xml 1004 2017-11-15 17:14:09Z sangwine $-->

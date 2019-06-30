@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "horzcat" overload = "both">
+<short>Horizontal concatenation</short>
+<syntax>Y = horzcat(A, B, C, ....)</syntax>
+<long>
+<para>
+<code>horzcat</code> overloads a fundamental &matlab; operation for quaternion
+arrays in order to make possible concatenation operations using the &matlab;
+square bracket notation. It is not normally called directly as a function.
+</para>
+<para>
+Quaternion arrays may be concatenated with non-quaternion
+arrays provided the non-quaternion arrays are numeric. The non-quaternion
+arrays will be converted to quaternion arrays by supplying a zero vector
+part.
+</para>
+</long>
+<examples>The example below shows explicit and implicit calls to the function, both
+of which will work. On the right hand side, &matlab; calls the function
+implicitly in order to implement the concatenation of quaternion operands.
+<precode>
+>> horzcat(qi, qj, qk) == [qi qj qk]
+
+ans =  1     1     1
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "horzcat"/>
+<qtfmfun name = "vertcat"/>
+</seealso>
+</function>
+
+<!--$Id: horzcat.xml 1004 2017-11-15 17:14:09Z sangwine $-->

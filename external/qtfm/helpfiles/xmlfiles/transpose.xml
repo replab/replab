@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "transpose" overload = "both">
+<short>Transpose of a quaternion</short>
+<syntax>Y = X.'</syntax>
+<long>
+<para>
+<code>transpose</code> implements the &matlab; <code>.'</code> operator for
+quaternion matrices.
+</para>
+</long>
+<seealso>
+<matlabfun name = "transpose"/>
+<qtfmfun name = "ctranspose"/>
+</seealso>
+</function>
+
+<!--$Id: transpose.xml 1004 2017-11-15 17:14:09Z sangwine $-->

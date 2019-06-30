@@ -1,0 +1,17 @@
+﻿<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "ifftshift" overload = "true">
+<short>Inverse FFT shift.</short>
+<syntax>Y = ifftshift(X, dim)</syntax>
+<long>
+<para>
+<code>ifftshift</code> overloads the &matlab; function of the same name and
+implements the same functionality, for quaternion arrays.
+</para>
+</long>
+<seealso>
+<matlabfun name = "ifftshift"/>
+<qtfmfun name = "fftshift"/>
+</seealso>
+</function>
+
+<!--$Id: ifftshift.xml 1004 2017-11-15 17:14:09Z sangwine $-->

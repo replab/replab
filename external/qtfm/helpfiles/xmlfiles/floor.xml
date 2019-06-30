@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "floor" overload = "true">
+<short>Round towards minus infinity.</short>
+<syntax>Y = floor(X)</syntax>
+<long>
+<para>
+<code>floor(X)</code> returns the quaternion resulting from applying the
+&matlab; <code>floor</code> function to the components of the quaternion argument.
+</para>
+</long>
+<seealso>
+<matlabfun name = "floor"/>
+<qtfmfun name = "ceil"/>
+<qtfmfun name = "fix"/>
+<qtfmfun name = "round"/>
+</seealso>
+</function>
+
+<!--$Id: floor.xml 1004 2017-11-15 17:14:09Z sangwine $-->

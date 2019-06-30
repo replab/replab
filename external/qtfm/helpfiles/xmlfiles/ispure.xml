@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "ispure" overload = "false">
+<short>Test for pure quaternion</short>
+<syntax>Y = ispure(X)</syntax>
+<long>
+<para>
+<code>ispure(X)</code> returns logical 1 (<code>true</code>) if the
+quaternion array <code>X</code> is <italic>pure</italic>.
+</para>
+<para>
+Mathematically, a pure quaternion has zero scalar part. Here, pure
+quaternions are <italic>stored</italic> without a scalar part, and it is
+the existence of the
+scalar part which is tested by this function, not its value. Thus a quaternion
+with a scalar part with value zero is not pure according to the definition
+used by this function. Similarly, empty quaternions do not have a scalar
+part (or any part) and therefore this function regards them as pure.
+</para>
+<para>
+The reason for implementing pure quaternions in the way described is for
+efficiency: reduced storage, and reduced computation, since computation
+with pure quaternions can be done without wasting time computing with the
+zero scalar part.
+</para>
+</long>
+</function>
+
+<!--$Id: ispure.xml 1004 2017-11-15 17:14:09Z sangwine $-->

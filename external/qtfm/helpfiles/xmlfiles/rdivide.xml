@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "rdivide" overload = "true">
+<short>./ Right array divide</short>
+<syntax>Y = A ./ B</syntax>
+<long>
+<para>
+<code>A ./ B</code> implements elementwise right array division. It handles
+cases where the left and right operands are quaternions, and where one of
+the operands is a quaternion and the other is numeric.
+</para>
+</long>
+<seealso>
+<matlabfun name = "rdivide"/>
+<qtfmfun name = "ldivide"/>
+<qtfmfun name = "mrdivide"/>
+</seealso>
+</function>
+
+<!--$Id: rdivide.xml 1004 2017-11-15 17:14:09Z sangwine $-->

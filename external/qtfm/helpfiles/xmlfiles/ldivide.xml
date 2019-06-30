@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "ldivide" overload = "false">
+<short>Quaternion left elementwise division (unimplemented operator)</short>
+<syntax>X .\ Y</syntax>
+<long>
+<para>
+Quaternion left elementwise division is not implemented.
+This is because &matlab; defines <code>A ./ B</code> to be the matrix with
+elements <code>A(i, j)/B(i, j)</code> and <code>A .\ B</code>
+to be the matrix with elements
+<code>B(i, j)/A(i, j)</code>. This is not consistent with the ideas of left
+and right division in a non-commutative algebra, therefore it is
+not supported for quaternion arrays. The operator <code>./</code> implements
+elementwise division on the right, as expected, but to obtain
+elementwise division on the left multiply on the left by the elementwise
+inverse of <code>B</code>
+(this can be computed as <code>conj(B) ./ (abs(B).^2)</code> ).
+</para>
+</long>
+</function>
+
+<!--$Id: ldivide.xml 1004 2017-11-15 17:14:09Z sangwine $-->

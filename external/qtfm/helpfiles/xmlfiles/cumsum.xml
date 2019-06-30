@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "cumsum" overload = "true">
+<short>Cumulative sum</short>
+<syntax>Y = cumsum(X, dim)</syntax>
+<long>
+<para>
+<code>cumsum(X)</code> computes the cumulative sum of the quaternion
+argument. If the argument is a vector, the result is a vector. If the argument
+is a matrix, the cumulative sum is computed along the columns by default.
+As with the equivalent &matlab; function, the <code>dim</code> parameter
+permits the sum to be computed along a specified dimension.
+</para>
+</long>
+<seealso>
+<matlabfun name = "cumsum"/>
+<qtfmfun name = "cumprod"/>
+<qtfmfun name = "sum"/>
+</seealso>
+</function>
+
+<!--$Id: cumsum.xml 1004 2017-11-15 17:14:09Z sangwine $-->

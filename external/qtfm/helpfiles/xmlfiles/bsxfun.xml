@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "bsxfun" overload = "both">
+<short>Binary Singleton Expansion Function</short>
+<syntax>C = bsxfun(fun, A, B)</syntax>
+<long>
+<para>
+This function is provided in order to support 
+certain &matlab; functions, particularly
+<code>var</code>, <code>std</code>, <code>cov</code> and <code>kron</code>
+which use
+<code>bsxfun</code> to apply arithmetic operators to intermediate results.
+<code>bsxfun</code> was introduced in &matlab; Version 7.4 (R2007a). Prior
+to that release the <code>var</code>, <code>std</code> and <code>cov</code>
+functions worked with quaternions, but the introduction of <code>bsxfun</code>
+broke this.
+</para>
+    <para>
+        The implementation is fairly crude and may use considerable memory for large
+        array inputs. This is not a fundamental issue, as there is scope in
+        the code to perform the processing in chunks, to reduce memory use,
+        and this may be done in a later release.
+    </para>
+</long>
+<seealso>
+<matlabfun name = "bsxfun"/>
+</seealso>
+</function>
+
+<!--$Id: bsxfun.xml 1004 2017-11-15 17:14:09Z sangwine $-->

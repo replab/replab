@@ -1,0 +1,51 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>cat :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>cat</h2>
+<p>Concatenate arrays<br>(Quaternion overloading of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>r = cat(dim, varargin)</tt></p>
+<h2>Description</h2>
+<p>
+<tt>cat</tt> concatenates arrays along a specified dimension, given by
+<tt>dim</tt>. Quaternion arrays may be concatenated with non-quaternion
+arrays provided the non-quaternion arrays are numeric. The non-quaternion
+arrays will be converted to quaternion arrays by supplying a zero vector
+part.
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; q = cat(2, eyeq(2), randq(2))
+ 
+q =
+ 
+     2x4 quaternion array
+ 
+&gt;&gt; show(q)
+ 
+q.S =
+ 
+    1.0000         0   -0.3181    0.9194
+         0    1.0000    0.1766   -0.0854
+
+q.X =
+ 
+         0         0   -0.2900   -0.1664
+         0         0    0.2511   -0.2816
+
+q.Y =
+ 
+         0         0   -0.2381    0.2980
+         0         0   -0.2083   -0.1756
+
+q.Z =
+ 
+         0         0    0.8706    0.1954
+         0         0    0.9287    0.9394
+</pre>
+
+<h2>See Also</h2>MATLAB&reg; function: <a href="matlab:doc cat">cat</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

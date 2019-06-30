@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "norm" overload = "both">
+<short>Matrix or vector norm</short>
+<syntax>Y = norm(X, p)</syntax>
+<long>
+<para><italic>See the function <code>normq</code> for the quaternion
+norms of the elements of a matrix - this function computes a matrix
+norm as does the &matlab; function of the same name.</italic>
+</para>
+<para>
+<code>norm(X, p)</code> computes the norm of the vector or matrix <code>X</code>.
+The second parameter selects the type of norm computed. Possible
+values are 1, 2, inf, -inf, and 'fro'. The default if <code>p</code> is omitted
+is 2.
+</para>
+<para>
+If <code>X</code> is a vector the norms computed for each value of <code>p</code>
+are as follows: 1 - sum of the absolute values; 2 - square root of the sum of
+squared values; inf - maximum absolute value; -inf - minimum absolute value.
+</para>
+<para>
+If <code>X</code> is a matrix the norms computed for each value of <code>p</code>
+are as follows: 1 - sum of the absolute values of the elements of each
+column; 2 - the largest singular value (requiring a singular value decomposition
+to be computed); inf - maximum absolute value in
+each column; 'fro' - the Frobenius norm.
+</para>
+</long>
+<seealso>
+<matlabfun name = "norm"/>
+<qtfmfun name = "normq"/>
+<qtfmfun name = "svd"/>
+</seealso>
+</function>
+
+<!--$Id: norm.xml 1004 2017-11-15 17:14:09Z sangwine $-->

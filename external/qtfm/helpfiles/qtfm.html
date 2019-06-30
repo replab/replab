@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Quaternion Toolbox</title>
+<link rel="stylesheet" href="qtfmstyle.css" type="text/css">
+</head>
+<body>
+<h1>Quaternion Toolbox</h1>
+<p>
+The quaternion toolbox for Matlab&reg; (QTFM for short) extends
+Matlab&reg; to handle vectors and matrices of quaternions.
+Many quaternion-specific functions are implemented, as are overloadings of
+standard Matlab&reg; functions and Matlab&reg; operators and notation.
+The toolbox is intended to work as far as possible in the same way as Matlab&reg; itself.
+Most functions are vectorized, and where a Matlab&reg; function is overloaded
+by the toolbox, as far as possible the quaternion function accepts the same
+parameters as the Matlab&reg; function.
+</p>
+<p>
+From Version 2.0 of the toolbox onwards, octonions are also supported, in a
+similar manner, but with fewer functions (this may change over time as more
+functionality is added).
+</p>
+<p>
+For a general overview of quaternions and octonions,
+and how they are handled by the
+toolbox, see the <a href="overview.html">overview</a> page.
+For a detailed list of functions, see the
+<a href="alphabetical.html">alphabetical</a> or
+<a href="categorical.html">categorized</a> lists.
+</p>
+<p>
+Many Matlab&reg; functions will work with quaternion arrays, because all
+the functions called are overloaded by the toolbox, and the semantics of
+the quaternion version are consistent with what the Matlab&reg; function
+expects. A <a href="matlist.html">list of these functions</a> is available.
+</p>
+<h2>Website</h2>
+<p>
+The toolbox website and Sourceforge project page may be acccessed from the
+Matlab&reg; Start menu, or from the following links:<br>
+<ul>
+<li>&nbsp;<a href="http://qtfm.sourceforge.net/">Web site at Sourceforge</a>
+<li>&nbsp;<a href="https://sourceforge.net/projects/qtfm/">Sourceforge project page</a>
+</ul>
+</p>
+<h2>Matlab&reg; version required</h2>
+<p>
+Matlab&reg; Version 7.14 (R2012a) is the minimum required system to run
+version 2 of the toolbox.
+Earlier versions of the toolbox will work with Version 7.4 (R2007a).
+The test code (see below) verifies the version required and documents
+the reasons for requiring it.
+</p>
+<h2>GNU Octave compatibility (under development)</h2>
+<p>
+From version 1.8 onwards, we have introduced some minor changes to attempt
+to achieve compatibility with
+<a href="http://www.gnu.org/software/octave/">GNU Octave</a>.
+At present, the toolbox will not work correctly under GNU Octave.
+The test code (see below) will recognise that QTFM is running under Octave,
+but the tests will fail due to serious problems with the GNU Octave search
+path, and the lack of recognition by GNU Octave of the toolbox directory
+structure. We welcome contributions to fixing these problems, which will be
+acknowledged on the <a href="contrib.html">contributors page</a>.
+</p>
+<h2>Test code</h2>
+<p>
+Some test code is provided in the directory <tt>test</tt>.
+To run it type <tt>qtfm_test</tt> in the command window.
+This runs all the test code. There may be some warnings
+about numerical accuracy of results, which vary from one test run to
+the next, and can usually be ignored.
+</p>
+<h2>SVN Repository</h2>
+<p>
+    We use SVN for version control of files within the toolbox. Until November
+    2017, we used CVS. The CVS repository was converted to SVN and therefore
+    preserves most of the history of commits to the CVS repository. The CVS
+    repository remains in existence for the time being, frozen at the state it
+    was in at the end of November 2017.
+</p>
+<p>
+New versions
+of files are uploaded to the SVN repository at Sourceforge as we develop
+them, in between releases of the toolbox. If you wish, you should be able
+to set up your own SVN system to provide read-only access to the repository
+and thus keep the toolbox updated in between releases. The effort of doing
+this is not likely to be worthwhile unless you already know how to use SVN.
+</p>
+<p>
+However, it may sometimes be worthwhile to check for a newer version of a
+specific file, if you hit a problem. You can do this through a web interface
+to the SVN repository:
+</p>
+<ul>
+<li><a href="https://sourceforge.net/p/qtfm/svncode/HEAD/tree/">Browse SVN repository</a>
+at Sourceforge.
+</ul>
+<h2>Contributors</h2>
+A list of people who have contributed to QTFM is available on a
+<a href="contrib.html">separate page</a>.
+<h2>Acknowledgements</h2>
+<ul>
+<li>
+The online help documentation for this toolbox was improved as part of a project to
+create initial documentation for the <a href = "http://clifford-multivector-toolbox.sourceforge.net/">Clifford Toolbox for Matlab</a>.
+These improvements were done by Ryan Stuart, working as a Frontrunner placement student
+on placement number FR1516207 funded by the University of Essex from June to August 2016.
+The improvements were in the styling and presentation of the main help pages, and the
+styling of the individual function pages.
+</li>
+</ul>
+<h2>Contact</h2>
+<p>The authors may be contacted through the Sourceforge page or directly at
+the following email addresses:<br>
+<ul>
+<li>&nbsp;<a href="mailto:sangwine@users.sourceforge.net">Stephen J. Sangwine</a>
+<li>&nbsp;<a href="mailto:nicolas.le-bihan@gipsa-lab.inpg.fr">Nicolas Le Bihan</a>
+</ul>
+</p>
+<h4>&copy; 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan.</h4>
+<p><a href="license.html">License terms.</a></p>
+</body>
+</html>
+<!--$Id: qtfm.html 1018 2019-02-21 12:01:28Z sangwine $-->

@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "scatter3" overload = "true">
+<short>3D scatter plot from quaternion array.</short>
+<syntax>h = scatter3(q, varargin)</syntax>
+<long>
+    <para>
+        <code>scatter3</code> plots a 3D scatter plot of elements in a 
+        pure quaternion array. It supports the same parameter profiles as
+        the &matlab; function of the same name, except that the first three
+        parameters <code>(X, Y, Z)</code> are replaced by a single
+        quaternion parameter, which must be a pure quaternion array.
+    </para>
+    <para>
+        If two parameters are given and the second is 'rgb' or 'seq', a
+        coloured scatter plot is produced. 'rgb' colours the plotted points
+        according to the direction of the position vector of the point from 
+        the origin using the convention of X = red, Y = green and Z = blue
+        (the standard RGB colour space used in image processing).
+        This is useful when the spatial position
+        of points is of interest. 'seq' colours the points in a graded sequence
+        of progressively darker values matching the sequence of points in the
+        quaternion vector Q. This is useful when the ordering of the points is of
+        interest.
+    </para>
+    <para>
+        If more than one <code>varargin</code> parameter is given, or the first is
+        neither 'rgb' nor 'seq', the <code>varargin</code> parameters are passed to the Matlab
+        scatter3 function, and must therefore conform to the requirements of that
+        function.
+    </para>
+    <para>
+        The output parameter is optional, with the same functionality as
+        the corresponding &matlab; function (a graphics handle).
+    </para>
+    <para>
+        The axes are not labelled by this function.
+        Use the standard &matlab; functions for this.
+    </para>
+    <para>
+        For more sophisticated requirements, use the Matlab function
+        and pass the X, Y and Z components of the quaternion array as the
+        first three parameters.
+    </para>
+</long>
+<examples>
+<precode>
+>> scatter3(randv(1,128), 'rgb'); axis equal
+</precode>
+<para>
+results in the creation of the following plot.
+</para>
+<figure>scatter.png</figure>
+</examples>
+<seealso>
+<qtfmfun name = "scatter4"/>
+<qtfmfun name = "scatter4p3"/>
+<matlabfun name = "scatter3"/>
+</seealso>
+</function>
+
+<!--$Id: scatter3.xml 1004 2017-11-15 17:14:09Z sangwine $-->

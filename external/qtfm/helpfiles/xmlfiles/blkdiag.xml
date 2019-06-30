@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "blkdiag" overload = "true">
+<short>Construct block diagonal matrix from input arguments.</short>
+<syntax>R = blkdiag(varargin)</syntax>
+<long>
+<para>
+Given a number of quaternion matrices, <code>blkdiag</code> builds a block
+diagonal matrix with the given matrices on the diagonal. It works exactly
+as the overloaded &matlab; function. The matrices supplied are not required
+to have the same size.
+</para>
+</long>
+<examples>
+<precode>
+>> blkdiag(randq(2), randq(3))
+ 
+ans =
+ 
+     5x5 quaternion array
+ 
+>> s(ans)
+
+ans =
+
+    0.0058    0.7714         0         0         0
+   -0.1470   -0.4792         0         0         0
+         0         0   -0.5044    0.5444   -0.5741
+         0         0    0.3300    0.8763    0.0667
+         0         0   -0.0868    0.9223    0.6933
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "diag"/>
+<qtfmfun name = "horzcat"/>
+<qtfmfun name = "vertcat"/>
+<matlabfun name = "blkdiag"/>
+</seealso>
+</function>
+
+<!--$Id: blkdiag.xml 1004 2017-11-15 17:14:09Z sangwine $-->

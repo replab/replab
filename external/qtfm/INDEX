@@ -1,0 +1,8 @@
+toolbox >> QTFM
+Category all
+      scalar vector v
+      s x y z
+      real imag
+ complex quaternion
+   cd dc cdpolar
+   abs conj unit sign inv axis angle

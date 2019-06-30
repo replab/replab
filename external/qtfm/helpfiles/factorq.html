@@ -1,0 +1,52 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>factorq :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>factorq</h2>
+<p>Factorisation of a quaternion</p>
+<h2>Syntax</h2><p><tt>[f, g, theta] = factorq(q, mu, L)</tt></p>
+<h2>Description</h2>
+<p>
+    <tt>factorq</tt> factorizes a quaternion <tt>q</tt>,
+    using the pure quaternion <tt>mu</tt>, such that the vector parts
+    of the factors are orthogonal.
+</p>
+<p>
+    On return
+    <tt>f</tt> is a quaternion, <tt>g</tt> is a unit quaternion,
+    and <tt>theta</tt> is an angle,
+    such that <tt>g = exp(mu .* theta)</tt> and
+    <tt>g .* f = q</tt> or <tt>f .* g = q</tt>
+    according as to whether the third
+    parameter is specified as 'L' or 'R', respectively (the exponential
+    factor is on the left or right).
+</p>
+<p>
+    <tt>f</tt> will be orthogonal to <tt>mu</tt> and therefore also
+    to the vector part of <tt>exp(mu .* theta) = mu .* sin(theta)</tt>.
+</p>
+
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; q = randq;
+&gt;&gt; mu = randv;
+&gt;&gt; [f, theta] = factorq(q, mu, 'R')
+ 
+f = 0.3864 + 0.2327 * I - 0.8896 * J + 0.07195 * K
+
+theta = -2.1688
+
+&gt;&gt; f .* exp(mu .* theta), q
+ 
+ans = -0.2175 - 0.1983 * I + 0.5497 * J + 0.7818 * K
+ 
+q   = -0.2175 - 0.1983 * I + 0.5497 * J + 0.7818 * K
+ 
+&gt;&gt; scalar_product(f, mu)
+
+ans = 1.8041e-16
+</pre>
+
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

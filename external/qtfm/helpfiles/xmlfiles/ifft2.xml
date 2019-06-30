@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "ifft2" overload = "true">
+<short>Inverse Fast Fourier transform</short>
+<syntax>Y = ifft2(X)</syntax>
+<long>
+<para>
+<code>ifft2(X)</code> computes the Fast Fourier Transform of the quaternion
+matrix <code>X</code> using a default axis and left-handed transform. See
+the related function <code>iqfft2</code> which permits control over the axis
+and handedness.
+</para>
+<para>
+The axis chosen is a complex (biquaternion) axis if <code>X</code> is
+complex, otherwise the axis is a (real) quaternion.
+</para>
+<para>
+The <code>N</code> and <code>dim</code> parameters of the overloaded
+&matlab; function are not yet implemented, but may be implemented at a
+later date.
+</para>
+</long>
+<seealso>
+<matlabfun name = "ifft2"/>
+<qtfmfun name = "fft"/>
+<qtfmfun name = "fft2"/>
+<qtfmfun name = "iqfft2"/>
+</seealso>
+<references>
+<reference>Ell, T. A. and Sangwine, S. J.,
+'Hypercomplex Fourier Transforms of Color Images',
+<italic>IEEE Transactions on Image Processing</italic>, <bold>16</bold>,
+(1), January 2007, 22-35. <doi>10.1109/TIP.2006.884955</doi>.
+</reference>
+<reference>Salem Said, Nicolas Le Bihan, and Stephen J. Sangwine,
+'Fast complexified quaternion Fourier transform',
+<italic>IEEE Transactions on Signal Processing</italic>, <bold>56</bold>,
+(4), April 2008, 1522-1531.
+<doi>10.1109/TSP.2007.910477</doi>.
+</reference>
+</references>
+</function>
+
+<!--$Id: ifft2.xml 1004 2017-11-15 17:14:09Z sangwine $-->

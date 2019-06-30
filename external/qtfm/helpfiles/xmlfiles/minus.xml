@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "minus" overload = "both">
+<short>- Minus</short>
+<syntax>Y = A - B</syntax>
+<long>
+<para>
+This function implements the elementwise binary subtraction operator for
+quaternion arrays.
+It is implemented
+for both full and pure quaternions and will implicitly supply a zero scalar
+part when needed. It also will work where one of the operands is not a
+quaternion, for example to subtract a real or complex value from a quaternion
+(implicitly from the scalar part).
+</para>
+</long>
+<examples>
+<precode>
+>> qi + qj + qk - 1
+ 
+ans = -1 + 1 * I + 1 * J + 1 * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "minus"/>
+<qtfmfun name = "uminus"/>
+<qtfmfun name = "plus"/>
+</seealso>
+</function>
+
+<!--$Id: minus.xml 1004 2017-11-15 17:14:09Z sangwine $-->

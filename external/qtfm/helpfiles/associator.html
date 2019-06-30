@@ -1,0 +1,71 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>associator :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>associator</h2>
+<p>Associator</p>
+<h2>Syntax</h2><p><tt>A = associator(X, Y, Z, option)</tt></p>
+<h2>Description</h2>
+    <p>
+        This function is provided for octonions only, since quaternion
+        multiplication is associative and the function would return either
+        zero or one, depending
+        on the option in the quaternion case, regardless of the data parameters.
+    </p>
+    <p>
+        <tt>A = associator(X, Y, Z)</tt> returns
+        <tt>(X .* Y) .* Z - X .* (Y .* Z)</tt>.
+        The same result is returned with option 'diff'.
+    </p>
+    <p>
+<tt>A = associator(X, Y, Z, 'prod')</tt> returns that octonion that
+multiplies the product <tt>(X .* Y) .* Z</tt> on the right to give the
+result of the product <tt>X .* (Y .* Z)</tt>
+</p>
+
+<h2>Examples</h2>
+<p>
+    Octonions are not associative, but quaternion-like subsets are, as shown
+    below (this shows the difference associator, which is zero when the three
+    parameters associate):
+</p>
+<pre>
+&gt;&gt; associator(oi, oj, ok)
+ 
+ans = 0 * I + 0 * J + 0 * K + 0 * L + 0 * M + 0 * N + 0 * O
+ 
+&gt;&gt; associator(oi, ol, oo)
+ 
+ans = 0 * I + 2 * J + 0 * K + 0 * L + 0 * M + 0 * N + 0 * O  
+</pre>
+Three octonions chosen at random have two evaluation orders for their
+product in a given order, and the associator multiplies one of these results
+to give the other:
+<pre>
+&gt;&gt; x = rando; y = rando; z = rando;
+&gt;&gt; ((x .* y) .* z) .* associator(x, y, z, 'prod')
+
+ans =
+
+0.2046 - 0.3172 * I + 0.3426 * J - 0.2111 * K + 0.4448 * L - 0.423 * M + 0.005592 * N - 0.5646 * O
+
+&gt;&gt; x .* (y .* z)
+
+ans =
+
+0.2046 - 0.3172 * I + 0.3426 * J - 0.2111 * K + 0.4448 * L - 0.423 * M + 0.005592 * N - 0.5646 * O
+
+</pre>
+
+<h2>See Also</h2>QTFM function: <a href="commutator.html">commutator</a><br>
+<h2>References</h2><ol><li>Richard D. Schafer,
+        'An Introduction to Non-Associative Algebras',
+        Academic Press, 1966. Page 13.
+    </li><li>
+        S. J. Sangwine,
+        `Octonion associators',
+        ArXiv e-print 1509.07718,
+        <a href="http://arxiv.org/abs/1509.07718">http://arxiv.org/abs/1509.07718</a>, 25 September 2015.
+    </li></ol>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

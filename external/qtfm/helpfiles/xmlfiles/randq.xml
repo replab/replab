@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "randq" overload = "false">
+<short>Uniformly distributed unit quaternions or rotations</short>
+<syntax>Y = randq(varargin)</syntax>
+<long>
+<para>
+<code>randq</code> constructs uniformly distributed quaternions (distributed
+uniformly in 4-space). It accepts the same parameters as the &matlab;
+functions <code>rand</code> and <code>randn</code>.
+</para>
+<para>
+Each quaternion returned is the result of three calls on the &matlab; function
+<code>rand</code>, and hence <code>randv</code> modifies the state of the
+generator used by <code>rand</code>.
+To initialise the generator or control the choice of generator, use
+<code>rand</code>.
+</para>
+<para>
+The result will have uniformly distributed axes and Gaussian-distributed
+angles. This rather non-intuitive result is discussed by Shoemake (see
+reference). If the quaternions supplied by this function are applied to a
+constant pure quaternion (e.g. <code>qi</code>) using the formula
+<code>conj(S) .* qi .* S</code>,
+the result will be randomly oriented pure quaternions with a uniform
+distribution in 3-space: this is what is meant by 'uniformly distributed
+rotations' (but note that this result can be obtained more directly with
+<code>randv</code> (q.v.)).
+</para>
+</long>
+<examples>
+<precode>
+>> q = randq(2)
+ 
+q = 2x2 quaternion array
+
+>> angle(q)
+
+ans =
+
+    2.0598    2.0802
+    1.1229    1.4153
+
+>> abs(q)
+
+ans =
+
+     1     1
+     1     1
+</precode>
+The Gaussian distribution of angles is easily demonstrated:
+<precode>
+>> q = randq(1e5,1)
+ 
+q = 100000x1 quaternion array
+ 
+>> hist(angle(q), 50)
+</precode>
+<figure>randq_angle_hist.png</figure>
+</examples>
+<seealso>
+<matlabfun name = "rand"/>
+<qtfmfun name = "randv"/>
+</seealso>
+<references>
+<reference>Ken Shoemake, 'Uniform random rotations', in David Kirk (ed),
+<italic>Graphics Gems III</italic>, Academic Press, 1992, pp124-132.
+</reference>
+</references>
+</function>
+
+<!--$Id: randq.xml 1004 2017-11-15 17:14:09Z sangwine $-->

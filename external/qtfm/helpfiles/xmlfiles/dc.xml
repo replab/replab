@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "dc" overload = "false">
+<short>Cayley-Dickson recomposition</short>
+<syntax>q = dc(A, B)</syntax>
+<long>
+<para>
+<code>dc</code> is the 'inverse' of the function <code>cd</code>.
+Given two complex numbers it returns the quaternion whose Cayley-Dickson
+decomposition would yield the two complex numbers.
+Given two quaternions it returns the octonion whose Cayley-Dickson
+decomposition would yield the two quaternions.
+</para>
+</long>
+<seealso>
+<qtfmfun name = "cd"/>
+<qtfmfun name = "cdpolar"/>
+</seealso>
+</function>
+
+<!--$Id: dc.xml 1004 2017-11-15 17:14:09Z sangwine $-->

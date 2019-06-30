@@ -1,0 +1,38 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>part :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>part</h2>
+<p>Component of a quaternion or octonion</p>
+<h2>Syntax</h2><p><tt>p = part(q, n)</tt></p>
+<h2>Description</h2>
+<p>
+This function extracts one of the four components of a quaternion or one of
+the eight components of an octonion. The result is a real
+(or a complex value if the quaternion/octonion has complex components).
+The parameter must be an integer in the range 1:4 or 1:8 as appropriate.
+For quaternions, there are also three named functions <tt>x</tt>,
+<tt>y</tt>, and <tt>z</tt> that can also access the components of
+the vector part. These are not provided for octonions, as the present
+function seemed a better implementation, since it is possible to index
+through the components. The scalar part can also be accessed through the
+<tt>s</tt> and <tt>scalar</tt> functions, which differ in their
+behaviour if the quaternion/octonion is pure. The present function behaves
+like <tt>s</tt> and returns an empty array for a pure quaternion or
+octonion.
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; q = quaternion(1, 2, 3, 4)
+ 
+q = 1 + 2 * I + 3 * J + 4 * K
+ 
+&gt;&gt; part(q, 3)
+
+ans = 3
+</pre>
+
+<h2>See Also</h2>QTFM functions: <a href="s.html">s</a>, <a href="s.html">scalar</a>, <a href="v.html">v</a>, <a href="v.html">vector</a>, <a href="x/y/z.html">x/y/z</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

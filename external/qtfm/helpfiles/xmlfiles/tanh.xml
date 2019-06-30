@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "tanh" overload = "true">
+<short>Hyperbolic tangent</short>
+<syntax>Y = tanh(X)</syntax>
+<long>
+<para>
+<code>tanh(X)</code> computes the hyperbolic tangent of the quaternion argument <code>X</code>
+which may be a complexified quaternion.
+</para>
+</long>
+<seealso>
+<matlabfun name = "tanh"/>
+<qtfmfun name = "sinh"/>
+<qtfmfun name = "cosh"/>
+</seealso>
+</function>
+
+<!--$Id: tanh.xml 1004 2017-11-15 17:14:09Z sangwine $-->

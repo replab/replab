@@ -1,0 +1,109 @@
+Implementation notes
+--------------------
+
+The following are general points about the implementation of the quaternion
+toolbox. It is intended to expand these notes in due course to give more
+detailed information about the design of the toolbox.
+
+1. The representation of a quaternion is hidden in a small number of private
+functions. This is to keep the bulk of the functions in the library separate
+from the representation, and to facilitate a later change of representation
+if needed. [This was an original aim, but it has gradually been eroded to
+make the code run signficantly faster, and as more confidence was gained
+that the internal representations were sound.]
+    
+2. Functions which are overloadings of Matlab functions generally take the
+same parameters as the Matlab function, but there are some exceptions where
+the Matlab function seemed to have unnecessary parameter combinations that
+are of little use.
+
+3. Functions are inherently matrix-oriented (vectorised) as with standard
+Matlab functions.
+
+4. Errors are limited to cases where parameters are incorrect or not supported.
+
+5. Warnings are issued in cases where a result will be incorrect (for example
+a NaN, but the computation is not stopped). Generally the problem should be
+fixed at a higher level than the point where the warning occurs. If this is in
+one of the functions of the toolbox, the problem should be reported, otherwise
+if it is user code it should be fixed there.
+
+6. Because the toolbox is designed to work with complexified quaternions (that
+is quaternions in which the four components are complex), there are some tricks
+in some of the functions. The modulus of a complex quaternion is complex, and it
+may be zero. This has many ramifications. One example suffices to illustrate the
+tricks needed. In the function unit.m, it is necessary to divide a quaternion by
+its modulus. There is an error check in the function to give a warning if any
+element of the quaternion array has zero modulus (in fact less than epsilon),
+but since the modulus may be complex, it is abs(m) that is compared with eps and
+not m itself. Note that if the modulus is real, abs(m) == m, and the abs
+function has no effect, whereas, if the modulus is complex, abs(m) is real, and
+it can only be zero if the modulus is zero.
+
+7. The overloading of the Matlab functions real, imag and conj is important.
+real and imag operate exactly as their complex counterparts. Applied to a
+complex quaternion they return a real quaternion which is the real or imaginary
+part of the complex quaternion, exactly analogous to the complex case. conj,
+however, is different since it returns the quaternion conjugate by default - the
+vector part is negated not the complex part of the components. To obtain the
+complex conjugate a second parameter is needed. There is also a total conjugate,
+which means both the quaternion and complex conjugates are applied. The reason
+for making the default the quaternion conjugate is subtle: conj is used in
+ctranspose and in inverse, and in both of these cases it must be the quaternion
+conjugate. Therefore for consistency, conj is the quaternion conjugate. The use
+of a different name (e.g. qconj) was considered but the problem of the '
+operator (conjugate transpose) would remain. It is clear that this operator
+should implement the quaternion conjugate transpose because it is this transpose
+that is needed most often and not the complex conjugate transpose. We can't
+introduce a new operator into Matlab. If we want a complex conjugate transpose
+we have to write conj(A.', 'complex').
+
+8. Indexing within class methods. Matlab does not support normal array indexing
+within a class method. If used, an obscure error occurs which has tripped us up
+more than once. The class methods are all the M-functions inside the @quaternion
+and @octonion directories and their sub-directories. If normal array indexing
+notation is employed inside any of these functions to index a quaternion array
+(but *not* other types of arrays such as real or string), then Matlab will fail
+to call the quaternion subsref function. Instead, it will call its own built-in
+subsref function, and the obscure error message
+
+"??? Index exceeds matrix dimensions."
+
+will usually occur. The workaround for this is to use the quaternion subsref
+function explictly. This is made slightly easier by using the substruct function
+to construct the necessary arguments. For example, the simple indexing operation
+q(k) has to be coded as subsref(q, substruct('()', {k})). To see more elaborate
+examples, search in the @quaternion directory for files containing 'substruct'.
+A brief mention of this can be found in the Matlab documentation under:
+Programming/Classes and Objects/Designing User Classes, under the title:
+Object Indexing within Methods. In more recent versions of Matlab, the help
+information has been reorganized and the most relevant section is headed
+(use search to find it):
+'subsref and subsasgn Within Class Methods ? Built-In Called' or in even more
+recent versions: 'Code Patterns for subsref and subsasgn Methods'.
+
+9. The octonion class was developed from 2011-12 and released in 2013 as part
+of QTFM Version 2.0. The implementation is based on the Cayley-Dickson form
+of an octonion as a pair of quaternions. The reason for implementing octonions
+in this way is to make maximum possible use of code already written for
+quaternions, and to avoid the very long and complex code that would result
+from representing octonions directly as eight components.
+Our intent is to implement almost all functionality by using existing
+quaternion functions. Therefore the default algorithm for some functions is
+to call the quaternion function of the same name on the first of the two
+quaternion components. This works for things like ndims and size, where the
+result is not octonion. Where the result is octonion, quite often it is
+possible to call the corresponding quaternion function and assemble the
+octonion result from the two quaternion results. Because this is such a
+common solution, it is implemented by the private function overload (q.v.).
+
+Steve Sangwine
+Nicolas Le Bihan
+
+Email: sangwine@users.sourceforge.net, nicolas.le-bihan@lis.inpg.fr
+
+LIS, Grenoble
+July 2005
+Amended March 2006, March 2008, November 2009, July 2011, December 2011,
+January 2013, April 2019.
+$Id: Implementation_notes.txt 1031 2019-04-20 12:49:25Z sangwine $

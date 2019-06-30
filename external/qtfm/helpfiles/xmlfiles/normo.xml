@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "normo" overload = "false">
+<short>Norm of an octonion</short>
+<syntax>Y = normo(X)</syntax>
+<long>
+    <para>
+        <italic>(Not to be confused with the function <code>norm</code>
+        which computes a matrix norm.)</italic>
+    </para>
+<para>
+<code>normo(X)</code> returns an array <code>Y</code> such that each
+element of <code>Y</code> is the norm of the corresponding element of
+<code>X</code>. The norm is the sum of the squares of the eight
+components (seven components in the case where <code>X</code> is pure).
+</para>
+<para>
+If <code>X</code> is a complex octonion, <code>normq(X)</code> returns
+the complex semi-norm, computed in the same way.
+The semi-norm of a complexified octonion can vanish. See the QTFM function
+<code>normq</code> for references on this topic for quaternions.
+No corresponding paper is known for the octonion case.
+</para>
+</long>
+<examples>
+<precode>
+normo(octonion(1,1,1,1,1,1,1,1))
+
+ans = 8
+</precode>
+<code>normo</code> is vectorized, and hence can operate on arrays.
+It can also operate on complex octonions yielding a complex result in
+general (the semi-norm):
+<precode>
+>> normo(1 + i + oi + on + om)
+
+ans = 3.0000 + 2.0000i
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "abs"/>
+<qtfmfun name = "norm"/>
+</seealso>
+</function>
+
+<!--$Id: normo.xml 1004 2017-11-15 17:14:09Z sangwine $-->

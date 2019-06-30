@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "mpower" overload = "true">
+<short>^ Matrix power</short>
+<syntax>Y = X ^ Y</syntax>
+<long>
+<para>
+<code>X ^ Y</code> raises the quaternion <code>X</code> to the
+power <code>Y</code>. If both parameters are scalar, the <code>.^</code>
+function is called, otherwise, limited cases of small integers for <code>Y</code>
+are handled by repeated multiplication.
+</para>
+<para>
+Other cases are unimplemented, but may be implemented at a later date.
+</para>
+</long>
+<seealso>
+<matlabfun name = "arithmeticoperators"/>
+<qftmfun name = "power"/>
+</seealso>
+</function>
+
+<!--$Id: mpower.xml 1004 2017-11-15 17:14:09Z sangwine $-->

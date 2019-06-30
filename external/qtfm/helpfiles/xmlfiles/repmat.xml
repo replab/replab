@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "repmat" overload = "both">
+<short>Replicate and tile an array</short>
+<syntax>Y = repmat(A, M, N)</syntax>
+<long>
+<para>
+<code>repmat(A, M, N)</code> replicates and tiles a quaternion array. It is
+a straightforward overloading of the &matlab; function of the same name
+implemented by a common mechanism for quaternion functions that can be
+computed by separate application of the &matlab; function to each component
+of the quaternion array.
+</para>
+</long>
+<seealso>
+<matlabfun name = "repmat"/>
+</seealso>
+</function>
+
+<!--$Id: repmat.xml 1004 2017-11-15 17:14:09Z sangwine $-->

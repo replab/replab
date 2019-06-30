@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "numel" overload = "both">
+<short>Number of elements in an array</short>
+<syntax>Y = numel(X)</syntax>
+<long>
+    <para>
+        <code>numel(X)</code> returns the number of quaternions or octonions in an
+        array, just as the corresponding built-in &matlab; function does for other types.
+    </para>
+    <para>
+        There is a complex history to this function, which is relevant only to code
+        developed with versions of QTFM prior to 2.4 and versions of &matlab; prior
+        to R2015b, when a new function <code>numArgumentsFromSubscript</code>
+        was introduced into &matlab;. See the notes in the quaternion (not
+        octonion) source file for
+        information about this.
+    </para>
+</long>
+<seealso>
+<matlabfun name = "numel"/>
+<qtfmfun name = "prod"/>
+<qtfmfun name = "size"/>
+</seealso>
+</function>
+
+<!--$Id: numel.xml 1004 2017-11-15 17:14:09Z sangwine $-->

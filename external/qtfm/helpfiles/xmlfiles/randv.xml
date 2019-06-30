@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "randv" overload = "false">
+<short>Uniformly distributed vectors (pure quaternions)</short>
+<syntax>Y = randv(varargin)</syntax>
+<long>
+<para>
+<code>randv</code> constructs uniformly distributed unit vectors (distributed
+uniformly in 3-space). It accepts the same parameters as the &matlab;
+functions <code>rand</code> and <code>randn</code>.
+</para>
+<para>
+Each unit vector returned is the result of two calls on the &matlab; function
+<code>rand</code>, and hence <code>randv</code> modifies the state of the
+generator used by <code>rand</code>.
+To initialise the generator or control the choice of generator, use
+<code>rand</code>.
+</para>
+</long>
+<examples>
+<precode>
+>> randv(2)
+ 
+ans = 2x2 pure quaternion array
+ 
+>> abs(ans)
+
+ans =
+
+    1.0000    1.0000
+    1.0000    1.0000
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "rand"/>
+<qtfmfun name = "randq"/>
+</seealso>
+</function>
+
+<!--$Id: randv.xml 1004 2017-11-15 17:14:09Z sangwine $-->

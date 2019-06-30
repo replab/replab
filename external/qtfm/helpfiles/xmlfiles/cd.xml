@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "cd" overload = "false">
+<short>Cayley-Dickson decomposition</short>
+<syntax>[A, B] = cd(q)</syntax>
+<long>
+<para>
+<code>cd</code> returns two values which are the Cayley-Dickson components
+of the argument.
+The Cayley-Dickson form represents a quaternion as a complex number with
+two complex components:
+q = A + B<bold>j</bold> where A = w + x i, B = y + z i. Thus:
+q = (w + x i) + (y + z i) j = w + x<bold>i</bold> + y<bold>j</bold> + z<bold>k</bold>.
+The Cayley-Dickson form of an octonion represents the octonion as a complex
+number with quaternion components:
+o = A + B<bold>l</bold> where A and B are quaternions, and <bold>l</bold>
+is the octonion operator <bold>l</bold>.
+</para>
+<para>
+Expressed in Matlab/QTFM code, A and B are such that:
+<precode>
+q = quaternion(real(A), imag(A), real(B), imag(B)),
+</precode>
+or in the octonion case:
+<precode>
+o = octonion(part(A, 1), part(A, 2), part(A, 3), part(A, 4),
+ part(B, 1), part(B, 2), part(B, 3), part(B, 4)).
+</precode>
+</para>
+<para>
+The name of this function is the same as the &matlab; command for changing
+directory, but the quaternion function is called only when the argument is
+a quaternion. Since a quaternion cannot designate a directory, there is no
+conflict.
+</para>
+</long>
+<examples>
+<precode>
+>> q = randq
+ 
+q = 0.01899 - 0.2061 * I - 0.9299 * J + 0.304 * K
+ 
+>> [A, B] = cd(q)
+
+A =  0.0190 - 0.2061i
+
+B = -0.9299 + 0.3040i
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "cdpolar"/>
+<qtfmfun name = "dc"/>
+</seealso>
+</function>
+
+<!--$Id: cd.xml 1004 2017-11-15 17:14:09Z sangwine $-->

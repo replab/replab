@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "isunitary" overload = "false">
+<short>Test for unitary matrix</short>
+<syntax>TF = isunitary(X, tol)</syntax>
+<long>
+<para>
+<code>isunitary(X, tol)</code> returns logical 1 (<code>true</code>) if the
+<italic>square matrix</italic> <code>X</code> is unitary (with transpose
+equal to its inverse) to within the tolerance given by the second parameter,
+if present.
+If no second parameter is specified, the tolerance defaults to <code>eps</code>.
+</para>
+</long>
+</function>
+
+<!--$Id: isunitary.xml 1004 2017-11-15 17:14:09Z sangwine $-->

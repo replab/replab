@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "reshape" overload = "both">
+<short>Change size</short>
+<syntax>Y = reshape(q, varargin)</syntax>
+<long>
+<para>
+<code>reshape</code> changes the size of a quaternion array. It is
+a straightforward overloading of the &matlab; function of the same name
+implemented by a common mechanism for quaternion functions that can be
+computed by separate application of the &matlab; function to each component
+of the quaternion array.
+</para>
+</long>
+<seealso>
+<matlabfun name = "reshape"/>
+</seealso>
+</function>
+
+<!--$Id: reshape.xml 1004 2017-11-15 17:14:09Z sangwine $-->

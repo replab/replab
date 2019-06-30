@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "isfinite" overload = "both">
+<short>Array elements that are finite</short>
+<syntax>TF = isfinite(X)</syntax>
+<long>
+<para>
+<code>isfinite(X)</code> returns logical 1 (<code>true</code>) for array
+elements that are finite in all quaternion components. It returns logical
+0 (<code>false</code>) at all array positions where at least one quaternion
+component is <code>infinite</code> or <code>NaN</code>.
+</para>
+</long>
+<seealso>
+<matlabfun name = "isfinite"/>
+</seealso>
+</function>
+
+<!--$Id: isfinite.xml 1004 2017-11-15 17:14:09Z sangwine $-->

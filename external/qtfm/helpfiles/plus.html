@@ -1,0 +1,38 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>minus :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>minus</h2>
+<p>+ Plus<br>(Quaternion and octonion overloadings of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>Y = A + B</tt></p>
+<h2>Description</h2>
+<p>
+This function implements the elementwise binary addition operator for
+quaternion arrays.
+It is implemented
+for both full and pure quaternions and will implicitly supply a zero scalar
+part when needed. It also will work where one of the operands is not a
+quaternion, for example to add a real or complex value to a quaternion
+(implicitly to the scalar part).
+</p>
+<p>
+The left and right parameters must have components of the same class, or if
+one is numeric, it must have the same class as the components of the other
+(which must be a quaternion). It is not possible, for example, to add a
+matrix of <tt>uint8</tt> unsigned integers to a pure quaternion matrix
+with components of type <tt>double</tt>. This is to prevent the creation
+of a quaternion matrix with components of mixed class, which would cause
+problems in other functions.
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; 1 + qi + qj + qk
+ 
+ans = 1 + 1 * I + 1 * J + 1 * K
+</pre>
+
+<h2>See Also</h2>MATLAB&reg; function: <a href="matlab:doc plus">plus</a><br>QTFM functions: <a href="minus.html">minus</a>, <a href="uminus.html">uminus</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

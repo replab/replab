@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "cumprod" overload = "true">
+<short>Cumulative product</short>
+<syntax>Y = cumprod(X, dim)</syntax>
+<long>
+<para>
+<code>cumprod(X)</code> computes the cumulative product of the quaternion
+argument. If the argument is a vector, the result is a vector. If the argument
+is a matrix, the cumulative product is computed along the columns by default.
+As with the equivalent &matlab; function, the <code>dim</code> parameter
+permits the product to be computed along a specified dimension.
+</para>
+<para>
+The ordering within the product is important, because of the non-commutative
+quaternion product: the product is computed with the lowest index on the
+left and the highest index on the right
+(that is, left to right for a row vector, or downwards for a column vector).
+</para>
+</long>
+<examples>
+The cumulative product of a vector containing the three quaternion operators
+gives a vector with the three values <code>qi</code>, <code>qk</code> and
+<code>-1</code>:
+<precode>
+>> cumprod([qi, qj, qk])
+ 
+ans = 1x3 quaternion array
+ 
+>> show(ans)
+ 
+ans.S =
+ 
+     0     0    -1
+
+ans.X =
+ 
+     1     0     0
+
+ans.Y =
+ 
+     0     0     0
+
+ans.Z =
+ 
+     0     1     0
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "cumprod"/>
+<qtfmfun name = "cumsum"/>
+<qtfmfun name = "prod"/>
+<qtfmfun name = "sum"/>
+</seealso>
+</function>
+
+<!--$Id: cumprod.xml 1004 2017-11-15 17:14:09Z sangwine $-->

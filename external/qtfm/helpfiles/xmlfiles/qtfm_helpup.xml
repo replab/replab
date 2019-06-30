@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "qtfm_helpup" overload = "false">
+<short>Rebuild QTFM HTML help files from XML masters</short>
+<syntax>qtfm_helpup</syntax>
+<long>
+<para>
+<code>qtfm_helpup</code> processes the QTFM XML help files to produce the
+HTML files that are visible to the user in the &matlab; help window. There
+is no need for the user to run this function (although it does no harm)
+unless some of the XML files have been updated from the CVS repository.
+</para>
+</long>
+</function>
+<!--$Id: qtfm_helpup.xml 1004 2017-11-15 17:14:09Z sangwine $-->

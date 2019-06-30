@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "qtfm_root" overload = "false">
+<short>Path to QTFM installation folder or directory</short>
+<syntax>S = qtfm_root</syntax>
+<long>
+<para>
+<code>qtfm_root</code> returns a string containing the full path to the
+root folder or directory where QTFM is installed. It is intended primarily
+for internal use, for example, in running test code from the &matlab; Start
+menu.
+</para>
+</long>
+</function>
+<!--$Id: qtfm_root.xml 1004 2017-11-15 17:14:09Z sangwine $-->

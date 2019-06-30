@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "normq" overload = "false">
+<short>Norm of a quaternion</short>
+<syntax>Y = normq(X)</syntax>
+<long>
+    <para>
+        <italic>(Not to be confused with the function <code>norm</code>
+        which computes a matrix norm.)</italic>
+    </para>
+<para>
+<code>normq(X)</code> returns an array <code>Y</code> such that each
+element of <code>Y</code> is the norm of the corresponding element of
+<code>X</code>. The norm is the sum of the squares of the four
+components (three components in the case where <code>X</code> is pure).
+</para>
+<para>
+If <code>X</code> is a complex quaternion, <code>normq(X)</code> returns
+the complex semi-norm, computed in the same way.
+The semi-norm of a complexified quaternion can vanish (see references).
+</para>
+</long>
+<examples>
+<precode>
+normq(quaternion(1,1,1,1))
+
+ans = 4
+</precode>
+<code>normq</code> is vectorized, and hence can operate on arrays:
+<precode>
+abs([qi, qj, qk, qi + qj])
+
+ans = 1     1     1     2
+ </precode>
+It can also operate on complex quaternions yielding a complex result in
+general (the semi-norm):
+<precode>
+>> normq(1 + i + qi + qj + qk)
+
+ans = 3.0000 + 2.0000i
+</precode>
+The following shows that a complex quaternion can have a vanishing
+norm and modulus:
+<precode>
+>> normq(i + qi)
+
+ans = 0
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "abs"/>
+<qtfmfun name = "norm"/>
+</seealso>
+<references>
+<reference>Sangwine, S. J. and Alfsmann, D.,
+'Determination of the biquaternion divisors of zero,
+including the idempotents and nilpotents',
+<italic>Advances in Applied Clifford Algebras</italic>, <bold>20</bold>(2),
+May 2010, 401-410, <doi>10.1007/s00006-010-0202-3</doi>.
+Published online 9 January 2010. Also available as:
+e-print arXiv:0812.1102, 8 December 2008, at
+<www>http://arxiv.org/abs/arxiv:0812.1102</www>.
+</reference>
+<reference>W. R. Hamilton,
+Lectures on Quaternions, Lecture VII, §672, p669.
+Hodges and Smith, Dublin, 1853.
+Available online at: <www>http://historical.library.cornell.edu/math/</www>.
+</reference>
+</references>
+</function>
+
+<!--$Id: normq.xml 1004 2017-11-15 17:14:09Z sangwine $-->

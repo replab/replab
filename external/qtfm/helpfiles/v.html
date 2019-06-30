@@ -1,0 +1,34 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>V/VECTOR :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>V/VECTOR</h2>
+<p>Vector component of a quaternion</p>
+<h2>Syntax</h2><p><tt>r = v(q), r = vector(q)</tt></p>
+<h2>Description</h2>
+<p>
+These two functions extract the vector component of a quaternion. The result
+is always a pure quaternion. The two functions are synonyms.
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; q = randq(2)
+ 
+q = 2x2 quaternion array
+ 
+&gt;&gt; v(q)
+ 
+ans = 2x2 pure quaternion array
+ 
+&gt;&gt; vector(q) == v(q)
+
+ans =
+
+     1     1
+     1     1
+</pre>
+
+<h2>See Also</h2>QTFM functions: <a href="s.html">s</a>, <a href="s.html">scalar</a>, <a href="xyz.html">x</a>, <a href="xyz.html">y</a>, <a href="xyz.html">z</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

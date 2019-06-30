@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "conv2" overload = "true">
+<short>Two-dimensional convolution</short>
+<syntax>C = conv2(A, B)</syntax>
+<long>
+<para>
+<code>conv2(A, B)</code> computes the two-dimensional convolution of matrices
+<code>A</code> and <code>B</code>. It operates in a similar way to the
+standard &matlab; function
+apart from supporting both left and right coefficients. (Since quaternion
+multiplication is not commutative, the general case requires both left
+and right multiplication in the convolution product/summation.) The
+&matlab; function allows the first two parameters to be vectors - this is
+not implemented as yet. Acceptable calling profiles are:
+<precode>
+C = conv2(A, B)      - A is convolved on the left of B, that is A * B
+C = conv2({L, R}, B) - The convolution is L * B * R. L and R must be of
+                       the same size.
+</precode>
+An optional last parameter can specify 'shape' as for the standard Matlab
+function. This is currently not implemented.
+</para>
+</long>
+<seealso>
+<matlabfun name = "conv2"/>
+<qtfmfun name = "conv"/>
+</seealso>
+</function>
+
+<!--$Id: conv2.xml 1004 2017-11-15 17:14:09Z sangwine $-->

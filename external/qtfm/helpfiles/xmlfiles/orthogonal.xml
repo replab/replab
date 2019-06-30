@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "orthogonal" overload = "false">
+<short>Construct unit pure quaternions orthogonal to elements of a pure quaternion array</short>
+<syntax>U = orthogonal(V, W)</syntax>
+<long>
+    <para>
+        <code>orthogonal(V, W)</code> constructs and returns an array of unit pure quaternions
+        each orthogonal to the corresponding element of <code>V</code>, and <code>W</code> if given.
+        <code>V</code> and <code>W</code> must be pure quaternions, but need not have unit modulus.
+        Elements of <code>W</code> need not be orthogonal to the corresponding elements of <code>V</code>,
+        but they must not be parallel.
+    </para>
+    <para>
+        Either or both of <code>V</code> or <code>W</code> may be a scalar,
+        in which case, it is treated as if the same size as the other.
+    </para>
+    <para>
+        The function works for the complex quaternion case as well as for
+        real quaternions.
+    </para>
+</long>
+<examples>
+<precode>
+>> orthogonal(qi, qj)
+ 
+ans = 0 * I + 0 * J + 1 * K
+
+>> A = randv(3);
+>> B = orthogonal(A, quaternion(1,0,1));
+>> scalar_product(A, B)
+
+ans =
+
+   1.0e-16 *
+
+         0    0.5551   -0.0694
+    0.0520         0         0
+         0    0.5551   -0.5551
+</precode>
+</examples>
+</function>
+
+<!--$Id: orthogonal.xml 1004 2017-11-15 17:14:09Z sangwine $-->

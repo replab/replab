@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "randvmf" overload = "false">
+<short>von Mises-Fisher distribution of unit quaternions</short>
+<syntax>Y = randvmf(μ, κ, varargin)</syntax>
+<long>
+<para>
+<code>randvmf</code> returns unit quaternions distributed on the 4-sphere according
+to the von Mises-Fisher distribution. See also <code>randf</code> for the
+3-sphere case.
+</para>
+<para>
+The first parameter μ must be a full quaternion (the mean direction in 4-space).
+The second parameter κ is the concentration
+parameter which controls the spread of the distribution on the 4-sphere. It
+must be non-negative. A value of zero results in a uniform distribution
+on the sphere. Larger values result in greater concentration of the
+distribution in the mean direction μ.
+</para>
+<para>
+The remaining parameters are as for the &matlab; function <code>rand</code> (q.v.). 
+The result may be scalar, vector, matrix or array depending on the parameters
+supplied.  Each pure quaternion returned is the result of at least two
+calls on <code>rand</code>, and two calls on <code>randn</code>, and hence
+<code>randf</code> modifies the state
+of the generator used by both <code>rand</code> and randn. To initialise the generator
+or control the choice of generator, use rand and/or <code>randn</code>.
+</para>
+</long>
+<seealso>
+<qtfmfun name = "randf"/>
+<qtfmfun name = "randq"/>
+<qtfmfun name = "randv"/>
+</seealso>
+<references>
+<reference>R. A. Fisher, 'Dispersion on a sphere',
+<italic>Proceedings of the Royal Society of London</italic>, Series A.,
+<bold>217</bold>, pp295-305, (1953).
+</reference>
+<reference>K. V. Mardia and P. E. Jupp,
+<italic>Directional Statistics</italic> (2nd edition),
+John Wiley (2000). [§9.3.]
+</reference>
+</references>
+</function>
+
+<!--$Id: randvmf.xml 1004 2017-11-15 17:14:09Z sangwine $-->

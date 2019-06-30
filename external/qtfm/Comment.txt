@@ -1,0 +1,7 @@
+To obtain support for quaternionic representations, unpack the QTFM library in this folder.
+
+https://sourceforge.net/projects/qtfm/
+
+Our code was tested with version 2.7.
+
+Note that QTFM is licensed under the GPL.

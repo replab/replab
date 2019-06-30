@@ -1,0 +1,40 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>complex :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>complex</h2>
+<p>Construct a complex quaternion/octonion from real quaternions/octonions.<br>(Quaternion and octonion overloadings of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>q = complex(a,b)</tt></p>
+<h2>Description</h2>
+<p>
+<tt>complex</tt> takes two quaternion arguments and constructs a
+complexified quaternion with the first quaternion as real part, and the
+second as the imaginary part. The result is equivalent to
+<tt>a + i * b</tt> (where <tt>i</tt> is the standard MATLAB&reg;
+complex operator). (Similarly for octonions.)
+</p>
+<p>
+Once constructed, a complexified quaternion can be separated into four
+complex components, or two quaternions (real and imaginary). It is of
+course also possible to construct complexified quaternions by other
+means, from four complex components.
+</p>
+<p>
+The two arguments must be of the same size, unless one is scalar. If this
+is the case the scalar argument is promoted in size to match the non-scalar
+argument. (This behaviour matches the way the corresponding MATLAB&reg;
+function operates.)
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; q = complex(quaternion(1,2,3,4), quaternion(5,6,7,8))
+ 
+q = (1+5i) + (2+6i) * I + (3+7i) * J + (4+8i) * K
+</pre>
+
+<h2>See Also</h2>MATLAB&reg; function: <a href="matlab:doc complex">complex</a><br>QTFM functions: <a href="real.html">real</a>, <a href="imag.html">imag</a><br>
+<h2>References</h2><ol><li>Ward, J. P., "Quaternions and Cayley numbers", Kluwer, 1997.</li></ol>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

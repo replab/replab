@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "convert" overload = "false">
+<short>Convert quaternion to different underlying data type</short>
+<syntax>Y = convert(q, t)</syntax>
+<long>
+<para>
+<code>convert(q, t)</code> converts the components of a quaternion to a
+different data type. By default, the components of a quaternion have the default
+&matlab; data type <code>double</code>. The <code>cast</code> function
+implements the same functionality, and is to be preferred since it overloads
+a standard &matlab; function. <code>Convert</code> is retained for
+compatibility with code written before the <code>cast</code> function was
+implemented.
+</para>
+</long>
+<seealso>
+<qtfmfun name = "cast"/>
+</seealso>
+</function>
+
+<!--$Id: convert.xml 1004 2017-11-15 17:14:09Z sangwine $-->

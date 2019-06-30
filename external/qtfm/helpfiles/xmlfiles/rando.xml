@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "rando" overload = "false">
+<short>Uniformly distributed unit octonions</short>
+<syntax>Y = rando(varargin)</syntax>
+<long>
+<para>
+<code>rando</code> constructs uniformly distributed octonions (distributed
+uniformly in 8-space). It accepts the same parameters as the &matlab;
+functions <code>rand</code> and <code>randn</code>.
+</para>
+<para>
+Each octonion returned is the result of eight calls on the &matlab; function
+<code>rand</code>, and hence <code>rando</code> modifies the state of the
+generator used by <code>rand</code>.
+To initialise the generator or control the choice of generator, use
+<code>rand</code>.
+</para>
+</long>
+<seealso>
+<matlabfun name = "rand"/>
+<qtfmfun name = "randvo"/>
+</seealso>
+</function>
+
+<!--$Id: rando.xml 1004 2017-11-15 17:14:09Z sangwine $-->

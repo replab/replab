@@ -1,0 +1,38 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>blkdiag :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>blkdiag</h2>
+<p>Construct block diagonal matrix from input arguments.<br>(Quaternion overloading of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>R = blkdiag(varargin)</tt></p>
+<h2>Description</h2>
+<p>
+Given a number of quaternion matrices, <tt>blkdiag</tt> builds a block
+diagonal matrix with the given matrices on the diagonal. It works exactly
+as the overloaded MATLAB&reg; function. The matrices supplied are not required
+to have the same size.
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; blkdiag(randq(2), randq(3))
+ 
+ans =
+ 
+     5x5 quaternion array
+ 
+&gt;&gt; s(ans)
+
+ans =
+
+    0.0058    0.7714         0         0         0
+   -0.1470   -0.4792         0         0         0
+         0         0   -0.5044    0.5444   -0.5741
+         0         0    0.3300    0.8763    0.0667
+         0         0   -0.0868    0.9223    0.6933
+</pre>
+
+<h2>See Also</h2>MATLAB&reg; function: <a href="matlab:doc blkdiag">blkdiag</a><br>QTFM functions: <a href="diag.html">diag</a>, <a href="horzcat.html">horzcat</a>, <a href="vertcat.html">vertcat</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

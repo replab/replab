@@ -1,0 +1,56 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>opd :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>opd</h2>
+<p>Orthogonal plane decomposition</p>
+<h2>Syntax</h2><p><tt>[p, m] = opd(q, a, b)</tt></p>
+<h2>Description</h2>
+<p>
+    <tt>opd(q, a ,b)</tt> decomposes a quaternion array element-by-element
+    <tt>q</tt> into two
+    components in orthogonal planes defined by <tt>a</tt> and <tt>b</tt>
+    using the formulae <i>p = &frac12;(q + aqb)</i> and <i>m = &frac12;(q - aqb)</i>.
+The third parameter is optional, if omitted it is set equal to the second.
+If <tt>a</tt> is a pure quaternion, and <tt>b</tt> is omitted,
+<tt>p</tt> is parallel to <tt>a</tt>, and <tt>m</tt> 
+is in the plane normal to <tt>a</tt>.
+(Parallel/perpendicular decomposition.)
+Other cases are determined by the values of the second and third parameters.
+Coxeter's paper is recommended as a reference for details of the geometry.
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; q = randq;
+&gt;&gt; [p,m] = opd(q, randv)
+ 
+p = 2.776e-17 - 0.1426 * I - 0.8066 * J - 0.07652 * K
+ 
+m = -0.4503 + 0.3269 * I - 0.0668 * J + 0.09476 * K
+ 
+&gt;&gt; scalar_product(p,m)
+
+ans = -3.9899e-17  % p and m are orthogonal.
+</pre>
+
+<h2>See Also</h2>QTFM function: <a href="ohd.html">ohd</a><br>
+<h2>References</h2><ol><li>
+        Eckhard Hitzer and Stephen J. Sangwine,
+        &#8216;The Orthogonal 2D Planes Split of Quaternions and Steerable Quaternion Fourier Transformations&#8217;,
+        Chapter 2, pp. 15-39 in: Eckhard Hitzer and Stephen J. Sangwine (eds.),
+        <i>Quaternion and Clifford Fourier Transforms and Wavelets</i>,
+        Birkh&auml;user/Springer Basel, 2013. xxvii+338 pp. 
+DOI: <a href="http://dx.doi.org/10.1007/978-3-0348-0603-9">10.1007/978-3-0348-0603-9</a>.
+    </li><li>
+    Ell, T. A. and Sangwine, S. J.,
+    'Quaternion Involutions and Anti-Involutions',
+    <i>Computers and Mathematics with Applications</i>, <b>53</b>(1), January 2007, 137-143.
+    
+DOI: <a href="http://dx.doi.org/10.1016/j.camwa.2006.10.029">10.1016/j.camwa.2006.10.029</a>.
+    </li><li>
+    H. S. M. Coxeter, 'Quaternions and reflections',
+    <i>American Mathematical Monthly</i>, <b>53</b>(3), 136-146, 1946.
+    </li></ol>  
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "mrdivide" overload = "both">
+<short>/ Matrix right divide</short>
+<syntax>Y = A/B</syntax>
+<long>
+<para>
+<code>A/B</code> computes matrix right divide. It is implemented for
+quaternion and octonion arrays only for the case where <code>B</code> is a scalar
+(that is a single quaternion/octonion or numeric value). In this case, the
+result is exactly the same as that given by the elementwise right
+divide (<code>./</code>). The reason for implementing this
+function is that some &matlab; code uses <code>/</code> when <code>./</code>
+should have been used. The existence of this function in the &qtfm;
+toolbox makes it possible for &matlab; functions to work on quaternion/octonion
+arrays if all other necessary functions are overloaded. An example is the &matlab;
+<code>cov</code> function.
+</para>
+</long>
+<seealso>
+<matlabfun name = "mrdivide"/>
+<qtfmfun name = "rdivide"/>
+</seealso>
+</function>
+
+<!--$Id: mrdivide.xml 1004 2017-11-15 17:14:09Z sangwine $-->

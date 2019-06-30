@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "qtfm_version" overload = "false">
+<short>Return QTFM version number</short>
+<syntax>V = qtfm_version</syntax>
+<long>
+<para>
+<code>qtfm_version</code> reads the version number of the currently running
+QTFM code. It also checks Sourceforge (if an Internet connection is
+available) and outputs a warning if there is a more recent version available
+at Sourceforge, with the version number of the latest version. If no
+Internet connection is available, a warning is output.
+</para>
+</long>
+</function>
+<!--$Id: qtfm_version.xml 1004 2017-11-15 17:14:09Z sangwine $-->

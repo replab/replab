@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "eyeq" overload = "false">
+<short>Identity matrix</short>
+<syntax>Y = eyeq(N)</syntax>
+<long>
+<para>
+<code>eyeq(X)</code> returns a quaternion identity matrix. The vector part
+is always zero, and the scalar part is a real identity matrix, as returned
+by the &matlab; <code>eye</code> function. Accepts the same parameters as
+the &matlab; <code>eye</code> function.
+</para>
+</long>
+<examples>
+<precode>
+>> show(eyeq(2))
+ 
+S =
+ 
+     1     0
+     0     1
+
+X =
+ 
+     0     0
+     0     0
+
+Y =
+ 
+     0     0
+     0     0
+
+Z =
+ 
+     0     0
+     0     0
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "eye"/>
+</seealso>
+</function>
+
+<!--$Id: eyeq.xml 1004 2017-11-15 17:14:09Z sangwine $-->

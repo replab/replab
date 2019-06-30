@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "qfft" overload = "false">
+<short>Quaternion Fast Fourier transform</short>
+<syntax>Y = qfft(X, A, L)</syntax>
+<long>
+<para>
+<code>qfft(X, A, L)</code> computes the Quaternion Fast Fourier Transform
+of the quaternion vector <code>X</code> using transform axis <code>A</code>
+(direction in 3-space). If <code>X</code> is a matrix, the transforms of the
+columns are computed.
+</para>
+<para>
+<code>L</code> specifies the handedness of the transform ('L' or 'R') -
+determined by the position of the complex exponential relative to <code>X</code>.
+(<code>'L'</code> gives a transform with the exponential on the left of
+the signal.)
+See the related function <code>fft</code> which supplies a default axis and
+handedness.
+</para>
+<para>
+The transform axis, <code>A</code> must be a pure quaternion (real or
+complex) but it need not have unit modulus (although the transform itself
+is computed using a unit-modulus axis, so that the axis is a root of -1).
+</para>
+<para>
+This function uses the &matlab; <code>fft</code> function to compute two
+or four complex FFTs depending on whether <code>X</code> is real or complex.
+If either or both are complex, a complex quaternion FFT is computed.
+</para>
+</long>
+<seealso>
+<qtfmfun name = "iqfft"/>
+<qtfmfun name = "qfft2"/>
+<qtfmfun name = "qdft"/>
+</seealso>
+<references>
+<reference>Ell, T. A. and Sangwine, S. J.,
+'Hypercomplex Fourier Transforms of Color Images',
+<italic>IEEE Transactions on Image Processing</italic>, <bold>16</bold>,
+(1), January 2007, 22-35. <doi>10.1109/TIP.2006.884955</doi>.
+</reference>
+<reference>Salem Said, Nicolas Le Bihan, and Stephen J. Sangwine,
+'Fast complexified quaternion Fourier transform',
+<italic>IEEE Transactions on Signal Processing</italic>, <bold>56</bold>,
+(4), April 2008, 1522-1531.
+<doi>10.1109/TSP.2007.910477</doi>.
+</reference>
+</references>
+</function>
+
+<!--$Id: qfft.xml 1004 2017-11-15 17:14:09Z sangwine $-->

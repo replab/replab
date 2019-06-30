@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "V/VECTOR" overload = "false">
+<short>Vector component of a quaternion</short>
+<syntax>r = v(q), r = vector(q)</syntax>
+<long>
+<para>
+These two functions extract the vector component of a quaternion. The result
+is always a pure quaternion. The two functions are synonyms.
+</para>
+</long>
+<examples>
+<precode>
+>> q = randq(2)
+ 
+q = 2x2 quaternion array
+ 
+>> v(q)
+ 
+ans = 2x2 pure quaternion array
+ 
+>> vector(q) == v(q)
+
+ans =
+
+     1     1
+     1     1
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "s"/>
+<qtfmfun name = "scalar" alias = "s"/>
+<qtfmfun name = "x" alias = "xyz"/>
+<qtfmfun name = "y" alias = "xyz"/>
+<qtfmfun name = "z" alias = "xyz"/>
+</seealso>
+</function>
+
+<!--$Id: v.xml 1004 2017-11-15 17:14:09Z sangwine $-->

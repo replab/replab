@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "zeroso" overload = "false">
+<short>Octonion zeros matrix</short>
+<syntax>Y = zeroso(N)</syntax>
+<long>
+<para>
+<code>zeroso(X)</code> returns a full octonion matrix of zeros.
+Accepts the same parameters as
+the &matlab; <code>zeros</code> function.
+</para>
+</long>
+<seealso>
+<matlabfun name = "zeros"/>
+<qtfmfun name = "zerosvo"/>
+</seealso>
+</function>
+
+<!--$Id: zeroso.xml 1004 2017-11-15 17:14:09Z sangwine $-->

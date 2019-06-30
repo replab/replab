@@ -1,0 +1,39 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>disp :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>disp</h2>
+<p>Display array<br>(Quaternion overloading of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>display(X)</tt></p>
+<h2>Description</h2>
+<p>
+<tt>display(X)</tt> displays the value of the quaternion <tt>X</tt>
+preceded by its name. For a scalar argument, <tt>disp</tt> displays the value of the
+quaternion using <tt>char</tt>. Otherwise it outputs a concise
+summary of the quaternion, indicating the dimensions, whether the
+value is pure, and whether it has complex components. MATLAB&reg; calls this
+function implicitly when a quaternion is to be displayed, as for example,
+after an assignment which has not been followed by a semi-colon.
+</p>
+<p>
+To display the numeric values in a non-scalar quaternion array,
+use <tt>displayall</tt> or <tt>show</tt>.
+</p>
+
+<h2>Examples</h2>
+Notice the implicit call to <tt>display</tt> after <tt>A</tt> is
+assigned.
+<pre>
+&gt;&gt; A = randq(2)
+ 
+A = 2x2 quaternion array
+ 
+&gt;&gt; display(A)
+ 
+A = 2x2 quaternion array
+</pre>
+
+<h2>See Also</h2>QTFM functions: <a href="disp.html">disp</a>, <a href="displayall.html">displayall</a>, <a href="show.html">show</a><br>MATLAB&reg; functions: <a href="matlab:doc disp">disp</a>, <a href="matlab:doc display">display</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

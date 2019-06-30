@@ -1,0 +1,66 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>polar :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>polar</h2>
+<p>Polar decomposition</p>
+<h2>Syntax</h2><p><tt>[t, h, n] = polar(q, L)</tt></p>
+<h2>Description</h2>
+        <p>
+            <tt>polar</tt> computes the polar decomposition of a complexified quaternion (biquaternion) or
+            complexified octonion <tt>q</tt> such
+            that <tt>n .* t .* h = q</tt> (right polar decomposition) or <tt>n .* h .* t = q</tt> (left polar
+            decomposition).
+            In the case of biquaternions, this decomposition is isomorphic to the polar decomposition of linear
+            algebra applied to the adjoint matrix representation. (Octonions do not have an adjoint matrix representation,
+            so this equivalence does not apply in the octonion case.)
+        </p>
+        <p>
+        The optional output parameter <tt>n</tt> is the modulus of <tt>q</tt>, which may be complex.
+        If the optional parameter is not supplied, a warning will be issued if <tt>q</tt> does not have
+        unit (real) modulus.
+        <tt>t</tt> is invariant to the ordering, but <tt>h</tt> varies.
+        Applied to a real quaternion/octonion, <tt>h</tt> will be unity,
+        and <tt>t</tt> will
+        be identical to <tt>q</tt>.
+        The <tt>t</tt> output parameter is a trigonometric factor, and will be real.
+        It may therefore be expressed in the usual polar (Euler) form using the <tt>axis</tt> and <tt>angle</tt>
+        functions.
+        The <tt>h</tt> output parameter is a hyperbolic factor.
+        It may be expressed in Euler form with a root of +1.
+        See the reference cited below for details.
+    </p>
+    <p>
+        The second input parameter must be 'L' or 'R'. The default is 'R'.
+    </p>
+
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; b = unit(complex(randq, randq)) .* 7
+ 
+b = (-0.5011+2.247i) + (-3.957+5.102i) * I + (-1.782-0.2298i) * J + (8.218+2.544i) * K
+ 
+&gt;&gt; [t, h, n] = polar(b)
+ 
+t = -0.05384 - 0.4252 * I - 0.1914 * J + 0.883 * K 
+
+h = (1.329+2.429e-17i) + (0+0.1379i) * I + (0-0.7349i) * J + (0-0.4566i) * K
+ 
+n = 7.0000 - 0.0000i
+
+&gt;&gt; n * t * h - b
+ 
+ans = (0-4.441e-16i) - 8.882e-16 * I + (0+1.388e-16i) * J + (0+4.441e-16i) * K
+</pre>
+
+<h2>See Also</h2>QTFM functions: <a href="axis.html">axis</a>, <a href="angle.html">angle</a><br>
+<h2>References</h2><ol><li>
+       Stephen J. Sangwine and Eckhard Hitzer,
+       Polar decomposition of complexified quaternions and octonions,
+       School of Computer Science and Electronic Engineering, University of Essex, UK.
+       Technical Report CES-535, April 2019. ISSN: 1744-8050 (to be submitted to
+      Advances in Applied Clifford Algebras).
+    </li></ol>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

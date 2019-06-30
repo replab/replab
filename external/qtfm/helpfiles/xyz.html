@@ -1,0 +1,39 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>X/Y/Z :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>X/Y/Z</h2>
+<p>X, Y, Z components of a quaternion</p>
+<h2>Syntax</h2><p><tt>r = x(q), r = y(q), r = z(q)</tt></p>
+<h2>Description</h2>
+<p>
+These three functions extract the three components of the vector part of a
+quaternion. The result is a real (or a complex value if the quaternion has
+complex components).
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; q = quaternion(1, 2, 3, 4)
+ 
+q =  +1 +2 I +3 J +4 K
+ 
+&gt;&gt; y(q)
+
+ans =  3
+
+&gt;&gt; q = randq(2)
+ 
+q = 2x2 quaternion array
+ 
+&gt;&gt; x(q)
+
+ans =
+
+   -0.2900   -0.1664
+    0.2511   -0.2816
+</pre>
+
+<h2>See Also</h2>QTFM functions: <a href="s.html">s</a>, <a href="s.html">scalar</a>, <a href="v.html">v</a>, <a href="v.html">vector</a>, <a href="part.html">part</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

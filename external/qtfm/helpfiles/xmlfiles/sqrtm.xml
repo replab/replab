@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "sqrtm" overload = "true">
+<short>Matrix square root</short>
+<syntax>Y = sqrtm(X)</syntax>
+<long>
+<para>
+<code>sqrtm(X)</code> computes the matrix square root of a quaternion matrix.
+The algorithm used is based on calling the &matlab; <code>sqrtm</code> function
+on an adjoint matrix, and is therefore not accurate for larger matrices.
+The accuracy may be checked by squaring the result using <code>^</code>.
+</para>
+</long>
+<seealso>
+<matlabfun name = "sqrtm"/>
+<qtfmfun name = "adjoint"/>
+<qtfmfun name = "unadjoint"/>
+</seealso>
+</function>
+
+<!--$Id: sqrtm.xml 1004 2017-11-15 17:14:09Z sangwine $-->

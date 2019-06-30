@@ -1,0 +1,35 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>norm :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>norm</h2>
+<p>Matrix or vector norm<br>(Quaternion and octonion overloadings of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>Y = norm(X, p)</tt></p>
+<h2>Description</h2>
+<p><i>See the function <tt>normq</tt> for the quaternion
+norms of the elements of a matrix - this function computes a matrix
+norm as does the MATLAB&reg; function of the same name.</i>
+</p>
+<p>
+<tt>norm(X, p)</tt> computes the norm of the vector or matrix <tt>X</tt>.
+The second parameter selects the type of norm computed. Possible
+values are 1, 2, inf, -inf, and 'fro'. The default if <tt>p</tt> is omitted
+is 2.
+</p>
+<p>
+If <tt>X</tt> is a vector the norms computed for each value of <tt>p</tt>
+are as follows: 1 - sum of the absolute values; 2 - square root of the sum of
+squared values; inf - maximum absolute value; -inf - minimum absolute value.
+</p>
+<p>
+If <tt>X</tt> is a matrix the norms computed for each value of <tt>p</tt>
+are as follows: 1 - sum of the absolute values of the elements of each
+column; 2 - the largest singular value (requiring a singular value decomposition
+to be computed); inf - maximum absolute value in
+each column; 'fro' - the Frobenius norm.
+</p>
+
+<h2>See Also</h2>MATLAB&reg; function: <a href="matlab:doc norm">norm</a><br>QTFM functions: <a href="normq.html">normq</a>, <a href="svd.html">svd</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

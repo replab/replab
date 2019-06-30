@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "acosh" overload = "true">
+<short>Inverse hyperbolic cosine.</short>
+<syntax>Y = acosh(X)</syntax>
+<long>
+<para>
+<code>acosh(X)</code> computes the inverse hyperbolic cosine of its argument,
+which must be a real quaternion (<code>acosh</code> is not yet implemented for
+complexified quaternions).
+</para>
+<para>
+This function is computed using the Matlab® function of the same name by
+first computing an isomorphic complex number. The result is then assigned
+the same quaternion axis as the original argument.
+</para>
+</long>
+<seealso>
+<matlabfun name = "acosh"/>
+<qtfmfun name = "cosh"/>
+</seealso>
+</function>
+
+<!--$Id: acosh.xml 1004 2017-11-15 17:14:09Z sangwine $-->

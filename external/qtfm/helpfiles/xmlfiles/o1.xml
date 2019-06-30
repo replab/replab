@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "o1/oi/oj/ok/ol/om/on/oo" overload = "false">
+<short>Octonion operators i, j, k, l, m, n, o and octonion unity</short>
+<syntax>o1/oi/oj/ok/ol/om/on/oo</syntax>
+<long>
+<para>
+These eight functions return constant octonions with values corresponding
+to the seven octonion operators <bold>i</bold>, <bold>j</bold>,
+<bold>k</bold>, <bold>l</bold>, <bold>m</bold>, <bold>n</bold> and
+<bold>o</bold>; and an octonion with value unity.
+</para>
+<para>
+The symbol <code>i</code> is a builtin &matlab; operator for the
+complex root of -1, and therefore it cannot be used for the quaternion or
+octonion <bold>i</bold>.
+This is why the notation <code>oi</code> is used.
+</para>
+<para>
+Octonion <bold>i</bold> and quaternion <bold>i</bold> are distinct entities
+(the octonion class has been added to the toolbox as a distinct type). 
+</para>
+</long>
+<examples>
+<precode>
+>> oi + ol + on
+ 
+ans = 1 * I + 0 * J + 0 * K + 1 * L + 0 * M + 1 * N + 0 * O
+
+>> 2 * ol + 3 * om
+ 
+ans = 0 * I + 0 * J + 0 * K + 2 * L + 3 * M + 0 * N + 0 * O
+</precode>
+</examples>
+</function>
+
+<!--$Id: o1.xml 1004 2017-11-15 17:14:09Z sangwine $-->

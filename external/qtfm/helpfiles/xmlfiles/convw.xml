@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "convw" overload = "false">
+<short>Convolution with wrap around</short>
+<syntax>C = convw(A, B)</syntax>
+<long>
+    <para>
+        <code>convw(A, B)</code> computes the one-dimensional convolution of
+        <code>A</code> and <code>B</code> with wrap around. Unlike the standard
+        convolution implemented by the <code>conv</code> function, the result from
+        this function matches that which would be obtained by a Fourier domain
+        product, that is it treats the input as if extended periodically.
+    </para>
+<para> To supply left and right coefficients, use the calling profile
+<code>convw{L,R},B)</code>
+where <code>L</code> and <code>R</code> are vectors of the same length and
+orientation. If the first parameter is not a cell array, it is taken to be
+a left coefficient and the right coefficient array is implicitly ones.
+</para>
+</long>
+<seealso>
+<qtfmfun name = "conv"/>
+<qtfmfun name = "convw2"/>
+</seealso>
+</function>
+
+<!--$Id: convw.xml 1004 2017-11-15 17:14:09Z sangwine $-->

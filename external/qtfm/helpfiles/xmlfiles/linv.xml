@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "linv" overload = "false">
+<short>Left inverse of octonion matrix</short>
+<syntax>X = linv(A, B)</syntax>
+<long>
+<para>
+This function computes the left inverse operator of an octonion matrix.
+The result, if it exists, is the octonion matrix that satisfies X * A = B.
+If B is omitted it defaults to an identity matrix,
+and X will then be the left inverse of A.
+</para>
+<para>
+Caution: this function will yield accurate results only for small matrices,
+of the order of five or six rows or columns.
+Until a better algorithm is found, there is no way to compute an accurate
+inverse for a larger matrix.
+</para>
+</long>
+<examples>
+<precode>
+>> A = rando(3)
+ 
+A = 3x3 octonion array
+ 
+>> B = linv(A)
+ 
+B = 3x3 octonion array
+ 
+>> scalar(B * A)
+
+ans =
+
+    1.0000   -0.0000    0.0000
+    0.0000    1.0000   -0.0000
+   -0.0000    0.0000    1.0000
+
+>> abs(vector(B * A))
+
+ans =
+
+   1.0e-09 *
+
+    0.0428    0.0358    0.0434
+    0.1019    0.0920    0.0980
+    0.0629    0.0637    0.0706
+
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "inv"/>
+<qtfmfun name = "rinv"/>
+</seealso>
+<references>
+<reference>
+Yongge Tian, 'Matrix representations of octonions and their applications',
+<italic>Advances in Applied Clifford Algebras</italic>,
+<bold>10</bold> (1), 61-90, 2000.
+</reference>
+</references>
+</function>
+
+<!--$Id: linv.xml 1004 2017-11-15 17:14:09Z sangwine $-->

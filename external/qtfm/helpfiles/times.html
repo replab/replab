@@ -1,0 +1,42 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>times :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>times</h2>
+<p>.* Array multiply<br>(Quaternion and octonion overloadings of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>Y = A .* B</tt></p>
+<h2>Description</h2>
+<p>
+This function implements the quaternion elementwise product. The two operands
+must be the same size, or one must be a scalar quaternion.
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; [qi qj qk] .* [qj qk qi]
+ 
+ans = 1x3 quaternion array
+ 
+&gt;&gt; show(ans)
+ 
+ans.S =
+ 
+     0     0     0
+
+ans.X =
+ 
+     0     1     0
+
+ans.Y =
+ 
+     0     0     1
+
+ans.Z =
+ 
+     1     0     0
+</pre>
+
+<h2>See Also</h2>QTFM function: <a href="mtimes.html">mtimes</a><br>MATLAB&reg; function: <a href="matlab:doc times">times</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

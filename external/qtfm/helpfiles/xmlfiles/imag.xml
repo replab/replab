@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "imag" overload = "both">
+<short>Imaginary part of a complex quaternion</short>
+<syntax>Y = imag(X)</syntax>
+<long>
+<para>
+<code>imag(X)</code> returns the imaginary part of a complex quaternion.
+If <code>X</code> is a real quaternion, <code>imag(X)</code> returns zero.
+</para>
+<para>
+The concept of the imaginary part of a quaternion should not be confused
+with the vector part (returned by the function <code>vector</code> or
+<code>v</code>).
+</para>
+</long>
+<examples>
+<precode>
+>>  q =  complex(quaternion(1,2,3,4), quaternion(5,6,7,8))
+ 
+q = (1+5i) + (2+6i) * I + (3+7i) * J + (4+8i) * K
+ 
+>> imag(q)
+ 
+ans = 5 + 6 * I + 7 * J + 8 * K
+ 
+>> real(q)
+ 
+ans = 1 + 2 * I + 3 * J + 4 * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "imag"/>
+<qtfmfun name = "real"/>
+</seealso>
+<references>
+<reference>Ward, J. P., "Quaternions and Cayley numbers", Kluwer, 1997.</reference>
+</references>
+</function>
+
+<!--$Id: imag.xml 1004 2017-11-15 17:14:09Z sangwine $-->

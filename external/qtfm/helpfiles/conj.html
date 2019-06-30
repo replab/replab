@@ -1,0 +1,39 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>conj :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>conj</h2>
+<p>Quaternion or octonion conjugate.<br>(Quaternion and octonion overloadings of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>Y = conj(X, S)</tt></p>
+<h2>Description</h2>
+<p>
+This function implements three different conjugates: <tt>conj(X)</tt>
+with the second parameter omitted, returns the standard quaternion or
+Hamilton conjugate, that is for a quaternion <tt>q = w + ix + jy + kz</tt>
+it returns <tt>q = w - ix - jy - kz</tt>. The same result is obtained
+if the parameter S is supplied with the value 'hamilton'.
+</p>
+<p>
+If the second parameter has the value 'complex', the result is the complex
+conjugate, that is the quaternion in which all four components w, x, y and
+z have been replaced by their complex conjugates. Obviously this has no
+effect if the quaternion is real.
+</p>
+<p>
+Finally, if the second parameter has the value 'total', the result is
+equivalent to <tt>conj(conj(X, 'complex'), 'hamilton')</tt>, that is
+both conjugates are applied.
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; conj(quaternion(1,2,3,4))
+ 
+ans = 1 - 2 * I - 3 * J - 4 * K
+</pre>
+
+<h2>See Also</h2>MATLAB&reg; function: <a href="matlab:doc conj">conj</a><br>QTFM functions: <a href="complex.html">complex</a>, <a href="real.html">real</a>, <a href="imag.html">imag</a><br>
+<h2>References</h2><ol><li>Ward, J. P., "Quaternions and Cayley numbers", Kluwer, 1997.</li></ol>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

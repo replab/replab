@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "sign" overload = "true">
+<short>Signum function</short>
+<syntax>Y = sign(X)</syntax>
+<long>
+<para>
+<code>sign(X)</code> is equivalent to <code>unit(X)</code>. It is implemented
+so that &matlab; code which calls <code>sign</code> will work for quaternion
+arrays.
+</para>
+</long>
+<examples>
+<precode>
+>> sign(quaternion(1,2,3,4))
+ 
+ans = 0.1826 + 0.3651 * I + 0.5477 * J + 0.7303 * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "sign"/>
+<qtfmfun name = "unit"/>
+</seealso>
+</function>
+
+<!--$Id: sign.xml 1004 2017-11-15 17:14:09Z sangwine $-->

@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "displayall" overload = "false">
+<short>Display elements of array</short>
+<syntax>displayall(X)</syntax>
+<long>
+<para>
+<code>displayall(X)</code> displays the value of the elements of quaternion <code>X</code>
+preceded by its name. <code>show</code> is a synonym for <code>displayall</code>.
+</para>
+</long>
+<examples>
+<precode>
+>> A = randq(2)
+ 
+A = 2x2 quaternion array
+ 
+>> displayall(A)
+ 
+A.S =
+ 
+   -0.4697   -0.4876
+    0.4331    0.1549
+
+A.X =
+ 
+   -0.3172   -0.1382
+    0.2339    0.7641
+
+A.Y =
+ 
+    0.8121    0.4941
+    0.2490   -0.5607
+
+A.Z =
+ 
+   -0.1387    0.7064
+    0.8341    0.2789
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "disp"/>
+<qtfmfun name = "show"/>
+</seealso>
+</function>
+
+<!--$Id: displayall.xml 1004 2017-11-15 17:14:09Z sangwine $-->

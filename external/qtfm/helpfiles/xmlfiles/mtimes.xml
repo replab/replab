@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "mtimes" overload = "both">
+<short>* Matrix multiply</short>
+<syntax>Y = A * B</syntax>
+<long>
+<para>
+<code>A * B</code> computes the quaternion matrix product. It is implemented
+for products of quaternion matrices and for quaternion matrices multiplied
+on the left or right by numeric matrices (real or complex), and for all
+combinations of pure and full quaternion matrices.
+</para>
+</long>
+<examples>
+<precode>
+>> [qi, qj, qk] * [qi, qj, qk].'
+ 
+ans = -3 + 0 * I + 0 * J + 0 * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "mtimes"/>
+</seealso>
+</function>
+
+<!--$Id: mtimes.xml 1004 2017-11-15 17:14:09Z sangwine $-->

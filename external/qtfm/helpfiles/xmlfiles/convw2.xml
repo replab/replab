@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "convw2" overload = "false">
+<short>Two-dimensional convolution with wrap around</short>
+<syntax>C = convw2(A, B)</syntax>
+<long>
+    <para>
+        <code>convw2(A, B)</code> computes the two-dimensional convolution of matrices
+        <code>A</code> and <code>B</code> with wrap around. Unlike the standard
+        convolution implemented by the <code>conv2</code> function, the result from
+        this function matches that which would be obtained by a Fourier domain
+        product, that is it treats the input as if extended periodically.
+    </para>
+<para>
+Acceptable calling profiles are:
+<precode>
+C = convw2(A, B)      - A is convolved on the left of B, that is A * B
+C = convw2({L, R}, B) - The convolution is L * B * R. L and R must be of
+                        the same size.
+</precode>
+</para>
+</long>
+<seealso>
+<qtfmfun name = "convw"/>
+<qtfmfun name = "conv2"/>
+</seealso>
+</function>
+
+<!--$Id: convw2.xml 1004 2017-11-15 17:14:09Z sangwine $-->

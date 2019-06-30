@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "scatter4" overload = "false">
+<short>4D scatter plot from quaternion array.</short>
+<syntax>scatter4(q, varargin)</syntax>
+<long>
+    <para>
+        <code>scatter4</code> plots six 2D scatter plots of elements in a 
+        quaternion vector. It supports the same parameter profiles as
+        the similarly named &matlab; functions, except that the first three
+        parameters <code>(X, Y, Z)</code> are replaced by a single
+        quaternion parameter.
+    </para>
+</long>
+<examples>
+<precode>
+>> scatter4(randvmf(randq, 10, 1e3, 1), 'r')
+</precode>
+<para>
+results in the creation of the following plot.
+</para>
+<figure>scatter4.png</figure>
+</examples>
+<seealso>
+<qtfmfun name = "scatter3"/>
+<qtfmfun name = "scatter4p3"/>
+<matlabfun name = "scatter3"/>
+</seealso>
+</function>
+
+<!--$Id: scatter4.xml 1004 2017-11-15 17:14:09Z sangwine $-->

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "cat" overload = "true">
+<short>Concatenate arrays</short>
+<syntax>r = cat(dim, varargin)</syntax>
+<long>
+<para>
+<code>cat</code> concatenates arrays along a specified dimension, given by
+<code>dim</code>. Quaternion arrays may be concatenated with non-quaternion
+arrays provided the non-quaternion arrays are numeric. The non-quaternion
+arrays will be converted to quaternion arrays by supplying a zero vector
+part.
+</para>
+</long>
+<examples>
+<precode>
+>> q = cat(2, eyeq(2), randq(2))
+ 
+q =
+ 
+     2x4 quaternion array
+ 
+>> show(q)
+ 
+q.S =
+ 
+    1.0000         0   -0.3181    0.9194
+         0    1.0000    0.1766   -0.0854
+
+q.X =
+ 
+         0         0   -0.2900   -0.1664
+         0         0    0.2511   -0.2816
+
+q.Y =
+ 
+         0         0   -0.2381    0.2980
+         0         0   -0.2083   -0.1756
+
+q.Z =
+ 
+         0         0    0.8706    0.1954
+         0         0    0.9287    0.9394
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "cat"/>
+</seealso>
+</function>
+
+<!--$Id: cat.xml 1004 2017-11-15 17:14:09Z sangwine $-->

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "qr" overload = "true">
+<short>QR decomposition</short>
+<syntax>[Q,R] = qr(A)</syntax>
+<long>
+<para>
+Computes a decomposition such that
+<code>A = Q * R</code>, where <code>Q</code> is unitary and <code>R</code>
+is upper triangular respectively.
+</para>
+</long>
+<seealso>
+<matlabfun name = "qr"/>
+<qtfmfun name = "lu"/>
+<qtfmfun name = "svd"/>
+</seealso>
+<references>
+<reference>Angelika Bunse-Gerstner, Ralph Byers, Volker Mehrmann,
+'A Quaternion QR Algorithm',
+<italic>Numerische Mathematik</italic>, <bold>55</bold> (1),
+January 1989, 83-95, <doi>10.1007/BF01395873</doi>
+</reference>
+<reference>Gene H. Golub and Charles van Loan,
+<italic>Matrix Computations</italic>, 3rd edition,
+Johns Hopkins University Press, 1996.
+</reference>
+</references>
+</function>
+
+<!--$Id: qr.xml 1004 2017-11-15 17:14:09Z sangwine $-->

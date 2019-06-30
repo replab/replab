@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "ceil" overload = "true">
+<short>Round towards plus infinity.</short>
+<syntax>Y = ceil(X)</syntax>
+<long>
+<para>
+<code>ceil(X)</code> returns the quaternion resulting from applying the
+&matlab; <code>ceil</code> function to the components of the quaternion argument.
+</para>
+</long>
+<seealso>
+<matlabfun name = "ceil"/>
+<qtfmfun name = "fix"/>
+<qtfmfun name = "floor"/>
+<qtfmfun name = "round"/>
+</seealso>
+</function>
+
+<!--$Id: ceil.xml 1004 2017-11-15 17:14:09Z sangwine $-->

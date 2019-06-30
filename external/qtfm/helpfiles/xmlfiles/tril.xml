@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "tril" overload = "both">
+<short>Lower triangular part of matrix</short>
+<syntax>Y = tril(X, K)</syntax>
+<long>
+<para>
+<code>tril(X, K)</code> extracts the lower triangular part of the matrix
+<code>X</code>. It is
+a straightforward overloading of the &matlab; function of the same name
+implemented by a common mechanism for quaternion functions that can be
+computed by separate application of the &matlab; function to each component
+of the quaternion array.
+</para>
+</long>
+<seealso>
+<matlabfun name = "tril"/>
+<qtfmfun name = "triu"/>
+</seealso>
+</function>
+
+<!--$Id: tril.xml 1004 2017-11-15 17:14:09Z sangwine $-->

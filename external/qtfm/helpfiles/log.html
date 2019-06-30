@@ -1,0 +1,31 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>log :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>log</h2>
+<p>Natural logarithm<br>(Quaternion overloading of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>Y = log(X)</tt></p>
+<h2>Description</h2>
+<p>
+<tt>log(X)</tt> computes the natural logarithm of the elements of the
+quaternion array <tt>X</tt>.
+</p>
+<p>
+The logarithm of a quaternion is not difficult to derive, as follows.
+First note that <tt>exp(y) = x</tt> (definition of logarithm).
+Then write <tt>x</tt> in polar form as r &times; exp(&#956;&#952;). Then we have:
+ln(x) = y = ln(r) + ln(exp(&#956;&#952;)) = ln(r) + &#956;&#952;. Note that r and &#952; may be
+complex if <tt>X</tt> is a complex quaternion.
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; log(quaternion(1,1,1))
+
+ans = 0.5493 + 0.9069 * I + 0.9069 * J + 0.9069 * K 
+</pre>
+
+<h2>See Also</h2>QTFM function: <a href="exp.html">exp</a><br>MATLAB&reg; function: <a href="matlab:doc log">log</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

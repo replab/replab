@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "scatter4p3" overload = "false">
+<short>Four 3D scatter plots from quaternion array.</short>
+<syntax>[p1, p2, p3, p4] = scatter4p3(q, varargin)</syntax>
+<long>
+    <para>
+        <code>scatter4p3</code> plots four 3D scatter plots of elements in a 
+        quaternion vector. It supports the same parameter profiles as
+        the similarly named &matlab; functions, except that the first three
+        parameters <code>(X, Y, Z)</code> are replaced by a single
+        quaternion parameter.
+    </para>
+    <para>
+        The output parameters are the plot axes to the four subplots, permitting
+        the user to apply the <code>set</code> command to make adjustments to the axis limits
+        and labels etc.
+    </para>
+</long>
+<examples>
+<precode>
+>> scatter4p3(randvmf(randq, 10, 1e3, 1), 'r')
+</precode>
+<para>
+results in the creation of the following plot.
+</para>
+<figure>scatter4p3.png</figure>
+</examples>
+<seealso>
+<qtfmfun name = "scatter3"/>
+<qtfmfun name = "scatter4"/>
+<matlabfun name = "scatter3"/>
+<matlabfun name = "set"/>
+</seealso>
+</function>
+
+<!--$Id: scatter4p3.xml 1004 2017-11-15 17:14:09Z sangwine $-->

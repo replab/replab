@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "imreadq" overload = "false">
+<short>Read an image file into a quaternion array.</short>
+<syntax>A = imreadq(filename, fmt)</syntax>
+<long>
+    <para>
+        <code>imreadq</code> reads an image file into a pure
+        quaternion array. It supports the same parameter profiles as the &matlab;
+        function <code>imread</code>, but returns a quaternion
+        array with elements of type <code>uint8</code> or
+        <code>uint16</code> depending on whether the image file contained
+        8-bit or 16-bit samples.
+    </para>
+    <para>
+        The function supports only RGB images, and returns a pure quaternion array.
+        The parameter profiles supported are the same as for the &matlab;
+        function <code>imread</code> but not all parameter profiles may
+        make sense. This is because the &matlab; function is used to perform
+        the file read, and the data is then converted into pure quaternion format.
+        No scaling or casting of the component values is done.
+    </para>
+    <para>
+        The function supports the same image file types as the &matlab; function <code>imread</code>.
+    </para>
+</long>
+<examples>
+<precode>
+>> A = imreadq('random.png')
+ 
+A = 128x128 pure quaternion array with uint8 components
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "imread"/>
+<qtfmfun name = "imwrite"/>
+<qtfmfun name = "image"/>
+</seealso>
+</function>
+
+<!--$Id: imreadq.xml 1004 2017-11-15 17:14:09Z sangwine $-->

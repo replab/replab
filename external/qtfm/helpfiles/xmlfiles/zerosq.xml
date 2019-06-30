@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "zerosq" overload = "false">
+<short>Quaternion zeros matrix</short>
+<syntax>Y = zerosq(N)</syntax>
+<long>
+<para>
+<code>zerosq(X)</code> returns a full quaternion matrix of zeros.
+Accepts the same parameters as
+the &matlab; <code>zeros</code> function.
+</para>
+</long>
+<examples>
+<precode>
+>> show(zerosq(2))
+ 
+S =
+ 
+     0     0
+     0     0
+
+X =
+ 
+     0     0
+     0     0
+
+Y =
+ 
+     0     0
+     0     0
+
+Z =
+ 
+     0     0
+     0     0
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "zeros"/>
+<qtfmfun name = "zerosv"/>
+</seealso>
+</function>
+
+<!--$Id: zerosq.xml 1004 2017-11-15 17:14:09Z sangwine $-->

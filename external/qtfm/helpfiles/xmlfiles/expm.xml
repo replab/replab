@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "expm" overload = "true">
+<short>Matrix exponential</short>
+<syntax>Y = expm(X)</syntax>
+<long>
+<para>
+<code>expm(X)</code> computes the matrix exponential for a quaternion matrix.
+The algorithm used is based on calling the &matlab; <code>expm</code> function
+on an adjoint matrix, and is therefore not accurate for larger matrices.
+The accuracy may be checked using the <code>logm</code> function.
+</para>
+</long>
+<seealso>
+<matlabfun name = "expm"/>
+<qtfmfun name = "logm"/>
+<qtfmfun name = "adjoint"/>
+<qtfmfun name = "unadjoint"/>
+</seealso>
+</function>
+
+<!--$Id: expm.xml 1004 2017-11-15 17:14:09Z sangwine $-->

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "end" overload = "both">
+<short>End indexing for quaternion/octonion arrays</short>
+<syntax>e = end(a, k, n)</syntax>
+<long>
+<para>
+<code>end</code> overloads a fundamental &matlab; operation for quaternion
+arrays in order to make possible indexing such as <code>A(2:end, 2:end)</code>.
+It is not normally called directly as a function.
+</para>
+</long>
+<seealso>
+<matlabfun name = "end"/>
+</seealso>
+</function>
+
+<!--$Id: end.xml 1004 2017-11-15 17:14:09Z sangwine $-->

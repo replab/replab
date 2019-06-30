@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "lu" overload = "both">
+<short>LU decomposition</short>
+<syntax>[L,U,P] = lu(A)</syntax>
+<long>
+<para>
+The third output parameter is optional. Computes a decomposition such that
+<code>P * A = L * U</code>, where <code>L</code> and <code>U</code> are lower
+and upper triangular respectively.
+</para>
+<para>If the third output parameter is omitted, the result in <code>L</code>
+will be permuted so that <code>A = L * U</code>. This behaviour matches that
+of the corresponding &matlab; function.
+</para>
+<para>
+The LU decomposition is not guaranteed to exist for all quaternion matrices.
+At present there is no checking for zero divisors or divisors of zero during
+the Gaussian elimination steps, and consequently the results returned may
+contain NaNs without warning. The same applies to octonion matrices.
+</para>
+<para>
+The algorithm used includes partial pivoting and is based on that described
+by Golub and van Loan for real matrices.
+</para>
+</long>
+<seealso>
+<matlabfun name = "lu"/>
+<qtfmfun name = "qr"/>
+<qtfmfun name = "svd"/>
+</seealso>
+<references>
+<reference>Gene H. Golub and Charles van Loan,
+<italic>Matrix Computations</italic>, 3rd edition,
+Johns Hopkins University Press, 1996.
+</reference>
+</references>
+</function>
+
+<!--$Id: lu.xml 1004 2017-11-15 17:14:09Z sangwine $-->

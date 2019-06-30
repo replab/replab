@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "plot3" overload = "true">
+<short>3D plot from quaternion array.</short>
+<syntax>h = plot3(q, varargin)</syntax>
+<long>
+    <para>
+        <code>plot3</code> plots a 3D line plot of elements in a 
+        pure quaternion array. It supports the same parameter profiles as
+        the &matlab; function of the same name, except that the first three
+        parameters <code>(X, Y, Z)</code> are replaced by a
+        quaternion parameter, which must be a pure quaternion array.
+    </para>
+    <para>
+        The <code>varargin</code> parameters are passed to the Matlab
+        plot3 function, and must therefore conform to the requirements of that
+        function.
+    </para>
+    <para>
+        The output parameter is optional, with the same functionality as
+        the corresponding &matlab; function (a graphics handle).
+    </para>
+    <para>
+        For more sophisticated requirements, use the Matlab function
+        and pass the X, Y, Z components of the quaternion array
+        as the first three or six parameters.
+    </para>
+</long>
+<seealso>
+<matlabfun name = "plot3"/>
+</seealso>
+</function>
+
+<!--$Id: plot3.xml 1004 2017-11-15 17:14:09Z sangwine $-->

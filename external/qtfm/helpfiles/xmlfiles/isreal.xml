@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "isreal" overload = "both">
+<short>Determine whether quaternion array is real</short>
+<syntax>TF = isreal(X)</syntax>
+<long>
+<para>
+<code>isreal(X)</code> returns logical 1 (<code>true</code>) if all the
+elements of the quaternion array <code>X</code> are real, that is have
+zero imaginary parts.
+</para>
+</long>
+<seealso>
+<matlabfun name = "isreal"/>
+</seealso>
+<references>
+<reference>Ward, J. P., "Quaternions and Cayley numbers", Kluwer, 1997.</reference>
+</references>
+</function>
+
+<!--$Id: isreal.xml 1004 2017-11-15 17:14:09Z sangwine $-->

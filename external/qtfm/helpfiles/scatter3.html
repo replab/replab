@@ -1,0 +1,60 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>scatter3 :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>scatter3</h2>
+<p>3D scatter plot from quaternion array.<br>(Quaternion overloading of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>h = scatter3(q, varargin)</tt></p>
+<h2>Description</h2>
+    <p>
+        <tt>scatter3</tt> plots a 3D scatter plot of elements in a 
+        pure quaternion array. It supports the same parameter profiles as
+        the MATLAB&reg; function of the same name, except that the first three
+        parameters <tt>(X, Y, Z)</tt> are replaced by a single
+        quaternion parameter, which must be a pure quaternion array.
+    </p>
+    <p>
+        If two parameters are given and the second is 'rgb' or 'seq', a
+        coloured scatter plot is produced. 'rgb' colours the plotted points
+        according to the direction of the position vector of the point from 
+        the origin using the convention of X = red, Y = green and Z = blue
+        (the standard RGB colour space used in image processing).
+        This is useful when the spatial position
+        of points is of interest. 'seq' colours the points in a graded sequence
+        of progressively darker values matching the sequence of points in the
+        quaternion vector Q. This is useful when the ordering of the points is of
+        interest.
+    </p>
+    <p>
+        If more than one <tt>varargin</tt> parameter is given, or the first is
+        neither 'rgb' nor 'seq', the <tt>varargin</tt> parameters are passed to the Matlab
+        scatter3 function, and must therefore conform to the requirements of that
+        function.
+    </p>
+    <p>
+        The output parameter is optional, with the same functionality as
+        the corresponding MATLAB&reg; function (a graphics handle).
+    </p>
+    <p>
+        The axes are not labelled by this function.
+        Use the standard MATLAB&reg; functions for this.
+    </p>
+    <p>
+        For more sophisticated requirements, use the Matlab function
+        and pass the X, Y and Z components of the quaternion array as the
+        first three parameters.
+    </p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; scatter3(randv(1,128), 'rgb'); axis equal
+</pre>
+<p>
+results in the creation of the following plot.
+</p>
+<img src="scatter.png">
+
+<h2>See Also</h2>MATLAB&reg; function: <a href="matlab:doc scatter3">scatter3</a><br>QTFM functions: <a href="scatter4.html">scatter4</a>, <a href="scatter4p3.html">scatter4p3</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

@@ -1,0 +1,29 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>minus :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>minus</h2>
+<p>- Minus<br>(Quaternion and octonion overloadings of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>Y = A - B</tt></p>
+<h2>Description</h2>
+<p>
+This function implements the elementwise binary subtraction operator for
+quaternion arrays.
+It is implemented
+for both full and pure quaternions and will implicitly supply a zero scalar
+part when needed. It also will work where one of the operands is not a
+quaternion, for example to subtract a real or complex value from a quaternion
+(implicitly from the scalar part).
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; qi + qj + qk - 1
+ 
+ans = -1 + 1 * I + 1 * J + 1 * K
+</pre>
+
+<h2>See Also</h2>MATLAB&reg; function: <a href="matlab:doc minus">minus</a><br>QTFM functions: <a href="uminus.html">uminus</a>, <a href="plus.html">plus</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

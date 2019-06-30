@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "funm" overload = "true">
+<short>Evaluate general matrix function</short>
+<syntax>Unimplemented function</syntax>
+<long>
+<para>
+<code>funm(X)</code> is currently an unimplemented function in QTFM. It may
+be implemented at a later date.
+</para>
+</long>
+<seealso>
+<matlabfun name = "funm"/>
+</seealso>
+</function>
+
+<!--$Id: funm.xml 1004 2017-11-15 17:14:09Z sangwine $-->

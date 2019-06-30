@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "sum" overload = "both">
+<short>Sum of array elements</short>
+<syntax>Y = sum(X, dim)</syntax>
+<long>
+<para>
+<code>sum(X, dim)</code> computes the sum of the elements of the
+quaternion array <code>X</code> along dimension <code>dim</code>.
+</para>
+</long>
+<examples>
+<precode>
+>>  sum([qi, qj, qk])
+ 
+ans = 1 * I + 1 * J + 1 * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "sum"/>
+<qtfmfun name = "prod"/>
+</seealso>
+</function>
+
+<!--$Id: sum.xml 1004 2017-11-15 17:14:09Z sangwine $-->

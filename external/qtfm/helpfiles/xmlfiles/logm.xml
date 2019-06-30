@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "logm" overload = "true">
+<short>Matrix logarithm</short>
+<syntax>X = logm(Y)</syntax>
+<long>
+<para>
+<code>logm(X)</code> computes the matrix logarithm of a quaternion matrix.
+The algorithm used is based on calling the &matlab; <code>logm</code> function
+on an adjoint matrix, and is therefore not accurate for larger matrices.
+It may also fail for some quaternion matrices.
+The accuracy may be checked using the <code>expm</code> function.
+</para>
+</long>
+<seealso>
+<matlabfun name = "logm"/>
+<qtfmfun name = "expm"/>
+<qtfmfun name = "adjoint"/>
+<qtfmfun name = "unadjoint"/>
+</seealso>
+</function>
+
+<!--$Id: logm.xml 1004 2017-11-15 17:14:09Z sangwine $-->

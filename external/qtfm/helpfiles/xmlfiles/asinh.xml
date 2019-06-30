@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "asinh" overload = "true">
+<short>Inverse hyperbolic sine.</short>
+<syntax>Y = asinh(X)</syntax>
+<long>
+<para>
+<code>asin(X)</code> computes the inverse hyperbolic sine of its argument,
+which must be a real quaternion (<code>asinh</code> is not yet implemented for
+complexified quaternions).
+</para>
+<para>
+This function is computed using the Matlab® function of the same name by
+first computing an isomorphic complex number. The result is then assigned
+the same quaternion axis as the original argument.
+</para>
+</long>
+<examples>
+<precode>
+>> asinh(qi + qj + qk)
+ 
+ans = 1.146 + 0.9069 * I + 0.9069 * J + 0.9069 * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "asinh"/>
+<qtfmfun name = "sinh"/>
+</seealso>
+</function>
+
+<!--$Id: asinh.xml 1004 2017-11-15 17:14:09Z sangwine $-->

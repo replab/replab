@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "part" overload = "false">
+<short>Component of a quaternion or octonion</short>
+<syntax>p = part(q, n)</syntax>
+<long>
+<para>
+This function extracts one of the four components of a quaternion or one of
+the eight components of an octonion. The result is a real
+(or a complex value if the quaternion/octonion has complex components).
+The parameter must be an integer in the range 1:4 or 1:8 as appropriate.
+For quaternions, there are also three named functions <code>x</code>,
+<code>y</code>, and <code>z</code> that can also access the components of
+the vector part. These are not provided for octonions, as the present
+function seemed a better implementation, since it is possible to index
+through the components. The scalar part can also be accessed through the
+<code>s</code> and <code>scalar</code> functions, which differ in their
+behaviour if the quaternion/octonion is pure. The present function behaves
+like <code>s</code> and returns an empty array for a pure quaternion or
+octonion.
+</para>
+</long>
+<examples>
+<precode>
+>> q = quaternion(1, 2, 3, 4)
+ 
+q = 1 + 2 * I + 3 * J + 4 * K
+ 
+>> part(q, 3)
+
+ans = 3
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "s"/>
+<qtfmfun name = "scalar" alias = "s"/>
+<qtfmfun name = "v"/>
+<qtfmfun name = "vector" alias = "v"/>
+<qtfmfun name = "x/y/z"/>
+</seealso>
+</function>
+
+<!--$Id: part.xml 1004 2017-11-15 17:14:09Z sangwine $-->

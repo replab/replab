@@ -1,0 +1,296 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Functions - Categorized List (Quaternion Toolbox Function Reference)</title><link rel="stylesheet" href="docstyle.css" type="text/css">
+<link rel="stylesheet" href="qtfmstyle.css" type="text/css">
+</head>
+<body>
+<h1>Quaternion Functions &#8212; Categorized List</h1>
+Some functions are overloaded for octonions. This is not shown below, but
+should be noted in the documentation pages themselves. Functions specific
+to octonions are listed below under the appropriate headings.
+<table>
+<tr>
+<td>Constructor and components</td>
+<td><a href="octonion.html">octonion</a> constructor</td>
+<td><a href="quaternion.html">quaternion</a> constructor</td>
+<td><a href="s.html">scalar</a> component</td>
+<td><a href="v.html">vector</a> component</td>
+<td><a href="xyz.html">x/y/z</a> components</td>
+<td><a href="part.html">part</a> access components by index</td>
+</tr>
+<tr>    
+<td>Display of quaternion values</td>
+<td><a href="char.html">char</a></td>
+<td><a href="disp.html">disp</a></td>
+<td><a href="display.html">display</a></td>
+<td><a href="displayall.html">displayall</a></td>
+<td><a href="show.html">show</a></td>
+</tr>
+<tr>
+<td rowspan = "2">Quaternion constants and matrices</td>
+<td><a href="o1.html">octonion constants</a> 1, <b>i</b>, <b>j</b>, <b>k</b>, <i>etc</i></td>
+<td><a href="q1.html">quaternion constants</a> 1, <b>i</b>, <b>j</b> and <b>k</b></td>
+<td><a href="empty.html">empty quaternion or octonion array</a></td>
+<td><a href="eyeq.html">quaternion identity matrix</a></td>
+<td><a href="onesq.html">quaternion matrix of ones</a></td>
+<td><a href="zerosq.html">matrix of zero quaternions</a></td>
+</tr>
+<tr>
+<td><a href="zerosv.html">matrix of zero vectors</a></td>
+<td><a href="zeroso.html">matrix of zero octonions</a></td>
+<td><a href="zerosvo.html">matrix of zero pure octonions</a></td>
+</tr>
+<tr>
+<td rowspan = "2">Basic quaternion operations</td>
+<td><a href="abs.html">abs</a> absolute value or modulus</td>
+<td><a href="conj.html">conj</a> quaternion conjugate</td>
+<td><a href="cross.html">cross</a> cross or vector product</td>
+<td><a href="normo.html">normo</a> norm or semi-norm of an octonion</td> 
+<td><a href="normq.html">normq</a> norm or semi-norm of a quaternion</td>    
+<td><a href="scalar_product.html">scalar_product</a> scalar product</td>
+</tr>
+<tr>
+<td><a href="sign.html">sign</a></td>
+<td><a href="unit.html">unit</a></td>
+<td><a href="vector_product.html">vector_product</a> cross or vector product</td>
+</tr>
+<tr>
+<td rowspan = "2">Arithmetic and logical operations</td>
+<td><a href="eq.html">eq</a></td>
+<td><a href="ldivide.html">ldivide</a></td>
+<td><a href="minus.html">minus</a></td>
+<td><a href="mrdivide.html">mrdivide</a></td>
+<td><a href="mtimes.html">mtimes</a></td>
+<td><a href="ne.html">ne</a></td>
+</tr>
+<tr>
+<td><a href="plus.html">plus</a></td>
+<td><a href="power.html">power</a></td>
+<td><a href="rdivide.html">rdivide</a></td>
+<td><a href="times.html">times</a></td>
+<td><a href="uminus.html">uminus</a></td>
+<td><a href="uplus.html">uplus</a></td>
+</tr>
+<tr>
+<td rowspan = "3">Trigonometric, hyperbolic, exp/log/sqrt functions</td>
+<td><a href="acos.html">acos</a></td>
+<td><a href="acosh.html">acosh</a></td>
+<td><a href="asin.html">asin</a></td>
+<td><a href="asinh.html">asinh</a></td>
+<td><a href="atan.html">atan</a></td>
+<td><a href="atanh.html">atanh</a></td>
+</tr>
+<tr>
+<td><a href="cos.html">cos</a></td>
+<td><a href="cosh.html">cosh</a></td>
+<td><a href="sin.html">sin</a></td>
+<td><a href="sinh.html">sinh</a></td>
+<td><a href="tan.html">tan</a></td>
+<td><a href="tanh.html">tanh</a></td>
+</tr>
+<tr>
+<td><a href="exp.html">exp</a></td>
+<td><a href="log.html">log</a></td>
+<td><a href="sqrt.html">sqrt</a></td>
+</tr>
+<tr>
+<td>Polar forms</td>
+<td><a href="angle.html">angle</a></td>
+<td><a href="axis.html">axis</a></td>
+<td><a href="polar.html">polar</a> - Polar decomposition</td>
+<td><a href="cdpolar.html">cdpolar</a> - Cayley-Dickson polar form</td>
+</tr>
+<tr>
+<td rowspan = "6">Basic matrix operations</td>
+<td><a href="bsxfun.html">bsxfun</a></td>
+<td><a href="arrayfun.html">arrayfun</a></td>
+<td><a href="cat.html">cat</a></td>
+<td><a href="horzcat.html">horzcat</a></td>
+<td><a href="vertcat.html">vertcat</a></td>
+<td><a href="blkdiag.html">blkdiag</a></td>
+</tr>
+<tr>
+<td><a href="diag.html">diag</a></td>
+<td><a href="tril.html">tril</a></td>
+<td><a href="triu.html">triu</a></td>
+<td><a href="ctranspose.html">ctranspose</a> conjugate transpose</td>
+<td><a href="end.html">end</a></td>
+<td><a href="length.html">length</a></td>
+</tr>
+<tr>
+<td><a href="ndims.html">ndims</a></td>
+<td><a href="norm.html">norm</a></td>
+<td><a href="numel.html">numel</a></td>
+<td><a href="orthogonal.html">orthogonal</a></td>
+<td><a href="size.html">size</a></td>
+<td><a href="subsasgn.html">subsasgn</a></td>
+</tr>
+<tr>
+<td><a href="subsindex.html">subsindex</a></td>
+<td><a href="subsref.html">subsref</a></td>
+<td><a href="transpose.html">transpose</a></td>
+<td><a href="ipermute.html">ipermute</a></td>
+<td><a href="permute.html">permute</a></td>
+<td><a href="repmat.html">repmat</a></td>
+</tr>
+<tr>
+<td><a href="reshape.html">reshape</a></td>
+<td><a href="squeeze.html">squeeze</a></td>
+<td><a href="cumprod.html">cumprod</a></td>
+<td><a href="cumsum.html">cumsum</a></td>
+<td><a href="diff.html">diff</a></td>
+<td><a href="mean.html">mean</a></td>
+</tr>
+<tr>
+<td><a href="prod.html">prod</a></td>
+<td><a href="sum.html">sum</a></td>
+</tr>
+<tr>
+<td rowspan = "3">Matrix operations and decompositions</td>
+<td><a href="adjoint.html">adjoint</a></td>
+<td><a href="unadjoint.html">unadjoint</a></td>
+<td><a href="det.html">det</a></td>
+<td><a href="eig.html">eig</a></td>
+<td><a href="expm.html">expm</a></td>
+<td><a href="funm.html">funm</a></td>
+</tr>
+<tr>
+<td><a href="inv.html">inv</a></td>
+<td><a href="linv.html">linv</a> Octonion left inverse operator</td>
+<td><a href="logm.html">logm</a></td>
+<td><a href="lu.html">lu</a></td>
+<td><a href="mpower.html">mpower</a></td>
+<td><a href="qr.html">qr</a></td>
+</tr>
+<tr>
+<td><a href="rinv.html">rinv</a> Octonion right inverse operator</td>
+<td><a href="sqrtm.html">sqrtm</a></td>
+<td><a href="svd.html">svd</a></td>
+<td><a href="svdj.html">svdj</a></td>
+<td><a href="sylvester.html">sylvester</a> Solve Sylvester's equation</td>
+</tr>
+<tr>
+<td>Random matrices</td>
+<td><a href="randf.html">randf</a></td>
+<td><a href="rando.html">rando</a></td>
+<td><a href="randq.html">randq</a></td>
+<td><a href="randv.html">randv</a></td>
+<td><a href="randvo.html">randvo</a></td>
+<td><a href="randvmf.html">randvmf</a></td>
+</tr>
+<tr>
+<td>Decompositions/factorizations</td>
+<td><a href="cd.html">cd</a> - Cayley-Dickson decomposition</td>
+<td><a href="dc.html">dc</a> - Cayley-Dickson recomposition</td>
+<td><a href="factorq.html">factorq - orthogonal factorization</a></td>
+<td><a href="ohd.html">ohd (orthogonal hyperplane decomposition)</a></td>
+<td><a href="opd.html">opd (orthogonal plane decomposition)</a></td>
+<td><a href="peirce.html">peirce (Peirce or idempotent decomposition)</a></td>
+</tr>
+<tr>
+<td>Conversions</td>
+<td><a href="cast.html">cast</a></td>
+<td><a href="convert.html">convert</a></td>
+<td><a href="change_basis.html">change_basis</a></td>
+</tr>
+<tr>
+<td>Rounding</td>
+<td><a href="ceil.html">ceil</a></td>
+<td><a href="fix.html">fix</a></td>
+<td><a href="floor.html">floor</a></td>
+<td><a href="round.html">round</a></td>
+</tr>
+<tr>
+<td>Complexified quaternion or biquaternion operations</td>
+<td><a href="complex.html">complex</a> construct complexified quaternion</td>
+<td><a href="imag.html">imag</a> imaginary part</td>
+<td><a href="real.html">real</a> real part</td>
+<td><a href="conj.html">conj</a> quaternion or complex conjugate</td>
+</tr>
+<tr>
+<td rowspan = "2">Tests of properties</td>
+<td><a href="isdivisor.html">isdivisor</a></td> 
+<td><a href="isempty.html">isempty</a></td>
+<td><a href="isfinite.html">isfinite</a></td>
+<td><a href="ishermitian.html">ishermitian</a></td>
+<td><a href="isinf.html">isinf</a></td>
+</tr>
+<tr>
+<td><a href="isnan.html">isnan</a></td>
+<td><a href="isnilpotent.html">isnilpotent</a></td>
+<td><a href="ispure.html">ispure</a></td>
+<td><a href="isreal.html">isreal</a></td>
+<td><a href="isunitary.html">isunitary</a></td>
+</tr>
+<tr>
+<td>Convolutions</td>
+<td><a href="conv.html">conv</a></td>
+<td><a href="conv2.html">conv2</a></td>
+<td><a href="convw.html">convw</a></td>
+<td><a href="convw2.html">convw2</a></td>
+<td><a href="mustard.html">mustard</a> convolution</td>
+</tr>
+<tr>
+<td rowspan = "3">Discrete and fast Fourier transforms</td>
+<td><a href="qdft.html">qdft</a></td>
+<td><a href="qdft2.html">qdft2</a></td>
+<td><a href="qfft.html">qfft</a></td>
+<td><a href="qfft2.html">qfft2</a></td>
+<td><a href="fft.html">fft</a></td>
+<td><a href="fft2.html">fft2</a></td>
+</tr>
+<tr>
+<td><a href="fftflip.html">fftflip</a></td>
+<td><a href="fftflip2.html">fftflip2</a></td>
+<td><a href="fftshift.html">fftshift</a></td>
+<td><a href="ifft.html">ifft</a></td>
+<td><a href="ifft2.html">ifft2</a></td>
+<td><a href="ifftshift.html">ifftshift</a></td>
+</tr>
+<tr>
+<td><a href="iqdft.html">iqdft</a></td>
+<td><a href="iqdft2.html">iqdft2</a></td>
+<td><a href="iqfft.html">iqfft</a></td>
+<td><a href="iqfft2.html">iqfft2</a></td>
+</tr>
+<tr>
+<td>Input/output</td>
+<td><a href="read.html">read</a> matrix</td>
+<td><a href="write.html">write</a> matrix</td>
+<td><a href="image.html">image</a> display quaternion array as image</td>
+<td><a href="imreadq.html">imreadq</a> image read</td>
+<td><a href="imwrite.html">imwrite</a> image write</td>
+<td><a href="fprintf.html">fprintf</a></td>
+</tr>
+<tr>    
+<td>Plots</td>
+<td><a href="plot3.html">plot3</a> 3D line plot</td>
+<td><a href="quiver3.html">quiver3</a> 3D quiver plot</td>
+<td><a href="scatter3.html">scatter3</a> 3D scatter plot</td>
+<td><a href="scatter4.html">scatter4</a> 4D scatter plot projected into 2D</td>
+<td><a href="scatter4p3.html">scatter4p3</a> 4D scatter plots projected into 3D</td>
+</tr>
+<tr>
+<td>Other functions</td>
+<td><a href="associator.html">associator</a> Associator</td>
+<td><a href="commutator.html">commutator</a> Commutator</td>
+<td><a href="kleinfeld.html">kleinfeld</a> Kleinfeld product</td>
+<td><a href="frenet.html">frenet</a> Frenet-Serret frames</td>
+<td><a href="slerp.html">slerp</a> Spherical linear interpolation</td>
+<td><a href="spherical_mean.html">spherical_mean</a> Spherical (geodesic or intrinsic) mean</td>
+</tr>
+<tr>   
+<td>Internal</td>
+<td><a href="qtfm_helpdb.html">qtfm_helpdb</a> Build or update searchable help database</td>
+<td><a href="qtfm_helpup.html">qtfm_helpup</a> Update HTML help files from XML masters</td>
+<td><a href="qtfm_root.html">qtfm_root</a> Display root directory of QTFM installation</td>
+<td><a href="qtfm_test.html">qtfm_test</a> Run QTFM test code</td>
+<td><a href="qtfm_version.html">qtfm_version</a> Return the QTFM version number (and check for update)</td>
+</tr>
+</table>
+<h4>&copy; 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan.</h4>
+<p><a href="license.html">License terms.</a></p>
+</body>
+</html>
+<!--$Id: categorical.html 1031 2019-04-20 12:49:25Z sangwine $-->

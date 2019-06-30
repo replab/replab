@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "full" overload = "both">
+<short>Convert sparse matrix to full matrix</short>
+<syntax>b = full(q)</syntax>
+<long>
+<para>
+<code>full</code> converts a sparse matrix to a full matrix.
+This function is provided because the &matlab;
+<code>trace</code> function calls it,
+and otherwise <code>trace</code> would not work.
+If the matrix is already a full matrix, the function has no effect.
+</para>
+</long>
+<seealso>
+<matlabfun name = "full"/>
+</seealso>
+</function>
+
+<!--$Id: full.xml 1004 2017-11-15 17:14:09Z sangwine $-->

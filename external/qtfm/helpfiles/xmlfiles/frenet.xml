@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "frenet" overload = "false">
+<short>Frenet-Serret frames</short>
+<syntax>[T, N1, N2, N3, J, K, L, M] = frenet(q)</syntax>
+<long>
+<para>
+<code>frenet(q)</code>
+computes the Frenet-Serret frames of a quaternion sequence or curve.
+</para>
+<para>
+    Given a vector of quaternions (full or pure), representing a curve in
+    3-space, 4-space or spacetime, this function computes the
+    vectors of tangents, normals, binormals, and trinormals and the curvatures.
+    The output parameters are as follows. The first four results are unit
+    quaternions; the remaining four are scalars.
+    <code>T</code> are the tangents;
+    <code>N1</code> are the normals;
+    <code>N2</code> are the binormals;
+    <code>N3</code> are the trinormals;
+    <code>J</code> is the moduli of the tangents,
+    so that non-unit tangents are <code>J .* T</code>;
+    <code>K</code> is the curvature; again <code>K .* N1</code>
+    gives un-normalised normals;
+    <code>L</code> is the second curvature or torsion;
+    <code>M</code> is the third curvature or bitorsion.
+</para>
+<para>Note that the first and last values of <code>T</code> are not necessarily meaningful
+because <code>T</code> is an approximation to the derivative, and therefore cannot be
+correctly computed for the first and last values in <code>q</code>. The same applies
+to <code>N1</code>, <code>N2</code> and <code>N3</code>,
+but as these are computed using successive derivatives,
+additional values at the extremities are not necessarily meaningful.
+</para>
+    <para>
+        Comments on references: the article by Bharathi and Nagaraj was probably the first to
+        explain the Frenet-Serret frames in 4-space using quaternions, but the
+        Wikipedia article makes clear that Camille Jordan worked out the
+        n-dimensional case in 1874. The article by Kurt Nalty is of value for its
+        clear tutorial explanation of the formulae.
+    </para>
+</long>
+<references>
+    <reference>K. Bharathi and M. Nagaraj,
+        'Quaternion Valued Function of a Real Variable Serret-Frenet Formula',
+        <italic>Indian J. Pure and Applied Mathematics</italic>, <bold>18</bold>(6),
+        507-511, June 1987.
+    </reference>
+    <reference>'Frenet-Serret formulas', subsection: 'Formulas in n dimensions',
+        Wikipedia (English), accessed 27 April 2011.
+        <www>http://en.wikipedia.org/wiki/Frenet%E2%80%93Serret_formulas</www>
+    </reference>
+<reference>Kurt Nalty,
+'Trajectories and curves in 3 and 4 dimensions',
+self-published article, 11pp, 19 January 2007, available at
+<www>http://kurtnalty.com/</www>.
+</reference>
+</references>
+</function>
+
+<!--$Id: frenet.xml 1004 2017-11-15 17:14:09Z sangwine $-->

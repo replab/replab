@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "char" overload = "both">
+<short>Create character array (string).</short>
+<syntax>str = char(q)</syntax>
+<long>
+<para>
+<code>char(q)</code> returns a character string representation of the quaternion
+q, which must be a scalar.
+</para>
+</long>
+<examples>
+<precode>
+>> char(randq)
+
+ans = 0.4373 - 0.8167 * I - 0.1902 * J + 0.3251 * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "char"/>
+<qtfmfun name = "disp"/>
+<qtfmfun name = "display"/>
+</seealso>
+</function>
+
+<!--$Id: char.xml 1004 2017-11-15 17:14:09Z sangwine $-->

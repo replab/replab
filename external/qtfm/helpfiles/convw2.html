@@ -1,0 +1,27 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>convw2 :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>convw2</h2>
+<p>Two-dimensional convolution with wrap around</p>
+<h2>Syntax</h2><p><tt>C = convw2(A, B)</tt></p>
+<h2>Description</h2>
+    <p>
+        <tt>convw2(A, B)</tt> computes the two-dimensional convolution of matrices
+        <tt>A</tt> and <tt>B</tt> with wrap around. Unlike the standard
+        convolution implemented by the <tt>conv2</tt> function, the result from
+        this function matches that which would be obtained by a Fourier domain
+        product, that is it treats the input as if extended periodically.
+    </p>
+<p>
+Acceptable calling profiles are:
+<pre>
+C = convw2(A, B)      - A is convolved on the left of B, that is A * B
+C = convw2({L, R}, B) - The convolution is L * B * R. L and R must be of
+                        the same size.
+</pre>
+</p>
+
+<h2>See Also</h2>QTFM functions: <a href="convw.html">convw</a>, <a href="conv2.html">conv2</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

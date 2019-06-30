@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "svd" overload = "true">
+<short>Singular value decomposition</short>
+<syntax>[U,S,V] = svd(X, econ)</syntax>
+<long>
+<para>
+<code>svd</code> computes the quaternion singular value decomposition. This
+decomposition generalises from the case of real and complex matrices. The
+singular values are real (even in the case of a complex quaternion matrix),
+and the singular vectors are quaternion-valued (complex quaternion-valued
+in the case of a complex quaternion matrix).
+Thus <code>U</code> and <code>V</code> are unitary quaternion matrices, and
+<code>S</code> is a real diagonal matrix.
+</para>
+</long>
+<examples>Construct a matrix at random, decompose it, and show that the
+matrix can be reconstructed from the decomposition, to within rounding
+error:
+<precode>
+>> q = randq(4)
+ 
+q = 4x4 quaternion array
+ 
+>> [U, S, V] = svd(q)
+ 
+U = 4x4 quaternion array
+ 
+S =
+
+    3.0473         0         0         0
+         0    2.1201         0         0
+         0         0    1.3996         0
+         0         0         0    0.5104
+
+V = 4x4 quaternion array
+ 
+>> U * S * V' - q
+ 
+ans = 4x4 quaternion array
+ 
+>> max(max(abs(ans)))
+
+ans = 1.8660e-15
+</precode>
+Similarly with a complex quaternion matrix (note the double use of <code>abs</code>
+when checking the reconstruction - because the modulus of a complex
+quaternion is complex it is necessary to take the modulus of the modulus
+so that the maximum can be found):
+<precode>
+>> q = complex(randq(4), randq(4)) .* randn(4)
+ 
+q = 4x4 complex quaternion array
+ 
+>> [U, S, V] = svd(q)
+ 
+U = 4x4 complex quaternion array
+ 
+S =
+
+    6.9636         0         0         0
+         0    2.8856         0         0
+         0         0    1.9821         0
+         0         0         0    0.5788
+
+V = 4x4 complex quaternion array
+ 
+>> U * S * V' - q
+ 
+ans = 4x4 complex quaternion array
+ 
+>> max(max(abs(abs(ans))))
+
+ans = 6.8965e-13
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "svd"/>
+<qtfmfun name = "svdj"/>
+</seealso>
+<references>
+<reference>F. Z. Zhang,
+'Quaternions and Matrices of Quaternions',
+<italic>Linear Algebra and its Applications</italic>,
+<bold>251</bold>, January 1997, 21-57.
+<doi>10.1016/0024-3795(95)00543-9</doi>
+</reference>
+<reference>S. J. Sangwine and N. Le Bihan,
+'Quaternion Singular Value Decomposition based on Bidiagonalization
+to a Real or Complex Matrix using Quaternion Householder Transformations',
+<italic>Applied Mathematics and Computation</italic>,
+<bold>182</bold> (1), 1 November 2006, 727-738.
+<doi>10.1016/j.amc.2006.04.032</doi>.
+</reference>
+<reference>S. J. Sangwine and N. Le Bihan,
+'Quaternion Singular Value Decomposition based on Bidiagonalization
+to a Real Matrix using Quaternion Householder Transformations',
+arXiv:math.NA/0603251, 10 March 2006.
+Available at <www>http://www.arxiv.org/</www>.
+</reference>
+</references>
+</function>
+
+<!--$Id: svd.xml 1004 2017-11-15 17:14:09Z sangwine $-->

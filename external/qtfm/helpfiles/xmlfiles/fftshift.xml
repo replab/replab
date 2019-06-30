@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "fftshift" overload = "true">
+<short>Shift zero-frequency component to center of spectrum.</short>
+<syntax>Y = fftshift(X, dim)</syntax>
+<long>
+<para>
+<code>fftshift</code> overloads the &matlab; function of the same name and
+implements the same functionality, for quaternion arrays.
+</para>
+</long>
+<seealso>
+<matlabfun name = "fftshift"/>
+<qtfmfun name = "ifftshift"/>
+</seealso>
+</function>
+
+<!--$Id: fftshift.xml 1004 2017-11-15 17:14:09Z sangwine $-->

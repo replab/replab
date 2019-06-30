@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "times" overload = "both">
+<short>.* Array multiply</short>
+<syntax>Y = A .* B</syntax>
+<long>
+<para>
+This function implements the quaternion elementwise product. The two operands
+must be the same size, or one must be a scalar quaternion.
+</para>
+</long>
+<examples>
+<precode>
+>> [qi qj qk] .* [qj qk qi]
+ 
+ans = 1x3 quaternion array
+ 
+>> show(ans)
+ 
+ans.S =
+ 
+     0     0     0
+
+ans.X =
+ 
+     0     1     0
+
+ans.Y =
+ 
+     0     0     1
+
+ans.Z =
+ 
+     1     0     0
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "times"/>
+<qtfmfun name = "mtimes"/>
+</seealso>
+</function>
+
+<!--$Id: times.xml 1004 2017-11-15 17:14:09Z sangwine $-->

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "disp" overload = "true">
+<short>Display array</short>
+<syntax>display(X)</syntax>
+<long>
+<para>
+<code>display(X)</code> displays the value of the quaternion <code>X</code>
+preceded by its name. For a scalar argument, <code>disp</code> displays the value of the
+quaternion using <code>char</code>. Otherwise it outputs a concise
+summary of the quaternion, indicating the dimensions, whether the
+value is pure, and whether it has complex components. &matlab; calls this
+function implicitly when a quaternion is to be displayed, as for example,
+after an assignment which has not been followed by a semi-colon.
+</para>
+<para>
+To display the numeric values in a non-scalar quaternion array,
+use <code>displayall</code> or <code>show</code>.
+</para>
+</long>
+<examples>
+Notice the implicit call to <code>display</code> after <code>A</code> is
+assigned.
+<precode>
+>> A = randq(2)
+ 
+A = 2x2 quaternion array
+ 
+>> display(A)
+ 
+A = 2x2 quaternion array
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "disp"/>
+<matlabfun name = "display"/>
+<qtfmfun name = "disp"/>
+<qtfmfun name = "displayall"/>
+<qtfmfun name = "show"/>
+</seealso>
+</function>
+
+<!--$Id: display.xml 1004 2017-11-15 17:14:09Z sangwine $-->

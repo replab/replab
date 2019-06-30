@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "unit" overload = "false">
+<short>Unit quaternion or octonion</short>
+<syntax>Y = unit(X)</syntax>
+<long>
+<para>
+<code>unit(X)</code> divides each element of its argument by its modulus to
+return quaternions with unit modulus.
+</para>
+</long>
+<examples>
+<precode>
+>> unit(quaternion(1,2,3,4))
+ 
+ans = 0.1826 + 0.3651 * I + 0.5477 * J + 0.7303 * K
+</precode>
+A unit pure quaternion is a root of -1, whether the quaternion is real or
+complex:
+<precode>
+>> q = unit(randv)
+ 
+q = 0.6552 * I - 0.2884 * J + 0.6983 * K
+ 
+>> q.^2
+ 
+ans = -1 + 0 * I + 0 * J + 0 * K
+
+>> q = unit(complex(randv, randv))
+ 
+q = (0.9195+0.0758i) * I + (0.00383+0.2233i) * J + (0.4813-0.1466i) * K
+ 
+>> q.^2
+ 
+ans = (-1+8.327e-17i) + (0) * I + (0) * J + (0) * K
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "sign"/>
+</seealso>
+</function>
+
+<!--$Id: unit.xml 1004 2017-11-15 17:14:09Z sangwine $-->

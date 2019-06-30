@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "ndims" overload = "both">
+<short>Number of array dimensions</short>
+<syntax>Y = ndims(X)</syntax>
+<long>
+<para>
+<code>ndims(X)</code> returns the number of dimensions of the array <code>X</code>.
+</para>
+</long>
+<examples>
+<precode>
+>> ndims(randq(3,2,2))
+
+ans = 3
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "ndims"/>
+</seealso>
+</function>
+
+<!--$Id: ndims.xml 1004 2017-11-15 17:14:09Z sangwine $-->

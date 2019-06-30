@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "orthonormal_basis" overload = "false">
+<short>Construct orthonormal basis</short>
+<syntax>B = orthonormal_basis(V, W)</syntax>
+<long>
+<para>
+Creates an orthonormal basis from a pure quaternion V,
+and an optional pure quaternion W, which need not be perpendicular to V,
+but must not be parallel.
+</para>
+<para>
+The result is represented as a 3×3 orthogonal matrix, which may be
+complex if V and/or W are complex pure quaternions.
+</para>
+</long>
+<examples>
+<precode>
+>> orthonormal_basis(qi + qj, qk + qi)
+
+ans =
+
+    0.7071    0.7071         0
+    0.5774   -0.5774   -0.5774
+   -0.4082    0.4082   -0.8165
+
+>> ans * ans'
+
+ans =
+
+    1.0000    0.0000   -0.0000
+    0.0000    1.0000   -0.0000
+   -0.0000   -0.0000    1.0000
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "change_basis"/>
+</seealso>
+</function>
+
+<!--$Id: orthonormal_basis.xml 1004 2017-11-15 17:14:09Z sangwine $-->

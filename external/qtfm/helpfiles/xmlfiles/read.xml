@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "read" overload = "false">
+<short>Input a quaternion array from a text file</short>
+<syntax>A = read(filename, format)</syntax>
+<long>
+<para>
+This function reads a quaternion matrix from a text file. The format of the
+file is defined by the matching function <code>write</code> (q.v.).
+</para>
+</long>
+<examples>See the matching function <code>write</code>.
+</examples>
+<seealso>
+<qtfmfun name = "write"/>
+</seealso>
+</function>
+
+<!--$Id: read.xml 1004 2017-11-15 17:14:09Z sangwine $-->

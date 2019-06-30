@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "permute" overload = "true">
+<short>Permute dimensions of N-D array</short>
+<syntax>Y = permute(X, order)</syntax>
+<long>
+<para>
+<code>permute(X, order)</code> permutes the dimensions of an N-D array.
+It accepts the same arguments as the overloaded
+&matlab; function and is implemented by calling the overloaded function on
+each component of <code>X</code>.
+</para>
+</long>
+<examples>
+</examples>
+<seealso>
+<matlabfun name = "permute"/>
+<qtfmfun name = "ipermute"/>
+</seealso>
+</function>
+<!--$Id: permute.xml 1004 2017-11-15 17:14:09Z sangwine $-->

@@ -1,0 +1,40 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>orthonormal_basis :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>orthonormal_basis</h2>
+<p>Construct orthonormal basis</p>
+<h2>Syntax</h2><p><tt>B = orthonormal_basis(V, W)</tt></p>
+<h2>Description</h2>
+<p>
+Creates an orthonormal basis from a pure quaternion V,
+and an optional pure quaternion W, which need not be perpendicular to V,
+but must not be parallel.
+</p>
+<p>
+The result is represented as a 3&times;3 orthogonal matrix, which may be
+complex if V and/or W are complex pure quaternions.
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; orthonormal_basis(qi + qj, qk + qi)
+
+ans =
+
+    0.7071    0.7071         0
+    0.5774   -0.5774   -0.5774
+   -0.4082    0.4082   -0.8165
+
+&gt;&gt; ans * ans'
+
+ans =
+
+    1.0000    0.0000   -0.0000
+    0.0000    1.0000   -0.0000
+   -0.0000   -0.0000    1.0000
+</pre>
+
+<h2>See Also</h2>QTFM function: <a href="change_basis.html">change_basis</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

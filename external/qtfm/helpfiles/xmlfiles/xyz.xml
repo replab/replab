@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "X/Y/Z" overload = "false">
+<short>X, Y, Z components of a quaternion</short>
+<syntax>r = x(q), r = y(q), r = z(q)</syntax>
+<long>
+<para>
+These three functions extract the three components of the vector part of a
+quaternion. The result is a real (or a complex value if the quaternion has
+complex components).
+</para>
+</long>
+<examples>
+<precode>
+>> q = quaternion(1, 2, 3, 4)
+ 
+q =  +1 +2 I +3 J +4 K
+ 
+>> y(q)
+
+ans =  3
+
+>> q = randq(2)
+ 
+q = 2x2 quaternion array
+ 
+>> x(q)
+
+ans =
+
+   -0.2900   -0.1664
+    0.2511   -0.2816
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "s"/>
+<qtfmfun name = "scalar" alias = "s"/>
+<qtfmfun name = "v"/>
+<qtfmfun name = "vector" alias = "v"/>
+<qtfmfun name = "part"/>
+</seealso>
+</function>
+
+<!--$Id: xyz.xml 1004 2017-11-15 17:14:09Z sangwine $-->

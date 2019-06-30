@@ -1,0 +1,38 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>o1/oi/oj/ok/ol/om/on/oo :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>o1/oi/oj/ok/ol/om/on/oo</h2>
+<p>Octonion operators i, j, k, l, m, n, o and octonion unity</p>
+<h2>Syntax</h2><p><tt>o1/oi/oj/ok/ol/om/on/oo</tt></p>
+<h2>Description</h2>
+<p>
+These eight functions return constant octonions with values corresponding
+to the seven octonion operators <b>i</b>, <b>j</b>,
+<b>k</b>, <b>l</b>, <b>m</b>, <b>n</b> and
+<b>o</b>; and an octonion with value unity.
+</p>
+<p>
+The symbol <tt>i</tt> is a builtin MATLAB&reg; operator for the
+complex root of -1, and therefore it cannot be used for the quaternion or
+octonion <b>i</b>.
+This is why the notation <tt>oi</tt> is used.
+</p>
+<p>
+Octonion <b>i</b> and quaternion <b>i</b> are distinct entities
+(the octonion class has been added to the toolbox as a distinct type). 
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; oi + ol + on
+ 
+ans = 1 * I + 0 * J + 0 * K + 1 * L + 0 * M + 1 * N + 0 * O
+
+&gt;&gt; 2 * ol + 3 * om
+ 
+ans = 0 * I + 0 * J + 0 * K + 2 * L + 3 * M + 0 * N + 0 * O
+</pre>
+
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

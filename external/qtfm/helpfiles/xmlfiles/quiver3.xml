@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "quiver3" overload = "true">
+<short>3D quiver plot from quaternion array.</short>
+<syntax>h = quiver3(o, p, varargin)</syntax>
+<long>
+    <para>
+        <code>quiver3</code> plots a 3D quiver plot of elements in a 
+        pure quaternion array. It supports the same parameter profiles as
+        the &matlab; function of the same name, except that the first three
+        or six
+        parameters <code>(X, Y, Z, U, V, W)</code> are replaced by a one or
+        two
+        quaternion parameters, which must be pure quaternion arrays. If one
+        quaternion parameter is given, the other is inferred as an array of
+        zeros. If both are given, the quivers plotted start at the quaternion
+        value represented by the first parameter and end at the values represented
+        by the second.
+    </para>
+    <para>
+        The <code>varargin</code> parameters are passed to the Matlab
+        quiver3 function, and must therefore conform to the requirements of that
+        function.
+    </para>
+    <para>
+        The output parameter is optional, with the same functionality as
+        the corresponding &matlab; function (a graphics handle).
+    </para>
+    <para>
+        For more sophisticated requirements, use the Matlab function
+        and pass the X, Y, Z, and U, V, W components of the quaternion array(s)
+        as the first three or six parameters.
+    </para>
+</long>
+<examples>
+<precode>
+>> quiver3(randv(1,128)); axis equal
+</precode>
+<para>
+results in the creation of a plot similar to the following.
+</para>
+<figure>quiver.png</figure>
+</examples>
+<seealso>
+<matlabfun name = "quiver3"/>
+</seealso>
+</function>
+
+<!--$Id: quiver3.xml 1004 2017-11-15 17:14:09Z sangwine $-->

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "fftflip" overload = "false">
+<short>Reverse signal or spectrum.</short>
+<syntax>Y = fftflip(X)</syntax>
+<long>
+    <para>
+        <code>fftflip</code> implements a type of flip operation, in which the
+        first element of the array remains unchanged and the rest reverse their order.
+        Given an even length array indexed by <code>1:n</code>,
+        the result is indexed <code>1 n n-1 ... 2</code>.
+        An odd length array is dealt with in the same way. Expressed in terms of
+        frequency coefficients of an FFT, the DC term stays put, the Nyquist term
+        stays put (even length only), and the positive and negative frequency
+        terms swap places.
+    </para>
+    <para>
+If the input is a matrix, this function operates on the columns.
+</para>
+    <para>
+        The function will work on any
+        type of array, including double, so it may be used on complex arrays.
+    </para>
+</long>
+<seealso>
+<qtfmfun name = "fftflip2"/>
+</seealso>
+    <references>
+        <reference>
+        Ell, T. A., Le Bihan, N. and Sangwine, S. J.,
+        <italic>Quaternion Fourier Transforms for Signal and Image Processing</italic>,
+        Wiley-ISTE 2014, ISBN 978-1-84821-478-1, 140pp. See Chapter 3.
+        </reference>
+    </references>
+</function>
+
+<!--$Id: fftflip.xml 1004 2017-11-15 17:14:09Z sangwine $-->

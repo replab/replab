@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "det" overload = "true">
+<short>Determinant of a quaternion matrix</short>
+<syntax>Y = det(X, T)</syntax>
+<long>
+<para>
+<code>det(X, T)</code> computes the determinant of the square quaternion matrix
+<code>X</code>. The second parameter, <code>T</code>, indicates the type of
+determinant, and must be one of 'Moore', 'Dieudonné', 'Dieudonne' or 'Study'.
+There is no default.
+</para>
+</long>
+<examples>
+<precode>
+Example to be inserted ...
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "det"/>
+</seealso>
+<references>
+<reference>Helmer Aslaksen, 'Quaternionic Determinants',
+<italic>The Mathematical Intelligencer</italic>, <bold>18</bold>(3), 1996,
+56-65. [Reprinted in 'Mathematical Conversation: Selections from
+ The Mathematical Intelligencer', Robin Williams and Jeremy Gray (eds.),
+ 142-156, Springer-Verlag, 2001.]
+</reference>
+<reference>
+F. Z. Zhang, 'Quaternions and Matrices of Quaternions',
+<italic>Linear Algebra and its Applications</italic>, <bold>251</bold>,
+January 1997, 21-57. [see p47]
+</reference>
+</references>
+</function>
+
+<!--$Id: det.xml 1004 2017-11-15 17:14:09Z sangwine $-->

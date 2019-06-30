@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "opd" overload = "false">
+<short>Orthogonal plane decomposition</short>
+<syntax>[p, m] = opd(q, a, b)</syntax>
+<long>
+<para>
+    <code>opd(q, a ,b)</code> decomposes a quaternion array element-by-element
+    <code>q</code> into two
+    components in orthogonal planes defined by <code>a</code> and <code>b</code>
+    using the formulae <italic>p = ½(q + aqb)</italic> and <italic>m = ½(q - aqb)</italic>.
+The third parameter is optional, if omitted it is set equal to the second.
+If <code>a</code> is a pure quaternion, and <code>b</code> is omitted,
+<code>p</code> is parallel to <code>a</code>, and <code>m</code> 
+is in the plane normal to <code>a</code>.
+(Parallel/perpendicular decomposition.)
+Other cases are determined by the values of the second and third parameters.
+Coxeter's paper is recommended as a reference for details of the geometry.
+</para>
+</long>
+<examples>
+<precode>
+>> q = randq;
+>> [p,m] = opd(q, randv)
+ 
+p = 2.776e-17 - 0.1426 * I - 0.8066 * J - 0.07652 * K
+ 
+m = -0.4503 + 0.3269 * I - 0.0668 * J + 0.09476 * K
+ 
+>> scalar_product(p,m)
+
+ans = -3.9899e-17  % p and m are orthogonal.
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "ohd"/>
+</seealso>
+<references>
+    <reference>
+        Eckhard Hitzer and Stephen J. Sangwine,
+        ‘The Orthogonal 2D Planes Split of Quaternions and Steerable Quaternion Fourier Transformations’,
+        Chapter 2, pp. 15-39 in: Eckhard Hitzer and Stephen J. Sangwine (eds.),
+        <italic>Quaternion and Clifford Fourier Transforms and Wavelets</italic>,
+        Birkhäuser/Springer Basel, 2013. xxvii+338 pp. <doi>10.1007/978-3-0348-0603-9</doi>.
+    </reference>
+    <reference>
+    Ell, T. A. and Sangwine, S. J.,
+    'Quaternion Involutions and Anti-Involutions',
+    <italic>Computers and Mathematics with Applications</italic>, <bold>53</bold>(1), January 2007, 137-143.
+    <doi>10.1016/j.camwa.2006.10.029</doi>.
+    </reference>
+    <reference>
+    H. S. M. Coxeter, 'Quaternions and reflections',
+    <italic>American Mathematical Monthly</italic>, <bold>53</bold>(3), 136-146, 1946.
+    </reference>
+</references>  
+</function>
+
+<!--$Id: opd.xml 1004 2017-11-15 17:14:09Z sangwine $-->

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "axis" overload = "false">
+<short>Axis of quaternion or octonion.</short>
+<syntax>Y = axis(X)</syntax>
+<long>
+<para>
+If Q = a + μ .* b where a and b are real/complex, and μ is a unit pure
+quaternion or octonion, then <code>axis(Q) = μ</code>.
+</para>
+<para>
+The polar form of a quaternion or octonion is q = A exp(μθ) where A is a real or complex
+modulus, μ is a unit pure quaternion or octonion, and θ is an angle. It is μ that is
+computed by this function.
+</para>
+</long>
+<examples>
+<precode>
+>> axis(qi + qj + qk)
+ 
+ans = 0.5774 * I + 0.5774 * J + 0.5774 * K
+
+>> axis(1 + qi + qj + qk)
+ 
+ans = 0.5774 * I + 0.5774 * J + 0.5774 * K
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "angle"/>
+</seealso>
+</function>
+
+<!--$Id: axis.xml 1004 2017-11-15 17:14:09Z sangwine $-->

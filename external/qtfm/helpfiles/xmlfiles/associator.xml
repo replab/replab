@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "associator" overload = "false">
+<short>Associator</short>
+<syntax>A = associator(X, Y, Z, option)</syntax>
+<long>
+    <para>
+        This function is provided for octonions only, since quaternion
+        multiplication is associative and the function would return either
+        zero or one, depending
+        on the option in the quaternion case, regardless of the data parameters.
+    </para>
+    <para>
+        <code>A = associator(X, Y, Z)</code> returns
+        <code>(X .* Y) .* Z - X .* (Y .* Z)</code>.
+        The same result is returned with option 'diff'.
+    </para>
+    <para>
+<code>A = associator(X, Y, Z, 'prod')</code> returns that octonion that
+multiplies the product <code>(X .* Y) .* Z</code> on the right to give the
+result of the product <code>X .* (Y .* Z)</code>
+</para>
+</long>
+<examples>
+<para>
+    Octonions are not associative, but quaternion-like subsets are, as shown
+    below (this shows the difference associator, which is zero when the three
+    parameters associate):
+</para>
+<precode>
+>> associator(oi, oj, ok)
+ 
+ans = 0 * I + 0 * J + 0 * K + 0 * L + 0 * M + 0 * N + 0 * O
+ 
+>> associator(oi, ol, oo)
+ 
+ans = 0 * I + 2 * J + 0 * K + 0 * L + 0 * M + 0 * N + 0 * O  
+</precode>
+Three octonions chosen at random have two evaluation orders for their
+product in a given order, and the associator multiplies one of these results
+to give the other:
+<precode>
+>> x = rando; y = rando; z = rando;
+>> ((x .* y) .* z) .* associator(x, y, z, 'prod')
+
+ans =
+
+0.2046 - 0.3172 * I + 0.3426 * J - 0.2111 * K + 0.4448 * L - 0.423 * M + 0.005592 * N - 0.5646 * O
+
+>> x .* (y .* z)
+
+ans =
+
+0.2046 - 0.3172 * I + 0.3426 * J - 0.2111 * K + 0.4448 * L - 0.423 * M + 0.005592 * N - 0.5646 * O
+
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "commutator"/>
+</seealso>
+<references>
+    <reference>Richard D. Schafer,
+        'An Introduction to Non-Associative Algebras',
+        Academic Press, 1966. Page 13.
+    </reference>
+    <reference>
+        S. J. Sangwine,
+        `Octonion associators',
+        ArXiv e-print 1509.07718,
+        <www>http://arxiv.org/abs/1509.07718</www>, 25 September 2015.
+    </reference>
+</references>
+</function>
+
+<!--$Id: associator.xml 1004 2017-11-15 17:14:09Z sangwine $-->

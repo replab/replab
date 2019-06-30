@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "sqrt" overload = "both">
+<short>Square root</short>
+<syntax>Y = sqrt(X)</syntax>
+<long>
+<para>
+<code>sqrt(X)</code> computes the square root of each element of the
+quaternion array <code>X</code>.
+</para>
+<para>
+The quaternion square root is easily defined in terms of the polar form:
+<italic>q</italic> = |<italic>q</italic>|exp(μθ). Then √<italic>q</italic>
+= √|<italic>q</italic>|exp(μθ/2).
+</para>
+</long>
+<examples>
+<precode>
+>> sqrt(qi)
+ 
+ans = 0.7071 + 0.7071 * I + 0 * J + 0 * K
+ 
+>> ans.^2
+ 
+ans = 0 + 1 * I + 0 * J + 0 * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "sqrt"/>
+</seealso>
+</function>
+
+<!--$Id: sqrt.xml 1004 2017-11-15 17:14:09Z sangwine $-->

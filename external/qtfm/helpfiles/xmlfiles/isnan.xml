@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "isnan" overload = "both">
+<short>Array elements containing NaNs</short>
+<syntax>TF = isnan(X)</syntax>
+<long>
+<para>
+<code>isnan(X)</code> returns logical 1 (<code>true</code>) for array
+elements that contain at least one quaternion/octonion component which is a
+<code>NaN</code>.
+</para>
+</long>
+<seealso>
+<matlabfun name = "isnan"/>
+</seealso>
+</function>
+
+<!--$Id: isnan.xml 1004 2017-11-15 17:14:09Z sangwine $-->

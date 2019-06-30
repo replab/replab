@@ -1,0 +1,37 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>vector_product :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>vector_product</h2>
+<p>Vector or cross product of two quaternions, or two or three octonions</p>
+<h2>Syntax</h2><p><tt>Y = vector_product(A, B)</tt></p>
+<h2>Description</h2>
+    <p>
+        <tt>vector_product(A, B)</tt> returns the vector (or cross) product of the two
+        arguments, elementwise on the two arrays, which must be pure.
+    </p>
+<p>
+The octonion version of the function accepts two or three parameters.
+The three-fold vector product is defined for full octonions.
+Its result is invariant to cyclic permutation of the parameters, but changes
+sign if two are interchanged.
+</p>
+
+<h2>Examples</h2>
+The vector product of <tt>qi</tt> with <tt>qj</tt> gives <tt>qk</tt>:
+<pre>
+&gt;&gt; vector_product(qi, qj) == qk
+
+ans = 1
+</pre>
+
+<h2>References</h2><ol><li>
+        Peter Zvengrowski, 'A 3-fold vector product in R8',
+        <i>Commentarii Mathematici Helvetici</i>, <b>40</b>, 149-152,
+        1965-1966.
+        
+DOI: <a href="http://dx.doi.org/10.5169/seals-30632">10.5169/seals-30632</a>
+    </li></ol>
+<h2>See Also</h2>QTFM function: <a href="cross.html">cross</a><br>MATLAB&reg; function: <a href="matlab:doc cross">cross</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

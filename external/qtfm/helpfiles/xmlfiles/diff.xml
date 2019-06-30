@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "diff" overload = "true">
+<short>Differences</short>
+<syntax>Z = diff(X, n, dim)</syntax>
+<long>
+<para>
+<code>diff(X, n, dim)</code> computes the n-th differences between elements
+of the quaternion array <code>X</code> along dimension <code>dim</code>, if
+specified.
+</para>
+</long>
+<examples>
+<precode>
+>> A = randq(1,2)
+ 
+A = 1x2 quaternion array
+ 
+>> show(A)
+ 
+A.S = -0.3782    0.0448
+
+A.X = -0.2545    0.1962
+
+A.Y = -0.7229   -0.3947
+
+A.Z =  0.5192    0.8965
+
+>> diff(A)
+ 
+ans = 0.423 + 0.4507 * I + 0.3282 * J + 0.3773 * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "diff"/>
+<qtfmfun name = "prod"/>
+<qtfmfun name = "sum"/>
+</seealso>
+</function>
+
+<!--$Id: diff.xml 1004 2017-11-15 17:14:09Z sangwine $-->

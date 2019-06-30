@@ -1,0 +1,28 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>kleinfeld :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>kleinfeld</h2>
+<p>Kleinfeld product</p>
+<h2>Syntax</h2><p><tt>K = kleinfeld(W, X, Y, Z)</tt></p>
+<h2>Description</h2>
+<p>
+<tt>K = kleinfeld(W, X, Y, Z)</tt> returns
+<tt>(wx, y, z) - x(w, y, z) - (x, y, z)w</tt> where <tt>(a, b, c)</tt>
+is the associator.
+The parameters must be octonions.
+The product has the property that it vanishes if any two of the four
+parameters are identical in value.
+Because the associator uses matrix multiplication,
+this function may give incorrect results if the parameters are not scalar.
+</p>
+
+<h2>See Also</h2>QTFM function: <a href="associator.html">associator</a><br>
+<h2>References</h2><ol><li>Erwin Kleinfeld,
+'A characterization of the Cayley numbers', pp126-143 in
+A. A. Albert (ed), 'Studies in Modern Algebra', Volume <b>2</b>,
+Prentice-Hall
+for The Mathematical Association of America, 1963.
+</li></ol>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

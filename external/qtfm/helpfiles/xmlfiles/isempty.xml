@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "isempty" overload = "both">
+<short>Determine whether quaternion array is empty</short>
+<syntax>TF = isempty(X)</syntax>
+<long>
+<para>
+<code>isempty(X)</code> returns logical 1 (<code>true</code>) if the quaternion
+<code>X</code> is an empty array. The definition of an empty array is the
+same as that used by the overloaded &matlab; function.
+</para>
+</long>
+<seealso>
+<matlabfun name = "isempty"/>
+</seealso>
+</function>
+
+<!--$Id: isempty.xml 1004 2017-11-15 17:14:09Z sangwine $-->

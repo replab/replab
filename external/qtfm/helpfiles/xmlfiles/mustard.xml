@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "mustard" overload = "false">
+<short>Mustard convolution</short>
+<syntax>R = mustard(f, g, mu, H)</syntax>
+<long>
+    <para>
+        <code>R = mustard(f, g, mu, H)</code> returns the so-called 'Mustard' convolution
+        of <code>f</code> and <code>g</code>. This is the convolution equivalent to pointwise
+        multiplication of the Fourier transforms of <code>f</code> and <code>g</code>.
+        It is dependent on the definition of the Fourier transform.
+        This function assumes a one-sided QFT as computed by <code>qfft</code> and <code>qfft2</code>
+        using a transform 'axis' <code>mu</code> and a handedness <code>H</code> as defined in the
+        parameter profiles of the transforms.
+        The computation performed by the <code>mustard</code> function does not use Fourier transforms:
+        it is computed using convolutions, but these convolutions differ according to the equivalent
+        transform axis and handedness.
+    </para>
+    <para>
+This code handles one dimensional or two dimensional arrays <code>f</code> and <code>g</code>
+according to the parameters supplied. If they are vectors, they must be
+both row or both column vectors.
+</para>
+</long>
+<references>
+    <reference>David Mustard, 'Fractional convolution',
+        <italic>The Journal of the Australian Mathematical Society</italic>,
+        Series B, Applied Mathematics, Vol <bold>40</bold>, 257­265, 1998.
+        <doi>10.1017/S0334270000012509</doi>.
+    </reference>
+    <reference>De Bie, H.; De Schepper, N.; Ell, T. A.; Rubrecht, K. and Sangwine, S. J.,
+        'Connecting spatial and frequency domains for the quaternion Fourier transform',
+        <italic>Applied Mathematics and Computation</italic>, <bold>271</bold>,
+        581-593, 15 November 2015, <doi>10.1016/j.amc.2015.09.045</doi>.
+    </reference>
+</references>
+</function>
+
+<!--$Id: mustard.xml 1004 2017-11-15 17:14:09Z sangwine $-->

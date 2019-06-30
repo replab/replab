@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "unadjoint" overload = "false">
+<short>Unadjoint of a quaternion matrix</short>
+<syntax>C = unadjoint(A, F, B)</syntax>
+<long>
+<para>
+This function reverses the result of the <code>adjoint</code> function,
+so that <code>unadjoint(adjoint(A)) == A</code>.
+</para>
+<para>
+<code>unadjoint(A)</code> or
+<code>unadjoint(A, 'complex')</code> assumes <code>A</code> is a complex adjoint matrix.
+<code>unadjoint(A, 'real')</code>    assumes <code>A</code> is a real    adjoint matrix.
+<code>unadjoint(A, 'quaternion')</code> assumes <code>A</code> is a quaternion adjoint matrix
+(only valid for the case where the original matrix was a complex quaternion
+or biquaternion matrix).
+The default assumption is a complex adjoint.
+</para>
+<para>
+    The third parameter (which may appear in the second position if the
+    second is omitted), controls the layout of the adjoint, specifically
+    whether the adjoint is organised in blocks by components (scalar, x, y, z)
+    or with each quaternion represented as an adjoint block. If the option
+    'block' was given to <code>adjoint</code>, then it must be given to
+    <code>unadjoint</code> to reverse
+    the effect of <code>adjoint</code>.
+</para>
+<para>There is no opposite for 'block'. 'block' is not supported with the
+option 'quaternion'.
+</para></long>
+<examples>
+<precode>
+>> A = randq(2)
+ 
+A = 2x2 quaternion array
+ 
+>> B = unadjoint(adjoint(A))
+ 
+B = 2x2 quaternion array
+ 
+>> show(A - B)
+ 
+S =
+ 
+     0     0
+     0     0
+
+X =
+ 
+     0     0
+     0     0
+
+Y =
+ 
+     0     0
+     0     0
+
+Z =
+ 
+     0     0
+     0     0
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "adjoint"/>
+</seealso>
+<references>
+<reference>F. Z. Zhang, Quaternions and Matrices of Quaternions,
+<italic>Linear Algebra and its Applications</italic>, <bold>251</bold>,
+January 1997, 21-57.
+<!-- The DOI here contains a pair of ( ) characters. These have been
+     encoded as %28 and %29 because if passed to Matlab as ( ) they
+     cause an error (possible bug in Matlab). The workaround here is
+     good enough, since it will work if clicked or copied and pasted. -->
+<doi>10.1016/0024-3795%2895%2900543-9</doi></reference>
+<reference>B. P. Ickes, A New Method for Performing Digital Control System
+Attitude Computations using Quaternions, <italic>AIAA Journal</italic>,
+<bold>8</bold>(1), January 1970, pp13-17, American Institute of Aeronautics
+and Astronautics.</reference>
+<reference>Ward, J. P., Quaternions and Cayley numbers, Kluwer, 1997.</reference>
+<reference>Todd A. Ell, On Systems of Linear Quaternion Functions, February
+2007, arXiv:math/0702084v1, <www>http://www.arxiv.org/abs/math/0702084</www>.
+</reference>
+<reference>Nicolas Le Bihan, Sebastian Miron and Jerome Mars,
+MUSIC Algorithm for Vector-Sensors Array using Biquaternions,
+<italic>IEEE Transactions on Signal Processing</italic>,
+<bold>55</bold>(9), September 2007, 4523-4533.
+<doi>10.1109/TSP.2007.896067</doi>.</reference>
+</references>
+</function>
+
+<!--$Id: unadjoint.xml 1004 2017-11-15 17:14:09Z sangwine $-->

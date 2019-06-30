@@ -1,0 +1,19 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>sqrtm :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>sqrtm</h2>
+<p>Matrix square root<br>(Quaternion overloading of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>Y = sqrtm(X)</tt></p>
+<h2>Description</h2>
+<p>
+<tt>sqrtm(X)</tt> computes the matrix square root of a quaternion matrix.
+The algorithm used is based on calling the MATLAB&reg; <tt>sqrtm</tt> function
+on an adjoint matrix, and is therefore not accurate for larger matrices.
+The accuracy may be checked by squaring the result using <tt>^</tt>.
+</p>
+
+<h2>See Also</h2>MATLAB&reg; function: <a href="matlab:doc sqrtm">sqrtm</a><br>QTFM functions: <a href="adjoint.html">adjoint</a>, <a href="unadjoint.html">unadjoint</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

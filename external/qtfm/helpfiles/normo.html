@@ -1,0 +1,44 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>normo :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>normo</h2>
+<p>Norm of an octonion</p>
+<h2>Syntax</h2><p><tt>Y = normo(X)</tt></p>
+<h2>Description</h2>
+    <p>
+        <i>(Not to be confused with the function <tt>norm</tt>
+        which computes a matrix norm.)</i>
+    </p>
+<p>
+<tt>normo(X)</tt> returns an array <tt>Y</tt> such that each
+element of <tt>Y</tt> is the norm of the corresponding element of
+<tt>X</tt>. The norm is the sum of the squares of the eight
+components (seven components in the case where <tt>X</tt> is pure).
+</p>
+<p>
+If <tt>X</tt> is a complex octonion, <tt>normq(X)</tt> returns
+the complex semi-norm, computed in the same way.
+The semi-norm of a complexified octonion can vanish. See the QTFM function
+<tt>normq</tt> for references on this topic for quaternions.
+No corresponding paper is known for the octonion case.
+</p>
+
+<h2>Examples</h2>
+<pre>
+normo(octonion(1,1,1,1,1,1,1,1))
+
+ans = 8
+</pre>
+<tt>normo</tt> is vectorized, and hence can operate on arrays.
+It can also operate on complex octonions yielding a complex result in
+general (the semi-norm):
+<pre>
+&gt;&gt; normo(1 + i + oi + on + om)
+
+ans = 3.0000 + 2.0000i
+</pre>
+
+<h2>See Also</h2>QTFM functions: <a href="abs.html">abs</a>, <a href="norm.html">norm</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

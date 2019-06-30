@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "quaternion" overload = "false">
+<short>Octonion constructor</short>
+<syntax>o = octonion(w, x, y, z, a, b, c, d)</syntax>
+<long>
+<para>
+This function constructs octonion (arrays) from components.
+It accepts zero, one, two, seven or eight arguments.
+The permissible cases are set out in the following paragraphs.
+</para>
+<para>
+Given no arguments, this function constructs an empty octonion.
+</para>
+<para>
+Given one argument which is already an octonion, the function returns the
+argument unchanged. If the argument is not an octonion, the function
+constructs one with the argument in the scalar part and supplies a
+zero vector part of the same type as the argument. Thus if the argument is
+a double, the result will have a vector part with double zeros as components.
+</para>
+<para>
+If two arguments are supplied, the first must be numeric, and the second
+must be a pure octonion of the same size. The result will be a full
+octonion. The first argument must have the same class as the components
+of the second. This is to prevent the creation of octonion arrays of mixed
+class.
+</para>
+<para>
+If seven arguments are supplied, they must be numeric and of the same size
+and class. The result is a pure octonion.
+</para>
+<para>
+If eight arguments are supplied, they must be numeric and of the same size
+and class. The result is a full octonion.
+</para>
+</long>
+<examples>
+<precode>
+>> octonion(1, 2, 3, 4, 5, 6, 7, 8)
+ 
+ans = 1 + 2 * I + 3 * J + 4 * K + 5 * L + 6 * M + 7 * N + 8 * O
+</precode>
+</examples>
+</function>
+
+<!--$Id: octonion.xml 1004 2017-11-15 17:14:09Z sangwine $-->

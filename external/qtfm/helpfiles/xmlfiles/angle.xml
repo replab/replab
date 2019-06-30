@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "angle" overload = "both">
+<short>Angle of a quaternion in polar form</short>
+<syntax>θ = angle(q, a)</syntax>
+<long>
+<para>
+<code>angle(X)</code> computes the angle of a quaternion in polar form. The
+polar form of a quaternion is q = A exp(μθ) where A is a real or complex
+modulus, μ is a unit pure quaternion, and θ is an angle. It is θ that is
+computed by this function.
+</para>
+<para>
+The second parameter is optional. If omitted, the result will always be
+in the range (0, π), that is, the quaternion q is regarded as being in
+the upper half of a complex plane defined by the axis of q. A reference
+unit vector defining the direction of the positive imaginary axis of q
+may be supplied as the second parameter, in which case the result may
+be in the full range from -π to +π. This reference unit vector is used
+to define the north pole of a hemisphere of 3-space, so that if the axis
+of q lies in this hemisphere, the angle is in the range (0,π). If the
+axis of q lies in the other (southern) hemisphere, then the angle
+returned will lie in (π, 2*π).
+</para>
+<para>
+The optional argument must be either the same size as q or be a scalar
+(in which case the same value is used for all elements of q).
+</para>
+</long>
+<examples>
+<precode>
+>> angle(randq(2))
+
+ans =
+
+    1.8062    1.5062
+    2.2535    1.9501
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "angle"/>
+<qtfmfun name = "axis"/>
+</seealso>
+</function>
+
+<!--$Id: angle.xml 1004 2017-11-15 17:14:09Z sangwine $-->

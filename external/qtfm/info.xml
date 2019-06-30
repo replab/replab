@@ -1,0 +1,58 @@
+<productinfo
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="optional">
+<?xml-stylesheet type="text/xsl" href="optional"?>
+
+<matlabrelease>14</matlabrelease>
+<name>Quaternion</name>
+<type>toolbox</type>
+<icon></icon>
+<help_location>helpfiles</help_location>
+
+<!-- The list section below is redundant in recent versions of Matlab, but
+     is left in situ for use with earlier versions of Matlab. These lines
+     may be removed in a later release as the toolbox is no longer
+     supported with versions of Matlab that support the information below.
+     -->
+<list>
+
+<listitem>
+<label>Help</label>
+<callback>web([qtfm_root filesep 'helpfiles' filesep 'qtfm.html'], '-helpbrowser');</callback>
+<icon>$toolbox/matlab/icons/helpicon.gif</icon>
+</listitem>
+
+<listitem>
+<label>Copyright information</label>
+<callback>run([qtfm_root filesep 'copyright'])</callback>
+<icon>$toolbox/matlab/icons/bookicon.gif</icon>
+</listitem>
+
+<listitem>
+<label>Run test code</label>
+<callback>qtfm_test</callback>
+<icon>$toolbox/matlab/icons/demoicon.gif</icon>
+</listitem>
+
+<listitem>
+<label>Refresh HTML help files</label>
+<callback>qtfm_helpup</callback>
+<icon>$toolbox/matlab/icons/demoicon.gif</icon>
+</listitem>
+
+<listitem>
+<label>Web site</label>
+<callback>web http://qtfm.sourceforge.net/ -browser;</callback>
+<icon>$toolbox/matlab/icons/webicon.gif</icon>
+</listitem>
+
+<listitem>
+<label>Sourceforge project page</label>
+<callback>web https://sourceforge.net/projects/qtfm/ -browser;</callback>
+<icon>$toolbox/matlab/icons/webicon.gif</icon>
+</listitem>
+
+</list>
+
+</productinfo>
+<!--$Id: info.xml 1004 2017-11-15 17:14:09Z sangwine $-->

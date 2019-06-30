@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "log" overload = "true">
+<short>Natural logarithm</short>
+<syntax>Y = log(X)</syntax>
+<long>
+<para>
+<code>log(X)</code> computes the natural logarithm of the elements of the
+quaternion array <code>X</code>.
+</para>
+<para>
+The logarithm of a quaternion is not difficult to derive, as follows.
+First note that <code>exp(y) = x</code> (definition of logarithm).
+Then write <code>x</code> in polar form as r × exp(μθ). Then we have:
+ln(x) = y = ln(r) + ln(exp(μθ)) = ln(r) + μθ. Note that r and θ may be
+complex if <code>X</code> is a complex quaternion.
+</para>
+</long>
+<examples>
+<precode>
+>> log(quaternion(1,1,1))
+
+ans = 0.5493 + 0.9069 * I + 0.9069 * J + 0.9069 * K 
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "log"/>
+<qtfmfun name = "exp"/>
+</seealso>
+</function>
+
+<!--$Id: log.xml 1004 2017-11-15 17:14:09Z sangwine $-->

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "cast" overload = "both">
+<short>Cast quaternion/octonion variable to different data type.</short>
+<syntax>b = cast(q, newclass)</syntax>
+<long>
+<para>
+<code>cast</code> converts the components of a quaternion to a different
+data type. By default, the components of a quaternion have the default
+&matlab; data type <code>double</code>.
+</para>
+</long>
+<examples>
+<precode>
+>> q = cast(quaternion(1,2,3,4), 'uint8')
+ 
+q = 1 + 2 * I + 3 * J + 4 * K
+ 
+>> class(q)
+
+ans =
+
+quaternion
+
+>> class(x(q))
+
+ans =
+
+uint8
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "cast"/>
+<qtfmfun name = "convert"/>
+</seealso>
+</function>
+
+<!--$Id: cast.xml 1004 2017-11-15 17:14:09Z sangwine $-->

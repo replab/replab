@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "imwrite" overload = "true">
+<short>Write an image file from a quaternion array.</short>
+<syntax>imwrite(A, filename, fmt)</syntax>
+<long>
+    <para>
+        <code>imwrite</code> writes an image file from data stored in a pure
+        quaternion array. It supports the same parameter profiles as the &matlab;
+        function of the same name, but the first parameter must be a quaternion
+        array with elements of type <code>uint8</code>,
+        <code>uint16</code>, or <code>double</code>.
+        The type of image written to the file depends on the
+        quaternion data in the array <code>A</code>. If the quaternion data has
+        components of type <code>uint16</code>, then 16-bit samples will be written to the
+        file. In all other cases 8-bit data will be written to the file. <code>uint8</code> or
+        <code>uint16</code> pixel values are not scaled - they are written directly to the
+        image file. <code>double</code> or <code>single</code>
+        pixel values are assumed to be in the range
+        [0, 1] and are scaled by 255 before writing to the file. This behaviour
+        follows from the behaviour of the overloaded &matlab; function which is used
+        to write the image file after reformatting of the quaternion data into the
+        form used by the &matlab; function.
+    </para>
+    <para>
+        The function supports the same image file types as the &matlab; function.
+    </para>
+</long>
+<examples>
+<precode>
+>> imwrite(randv(128), 'random.png')
+</precode>
+<para>
+results in the creation of an image file like the result following.
+In this case, because
+<code>randv</code> generates <code>double</code> quaternion data with component values
+in the range [0,1], the data is automatically scaled to the integer range
+[0,255] before writing to the Portable Network Graphics file.
+</para>
+<figure>random.png</figure>
+</examples>
+<seealso>
+<matlabfun name = "imwrite"/>
+<qtfmfun name = "imreadq"/>
+<qtfmfun name = "image"/>
+</seealso>
+</function>
+
+<!--$Id: imwrite.xml 1004 2017-11-15 17:14:09Z sangwine $-->

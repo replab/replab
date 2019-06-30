@@ -31,6 +31,8 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
     [pathStr, name, extension] = fileparts(which(mfilename));
     addpath(pathStr);
     
+    %% VPI
+    
     % Making sure the VPI library is in the path and working
     VPIInPath = false;
     try
@@ -49,6 +51,29 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
     elseif verbose >= 2
         disp('VPI is already in the path');
     end
+    
+    %% QTFM
+    
+    QTFMInPath = false;
+    try
+        qtfm_root;
+        QTFMInPath = true;
+    catch
+    end
+    if ~QTFMInPath
+        if exist([pathStr '/external/qtfm/qtfm_root.m']) ~= 2
+            warning(['The QTFM library was not found in the folder ', pathStr, '/external/qtfm']);
+        else
+            addpath([pathStr '/external/qtfm']);
+            if verbose >= 1
+                disp('Adding QTFM to the path');
+            end
+        end
+    elseif verbose >= 2
+        disp('QTFM is already in the path');
+    end
+    
+    %% MOxUnit
     
     % Making sure MOxUnit is in the path and working
     MOxUnitInPath = false;
@@ -73,7 +98,12 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
         disp('MOxUnit is already in the path');
     end
     
+    %% Solvers
+    
     if includeEmbeddedSolver == 1
+        
+        %% YALMIP
+        
         % Making sure YALMIP is in the path and working
         YALMIPInPath = false;
         try
@@ -105,6 +135,9 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
             disp('YALMIP is already in the path');
         end
 
+        
+        %% SDPT3
+        
         % Making sure SDPT3 is in the path and working
         SDPT3InPath = false;
         try
@@ -130,6 +163,8 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
         end
     end
 
+    %% MOcov
+    
     % Making sure MOcov is in the path and working
     MOcovInPath = false;
     try
@@ -152,17 +187,4 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
         disp('MOcov is already in the path');
     end
 
-    
-    % Making sure YALMIP is in the path and working
-    YALMIPInPath = false;
-    try
-        yalmip('version');
-        YALMIPInPath = true;
-    catch
-    end
-    if ~YALMIPInPath
-        if verbose >= 1
-            warning('YALMIP was not found in the path, some functionalities of the library might be disabled');
-        end
-    end
 end

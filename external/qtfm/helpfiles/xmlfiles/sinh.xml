@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "sinh" overload = "true">
+<short>Hyperbolic sine</short>
+<syntax>Y = sinh(X)</syntax>
+<long>
+<para>
+<code>sinh(X)</code> computes the hyperbolic sine of the quaternion argument <code>X</code>
+which may be a complexified quaternion.
+</para>
+</long>
+<examples>
+<precode>
+>>  sinh(1 + qi)
+ 
+ans = 0.635 + 1.298 * I + 0 * J + 0 * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "sinh"/>
+<qtfmfun name = "cosh"/>
+</seealso>
+</function>
+
+<!--$Id: sinh.xml 1004 2017-11-15 17:14:09Z sangwine $-->

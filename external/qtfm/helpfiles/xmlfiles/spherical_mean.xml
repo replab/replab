@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "spherical_mean" overload = "false">
+<short>Spherical (geodesic or intrinsic) mean</short>
+<syntax>y = spherical_mean(q, t)</syntax>
+<long>
+<para>
+<code>spherical_mean(q, t)</code> computes a quaternion
+(full or pure according as to whether <code>q</code> is full or pure)
+which is the geodesic mean of the quaternions in vector <code>q</code>.
+<code>t</code> is a tolerance (0 ≤ <code>t</code> ≤ 1) and may be omitted
+(in which case a default is used).
+</para>
+<para>
+    The <code>slerp</code> function may be regarded as a special case of
+    the spherical mean: given two arbitrary quaternions, the following calls
+    will return the same result, mid-way along the 'arc' between the two
+    quaternions: <code>slerp(p, q, 0.5)</code> and <code>spherical_mean([p,q])</code>
+</para>
+<para>
+The third parameter, <code>t</code>, gives the angular tolerance between the
+quaternions in <code>q</code>.
+</para>
+<para>
+<code>q</code> is not restricted to be a real quaternion, but interpretation
+of the result in the biquaternion case is unknown, and a warning is currently
+generated.
+</para>
+</long>
+<examples>To interpolate between <code>qi</code>, <code>qj</code> and <code>qk</code>
+we can supply a vector containing the three values.
+The result is at the centre of the <italic>spherical</italic> triangle
+given by the three unit quaternions.
+<precode>
+spherical_mean([qi, qj, qk])
+ 
+ans = 0.5774 * I + 0.5774 * J + 0.5774 * K
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "slerp"/>
+</seealso><references>
+<reference>Samuel R. Buss and Jay P. Fillmore,
+'Spherical averages and applications to spherical splines and interpolation',
+<italic>ACM Transactions on Graphics</italic>,
+<bold>20</bold> (2), 95-126, April 2001.
+<doi>10.1145/502122.502124</doi>.
+</reference>
+</references>
+</function>
+
+<!--$Id: spherical_mean.xml 1004 2017-11-15 17:14:09Z sangwine $-->

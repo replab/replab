@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "eig" overload = "true">
+<short>Eigenvalue decomposition</short>
+<syntax>[V, D] = eig(A)</syntax>
+<long>
+<para>
+<code>eig(X)</code> computes the eigenvalue decomposition of a quaternion
+matrix (with some limitations, chiefly to Hermitian matrices).
+Acceptable calling sequences are: <code>[V,D] = eig(X)</code> and
+<code>V = eig(X)</code>.
+</para>
+<para>
+<code>eig</code> uses an auxiliary QTFM function <code>tridiagonalize</code>.
+</para>
+</long>
+<examples>
+<precode>
+Examples to be inserted ...
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "eig"/>
+</seealso>
+</function>
+
+<!--$Id: eig.xml 1004 2017-11-15 17:14:09Z sangwine $-->

@@ -1,0 +1,24 @@
+\documentclass{article}
+\usepackage[latin9]{inputenc}
+\usepackage{url}
+\usepackage{natbib}
+\usepackage{fullpage}
+\usepackage{doipubmed}
+\usepackage{hyperref}
+\begin{document}
+Test document to verify the BiBTeX database file \texttt{qtfm.bib}
+which provides citations for \texttt{QTFM} itself and several articles
+and papers which are referenced in the source code.
+
+Note that some of the fields within the BiBTeX database file may not be
+printed by the standard BiBTeX style files. In particular, the DOI and
+EPRINT fields are not normally output. You should use if possible one of
+the style files that supports these fields in order to get a full listing
+of the reference. Try, for example, hplain or similar to get the EPRINT
+field to print, or the natbib package, used here, which will output the
+DOI field.
+\nocite{*}
+\bibliographystyle{plainnat}
+\bibliography{qtfm}
+\end{document}
+% $Id: test.tex 1004 2017-11-15 17:14:09Z sangwine $

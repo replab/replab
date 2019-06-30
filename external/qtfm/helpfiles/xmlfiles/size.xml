@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "size" overload = "both">
+<short>Size of matrix</short>
+<syntax>Y = size(X, N)</syntax>
+<long>
+<para>
+<code>size(X)</code> returns the size of the quaternion array <code>X</code>.
+</para>
+<para>
+<code>size(X, N)</code> returns the size of the N-th dimensions of the
+quaternion array <code>X</code>.
+</para>
+</long>
+<examples>
+<precode>
+>> q = randq(4,5)
+ 
+q = 4x5 quaternion array
+ 
+>> size(q)
+
+ans = 4     5
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "size"/>
+</seealso>
+</function>
+
+<!--$Id: size.xml 1004 2017-11-15 17:14:09Z sangwine $-->

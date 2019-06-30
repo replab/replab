@@ -1,0 +1,11 @@
+Name: quaternion
+Version: 2.3.0
+Date: 2016-01-27
+Author: Steve Sangwine and Nicolas Le Bihan
+Maintainer: Steve Sangwine and Nicolas Le Bihan
+Title: Quaternion Toolbox for Matlab
+Description: A quaternion package for Matlab/Octave.
+ Extends Matlab/Octave to handle matrices of quaternions.
+url: http://qtfm.sourceforge.net/
+Autoload: yes
+License: GPL version 3 or later

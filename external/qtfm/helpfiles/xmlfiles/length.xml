@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "length" overload = "both">
+<short>Length of vector</short>
+<syntax>Y = length(X)</syntax>
+<long>
+<para>
+<code>length(X)</code> returns the number of quaternion elements in the
+vector <code>X</code>.
+</para>
+</long>
+<examples>
+<precode>
+>> q = randq(7,1)
+ 
+q = 7x1 quaternion array
+ 
+>> length(q)
+
+ans = 7
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "length"/>
+</seealso>
+</function>
+
+<!--$Id: length.xml 1004 2017-11-15 17:14:09Z sangwine $-->

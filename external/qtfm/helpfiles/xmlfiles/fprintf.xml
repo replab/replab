@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "fprintf" overload = "true">
+<short>Write formatted data to file</short>
+<syntax>count = fprintf(FID, format, A)</syntax>
+<long>
+<para>
+This function overloads the &matlab; function of the same name for
+quaternion data. Only one quaternion argument is permitted, unlike the standard
+&matlab; function. The FID parameter may be omitted, in which case
+the output is sent to the standard output.
+</para>
+<para>
+The output is formatted with one quaternion per line of output.
+Spaces are automatically inserted between each of the components
+of each quaternion, and a \n is automatically inserted after each
+quaternion value output. The format string supplied should therefore
+not include spaces or \n.
+</para>
+</long>
+<examples>
+<precode>
+>> q = randq(2)
+ 
+q = 2x2 quaternion array
+ 
+>> count = fprintf('%11.4g', q)
+     0.1347     -0.7949     -0.1818      -0.563
+    -0.7562      0.4209      0.4884     -0.1119
+     0.7196     -0.5344     -0.2204      0.3847
+    -0.3163     -0.5328     -0.7841      0.0355
+
+count = 192
+
+>> show(q)
+ 
+q.S =
+ 
+    0.1347   -0.7562
+    0.7196   -0.3163
+
+q.X =
+ 
+   -0.7949    0.4209
+   -0.5344   -0.5328
+
+q.Y =
+ 
+   -0.1818    0.4884
+   -0.2204   -0.7841
+
+q.Z =
+ 
+   -0.5630   -0.1119
+    0.3847    0.0355
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "fprintf"/>
+<qtfmfun name = "write"/>
+</seealso>
+</function>
+
+<!--$Id: fprintf.xml 1004 2017-11-15 17:14:09Z sangwine $-->

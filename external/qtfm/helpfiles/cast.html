@@ -1,0 +1,37 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>cast :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>cast</h2>
+<p>Cast quaternion/octonion variable to different data type.<br>(Quaternion and octonion overloadings of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>b = cast(q, newclass)</tt></p>
+<h2>Description</h2>
+<p>
+<tt>cast</tt> converts the components of a quaternion to a different
+data type. By default, the components of a quaternion have the default
+MATLAB&reg; data type <tt>double</tt>.
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; q = cast(quaternion(1,2,3,4), 'uint8')
+ 
+q = 1 + 2 * I + 3 * J + 4 * K
+ 
+&gt;&gt; class(q)
+
+ans =
+
+quaternion
+
+&gt;&gt; class(x(q))
+
+ans =
+
+uint8
+</pre>
+
+<h2>See Also</h2>QTFM function: <a href="convert.html">convert</a><br>MATLAB&reg; function: <a href="matlab:doc cast">cast</a><br>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

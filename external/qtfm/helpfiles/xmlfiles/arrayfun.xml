@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "arrayfun" overload = "true">
+<short>Apply a function to each element of an array</short>
+<syntax>A = arrayfun(fun, B)</syntax>
+<long>
+<para>
+This function is not yet implemented for quaternions but may be
+added at a later date.
+</para>
+</long>
+<seealso>
+<matlabfun name = "arrayfun"/>
+</seealso>
+</function>
+
+<!--$Id: arrayfun.xml 1004 2017-11-15 17:14:09Z sangwine $-->

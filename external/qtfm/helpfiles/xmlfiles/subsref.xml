@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "subsref" overload = "both">
+<short>Subscripted reference</short>
+<syntax>r = subsref(a, ss)</syntax>
+<long>
+<para>
+<code>subsref</code> is an overloading of a &matlab; function that plays
+an essential role in subscripted references. See the documentation on the
+&matlab; function for details, and the source code of the quaternion
+implementation.
+</para>
+</long>
+<seealso>
+<matlabfun name = "subsref"/>
+<qtfmfun name = "subsasgn"/>
+<qtfmfun name = "subsindex"/>
+</seealso>
+</function>
+
+<!--$Id: subsref.xml 1004 2017-11-15 17:14:09Z sangwine $-->

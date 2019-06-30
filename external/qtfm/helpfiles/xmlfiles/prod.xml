@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "prod" overload = "true">
+<short>Product of array elements</short>
+<syntax>Y = prod(X, dim)</syntax>
+<long>
+<para>
+<code>prod(X, dim)</code> computes the product of the elements of the
+quaternion array <code>X</code> along dimension <code>dim</code>.
+</para>
+<para>
+The ordering within the product is important, because of the non-commutative
+quaternion product: the product is computed with the lowest index on the
+left and the highest index on the right
+(that is, left to right for a row vector, or downwards for a column vector).
+</para>
+</long>
+<examples>
+<precode>
+>> prod([qi, qj, qk]) == -1
+
+ans = 1
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "prod"/>
+<qtfmfun name = "sum"/>
+</seealso>
+</function>
+
+<!--$Id: prod.xml 1004 2017-11-15 17:14:09Z sangwine $-->

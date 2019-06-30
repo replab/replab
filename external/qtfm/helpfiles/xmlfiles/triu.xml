@@ -1,0 +1,20 @@
+﻿<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "triu" overload = "both">
+<short>Upper triangular part of matrix</short>
+<syntax>Y = triu(X, K)</syntax>
+<long>
+<para>
+<code>triu(X, K)</code> extracts the upper triangular part of the matrix
+<code>X</code>. It is
+a straightforward overloading of the &matlab; function of the same name
+implemented by a common mechanism for quaternion functions that can be
+computed by separate application of the &matlab; function to each component
+of the quaternion array.
+</para>
+</long>
+<seealso>
+<matlabfun name = "triu"/>
+<qtfmfun name = "tril"/>
+</seealso>
+</function>
+<!--$Id: triu.xml 1004 2017-11-15 17:14:09Z sangwine $-->

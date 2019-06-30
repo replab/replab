@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "kleinfeld" overload = "false">
+<short>Kleinfeld product</short>
+<syntax>K = kleinfeld(W, X, Y, Z)</syntax>
+<long>
+<para>
+<code>K = kleinfeld(W, X, Y, Z)</code> returns
+<code>(wx, y, z) - x(w, y, z) - (x, y, z)w</code> where <code>(a, b, c)</code>
+is the associator.
+The parameters must be octonions.
+The product has the property that it vanishes if any two of the four
+parameters are identical in value.
+Because the associator uses matrix multiplication,
+this function may give incorrect results if the parameters are not scalar.
+</para>
+</long>
+<seealso>
+<qtfmfun name = "associator"/>
+</seealso>
+<references>
+<reference>Erwin Kleinfeld,
+'A characterization of the Cayley numbers', pp126-143 in
+A. A. Albert (ed), 'Studies in Modern Algebra', Volume <bold>2</bold>,
+Prentice-Hall
+for The Mathematical Association of America, 1963.
+</reference>
+</references>
+</function>
+
+<!--$Id: kleinfeld.xml 1004 2017-11-15 17:14:09Z sangwine $-->

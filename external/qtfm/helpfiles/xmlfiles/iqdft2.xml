@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "iqdft2" overload = "false">
+<short>Inverse Quaternion Discrete Fourier transform</short>
+<syntax>Y = iqdft2(X, A, L)</syntax>
+<long>
+<para>
+<code>iqdft2(X, A, L)</code> computes the inverse Quaternion Discrete Fourier Transform
+of the quaternion matrix <code>X</code> using transform axis <code>A</code>
+(direction in 3-space).
+</para>
+<para>
+<code>L</code> specifies the handedness of the transform ('L' or 'R') -
+determined by the position of the complex exponential relative to <code>X</code>.
+(<code>'L'</code> gives a transform with the exponential on the left of
+the signal.)
+</para>
+<para>
+The transform axis, <code>A</code> must be a pure quaternion (real or
+complex) but it need not have unit modulus (although the transform itself
+is computed using a unit-modulus axis, so that the axis is a root of -1).
+</para>
+<para>
+This function is computed by a rather slow direct evaluation of the IQDFT.
+The related function <code>iqfft2</code> computes the same result much faster.
+</para>
+</long>
+<seealso>
+<qtfmfun name = "iqfft2"/>
+<qtfmfun name = "qdft"/>
+<qtfmfun name = "qdft2"/>
+</seealso>
+<references>
+<reference>Ell, T. A. and Sangwine, S. J.,
+'Hypercomplex Fourier Transforms of Color Images',
+<italic>IEEE Transactions on Image Processing</italic>, <bold>16</bold>,
+(1), January 2007, 22-35. <doi>10.1109/TIP.2006.884955</doi>.
+</reference>
+<reference>Salem Said, Nicolas Le Bihan, and Stephen J. Sangwine,
+'Fast complexified quaternion Fourier transform',
+<italic>IEEE Transactions on Signal Processing</italic>, <bold>56</bold>,
+(4), April 2008, 1522-1531.
+<doi>10.1109/TSP.2007.910477</doi>.
+</reference>
+</references>
+</function>
+
+<!--$Id: iqdft2.xml 1004 2017-11-15 17:14:09Z sangwine $-->

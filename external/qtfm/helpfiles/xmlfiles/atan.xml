@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "atan" overload = "true">
+<short>Inverse tangent.</short>
+<syntax>Y = atan(X)</syntax>
+<long>
+<para>
+<code>atan(X)</code> computes the inverse tangent of its argument, which
+must be a real quaternion (<code>atan</code> is not yet implemented for
+complexified quaternions).
+</para>
+<para>
+This function is computed using the Matlab® function of the same name by
+first computing an isomorphic complex number. The result is then assigned
+the same quaternion axis as the original argument.
+</para>
+</long>
+<examples>
+<precode>
+>> atan(qi + qj + qk)
+
+ans = 1.571 + 0.3802 * I + 0.3802 * J + 0.3802 * K 
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "atan"/>
+<qtfmfun name = "tan"/>
+</seealso>
+</function>
+<!--$Id: atan.xml 1004 2017-11-15 17:14:09Z sangwine $-->

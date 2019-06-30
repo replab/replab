@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "ishermitian" overload = "false">
+<short>Test for Hermitian matrix</short>
+<syntax>TF = ishermitian(X, tol)</syntax>
+<long>
+<para>
+<code>ishermitian(X, tol)</code> returns logical 1 (<code>true</code>) if the
+<italic>square matrix</italic> <code>X</code> is Hermitian (equal to its quaternion/octonion transpose
+conjugate) to within the tolerance given by the second parameter, if present.
+If no second parameter is specified, the tolerance defaults to <code>eps</code>.
+</para>
+</long>
+<seealso>
+<matlabfun name = "eps"/>
+</seealso>
+</function>
+
+<!--$Id: ishermitian.xml 1027 2019-04-19 11:04:21Z sangwine $-->

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "complex" overload = "both">
+<short>Construct a complex quaternion/octonion from real quaternions/octonions.</short>
+<syntax>q = complex(a,b)</syntax>
+<long>
+<para>
+<code>complex</code> takes two quaternion arguments and constructs a
+complexified quaternion with the first quaternion as real part, and the
+second as the imaginary part. The result is equivalent to
+<code>a + i * b</code> (where <code>i</code> is the standard &matlab;
+complex operator). (Similarly for octonions.)
+</para>
+<para>
+Once constructed, a complexified quaternion can be separated into four
+complex components, or two quaternions (real and imaginary). It is of
+course also possible to construct complexified quaternions by other
+means, from four complex components.
+</para>
+<para>
+The two arguments must be of the same size, unless one is scalar. If this
+is the case the scalar argument is promoted in size to match the non-scalar
+argument. (This behaviour matches the way the corresponding &matlab;
+function operates.)
+</para>
+</long>
+<examples>
+<precode>
+>> q = complex(quaternion(1,2,3,4), quaternion(5,6,7,8))
+ 
+q = (1+5i) + (2+6i) * I + (3+7i) * J + (4+8i) * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "complex"/>
+<qtfmfun name = "real"/>
+<qtfmfun name = "imag"/>
+</seealso>
+<references>
+<reference>Ward, J. P., "Quaternions and Cayley numbers", Kluwer, 1997.</reference>
+</references>
+</function>
+
+<!--$Id: complex.xml 1004 2017-11-15 17:14:09Z sangwine $-->

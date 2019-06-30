@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "q1/qi/qj/qk" overload = "false">
+<short>Quaternion unity, and operators i, j and k</short>
+<syntax>q1/qi/qj/qk</syntax>
+<long>
+<para>
+These four functions return constant quaternions with values corresponding
+to unity and the three quaternion operators <bold>i</bold>, <bold>j</bold> and
+<bold>k</bold>.
+</para>
+<para>
+    In versions of the toolbox prior to 2.5, the <code>q1</code> function
+    returned the same value
+    as the current function <code>qi</code>.
+</para>
+<para>
+The symbol <code>i</code> is a builtin &matlab; operator for the
+complex root of -1, and therefore it cannot be used for the quaternion
+<bold>i</bold>. This is why the notation <code>qi</code> is used.
+</para>
+</long>
+<examples>
+<precode>
+>> q1 + qi + qj + qk
+ 
+ans = 1 + 1 * I + 1 * J + 1 * K
+</precode>
+</examples>
+</function>
+
+<!--$Id: q1.xml 1004 2017-11-15 17:14:09Z sangwine $-->

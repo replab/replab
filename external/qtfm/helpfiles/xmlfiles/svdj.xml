@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "svdj" overload = "false">
+<short>Singular value decomposition using Jacobi algorithm</short>
+<syntax>[U,S,V] = svdj(A, tol)</syntax>
+<long>
+<para>
+<code>[U,S,V] = svdj(A, tol)</code> computes the quaternion singular value
+decomposition of <code>A</code> using a Jacobi algorithm, with <code>tol</code>
+as a tolerance to control the stopping point of the algorithm, which is
+iterative.
+</para>
+<para>
+This function is primarily provided for test and verification purposes,
+since Jacobi algorithms are known to be accurate, although slow. For a
+faster computation use the <code>svd</code> function.
+</para>
+<para>
+This function will work for real and complex matrices, as well as quaternion
+matrices. This makes possible verification of results using the <code>adjoint</code>
+function, since by this means a complex matrix may be constructed from a
+quaternion matrix and the singular values determined accurately. The code
+also exhibits specialised techniques that allow the same code to work on
+real, complex and quaternion data, which can be useful when developing
+experimental algorithms.
+</para>
+</long>
+<examples>The singular values of the complex adjoint are the same as those
+of the quaternion matrix, but they occur in pairs because of the duplication
+of information in the adjoint.
+<precode>
+>> q = randq(4)
+ 
+q = 4x4 quaternion array
+ 
+>> svdj(q)
+
+ans =
+
+    2.9641
+    2.3497
+    1.2075
+    0.4849
+
+>> svdj(adjoint(q))
+
+ans =
+
+    2.9641
+    2.9641
+    2.3497
+    2.3497
+    1.2075
+    1.2075
+    0.4849
+    0.4849
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "svd"/>
+<qtfmfun name = "adjoint"/>
+</seealso>
+<references>
+<reference>N. Le Bihan and S. J. Sangwine,
+'Jacobi Method for Quaternion Matrix Singular Value Decomposition',
+<italic>Applied Mathematics and Computation</italic>,
+<bold>187</bold> (2), 15 April 2007, 1265-1271.
+<doi>10.1016/j.amc.2006.09.055</doi>.
+</reference>
+<reference>S. J. Sangwine and N. Le Bihan,
+'Computing the SVD of a quaternion matrix', 
+<italic>in</italic>
+Seventh International Conference on Mathematics in Signal Processing,
+17-20 December 2006, The Royal Agricultural College, Cirencester, UK,
+pp5-8. Institute of Mathematics and its Applications, 2006.
+</reference>
+</references>
+</function>
+
+
+
+<!--$Id: svdj.xml 1004 2017-11-15 17:14:09Z sangwine $-->

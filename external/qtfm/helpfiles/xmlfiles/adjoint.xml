@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "adjoint" overload = "false">
+<short>Adjoint of a quaternion matrix</short>
+<syntax>C = adjoint(A, F, B)</syntax>
+<long>
+<para>
+<code>adjoint(A)</code> or
+<code>adjoint(A, 'complex')</code> returns a complex adjoint matrix.
+<code>adjoint(A, 'real')</code>    returns a real    adjoint matrix.
+<code>adjoint(A, 'quaternion')</code> returns a quaternion adjoint matrix
+(only valid for the case where <code>A</code> is a complex quaternion
+or biquaternion matrix).
+The default is a complex adjoint.
+</para>
+<para>
+    The third parameter (which may appear in the second position if the
+    second is omitted), controls the layout of the adjoint, specifically
+    whether the adjoint is organised in blocks by components (scalar, x, y, z)
+    or with each quaternion represented as an adjoint block.
+</para>
+<para>
+    <code>adjoint(A, 'block')</code> returns a complex matrix with each quaternion
+    represented by a 2-by-2 block.
+    <code>adjoint(A, 'real', 'block')</code> returns a real adjoint matrix in
+    which each quaternion is represented by a real adjoint block, and similarly
+    for other cases.
+</para>
+<para>There is no opposite for 'block'. 'block' is not supported with the
+option 'quaternion'.
+</para>
+<para>
+The adjoint of a quaternion matrix is a matrix which is in some
+senses equivalent to the original quaternion or biquaternion matrix.
+For example, it shares the same singular values
+(although they may occur in duplicated pairs). This
+means that the adjoint can be used to verify the results of quaternion
+matrix algorithms. The adjoint representation is redundant - it utilises
+twice the storage of the quaternion matrix, and after processing, it may
+deviate from an accurate adjoint representation (for example the pairs of
+singular values may no longer be closely matched). By extension, the
+function can also compute a real adjoint matrix which is also an alternative
+representation of the quaternion matrix, but with real elements rather than
+complex.
+The third possibility (a quaternion adjoint) applies only in the case of
+complex quaternion (biquaternion) matrices. It yields a quaternion matrix
+which has equivalent properties (such as singular values or eigenvalues).
+</para>
+<para>
+The definition of the adjoint matrix is not unique (several permutations
+of the layout are possible).
+</para>
+<para>
+<bold>N.B.</bold> The layout of the matrix returned
+<bold>in the real case</bold> was
+changed after the release of QTFM Version 1.6. See the code for details.
+</para>
+</long>
+<examples>
+<precode>
+>> q = [quaternion(1,2,3,4), quaternion(5,6,7,8);...
+        quaternion(9,10,11,12), quaternion(13,14,15,16)];
+>> show(q)
+ 
+q.S =
+ 
+     1     5
+     9    13
+
+q.X =
+ 
+     2     6
+    10    14
+
+q.Y =
+ 
+     3     7
+    11    15
+
+q.Z =
+ 
+     4     8
+    12    16
+
+>> adjoint(q)
+
+ans =
+
+   1.0000 + 2.0000i   5.0000 + 6.0000i   3.0000 + 4.0000i   7.0000 + 8.0000i
+   9.0000 +10.0000i  13.0000 +14.0000i  11.0000 +12.0000i  15.0000 +16.0000i
+  -3.0000 + 4.0000i  -7.0000 + 8.0000i   1.0000 - 2.0000i   5.0000 - 6.0000i
+ -11.0000 +12.0000i -15.0000 +16.0000i   9.0000 -10.0000i  13.0000 -14.0000i
+
+>> adjoint(q, 'block')
+
+ans =
+
+   1.0000 + 2.0000i   3.0000 + 4.0000i   5.0000 + 6.0000i   7.0000 + 8.0000i
+  -3.0000 + 4.0000i   1.0000 - 2.0000i  -7.0000 + 8.0000i   5.0000 - 6.0000i
+   9.0000 +10.0000i  11.0000 +12.0000i  13.0000 +14.0000i  15.0000 +16.0000i
+ -11.0000 +12.0000i   9.0000 -10.0000i -15.0000 +16.0000i  13.0000 -14.0000i
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "unadjoint"/>
+</seealso>
+<references>
+<reference>F. Z. Zhang, Quaternions and Matrices of Quaternions,
+<italic>Linear Algebra and its Applications</italic>, <bold>251</bold>,
+January 1997, 21-57.
+<!-- The DOI here contains a pair of ( ) characters. These have been
+     encoded as %28 and %29 because if passed to Matlab as ( ) they
+     cause an error (possible bug in Matlab). The workaround here is
+     good enough, since it will work if clicked or copied and pasted. -->
+<doi>10.1016/0024-3795%2895%2900543-9</doi></reference>
+<reference>B. P. Ickes, A New Method for Performing Digital Control System
+Attitude Computations using Quaternions, <italic>AIAA Journal</italic>,
+<bold>8</bold>(1), January 1970, pp13-17, American Institute of Aeronautics
+and Astronautics.</reference>
+<reference>Ward, J. P., Quaternions and Cayley numbers, Kluwer, 1997.</reference>
+<reference>Todd A. Ell, On Systems of Linear Quaternion Functions, February
+2007, arXiv:math/0702084v1, <www>http://www.arxiv.org/abs/math/0702084</www>.
+</reference>
+<reference>Nicolas Le Bihan, Sebastian Miron and Jerome Mars,
+MUSIC Algorithm for Vector-Sensors Array using Biquaternions,
+<italic>IEEE Transactions on Signal Processing</italic>,
+<bold>55</bold>(9), September 2007, 4523-4533.
+<doi>10.1109/TSP.2007.896067</doi>.</reference>
+</references>
+</function>
+
+<!--$Id: adjoint.xml 1004 2017-11-15 17:14:09Z sangwine $-->

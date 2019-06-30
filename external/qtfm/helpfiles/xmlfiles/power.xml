@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "power" overload = "true">
+<short>.^ Array power</short>
+<syntax>Y = X .^ Y</syntax>
+<long>
+<para>
+<code>X .^ Y</code> raises the quaternion <code>X</code> to the
+quaternion power <code>Y</code>, elementwise. It can also handle
+cases where one or both parameters is a scalar (a single quaternion).
+</para>
+<para>
+The general case is handled using logarithms, but certain special
+cases of the right parameter are computed using more direct formulae
+for greater speed and accuracy.
+</para>
+</long>
+<examples>
+The square of a unit pure quaternion is -1, as can easily be verified:
+<precode>
+>> randv .^ 2
+ 
+ans = -1 + 0 * I + 0 * J + 0 * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "power"/>
+<qtfmfun name = "mpower"/>
+</seealso>
+</function>
+
+<!--$Id: power.xml 1004 2017-11-15 17:14:09Z sangwine $-->

@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "inv" overload = "both">
+<short>Inverse of quaternion matrix</short>
+<syntax>Y = inv(X)</syntax>
+<long>
+<para>
+Given a single quaternion, <code>inv(X)</code> computes the inverse, that
+is the conjugate divided by the modulus. The inverse exists for all real
+quaternions, but not for all complexified quaternions. An error will result
+in cases where a complexified quaternion has no inverse.
+</para>
+<para>
+Given a <italic>square</italic> quaternion matrix, <code>inv(X)</code>
+computes a matrix inverse using an analytical formula based on partitioning
+the matrix into sub-matrices. This formula is inevitably inaccurate for
+larger matrices and a better method may be substituted in the future.
+</para>
+<para>
+No warning is given if the matrix is singular - the result will be NaNs.
+</para>
+<para>
+For octonion arrays this function works only for scalars,
+returning the conjugate divided by the norm,
+since octonion matrices have left and right inverses,
+computed by the functions <code>linv</code> and <code>rinv</code>.
+This may be changed in a later release to add additional functionality to
+<code>inv</code>.
+</para>
+</long>
+<examples>
+<precode>
+>> inv(qi + qj + qk)
+ 
+ans = -0.3333 * I - 0.3333 * J - 0.3333 * K
+ 
+>> ans * (qi + qj + qk)
+ 
+ans = 1 + 0 * I + 0 * J + 0 * K
+ 
+>> q = randq(3)
+ 
+q = 3x3 quaternion array
+ 
+>> show(q * inv(q))
+ 
+S =
+ 
+    1.0000    0.0000         0
+    0.0000    1.0000   -0.0000
+    0.0000   -0.0000    1.0000
+
+X =
+ 
+   1.0e-15 *
+
+         0   -0.0139    0.0278
+         0   -0.0833   -0.1665
+   -0.0555    0.1249    0.1665
+
+Y =
+ 
+   1.0e-15 *
+
+   -0.0278   -0.0555    0.0555
+   -0.1665    0.0555    0.2220
+    0.1110   -0.0555   -0.1110
+
+Z =
+ 
+   1.0e-15 *
+
+         0   -0.0278    0.0035
+    0.1110    0.0139    0.0555
+    0.0555    0.0416         0
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "inv"/>
+<qtfmfun name = "linv"/>
+<qtfmfun name = "rinv"/>
+</seealso>
+<references>
+<reference>R. A. Horn and C. R. Johnson, <italic>Matrix Analysis</italic>,
+Cambridge University Press, 1985, §0.7.3, page 18.
+</reference>
+</references>
+</function>
+
+<!--$Id: inv.xml 1004 2017-11-15 17:14:09Z sangwine $-->

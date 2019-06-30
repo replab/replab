@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "fftflip2" overload = "false">
+<short>Reverse signal or spectrum in two dimensions.</short>
+<syntax>Y = fftflip2(X)</syntax>
+<long>
+    <para> 
+        <code>fftflip2</code> carries out the two-dimensional equivalent of
+        the operation implemented by <code>fftflip</code>, reversing rows
+        and columns. Like the one-dimensional function, it will work on any
+        type of array, including double, so it may be used on complex arrays.
+    </para>
+</long>
+<seealso>
+<qtfmfun name = "fftflip"/>
+</seealso>
+    <references>
+        <reference>
+        Ell, T. A., Le Bihan, N. and Sangwine, S. J.,
+        <italic>Quaternion Fourier Transforms for Signal and Image Processing</italic>,
+        Wiley-ISTE 2014, ISBN 978-1-84821-478-1, 140pp. See Chapter 3.
+        </reference>
+    </references>
+</function>
+
+<!--$Id: fftflip2.xml 1004 2017-11-15 17:14:09Z sangwine $-->

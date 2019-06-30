@@ -1,0 +1,39 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>mustard :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>mustard</h2>
+<p>Mustard convolution</p>
+<h2>Syntax</h2><p><tt>R = mustard(f, g, mu, H)</tt></p>
+<h2>Description</h2>
+    <p>
+        <tt>R = mustard(f, g, mu, H)</tt> returns the so-called 'Mustard' convolution
+        of <tt>f</tt> and <tt>g</tt>. This is the convolution equivalent to pointwise
+        multiplication of the Fourier transforms of <tt>f</tt> and <tt>g</tt>.
+        It is dependent on the definition of the Fourier transform.
+        This function assumes a one-sided QFT as computed by <tt>qfft</tt> and <tt>qfft2</tt>
+        using a transform 'axis' <tt>mu</tt> and a handedness <tt>H</tt> as defined in the
+        parameter profiles of the transforms.
+        The computation performed by the <tt>mustard</tt> function does not use Fourier transforms:
+        it is computed using convolutions, but these convolutions differ according to the equivalent
+        transform axis and handedness.
+    </p>
+    <p>
+This code handles one dimensional or two dimensional arrays <tt>f</tt> and <tt>g</tt>
+according to the parameters supplied. If they are vectors, they must be
+both row or both column vectors.
+</p>
+
+<h2>References</h2><ol><li>David Mustard, 'Fractional convolution',
+        <i>The Journal of the Australian Mathematical Society</i>,
+        Series B, Applied Mathematics, Vol <b>40</b>, 257&shy;265, 1998.
+        
+DOI: <a href="http://dx.doi.org/10.1017/S0334270000012509">10.1017/S0334270000012509</a>.
+    </li><li>De Bie, H.; De Schepper, N.; Ell, T. A.; Rubrecht, K. and Sangwine, S. J.,
+        'Connecting spatial and frequency domains for the quaternion Fourier transform',
+        <i>Applied Mathematics and Computation</i>, <b>271</b>,
+        581-593, 15 November 2015, 
+DOI: <a href="http://dx.doi.org/10.1016/j.amc.2015.09.045">10.1016/j.amc.2015.09.045</a>.
+    </li></ol>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

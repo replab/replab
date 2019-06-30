@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "vector_product" overload = "false">
+<short>Vector or cross product of two quaternions, or two or three octonions</short>
+<syntax>Y = vector_product(A, B)</syntax>
+<long>
+    <para>
+        <code>vector_product(A, B)</code> returns the vector (or cross) product of the two
+        arguments, elementwise on the two arrays, which must be pure.
+    </para>
+<para>
+The octonion version of the function accepts two or three parameters.
+The three-fold vector product is defined for full octonions.
+Its result is invariant to cyclic permutation of the parameters, but changes
+sign if two are interchanged.
+</para>
+</long>
+<examples>
+The vector product of <code>qi</code> with <code>qj</code> gives <code>qk</code>:
+<precode>
+>> vector_product(qi, qj) == qk
+
+ans = 1
+</precode>
+</examples>
+<references>
+    <reference>
+        Peter Zvengrowski, 'A 3-fold vector product in R8',
+        <italic>Commentarii Mathematici Helvetici</italic>, <bold>40</bold>, 149-152,
+        1965-1966.
+        <doi>10.5169/seals-30632</doi>
+    </reference>
+</references>
+<seealso>
+<matlabfun name = "cross"/>
+<qtfmfun name = "cross"/>
+</seealso>
+</function>
+
+<!--$Id: vector_product.xml 1004 2017-11-15 17:14:09Z sangwine $-->

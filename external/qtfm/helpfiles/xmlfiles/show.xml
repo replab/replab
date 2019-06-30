@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "show" overload = "false">
+<short>Display elements of array</short>
+<syntax>show(X)</syntax>
+<long>
+<para>
+<code>show(X)</code> displays the value of the elements of quaternion
+or octonion arry <code>X</code> preceded by its name.
+<code>displayall</code> is a synonym for <code>show</code>.
+</para>
+</long>
+<examples>
+<precode>
+>> show(eyeq(2))
+ 
+S =
+ 
+     1     0
+     0     1
+
+X =
+ 
+     0     0
+     0     0
+
+Y =
+ 
+     0     0
+     0     0
+
+Z =
+ 
+     0     0
+     0     0
+
+>> show(rando(2))
+ 
+S =
+ 
+    0.0819    0.7332
+    0.9127   -0.3304
+
+X =
+ 
+    0.7252   -0.0167
+    0.1850    0.1749
+
+Y =
+ 
+   -0.0490    0.3944
+   -0.0317    0.3448
+
+Z =
+ 
+    0.3386   -0.3197
+    0.1713    0.1755
+
+A =
+ 
+    0.3896    0.2739
+    0.1247    0.1779
+
+B =
+ 
+   -0.0725   -0.2084
+    0.0750    0.2174
+
+C =
+ 
+   -0.2741   -0.2143
+   -0.2726   -0.7205
+
+D =
+ 
+    0.3437   -0.1999
+    0.0829    0.3353
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "disp"/>
+<qtfmfun name = "displayall"/>
+</seealso>
+</function>
+
+<!--$Id: show.xml 1004 2017-11-15 17:14:09Z sangwine $-->

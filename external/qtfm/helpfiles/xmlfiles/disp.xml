@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "disp" overload = "both">
+<short>Display array</short>
+<syntax>disp(X)</syntax>
+<long>
+<para>
+<code>disp(X)</code> displays the value of the quaternion <code>X</code>.
+For a scalar argument, <code>disp</code> displays the value of the
+quaternion using <code>char</code>. Otherwise it outputs a concise
+summary of the quaternion, indicating the dimensions, whether the
+value is pure, and whether it has complex components. If the components
+are not of class double (including complex double) <code>disp</code>
+also outputs information about the class of the components.
+</para>
+<para>
+<code>disp</code> is called implicitly by &matlab; after operations that
+yield a quaternion result and where display of the result has not been
+suppressed by the use of a semi-colon.
+</para>
+<para>
+As with the corresponding &matlab; function, <code>disp</code> does not
+output the name of the array being displayed.
+</para>
+<para>
+To display the numeric values in a non-scalar quaternion array,
+use <code>displayall</code> or <code>show</code>.
+</para>
+</long>
+<examples>
+<precode>
+>> disp(qi)
+     1 * I + 0 * J + 0 * K
+>> disp(randq(3,5))
+     3x5 quaternion array
+>> disp(v(randq(2)))
+     2x2 pure quaternion array
+>> disp(randq(3,2) + randq(3,2) .* i)
+     3x2 complex quaternion array
+</precode>
+The following example shows how the class of the components is displayed
+when they differ from the default (double).
+<precode>
+>> cast(randv(2), 'int8')
+ 
+ans = 2x2 pure quaternion array with int8 components
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "disp"/>
+<matlabfun name = "display"/>
+<qtfmfun name = "display"/>
+<qtfmfun name = "displayall"/>
+<qtfmfun name = "show"/>
+</seealso>
+</function>
+
+<!--$Id: disp.xml 1004 2017-11-15 17:14:09Z sangwine $-->

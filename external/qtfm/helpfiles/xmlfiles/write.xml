@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "write" overload = "false">
+<short>Output a quaternion array to a text file.</short>
+<syntax>write(filename, format, a)</syntax>
+<long>
+<para>
+This function writes a text file which is designed to be easily
+read into other software.  The
+first line of the file contains two integer values giving the
+number of rows and columns in the file.  The quaternion values
+then follow in raster order, that is with the column index varying
+most rapidly. Each quaternion value occupies one line in the file,
+and consists of four floating-point values, separated by spaces.
+</para>
+<para>
+The format parameter may be omitted, in which case a default is
+assumed which outputs sufficient digits to represent double values
+with no loss of accuracy. Otherwise the format is a string (see the
+standard &matlab; function <code>fprintf</code> for details).
+</para>
+<para>
+If the parameter <code>a</code> is a pure quaternion, only three components
+are written per quaternion.
+</para>
+<para>
+The text file written by this function may be read by the matching function
+<code>read</code>.
+</para>
+</long>
+<examples>
+<precode>
+>> q = randq(2)
+ 
+q = 2x2 quaternion array
+ 
+>> show(q)
+ 
+q.S =
+ 
+    0.4196    0.2015
+    0.2664   -0.5665
+
+q.X =
+ 
+    0.3533   -0.0095
+    0.1953    0.3631
+
+q.Y =
+ 
+    0.8358    0.9786
+   -0.8679   -0.3181
+
+q.Z =
+ 
+   -0.0225    0.0398
+    0.3710    0.6679
+
+>> write('data.txt', q)
+</precode>
+The resulting text file is as follows:
+<precode>
+       2        2
+ +4.1963850834385363e-01  +3.5330836341397237e-01  +8.3580546214538765e-01  -2.2493379128557589e-02
+ +2.0153918465836959e-01  -9.5148222156437885e-03  +9.7862378239152092e-01  +3.9836136147441963e-02
+ +2.6635283946883026e-01  +1.9532770507814057e-01  -8.6792292331469123e-01  +3.7096233194312195e-01
+ -5.6651136993926687e-01  +3.6311064121797937e-01  -3.1805954904022421e-01  +6.6787248276009414e-01
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "fprintf"/>
+<qtfmfun name = "read"/>
+</seealso>
+</function>
+
+<!--$Id: write.xml 1004 2017-11-15 17:14:09Z sangwine $-->

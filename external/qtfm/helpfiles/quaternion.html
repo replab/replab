@@ -1,0 +1,69 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>quaternion :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>quaternion</h2>
+<p>Quaternion constructor</p>
+<h2>Syntax</h2><p><tt>q = quaternion(w, x, y, z)</tt></p>
+<h2>Description</h2>
+<p>
+This function constructs quaternion (arrays) from components. It accepts
+from zero to four arguments. The permissible cases are set out in the following
+paragraphs.
+</p>
+<p>
+Given no arguments, this function constructs an empty quaternion.
+</p>
+<p>
+Given one argument which is already a quaternion, the function returns the
+argument unchanged. If the argument is not a quaternion, the function
+constructs a quaternion with the argument in the scalar part and supplies a
+zero vector part of the same type as the argument. Thus if the argument is
+a double, the resulting quaternion will have a vector part with double
+zeros as components.
+</p>
+<p>
+If two arguments are supplied, the first must be numeric, and the second
+must be a pure quaternion of the same size. The result will be a full
+quaternion. The first argument must have the same class as the components
+of the second. This is to prevent the creation of quaternion arrays of mixed
+class.
+</p>
+<p>
+If three arguments are supplied, they must be numeric and of the same size
+and class. The result is a pure quaternion.
+</p>
+<p>
+If four arguments are supplied, they must be numeric and of the same size
+and class. The result is a full quaternion.
+</p>
+
+<h2>Examples</h2>
+<pre>
+&gt;&gt; quaternion()
+ 
+ans = [] quaternion
+
+&gt;&gt; quaternion(randn('single'), randv('single'))
+ 
+ans = 0.7677 + 0.06019 * I + 0.8961 * J - 0.4397 * K
+ 
+&gt;&gt; class(x(ans))
+
+ans = single
+ 
+&gt;&gt; quaternion(1, 2, 3)
+ 
+ans = 1 * I + 2 * J + 3 * K
+ 
+&gt;&gt; quaternion(1, 2, 3, 4)
+ 
+ans = 1 + 2 * I + 3 * J + 4 * K
+
+&gt;&gt; quaternion(randn(2))
+ 
+ans = 2x2 quaternion array
+</pre>
+
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

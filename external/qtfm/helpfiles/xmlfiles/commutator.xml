@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "commutator" overload = "false">
+<short>Commutator</short>
+<syntax>C = commutator(X, Y, option)</syntax>
+<long>
+    <para>
+        <code>C = commutator(X, Y)</code> returns <code>X .* Y - Y .* X</code> and
+        <code>C = commutator(X, Y, 'diff')</code> returns the same result.
+    </para>
+    <para>
+<code>C = commutator(X, Y, 'prod')</code> returns the quaternion
+<code>c</code> that multiplies the product <code>X .* Y</code> on the right
+to give the result of the product <code>Y .* X</code>.
+</para>
+</long>
+<examples>
+<precode>
+>> x = randq; y = randq;
+>> x .* y .* commutator(x, y, 'prod')
+
+ans =
+
+0.254 + 0.8994 * I + 0.313 * J + 0.169 * K
+
+>> y .* x
+
+ans =
+
+0.254 + 0.8994 * I + 0.313 * J + 0.169 * K
+</precode>
+<para>
+Reals commute so the commutator of any two reals will be zero: 
+</para>
+<precode>
+>> commutator(randn, randn)
+
+ans = 0
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "associator"/>
+</seealso>
+</function>
+
+<!--$Id: commutator.xml 1004 2017-11-15 17:14:09Z sangwine $-->

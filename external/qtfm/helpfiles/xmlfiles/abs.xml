@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "abs" overload = "both">
+<short>Absolute value, or modulus</short>
+<syntax>Y = abs(X)</syntax>
+<long>
+<para>
+<code>abs(X)</code> returns an array <code>Y</code> such that each element of
+<code>Y</code> is the absolute value, or modulus, of the corresponding element
+of <code>X</code>.
+</para>
+<para>
+If <code>X</code> is a complex quaternion, <code>abs(X)</code> returns
+the complex modulus, the square root of the complex semi-norm,
+computed in the same way (the square root of the sum of the squares of the
+components of the quaternion). The semi-norm of a complex quaternion
+can vanish (see references), and therefore so can the modulus.
+</para>
+</long>
+<examples>
+<precode>
+abs(quaternion(1,1,1,1))
+
+ans = 2
+</precode>
+<code>abs</code> is vectorized, and hence can operate on arrays:
+<precode>
+abs([qi, qj, qk, qi + qj])
+
+ans =
+
+    1.0000    1.0000    1.0000    1.4142
+</precode>
+It can also operate on complex quaternions, with complex modulus, in
+general:
+<precode>
+abs(1 + i + qi + qj + qk)
+
+ans = 1.8174 + 0.5503i
+</precode>
+The following shows that a complex quaternion can have a vanishing
+modulus (and semi-norm):
+<precode>
+abs(i + qi)
+
+ans = 0
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "abs"/>
+<qtfmfun name = "normq"/>
+<qtfmfun name = "normo"/>
+</seealso>
+<references>
+<reference>Sangwine, S. J. and Alfsmann, D.,
+'Determination of the biquaternion divisors of zero,
+including the idempotents and nilpotents',
+<italic>Advances in Applied Clifford Algebras</italic>, <bold>20</bold>, (2),
+May 2010, 401–410, <doi>10.1007/s00006-010-0202-3</doi>, also available as
+e-print arXiv:0812.1102, 8 December 2008, available at
+<www>http://arxiv.org/abs/arxiv:0812.1102</www>.
+</reference>
+<reference>W. R. Hamilton,
+Lectures on Quaternions, Lecture VII, §672, p669.
+Hodges and Smith, Dublin, 1853.
+Available online at: <www>http://historical.library.cornell.edu/math/</www>.
+</reference>
+</references>
+</function>
+
+<!--$Id: abs.xml 1004 2017-11-15 17:14:09Z sangwine $-->

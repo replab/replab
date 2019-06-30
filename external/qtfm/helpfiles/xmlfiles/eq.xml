@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "eq" overload = "both">
+<short>== Equal</short>
+<syntax>r = eq(a, b)</syntax>
+<long>
+<para>
+<code>eq</code> implements the &matlab; equality operator <code>==</code>
+for quaternion arrays.
+</para>
+</long>
+<seealso>
+<matlabfun name = "eq"/>
+<qtfmfun name = "neq"/>
+</seealso>
+</function>
+
+<!--$Id: eq.xml 1004 2017-11-15 17:14:09Z sangwine $-->

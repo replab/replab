@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "diag" overload = "both">
+<short>Diagonal matrices and diagonals of a matrix.</short>
+<syntax>Y = diag(X, K)</syntax>
+<long>
+<para>
+<code>diag(X)</code> returns the diagonal elements of the quaternion matrix
+<code>X</code>. If <code>X</code> is a vector, <code>diag(X)</code> constructs
+a quaternion diagonal matrix using the elements of the vector as the
+diagonal elements. The second parameter must be a scalar integer indicating
+the main diagonal (K = 0), super diagonals (K &gt; 1), or sub diagonals (K &lt; 1).
+</para>
+</long>
+<examples>
+<precode>
+>> diag([qi, qj, qk])
+ 
+ans = 3x3 pure quaternion array
+ 
+>> show(ans)
+ 
+ans.X =
+ 
+     1     0     0
+     0     0     0
+     0     0     0
+
+ans.Y =
+ 
+     0     0     0
+     0     1     0
+     0     0     0
+
+ans.Z =
+ 
+     0     0     0
+     0     0     0
+     0     0     1
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "diag"/>
+<qtfmfun name = "blkdiag"/>
+<qtfmfun name = "tril"/>
+<qtfmfun name = "triu"/>
+</seealso>
+</function>
+
+<!--$Id: diag.xml 1004 2017-11-15 17:14:09Z sangwine $-->

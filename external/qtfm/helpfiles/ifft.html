@@ -1,0 +1,40 @@
+<!-- Generated automatically from an XML file of the same name.
+     Copyright: Stephen J. Sangwine and Nicolas Le Bihan, 2008-2019.
+--><html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <title>ifft :: Functions (Quaternion Toolbox Function Reference)
+</title><link rel="stylesheet" href="qtfmstyle.css" type="text/css"></head><body><h1>Quaternion Function Reference</h1><h2>ifft</h2>
+<p>Inverse Fast Fourier transform<br>(Quaternion overloading of standard MATLAB&reg; function)
+</p>
+<h2>Syntax</h2><p><tt>Y = ifft(X)</tt></p>
+<h2>Description</h2>
+<p>
+<tt>ifft(X)</tt> computes the inverse Fast Fourier Transform of the quaternion
+vector <tt>X</tt> using a default axis and left-handed transform. See
+the related function <tt>iqfft</tt> which permits control over the axis
+and handedness.
+</p>
+<p>
+The axis chosen is a complex (biquaternion) axis if <tt>X</tt> is
+complex, otherwise the axis is a (real) quaternion.
+</p>
+<p>
+The <tt>N</tt> and <tt>dim</tt> parameters of the overloaded
+MATLAB&reg; function are not yet implemented, but may be implemented at a
+later date.
+</p>
+
+<h2>See Also</h2>MATLAB&reg; function: <a href="matlab:doc ifft">ifft</a><br>QTFM functions: <a href="ifft2.html">ifft2</a>, <a href="fft.html">fft</a>, <a href="iqfft.html">iqfft</a><br>
+<h2>References</h2><ol><li>Ell, T. A. and Sangwine, S. J.,
+'Hypercomplex Fourier Transforms of Color Images',
+<i>IEEE Transactions on Image Processing</i>, <b>16</b>,
+(1), January 2007, 22-35. 
+DOI: <a href="http://dx.doi.org/10.1109/TIP.2006.884955">10.1109/TIP.2006.884955</a>.
+</li><li>Salem Said, Nicolas Le Bihan, and Stephen J. Sangwine,
+'Fast complexified quaternion Fourier transform',
+<i>IEEE Transactions on Signal Processing</i>, <b>56</b>,
+(4), April 2008, 1522-1531.
+
+DOI: <a href="http://dx.doi.org/10.1109/TSP.2007.910477">10.1109/TSP.2007.910477</a>.
+</li></ol>
+<h4>(c) 2008-2019 Stephen J. Sangwine and Nicolas Le Bihan</h4><p><a href="license.html">License terms.</a></p></body></html>

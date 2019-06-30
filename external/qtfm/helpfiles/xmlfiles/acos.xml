@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "acos" overload = "true">
+<short>Inverse cosine.</short>
+<syntax>Y = acos(X)</syntax>
+<long>
+<para>
+<code>acos(X)</code> computes the inverse cosine of its argument, which
+must be a real quaternion (<code>acos</code> is not yet implemented for
+complexified quaternions).
+</para>
+<para>
+This function is computed using the Matlab® function of the same name by
+first computing an isomorphic complex number. The result is then assigned
+the same quaternion axis as the original argument.
+</para>
+</long>
+<examples>
+<precode>
+>> acos(qi + qj + qk)
+ 
+ans = 1.571 - 0.7603 * I - 0.7603 * J - 0.7603 * K
+</precode>
+</examples>
+<seealso>
+<matlabfun name = "acos"/>
+<qtfmfun name = "cos"/>
+</seealso>
+</function>
+<!--$Id: acos.xml 1004 2017-11-15 17:14:09Z sangwine $-->

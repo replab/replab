@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE function SYSTEM "qtfmfunction.dtd">
+<function name = "slerp" overload = "both">
+<short>Spherical linear interpolation</short>
+<syntax>y = slerp(q1, q2, t)</syntax>
+<long>
+<para>
+<code>slerp(q1, q2, t)</code> interpolates between two quaternions
+<code>q1</code> and <code>q2</code>,
+using parameter <code>t</code> to determine how far along the 'arc'
+between the two quaternions to position the result.
+The function works in the same way for octonions.
+</para>
+<para>
+<code>q1</code>, <code>q2</code>, and <code>t</code> must have the same size
+unless one or more is scalar.
+</para>
+<para>
+The third parameter, <code>t</code>, gives the 'distance' along the 'arc' between the
+quaternions, 0 representing <code>q1</code> and 1 representing <code>q2</code>.
+If <code>q1</code> and <code>q2</code> are
+unit pure quaternions, the interpolation is along a great circle of the
+sphere between the points represented by <code>q1</code> and <code>q2</code>.
+If <code>q1</code> and <code>q2</code> are unit
+full quaternions, the interpolation is along the 'arc' on the 4-sphere:
+this means the result is a quaternion which represents a rotation
+intermediate between the two rotations represented by <code>q1</code> and
+<code>q2</code>. If the
+first two parameters are not of unit modulus, then there is also
+interpolation in modulus.
+</para>
+<para>
+The third parameter may take values outside the range (0,1). Values within
+this range will return results on the arc between the first two parameters.
+Values outside the range will return results on the extension of the arc
+outside the first two parameters (negative values being on the extension
+beyond the first parameter, and values greater than 1 being on the extension
+beyond the second parameter). Clearly, large values do not make sense, but
+the code cannot check the validity of the values without computing the angle
+between the two parameters, which would be a comparatively expensive check.
+</para>
+<para>
+<code>q1</code> and <code>q2</code> are not restricted to be real.
+</para>
+<para>
+The slerp function can be simply understood in terms of the ratio of two
+vectors (pure quaternions). The ratio is the quaternion that rotates one
+vector into the other. Taking a fractional power of this rotation and
+then multiplying it by the first vector obviously gives a vector which is
+part way along the arc between the two quaternions. The ratio is computed
+using the multiplicative inverse. If the two quaternions are full, then
+their ratio again gives a quaternion which multiplies one to give the
+other, but this time in 4-space, including, if the moduli are not unity,
+the scale factor needed to scale one into the other.
+</para>
+</long>
+<examples>To interpolate between <code>qi</code> and <code>qj</code>,
+we can supply a vector for <code>t</code>. The result shows that
+when <code>t</code> is zero, the result is <code>qi</code>, and when
+<code>t</code> is 1, the result is <code>qj</code>. At the mid-point of
+the interpolation, we get <code>qi</code>/√2 + <code>qj</code>/√2, the
+mid-point of the arc in 3-space:
+<precode>
+>> arc = slerp(qi, qj, [0:0.2:1])
+ 
+arc = 1x6 quaternion array
+ 
+>> show(arc)
+ 
+arc.S = 0     0     0     0     0     0
+
+arc.X = 1.0000    0.9511    0.8090    0.5878    0.3090    0.0000
+
+arc.Y = 0    0.3090    0.5878    0.8090    0.9511    1.0000
+
+arc.Z = 0     0     0     0     0     0
+</precode>
+</examples>
+<seealso>
+<qtfmfun name = "spherical_mean"/>
+</seealso><references>
+<reference>Ken Shoemake,
+'Animating rotation with quaternion curves',
+<italic>SIGGRAPH Computer Graphics</italic>,
+<bold>19</bold> (3), July 1985, 245-254, ACM, New York, USA.
+<doi>10.1145/325165.325242</doi>.
+</reference>
+</references>
+</function>
+
+<!--$Id: slerp.xml 1004 2017-11-15 17:14:09Z sangwine $-->
