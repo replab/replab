@@ -18,6 +18,8 @@ classdef Commutant < replab.Domain
     methods
         
         function self = Commutant(rep)
+        % Constructor; please do not call this from user code, but
+        % rather use `rep.commutant`.
             self.rep = rep;
             self.n = rep.dimension;
             self.field = rep.field;
@@ -32,10 +34,6 @@ classdef Commutant < replab.Domain
               otherwise
                 error('Unknown field');
             end
-        end
-        
-        function C = quaternionification(self)
-            
         end
         
         function X = project(self, X)

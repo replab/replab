@@ -5,15 +5,15 @@ classdef OrthonormalMatrices < replab.Group
         n; % size
     end
 
-    properties (Access = Protected)
-        parent; % real matrices
+    properties (Access = protected)
+        parent_; % real matrices
     end
 
     methods
         
         function self = OrthonormalMatrices(n)
             self.n = n;
-            self.parent = replab.domain.ComplexMatrices(n, n);
+            self.parent_ = replab.domain.RealMatrices(n, n);
             self.identity = speye(n);
         end
         
@@ -26,12 +26,12 @@ classdef OrthonormalMatrices < replab.Group
         % Domain
         
         function b = eqv(self, X, Y)
-            b = self.parent.eqv(X, Y);
+            b = self.parent_.eqv(X, Y);
         end
         
         function X = sample(self)
         % see http://home.lu.lv/~sd20008/papers/essays/Random%20unitary%20[paper].pdf
-            X = self.parent.sample;
+            X = self.parent_.sample;
             [Q, R] = qr(X);
             R = diag(diag(R)./abs(diag(R)));
             X = Q*R;

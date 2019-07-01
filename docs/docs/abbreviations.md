@@ -1,9 +1,9 @@
 ---
 layout: docs
-title: Installation
+title: Abbreviations
 ---
 
-# Code organization in RepLAB
+# Abbreviations in RepLAB
 
 ## Directories
 
@@ -13,6 +13,13 @@ title: Installation
 - `+replab`: the main RepLAB package, containing the main classes/methods,
 - `+replab/+subpackages`: implementation files for different submodules,
 - `tests`: tests written using MOxUnit, augmented with our laws test framework.
+
+## No abstract methods in abstract base classes
+
+As Octave does not support the `methods (Abstract)` syntax, we provide generic implementations for abstract methods in abstract base classes by either:
+
+- trying to retrieve and calling a function handle property (the `DomainFun`, `SemigroupFun`, ... approach), or
+- throwing `error('Not implemented')`.
 
 ## The `Class`, `ClassFun` and `ClassLaws` triad
 
@@ -126,6 +133,4 @@ RepLAB has several classes to work with centralizer algebras.
 ## Methods
 
 - `isNonZeroMatrix`, tests whether a matrix is nonzero up to a given tolerance using the 2-norm (singular value), with accelerations provided by matrix norm inequalities and cheap norms,
-- `headerStr`: returns a short description of an object without digging into its contents, 
-- `shortStr`: returns a short description of an object, with a best effort to include its contents,
-- `longStr`: returns a long description of an object, including an enumeration of its properties.
+- `strOf`: prettyprints a generic object.

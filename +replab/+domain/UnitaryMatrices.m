@@ -31,7 +31,7 @@ classdef UnitaryMatrices < replab.Group
         
         function X = sample(self)
         % see http://home.lu.lv/~sd20008/papers/essays/Random%20unitary%20[paper].pdf
-            X = self.parent.sample;
+            X = self.parent_.sample;
             [Q, R] = qr(X);
             R = diag(diag(R)./abs(diag(R)));
             X = Q*R;

@@ -29,10 +29,11 @@ classdef QuaternionHermitianMatrices < replab.Domain
         end
         
         function X = sample(self)
-        % Generates a n x n Hermitian matrix with measure invariant
-        % under unitary transformations,
-        % sampled from the Gaussian Unitary Ensemble, see
-        % http://staff.math.su.se/shapiro/UIUC/random_matrices.pdf
+        % Generates a n x n quaternion Hermitian matrix
+        %
+        % We adapt the procedure used for complex Hermitian
+        % matrices but haven't proved that it is the correct
+        % approach (factors could be off)
             n = self.n;
             X = zerosq(n, n);
             for r = 1:n

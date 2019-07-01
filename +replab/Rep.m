@@ -12,7 +12,7 @@ classdef Rep < replab.Str
     end
     
     properties (Access = protected)
-        % commutant_ = [];
+        commutant_ = [];
         % irreducible_ = [];
     end
         
@@ -27,13 +27,18 @@ classdef Rep < replab.Str
     
     methods
         
-% $$$         function c = commutant(self)
-% $$$         % Returns the commutant of this representation
-% $$$         % This is the algebra of matrices that commute with
-% $$$         % this representation images, i.e. for any g in G, we have
-% $$$         % rho(g) * X = X * rho(g)
-% $$$             if isequal(self.commutant_, [])
-% $$$                 assert(isa(self.group, 'replab.FiniteGroup'));
+        function c = commutant(self)
+        % Returns the commutant of this representation
+        % This is the algebra of matrices that commute with
+        % this representation images, i.e. for any g in G, we have
+        % rho(g) * X = X * rho(g)
+            if isequal(self.commutant_, [])
+                self.commutant_ = replab.Commutant(self);
+            end
+            c = self.commutant_
+        end
+        
+        % $$$                assert(isa(self.group, 'replab.FiniteGroup'));
 % $$$                 isMonomial = true;
 % $$$                 isReal = true;
 % $$$                 for i = 1:self.group.nGenerators
@@ -120,10 +125,13 @@ classdef Rep < replab.Str
 % $$$ 
         function sub = subRep(self, U)
         % Returns a subrepresentation of this representation,
-        % given by the row basis vectors in U, such that
-        % sub.image(g) = U * self.image(g) * U'
+        % given by the column basis vectors in U, such that
+        % sub.image(g) = U' * self.image(g) * U
         %
-        % U has dimension dChild x self.dimension
+        % U has dimension self.dimension x dim(subRepresentation)
+        %
+        % Note that U needs to be orthogonal, but the basis vectors
+        % do not need to be normalized
             sub = replab.SubRep(self, U);
         end
         

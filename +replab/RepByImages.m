@@ -20,14 +20,14 @@ classdef RepByImages < replab.Rep
 
         function names = hiddenFields(self)
             names = hiddenFields@replab.Rep(self);
-            names{end+1} = 'images';
+            names{1, end+1} = 'images';
         end
         
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Rep(self);
             for i = 1:length(self.images)
-                names{end+1} = sprintf('images{%d}', i);
-                values{end+1} = self.images{i};
+                names{1, end+1} = sprintf('images{%d}', i);
+                values{1, end+1} = self.images{i};
             end
         end
 
