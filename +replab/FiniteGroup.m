@@ -5,8 +5,8 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.FinitelyGeneratedGroup(self);
             if self.knownOrder
-                names{end+1} = 'order';
-                values{end+1} = self.order;
+                names{1, end+1} = 'order';
+                values{1, end+1} = self.order;
             end
         end
         

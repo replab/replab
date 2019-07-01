@@ -37,9 +37,9 @@ classdef StrFun < replab.Str
         
         function names = hiddenFields(self)
             names = hiddenFields@replab.Str(self);
-            names{end+1} = 'headerStrFun';
-            names{end+1} = 'shortStrFun';
-            names{end+1} = 'longStrFun';
+            names{1, end+1} = 'headerStrFun';
+            names{1, end+1} = 'shortStrFun';
+            names{1, end+1} = 'longStrFun';
         end
             
     end

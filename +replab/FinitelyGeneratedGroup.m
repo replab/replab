@@ -24,8 +24,8 @@ classdef FinitelyGeneratedGroup < replab.Group
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Group(self);
             for i = 1:self.nGenerators
-                names{end+1} = sprintf('generator(%d)', i);
-                values{end+1} = self.generator(i);
+                names{1, end+1} = sprintf('generator(%d)', i);
+                values{1, end+1} = self.generator(i);
             end
         end
         

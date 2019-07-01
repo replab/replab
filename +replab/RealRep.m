@@ -55,15 +55,15 @@ classdef RealRep < replab.Str
         
         function names = hiddenFields(self)
             names = hiddenFields@replab.Str(self);
-            names{end+1} = 'images';
-            names{end+1} = 'imagesInv';
+            names{1, end+1} = 'images';
+            names{1, end+1} = 'imagesInv';
         end
         
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Str(self);
             for i = 1:self.group.nGenerators
-                names{end+1} = sprintf('images{%d}', i);
-                values{end+1} = self.images{i};
+                names{1, end+1} = sprintf('images{%d}', i);
+                values{1, end+1} = self.images{i};
             end
         end
 

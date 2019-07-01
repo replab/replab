@@ -7,11 +7,11 @@ classdef MonoidFun < replab.SemigroupFun & replab.Monoid
             self.identity = identity;
         end
         function names = hiddenFields(self)
-            names1 = hiddenFields@replab.SemigroupFun(self);
-            names2 = hiddenFields@replab.Monoid(self);
-            names = vertcat(names1(:), names2(:));
-            names{end+1, 1} = 'inverseFun';
-            names = unique(names);
+            names = replab.str.uniqueNames( ...
+                hiddenFields@replab.SemigroupFun(self), ...
+                hiddenFields@replab.Monoid(self), ...
+                {'inverseFun'} ...
+                );
         end
     end
 end
