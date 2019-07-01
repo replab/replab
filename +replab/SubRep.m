@@ -22,7 +22,8 @@ classdef SubRep < replab.Rep
     methods
         
         function self = SubRep(parent, U0)
-        % U has dimension dParent x dThisChild
+        % Constructs a subrepresentation of the 'parent' representation
+        % given by the basis 'U0', which has dimension dParent x dThisChild
             dParent = size(U0, 1);
             d = size(U0, 2);
             assert(parent.dimension == dParent);
@@ -53,11 +54,19 @@ classdef SubRep < replab.Rep
         end
         
         function U = U(self)
+        % Returns the basis of this subrepresentation in its parent
             if self.hasCorrection
                 U = self.U0 * diag(self.D0);
             else
                 U = self.U0;
             end
+        end
+        
+        function P = projector(self)
+        % Returns the projector on this subrepresentation
+        %
+        % The projector is expressed in the parent representation
+            P = self.U*self.U';
         end
         
         % Str

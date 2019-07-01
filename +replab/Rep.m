@@ -35,32 +35,11 @@ classdef Rep < replab.Str
             if isequal(self.commutant_, [])
                 self.commutant_ = replab.Commutant(self);
             end
-            c = self.commutant_
+            c = self.commutant_;
         end
-        
-        % $$$                assert(isa(self.group, 'replab.FiniteGroup'));
-% $$$                 isMonomial = true;
-% $$$                 isReal = true;
-% $$$                 for i = 1:self.group.nGenerators
-% $$$                     img = self.image(self.group.generator(i));
-% $$$                     if ~replab.SignedPermutations.isSignedPermutationMatrix(img)
-% $$$                         isMonomial = false;
-% $$$                     end
-% $$$                     if ~isreal(img)
-% $$$                         isReal = false;
-% $$$                     end
-% $$$                 end
-% $$$                 if isMonomial && isReal % TODO: monomial complex representations
-% $$$                     self.commutant_ = replab.MonomialCommutant(self);
-% $$$                 else
-% $$$                     self.commutant_ = replab.FiniteGroupCommutant(self);
-% $$$                 end
-% $$$             end
-% $$$             c = self.commutant_;
-% $$$         end
-        
+
         % Str
-        
+
         function s = headerStr(self)
             f = replab.str.field(self.field, 'Orthogonal real', 'Unitary complex', 'Unitary quaternion');
             s = sprintf('%s representation of dimension %d', f, self.dimension);
@@ -104,25 +83,6 @@ classdef Rep < replab.Str
             quaternionRep = replab.RepFun(self.group, 'H', self.dimension, @(g) self.image(g));
         end
         
-% $$$         % CHANGE OF BASIS
-% $$$         
-% $$$         function P = projectorOn(self, subRep)
-% $$$         % Returns the projector on the given subrepresentation
-% $$$         %
-% $$$         % P has size self.dimension x self.dimension
-% $$$             V = self.basisOf(subRep);
-% $$$             P = V' * V;
-% $$$         end
-% $$$         
-% $$$         function V = basisOf(self, subRep)
-% $$$         % Returns the basis of a subrepresentation
-% $$$         %
-% $$$         % V is such that ConjugatedRep(V, self) == subRep
-% $$$         % thus V has dimension dim(subRep) x dim(self)
-% $$$             assert(self == subRep, 'Cannot find subrepresentation');
-% $$$             V = speye(self.dimension);
-% $$$         end
-% $$$ 
         function sub = subRep(self, U)
         % Returns a subrepresentation of this representation,
         % given by the column basis vectors in U, such that
