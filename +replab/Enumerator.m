@@ -51,7 +51,7 @@ classdef Enumerator < replab.Str
                 omit = self.size - start - finish;
                 omitting = 1;
             else
-                start = self.size;
+                start = double(self.size);
                 omit = [];
                 omitting = 0;
                 finish = 0;
