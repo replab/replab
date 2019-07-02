@@ -52,6 +52,14 @@ classdef PermutationGroup < replab.Group
             A = replab.perm.PermutationMatrixAction(self);
         end
         
+        function rho = indexPermutationRep(self, localDimension)
+        % Representation that permutes the indices of a tensor
+        %
+        % It acts on the tensor space R^ld x R^ld ... (domainSize times)
+        % by permuting the indices. The representation returned is real.
+            rho = replab.rep1.IndexPermutationRep(self, localDimension);
+        end
+        
         function rho = naturalRepresentation(self)
             rho = self.permutationRepresentation(self.domainSize, self.generators);
         end

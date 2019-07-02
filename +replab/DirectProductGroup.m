@@ -42,6 +42,32 @@ classdef DirectProductGroup < replab.FiniteGroup
             f = self.factors{i};
         end
         
+        function rep = sumRep(self, factorReps)
+        % Constructs a direct sum representation
+        %
+        % factorReps: a 1 x nFactors cell array of representations
+        %             s.t. factorReps{i} is a representation of factor(i)
+            rep = replab.rep1.DirectProductSumRep(self, factorReps);
+        end
+        
+        function rep = sumRepFun(self, fun)
+            reps = arrayfun(@(i) fun(self.factor(i), i), 1:self.nFactors, 'uniform', 0);
+            rep = self.sumRep(reps);
+        end
+        
+        function rep = tensorRep(self, factorReps)
+        % Constructs a tensor product representation
+        %
+        % factorReps: a 1 x nFactors cell array of representations
+        %             s.t. factorReps{i} is a representation of factor(i)
+            rep = replab.rep1.DirectProductTensorRep(self, factorReps);
+        end
+        
+        function rep = tensorRepFun(self, fun)
+            reps = arrayfun(@(i) fun(self.factor(i), i), 1:self.nFactors, 'uniform', 0);
+            rep = self.tensorRep(reps);
+        end
+        
         % Str
         
         function names = hiddenFields(self)
@@ -107,7 +133,7 @@ classdef DirectProductGroup < replab.FiniteGroup
             end
         end
         
-        % Finite group
+        % FiniteGroup
         
         function b = contains(self, g)
             assert(isa(g, 'cell'));

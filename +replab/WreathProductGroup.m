@@ -16,6 +16,14 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
             self.A = A;
         end
         
+        function rep = imprimitiveRep(self, Arep)
+            rep = replab.rep1.WreathProductImprimitiveRep(self, Arep);
+        end
+        
+        function rep = primitiveRep(self, Arep)
+            rep = replab.rep1.WreathProductPrimitiveRep(self, Arep);
+        end
+
     end
     
 end
