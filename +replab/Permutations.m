@@ -180,6 +180,17 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
             grp = self.subgroup(self.generators, self.order);
         end
         
+        function grp = dihedralGroup(self)
+            n = self.domainSize;
+            if n <= 2
+                grp = self.symmetricGroup;
+            else
+                g1 = [2:n 1];
+                g2 = fliplr(1:n);
+                grp = self.subgroup({g1 g2});
+            end
+        end
+        
     end
     
     methods (Static)
