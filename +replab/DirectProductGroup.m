@@ -1,5 +1,8 @@
 classdef DirectProductGroup < replab.FiniteGroup
 % Describes an external direct product of finite groups
+%
+% Elements of a direct product are 1xnFactors cell arrays, with
+% each cell element containing the element of one factor group.
     
     properties (SetAccess = protected)
         factors; % 1 x nFactors cell array of FiniteGroup instances
@@ -173,7 +176,7 @@ classdef DirectProductGroup < replab.FiniteGroup
         function gd = decomposition(self)
             T = {};
             for i = 1:self.nFactors
-                D = self.factor(i).decomposition;
+                D = self.factor(i).decomposition.transversals;
                 Ti = cell(1, length(D));
                 for j = 1:length(D)
                     Dj = D{j};
