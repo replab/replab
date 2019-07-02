@@ -18,7 +18,7 @@ classdef FinitelyGeneratedGroup < replab.Group
         
         function names = hiddenFields(self)
             names = hiddenFields@replab.Group(self);
-            names{end+1} = 'generators';
+            names{1, end+1} = 'generators';
         end
         
         function [names values] = additionalFields(self)
