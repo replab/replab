@@ -1,5 +1,6 @@
 function sub = decompose(rep)
 % Decomposes the given representation into irreducible subrepresentations
+    assert(isa(rep, 'replab.Rep'));
     sub1 = replab.rep1.orbitDecomposition(rep);
     trivial = cell(1, 0);
     nontrivial = cell(1, 0);

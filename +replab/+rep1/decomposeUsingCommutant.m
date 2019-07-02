@@ -2,6 +2,7 @@ function sub = decomposeUsingCommutant(rep)
 % Decomposes the given representation into irreducible representations
 %
 % Uses eigenvalue decomposition on a generic commutant sample
+    assert(isa(rep, 'replab.Rep'));
     tol = replab.Settings.doubleEigTol;
     % sample a Hermitian 
     C = rep.commutant.sampleSelfAdjoint;
