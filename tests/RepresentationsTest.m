@@ -13,6 +13,8 @@ function test_suite = RepresentationsTest()
     test_suite = replab.RealRepLaws(I).addTestCases(test_suite);
     test_suite = replab.RealRepLaws(I1).addTestCases(test_suite);
     test_suite = replab.RealRepLaws(I2).addTestCases(test_suite);
+    G = replab.Permutations(5);
+    test_suite = replab.RepLaws(G.standardRep).addTestCases(test_suite);
 end
 
 function test_symmetric_group_representations

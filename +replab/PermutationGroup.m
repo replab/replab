@@ -69,6 +69,15 @@ classdef PermutationGroup < replab.Group
             rho = self.permutationRep(self.domainSize, self.generators);
         end
         
+        function rho = standardRep(self)
+        % Returns the standard representation of this permutation group
+        %
+        % It corresponds to the representation orthogonal to the
+        % trivial representation with basis [1, 1, ..., 1]'/sqrt(d)
+            U = replab.rep1.standardBasis(self.domainSize);
+            rho = self.naturalRep.subRep(U(:, 2:end));
+        end
+        
         function o = orbits(self)
             if isempty(self.orbits_)
                 G = zeros(self.nGenerators, self.domainSize);
