@@ -69,6 +69,19 @@ classdef SubRep < replab.Rep
             P = self.U*self.U';
         end
         
+        function sub = in(self, newParent)
+        % Returns this subrepresentation as expressed in the given 'newParent'
+        %
+        % newParent must be equal to some self.parent. ... .parent
+            if isequal(self.parent, newParent)
+                sub = self;
+            else
+                newU0 = self.parent.U * self.U0;
+                newRep = self.parent.parent.subRep(newU0);
+                sub = newRep.in(newParent);
+            end
+        end
+        
         % Str
         
         function [names values] = additionalFields(self)

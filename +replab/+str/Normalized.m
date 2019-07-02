@@ -1,6 +1,6 @@
 classdef Normalized < replab.Str
 % Represents a vector vec*factor, where 'vec' is nice to print
-    properties
+    properties (SetAccess = protected)
         vec;
         factor;
     end

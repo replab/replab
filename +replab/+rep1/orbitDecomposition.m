@@ -1,18 +1,14 @@
-function [sub orbits] = orbitDecomposition(rep)
+function [sub O] = orbitDecomposition(rep)
 % Identifies subrepresentations from the sparsity pattern of a representation
 %
+% Those subrepresentations are not necessarily irreducible in general.
+%
 % Used as a first step in the decomposition into irreducibles
-    assert(isa(rep.group, 'replab.FinitelyGeneratedGroup'));
-    mask = false(rep.dimension, rep.dimension);
-    for i = 1:rep.group.nGenerators
-        rho = rep.image(rep.group.generator(i));
-        mask = mask | (abs(rho) > replab.Settings.doubleEigTol);
-    end
-    orbits = replab.Partition.connectedComponents(mask);
-    n = orbits.nBlocks;
+    O = replab.rep1.orbits(rep);
+    n = O.nBlocks;
     sub = cell(1, n);
     for b = 1:n
-        block = orbits.block(b);
+        block = O.block(b);
         d = length(block);
         basis = sparse(block, 1:d, ones(1, d), rep.dimension, d);
         sub{b} = rep.subRep(basis);

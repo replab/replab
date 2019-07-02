@@ -5,14 +5,14 @@ classdef Commutant < replab.Domain
 % of matrices X such that rep.image(g) * X = X * rep.image(g)
 
     properties (SetAccess = protected)
-        field; % vector space field, 'R' (real) or 'C' (complex)
+        field; % vector space field, 'R', 'C' or 'H'
         n;     % matrix size
         group; % group
         rep;   % representation
     end
     
     properties (Access = protected)
-        parent_; % parent domain: real or complex matrices
+        parent_; % parent domain: either real/complex/quaternion matrices
     end
     
     methods
@@ -96,7 +96,7 @@ classdef Commutant < replab.Domain
             X = self.project(self.parent_.sample);
         end
         
-        function X = sampleHermitian(self)
+        function X = sampleSelfAdjoint(self)
             X = self.parent_.sample;
             X = (X + X')/2;
             X = self.project(X);
