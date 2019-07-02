@@ -195,5 +195,15 @@ classdef DirectProductGroup < replab.FiniteGroup
         end
         
     end
+    
+    methods (Static)
+       
+        function self = power(A, n)
+        % Returns the direct product A x ...(n times)... x A
+            factors = arrayfun(@(x) A, 1:n, 'uniform', 0);
+            self = replab.DirectProductGroup(factors);
+        end
+        
+    end
 
 end
