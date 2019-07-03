@@ -27,6 +27,21 @@ classdef Rep < replab.Str
     
     methods
         
+        function b = overR(self)
+        % Returns true if this representation is defined over the real field
+            b = isequal(self.field, 'R');
+        end
+        
+        function b = overC(self)
+        % Returns true if this representation is defined over the complex field
+            b = isequal(self.field, 'C');
+        end
+        
+        function b = overH(self)
+        % Returns true if this representation is defined over the quaternions
+            b = isequal(self.field, 'H');
+        end
+        
         function c = commutant(self)
         % Returns the commutant of this representation
         % This is the algebra of matrices that commute with
