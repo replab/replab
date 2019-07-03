@@ -1,4 +1,4 @@
-function g = gcd(vec)
+function g = vecgcd(vec)
     assert(length(vec) > 0);
     g = vec(1);
     for i = 2:length(vec)

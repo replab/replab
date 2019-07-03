@@ -6,14 +6,14 @@ classdef UnitaryMatrices < replab.Group
     end
     
     properties (Access = protected)
-        parent; % complex matrices
+        parent_; % complex matrices
     end
     
     methods
         
         function self = UnitaryMatrices(n)
             self.n = n;
-            self.parent = replab.domain.ComplexMatrices(n, n);
+            self.parent_ = replab.domain.ComplexMatrices(n, n);
             self.identity = speye(n);
         end
         
@@ -26,7 +26,7 @@ classdef UnitaryMatrices < replab.Group
         % Domain
         
         function b = eqv(self, X, Y)
-            b = self.parent.eqv(X, Y);
+            b = self.parent_.eqv(X, Y);
         end
         
         function X = sample(self)

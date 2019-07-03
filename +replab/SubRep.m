@@ -47,7 +47,11 @@ classdef SubRep < replab.Rep
                 self.D0 = [];
             end
         end
-        
+
+        function s = headerStr(self)
+            s = 'Subrepresentation';
+        end
+
         function b = hasCorrection(self)
         % Returns true if the basis is not normalized and needs correction
             b = ~isequal(self.D0, []);

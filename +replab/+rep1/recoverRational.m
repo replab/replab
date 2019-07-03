@@ -1,13 +1,14 @@
-function V = recoverRational(sub)
+function V1 = recoverRational(sub)
 % Replaces the basis sub.U by a basis with integer coefficients if possible
-    assert(isequal(sub.field, 'R'));
-    assert(isequal(replab.rep1.realType(sub), 'R'));
+    V1 = [];
     P = sub.U*sub.U';
+    if replab.isNonZeroMatrix(imag(P), replab.Settings.doubleEigTol)
+        return
+    end
     [~, jb] = rref(P);
     U = P(:, jb);
     [num den] = rat(U);
-    G = replab.rep1.lcm(unique(den(:)));
-    V = [];
+    G = replab.rep1.veclcm(unique(den(:)));
     limit = 1000;
     if G < limit
         V = num .* (G./den);
@@ -17,14 +18,14 @@ function V = recoverRational(sub)
             for j = 1:i-1
                 vj = V(:,j);
                 vi1 = vi1*dot(vj,vj) - dot(vj,vi1)*vj;
-                G = replab.rep1.gcd(vi1);
+                G = replab.rep1.vecgcd(vi1);
                 vi1 = vi1/G;
                 if max(abs(vi1)) > limit
-                    V = [];
                     return
                 end
             end
             V(:,i) = vi1;
         end
     end
+    V1 = V;
 end

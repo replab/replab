@@ -83,16 +83,31 @@ classdef Rep < replab.Str
             quaternionRep = replab.RepFun(self.group, 'H', self.dimension, @(g) self.image(g));
         end
         
-        function sub = subRep(self, U)
-        % Returns a subrepresentation of this representation,
-        % given by the column basis vectors in U, such that
-        % sub.image(g) = U' * self.image(g) * U
+        function sub = subRep(self, A)
+        % Returns a subrepresentation of this representation
         %
-        % U has dimension self.dimension x dim(subRepresentation)
         %
-        % Note that U needs to be orthogonal, but the basis vectors
+        % It is given by the column basis vectors in A, such that
+        % sub.image(g) = A' * self.image(g) * A
+        %
+        % A has dimension self.dimension x dim(subRepresentation)
+        %
+        % Note that A needs to be orthogonal, but the basis vectors
         % do not need to be normalized
-            sub = replab.SubRep(self, U);
+            sub = replab.SubRep(self, A);
+        end
+        
+        function rep1 = leftConjugate(self, A)
+        % Returns the (left) conjugation of this representation
+        %
+        % A should be a unitary matrix
+        %
+        % It returns a representation rep1 such that
+        %
+        % rep1.image(g) = A * self.image(g) * A'
+        %
+        % Note the opposite convention with respect to subRep
+            rep1 = replab.ConjugateRep(A, self);
         end
         
     end

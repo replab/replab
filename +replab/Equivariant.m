@@ -49,7 +49,7 @@ classdef Equivariant < replab.Domain
         function X = project(self, X)
         % Projects any nR x nC matrix in the equivariant subspace
             assert(isa(self.group, 'replab.FiniteGroup'));
-            dec = self.group.decomposition.transversals;
+            T = self.group.decomposition.transversals;
             for i = length(T):-1:1
                 X = self.averageOver(X, T{i});
             end
