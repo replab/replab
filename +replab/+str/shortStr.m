@@ -6,7 +6,7 @@ function s = shortStr(obj, maxColumns)
     overLimit = false;
     if isscalar(obj) % prints scalars using the relevant method
         if isa(obj, 'cell')
-            s = ['{' replab.str.shortStr(obj, maxColumns)];
+            s = ['{' replab.str.shortStr(obj{1}, maxColumns)];
             if length(s) < maxColumns
                 s = [s '}'];
             end
