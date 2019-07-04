@@ -17,31 +17,31 @@ S10 = replab.GroupFun(<span class="string">'Permutations of 1..10'</span>, eqvFu
 </pre><pre class="codeoutput">
 S10 = 
 
-replab.GroupFun instance with six fields:
- composeFun: function_handle                
-description: 'Permutations of 1..10'        
-     eqvFun: function_handle                
-   identity: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
- inverseFun: function_handle                
-  sampleFun: function_handle                
+
+S10 = 
+
+</pre><pre class="codeoutput">Undefined function 'horczat' for input arguments of type 'cell'.
+
+Error in replab.GroupFun/hiddenFields (line 16)
+            names = horczat(names1(:), names2(:));
+
+Error in replab.str.fieldsList (line 29)
+        hidden = obj.hiddenFields;
+
+Error in replab.str.longStr (line 17)
+        [names values] = replab.str.fieldsList(obj);
+
+Error in replab.longStr (line 28)
+    lines = replab.str.longStr(obj, maxRows, maxColumns);
+
+Error in replab.Str/disp (line 12)
+            lines = replab.longStr(self, maxRows, maxColumns);
+
+Error in LawChecks (line 12)
+S10 = replab.GroupFun('Permutations of 1..10', eqvFun, sampleFun, composeFun, identity, inverseFun)
 </pre><p>We instantiate the group laws, and check them.</p><pre class="codeinput">S10laws = replab.GroupLaws(S10)
 S10laws.check
-</pre><pre class="codeoutput">
-S10laws = 
-
-replab.GroupLaws instance with two fields:
-          T: replab.GroupFun            
-description: 'replab.GroupLaws instance'
-Checking inverse compatible with compose...
-Checking inverse...
-Checking composeN integers...
-Checking identity...
-Checking composeN zero...
-Checking composeAll...
-Checking composeN positive...
-Checking associativity...
-Checking eqv...
-<!--
+</pre></div><!--
 ##### SOURCE BEGIN #####
 %% Using law checks
 %
@@ -59,5 +59,6 @@ S10 = replab.GroupFun('Permutations of 1..10', eqvFun, sampleFun, composeFun, id
 % We instantiate the group laws, and check them.
 S10laws = replab.GroupLaws(S10)
 S10laws.check
+
 ##### SOURCE END #####
 -->

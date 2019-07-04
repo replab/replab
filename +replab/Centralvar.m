@@ -95,7 +95,7 @@ classdef Centralvar < replab.Str
             n = size(generators{1}, 2);
             group = replab.SignedPermutations(n).subgroup(generators);
             
-            irrDecomp = group.naturalRepresentation.decomposition;
+            irrDecomp = group.naturalRep.decomposition;
             U = zeros(n, 0);
             dimensions1 = [];
             multiplicities1 = [];
@@ -104,7 +104,7 @@ classdef Centralvar < replab.Str
                 component = irrDecomp.component(i);
                 dimensions1 = [dimensions1 component.copyDimension];
                 multiplicities1 = [multiplicities1 component.multiplicity];
-                types(i) = component.realDivisionAlgebra.shortName;
+                types(i) = component.copy(1).realDivisionAlgebra.shortName;
                 for j = 1:component.multiplicity
                     copy = component.copy(j);
                     U = [U copy.U];

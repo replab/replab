@@ -29,6 +29,6 @@ function test_symmetric_group_representations
     rho = G.naturalRep;
     I = rho.decomposition;
     assertEqual(I.nComponents, 2);
-    assertEqual(cellfun(@(c) c.localDimension, I.components), [1 3]);
+    assertEqual(cellfun(@(c) c.copyDimension, I.components), [1 3]);
     assertEqual(cellfun(@(c) c.multiplicity, I.components), [1 1]);
 end

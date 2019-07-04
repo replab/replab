@@ -68,7 +68,7 @@ S30.elements
 %% Group representations
 % The natural representation of $S_4$ simply permutes the
 % coordinates of $R^4$:
-rho = S4.naturalRepresentation
+rho = S4.naturalRep
 %%
 % We take two elements of $S_4$:
 g = [2 3 1 4]
@@ -85,8 +85,8 @@ rho.image(gh)
 % we define the sign representation (using a permutation
 % representation of it!).
 dim = 2;
-rho1 = S4.realRepresentation(dim, {[0 1; 1 0] [0 1; 1 0]})
-rho2 = S4.permutationRepresentation(2, {[2 1] [2 1]})
+rho1 = S4.rep(dim, 'R', {[0 1; 1 0] [0 1; 1 0]})
+rho2 = S4.permutationRep(2, {[2 1] [2 1]})
 %%
 %
 rho1.image(g)
@@ -96,25 +96,28 @@ rho2.image(g)
 % *RepLAB* provides the irreducible decomposition of representations
 % over the real numbers, identifying the representation type
 % (real, complex or quaternionic):
-rho.irreducible
+I = rho.decomposition
 %%
-% We can get subrepresentations
-subrho1 = rho.irreducible.component(1)
+% We can get isotypic components and the copies of irreducible
+% representations contained inside
+I.component(1)
+subrho1 = I.component(1).copy(1)
 %%
 %
-subrho2 = rho.irreducible.component(2)
+I.component(2)
+subrho2 = I.component(2).copy(1)
 %%
 % with their bases:
 subrho1.U
 subrho2.U
 
-%% The centralizer algebra
-% The centralizer algebra of $\rho$ is composed of all the matrices
+%% The commutant algebra
+% The commutant algebra of $\rho$ is composed of all the matrices
 % $M$ that commute with $\rho$, that is $M \rho_g = \rho_g M$ for
 % all $g$ in the group.
 %
 % *RepLAB* gives an access to that algebra:
-A = rho.centralizerAlgebra
+A = rho.commutant
 %%
 % and we can sample generic matrices from that algebra
 %
@@ -127,12 +130,9 @@ Mgen = rand(n, n)
 %
 M = A.project(rand(n,n))
 %%
-% Now, given $M$ in the algebra, we can get its blocks:
-blocks = rho.irreducible.centralizerAlgebra.blocksOfParentElement(M)
 %%
-% which correspond to the block diagonalization of such matrices in
-% the symmetry adapted basis:
-U = rho.irreducible.U
+% Which is has a block diagonalization in the symmetry adapted basis:
+U = I.rep.U
 %%
 %
 U'*M*U

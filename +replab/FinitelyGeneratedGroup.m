@@ -72,7 +72,7 @@ classdef FinitelyGeneratedGroup < replab.Group
             phi = @(w) self.evaluateWord(w);
         end
         
-        function rho = representation(self, field, dimension, images)
+        function rho = rep(self, field, dimension, images)
         % Constructs a finite dimensional real or complex representation of this group
         %
         %     field: 'R' or 'C' for real or complex
@@ -90,7 +90,7 @@ classdef FinitelyGeneratedGroup < replab.Group
             S = replab.Permutations(dimension);
             f = @(g) S.toMatrix(g);
             images = cellfun(f, permutations, 'uniform', 0);
-            rho = self.representation('R', dimension, images);
+            rho = self.rep('R', dimension, images);
         end
         
         function rho = signedPermutationRep(self, dimension, signedPermutations)
@@ -101,42 +101,9 @@ classdef FinitelyGeneratedGroup < replab.Group
             S = replab.SignedPermutations(dimension);
             f = @(g) S.toMatrix(g);
             images = cellfun(f, signedPermutations, 'uniform', 0);
-            rho = self.representation('R', dimension, images);
+            rho = self.rep('R', dimension, images);
         end
-        
-        function rho = realRepresentation(self, dimension, images, imagesInv)
-            if nargin < 4
-                imagesInv = cellfun(@(x) inv(x), images, 'UniformOutput', 0);
-            end
-            rho = replab.RealRep(self, dimension, images, imagesInv);
-        end
-
-        function rho = signedPermutationRepresentation(self, dimension, signedPermutations)
-        % Returns a monomial representation of this group described by signed permutations
-        %
-        % dimension: dimension of the representation
-        % signedPermutations: row cell array of images of the generators as signed permutations of size "dimension"
-            S = replab.SignedPermutations(dimension);
-            f = @(g) S.toMatrix(g);
-            fInv = @(g) S.toMatrix(S.inverse(g));
-            images = cellfun(f, signedPermutations, 'UniformOutput', false);
-            imagesInv = cellfun(fInv, signedPermutations, 'UniformOutput', false);
-            rho = self.realRepresentation(dimension, images, imagesInv);
-        end
-        
-        function rho = permutationRepresentation(self, dimension, permutations)
-        % Returns a permutation representation of this group
-        %
-        % dimension: dimension of the representation
-        % permutation: row cell array of images of the generators as permutations of size "dimension"
-            S = replab.Permutations(dimension);
-            f = @(g) S.toMatrix(g);
-            fInv = @(g) S.toMatrix(S.inverse(g));
-            images = cellfun(f, permutations, 'UniformOutput', false);
-            imagesInv = cellfun(fInv, permutations, 'UniformOutput', false);
-            rho = self.realRepresentation(dimension, images, imagesInv);
-        end
-        
+                
     end
     
 end

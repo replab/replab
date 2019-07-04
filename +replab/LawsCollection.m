@@ -24,6 +24,9 @@ classdef LawsCollection
             for i = 1:self.nChildren
                 c = self.child(i);
                 [testNames1 testFuns1] = c.getTestCases;
+                for j = 1:length(testNames1)
+                    testNames1{j} = sprintf('%s(%d)', testNames1{j}, i);
+                end
                 testNames = horzcat(testNames, testNames1);
                 testFuns = horzcat(testFuns, testFuns1);
             end
