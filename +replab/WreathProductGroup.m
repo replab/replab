@@ -90,11 +90,11 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
         end
         
         function rep = imprimitiveRep(self, Arep)
-            rep = replab.rep1.WreathProductImprimitiveRep(self, Arep);
+            rep = replab.rep.WreathProductImprimitiveRep(self, Arep);
         end
         
         function rep = primitiveRep(self, Arep)
-            rep = replab.rep1.WreathProductPrimitiveRep(self, Arep);
+            rep = replab.rep.WreathProductPrimitiveRep(self, Arep);
         end
         
     end

@@ -26,17 +26,15 @@ function W = enforceComplexEncoding(rep)
     w2 = imag(W(:,1));
     w1 = w1/norm(w1);
     w2 = w2/norm(w2);
-    W1 = w1;
-    W2 = w2;
-    while size(W1, 2)*2 < d
+    W = [w1 w2];
+    while size(W, 2) < d
         A = rep.sample;
-        if rank([W1 W2 A*w1]) > size(W1, 2)*2
-            W1 = [W1 A*w1];
-            W2 = [W2 A*w2];
+        x1 = A * w1;
+        if norm(x1 - W * (W \ x1)) > replab.Settings.doubleEigTol
+            x2 = A * w2;
+            W = [W x1 x2];
         end
     end
-    [Q R] = qr(W1, 0);
-    W1 = W1 / R;
-    W2 = W2 / R;
-    W = reshape([W1; W2], [d d]);
+    [Q R] = qr(W, 0);
+    W = W / R;
 end

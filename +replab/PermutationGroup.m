@@ -64,7 +64,7 @@ classdef PermutationGroup < replab.Group
         % Describes the permutation action of this group on tensor coefficients
         %
         % The tensor coefficients correspond to R^ld x R^ld ... (domainSize times)
-            phi = @(g) self.indexPermutation(g, localDimension);
+            phi = @(g) self.indexRelabelingPermutation(g, localDimension);
         end
         
         function rho = indexRelabelingRep(self, localDimension)
@@ -72,7 +72,7 @@ classdef PermutationGroup < replab.Group
         %
         % It acts on the tensor space R^ld x R^ld ... (domainSize times)
         % by permuting the indices. The representation returned is real.
-            rho = replab.rep1.IndexRelabelingRep(self, localDimension);
+            rho = replab.rep.IndexRelabelingRep(self, localDimension);
         end
         
         function rho = naturalRepresentation(self)
@@ -89,7 +89,7 @@ classdef PermutationGroup < replab.Group
         %
         % It corresponds to the representation orthogonal to the
         % trivial representation with basis [1, 1, ..., 1]'/sqrt(d)
-            U = replab.rep1.standardBasis(self.domainSize);
+            U = replab.rep.standardBasis(self.domainSize);
             rho = self.naturalRep.subRep(U(:, 2:end));
         end
         

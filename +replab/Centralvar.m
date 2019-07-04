@@ -92,22 +92,25 @@ classdef Centralvar < replab.Str
         
         function R = fromGenerators(generators)
             assert(iscell(generators), 'Please specify generators in cell array.');
-            
-            n = size(generators{1},2);
+            n = size(generators{1}, 2);
             group = replab.SignedPermutations(n).subgroup(generators);
             
-            irrDecomp = group.naturalRepresentation.irreducible;
-            U = irrDecomp.U;
-            
-            dimensions1 = zeros(1, irrDecomp.nComponents);
-            multiplicities = zeros(1, irrDecomp.nComponents);
+            irrDecomp = group.naturalRepresentation.decomposition;
+            U = zeros(n, 0);
+            dimensions1 = [];
+            multiplicities1 = [];
             types = '';
             for i = 1:irrDecomp.nComponents
-                dimensions1(i) = irrDecomp.component(i).dimension1;
-                multiplicities(i) = irrDecomp.component(i).multiplicity;
-                types(i) = irrDecomp.component(i).divisionAlgebra.shortName;
+                component = irrDecomp.component(i);
+                dimensions1 = [dimensions1 component.copyDimension];
+                multiplicities1 = [multiplicities1 component.multiplicity];
+                types(i) = component.realDivisionAlgebra.shortName;
+                for j = 1:component.multiplicity
+                    copy = component.copy(j);
+                    U = [U copy.U];
+                end
             end
-            
+                        
             R = replab.Centralvar(U, dimensions1, multiplicities, types);
         end
         
@@ -197,7 +200,7 @@ classdef Centralvar < replab.Str
                 F = [F, self.blocks{i} >= other];
             end
         end
-        
+ 
         function s = str(self)
         % Nice string representation
             s = ['SDP matrix of size ', num2str(self.dim), 'x', num2str(self.dim), ' with ', num2str(self.nbVars), ' variables.'];
@@ -217,7 +220,7 @@ classdef Centralvar < replab.Str
             end
             s = s(1:end-3);
         end
-        
+
         function n = nbVars(self)
         % Returns the number of SDP variable used be the object
             n = 0;
@@ -225,8 +228,7 @@ classdef Centralvar < replab.Str
                 n = n + length(getvariables(self.blocks{i}));
             end
         end
-        
+
     end
-    
-    
+
 end

@@ -3,8 +3,6 @@ classdef Irreducible < replab.Str
     
     properties
         parent;     % Parent representation
-        group;      % Group represented
-        field;      % Field ('R' real or 'C' complex)
         components; % Isotypic components
     end
 
@@ -12,17 +10,30 @@ classdef Irreducible < replab.Str
 
         function self = Irreducible(parent, components)
             self.parent = parent;
-            self.group = parent.group;
-            self.field = parent.field;
             self.components = components;
         end
         
+        function r = rep(self)
+        % Returns the subrepresentation corresponding to this isotypic component
+            U = zeros(self.parent.dimension, 0);
+            for i = 1:self.nComponents
+                U = [U self.component(i).rep.U];
+            end
+            r = self.parent.leftConjugate(U);
+            % TODO: preserve rational bases
+        end
+
         function n = nComponents(self)
             n = length(self.components);
         end
         
         function c = component(self, i)
             c = self.components{i};
+        end
+        
+        function I = recoverRational(self)
+            components1 = cellfun(@(x) x.recoverRational, self.components, 'uniform', 0);
+            I = replab.Irreducible(self.parent, components1);
         end
         
         function names = hiddenFields(self)

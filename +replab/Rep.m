@@ -52,6 +52,11 @@ classdef Rep < replab.Str
             end
             c = self.commutant_;
         end
+        
+        function I = decomposition(self)
+        % Returns the irreducible decomposition of this representation
+            I = replab.rep.decompose(self);
+        end
 
         % Str
 
@@ -98,6 +103,8 @@ classdef Rep < replab.Str
             quaternionRep = replab.RepFun(self.group, 'H', self.dimension, @(g) self.image(g));
         end
         
+        % Manipulation of representation space
+        
         function sub = subRep(self, A)
         % Returns a subrepresentation of this representation
         %
@@ -111,7 +118,7 @@ classdef Rep < replab.Str
         % do not need to be normalized
             sub = replab.SubRep(self, A);
         end
-        
+
         function rep1 = leftConjugate(self, A)
         % Returns the (left) conjugation of this representation
         %
@@ -125,6 +132,7 @@ classdef Rep < replab.Str
             rep1 = replab.ConjugateRep(A, self);
         end
         
+
     end
     
 end

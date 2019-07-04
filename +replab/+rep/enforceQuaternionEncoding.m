@@ -42,23 +42,17 @@ function W = enforceQuaternionEncoding(rep)
     w2 = w2/norm(w2);
     w3 = w3/norm(w3);
     w4 = w4/norm(w4);
-    W1 = w1;
-    W2 = w2;
-    W3 = w3;
-    W4 = w4;
-    while size(W1, 2)*4 < d
+    W = [w1 w2 w3 w4];
+    while size(W, 2) < d
         A = rep.sample;
-        if rank([W1 W2 W3 W4 A*w1]) > size(W1, 2)*4
-            W1 = [W1 A*w1];
-            W2 = [W2 A*w2];
-            W3 = [W3 A*w3];
-            W4 = [W4 A*w4];
+        x1 = A * w1;
+        if norm(x1 - W * (W \ x1)) > replab.Settings.doubleEigTol
+            x2 = A*w2;
+            x3 = A*w3;
+            x4 = A*w4;
+            W = [W x1 x2 x3 x4];
         end
     end
-    [Q R] = qr(W1, 0);
-    W1 = W1 / R;
-    W2 = W2 / R;
-    W3 = W3 / R;
-    W4 = W4 / R;
-    W = reshape([W1; W3; W2; W4], [d d]);
+    [Q R] = qr(W, 0);
+    W = W / R;
 end

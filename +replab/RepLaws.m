@@ -14,7 +14,6 @@ classdef RepLaws < replab.Laws
             d = self.rep.dimension;
             self.G = rep.group;
             self.C = rep.commutant;
-            eqvFun = @(X, Y) ~replab.isNonZeroMatrix(X - Y, replab.Settings.doubleEigTol);
             switch rep.field
               case 'R'
                 self.U = replab.domain.OrthonormalMatrices(d);
@@ -27,8 +26,7 @@ classdef RepLaws < replab.Laws
                 self.M = replab.domain.QuaternionMatrices(d, d);
               otherwise
                 error('Unknown field');
-            end
-            
+            end            
         end
         function morphismLaws = laws_asGroupHomomorphism(self)
             morphismLaws = replab.GroupMorphismLaws(@(g) self.rep.image(g), self.G, self.U);

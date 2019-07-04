@@ -47,7 +47,7 @@ classdef DirectProductGroup < replab.FiniteGroup
         %
         % factorReps: a 1 x nFactors cell array of representations
         %             s.t. factorReps{i} is a representation of factor(i)
-            rep = replab.rep1.DirectProductSumRep(self, factorReps);
+            rep = replab.rep.DirectProductSumRep(self, factorReps);
         end
         
         function rep = sumRepFun(self, fun)
@@ -60,7 +60,7 @@ classdef DirectProductGroup < replab.FiniteGroup
         %
         % factorReps: a 1 x nFactors cell array of representations
         %             s.t. factorReps{i} is a representation of factor(i)
-            rep = replab.rep1.DirectProductTensorRep(self, factorReps);
+            rep = replab.rep.DirectProductTensorRep(self, factorReps);
         end
         
         function rep = tensorRepFun(self, fun)

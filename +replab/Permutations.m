@@ -148,11 +148,11 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
             grp = replab.perm.PermutationBSGSGroup(self, generators, orderOpt);
         end
         
-        function grp = trivialGroup(self)
+        function grp = trivialSubgroup(self)
             grp = self.subgroup({}, vpi(1));
         end
         
-        function grp = cyclicGroup(self)
+        function grp = cyclicSubgroup(self)
             n = self.domainSize;
             if n == 1
                 grp = self.trivialGroup;
@@ -161,7 +161,7 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
             end
         end
         
-        function grp = alternatingGroup(self)
+        function grp = alternatingSubgroup(self)
             n = self.domainSize;
             if n <= 2
                 grp = self.trivialGroup;
@@ -180,7 +180,7 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
             grp = self.subgroup(self.generators, self.order);
         end
         
-        function grp = dihedralGroup(self)
+        function grp = dihedralSubgroup(self)
             n = self.domainSize;
             if n <= 2
                 grp = self.symmetricGroup;

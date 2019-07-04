@@ -4,24 +4,31 @@ function test_suite = RepresentationsTest()
     catch
     end
     initTestSuite;
+    % test orbit decomposition
     G = replab.Permutations(4).subgroup({[2 1 3 4] [2 3 4 1]});
-    rho = G.naturalRepresentation;
-    I = rho.irreducible;
-    I1 = rho.irreducible.component(1);
-    I2 = rho.irreducible.component(2);
-    test_suite = replab.RealRepLaws(rho).addTestCases(test_suite);
-    test_suite = replab.RealRepLaws(I).addTestCases(test_suite);
-    test_suite = replab.RealRepLaws(I1).addTestCases(test_suite);
-    test_suite = replab.RealRepLaws(I2).addTestCases(test_suite);
+    rho = G.naturalRep;
+    I = rho.decomposition;
+    test_suite = replab.IrreducibleLaws(I).addTestCases(test_suite);
+    % test standard representation
     G = replab.Permutations(5);
     test_suite = replab.RepLaws(G.standardRep).addTestCases(test_suite);
+    % test quaternion type representations
+    Q = replab.SignedPermutations.quaternionGroup;
+    S3 = replab.S(3);
+    W = replab.WreathProductGroup(S3, Q);
+    rho = W.primitiveRep(Q.naturalRep);
+    I = rho.decomposition;
+    test_suite = replab.IrreducibleLaws(I).addTestCases(test_suite);
+    rho = W.imprimitiveRep(Q.naturalRep);
+    I = rho.decomposition;
+    test_suite = replab.IrreducibleLaws(I).addTestCases(test_suite);
 end
 
 function test_symmetric_group_representations
     G = replab.Permutations(4).subgroup({[2 1 3 4] [2 3 4 1]});
-    rho = G.naturalRepresentation;
-    I = rho.irreducible;
+    rho = G.naturalRep;
+    I = rho.decomposition;
     assertEqual(I.nComponents, 2);
-    assertEqual(cellfun(@(c) c.dimension, I.components), [1 3]);
+    assertEqual(cellfun(@(c) c.localDimension, I.components), [1 3]);
     assertEqual(cellfun(@(c) c.multiplicity, I.components), [1 1]);
 end

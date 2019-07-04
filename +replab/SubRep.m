@@ -66,6 +66,16 @@ classdef SubRep < replab.Rep
             end
         end
         
+        function sub1 = recoverRational(self)
+        % Tries to recover a rational basis for this subrepresentatino
+            U1 = replab.rep.recoverRational(self);
+            if isequal(U1, [])
+                sub1 = self;
+            else
+                sub1 = self.parent.subRep(U1);
+            end
+        end
+        
         function P = projector(self)
         % Returns the projector on this subrepresentation
         %
@@ -73,11 +83,18 @@ classdef SubRep < replab.Rep
             P = self.U*self.U';
         end
         
+        function newSub = collapseParent(self)
+        % Returns this subrepresentation as expressed in self.parent.parent
+            assert(isa(self.parent, 'replab.SubRep'));
+            newU0 = self.parent.U * self.U0;
+            newSub = self.parent.parent.subRep(newU0);
+        end
+        
         function sub = in(self, newParent)
         % Returns this subrepresentation as expressed in the given 'newParent'
         %
         % newParent must be equal to some self.parent. ... .parent
-            if isequal(self.parent, newParent)
+            if self.parent == newParent % we want handle equality
                 sub = self;
             else
                 newU0 = self.parent.U * self.U0;

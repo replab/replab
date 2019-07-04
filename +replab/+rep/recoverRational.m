@@ -8,7 +8,7 @@ function V1 = recoverRational(sub)
     [~, jb] = rref(P);
     U = P(:, jb);
     [num den] = rat(U);
-    G = replab.rep1.veclcm(unique(den(:)));
+    G = replab.rep.veclcm(unique(den(:)));
     limit = 1000;
     if G < limit
         V = num .* (G./den);
@@ -18,7 +18,7 @@ function V1 = recoverRational(sub)
             for j = 1:i-1
                 vj = V(:,j);
                 vi1 = vi1*dot(vj,vj) - dot(vj,vi1)*vj;
-                G = replab.rep1.vecgcd(vi1);
+                G = replab.rep.vecgcd(vi1);
                 vi1 = vi1/G;
                 if max(abs(vi1)) > limit
                     return

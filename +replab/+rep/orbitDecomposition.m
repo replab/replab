@@ -4,7 +4,7 @@ function [sub O] = orbitDecomposition(rep)
 % Those subrepresentations are not necessarily irreducible in general.
 %
 % Used as a first step in the decomposition into irreducibles
-    O = replab.rep1.orbits(rep);
+    O = replab.rep.orbits(rep);
     n = O.nBlocks;
     sub = cell(1, n);
     for b = 1:n
