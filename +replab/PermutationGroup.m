@@ -52,12 +52,27 @@ classdef PermutationGroup < replab.Group
             A = replab.perm.PermutationMatrixAction(self);
         end
         
-        function rho = indexPermutationRep(self, localDimension)
+        function perm = indexRelabelingPermutation(self, g, localDimension)
+        % Describes the permutation action of this group on tensor coefficients
+            n = self.domainSize;
+            dims = localDimension * ones(1, n);
+            perm = permute(reshape(1:prod(dims), dims), fliplr(n +  1 - g));
+            perm = perm(:)';
+        end
+        
+        function phi = indexRelabelingMorphism(self, localDimension)
+        % Describes the permutation action of this group on tensor coefficients
+        %
+        % The tensor coefficients correspond to R^ld x R^ld ... (domainSize times)
+            phi = @(g) self.indexPermutation(g, localDimension);
+        end
+        
+        function rho = indexRelabelingRep(self, localDimension)
         % Representation that permutes the indices of a tensor
         %
         % It acts on the tensor space R^ld x R^ld ... (domainSize times)
         % by permuting the indices. The representation returned is real.
-            rho = replab.rep1.IndexPermutationRep(self, localDimension);
+            rho = replab.rep1.IndexRelabelingRep(self, localDimension);
         end
         
         function rho = naturalRepresentation(self)

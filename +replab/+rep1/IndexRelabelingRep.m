@@ -1,4 +1,4 @@
-classdef IndexPermutationRep < replab.Rep
+classdef IndexRelabelingRep < replab.Rep
     
     properties
         localDimension; % dimension of each subsystem in the tensor space
@@ -6,7 +6,7 @@ classdef IndexPermutationRep < replab.Rep
     
     methods
         
-        function self = IndexPermutationRep(group, localDimension)
+        function self = IndexRelabelingRep(group, localDimension)
             assert(isa(group, 'replab.PermutationGroup'));
             n = group.domainSize;
             self.group = group;

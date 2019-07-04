@@ -10,7 +10,7 @@ classdef PermutationCellAction < replab.Action
             C1 = C;
             C1(perm) = C;
         end
-        function C1 = rightAction(self, perm, C)
+        function C1 = rightAction(self, C, perm)
             C1 = C(perm);
         end
     end
