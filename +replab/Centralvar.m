@@ -98,12 +98,12 @@ classdef Centralvar < replab.Str
             irrDecomp = group.naturalRep.decomposition;
             U = zeros(n, 0);
             dimensions1 = [];
-            multiplicities1 = [];
+            multiplicities = [];
             types = '';
             for i = 1:irrDecomp.nComponents
                 component = irrDecomp.component(i);
                 dimensions1 = [dimensions1 component.copyDimension];
-                multiplicities1 = [multiplicities1 component.multiplicity];
+                multiplicities = [multiplicities component.multiplicity];
                 types(i) = component.copy(1).realDivisionAlgebra.shortName;
                 for j = 1:component.multiplicity
                     copy = component.copy(j);
