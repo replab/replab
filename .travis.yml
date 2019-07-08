@@ -6,6 +6,9 @@ dist: bionic
 
 addons:
   apt:
+    sources:
+      - sourceline: 'deb http://archive.ubuntu.com/ubuntu bionic universe'
+      - sourceline: 'deb-src http://archive.ubuntu.com/ubuntu bionic universe'
     packages:
       - octave
       - liboctave-dev
