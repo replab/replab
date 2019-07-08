@@ -6,8 +6,6 @@ dist: disco
 
 addons:
   apt:
-    sources:
-      - sourceline: 'ppa:octave/stable'
     packages:
       - octave
       - liboctave-dev
