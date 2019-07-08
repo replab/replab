@@ -10,8 +10,6 @@ function W = findCommonBasis(rep, sub1, sub2, c)
 % Returns W such that W' * sub2.image(g) * W = sub1.image(g)
     assert(isa(sub1, 'replab.Irrep'));
     assert(isa(sub2, 'replab.SubRep'));
-    assert(isequal(sub1.parent, rep));
-    assert(isequal(sub2.parent, rep));
     if nargin < 4
         c = rep.commutant.sample;
     end
