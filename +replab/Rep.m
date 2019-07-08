@@ -136,6 +136,7 @@ classdef Rep < replab.Str
         %
         % Note that A needs to be orthogonal, but the basis vectors
         % do not need to be normalized
+            assert(nargin == 2);
             sub = replab.SubRep(self, A);
         end
 

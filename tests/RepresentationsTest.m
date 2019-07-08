@@ -11,7 +11,8 @@ function test_suite = RepresentationsTest()
     test_suite = replab.IrreducibleLaws(I).addTestCases(test_suite);
     % test standard representation
     G = replab.Permutations(5);
-    test_suite = replab.RepLaws(G.standardRep).addTestCases(test_suite);
+    Gstd = G.standardRep;
+    test_suite = replab.RepLaws(Gstd).addTestCases(test_suite);
     % test quaternion type representations
     Q = replab.SignedPermutations.quaternionGroup;
     S3 = replab.S(3);
