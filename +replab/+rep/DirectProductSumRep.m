@@ -15,7 +15,7 @@ classdef DirectProductSumRep < replab.Rep
             self.reps = reps;
             d = 0;
             for i = 1:n
-                assert(reps{i}.group == group.factor(i));
+                assert(isequal(reps{i}.group, group.factor(i)));
                 assert(isequal(reps{i}.field, self.field));
                 d = d + reps{i}.dimension;
             end

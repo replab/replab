@@ -13,7 +13,7 @@ classdef TensorRep < replab.Rep
             end
             self.dimension = d;
             for i = 2:length(factors)
-                assert(factors{1}.group == factors{i}.group);
+                assert(isequal(factors{1}.group, factors{i}.group));
                 assert(isequal(factors{1}.field, factors{i}.field));
             end
             self.factors = factors;
