@@ -2,13 +2,14 @@
 # available (as of January 2016)
 language: java
 
-dist: disco
+dist: xenial
 
 addons:
   apt:
+    sources:
+      - sourceline: 'ppa:alexlarsson/flatpak'
     packages:
-      - octave
-      - liboctave-dev
+      - flatpak
       
 ###############################################################################
 cache:
@@ -24,6 +25,8 @@ cache:
 # Command to install dependencies
 before_install:
   - git submodule update --init
+  - flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  - flatpak install flathub org.octave.Octave
 
 ###############################################################################
 install:
@@ -37,7 +40,7 @@ before_script:
   # Double-check we are still in the right directory
   - pwd
   # Check what octave packages we have installed
-  - octave -q --eval "ver"
+  - flatpak run org.octave.Octave -q --eval "ver"
   # ---------------------------------------------------------------------------
   # Remove any cached results files from previous build, if present
   - rm -f testresults.xml;
@@ -45,7 +48,7 @@ before_script:
 
 ###############################################################################
 script:
-  - octave -q --eval "$ADDPATH_COMMAND $INSTALL_SDPT3 $TEST_COMMAND";
+  - flatpak run org.octave.Octave -q --eval "$ADDPATH_COMMAND $INSTALL_SDPT3 $TEST_COMMAND";
 
 ###############################################################################
 after_script:
