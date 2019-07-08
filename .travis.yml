@@ -3,15 +3,6 @@
 language: java
 
 dist: bionic
-
-addons:
-  apt:
-    sources:
-      - sourceline: 'deb http://archive.ubuntu.com/ubuntu bionic universe'
-      - sourceline: 'deb-src http://archive.ubuntu.com/ubuntu bionic universe'
-    packages:
-      - octave
-      - liboctave-dev
       
 ###############################################################################
 cache:
@@ -26,6 +17,9 @@ cache:
 ###############################################################################
 # Command to install dependencies
 before_install:
+  - sudo add-apt-repository universe
+  - sudo apt update
+  - sudo apt install octave liboctave-dev
   - git submodule update --init
 
 ###############################################################################
