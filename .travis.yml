@@ -26,7 +26,7 @@ cache:
 before_install:
   - git submodule update --init
   - sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-  - sudo flatpak install flathub org.octave.Octave
+  - sudo flatpak install -y flathub org.octave.Octave
 
 ###############################################################################
 install:
