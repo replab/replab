@@ -13,7 +13,7 @@ classdef Rep < replab.Str
     
     properties (Access = protected)
         commutant_ = [];
-        % irreducible_ = [];
+        decomposition_ = [];
     end
         
     methods % ABSTRACT
@@ -50,7 +50,10 @@ classdef Rep < replab.Str
         
         function I = decomposition(self)
         % Returns the irreducible decomposition of this representation
-            I = replab.rep.decompose(self);
+            if isequal(self.decomposition_, [])
+                self.decomposition_ = replab.rep.decomposition(self);
+            end
+            I = self.decomposition_;
         end
 
         % Str

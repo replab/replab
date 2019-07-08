@@ -1,4 +1,4 @@
-function I = decompose(rep)
+function I = decomposition(rep)
 % Decomposes the given representation into irreducible subrepresentations
     assert(isa(rep, 'replab.Rep'));
     assert(rep.overR || rep.overC);
