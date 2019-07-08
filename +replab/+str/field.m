@@ -1,13 +1,9 @@
-function s = field(f, realStr, complexStr, quaternionStr)
+function s = field(f, realStr, complexStr)
 % Returns either:
 % - 'realStr' if f = 'R'
 % - 'complexStr' if field = 'C'  
-% - 'quaternionStr' if field = 'H'
 %
-% Default values for realStr/complexStr/quaternionStr are 'real'/'complex'/'quaternion'
-    if nargin < 4
-        quaternionStr = 'quaternion';
-    end
+% Default values for realStr/complexStr are 'real'/'complex'
     if nargin < 3
         complexStr = 'complex';
     end
@@ -19,8 +15,6 @@ function s = field(f, realStr, complexStr, quaternionStr)
         s = realStr;
       case 'C'
         s = complexStr;
-      case 'H'
-        s = quaternionStr;
       otherwise
         error(sprintf('Unknown field %s', f));
     end

@@ -35,7 +35,7 @@ classdef QuaternionHermitianMatrices < replab.Domain
         % matrices but haven't proved that it is the correct
         % approach (factors could be off)
             n = self.n;
-            X = zerosq(n, n);
+            X = replab.Quaternion.zeros(n, n);
             for r = 1:n
                 X(r, r) = randn;
                 s1 = randn(1, n-r);
@@ -43,7 +43,7 @@ classdef QuaternionHermitianMatrices < replab.Domain
                 sj = randn(1, n-r);
                 sk = randn(1, n-r);
                 if r < n
-                    X(r, r+1:end) = (s1*q1 + si*qi + sj*qj + sk*qk)/2;
+                    X(r, r+1:end) = replab.Quaternion(s1, si, sj, sk)/2;
                     X(r+1:end, r) = conj(X(r, r+1:end));
                 end
             end

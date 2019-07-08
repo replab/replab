@@ -28,7 +28,7 @@ classdef QuaternionVectors < replab.Domain
             parti = randn(self.d, 1);
             partj = randn(self.d, 1);
             partk = randn(self.d, 1);
-            X = (q1*part1 + qi*parti + qj*partj + qk*partk)/2;
+            X = replab.Quaternion(part1, parti, partj, partk)/2;
         end
         
     end

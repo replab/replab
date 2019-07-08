@@ -8,7 +8,7 @@ classdef Trivial < replab.Domain
     end
         
     properties (Access = protected)
-        parent_; % parent domain: real, complex, quaternion vectors
+        parent_; % parent domain: real or complex vectors
     end
     
     methods
@@ -23,8 +23,6 @@ classdef Trivial < replab.Domain
                 self.parent_ = replab.domain.RealVectors(self.n);
               case 'C'
                 self.parent_ = replab.domain.ComplexVectors(self.n);
-              case 'H'
-                self.parent_ = replab.domain.QuaternionVectors(self.n);
               otherwise
                 error('Unknown field');
             end

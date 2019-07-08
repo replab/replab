@@ -5,14 +5,14 @@ classdef Commutant < replab.Domain
 % of matrices X such that rep.image(g) * X = X * rep.image(g)
 
     properties (SetAccess = protected)
-        field; % vector space field, 'R', 'C' or 'H'
+        field; % vector space field, 'R', 'C'
         n;     % matrix size
         group; % group
         rep;   % representation
     end
     
     properties (Access = protected)
-        parent_; % parent domain: either real/complex/quaternion matrices
+        parent_; % parent domain: either real/complex matrices
     end
     
     methods
@@ -29,8 +29,6 @@ classdef Commutant < replab.Domain
                 self.parent_ = replab.domain.RealMatrices(self.n, self.n);
               case 'C'
                 self.parent_ = replab.domain.ComplexMatrices(self.n, self.n);
-              case 'H'
-                self.parent_ = replab.domain.QuaternionMatrices(self.n, self.n);
               otherwise
                 error('Unknown field');
             end
@@ -93,16 +91,31 @@ classdef Commutant < replab.Domain
         end
         
         function X = sample(self)
+        % Samples a generic matrix from this commutant algebra
             X = self.project(self.parent_.sample);
         end
         
         function X = sampleSelfAdjoint(self)
+        % Samples a generic self-adjoint matrix from this commutant algebra
+        %
+        % Enforces that X = X'
+        % i.e. real matrices are symmetric, complex matrices are Hermitian
             X = self.parent_.sample;
             X = (X + X')/2;
             X = self.project(X);
             X = (X + X')/2;
         end
         
+        function X = sampleSkewAdjoint(self)
+        % Samples a generic skew-adjoint (or anti-self-adjoint) matrix
+        %
+        % Enforces that X = -X'
+            X = self.parent_.sample;
+            X = (X - X')/2;
+            X = self.project(X);
+            X = (X - X')/2;
+        end
+
     end
     
 end

@@ -32,3 +32,14 @@ function test_symmetric_group_representations
     assertEqual(cellfun(@(c) c.copyDimension, I.components), [1 3]);
     assertEqual(cellfun(@(c) c.multiplicity, I.components), [1 1]);
 end
+
+function test_representation_of_cyclic_group
+    C12 = replab.S(12).cyclicSubgroup;
+    rep = C12.naturalRep;
+    d = cellfun(@(iso) iso.copyDimension, rep.decomposition.components);
+    m = cellfun(@(iso) iso.multiplicity, rep.decomposition.components);
+    t = cellfun(@(iso) iso.copy(1).realDivisionAlgebra.d, rep.decomposition.components);
+    assertEqual(d, [1 1 2 2 2 2 2]);
+    assertEqual(m, [1 1 1 1 1 1 1]);
+    assertEqual(t, [1 1 2 2 2 2 2]);
+end

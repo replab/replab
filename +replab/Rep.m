@@ -7,7 +7,7 @@ classdef Rep < replab.Str
     
     properties (SetAccess = protected)
         group;     % Group being represented
-        field;     % 'R', 'C' or 'H'
+        field;     % 'R' or 'C'
         dimension; % Representation dimension
     end
     
@@ -36,12 +36,7 @@ classdef Rep < replab.Str
         % Returns true if this representation is defined over the complex field
             b = isequal(self.field, 'C');
         end
-        
-        function b = overH(self)
-        % Returns true if this representation is defined over the quaternions
-            b = isequal(self.field, 'H');
-        end
-        
+                
         function c = commutant(self)
         % Returns the commutant of this representation
         % This is the algebra of matrices that commute with
@@ -61,7 +56,7 @@ classdef Rep < replab.Str
         % Str
 
         function s = headerStr(self)
-            f = replab.str.field(self.field, 'Orthogonal real', 'Unitary complex', 'Unitary quaternion');
+            f = replab.str.field(self.field, 'Orthogonal real', 'Unitary complex');
             s = sprintf('%s representation of dimension %d', f, self.dimension);
         end
 
@@ -97,12 +92,7 @@ classdef Rep < replab.Str
             assert(isequal(self.field, 'R'), 'Representation should be real to start with');
             complexRep = replab.RepFun(self.group, 'C', self.dimension, @(g) self.image(g));
         end
-        
-        function quaternionRep = quaternionification(self)
-            assert(isequal(self.field, 'R'), 'Representation should be real to start with');
-            quaternionRep = replab.RepFun(self.group, 'H', self.dimension, @(g) self.image(g));
-        end
-        
+                
         % Manipulation of representation space
         
         function sub = subRep(self, A)

@@ -2,7 +2,7 @@ function W = enforceComplexEncoding(rep)
 % Finds change of basis that reveals the complex division algebra
 %
 % Returns W such that W' * rep.image(g) * W is encoded using the
-% quaternion encoding of replab.DivisionAlgebra
+% complex encoding of replab.DivisionAlgebra
     assert(isequal(rep.field, 'R'));
     d = rep.dimension;
     A = rep.complexification.commutant.sampleSelfAdjoint;

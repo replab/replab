@@ -3,8 +3,8 @@ classdef RepLaws < replab.Laws
         rep;
         G; % group of which rep is a representation
         C; % commutant algebra
-        U; % Unitary/orthonormal matrices on R, C or H
-        M; % n x n matrices over R, C or H
+        U; % Unitary/orthonormal matrices on R or C
+        M; % n x n matrices over R, or C
     end
     
     methods
@@ -21,9 +21,6 @@ classdef RepLaws < replab.Laws
               case 'C'
                 self.U = replab.domain.UnitaryMatrices(d);
                 self.M = replab.domain.ComplexMatrices(d, d);
-              case 'H'
-                self.U = replab.domain.QuaternionUnitaryMatrices(d);
-                self.M = replab.domain.QuaternionMatrices(d, d);
               otherwise
                 error('Unknown field');
             end            
@@ -31,9 +28,9 @@ classdef RepLaws < replab.Laws
         function morphismLaws = laws_asGroupHomomorphism(self)
             morphismLaws = replab.GroupMorphismLaws(@(g) self.rep.image(g), self.G, self.U);
         end
-        function law_commutes_with_commutant_algebra_GC(self, g, C)
+        function law_commutes_with_commutant_algebra_GC(self, g, c)
             rho = self.rep.image(g);
-            self.M.assertEqv(rho*C, C*rho);
+            self.M.assertEqv(rho*c, c*rho);
         end
     end
 end

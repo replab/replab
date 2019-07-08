@@ -30,7 +30,7 @@ classdef QuaternionMatrices < replab.Domain
             parti = randn(self.nR, self.nC);
             partj = randn(self.nR, self.nC);
             partk = randn(self.nR, self.nC);
-            X = (q1*part1 + qi*parti + qj*partj + qk*partk)/2;
+            X = replab.Quaternion(part1, parti, partj, partk)/2;
         end
         
     end
