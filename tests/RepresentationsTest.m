@@ -34,7 +34,7 @@ function test_symmetric_group_representations
 end
 
 function test_representation_of_cyclic_group
-    C12 = replab.S(12).cyclicSubgroup;
+    C12 = replab.Permutations(12).cyclicSubgroup;
     rep = C12.naturalRep;
     d = cellfun(@(iso) iso.copyDimension, rep.decomposition.components);
     m = cellfun(@(iso) iso.multiplicity, rep.decomposition.components);
