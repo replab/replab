@@ -3,6 +3,7 @@ function W = enforceQuaternionEncoding(rep)
 %
 % Returns W such that W' * rep.image(g) * W is encoded using the
 % quaternion encoding of replab.DivisionAlgebra
+    assert(isa(rep, 'replab.Rep'));
     assert(isequal(rep.field, 'R'));
     d = rep.dimension;
     A1 = rep.commutant.sampleSelfAdjoint;
@@ -47,17 +48,23 @@ function W = enforceQuaternionEncoding(rep)
     w2 = w2/norm(w2);
     w3 = w3/norm(w3);
     w4 = w4/norm(w4);
-    W = [w1 w2 w3 w4];
+    W = [w1 w2 w4 w3]; % switch to force basis (TODO: prove)
+    % W is orthonormal
     while size(W, 2) < d
         A = rep.sample;
         x1 = A * w1;
-        if norm(x1 - W * (W \ x1)) > replab.Settings.doubleEigTol
+        tol = replab.Settings.doubleEigTol;
+        if norm(x1 - W * (W' * x1)) > tol
             x2 = A*w2;
             x3 = A*w3;
             x4 = A*w4;
-            W = [W x1 x2 x3 x4];
+            X = [x1 x2 x4 x3];
+            X = X - W*(W'*X);
+            t = trace(X'*X)/4;
+            X = X/sqrt(t);
+            % TODO: remove
+            assert(~replab.isNonZeroMatrix(X'*X - eye(4), tol));
+            W = [W X];
         end
     end
-    [Q R] = qr(W, 0);
-    W = W / R;
 end
