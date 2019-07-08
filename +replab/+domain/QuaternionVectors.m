@@ -20,7 +20,7 @@ classdef QuaternionVectors < replab.Domain
         % Domain
         
         function b = eqv(self, X, Y)
-            b = replab.isNonZeroMatrix(X - Y, replab.Settings.doubleEigTol);
+            b = ~replab.isNonZeroMatrix(X - Y, replab.Settings.doubleEigTol);
         end
         
         function X = sample(self)
