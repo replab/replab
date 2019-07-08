@@ -52,27 +52,6 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
         disp('VPI is already in the path');
     end
     
-    %% QTFM
-    
-    QTFMInPath = false;
-    try
-        qtfm_root;
-        QTFMInPath = true;
-    catch
-    end
-    if ~QTFMInPath
-        if exist([pathStr '/external/qtfm/qtfm_root.m']) ~= 2
-            warning(['The QTFM library was not found in the folder ', pathStr, '/external/qtfm']);
-        else
-            addpath([pathStr '/external/qtfm']);
-            if verbose >= 1
-                disp('Adding QTFM to the path');
-            end
-        end
-    elseif verbose >= 2
-        disp('QTFM is already in the path');
-    end
-    
     %% MOxUnit
     
     % Making sure MOxUnit is in the path and working
