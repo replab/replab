@@ -66,8 +66,7 @@ function I = decomposition(rep)
         copies{1} = firstIrrep;
         for j = 2:length(iso)
             other = nontrivial{iso(j)};
-            E = firstIrrep.U' * C * other.U;
-            E = E * sqrt(first.dimension/real(trace(E*E')));
+            E = replab.rep.findCommonBasis(rep, firstIrrep, other, C);
             copies{j} = replab.Irrep(rep, other.U * E, ...
                                      firstIrrep.realDivisionAlgebra);
         end

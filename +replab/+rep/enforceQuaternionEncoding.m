@@ -2,7 +2,7 @@ function W = enforceQuaternionEncoding(rep)
 % Finds change of basis that reveals the quaternion division algebra
 %
 % Returns W such that W' * rep.image(g) * W is encoded using the
-% quaternion encoding of replab.DivisionAlgebrax
+% quaternion encoding of replab.DivisionAlgebra
     assert(isequal(rep.field, 'R'));
     d = rep.dimension;
     A1 = rep.commutant.sampleSelfAdjoint;

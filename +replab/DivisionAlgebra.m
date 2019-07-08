@@ -84,6 +84,18 @@ classdef DivisionAlgebra < replab.Monoid
             z = z.';
         end
         
+        function b = isReal(self)
+            b = isequal(self.shortName, 'R');
+        end
+        
+        function b = isComplex(self)
+            b = isequal(self.shortName, 'C');
+        end
+        
+        function b = isQuaternion(self)
+            b = isequal(self.shortName, 'H');
+        end
+        
     end
         
     methods (Static)

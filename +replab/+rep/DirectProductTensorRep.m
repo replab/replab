@@ -15,7 +15,7 @@ classdef DirectProductTensorRep < replab.Rep
             self.reps = reps;
             d = 1;
             for i = 1:n
-                assert(isequal(reps{i}.group, group.factor(i)));
+                assert(reps{i}.group == group.factor(i));
                 assert(isequal(reps{i}.field, self.field));
                 d = d * reps{i}.dimension;
             end

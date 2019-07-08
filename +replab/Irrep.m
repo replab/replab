@@ -1,9 +1,14 @@
 classdef Irrep < replab.SubRep
-% Describes a subrepresentation of a unitary finite representation
+% Describes an irreducible subrepresentation
 %
-% 
+% The additional constraints compared to replab.SubRep are:
+% - this subrepresentation is irreducible over its field,
+% - if the field is R, then the type (real, complex, quaternion)
+%   of this irreducible representation is known, and the
+%   encoding of complex/quaternion types is canonical
     properties (SetAccess = protected)
-        realDivisionAlgebra;
+        realDivisionAlgebra; % = [] for representation over 'C'
+                             % or a replab.DivisionAlgebra
     end
     
     methods

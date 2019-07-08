@@ -95,7 +95,34 @@ classdef Rep < replab.Str
             assert(isequal(self.field, 'R'), 'Representation should be real to start with');
             complexRep = replab.RepFun(self.group, 'C', self.dimension, @(g) self.image(g));
         end
-                
+           
+        % Construction of derived representations
+        
+        function cRep = conj(self)
+        % Returns the conjugate representation
+            if self.overR
+                cRep = self;
+            else
+                cRep = replab.RepFun(self.group, 'C', self.dimension, @(g) conj(self.image(g)));
+            end
+        end
+        
+        function rep = directSum(varargin)
+            rep = replab.rep.DirectSumRep(varargin);
+        end
+        
+        function rep = tensor(varargin)
+            rep = replab.rep.TensorRep(varargin);
+        end
+        
+        function rep = blkdiag(varargin)
+            rep = replab.rep.DirectSumRep(varargin);            
+        end
+        
+        function rep = kron(varargin)
+            rep = replab.rep.TensorRep(varargin);
+        end
+        
         % Manipulation of representation space
         
         function sub = subRep(self, A)

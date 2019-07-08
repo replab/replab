@@ -8,7 +8,7 @@ classdef WreathProductPrimitiveRep < replab.Rep
         
         function self = WreathProductPrimitiveRep(group, Arep)
             assert(isa(group, 'replab.WreathProductGroup'));
-            assert(isequal(group.A, Arep.group));
+            assert(group.A == Arep.group);
             dA = Arep.dimension;
             n = group.H.domainSize;
             self.Arep = Arep;
