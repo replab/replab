@@ -49,14 +49,6 @@ classdef RepByImages < replab.Rep
             end
         end
         
-        % Overloading for optimization purposes
-        
-        %function sub = subRep(self, U)
-        %    d = size(U, 1);
-        %    newImages = cellfun(@(im) U * im * U', self.images, 'UniformOutput', false);
-        %    sub = replab.RepByImages(self.group, self.field, d, newImages);
-        %end
-        
     end
     
 end
