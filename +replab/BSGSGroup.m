@@ -92,7 +92,7 @@ classdef BSGSGroup < replab.FiniteGroup
         
         function index = enumeratorFind(self, el)
             [remaining indices] = self.chain.sift(el);
-            if isempty(remaining) || ~self.parent.isIdentity(remaining)
+            if isempty(remaining) || ~self.isIdentity(remaining)
                 ind = [];
             else
                 index = self.chain.indexFromIndices(indices);
