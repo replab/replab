@@ -5,7 +5,7 @@ function sub = decomposeUsingCommutant(rep)
     assert(isa(rep, 'replab.Rep'));
     tol = replab.Settings.doubleEigTol;
     % sample a Hermitian 
-    C = rep.commutant.sampleSelfAdjoint;
+    C = full(rep.commutant.sampleSelfAdjoint);
     [U D] = replab.rep.sortedEig(C, 'ascend', false);
     D = diag(D);
     D = D(:)';

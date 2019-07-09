@@ -40,8 +40,16 @@ classdef Irrep < replab.SubRep
 
         
         function sub1 = recoverRational(self)
-            sub1 = self;
-            % TODO: handle various real division algebras
+            if self.overC || self.realDivisionAlgebra.isReal
+                U1 = replab.rep.recoverRational(self);
+                if isequal(U1, [])
+                    sub1 = self;
+                else
+                    sub1 = replab.Irrep(self.parent, U1, self.realDivisionAlgebra);
+                end
+            else
+                sub1 = self;
+            end
         end
         
     end

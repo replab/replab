@@ -47,7 +47,7 @@ classdef Isotypic < replab.Str
         %
         % TODO: handle the multiplicity degeneracy
             copies1 = cellfun(@(x) x.recoverRational, self.copies, 'uniform', 0);
-            I = replab.Isotypic(self.parent, copies1, self.realType);
+            I = replab.Isotypic(self.parent, copies1);
         end
 
         
@@ -67,7 +67,7 @@ classdef Isotypic < replab.Str
         function s = headerStr(self)
             rt = self.copy(1).realDivisionAlgebra;
             if isequal(rt, [])
-                rt = '';
+                rt = 'C';
             else
                 rt = rt.shortName;
             end
