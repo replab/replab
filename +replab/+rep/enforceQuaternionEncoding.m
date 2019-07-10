@@ -50,10 +50,10 @@ function W = enforceQuaternionEncoding(rep)
     w4 = w4/norm(w4);
     W = [w1 w2 w4 w3]; % switch to force basis (TODO: prove)
     % W is orthonormal
+    tol = replab.Settings.doubleEigTol;
     while size(W, 2) < d
         A = rep.sample;
         x1 = A * w1;
-        tol = replab.Settings.doubleEigTol;
         if norm(x1 - W * (W' * x1)) > tol
             x2 = A*w2;
             x3 = A*w3;

@@ -27,14 +27,17 @@ function W = enforceComplexEncoding(rep)
     w1 = w1/norm(w1);
     w2 = w2/norm(w2);
     W = [w1 w2];
+    tol = replab.Settings.doubleEigTol;
     while size(W, 2) < d
         A = rep.sample;
         x1 = A * w1;
-        if norm(x1 - W * (W \ x1)) > replab.Settings.doubleEigTol
+        if norm(x1 - W * (W' * x1)) > tol
             x2 = A * w2;
-            W = [W x1 x2];
+            X = [x1 x2];
+            X = X - W*(W'*X);
+            t = trace(X'*X)/2;
+            X = X/sqrt(t);
+            W = [W X];
         end
     end
-    [Q R] = qr(W, 0);
-    W = W / R;
 end
