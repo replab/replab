@@ -85,7 +85,7 @@ rho.image(gh)
 % we define the sign representation (using a permutation
 % representation of it!).
 dim = 2;
-rho1 = S4.rep(dim, 'R', {[0 1; 1 0] [0 1; 1 0]})
+rho1 = S4.rep('R', dim, {[0 1; 1 0] [0 1; 1 0]})
 rho2 = S4.permutationRep(2, {[2 1] [2 1]})
 %%
 %
@@ -132,7 +132,7 @@ M = A.project(rand(n,n))
 %%
 %%
 % Which is has a block diagonalization in the symmetry adapted basis:
-U = I.rep.U
+A = I.rep.A
 %%
 %
-U'*M*U
+A'*M*A
