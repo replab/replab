@@ -22,8 +22,8 @@ diagnostic =
   struct with fields:
 
     yalmipversion: '20190425'
-       yalmiptime: 0.0527
-       solvertime: 0.1030
+       yalmiptime: 0.0682
+       solvertime: 0.1090
              info: 'Successfully solved (SDPT3-4)'
           problem: 0
 
@@ -46,8 +46,8 @@ diagnosticSym =
   struct with fields:
 
     yalmipversion: '20190425'
-       yalmiptime: 0.0536
-       solvertime: 0.1028
+       yalmiptime: 0.0565
+       solvertime: 0.1533
              info: 'Successfully solved (SDPT3-4)'
           problem: 0
 
@@ -100,13 +100,13 @@ Coeffiecient range: 1 to 1
 MSym = 
 
 replab.CommutantVar
-             U: [0.57735, 0.5691, -0.58549; 0.57735, -0.7916, -0.20011; 0.57735, 0.2225, 0.7856]
-        blocks: {sdpvar, [sdpvar, 0; 0, sdpvar]}                                                
-           dim: 3                                                                               
-   dimensions1: [1, 2]                                                                          
-multiplicities: [1, 1]                                                                          
-   nComponents: 2                                                                               
-         types: 'RC'                                                                            
+             U: [0.57735, -0.69835, 0.42305; 0.57735, 0.71555, 0.39326; 0.57735, -0.017201, -0.81632]
+        blocks: {sdpvar, [sdpvar, 0; 0, sdpvar]}                                                     
+           dim: 3                                                                                    
+   dimensions1: [1, 2]                                                                               
+multiplicities: [1, 1]                                                                               
+   nComponents: 2                                                                                    
+         types: 'RC'                                                                                 
 </pre><p>and notice that this variable is made up of two PSD blocks:</p><div><ul><li>One block of size 1x1, which appears 1 time</li><li>One block of size 2x2, which appears 1 time</li></ul></div><p>Each block can be examined individually:</p><pre class="codeinput">MSym.blocks{1}
 </pre><pre class="codeoutput">Linear scalar (real, 1 variable)
 Current value: 2.7979e-09
