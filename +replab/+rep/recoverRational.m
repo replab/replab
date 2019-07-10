@@ -1,6 +1,6 @@
-function V1 = recoverRational(sub)
+function V = recoverRational(sub)
 % Replaces the basis sub.U by a basis with integer coefficients if possible
-    V1 = [];
+    V = [];
     P = sub.U*sub.U';
     if replab.isNonZeroMatrix(imag(P), replab.Settings.doubleEigTol)
         return
@@ -27,5 +27,4 @@ function V1 = recoverRational(sub)
             V(:,i) = vi1;
         end
     end
-    V1 = V;
 end
