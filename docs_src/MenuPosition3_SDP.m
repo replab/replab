@@ -66,7 +66,7 @@ MOpt = value(M)
 % structure of the matrix $M$.
 %
 % We start by defining a matrix which satisfies the desired symmetry
-MSym = replab.Centralvar.fromGenerators({permutation});
+MSym = replab.CommutantVar.fromPermutations({permutation});
 %%
 % We can then perform the optimization with:
 constraintsSym = [MSym(1,1)+MSym(2,2)+MSym(3,3) == 1, MSym >= 0];

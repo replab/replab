@@ -1,7 +1,7 @@
-classdef Centralvar < replab.Str
+classdef CommutantVar < replab.Str
 % A matrix variable satisfying some symmetry constraints
 %
-% example: replab.Centralvar.fromGenerators({[3 1 2]})
+% example: replab.CommutantVar.fromPermutations({[3 1 2]})
 
 % Current limitations:
 % - The sdp matrix produced is currently always square, real, and symmetric
@@ -23,7 +23,7 @@ classdef Centralvar < replab.Str
 
     methods
         
-        function self = Centralvar(U, dimensions1, multiplicities, types)
+        function self = CommutantVar(U, dimensions1, multiplicities, types)
             try
                 yalmip('version');
             catch
@@ -90,7 +90,7 @@ classdef Centralvar < replab.Str
     
     methods (Static) % Factory methods
         
-        function R = fromGenerators(generators)
+        function R = fromPermutations(generators)
             assert(iscell(generators), 'Please specify generators in cell array.');
             n = size(generators{1}, 2);
             group = replab.SignedPermutations(n).subgroup(generators);
@@ -111,7 +111,7 @@ classdef Centralvar < replab.Str
                 end
             end
                         
-            R = replab.Centralvar(U, dimensions1, multiplicities, types);
+            R = replab.CommutantVar(U, dimensions1, multiplicities, types);
         end
         
     end
@@ -177,22 +177,22 @@ classdef Centralvar < replab.Str
         function F = ge(X,Y)
         % greater or equal constraint
             % We only support some simple cases for now
-            if isa(X, 'replab.Centralvar')
+            if isa(X, 'replab.CommutantVar')
                 self = X;
                 other = Y;
-                if isa(Y, 'replab.Centralvar')
-                    error('Comparison between two replab.Centralvar not yet supported');
+                if isa(Y, 'replab.CommutantVar')
+                    error('Comparison between two replab.CommutantVar not yet supported');
                 elseif numel(Y) ~= 1
                     error('Only comparison with scalar supported');
                 end
-            elseif isa(Y, 'replab.Centralvar')
+            elseif isa(Y, 'replab.CommutantVar')
                 self = Y;
                 other = X;
                 if numel(X) ~= 1
                     error('Only comparison with scalar supported');
                 end
             else
-                error('Neither of the two arguments is of type Centralvar');
+                error('Neither of the two arguments is of type replab.CommutantVar');
             end
             
             F = [self.blocks{1} >= other];
