@@ -82,5 +82,5 @@ function I = decomposition(rep)
     else
         components = NT;
     end
-    I = replab.Irreducible(rep, components).recoverRational;
+    I = replab.Irreducible(rep, components);
 end
