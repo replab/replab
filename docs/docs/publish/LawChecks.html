@@ -17,21 +17,15 @@ S10 = replab.GroupFun(<span class="string">'Permutations of 1..10'</span>, eqvFu
 </pre><pre class="codeoutput">
 S10 = 
 
-replab.GroupFun instance with six fields:
- composeFun: function_handle                
-description: 'Permutations of 1..10'        
-     eqvFun: function_handle                
-   identity: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
- inverseFun: function_handle                
-  sampleFun: function_handle                
+replab.GroupFun
+identity: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 </pre><p>We instantiate the group laws, and check them.</p><pre class="codeinput">S10laws = replab.GroupLaws(S10)
 S10laws.check
 </pre><pre class="codeoutput">
 S10laws = 
 
-replab.GroupLaws instance with two fields:
-          T: replab.GroupFun            
-description: 'replab.GroupLaws instance'
+replab.GroupLaws
+T: replab.GroupFun
 Checking inverse compatible with compose...
 Checking inverse...
 Checking composeN integers...
@@ -41,7 +35,7 @@ Checking composeAll...
 Checking composeN positive...
 Checking associativity...
 Checking eqv...
-<!--
+</pre></div><!--
 ##### SOURCE BEGIN #####
 %% Using law checks
 %
@@ -59,5 +53,6 @@ S10 = replab.GroupFun('Permutations of 1..10', eqvFun, sampleFun, composeFun, id
 % We instantiate the group laws, and check them.
 S10laws = replab.GroupLaws(S10)
 S10laws.check
+
 ##### SOURCE END #####
 -->

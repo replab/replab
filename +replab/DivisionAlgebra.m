@@ -84,26 +84,20 @@ classdef DivisionAlgebra < replab.Monoid
             z = z.';
         end
         
-    end
-    
-    methods
-        
-        function law_matrix_isomorphism_compose_DD(self, x, y)
-            X = self.toMatrix(x);
-            Y = self.toMatrix(y);
-            XY = X*Y;
-            XY1 = self.toMatrix(self.compose(x, y));
-            self.assertTrue(isequal(XY, XY1));
+        function b = isReal(self)
+            b = isequal(self.shortName, 'R');
         end
         
-        function law_matrix_isomorphism_D(self, x)
-            X = self.toMatrix(x);
-            x1 = self.fromMatrix(X);
-            self.assertEqv(x, x1);
+        function b = isComplex(self)
+            b = isequal(self.shortName, 'C');
+        end
+        
+        function b = isQuaternion(self)
+            b = isequal(self.shortName, 'H');
         end
         
     end
-    
+        
     methods (Static)
         
         function D = real

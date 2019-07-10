@@ -13,7 +13,7 @@ classdef GroupFun < replab.MonoidFun & replab.Group
         function names = hiddenFields(self)
             names1 = hiddenFields@replab.MonoidFun(self);
             names2 = hiddenFields@replab.Group(self);
-            names = vertcat(names1(:), names2(:));
+            names = horzcat(names1(:), names2(:));
             names{end+1, 1} = 'inverseFun';
             names = unique(names);
         end

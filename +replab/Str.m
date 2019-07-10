@@ -16,7 +16,7 @@ classdef Str < handle
         
         function [names values] = additionalFields(self)
         % Returns the name/value pairs corresponding to additional
-        % fields to be printed; given as column vectors
+        % fields to be printed; given as row vectors
         % Classes that override this method should call the
         % superclass method
             names = {};
@@ -24,9 +24,8 @@ classdef Str < handle
         end
         
         function names = hiddenFields(self)
-        % Returns the names of the fields that are not printed as a column vector
-        % Classes that override this method should call the
-        % superclass method
+        % Returns the names of the fields that are not printed as a row vector
+        % Classes that override this method should call the superclass method
             names = {};
         end
         
@@ -36,11 +35,24 @@ classdef Str < handle
             if isfield(self, 'shortStrFun')
                 f = self.shortStrFun;
                 if ~isequal(f, [])
-                    str = f(self, maxColumns);
+                    s = f(self, maxColumns);
                     return
                 end
             end
             s = replab.str.shortStr(self, maxColumns);
+        end
+        
+        function s = headerStr(self, maxColumns)
+        % Returns a tiny single line description of the current object type
+        % see replab.headerStr for documentation
+            if isfield(self, 'headerStrFun')
+                f = self.headerStrFun;
+                if ~isequal(f, [])
+                    s = f(self);
+                    return
+                end
+            end
+            s = self.shortStr(maxColumns);
         end
         
         function s = longStr(self, maxRows, maxColumns)

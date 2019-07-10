@@ -131,6 +131,19 @@ classdef SignedPermutations < replab.SignedPermutationGroup & replab.FiniteGroup
         
     end
     
+    methods (Static)
+        
+        function Q = quaternionGroup(self)
+        % Returns a signed representation of the quaternion group
+            SS4 = replab.SignedPermutations(4);
+            g1 = [-1 -2 -3 -4];
+            gi = [2 -1 4 -3];
+            gj = [3 -4 -1 2];
+            Q = SS4.subgroup({g1 gi gj});
+        end
+        
+    end
+    
     methods (Access = protected)
         
         function ind = enumeratorFind(self, g)

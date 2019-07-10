@@ -30,9 +30,7 @@ function [names values] = fieldsList(obj)
         [names I] = setdiff(names, hidden);
         values = values(I);
         [names1 values1] = obj.additionalFields;
-        names1 = names1(:);
-        values1 = values1(:);
-        names = vertcat(names, names1);
-        values = vertcat(values, values1);
+        names = replab.str.horzcatForce(names, names1);
+        values = replab.str.horzcatForce(values, values1);
     end
 end

@@ -9,7 +9,7 @@ classdef SignedPermutationNaturalAction < replab.FaithfulAction & replab.StrFun
         function self = SignedPermutationNaturalAction(G)
             assert(isa(G, 'replab.SignedPermutations'));
             desc = sprintf('Natural signed permutation action on 2*%d elements', G.domainSize);
-            self = self@replab.StrFun(@(s, mc) desc);
+            self = self@replab.StrFun(desc, desc);
             self.G = G;
             self.P = replab.domain.signedIntAsDouble(1, G.domainSize);
         end

@@ -17,15 +17,10 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
         
         % Str
                 
-        function s = shortStr(self, maxColumns)
+        function s = headerStr(self)
             s = sprintf('Permutations acting on %d elements', self.domainSize);
         end
 
-        function lines = longStr(self, maxRows, maxColumns)
-            lines = replab.str.longStr(self, maxRows, maxColumns);
-            lines{1} = self.shortStr(maxColumns);
-        end
-        
         % Domain
         
         function s = sample(self)
@@ -153,11 +148,11 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
             grp = replab.perm.PermutationBSGSGroup(self, generators, orderOpt);
         end
         
-        function grp = trivialGroup(self)
+        function grp = trivialSubgroup(self)
             grp = self.subgroup({}, vpi(1));
         end
         
-        function grp = cyclicGroup(self)
+        function grp = cyclicSubgroup(self)
             n = self.domainSize;
             if n == 1
                 grp = self.trivialGroup;
@@ -166,7 +161,7 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
             end
         end
         
-        function grp = alternatingGroup(self)
+        function grp = alternatingSubgroup(self)
             n = self.domainSize;
             if n <= 2
                 grp = self.trivialGroup;
@@ -185,9 +180,30 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
             grp = self.subgroup(self.generators, self.order);
         end
         
+        function grp = dihedralSubgroup(self)
+            n = self.domainSize;
+            if n <= 2
+                grp = self.symmetricGroup;
+            else
+                g1 = [2:n 1];
+                g2 = fliplr(1:n);
+                grp = self.subgroup({g1 g2});
+            end
+        end
+        
     end
     
     methods (Static)
+        
+        function Q = quaternionGroup(self)
+        % Returns a permutation representation of the quaternion group
+        %
+        % (can be seen as the multiplication of quaternions +/- 1,i,j,k = 8 elements)
+            S8 = replab.Permutations(8);
+            g1 = S8.fromCycles([1 2 4 7], [3 6 8 5]);
+            g2 = S8.fromCycles([1 3 4 8], [2 5 7 6]);
+            Q = replab.Permutations(8).subgroup({g1 g2});
+        end
         
         function mat = toMatrix(perm)
         % Returns the permutation matrix corresponding to the given permutation

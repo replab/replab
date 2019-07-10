@@ -14,13 +14,6 @@ title: Installation
 - `+replab/+subpackages`: implementation files for different submodules,
 - `tests`: tests written using MOxUnit, augmented with our laws test framework.
 
-## No abstract methods in abstract base classes
-
-As Octave does not support the `methods (Abstract)` syntax, we provide generic implementations for abstract methods in abstract base classes by either:
-
-- trying to retrieve and calling a function handle property (the `DomainFun`, `SemigroupFun`, ... approach), or
-- throwing `error('Not implemented')`.
-
 ## The `Class`, `ClassFun` and `ClassLaws` triad
 
 This works for `Class` = `Domain`, `Class` = `Semigroup`, `Class` = `Action`, and so on.
@@ -72,6 +65,12 @@ Finite groups contain a finite number of elements.
 
 - `FiniteGroupDecomposition`: describes the decomposition of a group into a product of sets.
 
+### Abstract group constructions
+
+- `DirectProductGroup`: represents the (outer) direct product of finite groups, the elements are represented by row cell arrays,
+- `SemidirectProductGroup`: represents an outer semidirect product from a homomorphism, with both factors finite groups,
+- `WreathProductGroup`: describes the wreath product of a finite group by a permutation group.
+
 ### Permutation groups
 
 Permutation groups are finite groups that are subgroups of the symmetric group acting on `n` elements.
@@ -99,23 +98,25 @@ Those algorithms are generic and rest on the availability of a `FaithfulAction` 
 
 ### Representations
 
-- `RealRep` is a real representation of a finitely generated group. It is described by the (matrix) images of the group generators; the computation of images rests on the factorization of group elements.
+- `Rep` is a real or complex representation of a finitely generated group. 
 
-Once a `RealRep` has been constructed, it can be decomposed into irreducible representations using the `realRep.irreducible` method.
+- `RepByImages` is a real or complex representation described by the (matrix) images of the group generators; the computation of images rests on the factorization of group elements.
 
-- `RealIrrep` describes an irreducible representation with possible multiplicity. The instance can remember which representation it splits (as a `parent`) and the change of basis matrix (`U` and `Uinv`).
-- `RealDecompositionRep` collects inequivalent subrepresentations in a decomposition. It corresponds to the direct sum of representations that are guaranteed to be inequivalent (even after further splitting).
+Once a `Rep` has been constructed, it can be decomposed into irreducible representations using the `realRep.decomposition` method.
 
-### Centralizer algebras
+- `SubRep` describes a subrepresentation of an existing representation. The instance can remember which representation it splits (as a `parent`) and the change of basis matrix (`U`).
+- `Irrep` describes an irreducible subrepresentation; for representations over the reals, it also takes care to express the complex/quaternion division algebras in a regular manner.
+- `Isotypic` are isotypic components, which group equivalent irreducible representations present in a reprsentation.
+- `Irreducible` regroups isotypic components.
 
-The key to the simplification of invariant semidefinite programs is the decomposition of *matrices that commute with a group representation*; the set of all such matrices is the *centralizer algebra*.
+### Commutant algebras
+
+The key to the simplification of invariant semidefinite programs is the decomposition of *matrices that commute with a group representation*; the set of all such matrices is the *commutant algebra*.
 
 RepLAB has several classes to work with centralizer algebras.
 
-- `RealCentralizerAlgebra` describes a generic centralizer algebra.
-- `RealConfigurationAlgebra` describes a centralizer algebra invariant under a monomial representation (thus faster projection algorithms are available),
-- `RealDecompositionCentralizerAlgebra` collects centralizer algebras corresponding to inequivalent representations,
-- `RealIrreducibleCentralizerAlgebra` corresponds to the centralizer algebra of an irreducible real representation. Note that irreducible real representations are of three types: real, complex and quaternionic, thus, see below,
+- `Equivariant` describes the vector space of equivariant linear maps between two representations of the same group.
+- `Commutant` describes a generic commutant algebra.
 - `DivisionAlgebra` describes a division algebra present in an irreducible representation.
 
 ## Sequences of elements
@@ -127,10 +128,13 @@ RepLAB has several classes to work with centralizer algebras.
 - `Partition`: describes an unordered partition of the integers $\{1,...,n\}$,
 - `DivisionAlgebra`: generic representation of the real, complex and quaternionic algebras over the reals,
 - `rational`: a hacky implementation of rational matrices with double-representable integer coefficients,
+- `Quaternion`: a minimal implementation of quaternion matrices,
 - `Settings`: various global settings such as tolerances,
 - `GroupMorphismLaws`: laws for function handles that are group homomorphisms.
 
 ## Methods
 
 - `isNonZeroMatrix`, tests whether a matrix is nonzero up to a given tolerance using the 2-norm (singular value), with accelerations provided by matrix norm inequalities and cheap norms,
-- `strOf`: prettyprints a generic object.
+- `headerStr`: returns a short description of an object without digging into its contents, 
+- `shortStr`: returns a short description of an object, with a best effort to include its contents,
+- `longStr`: returns a long description of an object, including an enumeration of its properties.

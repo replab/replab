@@ -6,11 +6,7 @@ function msg = message(errorDesc, context, assertArgs, testVarNames, testVarValu
         msg = errorDesc;
     end
     for i = 1:length(assertArgs)
-        try
-            assertArgs{i} = str(assertArgs{i});
-        catch
-            assertArgs{i} = moxunit_util_elem2str(assertArgs{i});
-        end
+        assertArgs{i} = replab.shortStr(assertArgs{i});
     end
     msg = sprintf(msg, assertArgs{:});
     msg = [msg char(10) 'with variables' char(10)];
@@ -18,11 +14,7 @@ function msg = message(errorDesc, context, assertArgs, testVarNames, testVarValu
     for i = 1:length(testVarNames)
         vn = testVarNames{i};
         vn = [blanks(maxLength - length(vn)) vn ':' char(10)];
-        try
-            vv = str(testVarValues{i});
-        catch
-            vv = moxunit_util_elem2str(testVarValues{i});
-        end
+        vv = replab.shortStr(testVarValues{i});
         msg = [msg sprintf('%s\n%s\n\n', vn, vv)];
     end
 end

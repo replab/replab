@@ -52,8 +52,46 @@ classdef PermutationGroup < replab.Group
             A = replab.perm.PermutationMatrixAction(self);
         end
         
+        function perm = indexRelabelingPermutation(self, g, localDimension)
+        % Describes the permutation action of this group on tensor coefficients
+            n = self.domainSize;
+            dims = localDimension * ones(1, n);
+            perm = permute(reshape(1:prod(dims), dims), fliplr(n +  1 - g));
+            perm = perm(:)';
+        end
+        
+        function phi = indexRelabelingMorphism(self, localDimension)
+        % Describes the permutation action of this group on tensor coefficients
+        %
+        % The tensor coefficients correspond to R^ld x R^ld ... (domainSize times)
+            phi = @(g) self.indexRelabelingPermutation(g, localDimension);
+        end
+        
+        function rho = indexRelabelingRep(self, localDimension)
+        % Representation that permutes the indices of a tensor
+        %
+        % It acts on the tensor space R^ld x R^ld ... (domainSize times)
+        % by permuting the indices. The representation returned is real.
+            rho = replab.rep.IndexRelabelingRep(self, localDimension);
+        end
+        
         function rho = naturalRepresentation(self)
             rho = self.permutationRepresentation(self.domainSize, self.generators);
+        end
+        
+        function rho = naturalRep(self)
+        % Returns the natural permutation representation of this permutation group
+            rho = self.permutationRep(self.domainSize, self.generators);
+        end
+        
+        function rho = standardRep(self)
+        % Returns the standard representation of this permutation group
+        %
+        % It corresponds to the representation orthogonal to the
+        % trivial representation with basis [1, 1, ..., 1]'/sqrt(d)
+            U = replab.rep.standardBasis(self.domainSize);
+            U = U(:, 2:end);
+            rho = self.naturalRep.subRep(U);
         end
         
         function o = orbits(self)

@@ -346,10 +346,18 @@ classdef Chain < handle
         end
         
         function gd = groupDecomposition(self)
+        % Returns the group decomposition into a product of transversals
+        %
+        % Guarantees that the first element of each transversal is
+        % the identity
             gd = {};
             it = self;
             while ~it.isTerm
-                gd = horzcat(gd, {it.u});
+                u = cell(1, length(it.orbit));
+                u{1} = self.A.G.identity;
+                mask = cellfun(@(b) ~isequal(b, it.beta), it.orbit);
+                u = {self.A.G.identity it.u{mask}};
+                gd = horzcat(gd, {u});
                 it = it.next;
             end
         end

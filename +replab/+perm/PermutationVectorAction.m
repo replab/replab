@@ -5,7 +5,7 @@ classdef PermutationVectorAction < replab.Action & replab.StrFun
             d = G.domainSize;
             assert(isa(G, 'replab.PermutationGroup'));
             desc = sprintf('Action of permutations on vectors of %d elements', d);
-            self = self@replab.StrFun(@(s, mc) desc);
+            self = self@replab.StrFun(desc, desc);
             self.G = G;
             self.P = replab.domain.intAsDoubleMatrix(d, 1, 1, G.domainSize);
         end

@@ -12,11 +12,11 @@ classdef FaithfulActionFun < replab.ActionFun & replab.FaithfulAction
         end
         
         function names = hiddenFields(self)
-            names1 = hiddenFields@replab.ActionFun(self);
-            names2 = hiddenFields@replab.FaithfulAction(self);
-            names = vertcat(names1(:), names2(:));
-            names{end+1, 1} = 'findMovedElementFun';
-            names = unique(names);
+            names = replab.str.uniqueNames( ...
+                hiddenFields@replab.ActionFun(self), ...
+                hiddenFields@replab.FaithfulAction(self), ...
+                {'findMovedElementFun'}, ...
+                );
         end
 
     end

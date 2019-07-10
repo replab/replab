@@ -121,7 +121,7 @@ classdef Laws < replab.Str
     methods (Static)
         function n = nRuns
         % Returns the default number of runs (constant)
-            n = 100;
+            n = 20;
         end
     end
     

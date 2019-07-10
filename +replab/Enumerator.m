@@ -36,7 +36,11 @@ classdef Enumerator < replab.Str
     methods
         
         function self = Enumerator(size)
-            self.size = size;
+            if isa(size, 'vpi')
+                self.size = size;
+            else
+                self.size = vpi(size);
+            end
         end
         
         function s = shortStr(self, maxColumns)
@@ -51,7 +55,7 @@ classdef Enumerator < replab.Str
                 omit = self.size - start - finish;
                 omitting = 1;
             else
-                start = self.size;
+                start = double(self.size);
                 omit = [];
                 omitting = 0;
                 finish = 0;
@@ -83,6 +87,8 @@ classdef Enumerator < replab.Str
         function obj = sample(self)
         % Returns an element uniformly sampled from this Enumerator
             obj = self.at(randint(self.size));
+            % use randint as it is the method equivalent to randi
+            % on @vpi
         end
         
         function C = toCell(self)
