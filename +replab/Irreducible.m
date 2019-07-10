@@ -48,7 +48,6 @@ classdef Irreducible < replab.Str
                 values{1, end+1} = self.component(i);
             end
         end
-
         
     end
 
