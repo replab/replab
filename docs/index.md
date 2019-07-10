@@ -25,10 +25,8 @@ See the [**Installation guide**](docs/installation.html).
 
 **RepLAB** is a work-in-progress. In particular:
 
-- Representations over the complex field are not supported, nor are monomial groups with complex roots of unity.
 - RepLAB only works in double floating-point precision.
-- When decomposing representations over the reals, irreducible representations of quaternionic type are detected but not yet decomposed.
-- Representations are handled by decomposing preimages in words over generators, which limits the order of groups that can be handled.
+- Most representations are handled by decomposing preimages in words over generators, which limits the order of groups that can be handled.
 - While RepLAB has a basic implementation of the BSGS construction, it does not offer much to work with permutation groups.
 
 ## Why RepLAB?
@@ -60,4 +58,4 @@ Feedback and suggestions are always welcome. We ask participants to follow the g
 
 ## License
 
-RepLAB is (C) 2018 Denis Rosset, Jean-Daniel Bancal and licensed under the [Mozilla Public License 2.0](https://github.com/replab/replab/LICENSE).
+RepLAB is (C) 2018-2019 Denis Rosset, Jean-Daniel Bancal and other collaborators, and licensed under the [Mozilla Public License 2.0](https://github.com/replab/replab/LICENSE).
