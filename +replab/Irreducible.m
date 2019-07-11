@@ -19,7 +19,7 @@ classdef Irreducible < replab.Str
             for i = 1:self.nComponents
                 U = [U self.component(i).rep.U];
             end
-            r = self.parent.leftConjugate(U);
+            r = self.parent.leftConjugate(U');
             % TODO: preserve rational bases
         end
 
