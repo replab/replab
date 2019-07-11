@@ -15,11 +15,11 @@ classdef Irreducible < replab.Str
         
         function r = rep(self)
         % Returns the subrepresentation corresponding to this isotypic component
-            U = zeros(self.parent.dimension, 0);
+            U = zeros(0, self.parent.dimension);
             for i = 1:self.nComponents
-                U = [U self.component(i).rep.U];
+                U = [U; self.component(i).rep.U];
             end
-            r = self.parent.leftConjugate(U');
+            r = self.parent.leftConjugate(U);
             % TODO: preserve rational bases
         end
 

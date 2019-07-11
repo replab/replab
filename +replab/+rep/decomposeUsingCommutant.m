@@ -14,6 +14,6 @@ function sub = decomposeUsingCommutant(rep)
     n = length(runs);
     sub = cell(1, n);
     for i = 1:n
-        sub{i} = rep.subRep(U(:, runs{i}));
+        sub{i} = rep.subRep(U(:, runs{i})');
     end
 end

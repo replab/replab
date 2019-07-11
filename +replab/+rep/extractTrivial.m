@@ -41,4 +41,7 @@ function [Utrivial Urest] = extractTrivial(rep)
     assert(size(Utrivial, 1) == d);
     assert(size(Urest, 1) == d);
     assert(size(Utrivial, 2) + size(Urest, 2) == d);
+    % new convention corresponding to left conjugation
+    Utrivial = Utrivial';
+    Urest = Urest';
 end

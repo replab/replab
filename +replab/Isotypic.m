@@ -24,9 +24,9 @@ classdef Isotypic < replab.Str
         
         function r = rep(self)
         % Returns the subrepresentation corresponding to this isotypic component
-            U = zeros(self.parent.dimension, 0);
+            U = zeros(0, self.parent.dimension);
             for i = 1:self.nCopies
-                U = [U self.copy(i).U];
+                U = [U;self.copy(i).U];
             end
             r = self.parent.subRep(U);
             % TODO: preserve rational bases

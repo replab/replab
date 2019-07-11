@@ -7,7 +7,7 @@ function W = findCommonBasis(rep, sub1, sub2, c)
 %           (sub1 and sub2 need to be equivalent)
 %        c: (optional) generic sample from rep.commutant
 %
-% Returns W such that W' * sub2.image(g) * W = sub1.image(g)
+% Returns W such that W * sub2.image(g) * W' = sub1.image(g)
     assert(isa(sub1, 'replab.Irrep'));
     assert(isa(sub2, 'replab.SubRep'));
     if nargin < 4
@@ -16,13 +16,15 @@ function W = findCommonBasis(rep, sub1, sub2, c)
     d = sub1.dimension;
     assert(sub2.dimension == d);
     if isequal(sub1.realDivisionAlgebra, []) || sub1.realDivisionAlgebra.isReal
-        W = sub2.U'*c*sub1.U;
+        W = sub2.U*c*sub1.U';
         W = W * sqrt(sub1.dimension/real(trace(W*W')));
     elseif sub1.realDivisionAlgebra.isComplex
-        W = sub2.U'*c*sub1.U;
+        W = sub2.U*c*sub1.U';
         W = W * sqrt(sub1.dimension/real(trace(W*W')));
     elseif sub1.realDivisionAlgebra.isQuaternion
-        W = sub2.U'*c*sub1.U;
+        W = sub2.U*c*sub1.U';
         W = W * sqrt(sub1.dimension/real(trace(W*W')));
     end
+    % correction needed: why?
+    W = W';
 end
