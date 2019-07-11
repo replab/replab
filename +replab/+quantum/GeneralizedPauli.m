@@ -1,16 +1,24 @@
-classdef PauliGroup < replab.FiniteGroup
+classdef GeneralizedPauli < replab.FiniteGroup
+% Returns a definition of the generalized Pauli group
+%
+% See for example https://arxiv.org/pdf/quant-ph/0408190.pdf
+% 
 % An element of the Pauli group of dimension d is represented by
 % three integers a, b, c = 0,...,d-1 in a row vector [a b c]
 % such that for g = [a b c], the represented group element is
 %    w^a x^b z^c
+%
+% w is a common phase
+% x is a cyclic shift of levels
+% z is a level-dependent phase 
 
     properties
-        d;
+        d; % Dimension of the qudit
     end
         
     methods
         
-        function self = PauliGroup(d)
+        function self = GeneralizedPauli(d)
             self.d = d;
             self.identity = [0 0 0];
             % group generators
