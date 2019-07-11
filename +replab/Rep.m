@@ -51,7 +51,7 @@ classdef Rep < replab.Str
         function I = decomposition(self)
         % Returns the irreducible decomposition of this representation
             if isequal(self.decomposition_, [])
-                self.decomposition_ = replab.rep.decomposition(self);
+                self.decomposition_ = replab.rep.decomposition(self).nice;
             end
             I = self.decomposition_;
         end
@@ -125,34 +125,32 @@ classdef Rep < replab.Str
         
         % Manipulation of representation space
         
-        function sub = subRep(self, A)
+        function sub = subRep(self, U)
         % Returns a subrepresentation of this representation
         %
-        %
-        % It is given by the column basis vectors in A, such that
-        % sub.image(g) = A' * self.image(g) * A
+        % It is described by the row basis vectors in U, such that
+        % sub.image(g) = U' * self.image(g) * U
         %
         % A has dimension self.dimension x dim(subRepresentation)
         %
-        % Note that A needs to be orthogonal, but the basis vectors
+        % Note that U needs to be orthogonal, but the basis vectors
         % do not need to be normalized
             assert(nargin == 2);
-            sub = replab.SubRep(self, A);
+            sub = replab.SubRep(self, U);
         end
 
-        function rep1 = leftConjugate(self, A)
+        function rep1 = leftConjugate(self, U)
         % Returns the (left) conjugation of this representation
         %
         % A should be a unitary matrix
         %
         % It returns a representation rep1 such that
         %
-        % rep1.image(g) = A * self.image(g) * A'
+        % rep1.image(g) = U * self.image(g) * U'
         %
         % Note the opposite convention with respect to subRep
-            rep1 = replab.ConjugateRep(A, self);
+            rep1 = replab.ConjugateRep(U, self);
         end
-        
 
     end
     

@@ -31,8 +31,8 @@ classdef Irreducible < replab.Str
             c = self.components{i};
         end
         
-        function I = recoverRational(self)
-            components1 = cellfun(@(x) x.recoverRational, self.components, 'uniform', 0);
+        function I = nice(self)
+            components1 = cellfun(@(x) x.nice, self.components, 'uniform', 0);
             I = replab.Irreducible(self.parent, components1);
         end
         

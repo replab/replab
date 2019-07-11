@@ -66,13 +66,11 @@ classdef SubRep < replab.Rep
             end
         end
         
-        function sub1 = recoverRational(self)
-        % Tries to recover a rational basis for this subrepresentatino
-            U1 = replab.rep.recoverRational(self);
-            if isequal(U1, [])
-                sub1 = self;
-            else
-                sub1 = self.parent.subRep(U1);
+        function sub1 = nice(self)
+        % Tries to recover a nice basis for this subrepresentation
+            sub1 = replab.rep.niceRep(self);
+            if isequal(sub1, [])
+                sub1 = self; % fallback
             end
         end
         
