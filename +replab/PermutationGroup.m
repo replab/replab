@@ -90,7 +90,7 @@ classdef PermutationGroup < replab.Group
         % It corresponds to the representation orthogonal to the
         % trivial representation with basis [1, 1, ..., 1]'/sqrt(d)
             U = replab.rep.standardBasis(self.domainSize);
-            U = U(:, 2:end);
+            U = U(2:end, :);
             rho = self.naturalRep.subRep(U);
         end
         

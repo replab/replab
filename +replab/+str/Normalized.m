@@ -15,7 +15,9 @@ classdef Normalized < replab.Str
             invsquare = 1/f^2;
             if abs(invsquare - round(invsquare)) < replab.Settings.doubleEigTol
                 n = round(invsquare);
-                if sqrt(n) == round(sqrt(n))
+                if n == 1
+                    rhs = '';
+                elseif sqrt(n) == round(sqrt(n))
                     n1 = sqrt(n);
                     rhs = sprintf('/%d', n1);
                 else

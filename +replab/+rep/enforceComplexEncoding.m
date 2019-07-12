@@ -1,7 +1,7 @@
 function W = enforceComplexEncoding(rep)
 % Finds change of basis that reveals the complex division algebra
 %
-% Returns W such that W' * rep.image(g) * W is encoded using the
+% Returns W such that W * rep.image(g) * W' is encoded using the
 % complex encoding of replab.DivisionAlgebra
     assert(isequal(rep.field, 'R'));
     d = rep.dimension;
@@ -40,4 +40,5 @@ function W = enforceComplexEncoding(rep)
             W = [W X];
         end
     end
+    W = W'; % returns adjoint
 end

@@ -107,7 +107,9 @@ classdef CommutantVar < replab.Str
                 types(i) = component.copy(1).realDivisionAlgebra.shortName;
                 for j = 1:component.multiplicity
                     copy = component.copy(j);
-                    U = [U copy.U];
+                    % correction, as the new RepLAB convention
+                    % is to store basis vectors as row vectors
+                    U = [U copy.U'];
                 end
             end
                         

@@ -14,4 +14,6 @@ function U = standardBasis(d)
         end
         U = kron(U, Ui);
     end
+    % new convention with basis vectors in rows
+    U = U';
 end

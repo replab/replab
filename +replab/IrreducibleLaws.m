@@ -21,8 +21,8 @@ classdef IrreducibleLaws < replab.Laws
         end
         
         function law_decomposes_entire_space(self)
-            A = self.irreducible.rep.A;
-            self.M.assertEqv(A' * A, eye(self.irreducible.parent.dimension));
+            U = self.irreducible.rep.U;
+            self.M.assertEqv(U' * U, eye(self.irreducible.parent.dimension));
         end
         
         function isotypicLaws = laws_isotypic_components(self)

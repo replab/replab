@@ -10,7 +10,7 @@ function [sub O] = orbitDecomposition(rep)
     for b = 1:n
         block = O.block(b);
         d = length(block);
-        basis = sparse(block, 1:d, ones(1, d), rep.dimension, d);
+        basis = sparse(1:d, block, ones(1, d), d, rep.dimension);
         sub{b} = rep.subRep(basis);
     end
 end

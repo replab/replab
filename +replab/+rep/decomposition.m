@@ -13,8 +13,8 @@ function I = decomposition(rep)
     for i = 1:length(sub1)
         s1 = sub1{i};
         [Ut Ur] = replab.rep.extractTrivial(s1);
-        for j = 1:size(Ut, 2)
-            Uthis = s1.U * Ut(:, j);
+        for j = 1:size(Ut, 1)
+            Uthis = Ut(j, :) * s1.U;
             trivial{1, end+1} = replab.Irrep(rep, Uthis, trivialRealDivisionAlgebra);
         end
         if size(Ur, 2) > 0
@@ -35,7 +35,7 @@ function I = decomposition(rep)
         for j = 1:nNT
             subI = nontrivial{i};
             subJ = nontrivial{j};
-            mask(i,j) = replab.isNonZeroMatrix(subI.U' * C * subJ.U, tol);
+            mask(i,j) = replab.isNonZeroMatrix(subI.U * C * subJ.U', tol);
         end
     end
     cc = replab.Partition.connectedComponents(mask).blocks;
@@ -52,11 +52,11 @@ function I = decomposition(rep)
                                           replab.DivisionAlgebra.real);
               case 'C'
                 W = replab.rep.enforceComplexEncoding(first);
-                firstIrrep = replab.Irrep(rep, first.U * W, ...
+                firstIrrep = replab.Irrep(rep, W * first.U, ...
                                           replab.DivisionAlgebra.complex);
               case 'H'
                 W = replab.rep.enforceQuaternionEncoding(first);
-                firstIrrep = replab.Irrep(rep, first.U * W, ...
+                firstIrrep = replab.Irrep(rep, W * first.U, ...
                                           replab.DivisionAlgebra.quaternion);
             end
         else
@@ -67,7 +67,7 @@ function I = decomposition(rep)
         for j = 2:length(iso)
             other = nontrivial{iso(j)};
             E = replab.rep.findCommonBasis(rep, firstIrrep, other, C);
-            copies{j} = replab.Irrep(rep, other.U * E, ...
+            copies{j} = replab.Irrep(rep, E * other.U, ...
                                      firstIrrep.realDivisionAlgebra);
         end
         NT{i} = replab.Isotypic(rep, copies);

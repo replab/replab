@@ -117,22 +117,22 @@ subrho2.U
 % all $g$ in the group.
 %
 % *RepLAB* gives an access to that algebra:
-A = rho.commutant
+C = rho.commutant
 %%
 % and we can sample generic matrices from that algebra
 %
-A.sample
+C.sample
 %%
 % or perform an orthogonal projection of arbitrary matrices in that
 % algebra
 Mgen = rand(n, n)
 %%
 %
-M = A.project(rand(n,n))
+M = C.project(rand(n,n))
 %%
 %%
 % Which is has a block diagonalization in the symmetry adapted basis:
-A = I.rep.A
+U = I.rep.U
 %%
 %
-A'*M*A
+U*M*U'

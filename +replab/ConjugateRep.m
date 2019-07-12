@@ -1,30 +1,30 @@
 classdef ConjugateRep < replab.Rep
-% Conjugated representation A * rep * A'
+% Conjugated representation U * rep * U'
 %
 % We use left action convention, which means that
-% image(g) = A * parent.image(g) * A'
+% image(g) = U * parent.image(g) * U'
     
     properties (SetAccess = protected)
-        A; % unitary conjugation matrix
+        U; % unitary conjugation matrix
         parent; % representation being conjugated
     end
     
     methods
                 
-        function self = ConjugateRep(A, parent)
+        function self = ConjugateRep(U, parent)
             switch parent.field
               case 'R'
-                assert(isreal(A), 'A real Rep can only be conjugated by a real orthonormal matrix');
+                assert(isreal(U), 'A real Rep can only be conjugated by a real orthonormal matrix');
               case 'C'
-                assert(isa(A, 'double'), 'A complex Rep can only be conjugated by a complex/real unitary matrix');
+                assert(isa(U, 'double'), 'A complex Rep can only be conjugated by a complex/real unitary matrix');
               otherwise
             end
-            assert(size(A, 1) == parent.dimension);
-            assert(size(A, 2) == parent.dimension);
+            assert(size(U, 1) == parent.dimension);
+            assert(size(U, 2) == parent.dimension);
             self.group = parent.group;
             self.field = parent.field;
             self.dimension = parent.dimension;
-            self.A = A;
+            self.U = U;
             self.parent = parent;
         end
 
@@ -33,7 +33,7 @@ classdef ConjugateRep < replab.Rep
         end
 
         function rho = image(self, g)
-            rho = self.A * self.parent.image(g) * self.A';
+            rho = self.U * self.parent.image(g) * self.U';
         end
 
         % TODO: optimize other methods

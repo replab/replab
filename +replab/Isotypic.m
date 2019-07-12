@@ -24,9 +24,9 @@ classdef Isotypic < replab.Str
         
         function r = rep(self)
         % Returns the subrepresentation corresponding to this isotypic component
-            U = zeros(self.parent.dimension, 0);
+            U = zeros(0, self.parent.dimension);
             for i = 1:self.nCopies
-                U = [U self.copy(i).U];
+                U = [U;self.copy(i).U];
             end
             r = self.parent.subRep(U);
             % TODO: preserve rational bases
@@ -42,14 +42,15 @@ classdef Isotypic < replab.Str
             c = self.copies{i};
         end
         
-        function I = recoverRational(self)
-        % Tries to recover rational bases for all subrepresentations
-        %
-        % TODO: handle the multiplicity degeneracy
-            copies1 = cellfun(@(x) x.recoverRational, self.copies, 'uniform', 0);
-            I = replab.Isotypic(self.parent, copies1);
+        function I = nice(self)
+        % Tries to recover "nice" bases for all subrepresentations
+            if self.nCopies > 1
+                % TODO: handle multiplicities better
+                I = self;
+            else
+                I = replab.Isotypic(self.parent, {self.copy(1).nice});
+            end
         end
-
         
         function names = hiddenFields(self)
             names = hiddenFields@replab.Str(self);

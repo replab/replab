@@ -1,10 +1,11 @@
 function V = recoverRational(sub)
 % Replaces the basis sub.U by a basis with integer coefficients if possible
     V = [];
-    P = sub.U*sub.U';
+    P = sub.U'*sub.U;
     if replab.isNonZeroMatrix(imag(P), replab.Settings.doubleEigTol)
         return
     end
+    P = real(P);
     [~, jb] = rref(P);
     U = P(:, jb);
     [num den] = rat(U);
@@ -12,6 +13,7 @@ function V = recoverRational(sub)
     limit = 1000;
     if G < limit
         V = num .* (G./den);
+        V(:,1) = V(:,1)/replab.rep.vecgcd(V(:,1));
         for i = 2:size(V, 2)
             vi = V(:,i);
             vi1 = vi;
@@ -26,5 +28,6 @@ function V = recoverRational(sub)
             end
             V(:,i) = vi1;
         end
+        V = V';
     end
 end

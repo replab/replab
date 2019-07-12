@@ -37,9 +37,10 @@ end
 function test_representation_of_cyclic_group
     C12 = replab.Permutations(12).cyclicSubgroup;
     rep = C12.naturalRep;
-    d = cellfun(@(iso) iso.copyDimension, rep.decomposition.components);
-    m = cellfun(@(iso) iso.multiplicity, rep.decomposition.components);
-    t = cellfun(@(iso) iso.copy(1).realDivisionAlgebra.d, rep.decomposition.components);
+    dec = rep.decomposition;
+    d = cellfun(@(iso) iso.copyDimension, dec.components);
+    m = cellfun(@(iso) iso.multiplicity, dec.components);
+    t = cellfun(@(iso) iso.copy(1).realDivisionAlgebra.d, dec.components);
     assertEqual(d, [1 1 2 2 2 2 2]);
     assertEqual(m, [1 1 1 1 1 1 1]);
     assertEqual(t, [1 1 2 2 2 2 2]);
