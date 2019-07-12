@@ -107,3 +107,6 @@ docs/_site/
 coverage.*
 coverage_html
 
+## Jupyter checkpoints
+.ipynb_checkpoints
+
