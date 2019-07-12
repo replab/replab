@@ -16,23 +16,34 @@ permutation = [2 3 1];
 constraints = [trace(M) == 1, M(permutation, permutation) == M, M &gt;= 0];
 diagnostic = optimize(constraints, M(1,2), sdpsettings(<span class="string">'verbose'</span>, 0))
 MOpt = value(M)
-</pre><pre class="codeoutput">
+</pre><pre class="codeoutput">#############################################################
+You are using LMILAB. Please don't use LMILAB with YALMIP
+https://yalmip.github.io/solver/lmilab/
+ 
+Install a better SDP solver
+https://yalmip.github.io/allsolvers/
+ 
+To get rid of this message, edit calllmilab.m  
+(but don't expect support when things do not work,
+YALMIP + LMILAB =&gt; No support)
+#############################################################
+
 diagnostic = 
 
   struct with fields:
 
     yalmipversion: '20190425'
-       yalmiptime: 0.0682
-       solvertime: 0.1090
-             info: 'Successfully solved (SDPT3-4)'
-          problem: 0
+       yalmiptime: 0.7152
+       solvertime: 0.0975
+             info: 'Infeasible problem (LMILAB)'
+          problem: 1
 
 
 MOpt =
 
-    0.3333   -0.1667   -0.1667
-   -0.1667    0.3333   -0.1667
-   -0.1667   -0.1667    0.3333
+   NaN   NaN   NaN
+   NaN   NaN   NaN
+   NaN   NaN   NaN
 
 </pre><p>This shows that the lowest possible value of <img src="SDP_eq11726414244992110607.png" alt="$M(1,2)$"> which is compatible with a matrix <img src="SDP_eq00802513524912003067.png" alt="$M$"> having only positive eigenvalues is <img src="SDP_eq13230327389884360718.png" alt="$-1/6$">.</p><p>
 <h3>Symmetric formulation</h3>
@@ -40,23 +51,34 @@ MOpt =
 </pre><p>We can then perform the optimization with:</p><pre class="codeinput">constraintsSym = [MSym(1,1)+MSym(2,2)+MSym(3,3) == 1, MSym &gt;= 0];
 diagnosticSym = optimize(constraintsSym, MSym(1,2), sdpsettings(<span class="string">'verbose'</span>, 0))
 MSymOpt = value(MSym)
-</pre><pre class="codeoutput">
+</pre><pre class="codeoutput">#############################################################
+You are using LMILAB. Please don't use LMILAB with YALMIP
+https://yalmip.github.io/solver/lmilab/
+ 
+Install a better SDP solver
+https://yalmip.github.io/allsolvers/
+ 
+To get rid of this message, edit calllmilab.m  
+(but don't expect support when things do not work,
+YALMIP + LMILAB =&gt; No support)
+#############################################################
+
 diagnosticSym = 
 
   struct with fields:
 
     yalmipversion: '20190425'
-       yalmiptime: 0.0565
-       solvertime: 0.1533
-             info: 'Successfully solved (SDPT3-4)'
-          problem: 0
+       yalmiptime: 0.1386
+       solvertime: 0.0268
+             info: 'Infeasible problem (LMILAB)'
+          problem: 1
 
 
 MSymOpt =
 
-    0.3333   -0.1667   -0.1667
-   -0.1667    0.3333   -0.1667
-   -0.1667   -0.1667    0.3333
+   NaN   NaN   NaN
+   NaN   NaN   NaN
+   NaN   NaN   NaN
 
 </pre><p>Again, we find the critical value of <img src="SDP_eq13230327389884360718.png" alt="$-1/6$">. This last formulation is however more concise as we now discuss.</p><p>
 <h3>Complexity comparison</h3>
@@ -85,7 +107,6 @@ MSymOpt =
 </table>
 </p><p>To see this, we examine the variables involved.</p><p>In the first case, we have</p><pre class="codeinput">M
 </pre><pre class="codeoutput">Linear matrix variable 3x3 (symmetric, real, 6 variables)
-Eigenvalues between [-2.4638e-09,0.5]
 Coeffiecient range: 1 to 1
 </pre><pre class="codeinput">constraints
 </pre><pre class="codeoutput">+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -100,7 +121,7 @@ Coeffiecient range: 1 to 1
 MSym = 
 
 replab.CommutantVar
-             U: [0.57735, -0.69835, 0.42305; 0.57735, 0.71555, 0.39326; 0.57735, -0.017201, -0.81632]
+             U: [0.57735, -0.002419, -0.81649; 0.57735, 0.70831, 0.40615; 0.57735, -0.70589, 0.41034]
         blocks: {sdpvar, [sdpvar, 0; 0, sdpvar]}                                                     
            dim: 3                                                                                    
    dimensions1: [1, 2]                                                                               
@@ -109,11 +130,9 @@ multiplicities: [1, 1]
          types: 'RC'                                                                                 
 </pre><p>and notice that this variable is made up of two PSD blocks:</p><div><ul><li>One block of size 1x1, which appears 1 time</li><li>One block of size 2x2, which appears 1 time</li></ul></div><p>Each block can be examined individually:</p><pre class="codeinput">MSym.blocks{1}
 </pre><pre class="codeoutput">Linear scalar (real, 1 variable)
-Current value: 2.7979e-09
 Coeffiecient range: 1 to 1
 </pre><pre class="codeinput">MSym.blocks{2}
 </pre><pre class="codeoutput">Linear matrix variable 2x2 (symmetric, real, 1 variable)
-Eigenvalues between [0.5,0.5]
 Coeffiecient range: 1 to 1
 </pre><p>and is found to contain exactly one variable.</p><p>The constraints this time are</p><pre class="codeinput">constraintsSym
 </pre><pre class="codeoutput">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
