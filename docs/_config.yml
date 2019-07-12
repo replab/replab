@@ -4,4 +4,4 @@ description: RepLAB - a MATLAB/Octave toolbox for representation theory
 highlighter: rouge
 docs: true
 markdown: kramdown
-replabVersion: 0.4.1
+replabVersion: 0.4.2-SNAPSHOT
