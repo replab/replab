@@ -2,6 +2,10 @@ function b = isNonZeroMatrix(A, tol)
 % Returns whether norm(A, 2) > tol
     m = size(A, 1);
     n = size(A, 2);
+    if m*n == 0
+        b = false;
+        return
+    end
     % A is a m x n matrix
     % we have the norm inequalities
     % norm(A, 'inf')/sqrt(n) <= norm(A) <= norm(A, 'inf')*sqrt(m)

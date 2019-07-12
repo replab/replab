@@ -39,7 +39,7 @@ classdef GHZ < replab.SemidirectProductGroup
             rho = partyRho*levelRho*phaseRho;
         end
         
-        function rep = rep(self)
+        function rep = naturalRep(self)
             rep = replab.RepFun(self, 'C', self.N.naturalRep.dimension, @(g) self.toMatrix(g));
         end
         

@@ -51,7 +51,8 @@ classdef Rep < replab.Str
         function I = decomposition(self)
         % Returns the irreducible decomposition of this representation
             if isequal(self.decomposition_, [])
-                self.decomposition_ = replab.rep.decomposition(self).nice;
+                dec = replab.rep.decomposition(self);
+                self.decomposition_ = dec.nice;
             end
             I = self.decomposition_;
         end
