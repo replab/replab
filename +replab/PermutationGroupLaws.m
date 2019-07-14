@@ -4,7 +4,7 @@ classdef PermutationGroupLaws < replab.FiniteGroupLaws
     end
     methods
         function self = PermutationGroupLaws(T)
-            self = self@replab.FiniteGroupLaws(T);
+            self@replab.FiniteGroupLaws(T);
             self.P = replab.domain.intAsDouble(1, T.domainSize);
         end
     end

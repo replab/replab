@@ -45,6 +45,9 @@ classdef DivisionAlgebra < replab.Monoid
         end
         
         function X = projectMatrix(self, X)
+            if self.isReal
+                return
+            end
             m = self.m;
             d = self.d;
             R = size(X, 1);

@@ -8,7 +8,7 @@ classdef SemidirectProductGroupLaws < replab.FiniteGroupLaws
     
     methods
         function self = SemidirectProductGroupLaws(G)
-            self = self@replab.FiniteGroupLaws(G);
+            self@replab.FiniteGroupLaws(G);
             assert(isa(G, 'replab.SemidirectProductGroup'));
             self.G = G;
             self.H = G.H;

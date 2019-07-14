@@ -13,7 +13,7 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
             n = H.domainSize;
             base = replab.DirectProductGroup.power(A, n);
             phi = replab.perm.PermutationCellAction(H, base);
-            self = self@replab.SemidirectProductGroup(phi);
+            self@replab.SemidirectProductGroup(phi);
             self.n = n;
             self.A = A;
         end

@@ -5,7 +5,7 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
     methods % Implementations of abstract methods
         
         function self = Permutations(domainSize)
-            self = self@replab.PermutationGroup(domainSize);
+            self@replab.PermutationGroup(domainSize);
             if self.domainSize < 2
                 self.generators = cell(1, 0);
             elseif self.domainSize == 2

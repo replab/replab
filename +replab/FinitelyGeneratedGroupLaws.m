@@ -4,7 +4,7 @@ classdef FinitelyGeneratedGroupLaws < replab.GroupLaws
     end
     methods
         function self = FinitelyGeneratedGroupLaws(T)
-            self = self@replab.GroupLaws(T);
+            self@replab.GroupLaws(T);
             self.I = replab.domain.intAsDouble(1, T.nGenerators);
         end
     end

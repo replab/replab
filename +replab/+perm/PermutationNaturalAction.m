@@ -10,7 +10,7 @@ classdef PermutationNaturalAction < replab.FaithfulAction & replab.StrFun
         function self = PermutationNaturalAction(G)
             assert(isa(G, 'replab.PermutationGroup'));
             desc = sprintf('Natural permutation action on %d elements', G.domainSize);
-            self = self@replab.StrFun(desc, desc);
+            self@replab.StrFun(desc, desc);
             self.G = G;
             self.P = replab.domain.intAsDouble(1, G.domainSize);
         end

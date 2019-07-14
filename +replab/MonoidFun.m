@@ -3,7 +3,7 @@ classdef MonoidFun < replab.SemigroupFun & replab.Monoid
         function self = MonoidFun(description, eqvFun, sampleFun, ... % Domain
                                      composeFun, ... % Semigroup
                                      identity) % Monoid
-            self = self@replab.SemigroupFun(description, eqvFun, sampleFun, composeFun);
+            self@replab.SemigroupFun(description, eqvFun, sampleFun, composeFun);
             self.identity = identity;
         end
         function names = hiddenFields(self)

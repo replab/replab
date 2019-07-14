@@ -4,7 +4,7 @@ classdef SignedPermutationsLaws < replab.FiniteGroupLaws
     end
     methods
         function self = SignedPermutationsLaws(T)
-            self = self@replab.FiniteGroupLaws(T);
+            self@replab.FiniteGroupLaws(T);
             self.P = replab.domain.signedIntAsDouble(1, T.domainSize);
         end
         function law_toPermutation_fromPermutation_T(self, t)

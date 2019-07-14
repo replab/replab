@@ -1,7 +1,7 @@
 classdef DivisionAlgebraLaws < replab.MonoidLaws
     methods
         function self = DivisionAlgebraLaws(T)
-            self = self@replab.MonoidLaws(T);
+            self@replab.MonoidLaws(T);
         end
         function law_matrix_isomorphism_compose_TT(self, x, y)
             X = self.T.toMatrix(x);

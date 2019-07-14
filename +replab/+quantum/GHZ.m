@@ -16,7 +16,7 @@ classdef GHZ < replab.SemidirectProductGroup
             f = @(q, b) base.permuteParties(q{1}, base.permuteLevels(q{2}, b));
             phi = replab.ActionFun('Permutation of parties/levels', quotient, base, f);
             G = replab.SemidirectProductGroup(phi);
-            self = self@replab.SemidirectProductGroup(phi);
+            self@replab.SemidirectProductGroup(phi);
             self.nParties = nParties;
             self.nLevels = nLevels;
             self.rootOrder = rootOrder;

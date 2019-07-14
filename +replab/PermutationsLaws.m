@@ -1,7 +1,7 @@
 classdef PermutationsLaws < replab.PermutationGroupLaws
     methods
         function self = PermutationsLaws(T)
-            self = self@replab.PermutationGroupLaws(T);
+            self@replab.PermutationGroupLaws(T);
         end
         function law_toMatrix_fromMatrix_T(self, t)
             M = self.T.toMatrix(t);

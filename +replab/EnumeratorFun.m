@@ -5,7 +5,7 @@ classdef EnumeratorFun < replab.Enumerator
     end
     methods
         function self = EnumeratorFun(size, atFun, findFun)
-            self = self@replab.Enumerator(size);
+            self@replab.Enumerator(size);
             self.atFun = atFun;
             self.findFun = findFun;            
         end

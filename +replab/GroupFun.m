@@ -7,7 +7,7 @@ classdef GroupFun < replab.MonoidFun & replab.Group
                                  composeFun, ... % Semigroup
                                  identity, ... % Monoid
                                  inverseFun) % Group
-            self = self@replab.MonoidFun(description, eqvFun, sampleFun, composeFun, identity);
+            self@replab.MonoidFun(description, eqvFun, sampleFun, composeFun, identity);
             self.inverseFun = inverseFun;
         end
         function names = hiddenFields(self)

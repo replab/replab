@@ -1,7 +1,7 @@
 classdef GroupLaws < replab.MonoidLaws
     methods
         function self = GroupLaws(T)
-            self = self@replab.MonoidLaws(T);
+            self@replab.MonoidLaws(T);
         end
         function law_composeN_integers_TN10(self, x, n)
             pow1 = self.T.composeN(x, n);

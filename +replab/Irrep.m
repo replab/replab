@@ -14,7 +14,7 @@ classdef Irrep < replab.SubRep
     methods
         
         function self = Irrep(parent, U0, realDivisionAlgebra)
-            self = self@replab.SubRep(parent, U0);
+            self@replab.SubRep(parent, U0);
             if isequal(self.field, 'R')
                 assert(isa(realDivisionAlgebra, 'replab.DivisionAlgebra'));
             else

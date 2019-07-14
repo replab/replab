@@ -1,7 +1,7 @@
 classdef FaithfulActionLaws < replab.ActionLaws
     methods
         function self = FaithfulActionLaws(action)
-            self = self@replab.ActionLaws(action);
+            self@replab.ActionLaws(action);
         end
         function law_findMovedElement_identity(self)
             p = self.action.findMovedElement(self.G.identity);

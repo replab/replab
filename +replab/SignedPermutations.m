@@ -5,7 +5,7 @@ classdef SignedPermutations < replab.SignedPermutationGroup & replab.FiniteGroup
     methods
         
         function self = SignedPermutations(domainSize)
-            self = self@replab.SignedPermutationGroup(domainSize);
+            self@replab.SignedPermutationGroup(domainSize);
             switch self.domainSize
               case 0
                 self.generators = cell(1, 0); % TODO: verify

@@ -11,7 +11,7 @@ classdef SignedPermutationSubgroup < replab.SignedPermutationGroup & replab.Fini
             if nargin < 3
                 orderOpt = [];
             end
-            self = self@replab.SignedPermutationGroup(parent.domainSize);
+            self@replab.SignedPermutationGroup(parent.domainSize);
             self.generators = generators;
             if nargin > 2 && ~isempty(orderOpt)
                 self.order_ = vpi(orderOpt);

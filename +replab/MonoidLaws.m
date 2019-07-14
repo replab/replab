@@ -1,7 +1,7 @@
 classdef MonoidLaws < replab.SemigroupLaws
     methods
         function self = MonoidLaws(T)
-            self = self@replab.SemigroupLaws(T);
+            self@replab.SemigroupLaws(T);
         end
         function law_composeN_zero_T(self, x)
             id1 = self.T.composeN(x, 0);

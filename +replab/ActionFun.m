@@ -5,7 +5,7 @@ classdef ActionFun < replab.Action & replab.StrFun
     methods
         
         function self = ActionFun(description, G, P, leftActionFun)
-            self = self@replab.StrFun(description, description);
+            self@replab.StrFun(description, description);
             self.G = G;
             self.P = P;
             self.leftActionFun = leftActionFun;

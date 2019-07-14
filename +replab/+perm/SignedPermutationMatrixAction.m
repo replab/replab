@@ -6,7 +6,7 @@ classdef SignedPermutationMatrixAction < replab.Action & replab.StrFun
             d = G.domainSize;
             assert(isa(G, 'replab.SignedPermutations'));
             desc = sprintf('Action of signed permutations on %d x %d matrices', d, d);
-            self = self@replab.StrFun(desc, desc);
+            self@replab.StrFun(desc, desc);
             self.G = G;
             self.P = replab.domain.intAsDoubleMatrix(d, d, 1, G.domainSize);
         end

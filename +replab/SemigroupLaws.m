@@ -1,7 +1,7 @@
 classdef SemigroupLaws < replab.DomainLaws
     methods
         function self = SemigroupLaws(T)
-            self = self@replab.DomainLaws(T);
+            self@replab.DomainLaws(T);
         end
         function law_associativity_TTT(self, x, y, z)
         % Checks associativity of group binary operation

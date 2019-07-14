@@ -3,7 +3,7 @@ classdef IrrepLaws < replab.SubRepLaws
     methods
 
         function self = IrrepLaws(rep)
-            self = self@replab.SubRepLaws(rep);
+            self@replab.SubRepLaws(rep);
         end
         
         function law_respects_division_algebra_G(self, g)

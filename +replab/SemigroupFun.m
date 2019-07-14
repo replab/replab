@@ -5,7 +5,7 @@ classdef SemigroupFun < replab.DomainFun & replab.Semigroup
     methods
         function self = SemigroupFun(description, eqvFun, sampleFun, ... % Domain
                                      composeFun) % Semigroup
-            self = self@replab.DomainFun(description, eqvFun, sampleFun);
+            self@replab.DomainFun(description, eqvFun, sampleFun);
             self.composeFun = composeFun;
         end
         function names = hiddenFields(self)

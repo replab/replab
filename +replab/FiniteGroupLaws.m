@@ -1,7 +1,7 @@
 classdef FiniteGroupLaws < replab.FinitelyGeneratedGroupLaws
     methods
         function self = FiniteGroupLaws(T)
-            self = self@replab.FinitelyGeneratedGroupLaws(T);
+            self@replab.FinitelyGeneratedGroupLaws(T);
         end
     end
     methods
