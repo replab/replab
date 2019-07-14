@@ -14,6 +14,10 @@ classdef Trivial < replab.Domain
     methods
         
         function self = Trivial(rep)
+        % Constructor; please do not call this from user code, but
+        % rather use `replab.rep.trivial(...)`, which can eventually
+        % select an optimization implementation depending on the
+        % use case.
             self.rep = rep;
             self.field = rep.field;
             self.n = rep.dimension;

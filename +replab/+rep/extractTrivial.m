@@ -1,6 +1,6 @@
 function [Utrivial Urest] = extractTrivial(rep)
     d = rep.dimension;
-    T = replab.trivial(rep);
+    T = replab.rep.Trivial(rep);
     O = replab.rep.orbits(rep);
     U = zeros(d, 0);
     D = zeros(0, 1);

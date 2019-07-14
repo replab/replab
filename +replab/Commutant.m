@@ -19,7 +19,9 @@ classdef Commutant < replab.Domain
         
         function self = Commutant(rep)
         % Constructor; please do not call this from user code, but
-        % rather use `rep.commutant`.
+        % rather use `replab.rep.commutant(...)`, or call `rep.commutant`
+        % which can eventually select an optimized implementation 
+        % depending on the use case.
             self.rep = rep;
             self.n = rep.dimension;
             self.field = rep.field;

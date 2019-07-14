@@ -36,14 +36,27 @@ classdef Rep < replab.Str
         % Returns true if this representation is defined over the complex field
             b = isequal(self.field, 'C');
         end
-                
+        
+        function e = equivariant(self, repC)
+        % Returns the space of equivariant linear maps from this rep to repC
+        %
+        % repR.equivariant(repC) is equivalent to the call 
+        % replab.rep.equivariant(repR, repC)
+        %
+        % the returned space describes the matrices X such that
+        %
+        % repR.image(g) * X = X * repC.image(g)
+            e = replab.rep.equivariant(self, repC)
+        end
+
         function c = commutant(self)
         % Returns the commutant of this representation
+        %
         % This is the algebra of matrices that commute with
         % this representation images, i.e. for any g in G, we have
         % rho(g) * X = X * rho(g)
             if isequal(self.commutant_, [])
-                self.commutant_ = replab.Commutant(self);
+                self.commutant_ = replab.rep.commutant(self);
             end
             c = self.commutant_;
         end
