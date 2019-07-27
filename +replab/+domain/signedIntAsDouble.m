@@ -10,5 +10,5 @@ function D = signedIntAsDouble(rangeMin, rangeMax)
     end
     desc = sprintf('Signed integers (double) in {-%d,...,-%d,%d,...,%d}', ...
                    rangeMax, rangeMin, rangeMin, rangeMax);
-    D = replab.DomainFun(desc, @isequal, sampleFun);
+    D = replab.Domain.lambda(desc, @isequal, sampleFun);
 end

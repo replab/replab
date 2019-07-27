@@ -22,6 +22,14 @@ classdef Domain < replab.Str
         
     end
     
+    methods (Static)
+        
+        function domain = lambda(header, eqvFun, sampleFun)
+            domain = replab.lambda.Domain(header, eqvFun, sampleFun);
+        end
+        
+    end
+    
     methods % Test helpers
        
         function assertNotEqv(self, x, y, context)

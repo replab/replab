@@ -7,5 +7,5 @@ function D = intAsDoubleMatrix(nRows, nCols, rangeMin, rangeMax)
         sampleFun = @() randi([rangeMin rangeMax], nRows, nCols);
     end
     desc = sprintf('%d x %d integer (double) matrix with coefficients between %d and %d', nRows, nCols, rangeMin, rangeMax);
-    D = replab.DomainFun(desc, @isequal, sampleFun);
+    D = replab.Domain.lambda(desc, @isequal, sampleFun);
 end

@@ -9,5 +9,5 @@ function D = vpi(rangeMin, rangeMax)
         sampleFun = @() rangeMin + randint(rangeMax - rangeMin);
     end
     desc = sprintf('Integers (vpi) between %s and %s', strtrim(num2str(rangeMin)), strtrim(num2str(rangeMax)));
-    D = replab.DomainFun(desc, @isequal, sampleFun);
+    D = replab.Domain.lambda(desc, @isequal, sampleFun);
 end

@@ -1,14 +1,16 @@
-classdef SignedPermutationMatrixAction < replab.Action & replab.StrFun
+classdef SignedPermutationMatrixAction < replab.Action
 % Describes the action of signed permutations on square matrices by simultaneous
 % permutations of rows and columns and sign flips
     methods
         function self = SignedPermutationMatrixAction(G)
-            d = G.domainSize;
             assert(isa(G, 'replab.SignedPermutations'));
-            desc = sprintf('Action of signed permutations on %d x %d matrices', d, d);
-            self@replab.StrFun(desc, desc);
+            d = G.domainSize;
             self.G = G;
             self.P = replab.domain.intAsDoubleMatrix(d, d, 1, G.domainSize);
+        end
+        function str = headerStr(self)
+            d = self.G.domainSize;
+            str = sprintf('Action of signed permutations on %d x %d matrices', d, d);
         end
         function M = leftAction(self, signedPerm, M)
             minusSign = find(signedPerm < 0);

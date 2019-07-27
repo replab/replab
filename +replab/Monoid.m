@@ -69,4 +69,15 @@ classdef Monoid < replab.Domain
         end
         
     end
+
+    methods (Static)
+        
+        function monoid = lambda(header, eqvFun, sampleFun, ...
+                                 composeFun, identity)
+            monoid = replab.lambda.Monoid(header, eqvFun, sampleFun, ...
+                                          composeFun, identity);
+        end
+        
+    end
+    
 end
