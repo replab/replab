@@ -20,8 +20,6 @@ function [Utrivial Urest] = extractTrivial(rep)
         M = replab.domain.RealMatrices(d, nRest);
       case 'C'
         M = replab.domain.ComplexMatrices(d, nRest);
-      case 'R'
-        M = replab.domain.QuaternionMatrices(d, nRest);
     end
     S = M.sample;
     if size(U, 2) > 0
