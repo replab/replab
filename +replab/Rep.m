@@ -16,16 +16,16 @@ classdef Rep < replab.Str
         decomposition_ = [];
     end
         
-    methods % ABSTRACT
+    methods % Abstract methods
         
-        function rho = image(self, g) % ABSTRACT
+        function rho = image(self, g)
         % Returns the image of the group element
-            rho = self.imageFun(g);
+            error('Not implemented');
         end
         
     end
     
-    methods
+    methods % Default implementations
         
         function b = overR(self)
         % Returns true if this representation is defined over the real field
@@ -107,7 +107,7 @@ classdef Rep < replab.Str
         
         function complexRep = complexification(self)
             assert(isequal(self.field, 'R'), 'Representation should be real to start with');
-            complexRep = replab.RepFun(self.group, 'C', self.dimension, @(g) self.image(g));
+            complexRep = replab.Rep.lambda(self.group, 'C', self.dimension, @(g) self.image(g));
         end
            
         % Construction of derived representations
@@ -117,7 +117,7 @@ classdef Rep < replab.Str
             if self.overR
                 cRep = self;
             else
-                cRep = replab.RepFun(self.group, 'C', self.dimension, @(g) conj(self.image(g)));
+                cRep = replab.Rep.lambda(self.group, 'C', self.dimension, @(g) conj(self.image(g)));
             end
         end
         
@@ -166,6 +166,14 @@ classdef Rep < replab.Str
             rep1 = replab.ConjugateRep(U, self);
         end
 
+    end
+
+    methods (Static)
+        
+        function rep = lambda(group, field, dimension, imageFun)
+            rep = replab.lambda.Rep(group, field, dimension, imageFun);
+        end
+        
     end
     
 end

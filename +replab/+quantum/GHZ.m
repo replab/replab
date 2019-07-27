@@ -40,7 +40,7 @@ classdef GHZ < replab.SemidirectProductGroup
         end
         
         function rep = naturalRep(self)
-            rep = replab.RepFun(self, 'C', self.N.naturalRep.dimension, @(g) self.toMatrix(g));
+            rep = replab.Rep.lambda(self, 'C', self.N.naturalRep.dimension, @(g) self.toMatrix(g));
         end
         
     end

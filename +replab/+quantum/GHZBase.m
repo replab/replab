@@ -60,7 +60,7 @@ classdef GHZBase < replab.FiniteGroup
         
         function rep = naturalRep(self)
             d = self.nLevels^self.nParties;
-            rep = replab.RepFun(self, 'C', d, @(g) self.toMatrix(g));
+            rep = replab.Rep.lambda(self, 'C', d, @(g) self.toMatrix(g));
         end
         
         function g1 = permuteParties(self, p, g)
@@ -137,34 +137,10 @@ classdef GHZBase < replab.FiniteGroup
             o = vpi(self.rootOrder)^n;
         end
         
-        function g = atFun(self, ind)
-            p = zeros(1, (self.nParties-1)*(self.nLevels-1));
-            ind = ind - 1;
-            for i = length(p):-1:1
-                this = double(mod(ind, self.rootOrder));
-                ind = (ind - this)/self.rootOrder;
-                p(i) = this;
-            end
-            p = reshape(p, [self.nLevels-1 self.nParties-1])';
-            g = self.fromPartial(p);
-        end
-        
-        function ind = findFun(self, g)
-            p = self.partial(g);
-            p = p';
-            p = p(:);
-            ind = vpi(0);
-            for i = 1:length(p)
-                ind = ind * self.rootOrder;
-                ind = ind + p(i);
-            end
-            ind = ind + 1;
-        end
-        
         function e = elements(self)
-            e = replab.EnumeratorFun(self.order, ...
-                                     @(ind) self.atFun(ind), ...
-                                     @(g) self.findFun(g));
+            e = replab.Enumerator.lambda(self.order, ...
+                                         @(ind) self.enumeratorAtFun(ind), ...
+                                         @(g) self.enumeratorFindFun(g));
         end
         
         function gd = decomposition(self)
@@ -185,6 +161,35 @@ classdef GHZBase < replab.FiniteGroup
             gd = replab.FiniteGroupDecomposition(self, T);
         end
         
+    end
+    
+    methods (Access = protected)
+        
+                
+        function g = enumeratorAtFun(self, ind)
+            p = zeros(1, (self.nParties-1)*(self.nLevels-1));
+            ind = ind - 1;
+            for i = length(p):-1:1
+                this = double(mod(ind, self.rootOrder));
+                ind = (ind - this)/self.rootOrder;
+                p(i) = this;
+            end
+            p = reshape(p, [self.nLevels-1 self.nParties-1])';
+            g = self.fromPartial(p);
+        end
+        
+        function ind = enumeratorFindFun(self, g)
+            p = self.partial(g);
+            p = p';
+            p = p(:);
+            ind = vpi(0);
+            for i = 1:length(p)
+                ind = ind * self.rootOrder;
+                ind = ind + p(i);
+            end
+            ind = ind + 1;
+        end
+
     end
     
 end
