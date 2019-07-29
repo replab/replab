@@ -11,13 +11,12 @@ classdef Action < replab.Str
         % Returns the left action p1 = g(p) of G over P, which
         % is compatible with group composition in this way
         % p2 = g(h(p)) implies p2 = (g compose h)(p)
-            f = self.leftActionFun;
-            p1 = f(g, p);
+            error('Not implemented');
         end
         
     end
     
-    methods % Methods with default implementations
+    methods % Default implementations
         
         function p1 = rightAction(self, p, g)
         % Returns the right action p1 = p^g, compatible with the
@@ -26,4 +25,13 @@ classdef Action < replab.Str
         end
 
     end
+    
+    methods (Static)
+        
+        function action = lambda(header, G, P, leftActionFun)
+            action = replab.lambda.Action(header, G, P, leftActionFun);
+        end
+        
+    end
+    
 end

@@ -4,44 +4,23 @@ classdef Enumerator < replab.Str
         size; % Number of elements contained in this enumerator (vpi)
     end
     
-    methods (Access = protected)
-        
-        function s = describe(self, i)
-        % Returns a one line string that describes the i-th element
-        % used by Enumerator.str
-            sizeNChars = length(strtrim(num2str(self.size)));
-            msg = ['at(%' num2str(sizeNChars) 's) = %s'];
-            el = replab.shortStr(self.at(i));
-            s = sprintf(msg, strtrim(num2str(i)), el);
-        end
-        
-    end
-    
     methods % Abstract
         
         function obj = at(self, ind)
         % Returns the element at the "ind" position
         % ind is an integer encoded as a double, string or vpi object
-            obj = self.atFun(vpi(ind));
+            error('Not implemented');
         end
         
         function ind = find(self, obj)
         % Returns the position of the given element as a vpi object
         % or [] if the element cannot be found
-            ind = self.findFun(obj);
+            error('Not implemented');
         end
         
     end
     
     methods
-        
-        function self = Enumerator(size)
-            if isa(size, 'vpi')
-                self.size = size;
-            else
-                self.size = vpi(size);
-            end
-        end
         
         function s = shortStr(self, maxColumns)
             s = sprintf('Enumerator of %s elements', replab.shortStr(self.size, maxColumns));
@@ -104,6 +83,14 @@ classdef Enumerator < replab.Str
                     C{i} = self.at(i);
                 end
             end
+        end
+        
+    end
+
+    methods (Static)
+    
+        function enumerator = lambda(size, atFun, findFun)
+            enumerator = replab.lambda.Enumerator(size, atFun, findFun);
         end
         
     end

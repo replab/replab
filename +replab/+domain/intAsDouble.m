@@ -7,5 +7,5 @@ function D = intAsDouble(rangeMin, rangeMax)
         sampleFun = @() randi([rangeMin rangeMax]);
     end
     desc = sprintf('Integers (double) between %d and %d', rangeMin, rangeMax);
-    D = replab.DomainFun(desc, @isequal, sampleFun);
+    D = replab.Domain.lambda(desc, @isequal, sampleFun);
 end

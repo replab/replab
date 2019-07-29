@@ -1,4 +1,4 @@
-classdef PermutationNaturalAction < replab.FaithfulAction & replab.StrFun
+classdef PermutationNaturalAction < replab.FaithfulAction
 % Describes the natural action of permutations on their domain
 %
 % i.e. a permutation described by a vector of images of length n
@@ -9,10 +9,11 @@ classdef PermutationNaturalAction < replab.FaithfulAction & replab.StrFun
     methods
         function self = PermutationNaturalAction(G)
             assert(isa(G, 'replab.PermutationGroup'));
-            desc = sprintf('Natural permutation action on %d elements', G.domainSize);
-            self@replab.StrFun(desc, desc);
             self.G = G;
             self.P = replab.domain.intAsDouble(1, G.domainSize);
+        end
+        function str = headerStr(self)
+            str = sprintf('Natural permutation action on %d elements', self.G.domainSize);
         end
         function p = findMovedElement(self, perm)
             for i = 1:length(perm)

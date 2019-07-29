@@ -3,6 +3,8 @@ function W = findCommonBasis(rep, sub1, sub2, c)
 %
 %      rep: Representation decomposed
 %     sub1: First copy of an irreducible subrepresentation of rep
+%           whose division algebra structure is canonical
+%           (instance of replab.Irrep)
 %     sub2: Second copy of an irreducible subrepresentation of rep
 %           (sub1 and sub2 need to be equivalent)
 %        c: (optional) generic sample from rep.commutant
@@ -15,16 +17,8 @@ function W = findCommonBasis(rep, sub1, sub2, c)
     end
     d = sub1.dimension;
     assert(sub2.dimension == d);
-    if isequal(sub1.realDivisionAlgebra, []) || sub1.realDivisionAlgebra.isReal
-        W = sub2.U*c*sub1.U';
-        W = W * sqrt(sub1.dimension/real(trace(W*W')));
-    elseif sub1.realDivisionAlgebra.isComplex
-        W = sub2.U*c*sub1.U';
-        W = W * sqrt(sub1.dimension/real(trace(W*W')));
-    elseif sub1.realDivisionAlgebra.isQuaternion
-        W = sub2.U*c*sub1.U';
-        W = W * sqrt(sub1.dimension/real(trace(W*W')));
-    end
-    % correction needed: why?
+    W = sub2.U*c*sub1.U';
+    W = W * sqrt(sub1.dimension/real(trace(W*W')));
+    % correction needed, TODO: why?
     W = W';
 end

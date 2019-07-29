@@ -26,5 +26,15 @@ classdef Group < replab.Monoid
         end
         
     end
+
+    methods (Static)
+        
+        function group = lambda(header, eqvFun, sampleFun, ...
+                                composeFun, identity, inverseFun)
+            group = replab.lambda.Group(header, eqvFun, sampleFun, ...
+                                        composeFun, identity, inverseFun);
+        end
+        
+    end
     
 end

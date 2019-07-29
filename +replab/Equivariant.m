@@ -44,8 +44,6 @@ classdef Equivariant < replab.Domain
                 self.parent_ = replab.domain.RealMatrices(self.nR, self.nC);
               case 'C'
                 self.parent_ = replab.domain.ComplexMatrices(self.nR, self.nC);
-              case 'H'
-                self.parent_ = replab.domain.QuaternionMatrices(self.nR, self.nC);                
               otherwise
                 error('Unknown field');
             end
