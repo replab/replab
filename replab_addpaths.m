@@ -1,5 +1,5 @@
-function replab_addpaths(verbose, includeEmbeddedSolver)
-    % replab_addpaths([verbose], [includeEmbeddedSolver])
+function replab_addpaths(verbose)
+    % replab_addpaths([verbose])
     %
     % replab_addpaths adds directories that are needed to the search path
     % in order to enable all functionalities of the library.
@@ -10,11 +10,6 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
     %   1 informs of the changes made (default value)
     %   2 prints the complete information
     %
-    % The optional parameter 'includeEmbeddedSolver' is 0 by default. Set
-    % it to 1 to add the folders 'external/YALMIP/...' and 'externl/SDPT3'
-    % to the path (avoid this if you already have your own installation of
-    % these libraries)
-    %
     % example: replab_addpaths
     
     %% Parameter checking
@@ -22,14 +17,29 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
         verbose = 1;
     end
 
-    if nargin < 2
-        includeEmbeddedSolver = 0;
-    end
-    
-    
-    %% Action
+    %% Action -- first adding RepLAB itself
     [pathStr, name, extension] = fileparts(which(mfilename));
-    addpath(pathStr);
+    
+    % Check if another instance of RepLAB is already in the path
+    currentPathStr = pwd;
+    dirName = currentPathStr(find(currentPathStr=='/',1,'last')+1:end);
+    cd ..
+    AmIMyself = which('replab_addpaths');
+    cd(dirName);
+    if ~isempty(AmIMyself) && ~isequal(AmIMyself, [pathStr, '/', name, extension])
+        error(['Another instance of RepLAB in folder ', fileparts(AmIMyself), ' is already in the path.', char(10), ...
+            'Use this one or remove from the path.']);
+    else
+        if isempty(AmIMyself)
+            addpath(pathStr);
+            if verbose >= 1
+                disp('Adding RepLAB to the path');
+            end
+        elseif verbose >= 2
+            disp('RepLAB is already in the path');
+        end
+    end
+
     
     %% VPI
     
@@ -47,6 +57,7 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
             if verbose >= 1
                 disp('Adding VPI to the path');
             end
+            VPIInPath = true;
         end
     elseif verbose >= 2
         disp('VPI is already in the path');
@@ -72,74 +83,91 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
             if verbose >= 1
                 disp('Adding MOxUnit to the path');
             end
+            MOxUnitInPath = true;
         end
     elseif verbose >= 2
         disp('MOxUnit is already in the path');
     end
     
-    %% Solvers
-    
-    if includeEmbeddedSolver == 1
-        
-        %% YALMIP
-        
-        % Making sure YALMIP is in the path and working
-        YALMIPInPath = false;
-        try
-            yalmip('version');
-            YALMIPInPath = true;
-        catch
-        end
-        if ~YALMIPInPath
-            if exist([pathStr '/external/YALMIP/yalmiptest.m']) ~= 2
-                warning(['The YALMIP library was found neither in the path nor in the folder ', pathStr, '/external/YALMIP, some functionalities of the library might be disabled']);
-            else
-                addpath([pathStr '/external/YALMIP']);
-                addpath([pathStr '/external/YALMIP/demos']);
-                addpath([pathStr '/external/YALMIP/extras']);
-                addpath([pathStr '/external/YALMIP/modules']);
-                addpath([pathStr '/external/YALMIP/modules/bilevel']);
-                addpath([pathStr '/external/YALMIP/modules/global']);
-                addpath([pathStr '/external/YALMIP/modules/moment']);
-                addpath([pathStr '/external/YALMIP/modules/parametric']);
-                addpath([pathStr '/external/YALMIP/modules/robust']);
-                addpath([pathStr '/external/YALMIP/modules/sos']);
-                addpath([pathStr '/external/YALMIP/operators']);
-                addpath([pathStr '/external/YALMIP/solvers']);
-                if verbose >= 1
-                    disp('Adding embedded YALMIP to the path');
-                end
-            end
-        elseif verbose >= 2
-            disp('YALMIP is already in the path');
-        end
+    %% YALMIP
 
-        
-        %% SDPT3
-        
-        % Making sure SDPT3 is in the path and working
-        SDPT3InPath = false;
+    % Making sure YALMIP is in the path and working
+    YALMIPInPath = false;
+    try
+        yalmip('version');
+        YALMIPInPath = true;
+    catch
+    end
+    if ~YALMIPInPath
+        if exist([pathStr '/external/YALMIP/yalmiptest.m']) ~= 2
+            warning(['The YALMIP library was found neither in the path nor in the folder ', pathStr, '/external/YALMIP.', char(10), ...
+                'Some functionalities of the library might be disabled.']);
+        else
+            addpath([pathStr '/external/YALMIP']);
+            addpath([pathStr '/external/YALMIP/demos']);
+            addpath([pathStr '/external/YALMIP/extras']);
+            addpath([pathStr '/external/YALMIP/modules']);
+            addpath([pathStr '/external/YALMIP/modules/bilevel']);
+            addpath([pathStr '/external/YALMIP/modules/global']);
+            addpath([pathStr '/external/YALMIP/modules/moment']);
+            addpath([pathStr '/external/YALMIP/modules/parametric']);
+            addpath([pathStr '/external/YALMIP/modules/robust']);
+            addpath([pathStr '/external/YALMIP/modules/sos']);
+            addpath([pathStr '/external/YALMIP/operators']);
+            addpath([pathStr '/external/YALMIP/solvers']);
+            if verbose >= 1
+                disp('Adding embedded YALMIP to the path');
+            end
+            YALMIPInPath = true;
+        end
+    elseif verbose >= 2
+        disp('YALMIP is already in the path');
+    end
+
+
+    %% SDPT3
+
+    % Making sure a woring SDP solver is in the path and working, otherwise
+    % tries to add SDPT3
+    if YALMIPInPath
+        SDPSolverInPath = false;
         try
-            [blk, Avec, C, b, X0, y0, Z0] = randsdp([2 2], [2 2], 2, 2);
-            options.printlevel = 0;
-            sdpt3(blk, Avec, C, b, options);
-            SDPT3InPath = true;
+            x = sdpvar(2);
+            sol = optimize([x >= 0, trace(x) == 1], 0, sdpsettings('verbose',0));
+            SDPSolverInPath = (sol.problem >= 0);
         catch
         end
-        if ~SDPT3InPath
-            if exist([pathStr '/external/SDPT3/sdpt3.m']) ~= 2
-                if verbose >= 2
-                    warning(['The SDPT3 library was found neither in the path nor in the folder ', pathStr, '/external/SDPT3, some functionalities of the library might be disabled']);
+        if ~SDPSolverInPath
+            SDPT3InPath = false;
+            try
+                [blk, Avec, C, b, X0, y0, Z0] = randsdp([2 2], [2 2], 2, 2);
+                options.printlevel = 0;
+                sdpt3(blk, Avec, C, b, options);
+                SDPT3InPath = true;
+            catch
+            end
+            if ~SDPT3InPath
+                if exist([pathStr '/external/SDPT3/sdpt3.m']) ~= 2
+                    if verbose >= 2
+                        warning(['No suitable SDP solver found. In particular, the SDPT3 library was found', char(10), ...
+                            'neither in the path nor in the folder ', pathStr, '/external/SDPT3.', char(10), ...
+                            'Some functionalities of the library might be disabled.']);
+                    end
+                else
+                    addpath([pathStr '/external/SDPT3']);
+                    if verbose >= 0
+                        disp('Adding embedded SDPT3 to the path. Please run ''install_sdpt3'' to complete the setup of this solver');
+                    end
+                    SDPT3InPath = true;
                 end
-            else
-                addpath([pathStr '/external/SDPT3']);
-                if verbose >= 0
-                    disp('Adding embedded SDPT3 to the path. Please run ''install_sdpt3'' to complete the setup of this solver');
-                end
+            elseif verbose >= 2
+                disp('SDPT3 is already in the path');
             end
         elseif verbose >= 2
-            disp('SDPT3 is already in the path');
+            disp('An SDP solver is already in the path');
         end
+    elseif verbose >= 2
+        warning('YALMIP not in path, not checking for an SDP solver')
     end
 
     %% MOcov
@@ -155,12 +183,13 @@ function replab_addpaths(verbose, includeEmbeddedSolver)
         if exist([pathStr '/external/MOcov/MOcov/mocov.m']) ~= 2
             warning(['The MOcov library was not found in the folder ', pathStr, '/external/MOcov', char(10), ...
                 'Did you run ''git submodule init'' and ''git submodule update''?', char(10), ...
-                'It will not be possible to run the tests.']);
+                'It will not be possible to run tests with code coverage.']);
         else
             addpath([pathStr '/external/MOcov/MOcov']);
             if verbose >= 1
                 disp('Adding MOcov to the path');
             end
+            MOcovInPath = true;
         end
     elseif verbose >= 2
         disp('MOcov is already in the path');
