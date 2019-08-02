@@ -11,6 +11,18 @@ function replab_compiledoc
     cd(pathStr)
     cd docs_src
 
+    % Check the presence of a SDP solver
+    SDPSolverInPath = false;
+    try
+        x = sdpvar(2);
+        sol = optimize([x >= 0, trace(x) == 1], 0, sdpsettings('verbose',0));
+        SDPSolverInPath = (sol.problem >= 0);
+    catch
+    end
+    if ~SDPSolverInPath
+        error('No SDP working SDP solver found. Did you run ''install_sdpt3''?');
+    end
+
     % delete existing output and tmp folders
     status = rmdir('tmp','s');
     status = mkdir('tmp');

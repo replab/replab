@@ -39,6 +39,18 @@ function result = replab_runtests(withCoverage)
         end
     end
     
+    % Check the presence of a SDP solver
+    SDPSolverInPath = false;
+    try
+        x = sdpvar(2);
+        sol = optimize([x >= 0, trace(x) == 1], 0, sdpsettings('verbose',0));
+        SDPSolverInPath = (sol.problem >= 0);
+    catch
+    end
+    if ~SDPSolverInPath
+        warning('No SDP working SDP solver found, some tests will fail.');
+    end
+
     % calls the relevant test suite
     if withCoverage == 1
         result = moxunit_runtests('tests/codeCoverageHelperFunction.m', '-verbose', ...
