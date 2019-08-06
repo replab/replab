@@ -45,10 +45,6 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
             f = self.decompositionFun;
             d = f();
         end
-
-    end
-    
-    methods
                 
         function g = sample(self)
             g = self.randomBag.sample;
@@ -57,6 +53,23 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
         function g = sampleUniformly(self)
         % Returns an element sampled uniformly from this group
             g = self.elements.sample;
+        end
+        
+        function rep = leftRegularRep(self)
+            o = self.order;
+            assert(o < 1e6);
+            o = double(o);
+            perms = cell(1, self.nGenerators);
+            E = self.elements;
+            for i = 1:self.nGenerators
+                g = self.generator(i);
+                img = zeros(1, o);
+                for j = 1:o
+                    img(j) = double(E.find(self.compose(g, E.at(j))));
+                end
+                perms{i} = img;
+            end
+            rep = self.permutationRep(o, perms);
         end
         
     end
