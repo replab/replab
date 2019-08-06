@@ -1,0 +1,7 @@
+On top of Sphinx, install the following packages. I tried with Python 3 in a dedicated virtualenv.
+
+sphinxcontrib-matlabdomain
+texext
+sphinx_rtd_theme
+
+I used the provided Makefile with `make html` on Ubuntu 18.04.
