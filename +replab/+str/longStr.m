@@ -7,7 +7,7 @@ function lines = longStr(obj, maxRows, maxColumns)
 %    maxRows: maximum number of rows
 % maxColumns: maximum number of columns
 %
-% Returns a cell array of strings 's'.
+% Returns a nRows x 1 cell array of strings 's'.
 %   
 % Thank you Matlab for being a regular language, we totally don't have to consider a thousand
 % particular cases below.
