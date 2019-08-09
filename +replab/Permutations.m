@@ -199,7 +199,7 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
         % Returns a permutation representation of the quaternion group
         %
         % The quaternion group returned can be seen as the multiplication of 
-        % of the four quaternion generators $1$, $i$, $j$, $k$ with a sign $\pm 1$, thus
+        % of the four quaternion generators 1, i, j, k with a sign +/-1, thus
         % can be represented by permutations on 8 elements.
         %
         % Returns:
