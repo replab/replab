@@ -125,6 +125,39 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
 
     methods
         
+        function ij = identifyTransposition(self, p)
+        % Identifies whether a permutation is a transposition
+        %
+        % Args:
+        %   p: Permutation to characterize
+        %
+        % Returns:
+        %   Either ``[i j]`` so that ``p == self.transposition(i, j)`` when
+        %   p is a transposition, or ``[]`` otherwise
+            support = find(p ~= 1:self.domainSize);
+            if length(support) == 2
+                ij = support(:)'; % to be sure of the shape
+            else
+                ij = [];
+            end
+        end
+        
+        function i = identifyShift(self, p)
+        % Identifies whether a permutation is a cyclic shift
+        %
+        % Args:
+        %   p: Permutation to characterize
+        %
+        % Returns:
+        %   Either ``i`` so that ``p == self.shift(i)`` when p is a
+        %   cyclic shift, or ``[]`` otherwise
+            if isequal(self.shift(p(1) - 1), p)
+                i = p(i) - 1;
+            else
+                i = [];
+            end
+        end
+            
         function p = transposition(self, i, j)
         % Returns the transposition permuting ``i`` and ``j``.
         %
@@ -307,6 +340,7 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
             end
             perm = I(IJ);
         end
+        
     end
     
 end
