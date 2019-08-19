@@ -1,0 +1,9 @@
+I tried with Python 3 in a dedicated virtualenv in Ubuntu 18.04.
+
+On top of Sphinx, install the following python packages:
+ - sphinxcontrib-matlabdomain
+ - texext
+ - sphinx_rtd_theme
+This can be done with the command `pip install --user sphinxcontrib-matlabdomain texext sphinx_rtd_theme`
+
+I then used the provided Makefile with `make html`. This creates the web pages in the folder `_build`.

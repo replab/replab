@@ -243,7 +243,12 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
         function Q = quaternionGroup(self)
         % Returns a permutation representation of the quaternion group
         %
-        % (can be seen as the multiplication of quaternions +/- 1,i,j,k = 8 elements)
+        % The quaternion group returned can be seen as the multiplication of 
+        % of the four quaternion generators 1, i, j, k with a sign +/-1, thus
+        % can be represented by permutations on 8 elements.
+        %
+        % Returns:
+        %    +replab.PermutationGroup: Quaternion group as a subgroup of S(8)
             S8 = replab.Permutations(8);
             g1 = S8.fromCycles([1 2 4 7], [3 6 8 5]);
             g2 = S8.fromCycles([1 3 4 8], [2 5 7 6]);
