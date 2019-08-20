@@ -47,7 +47,7 @@ classdef Settings
             if nargin == 1
                 DoubleSdpTol = newValue;
             elseif isequal(DoubleSdpTol, [])
-                DoubleSdpTol = 1e-6;
+                DoubleSdpTol = 1e-5;
             end
             value = DoubleSdpTol;
         end

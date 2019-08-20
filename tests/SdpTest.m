@@ -67,7 +67,7 @@ function test_SDP_CHSH
     obj2 = value(obj);
     
     % We compare the result:
-    assert(abs(obj1 - obj2) < replab.Settings.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
+    assert(abs(obj1 - obj2)/abs(obj1) < replab.Settings.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
 end
 
 function test_SDP_CHSH_FullProb
@@ -126,7 +126,7 @@ function test_SDP_CHSH_FullProb
     obj2 = value(obj);
     
     % We compare the result:
-    assert(abs(obj1 - obj2) < replab.Settings.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
+    assert(abs(obj1 - obj2)/abs(obj1) < replab.Settings.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
 end
 
 function test_SDP_CGLMP3_FullProb
@@ -209,6 +209,6 @@ function test_SDP_CGLMP3_FullProb
     obj2 = value(obj);
     
     % We compare the result:
-    assert(abs(obj1 - obj2) < replab.Settings.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
+    assert(abs(obj1 - obj2)/abs(obj1) < replab.Settings.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
 
 end
