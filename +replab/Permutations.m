@@ -125,10 +125,47 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
 
     methods
         
+        function p = transposition(self, i, j)
+        % Returns the transposition permuting ``i`` and ``j``.
+        %
+        % Args:
+        %   i: First domain element to be transposed.
+        %   j: Second domain element to be transposed.
+        %
+        % Returns:
+        %   The constructed transposition.
+            assert(1 <= i);
+            assert(i <= self.domainSize);
+            assert(1 <= j);
+            assert(j <= self.domainSize);
+            assert(i ~= j);
+            p = 1:self.domainSize;
+            p([i j]) = [j i];
+        end
+        
+        function p = shift(self, i)
+        % Returns the cyclic permutation that shifts the domain indices by ``i``.
+        %
+        % Args:
+        %   i: Shift so that $j$ is sent to $j+i$ (wrapping around).
+        %
+        % Returns:
+        %   The constructed cyclic shift.
+            n = self.domainSize;
+            p = mod((0:n-1)+i, n)+1;
+        end
+        
         function p = fromCycles(self, varargin)
-        % Constructs a permutation from a product of cycles, each
-        % cycle being a row vector, and the sequence cycles being
-        % given as variable arguments
+        % Constructs a permutation from a product of cycles.
+        %
+        % Each cycle is given as a row vector, and the sequence of cycles is
+        % given as variable arguments.
+        %
+        % Args:
+        %  *args: Sequence of cycles as row vectors of indices
+        % 
+        % Returns:
+        %  The permutation corresponding to the product of cycles.
             n = self.domainSize;
             p = self.identity;
             for i = length(varargin):-1:1
@@ -142,6 +179,14 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
         end
 
         function grp = subgroup(self, generators, orderOpt)
+        % Constructs a permutation subgroup from its generators
+        %
+        % Args:
+        %   generators: List of generators given as a permutations in a row cell array
+        %   orderOpt: Optional argument specifying the group order, will speed up computations
+        %
+        % Returns:
+        %   +replab.PermutationSubgroup: The constructed permutation subgroup.
             if nargin < 3
                 orderOpt = [];
             end
@@ -213,16 +258,32 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
         function mat = toMatrix(perm)
         % Returns the permutation matrix corresponding to the given permutation
         %
-        % such that matrix multiplication is compatible with composition of
-        % permutations, i.e. for P = replab.Permutations(domainSize)
-        % P.toMatrix(P.compose(x, y)) = P.toMatrix(x) * P.toMatrix(y)
+        % The returned matrix is such that matrix multiplication is compatible with composition of
+        % permutations, i.e. for `P = replab.Permutations(domainSize)` we have
+        % `P.toMatrix(P.compose(x, y)) = P.toMatrix(x) * P.toMatrix(y)`
+        %
+        % Args:
+        %   perm: Permutation
+        %
+        % Returns:
+        %   The permutation matrix corresponding to ``perm``.
             n = length(perm);
             mat = sparse(perm, 1:n, ones(1, n), n, n);
         end
         
         function perm = fromMatrix(mat)
         % Returns the signed permutation corresponding to the given matrix representation
-        % or throws an error
+        %
+        % See :method:`+replab.Permutations.toMatrix`
+        %
+        % Args:
+        %   mat: A permutation matrix.
+        %
+        % Returns:
+        %   The permutation corresponding to matrix ``mat``.
+        %
+        % Raises:
+        %   Error: if ``mat`` is not a permutation matrix, throws an error
             if isequal(size(mat), [0 0])
                 perm = zeros(1, 0);
                 return

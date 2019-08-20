@@ -3,19 +3,27 @@ classdef Commutant < replab.Domain
 %
 % Let rep be a representation of a group G. This describes the set
 % of matrices X such that rep.image(g) * X = X * rep.image(g)
+%
+% Abstract base class
 
     properties (SetAccess = protected)
-        field; % vector space field, 'R', 'C'
-        n;     % matrix size
-        group; % group
-        rep;   % representation
+        parent; % parent domain: either real/complex matrices
+        field;  % vector space field, 'R', 'C'
+        n;      % matrix size
+        group;  % group
+        rep;    % representation
     end
     
-    properties (Access = protected)
-        parent_; % parent domain: either real/complex matrices
+    methods % ABSTRACT
+        
+        function X = project(self, X)
+        % Projects any n x n matrix in the invariant subspace
+            error('Not implemented');
+        end
+
     end
     
-    methods
+    methods (Access = protected)
         
         function self = Commutant(rep)
         % Constructor; please do not call this from user code, but
@@ -28,22 +36,17 @@ classdef Commutant < replab.Domain
             self.group = rep.group;
             switch self.field
               case 'R'
-                self.parent_ = replab.domain.RealMatrices(self.n, self.n);
+                self.parent = replab.domain.RealMatrices(self.n, self.n);
               case 'C'
-                self.parent_ = replab.domain.ComplexMatrices(self.n, self.n);
+                self.parent = replab.domain.ComplexMatrices(self.n, self.n);
               otherwise
                 error('Unknown field');
             end
         end
         
-        function X = project(self, X)
-        % Projects any n x n matrix in the equivariant subspace
-            assert(isa(self.group, 'replab.FiniteGroup'));
-            T = self.group.decomposition.transversals;
-            for i = length(T):-1:1
-                X = self.averageOver(X, T{i});
-            end
-        end
+    end
+    
+    methods
 
         function X1 = averageOver(self, X, elements)
         % Averages X over the given group elements (row cell vector)
@@ -69,7 +72,6 @@ classdef Commutant < replab.Domain
         
         function distances = randomDistances(self, X, nSamples)
         % Samples random group elements, and computes the corresponding violation of commutativity
-
             distances = [];
             for i = 1:nSamples
                 g = self.group.sample;
@@ -89,12 +91,12 @@ classdef Commutant < replab.Domain
         % Domain
         
         function b = eqv(self, X, Y)
-            b = self.parent_.eqv(X, Y);
+            b = self.parent.eqv(X, Y);
         end
         
         function X = sample(self)
         % Samples a generic matrix from this commutant algebra
-            X = self.project(self.parent_.sample);
+            X = self.project(self.parent.sample);
         end
         
         function X = sampleSelfAdjoint(self)
@@ -102,7 +104,7 @@ classdef Commutant < replab.Domain
         %
         % Enforces that X = X'
         % i.e. real matrices are symmetric, complex matrices are Hermitian
-            X = self.parent_.sample;
+            X = self.parent.sample;
             X = (X + X')/2;
             X = self.project(X);
             X = (X + X')/2;
@@ -112,7 +114,7 @@ classdef Commutant < replab.Domain
         % Samples a generic skew-adjoint (or anti-self-adjoint) matrix
         %
         % Enforces that X = -X'
-            X = self.parent_.sample;
+            X = self.parent.sample;
             X = (X - X')/2;
             X = self.project(X);
             X = (X - X')/2;
