@@ -9,8 +9,8 @@ function F = ge(X,Y)
         % CommutantVar >= sthg
         if isscalar(Y)
             F = [X.blocks{1} >= Y];
-            for i = 2:self.nComponents
-                F = [F, self.blocks{i} >= Y];
+            for i = 2:X.nComponents
+                F = [F, X.blocks{i} >= Y];
             end
         else
             % We need to check whether X and Y have the same block
