@@ -130,14 +130,19 @@ function replab_addpaths(verbose)
     % Making sure a woring SDP solver is in the path and working, otherwise
     % tries to add SDPT3
     if YALMIPInPath
-        SDPSolverInPath = false;
+        decentSDPSolverInPath = false;
         try
             x = sdpvar(2);
             sol = optimize([x >= 0, trace(x) == 1], 0, sdpsettings('verbose',0));
-            SDPSolverInPath = (sol.problem >= 0);
+            decentSDPSolverInPath = (sol.problem >= 0);
+            % If LMILAB was used to solve the problem, this means that no
+            % good solver was found.
+            if ~isempty(strfind(upper(info), 'LMILAB'))
+                decentSDPSolverInPath = false;
+            end
         catch
         end
-        if ~SDPSolverInPath
+        if ~decentSDPSolverInPath
             SDPT3InPath = false;
             try
                 [blk, Avec, C, b, X0, y0, Z0] = randsdp([2 2], [2 2], 2, 2);
