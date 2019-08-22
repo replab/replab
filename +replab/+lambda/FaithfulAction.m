@@ -1,4 +1,4 @@
-classdef FaithfulActionFun < replab.FaithfulAction
+classdef FaithfulAction < replab.FaithfulAction
     
     properties (SetAccess = protected)
         header;
@@ -8,7 +8,7 @@ classdef FaithfulActionFun < replab.FaithfulAction
     
     methods
         
-        function self = FaithfulActionFun(header, G, P, leftActionFun, findMovedElementFun)
+        function self = FaithfulAction(header, G, P, leftActionFun, findMovedElementFun)
             self.header = header;
             self.G = G;
             self.P = P;

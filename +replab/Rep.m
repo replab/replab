@@ -6,9 +6,10 @@ classdef Rep < replab.Str
 % actions can also be specialized.
     
     properties (SetAccess = protected)
-        group;     % Group being represented
-        field;     % 'R' or 'C'
-        dimension; % Representation dimension
+        group     % Group being represented
+        field     % Field on which the representation space is defined
+                  % with values either ``'R'`` (real) or ``'C'`` (complex)
+        dimension % Dimension of the representation
     end
     
     properties (Access = protected)
@@ -19,22 +20,44 @@ classdef Rep < replab.Str
     methods % Abstract methods
         
         function rho = image(self, g)
-        % Returns the image of the group element
+        % (Abstract) Returns the image of the group element
+        %
+        % Args:
+        %   g (Element of :attr:`group`): Element for which the representation matrix is computed 
+        %
+        % Returns:
+        %   double matrix: Image of the group element
             error('Not implemented');
         end
         
     end
     
     methods % Default implementations
-        
-        function b = overR(self)
-        % Returns true if this representation is defined over the real field
-            b = isequal(self.field, 'R');
+
+        function c = commutant(self)
+        % Returns the commutant algebra of this representation
+        %
+        % This is the algebra of matrices that commute with all images of this representation.
+        %
+        % For any $g \in G$, we have $\rho(g) X = X \rho(g)$.
+            if isequal(self.commutant_, [])
+                self.commutant_ = replab.rep.commutant(self);
+            end
+            c = self.commutant_;
         end
-        
+
         function b = overC(self)
         % Returns true if this representation is defined over the complex field
+        %
+        % See also :meth:`overR`
             b = isequal(self.field, 'C');
+        end
+
+        function b = overR(self)
+        % Returns true if this representation is defined over the real field
+        %
+        % See also :meth:`overC`
+            b = isequal(self.field, 'R');
         end
         
         function e = equivariant(self, repC)
@@ -49,17 +72,6 @@ classdef Rep < replab.Str
             e = replab.rep.equivariant(self, repC)
         end
 
-        function c = commutant(self)
-        % Returns the commutant of this representation
-        %
-        % This is the algebra of matrices that commute with
-        % this representation images, i.e. for any g in G, we have
-        % rho(g) * X = X * rho(g)
-            if isequal(self.commutant_, [])
-                self.commutant_ = replab.rep.commutant(self);
-            end
-            c = self.commutant_;
-        end
         
         function I = decomposition(self)
         % Returns the irreducible decomposition of this representation

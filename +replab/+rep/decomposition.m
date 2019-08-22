@@ -1,7 +1,22 @@
 function I = decomposition(rep)
-% Decomposes the given representation into irreducible subrepresentations
+% Decomposes the given representation into (structured) irreducible subrepresentations
+%
+% Args:
+%   rep (:class:`+replab.Rep`): Representation to decompose
+%
+% Returns:
+%   :class:`+replab.Irreducible`: A structured decomposition into irreducible representations
     assert(isa(rep, 'replab.Rep'));
     assert(rep.overR || rep.overC);
+    if isa(rep.group, 'replab.PermutationGroup')
+        n = rep.group.domainSize;
+        if rep.group.order == factorial(vpi(n))
+            I = replab.rep.decomposeSymmetric(rep);
+            if ~isequal(I, [])
+                return
+            end
+        end
+    end
     if rep.overR
         trivialRealDivisionAlgebra = replab.DivisionAlgebra.real;
     else

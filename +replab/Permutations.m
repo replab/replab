@@ -341,6 +341,45 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
             perm = I(IJ);
         end
         
+        function p = sorting(array, greaterFun)
+        % Returns the permutation that sorts a cell array using a custom comparison function
+        %
+        % Args:
+        %   array: A (row or column) vector array containing data
+        %          of arbitrary type
+        %   greaterFun: A function handle that compares elements such that
+        %               ``greaterFun(x, y) == true`` when x > y
+        %               and false otherwise
+        % Returns:
+        %   A permutation ``p`` such that ``sorted = array(p)``
+            n = length(array);
+            p = 1:n;
+            inc = round(n/2);
+            while inc > 0
+                for i = (inc+1):n
+                    tmp = p(i);
+                    j = i;
+                    if isa(array, 'cell')
+                        while (j >= inc+1) && greaterFun(array{p(j-inc)}, array{tmp})
+                            p(j) = p(j-inc);
+                            j = j - inc;
+                        end
+                    else
+                        while (j >= inc+1) && greaterFun(array(p(j-inc)), array(tmp))
+                            p(j) = p(j-inc);
+                            j = j - inc;
+                        end
+                    end
+                    p(j) = tmp;
+                end
+                if inc == 2
+                    inc = 1;
+                else
+                    inc = round(inc/2.2);
+                end
+            end
+        end
+        
     end
     
 end

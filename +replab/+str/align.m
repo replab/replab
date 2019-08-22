@@ -1,7 +1,13 @@
 function s = align(table, spec)
-% Renders a table using the given LaTeX-inspired specification
+% Renders an aligned table using the given alignment of text in columns
 %
-% spec: contains as many 'l', 'c', or 'r' to prescribe alignement as there are columns
+% Args:
+%   table (cell 2D array of strings): 2D table of data to pretty print
+%   spec (char row vector): contains as many ``'l'``, ``'c'``, or ``'r'`` 
+%                           to prescribe alignement as there are columns in the table
+%
+% Returns:
+%   A column cell vector containing the lines of the table
     nR = size(table, 1);
     nC = size(table, 2);
     s = cell(nR, 1);

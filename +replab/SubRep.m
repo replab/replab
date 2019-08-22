@@ -1,7 +1,5 @@
 classdef SubRep < replab.Rep
 % Describes a subrepresentation of a unitary finite representation
-%
-% 
     properties (SetAccess = protected)
         parent; % Parent representation
                 %

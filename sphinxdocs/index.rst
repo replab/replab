@@ -6,5 +6,10 @@
 RepLAB documentation prototype in Sphinx
 ========================================
 
-.. automodule:: +replab
-     :members:
+.. toctree::
+   :maxdepth: 3
+
+   api_prettyprinting
+   api_grouphierarchy
+   
+.. bibliography:: references.bib

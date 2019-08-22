@@ -1,8 +1,12 @@
 function str = headerStr(obj)
 % Returns a tiny one-line description of the object type without inspecting its contents 
 %
-%        obj: Object to pretty print
+% Args:
 %
+%   obj: Object to pretty print
+%
+% Returns:
+%   A one-line compact string representation
     if isa(obj, 'replab.Str')
         try
             str = obj.headerStr;

@@ -19,9 +19,9 @@ import os
 
 # -- Project information -----------------------------------------------------
 
-project = 'sphinxcontrib-matlabdomain'
-copyright = '2018, Jørgen Cederberg'
-author = 'Jørgen Cederberg'
+project = 'RepLAB'
+copyright = '2019, Denis Rosset and Jean-Daniel Bancal'
+author = 'Denis Rosset and Jean-Daniel Bancal'
 
 # The short X.Y version
 version = ''
@@ -39,10 +39,15 @@ release = ''
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc', 'sphinxcontrib.matlab',
-              'sphinx.ext.napoleon', 'sphinx.ext.mathjax', 'texext.math_dollar']
+              'sphinx.ext.napoleon', 'sphinx.ext.mathjax', 'texext.math_dollar',
+              'sphinxcontrib.bibtex']
 matlab_src_dir = os.path.dirname(os.path.abspath(__file__ + "/../"))
 primary_domain = 'mat'
+autodoc_member_order = 'bysource'
 
+autodoc_default_options = {
+    'member-order': 'bysource'
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -88,7 +93,12 @@ html_theme = 'sphinx_rtd_theme'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ['_static']
+html_static_path = ['_static']
+
+# this removes the default property value display (which is "None" by default)
+html_css_files = [
+    'css/custom.css',
+]
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.

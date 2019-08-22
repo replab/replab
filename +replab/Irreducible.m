@@ -1,19 +1,29 @@
 classdef Irreducible < replab.Str
 % Describes the irreducible decomposition of a representation
-    
+%
+% It corresponds to the canonical decomposition of Section 2.6 in :cite:`Serre1977`.
     properties
-        parent;     % Parent representation
-        components; % Isotypic components
+        parent % Representation being decomposed
+        components % (row cell vector of :class:`+replab.Isotypic`): Isotypic components
     end
 
     methods
 
         function self = Irreducible(parent, components)
+        % Constructor
+        %
+        % Parameters:
+        %   parent (:class:`+replab.Rep`): Representation being decomposed
+        %   components (row cell vector of :class:`+replab.Isotypic`): Isotypic components
+            
             self.parent = parent;
             self.components = components;
         end
         
         function r = rep(self)
+        % Returns the decomposed representation in the basis that expresses the decomposition
+        %
+        % Returns: 
         % Returns the subrepresentation corresponding to this isotypic component
             U = zeros(0, self.parent.dimension);
             for i = 1:self.nComponents
