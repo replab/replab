@@ -11,5 +11,6 @@ RepLAB documentation prototype in Sphinx
 
    api_prettyprinting
    api_grouphierarchy
+   api_objects
    
 .. bibliography:: references.bib
