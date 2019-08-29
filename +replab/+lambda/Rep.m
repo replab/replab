@@ -2,7 +2,7 @@ classdef Rep < replab.Rep
 % An implementation of a representation defined by an image function
 
     properties (SetAccess = protected)
-        imageFun; % image function
+        imageFun % image function
     end
     
     methods

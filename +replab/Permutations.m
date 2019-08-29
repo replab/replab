@@ -126,7 +126,7 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
     methods
         
         function p = transposition(self, i, j)
-        % Returns the transposition permuting ``i`` and ``j``.
+        % Returns the transposition permuting `i` and `j`.
         %
         % Args:
         %   i: First domain element to be transposed.
@@ -144,10 +144,10 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
         end
         
         function p = shift(self, i)
-        % Returns the cyclic permutation that shifts the domain indices by ``i``.
+        % Returns the cyclic permutation that shifts the domain indices by `i`.
         %
         % Args:
-        %   i: Shift so that $j$ is sent to $j+i$ (wrapping around).
+        %   i: Shift so that ``j`` is sent to ``j + i`` (wrapping around).
         %
         % Returns:
         %   The constructed cyclic shift.
@@ -259,14 +259,14 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
         % Returns the permutation matrix corresponding to the given permutation
         %
         % The returned matrix is such that matrix multiplication is compatible with composition of
-        % permutations, i.e. for `P = replab.Permutations(domainSize)` we have
-        % `P.toMatrix(P.compose(x, y)) = P.toMatrix(x) * P.toMatrix(y)`
+        % permutations, i.e. for ``P = replab.Permutations(domainSize)`` we have
+        % ``P.toMatrix(P.compose(x, y)) = P.toMatrix(x) * P.toMatrix(y)``
         %
         % Args:
         %   perm: Permutation
         %
         % Returns:
-        %   The permutation matrix corresponding to ``perm``.
+        %   The permutation matrix corresponding to `perm`.
             n = length(perm);
             mat = sparse(perm, 1:n, ones(1, n), n, n);
         end
@@ -274,16 +274,16 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
         function perm = fromMatrix(mat)
         % Returns the signed permutation corresponding to the given matrix representation
         %
-        % See :method:`+replab.Permutations.toMatrix`
+        % See `replab.Permutations.toMatrix`
         %
         % Args:
         %   mat: A permutation matrix.
         %
         % Returns:
-        %   The permutation corresponding to matrix ``mat``.
+        %   The permutation corresponding to matrix `mat`.
         %
         % Raises:
-        %   Error: if ``mat`` is not a permutation matrix, throws an error
+        %   Error: if `mat` is not a permutation matrix, throws an error
             if isequal(size(mat), [0 0])
                 perm = zeros(1, 0);
                 return

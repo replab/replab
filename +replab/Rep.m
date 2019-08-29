@@ -1,14 +1,13 @@
 classdef Rep < replab.Str
-% Describes a orthogonal (real) or unitary (complex) finite dimensional represenation
-% of a compact group
+% Describes a orthogonal/unitary finite dimensional representation of a compact group
 % 
-% Only "image" needs to be implemented in principle; for optimization purposes,
-% actions can also be specialized.
+% Only "image" needs to be implemented in principle; 
+% for optimization purposes, actions can also be specialized.
     
     properties (SetAccess = protected)
-        group;     % Group being represented
-        field;     % 'R' or 'C'
-        dimension; % Representation dimension
+        group     % (replab.Group) Group being represented
+        field     % ({'R', 'C'}) Representation type, real or complex
+        dimension % (integer as double) Representation dimension
     end
     
     properties (Access = protected)
@@ -19,7 +18,7 @@ classdef Rep < replab.Str
     methods % Abstract methods
         
         function rho = image(self, g)
-        % Returns the image of the group element
+        % Returns the image of the group element (abstract)
             error('Not implemented');
         end
         
@@ -106,7 +105,7 @@ classdef Rep < replab.Str
         % REAL OR COMPLEX
         
         function complexRep = complexification(self)
-            assert(isequal(self.field, 'R'), 'Representation should be real to start with');
+            assert(self.overR, 'Representation should be real to start with');
             complexRep = replab.Rep.lambda(self.group, 'C', self.dimension, @(g) self.image(g));
         end
            
@@ -143,7 +142,7 @@ classdef Rep < replab.Str
         % Returns a subrepresentation of this representation
         %
         % It is described by the row basis vectors in U, such that
-        % sub.image(g) = U' * self.image(g) * U
+        % sub.image(g) = U * self.image(g) * U'
         %
         % A has dimension self.dimension x dim(subRepresentation)
         %
@@ -161,8 +160,6 @@ classdef Rep < replab.Str
         % It returns a representation rep1 such that
         %
         % rep1.image(g) = U * self.image(g) * U'
-        %
-        % Note the opposite convention with respect to subRep
             rep1 = replab.ConjugateRep(U, self);
         end
 
