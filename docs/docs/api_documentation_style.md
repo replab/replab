@@ -178,6 +178,8 @@ Class properties are documented by *not* adding a semicolon `;` to each property
 
 Methods are documented as are standalone functions. Do not include `self` in the list of parameters. The constructor is documented separately as any method.
 
+Abstract methods such have their one line description followed by `(abstract)`. 
+
 ## Other points
 
 - Equations: we do not use currently LaTeX formatting. (TODO: should we, in the future?)
