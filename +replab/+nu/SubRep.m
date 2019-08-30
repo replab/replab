@@ -1,4 +1,4 @@
-classdef NUSubRep < replab.NURep
+classdef SubRep < replab.nu.Rep
 % Describes a subrepresentation of a unitary finite representation
     
     properties (SetAccess = protected)

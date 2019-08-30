@@ -1,9 +1,9 @@
-classdef NUSubRepLaws < replab.NURepLaws
+classdef SubRepLaws < replab.nu.RepLaws
     
     methods
         
-        function self = NUSubRepLaws(rep)
-            self = self@replab.NURepLaws(rep);
+        function self = SubRepLaws(rep)
+            self = self@replab.nu.RepLaws(rep);
         end
         
         function law_basis_is_consistent(self)

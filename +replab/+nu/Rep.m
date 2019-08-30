@@ -1,4 +1,4 @@
-classdef NURep < replab.Str
+classdef Rep < replab.Str
 % Describes a real or complex finite dimension representation of a compact group
 %
 % EXPERIMENTAL
@@ -58,7 +58,7 @@ classdef NURep < replab.Str
             if self.overR
                 cRep = self;
             else
-                cRep = replab.NURep.lambda(self.group, 'C', self.dimension, @(g) self.image(g));
+                cRep = replab.nu.LambdaRep(self.group, 'C', self.dimension, @(g) self.image(g));
             end
         end
         
@@ -75,7 +75,7 @@ classdef NURep < replab.Str
         %   G (double matrix): map W -> V
         % Returns:
         %   NUSubRep: Subrepresentation
-            sub = replab.NCSubRep(self, F, G);
+            sub = replab.nu.SubRep(self, F, G);
         end
         
         %function X1 = actionDualDual(self, g, X)
@@ -110,7 +110,7 @@ classdef NURep < replab.Str
         
         function rep = lambda(group, field, dimension, imageFun)
         % Creates a non unitary representation from an image function
-            rep = replab.lambda.NURep(group, field, dimension, imageFun);
+            rep = replab.nu.LambdaRep(group, field, dimension, imageFun);
         end
         
     end

@@ -1,4 +1,4 @@
-classdef NURepByImages < replab.NURep
+classdef RepByImages < replab.nu.Rep
 % A finite dimensional unitary representation of a finitely generated group
     properties (SetAccess = protected)
         images % Generator images
@@ -7,7 +7,7 @@ classdef NURepByImages < replab.NURep
 
     methods
         
-        function self = NURepByImages(group, field, dimension, images, invImages)
+        function self = RepByImages(group, field, dimension, images, invImages)
         % Constructs a representation from a group's generator images
             assert(isa(group, 'replab.FinitelyGeneratedGroup'));
             assert(length(images) == group.nGenerators);

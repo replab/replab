@@ -1,4 +1,4 @@
-classdef NURep < replab.NURep
+classdef LambdaRep < replab.nu.Rep
 % An implementation of a non unitary representation defined by an image function
 
     properties (SetAccess = protected)
@@ -7,7 +7,7 @@ classdef NURep < replab.NURep
     
     methods
         
-        function self = NURep(group, field, dimension, imageFun)
+        function self = LambdaRep(group, field, dimension, imageFun)
         % Constructs a representation from a group's generator images
             assert(isa(group, 'replab.Group'));
             self.group = group;

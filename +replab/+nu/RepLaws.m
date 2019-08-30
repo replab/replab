@@ -1,4 +1,4 @@
-classdef NURepLaws < replab.Laws
+classdef RepLaws < replab.Laws
     
     properties
         rep % non unitary representation being tested
@@ -9,7 +9,7 @@ classdef NURepLaws < replab.Laws
     
     methods
         
-        function self = NURepLaws(rep)
+        function self = RepLaws(rep)
             self.rep = rep;
             d = self.rep.dimension;
             self.G = rep.group;
