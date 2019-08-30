@@ -151,3 +151,83 @@ for j = 1:24
     U = A_S4_Ss*images{1,j}*inv(A_S4_Ss);
     U*U'
 end
+
+%%
+%S5 STANDARD REP SPECHT
+S5 = replab.S(5);
+images = {};
+S = replab.NURepByImages(S5,'R', 4, {[-1 1 -1 1; -1 0 0 0; 0 -1 0 0; 0 0 -1 0] [0 -1 0 0; -1 0 0 0; 0 0 1 0; 0 0 0 1]},{inv([-1 1 -1 1; -1 0 0 0; 0 -1 0 0; 0 0 -1 0]) inv([0 -1 0 0; -1 0 0 0; 0 0 1 0; 0 0 0 1])});
+for i = 1:120
+    images{1,i} = image(S,S5.elements.at(i));
+end
+
+R = zeros(4);
+for j = 1:120
+    R = R + images{1,j}'*images{1,j};
+end
+R = R/120;
+A_S5_S = chol(R);
+
+%%
+%S5 STANDARD x SIGN REP SPECHT
+S5 = replab.S(5);
+images = {};
+Ss = replab.NURepByImages(S5, 'R', 4, {[-1 1 0 0; -1 0 1 0; -1 0 0 1; -1 0 0 0] [-1 0 0 0; 0 -1 0 0; 0 0 0 -1; 0 0 -1 0]}, {inv([-1 1 0 0; -1 0 1 0; -1 0 0 1; -1 0 0 0]) inv([-1 0 0 0; 0 -1 0 0; 0 0 0 -1; 0 0 -1 0])});
+for i = 1:120
+    images{1,i} = image(Ss,S5.elements.at(i));
+end
+
+R = zeros(4);
+for j = 1:120
+    R = R + images{1,j}'*images{1,j};
+end
+R = R/120;
+A_S5_Ss = chol(R);
+
+%%
+%S5 5D (3 + 2) REP SPECHT
+S5 = replab.S(5);
+images = {};
+f = replab.NURepByImages(S5, 'R', 5, {[-1 1 -1 0 0; 0 0 0 1 -1; 0 0 1 0 -1; 1 0 0 0 0; 1 0 1 0 0] [1 0 0 0 0; 0 0 0 -1 0; -1 0 0 0 -1; 0 -1 0 0 0; -1 0 -1 0 0]}, {inv([-1 1 -1 0 0; 0 0 0 1 -1; 0 0 1 0 -1; 1 0 0 0 0; 1 0 1 0 0]) inv([1 0 0 0 0; 0 0 0 -1 0; -1 0 0 0 -1; 0 -1 0 0 0; -1 0 -1 0 0])});
+for i = 1:120
+    images{1,i} = image(f,S5.elements.at(i));
+end
+
+R = zeros(5);
+for j = 1:120
+    R = R + images{1,j}'*images{1,j};
+end
+R = R/120;
+A_S5_f = chol(R);
+
+%%
+%S5 5D (2 + 2 + 1) REP SPECHT
+S5 = replab.S(5);
+images = {};
+F = replab.NURepByImages(S5, 'R', 5, {[1 -1 -1 1 0; 0 -1 -1 0 1; 1 -1 0 0 0; 0 -1 0 0 0; 1 -1 -1 0 0] [0 0 -1 0 0; 0 0 0 -1 0; -1 0 0 0 0; 0 -1 0 0 0; 0 0 0 0 -1]}, {inv([1 -1 -1 1 0; 0 -1 -1 0 1; 1 -1 0 0 0; 0 -1 0 0 0; 1 -1 -1 0 0]) inv([0 0 -1 0 0; 0 0 0 -1 0; -1 0 0 0 0; 0 -1 0 0 0; 0 0 0 0 -1])});
+for i = 1:120
+    images{1,i} = image(F,S5.elements.at(i));
+end
+
+R = zeros(5);
+for j = 1:120
+    R = R + images{1,j}'*images{1,j};
+end
+R = R/120;
+A_S5_F = chol(R);
+
+%%
+%S5 EXTERIOR PRODUCT OF STANDARD REP SPECHT
+S5 = replab.S(5);
+images = {};
+E = replab.NURepByImages(S5, 'R', 6, {[1 -1 1 0 0 0; 1 0 0 -1 1 0; 0 1 0 -1 0 1; 1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 0 1 0 0] [-1 0 0 0 0 0; 0 0 0 -1 0 0; 0 0 0 0 -1 0; 0 -1 0 0 0 0; 0 0 -1 0 0 0; 0 0 0 0 0 1]}, {inv([1 -1 1 0 0 0; 1 0 0 -1 1 0; 0 1 0 -1 0 1; 1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 0 1 0 0]) inv([-1 0 0 0 0 0; 0 0 0 -1 0 0; 0 0 0 0 -1 0; 0 -1 0 0 0 0; 0 0 -1 0 0 0; 0 0 0 0 0 1])});
+for i = 1:120
+    images{1,i} = image(E, S5.elements.at(i));
+end
+
+R = zeros(6);
+for j = 1:120
+    R = R + images{1,j}'*images{1,j};
+end
+R = R/120;
+A_S5_E = chol(R);
