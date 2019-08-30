@@ -1,4 +1,5 @@
 classdef NURepLaws < replab.Laws
+    
     properties
         rep % non unitary representation being tested
         G % group of which rep is a representation
@@ -22,8 +23,10 @@ classdef NURepLaws < replab.Laws
                 error('Unknown field');
             end            
         end
+        
         function morphismLaws = laws_asGroupHomomorphism(self)
             morphismLaws = replab.GroupMorphismLaws(@(g) self.rep.image(g), self.G, self.L);
         end
+        
     end
 end

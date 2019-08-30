@@ -1,5 +1,7 @@
 classdef NURep < replab.Str
 % Describes a real or complex finite dimension representation of a compact group
+%
+% EXPERIMENTAL
     
     properties (SetAccess = protected)
         group % Group being representation
@@ -74,6 +76,32 @@ classdef NURep < replab.Str
         % Returns:
         %   NUSubRep: Subrepresentation
             sub = replab.NCSubRep(self, F, G);
+        end
+        
+        %function X1 = actionDualDual(self, g, X)
+        %    rho = self.image(g);
+        %    rhoi = self.invImage(g);
+        %    X1 = rhoi' * X * rho';
+        %end
+        
+        function X1 = innerProductAction(self, g, X)
+            rhoi = self.invImage(g);
+            X1 = rhoi' * X * rhoi;
+        end
+                
+        function X1 = innerProductProject(self, X)
+        % Args:
+        %   X (double): Map from V to V*
+            T = self.group.decomposition.transversals;
+            X1 = X;
+            for i = 1:length(T):-1:1
+                Ti = T{i};
+                S = X1;
+                for j = 2:length(Ti)
+                    S = S + self.innerProductAction(Ti{j}, X1);
+                end
+                X1 = S / length(Ti);
+            end
         end
         
     end

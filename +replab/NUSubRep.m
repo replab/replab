@@ -4,23 +4,23 @@ classdef NUSubRep < replab.NURep
     properties (SetAccess = protected)
         parent % Parent representation
         F      % Map from the parent to this representation
-        G      % Map from this representation to the parent representation
+        H      % Map from this representation to the parent representation
     end
     
     methods
         
-        function self = SubRep(parent, F, G)
+        function self = SubRep(parent, F, H)
             d = size(F, 1);
             dParent = size(F, 2);
-            assert(size(G, 1) == dParent);
-            assert(size(G, 2) == d);
+            assert(size(H, 1) == dParent);
+            assert(size(H, 2) == d);
             assert(parent.dimension == dParent);
             self.group = parent.group;
             self.field = parent.field;
             self.dimension = d;
             self.parent = parent;
             self.F = F;
-            self.G = G;
+            self.H = H;
         end
 
         function s = headerStr(self)
@@ -31,7 +31,7 @@ classdef NUSubRep < replab.NURep
         % Returns the projector on this subrepresentation
         %
         % The projector is expressed in the parent representation
-            P = self.G*self.F;
+            P = self.H*self.F;
         end
         
         function newSub = collapseParent(self)
@@ -39,14 +39,14 @@ classdef NUSubRep < replab.NURep
             assert(isa(self.parent, 'replab.NUSubRep'));
             % self W, parent V, parent.parent U
             % self.F: V -> W
-            % self.G: W -> V
+            % self.H: W -> V
             % self.parent.F: U -> V
-            % self.parent.G: V -> U
+            % self.parent.H: V -> U
             % newF: U -> W
-            % newG: W -> U
+            % newH: W -> U
             newF = self.F * self.parent.F;
-            newG = self.parent.G * self.G;
-            newSub = self.parent.parent.subRep(newF, newG);
+            newH = self.parent.H * self.H;
+            newSub = self.parent.parent.subRep(newF, newH);
         end
         
         % TODO function sub = in(self, newParent)
@@ -54,8 +54,8 @@ classdef NUSubRep < replab.NURep
         % Rep
         
         function rho = image(self, g)
-        % Returns G rho(g) F
-            rho = self.G * self.parent.image(g) * self.F;
+        % Returns H rho(g) F
+            rho = self.H * self.parent.image(g) * self.F;
         end
         
     end
