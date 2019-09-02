@@ -118,8 +118,10 @@ In order, the sections of a funciton comment are:
    %
    % Returns
    % -------
-   %   c: Smallest number
-   %   d: Largest number
+   %   c: double
+   %     Smallest number
+   %   d: double
+   %     Largest number
    ```
    
 6. Raises
