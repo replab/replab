@@ -21,7 +21,7 @@ function replab_addpaths(verbose)
     [pathStr, name, extension] = fileparts(which(mfilename));
     
     % Check if another instance of RepLAB is already in the path
-    currentPathStr = pwd;
+    currentPathStr = strrep(pwd,'\','/');
     dirName = currentPathStr(find(currentPathStr=='/',1,'last')+1:end);
     cd ..
     AmIMyself = which('replab_addpaths');
