@@ -23,6 +23,25 @@ classdef CommutantVar < replab.Str
 
     methods
         
+        function s = headerStr(self)
+            s = sprintf('Parametric %dx%d commutant (%d blocks, %d variables)', self.dim, self.dim, length(self.blocks), self.nbVars());
+        end
+        
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Str(self);
+            names{1, end+1} = 'blocks';
+        end
+        
+        function [names values] = additionalFields(self)
+            [names values] = additionalFields@replab.Str(self);
+            names{1, end+1} = 'blocks';
+            dims = zeros(1,length(self.blocks));
+            for i = 1:length(self.blocks)
+                dims(i) = size(self.blocks{i},1);
+            end
+            values{1, end+1} = dims;
+        end
+        
         function self = CommutantVar(U, dimensions1, multiplicities, types)
             try
                 yalmip('version');
