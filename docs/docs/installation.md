@@ -38,7 +38,7 @@ This creates a folder **RepLAB** with all the necessary code, including the [VPI
 
 
 ## Setting up SDP support
-**RepLAB** uses the [YALMIP](https://yalmip.github.io) interface to solve convex optimization problems. The steps above make sure the YALMIP and SDPT3 code are downloaded. To activate the SDPT3 solver, run the following command from the `SDPT3` folder
+**RepLAB** uses the [YALMIP](https://yalmip.github.io) interface to solve convex optimization problems. The steps above make sure the YALMIP and SDPT3 code are downloaded. To activate the SDPT3 solver, run the following command from the `external/SDPT3` folder
 ```
 install_sdpt3
 ```
