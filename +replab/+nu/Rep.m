@@ -26,7 +26,7 @@ classdef Rep < replab.Str
     
     methods
         
-        function rho = invImage(self, g)
+        function rho = inverseImage(self, g)
         % Returns the image of the inverse of a group element
         %
         % Args:
@@ -78,39 +78,30 @@ classdef Rep < replab.Str
             sub = replab.nu.SubRep(self, F, G);
         end
         
-        %function X1 = actionDualDual(self, g, X)
-        %    rho = self.image(g);
-        %    rhoi = self.invImage(g);
-        %    X1 = rhoi' * X * rho';
-        %end
-        
-        function X1 = innerProductAction(self, g, X)
-            rhoi = self.invImage(g);
-            X1 = rhoi' * X * rhoi;
-        end
-                
-        function X1 = innerProductProject(self, X)
-        % Args:
-        %   X (double): Map from V to V*
-            T = self.group.decomposition.transversals;
-            X1 = X;
-            for i = 1:length(T):-1:1
-                Ti = T{i};
-                S = X1;
-                for j = 2:length(Ti)
-                    S = S + self.innerProductAction(Ti{j}, X1);
-                end
-                X1 = S / length(Ti);
-            end
+        function dualRep = dual(self)
+        % Returns the dual representation of this representation
+            imageFun = @(g) self.inverseImage(g).';
+            inverseImageFun = @(g) self.image(g).';
+            dualRep = replab.nu.Rep.lambda(self.group, self.field, self.dimension, imageFun, inverseImageFun);
         end
         
     end
     
     methods (Static)
         
-        function rep = lambda(group, field, dimension, imageFun)
+        function rep = lambda(group, field, dimension, imageFun, inverseImageFun)
         % Creates a non unitary representation from an image function
-            rep = replab.nu.LambdaRep(group, field, dimension, imageFun);
+        %
+        % Args:
+        %   group (replab.Group): Group represented
+        %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
+        %   imageFun (handle): Function handle that returns an image matrix given a group element
+        %   inverseImageFun (handle, optional): Function handle that returns the inverse of the image
+        %                                       matrix given a group element
+            if nargin < 5
+                inverseImageFun = [];
+            end
+            rep = replab.nu.LambdaRep(group, field, dimension, imageFun, inverseImageFun);
         end
         
     end
