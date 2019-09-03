@@ -133,11 +133,12 @@ function replab_addpaths(verbose)
         decentSDPSolverInPath = false;
         try
             x = sdpvar(2);
-            sol = optimize([x >= 0, trace(x) == 1], 0, sdpsettings('verbose',0));
-            decentSDPSolverInPath = (sol.problem >= 0);
-            % If LMILAB was used to solve the problem, this means that no
-            % good solver was found.
-            if ~isempty(strfind(upper(info), 'LMILAB'))
+            F = [x >= 0, trace(x) == 1];
+            [interfacedata,recoverdata,solver,diagnostic] = compileinterfacedata(F, [], [], [], sdpsettings, 0, 0);
+            decentSDPSolverInPath = isempty(diagnostic);
+            % If LMILAB was identified as the best solver to solve the
+            % problem, this means that no good solver was found.
+            if ~isempty(strfind(upper(solver.tag), 'LMILAB'))
                 decentSDPSolverInPath = false;
             end
         catch
@@ -161,7 +162,8 @@ function replab_addpaths(verbose)
                 else
                     addpath([pathStr '/external/SDPT3']);
                     if verbose >= 0
-                        disp('Adding embedded SDPT3 to the path. Please run ''install_sdpt3'' to complete the setup of this solver');
+                        disp('Adding embedded SDPT3 to the path.');
+                        disp('Please run ''install_sdpt3'' from within the ''external/SDPT3'' folder to complete the setup of this solver');
                     end
                     SDPT3InPath = true;
                 end
