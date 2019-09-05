@@ -1,7 +1,11 @@
-classdef CommutantVar < replab.Str
+classdef CommutantVar < replab.Str & matlab.mixin.Copyable
 % A matrix variable satisfying some symmetry constraints
 %
 % example: replab.CommutantVar.fromPermutations({[3 1 2]})
+
+% Warning: this object inherits from a handle object, therefore it is also
+% a handle object. To copy this object use the 'copy' method to obtain two
+% identical but independent objects.
 
 % Current limitations:
 % - The sdp matrix produced is currently always square, real, and symmetric
@@ -24,12 +28,13 @@ classdef CommutantVar < replab.Str
     methods
         
         function s = headerStr(self)
-            s = sprintf('Parametric %dx%d commutant (%d blocks, %d variables)', self.dim, self.dim, length(self.blocks), self.nbVars());
+            s = sprintf('Commutant variable %dx%d (%d blocks, %d scalar variables)', self.dim, self.dim, length(self.blocks), self.nbVars());
         end
         
         function names = hiddenFields(self)
             names = hiddenFields@replab.Str(self);
             names{1, end+1} = 'blocks';
+            names{1, end+1} = 'nComponents';
         end
         
         function [names values] = additionalFields(self)
