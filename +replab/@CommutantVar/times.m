@@ -6,7 +6,7 @@ function Z = times(X, Y)
         error('Use fullMatrix for non-scalar multiplications.');
     end
     
-	% We examine each case independently
+    % We examine each case independently
     if isa(X, 'replab.CommutantVar') && isa(Y, 'replab.CommutantVar')
         % CommutantVar .* CommutantVar
         error('Use fullMatrix instead');

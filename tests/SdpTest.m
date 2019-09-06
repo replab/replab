@@ -12,21 +12,6 @@ function test_suite = SdpTest()
     end
 end
 
-function test_CommutantVar_simple_structure
-    % We do a sanity check with one group
-    generators = {[2 3 4 5 1]};
-    matrix = replab.CommutantVar.fromPermutations(generators);
-    matrix = matrix.fullMatrix;
-    for i = 1:length(generators)
-        difference = matrix - matrix(generators{i}, generators{i});
-        vars = getvariables(difference);
-        for j = 1:length(vars)
-            coeffs = getbasematrix(difference, vars(i));
-            assert(norm(coeffs(:)) <= replab.Settings.doubleEigTol);
-        end
-    end
-end
-
 function test_SDP_CHSH
     indexMatrix = [  1   2   3   6   7   8  11  12  13
                      2   1   4   7   6   9  12  11  14

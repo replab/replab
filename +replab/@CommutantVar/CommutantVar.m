@@ -1,4 +1,4 @@
-classdef CommutantVar < replab.Str & matlab.mixin.Copyable
+classdef (InferiorClasses = {?sdpvar,?gem,?sgem}) CommutantVar < replab.Str & matlab.mixin.Copyable
 % A matrix variable satisfying some symmetry constraints
 %
 % example: replab.CommutantVar.fromPermutations({[3 1 2]})

@@ -17,16 +17,16 @@ function Z = minus(X,Y)
         error('Incompatible size for matrix substraction');
     end
 
-    % We verify that both variables have fully compatible structures
-    compatLevel = X.compatibleWith(Y);
-    if compatLevel ~= 2
-        error('Block structure of both matrices don''t match. Consider using fullMatrix.');
-    end
-
 	% We examine each case independently
     if isa(X, 'replab.CommutantVar')
         % CommutantVar - sthg
         
+        % We verify that both variables have fully compatible structures
+        compatLevel = X.compatibleWith(Y);
+        if compatLevel ~= 2
+            error('Block structure of both matrices don''t match. Consider using fullMatrix.');
+        end
+
         % We express Y in the block basis of X
         if isa(Y, 'replab.CommutantVar')
             rotatedY = X.U'*Y.fullMatrix*X.U;
@@ -52,13 +52,24 @@ function Z = minus(X,Y)
             constantBlock = rotatedY(co + (1:dim:dim*size(X.blocks{i},1)), co + (1:dim:dim*size(X.blocks{i},1)));
             % We make sure that the constant block is hermitian
             shouldBeZero = constantBlock - constantBlock';
-            if max(max(abs(shouldBeZero))) > epsilon
-                error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(shouldBeZero)))), '.']);
-            elseif ~ishermitian(constantBlock)
+            if isa(shouldBeZero, 'sdpvar')
+                indices = getvariables(shouldBeZero);
+                for ind = indices
+                    if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
+                        error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(getbasematrix(shouldBeZero,ind))))), '.']);
+                    end
+                    maxNonHermiticity = max(maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind)))));
+                end
+            else
+                if max(max(abs(shouldBeZero))) > epsilon
+                    error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(shouldBeZero)))), '.']);
+                end
+                maxNonHermiticity = max(maxNonHermiticity, max(max(abs(shouldBeZero))));
+            end
+            if ~ishermitian(constantBlock)
                 % We force exact hermiticity
                 constantBlock = (constantBlock + constantBlock')/2;
             end
-            maxNonHermiticity = max(maxNonHermiticity, max(max(abs(shouldBeZero))));
             Z.blocks{i} = Z.blocks{i} - constantBlock;
             co = co + dim*size(X.blocks{i},1);
         end
