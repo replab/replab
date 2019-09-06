@@ -13,7 +13,7 @@ function lines = longStr(obj, maxRows, maxColumns)
 % particular cases below.
     header = [];
     body = {};
-    if isscalar(obj) && (isobject(obj) || isstruct(obj))
+    if isobject(obj) || (isscalar(obj) && isstruct(obj))
         [names values] = replab.str.fieldsList(obj);
         n = length(names);
         header = replab.headerStr(obj);
