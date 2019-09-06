@@ -40,14 +40,20 @@ function result = replab_runtests(withCoverage)
     end
     
     % Check the presence of a SDP solver
-    SDPSolverInPath = false;
+    decentSDPSolverInPath = false;
     try
         x = sdpvar(2);
-        sol = optimize([x >= 0, trace(x) == 1], 0, sdpsettings('verbose',0));
-        SDPSolverInPath = (sol.problem >= 0);
+        F = [x >= 0, trace(x) == 1];
+        [interfacedata,recoverdata,solver,diagnostic] = compileinterfacedata(F, [], [], [], sdpsettings, 0, 0);
+        decentSDPSolverInPath = isempty(diagnostic);
+        % If LMILAB was identified as the best solver to solve the
+        % problem, this means that no good solver was found.
+        if ~isempty(strfind(upper(solver.tag), 'LMILAB'))
+            decentSDPSolverInPath = false;
+        end
     catch
     end
-    if ~SDPSolverInPath
+    if ~decentSDPSolverInPath
         warning('No SDP working SDP solver found, some tests will fail.');
     end
     

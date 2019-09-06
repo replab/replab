@@ -130,14 +130,20 @@ function replab_addpaths(verbose)
     % Making sure a woring SDP solver is in the path and working, otherwise
     % tries to add SDPT3
     if YALMIPInPath
-        SDPSolverInPath = false;
+        decentSDPSolverInPath = false;
         try
             x = sdpvar(2);
-            sol = optimize([x >= 0, trace(x) == 1], 0, sdpsettings('verbose',0));
-            SDPSolverInPath = (sol.problem >= 0);
+            F = [x >= 0, trace(x) == 1];
+            [interfacedata,recoverdata,solver,diagnostic] = compileinterfacedata(F, [], [], [], sdpsettings, 0, 0);
+            decentSDPSolverInPath = isempty(diagnostic);
+            % If LMILAB was identified as the best solver to solve the
+            % problem, this means that no good solver was found.
+            if ~isempty(strfind(upper(solver.tag), 'LMILAB'))
+                decentSDPSolverInPath = false;
+            end
         catch
         end
-        if ~SDPSolverInPath
+        if ~decentSDPSolverInPath
             SDPT3InPath = false;
             try
                 [blk, Avec, C, b, X0, y0, Z0] = randsdp([2 2], [2 2], 2, 2);
@@ -155,9 +161,10 @@ function replab_addpaths(verbose)
                     end
                 else
                     addpath([pathStr '/external/SDPT3']);
-                    if verbose >= 0
-                        disp('Adding embedded SDPT3 to the path. Please run ''install_sdpt3'' to complete the setup of this solver');
-                    end
+                    % Now we run install_sdpt3
+                    cd external/SDPT3;
+                    install_sdpt3;
+                    cd ../..;
                     SDPT3InPath = true;
                 end
             elseif verbose >= 2
