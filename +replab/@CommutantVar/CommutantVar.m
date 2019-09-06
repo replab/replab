@@ -1,4 +1,6 @@
-classdef (InferiorClasses = {?sdpvar,?gem,?sgem}) CommutantVar < replab.Str %& matlab.mixin.Copyable % not supported by Octave...
+classdef CommutantVar < replab.Str
+%classdef (InferiorClasses = {?sdpvar,?gem,?sgem}) CommutantVar < replab.Str %& matlab.mixin.Copyable % Use this declaration line for better result in matlab (c.f. https://savannah.gnu.org/bugs/index.php?56864 )
+%
 % A matrix variable satisfying some symmetry constraints
 %
 % example: replab.CommutantVar.fromPermutations({[3 1 2]})
@@ -11,9 +13,6 @@ classdef (InferiorClasses = {?sdpvar,?gem,?sgem}) CommutantVar < replab.Str %& m
 % - The sdp matrix produced is currently always square, real, and symmetric
 % - Only supports complex and quaternionic representations with dimension 2
 %   and 4 respectively.
-% - limited arithmetic, essentially we can just:
-%   - access the elements of the matrix through the fullMatrix method
-%   - define an SDP constraint with a constant bound, such as "M >= 0"
 
     properties (SetAccess = protected)
         U; % Unitary operator block-diagonalizing the matrix
@@ -23,7 +22,10 @@ classdef (InferiorClasses = {?sdpvar,?gem,?sgem}) CommutantVar < replab.Str %& m
         types; % The representation type
         dim; % matrix dimension
         blocks; % The sdp blocks corresponding to each irreducible representation
-        sdpMatrix; % A sdpMatrix that must match
+    end
+    
+    properties (SetAccess = public)
+        sdpMatrix; % An sdpMatrix that the CommutantVar must match
     end
 
     methods
@@ -36,16 +38,23 @@ classdef (InferiorClasses = {?sdpvar,?gem,?sgem}) CommutantVar < replab.Str %& m
             names = hiddenFields@replab.Str(self);
             names{1, end+1} = 'blocks';
             names{1, end+1} = 'nComponents';
+            names{1, end+1} = 'sdpMatrix';
         end
         
         function [names, values] = additionalFields(self)
             [names, values] = additionalFields@replab.Str(self);
+
             names{1, end+1} = 'blocks';
             dims = zeros(1,length(self.blocks));
             for i = 1:length(self.blocks)
                 dims(i) = size(self.blocks{i},1);
             end
             values{1, end+1} = dims;
+            
+            if ~isempty(self.sdpMatrix)
+                names{1, end+1} = 'sdpMatrix';
+                values{1, end+1} = self.sdpMatrix;
+            end
         end
         
         function self = CommutantVar(U, dimensions1, multiplicities, types, sdpMatrix)
