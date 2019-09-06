@@ -50,7 +50,10 @@ function result = replab_runtests(withCoverage)
     if ~SDPSolverInPath
         warning('No SDP working SDP solver found, some tests will fail.');
     end
-
+    
+    % Add the tests folder to the path
+    addpath([pathStr '/tests']);
+    
     % calls the relevant test suite
     if withCoverage == 1
         result = moxunit_runtests('tests/codeCoverageHelperFunction.m', '-verbose', ...
