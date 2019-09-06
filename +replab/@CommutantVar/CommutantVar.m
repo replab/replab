@@ -1,4 +1,4 @@
-classdef (InferiorClasses = {?sdpvar,?gem,?sgem}) CommutantVar < replab.Str & matlab.mixin.Copyable
+classdef (InferiorClasses = {?sdpvar,?gem,?sgem}) CommutantVar < replab.Str %& matlab.mixin.Copyable % not supported by Octave...
 % A matrix variable satisfying some symmetry constraints
 %
 % example: replab.CommutantVar.fromPermutations({[3 1 2]})
@@ -23,6 +23,7 @@ classdef (InferiorClasses = {?sdpvar,?gem,?sgem}) CommutantVar < replab.Str & ma
         types; % The representation type
         dim; % matrix dimension
         blocks; % The sdp blocks corresponding to each irreducible representation
+        sdpMatrix; % A sdpMatrix that must match
     end
 
     methods
@@ -47,7 +48,7 @@ classdef (InferiorClasses = {?sdpvar,?gem,?sgem}) CommutantVar < replab.Str & ma
             values{1, end+1} = dims;
         end
         
-        function self = CommutantVar(U, dimensions1, multiplicities, types)
+        function self = CommutantVar(U, dimensions1, multiplicities, types, sdpMatrix)
             try
                 yalmip('version');
             catch
@@ -108,16 +109,51 @@ classdef (InferiorClasses = {?sdpvar,?gem,?sgem}) CommutantVar < replab.Str & ma
                 assert(issymmetric(self.blocks{i}));
             end
 
+            % We keep a copy of the SDP matrix constraint if provided
+            self.sdpMatrix = sdpMatrix;
         end
 
+        function R = copy(rhs)
+            % copy object
+            
+            % Create a new object
+            R = replab.CommutantVar(rhs.U, rhs.dimensions1, rhs.multiplicities, rhs.types, rhs.sdpMatrix);
+            
+            % Override properties
+%             fns = properties(rhs);
+%             for i=1:length(fns)
+%                 R.(fns{i}) = rhs.(fns{i});
+%             end
+            % The above is not supported on octave, so we copy all elements
+            % by hand...
+            R.U = rhs.U;
+            R.nComponents = rhs.nComponents;
+            R.dimensions1 = rhs.dimensions1;
+            R.multiplicities = rhs.multiplicities;
+            R.types = rhs.types;
+            R.dim = rhs.dim;
+            R.blocks = rhs.blocks;
+            R.sdpMatrix = rhs.sdpMatrix;
+        end
+        
     end
     
     methods (Static) % Factory methods
         
         function R = fromPermutations(generators)
+            R = replab.CommutantVar.fromSDPMatrix([], generators);
+        end
+        
+        function R = fromSDPMatrix(sdpMatrix, generators)
+            assert(nargin >= 2, 'Not enough arguments.');
+            
             assert(iscell(generators), 'Please specify generators in cell array.');
             n = size(generators{1}, 2);
             group = replab.SignedPermutations(n).subgroup(generators);
+            
+            if ~isempty(sdpMatrix)
+                assert(isequal(size(sdpMatrix), [n n]), 'Wrong matrix or group dimension.');
+            end
             
             irrDecomp = group.naturalRep.decomposition;
             U = zeros(n, 0);
@@ -137,7 +173,7 @@ classdef (InferiorClasses = {?sdpvar,?gem,?sgem}) CommutantVar < replab.Str & ma
                 end
             end
                         
-            R = replab.CommutantVar(U, dimensions1, multiplicities, types);
+            R = replab.CommutantVar(U, dimensions1, multiplicities, types, sdpMatrix);
         end
         
     end

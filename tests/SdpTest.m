@@ -195,5 +195,4 @@ function test_SDP_CGLMP3_FullProb
     
     % We compare the result:
     assert(abs(obj1 - obj2)/abs(obj1) < replab.Settings.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
-
 end
