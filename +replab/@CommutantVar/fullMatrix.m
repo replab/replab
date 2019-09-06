@@ -15,7 +15,7 @@ function M = fullMatrix(self)
             otherwise
                 error('Unknown type');
         end
-        M(co+[1:dim*size(self.blocks{i},1)], co+[1:dim*size(self.blocks{i},1)]) = kron(self.blocks{i}, eye(dim));
+        M(co + (1:dim*size(self.blocks{i},1)), co + (1:dim*size(self.blocks{i},1))) = kron(self.blocks{i}, eye(dim));
         co = co + dim*size(self.blocks{i},1);
     end
     M = self.U*M*self.U';

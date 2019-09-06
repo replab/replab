@@ -10,11 +10,11 @@ function okLevel = compatibleWith(X, Y)
     % Numerical tolerance to decide whether numbers are close to zero in
     % this function.
     epsilon = 1e-10;
-    epsilonWarning = 1e-15;
 
     % We keep track if some rounding is done
     maxOuterEpsilonFound = 0;
     maxEpsilonFound = 0;
+    epsilonWarning = 1e-14;
     
     % basic tests
     if ~isequal(size(X), size(Y))
@@ -24,11 +24,15 @@ function okLevel = compatibleWith(X, Y)
     
     % We examine each case independently
     okLevel = 2;
-    if isa(X, 'replab.CommutantVar') && isa(Y, 'replab.CommutantVar')
-        % CommutantVar vs CommutantVar
+    if isa(X, 'replab.CommutantVar') && (isa(Y, 'replab.CommutantVar') || isa(Y, 'sdpvar'))
+        % CommutantVar vs CommutantVar/sdpvar
         
-        % We put Y in the block basis of self
-        rotatedY = X.U'*Y.fullMatrix*X.U;
+        % We put Y in the block basis of X
+        if isa(Y, 'replab.CommutantVar')
+            rotatedY = X.U'*Y.fullMatrix*X.U;
+        else
+            rotatedY = X.U'*Y*X.U;
+        end
         
         % We check the structure of rotatedY
         co = 0;
@@ -93,7 +97,7 @@ function okLevel = compatibleWith(X, Y)
     elseif isa(X, 'replab.CommutantVar') && ~isa(Y, 'replab.CommutantVar')
         % CommutantVar vs sthg
         
-        % We put Y in the block basis of self
+        % We put Y in the block basis of X
         rotatedY = X.U'*Y*X.U;
 
         % We check the structure of rotatedY

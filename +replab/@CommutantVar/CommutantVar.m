@@ -37,8 +37,8 @@ classdef CommutantVar < replab.Str & matlab.mixin.Copyable
             names{1, end+1} = 'nComponents';
         end
         
-        function [names values] = additionalFields(self)
-            [names values] = additionalFields@replab.Str(self);
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.Str(self);
             names{1, end+1} = 'blocks';
             dims = zeros(1,length(self.blocks));
             for i = 1:length(self.blocks)
