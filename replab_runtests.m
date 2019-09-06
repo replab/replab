@@ -63,8 +63,7 @@ function result = replab_runtests(withCoverage)
     % calls the relevant test suite
     if withCoverage == 1
         result = moxunit_runtests('tests/codeCoverageHelperFunction.m', '-verbose', ...
-            '-with_coverage', '-cover', '.', '-cover_exclude', 'external', '-cover_exclude', 'tests', '-cover_exclude', 'docs_src', ...
-            '-cover_json_file', 'coverage.json', '-cover_xml_file', 'coverage.xml', '-cover_html_dir', 'coverage_html');
+            '-with_coverage', '-cover', 'replab', '-cover_json_file', 'coverage.json', '-cover_xml_file', 'coverage.xml', '-cover_html_dir', 'coverage_html');
     else
         result = moxunit_runtests('tests', '-verbose', '-recursive');
     end

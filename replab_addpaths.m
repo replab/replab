@@ -21,7 +21,7 @@ function replab_addpaths(verbose)
     [pathStr, name, extension] = fileparts(which(mfilename));
     
     % Check if another instance of RepLAB is already in the path
-    currentPathStr = pwd;
+    currentPathStr = strrep(pwd,'\','/');
     dirName = currentPathStr(find(currentPathStr=='/',1,'last')+1:end);
     cd ..
     AmIMyself = which('replab_addpaths');
@@ -40,6 +40,25 @@ function replab_addpaths(verbose)
         end
     end
 
+    % We also add the replab package path
+    packagePath = which('replab.Action');
+    %packagePath = packagePath(1:find(packagePath=='/',2,'last')-1);
+    if ~isempty(packagePath) && ~isequal(packagePath, [pathStr, '/replab/+replab/Action.m'])
+        packagePath = packagePath(1:find(packagePath=='/',2,'last')-1);
+        error(['Another RepLAB package in folder ', packagePath, ' is already in the path.', char(10), ...
+            'Use this one or remove from the path.']);
+    else
+        if isempty(packagePath)
+            packagePath = [pathStr, '/replab'];
+            addpath(packagePath);
+            if verbose >= 1
+                disp('Adding RepLAB package to the path');
+            end
+        elseif verbose >= 2
+            packagePath = packagePath(1:find(packagePath=='/',2,'last')-1);
+            disp('RepLAB package is already in the path');
+        end
+    end
     
     %% VPI
     

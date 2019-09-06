@@ -37,7 +37,7 @@ function test_suite = codeCoverageHelperFunction()
     % default location for the source code will be the one with activated
     % coverage
     [pathStr, name, extension] = fileparts(which(mfilename));
-    replabFolder = pathStr(1:find(pathStr=='/',1,'last')-1);
+    replabFolder = [pathStr(1:find(pathStr=='/',1,'last')-1), '/replab'];
     rmpath(replabFolder);
     
     % We define a test which consists of all other tests
