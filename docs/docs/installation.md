@@ -37,23 +37,14 @@ which will download the latest `master` version, and update the Git submodules a
 This creates a folder **RepLAB** with all the necessary code, including the [VPI](https://ch.mathworks.com/matlabcentral/fileexchange/22725-variable-precision-integer-arithmetic) library for large integers, the testing suite [MOxUnit](https://github.com/MOxUnit/MOxUnit), and the tools needed for semidefinite programming.
 
 
-## Setting up SDP support
-**RepLAB** uses the [YALMIP](https://yalmip.github.io) interface to solve convex optimization problems. The steps above make sure the YALMIP and SDPT3 code are downloaded. To activate the SDPT3 solver, run the following command from the `external/SDPT3` folder
-```
-install_sdpt3
-```
-On Octave, the package `liboctave-dev` is required for this command to succeed.
-
-
-Alternatively, **RepLAB** can also detect automatically any instance of YALMIP which has been [installed](https://yalmip.github.io/download/) and [configured](https://yalmip.github.io/tutorial/installation/) on your system. In particular, any [SDP solver](https://yalmip.github.io/allsolvers/), such as [SeDuMi](https://github.com/SQLP/SeDuMi), can be used by **RepLAB** instead of SDPT3. The proper installation of a YALMIP instance can be checked with the command `yalmiptest`.
-
-
 ## Setting up the path
 
-To use the library, the **RepLAB** folder must be added in Matlab or Octave. This can be done with
+To use the library, the **RepLAB** folder must be added in Matlab or Octave. Additional paths are also necessary to enable specific functionalities, as mentioned above. Setting up the path can be done with
 ```
 replab_addpaths
 ```
+
+This command checks in particular whether an instance of YALMIP is  [available](https://yalmip.github.io/download/) and [configured](https://yalmip.github.io/tutorial/installation/) on your system. If this is not the case, the embedded version of yalmip is used. **RepLAB** uses the [YALMIP](https://yalmip.github.io) interface to solve convex optimization problems. The `replab_addpaths` command also ensures that an [SDP solver](https://yalmip.github.io/allsolvers/) such as [SeDuMi](https://github.com/SQLP/SeDuMi) is properly set up. If this is not the case, it activates the embedded SDPT3 solver. The proper installation of a YALMIP instance can be checked with the command `yalmiptest`.
 
 
 ## Testing

@@ -161,10 +161,10 @@ function replab_addpaths(verbose)
                     end
                 else
                     addpath([pathStr '/external/SDPT3']);
-                    if verbose >= 0
-                        disp('Adding embedded SDPT3 to the path.');
-                        disp('Please run ''install_sdpt3'' from within the ''external/SDPT3'' folder to complete the setup of this solver');
-                    end
+                    % Now we run install_sdpt3
+                    cd external/SDPT3;
+                    install_sdpt3;
+                    cd ../..;
                     SDPT3InPath = true;
                 end
             elseif verbose >= 2
