@@ -35,11 +35,15 @@ classdef RepByImages < replab.nu.Rep
                 ind = word.indices(i);
                 e = word.exponents(i);
                 if e > 0
-                    ge = self.images{ind}^e;
+                    el = self.images{ind};
+                    d = self.dimension;
+                    g_e = el^e;
                 else
-                    ge = self.inverseImages{ind}^(-e);
+                    el = self.inverseImages{ind};
+                    d = self.dimension;
+                    g_e = el^(-e);
                 end
-                rho = rho * ge;
+                rho = rho * g_e;
             end
         end
         
