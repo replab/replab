@@ -5,7 +5,7 @@ function [major minor patch snapshot contents] = replab_version(contents)
 % string from the replab_version.txt file.
     if nargin < 1
         [pathStr, name, extension] = fileparts(which(mfilename));
-        version_filename = fullfile(pathStr, 'replab_version.txt');
+        version_filename = fullfile(pathStr, '/../replab_version.txt');
         contents = fileread(version_filename);
         contents = strrep(contents, sprintf('\n'), '');
         contents = strrep(contents, sprintf('\r'), '');    

@@ -14,6 +14,7 @@ function result = replab_runtests(withCoverage)
     initialPath = pwd;
     [pathStr, name, extension] = fileparts(which(mfilename));
     cd(pathStr)
+    cd ..
     
     % Check the presence of the MOxUnit library
     MOxUnitInPath = false;
@@ -58,7 +59,7 @@ function result = replab_runtests(withCoverage)
     end
     
     % Add the tests folder to the path
-    addpath([pathStr '/tests']);
+    addpath([pathStr '/../tests']);
     
     % calls the relevant test suite
     if withCoverage == 1
