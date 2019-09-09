@@ -14,8 +14,7 @@ end
 
 function test_cases
     % We do some sanity checks
-    generators = {[2 3 4 5 1]};
-    matrix = replab.CommutantVar.fromPermutations(generators);
+    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
     
     difference = matrix - matrix;
     vars = difference.getVariables;

@@ -13,8 +13,7 @@ function test_suite = lmtimesTest()
 end
 
 function test_cases
-    generators = {[2 3 4 5 1]};
-    matrix = replab.CommutantVar.fromPermutations(generators);
+    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
 
     difference = 2*matrix - matrix - matrix;
     vars = difference.getVariables;

@@ -14,8 +14,7 @@ end
 
 function test_oneGroup
     % We do a sanity check with one group
-    generators = {[2 3 4 5 1]};
-    matrix = replab.CommutantVar.fromPermutations(generators);
+    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
     fullMatrix = matrix.fullMatrix;
     difference = trace(matrix) - trace(fullMatrix);
     vars = getvariables(difference);

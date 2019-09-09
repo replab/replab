@@ -8,6 +8,7 @@ function replab_compiledoc
     % Make sure we are in the right folder
     initialPath = pwd;
     [pathStr, name, extension] = fileparts(which(mfilename));
+    pathStr = strrep(pathStr, '\', '/');
     cd(pathStr)
     cd ../docs_src
 

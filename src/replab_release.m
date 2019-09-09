@@ -2,6 +2,7 @@ function replab_release
     % Move to the right folder
     initialPath = pwd;
     [pathStr, name, extension] = fileparts(which(mfilename));
+    pathStr = strrep(pathStr, '\', '/');
     cd(pathStr)
     cd ..
     

@@ -13,6 +13,7 @@ function result = replab_runtests(withCoverage)
     % Make sure we are in the current path
     initialPath = pwd;
     [pathStr, name, extension] = fileparts(which(mfilename));
+    pathStr = strrep(pathStr, '\', '/');
     cd(pathStr)
     cd ..
     
@@ -55,7 +56,7 @@ function result = replab_runtests(withCoverage)
     catch
     end
     if ~decentSDPSolverInPath
-        warning('No SDP working SDP solver found, some tests will fail.');
+        warning('No working SDP solver found, some tests will fail.');
     end
     
     % Add the tests folder to the path
@@ -64,7 +65,7 @@ function result = replab_runtests(withCoverage)
     % calls the relevant test suite
     if withCoverage == 1
         result = moxunit_runtests('tests/codeCoverageHelperFunction.m', '-verbose', ...
-            '-with_coverage', '-cover', 'replab', '-cover_json_file', 'coverage.json', '-cover_xml_file', 'coverage.xml', '-cover_html_dir', 'coverage_html');
+            '-with_coverage', '-cover', 'src', '-cover_json_file', 'coverage.json', '-cover_xml_file', 'coverage.xml', '-cover_html_dir', 'coverage_html');
     else
         result = moxunit_runtests('tests', '-verbose', '-recursive');
     end

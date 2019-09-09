@@ -2,7 +2,7 @@ classdef CommutantVar < replab.Str
 % CommutantVar is a sdpvar class for matrices satisfying symmetry
 % constraints.
 %
-% See also replab.CommutantVar.fromSDPMatrix,
+% See also replab.CommutantVar.fromSdpMatrix,
 %          replab.CommutantVar.fromPermutations
 
 % Warning: this object inherits from a handle object, therefore it is also
@@ -114,7 +114,7 @@ classdef CommutantVar < replab.Str
         %     self: replab.CommutantVar object
         %
         % See also:
-        %     replab.CommutantVar.fromSDPMatrix,
+        %     replab.CommutantVar.fromSdpMatrix,
         %     replab.CommutantVar.fromPermutations
 
             try
@@ -243,11 +243,11 @@ classdef CommutantVar < replab.Str
         % See also:
         %     replab.CommutantVar.fromSdpMatrix
         
-            R = replab.CommutantVar.fromSDPMatrix([], generators);
+            R = replab.CommutantVar.fromSdpMatrix([], generators);
         end
 
-        function R = fromSDPMatrix(sdpMatrix, generators)
-        % R = fromSDPMatrix(sdpMatrix, generators)
+        function R = fromSdpMatrix(sdpMatrix, generators)
+        % R = fromSdpMatrix(sdpMatrix, generators)
         % 
         % Imposes symmetry constraints onto an existing SDP matrix. This
         % creates a CommutantVar matrix which satisfies both:
@@ -268,7 +268,7 @@ classdef CommutantVar < replab.Str
         %     sdpMatrix = sdpvar(3);
         %     sdpMatrix(1,1) = 1-sdpMatrix(2,2)-sdpMatrix(3,3);
         %     trace(sdpMatrix)
-        %     matrix = replab.CommutantVar.fromSDPMatrix(sdpMatrix, {[3 1 2]})
+        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, {[3 1 2]})
         %
         % See also:
         %     replab.CommutantVar.fromPermutations
@@ -360,7 +360,7 @@ classdef CommutantVar < replab.Str
         %     s2: The second dimension (optional)
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromSDPMatrix(sdpMatrix, {[3 1 2]})
+        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, {[3 1 2]})
         %     size(matrix)
         %
         % See also:
@@ -393,7 +393,7 @@ classdef CommutantVar < replab.Str
         %     M: sdpvar block
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromSDPMatrix(sdpMatrix, {[3 1 2]})
+        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, {[3 1 2]})
         %     matrix.block(2)
         %
         % See also:
@@ -489,7 +489,7 @@ classdef CommutantVar < replab.Str
         % Example:
         %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
         %     matrix.getVariables
-        %     matrix = replab.CommutantVar.fromSDPMatrix(sdpvar(3), {[2 3 1]})
+        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
         %     matrix.getVariables
         %
         % See also:
@@ -521,7 +521,7 @@ classdef CommutantVar < replab.Str
         % Example:
         %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
         %     matrix.nbVars
-        %     matrix = replab.CommutantVar.fromSDPMatrix(sdpvar(3), {[2 3 1]})
+        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
         %     matrix.nbVars
         %
         % See also:
@@ -1236,7 +1236,7 @@ classdef CommutantVar < replab.Str
         % Example:
         %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
         %     F = [matrix == 0]
-        %     matrix = replab.CommutantVar.fromSDPMatrix(sdpvar(3), {[2 3 1]})
+        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
         %     F = [matrix == 0]
         %
         % See also:
@@ -1252,7 +1252,7 @@ classdef CommutantVar < replab.Str
                 else
                     F = (X.blocks{1} == Y);
                     for i = 2:X.nComponents
-                        F = [F, X.blocks{i} >= Y];
+                        F = [F, X.blocks{i} == Y];
                     end
                 end
                 
@@ -1336,7 +1336,7 @@ classdef CommutantVar < replab.Str
         % Example:
         %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
         %     F = [matrix >= 0]
-        %     matrix = replab.CommutantVar.fromSDPMatrix(sdpvar(3), {[2 3 1]})
+        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
         %     F = [matrix >= 0]
         %
         % See also:
@@ -1467,7 +1467,7 @@ classdef CommutantVar < replab.Str
         % Example:
         %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
         %     F = [matrix <= 0]
-        %     matrix = replab.CommutantVar.fromSDPMatrix(sdpvar(3), {[2 3 1]})
+        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
         %     F = [matrix <= 0]
         %
         % See also:

@@ -1,16 +1,18 @@
 function replab_addpaths(verbose)
-    % replab_addpaths([verbose])
-    %
-    % replab_addpaths adds directories that are needed to the search path
-    % in order to enable all functionalities of the library.
-    %
-    % The optional parameter 'verbose' controls the display level:
-    %   0 only produce a display in case of error/warning or for critical
-    %     cases
-    %   1 informs of the changes made (default value)
-    %   2 prints the complete information
-    %
-    % example: replab_addpaths
+% replab_addpaths([verbose])
+%
+% Sets up the search path in order to enable all functionalities of the
+% RepLAB library.
+%
+% Args:
+%     verbose: controls the display level (optional):
+%         0: only produce a display in case of error/warning or for
+%             critical cases
+%         1: informs of the changes made (default value)
+%         2: prints full information
+%
+% Example:
+%     replab_addpaths
     
     %% Parameter checking
     if nargin < 1
@@ -19,16 +21,17 @@ function replab_addpaths(verbose)
 
     %% Action -- first adding RepLAB itself
     [pathStr, name, extension] = fileparts(which(mfilename));
+    pathStr = strrep(pathStr, '\', '/');
     
     % Check if another instance of RepLAB is already in the path
-    currentPathStr = strrep(pwd,'\','/');
+    currentPathStr = strrep(pwd, '\', '/');
     dirName = currentPathStr(find(currentPathStr=='/',1,'last')+1:end);
     cd ..
-    AmIMyself = which('replab_addpaths');
+    AmIMyself = strrep(which('replab_addpaths'), '\', '/');
     cd(dirName);
     if ~isempty(AmIMyself) && ~isequal(AmIMyself, [pathStr, '/', name, extension])
         error(['Another instance of RepLAB in folder ', fileparts(AmIMyself), ' is already in the path.', char(10), ...
-            'Use this one or remove from the path.']);
+            'Use this one or remove it from the path.']);
     else
         if isempty(AmIMyself)
             addpath(pathStr);
@@ -41,21 +44,19 @@ function replab_addpaths(verbose)
     end
 
     % We also add the replab package path
-    packagePath = which('replab.Action');
-    %packagePath = packagePath(1:find(packagePath=='/',2,'last')-1);
-    if ~isempty(packagePath) && ~isequal(packagePath, [pathStr, '/replab/+replab/Action.m'])
-        packagePath = packagePath(1:find(packagePath=='/',2,'last')-1);
+    packagePath = strrep(which('replab_version'), '\', '/');
+    packagePath = packagePath(1:find(packagePath=='/',1,'last')-1);
+    if ~isempty(packagePath) && ~isequal(packagePath, [pathStr, '/src'])
         error(['Another RepLAB package in folder ', packagePath, ' is already in the path.', char(10), ...
-            'Use this one or remove from the path.']);
+            'Use this one or remove it from the path.']);
     else
         if isempty(packagePath)
-            packagePath = [pathStr, '/replab'];
+            packagePath = [pathStr, '/src'];
             addpath(packagePath);
             if verbose >= 1
                 disp('Adding RepLAB package to the path');
             end
         elseif verbose >= 2
-            packagePath = packagePath(1:find(packagePath=='/',2,'last')-1);
             disp('RepLAB package is already in the path');
         end
     end
