@@ -57,11 +57,11 @@ elseif isequal(partition,[2]) %trivial
     
 elseif isequal(partition,[1 1]) %sign
     SB = [-1];
-    SA = [1];
+    SA = [-1];
     NB = [-1];
-    NA = [1];
+    NA = [-1];
     OB = [-1];
-    OA = [1];
+    OA = [-1];
     
 %S3
     
@@ -81,6 +81,14 @@ elseif isequal(partition,[2 1]) %standard
     OB = [1 0; 0 -1];
     OA = [-1/2 sqrt(3)/2; -sqrt(3)/2 -1/2];
     
+elseif isequal(partition,[1 1 1]) %sign
+    SB = [-1];
+    SA = [1];
+    NB = [-1];
+    NA = [1];
+    OB = [-1];
+    OA = [1];
+
 %S4
     
 elseif isequal(partition,[4]) %trivial
