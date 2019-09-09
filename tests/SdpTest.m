@@ -47,8 +47,8 @@ function test_SDP_CHSH
     obj1 = value(obj);
     
     % We formulate the symmetrized SDP:
-    symSdpMatrix = replab.CommutantVar.fromPermutations(generators);
-    solvesdp([symSdpMatrix >= 0, symSdpMatrix.fullMatrix == sdpMatrix, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    symSdpMatrix = replab.CommutantVar.fromSDPMatrix(sdpMatrix,generators);
+    solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
     obj2 = value(obj);
     
     % We compare the result:
@@ -106,8 +106,8 @@ function test_SDP_CHSH_FullProb
     obj1 = value(obj);
     
     % We formulate the symmetrized SDP:
-    symSdpMatrix = replab.CommutantVar.fromPermutations(generators);
-    solvesdp([symSdpMatrix >= 0, symSdpMatrix.fullMatrix == sdpMatrix, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    symSdpMatrix = replab.CommutantVar.fromSDPMatrix(sdpMatrix, generators);
+    solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
     obj2 = value(obj);
     
     % We compare the result:
@@ -189,8 +189,8 @@ function test_SDP_CGLMP3_FullProb
     obj1 = value(obj);
     
     % We formulate the symmetrized SDP:
-    symSdpMatrix = replab.CommutantVar.fromPermutations(generators);
-    solvesdp([symSdpMatrix >= 0, symSdpMatrix.fullMatrix == sdpMatrix, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    symSdpMatrix = replab.CommutantVar.fromSDPMatrix(sdpMatrix, generators);
+    solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
     obj2 = value(obj);
     
     % We compare the result:
