@@ -11,6 +11,13 @@ classdef RepByImages < replab.nu.Rep
         % Constructs a representation from a group's generator images
             assert(isa(group, 'replab.FinitelyGeneratedGroup'));
             assert(length(images) == group.nGenerators);
+            assert(length(inverseImages) == group.nGenerators);
+            assert(isa(images, 'cell'));
+            assert(isa(inverseImages, 'cell'));
+            for i = 1:group.nGenerators
+                assert(isequal(size(images{i}), [dimension dimension]));
+                assert(isequal(size(inverseImages{i}), [dimension dimension]));
+            end
             self.group = group;
             self.field = field;
             self.dimension = dimension;
