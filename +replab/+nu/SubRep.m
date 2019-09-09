@@ -49,10 +49,6 @@ classdef SubRep < replab.nu.Rep
             newSub = self.parent.parent.subRep(newF, newH);
         end
         
-        % TODO function sub = in(self, newParent)
-        
-        % Rep
-        
         function rho = image(self, g)
         % Returns H rho(g) F
             rho = self.H * self.parent.image(g) * self.F;

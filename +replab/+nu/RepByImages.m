@@ -1,5 +1,5 @@
 classdef RepByImages < replab.nu.Rep
-% A finite dimensional unitary representation of a finitely generated group
+% A finite dimensional not necessarily unitary representation of a finitely generated group
     properties (SetAccess = protected)
         images % Generator images
         inverseImages % Generator inverse images

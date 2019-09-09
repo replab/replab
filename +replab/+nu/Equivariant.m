@@ -8,6 +8,8 @@ classdef Equivariant < replab.Domain
 %   
 % See Proposition 4 of 
 % J.-P. Serre, Linear Representations of Finite Groups (Springer, 1977).
+%
+% IN CONSTRUCTION
     
     properties (SetAccess = protected)
         field % vector space field, 'R' (real) or 'C' (complex)
@@ -27,6 +29,7 @@ classdef Equivariant < replab.Domain
         function self = Equivariant(repR, repC)
             
         end
+        
     end
          
 end
