@@ -24,7 +24,19 @@ classdef Domain < replab.Domain
                 {'header'} ...
                 );
         end
-    
+
+        % Domain methods
+        
+        function b = eqv(self, t, u)
+            f = self.eqvFun;
+            b = f(t, u);
+        end
+
+        function t = sample(self)
+            f = self.sampleFun;
+            t = f();
+        end
+
     end
     
 end

@@ -8,9 +8,15 @@ classdef Monoid < replab.Domain
     methods % Abstract methods
         
         function z = compose(self, x, y)
-        % Returns the result of the binary operation applied to x and y
-            f = self.composeFun;
-            z = f(x, y);
+        % Composes two monoid/group elements
+        %
+        % Args:
+        %   x (element): Left hand side of the binary operation
+        %   y (element): Right hand side of the binary operation
+        %
+        % Returns:
+        %   element: Result of the binary operation `x` op `y`
+            error('Abstract');
         end
 
     end
@@ -72,8 +78,18 @@ classdef Monoid < replab.Domain
 
     methods (Static)
         
-        function monoid = lambda(header, eqvFun, sampleFun, ...
-                                 composeFun, identity)
+        function monoid = lambda(header, eqvFun, sampleFun, composeFun, identity)
+        % Constructs a monoid from function handles
+        %
+        % Args:
+        %   header (char): Header display string
+        %   eqvFun (function_handle): Handle implementing the `eqv` method
+        %   sampleFun (function_handle): Handle implementing the `sample` method
+        %   composeFun (function_handle): Handle implementing the `compose` method
+        %   identity (element): Identity element of this monoid
+        %
+        % Returns:
+        %   replab.Monoid: The constructed monoid
             monoid = replab.lambda.Monoid(header, eqvFun, sampleFun, ...
                                           composeFun, identity);
         end

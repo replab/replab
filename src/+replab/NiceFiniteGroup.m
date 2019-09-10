@@ -1,7 +1,13 @@
-classdef FiniteGroup < replab.FinitelyGeneratedGroup
+classdef NiceFiniteGroup < replab.FiniteSubgroup
     
-    properties
+    properties (SetAccess = protected)
         niceMonomorphism % Injective group homomorphism from this group into a permutation group
+                         % Must be valid for elements of the parent group too
+    end
+    
+    properties (Access = protected)
+        order_ = [];
+        chain_ = [];
     end
 
     methods
@@ -15,11 +21,15 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
         end
 
         function b = knownOrder(self)
-        % Tests whether the group order has been computed
+            b = ~isempty(self.order_) || ~isempty(self.chain_);
+        end
+        
+        function b = knownChain(self)
+        % Tests whether the group BSGS chain has been computed
         %
         % Returns:
-        %   logical: True if this group order has been computed
-            error('Not implemented');
+        %   logical: True if this group BSGS chain has been computed
+            b = ~isempty(self.chain_);
         end
         
         function o = order(self)
@@ -27,7 +37,20 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
         %
         % Returns:
         %   vpi: Order of this group
-            error('Not implemented');
+            if isempty(self.order_)
+                self.order_ = self.chain.order;
+            end
+            o = self.order_;
+        end
+        
+        function c = chain(self)
+            if isempty(self.chain_)
+                imgId = self.niceMonomorphism(self.identity);
+                n = length(imgId);
+                S = cellfun(@(x) self.niceMonomorphism(x), self.generators);
+                self.chain_ = replab.bsgs1.Chain.makeWithImages(n, S, self, self.generators);
+            end
+            c = self.chain_;
         end
         
         function e = elements(self)
@@ -43,26 +66,7 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
         %
         % Returns:
         %   replab.FiniteGroupDecomposition: The group decomposition
-            assert(self.order < 1e6, 'Default decomposition is available only for small groups');
-            O = double(self.order);
-            C = self.elements.toCell;
-            idIndex = self.elements.find(self.identity);
-            C = C([idIndex setdiff(1:O, idIndex)]);
-            T = cell(1, O);
-            T{1} = self.identity;
-            ind = 2;
-            for i = 1:O
-                if i ~= idIndex
-                    T{ind} = self.elements.at(i);
-                    ind = ind + 1;
-                end
-            end
-                
-            C = self.elements.toCell;
-            idIndex = [];
-            for i = 1:length(C)
-                if self.isIdentity
-            
+            error('Not implemented');
         end
 
         function g = sampleUniformly(self)

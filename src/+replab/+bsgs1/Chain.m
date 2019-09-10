@@ -168,6 +168,32 @@ classdef Chain < replab.Str
             k = length(self.B);
         end
         
+        function o = order(self)
+        % Returns the order of this BSGS chain
+            o = vpi(1);
+            for i = 1:self.length
+                o = o * vpi(length(self.Delta{i}));
+            end
+        end
+        
+        function [g v] = sampleUniformly(self)
+        % Samples an element uniformly from the group
+            if nargout > 1
+                [g v] = self.randomTransversal(1);
+                for i = 2:self.length
+                    [gi vi] = self.randomTransversal(i);
+                    g = self.G.compose(g, gi);
+                    v = self.J.compose(v, vi);
+                end
+            else
+                g = self.randomTransversal(1);
+                for i = 2:self.length
+                    gi = self.randomTransversal(i);
+                    g = self.G.compose(g, gi);
+                end
+            end
+        end
+        
         function nS = nStrongGenerators(self)
         % Returns the number of strong generators in this BSGS chain
             nS = size(self.S, 2);
@@ -192,6 +218,27 @@ classdef Chain < replab.Str
         %
         % Returns:
         %   A group element of `self.J`
+        end
+        
+        function [u v]  = randomTransversal(self, i)
+        % Returns a random transversal element from a specific transversal set
+        %
+        % Args:
+        %  i (integer): Index of the transversal set
+        %
+        % Returns
+        % -------
+        %  u: permutation
+        %    Random transversal element
+        %  v: element of `self.J`
+        %    Image of `g`
+            j = randi(length(self.Delta{i}));
+            Ui = self.U{i};
+            u = Ui(:,j)';
+            if self.withImages && nargout > 1
+                Vi = self.V{i};
+                v = Vi{j};
+            end
         end
         
         function g = u(self, i, b)
@@ -631,14 +678,14 @@ classdef Chain < replab.Str
     
     methods (Static)
        
-        function C = makeWithImages(n, S, J, T)
+        function C = makeWithImages(n, S, J, T, order)
             C = replab.bsgs1.Chain(n, J);
             C.insertStrongGenerators(S, T);
             C.randomizedSchreierSims;
             C.makeImmutable;
         end
         
-        function C = make(n, S)
+        function C = make(n, S, order)
             C = replab.bsgs1.Chain(n);
             C.insertStrongGenerators(S);
             C.randomizedSchreierSims;

@@ -71,6 +71,13 @@ classdef Enumerator < replab.Str
         end
         
         function C = toCell(self)
+        % Computes an ordered cell array of all elements in this Enumerator
+        %
+        % Returns:
+        %   row cell array of elements: A cell array `C` such that C{i} = self.at(i)
+        %
+        % Raises:
+        %   An error if the enumerator is too big and the elements do not fit in a cell array.
             if self.size == 0
                 C = cell(1, 0);
             else
