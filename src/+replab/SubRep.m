@@ -1,7 +1,6 @@
 classdef SubRep < replab.Rep
 % Describes a subrepresentation of a unitary finite representation
-%
-% 
+    
     properties (SetAccess = protected)
         parent; % Parent representation
                 %
@@ -23,7 +22,7 @@ classdef SubRep < replab.Rep
         
         function self = SubRep(parent, U0)
         % Constructs a subrepresentation of the 'parent' representation
-        % given by the basis 'U0', which has dimension dParent x dThisChild
+        % given by the basis 'U0', which has dimension dThisChild x dParent
             d = size(U0, 1);
             dParent = size(U0, 2);
             assert(parent.dimension == dParent);
