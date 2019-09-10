@@ -6,6 +6,11 @@
 % 
 % Straight-forward implementation of PRINITIALIZE and PRRANDOM of 
 % section 3.2.2, pp. 70-71 of Holt 2005 (Handbook of Computational Group Theory)
+%
+% This implementation differs from `replab.RandomBag` by specializing for
+% permutation groups, and optionally keeping track of images of the
+% generated elements under some group homomorphism.
+
 classdef RandomBag < replab.Str
     
     properties (SetAccess = protected)
@@ -83,7 +88,8 @@ classdef RandomBag < replab.Str
         %                          Default value is max(nGens, 10)
         %   m (integer, optional): Number of shuffles done during initialization 
         %                          Default value is 50
-        %  
+        %   J (replab.Group, optional): Group structure for images
+        %   images (row cell array of elements of `J`): Images of `generators`
             G = replab.Permutations(n);
             if nargin < 5
                 self.withImages = false;

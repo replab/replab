@@ -1,25 +1,74 @@
-classdef FiniteGroup < replab.FinitelyGeneratedGroup
+classdef FiniteGroup < replab.CompactGroup
     
-    properties
-        niceMonomorphism % Injective group homomorphism from this group into a permutation group
+    properties (SetAccess = protected)
+        generators % row cell array of group elements: Group generators
+        order % vpi: Order of the group, equal to the number of distinct group elements
+        niceMonomorphism % function_handle: Injective group homomorphism from this group into a permutation group
     end
-
+    
+    properties (Access = protected)
+        randomBag_ % Bag of elements used for random sampling
+    end
+    
     methods
         
+        function R = randomBag(self)
+            if isequal(self.randomBag_, [])
+                self.randomBag_ = replab.RandomBag(self, self.generators);
+            end
+            R = self.randomBag_;
+        end
+        
+        
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Group(self);
+            names{1, end+1} = 'generators';
+        end
+        
         function [names values] = additionalFields(self)
-            [names values] = additionalFields@replab.FinitelyGeneratedGroup(self);
-            if self.knownOrder
-                names{1, end+1} = 'order';
-                values{1, end+1} = self.order;
+            [names values] = additionalFields@replab.Group(self);
+            for i = 1:self.nGenerators
+                names{1, end+1} = sprintf('generator(%d)', i);
+                values{1, end+1} = self.generator(i);
             end
         end
-
-        function b = knownOrder(self)
-        % Tests whether the group order has been computed
+        
+        function n = nGenerators(self)
+        % Returns the number of group generators
         %
         % Returns:
-        %   logical: True if this group order has been computed
-            error('Not implemented');
+        %   integer: Number of group generators
+            n = length(self.generators);
+        end
+        
+        function p = generator(self, i) 
+        % Returns the i-th group generator
+        %
+        % Args:
+        %   i (integer): Generator index
+        %
+        % Returns:
+        %   element: i-th group generator
+            p = self.generators{i};
+        end
+        
+        function p = generatorInverse(self, i)
+        % Returns the inverse of the i-th group generator
+        %
+        % Args:
+        %   i (integer): Generator index
+        %
+        % Returns:
+        %   element: Inverse of the i-th group generator
+            p = self.inverse(self.generators{i});
+        end
+
+        function b = isTrivial(self)
+        % Tests whether this group is trivial
+        %
+        % Returns:
+        %   logical: True if this group is trivial (i.e. has only one element)
+            b = self.nGenerators == 0;
         end
         
         function o = order(self)
@@ -38,7 +87,7 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
             error('Not implemented');
         end
         
-        function d = decomposition(self)
+        function D = decomposition(self)
         % Returns a decomposition of this group as a product of sets
         %
         % Returns:
@@ -48,57 +97,11 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
             C = self.elements.toCell;
             idIndex = self.elements.find(self.identity);
             C = C([idIndex setdiff(1:O, idIndex)]);
-            T = cell(1, O);
-            T{1} = self.identity;
-            ind = 2;
-            for i = 1:O
-                if i ~= idIndex
-                    T{ind} = self.elements.at(i);
-                    ind = ind + 1;
-                end
-            end
-                
-            C = self.elements.toCell;
-            idIndex = [];
-            for i = 1:length(C)
-                if self.isIdentity
-            
+            D = replab.FiniteGroupDecomposition.trivial(self, C);
         end
 
         function g = sampleUniformly(self)
             g = self.elements.sample;
-        end
-               
-        function rho = rep(self, field, dimension, images)
-        % Constructs a finite dimensional real or complex representation of this group
-        %
-        %     field: 'R' or 'C' for real or complex
-        % dimension: representation dimension
-        %    images: 1 x n cell array of matrices providing the images
-        %            of the group generators
-            rho = replab.RepByImages(self, field, dimension, self.niceMonomorphism, images);
-        end
-
-        function rho = permutationRep(self, dimension, permutations)
-        % Returns a real permutation representation of this group
-        %
-        %    dimension: dimension of the representation
-        % permutations: row cell array of images of the generators as permutations of size "dimension"
-            S = replab.Permutations(dimension);
-            f = @(g) S.toMatrix(g);
-            images = cellfun(f, permutations, 'uniform', 0);
-            rho = self.rep('R', dimension, images);
-        end
-        
-        function rho = signedPermutationRep(self, dimension, signedPermutations)
-        % Returns a real signed permutation representation of this group
-        %
-        %          dimension: dimension of the representation
-        % signedPermutations: row cell array of images of the generators as permutations of size "dimension"
-            S = replab.SignedPermutations(dimension);
-            f = @(g) S.toMatrix(g);
-            images = cellfun(f, signedPermutations, 'uniform', 0);
-            rho = self.rep('R', dimension, images);
         end
 
         function rep = leftRegularRep(self)
@@ -118,18 +121,6 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
             rep = self.permutationRep(o, perms);
         end
 
-    end
-
-    
-    methods
-        
-        function R = randomBag(self)
-            if isequal(self.randomBag_, [])
-                self.randomBag_ = replab.RandomBag(self, self.generators);
-            end
-            R = self.randomBag_;
-        end
-        
     end
 
 end

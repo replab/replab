@@ -23,4 +23,14 @@ classdef FiniteGroupDecomposition < replab.Str
             self.transversals = transversals;
         end
     end
+    methods (Static)
+        function D = trivial(group, elements)
+            if ~group.isIdentity(elements{1})
+                idIndex = find(cellfun(@(g) group.isIdentity(g), elements));
+                assert(length(idIndex) == 1, 'Elements should have a single copy of the identity');
+                elements = elements([idIndex setdiff(1:length(elements, idIndex))]);
+            end
+            D = FiniteGroupDecomposition(group, {elements});
+        end
+    end
 end

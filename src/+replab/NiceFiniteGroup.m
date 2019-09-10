@@ -23,15 +23,7 @@ classdef NiceFiniteGroup < replab.FiniteSubgroup
         function b = knownOrder(self)
             b = ~isempty(self.order_) || ~isempty(self.chain_);
         end
-        
-        function b = knownChain(self)
-        % Tests whether the group BSGS chain has been computed
-        %
-        % Returns:
-        %   logical: True if this group BSGS chain has been computed
-            b = ~isempty(self.chain_);
-        end
-        
+
         function o = order(self)
         % Returns the group order, computing it if necessary
         %
@@ -42,8 +34,17 @@ classdef NiceFiniteGroup < replab.FiniteSubgroup
             end
             o = self.order_;
         end
-        
+
+        function b = knownChain(self)
+        % Tests whether the group BSGS chain has been computed
+        %
+        % Returns:
+        %   logical: True if this group BSGS chain has been computed
+            b = ~isempty(self.chain_);
+        end
+                
         function c = chain(self)
+        % Returns the BSGS chain for this group and its nice monomorphism
             if isempty(self.chain_)
                 imgId = self.niceMonomorphism(self.identity);
                 n = length(imgId);
@@ -52,6 +53,63 @@ classdef NiceFiniteGroup < replab.FiniteSubgroup
             end
             c = self.chain_;
         end
+        
+        function rho = rep(self, field, dimension, images)
+        % Constructs a finite dimensional representation of this group
+        %
+        % Args:
+        %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
+        %   dimension (integer): Representation dimension
+        %   images (row cell array of matrices): Orthonormal/unitary images of the group generators
+        %
+        % Returns:
+        %   replab.Rep: The constructed group representation
+            rho = replab.RepByImages(self, field, dimension, self.niceMonomorphism, images);
+        end
+
+        function rho = permutationRep(self, dimension, permutations)
+        % Constructs a permutation representation of this group
+        %
+        % The returned representation is real. Use ``rep.complexification``
+        % to obtain a complex representation.
+        %
+        % Args:
+        %   dimension: Dimension of the representation
+        %   permutations (row cell array of permutations): Images of the generators as permutations of size "dimension"
+        %
+        % Returns:
+        %   replab.Rep: The constructed group representation
+            S = replab.Permutations(dimension);
+            f = @(g) S.toMatrix(g);
+            images = cellfun(f, permutations, 'uniform', 0);
+            rho = self.rep('R', dimension, images);
+        end
+
+        function rho = signedPermutationRep(self, dimension, signedPermutations)
+        % Returns a real signed permutation representation of this group
+        %
+        % The returned representation is real. Use ``rep.complexification``
+        % to obtain a complex representation.
+        %
+        % Args:
+        %   dimension: Dximension of the representation
+        %   signedPermutations (row cell array of signed permutations): Images of the generators as signed permutations of size "dimension"
+        %
+        % Returns:
+        %   replab.Rep: The constructed group representation
+            S = replab.SignedPermutations(dimension);
+            f = @(g) S.toMatrix(g);
+            images = cellfun(f, signedPermutations, 'uniform', 0);
+            rho = self.rep('R', dimension, images);
+        end
+        
+        % CompactGroup methods
+        
+        function g = sampleUniformly(self)
+            g = self.chain.sampleUniformly;
+        end
+        
+        % Finite group methods
         
         function e = elements(self)
         % Returns an enumeration of the group elements
@@ -67,10 +125,6 @@ classdef NiceFiniteGroup < replab.FiniteSubgroup
         % Returns:
         %   replab.FiniteGroupDecomposition: The group decomposition
             error('Not implemented');
-        end
-
-        function g = sampleUniformly(self)
-            g = self.elements.sample;
         end
                
         function rho = rep(self, field, dimension, images)

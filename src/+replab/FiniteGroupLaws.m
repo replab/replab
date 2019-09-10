@@ -1,10 +1,22 @@
-classdef FiniteGroupLaws < replab.FinitelyGeneratedGroupLaws
+classdef FiniteGroupLaws < replab.GroupLaws
+    properties (SetAccess = protected)
+        I; % index of generator
+    end
     methods
         function self = FiniteGroupLaws(T)
-            self@replab.FinitelyGeneratedGroupLaws(T);
+            self@replab.GroupLaws(T);
+            self.I = replab.domain.intAsDouble(1, T.nGenerators);
         end
     end
     methods
+        function law_generatorInverse_I(self, i)
+            t = self.T.inverse(self.T.generator(i));
+            t1 = self.T.generatorInverse(i);
+            self.T.assertEqv(t, t1);
+        end
+        function law_isTrivial(self)
+            self.assert(self.T.isTrivial == (self.T.nGenerators == 0));
+        end
         function law_contains_T(self, t)
             self.assert(self.T.contains(t));
         end

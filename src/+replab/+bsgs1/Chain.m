@@ -162,14 +162,26 @@ classdef Chain < replab.Str
                 end
             end
         end
-        
+         
         %% Immutable functions
+        
+        function s = orbitSizes(self)
+            s = cellfun(@(x) length(x), self.Delta);
+        end
+            
         function k = length(self)
+        % Returns the length of this BSGS chain
+        %
+        % Returns:
+        %   integer: Chain length
             k = length(self.B);
         end
         
         function o = order(self)
         % Returns the order of this BSGS chain
+        %
+        % Returns:
+        %   vpi: Size of the group stored in the chain
             o = vpi(1);
             for i = 1:self.length
                 o = o * vpi(length(self.Delta{i}));
@@ -178,6 +190,15 @@ classdef Chain < replab.Str
         
         function [g v] = sampleUniformly(self)
         % Samples an element uniformly from the group
+        %
+        % Can return two arguments if `self.withImages` is true. 
+        %
+        % Returns
+        % -------
+        %  g: permutation
+        %    Random group element
+        %  v: element of `self.J`
+        %    Image of `g`
             if nargout > 1
                 [g v] = self.randomTransversal(1);
                 for i = 2:self.length
@@ -223,6 +244,8 @@ classdef Chain < replab.Str
         function [u v]  = randomTransversal(self, i)
         % Returns a random transversal element from a specific transversal set
         %
+        % Can return two arguments if `self.withImages` is true. 
+        %
         % Args:
         %  i (integer): Index of the transversal set
         %
@@ -241,22 +264,57 @@ classdef Chain < replab.Str
             end
         end
         
+        function j = orbitIndex(self, i, b)
+        % Looks up an orbit element
+        %
+        % Args:
+        %   i (integer): Index of orbit
+        %   b (integer): Orbit element to lookup
+        %
+        % Returns:
+        %   integer: When `b` is part of the i-th orbit, returns an integer `j` such that ``self.Delta{i}(j) = b``,
+        %            otherwise returns 0.
+        %   if 
+            [~, j] = ismember(b, self.Delta{i});
+        end
+        
+        function [remaining indices] = sift(self, g)
+            it = self;
+            remaining = el;
+            indices = zeros(1, self.baseLength);
+            i = 1;
+            while ~it.isTerm
+                b = self.A.leftAction(remaining, it.beta);
+                ind = it.orbitIndex(b);
+                if ind == 0
+                    remaining = [];
+                    return
+                else
+                    indices(i) = ind;
+                    remaining = self.G.compose(it.uInv{ind}, remaining);
+                end
+                i = i + 1;
+                it = it.next;
+            end
+            
+        end
+        
         function g = u(self, i, b)
         % Looks up a transversal element that maps beta_i to b
         %
         % Args:
-        %   i: Index of transversal
-        %   b: Orbit element
+        %   i (integer): Index of transversal
+        %   b (integer): Orbit element
         %
         % Returns:
         %   The corresponding transversal element, or [] if b is not part of the orbit
-            [~, j] = ismember(b, self.Delta{i});
+            j = self.orbitIndex(i, b);
             if j == 0
                 g = [];
-                return
+            else
+                Ui = self.U{i};
+                g = Ui(:,j)';
             end
-            Ui = self.U{i};
-            g = Ui(:,j)';
         end
         
         function img = v(self, i, b)
