@@ -47,7 +47,6 @@ classdef Chain < replab.Str
 %
 % * The chain describes the orbits/transversals of H^i.
 %
-%
 % In both cases:
 %
 % * The base B, base order bo, boInv, the data structures for orbits and transversals Delta, U, Uinv are consistent.
@@ -59,7 +58,6 @@ classdef Chain < replab.Str
     properties (SetAccess = protected)
         isMutable % whether the chain can be modified
         n % domain size
-        G % Group of permutation on 1..n
         B % row vector of base points (all between 1..n without duplicates)   
         bo % base order, i.e. for each domain element, gives its order
         boinv % inverse permutation of bo, permutation that starts with B and then the remaining domain elements increasing
@@ -95,7 +93,6 @@ classdef Chain < replab.Str
             end
             self.isMutable = true;
             self.n = n;
-            self.G = replab.Permutations(n);
             self.B = [];
             self.bo = 1:n;
             self.boinv = 1:n;
@@ -110,6 +107,12 @@ classdef Chain < replab.Str
             self.Vinv = {};
         end
         
+        function id = identity(self)
+            id = 1:self.n;
+        end
+        
+        function z = compose(self, x, y)
+                    
         function check(self)
             self.checkTransversals;
             self.checkStrongGenerators;
@@ -194,7 +197,7 @@ classdef Chain < replab.Str
             g = self.randomTransversal(1);
             for i = 2:self.length
                 gi = self.randomTransversal(i);
-                g = self.G.compose(g, gi);
+                g = g(gi); % compose(g, gi)
             end
         end
         
@@ -210,7 +213,7 @@ classdef Chain < replab.Str
             [g v] = self.randomTransversal(1);
             for i = 2:self.length
                 [gi vi] = self.randomTransversal(i);
-                g = self.G.compose(g, gi);
+                g = g(gi); % compose(g, gi)
                 v = self.J.compose(v, vi);
             end
         end
@@ -386,7 +389,7 @@ classdef Chain < replab.Str
                 uinv = Uinvi(:, j)';
                 Vi = self.V{i};
                 v = Vi{j};
-                h = self.G.compose(uinv, h);
+                h = uinv(h); % compose(uinv, h)
                 img = self.J.compose(img, v);
             end
         end
@@ -394,8 +397,9 @@ classdef Chain < replab.Str
         function b = contains(self, g)
         % Tests whether the BSGS chain contains an element
             k = self.length;
+            n = self.n;
             [h, i] = self.strip(g);
-            b = (i > k) && self.group.isIdentity(h);
+            b = (i > k) && all(h == 1:n); % i > k and h is the identity
         end
         
         function [h i] = strip(self, g)
@@ -424,7 +428,7 @@ classdef Chain < replab.Str
                 uinv = Uinvi(:, j)';                
                 % note order is reversed compared to Holt, as
                 % we use a left action
-                h = self.G.compose(uinv, h);
+                h = uinv(h); % compose(uinv, h)
             end
             i = k + 1; % marker that we striped through the chain
         end
@@ -457,7 +461,7 @@ classdef Chain < replab.Str
                 uinv = Uinvi(:, j)';                
                 % note order is reversed compared to Holt, as
                 % we use a left action
-                h = self.G.compose(uinv, h);
+                h = uinv(h); % compose(uinv, h)
                 Vinvi = self.Vinv{i};
                 vinv = Vinvi{j};
                 w = self.J.compose(vinv, w);
@@ -487,9 +491,13 @@ classdef Chain < replab.Str
         function recomputeBaseOrder(self)
         % Recomputes the base order, and reorders all orbits according to the corrected base order
             assert(self.isMutable);
-            remaining = setdiff(1:self.n, self.B); % domain elements not part of base
-            self.boInv = [self.B remaining];
-            self.bo = self.G.inverse(self.boInv);
+            n = self.n;
+            remaining = setdiff(1:n, self.B); % domain elements not part of base
+            boInv = [self.B remaining];
+            bo = zeros(1, n);
+            bo(self.boInv) = 1:n; % bo = inverse(boInv)
+            self.bo = bo;
+            self.boInv = boInv;
             for i = 1:self.length
                 self.reorderOrbit(i);
             end
@@ -524,12 +532,14 @@ classdef Chain < replab.Str
         %   i (double): Index of the orbit, 1 <= i <= self.length
         %   b (double): Existing orbit point
         %   iS (double): Index of strong generator
+            n = self.n;
             D = self.Delta{i};
             pos = 1;
             g = self.S(:,iS)';
             newb = g(b);
-            newu = self.G.compose(g, self.u(i, b));
-            newuinv = self.G.inverse(newu);
+            newu = g(self.u(i, b)); % compose(g, self.u(i, b))
+            newuinv = zeros(1, n);
+            newuinv(newu) = 1:n; % newuinv = inverse(newu)
             newv = self.J.compose(self.T{iS}, self.v(i, b));
             newvinv = self.J.inverse(newv);
             % Look for the position `pos` where to insert the new orbit point
@@ -650,14 +660,16 @@ classdef Chain < replab.Str
             if j <= self.length
                 % New strong generator h at level j
                 newSG = true;
-            elseif ~self.G.isIdentity(h)
-                % New strong generator h fixes all base points
+            else
+                % Check if h is the identity
                 gamma = find(h ~= 1:n, 1);
-                % We find a new base point gamma
-                assert(length(gamma) == 1, 'Cannot be identity');
-                % and insert it at the end of the chain
-                self.insertEndBasePoint(gamma);
-                newSG = true;
+                if length(gamma) > 0
+                    % New strong generator h fixes all base points
+                    % We have a new base point gamma
+                    % and insert it at the end of the chain
+                    self.insertEndBasePoint(gamma);
+                    newSG = true;
+                end
             end
             if newSG
                 % if we have a new strong generator, add it to the chain

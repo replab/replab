@@ -5,7 +5,6 @@ classdef TrivialGroup < replab.FiniteGroup
         function self = TrivialGroup
             self.identity = [];
             self.generators = {};
-            self.niceMonomorphism = @(x) [1];
             self.order = vpi(1);
         end
         
@@ -39,9 +38,7 @@ classdef TrivialGroup < replab.FiniteGroup
         
         function d = decomposition(self)
             d = replab.FiniteGroupDecomposition.trivial(group, {[]});
-        
-        
-        
+        end
         
     end
     

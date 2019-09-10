@@ -1,21 +1,11 @@
-classdef PermutationGroup < replab.Group
+classdef PermutationBaseGroup < replab.FiniteGroup
 % Represents a permutation group
 
     properties (SetAccess = protected)
         domainSize; % d when this group acts on {1, ..., d}
     end
     
-    properties (Access = protected)
-        orbits_ = [];
-    end
-    
     methods
-                
-        function self = PermutationGroup(domainSize)
-            self.niceMonomorphism = @(x) x;
-            self.domainSize = domainSize;
-            self.identity = 1:domainSize;
-        end
         
         % Domain
         
@@ -96,14 +86,11 @@ classdef PermutationGroup < replab.Group
         end
         
         function o = orbits(self)
-            if isempty(self.orbits_)
-                G = zeros(self.nGenerators, self.domainSize);
-                for i = 1:self.nGenerators
-                    G(i, :) = self.generators{i};
-                end
-                self.orbits_ = replab.Partition.permutationsOrbits(G);
+            G = zeros(self.nGenerators, self.domainSize);
+            for i = 1:self.nGenerators
+                G(i, :) = self.generators{i};
             end
-            o = self.orbits_;
+            o = replab.Partition.permutationsOrbits(G);
         end
         
     end

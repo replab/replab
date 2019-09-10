@@ -17,7 +17,7 @@
 classdef RandomBag < replab.Str
     
     properties (SetAccess = protected)
-        G % Group definition
+        n % domainSize
         x0 % Last generated sample
         x % n x r matrix representing the contents of the bag
         J % Image group
@@ -31,6 +31,17 @@ classdef RandomBag < replab.Str
             s = sprintf('Random bag of %d elements', length(self.x));
         end
         
+        function z = compose(self, x, y)
+        % Duplicates self.Permutations(n).compose to avoid reference loops 
+            z = x(y);
+        end
+        
+        function xInv = inverse(self, x)
+        % Duplicates self.Permutations(n).inverse to avoid reference loops 
+            xInv = zeros(1, self.n);
+            xInv(x) = 1:self.n;
+        end
+        
         function [xres yres]  = sample(self)
             r = size(self.x, 2);
             s = randi(r);
@@ -40,25 +51,25 @@ classdef RandomBag < replab.Str
             end
             if randi(2) == 2
                 if randi(2) == 2 % e = 1
-                    self.x(:,s) = self.G.compose(self.x(:,s)', self.x(:,t)');
+                    self.x(:,s) = self.compose(self.x(:,s)', self.x(:,t)');
                     self.y{s} = self.J.compose(self.y{s}, self.y{t});
                 else
-                    self.x(:,s) = self.G.composeWithInverse(self.x(:,s)', self.x(:,t)');
+                    self.x(:,s) = self.compose(self.x(:,s)', self.inverse(self.x(:,t)'));
                     self.y{s} = self.J.composeWithInverse(self.y{s}, self.y{t});
                 end
-                self.x0 = self.G.compose(self.x0, self.x(:,s)');
+                self.x0 = self.compose(self.x0, self.x(:,s)');
                 self.y0 = self.J.compose(self.y0, self.y{s});
             else
                 if randi(2) == 2 % e = 1
-                    self.x(:,s) = self.G.compose(self.x(:,t)', self.x(:,s)');
+                    self.x(:,s) = self.compose(self.x(:,t)', self.x(:,s)');
                     self.y{s} = self.J.compose(self.y{t}, self.y{s});
                 else
-                    tinv = self.G.inverse(self.x(:,t)');
-                    self.x(:,s) = self.G.compose(tinv, self.x(:,s)');
+                    tinv = self.inverse(self.x(:,t)');
+                    self.x(:,s) = self.compose(tinv, self.x(:,s)');
                     tinv1 = self.J.inverse(self.y{t});
                     self.y{s} = self.J.compose(tinv1, self.y{s});
                 end
-                self.x0 = self.G.compose(self.x(:,s)', self.x0);
+                self.x0 = self.compose(self.x(:,s)', self.x0);
                 self.y0 = self.J.compose(self.y{s}, self.y0);
             end
             xres = self.x0;
@@ -80,7 +91,7 @@ classdef RandomBag < replab.Str
         %                          Default value is 50
         %   J (replab.Group, optional): Group structure for images
         %   images (row cell array of elements of `J`): Images of `generators`
-            G = replab.Permutations(n);
+            self.n = n;
             if nargin < 5
                 J = replab.bsgs1.TrivialGroup;
                 images = arrayfun(@(x) [], 1:length(generators), 'uniform', false);
@@ -100,7 +111,7 @@ classdef RandomBag < replab.Str
             if nGens == 0
                 % cater for the special case when generators are empty
                 for i = 1:r
-                    x(:,i) = 1:n;
+                    x(:,i) = 1:n; % identity
                     y{i} = J.identity;
                 end
             else
@@ -110,16 +121,16 @@ classdef RandomBag < replab.Str
                     y{i} = images{ind};
                 end
             end
-            self.G = G;
-            self.x0 = G.identity; % initially, the identity element
+            self.x0 = 1:n; % initially, the identity element
             self.x = x;
+            self.J = J;
             self.y0 = J.identity;
             self.y = y;
             for i = 1:m
                 self.sample; % perform initial shuffles
             end
         end
-   
+        
     end
     
 end

@@ -1,11 +1,12 @@
-classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
+classdef Permutations < replab.NiceFiniteGroup & replab.PermutationBaseGroup
 % Describes permutations over n = "domainSize" elements, i.e.
 % the symmetric group Sn
     
     methods % Implementations of abstract methods
         
         function self = Permutations(domainSize)
-            self@replab.PermutationGroup(domainSize);
+        %self@replab.PermutationGroup(domainSize);
+            self@
             if self.domainSize < 2
                 self.generators = cell(1, 0);
             elseif self.domainSize == 2

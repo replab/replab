@@ -25,7 +25,7 @@ classdef Settings
             end
             value = UseSparse;
         end
-        
+
         function value = randomizedSchreierSimsTries(newValue)
         % Gets/sets the number of sifted elements before the BSGS chain is declared complete
         %
@@ -43,6 +43,8 @@ classdef Settings
                 RandomizedSchreierSimsTries = newValue;
             elseif isempty(RandomizedSchreierSimsTries)
                 RandomizedSchreierSimsTries = 1000;
+            end
+            value = RandomizedSchreierSimsTries;
         end
         
         function value = strMaxColumns(newValue)
@@ -54,7 +56,7 @@ classdef Settings
             end
             value = StrMaxColumns;
         end
-           
+        
         function value = strMaxRows(newValue)
             persistent StrMaxRows;
             if nargin == 1
@@ -64,7 +66,7 @@ classdef Settings
             end
             value = StrMaxRows;
         end
-                
+        
         function value = bsgsFailureProbability(newValue)
             persistent BsgsFailureProbability;
             if nargin == 1
@@ -96,5 +98,5 @@ classdef Settings
         end
         
     end
-    
+
 end
