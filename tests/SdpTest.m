@@ -12,21 +12,6 @@ function test_suite = SdpTest()
     end
 end
 
-function test_CommutantVar_simple_structure
-    % We do a sanity check with one group
-    generators = {[2 3 4 5 1]};
-    matrix = replab.CommutantVar.fromPermutations(generators);
-    matrix = matrix.fullMatrix;
-    for i = 1:length(generators)
-        difference = matrix - matrix(generators{i}, generators{i});
-        vars = getvariables(difference);
-        for j = 1:length(vars)
-            coeffs = getbasematrix(difference, vars(i));
-            assert(norm(coeffs(:)) <= replab.Settings.doubleEigTol);
-        end
-    end
-end
-
 function test_SDP_CHSH
     indexMatrix = [  1   2   3   6   7   8  11  12  13
                      2   1   4   7   6   9  12  11  14
@@ -62,8 +47,8 @@ function test_SDP_CHSH
     obj1 = value(obj);
     
     % We formulate the symmetrized SDP:
-    symSdpMatrix = replab.CommutantVar.fromPermutations(generators);
-    solvesdp([symSdpMatrix >= 0, symSdpMatrix.fullMatrix == sdpMatrix, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    symSdpMatrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix,generators);
+    solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
     obj2 = value(obj);
     
     % We compare the result:
@@ -121,8 +106,8 @@ function test_SDP_CHSH_FullProb
     obj1 = value(obj);
     
     % We formulate the symmetrized SDP:
-    symSdpMatrix = replab.CommutantVar.fromPermutations(generators);
-    solvesdp([symSdpMatrix >= 0, symSdpMatrix.fullMatrix == sdpMatrix, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    symSdpMatrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, generators);
+    solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
     obj2 = value(obj);
     
     % We compare the result:
@@ -204,11 +189,10 @@ function test_SDP_CGLMP3_FullProb
     obj1 = value(obj);
     
     % We formulate the symmetrized SDP:
-    symSdpMatrix = replab.CommutantVar.fromPermutations(generators);
-    solvesdp([symSdpMatrix >= 0, symSdpMatrix.fullMatrix == sdpMatrix, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    symSdpMatrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, generators);
+    solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
     obj2 = value(obj);
     
     % We compare the result:
     assert(abs(obj1 - obj2)/abs(obj1) < replab.Settings.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
-
 end

@@ -6,7 +6,7 @@ options:
   - title: Quick start 
     url: docs/publish/Example.html
 
-  - title: Semidefinite programming
+  - title: Symmetric SDPs
     url: docs/publish/SDP.html
 
   - title: Code organization 

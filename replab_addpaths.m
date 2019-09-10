@@ -1,16 +1,18 @@
 function replab_addpaths(verbose)
-    % replab_addpaths([verbose])
-    %
-    % replab_addpaths adds directories that are needed to the search path
-    % in order to enable all functionalities of the library.
-    %
-    % The optional parameter 'verbose' controls the display level:
-    %   0 only produce a display in case of error/warning or for critical
-    %     cases
-    %   1 informs of the changes made (default value)
-    %   2 prints the complete information
-    %
-    % example: replab_addpaths
+% replab_addpaths([verbose])
+%
+% Sets up the search path in order to enable all functionalities of the
+% RepLAB library.
+%
+% Args:
+%     verbose: controls the display level (optional):
+%         0: only produce a display in case of error/warning or for
+%             critical cases
+%         1: informs of the changes made (default value)
+%         2: prints full information
+%
+% Example:
+%     replab_addpaths
     
     %% Parameter checking
     if nargin < 1
@@ -19,16 +21,17 @@ function replab_addpaths(verbose)
 
     %% Action -- first adding RepLAB itself
     [pathStr, name, extension] = fileparts(which(mfilename));
+    pathStr = strrep(pathStr, '\', '/');
     
     % Check if another instance of RepLAB is already in the path
-    currentPathStr = strrep(pwd,'\','/');
+    currentPathStr = strrep(pwd, '\', '/');
     dirName = currentPathStr(find(currentPathStr=='/',1,'last')+1:end);
     cd ..
-    AmIMyself = which('replab_addpaths');
+    AmIMyself = strrep(which('replab_addpaths'), '\', '/');
     cd(dirName);
     if ~isempty(AmIMyself) && ~isequal(AmIMyself, [pathStr, '/', name, extension])
         error(['Another instance of RepLAB in folder ', fileparts(AmIMyself), ' is already in the path.', char(10), ...
-            'Use this one or remove from the path.']);
+            'Use this one or remove it from the path.']);
     else
         if isempty(AmIMyself)
             addpath(pathStr);
@@ -40,6 +43,23 @@ function replab_addpaths(verbose)
         end
     end
 
+    % We also add the replab package path
+    packagePath = strrep(which('replab_version'), '\', '/');
+    packagePath = packagePath(1:find(packagePath=='/',1,'last')-1);
+    if ~isempty(packagePath) && ~isequal(packagePath, [pathStr, '/src'])
+        error(['Another RepLAB package in folder ', packagePath, ' is already in the path.', char(10), ...
+            'Use this one or remove it from the path.']);
+    else
+        if isempty(packagePath)
+            packagePath = [pathStr, '/src'];
+            addpath(packagePath);
+            if verbose >= 1
+                disp('Adding RepLAB package to the path');
+            end
+        elseif verbose >= 2
+            disp('RepLAB package is already in the path');
+        end
+    end
     
     %% VPI
     
@@ -130,14 +150,20 @@ function replab_addpaths(verbose)
     % Making sure a woring SDP solver is in the path and working, otherwise
     % tries to add SDPT3
     if YALMIPInPath
-        SDPSolverInPath = false;
+        decentSDPSolverInPath = false;
         try
             x = sdpvar(2);
-            sol = optimize([x >= 0, trace(x) == 1], 0, sdpsettings('verbose',0));
-            SDPSolverInPath = (sol.problem >= 0);
+            F = [x >= 0, trace(x) == 1];
+            [interfacedata,recoverdata,solver,diagnostic] = compileinterfacedata(F, [], [], [], sdpsettings, 0, 0);
+            decentSDPSolverInPath = isempty(diagnostic);
+            % If LMILAB was identified as the best solver to solve the
+            % problem, this means that no good solver was found.
+            if ~isempty(strfind(upper(solver.tag), 'LMILAB'))
+                decentSDPSolverInPath = false;
+            end
         catch
         end
-        if ~SDPSolverInPath
+        if ~decentSDPSolverInPath
             SDPT3InPath = false;
             try
                 [blk, Avec, C, b, X0, y0, Z0] = randsdp([2 2], [2 2], 2, 2);
@@ -155,9 +181,10 @@ function replab_addpaths(verbose)
                     end
                 else
                     addpath([pathStr '/external/SDPT3']);
-                    if verbose >= 0
-                        disp('Adding embedded SDPT3 to the path. Please run ''install_sdpt3'' to complete the setup of this solver');
-                    end
+                    % Now we run install_sdpt3
+                    cd external/SDPT3;
+                    install_sdpt3;
+                    cd ../..;
                     SDPT3InPath = true;
                 end
             elseif verbose >= 2
