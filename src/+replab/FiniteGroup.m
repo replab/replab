@@ -1,5 +1,8 @@
 classdef FiniteGroup < replab.FinitelyGeneratedGroup
     
+    properties
+        niceMonomorphism % Injective group homomorphism from this group into a permutation group
+    end
     methods
         
         function [names values] = additionalFields(self)
@@ -45,7 +48,7 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
             f = self.decompositionFun;
             d = f();
         end
-                
+
         function g = sample(self)
             g = self.randomBag.sample;
         end
@@ -54,7 +57,39 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
         % Returns an element sampled uniformly from this group
             g = self.elements.sample;
         end
+                
+        function rho = rep(self, field, dimension, images)
+        % Constructs a finite dimensional real or complex representation of this group
+        %
+        %     field: 'R' or 'C' for real or complex
+        % dimension: representation dimension
+        %    images: 1 x n cell array of matrices providing the images
+        %            of the group generators
+            rho = replab.RepByImages(self, field, dimension, self.niceMonomorphism, images);
+        end
+
+        function rho = permutationRep(self, dimension, permutations)
+        % Returns a real permutation representation of this group
+        %
+        %    dimension: dimension of the representation
+        % permutations: row cell array of images of the generators as permutations of size "dimension"
+            S = replab.Permutations(dimension);
+            f = @(g) S.toMatrix(g);
+            images = cellfun(f, permutations, 'uniform', 0);
+            rho = self.rep('R', dimension, images);
+        end
         
+        function rho = signedPermutationRep(self, dimension, signedPermutations)
+        % Returns a real signed permutation representation of this group
+        %
+        %          dimension: dimension of the representation
+        % signedPermutations: row cell array of images of the generators as permutations of size "dimension"
+            S = replab.SignedPermutations(dimension);
+            f = @(g) S.toMatrix(g);
+            images = cellfun(f, signedPermutations, 'uniform', 0);
+            rho = self.rep('R', dimension, images);
+        end
+
         function rep = leftRegularRep(self)
             o = self.order;
             assert(o < 1e6);
@@ -71,7 +106,7 @@ classdef FiniteGroup < replab.FinitelyGeneratedGroup
             end
             rep = self.permutationRep(o, perms);
         end
-        
+
     end
 
     properties (Access = protected)

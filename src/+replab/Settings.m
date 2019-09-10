@@ -2,6 +2,30 @@ classdef Settings
     
     methods (Static)
         
+        function value = useSparse(newValue)
+        % Gets/sets the flag whether to use sparse matrices when possible
+        %
+        % The default value is `false`.
+        %
+        % Warnings:
+        %   This flag should be set once before any computations is made,
+        %   as matrix values are cached by RepLAB and those cached values
+        %   not updated when this flag changes.
+        %
+        % Args:
+        %   newValue (logical, optional): New flag value
+        %
+        % Returns:
+        %   The current flag value.
+            persistent UseSparse;
+            if nargin == 1
+                UseSparse = newValue;
+            elseif isequal(UseSparse, [])
+                UseSparse = false;
+            end
+            value = UseSparse;
+        end
+        
         function value = strMaxColumns(newValue)
             persistent StrMaxColumns;
             if nargin == 1

@@ -31,6 +31,9 @@ classdef WreathProductPrimitiveRep < replab.Rep
             I = permute(reshape(1:d, dims), fliplr(n + 1 - h));
             I = I(:)';
             rho = sparse(I, 1:d, ones(1, d), d, d) * rho;
+            if ~replab.Settings.useSparse
+                rho = full(rho);
+            end
         end
         
     end

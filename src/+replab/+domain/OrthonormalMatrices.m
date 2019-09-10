@@ -14,7 +14,11 @@ classdef OrthonormalMatrices < replab.Group
         function self = OrthonormalMatrices(n)
             self.n = n;
             self.parent_ = replab.domain.RealMatrices(n, n);
-            self.identity = speye(n);
+            if replab.Settings.useSparse
+                self.identity = speye(n);
+            else
+                self.identity = eye(n);
+            end
         end
         
         % Str

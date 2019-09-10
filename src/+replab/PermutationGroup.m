@@ -12,6 +12,7 @@ classdef PermutationGroup < replab.Group
     methods
                 
         function self = PermutationGroup(domainSize)
+            self.niceMonomorphism = @(x) x;
             self.domainSize = domainSize;
             self.identity = 1:domainSize;
         end

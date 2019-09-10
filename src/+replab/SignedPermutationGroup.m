@@ -14,6 +14,7 @@ classdef SignedPermutationGroup < replab.Group
         function self = SignedPermutationGroup(domainSize)
             self.domainSize = domainSize;
             self.identity = 1:domainSize;
+            self.niceMonomorphism = @(x) replab.SignedPermutationGroup.toPermutation(x);
         end
         
         % Domain
@@ -136,6 +137,9 @@ classdef SignedPermutationGroup < replab.Group
         % where S = SignedPermutations(domainSize)
             n = length(signedPerm);
             mat = sparse(abs(signedPerm), 1:n, sign(signedPerm), n, n);
+            if ~replab.Settings.useSparse
+                mat = full(mat);
+            end
         end
         
         function b = isSignedPermutationMatrix(mat)

@@ -22,6 +22,9 @@ classdef IndexRelabelingRep < replab.Rep
             I = permute(reshape(1:d, dims), g);
             I = I(:)';
             rho = sparse(I, 1:d, ones(1, d), d, d);
+            if ~replab.Settings.useSparse
+                rho = full(rho);
+            end
         end
         
     end
