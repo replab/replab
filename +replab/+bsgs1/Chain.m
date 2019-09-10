@@ -1,12 +1,8 @@
 classdef Chain < replab.Str
-% A BSGS chain data structure for a (signed) permutation group
+% A BSGS chain data structure for a permutation group
 %
-% The represented group either acts on {1, ..., n} (for signed = false)
-% or {-n,...,-1,1,...,n} (for signed = true). When it acts on a signed domain
-% the following should hold: for any element g of the group, we have that
-%                                ``g(i) = -g(-i)``
-%
-% We follow loosely the notation in Handbook of CGT, Derek Holt.
+% The represented group acts on {1, ..., n}. We follow loosely the
+% notation in Handbook of CGT, Derek Holt.
 %
 % The BSGS chain is stored as follows.
 %
@@ -58,9 +54,8 @@ classdef Chain < replab.Str
 
     properties (SetAccess = protected)
         isMutable % whether the chain can be modified
-        isSigned % (boolean) whether the domain is signed 
         n % domain size
-        G % (signed) group of permutation on 1..n
+        G % Group of permutation on 1..n
         B % row vector of base points (all between 1..n without duplicates)   
         bo % base order, i.e. for each domain element, gives its order
         boinv % inverse permutation of bo, permutation that starts with B and then the remaining domain elements increasing
@@ -80,30 +75,24 @@ classdef Chain < replab.Str
     
     methods
         
-        function self = Chain(isSigned, n, J)
-        % Constructs an empty mutable chain for a subgroup of the (signed/unsigned) permutation group
+        function self = Chain(n, J)
+        % Constructs an empty mutable chain for a subgroup of the permutation group
         %
-        % The subgroup acts on (signed: -n..-1) and 1..n
+        % The subgroup acts on 1..n
         %
         % Args:
-        %   isSigned (logical): Whether the permutations can be signed
-        %   n: Domain size (for signed permutations, size of the positive part of the domain)
+        %   n: Domain size
         %   J (replab.Group, optional): Group structure for morphism images
         %
         % Returns:
         %   A constructed empty BSGS chain
             
-            if nargin < 3
+            if nargin < 2
                 J = [];
             end
             self.isMutable = true;
-            self.isSigned = isSigned;
             self.n = n;
-            if isSigned
-                self.G = replab.SignedPermutations(n);
-            else
-                self.G = replab.Permutations(n);
-            end
+            self.G = replab.Permutations(n);
             self.B = [];
             self.bo = 1:n;
             self.boinv = 1:n;
@@ -191,7 +180,7 @@ classdef Chain < replab.Str
         %   i (integer): Strong generator index
         %
         % Returns:
-        %   A (un)signed permutation given as a row vector
+        %   A permutation given as a row vector
             p = self.S(:, i)';
         end
         
@@ -210,7 +199,7 @@ classdef Chain < replab.Str
         %
         % Args:
         %   i: Index of transversal
-        %   b: Orbit element (can be negative if `self.isSigned` is true)
+        %   b: Orbit element
         %
         % Returns:
         %   The corresponding transversal element, or [] if b is not part of the orbit
@@ -228,7 +217,7 @@ classdef Chain < replab.Str
         %
         % Args:
         %   i: Index of transversal
-        %   b: Orbit element (can be negative if `self.isSigned` is true)
+        %   b: Orbit element
         %
         % Returns:
         %   The corresponding transversal element image if it exists
@@ -246,7 +235,7 @@ classdef Chain < replab.Str
         % Looks up the inverse transversal element that maps b to beta_i
         % Args:
         %   i: Index of transversal
-        %   b: Orbit element (can be negative if `self.isSigned` is true)
+        %   b: Orbit element
         %
         % Returns:
         %   The corresponding inverse transversal element or [] if b is not part
@@ -265,7 +254,7 @@ classdef Chain < replab.Str
         %
         % Args:
         %   i: Index of transversal
-        %   b: Orbit element (can be negative if `self.isSigned` is true)
+        %   b: Orbit element
         %
         % Returns:
         %   The corresponding image of the inverse transversal element
@@ -277,6 +266,34 @@ classdef Chain < replab.Str
             assert(length(j) == 1, 'Element not part of orbit');
             Vinvi = self.Vinv{i};
             img = Vinvi{j};
+        end
+        
+        function img = image(self, g)
+        % Returns the image of a chain element
+        %
+        % Args:
+        %   g (permutation row vector): Permutation part of this chain
+        %
+        % Returns:
+        %   The image of the given element `g`
+        %
+        % Raises:
+        %   An error if the element is not part of the chain
+            assert(self.withImages);
+            h = g;
+            img = self.J.identity;
+            for i = 1:self.length
+                beta_i = self.B(i);
+                b = h(beta_i);
+                [~, j] = ismember(b, self.Delta{i});
+                assert(j ~= 0, 'Element is not member of the chain');
+                Uinvi = self.Uinv{i};
+                uinv = Uinvi(:, j)';
+                Vi = self.V{i};
+                v = Vi{j};
+                h = self.G.compose(uinv, h);
+                img = self.J.compose(img, v);
+            end
         end
 
         function [h i w] = strip(self, g, v)
@@ -317,7 +334,7 @@ classdef Chain < replab.Str
                 if img
                     Vinvi = self.Vinv{i};
                     vinv = Vinvi{j};
-                    w = self.imgG.compose(vinv, w);
+                    w = self.J.compose(vinv, w);
                 end
             end
             i = k + 1; % marker that we striped through the chain
@@ -391,7 +408,7 @@ classdef Chain < replab.Str
             newuinv = self.G.inverse(newu);
             if self.withImages
                 newv = self.J.compose(self.T{iS}, self.v(i, b));
-                newvinv = self.J.inverse(newimgu);
+                newvinv = self.J.inverse(newv);
             end
             % Look for the position `pos` where to insert the new orbit point
             while pos <= length(D) && self.bo(D(pos)) < self.bo(newb)
@@ -404,7 +421,7 @@ classdef Chain < replab.Str
             self.Uinv{i} = [Uinvi(:,1:pos-1) newuinv' Uinvi(:,pos:end)];
             if self.withImages
                 Vi = self.V{i};
-                self.Vi{i} = {Vi{1:pos-1} newv Vi{pos:end}};
+                self.V{i} = {Vi{1:pos-1} newv Vi{pos:end}};
                 Vinvi = self.Vinv{i};
                 self.Vinv{i} = {Vinvi{1:pos-1} newvinv Vinvi{pos:end}};
             end
@@ -467,8 +484,8 @@ classdef Chain < replab.Str
             self.Sind = [self.Sind(1:k+1) self.Sind(k+1)+sum(~stabilized)];
             if self.withImages
                 % Take care of homomorphism images if necessary
-                self.V = horzcat(self.V, {self.J.identity});
-                self.Vinv = horzcat(self.Vinv, {self.J.identity});
+                self.V = horzcat(self.V, {{self.J.identity}});
+                self.Vinv = horzcat(self.Vinv, {{self.J.identity}});
                 if size(candidates, 2) ~= 0
                     Tunchanged = self.T(1:I(k+1)-1);
                     Tcandidates = self.T(I(k+1):nS);
@@ -570,6 +587,11 @@ classdef Chain < replab.Str
             end
         end
         
+        function makeImmutable(self)
+            assert(self.isMutable);
+            self.isMutable = false;
+        end
+        
         function randomizedSchreierSims(self, nTries)
         % Runs the randomized Schreier-Sims algorithm
         %
@@ -577,22 +599,52 @@ classdef Chain < replab.Str
         %   nTries: Number of attempts of successive failed attempts to generate a new strong generator
         %           before deciding the chain is complete; the probability of failure is then less than
         %           1/2^nTries
-            if self.withImages
-                R = replab.bsgs1.RandomBag(self.isSigned, self.n, self.S);
-            else
-                R = replab.bsgs1.RandomBag(self.isSigned, self.n, self.S, [], [], self.T);
+            if nargin < 2
+                nTries = 1000;
             end
-            c = 0;
-            while c <= nTries
-                g = R.sample;
-                if self.stripAndAddStrongGenerator(g)
-                    c = 0;
-                else
-                    c = c + 1;
+            if self.withImages
+                R = replab.bsgs1.RandomBag(self.n, self.S, [], [], self.J, self.T);
+                c = 0;
+                while c <= nTries
+                    [g v] = R.sample;
+                    if self.stripAndAddStrongGenerator(g, v)
+                        c = 0;
+                    else
+                        c = c + 1;
+                    end
+                end
+            else
+                R = replab.bsgs1.RandomBag(self.n, self.S);
+                c = 0;
+                while c <= nTries
+                    g = R.sample;
+                    if self.stripAndAddStrongGenerator(g)
+                        c = 0;
+                    else
+                        c = c + 1;
+                    end
                 end
             end
         end
-                
+
+    end
+    
+    methods (Static)
+       
+        function C = makeWithImages(n, S, J, T)
+            C = replab.bsgs1.Chain(n, J);
+            C.insertStrongGenerators(S, T);
+            C.randomizedSchreierSims;
+            C.makeImmutable;
+        end
+        
+        function C = make(n, S)
+            C = replab.bsgs1.Chain(n);
+            C.insertStrongGenerators(S);
+            C.randomizedSchreierSims;
+            C.makeImmutable;
+        end
+        
     end
 
 end

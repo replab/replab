@@ -1,4 +1,4 @@
-% Generator of random elements from generators of a group.
+% Generator of random elements from generators of a permutation group.
 % 
 % A random bag is a set of random group elements that always generates
 % the group; random elements are provided by multiplying elements of the
@@ -6,8 +6,6 @@
 % 
 % Straight-forward implementation of PRINITIALIZE and PRRANDOM of 
 % section 3.2.2, pp. 70-71 of Holt 2005 (Handbook of Computational Group Theory)
-%
-% Is generic in the group element type.
 classdef RandomBag < replab.Str
     
     properties (SetAccess = protected)
@@ -74,12 +72,11 @@ classdef RandomBag < replab.Str
             end
         end
         
-        function self = RandomBag(signed, n, generators, r, m, J, images)
-        % Constructs a random bag from the given (un)signed permutations
+        function self = RandomBag(n, generators, r, m, J, images)
+        % Constructs a random bag from the given permutations
         %
         % Args:
-        %   signed (logical): Whether the permutations are signed
-        %   n: Domain size (if signed, of the positive part)
+        %   n: Domain size
         %   generators (integer matrix): Group generators, given as a n x nGens matrix
         %   r (integer, optional): Number of elements in the bag
         %                          Must be >= nGens and >= 10
@@ -87,12 +84,8 @@ classdef RandomBag < replab.Str
         %   m (integer, optional): Number of shuffles done during initialization 
         %                          Default value is 50
         %  
-            if signed
-                G = replab.SignedPermutations(n);
-            else
-                G = replab.Permutations(n);
-            end
-            if nargin < 6
+            G = replab.Permutations(n);
+            if nargin < 5
                 self.withImages = false;
             else
                 self.withImages = true;
