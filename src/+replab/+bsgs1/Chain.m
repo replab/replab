@@ -107,12 +107,7 @@ classdef Chain < replab.Str
             self.Vinv = {};
         end
         
-        function id = identity(self)
-            id = 1:self.n;
-        end
         
-        function z = compose(self, x, y)
-                    
         function check(self)
             self.checkTransversals;
             self.checkStrongGenerators;
@@ -260,8 +255,6 @@ classdef Chain < replab.Str
         function [u v]  = randomTransversalWithImage(self, i)
         % Returns a random transversal element from a specific transversal set along with its image
         %
-        % Can return two arguments if `self.withImages` is true. 
-        %
         % Args:
         %  i (integer): Index of the transversal set
         %
@@ -309,26 +302,7 @@ classdef Chain < replab.Str
                 g = Ui(:,j)';
             end
         end
-        
-        function img = v(self, i, b)
-        % Looks up the image of the transversal element that maps beta_i to b
-        %
-        % Args:
-        %   i: Index of transversal
-        %   b: Orbit element
-        %
-        % Returns:
-        %   The corresponding transversal element image if it exists
-        %
-        % Raises:
-        %   An error if `self.withImages` is false
-        %   An error if `b` is not part of the orbit Delta^i
-            [~, j] = ismember(b, self.Delta{i});
-            assert(j ~= 0);
-            Vi = self.V{i};
-            img = Vi{j};
-        end
-        
+                
         function g = uinv(self, i, b)
         % Looks up the inverse transversal element that maps b to beta_i
         % Args:
@@ -347,6 +321,24 @@ classdef Chain < replab.Str
             g = Uinvi(:,j)';
         end
         
+        function img = v(self, i, b)
+        % Looks up the image of the transversal element that maps beta_i to b
+        %
+        % Args:
+        %   i: Index of transversal
+        %   b: Orbit element
+        %
+        % Returns:
+        %   The corresponding transversal element image if it exists
+        %
+        % Raises:
+        %   An error if `b` is not part of the orbit Delta^i
+            j = self.orbitIndex(i, b);
+            assert(j ~= 0, 'Element not part of orbit');
+            Vi = self.V{i};
+            img = Vi{j};
+        end
+
         function img = vinv(self, i, b)
         % Looks up the image of the inverse transversal element that maps b to beta_i
         %
@@ -358,10 +350,9 @@ classdef Chain < replab.Str
         %   The corresponding image of the inverse transversal element
         %
         % Raises:
-        %   An error if `self.withImages` is false
         %   An error if `b` is not part of the orbit Delta^i
-            [~, j] = ismember(b, self.Delta{i});
-            assert(length(j) == 1, 'Element not part of orbit');
+            j = self.orbitIndex(i, b);
+            assert(j ~= 0, 'Element not part of orbit');
             Vinvi = self.Vinv{i};
             img = Vinvi{j};
         end
@@ -377,7 +368,6 @@ classdef Chain < replab.Str
         %
         % Raises:
         %   An error if the element is not part of the chain
-            assert(self.withImages);
             h = g;
             img = self.J.identity;
             for i = 1:self.length
@@ -712,43 +702,25 @@ classdef Chain < replab.Str
             self.isMutable = false;
         end
         
-        function randomizedSchreierSims(self, nTries)
+        function randomizedSchreierSims(self)
         % Runs the randomized Schreier-Sims algorithm
         %
-        % Args:
-        %   nTries: Number of attempts of successive failed attempts to generate a new strong generator
-        %           before deciding the chain is complete; the probability of failure is then less than
-        %           1/2^nTries
-            if nargin < 2
-                nTries = 1000;
-            end
-            if self.withImages
-                R = replab.bsgs1.RandomBag(self.n, self.S, [], [], self.J, self.T);
-                c = 0;
-                while c <= nTries
-                    [g v] = R.sample;
-                    if self.stripAndAddStrongGenerator(g, v)
-                        c = 0;
-                    else
-                        c = c + 1;
-                    end
-                end
-            else
-                R = replab.bsgs1.RandomBag(self.n, self.S);
-                c = 0;
-                while c <= nTries
-                    g = R.sample;
-                    if self.stripAndAddStrongGenerator(g)
-                        c = 0;
-                    else
-                        c = c + 1;
-                    end
+        % Failure probability can be tuned using replab.Settings.randomizedSchreierSimsTries
+            nTries = replab.Settings.randomizedSchreierSimsTries;
+            R = replab.bsgs1.RandomBag(self.n, self.S, [], [], self.J, self.T);
+            c = 0;
+            while c <= nTries
+                [g v] = R.sample;
+                if self.stripAndAddStrongGenerator(g, v)
+                    c = 0;
+                else
+                    c = c + 1;
                 end
             end
         end
 
     end
-    
+
     methods (Static)
         
         function C = makeWithImages(n, S, J, T, order)

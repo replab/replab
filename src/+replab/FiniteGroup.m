@@ -2,17 +2,46 @@ classdef FiniteGroup < replab.CompactGroup
     
     properties (SetAccess = protected)
         generators % row cell array of group elements: Group generators
-        order % vpi: Order of the group, equal to the number of distinct group elements
     end
     
     properties (Access = protected)
         randomBag_ % replab.RandomBag: Bag of elements used for random sampling
+        order_ % vpi: Cached group order
         elements_ % replab.Enumerator: Cached enumerator of group elements
         decomposition_ % replab.FiniteGroupDecomposition: Cached decomposition of this group
     end
     
+    methods (Access = protected)
+        
+        function o = computeOrder(self)
+        % Computes the result cached by self.order
+            error('Abstract');
+        end
+        
+        function E = computeElements(self)
+        % Computes the result cached by self.elements
+            error('Abstract');
+        end
+        
+        function D = computeDecomposition(self)
+        % Computes the result cached by self.decomposition
+            error('Abstract');
+        end
+
+    end
+    
     methods % Abstract (and cached) methods
 
+        function o = order(self)
+        % Returns the group order
+        %
+        % Returns:
+        %   vpi: The group order
+            if isempty(self.order_)
+                self.order_ = self.computeOrder;
+            end
+            o = self.order_;
+        end
         function E = elements(self)
         % Returns an enumeration of the group elements
         %
@@ -24,10 +53,6 @@ classdef FiniteGroup < replab.CompactGroup
             E = self.elements_;
         end
 
-        function E = computeElements(self)
-        % Computes the result cached by self.elements
-            error('Abstract');
-        end
         
         function D = decomposition(self)
         % Returns a decomposition of this group as a product of sets
@@ -40,10 +65,6 @@ classdef FiniteGroup < replab.CompactGroup
             D = self.decomposition_;
         end
 
-        function D = computeDecomposition(self)
-        % Computes the result cached by self.decomposition
-            error('Abstract');
-        end
 
     end
     

@@ -8,11 +8,22 @@ classdef NiceFiniteGroup < replab.FiniteGroup
     
     properties (SetAccess = protected)
         niceMonomorphism % function_handle: Injective group homomorphism from this group into a permutation group
-        chain % replab.bsgs1.Chain: BSGS chain describing this group
+    end
+    
+    
+    properties (Access = protected)
+        chain_ % replab.bsgs1.Chain: BSGS chain describing this group
     end
 
     methods (Access = protected)
-        
+
+        function chain = computeChain(self)
+            imgId = self.niceMonomorphism(self.identity);
+            n = length(imgId);
+            S = cellfun(@(x) self.niceMonomorphism(x), self.generators);
+            chain = replab.bsgs1.Chain.makeWithImages(n, S, self, generators);
+        end
+
         function el = enumeratorAt(self, index)
             indices = self.chain.indicesFromIndex(index);
             el = self.chain.elementFromIndices(indices);
@@ -35,13 +46,19 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Constructs a nice finite group with the given properties
             self.identity = identity;
             self.generators = generators;
-            imgId = self.niceMonomorphism(self.identity);
-            n = length(imgId);
-            S = cellfun(@(x) self.niceMonomorphism(x), self.generators);
-            self.chain = replab.bsgs1.Chain.makeWithImages(n, S, self, generators);
             self.order = self.chain.order;
         end
         
+        function c = chain(self)
+        % Returns the BSGS chain corresponding to this group
+        %
+        % Returns:
+        %   replab.bsgs1.Chain: BSGS chain describing this group
+            if isempty(self.chain_)
+                self.chain_ = self.computeChain;
+            end
+            c = self.chain_;
+        end
         
         % CompactGroup methods
         
