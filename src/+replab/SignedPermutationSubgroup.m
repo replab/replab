@@ -59,7 +59,7 @@ classdef SignedPermutationSubgroup < replab.SignedPermutationGroup & replab.Fini
         
         function d = decomposition(self)
             d1 = self.nice.decomposition;
-            T1 = d1.transversals;
+            T1 = d1.T;
             T = cellfun(@(t) cellfun(@(x) self.fromPermutation(x), t, 'UniformOutput', false), T1, 'UniformOutput', false);
             d = replab.FiniteGroupDecomposition(self, T);
         end

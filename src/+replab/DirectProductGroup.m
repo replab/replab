@@ -202,7 +202,7 @@ classdef DirectProductGroup < replab.FiniteGroup
         function gd = decomposition(self)
             T = {};
             for i = 1:self.nFactors
-                D = self.factor(i).decomposition.transversals;
+                D = self.factor(i).decomposition.T;
                 Ti = cell(1, length(D));
                 for j = 1:length(D)
                     Dj = D{j};

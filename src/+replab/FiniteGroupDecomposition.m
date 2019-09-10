@@ -1,36 +1,41 @@
 classdef FiniteGroupDecomposition < replab.Str
-% Describes the decomposition of a "group" into a product of coset representatives
+% Describes the decomposition of a finite group into a product of sets
 %
-% Describes the set U = { u }, where u = u_1 u_2 ... u_n and
-% u_i is in transversals{i}
+% We assume the existence of sets T1, T2, ..., Tn such that every group elements has a unique decomposition
+% g = t1 t2 ... tn, where ti is in Ti; thus, we have that length(T1)*length(T2)*...*length(Tn) = group order
 %
-% For each i, we have transversals{i}{1} the group identity.
+% We require additionally that in each set Ti, Ti{1} is the group identity.
 %
-% The set U possibly has repetitions of elements, and composition
-% of elements is done according to the binary operation of "group".
-%
-% A construction comes from the decomposition of a group into
-% a chain of subgroups
-% G = G_1 >= G_2 >= ... G_{n+1} = trivial group
-% where transversals{i} are (left) coset representatives of G_i / G_{i+1}
     properties (SetAccess = protected)
-        group;
-        transversals;
+        group % replab.FiniteGroup: Group decomposed
+        T % row cell array of row cell arrays: Stores the sets Ti as {T1 T2 ... Tn}
     end
+    
     methods
-        function self = FiniteGroupDecomposition(group, transversals)
+        
+        function self = FiniteGroupDecomposition(group, T)
             self.group = group;
-            self.transversals = transversals;
+            self.T = T;
         end
+        
     end
+    
     methods (Static)
-        function D = trivial(group, elements)
-            if ~group.isIdentity(elements{1})
-                idIndex = find(cellfun(@(g) group.isIdentity(g), elements));
-                assert(length(idIndex) == 1, 'Elements should have a single copy of the identity');
-                elements = elements([idIndex setdiff(1:length(elements, idIndex))]);
-            end
-            D = FiniteGroupDecomposition(group, {elements});
+        
+        function D = trivial(group)
+        % Constructs a group decomposition using a single set
+        %
+        % No efficiency gains are then expected.
+        %
+        % Args:
+        %   group (replab.FiniteGroup): Finite group to decompose
+            O = double(group.order);
+            T1 = group.elements.toCell;
+            idIndex = self.elements.find(self.identity);
+            T1 = T1([idIndex setdiff(1:O, idIndex)]);
+            D = replab.FiniteGroupDecomposition(group, {T});
         end
+        
     end
+    
 end

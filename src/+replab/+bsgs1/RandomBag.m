@@ -8,8 +8,11 @@
 % section 3.2.2, pp. 70-71 of Holt 2005 (Handbook of Computational Group Theory)
 %
 % This implementation differs from `replab.RandomBag` by specializing for
-% permutation groups, and optionally keeping track of images of the
-% generated elements under some group homomorphism.
+% permutation groups, and keeping track of images of the generated
+% elements under some group homomorphism.
+%
+% When the group homomorphism support is not desired, the `replab.bsgs1.TrivialGroup`
+% trivial group can be used as a placeholder.
 
 classdef RandomBag < replab.Str
     
@@ -17,7 +20,6 @@ classdef RandomBag < replab.Str
         G % Group definition
         x0 % Last generated sample
         x % n x r matrix representing the contents of the bag
-        withImages % (logical) Whether we store images as well
         J % Image group
         y0 % Image of last generated sample
         y % Images of x
@@ -39,46 +41,34 @@ classdef RandomBag < replab.Str
             if randi(2) == 2
                 if randi(2) == 2 % e = 1
                     self.x(:,s) = self.G.compose(self.x(:,s)', self.x(:,t)');
-                    if self.withImages
-                        self.y{s} = self.J.compose(self.y{s}, self.y{t});
-                    end
+                    self.y{s} = self.J.compose(self.y{s}, self.y{t});
                 else
                     self.x(:,s) = self.G.composeWithInverse(self.x(:,s)', self.x(:,t)');
-                    if self.withImages
-                        self.y{s} = self.J.composeWithInverse(self.y{s}, self.y{t});
-                    end
+                    self.y{s} = self.J.composeWithInverse(self.y{s}, self.y{t});
                 end
                 self.x0 = self.G.compose(self.x0, self.x(:,s)');
-                if self.withImages
-                    self.y0 = self.J.compose(self.y0, self.y{s});
-                end
+                self.y0 = self.J.compose(self.y0, self.y{s});
             else
                 if randi(2) == 2 % e = 1
                     self.x(:,s) = self.G.compose(self.x(:,t)', self.x(:,s)');
-                    if self.withImages
-                        self.y{s} = self.J.compose(self.y{t}, self.y{s});
-                    end
+                    self.y{s} = self.J.compose(self.y{t}, self.y{s});
                 else
                     tinv = self.G.inverse(self.x(:,t)');
                     self.x(:,s) = self.G.compose(tinv, self.x(:,s)');
-                    if self.withImages
-                        tinv1 = self.J.inverse(self.y{t});
-                        self.y{s} = self.J.compose(tinv1, self.y{s});
-                    end
+                    tinv1 = self.J.inverse(self.y{t});
+                    self.y{s} = self.J.compose(tinv1, self.y{s});
                 end
                 self.x0 = self.G.compose(self.x(:,s)', self.x0);
-                if self.withImages
-                    self.y0 = self.J.compose(self.y{s}, self.y0);
-                end
+                self.y0 = self.J.compose(self.y{s}, self.y0);
             end
             xres = self.x0;
-            if self.withImages
-                yres = self.y0;
-            end
+            yres = self.y0;
         end
         
         function self = RandomBag(n, generators, r, m, J, images)
         % Constructs a random bag from the given permutations
+        %
+        % If a image group `J` and generator images are not given, the trivial group is used.
         %
         % Args:
         %   n: Domain size
@@ -92,49 +82,39 @@ classdef RandomBag < replab.Str
         %   images (row cell array of elements of `J`): Images of `generators`
             G = replab.Permutations(n);
             if nargin < 5
-                self.withImages = false;
-            else
-                self.withImages = true;
-                self.J = J;
-            end
-            if nargin < 5 || isequal(r, [])
-                r = -1;
+                J = replab.bsgs1.TrivialGroup;
+                images = arrayfun(@(x) [], 1:length(generators), 'uniform', false);
             end
             if nargin < 4 || isequal(m, [])
                 m = 50;
+            end
+            if nargin < 3 || isequal(r, [])
+                r = -1;
             end
             nGens = size(generators, 2); % number of generators
             if r < nGens || r < 10
                 r = max(nGens, 10);
             end
             x = zeros(n, r);
-            if self.withImages
-                y = cell(1, r);
-            end
+            y = cell(1, r);
             if nGens == 0
                 % cater for the special case when generators are empty
                 for i = 1:r
                     x(:,i) = 1:n;
-                    if self.withImages
-                        y{i} = J.identity;
-                    end
+                    y{i} = J.identity;
                 end
             else
                 for i = 1:r
                     ind = mod(i-1, nGens)+1;
                     x(:,i) = generators(:, ind);
-                    if self.withImages
-                        y{i} = images{ind};
-                    end
+                    y{i} = images{ind};
                 end
             end
             self.G = G;
             self.x0 = G.identity; % initially, the identity element
             self.x = x;
-            if self.withImages
-                self.y0 = J.identity;
-                self.y = y;
-            end
+            self.y0 = J.identity;
+            self.y = y;
             for i = 1:m
                 self.sample; % perform initial shuffles
             end

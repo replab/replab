@@ -3,11 +3,48 @@ classdef FiniteGroup < replab.CompactGroup
     properties (SetAccess = protected)
         generators % row cell array of group elements: Group generators
         order % vpi: Order of the group, equal to the number of distinct group elements
-        niceMonomorphism % function_handle: Injective group homomorphism from this group into a permutation group
     end
     
     properties (Access = protected)
-        randomBag_ % Bag of elements used for random sampling
+        randomBag_ % replab.RandomBag: Bag of elements used for random sampling
+        elements_ % replab.Enumerator: Cached enumerator of group elements
+        decomposition_ % replab.FiniteGroupDecomposition: Cached decomposition of this group
+    end
+    
+    methods % Abstract (and cached) methods
+
+        function E = elements(self)
+        % Returns an enumeration of the group elements
+        %
+        % Returns:
+        %   replab.Enumerator: A space-efficient enumeration of the group elements
+            if isempty(self.elements_)
+                self.elements_ = self.computeElements;
+            end
+            E = self.elements_;
+        end
+
+        function E = computeElements(self)
+        % Computes the result cached by self.elements
+            error('Abstract');
+        end
+        
+        function D = decomposition(self)
+        % Returns a decomposition of this group as a product of sets
+        %
+        % Returns:
+        %   replab.FiniteGroupDecomposition: The group decomposition
+            if isempty(self.decomposition_)
+                self.decomposition_ = self.computeDecomposition;
+            end
+            D = self.decomposition_;
+        end
+
+        function D = computeDecomposition(self)
+        % Computes the result cached by self.decomposition
+            error('Abstract');
+        end
+
     end
     
     methods
@@ -18,7 +55,8 @@ classdef FiniteGroup < replab.CompactGroup
             end
             R = self.randomBag_;
         end
-        
+
+        % Str
         
         function names = hiddenFields(self)
             names = hiddenFields@replab.Group(self);
@@ -32,6 +70,20 @@ classdef FiniteGroup < replab.CompactGroup
                 values{1, end+1} = self.generator(i);
             end
         end
+
+        % Domain
+        
+        function g = sample(self)
+            g = self.randomBag.sample;
+        end
+                
+        % CompactGroup
+        
+        function g = sampleUniformly(self)
+            g = self.elements.sample;
+        end
+
+        % Own methods
         
         function n = nGenerators(self)
         % Returns the number of group generators
@@ -70,41 +122,16 @@ classdef FiniteGroup < replab.CompactGroup
         %   logical: True if this group is trivial (i.e. has only one element)
             b = self.nGenerators == 0;
         end
-        
-        function o = order(self)
-        % Returns the group order, computing it if necessary
-        %
-        % Returns:
-        %   vpi: Order of this group
-            error('Not implemented');
-        end
-        
-        function e = elements(self)
-        % Returns an enumeration of the group elements
-        %
-        % Returns:
-        %   replab.Enumerator: A space-efficient enumeration of the group elements
-            error('Not implemented');
-        end
-        
-        function D = decomposition(self)
-        % Returns a decomposition of this group as a product of sets
-        %
-        % Returns:
-        %   replab.FiniteGroupDecomposition: The group decomposition
-            assert(self.order < 1e6, 'Default decomposition is available only for small groups');
-            O = double(self.order);
-            C = self.elements.toCell;
-            idIndex = self.elements.find(self.identity);
-            C = C([idIndex setdiff(1:O, idIndex)]);
-            D = replab.FiniteGroupDecomposition.trivial(self, C);
-        end
-
-        function g = sampleUniformly(self)
-            g = self.elements.sample;
-        end
 
         function rep = leftRegularRep(self)
+        % Returns the left regular representation of this group
+        %
+        % Warning:
+        %   The choice of a basis for the regular representation is not deterministic,
+        %   and results can vary between runs.
+        %
+        % Returns:
+        %   replab.Rep: The left regular representation as a real permutation representation
             o = self.order;
             assert(o < 1e6);
             o = double(o);

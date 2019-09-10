@@ -129,8 +129,8 @@ classdef SemidirectProductGroup < replab.FiniteGroup
         end
         
         function gd = decomposition(self)
-            TH = self.H.decomposition.transversals;
-            TN = self.N.decomposition.transversals;
+            TH = self.H.decomposition.T;
+            TN = self.N.decomposition.T;
             idN = self.N.identity;
             idH = self.H.identity;
             TH1 = cellfun(@(t) cellfun(@(h) {h idN}, t, 'uniform', 0), TH, 'uniform', 0);
