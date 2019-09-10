@@ -19,6 +19,12 @@ function s = shortStr(obj, maxColumns)
             s = strtrim(s);
         elseif isa(obj, 'function_handle')
             s = func2str(obj);
+        elseif islogical(obj)
+            if obj
+                s = 'true';
+            else
+                s = 'false';
+            end
         elseif isnumeric(obj)
             s = num2str(obj);
         elseif isa(obj, 'sym')
