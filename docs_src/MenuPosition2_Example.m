@@ -37,18 +37,6 @@ S4 = replab.Permutations(4).subgroup({g1 g2})
 g = randperm(n);
 g = S4.sample;
 g = S4.sampleUniformly;
-%%
-% But for the example, we fix the random sample.
-g = [3 2 4 1]
-%%
-% We can factor the last $g$ in the group generators:
-w = S4.factorization(g)
-%%
-% to obtain a word in the generators $a$ and $b$. We evaluate back
-% this word:
-g1 = S4.evaluateWord(w)
-%%
-% to obtain back $g$.
 %
 % We can also compute the group order or enumerate the elements of
 % the group

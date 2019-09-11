@@ -21,13 +21,13 @@ classdef UnitaryMatrices < replab.CompactGroup
             end
         end
         
-        % Str
+        %% Str methods
         
         function s = headerStr(self)
             s = sprintf('%d x %d unitary matrices', self.n, self.n);
         end
         
-        % Domain
+        %% Domain methods
         
         function b = eqv(self, X, Y)
             b = self.parent_.eqv(X, Y);
@@ -37,17 +37,19 @@ classdef UnitaryMatrices < replab.CompactGroup
             X = self.sampleUniformly;
         end
         
-        % Semigroup/monoid/group
+        %% Monoid methods
         
         function Z = compose(self, X, Y)
             Z = X * Y;
         end
         
+        %% Group methods
+        
         function XInv = inverse(self, X)
             XInv = X';
         end
         
-        % Compact group
+        %% CompactGroup methods
         
         function X = sampleUniformly(self)
         % see http://home.lu.lv/~sd20008/papers/essays/Random%20unitary%20[paper].pdf
@@ -55,6 +57,13 @@ classdef UnitaryMatrices < replab.CompactGroup
             [Q, R] = qr(X);
             R = diag(diag(R)./abs(diag(R)));
             X = Q*R;
+        end
+
+        %% Representations
+        
+        function rep = naturalRep(self)
+        % Returns the natural representation of this unitary group
+            rep = replab.Rep(self, 'C', self.n, @(u) u);
         end
 
     end

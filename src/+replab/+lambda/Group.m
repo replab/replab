@@ -47,7 +47,6 @@ classdef Group < replab.Group
         % Monoid methods
         
         function z = compose(self, x, y)
-            error('Not implemented');
             f = self.composeFun;
             z = f(x, y);
         end
