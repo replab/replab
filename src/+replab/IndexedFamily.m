@@ -1,21 +1,44 @@
-classdef Enumerator < replab.Str
-    
+classdef IndexedFamily < replab.Str
+% Describes an indexed family of elements
+%
+% See https://en.wikipedia.org/wiki/Indexed_family , and our indices are
+% (bounded) integers, represented by `vpi` instances.
+%
+% The family supports element indexing and searching for elements.
+
     properties (SetAccess = protected)
-        size; % Number of elements contained in this enumerator (vpi)
+        size; % vpi: Number of elements contained in this enumerator
     end
     
     methods % Abstract
         
         function obj = at(self, ind)
-        % Returns the element at the "ind" position
-        % ind is an integer encoded as a double, string or vpi object
-            error('Not implemented');
+        % Retrieves a element by position
+        %
+        % Normally, RepLAB encodes big integers using the `vpi` type. As a user convenience
+        % (esp. on the command line), this method must also accept string and double arguments.
+        %
+        % Args:
+        %   ind (vpi or double or string): Index of element to be retrieved, 1 <= `ind` <= `self.size`
+        %
+        % Returns:
+        %   The element at the "ind" position
+            error('Abstract');
         end
         
         function ind = find(self, obj)
-        % Returns the position of the given element as a vpi object
-        % or [] if the element cannot be found
-            error('Not implemented');
+        % Returns the index of a given element
+        %
+        % If the element is not part of the family, the behavior is undefined.
+        % Best effort can be made to return `[]`, but this is not guaranteed unless
+        % documented by specific `replab.IndexedFamily` implementations
+        %
+        % Args:
+        %   obj: Element to retrieve
+        %
+        % Returns:
+        %   vpi: 1-based index of the given element
+            error('Abstract');
         end
         
     end
@@ -23,7 +46,7 @@ classdef Enumerator < replab.Str
     methods
         
         function s = shortStr(self, maxColumns)
-            s = sprintf('Enumerator of %s elements', replab.shortStr(self.size, maxColumns));
+            s = sprintf('Indexed family of %s elements', replab.shortStr(self.size, maxColumns));
         end
         
         function lines = longStr(self, maxRows, maxColumns)
@@ -64,25 +87,26 @@ classdef Enumerator < replab.Str
         end
         
         function obj = sample(self)
-        % Returns an element uniformly sampled from this Enumerator
-            obj = self.at(randint(self.size));
-            % use randint as it is the method equivalent to randi
-            % on @vpi
+        % Returns an element sampled uniformly
+        %
+        % Returns:
+        %   Random element of this family
+            obj = self.at(randint(self.size)); % use randint as it is the method equivalent to randi on @vpi
         end
         
         function C = toCell(self)
-        % Computes an ordered cell array of all elements in this Enumerator
+        % Returns a row cell array containing all elements of this family
         %
         % Returns:
         %   row cell array of elements: A cell array `C` such that C{i} = self.at(i)
         %
         % Raises:
-        %   An error if the enumerator is too big and the elements do not fit in a cell array.
+        %   An error if the enumerator is too big and the elements cannot fit in a cell array.
             if self.size == 0
                 C = cell(1, 0);
             else
                 n = self.size;
-                msg = 'Enumerator of size %s too big to enumerate in a matrix';
+                msg = 'Indexed family of size %s too big to enumerate in a matrix';
                 assert(n < intmax('int32'), msg, num2str(self.size));
                 n = double(n);
                 C = cell(1, n);
@@ -97,6 +121,17 @@ classdef Enumerator < replab.Str
     methods (Static)
     
         function enumerator = lambda(size, atFun, findFun)
+        % Constructs an indexed family from function handles
+        %
+        % Args:
+        %   size (vpi): Size of the indexed family, so that the index set is 1..`size`
+        %   atFun (function_handle): Handle that implements the `at` method
+        %                            To simplify implementation, it is guaranteed
+        %                            that `atFun` will receive an argument of type `vpi`.
+        %   findFun (function_handle): Handle that implements the `find` method
+        %
+        % Returns:
+        %   replab.IndexedFamily: The constructed indexed family
             enumerator = replab.lambda.Enumerator(size, atFun, findFun);
         end
         

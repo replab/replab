@@ -1,6 +1,6 @@
 function O = orbits(rep)
 % Identifies subrepresentations from the sparsity pattern of a representation
-    assert(isa(rep.group, 'replab.FinitelyGeneratedGroup'));
+    assert(isa(rep.group, 'replab.FiniteGroup'));
     mask = false(rep.dimension, rep.dimension);
     for i = 1:rep.group.nGenerators
         rho = rep.image(rep.group.generator(i));

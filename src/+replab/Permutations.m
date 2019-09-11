@@ -1,6 +1,5 @@
 classdef Permutations < replab.PermutationGroup
-% Describes permutations over n = "domainSize" elements, i.e.
-% the symmetric group Sn
+% Describes permutations over n = "domainSize" elements, i.e. the symmetric group Sn
     
     methods % Implementations of abstract methods
         
@@ -9,6 +8,7 @@ classdef Permutations < replab.PermutationGroup
             self.identity = 1:domainSize;
             self.domainSize = domainSize;
             self.niceMonomorphism = @(x) x;
+            self.parent = self;
             if self.domainSize < 2
                 self.generators = cell(1, 0);
             elseif self.domainSize == 2
@@ -24,17 +24,35 @@ classdef Permutations < replab.PermutationGroup
             s = sprintf('Permutations acting on %d elements', self.domainSize);
         end
 
-        % Domain
+        %% Domain methods
         
         function s = sample(self)
-            s = randperm(self.domainSize);
+            s = randperm(self.domainSize); % overriden for efficiency
         end
-                
+
         % FiniteGroup
         
         function b = contains(self, g)
-            b = (length(g) == self.domainSize) && all(g > 0);
+            assert(length(g) == self.domainSize, 'Permutation in wrong domain');
+            assert(all(g > 0), 'Permutation should have positive coefficients');
+            b = true;
         end
+
+        function grp = subgroup(self, generators, order)
+        % Constructs a permutation subgroup from its generators
+        %
+        % Args:
+        %   generators (row cell array): List of generators given as a permutations in a row cell array
+        %   order (vpi, optional): Argument specifying the group order, if given can speed up computations
+        %
+        % Returns:
+        %   +replab.PermutationSubgroup: The constructed permutation subgroup.
+            if nargin < 3
+                order = [];
+            end
+            grp = replab.PermutationSubgroup(self, generators, order);
+        end
+
         
     end
     
@@ -45,9 +63,9 @@ classdef Permutations < replab.PermutationGroup
         end
         
         function E = computeElements(self)
-            E = replab.Enumerator.lambda(self.order, ...
-                                         @(ind) self.enumeratorAt(ind), ...
-                                         @(el) self.enumeratorFind(el));
+            E = replab.IndexedFamily.lambda(self.order, ...
+                                            @(ind) self.enumeratorAt(ind), ...
+                                            @(el) self.enumeratorFind(el));
         end
         
         function d = computeDecomposition(self)
@@ -142,22 +160,7 @@ classdef Permutations < replab.PermutationGroup
                 p = self.compose(newEl, p);
             end
         end
-
-        function grp = subgroup(self, generators, orderOpt)
-        % Constructs a permutation subgroup from its generators
-        %
-        % Args:
-        %   generators: List of generators given as a permutations in a row cell array
-        %   orderOpt: Optional argument specifying the group order, will speed up computations
-        %
-        % Returns:
-        %   +replab.PermutationSubgroup: The constructed permutation subgroup.
-            if nargin < 3
-                orderOpt = [];
-            end
-            grp = replab.perm.PermutationBSGSGroup(self, generators, orderOpt);
-        end
-        
+       
         function grp = trivialSubgroup(self)
             grp = self.subgroup({}, vpi(1));
         end

@@ -1,9 +1,10 @@
-classdef EnumeratorLaws < replab.Laws
+classdef IndexedFamilyLaws < replab.Laws
     properties (SetAccess = protected)
         E;
         B;
     end
     methods
+        % TODO add test of string/double in 'at'
         function self = EnumeratorLaws(E)
             self.E = E;
             self.B = replab.domain.vpi(1, E.size);

@@ -7,11 +7,11 @@ classdef FiniteGroup < replab.CompactGroup
     properties (Access = protected)
         randomBag_ % replab.RandomBag: Bag of elements used for random sampling
         order_ % vpi: Cached group order
-        elements_ % replab.Enumerator: Cached enumerator of group elements
+        elements_ % replab.IndexedFamily: Cached indexed family of group elements
         decomposition_ % replab.FiniteGroupDecomposition: Cached decomposition of this group
     end
     
-    methods (Access = protected)
+    methods (Access = protected) % Abstract
         
         function o = computeOrder(self)
         % Computes the result cached by self.order
@@ -42,11 +42,15 @@ classdef FiniteGroup < replab.CompactGroup
             end
             o = self.order_;
         end
+        
         function E = elements(self)
-        % Returns an enumeration of the group elements
+        % Returns an indexed family of the group elements
+        %
+        % The order of elements in the family is not guaranteed due to the use of
+        % nondeterministic algorithms.
         %
         % Returns:
-        %   replab.Enumerator: A space-efficient enumeration of the group elements
+        %   replab.IndexedFamily: A space-efficient enumeration of the group elements
             if isempty(self.elements_)
                 self.elements_ = self.computeElements;
             end

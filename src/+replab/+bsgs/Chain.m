@@ -32,7 +32,7 @@ classdef Chain < replab.Str
 % Transversal element inverses are stored as column vectors in a matrix, in a row cell array Uinv.
 %
 % This class also stores the images of a group homomorphism. When no homomorphism computation is required,
-% we use the trivial group `replab.bsgs1.TrivialGroup` as a placeholder.
+% we use the trivial group `replab.bsgs.TrivialGroup` as a placeholder.
 %
 % For that, images of the strong generators are stored in J, and the images of transversal
 % elements are stored in row cell arrays (containing row cell arrays of group elements) V and Vinv, with
@@ -84,12 +84,12 @@ classdef Chain < replab.Str
         % Args:
         %   n: Domain size
         %   J (replab.Group, optional): Group structure for morphism images
-        %                               The default value is `replab.bsgs1.TrivialGroup`
+        %                               The default value is `replab.bsgs.TrivialGroup`
         %
         % Returns:
         %   A constructed empty BSGS chain
             if nargin < 2
-                J = replab.bsgs1.TrivialGroup;
+                J = replab.bsgs.TrivialGroup;
             end
             self.isMutable = true;
             self.n = n;
@@ -411,6 +411,61 @@ classdef Chain < replab.Str
             end
         end
 
+        function [h i] = strip(self, g)
+        % Strips a permutation through the chain
+        %
+        % Args:
+        %   g (row permutation vector): A permutation group element
+        %
+        % Returns
+        % -------
+        %   h: row permutation vector
+        %     The part of the group element that could not be sifted
+        %   i: integer
+        %     Index i-th such that h(beta_i) was not part of the orbit Delta^i
+        %   w: element of `self.J`, optional
+        %     The part of the image that could not be sifted
+            k = self.length;
+            h = g;
+            for i = 1:k
+                b = h(self.B(i));
+                j = self.orbitIndex(i, b);
+                if j == 0
+                    return
+                end
+                Uinvi = self.Uinv{i};
+                uinv = Uinvi(:, j)';                
+                % note order is reversed compared to Holt, as
+                % we use a left action
+                h = uinv(h); % compose(uinv, h)
+            end
+            i = k + 1; % marker that we striped through the chain
+        end
+        
+        %% Element indexing
+        
+        function el = elementFromIndex(self, index)
+        % Return the element corresponding to an overall index
+        %
+        % Args:
+        %   index (vpi): Element index
+        %
+        % Returns:
+        %   permutation: Chain element
+            el = self.elementFromIndices(self.indicesFromIndex(index));
+        end
+        
+        function index = indexFromElement(self, element)
+        % Returns the index corresponding to a group element
+        %
+        % Args:
+        %   element (row permutation vector): A permutation element of this chain
+        %
+        % Returns:
+        %   vpi: Index of the given group element
+            index = self.indexFromIndices(self.indicesFromElement(element));
+        end
+            
         function g = elementFromIndices(self, indices)
         % Computes the group element from transversal indices
         %
@@ -459,37 +514,6 @@ classdef Chain < replab.Str
             end
         end
 
-        function [h i] = strip(self, g)
-        % Strips a permutation through the chain
-        %
-        % Args:
-        %   g (row permutation vector): A permutation group element
-        %
-        % Returns
-        % -------
-        %   h: row permutation vector
-        %     The part of the group element that could not be sifted
-        %   i: integer
-        %     Index i-th such that h(beta_i) was not part of the orbit Delta^i
-        %   w: element of `self.J`, optional
-        %     The part of the image that could not be sifted
-            k = self.length;
-            h = g;
-            for i = 1:k
-                b = h(self.B(i));
-                j = self.orbitIndex(i, b);
-                if j == 0
-                    return
-                end
-                Uinvi = self.Uinv{i};
-                uinv = Uinvi(:, j)';                
-                % note order is reversed compared to Holt, as
-                % we use a left action
-                h = uinv(h); % compose(uinv, h)
-            end
-            i = k + 1; % marker that we striped through the chain
-        end
-        
         function indices = indicesFromIndex(self, index)
         % Return the indices vector corresponding to an overall index
         %
@@ -511,6 +535,12 @@ classdef Chain < replab.Str
         
         function index = indexFromIndices(self, indices)
         % Returns the overall index corresponding to the given indices vector
+        %
+        % Args:
+        %   indices (row integer vector): Transversal indices
+        %
+        % Returns:
+        %   vpi: Overall index
             index = vpi(0);
             L = self.length;
             f = self.orbitSizes;
@@ -773,7 +803,7 @@ classdef Chain < replab.Str
         %   newT (row cell vector, optional): Images of those strong generators
             nNew = size(newS, 2);
             if nargin < 3
-                assert(isa(self.J, 'replab.bsgs1.TrivialGroup'), ...
+                assert(isa(self.J, 'replab.bsgs.TrivialGroup'), ...
                        'Strong generator images can be omitted only when image group is trivial');
                 newT = arrayfun(@(x) [], 1:nNew, 'uniform', 0);
             end
@@ -805,7 +835,7 @@ classdef Chain < replab.Str
         %
         % Failure probability can be tuned using replab.Settings.randomizedSchreierSimsTries
             nTries = replab.Settings.randomizedSchreierSimsTries;
-            R = replab.bsgs1.RandomBag(self.n, self.S, [], [], self.J, self.T);
+            R = replab.bsgs.RandomBag(self.n, self.S, [], [], self.J, self.T);
             c = 0;
             while c <= nTries
                 [g v] = R.sample;
@@ -822,14 +852,14 @@ classdef Chain < replab.Str
     methods (Static)
         
         function C = makeWithImages(n, S, J, T, order)
-            C = replab.bsgs1.Chain(n, J);
+            C = replab.bsgs.Chain(n, J);
             C.insertStrongGenerators(S, T);
             C.randomizedSchreierSims;
             C.makeImmutable;
         end
         
         function C = make(n, S, order)
-            C = replab.bsgs1.Chain(n);
+            C = replab.bsgs.Chain(n);
             C.insertStrongGenerators(S);
             C.randomizedSchreierSims;
             C.makeImmutable;

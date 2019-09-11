@@ -26,8 +26,8 @@ classdef FiniteGroupLaws < replab.GroupLaws
         function law_order_elements(self)
             self.assert(self.T.elements.size == self.T.order);
         end
-        function enumeratorLaws = laws_enumerator(self)
-            enumeratorLaws = replab.EnumeratorLaws(self.T.elements);
+        function elementsLaws = laws_elements(self)
+            elementsLaws = replab.IndexedFamilyLaws(self.T.elements);
         end
     end    
 end

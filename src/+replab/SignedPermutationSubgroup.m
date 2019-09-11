@@ -54,7 +54,7 @@ classdef SignedPermutationSubgroup < replab.SignedPermutationGroup & replab.Fini
         function E = elements(self)
             ea = @(ind) self.fromPermutation(self.nice.elements.at(ind));
             ef = @(x) self.nice.elements.find(self.toPermutation(x));
-            E = replab.Enumerator.lambda(self.order, ea, ef);
+            E = replab.IndexedFamily.lambda(self.order, ea, ef);
         end
         
         function d = decomposition(self)

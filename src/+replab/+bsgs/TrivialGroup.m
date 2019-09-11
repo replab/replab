@@ -40,7 +40,7 @@ classdef TrivialGroup < replab.FiniteGroup
         end
         
         function e = computeElements(self)
-            e = replab.Enumerator.lambda(1, @(i) [], @(x) 1);
+            e = replab.IndexedFamily.lambda(1, @(i) [], @(x) 1);
         end
         
         function d = computeDecomposition(self)

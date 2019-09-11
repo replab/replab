@@ -11,7 +11,7 @@
 % permutation groups, and keeping track of images of the generated
 % elements under some group homomorphism.
 %
-% When the group homomorphism support is not desired, the `replab.bsgs1.TrivialGroup`
+% When the group homomorphism support is not desired, the `replab.bsgs.TrivialGroup`
 % trivial group can be used as a placeholder.
 
 classdef RandomBag < replab.Str
@@ -93,7 +93,7 @@ classdef RandomBag < replab.Str
         %   images (row cell array of elements of `J`): Images of `generators`
             self.n = n;
             if nargin < 5
-                J = replab.bsgs1.TrivialGroup;
+                J = replab.bsgs.TrivialGroup;
                 images = arrayfun(@(x) [], 1:length(generators), 'uniform', false);
             end
             if nargin < 4 || isequal(m, [])
