@@ -1,4 +1,4 @@
-classdef PermutationBaseGroup < replab.FiniteGroup
+classdef PermutationGroup < replab.NiceFiniteGroup
 % Represents a permutation group
 
     properties (SetAccess = protected)
@@ -64,10 +64,6 @@ classdef PermutationBaseGroup < replab.FiniteGroup
         % It acts on the tensor space R^ld x R^ld ... (domainSize times)
         % by permuting the indices. The representation returned is real.
             rho = replab.rep.IndexRelabelingRep(self, localDimension);
-        end
-        
-        function rho = naturalRepresentation(self)
-            rho = self.permutationRepresentation(self.domainSize, self.generators);
         end
         
         function rho = naturalRep(self)

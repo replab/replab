@@ -26,7 +26,7 @@ classdef NiceFiniteSubgroup < replab.FiniteGroup
         function z = compose(self, x, y)
             z = self.parent.compose(x, y);
         end
-        
+a        
         % Group
         
         function xInv = inverse(self, x)

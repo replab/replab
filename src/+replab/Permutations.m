@@ -1,4 +1,4 @@
-classdef Permutations < replab.NiceFiniteGroup & replab.PermutationBaseGroup
+classdef Permutations < replab.PermutationGroup
 % Describes permutations over n = "domainSize" elements, i.e.
 % the symmetric group Sn
     
@@ -6,7 +6,9 @@ classdef Permutations < replab.NiceFiniteGroup & replab.PermutationBaseGroup
         
         function self = Permutations(domainSize)
         %self@replab.PermutationGroup(domainSize);
-            self@
+            self.identity = 1:domainSize;
+            self.domainSize = domainSize;
+            self.niceMonomorphism = @(x) x;
             if self.domainSize < 2
                 self.generators = cell(1, 0);
             elseif self.domainSize == 2
@@ -27,70 +29,32 @@ classdef Permutations < replab.NiceFiniteGroup & replab.PermutationBaseGroup
         function s = sample(self)
             s = randperm(self.domainSize);
         end
-        
-        % FinitelyGeneratedGroup
-        
-        function w = factorization(self, x)
-        % Factorizes a permutation using bubble sort
-            if self.isIdentity(x)
-                w = replab.Word.identity;
-                return
-            elseif self.domainSize == 2
-                % not identity
-                w = replab.Word.generator(1);
-                return
-            end
-            n = length(x);
-            w = replab.Word.identity;
-            moved = true;
-            while moved
-                moved = false;
-                for i = 1:n-1
-                    if x(i) > x(i+1)
-                        t = x(i+1);
-                        x(i+1) = x(i);
-                        x(i) = t;
-                        moved = true;
-                        if i == 1
-                            shift = replab.Word.identity;
-                        else
-                            shift = replab.Word.fromIndicesAndExponents(1, i - 1);
-                        end
-                        w = shift * replab.Word.generator(2) * inv(shift) * w;
-                    end
-                end
-            end
-        end
-        
+                
         % FiniteGroup
         
         function b = contains(self, g)
             b = (length(g) == self.domainSize) && all(g > 0);
         end
         
-        function b = knownOrder(self)
-            b = true;
-        end
-        
-        function o = order(self)
+    end
+    
+    methods (Access = protected)
+
+        function o = computeOrder(self)
             o = factorial(vpi(self.domainSize));
         end
         
-        function E = elements(self)
+        function E = computeElements(self)
             E = replab.Enumerator.lambda(self.order, ...
                                          @(ind) self.enumeratorAt(ind), ...
                                          @(el) self.enumeratorFind(el));
         end
         
-        function d = decomposition(self)
+        function d = computeDecomposition(self)
             G = self.subgroup(self.generators, self.order);
             d = G.decomposition;
         end
-        
-    end
-    
-    methods (Access = protected)
-        
+
         function ind = enumeratorFind(self, g)
             n = self.domainSize;
             ind0 = vpi(0);

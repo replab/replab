@@ -189,8 +189,8 @@ classdef Chain < replab.Str
         %
         % Returns:
         %  permutation: Random group element
-            g = self.randomTransversal(1);
-            for i = 2:self.length
+            g = 1:self.n;
+            for i = 1:self.length
                 gi = self.randomTransversal(i);
                 g = g(gi); % compose(g, gi)
             end
@@ -205,8 +205,9 @@ classdef Chain < replab.Str
         %    Random group element
         %  v: element of `self.J`
         %    Image of `g`
-            [g v] = self.randomTransversal(1);
-            for i = 2:self.length
+            g = 1:self.n;
+            v = self.J.identity;
+            for i = 1:self.length
                 [gi vi] = self.randomTransversal(i);
                 g = g(gi); % compose(g, gi)
                 v = self.J.compose(v, vi);
@@ -392,6 +393,72 @@ classdef Chain < replab.Str
             b = (i > k) && all(h == 1:n); % i > k and h is the identity
         end
         
+        
+        function T = groupDecomposition(self)
+        % Returns the group decomposition into a product of transversals
+        %
+        % Guarantees that the first element of each transversal is the identity
+            k = self.length;
+            T = cell(1, k);
+            for i = 1:k
+                Ui = self.U{i};
+                m = size(Ui, 2);
+                t = cell(1, m);
+                for j = 1:m
+                    t{j} = Ui(:,j)';
+                end
+                T{i} = t;
+            end
+        end
+
+        function g = elementFromIndices(self, indices)
+        % Computes the group element from transversal indices
+        %
+        % See `self.toIndices`
+        %
+        % Args:
+        %   indices (row integer vector): Transversal indices
+        %
+        % Returns:
+        %   permutation: Chain element
+            g = 1:self.n;
+            for i = 1:self.length
+                Ui = self.U{i};
+                gi = Ui(:,indices(i));
+                g = g(gi); % compose(g, gi)
+            end
+        end
+        
+        function indices = indicesFromElement(self, g)
+        % Computes the transversal indices decomposition for a group element
+        %
+        % The indices are such that
+        % g = self.u(1, indices(1)) * ... * self.u(k, indices(k))
+        % 
+        % Args:
+        %   g (row permutation vector): A permutation group element
+        %
+        % Returns:
+        %   (row integer vector): Transversal indices
+            k = self.length;
+            h = g;
+            indices = zeros(1, k);
+            for i = 1:k
+                b = h(self.B(i));
+                j = self.orbitIndex(i, b);
+                indices(i) = j;
+                if j == 0
+                    indices = [];
+                    return
+                end
+                Uinvi = self.Uinv{i};
+                uinv = Uinvi(:, j)';
+                % note order is reversed compared to Holt, as
+                % we use a left action
+                h = uinv(h); % compose(uinv, h)
+            end
+        end
+
         function [h i] = strip(self, g)
         % Strips a permutation through the chain
         %
@@ -423,6 +490,37 @@ classdef Chain < replab.Str
             i = k + 1; % marker that we striped through the chain
         end
         
+        function indices = indicesFromIndex(self, index)
+        % Return the indices vector corresponding to an overall index
+        %
+        % Args:
+        %   index (vpi): Element index
+        %
+        % Returns:
+        %   row integer vector: Transversal indices
+            L = self.length;
+            indices = zeros(1, L);
+            f = self.orbitSizes;
+            ind = index - 1;
+            for i = L:-1:1
+                r = mod(ind, f(i));
+                ind = (ind - r)/f(i);
+                indices(i) = double(r) + 1;
+            end
+        end
+        
+        function index = indexFromIndices(self, indices)
+        % Returns the overall index corresponding to the given indices vector
+            index = vpi(0);
+            L = self.length;
+            f = self.orbitSizes;
+            for i = 1:L
+                index = index * f(i);
+                index = index + vpi(indices(i) - 1);
+            end
+            index = index + vpi(1);
+        end
+
         function [h i w] = stripWithImage(self, g, v)
         % Strips a permutation through the chain along with its image
         %

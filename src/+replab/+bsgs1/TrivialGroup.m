@@ -5,7 +5,6 @@ classdef TrivialGroup < replab.FiniteGroup
         function self = TrivialGroup
             self.identity = [];
             self.generators = {};
-            self.order = vpi(1);
         end
         
         % Domain
@@ -32,11 +31,19 @@ classdef TrivialGroup < replab.FiniteGroup
         
         % FiniteGroup
         
-        function e = elements(self)
+    end
+    
+    methods (Access = protected)
+        
+        function o = computeOrder(self)
+            o = vpi(1);
+        end
+        
+        function e = computeElements(self)
             e = replab.Enumerator.lambda(1, @(i) [], @(x) 1);
         end
         
-        function d = decomposition(self)
+        function d = computeDecomposition(self)
             d = replab.FiniteGroupDecomposition.trivial(group, {[]});
         end
         

@@ -24,15 +24,25 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             chain = replab.bsgs1.Chain.makeWithImages(n, S, self, generators);
         end
 
+        function E = computeElements(self)
+            E = replab.Enumerator.lambda(self.order, ...
+                                         @(ind) self.enumeratorAt(ind), ...
+                                         @(el) self.enumeratorFind(el));
+        end
+
+        function D = computeDecomposition(self)
+            D = replab.FiniteGroupDecomposition(self, self.chain.groupDecomposition);
+        end
+
         function el = enumeratorAt(self, index)
             indices = self.chain.indicesFromIndex(index);
             el = self.chain.elementFromIndices(indices);
         end
         
         function index = enumeratorFind(self, el)
-            [remaining indices] = self.chain.sift(el);
-            if isempty(remaining) || ~self.isIdentity(remaining)
-                ind = [];
+            indices = self.chain.sift(el);
+            if isempty(indices)
+                index = [];
             else
                 index = self.chain.indexFromIndices(indices);
             end
@@ -41,14 +51,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
     end
 
     methods
-        
-        function self = NiceFiniteGroup(identity, generators, niceMonomorphism)
-        % Constructs a nice finite group with the given properties
-            self.identity = identity;
-            self.generators = generators;
-            self.order = self.chain.order;
-        end
-        
+                
         function c = chain(self)
         % Returns the BSGS chain corresponding to this group
         %
@@ -66,18 +69,6 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             g = self.chain.sampleUniformly;
         end
 
-        % FiniteGroup methods
-        
-        function E = computeElements(self)
-            E = replab.Enumerator.lambda(self.order, ...
-                                         @(ind) self.enumeratorAt(ind), ...
-                                         @(el) self.enumeratorFind(el));
-        end
-
-        function D = computeDecomposition(self)
-            D = replab.FiniteGroupDecomposition(self, self.chain.groupDecomposition);
-        end
-        
         % Methods enabled by the BSGS algorithms
         
         function b = contains(self, g)
