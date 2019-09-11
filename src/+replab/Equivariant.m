@@ -23,6 +23,11 @@ classdef Equivariant < replab.Domain
     
     methods
 
+        function X = project(self, X)
+        % Projects any nR x nC matrix in the equivariant subspace
+            error('Abstract');
+        end
+
         function self = Equivariant(repR, repC)
         % Constructor; please do not call this from user code, but
         % rather use `replab.rep.equivariant(repR, repC)`, 
@@ -36,7 +41,7 @@ classdef Equivariant < replab.Domain
             assert(isequal(repR.field, repC.field), ...
                    'Both representations must have be defined on the same field');
             self.field = repR.field;
-            assert(isequal(repR.group, repC.group), ...
+            assert(repR.group == repC.group, ...
                    'Both representations must be defined on the same group');
             self.group = repR.group;
             switch self.field
@@ -46,15 +51,6 @@ classdef Equivariant < replab.Domain
                 self.parent_ = replab.domain.ComplexMatrices(self.nR, self.nC);
               otherwise
                 error('Unknown field');
-            end
-        end
-        
-        function X = project(self, X)
-        % Projects any nR x nC matrix in the equivariant subspace
-            assert(isa(self.group, 'replab.FiniteGroup'));
-            T = self.group.decomposition.T;
-            for i = length(T):-1:1
-                X = self.averageOver(X, T{i});
             end
         end
 

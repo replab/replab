@@ -73,7 +73,7 @@ classdef FiniteGroup < replab.CompactGroup
     methods
         
         function R = randomBag(self)
-            if isequal(self.randomBag_, [])
+            if isempty(self.randomBag_)
                 self.randomBag_ = replab.RandomBag(self, self.generators);
             end
             R = self.randomBag_;

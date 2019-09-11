@@ -45,7 +45,7 @@ classdef Rep < replab.Str
         % the returned space describes the matrices X such that
         %
         % repR.image(g) * X = X * repC.image(g)
-            e = replab.rep.equivariant(self, repC)
+            e = replab.EquivariantDispatch.instance.call(self, repC)
         end
 
         function c = commutant(self)
@@ -54,15 +54,15 @@ classdef Rep < replab.Str
         % This is the algebra of matrices that commute with
         % this representation images, i.e. for any g in G, we have
         % rho(g) * X = X * rho(g)
-            if isequal(self.commutant_, [])
-                self.commutant_ = replab.rep.commutant(self);
+            if isempty(self.commutant_)
+                self.commutant_ = replab.CommutantDispatch.instance.call(self);
             end
             c = self.commutant_;
         end
         
         function I = decomposition(self)
         % Returns the irreducible decomposition of this representation
-            if isequal(self.decomposition_, [])
+            if isempty(self.decomposition_)
                 dec = replab.rep.decomposition(self);
                 self.decomposition_ = dec.nice;
             end
@@ -144,8 +144,11 @@ classdef Rep < replab.Str
         %
         % A has dimension self.dimension x dim(subRepresentation)
         %
-        % Note that U needs to be orthogonal, but the basis vectors
-        % do not need to be normalized
+        % U needs to be orthogonal; if U is not orthonormal, the
+        % basis vectors will be implicitly normalized
+        %
+        % Returns:
+        %   replab.SubRep: The desired subrepresentation
             assert(nargin == 2);
             sub = replab.SubRep(self, U);
         end

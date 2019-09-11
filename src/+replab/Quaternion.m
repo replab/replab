@@ -17,10 +17,10 @@ classdef Quaternion < replab.Str
         %   - if the argument is complex, 
         %     it fills the real and 'i' parts of the quaternion.
         %   - if the argument is a quaternion, the quaternion is copied
-            if nargin < 4 || isequal(k, [])
+            if nargin < 4 || isempty(k)
                 k = zeros(size(r));
             end
-            if nargin < 3 || isequal(j, [])
+            if nargin < 3 || isempty(j)
                 j = zeros(size(r));
             end
             if nargin == 1 && isa(r, 'replab.Quaternion')
@@ -31,7 +31,7 @@ classdef Quaternion < replab.Str
             elseif nargin == 1 && ~isreal(r)
                 i = imag(r);
                 r = real(r);
-            elseif nargin < 2 || isequal(i, [])
+            elseif nargin < 2 || isempty(i)
                 i = zeros(size(r));
             end
             assert(isreal(r));

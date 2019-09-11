@@ -63,7 +63,7 @@ classdef OrthonormalMatrices < replab.CompactGroup
         
         function rep = naturalRep(self)
         % Returns the natural representation of this orthonormal group
-            rep = replab.Rep(self, 'R', self.n, @(o) o);
+            rep = replab.Rep.lambda(self, 'R', self.n, @(o) o);
         end
         
     end

@@ -18,13 +18,13 @@ classdef Irrep < replab.SubRep
             if isequal(self.field, 'R')
                 assert(isa(realDivisionAlgebra, 'replab.DivisionAlgebra'));
             else
-                assert(isequal(realDivisionAlgebra, []));
+                assert(isempty(realDivisionAlgebra));
             end
             self.realDivisionAlgebra = realDivisionAlgebra;
         end
         
         function s = headerStr(self)
-            if isequal(self.realDivisionAlgebra, [])
+            if isempty(self.realDivisionAlgebra)
                 s = 'Irreducible subrepresentation';
             else
                 switch self.realDivisionAlgebra.shortName

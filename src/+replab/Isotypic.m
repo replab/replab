@@ -67,7 +67,7 @@ classdef Isotypic < replab.Str
         
         function s = headerStr(self)
             rt = self.copy(1).realDivisionAlgebra;
-            if isequal(rt, [])
+            if isempty(rt)
                 rt = 'C';
             else
                 rt = rt.shortName;

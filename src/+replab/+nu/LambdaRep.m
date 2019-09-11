@@ -30,7 +30,7 @@ classdef LambdaRep < replab.nu.Rep
         
         function rho = inverseImage(self, g)
             f = self.inverseImageFun;
-            if isequal(f, [])
+            if isempty(f)
                 rho = inverseImage@replab.nu.Rep.inverseImage(g);
             else
                 rho = f(g);

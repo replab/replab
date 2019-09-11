@@ -1,11 +1,10 @@
-classdef DecompositionCommutant < replab.Commutant
+classdef ApproximateCommutant < replab.Commutant
 % Commutant algebra of a finite group representation 
     
     methods
         
-        function self = DecompositionCommutant(rep)
+        function self = ApproximateCommutant(rep)
             self@replab.Commutant(rep);
-            replab.Dispatch.assert(isa(rep.group, 'replab.FiniteGroup'));
         end
         
         function X = project(self, X)

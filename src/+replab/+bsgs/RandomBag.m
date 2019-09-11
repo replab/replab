@@ -96,10 +96,10 @@ classdef RandomBag < replab.Str
                 J = replab.bsgs.TrivialGroup;
                 images = arrayfun(@(x) [], 1:length(generators), 'uniform', false);
             end
-            if nargin < 4 || isequal(m, [])
+            if nargin < 4 || isempty(m)
                 m = 50;
             end
-            if nargin < 3 || isequal(r, [])
+            if nargin < 3 || isempty(r)
                 r = -1;
             end
             nGens = size(generators, 2); % number of generators

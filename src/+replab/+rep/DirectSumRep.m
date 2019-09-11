@@ -15,7 +15,7 @@ classdef DirectSumRep < replab.Rep
             end
             self.dimension = d;
             for i = 2:length(blocks)
-                assert(isequal(blocks{1}.group, blocks{i}.group));
+                assert(blocks{1}.group == blocks{i}.group);
                 assert(isequal(blocks{1}.field, blocks{i}.field));
             end
             self.blocks = blocks;

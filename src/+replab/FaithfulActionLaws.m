@@ -9,7 +9,7 @@ classdef FaithfulActionLaws < replab.ActionLaws
         end
         function law_findMovedElement_G(self, g)
             p = self.action.findMovedElement(g);
-            if ~isequal(p, [])
+            if ~isempty(p)
                 p1 = self.action.leftAction(g, p);
                 self.P.assertNotEqv(p, p1);
             end

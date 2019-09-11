@@ -63,7 +63,7 @@ classdef UnitaryMatrices < replab.CompactGroup
         
         function rep = naturalRep(self)
         % Returns the natural representation of this unitary group
-            rep = replab.Rep(self, 'C', self.n, @(u) u);
+            rep = replab.Rep.lambda(self, 'C', self.n, @(u) u);
         end
 
     end

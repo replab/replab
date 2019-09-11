@@ -68,7 +68,7 @@ classdef SubRep < replab.Rep
         function sub1 = nice(self)
         % Tries to recover a nice basis for this subrepresentation
             sub1 = replab.rep.niceRep(self);
-            if isequal(sub1, [])
+            if isempty(sub1)
                 sub1 = self; % fallback
             end
         end
