@@ -56,7 +56,6 @@ classdef FiniteGroup < replab.CompactGroup
             end
             E = self.elements_;
         end
-
         
         function D = decomposition(self)
         % Returns a decomposition of this group as a product of sets
@@ -68,7 +67,6 @@ classdef FiniteGroup < replab.CompactGroup
             end
             D = self.decomposition_;
         end
-
 
     end
     

@@ -5,7 +5,7 @@ classdef Rep < replab.Str
 % for optimization purposes, actions can also be specialized.
     
     properties (SetAccess = protected)
-        group     % (replab.Group) Group being represented
+        group     % (replab.CompactGroup) Group being represented
         field     % ({'R', 'C'}) Representation type, real or complex
         dimension % (integer as double) Representation dimension
     end

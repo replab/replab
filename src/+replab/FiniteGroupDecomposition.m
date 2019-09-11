@@ -30,9 +30,9 @@ classdef FiniteGroupDecomposition < replab.Str
         % Args:
         %   group (replab.FiniteGroup): Finite group to decompose
             O = double(group.order);
-            T1 = group.elements.toCell;
-            idIndex = self.elements.find(self.identity);
-            T1 = T1([idIndex setdiff(1:O, idIndex)]);
+            T = group.elements.toCell;
+            idIndex = double(group.elements.find(group.identity));
+            T = T([idIndex setdiff(1:O, idIndex)]);
             D = replab.FiniteGroupDecomposition(group, {T});
         end
         

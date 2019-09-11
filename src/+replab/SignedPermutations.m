@@ -1,14 +1,17 @@
-classdef SignedPermutations < replab.SignedPermutationGroup & replab.FiniteGroup
+classdef SignedPermutations < replab.SignedPermutationGroup
 % Describes the signed permutation group over
 % {-n...-1, 1...n} where n = domainSize
     
     methods
         
         function self = SignedPermutations(domainSize)
-            self@replab.SignedPermutationGroup(domainSize);
+            self.identity = 1:domainSize;
+            self.domainSize = domainSize;
+            self.niceMonomorphism = @(x) replab.SignedPermutations.toPermutation(x);
+            self.parent = self;
             switch self.domainSize
               case 0
-                self.generators = cell(1, 0); % TODO: verify
+                self.generators = cell(1, 0);
               case 1
                 self.generators = {[-1]};
               case 2
@@ -21,131 +24,55 @@ classdef SignedPermutations < replab.SignedPermutationGroup & replab.FiniteGroup
             end
         end
         
-        % Str
+        %% Str methods
                 
-        function s = str(self)
+        function s = headerStr(self)
             s = sprintf('Signed permutations acting on {-%d..-1 1..%d}', self.domainSize, self.domainSize);
         end
         
-        % Domain
+        %% Domain methods
         
         function s = sample(self)
             n = self.domainSize;
             s = randperm(n) .* (randi([0 1], 1, n)*2-1);
         end
         
-        % FinitelyGeneratedGroup
-        
-        function w = factorization(self, x)
-            if self.isIdentity(x)
-                w = replab.Word.identity;
-                return
-            elseif self.domainSize == 1
-                % not identity, so it is the flip
-                w = replab.Word.generator(1);
-                return
-            elseif self.domainSize == 2
-                t = replab.Word.generator(1);
-                f1 = replab.Word.generator(2);
-                f2 = t * f1 * t;
-                w = replab.Word.identity;
-                if x(1) < 0
-                    x(1) = abs(x(1));
-                    w = f1 * w;
-                end
-                if x(2) < 0
-                    x(2) = abs(x(2));
-                    w = f2 * w;
-                end
-                if isequal(x, [2 1])
-                    w = t * w;
-                end
-                return
-            end
-            n = length(x);
-            w = replab.Word.identity;
-            % Flip negative images
-            for i = 1:n
-                if x(i) < 0
-                    if i == 1
-                        shift = replab.Word.identity;
-                    else
-                        shift = replab.Word.fromIndicesAndExponents(1, i - 1);
-                    end
-                    x(i) = abs(x(i));
-                    w = shift * replab.Word.generator(3) * inv(shift) * w;
-                end
-            end
-            % Bubble sort to order the image
-            moved = true;
-            while moved
-                moved = false;
-                for i = 1:n-1
-                    if x(i) > x(i+1)
-                        t = x(i+1);
-                        x(i+1) = x(i);
-                        x(i) = t;
-                        moved = true;
-                        if i == 1
-                            shift = replab.Word.identity;
-                        else
-                            shift = replab.Word.fromIndicesAndExponents(1, i - 1);
-                        end
-                        w = shift * replab.Word.generator(2) * inv(shift) * w;
-                    end
-                end
-            end
-        end
-        
-        % Contains
-        
+        %% Finite group methods
+                
         function b = contains(self, g)
-            b = length(g) == self.domainSize;
-        end
-        
-        function b = knownOrder(self)
+            assert(length(g) == self.domainSize, 'Signed permutation in wrong domain');
+            assert(all(g ~= 0) && all(abs(g) <= self.domainSize), ...
+                   'Signed permutation has out of range coefficients');
             b = true;
         end
         
-        function o = order(self)
-            o = factorial(vpi(self.domainSize)) * vpi(2)^self.domainSize;
-        end        
         
-        function E = elements(self)
-            E = replab.IndexedFamily.lambda(self.order, ...
-                                         @(ind) self.enumeratorAt(ind), ...
-                                         @(el) self.enumeratorFind(el));
-        end
-
-        function d = decomposition(self)
-            G = self.subgroup(self.generators, self.order);
-            d = G.decomposition;
-        end
-        
-        function G = subgroup(self, generators, orderOpt)
+        function G = subgroup(self, generators, order)
             if nargin < 3
-                orderOpt = [];
+                order = [];
             end
-            G = replab.SignedPermutationSubgroup(self, generators, orderOpt);
-        end
-        
-    end
-    
-    methods (Static)
-        
-        function Q = quaternionGroup(self)
-        % Returns a signed representation of the quaternion group
-            SS4 = replab.SignedPermutations(4);
-            g1 = [-1 -2 -3 -4];
-            gi = [2 -1 4 -3];
-            gj = [3 -4 -1 2];
-            Q = SS4.subgroup({g1 gi gj});
+            G = replab.SignedPermutationSubgroup(self, generators, order);
         end
         
     end
     
     methods (Access = protected)
         
+        function o = computeOrder(self)
+            o = factorial(vpi(self.domainSize)) * vpi(2)^self.domainSize;
+        end        
+        
+        function E = computeElements(self)
+            E = replab.IndexedFamily.lambda(self.order, ...
+                                            @(ind) self.enumeratorAt(ind), ...
+                                            @(el) self.enumeratorFind(el));
+        end
+
+        function d = computeDecomposition(self)
+            G = self.subgroup(self.generators, self.order);
+            d = G.decomposition;
+        end
+
         function ind = enumeratorFind(self, g)
             n = self.domainSize;
             ind0 = vpi(0);
@@ -175,6 +102,119 @@ classdef SignedPermutations < replab.SignedPermutationGroup & replab.FiniteGroup
                 g(i) = e;
                 els = setdiff(els, [e -e]);
             end
+        end
+
+    end
+        
+    methods (Static)
+        
+        function perm = toPermutation(signedPerm)
+        % Returns the permutation corresponding to the given signed permutation
+        % where the permutation acts on the list [-d,..,-1,1,..,d]
+            n = length(signedPerm);
+            perm = zeros(1, 2*n);
+            for i = 1:length(signedPerm)
+                im = n - i + 1; % position of -i in the list
+                ip = n + i; % position of i in the list
+                j = signedPerm(i);
+                jm = n - abs(j) + 1;
+                jp = n + abs(j);
+                if j > 0
+                    perm(im) = jm;
+                    perm(ip) = jp;
+                else
+                    perm(im) = jp;
+                    perm(ip) = jm;
+                end
+            end
+        end
+        
+        function signedPerm = fromPermutation(perm)
+        % Returns the signed permutation corresponding to the given permutation encoding
+        % see SignedPermutations.toPermutation
+            n2 = length(perm);
+            if mod(n2, 2) ~= 0
+                error('Not an image of a signed permutation');
+            end
+            n = n2/2; % domain size of the signed permutation
+            perm(perm <= n) = -(n - perm(perm <= n) + 1);
+            perm(perm > n) = perm(perm > n) - n;
+            mperm = -fliplr(perm(1:n));
+            pperm = perm(n+1:n2);
+            assert(isequal(mperm, pperm), 'Not an image of a signed permutation');
+            signedPerm = pperm;
+        end
+
+        function mat = toMatrix(signedPerm)
+        % Returns the signed permutation matrix corresponding to the given
+        % signed permutation such that matrix multiplication is
+        % compatible with composition of permutations, i.e. 
+        % S.toMatrix(S.compose(x, y)) = 
+        % S.toMatrix(x) * S.toMatrix(y)
+        % where S = SignedPermutations(domainSize)
+            n = length(signedPerm);
+            mat = sparse(abs(signedPerm), 1:n, sign(signedPerm), n, n);
+            if ~replab.Settings.useSparse
+                mat = full(mat);
+            end
+        end
+        
+        function b = isSignedPermutationMatrix(mat)
+        % Returns true when "mat" is a signed permutation matrix, i.e. a monomial matrix
+        % with nonzero entries equal to +1 or -1
+            if isequal(size(mat), [0 0])
+                b = true;
+                return
+            end
+            n = size(mat, 1);
+            [I J S] = find(mat);
+            I = I';
+            J = J';
+            S = S';
+            sI = sort(I);
+            [sJ IJ] = sort(J);
+            b = isequal(sI, 1:n) && isequal(sJ, 1:n) && isequal(abs(S), ones(1, n));
+        end
+        
+        function signedPerm = fromMatrix(mat)
+        % Returns the signed permutation corresponding to the given matrix representation
+        % or throws an error
+            if isequal(size(mat), [0 0])
+                signedPerm = zeros(1, 0);
+                return
+            end
+            signedPerm = [];
+            n = size(mat, 1);
+            [I J S] = find(mat);
+            if length(I) ~= n
+                error('Not a monomial matrix');
+            end
+            I = I';
+            J = J';
+            S = S';
+            sI = sort(I);
+            [sJ IJ] = sort(J);
+            if ~isequal(sI, 1:n) || ~isequal(sJ, 1:n)
+                error('Not a monomial matrix');
+            end
+            if ~isequal(abs(S), ones(1, n))
+                error('Monomial matrix with entries other than +1, -1');
+            end
+            signedPerm = I.*S;
+            signedPerm = signedPerm(IJ);
+        end
+    
+    end
+    
+    methods (Static)
+        
+        function Q = quaternionGroup(self)
+        % Returns a signed representation of the quaternion group
+            SS4 = replab.SignedPermutations(4);
+            g1 = [-1 -2 -3 -4];
+            gi = [2 -1 4 -3];
+            gj = [3 -4 -1 2];
+            Q = SS4.subgroup({g1 gi gj});
         end
         
     end

@@ -120,7 +120,7 @@ classdef IndexedFamily < replab.Str
 
     methods (Static)
     
-        function enumerator = lambda(size, atFun, findFun)
+        function family = lambda(size, atFun, findFun)
         % Constructs an indexed family from function handles
         %
         % Args:
@@ -132,7 +132,7 @@ classdef IndexedFamily < replab.Str
         %
         % Returns:
         %   replab.IndexedFamily: The constructed indexed family
-            enumerator = replab.lambda.Enumerator(size, atFun, findFun);
+            family = replab.lambda.IndexedFamily(size, atFun, findFun);
         end
         
     end

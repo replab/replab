@@ -99,6 +99,8 @@ In order, the sections of a funciton comment are:
 	
 	Matlab/Octave encodes integer values using double floating point numbers. Our convention is to name those values `integer`. In the rare case a primitive integer type is needed, we write that type precisely (as in `int32` or `uint32`). Big integers have type `vpi`, which is the name of the external library that supports them.
 	
+	Permutations are stored using row double vectors containing integers, and are documented as `permutation`. Same convention for signed permutations, that are documented as `signed permutation`.
+	
 	Strings represented as char arrays have type `char` (recent Matlab versions have a new `string` type which should not be confused with).
 	
 	Function handles have type `function_handle`.

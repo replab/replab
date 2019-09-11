@@ -72,5 +72,18 @@ classdef RepByImages < replab.Rep
         end
         
     end
-    
+
+    methods (Static)
+        
+        function rep1 = fromRep(rep)
+            assert(isa(rep.group, 'replab.NiceFiniteGroup'));
+            nG = rep.group.nGenerators;
+            images = cell(1, nG);
+            for i = 1:nG
+                images{i} = rep.image(rep.group.generator(i));
+            end
+            rep1 = replab.RepByImages(rep.group, rep.field, rep.dimension, images);
+        end
+        
+    end
 end

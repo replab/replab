@@ -10,7 +10,7 @@ function test_withPermutations
     g1 = [2:n 1];
     g2 = [2 1 3:n];
     Sn = replab.Permutations(n);
-    R = replab.bsgs1.RandomBag(10, [g1' g2'], [], [], Sn, {g1 g2});
+    R = replab.bsgs.RandomBag(10, [g1' g2'], [], [], Sn, {g1 g2});
     for i = 1:100
         [x y] = R.sample;
         assert(isequal(x, y));

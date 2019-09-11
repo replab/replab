@@ -240,7 +240,7 @@ classdef Chain < replab.Str
         %   A group element of `self.J`
         end
         
-        function u = randomTransversal(self)
+        function u = randomTransversal(self, i)
         % Returns a random transversal element from a specific transversal set
         %
         % Args:
@@ -394,21 +394,12 @@ classdef Chain < replab.Str
         end
         
         
-        function T = groupDecomposition(self)
-        % Returns the group decomposition into a product of transversals
+        function T = imagesDecomposition(self)
+        % Returns the homomorphism group images into a product of transversals
         %
         % Guarantees that the first element of each transversal is the identity
             k = self.length;
-            T = cell(1, k);
-            for i = 1:k
-                Ui = self.U{i};
-                m = size(Ui, 2);
-                t = cell(1, m);
-                for j = 1:m
-                    t{j} = Ui(:,j)';
-                end
-                T{i} = t;
-            end
+            T = self.V;
         end
 
         function [h i] = strip(self, g)

@@ -1,5 +1,5 @@
 classdef PermutationGroup < replab.NiceFiniteGroup
-% Represents a permutation group
+% A base class for all permutation groups
 
     properties (SetAccess = protected)
         domainSize; % d when this group acts on {1, ..., d}

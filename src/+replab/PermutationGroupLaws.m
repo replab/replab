@@ -1,10 +1,10 @@
-classdef PermutationGroupLaws < replab.FiniteGroupLaws
+classdef PermutationGroupLaws < replab.NiceFiniteGroupLaws
     properties (SetAccess = protected)
         P;
     end
     methods
         function self = PermutationGroupLaws(T)
-            self@replab.FiniteGroupLaws(T);
+            self@replab.NiceFiniteGroupLaws(T);
             self.P = replab.domain.intAsDouble(1, T.domainSize);
         end
     end

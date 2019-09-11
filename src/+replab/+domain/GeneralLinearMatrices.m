@@ -22,7 +22,7 @@ classdef GeneralLinearMatrices < replab.Group
                 self.parent_ = replab.domain.ComplexMatrices(n, n);
               otherwise
                 error('Unknown field');
-            end'
+            end
             if replab.Settings.useSparse
                 self.identity = speye(n);
             else

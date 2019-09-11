@@ -1,4 +1,4 @@
-classdef UnitaryMatrices < replab.Group
+classdef UnitaryMatrices < replab.CompactGroup
 % Describes the group of n x n unitary (complex) matrices
     
     properties
@@ -34,11 +34,7 @@ classdef UnitaryMatrices < replab.Group
         end
         
         function X = sample(self)
-        % see http://home.lu.lv/~sd20008/papers/essays/Random%20unitary%20[paper].pdf
-            X = self.parent_.sample;
-            [Q, R] = qr(X);
-            R = diag(diag(R)./abs(diag(R)));
-            X = Q*R;
+            X = self.sampleUniformly;
         end
         
         % Semigroup/monoid/group
@@ -51,6 +47,16 @@ classdef UnitaryMatrices < replab.Group
             XInv = X';
         end
         
+        % Compact group
+        
+        function X = sampleUniformly(self)
+        % see http://home.lu.lv/~sd20008/papers/essays/Random%20unitary%20[paper].pdf
+            X = self.parent_.sample;
+            [Q, R] = qr(X);
+            R = diag(diag(R)./abs(diag(R)));
+            X = Q*R;
+        end
+
     end
 
 end

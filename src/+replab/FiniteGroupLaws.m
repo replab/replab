@@ -26,8 +26,26 @@ classdef FiniteGroupLaws < replab.GroupLaws
         function law_order_elements(self)
             self.assert(self.T.elements.size == self.T.order);
         end
+        function law_generators(self)
+            T = self.T;
+            for i = 1:T.nGenerators
+                g = T.generator(i);
+                ginv = T.generatorInverse(i);
+                T.assertEqv(T.identity, T.compose(g, ginv)); % generator consistent with its inverse
+                self.assert(T.elements.find(g) > 0); % generator is part of elements
+                self.assert(T.elements.find(ginv) > 0); % generator inverse is part of elements
+            end
+        end
         function elementsLaws = laws_elements(self)
             elementsLaws = replab.IndexedFamilyLaws(self.T.elements);
         end
-    end    
+        function law_decomposition_size(self)
+            D = self.T.decomposition.T;
+            o = vpi(1);
+            for i = 1:length(D)
+                o = o * length(D{i});
+            end
+            self.assert(o == self.T.order);
+        end
+    end
 end

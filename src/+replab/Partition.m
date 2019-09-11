@@ -56,6 +56,31 @@ classdef Partition < replab.Str
             end
         end
         
+        function sz = blockSizes(self)
+        % Returns the sizes of all blocks
+        %
+        % Returns:
+        %   (row integer vector): block sizes
+            nB = self.nBlocks;
+            sz = arrayfun(@(i) self.blockSize(i), 1:nB);
+        end
+            
+        function sz = blockSize(self, i)
+        % Returns the size of a partition block
+        %
+        % Args:
+        %   i (integer): Index of the block
+        %
+        % Returns:
+        %   integer: Size of the i-th block in this partition
+            el = self.start(i);
+            sz = 0;
+            while el > 0
+                sz = sz + 1;
+                el = self.next(el);
+            end
+        end
+        
         function B = blocks(self)
             nB = self.nBlocks;
             B = cell(1, nB);

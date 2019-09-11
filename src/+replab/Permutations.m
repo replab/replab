@@ -4,7 +4,6 @@ classdef Permutations < replab.PermutationGroup
     methods % Implementations of abstract methods
         
         function self = Permutations(domainSize)
-        %self@replab.PermutationGroup(domainSize);
             self.identity = 1:domainSize;
             self.domainSize = domainSize;
             self.niceMonomorphism = @(x) x;
@@ -18,7 +17,7 @@ classdef Permutations < replab.PermutationGroup
             end
         end
         
-        % Str
+        %% Str methods
                 
         function s = headerStr(self)
             s = sprintf('Permutations acting on %d elements', self.domainSize);
@@ -30,13 +29,15 @@ classdef Permutations < replab.PermutationGroup
             s = randperm(self.domainSize); % overriden for efficiency
         end
 
-        % FiniteGroup
+        %% FiniteGroup methods
         
         function b = contains(self, g)
             assert(length(g) == self.domainSize, 'Permutation in wrong domain');
             assert(all(g > 0), 'Permutation should have positive coefficients');
             b = true;
         end
+        
+        %% NiceFiniteGroup methods
 
         function grp = subgroup(self, generators, order)
         % Constructs a permutation subgroup from its generators

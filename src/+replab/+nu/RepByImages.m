@@ -20,8 +20,8 @@ classdef RepByImages < replab.nu.Rep
             for i = 1:group.nGenerators
                 imageI = images{i};
                 invImageI = inverseImages{i};
-                assert(isequal(imageI, [dimension dimension]));
-                assert(isequal(invImageI, [dimension dimension]));
+                assert(isequal(size(imageI), [dimension dimension]));
+                assert(isequal(size(invImageI), [dimension dimension]));
                 elements{i} = [imageI invImageI];
             end
             self.group = group;
@@ -36,7 +36,7 @@ classdef RepByImages < replab.nu.Rep
             for i = 1:nG
                 I(:,i) = group.niceMonomorphism(group.generator(i));
             end
-            chain = replab.bsgs.Chain(n, J);
+            C = replab.bsgs.Chain(n, J);
             C.insertStrongGenerators(I, elements);
             C.randomizedSchreierSims;
             cut = @(X) X(:, 1:dimension);
