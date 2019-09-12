@@ -8,7 +8,6 @@ classdef SignedPermutationSubgroup < replab.SignedPermutationGroup
             self.parent = parent;
             self.domainSize = parent.domainSize;
             self.identity = parent.identity;
-            self.niceMonomorphism = parent.niceMonomorphism;
             % own stuff
             if nargin > 2 && ~isempty(order)
                 self.order_ = order;
