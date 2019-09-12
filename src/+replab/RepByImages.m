@@ -11,7 +11,10 @@ classdef RepByImages < replab.Rep
 % https://www.gap-system.org/Manuals/doc/ref/chap40.html#X7FFD731684606BC6)
     properties (SetAccess = protected)
         images % Generator images
-        chain % BSGS chain with images
+    end
+    
+    properties (Access = protected)
+        chain_ % BSGS chain with images
     end
         
     methods
@@ -25,27 +28,33 @@ classdef RepByImages < replab.Rep
         %   niceMonomorphism: Injective group homomorphism from `self.group` into a permutation group
         %   images (row cell array of orthonormal/unitary matrices): Images of the generators of `group` in the same order
             assert(isa(group, 'replab.NiceFiniteGroup'));
-            nG = group.nGenerators;
-            assert(length(images) == nG);
+            assert(length(images) == group.nGenerators);
             self.group = group;
             self.field = field;
             self.dimension = dimension;
             self.images = images;
-            switch field
-              case 'R'
-                J = replab.domain.OrthonormalMatrices(dimension);
-              case 'C'
-                J = replab.domain.UnitaryMatrices(dimension);
-              otherwise
-                error('Unknown field');
+        end
+        
+        function c = chain(self)
+            if isempty(self.chain_)
+                switch self.field
+                  case 'R'
+                    J = replab.domain.OrthonormalMatrices(self.dimension);
+                  case 'C'
+                    J = replab.domain.UnitaryMatrices(self.dimension);
+                  otherwise
+                    error('Unknown field');
+                end
+                niceId = self.group.niceMonomorphism(self.group.identity);
+                n = length(niceId);
+                nG = self.group.nGenerators;
+                I = zeros(n, nG);
+                for i = 1:nG
+                    I(:,i) = self.group.niceMonomorphism(self.group.generator(i));
+                end
+                self.chain_ = replab.bsgs.Chain.makeWithImages(n, I, J, self.images);
             end
-            niceId = group.niceMonomorphism(group.identity);
-            n = length(niceId);
-            I = zeros(n, nG);
-            for i = 1:nG
-                I(:,i) = group.niceMonomorphism(group.generator(i));
-            end
-            self.chain = replab.bsgs.Chain.makeWithImages(n, I, J, images);
+            c = self.chain_;
         end
 
         % Str

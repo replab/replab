@@ -30,6 +30,13 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
             y(invFlip) = -y(invFlip);
         end
         
+        %% NiceFiniteGroup methods
+        
+        function p1 = niceMonomorphism(self, p)
+            p1 = replab.SignedPermutations.toPermutation(p);
+        end
+
+        
         %% Methods specific to signed permutation groups
         
         function G = permutationPart(self)

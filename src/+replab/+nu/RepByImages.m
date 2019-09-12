@@ -3,7 +3,10 @@ classdef RepByImages < replab.nu.Rep
     properties (SetAccess = protected)
         images % Generator images
         inverseImages % Inverses of generator images
-        chain % BSGS chain with images
+    end
+    
+    properties (Access = protected)
+        chain_ % BSGS chain with images
     end
 
     methods
@@ -17,34 +20,42 @@ classdef RepByImages < replab.nu.Rep
             assert(isa(images, 'cell'));
             assert(isa(inverseImages, 'cell'));
             elements = cell(1, nG);
-            for i = 1:group.nGenerators
+            for i = 1:nG
                 imageI = images{i};
                 invImageI = inverseImages{i};
                 assert(isequal(size(imageI), [dimension dimension]));
                 assert(isequal(size(invImageI), [dimension dimension]));
-                elements{i} = [imageI invImageI];
             end
             self.group = group;
             self.field = field;
             self.dimension = dimension;
             self.images = images;
             self.inverseImages = inverseImages;
-            J = replab.nu.GeneralLinearMatricesWithInverses(field, dimension);
-            niceId = group.niceMonomorphism(group.identity);
-            n = length(niceId);
-            I = zeros(n, nG);
-            for i = 1:nG
-                I(:,i) = group.niceMonomorphism(group.generator(i));
-            end
-            C = replab.bsgs.Chain(n, J);
-            C.insertStrongGenerators(I, elements);
-            C.randomizedSchreierSims;
-            cut = @(X) X(:, 1:dimension);
-            C.mutableMapImages(replab.domain.GeneralLinearMatrices(field, dimension), cut);
-            C.makeImmutable;
-            self.chain = C;
         end
 
+        function c = chain(self)
+            if isempty(self.chain_)
+                J = replab.nu.GeneralLinearMatricesWithInverses(self.field, self.dimension);
+                niceId = self.group.niceMonomorphism(self.group.identity);
+                n = length(niceId);
+                nG = self.group.nGenerators;
+                I = zeros(n, nG);
+                elements = cell(1, nG);
+                for i = 1:nG
+                    I(:,i) = self.group.niceMonomorphism(self.group.generator(i));
+                    elements{i} = [self.images{i} self.inverseImages{i}];
+                end
+                C = replab.bsgs.Chain(n, J);
+                C.insertStrongGenerators(I, elements);
+                C.randomizedSchreierSims;
+                cut = @(X) X(:, 1:self.dimension);
+                C.mutableMapImages(replab.domain.GeneralLinearMatrices(self.field, self.dimension), cut);
+                C.makeImmutable;
+                self.chain_ = C;
+            end
+            c = self.chain_;
+        end
+        
         function rho = image(self, g)
         % Computes the image of a group element g in this representation
             img = self.group.niceMonomorphism(g);

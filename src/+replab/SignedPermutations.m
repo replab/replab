@@ -7,7 +7,6 @@ classdef SignedPermutations < replab.SignedPermutationGroup
         function self = SignedPermutations(domainSize)
             self.identity = 1:domainSize;
             self.domainSize = domainSize;
-            self.niceMonomorphism = @(x) replab.SignedPermutations.toPermutation(x);
             self.parent = self;
             switch self.domainSize
               case 0

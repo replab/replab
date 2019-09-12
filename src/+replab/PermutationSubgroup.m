@@ -8,10 +8,12 @@ classdef PermutationSubgroup < replab.PermutationGroup
             self.parent = parent;
             self.domainSize = parent.domainSize;
             self.identity = parent.identity;
-            self.niceMonomorphism = parent.niceMonomorphism;
             % own stuff
             if nargin > 2 && ~isempty(order)
                 self.order_ = order;
+            end
+            for i = 1:length(generators)
+                assert(~parent.isIdentity(generators{i}), 'Generator cannot be identity');
             end
             self.generators = generators;
         end

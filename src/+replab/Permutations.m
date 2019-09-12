@@ -6,7 +6,6 @@ classdef Permutations < replab.PermutationGroup
         function self = Permutations(domainSize)
             self.identity = 1:domainSize;
             self.domainSize = domainSize;
-            self.niceMonomorphism = @(x) x;
             self.parent = self;
             if self.domainSize < 2
                 self.generators = cell(1, 0);
@@ -38,7 +37,7 @@ classdef Permutations < replab.PermutationGroup
         end
         
         %% NiceFiniteGroup methods
-
+        
         function grp = subgroup(self, generators, order)
         % Constructs a permutation subgroup from its generators
         %
@@ -53,7 +52,6 @@ classdef Permutations < replab.PermutationGroup
             end
             grp = replab.PermutationSubgroup(self, generators, order);
         end
-
         
     end
     

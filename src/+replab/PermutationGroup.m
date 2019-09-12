@@ -27,6 +27,11 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             y(x) = 1:n;
         end
         
+        %% NiceFiniteGroup
+        
+        function p = niceMonomorphism(self, p)
+        end
+        
         %% Methods specific to permutation groups
 
         function o = orbits(self)
