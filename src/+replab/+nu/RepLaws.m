@@ -13,7 +13,7 @@ classdef RepLaws < replab.Laws
             self.rep = rep;
             d = self.rep.dimension;
             self.G = rep.group;
-            self.L = replab.domain.GeneralLinearMatrices(d, rep.field);
+            self.L = replab.domain.GeneralLinearMatrices(rep.field, d);
             switch rep.field
               case 'R'
                 self.M = replab.domain.RealMatrices(d, d);

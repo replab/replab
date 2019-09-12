@@ -194,15 +194,15 @@ classdef DirectProductGroup < replab.FiniteGroup
         end
         
         function e = elements(self)
-            e = replab.Enumerator.lambda(self.order, ...
-                                         @(ind) self.atFun(ind), ...
-                                         @(g) self.findFun(g));
+            e = replab.IndexedFamily.lambda(self.order, ...
+                                            @(ind) self.atFun(ind), ...
+                                            @(g) self.findFun(g));
         end
         
         function gd = decomposition(self)
             T = {};
             for i = 1:self.nFactors
-                D = self.factor(i).decomposition.transversals;
+                D = self.factor(i).decomposition.T;
                 Ti = cell(1, length(D));
                 for j = 1:length(D)
                     Dj = D{j};

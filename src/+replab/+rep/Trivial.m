@@ -42,7 +42,7 @@ classdef Trivial < replab.Domain
         % One can provide n vectors to that function, stored as a
         % d x n matrix
             assert(isa(self.group, 'replab.FiniteGroup'));
-            T = self.group.decomposition.transversals;
+            T = self.group.decomposition.T;
             for i = length(T):-1:1
                 X = self.averageOver(X, T{i});
             end

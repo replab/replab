@@ -8,7 +8,7 @@ classdef WreathProductPrimitiveRep < replab.Rep
         
         function self = WreathProductPrimitiveRep(group, Arep)
             assert(isa(group, 'replab.WreathProductGroup'));
-            assert(isequal(group.A, Arep.group));
+            %assert(isequal(group.A, Arep.group)); octave not happy
             dA = Arep.dimension;
             n = group.H.domainSize;
             self.Arep = Arep;
@@ -31,6 +31,9 @@ classdef WreathProductPrimitiveRep < replab.Rep
             I = permute(reshape(1:d, dims), fliplr(n + 1 - h));
             I = I(:)';
             rho = sparse(I, 1:d, ones(1, d), d, d) * rho;
+            if ~replab.Settings.useSparse
+                rho = full(rho);
+            end
         end
         
     end

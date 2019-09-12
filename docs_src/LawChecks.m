@@ -9,7 +9,7 @@ sampleFun = @() randperm(n);
 composeFun = @(x, y) x(y);
 identity = 1:n;
 inverseFun = @(x) arrayfun(@(i) find(x == i), 1:10);
-S10 = replab.GroupFun('Permutations of 1..10', eqvFun, sampleFun, composeFun, identity, inverseFun)
+S10 = replab.Group.lambda('Permutations of 1..10', eqvFun, sampleFun, composeFun, identity, inverseFun)
 %%
 % We instantiate the group laws, and check them.
 S10laws = replab.GroupLaws(S10)

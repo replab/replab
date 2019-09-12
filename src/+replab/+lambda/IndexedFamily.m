@@ -1,13 +1,13 @@
-classdef Enumerator < replab.Enumerator
+classdef IndexedFamily < replab.IndexedFamily
     
     properties (SetAccess = protected)
-        atFun; % Handle that implements Enumerator.at
-        findFun; % Handle that implements Enumerator.find
+        atFun; % Handle that implements IndexedFamily.at
+        findFun; % Handle that implements IndexedFamily.find
     end
     
     methods
         
-        function self = Enumerator(size, atFun, findFun)
+        function self = IndexedFamily(size, atFun, findFun)
             if isa(size, 'vpi')
                 self.size = size;
             else
@@ -19,7 +19,7 @@ classdef Enumerator < replab.Enumerator
         
         function names = hiddenFields(self)
             names = replab.str.uniqueNames( ...
-                hiddenFields@replab.Enumerator(self), ...
+                hiddenFields@replab.IndexedFamily(self), ...
                 {'atFun' 'sampleFun'} ...
                 );
         end

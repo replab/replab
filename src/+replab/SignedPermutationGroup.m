@@ -1,32 +1,25 @@
-classdef SignedPermutationGroup < replab.Group
-% Represents a signed permutation group
+classdef SignedPermutationGroup < replab.NiceFiniteGroup
+% A base class for all signed permutation groups
 
     properties (SetAccess = protected)
         domainSize; % d when this group acts on {-d..-1, 1..d}
     end
     
-    properties (Access = protected)
-        abs_ = [];
-    end
-    
     methods
 
-        function self = SignedPermutationGroup(domainSize)
-            self.domainSize = domainSize;
-            self.identity = 1:domainSize;
-        end
-        
-        % Domain
+        %% Domain methods
         
         function b = eqv(self, x, y)
             b = isequal(x, y);
         end
 
-        % Semigroup/Monoid/Group
+        %% Monoid methods
         
         function z = compose(self, x, y)
             z = x(abs(y)).*sign(y);
         end
+        
+        %% Group methods
         
         function y = inverse(self, x)
             n = self.domainSize;
@@ -37,10 +30,49 @@ classdef SignedPermutationGroup < replab.Group
             y(invFlip) = -y(invFlip);
         end
         
-        % Own methods
-                
+        %% NiceFiniteGroup methods
+        
+        function p1 = niceMonomorphism(self, p)
+            p1 = replab.SignedPermutations.toPermutation(p);
+        end
+
+        
+        %% Methods specific to signed permutation groups
+        
+        function G = permutationPart(self)
+        % Returns the permutation part of the current group
+        %
+        % Corresponds to the group image under the homomorphism `elementPermutationPart`.
+        %
+        % Returns:
+        %   replab.PermutationGroup: The corresponding permutation group
+            newGenerators = cell(1, 0);
+            for i = 1:self.nGenerators
+                img = self.elementPermutationPart(self.generator(i));
+                if ~self.isIdentity(img)
+                    newGenerators{1, end+1} = img;
+                end
+            end
+            G = replab.Permutations(self.domainSize).subgroup(newGenerators);
+        end
+        
+        function p = elementPermutationPart(self, g)
+        % Returns the permutation part of a signed permutation, by taking image absolute values
+        %
+        % Computes the permutation p that acts on 1...domainSize as p(i) = abs(g(i))
+        %
+        % Args:
+        %   g (signed permutation): Signed permutation
+        %
+        % Returns:
+        %   permutation: The permutation part of `g`
+            p = abs(g);
+        end
+        
+        %% Actions
+
         function A = naturalAction(self)
-        % Returns the action of elementso f this group on
+        % Returns the action of elements of this group on its domain
         % its domain {-d..-1 1..d} where d is self.domainSize
             A = replab.perm.SignedPermutationNaturalAction(self);
         end
@@ -59,130 +91,13 @@ classdef SignedPermutationGroup < replab.Group
             A = replab.perm.SignedPermutationMatrixAction(self);
         end
         
-        function rho = naturalRepresentation(self)
-        % Natural representation on R^d of signed permutations on integers -d..-1, 1..d
-            rho = self.signedPermutationRepresentation(self.domainSize, self.generators);
-        end
+        %% Representation construction
         
         function rho = naturalRep(self)
         % Natural representation on R^d of signed permutations on integers -d..-1, 1..d
             rho = self.signedPermutationRep(self.domainSize, self.generators);
         end
         
-        function G = abs(self)
-            if isempty(self.abs_)
-                % maps generators to their "absolute value", collapsing
-                % i and -i in the domain, and removes generators that map
-                % to the identity
-                absGenerators = cell(1, 0);
-                for i = 1:self.nGenerators
-                    ag = abs(self.generators{i});
-                    if ~self.isIdentity(ag)
-                        absGenerators{end+1} = ag;
-                    end
-                end
-                self.abs_ = replab.Permutations(self.domainSize).subgroup(absGenerators);
-            end
-            G = self.abs_;
-        end
-        
-    end
-
-    methods (Static)
-        
-        function perm = toPermutation(signedPerm)
-        % Returns the permutation corresponding to the given signed permutation
-        % where the permutation acts on the list [-d,..,-1,1,..,d]
-            n = length(signedPerm);
-            perm = zeros(1, 2*n);
-            for i = 1:length(signedPerm)
-                im = n - i + 1; % position of -i in the list
-                ip = n + i; % position of i in the list
-                j = signedPerm(i);
-                jm = n - abs(j) + 1;
-                jp = n + abs(j);
-                if j > 0
-                    perm(im) = jm;
-                    perm(ip) = jp;
-                else
-                    perm(im) = jp;
-                    perm(ip) = jm;
-                end
-            end
-        end
-        
-        function signedPerm = fromPermutation(perm)
-        % Returns the signed permutation corresponding to the given permutation encoding
-        % see SignedPermutations.toPermutation
-            n2 = length(perm);
-            if mod(n2, 2) ~= 0
-                error('Not an image of a signed permutation');
-            end
-            n = n2/2; % domain size of the signed permutation
-            perm(perm <= n) = -(n - perm(perm <= n) + 1);
-            perm(perm > n) = perm(perm > n) - n;
-            mperm = -fliplr(perm(1:n));
-            pperm = perm(n+1:n2);
-            assert(isequal(mperm, pperm), 'Not an image of a signed permutation');
-            signedPerm = pperm;
-        end
-
-        function mat = toMatrix(signedPerm)
-        % Returns the signed permutation matrix corresponding to the given
-        % signed permutation such that matrix multiplication is
-        % compatible with composition of permutations, i.e. 
-        % S.toMatrix(S.compose(x, y)) = 
-        % S.toMatrix(x) * S.toMatrix(y)
-        % where S = SignedPermutations(domainSize)
-            n = length(signedPerm);
-            mat = sparse(abs(signedPerm), 1:n, sign(signedPerm), n, n);
-        end
-        
-        function b = isSignedPermutationMatrix(mat)
-        % Returns true when "mat" is a signed permutation matrix, i.e. a monomial matrix
-        % with nonzero entries equal to +1 or -1
-            if isequal(size(mat), [0 0])
-                b = true;
-                return
-            end
-            n = size(mat, 1);
-            [I J S] = find(mat);
-            I = I';
-            J = J';
-            S = S';
-            sI = sort(I);
-            [sJ IJ] = sort(J);
-            b = isequal(sI, 1:n) && isequal(sJ, 1:n) && isequal(abs(S), ones(1, n));
-        end
-        
-        function signedPerm = fromMatrix(mat)
-        % Returns the signed permutation corresponding to the given matrix representation
-        % or throws an error
-            if isequal(size(mat), [0 0])
-                signedPerm = zeros(1, 0);
-                return
-            end
-            signedPerm = [];
-            n = size(mat, 1);
-            [I J S] = find(mat);
-            if length(I) ~= n
-                error('Not a monomial matrix');
-            end
-            I = I';
-            J = J';
-            S = S';
-            sI = sort(I);
-            [sJ IJ] = sort(J);
-            if ~isequal(sI, 1:n) || ~isequal(sJ, 1:n)
-                error('Not a monomial matrix');
-            end
-            if ~isequal(abs(S), ones(1, n))
-                error('Monomial matrix with entries other than +1, -1');
-            end
-            signedPerm = I.*S;
-            signedPerm = signedPerm(IJ);
-        end
-    
     end
     
 end

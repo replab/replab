@@ -1,18 +1,18 @@
-classdef GeneralLinearMatrices < replab.Group
-% Describes the group of square invertible real or complex matrices
+classdef GeneralLinearMatricesWithInverses < replab.Group
+% Describes the group of n x n invertible real or complex matrices
     
     properties
-        field % {'R', 'C'}: Underlying field, real (R) or complex (C) matrices
-        n % integer: size
+        field % {'R', 'C'} real or complex matrices
+        n % size
     end
     
     properties (Access = protected)
-        parent_; % general, not necessarily invertible matrices
+        parent_; % complex matrices
     end
     
     methods
         
-        function self = GeneralLinearMatrices(field, n)
+        function self = GeneralLinearMatricesWithInverses(field, n)
             self.field = field;
             self.n = n;
             switch field
@@ -24,9 +24,9 @@ classdef GeneralLinearMatrices < replab.Group
                 error('Unknown field');
             end
             if replab.Settings.useSparse
-                self.identity = speye(n);
+                self.identity = [speye(n) speye(n)];
             else
-                self.identity = eye(n);
+                self.identity = [eye(n) eye(n)];
             end
         end
         
@@ -39,22 +39,31 @@ classdef GeneralLinearMatrices < replab.Group
         % Domain
         
         function b = eqv(self, X, Y)
-            b = self.parent_.eqv(X, Y);
+            b = self.parent_.eqv(X(:,1:self.n), Y(:,1:self.n));
         end
         
         function X = sample(self)
             X = self.parent_.sample;
+            X = [X inv(X)];
             % a generic gaussian matrix is almost always invertible
         end
         
         % Semigroup/monoid/group
         
         function Z = compose(self, X, Y)
-            Z = X * Y;
+            n = self.n;
+            Xinv = X(:,n+1:2*n);
+            X = X(:,1:n);
+            Yinv = Y(:,n+1:2*n);
+            Y = Y(:,1:n);
+            Z = [X*Y Yinv*Xinv];
         end
         
-        function XInv = inverse(self, X)
-            XInv = inv(X);
+        function Xinv = inverse(self, X)
+            n = self.n;
+            Xinv = X(:,n+1:2*n);
+            X = X(:,1:n);
+            Xinv = [Xinv X];
         end
         
     end

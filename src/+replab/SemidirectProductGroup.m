@@ -123,14 +123,14 @@ classdef SemidirectProductGroup < replab.FiniteGroup
         end
         
         function e = elements(self)
-            e = replab.Enumerator.lambda(self.order, ...
-                                         @(ind) self.atFun(ind), ...
-                                         @(g) self.findFun(g));
+            e = replab.IndexedFamily.lambda(self.order, ...
+                                            @(ind) self.atFun(ind), ...
+                                            @(g) self.findFun(g));
         end
         
         function gd = decomposition(self)
-            TH = self.H.decomposition.transversals;
-            TN = self.N.decomposition.transversals;
+            TH = self.H.decomposition.T;
+            TN = self.N.decomposition.T;
             idN = self.N.identity;
             idH = self.H.identity;
             TH1 = cellfun(@(t) cellfun(@(h) {h idN}, t, 'uniform', 0), TH, 'uniform', 0);

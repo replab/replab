@@ -5,7 +5,7 @@ classdef Rep < replab.Str
 % for optimization purposes, actions can also be specialized.
     
     properties (SetAccess = protected)
-        group     % (replab.Group) Group being represented
+        group     % (replab.CompactGroup) Group being represented
         field     % ({'R', 'C'}) Representation type, real or complex
         dimension % (integer as double) Representation dimension
     end
@@ -69,20 +69,20 @@ classdef Rep < replab.Str
             I = self.decomposition_;
         end
 
-        % Str
+        %% Str methods
 
         function s = headerStr(self)
             f = replab.str.field(self.field, 'Orthogonal real', 'Unitary complex');
             s = sprintf('%s representation of dimension %d', f, self.dimension);
         end
 
-        % SAMPLING
+        %% Sampling
         
         function rho = sample(self)
             rho = self.image(self.group.sample);
         end
         
-        % ACTIONS
+        %% Derived actions
         
         function v1 = action(self, g, v)
         % Computes the action of the group element g on the 
@@ -102,15 +102,13 @@ classdef Rep < replab.Str
             X1 = gI * X * gI';
         end
         
-        % REAL OR COMPLEX
+        %% Derived representations
         
         function complexRep = complexification(self)
             assert(self.overR, 'Representation should be real to start with');
             complexRep = replab.Rep.lambda(self.group, 'C', self.dimension, @(g) self.image(g));
         end
-           
-        % Construction of derived representations
-        
+                   
         function cRep = conj(self)
         % Returns the conjugate representation
             if self.overR
@@ -136,7 +134,7 @@ classdef Rep < replab.Str
             rep = replab.rep.TensorRep(varargin);
         end
         
-        % Manipulation of representation space
+        %% Manipulation of representation space
         
         function sub = subRep(self, U)
         % Returns a subrepresentation of this representation

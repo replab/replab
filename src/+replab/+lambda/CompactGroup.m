@@ -1,30 +1,36 @@
-classdef Monoid < replab.Monoid
+classdef CompactGroup < replab.Group
     
     properties (SetAccess = protected)
         header;
         eqvFun;
         sampleFun;
         composeFun;
+        inverseFun;
+        sampleUniformlyFun;
     end
-
+    
     methods
         
-        function self = Monoid(header, eqvFun, sampleFun, ... % Domain
-                               composeFun, identity) % Monoid
+        function self = Group(header, eqvFun, sampleFun, ... % Domain
+                              composeFun, identity, ... % Monoid
+                              inverseFun, ... % Group
+                              sampleUniformlyFun) % CompactGroup
             self.header = header;
             self.eqvFun = eqvFun;
-            self.sampleFun = sampleFun;
+            self.sampleFun
             self.composeFun = composeFun;
             self.identity = identity;
+            self.inverseFun = inverseFun;
+            self.sampleUniformlyFun = sampleUniformlyFun;
         end
         
         function str = headerStr(self)
             str = self.header;
         end
-        
+
         function names = hiddenFields(self)
             names = replab.str.uniqueNames( ...
-                hiddenFields@replab.Monoid(self), ...
+                hiddenFields@replab.Group(self), ...
                 {'header'} ...
                 );
         end
@@ -49,6 +55,20 @@ classdef Monoid < replab.Monoid
             z = f(x, y);
         end
         
+        % Group methods
+        
+        function xInv = inverse(self, x)
+            f = self.inverseFun;
+            xInv = f(x);
+        end
+        
+        % CompactGroup methods
+        
+        function g = sampleUniformly(self)
+            f = self.sampleUniformlyFun;
+            g = f();
+        end
+    
     end
     
 end

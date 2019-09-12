@@ -8,7 +8,7 @@ classdef WreathProductImprimitiveRep < replab.Rep
         
         function self = WreathProductImprimitiveRep(group, Arep)
             assert(isa(group, 'replab.WreathProductGroup'));
-            assert(isequal(group.A, Arep.group));
+            %assert(isequal(group.A, Arep.group)); octave not happy
             dA = Arep.dimension;
             n = group.H.domainSize;
             self.Arep = Arep;
@@ -25,6 +25,9 @@ classdef WreathProductImprimitiveRep < replab.Rep
             rho = blkdiag(rhos{:});
             dA = self.Arep.dimension;
             rho = kron(sparse(h, 1:n, ones(1,n), n, n), speye(dA)) * rho;
+            if ~replab.Settings.useSparse
+                rho = full(rho);
+            end
         end
         
     end

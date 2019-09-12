@@ -13,14 +13,16 @@ outputRep = S2.naturalRep
 S2 = 
 
 Permutations acting on 2 elements
-  domainSize: 2     
-    identity: [1, 2]
-generator(1): [2, 1]
-       order: 2     
+      domainSize: 2                                
+        identity: [1, 2]                           
+niceMonomorphism: @(x)x                            
+          parent: Permutations acting on 2 elements
+    generator(1): [2, 1]                           
 
 outputRep = 
 
 Orthogonal real representation of dimension 2
+    chain: replab.bsgs.Chain                
 dimension: 2                                
     field: 'R'                              
     group: Permutations acting on 2 elements
@@ -40,7 +42,6 @@ replab.WreathProductGroup
 generator(1): {[2, 1], {[1, 2], [1, 2]}}       
 generator(2): {[1, 2], {[2, 1], [1, 2]}}       
 generator(3): {[1, 2], {[1, 2], [2, 1]}}       
-       order: 8                                
 
 partyRep = 
 
@@ -68,7 +69,6 @@ generator(4): {[1, 2], {{[1, 2], {[1, 2], [2, 1]}}, {[1, 2], {[1, 2], [1, 2]}}}}
 generator(5): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[2, 1], {[1, 2], [1, 2]}}}}
 generator(6): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[2, 1], [1, 2]}}}}
 generator(7): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [2, 1]}}}}
-       order: 128                                                               
 </pre><h2>We now compute the decomposition of the representation<a name="4"></a></h2><pre class="codeinput">probRep.decomposition
 </pre><pre class="codeoutput">
 ans = 

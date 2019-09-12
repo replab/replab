@@ -12,8 +12,4 @@ function test_suite = LawsTest()
         G = replab.SignedPermutations(n);
         test_suite = replab.SignedPermutationsLaws(G).addTestCases(test_suite);
     end
-    for n = [0 1 5]
-        G = replab.FreeGroup(n);
-        test_suite = replab.FinitelyGeneratedGroupLaws(G).addTestCases(test_suite);
-    end
 end

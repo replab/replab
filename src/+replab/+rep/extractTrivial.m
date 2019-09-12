@@ -34,7 +34,11 @@ function [Utrivial Urest] = extractTrivial(rep)
     if size(Utrivial, 2) > 0
         Urest = null(Utrivial');
     else
-        Urest = speye(d);
+        if replab.Settings.useSparse
+            Urest = speye(d);
+        else
+            Urest = eye(d);
+        end
     end
     assert(size(Utrivial, 1) == d);
     assert(size(Urest, 1) == d);
