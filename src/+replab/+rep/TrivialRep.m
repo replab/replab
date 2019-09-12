@@ -12,27 +12,34 @@ classdef TrivialRep < replab.Rep
             self.group = group;
             self.field = field;
             self.dimension = dimension;
+            self.isUnitary = true;
             if replab.Settings.useSparse
                 self.identity = speye(self.dimension);
             else
                 self.identity = eye(self.dimension);
             end
         end
+        
+        %% Rep methods
        
         function rho = image(self, g)
             rho = self.identity;
         end
         
+        function rho = inverseImage(self, g)
+            rho = self.identity;
+        end
+
         function rho = sample(self)
             rho = self.identity;
         end            
         
-        function v = action(self, g, v)
-        % do nothing to v
+        function M = matrixRowAction(self, g, M)
+        % do nothing to M
         end
         
-        function X = adjointAction(self, g, X)
-        % do nothing to X
+        function M = matrixColAction(self, g, M)
+        % do nothing to M
         end
         
         function complexRep = complexification(self)
@@ -41,6 +48,10 @@ classdef TrivialRep < replab.Rep
         end
         
         function rep = conj(self)
+            rep = self;
+        end
+        
+        function rep = dual(self)
             rep = self;
         end
         

@@ -1,4 +1,14 @@
 classdef FiniteGroup < replab.CompactGroup
+% Describes a group with a finite number of elements
+%
+% More computational primitives are available when a nice monomorphism is provided,
+% see `replab.NiceFiniteGroup`.
+%
+% This computational structure must provide:
+%
+% * An indexed family of the group elements that supports element seeking and retrieval
+%
+% * A decomposition of the finite group in a product of sets
     
     properties (SetAccess = protected)
         generators % row cell array of group elements: Group generators
@@ -72,41 +82,7 @@ classdef FiniteGroup < replab.CompactGroup
     
     methods
         
-        function R = randomBag(self)
-            if isempty(self.randomBag_)
-                self.randomBag_ = replab.RandomBag(self, self.generators);
-            end
-            R = self.randomBag_;
-        end
-
-        % Str
-        
-        function names = hiddenFields(self)
-            names = hiddenFields@replab.Group(self);
-            names{1, end+1} = 'generators';
-        end
-        
-        function [names values] = additionalFields(self)
-            [names values] = additionalFields@replab.Group(self);
-            for i = 1:self.nGenerators
-                names{1, end+1} = sprintf('generator(%d)', i);
-                values{1, end+1} = self.generator(i);
-            end
-        end
-
-        % Domain
-        
-        function g = sample(self)
-            g = self.randomBag.sample;
-        end
-                
-        % CompactGroup
-        
-        function g = sampleUniformly(self)
-            g = self.elements.sample;
-        end
-
-        % Own methods
+        %% Own methods
         
         function n = nGenerators(self)
         % Returns the number of group generators
@@ -145,7 +121,44 @@ classdef FiniteGroup < replab.CompactGroup
         %   logical: True if this group is trivial (i.e. has only one element)
             b = self.nGenerators == 0;
         end
+        
+        function R = randomBag(self)
+        % Returns an instance of the product-replacement algorithm data structure
+            if isempty(self.randomBag_)
+                self.randomBag_ = replab.RandomBag(self, self.generators);
+            end
+            R = self.randomBag_;
+        end
 
+        %% Str methods
+        
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Group(self);
+            names{1, end+1} = 'generators';
+        end
+        
+        function [names values] = additionalFields(self)
+            [names values] = additionalFields@replab.Group(self);
+            for i = 1:self.nGenerators
+                names{1, end+1} = sprintf('generator(%d)', i);
+                values{1, end+1} = self.generator(i);
+            end
+        end
+
+        %% Domain methods
+        
+        function g = sample(self)
+            g = self.randomBag.sample;
+        end
+                
+        %% CompactGroup methods
+        
+        function g = sampleUniformly(self)
+            g = self.elements.sample;
+        end
+
+        %% Representations
+        
         function rep = leftRegularRep(self)
         % Returns the left regular representation of this group
         %
@@ -173,4 +186,8 @@ classdef FiniteGroup < replab.CompactGroup
 
     end
 
+    methods (Static)
+        
+    end
+    
 end

@@ -1,7 +1,8 @@
 classdef DirectSumRep < replab.Rep
+% A direct sum of representations whose images are diagonal by blocks
     
     properties
-        blocks;
+        blocks % row cell array: Contained subrepresentations
     end
     
     methods
@@ -14,6 +15,7 @@ classdef DirectSumRep < replab.Rep
                 d = d + blocks{i}.dimension;
             end
             self.dimension = d;
+            self.isUnitary = replab.domain.Trilean.and(cellfun(@(x) x.isUnitary, blocks, 'uniform', 0));
             for i = 2:length(blocks)
                 assert(blocks{1}.group == blocks{i}.group);
                 assert(isequal(blocks{1}.field, blocks{i}.field));
@@ -30,8 +32,8 @@ classdef DirectSumRep < replab.Rep
         function block = block(self, i)
             block = self.blocks{i};
         end
-                
-        % Str
+
+        %% Str methods
                 
         function names = hiddenFields(self)
             names = hiddenFields@replab.Rep(self);
@@ -46,12 +48,18 @@ classdef DirectSumRep < replab.Rep
             end
         end
         
-        % Rep
+        %% Rep methods
 
         function rho = image(self, g)
             rhos = cellfun(@(rep) rep.image(g), self.blocks, 'uniform', 0);
             rho = blkdiag(rho{:});
         end
         
+        function rho = inverseImage(self, g)
+            rhos = cellfun(@(rep) rep.inverseImage(g), self.blocks, 'uniform', 0);
+            rho = blkdiag(rho{:});
+        end
+
     end
+
 end

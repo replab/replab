@@ -2,7 +2,7 @@ classdef ForRepByImages < replab.Equivariant
 
     properties (Access = protected)
         decompositionR % transversal images for repR
-        decompositionC % transversal images for repC
+        decompositionC % transversal inverse images for repC
     end
     
     methods (Access = protected)
@@ -10,7 +10,7 @@ classdef ForRepByImages < replab.Equivariant
         function computeImages(self)
             self.decompositionR = self.repR.chain.V;
             if self.repR == self.repC
-                self.decompositionC = self.repC.chain.V;
+                self.decompositionC = self.repC.chain.Vinv;
             else
                 U = self.repR.chain.U;
                 k = length(U);
@@ -20,7 +20,7 @@ classdef ForRepByImages < replab.Equivariant
                     nEl = size(Ri, 2);
                     Ci = cell(1, nEl);
                     for j = 1:nEl
-                        Ci{j} = self.repC.chain.image(Ri(:,j)');
+                        Ci{j} = self.repC.chain.inverseImage(Ri(:,j)');
                     end
                     decC{i} = Ci;
                 end
@@ -43,14 +43,14 @@ classdef ForRepByImages < replab.Equivariant
                 self.computeImages;
             end
             R = self.decompositionR;
-            C = self.decompositionC;
+            Cinv = self.decompositionC;
             for i = length(R):-1:1
                 Ri = R{i};
-                Ci = C{i};
+                Cinvi = Cinv{i};
                 nEls = length(Ri);
                 S = X;
                 for j = 2:nEls
-                    gX = Ri{j} * X * Ci{j}';
+                    gX = Ri{j} * X * Cinvi{j};
                     S = S + gX;
                 end
                 X = S/nEls;

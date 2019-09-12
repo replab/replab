@@ -14,6 +14,6 @@ function [sub O] = orbitDecomposition(rep)
         if ~replab.Settings.useSparse
             basis = full(basis);
         end
-        sub{b} = rep.subRep(basis);
+        sub{b} = rep.subRepUnitary(basis);
     end
 end

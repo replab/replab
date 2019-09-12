@@ -28,7 +28,7 @@ classdef Isotypic < replab.Str
             for i = 1:self.nCopies
                 U = [U;self.copy(i).U];
             end
-            r = self.parent.subRep(U);
+            r = self.parent.subRepUnitary(U);
             % TODO: preserve rational bases
         end
         

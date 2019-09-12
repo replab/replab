@@ -11,6 +11,7 @@ classdef IndexRelabelingRep < replab.Rep
             n = group.domainSize;
             self.group = group;
             self.dimension = localDimension^n;
+            self.isUnitary = true;
             self.localDimension = localDimension;
             self.field = 'R';
         end

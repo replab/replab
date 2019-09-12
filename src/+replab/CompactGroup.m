@@ -13,6 +13,36 @@ classdef CompactGroup < replab.Group
             error('Abstract');
         end
         
+        %% Group construction
+        
+        function prd = directProduct(varargin)
+        % Returns the direct product of groups
+        %
+        % Args:
+        %   varargin: Variable number of arguments of type `replab.CompactGroup`
+        %
+        % Returns:
+        %   replab.CompactGroup: The direct product group
+        %                        If all groups are of type `replab.NiceFiniteGroup`, the return type
+        %                        is `replab.NiceFiniteGroup` as well.
+        %                        If all groups are of type `replab.FiniteGroup`, the return type
+        %                        is `replab.FiniteGroup` as well.
+            prd = replab.directproduct.of(varargin);
+        end
+        
+        function prd = directPower(self, n)
+        % Returns the direct product of this group with itself a number of times
+        %
+        % Args:
+        %   n (integer): Number of copies
+        %
+        % Returns:
+        %   replab.CompactGroup: The direct product self x ...(n times)... x self
+        %                        The return type is specialized as in `replab.CompactGroup.directProduct`.
+            factors = arrayfun(@(x) self, 1:n, 'uniform', 0);
+            prd = replab.directproduct.of(factors);
+        end
+        
         %% Representations
         
         function rep = trivialRep(self, field, dimension)

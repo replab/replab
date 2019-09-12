@@ -17,7 +17,7 @@ classdef Settings
             if nargin == 1
                 AveragingIterations = newValue;
             elseif isempty(AveragingIterations)
-                AveragingIterations = 50;
+                AveragingIterations = 200;
             end
             value = AveragingIterations;
         end

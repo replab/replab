@@ -23,7 +23,7 @@ function sub1 = niceRep(sub)
         end
         return
     end
-    if isequal(sub.field, 'C')
+    if sub.overC
         Ureal = replab.rep.recoverReal(sub);
         if ~isempty(Ureal)
             if isa(sub, 'replab.Irrep')

@@ -18,11 +18,25 @@ classdef Equivariant < replab.Domain
     end
     
     properties (Access = protected)
-        parent_ % parent domain, real or complex matrices
+        parent % parent domain, real or complex matrices
     end
     
     methods
 
+        
+        %% Abstract
+        
+        function b = isEquivariant(self, X)
+        % Returns whether the matrix X represents an equivariant linear map
+        %
+        % Args:
+        %   X: Candidate equivariant linear map
+        %
+        % Returns:
+        %   logical: Whether the given linear map is equivariant
+            b = self.parent.eqv(X, self.project(X));
+        end
+        
         function X = project(self, X)
         % Projects any nR x nC matrix in the equivariant subspace
             error('Abstract');
@@ -43,14 +57,7 @@ classdef Equivariant < replab.Domain
             assert(repR.group == repC.group, ...
                    'Both representations must be defined on the same group');
             self.group = repR.group;
-            switch self.field
-              case 'R'
-                self.parent_ = replab.domain.RealMatrices(self.nR, self.nC);
-              case 'C'
-                self.parent_ = replab.domain.ComplexMatrices(self.nR, self.nC);
-              otherwise
-                error('Unknown field');
-            end
+            self.parent = replab.domain.Matrices(self.field, self.nR, self.nC);
         end
 
         %% Str methods
@@ -64,11 +71,11 @@ classdef Equivariant < replab.Domain
         %% Domain methods
         
         function b = eqv(self, X, Y)
-            b = self.parent_.eqv(X, Y);
+            b = self.parent.eqv(X, Y);
         end
         
         function X = sample(self)
-            X = self.project(self.parent_.sample);
+            X = self.project(self.parent.sample);
         end
         
     end

@@ -160,7 +160,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %   replab.Rep: The (real) standard representation
             U = replab.rep.standardBasis(self.domainSize);
             U = U(2:end, :);
-            rho = self.naturalRep.subRep(U);
+            rho = self.naturalRep.subRepUnitary(U);
         end
                 
     end
