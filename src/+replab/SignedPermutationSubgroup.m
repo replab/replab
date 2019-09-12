@@ -13,6 +13,9 @@ classdef SignedPermutationSubgroup < replab.SignedPermutationGroup
                 self.order_ = order;
             end
             self.generators = generators;
+            for i = 1:length(generators)
+                assert(~parent.isIdentity(generators{i}), 'Generator cannot be identity');
+            end
         end
         
     end

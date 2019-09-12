@@ -31,7 +31,6 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         
         function p = niceMonomorphism(self, p)
         end
-
         
         %% Methods specific to permutation groups
 

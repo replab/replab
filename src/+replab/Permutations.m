@@ -52,7 +52,6 @@ classdef Permutations < replab.PermutationGroup
             end
             grp = replab.PermutationSubgroup(self, generators, order);
         end
-
         
     end
     

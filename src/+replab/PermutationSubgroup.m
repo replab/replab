@@ -12,6 +12,9 @@ classdef PermutationSubgroup < replab.PermutationGroup
             if nargin > 2 && ~isempty(order)
                 self.order_ = order;
             end
+            for i = 1:length(generators)
+                assert(~parent.isIdentity(generators{i}), 'Generator cannot be identity');
+            end
             self.generators = generators;
         end
         
