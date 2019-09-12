@@ -295,7 +295,7 @@ classdef Chain < replab.Str
         %
         % Returns:
         %   The corresponding transversal element, or [] if b is not part of the orbit
-            j = self.orbitIndex(i, b);
+            [~, j] = ismember(b, self.Delta{i});
             if j == 0
                 g = [];
             else
@@ -334,7 +334,7 @@ classdef Chain < replab.Str
         %
         % Raises:
         %   An error if `b` is not part of the orbit Delta^i
-            j = self.orbitIndex(i, b);
+            [~, j] = ismember(b, self.Delta{i});
             assert(j ~= 0, 'Element not part of orbit');
             Vi = self.V{i};
             img = Vi{j};
@@ -352,7 +352,7 @@ classdef Chain < replab.Str
         %
         % Raises:
         %   An error if `b` is not part of the orbit Delta^i
-            j = self.orbitIndex(i, b);
+            [~, j] = ismember(b, self.Delta{i});
             assert(j ~= 0, 'Element not part of orbit');
             Vinvi = self.Vinv{i};
             img = Vinvi{j};
@@ -374,7 +374,7 @@ classdef Chain < replab.Str
             for i = 1:self.length
                 beta_i = self.B(i);
                 b = h(beta_i);
-                j = self.orbitIndex(i, b);
+                [~, j] = ismember(b, self.Delta{i});
                 assert(j ~= 0, 'Element is not member of the chain');
                 Uinvi = self.Uinv{i};
                 uinv = Uinvi(:, j)';
@@ -420,7 +420,7 @@ classdef Chain < replab.Str
             h = g;
             for i = 1:k
                 b = h(self.B(i));
-                j = self.orbitIndex(i, b);
+                [~, j] = ismember(b, self.Delta{i});
                 if j == 0
                     return
                 end
@@ -491,7 +491,7 @@ classdef Chain < replab.Str
             indices = zeros(1, k);
             for i = 1:k
                 b = h(self.B(i));
-                j = self.orbitIndex(i, b);
+                [~, j] = ismember(b, self.Delta{i});
                 indices(i) = j;
                 if j == 0
                     indices = [];
@@ -562,7 +562,7 @@ classdef Chain < replab.Str
             w = v;
             for i = 1:k
                 b = h(self.B(i));
-                j = self.orbitIndex(i, b);
+                [~, j] = ismember(b, self.Delta{i});
                 if j == 0
                     return
                 end
