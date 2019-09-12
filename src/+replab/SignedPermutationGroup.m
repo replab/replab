@@ -95,7 +95,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
         
         function rho = naturalRep(self)
         % Natural representation on R^d of signed permutations on integers -d..-1, 1..d
-            rho = self.signedPermutationRep(self.domainSize, self.generators);
+            rho = replab.Rep.lambda(self, 'R', self.domainSize, @(p) replab.SignedPermutations.toMatrix(p));
         end
         
     end

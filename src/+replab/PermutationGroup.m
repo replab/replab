@@ -147,7 +147,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   replab.Rep: The (real) natural permutation representation
-            rho = self.permutationRep(self.domainSize, self.generators);
+            rho = replab.Rep.lambda(self, 'R', self.domainSize, @(p) replab.Permutations.toMatrix(p));
         end
         
         function rho = standardRep(self)
