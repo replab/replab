@@ -40,11 +40,9 @@ classdef RepByImages < replab.nu.Rep
                 n = length(niceId);
                 nG = self.group.nGenerators;
                 I = zeros(n, nG);
+                elements = cell(1, nG);
                 for i = 1:nG
                     I(:,i) = self.group.niceMonomorphism(self.group.generator(i));
-                end
-                elements = cell(1, nG);
-                for i = 1:group.nGenerators
                     elements{i} = [self.images{i} self.inverseImages{i}];
                 end
                 C = replab.bsgs.Chain(n, J);
