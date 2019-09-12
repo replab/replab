@@ -2,8 +2,9 @@ classdef CommutantVar < replab.Str
 % CommutantVar is a sdpvar class for matrices satisfying symmetry
 % constraints.
 %
-% See also replab.CommutantVar.fromSdpMatrix,
-%          replab.CommutantVar.fromPermutations
+% See also replab.CommutantVar.fromPermutations,
+%          replab.CommutantVar.fromSdpMatrix,
+%          replab.CommutantVar.fromSymSdpMatrix
 
 % Warning: this object inherits from a handle object, therefore it is also
 % a handle object. To copy this object and obtain two identical but
@@ -397,8 +398,6 @@ classdef CommutantVar < replab.Str
         %
         % Example:
         %     sdpMatrix = sdpvar(3);
-        %     sdpMatrix(1,1) = 1-sdpMatrix(2,2)-sdpMatrix(3,3);
-        %     trace(sdpMatrix)
         %     matrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, {[3 1 2]})
         %
         % See also:
@@ -411,19 +410,13 @@ classdef CommutantVar < replab.Str
         function R = fromSymSdpMatrix(sdpMatrix, generators)
         % R = fromSymSdpMatrix(sdpMatrix, generators)
         % 
-        % Imposes symmetry constraints onto an existing SDP matrix which is
-        % already invariant under the group elements. The 
-        
-        % creates a CommutantVar matrix which satisfies both:
-        %     - the structure encoded into sdpMatrix
-        %     - invariance under joint permutations of its lines and
-        %       columns by the provided generators.
+        % Block-diagonalizes an existing SDP matrix which is already
+        % invariant under the group generators.
         %
         % Args:
-        %     sdpMatrix: the SDP matrix to block diagonlize, which should
-        %         be invariant under permutations
-        %     generators: a list of generators under which the matrix is to
-        %         remain unchanged
+        %     sdpMatrix: the SDP matrix to block diagonlize
+        %     generators: a list of generators under which the matrix
+        %         remains unchanged
         %
         % Results:
         %     R: a CommutantVar object
@@ -497,7 +490,7 @@ classdef CommutantVar < replab.Str
         %     s2: The second dimension (optional)
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, {[3 1 2]})
+        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]})
         %     size(matrix)
         %
         % See also:
@@ -530,7 +523,7 @@ classdef CommutantVar < replab.Str
         %     M: sdpvar block
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, {[3 1 2]})
+        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]})
         %     matrix.block(2)
         %
         % See also:
@@ -624,13 +617,18 @@ classdef CommutantVar < replab.Str
         %     vars: vector of indices 
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
-        %     matrix.getVariables
-        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
-        %     matrix.getVariables
+        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]})
+        %     matrix1.getVariables
+        %     matrix2 = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
+        %     matrix2.getVariables
+        %     x = sdpvar;
+        %     sdpMatrix = [1 x x; x 1 x; x x 1];
+        %     matrix3 = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[2 3 1]})
+        %     matrix3.getVariables
         %
         % See also:
         %     replab.CommutantVar.nbVars
+        %     sdpvar.getvariables
 
             vars = getvariables(self.blocks{1});
             for i = 2:self.nComponents
@@ -656,10 +654,14 @@ classdef CommutantVar < replab.Str
         %     n: number of SDP variables
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
-        %     matrix.nbVars
-        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
-        %     matrix.nbVars
+        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]})
+        %     matrix1.nbVars
+        %     matrix2 = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
+        %     matrix2.nbVars
+        %     x = sdpvar;
+        %     sdpMatrix = [1 x x; x 1 x; x x 1];
+        %     matrix3 = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[2 3 1]})
+        %     matrix3.nbVars
         %
         % See also:
         %     replab.CommutantVar.getVariables
@@ -668,13 +670,34 @@ classdef CommutantVar < replab.Str
         end
 
         function val = value(self)
-        % Returns the current numerical value of the object
+        % val = value(self)
+        %
+        % Returns the current numerical value of the object.
+        %
+        % Args:
+        %     self: CommutantVar object
+        %
+        % Returns:
+        %     val: numerical value taken by the object
+        %
+        % See also:
+        %     sdpvar.value
+        
             val = value(self.fullMatrix);
         end
 
         function see(self)
-        % Displays internal info about the matrix composition. For now, we
-        % delegate to yalmip
+        % see(self)
+        %
+        % Displays internal info about the structure of the matrix in full
+        % form.
+        %
+        % Args:
+        %     self: CommutantVar object
+        %
+        % See also:
+        %     sdpvar.see
+        
             see(self.fullMatrix);
         end
 
@@ -749,7 +772,7 @@ classdef CommutantVar < replab.Str
             % We keep track if some rounding is done
             maxOuterEpsilonFound = 0;
             maxEpsilonFound = 0;
-            epsilonWarning = 1e-14;
+            epsilonWarning = 1e-13;
 
             % basic tests
             if ~isequal(size(X), size(Y))
@@ -922,7 +945,7 @@ classdef CommutantVar < replab.Str
 
             % We keep track of the encountered non-hermiticities
             maxNonHermiticity = 0;
-            epsilonWarning = 1e-14;
+            epsilonWarning = 1e-13;
 
             size1 = size(X);
             size2 = size(Y);
@@ -950,7 +973,7 @@ classdef CommutantVar < replab.Str
                 end
 
                 % The block structure matches fully, we procede to perform the
-                % substraction on each block
+                % addition on each block
                 Z = copy(X);
                 co = 0;
                 for i = 1:Z.nComponents
@@ -1028,7 +1051,7 @@ classdef CommutantVar < replab.Str
 
             % We keep track of the encountered non-hermiticities
             maxNonHermiticity = 0;
-            epsilonWarning = 1e-14;
+            epsilonWarning = 1e-13;
 
             size1 = size(X);
             size2 = size(Y);
@@ -1357,9 +1380,8 @@ classdef CommutantVar < replab.Str
         % F = eq(X, Y)
         %
         % Equality constraint. The constraint is imposed through a series
-        % of equality constraint for each block. If X or Y also includes
-        % linear constraints, these constraints are also added to the
-        % constraints.
+        % of equality constraint for each block. If X or Y includes linear
+        % constraints, they are also added to the result.
         %
         % Args:
         %     X: CommutantVar, compatible sdpvar object or numeric matrix,
@@ -1458,8 +1480,8 @@ classdef CommutantVar < replab.Str
         %
         % Greater or equal semi-definite constraint. The constraint on the
         % matrices are imposed through a series of constraint for each
-        % block. If X or Y also includes linear constraints, these
-        % constraints are also added to the constraints.
+        % block. If X or Y includes linear constraints, they are also added
+        % to the result.
         %
         % Args:
         %     X: CommutantVar, compatible sdpvar object or numeric matrix,
@@ -1485,7 +1507,7 @@ classdef CommutantVar < replab.Str
 
             % We keep track of the encountered non-hermiticities
             maxNonHermiticity = 0;
-            epsilonWarning = 1e-14;
+            epsilonWarning = 1e-13;
 
             % We examine each case independently
             if isa(X, 'replab.CommutantVar') && ~isa(Y, 'replab.CommutantVar') && (numel(Y) == 1)
@@ -1589,8 +1611,8 @@ classdef CommutantVar < replab.Str
         %
         % Lesser or equal semi-definite constraint. The constraint on the
         % matrices are imposed through a series of constraint for each
-        % block. If X or Y also includes linear constraints, these
-        % constraints are also added to the constraints.
+        % block. If X or Y includes linear constraints, they are also added
+        % to the result.
         %
         % Args:
         %     X: CommutantVar, compatible sdpvar object or numeric matrix,
@@ -1616,7 +1638,7 @@ classdef CommutantVar < replab.Str
 
             % We keep track of the encountered non-hermiticities
             maxNonHermiticity = 0;
-            epsilonWarning = 1e-14;
+            epsilonWarning = 1e-13;
 
             % We examine each case independently
             if isa(X, 'replab.CommutantVar') && ~isa(Y, 'replab.CommutantVar') && (numel(Y) == 1)
