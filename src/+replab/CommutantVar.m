@@ -96,34 +96,73 @@ classdef CommutantVar < replab.Str
 %                               constructors
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 
-        function self = CommutantVar(U, dimensions1, multiplicities, types, sdpMatrix)
-        % self = CommutantVar(U, dimensions1, multiplicities, types, sdpMatrix)
+        function self = CommutantVar(generators, sdpMatrix, sdpMatrixIsSym)
+        % self = CommutantVar(generators, sdpMatrix, sdpMatrixIsSym)
         %
         % Class constructor, not to be used directly.
         %
         % Args:
-        %     U: unitary putting the matrix in block form
-        %     dimensions1: dimension of each irreducible representation
-        %     multiplicities: multiplicity of each irreducible
-        %         representation
-        %     types: type of each representation
-        %     sdpMatrix: constrainted value for each matrix element
-        %         (optional)
+        %     generators: a list of generators under which the matrix is to
+        %         remain unchanged
+        %     sdpMatrix: the SDP matrix on which to impose permutation
+        %         invariance (should be empty if none)
+        %     sdpMatrixIsSym: whether the structure of the provided
+        %         sdpMatrix is already invariant under the generators
+        %         (should be empty if no sdpMatrix is provided)
         %
         % Results:
         %     self: replab.CommutantVar object
         %
         % See also:
+        %     replab.CommutantVar.fromPermutations,
         %     replab.CommutantVar.fromSdpMatrix,
-        %     replab.CommutantVar.fromPermutations
-
+        %     replab.CommutantVar.fromSymSdpMatrix
+        
             try
                 yalmip('version');
             catch
                 error('Yalmip not found in the path');
             end
+            
+            % We keep track if some big rounding is done
+            maxOuterEpsilonFound = 0;
+            maxEpsilonFound = 0;
+            epsilonWarning = 1e-10;
 
-            % We set the class attributes
+            % Input checking
+            assert(nargin <= 3, 'Not enough arguments.');
+
+            assert(iscell(generators), 'Please specify generators in cell array.');
+            n = size(generators{1}, 2);
+
+            if isempty(sdpMatrix)
+                assert(isempty(sdpMatrixIsSym), ['No sdpMatrix provided but sdpMatrixIsSym set to ', num2str(sdpMatrixIsSym)]);
+            else
+                assert(isequal(size(sdpMatrix), [n n]), 'Wrong matrix or group dimension.');
+                assert(isequal(sdpMatrixIsSym, false) || isequal(sdpMatrixIsSym, true), 'sdpMatrixIsSym should be a boolean.');
+            end
+            
+            % Representation decomposition
+            group = replab.SignedPermutations(n).subgroup(generators);
+            irrDecomp = group.naturalRep.decomposition;
+            U = zeros(n, 0);
+            dimensions1 = zeros(1,irrDecomp.nComponents);
+            multiplicities = zeros(1,irrDecomp.nComponents);
+            types = '';
+            for i = 1:irrDecomp.nComponents
+                component = irrDecomp.component(i);
+                dimensions1(i) = component.copyDimension;
+                multiplicities(i) = component.multiplicity;
+                types(i) = component.copy(1).realDivisionAlgebra.shortName;
+                for j = 1:component.multiplicity
+                    copy = component.copy(j);
+                    % correction, as the new RepLAB convention
+                    % is to store basis vectors as row vectors
+                    U = [U copy.U'];
+                end
+            end
+            
+            % We set most class attributes
             self.U = U;
             self.nComponents = length(dimensions1);
             self.dimensions1 = dimensions1;
@@ -137,52 +176,143 @@ classdef CommutantVar < replab.Str
             assert(self.dim == size(self.U,1), ['dimension is ', num2str(self.dim), ' but U is of size ', num2str(size(self.U,1)), 'x', num2str(size(self.U,2))]);
             assert(self.dim == size(self.U,2), ['dimension is ', num2str(self.dim), ' but U is of size ', num2str(size(self.U,1)), 'x', num2str(size(self.U,2))]);
 
-            % We construct the SDP matrix by block
-            self.blocks = cell(1,self.nComponents);
-            for i = 1:self.nComponents
-                switch self.types(i)
-                    case 'R'
-                        self.blocks{i} = sdpvar(self.multiplicities(i));
-                    case 'C'
-                        assert(self.dimensions1(i) == 2, ['Dimension ', num2str(self.dimensions1(i)), ' for a complex representation is currently not supported.']);
-                        self.blocks{i} = kron(sdpvar(self.multiplicities(i)), eye(2));
-                        tmp = kron(sdpvar(self.multiplicities(i), self.multiplicities(i), 'skew'), [1 0; 0 -1]);
-                        reOrder = reshape(1:2*self.multiplicities(i), 2, self.multiplicities(i));
-                        reOrder = reOrder([2 1],:);
-                        reOrder = reOrder(:)';
-                        self.blocks{i} = self.blocks{i} + tmp(:, reOrder);
-                    case 'H'
-                        assert(self.dimensions1(i) == 4, ['Dimension ', num2str(self.dimensions1(i)), ' for a quaternionic representation is currently not supported.']);
-                        da = replab.DivisionAlgebra.quaternion;
-                        self.blocks{i} = sdpvar(1)*ones(4*self.multiplicities(i));
-                        for x = 1:self.multiplicities(i)
-                            for y = x:self.multiplicities(i)
-                                vars = sdpvar(4,1);
-                                if (x == y)
-                                    % Only keep the symmetric part
-                                    self.blocks{i}(4*(x-1)+[1:4], 4*(y-1)+[1:4]) = da.toMatrix([1 0 0 0]'.*vars);
+            % Constructing the SDP blocks now
+            if isempty(sdpMatrix) || ~sdpMatrixIsSym
+                % We construct the SDP blocks from scratch
+                self.blocks = cell(1,self.nComponents);
+                for i = 1:self.nComponents
+                    switch self.types(i)
+                        case 'R'
+                            self.blocks{i} = sdpvar(self.multiplicities(i));
+                        case 'C'
+                            assert(self.dimensions1(i) == 2, ['Dimension ', num2str(self.dimensions1(i)), ' for a complex representation is currently not supported.']);
+                            self.blocks{i} = kron(sdpvar(self.multiplicities(i)), eye(2));
+                            tmp = kron(sdpvar(self.multiplicities(i), self.multiplicities(i), 'skew'), [1 0; 0 -1]);
+                            reOrder = reshape(1:2*self.multiplicities(i), 2, self.multiplicities(i));
+                            reOrder = reOrder([2 1],:);
+                            reOrder = reOrder(:)';
+                            self.blocks{i} = self.blocks{i} + tmp(:, reOrder);
+                        case 'H'
+                            assert(self.dimensions1(i) == 4, ['Dimension ', num2str(self.dimensions1(i)), ' for a quaternionic representation is currently not supported.']);
+                            da = replab.DivisionAlgebra.quaternion;
+                            self.blocks{i} = sdpvar(1)*ones(4*self.multiplicities(i));
+                            for x = 1:self.multiplicities(i)
+                                for y = x:self.multiplicities(i)
+                                    vars = sdpvar(4,1);
+                                    if (x == y)
+                                        % Only keep the symmetric part
+                                        self.blocks{i}(4*(x-1)+[1:4], 4*(y-1)+[1:4]) = da.toMatrix([1 0 0 0]'.*vars);
+                                    else
+                                        % keep everything
+                                        self.blocks{i}(4*(x-1)+[1:4], 4*(y-1)+[1:4]) = da.toMatrix(vars);
+                                        % Set the off-diagonal terms as well
+                                        self.blocks{i}(4*(y-1)+[1:4], 4*(x-1)+[1:4]) = da.toMatrix([1 -1 -1 -1]'.*vars);
+                                    end
+                                end
+                            end
+                        otherwise
+                            error('Unknown type');
+                    end
+
+                    % sanity check
+                    assert(issymmetric(self.blocks{i}));
+                end
+                
+                % We keep in memory the constraint imposed by the SDP matrix
+                % TODO: if a SDP matrix was provided, eliminate linear
+                %       constraints cleanly by applying the generators
+                %       to the SDP matrix. This would be much better.
+                if isempty(sdpMatrix)
+                    self.linearConstraints = [];
+                else
+                    assert(isnumeric(sdpMatrix) || isa(sdpMatrix, 'sdpvar'), ['Wrong type for sdpMatrix: ', class(sdpMatrix), '.']);
+                    self.linearConstraints = (self.fullMatrix == sdpMatrix);
+                end
+            else
+                % We construct the SDP blocks from the provided SDP matrix
+                % off-block-diagonal terms should be zero
+                
+                assert(isnumeric(sdpMatrix) || isa(sdpMatrix, 'sdpvar'), ['Wrong type for sdpMatrix: ', class(sdpMatrix), '.']);
+                
+                % We compute each block from the provided SDP matrix
+                blockMatrix = self.U'*sdpMatrix*self.U;
+                
+                co = 0;
+                for i = 1:self.nComponents
+                    d = self.dimensions1(i);
+                    switch self.types(i)
+                        case 'R'
+                            dimBlock = self.multiplicities(i)*d;
+                        case 'C'
+                            d = d/2;
+                            assert(self.dimensions1(i) == 2, ['Dimension ', num2str(self.dimensions1(i)), ' for a complex representation is currently not supported.']);
+                            dimBlock = self.multiplicities(i)*2*d;
+                        case 'H'
+                            d = d/4;
+                            assert(self.dimensions1(i) == 4, ['Dimension ', num2str(self.dimensions1(i)), ' for a quaternionic representation is currently not supported.']);
+                            dimBlock = self.multiplicities(i)*4*d;
+                    end
+                    self.blocks{i} = blockMatrix(co + (1:dimBlock), co + (1:dimBlock));
+                    
+                    % TODO: check and enforce the fine-grained
+                    % block structure for the C and H cases.
+                    
+                    % Three sanity checks:
+                    % 1. block-diagonal form
+                    shouldBeZero = blockMatrix(co+(1:dimBlock), co+dimBlock+1:end);
+                    indices = [0 getvariables(shouldBeZero)];
+                    for ind = indices
+                        maxOuterEpsilonFound = max([maxOuterEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
+                    end
+                    
+                    % 2. Fine-grained form of real blocks
+                    if isequal(self.types(i), 'R') && (self.dimensions1(i) > 1)
+                        m = self.multiplicities(i);
+                        tmp = reshape(permute(reshape(self.blocks{i}, [d m d m]), [2 1 4 3]), d*m*[1 1]);
+                        for j = 1:d-1
+                            for k = j:d
+                                if j == k
+                                    shouldBeZero = tmp((j-1)*m + (1:m), (k-1)*m + (1:m)) - tmp(1:m,1:m);
                                 else
-                                    % keep everything
-                                    self.blocks{i}(4*(x-1)+[1:4], 4*(y-1)+[1:4]) = da.toMatrix(vars);
-                                    % Set the off-diagonal terms as well
-                                    self.blocks{i}(4*(y-1)+[1:4], 4*(x-1)+[1:4]) = da.toMatrix([1 -1 -1 -1]'.*vars);
+                                    shouldBeZero = tmp((j-1)*m + (1:m), (k-1)*m + (1:m));
+                                end
+                                indices = [0 getvariables(shouldBeZero)];
+                                for ind = indices
+                                    maxOuterEpsilonFound = max([maxOuterEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
                                 end
                             end
                         end
-                    otherwise
-                        error('Unknown type');
+                        
+                        % Enforce the structure
+                        self.blocks{i} = tmp(1:m, 1:m);
+                    end
+                    
+                    % 3. hermitianity
+                    if ~ishermitian(self.blocks{i})
+                        shouldBeZero = self.blocks{i} - self.blocks{i}';
+                        indices = [0 getvariables(shouldBeZero)];
+                        for ind = indices
+                            maxEpsilonFound = max([maxEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
+                        end
+                        self.blocks{i} = self.blocks{i} + self.blocks{i}';
+                    end
+                    
+                    assert(issymmetric(self.blocks{i}));
+                    co = co + dimBlock;
                 end
-
-                % sanity check
-                assert(issymmetric(self.blocks{i}));
-            end
-
-            % We keep in memory the constraint imposed by the SDP matrix
-            if isempty(sdpMatrix)
+                assert(co == size(sdpMatrix,1))
+                
+                if maxOuterEpsilonFound > epsilonWarning
+                    warning(['The provided SDP matrix does not approximately block-diagonalizes: max delta = ', num2str(maxOuterEpsilonFound), char(10), ...
+                        'Off-block-diagonal elements have been replaced by zeros.', char(10), ...
+                        'It might be better to use replab.CommutantVar.fromSdpMatrix.']);
+                end
+                if maxEpsilonFound > epsilonWarning
+                    warning(['The provided SDP matrix does not block-diagonalizes into symmetric blocks: max delta = ', num2str(maxEpsilonFound), char(10), ...
+                        'Blocks have been symmetrized. It might be better to use replab.CommutantVar.fromSdpMatrix.']);
+                end
+                
                 self.linearConstraints = [];
-            else
-                assert(isnumeric(sdpMatrix) || isa(sdpMatrix, 'sdpvar'), ['Wrong type for sdpMatrix: ', class(sdpMatrix), '.']);
-                self.linearConstraints = (self.fullMatrix == sdpMatrix);
             end
         end
 
@@ -199,8 +329,8 @@ classdef CommutantVar < replab.Str
         % Result:
         %     R: replab.CommutantVar object
 
-            % Create a new object
-            R = replab.CommutantVar(rhs.U, rhs.dimensions1, rhs.multiplicities, rhs.types, []);
+            % Create a new simple object
+            R = replab.CommutantVar({[2 1]}, [], []);
 
             % Override properties
 %             fns = properties(rhs);
@@ -242,8 +372,9 @@ classdef CommutantVar < replab.Str
         %
         % See also:
         %     replab.CommutantVar.fromSdpMatrix
+        %     replab.CommutantVar.fromSymSdpMatrix
         
-            R = replab.CommutantVar.fromSdpMatrix([], generators);
+            R = replab.CommutantVar(generators, [], []);
         end
 
         function R = fromSdpMatrix(sdpMatrix, generators)
@@ -272,38 +403,44 @@ classdef CommutantVar < replab.Str
         %
         % See also:
         %     replab.CommutantVar.fromPermutations
+        %     replab.CommutantVar.fromSymSdpMatrix
 
-            assert(nargin >= 2, 'Not enough arguments.');
-
-            assert(iscell(generators), 'Please specify generators in cell array.');
-            n = size(generators{1}, 2);
-            group = replab.SignedPermutations(n).subgroup(generators);
-
-            if ~isempty(sdpMatrix)
-                assert(isequal(size(sdpMatrix), [n n]), 'Wrong matrix or group dimension.');
-            end
-
-            irrDecomp = group.naturalRep.decomposition;
-            U = zeros(n, 0);
-            dimensions1 = [];
-            multiplicities = [];
-            types = '';
-            for i = 1:irrDecomp.nComponents
-                component = irrDecomp.component(i);
-                dimensions1 = [dimensions1 component.copyDimension];
-                multiplicities = [multiplicities component.multiplicity];
-                types(i) = component.copy(1).realDivisionAlgebra.shortName;
-                for j = 1:component.multiplicity
-                    copy = component.copy(j);
-                    % correction, as the new RepLAB convention
-                    % is to store basis vectors as row vectors
-                    U = [U copy.U'];
-                end
-            end
-
-            R = replab.CommutantVar(U, dimensions1, multiplicities, types, sdpMatrix);
+            R = replab.CommutantVar(generators, sdpMatrix, false);
         end
 
+        function R = fromSymSdpMatrix(sdpMatrix, generators)
+        % R = fromSymSdpMatrix(sdpMatrix, generators)
+        % 
+        % Imposes symmetry constraints onto an existing SDP matrix which is
+        % already invariant under the group elements. The 
+        
+        % creates a CommutantVar matrix which satisfies both:
+        %     - the structure encoded into sdpMatrix
+        %     - invariance under joint permutations of its lines and
+        %       columns by the provided generators.
+        %
+        % Args:
+        %     sdpMatrix: the SDP matrix to block diagonlize, which should
+        %         be invariant under permutations
+        %     generators: a list of generators under which the matrix is to
+        %         remain unchanged
+        %
+        % Results:
+        %     R: a CommutantVar object
+        %
+        % Example:
+        %     x = sdpvar;
+        %     y = sdpvar;
+        %     sdpMatrix = [x y y; y x y; y y x];
+        %     matrix = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[3 1 2]})
+        %
+        % See also:
+        %     replab.CommutantVar.fromPermutations
+        %     replab.CommutantVar.fromSdpMatrix
+
+            R = replab.CommutantVar(generators, sdpMatrix, true);
+        end
+        
     end
 
 
@@ -648,13 +785,13 @@ classdef CommutantVar < replab.Str
 
                     % First we check the gross structure
                     shouldBeZero = rotatedY(co + (1:d*size(X.blocks{i},1)), co + 1 + d*size(X.blocks{i},2):end);
-                    indices = getvariables(shouldBeZero);
+                    indices = [0 getvariables(shouldBeZero)];
                     for ind = indices
                         if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
                             okLevel = 0;
                             break;
                         end
-                        maxOuterEpsilonFound = max(maxOuterEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind)))));
+                        maxOuterEpsilonFound = max([maxOuterEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
                     end
 
                     % Now we check the intro-block structure
@@ -665,14 +802,14 @@ classdef CommutantVar < replab.Str
                         shouldBeZero = ideal - rotatedY(co + (1:d*size(X.blocks{i},1)), co + (1:d*size(X.blocks{i},2)));
 
                         % we check if the coefficients are negligible
-                        indices = getvariables(shouldBeZero);
+                        indices = [0 getvariables(shouldBeZero)];
                         for ind = indices
                             if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
                                 okLevel = 1;
                                 maxEpsilonFound = 0;
                                 break;
                             end
-                            maxEpsilonFound = max(maxEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind)))));
+                            maxEpsilonFound = max([maxEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
                         end
                     end
                     if okLevel == 1
@@ -681,13 +818,13 @@ classdef CommutantVar < replab.Str
                         shouldBeZero = rotatedY(co + (1:d*size(X.blocks{i},1)), co + (1:d*size(X.blocks{i},2))).*(1-mask);
 
                         % we check if the coefficients are negligible
-                        indices = getvariables(shouldBeZero);
+                        indices = [0 getvariables(shouldBeZero)];
                         for ind = indices
                             if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
                                 okLevel = 0;
                                 return;
                             end
-                            maxEpsilonFound = max(maxEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind)))));
+                            maxEpsilonFound = max([maxEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
                         end
                     end
                     co = co + d*size(X.blocks{i},1);
@@ -718,7 +855,7 @@ classdef CommutantVar < replab.Str
                         okLevel = 0;
                         return;
                     end
-                    maxOuterEpsilonFound = max(maxOuterEpsilonFound, max(max(abs(shouldBeZero))));
+                    maxOuterEpsilonFound = max([maxOuterEpsilonFound, max(max(abs(shouldBeZero)))]);
 
                     % Now we check the intro-block structure
                     if okLevel == 2
@@ -730,7 +867,7 @@ classdef CommutantVar < replab.Str
                             okLevel = 1;
                             maxEpsilonFound = 0;
                         end
-                        maxEpsilonFound = max(maxEpsilonFound, max(max(abs(shouldBeZero))));
+                        maxEpsilonFound = max([maxEpsilonFound, max(max(abs(shouldBeZero)))]);
                     end
                     if okLevel == 1
                         % Check partial compatibility
@@ -740,7 +877,7 @@ classdef CommutantVar < replab.Str
                             okLevel = 0;
                             return;
                         end
-                        maxEpsilonFound = max(maxEpsilonFound, max(max(abs(shouldBeZero))));
+                        maxEpsilonFound = max([maxEpsilonFound, max(max(abs(shouldBeZero)))]);
                     end
                     co = co + d*size(X.blocks{i},1);
                 end
@@ -754,7 +891,7 @@ classdef CommutantVar < replab.Str
 
             % We produce a warning if some small but not too small coefficients
             % have been neglected
-            if max(maxOuterEpsilonFound, maxEpsilonFound) > epsilonWarning
+            if max([maxOuterEpsilonFound, maxEpsilonFound]) > epsilonWarning
                 warning(['Block structure mismatch by ', num2str(maxEpsilonFound), ' ignored.']);
             end
         end
@@ -831,18 +968,18 @@ classdef CommutantVar < replab.Str
                     % We make sure that the constant block is hermitian
                     shouldBeZero = constantBlock - constantBlock';
                     if isa(shouldBeZero, 'sdpvar')
-                        indices = getvariables(shouldBeZero);
+                        indices = [0 getvariables(shouldBeZero)];
                         for ind = indices
                             if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
                                 error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(getbasematrix(shouldBeZero,ind))))), '.']);
                             end
-                            maxNonHermiticity = max(maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind)))));
+                            maxNonHermiticity = max([maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
                         end
                     else
                         if max(max(abs(shouldBeZero))) > epsilon
                             error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(shouldBeZero)))), '.']);
                         end
-                        maxNonHermiticity = max(maxNonHermiticity, max(max(abs(shouldBeZero))));
+                        maxNonHermiticity = max([maxNonHermiticity, max(max(abs(shouldBeZero)))]);
                     end
                     if ~ishermitian(constantBlock)
                         % We force exact hermiticity
@@ -937,18 +1074,18 @@ classdef CommutantVar < replab.Str
                     % We make sure that the constant block is hermitian
                     shouldBeZero = constantBlock - constantBlock';
                     if isa(shouldBeZero, 'sdpvar')
-                        indices = getvariables(shouldBeZero);
+                        indices = [0 getvariables(shouldBeZero)];
                         for ind = indices
                             if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
                                 error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(getbasematrix(shouldBeZero,ind))))), '.']);
                             end
-                            maxNonHermiticity = max(maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind)))));
+                            maxNonHermiticity = max([maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
                         end
                     else
                         if max(max(abs(shouldBeZero))) > epsilon
                             error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(shouldBeZero)))), '.']);
                         end
-                        maxNonHermiticity = max(maxNonHermiticity, max(max(abs(shouldBeZero))));
+                        maxNonHermiticity = max([maxNonHermiticity, max(max(abs(shouldBeZero)))]);
                     end
                     if ~ishermitian(constantBlock)
                         % We force exact hermiticity
@@ -1398,18 +1535,18 @@ classdef CommutantVar < replab.Str
                         % We make sure that the constant block is hermitian
                         shouldBeZero = constantBlock - constantBlock';
                         if isa(shouldBeZero, 'sdpvar')
-                            indices = getvariables(shouldBeZero);
+                            indices = [0 getvariables(shouldBeZero)];
                             for ind = indices
                                 if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
                                     error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(getbasematrix(shouldBeZero,ind))))), '.']);
                                 end
-                                maxNonHermiticity = max(maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind)))));
+                                maxNonHermiticity = max([maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
                             end
                         else
                             if max(max(abs(shouldBeZero))) > epsilon
                                 error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(shouldBeZero)))), '.']);
                             end
-                            maxNonHermiticity = max(maxNonHermiticity, max(max(abs(shouldBeZero))));
+                            maxNonHermiticity = max([maxNonHermiticity, max(max(abs(shouldBeZero)))]);
                         end
                         if ~ishermitian(constantBlock)
                             % We force exact hermiticity
@@ -1529,18 +1666,18 @@ classdef CommutantVar < replab.Str
                         % We make sure that the constant block is hermitian
                         shouldBeZero = constantBlock - constantBlock';
                         if isa(shouldBeZero, 'sdpvar')
-                            indices = getvariables(shouldBeZero);
+                            indices = [0 getvariables(shouldBeZero)];
                             for ind = indices
                                 if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
                                     error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(getbasematrix(shouldBeZero,ind))))), '.']);
                                 end
-                                maxNonHermiticity = max(maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind)))));
+                                maxNonHermiticity = max([maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
                             end
                         else
                             if max(max(abs(shouldBeZero))) > epsilon
                                 error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(shouldBeZero)))), '.']);
                             end
-                            maxNonHermiticity = max(maxNonHermiticity, max(max(abs(shouldBeZero))));
+                            maxNonHermiticity = max([maxNonHermiticity, max(max(abs(shouldBeZero)))]);
                         end
                         if ~ishermitian(constantBlock)
                             % We force exact hermiticity
