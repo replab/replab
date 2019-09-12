@@ -36,13 +36,13 @@ classdef RepByImages < replab.nu.Rep
         function c = chain(self)
             if isempty(self.chain_)
                 J = replab.nu.GeneralLinearMatricesWithInverses(self.field, self.dimension);
-                niceId = self.group.niceMonomorphism(self.group.identity);
+                niceId = self.group.niceMonomorphismImage(self.group.identity);
                 n = length(niceId);
                 nG = self.group.nGenerators;
                 I = zeros(n, nG);
                 elements = cell(1, nG);
                 for i = 1:nG
-                    I(:,i) = self.group.niceMonomorphism(self.group.generator(i));
+                    I(:,i) = self.group.niceMonomorphismImage(self.group.generator(i));
                     elements{i} = [self.images{i} self.inverseImages{i}];
                 end
                 C = replab.bsgs.Chain(n, J);
@@ -58,7 +58,7 @@ classdef RepByImages < replab.nu.Rep
         
         function rho = image(self, g)
         % Computes the image of a group element g in this representation
-            img = self.group.niceMonomorphism(g);
+            img = self.group.niceMonomorphismImage(g);
             rho = self.chain.image(img);
         end
         

@@ -29,7 +29,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         
         %% NiceFiniteGroup
         
-        function p = niceMonomorphism(self, p)
+        function p = niceMonomorphismImage(self, p)
         end
         
         %% Methods specific to permutation groups

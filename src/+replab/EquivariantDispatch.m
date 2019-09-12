@@ -7,7 +7,8 @@ classdef EquivariantDispatch < replab.Dispatch
     methods
         
         function self = EquivariantDispatch
-            self.register('FiniteGroup', @(repR, repC) replab.DecompositionEquivariant(repR, repC), 0);
+            self.register('ForRepByImages', @(repR, repC) replab.equivariant.ForRepByImages(repR, repC), 10);
+            self.register('ForFiniteGroup', @(repR, repC) replab.equivariant.ForFiniteGroup(repR, repC), 5);
         end
         
     end

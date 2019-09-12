@@ -9,16 +9,16 @@ classdef Equivariant < replab.Domain
 % J.-P. Serre, Linear Representations of Finite Groups (Springer, 1977).
     
     properties (SetAccess = protected)
-        field; % vector space field, 'R' (real) or 'C' (complex)
-        nR;    % row size
-        nC;    % column size
-        group; % group
-        repR;  % representation of row space
-        repC;  % representation of column space
+        field % {'R', 'C'}: field of the vector space real (R) or complex x(C)
+        nR % integer: row size
+        nC % integer: column size
+        group % replab.CompactGroup: group being represented
+        repR % replab.Rep: representation of row space
+        repC % replab.Rep: representation of column space
     end
     
     properties (Access = protected)
-        parent_; % parent domain: real or complex matrices
+        parent_ % parent domain, real or complex matrices
     end
     
     methods
@@ -30,10 +30,9 @@ classdef Equivariant < replab.Domain
 
         function self = Equivariant(repR, repC)
         % Constructor; please do not call this from user code, but
-        % rather use `replab.rep.equivariant(repR, repC)`, 
-        % or `repR.equivariant(repC)`, which can eventually
-        % select an optimization implementation depending on the
-        % use case.
+        % rather use `replab.EquivariantDispatch.instance.call(repR, repC)`, 
+        % which can eventually select an optimized implementation 
+        % depending on the use case.
             self.repR = repR;
             self.nR = repR.dimension;
             self.repC = repC;
@@ -54,39 +53,7 @@ classdef Equivariant < replab.Domain
             end
         end
 
-        function X1 = averageOver(self, X, elements)
-        % Averages X over the given group elements (row cell vector)
-            X1 = [];
-            nElements = length(elements);
-            for i = 1:nElements
-                g = elements{i};
-                gX = self.repC.action(g, self.repR.action(g, X)')';
-                if i == 1
-                    X1 = gX;
-                else
-                    X1 = X1 + gX;
-                end
-            end
-            X1 = X1/nElements;
-        end
-        
-        function X1 = randomAveraging(self, X, nSamples)
-        % Computes the average of X using Monte Carlo sampling
-            samples = arrayfun(@(i) self.group.sample, 1:nSamples, 'uniform', 0);
-            X1 = self.averageOver(X, samples);
-        end
-        
-        function distances = sampleDistances(self, X, nSamples)
-        % Samples random group elements, and computes the corresponding violation of equivariance
-            distances = [];
-            for i = 1:nSamples
-                g = self.group.sample;
-                gX = self.repC.action(g, self.repR.action(g, X)')';
-                distances(i) = norm(X - gX, 'fro');
-            end
-        end
-
-        % Str
+        %% Str methods
         
         function s = headerStr(self)
             s = sprintf('%d x %d %s equivariant matrices', ...
@@ -94,7 +61,7 @@ classdef Equivariant < replab.Domain
                         replab.str.field(self.field));
         end
         
-        % Domain
+        %% Domain methods
         
         function b = eqv(self, X, Y)
             b = self.parent_.eqv(X, Y);

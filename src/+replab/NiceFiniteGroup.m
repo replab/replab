@@ -32,8 +32,21 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             sub = self.parent.subgroup(generators, order);
         end
         
-        function p = niceMonomorphism(self, g)
-        % Returns a permutation representation of the group element g
+        function g = niceMonomorphismPreimage(self, p)
+        % Returns the group element corresponding to a permutation
+        %
+        % See also `replab.NiceFiniteGroup.niceMonomorphismImage`
+        %
+        % Args:
+        %   p (permutation): Permutation representation
+        %
+        % Returns:
+        %   g (element): Group element corresponding to the permutation
+            g = self.chain.image(p);
+        end
+        
+        function p = niceMonomorphismImage(self, g)
+        % Returns a permutation representation of the given group element
         %
         % A nice monomorphism is the GAP System terminology for injective
         % homomorphism into a permutation group.
@@ -43,7 +56,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   permutation: Permutation representation of `g`
-            p = self.parent.niceMonomorphism(g);
+            p = self.parent.niceMonomorphismImage(g);
         end
 
         %% Domain methods
@@ -81,12 +94,12 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         end
         
         function chain = computeChain(self)
-            imgId = self.niceMonomorphism(self.identity);
+            imgId = self.niceMonomorphismImage(self.identity);
             n = length(imgId);
             nG = self.nGenerators;
             S = zeros(n, nG);
             for i = 1:nG
-                S(:,i) = self.niceMonomorphism(self.generator(i));
+                S(:,i) = self.niceMonomorphismImage(self.generator(i));
             end
             chain = replab.bsgs.Chain.makeWithImages(n, S, self, self.generators);
         end
@@ -113,7 +126,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   integer: The order of `g`, i.e. the smallest `o` such that ``g^o == identity``
-            p = self.niceMonomorphism(g);
+            p = self.niceMonomorphismImage(g);
             orbits = replab.Partition.permutationsOrbits(p);
             orders = unique(orbits.blockSizes);
             o = 1;

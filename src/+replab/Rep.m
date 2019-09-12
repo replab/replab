@@ -45,7 +45,7 @@ classdef Rep < replab.Str
         % the returned space describes the matrices X such that
         %
         % repR.image(g) * X = X * repC.image(g)
-            e = replab.EquivariantDispatch.instance.call(self, repC)
+            e = replab.EquivariantDispatch.instance.call(self, repC);
         end
 
         function c = commutant(self)

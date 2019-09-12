@@ -32,7 +32,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
         
         %% NiceFiniteGroup methods
         
-        function p1 = niceMonomorphism(self, p)
+        function p1 = niceMonomorphismImage(self, p)
             p1 = replab.SignedPermutations.toPermutation(p);
         end
 

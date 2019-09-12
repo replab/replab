@@ -49,7 +49,7 @@ classdef Chain < replab.Str
 %
 % In both cases:
 %
-% * The base B, base order bo, boInv, the data structures for orbits and transversals Delta, U, Uinv are consistent.
+% * The base B, base order bo, boinv, the data structures for orbits and transversals Delta, U, Uinv are consistent.
 %
 % * The strong generating set is ordered, so that the starting indices Sind describe the sequence S^i
 %
@@ -602,11 +602,11 @@ classdef Chain < replab.Str
             assert(self.isMutable);
             n = self.n;
             remaining = setdiff(1:n, self.B); % domain elements not part of base
-            boInv = [self.B remaining];
+            boinv = [self.B remaining];
             bo = zeros(1, n);
-            bo(self.boInv) = 1:n; % bo = inverse(boInv)
+            bo(self.boinv) = 1:n; % bo = inverse(boinv)
             self.bo = bo;
-            self.boInv = boInv;
+            self.boinv = boinv;
             for i = 1:self.length
                 self.reorderOrbit(i);
             end
@@ -729,6 +729,7 @@ classdef Chain < replab.Str
                 Tcandidates = self.T(I(k+1):nS);
                 self.T = horzcat(Tunchanged, Tcandidates(~stabilized), Tcandidates(stabilized));
             end
+            self.recomputeBaseOrder;
             self.completeOrbit(k+1);
         end
         
