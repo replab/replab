@@ -33,7 +33,7 @@ function with_linear_constraint
     assert(length(2 >= matrix) == 4);
     assert(length(eye(5)/2 >= matrix) == 4);
     
-    if TestParameters.onlyFastTests
+    if ReplabTestParameters.onlyFastTests
         return;
     end
     

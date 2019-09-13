@@ -13,7 +13,7 @@ function test_cases
     assert(issparse(mask));
     assert(nnz(mask) == 9);
     
-    if TestParameters.onlyFastTests
+    if ReplabTestParameters.onlyFastTests
         return;
     end
     

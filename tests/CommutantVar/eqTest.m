@@ -27,7 +27,7 @@ function with_linear_constraint
     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(5,5,'hankel'), {[2 3 4 5 1]});
     assert(length(matrix == 0) == 4);
     
-    if TestParameters.onlyFastTests
+    if ReplabTestParameters.onlyFastTests
         return;
     end
     
@@ -44,7 +44,7 @@ function with_linear_constraint
 end
 
 function double_combination
-    if TestParameters.onlyFastTests
+    if ReplabTestParameters.onlyFastTests
         return;
     end
     

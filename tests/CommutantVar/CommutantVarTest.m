@@ -52,7 +52,7 @@ function test_fromSdpMatrix_SDP_CHSH
     tmp = sparse(1:numel(indexMatrix), reshape(1+indexMatrix,1,numel(indexMatrix)), true);
     sdpMatrix = reshape(tmp*vars, size(indexMatrix));
     obj = objective*sdpMatrix(:,1);
-    if TestParameters.onlyFastTests
+    if ReplabTestParameters.onlyFastTests
         obj1 = 2*sqrt(2);
     else
         solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
@@ -69,7 +69,7 @@ function test_fromSdpMatrix_SDP_CHSH
 end
 
 function test_fromSdpMatrix_SDP_CHSH_FullProb
-    if TestParameters.onlyFastTests
+    if ReplabTestParameters.onlyFastTests
         return;
     end
     
@@ -132,7 +132,7 @@ function test_fromSdpMatrix_SDP_CHSH_FullProb
 end
 
 function test_fromSdpMatrix_SDP_CGLMP3_FullProb
-    if TestParameters.onlyFastTests
+    if ReplabTestParameters.onlyFastTests
         return;
     end
     
@@ -238,7 +238,7 @@ function test_fromSymSdpMatrix
     tmp = sparse(1:numel(indexMatrix), reshape(1+indexMatrix,1,numel(indexMatrix)), true);
     sdpMatrix = reshape(tmp*vars, size(indexMatrix));
     obj = objective*sdpMatrix(:,1);
-    if TestParameters.onlyFastTests
+    if ReplabTestParameters.onlyFastTests
         obj1 = 2*sqrt(2);
     else
         solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));

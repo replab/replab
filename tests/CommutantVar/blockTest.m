@@ -10,7 +10,7 @@ function test_inputs
     matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
     shouldProduceAnError(@(x) matrix.block(-1));
 
-    if TestParameters.onlyFastTests
+    if ReplabTestParameters.onlyFastTests
         return;
     end
     
