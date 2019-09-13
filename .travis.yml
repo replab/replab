@@ -28,7 +28,7 @@ install:
 
 ###############################################################################
 before_script:
-  - TEST_COMMAND="exit(~replab_runtests(1));";
+  - TEST_COMMAND="exit(~replab_runtests(1,1));";
     echo "TEST_COMMAND| $TEST_COMMAND";
   # Double-check we are still in the right directory
   - pwd
