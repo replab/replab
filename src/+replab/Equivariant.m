@@ -37,8 +37,12 @@ classdef Equivariant < replab.Domain
             b = self.parent.eqv(X, self.project(X));
         end
         
-        function X = project(self, X)
+        function X1 = project(self, X)
         % Projects any nR x nC matrix in the equivariant subspace
+        %
+        % Performs the integration
+        %
+        % `` X1 = int{g in G} dg rhoR.image(g) * X * rhoC.inverseImage(g) ``
             error('Abstract');
         end
 

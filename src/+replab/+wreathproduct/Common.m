@@ -130,7 +130,7 @@ classdef Common < handle
             rep = replab.wreathproduct.PrimitiveRep(self, Arep);
         end
 
-        function rep = primitiveRepFun(self, Arep)
+        function rep = primitiveRepFun(self, fun)
         % Returns an primitive representation of this wreath product
         %
         % See `primitiveRep`

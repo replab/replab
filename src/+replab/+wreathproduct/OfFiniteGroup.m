@@ -5,11 +5,11 @@ classdef OfFiniteGroup < replab.semidirectproduct.OfFiniteGroups & replab.wreath
         
         function self = OfFiniteGroup(H, A)
             assert(isa(H, 'replab.PermutationGroup'));
-            assert(isa(A, self.requiredType));
             n = H.domainSize;
             base = A.directPower(n);
             phi = replab.perm.PermutationCellAction(H, base);
             self@replab.semidirectproduct.OfFiniteGroups(phi);
+            assert(isa(A, self.requiredType));
             self.n = n;
             self.A = A;
         end
