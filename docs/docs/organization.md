@@ -40,8 +40,7 @@ To quickly create an instance of `Domain`, the helper class `DomainFun` can be u
 
 The following three classes provide basic group structures.
 
-- `Semigroup`: structure with associative binary operation
-- `Monoid`: + an identity element (property), and test for identity
+- `Monoid`: structure with a binary associatvie operation, an identity element (property), and test for identity
 - `Group`: + inverse elements
 
 ### Finite groups
@@ -55,9 +54,9 @@ Finite groups contain a finite number of elements.
 
 ### Abstract group constructions
 
-- `DirectProductGroup`: represents the (outer) direct product of finite groups, the elements are represented by row cell arrays,
-- `SemidirectProductGroup`: represents an outer semidirect product from a homomorphism, with both factors finite groups,
-- `WreathProductGroup`: describes the wreath product of a finite group by a permutation group.
+- `replab.directproduct.*`: represents the (outer) direct product of finite groups, the elements are represented by row cell arrays,
+- `replab.semidirectproduct.*`: represents an outer semidirect product from a homomorphism, with both factors finite groups,
+- `replab.wreathproduct.*`: describes the wreath product of a finite group by a permutation group.
 
 ### Permutation groups
 
@@ -70,15 +69,14 @@ In particular, the decomposition of $\{1,...,n\}$ into orbits, the natural actio
 
 As a closely related variant, we describe signed permutations.
 
-- `SignedPermutationGroup`: provides an abstract base class for all signed permutation groups,
-- `SignedPermutations`: describes the signed permutations on $\{-n,...,-1, 1,...,n\}$,
+- `signed.PermutationGroup`: provides an abstract base class for all signed permutation groups,
+- `signed.Permutations`: describes the signed permutations on $\{-n,...,-1, 1,...,n\}$,
 
 ### Actions
 
 The following two classes in RepLAB do not define a domain, but rather express a relation between domains.
 
 - `Action`: abstract base class that defines the action of elements of a group `G` on elements of a domain `P`,
-- `FaithfulAction`: in addition, for any `g` in `G` which is not the identity, the class provides a `p` in `P` that is moved by `g`.
 
 ### Representations
 
@@ -112,7 +110,7 @@ RepLAB has several classes to work with centralizer algebras.
 - `Partition`: describes an unordered partition of the integers $\{1,...,n\}$,
 - `DivisionAlgebra`: generic representation of the real, complex and quaternionic algebras over the reals,
 - `rational`: a hacky implementation of rational matrices with double-representable integer coefficients,
-- `Quaternion`: a minimal implementation of quaternion matrices,
+- `quaternion.H`: a minimal implementation of quaternion matrices,
 - `Settings`: various global settings such as tolerances,
 - `GroupMorphismLaws`: laws for function handles that are group homomorphisms.
 

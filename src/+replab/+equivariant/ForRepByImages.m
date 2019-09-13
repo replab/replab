@@ -33,8 +33,12 @@ classdef ForRepByImages < replab.Equivariant
     methods
 
         function self = ForRepByImages(repR, repC)
-            replab.Dispatch.assert(isa(repR, 'replab.RepByImages'));
-            replab.Dispatch.assert(isa(repC, 'replab.RepByImages'));
+            if ~isa(repR, 'replab.RepByImages')
+                error('replab:Dispatch:tryNext', 'try next');
+            end
+            if ~isa(repC, 'replab.RepByImages')
+                error('replab:Dispatch:tryNext', 'try next');
+            end
             self = self@replab.Equivariant(repR, repC);
         end
         

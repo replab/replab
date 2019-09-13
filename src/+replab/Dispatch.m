@@ -33,6 +33,7 @@ classdef Dispatch < handle
             for i = 1:length(self.handles)
                 h = self.handles{i};
                 try
+                    
                     [varargout{1:nargout}] = h(varargin{:});
                     return
                 catch ME
@@ -42,28 +43,6 @@ classdef Dispatch < handle
                 end
             end
             error('No registered implementation worked.');
-        end
-        
-    end
-    
-    methods (Static)
-        
-        function error(message)
-        % Throws an error that signals that the next implementation should be tried 
-            if nargin < 1
-                message = '';
-            end
-            error('replab:Dispatch:tryNext', message);
-        end
-        
-        function assert(condition, message)
-        % Asserts a condition, if false the next implementation should be tried
-            if nargin < 2
-                message = '';
-            end
-            if ~condition
-                error('replab:Dispatch:tryNext', message);
-            end
         end
         
     end

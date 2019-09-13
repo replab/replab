@@ -3,7 +3,9 @@ classdef ForFiniteGroup < replab.Equivariant
     methods
 
         function self = ForFiniteGroup(repR, repC)
-            replab.Dispatch.assert(isa(repR.group, 'replab.FiniteGroup'));
+            if ~isa(repR.group, 'replab.FiniteGroup')
+                error('replab:Dispatch:tryNext', 'try next');
+            end
             self = self@replab.Equivariant(repR, repC);
         end
         

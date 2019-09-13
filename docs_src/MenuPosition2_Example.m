@@ -71,9 +71,10 @@ rho.image(gh)
 %%
 % We can also define representations from their images. Here,
 % we define the sign representation (using a permutation
-% representation of it!).
+% representation of it!). 
 dim = 2;
-rho1 = S4.rep('R', dim, {[0 1; 1 0] [0 1; 1 0]})
+isUnitary = true;
+rho1 = S4.rep('R', dim, isUnitary, {[0 1; 1 0] [0 1; 1 0]})
 rho2 = S4.permutationRep(2, {[2 1] [2 1]})
 %%
 %

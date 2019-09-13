@@ -208,7 +208,7 @@ classdef Chain < replab.Str
             g = 1:self.n;
             v = self.J.identity;
             for i = 1:self.length
-                [gi vi] = self.randomTransversal(i);
+                [gi vi] = self.randomTransversalWithImage(i);
                 g = g(gi); % compose(g, gi)
                 v = self.J.compose(v, vi);
             end

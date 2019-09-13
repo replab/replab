@@ -15,12 +15,16 @@ classdef RepLaws < replab.Laws
             self.G = rep.group;
             self.C = rep.commutant;
             self.M = replab.domain.Matrices(rep.field, d, d);
-            switch rep.field
-              case 'R'
-                self.U = replab.OrthogonalGroup(d);
-              case 'C'
-                self.U = replab.UnitaryGroup(d);
-            end            
+            if rep.isUnitary
+                switch rep.field
+                  case 'R'
+                    self.U = replab.OrthogonalGroup(d);
+                  case 'C'
+                    self.U = replab.UnitaryGroup(d);
+                end
+            else
+                self.U = replab.GeneralLinearGroup(rep.field, d);
+            end
         end
         function morphismLaws = laws_asGroupHomomorphism(self)
             morphismLaws = replab.GroupMorphismLaws(@(g) self.rep.image(g), self.G, self.U);
