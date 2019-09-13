@@ -1,13 +1,23 @@
-function result = replab_runtests(withCoverage)
-    % result = replab_runtests([withCoverage])
-    %
-    % replab_runtests tests the library functionalities
-    %
-    % When the option 'withCoverage' is set to 1, code coverage data is
-    % generated.
-    
+function result = replab_runtests(withCoverage, onlyFastTests)
+% result = replab_runtests([withCoverage], [onlyFastTests])
+%
+% replab_runtests tests the library functionalities
+%
+% Args:
+%     withCoverage: boolean to enable code coverage (optional, default
+%         value is false)
+%     onlyFastTests: boolean to run only a selection of fast tests
+%         (optional, default value if false)
+%
+% Results:
+%     result: test results
+
     if nargin < 1
-        withCoverage = 0;
+        withCoverage = false;
+    end
+    
+    if nargin < 2
+        onlyFastTests = false;
     end
     
     % Make sure we are in the current path
@@ -16,6 +26,13 @@ function result = replab_runtests(withCoverage)
     pathStr = strrep(pathStr, '\', '/');
     cd(pathStr)
     cd ..
+    
+    % Add the tests folder to the path
+    addpath([pathStr '/../tests']);
+    
+    % Set test paramters
+    ReplabTestParameters.withCoverage(withCoverage);
+    ReplabTestParameters.onlyFastTests(onlyFastTests);
     
     % Check the presence of the MOxUnit library
     MOxUnitInPath = false;
@@ -59,16 +76,16 @@ function result = replab_runtests(withCoverage)
         warning('No working SDP solver found, some tests will fail.');
     end
     
-    % Add the tests folder to the path
-    addpath([pathStr '/../tests']);
-    
     % calls the relevant test suite
-    if withCoverage == 1
+    if ReplabTestParameters.withCoverage == 1
         result = moxunit_runtests('tests/codeCoverageHelperFunction.m', '-verbose', ...
             '-with_coverage', '-cover', 'src', '-cover_json_file', 'coverage.json', '-cover_xml_file', 'coverage.xml', '-cover_html_dir', 'coverage_html');
     else
         result = moxunit_runtests('tests', '-verbose', '-recursive');
     end
+    
+    % Remove the tests folder to the path
+    rmpath([pathStr '/../tests']);
     
     % return to the previous path
     cd(initialPath);
