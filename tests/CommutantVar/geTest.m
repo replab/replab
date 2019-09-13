@@ -33,6 +33,10 @@ function with_linear_constraint
     assert(length(2 >= matrix) == 4);
     assert(length(eye(5)/2 >= matrix) == 4);
     
+    if TestParameters.onlyFastTests
+        return;
+    end
+    
     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3,3,'hankel'), {[1 3 2]});
     R = rand(3);
     R = R + R([1 3 2], [1 3 2]);

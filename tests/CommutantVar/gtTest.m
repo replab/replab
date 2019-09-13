@@ -7,6 +7,10 @@ function test_suite = gtTest()
 end
 
 function test_cases
+    if TestParameters.onlyFastTests
+        return;
+    end
+    
     % We do some sanity checks
     matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
     assert(length(matrix > 2) == 3);

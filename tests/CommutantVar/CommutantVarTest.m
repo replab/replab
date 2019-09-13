@@ -22,7 +22,6 @@ function test_fromPermutations
 end
 
 function test_fromSdpMatrix_SDP_CHSH
-    % CHSH case in correlations
     indexMatrix = [  1   2   3   6   7   8  11  12  13
                      2   1   4   7   6   9  12  11  14
                      3   4   1   8   9   6  13  14  11
@@ -53,8 +52,12 @@ function test_fromSdpMatrix_SDP_CHSH
     tmp = sparse(1:numel(indexMatrix), reshape(1+indexMatrix,1,numel(indexMatrix)), true);
     sdpMatrix = reshape(tmp*vars, size(indexMatrix));
     obj = objective*sdpMatrix(:,1);
-    solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
-    obj1 = value(obj);
+    if TestParameters.onlyFastTests
+        obj1 = 2*sqrt(2);
+    else
+        solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+        obj1 = value(obj);
+    end
     
     % We formulate the symmetrized SDP:
     symSdpMatrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix,generators);
@@ -66,6 +69,10 @@ function test_fromSdpMatrix_SDP_CHSH
 end
 
 function test_fromSdpMatrix_SDP_CHSH_FullProb
+    if TestParameters.onlyFastTests
+        return;
+    end
+    
     indexMatrix = [  1    2    4    3    5   14   15   17   16   18   40   41   43   42   44   27   28   30   29   31   53   54   56   55   57
                      2    2    0    6    7   15   15    0   19   20   41   41    0   45   46   28   28    0   32   33   54   54    0   58   59
                      4    0    4    9   11   17    0   17   22   24   43    0   43   48   50   30    0   30   35   37   56    0   56   61   63
@@ -125,6 +132,10 @@ function test_fromSdpMatrix_SDP_CHSH_FullProb
 end
 
 function test_fromSdpMatrix_SDP_CGLMP3_FullProb
+    if TestParameters.onlyFastTests
+        return;
+    end
+    
     indexMatrix = [   1    2    4    6    3    5    7   26   27   29   31   28   30   32   76   77   79   81   78   80   82  126  127  129  131  128  130  132   51   52   54   56   53   55   57  101  102  104  106  103  105  107  151  152  154  156  153  155  157
                       2    2    0    0    8    9   10   27   27    0    0   33   34   35   77   77    0    0   83   84   85  127  127    0    0  133  134  135   52   52    0    0   58   59   60  102  102    0    0  108  109  110  152  152    0    0  158  159  160
                       4    0    4    0   12   15   16   29    0   29    0   37   40   41   79    0   79    0   87   90   91  129    0  129    0  137  140  141   54    0   54    0   62   65   66  104    0  104    0  112  115  116  154    0  154    0  162  165  166
@@ -227,8 +238,12 @@ function test_fromSymSdpMatrix
     tmp = sparse(1:numel(indexMatrix), reshape(1+indexMatrix,1,numel(indexMatrix)), true);
     sdpMatrix = reshape(tmp*vars, size(indexMatrix));
     obj = objective*sdpMatrix(:,1);
-    solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
-    obj1 = value(obj);
+    if TestParameters.onlyFastTests
+        obj1 = 2*sqrt(2);
+    else
+        solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+        obj1 = value(obj);
+    end
     
     % We do a sanity check with one group
     blockSdpMatrix = replab.CommutantVar.fromSymSdpMatrix(generators, generators);

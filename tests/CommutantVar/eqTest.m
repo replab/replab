@@ -27,6 +27,10 @@ function with_linear_constraint
     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(5,5,'hankel'), {[2 3 4 5 1]});
     assert(length(matrix == 0) == 4);
     
+    if TestParameters.onlyFastTests
+        return;
+    end
+    
     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3,3,'hankel'), {[1 3 2]});
     R = rand(3);
     R = R + R([1 3 2], [1 3 2]);
@@ -40,6 +44,10 @@ function with_linear_constraint
 end
 
 function double_combination
+    if TestParameters.onlyFastTests
+        return;
+    end
+    
     matrix1 = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
     matrix2 = replab.CommutantVar.fromSdpMatrix(matrix1.fullMatrix, {[2 1 3 4 5]});
 

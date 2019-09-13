@@ -12,7 +12,7 @@ function test_oneGroup
     fullMatrix = matrix.fullMatrix;
     difference = trace(matrix) - trace(fullMatrix);
     vars = getvariables(difference);
-    for j = 1:length(vars)
+    for j = 0:length(vars)
         coeffs = getbasematrix(difference, vars(j));
         assert(norm(coeffs(:)) <= replab.Settings.doubleEigTol);
     end

@@ -13,6 +13,10 @@ function test_cases
     assert(issparse(mask));
     assert(nnz(mask) == 9);
     
+    if TestParameters.onlyFastTests
+        return;
+    end
+    
     matrix = replab.CommutantVar.fromPermutations({[1 3 2]});
     mask = matrix.blockMask;
     assert(issparse(mask));
