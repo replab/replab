@@ -18,7 +18,7 @@ function I = decomposition(rep)
             trivial{1, end+1} = replab.Irrep(rep, Uthis, trivialRealDivisionAlgebra);
         end
         if size(Ur, 2) > 0
-            s2 = s1.subRep(Ur);
+            s2 = s1.subRepUnitary(Ur);
             sub3 = replab.rep.decomposeUsingCommutant(s2);
             for j = 1:length(sub3)
                 s3 = sub3{j};

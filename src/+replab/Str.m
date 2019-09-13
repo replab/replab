@@ -6,6 +6,15 @@ classdef Str < handle
     
     methods
         
+        function res = eq(self, rhs)
+        % Workaround bug of == not implemented for handles
+            if replab.platformIsOctave
+                res = true(size(self));
+            else
+                res = eq@handle(self, rhs);
+            end
+        end
+        
         function disp(self)
             maxRows = replab.Settings.strMaxRows;
             maxColumns = replab.Settings.strMaxColumns;

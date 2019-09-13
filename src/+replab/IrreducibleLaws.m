@@ -10,14 +10,7 @@ classdef IrreducibleLaws < replab.Laws
         function self = IrreducibleLaws(irreducible)
             self.irreducible = irreducible;
             d = self.irreducible.parent.dimension;
-            switch irreducible.parent.field
-              case 'R'
-                self.M = replab.domain.RealMatrices(d, d);
-              case 'C'
-                self.M = replab.domain.ComplexMatrices(d, d);
-              otherwise
-                error('Unknown field');
-            end
+            self.M = replab.domain.Matrices(irreducible.parent.field, d, d);
         end
         
         function law_decomposes_entire_space(self)

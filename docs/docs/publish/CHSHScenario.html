@@ -13,53 +13,57 @@ outputRep = S2.naturalRep
 S2 = 
 
 Permutations acting on 2 elements
-  domainSize: 2     
-    identity: [1, 2]
-generator(1): [2, 1]
-       order: 2     
+  domainSize: 2                                
+    identity: [1, 2]                           
+      parent: Permutations acting on 2 elements
+generator(1): [2, 1]                           
 
 outputRep = 
 
-Orthogonal real representation of dimension 2
-dimension: 2                                
-    field: 'R'                              
-    group: Permutations acting on 2 elements
-images{1}: [0, 1; 1, 0]                     
-</pre><h2>Defining the party relabelings<a name="2"></a></h2><p>We have a copy of S2 acting on the outputs of the first measurement, and a second copy of S2 acting on the outputs of the second measurement, while another copy of S2 permutes the choice of measurement (input).</p><p>This is described by the wreath product of S2 by S2.</p><p>The representation on P(a|x) is the imprimitive representation, given that we use the natural representation for the inner group</p><pre class="codeinput">party = replab.WreathProductGroup(S2, S2)
+replab.RepByImages
+    dimension: 2                                
+        field: 'R'                              
+        group: Permutations acting on 2 elements
+inverseImages: {[0, 1; 1, 0]}                   
+    isUnitary: true                             
+    images{1}: [0, 1; 1, 0]                     
+</pre><h2>Defining the party relabelings<a name="2"></a></h2><p>We have a copy of S2 acting on the outputs of the first measurement, and a second copy of S2 acting on the outputs of the second measurement, while another copy of S2 permutes the choice of measurement (input).</p><p>This is described by the wreath product of S2 by S2.</p><p>The representation on P(a|x) is the imprimitive representation, given that we use the natural representation for the inner group</p><pre class="codeinput">party = S2.wreathProduct(S2)
 partyRep = party.imprimitiveRep(outputRep)
 </pre><pre class="codeoutput">
 party = 
 
-replab.WreathProductGroup
-           A: Permutations acting on 2 elements
-           H: Permutations acting on 2 elements
-           N: replab.DirectProductGroup        
-    identity: {[1, 2], {[1, 2], [1, 2]}}       
-           n: 2                                
-         phi: replab.perm.PermutationCellAction
-generator(1): {[2, 1], {[1, 2], [1, 2]}}       
-generator(2): {[1, 2], {[2, 1], [1, 2]}}       
-generator(3): {[1, 2], {[1, 2], [2, 1]}}       
-       order: 8                                
+replab.wreathproduct.OfNiceFiniteGroup
+           A: Permutations acting on 2 elements      
+           H: Permutations acting on 2 elements      
+           N: replab.directproduct.OfNiceFiniteGroups
+    identity: {[1, 2], {[1, 2], [1, 2]}}             
+           n: 2                                      
+      parent: replab.wreathproduct.OfNiceFiniteGroup 
+         phi: replab.perm.PermutationCellAction      
+generator(1): {[2, 1], {[1, 2], [1, 2]}}             
+generator(2): {[1, 2], {[2, 1], [1, 2]}}             
+generator(3): {[1, 2], {[1, 2], [2, 1]}}             
 
 partyRep = 
 
-Orthogonal real representation of dimension 4
-     Arep: Orthogonal real representation of dimension 2
-dimension: 4                                            
-    field: 'R'                                          
-    group: replab.WreathProductGroup                    
-</pre><h2>Defining the scenario relabelings<a name="3"></a></h2><p>The same story repeats for scenario relabelings; we have two copies of the party relabeling group (one for Alice, one for Bob), and a copy of S2 that permutes the parties.</p><p>The representation on P(ab|xy) is however a primitive representation, as P(a|x; b|y) ressembles a tensor. Inside each party, we use the imprimitive representation seen before.</p><pre class="codeinput">scenario = replab.WreathProductGroup(S2, party)
+replab.wreathproduct.ImprimitiveRep
+     Arep: replab.RepByImages                    
+dimension: 4                                     
+    field: 'R'                                   
+    group: replab.wreathproduct.OfNiceFiniteGroup
+isUnitary: true                                  
+</pre><h2>Defining the scenario relabelings<a name="3"></a></h2><p>The same story repeats for scenario relabelings; we have two copies of the party relabeling group (one for Alice, one for Bob), and a copy of S2 that permutes the parties.</p><p>The representation on P(ab|xy) is however a primitive representation, as P(a|x; b|y) ressembles a tensor. Inside each party, we use the imprimitive representation seen before.</p><pre class="codeinput">scenario = S2.wreathProduct(party)
 probRep = scenario.primitiveRep(partyRep);
 </pre><pre class="codeoutput">
 scenario = 
 
-replab.WreathProductGroup
-           A: replab.WreathProductGroup                                         
+replab.wreathproduct.OfNiceFiniteGroup
+           A: replab.wreathproduct.OfNiceFiniteGroup                            
            H: Permutations acting on 2 elements                                 
-           N: replab.DirectProductGroup                                         
+           N: replab.directproduct.OfNiceFiniteGroups                           
     identity: {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}
            n: 2                                                                 
+      parent: replab.wreathproduct.OfNiceFiniteGroup                            
          phi: replab.perm.PermutationCellAction                                 
 generator(1): {[2, 1], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}
 generator(2): {[1, 2], {{[2, 1], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}
@@ -68,19 +72,18 @@ generator(4): {[1, 2], {{[1, 2], {[1, 2], [2, 1]}}, {[1, 2], {[1, 2], [1, 2]}}}}
 generator(5): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[2, 1], {[1, 2], [1, 2]}}}}
 generator(6): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[2, 1], [1, 2]}}}}
 generator(7): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [2, 1]}}}}
-       order: 128                                                               
 </pre><h2>We now compute the decomposition of the representation<a name="4"></a></h2><pre class="codeinput">probRep.decomposition
 </pre><pre class="codeoutput">
 ans = 
 
 replab.Irreducible
-      parent: Orthogonal real representation of dimension 16
-component(1): Isotypic component R(1)                       
-component(2): Isotypic component R(1)                       
-component(3): Isotypic component R(2)                       
-component(4): Isotypic component R(4)                       
-component(5): Isotypic component R(4)                       
-component(6): Isotypic component R(4)                       
+      parent: replab.wreathproduct.PrimitiveRep
+component(1): Isotypic component R(1)          
+component(2): Isotypic component R(1)          
+component(3): Isotypic component R(2)          
+component(4): Isotypic component R(4)          
+component(5): Isotypic component R(4)          
+component(6): Isotypic component R(4)          
 </pre></div><!--
 ##### SOURCE BEGIN #####
 %% Relabelings in the CHSH scenario
@@ -104,7 +107,7 @@ outputRep = S2.naturalRep
 %
 % The representation on P(a|x) is the imprimitive representation,
 % given that we use the natural representation for the inner group
-party = replab.WreathProductGroup(S2, S2)
+party = S2.wreathProduct(S2)
 partyRep = party.imprimitiveRep(outputRep)
 
 %% Defining the scenario relabelings
@@ -116,7 +119,7 @@ partyRep = party.imprimitiveRep(outputRep)
 % as P(a|x; b|y) ressembles a tensor. Inside each party, we use the
 % imprimitive representation seen before.
 
-scenario = replab.WreathProductGroup(S2, party)
+scenario = S2.wreathProduct(party)
 probRep = scenario.primitiveRep(partyRep);
 
 %% We now compute the decomposition of the representation

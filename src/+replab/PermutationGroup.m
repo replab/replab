@@ -1,32 +1,25 @@
-classdef PermutationGroup < replab.Group
-% Represents a permutation group
+classdef PermutationGroup < replab.NiceFiniteGroup
+% A base class for all permutation groups
 
     properties (SetAccess = protected)
         domainSize; % d when this group acts on {1, ..., d}
     end
     
-    properties (Access = protected)
-        orbits_ = [];
-    end
-    
     methods
-                
-        function self = PermutationGroup(domainSize)
-            self.domainSize = domainSize;
-            self.identity = 1:domainSize;
-        end
         
-        % Domain
+        %% Domain methods
         
         function b = eqv(self, x, y)
             b = isequal(x, y);
         end
         
-        % Semigroup/Monoid/Group
+        %% Monoid methods
         
         function z = compose(self, x, y)
             z = x(y);
         end
+        
+        %% Group methods
         
         function y = inverse(self, x)
             n = self.domainSize;
@@ -34,53 +27,150 @@ classdef PermutationGroup < replab.Group
             y(x) = 1:n;
         end
         
+        %% NiceFiniteGroup
+        
+        function p = niceMonomorphismImage(self, p)
+        end
+        
+        %% Methods specific to permutation groups
+
+        function o = orbits(self)
+        % Returns the partition of the domain into orbits under this group
+        %
+        % Permutation group orbits are also called domains of transitivity,
+        % see https://www.encyclopediaofmath.org/index.php/Transitive_group
+        %
+        % Returns:
+        %   replab.Partition: The orbit partition
+            G = zeros(self.nGenerators, self.domainSize);
+            for i = 1:self.nGenerators
+                G(i, :) = self.generators{i};
+            end
+            o = replab.Partition.permutationsOrbits(G);
+        end
+
+        %% Group construction
+        
+        function w = wreathProduct(self, A)
+        % Returns the wreath product of a compact group by this permutation group
+        %
+        % See https://en.wikipedia.org/wiki/Wreath_product
+        %
+        % Note that our notation is reversed compared to the Wikipedia page,
+        % the permutation group is on the left hand side, as our convention
+        % for semidirect product places the group acted upon on the right.
+        %
+        % Note that the return type depends on the argument type:
+        % if `A` is a `replab.FiniteGroup`, the result will be a finite group
+        % too, and if `A` is a `replab.NiceFiniteGroup`, the result will be of
+        % that type.
+        %
+        % Args:
+        %   A (replab.CompactGroup): The group whose copies are acted upon
+        %
+        % Returns:
+        %   replab.wreathproduct.Common: A wreath product group
+            w = replab.wreathproduct.of(self, A);
+        end
+        
+        %% Actions
+        
         function A = naturalAction(self)
-        % Returns the action of elements of this group on {1..self.domainSize}
+        % Returns the natural action of elements of this group on its domain
+        %
+        % This group natural domain is the set of integers ``{1..domainSize}``
+        %
+        % Returns:
+        %   replab.Action: The natural action
             A = replab.perm.PermutationNaturalAction(self);
         end
         
         function A = vectorAction(self)
-        % Returns the action of elements of this group on
-        % (self.domainSize)-dimensional vectors by permuting their coefficients
+        % Returns the action of permutations on column vectors
+        %
+        % Acts on vectors of size `self.domainSize` by permuting their coefficients
+        %
+        % Returns:
+        %   replab.Action: The vector action
             A = replab.perm.PermutationVectorAction(self);
         end
 
         function A = matrixAction(self)
-        % Returns the action of elements of this group on d x d matrices
-        % where d = self.domainSize, by simultaneous permutations of their
-        % rows and columns
+        % Returns the simultaneous action of permutations on both rows and columns of square matrices
+        %
+        % Acts on matrices of size ``self.domainSize x self.domainSize``
+        %
+        % Returns:
+        %   replab.Action: The matrix action
             A = replab.perm.PermutationMatrixAction(self);
         end
         
-        function perm = indexRelabelingPermutation(self, g, localDimension)
-        % Describes the permutation action of this group on tensor coefficients
+        function perm = indexRelabelingPermutation(self, g, indexRange)
+        % Returns the permutation that acts by permuting tensor coefficients
+        %
+        % Let I = (i1, ..., id) be a sequence of indices, where d = self.domainSize
+        % and 1 <= i1,...,id <= indexRange
+        %
+        % We enumerate elements of I by first incrementing id, then i_(d-1), etc...
+        %
+        % We compute the permutation of domain size ``indexRange^domainSize`` that acts on the
+        % indices of I according to the argument `g`.
+        %
+        % Args:
+        %   g (permutation): Permutation of subindices
+        %   indexRange (integer): Dimension of each subindex
+        %
+        % Returns:
+        %   permutation: The permutation on the enumeration of indices
             n = self.domainSize;
-            dims = localDimension * ones(1, n);
+            dims = indexRange * ones(1, n);
             perm = permute(reshape(1:prod(dims), dims), fliplr(n +  1 - g));
             perm = perm(:)';
         end
         
-        function phi = indexRelabelingMorphism(self, localDimension)
-        % Describes the permutation action of this group on tensor coefficients
+        function phi = indexRelabelingMorphism(self, indexRange)
+        % Returns the morphism the permutation action of this group on tensor coefficients
         %
-        % The tensor coefficients correspond to R^ld x R^ld ... (domainSize times)
-            phi = @(g) self.indexRelabelingPermutation(g, localDimension);
+        % The tensor coefficients correspond to R^ir x R^ir ... (domainSize times)
+        % where ir = indexRange
+        %
+        % See also:
+        %   `replab.PermutationGroup.indexRelabelingPermutation`
+        %
+        % Args:
+        %   indexRange (integer): Dimension of each subindex
+        %
+        % Returns:
+        %   function_handle: The permutation group homomorphism
+            phi = @(g) self.indexRelabelingPermutation(g, indexRange);
         end
         
-        function rho = indexRelabelingRep(self, localDimension)
+        %% Representation construction
+        
+        function rho = indexRelabelingRep(self, indexRange)
         % Representation that permutes the indices of a tensor
         %
-        % It acts on the tensor space R^ld x R^ld ... (domainSize times)
-        % by permuting the indices. The representation returned is real.
-            rho = replab.rep.IndexRelabelingRep(self, localDimension);
-        end
-        
-        function rho = naturalRepresentation(self)
-            rho = self.permutationRepresentation(self.domainSize, self.generators);
+        % It acts on the tensor space R^ir x R^ir ... (domainSize times)
+        % where ir = indexRange, by permuting the indices. 
+        %
+        % The representation returned is real.
+        %
+        % See also:
+        %   `replab.PermutationGroup.indexRelabelingPermutation`
+        %
+        % Args:
+        %   indexRange (integer): Dimension of the tensor components/range of the subindices
+        %
+        % Returns:
+        %   replab.Rep: The desired permutation representation
+            rho = replab.rep.IndexRelabelingRep(self, indexRange);
         end
         
         function rho = naturalRep(self)
         % Returns the natural permutation representation of this permutation group
+        %
+        % Returns:
+        %   replab.Rep: The (real) natural permutation representation
             rho = self.permutationRep(self.domainSize, self.generators);
         end
         
@@ -89,22 +179,14 @@ classdef PermutationGroup < replab.Group
         %
         % It corresponds to the representation orthogonal to the
         % trivial representation with basis [1, 1, ..., 1]'/sqrt(d)
+        %
+        % Returns:
+        %   replab.Rep: The (real) standard representation
             U = replab.rep.standardBasis(self.domainSize);
             U = U(2:end, :);
-            rho = self.naturalRep.subRep(U);
+            rho = self.naturalRep.subRepUnitary(U);
         end
-        
-        function o = orbits(self)
-            if isempty(self.orbits_)
-                G = zeros(self.nGenerators, self.domainSize);
-                for i = 1:self.nGenerators
-                    G(i, :) = self.generators{i};
-                end
-                self.orbits_ = replab.Partition.permutationsOrbits(G);
-            end
-            o = self.orbits_;
-        end
-        
+                
     end
         
 end

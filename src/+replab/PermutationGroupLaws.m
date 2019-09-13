@@ -1,16 +1,16 @@
-classdef PermutationGroupLaws < replab.FiniteGroupLaws
+classdef PermutationGroupLaws < replab.NiceFiniteGroupLaws
     properties (SetAccess = protected)
         P;
     end
     methods
         function self = PermutationGroupLaws(T)
-            self@replab.FiniteGroupLaws(T);
+            self@replab.NiceFiniteGroupLaws(T);
             self.P = replab.domain.intAsDouble(1, T.domainSize);
         end
     end
     methods
         function actionLaws = laws_naturalAction(self)
-            actionLaws = replab.FaithfulActionLaws(self.T.naturalAction);
+            actionLaws = replab.ActionLaws(self.T.naturalAction);
         end
         function actionLaws = laws_vectorAction(self)
             actionLaws = replab.ActionLaws(self.T.vectorAction);

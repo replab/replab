@@ -12,8 +12,9 @@ classdef TensorRep < replab.Rep
                 d = d * factors{i}.dimension;
             end
             self.dimension = d;
+            self.isUnitary = replab.domain.Trilean.and(cellfun(@(x) x.isUnitary, factors, 'uniform', 0));
             for i = 2:length(factors)
-                assert(isequal(factors{1}.group, factors{i}.group));
+                assert(factors{1}.group == factors{i}.group);
                 assert(isequal(factors{1}.field, factors{i}.field));
             end
             self.factors = factors;

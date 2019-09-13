@@ -5,6 +5,6 @@ function test_suite = WreathProductGroupTest()
     end
     initTestSuite;
     S3 = replab.Permutations(2);
-    W = replab.WreathProductGroup(S3, S3);
+    W = S3.wreathProduct(S3);
     test_suite = replab.FiniteGroupLaws(W).addTestCases(test_suite);
 end

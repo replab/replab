@@ -13,13 +13,32 @@ sampleFun = @() randperm(n);
 composeFun = @(x, y) x(y);
 identity = 1:n;
 inverseFun = @(x) arrayfun(@(i) find(x == i), 1:10);
-S10 = replab.GroupFun(<span class="string">'Permutations of 1..10'</span>, eqvFun, sampleFun, composeFun, identity, inverseFun)
-</pre><pre class="codeoutput">Undefined variable "replab" or class "replab.GroupFun".
+S10 = replab.Group.lambda(<span class="string">'Permutations of 1..10'</span>, eqvFun, sampleFun, composeFun, identity, inverseFun)
+</pre><pre class="codeoutput">
+S10 = 
 
-Error in LawChecks (line 12)
-S10 = replab.GroupFun('Permutations of 1..10', eqvFun, sampleFun, composeFun, identity, inverseFun)
+Permutations of 1..10
+composeFun: @(x,y)x(y)                       
+    eqvFun: @(x,y)isequal(x,y)               
+  identity: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  
+inverseFun: @(x)arrayfun(@(i)find(x==i),1:10)
+ sampleFun: @()randperm(n)                   
 </pre><p>We instantiate the group laws, and check them.</p><pre class="codeinput">S10laws = replab.GroupLaws(S10)
 S10laws.check
+</pre><pre class="codeoutput">
+S10laws = 
+
+replab.GroupLaws
+T: Permutations of 1..10
+Checking inverse compatible with compose...
+Checking inverse...
+Checking composeN integers...
+Checking identity...
+Checking composeN zero...
+Checking composeAll...
+Checking composeN positive...
+Checking associativity...
+Checking eqv...
 </pre></div><!--
 ##### SOURCE BEGIN #####
 %% Using law checks
@@ -33,7 +52,7 @@ sampleFun = @() randperm(n);
 composeFun = @(x, y) x(y);
 identity = 1:n;
 inverseFun = @(x) arrayfun(@(i) find(x == i), 1:10);
-S10 = replab.GroupFun('Permutations of 1..10', eqvFun, sampleFun, composeFun, identity, inverseFun)
+S10 = replab.Group.lambda('Permutations of 1..10', eqvFun, sampleFun, composeFun, identity, inverseFun)
 %%
 % We instantiate the group laws, and check them.
 S10laws = replab.GroupLaws(S10)

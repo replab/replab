@@ -3,7 +3,7 @@ classdef SignedPermutationMatrixAction < replab.Action
 % permutations of rows and columns and sign flips
     methods
         function self = SignedPermutationMatrixAction(G)
-            assert(isa(G, 'replab.SignedPermutations'));
+            assert(isa(G, 'replab.signed.PermutationGroup'));
             d = G.domainSize;
             self.G = G;
             self.P = replab.domain.intAsDoubleMatrix(d, d, 1, G.domainSize);

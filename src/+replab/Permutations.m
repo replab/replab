@@ -1,11 +1,12 @@
-classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
-% Describes permutations over n = "domainSize" elements, i.e.
-% the symmetric group Sn
+classdef Permutations < replab.PermutationGroup
+% Describes permutations over n = "domainSize" elements, i.e. the symmetric group Sn
     
     methods % Implementations of abstract methods
         
         function self = Permutations(domainSize)
-            self@replab.PermutationGroup(domainSize);
+            self.identity = 1:domainSize;
+            self.domainSize = domainSize;
+            self.parent = self;
             if self.domainSize < 2
                 self.generators = cell(1, 0);
             elseif self.domainSize == 2
@@ -15,81 +16,62 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
             end
         end
         
-        % Str
+        %% Str methods
                 
         function s = headerStr(self)
             s = sprintf('Permutations acting on %d elements', self.domainSize);
         end
 
-        % Domain
+        %% Domain methods
         
         function s = sample(self)
-            s = randperm(self.domainSize);
+            s = randperm(self.domainSize); % overriden for efficiency
         end
-        
-        % FinitelyGeneratedGroup
-        
-        function w = factorization(self, x)
-        % Factorizes a permutation using bubble sort
-            if self.isIdentity(x)
-                w = replab.Word.identity;
-                return
-            elseif self.domainSize == 2
-                % not identity
-                w = replab.Word.generator(1);
-                return
-            end
-            n = length(x);
-            w = replab.Word.identity;
-            moved = true;
-            while moved
-                moved = false;
-                for i = 1:n-1
-                    if x(i) > x(i+1)
-                        t = x(i+1);
-                        x(i+1) = x(i);
-                        x(i) = t;
-                        moved = true;
-                        if i == 1
-                            shift = replab.Word.identity;
-                        else
-                            shift = replab.Word.fromIndicesAndExponents(1, i - 1);
-                        end
-                        w = shift * replab.Word.generator(2) * inv(shift) * w;
-                    end
-                end
-            end
-        end
-        
-        % FiniteGroup
+
+        %% FiniteGroup methods
         
         function b = contains(self, g)
-            b = (length(g) == self.domainSize) && all(g > 0);
-        end
-        
-        function b = knownOrder(self)
+            assert(length(g) == self.domainSize, 'Permutation in wrong domain');
+            assert(all(g > 0), 'Permutation should have positive coefficients');
             b = true;
         end
         
-        function o = order(self)
-            o = factorial(vpi(self.domainSize));
-        end
+        %% NiceFiniteGroup methods
         
-        function E = elements(self)
-            E = replab.Enumerator.lambda(self.order, ...
-                                         @(ind) self.enumeratorAt(ind), ...
-                                         @(el) self.enumeratorFind(el));
-        end
-        
-        function d = decomposition(self)
-            G = self.subgroup(self.generators, self.order);
-            d = G.decomposition;
+        function grp = subgroup(self, generators, order)
+        % Constructs a permutation subgroup from its generators
+        %
+        % Args:
+        %   generators (row cell array): List of generators given as a permutations in a row cell array
+        %   order (vpi, optional): Argument specifying the group order, if given can speed up computations
+        %
+        % Returns:
+        %   +replab.PermutationSubgroup: The constructed permutation subgroup.
+            if nargin < 3
+                order = [];
+            end
+            grp = replab.PermutationSubgroup(self, generators, order);
         end
         
     end
     
     methods (Access = protected)
+
+        function o = computeOrder(self)
+            o = factorial(vpi(self.domainSize));
+        end
         
+        function E = computeElements(self)
+            E = replab.IndexedFamily.lambda(self.order, ...
+                                            @(ind) self.enumeratorAt(ind), ...
+                                            @(el) self.enumeratorFind(el));
+        end
+        
+        function d = computeDecomposition(self)
+            G = self.subgroup(self.generators, self.order);
+            d = G.decomposition;
+        end
+
         function ind = enumeratorFind(self, g)
             n = self.domainSize;
             ind0 = vpi(0);
@@ -177,22 +159,7 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
                 p = self.compose(newEl, p);
             end
         end
-
-        function grp = subgroup(self, generators, orderOpt)
-        % Constructs a permutation subgroup from its generators
-        %
-        % Args:
-        %   generators: List of generators given as a permutations in a row cell array
-        %   orderOpt: Optional argument specifying the group order, will speed up computations
-        %
-        % Returns:
-        %   +replab.PermutationSubgroup: The constructed permutation subgroup.
-            if nargin < 3
-                orderOpt = [];
-            end
-            grp = replab.perm.PermutationBSGSGroup(self, generators, orderOpt);
-        end
-        
+       
         function grp = trivialSubgroup(self)
             grp = self.subgroup({}, vpi(1));
         end
@@ -269,6 +236,9 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
         %   The permutation matrix corresponding to `perm`.
             n = length(perm);
             mat = sparse(perm, 1:n, ones(1, n), n, n);
+            if ~replab.Settings.useSparse
+                mat = full(mat);
+            end
         end
         
         function perm = fromMatrix(mat)
@@ -307,6 +277,46 @@ classdef Permutations < replab.PermutationGroup & replab.FiniteGroup
             end
             perm = I(IJ);
         end
+
+        function p = sorting(array, greaterFun)
+        % Returns the permutation that sorts a cell array using a custom comparison function
+        %
+        % Args:
+        %   array: A (row or column) vector array containing data
+        %          of arbitrary type
+        %   greaterFun: A function handle that compares elements such that
+        %               ``greaterFun(x, y) == true`` when x > y
+        %               and false otherwise
+        % Returns:
+        %   A permutation ``p`` such that ``sorted = array(p)``
+            n = length(array);
+            p = 1:n;
+            inc = round(n/2);
+            while inc > 0
+                for i = (inc+1):n
+                    tmp = p(i);
+                    j = i;
+                    if isa(array, 'cell')
+                        while (j >= inc+1) && greaterFun(array{p(j-inc)}, array{tmp})
+                            p(j) = p(j-inc);
+                            j = j - inc;
+                        end
+                    else
+                        while (j >= inc+1) && greaterFun(array(p(j-inc)), array(tmp))
+                            p(j) = p(j-inc);
+                            j = j - inc;
+                        end
+                    end
+                    p(j) = tmp;
+                end
+                if inc == 2
+                    inc = 1;
+                else
+                    inc = round(inc/2.2);
+                end
+            end
+        end
+        
     end
     
 end

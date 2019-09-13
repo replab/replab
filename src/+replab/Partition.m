@@ -2,10 +2,10 @@ classdef Partition < replab.Str
 % Represents an unordered partition of the set {1..n} into disjoint subsets
    
     properties (SetAccess = protected)
-        n;           % domain size
-        blockIndex;  % index of the block for each element
-        start;       % starting index for each block
-        next;        % next index in the same block, or 0 if at the end
+        n % integer: Domain size
+        blockIndex % integer row vector: Index of the block for each element
+        start % integer row vector: Starting index for each block
+        next % integer row vector: Next index in the same block, or 0 if at the end
     end
     
     methods (Access = protected)
@@ -52,6 +52,31 @@ classdef Partition < replab.Str
             B = [];
             while el > 0
                 B = [B el];
+                el = self.next(el);
+            end
+        end
+        
+        function sz = blockSizes(self)
+        % Returns the sizes of all blocks
+        %
+        % Returns:
+        %   (row integer vector): block sizes
+            nB = self.nBlocks;
+            sz = arrayfun(@(i) self.blockSize(i), 1:nB);
+        end
+            
+        function sz = blockSize(self, i)
+        % Returns the size of a partition block
+        %
+        % Args:
+        %   i (integer): Index of the block
+        %
+        % Returns:
+        %   integer: Size of the i-th block in this partition
+            el = self.start(i);
+            sz = 0;
+            while el > 0
+                sz = sz + 1;
                 el = self.next(el);
             end
         end

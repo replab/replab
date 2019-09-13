@@ -15,7 +15,7 @@ function sub1 = niceRep(sub)
         return
     end
     U0rational = replab.rep.recoverRational(sub);
-    if ~isequal(U0rational, [])
+    if ~isempty(U0rational)
         if isa(sub, 'replab.Irrep')
             sub1 = replab.Irrep(sub.parent, U0rational, sub.realDivisionAlgebra);
         else
@@ -23,9 +23,9 @@ function sub1 = niceRep(sub)
         end
         return
     end
-    if isequal(sub.field, 'C')
+    if sub.overC
         Ureal = replab.rep.recoverReal(sub);
-        if ~isequal(Ureal, [])
+        if ~isempty(Ureal)
             if isa(sub, 'replab.Irrep')
                 sub1 = replab.Irrep(sub.parent, Ureal, sub.realDivisionAlgebra);
             else

@@ -11,6 +11,7 @@ classdef IndexRelabelingRep < replab.Rep
             n = group.domainSize;
             self.group = group;
             self.dimension = localDimension^n;
+            self.isUnitary = true;
             self.localDimension = localDimension;
             self.field = 'R';
         end
@@ -22,6 +23,9 @@ classdef IndexRelabelingRep < replab.Rep
             I = permute(reshape(1:d, dims), g);
             I = I(:)';
             rho = sparse(I, 1:d, ones(1, d), d, d);
+            if ~replab.Settings.useSparse
+                rho = full(rho);
+            end
         end
         
     end

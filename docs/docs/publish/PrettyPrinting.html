@@ -12,23 +12,23 @@ To make changes, update the MATLAB code and republish this document.
 P = 
 
 Permutations acting on 3 elements
-  domainSize: 3        
-    identity: [1, 2, 3]
-generator(1): [2, 3, 1]
-generator(2): [2, 1, 3]
-       order: 6        
+  domainSize: 3                                
+    identity: [1, 2, 3]                        
+      parent: Permutations acting on 3 elements
+generator(1): [2, 3, 1]                        
+generator(2): [2, 1, 3]                        
 </pre><p>which is the output of the 'replab.longStr' function</p><pre class="codeinput">replab.longStr(P)
 </pre><pre class="codeoutput">
 ans =
 
-  6&times;1 cell array
+  6x1 cell array
 
-    {'Permutations acting on 3 elements'}
-    {'  domainSize: 3        '          }
-    {'    identity: [1, 2, 3]'          }
-    {'generator(1): [2, 3, 1]'          }
-    {'generator(2): [2, 1, 3]'          }
-    {'       order: 6        '          }
+    {'Permutations acting on 3 elements'              }
+    {'  domainSize: 3                                '}
+    {'    identity: [1, 2, 3]                        '}
+    {'      parent: Permutations acting on 3 elements'}
+    {'generator(1): [2, 3, 1]                        '}
+    {'generator(2): [2, 1, 3]                        '}
 
 </pre><p>while the short version is much less informative.</p><pre class="codeinput">replab.shortStr(P)
 </pre><pre class="codeoutput">
@@ -41,14 +41,14 @@ P.shortStr(80)
 </pre><pre class="codeoutput">
 ans =
 
-  6&times;1 cell array
+  6x1 cell array
 
-    {'replab.Permutations'    }
-    {'  domainSize: 3        '}
-    {'    identity: [1, 2, 3]'}
-    {'generator(1): [2, 3, 1]'}
-    {'generator(2): [2, 1, 3]'}
-    {'       order: 6        '}
+    {'replab.Permutations'                            }
+    {'  domainSize: 3                                '}
+    {'    identity: [1, 2, 3]                        '}
+    {'      parent: Permutations acting on 3 elements'}
+    {'generator(1): [2, 3, 1]                        '}
+    {'generator(2): [2, 1, 3]                        '}
 
 
 ans =
@@ -61,22 +61,21 @@ P
 </pre><pre class="codeoutput">
 P = 
 
-replab.perm.PermutationBSGSGroup
-      action: Natural permutation action on 3 elements
-  domainSize: 3                                       
-    identity: [1, 2, 3]                               
-generator(1): [2, 3, 1]                               
+replab.PermutationSubgroup
+  domainSize: 3                                
+    identity: [1, 2, 3]                        
+      parent: Permutations acting on 3 elements
+generator(1): [2, 3, 1]                        
 ans =
     3
 
 P = 
 
-replab.perm.PermutationBSGSGroup
-      action: Natural permutation action on 3 elements
-  domainSize: 3                                       
-    identity: [1, 2, 3]                               
-generator(1): [2, 3, 1]                               
-       order: 3                                       
+replab.PermutationSubgroup
+  domainSize: 3                                
+    identity: [1, 2, 3]                        
+      parent: Permutations acting on 3 elements
+generator(1): [2, 3, 1]                        
 </pre></div><!--
 ##### SOURCE BEGIN #####
 %% Pretty printing infrastructure

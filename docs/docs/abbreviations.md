@@ -23,3 +23,4 @@ Abbreviations from Matlab (or toolboxes) conventions:
 
 Other abbreviations:
 - `eqv` for `equivalent`
+- `col(s)` for `column(s)`

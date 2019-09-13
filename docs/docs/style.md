@@ -27,7 +27,4 @@ That function will then construct the object with the best performance character
 
 ## No abstract methods in abstract base classes
 
-As Octave does not support the `methods (Abstract)` syntax, we provide generic implementations for abstract methods in abstract base classes by either:
-
-- trying to retrieve and calling a function handle property (the `DomainFun`, `SemigroupFun`, ... approach), or
-- throwing `error('Not implemented')`.
+As Octave does not support the `methods (Abstract)` syntax, we provide generic implementations for abstract methods by throwing `error('Abstract')`.

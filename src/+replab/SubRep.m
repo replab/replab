@@ -30,6 +30,7 @@ classdef SubRep < replab.Rep
             self.field = parent.field;
             self.dimension = d;
             self.parent = parent;
+            self.isUnitary = true;
             self.U0 = U0;
             D0 = ones(1, d);
             hasCorrection = false;
@@ -68,7 +69,7 @@ classdef SubRep < replab.Rep
         function sub1 = nice(self)
         % Tries to recover a nice basis for this subrepresentation
             sub1 = replab.rep.niceRep(self);
-            if isequal(sub1, [])
+            if isempty(sub1)
                 sub1 = self; % fallback
             end
         end
@@ -84,7 +85,7 @@ classdef SubRep < replab.Rep
         % Returns this subrepresentation as expressed in self.parent.parent
             assert(isa(self.parent, 'replab.SubRep'));
             newU0 = self.U0 * self.parent.U;
-            newSub = self.parent.parent.subRep(newU0);
+            newSub = self.parent.parent.subRepUnitary(newU0);
         end
         
         function sub = in(self, newParent)
@@ -95,12 +96,12 @@ classdef SubRep < replab.Rep
                 sub = self;
             else
                 newU0 = self.U0 * self.parent.U;
-                newRep = self.parent.parent.subRep(newU0);
+                newRep = self.parent.parent.subRepUnitary(newU0);
                 sub = newRep.in(newParent);
             end
         end
         
-        % Str
+        %% Str methods
         
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Rep(self);
@@ -122,13 +123,15 @@ classdef SubRep < replab.Rep
                 );
         end
         
-        % Rep
+        %% Rep methods
         
         function rho = image(self, g)
             rho = self.U * self.parent.image(g) * self.U';
         end
         
-        % TODO optimize action and adjointAction
+        function rho = inverseImage(self, g)
+            rho = self.U * self.parent.inverseImage(g) * self.U';
+        end
         
     end
 
