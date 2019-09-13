@@ -1,26 +1,50 @@
 classdef Action < replab.Str
-% A group action describing the action of elements of type G upon elements of type P
+% A group action describing the action of a group on a set
+%
+% Elements of the group `G` act upon elements of type `P`.
+    
     properties (SetAccess = protected)
-        G; % group
-        P; % set acted upon
+        G % replab.Group: Group acting
+        P % replab.Domain: Set acted upon
     end
     
-    methods % Abstract methods
+    methods 
+        
+        %% Abstract methods
         
         function p1 = leftAction(self, g, p)
-        % Returns the left action p1 = g(p) of G over P, which
-        % is compatible with group composition in this way
-        % p2 = g(h(p)) implies p2 = (g compose h)(p)
-            error('Not implemented');
+        % Computes the left action of a group element on a set element
+        %
+        % Returns the left action, often denoted by ``p1 = g(p)`` of G over P, 
+        % which is compatible with group composition as in:
+        %
+        % `` p2 = g(h(p)) = (g compose h)(p) ``
+        %
+        % Args:
+        %   g (element of `self.G`): Group element acting
+        %   p (element of `self.P`): Element acted upon
+        %
+        % Returns:
+        %   element of `self.P`: Result of the left action
+            error('Abstract');
         end
         
-    end
-    
-    methods % Default implementations
+        %% Default implementations
         
         function p1 = rightAction(self, p, g)
-        % Returns the right action p1 = p^g, compatible with the
-        % group composition as p2 = (p^g)^h = p^(g compose h)
+        % Computes the right action of a group element on a set element
+        %
+        % Returns the right action, often denoted ``p1 = p^g``, 
+        % compatible with the group composition as in
+        %
+        % ``p2 = (p^g)^h = p^(g compose h)``
+        %
+        % Args:
+        %   p (element of `self.P`): Element acted upon
+        %   g (element of `self.G`): Group element acting
+        %
+        % Returns:
+        %   element of `self.P`: Result of the right action
             p1 = self.leftAction(self.G.inverse(g), p);
         end
 
@@ -29,6 +53,15 @@ classdef Action < replab.Str
     methods (Static)
         
         function action = lambda(header, G, P, leftActionFun)
+        % Constructs an action from a function handle
+        %
+        % Args:
+        %   G (`replab.Group`): Group acting
+        %   P (`replab.Domain`: Set acted upon
+        %   leftActionFun (function_handle): Handle implementing `leftAction`
+        %
+        % Returns:
+        %   replab.Action: The action
             action = replab.lambda.Action(header, G, P, leftActionFun);
         end
         

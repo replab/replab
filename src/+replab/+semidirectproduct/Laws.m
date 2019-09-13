@@ -1,21 +1,17 @@
-classdef SemidirectProductGroupLaws < replab.FiniteGroupLaws
-    
+classdef Laws < replab.Laws
     properties (SetAccess = protected)
-        G; % semidirect product group
-        H; % group acting
-        M; % group acted upon
+        G % replab.semidirectproduct.OfCompactGroups: Semidirect product group
+        H % replab.CompactGroup: Group acting
+        M % replab.CompactGroup: Group acted upon
     end
-    
     methods
-        function self = SemidirectProductGroupLaws(G)
-            self@replab.FiniteGroupLaws(G);
-            assert(isa(G, 'replab.SemidirectProductGroup'));
+        function self = Laws(G)
+            assert(isa(G, 'replab.semidirect.OfCompactGroups'));
             self.G = G;
             self.H = G.H;
             self.M = G.N;
         end
     end
-    
     methods
         function actionLaws = laws_phi(self)
             actionLaws = replab.ActionLaws(self.G.phi);

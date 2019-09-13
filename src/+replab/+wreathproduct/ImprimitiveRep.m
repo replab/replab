@@ -1,18 +1,24 @@
-classdef WreathProductImprimitiveRep < replab.Rep
+classdef ImprimitiveRep < replab.Rep
+% Imprimitive representation of a wreath product group
+%
+% See `replab.wreathproduct.Common.imprimitiveRep`
+%
+% See `replab.wreathproduct.PrimitiveRep`
     
     properties (SetAccess = protected)
-        Arep;
+        Arep % replab.Rep: Representation of the group whose copies are acted upon
     end
     
     methods
         
-        function self = WreathProductImprimitiveRep(group, Arep)
-            assert(isa(group, 'replab.WreathProductGroup'));
+        function self = ImprimitiveRep(group, Arep)
+            assert(isa(group, 'replab.wreathproduct.Common'));
             assert(group.A == Arep.group);
             dA = Arep.dimension;
             n = group.H.domainSize;
             self.Arep = Arep;
             self.dimension = n*dA;
+            self.isUnitary = Arep.isUnitary;
             self.field = Arep.field;
             self.group = group;
         end

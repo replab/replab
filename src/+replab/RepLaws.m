@@ -17,9 +17,9 @@ classdef RepLaws < replab.Laws
             self.M = replab.domain.Matrices(rep.field, d, d);
             switch rep.field
               case 'R'
-                self.U = replab.domain.OrthonormalMatrices(d);
+                self.U = replab.OrthogonalGroup(d);
               case 'C'
-                self.U = replab.domain.UnitaryMatrices(d);
+                self.U = replab.UnitaryGroup(d);
             end            
         end
         function morphismLaws = laws_asGroupHomomorphism(self)

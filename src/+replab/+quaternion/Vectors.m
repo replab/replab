@@ -1,4 +1,4 @@
-classdef QuaternionVectors < replab.Domain
+classdef Vectors < replab.Domain
 % Describes the vector space of d x 1 quaternion vectors
     
     properties
@@ -7,7 +7,7 @@ classdef QuaternionVectors < replab.Domain
     
     methods
         
-        function self = QuaternionVectors(d)
+        function self = Vectors(d)
             self.d = d;
         end
         
@@ -28,7 +28,7 @@ classdef QuaternionVectors < replab.Domain
             parti = randn(self.d, 1);
             partj = randn(self.d, 1);
             partk = randn(self.d, 1);
-            X = replab.Quaternion(part1, parti, partj, partk)/2;
+            X = replab.quaternion.H(part1, parti, partj, partk)/2;
         end
         
     end

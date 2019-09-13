@@ -1,9 +1,9 @@
-classdef SignedPermutationsLaws < replab.FiniteGroupLaws
+classdef PermutationsLaws < replab.FiniteGroupLaws
     properties
         P;
     end
     methods
-        function self = SignedPermutationsLaws(T)
+        function self = PermutationsLaws(T)
             self@replab.FiniteGroupLaws(T);
             self.P = replab.domain.signedIntAsDouble(1, T.domainSize);
         end
@@ -18,7 +18,7 @@ classdef SignedPermutationsLaws < replab.FiniteGroupLaws
             morphismLaws = replab.GroupMorphismLaws(@(s) self.T.toPermutation(s), self.T, SymGrp);
         end
         function actionLaws = laws_naturalAction(self)
-            actionLaws = replab.FaithfulActionLaws(self.T.naturalAction);
+            actionLaws = replab.ActionLaws(self.T.naturalAction);
         end
         function actionLaws = laws_vectorAction(self)
             actionLaws = replab.ActionLaws(self.T.vectorAction);

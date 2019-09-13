@@ -222,8 +222,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   replab.Rep: The constructed group representation
-            S = replab.SignedPermutations(dimension);
-            f = @(g) S.toMatrix(g);
+            f = @(g) replab.signed.Permutations.toMatrix(g);
             images = cellfun(f, signedPermutations, 'uniform', 0);
             rho = self.rep('R', dimension, true, images);
         end

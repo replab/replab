@@ -209,7 +209,7 @@ classdef Permutations < replab.signed.PermutationGroup
         
         function Q = quaternionGroup(self)
         % Returns a signed representation of the quaternion group
-            SS4 = replab.SignedPermutations(4);
+            SS4 = replab.signed.Permutations(4);
             g1 = [-1 -2 -3 -4];
             gi = [2 -1 4 -3];
             gj = [3 -4 -1 2];

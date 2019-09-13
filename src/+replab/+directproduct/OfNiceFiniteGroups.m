@@ -14,19 +14,19 @@ classdef OfNiceFiniteGroups < replab.NiceFiniteGroup & replab.directproduct.OfFi
         %% Domain methods
         
         function b = eqv(self, x, y)
-            b = eqv@replab.directproduct.OfGroups(self, x, y);
+            b = eqv@replab.directproduct.OfCompactGroups(self, x, y);
         end
         
         %% Monoid methods
         
         function z = compose(self, x, y)
-            z = compose@replab.directproduct.OfGroups(self, x, y);
+            z = compose@replab.directproduct.OfCompactGroups(self, x, y);
         end
  
         %% Group methods
         
         function xInv = inverse(self, x)
-            xInv = inverse@replab.directproduct.OfGroups(self, x);
+            xInv = inverse@replab.directproduct.OfCompactGroups(self, x);
         end
 
         %% CompactGroup methods

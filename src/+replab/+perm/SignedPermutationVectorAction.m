@@ -3,7 +3,7 @@ classdef SignedPermutationVectorAction < replab.Action
 % permuting the coefficients and flipping their signs
     methods
         function self = SignedPermutationVectorAction(G)
-            assert(isa(G, 'replab.SignedPermutations'));
+            assert(isa(G, 'replab.signed.PermutationGroup'));
             d = G.domainSize;
             self.G = G;
             self.P = replab.domain.intAsDoubleMatrix(d, 1, 1, G.domainSize);

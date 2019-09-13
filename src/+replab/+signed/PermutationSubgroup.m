@@ -1,9 +1,9 @@
-classdef SignedPermutationSubgroup < replab.SignedPermutationGroup
+classdef PermutationSubgroup < replab.signed.PermutationGroup
 % Represents a subgroup of a signed permutation group
     
     methods
 
-        function self = SignedPermutationSubgroup(parent, generators, order)
+        function self = PermutationSubgroup(parent, generators, order)
             % stuff derived from parent
             self.parent = parent;
             self.domainSize = parent.domainSize;

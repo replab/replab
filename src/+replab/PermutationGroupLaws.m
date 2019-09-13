@@ -10,7 +10,7 @@ classdef PermutationGroupLaws < replab.NiceFiniteGroupLaws
     end
     methods
         function actionLaws = laws_naturalAction(self)
-            actionLaws = replab.FaithfulActionLaws(self.T.naturalAction);
+            actionLaws = replab.ActionLaws(self.T.naturalAction);
         end
         function actionLaws = laws_vectorAction(self)
             actionLaws = replab.ActionLaws(self.T.vectorAction);

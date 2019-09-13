@@ -34,7 +34,7 @@ classdef RepByImages < replab.Rep
         %                                                                Optional if the representation is unitary
             assert(isa(group, 'replab.NiceFiniteGroup'));
             assert(isa(images, 'cell'));
-            if nargin < 6 || isempty(inverseImages)
+            if nargin < 6 || isequal(inverseImages, [])
                 assert(~isempty(isUnitary) && isUnitary, 'The representation must be unitary when inverse images are omitted');
                 inverseImages = cellfun(@(x) x', images, 'uniform', 0);
             end

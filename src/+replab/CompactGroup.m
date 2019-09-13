@@ -43,6 +43,40 @@ classdef CompactGroup < replab.Group
             prd = replab.directproduct.of(factors);
         end
         
+        function sd = semidirectProduct(self, N, phi)
+        % Describes an external semidirect product of groups
+        %
+        % See the construction in https://en.wikipedia.org/wiki/Semidirect_product
+        %
+        %    
+        % Let ``H = self`` be a group, `N` a group.
+        %
+        % The semidirect product is defined using a homomorphism 
+        %
+        % `` phi: H -> Aut(N) ``
+        %
+        % which we write here
+        % 
+        % `` phi: H x N -> N ``, ``n1 = phi(h, n)``
+        %
+        % Here, we describe this homomorphism by a function handle with parameters of type
+        % ``H x N``.
+        %
+        % We write each semidirect group element {h n}.
+        %
+        % The type of the return value depends on the most refined type at the intersection
+        % of the type of `self` and `N`, with possible types CompactGroup/FiniteGroup/NiceFiniteGroup.
+        %
+        % Args:
+        %   N (replab.CompactGroup): Group acted upon
+        %   phi (function_handle): Function describing a homomorphism as described above
+        %
+        % Returns:
+        %   replab.CompactGroup: Semidirect product group
+            action = replab.Action.lambda('Semidirect homomorphism', self, N, phi);
+            sd = replab.semidirectproduct.of(action);
+        end
+        
         %% Representations
         
         function rep = trivialRep(self, field, dimension)
