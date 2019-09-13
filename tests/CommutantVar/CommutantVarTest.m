@@ -246,7 +246,7 @@ function test_fromSymSdpMatrix
     end
     
     % We do a sanity check with one group
-    blockSdpMatrix = replab.CommutantVar.fromSymSdpMatrix(generators, generators);
+    blockSdpMatrix = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, generators);
     solvesdp([blockSdpMatrix >= 0, blockSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
     obj2 = value(obj);
     

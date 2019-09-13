@@ -144,7 +144,7 @@ classdef CommutantVar < replab.Str
             end
             
             % Representation decomposition
-            group = replab.SignedPermutations(n).subgroup(generators);
+            group = replab.signed.Permutations(n).subgroup(generators);
             irrDecomp = group.naturalRep.decomposition;
             U = zeros(n, 0);
             dimensions1 = zeros(1,irrDecomp.nComponents);
@@ -628,6 +628,7 @@ classdef CommutantVar < replab.Str
         %
         % See also:
         %     replab.CommutantVar.nbVars
+        %     replab.CommutantVar.getBaseMatrix
         %     sdpvar.getvariables
 
             vars = getvariables(self.blocks{1});
@@ -665,8 +666,50 @@ classdef CommutantVar < replab.Str
         %
         % See also:
         %     replab.CommutantVar.getVariables
+        %     replab.CommutantVar.getBaseMatrix
         
             n = length(self.getVariables);
+        end
+
+        function basis = getBaseMatrix(self, index)
+        % basis = getBaseMatrix(self, index)
+        %
+        % Returns the coefficients contributing the the SDP variable with
+        % given index.
+        %
+        % Args:
+        %     self: CommutantVar object
+        %     index: index of the sdp variable (or 0 for the constant term)
+        %
+        % Returns:
+        %     basis: the matrix of coefficients
+        %
+        % Example:
+        %
+        % See also:
+        %     replab.CommutantVar.getVariables
+        %     replab.CommutantVar.see
+        %     sdpvar.getBaseMatrix
+
+            % For now, we simply return the coefficients if they are in the
+            % fullMatrix, TODO : also take into account the linear
+            % constraint...
+            basis = getbasematrix(self.fullMatrix, index);
+        end
+
+        function see(self)
+        % see(self)
+        %
+        % Displays internal info about the structure of the matrix in full
+        % form.
+        %
+        % Args:
+        %     self: CommutantVar object
+        %
+        % See also:
+        %     sdpvar.see
+        
+            see(self.fullMatrix);
         end
 
         function val = value(self)
@@ -684,21 +727,6 @@ classdef CommutantVar < replab.Str
         %     sdpvar.value
         
             val = value(self.fullMatrix);
-        end
-
-        function see(self)
-        % see(self)
-        %
-        % Displays internal info about the structure of the matrix in full
-        % form.
-        %
-        % Args:
-        %     self: CommutantVar object
-        %
-        % See also:
-        %     sdpvar.see
-        
-            see(self.fullMatrix);
         end
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %

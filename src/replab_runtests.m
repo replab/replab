@@ -33,6 +33,11 @@ function result = replab_runtests(withCoverage, onlyFastTests)
     % Set test paramters
     ReplabTestParameters.withCoverage(withCoverage);
     ReplabTestParameters.onlyFastTests(onlyFastTests);
+    if onlyFastTests
+        replab.Laws.nRuns(1);
+    else
+        replab.Laws.nRuns(20);
+    end
     
     % Check the presence of the MOxUnit library
     MOxUnitInPath = false;

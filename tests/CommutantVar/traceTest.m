@@ -11,8 +11,8 @@ function test_oneGroup
     matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
     fullMatrix = matrix.fullMatrix;
     difference = trace(matrix) - trace(fullMatrix);
-    vars = getvariables(difference);
-    for j = 0:length(vars)
+    vars = [0 getvariables(difference)];
+    for j = 1:length(vars)
         coeffs = getbasematrix(difference, vars(j));
         assert(norm(coeffs(:)) <= replab.Settings.doubleEigTol);
     end

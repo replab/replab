@@ -9,11 +9,10 @@ end
 function test_cases
     % We do some sanity checks
     matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
-    
     difference = matrix - matrix;
-    vars = difference.getVariables;
-    for j = 0:length(vars)
-        coeffs = getbasematrix(difference, vars(j));
+    vars = [0 difference.getVariables];
+    for j = 1:length(vars)
+        coeffs = getBaseMatrix(difference, vars(j));
         assert(norm(coeffs(:)) <= replab.Settings.doubleEigTol);
     end
 end
