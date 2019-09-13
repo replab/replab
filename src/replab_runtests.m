@@ -31,8 +31,8 @@ function result = replab_runtests(withCoverage, onlyFastTests)
     addpath([pathStr '/../tests']);
     
     % Set test paramters
-    TestParameters.withCoverage(withCoverage);
-    TestParameters.onlyFastTests(onlyFastTests);
+    ReplabTestParameters.withCoverage(withCoverage);
+    ReplabTestParameters.onlyFastTests(onlyFastTests);
     
     % Check the presence of the MOxUnit library
     MOxUnitInPath = false;
@@ -77,7 +77,7 @@ function result = replab_runtests(withCoverage, onlyFastTests)
     end
     
     % calls the relevant test suite
-    if TestParameters.withCoverage == 1
+    if ReplabTestParameters.withCoverage == 1
         result = moxunit_runtests('tests/codeCoverageHelperFunction.m', '-verbose', ...
             '-with_coverage', '-cover', 'src', '-cover_json_file', 'coverage.json', '-cover_xml_file', 'coverage.xml', '-cover_html_dir', 'coverage_html');
     else

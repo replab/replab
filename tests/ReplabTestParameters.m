@@ -1,11 +1,11 @@
-classdef TestParameters
-% TestParameters
+classdef ReplabTestParameters
+% ReplabTestParameters
 %
 % This class stores parameters meant to be accessed by the tests.
 %
 % See also:
-%     TestParameters.withCoverage,
-%     TestParameters.fastTestsOnly
+%     ReplabTestParameters.withCoverage,
+%     ReplabTestParameters.fastTestsOnly
 
     methods (Static)
 
