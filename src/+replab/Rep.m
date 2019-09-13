@@ -148,7 +148,6 @@ classdef Rep < replab.Str
             f = replab.str.field(self.field, 'Orthogonal real', 'Unitary complex');
             s = sprintf('%s representation of dimension %d', f, self.dimension);
         end
-
         
         %% Derived actions
         

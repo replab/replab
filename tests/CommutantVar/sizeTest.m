@@ -22,6 +22,14 @@ end
 
 function test_inputs
     matrix = replab.CommutantVar.fromPermutations({[3 2 1]});
-    shouldProduceAnError(@(x) size(matrix, 3));
+    
+    % Octave > 4.2 has some trouble with anonymous functions that involve class objects
+    isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
+    ver = version;
+    
+    if ~isOctave || (isOctave && isequal(ver(1:3),'4.2'))
+        shouldProduceAnError(@(x) size(matrix, 3));
+    end
+    
     shouldProduceAnError(@(x) size(1, matrix));
 end

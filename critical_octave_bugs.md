@@ -1,4 +1,4 @@
-#Critical Octave bugs
+# Critical Octave bugs
 
 Here is a list of Octave bugs that are problematic to the project. Their resolution will allow to improve the library.
 

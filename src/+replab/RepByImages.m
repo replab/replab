@@ -18,8 +18,7 @@ classdef RepByImages < replab.Rep
     end
         
     methods
-        
-        
+                
         %% Own methods
         
         function self = RepByImages(group, field, dimension, isUnitary, images, inverseImages)
@@ -90,7 +89,7 @@ classdef RepByImages < replab.Rep
             end
             c = self.chain_;
         end
-
+        
         %% Str methods
 
         function names = hiddenFields(self)
