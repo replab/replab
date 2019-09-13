@@ -92,7 +92,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %% CompactGroup methods
         
         function g = sampleUniformly(self)
-            g = self.chain.sampleUniformly;
+            [~, g] = self.chain.sampleUniformlyWithImage;
         end
     
     end
@@ -170,7 +170,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   logical: True if this group contains `g` and false otherwise
-            b = self.chain.contains(g);
+            b = self.chain.contains(self.niceMonomorphismImage(g));
         end
                                
         %% Representation construction
