@@ -2,10 +2,10 @@ classdef Partition < replab.Str
 % Represents an unordered partition of the set {1..n} into disjoint subsets
    
     properties (SetAccess = protected)
-        n;           % domain size
-        blockIndex;  % index of the block for each element
-        start;       % starting index for each block
-        next;        % next index in the same block, or 0 if at the end
+        n % integer: Domain size
+        blockIndex % integer row vector: Index of the block for each element
+        start % integer row vector: Starting index for each block
+        next % integer row vector: Next index in the same block, or 0 if at the end
     end
     
     methods (Access = protected)

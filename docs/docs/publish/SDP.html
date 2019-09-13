@@ -22,8 +22,8 @@ diagnostic =
   struct with fields:
 
     yalmipversion: '20190425'
-       yalmiptime: 0.0815
-       solvertime: 0.1818
+       yalmiptime: 0.0741
+       solvertime: 0.1795
              info: 'Successfully solved (SDPT3-4)'
           problem: 0
 
@@ -46,8 +46,8 @@ diagnosticSym =
   struct with fields:
 
     yalmipversion: '20190425'
-       yalmiptime: 0.0561
-       solvertime: 0.1086
+       yalmiptime: 0.0708
+       solvertime: 0.1696
              info: 'Successfully solved (SDPT3-4)'
           problem: 0
 
@@ -100,12 +100,12 @@ Coeffiecient range: 1 to 1
 MSym = 
 
 Commutant variable 3x3 (2 blocks, 2 scalar variables)
-             U: [0.57735, -0.81174, 0.088012; 0.57735, 0.48209, 0.65898; 0.57735, 0.32965, -0.74699]
-           dim: 3                                                                                   
-   dimensions1: [1, 2]                                                                              
-multiplicities: [1, 1]                                                                              
-         types: 'RC'                                                                                
-        blocks: [1, 2]                                                                              
+             U: [0.57735, 0.5596, -0.59457; 0.57735, -0.79471, -0.18734; 0.57735, 0.23512, 0.78191]
+           dim: 3                                                                                  
+   dimensions1: [1, 2]                                                                             
+multiplicities: [1, 1]                                                                             
+         types: 'RC'                                                                               
+        blocks: [1, 2]                                                                             
 </pre><p>In other words, the matrix is made of two blocks of size 1x1 and 2x2, and involves altogether just 2 variables.</p><p>The constraints this time are</p><pre class="codeinput">constraintsSym
 </pre><pre class="codeoutput">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |   ID|                    Constraint|   Coefficient range|
@@ -123,13 +123,13 @@ MSpecial = [1 vars(1) vars(2)
 MSpecialSym = 
 
 Commutant variable 3x3 (2 blocks, 4 scalar variables)
-                U: [0.57735, -0.61635, -0.53552; 0.57735, 0.77195, -0.26602; 0.57735, -0.15559, 0.80153]
-              dim: 3                                                                                    
-      dimensions1: [1, 2]                                                                               
-   multiplicities: [1, 1]                                                                               
-            types: 'RC'                                                                                 
-           blocks: [1, 2]                                                                               
-linearConstraints: constraint                                                                           
+                U: [0.57735, -0.45383, 0.67875; 0.57735, 0.81473, 0.053656; 0.57735, -0.3609, -0.73241]
+              dim: 3                                                                                   
+      dimensions1: [1, 2]                                                                              
+   multiplicities: [1, 1]                                                                              
+            types: 'RC'                                                                                
+           blocks: [1, 2]                                                                              
+linearConstraints: constraint                                                                          
 </pre><p>Requesting this matrix to be PSD now imposes both * Positivity of the 1x1 and 2x2 blocks * Equality between the matrix and the imposed form as can be seen with</p><pre class="codeinput">MSpecialSym &gt;= 0
 </pre><pre class="codeoutput">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |   ID|                    Constraint|   Coefficient range|

@@ -29,7 +29,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         
         %% NiceFiniteGroup
         
-        function p = niceMonomorphism(self, p)
+        function p = niceMonomorphismImage(self, p)
         end
         
         %% Methods specific to permutation groups
@@ -49,6 +49,30 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             o = replab.Partition.permutationsOrbits(G);
         end
 
+        %% Group construction
+        
+        function w = wreathProduct(self, A)
+        % Returns the wreath product of a compact group by this permutation group
+        %
+        % See https://en.wikipedia.org/wiki/Wreath_product
+        %
+        % Note that our notation is reversed compared to the Wikipedia page,
+        % the permutation group is on the left hand side, as our convention
+        % for semidirect product places the group acted upon on the right.
+        %
+        % Note that the return type depends on the argument type:
+        % if `A` is a `replab.FiniteGroup`, the result will be a finite group
+        % too, and if `A` is a `replab.NiceFiniteGroup`, the result will be of
+        % that type.
+        %
+        % Args:
+        %   A (replab.CompactGroup): The group whose copies are acted upon
+        %
+        % Returns:
+        %   replab.wreathproduct.Common: A wreath product group
+            w = replab.wreathproduct.of(self, A);
+        end
+        
         %% Actions
         
         function A = naturalAction(self)
@@ -147,7 +171,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   replab.Rep: The (real) natural permutation representation
-            rho = replab.Rep.lambda(self, 'R', self.domainSize, @(p) replab.Permutations.toMatrix(p));
+            rho = self.permutationRep(self.domainSize, self.generators);
         end
         
         function rho = standardRep(self)
@@ -160,7 +184,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %   replab.Rep: The (real) standard representation
             U = replab.rep.standardBasis(self.domainSize);
             U = U(2:end, :);
-            rho = self.naturalRep.subRep(U);
+            rho = self.naturalRep.subRepUnitary(U);
         end
                 
     end

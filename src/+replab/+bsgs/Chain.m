@@ -49,7 +49,7 @@ classdef Chain < replab.Str
 %
 % In both cases:
 %
-% * The base B, base order bo, boInv, the data structures for orbits and transversals Delta, U, Uinv are consistent.
+% * The base B, base order bo, boinv, the data structures for orbits and transversals Delta, U, Uinv are consistent.
 %
 % * The strong generating set is ordered, so that the starting indices Sind describe the sequence S^i
 %
@@ -208,7 +208,7 @@ classdef Chain < replab.Str
             g = 1:self.n;
             v = self.J.identity;
             for i = 1:self.length
-                [gi vi] = self.randomTransversal(i);
+                [gi vi] = self.randomTransversalWithImage(i);
                 g = g(gi); % compose(g, gi)
                 v = self.J.compose(v, vi);
             end
@@ -385,6 +385,37 @@ classdef Chain < replab.Str
             end
         end
 
+        function img = inverseImage(self, g)
+        % Returns the inverse image of a chain element
+        %
+        % Satisfies 
+        %
+        % self.J.compose(self.image(g), self.inverseImage(y)) == self.J.identity
+        %
+        % Args:
+        %   g (permutation row vector): Permutation part of this chain
+        %
+        % Returns:
+        %   The inverse image of the given element `g`
+        %
+        % Raises:
+        %   An error if the element is not part of the chain
+            h = g;
+            img = self.J.identity;
+            for i = 1:self.length
+                beta_i = self.B(i);
+                b = h(beta_i);
+                [~, j] = ismember(b, self.Delta{i});
+                assert(j ~= 0, 'Element is not member of the chain');
+                Uinvi = self.Uinv{i};
+                uinv = Uinvi(:, j)';
+                Vinv = self.Vinv{i};
+                vinv = Vinv{j};
+                h = uinv(h); % compose(uinv, h)
+                img = self.J.compose(vinv, img);
+            end
+        end
+
         function b = contains(self, g)
         % Tests whether the BSGS chain contains an element
             k = self.length;
@@ -435,6 +466,17 @@ classdef Chain < replab.Str
         
         %% Element indexing
         
+        function v = imageFromIndex(self, index)
+        % Return the image corresponding to an overall index
+        %
+        % Args:
+        %   index (vpi): Group element index
+        %
+        % Returns:
+        %   element of `self.J`: Image
+            v = self.imageFromIndices(self.indicesFromIndex(index));
+        end
+        
         function el = elementFromIndex(self, index)
         % Return the element corresponding to an overall index
         %
@@ -472,6 +514,22 @@ classdef Chain < replab.Str
                 Ui = self.U{i};
                 gi = Ui(:,indices(i));
                 g = g(gi); % compose(g, gi)
+            end
+        end
+        
+        function v = imageFromIndices(self, indices)
+        % Computes the image from transversal indices
+        %
+        % Args:
+        %   indices (row integer vector): Transversal indices
+        %
+        % Returns:
+        %   element of `self.J`: Image for the given indices
+            v = self.J.identity;
+            for i = 1:self.length
+                Vi = self.V{i};
+                vi = Vi{indices(i)};
+                v = self.J.compose(v, vi);
             end
         end
         
@@ -602,11 +660,11 @@ classdef Chain < replab.Str
             assert(self.isMutable);
             n = self.n;
             remaining = setdiff(1:n, self.B); % domain elements not part of base
-            boInv = [self.B remaining];
+            boinv = [self.B remaining];
             bo = zeros(1, n);
-            bo(self.boInv) = 1:n; % bo = inverse(boInv)
+            bo(self.boinv) = 1:n; % bo = inverse(boinv)
             self.bo = bo;
-            self.boInv = boInv;
+            self.boinv = boinv;
             for i = 1:self.length
                 self.reorderOrbit(i);
             end
@@ -729,6 +787,7 @@ classdef Chain < replab.Str
                 Tcandidates = self.T(I(k+1):nS);
                 self.T = horzcat(Tunchanged, Tcandidates(~stabilized), Tcandidates(stabilized));
             end
+            self.recomputeBaseOrder;
             self.completeOrbit(k+1);
         end
         

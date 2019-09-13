@@ -28,7 +28,7 @@ classdef Isotypic < replab.Str
             for i = 1:self.nCopies
                 U = [U;self.copy(i).U];
             end
-            r = self.parent.subRep(U);
+            r = self.parent.subRepUnitary(U);
             % TODO: preserve rational bases
         end
         
@@ -67,7 +67,7 @@ classdef Isotypic < replab.Str
         
         function s = headerStr(self)
             rt = self.copy(1).realDivisionAlgebra;
-            if isequal(rt, [])
+            if isempty(rt)
                 rt = 'C';
             else
                 rt = rt.shortName;

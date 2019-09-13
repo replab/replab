@@ -2,6 +2,26 @@ classdef Settings
     
     methods (Static)
         
+        function value = averagingSamples(newValue)
+            persistent AveragingSamples;
+            if nargin == 1
+                AveragingSamples = newValue;
+            elseif isempty(AveragingSamples)
+                AveragingSamples = 3;
+            end
+            value = AveragingSamples;
+        end
+        
+        function value = averagingIterations(newValue)
+            persistent AveragingIterations;
+            if nargin == 1
+                AveragingIterations = newValue;
+            elseif isempty(AveragingIterations)
+                AveragingIterations = 200;
+            end
+            value = AveragingIterations;
+        end
+        
         function value = useSparse(newValue)
         % Gets/sets the flag whether to use sparse matrices when possible
         %

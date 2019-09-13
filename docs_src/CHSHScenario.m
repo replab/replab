@@ -19,7 +19,7 @@ outputRep = S2.naturalRep
 %
 % The representation on P(a|x) is the imprimitive representation,
 % given that we use the natural representation for the inner group
-party = replab.WreathProductGroup(S2, S2)
+party = S2.wreathProduct(S2)
 partyRep = party.imprimitiveRep(outputRep)
 
 %% Defining the scenario relabelings
@@ -31,7 +31,7 @@ partyRep = party.imprimitiveRep(outputRep)
 % as P(a|x; b|y) ressembles a tensor. Inside each party, we use the
 % imprimitive representation seen before.
 
-scenario = replab.WreathProductGroup(S2, party)
+scenario = S2.wreathProduct(party)
 probRep = scenario.primitiveRep(partyRep);
 
 %% We now compute the decomposition of the representation

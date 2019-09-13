@@ -14,15 +14,14 @@ For each algebraic structure (semigroup, monoid, group, ...), we define:
 - A function handle quick implementation class SemigroupFun
   that has a single constructor, calling all XXXFun superclasses
 
+# Lazy properties
+
+If a computed property is cached, it is implemented using a protected property `expensiveProp_`, and accessed using a method
+`expensiveProp` that then checks if `expensiveProp_` has already been computed.
+
 # Abstract classes/methods
 
-As Octave does not support abstract methods, we use the following workaround.
-
-In the base abstract class, an abstract method `operation(args)` looks for a property called `operationFun`, stores it into a variable `f` then calls `f(args)`.
-
-This enables subclasses to implement the abstract class in a generic way (see `replab.GroupFun` for an example) without duplicating too much code.
-
-If an error appears at runtime in one of those pseudo-abstract methods, it was supposed to be overriden in a subclass but was not.
+As Octave does not support abstract methods, we "implement" abstract methods by throwing `error('Abstract');` in the method body.
 
 # Typeclasses
 

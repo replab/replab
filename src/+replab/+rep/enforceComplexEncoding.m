@@ -6,7 +6,7 @@ function W = enforceComplexEncoding(rep)
     assert(isequal(rep.field, 'R'));
     d = rep.dimension;
     A = rep.complexification.commutant.sampleSelfAdjoint;
-    v1 = replab.domain.ComplexVectors(d).sample;
+    v1 = replab.domain.Vectors('C', d).sample;
     v1 = v1/norm(v1);
     w1p = A*v1;
     alpha1 = real(w1p'*v1);

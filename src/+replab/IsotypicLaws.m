@@ -15,14 +15,7 @@ classdef IsotypicLaws < replab.Laws
             self.C = iso.rep.commutant;
             self.G = iso.parent.group;
             d1 = iso.copyDimension;
-            switch iso.parent.field
-              case 'R'
-                self.M1 = replab.domain.RealMatrices(d1, d1);
-              case 'C'
-                self.M1 = replab.domain.ComplexMatrices(d1, d1);
-              otherwise
-                error('Unknown field');
-            end
+            self.M1 = replab.domain.Matrices(iso.parent.field, d1, d1);
         end
         
         function irrepLaws = laws_subReps(self)

@@ -1,6 +1,8 @@
 function [Utrivial Urest] = extractTrivial(rep)
     d = rep.dimension;
-    T = replab.rep.Trivial(rep);
+    field = rep.field;
+    E1 = rep.equivariant(rep.group.trivialRep(field, 1));
+    Ed = rep.equivariant(rep.group.trivialRep(field, d));
     O = replab.rep.orbits(rep);
     U = zeros(d, 0);
     D = zeros(0, 1);
@@ -8,24 +10,19 @@ function [Utrivial Urest] = extractTrivial(rep)
         v = zeros(d, 1);
         b = O.block(i);
         v(b) = 1;
-        if T.isInvariant(v)
+        if E1.isEquivariant(v)
             v = v;
             U = [U v];
             D(1, i) = 1/length(b);
         end
     end
     nRest = d - size(U, 2);
-    switch rep.field
-      case 'R'
-        M = replab.domain.RealMatrices(d, nRest);
-      case 'C'
-        M = replab.domain.ComplexMatrices(d, nRest);
-    end
+    M = replab.domain.Matrices(rep.field, d, nRest);
     S = M.sample;
     if size(U, 2) > 0
         S = S - U*diag(D)*U'*S;
     end
-    S = T.project(S);
+    S = Ed.project(S);
     if M.eqv(S, zeros(d, nRest))
         Utrivial = U;
     else

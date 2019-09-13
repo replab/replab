@@ -277,7 +277,7 @@ classdef CommutantVar < replab.Str
 
             assert(iscell(generators), 'Please specify generators in cell array.');
             n = size(generators{1}, 2);
-            group = replab.SignedPermutations(n).subgroup(generators);
+            group = replab.signed.Permutations(n).subgroup(generators);
 
             if ~isempty(sdpMatrix)
                 assert(isequal(size(sdpMatrix), [n n]), 'Wrong matrix or group dimension.');

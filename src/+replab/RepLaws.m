@@ -14,16 +14,17 @@ classdef RepLaws < replab.Laws
             d = self.rep.dimension;
             self.G = rep.group;
             self.C = rep.commutant;
-            switch rep.field
-              case 'R'
-                self.U = replab.domain.OrthonormalMatrices(d);
-                self.M = replab.domain.RealMatrices(d, d);
-              case 'C'
-                self.U = replab.domain.UnitaryMatrices(d);
-                self.M = replab.domain.ComplexMatrices(d, d);
-              otherwise
-                error('Unknown field');
-            end            
+            self.M = replab.domain.Matrices(rep.field, d, d);
+            if rep.isUnitary
+                switch rep.field
+                  case 'R'
+                    self.U = replab.OrthogonalGroup(d);
+                  case 'C'
+                    self.U = replab.UnitaryGroup(d);
+                end
+            else
+                self.U = replab.GeneralLinearGroup(rep.field, d);
+            end
         end
         function morphismLaws = laws_asGroupHomomorphism(self)
             morphismLaws = replab.GroupMorphismLaws(@(g) self.rep.image(g), self.G, self.U);
