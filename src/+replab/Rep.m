@@ -240,12 +240,31 @@ classdef Rep < replab.Str
         end
         
         function rep = blkdiag(varargin)
+        % Direct sum of representations
+        %
+        % See `replab.Rep.directSum`
             rep = replab.Rep.directSum(varargin);            
         end
         
         function rep = kron(varargin)
+        % Tensor product of representations
+        %
+        % See `replab.Rep.tensor`
             rep = replab.Rep.tensor(varargin);
         end
+        
+        function rep = tensorPower(self, n)
+        % Returns a tensor power of this representation
+        %
+        % Args:
+        %   n (integer): Exponent of the tensor power
+        %
+        % Returns:
+        %   replab.Rep: The tensor power representation
+            reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
+            rep = replab.Rep.tensor(reps);
+        end
+
         
         %% Manipulation of representation space
 
@@ -328,7 +347,7 @@ classdef Rep < replab.Str
         %   replab.Rep: Tensor product of the representations
             rep = replab.rep.TensorRep(reps);
         end
-
+        
         function rep = lambda(group, field, dimension, isUnitary, imageFun, inverseImageFun)
         % Creates a non unitary representation from an image function
         %
