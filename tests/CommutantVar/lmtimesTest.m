@@ -7,7 +7,8 @@ function test_suite = lmtimesTest()
 end
 
 function test_cases
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    global matrix231 matrix23451
+    matrix = matrix23451;
     difference = 2*matrix - matrix - matrix;
     vars = [0 difference.getVariables];
     for j = 1:length(vars)
@@ -17,6 +18,7 @@ function test_cases
 end
 
 function test_inputs
-    matrix = replab.CommutantVar.fromPermutations({[3 2 1]});
+    global matrix231 matrix23451
+    matrix = matrix231;
     shouldProduceAnError(@(x) matrix * matrix);
 end

@@ -8,14 +8,16 @@ end
 
 function test_oneGroup
     % We do a sanity check with one group
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    global matrix231 matrix23451
+    matrix = matrix23451;
     s12 = size(matrix);
     assert(s12(1) == size(matrix,1));
     assert(s12(2) == size(matrix,2));
 end
 
 function test_inputs
-    matrix = replab.CommutantVar.fromPermutations({[3 2 1]});
+    global matrix231 matrix23451
+    matrix = matrix231;
     
     % Octave > 4.2 has some trouble with anonymous functions that involve class objects
     isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;

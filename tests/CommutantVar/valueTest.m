@@ -8,7 +8,8 @@ end
 
 function test_cases
     % We do some sanity checks
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    global matrix231 matrix23451
+    matrix = matrix23451;
     
     assert(norm(isnan(value(matrix))-1) == 0);
 end

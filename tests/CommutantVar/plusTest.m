@@ -8,7 +8,8 @@ end
 
 function test_cases
     % We do some sanity checks
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    global matrix231 matrix23451
+    matrix = matrix23451;
     sum = matrix + matrix;
     difference = sum - sum;
     vars = [0 difference.getVariables];
@@ -19,7 +20,8 @@ function test_cases
 end
 
 function test_inputs
-    matrix = replab.CommutantVar.fromPermutations({[3 2 1]});
+    global matrix231 matrix23451
+    matrix = matrix231;
     shouldProduceAnError(@(x) matrix + rand(5));
     shouldProduceAnError(@(x) matrix + rand(3));
     shouldProduceAnError(@(x) rand(5) + matrix);

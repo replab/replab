@@ -8,20 +8,21 @@ end
 
 function test_cases
     % We do some sanity checks
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    global matrix231 matrix23451
+    matrix = matrix23451;
     assert(length(matrix >= 2) == 3);
     assert(length(matrix >= eye(5)/2) == 3);
     assert(length(2 >= matrix) == 3);
     assert(length(eye(5)/2 >= matrix) == 3);
     
-    matrix = replab.CommutantVar.fromPermutations({[1 3 2]});
+    matrix = matrix231;
     R = rand(3);
-    R = R + R([1 3 2], [1 3 2]);
+    R = R + R([2 3 1], [2 3 1]) + R([3 1 2], [3 1 2]);
     assert(length(matrix >= R+R') == 2);
     assert(length(R+R' >= matrix) == 2);
 
     R = sdpvar(3);
-    R = R + R([1 3 2], [1 3 2]);
+    R = R + R([2 3 1], [2 3 1]) + R([3 1 2], [3 1 2]);
     assert(length(matrix >= R) == 2);
     %assert(length(R >= matrix) == 2); % We cannot check due to a bug in octave
 end

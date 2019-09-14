@@ -7,7 +7,8 @@ function test_suite = blockTest()
 end
 
 function test_inputs
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    global matrix231 matrix23451
+    matrix = matrix23451;
     shouldProduceAnError(@(x) matrix.block(-1));
 
     if ReplabTestParameters.onlyFastTests

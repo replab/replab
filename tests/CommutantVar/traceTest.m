@@ -8,7 +8,8 @@ end
 
 function test_oneGroup
     % We do a sanity check with one group
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    global matrix231 matrix23451
+    matrix = matrix23451;
     fullMatrix = matrix.fullMatrix;
     difference = trace(matrix) - trace(fullMatrix);
     vars = [0 getvariables(difference)];

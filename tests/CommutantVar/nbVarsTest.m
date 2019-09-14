@@ -7,7 +7,8 @@ function test_suite = nbVarsTest()
 end
 
 function test_cases
-    matrix1 = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    global matrix231 matrix23451
+    matrix1 = matrix23451;
     assert(length(matrix1.getVariables) == matrix1.nbVars);
 
     if ReplabTestParameters.onlyFastTests

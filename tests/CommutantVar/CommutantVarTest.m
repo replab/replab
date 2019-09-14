@@ -4,12 +4,24 @@ function test_suite = CommutantVarTest()
     catch
     end
     initTestSuite;
+    
+    if ReplabTestParameters.onlyFastTests
+        % We create just once two CommutantVar objects to be used by all
+        % the tests of this class
+
+        disp('Creating two simple CommutantVar objects from Permutations');
+        global matrix231 matrix23451
+        matrix231 = replab.CommutantVar.fromPermutations({[2 3 1]});
+        matrix23451 = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    end
+
 end
 
 function test_fromPermutations
     % We do a sanity check with one group
+    global matrix231 matrix23451
     generators = {[2 3 4 5 1]};
-    matrix = replab.CommutantVar.fromPermutations(generators);
+    matrix = matrix23451;
     fullMatrix = matrix.fullMatrix;
     for i = 1:length(generators)
         difference = fullMatrix - fullMatrix(generators{i}, generators{i});
