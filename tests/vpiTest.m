@@ -1,10 +1,12 @@
 function test_suite = vpiTest()
+    disp(['Setting up tests in ', mfilename()]);
     try
         test_functions = localfunctions();
     catch
     end
     initTestSuite;
 end
+
 function test_vpiLongNumbers
     if ReplabTestParameters.onlyFastTests
         return;
