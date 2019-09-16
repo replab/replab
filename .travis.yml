@@ -3,6 +3,11 @@
 language: java
 
 dist: bionic
+
+###############################################################################
+env:
+  - TEST_COMMAND="exit(~replab_runtests(0,0));";
+  - TEST_COMMAND="exit(~replab_runtests(1,1));";
       
 ###############################################################################
 cache:
@@ -28,8 +33,7 @@ install:
 
 ###############################################################################
 before_script:
-  - TEST_COMMAND="exit(~replab_runtests(1,1));";
-    echo "TEST_COMMAND| $TEST_COMMAND";
+  - echo "TEST_COMMAND| $TEST_COMMAND";
   # Double-check we are still in the right directory
   - pwd
   # Check what octave packages we have installed
