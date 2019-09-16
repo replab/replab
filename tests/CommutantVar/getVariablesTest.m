@@ -1,19 +1,14 @@
 function test_suite = getVariablesTest()
     try
-        yalmip('version');
-        try
-            test_functions = localfunctions();
-        catch
-        end
-        initTestSuite;
+        test_functions = localfunctions();
     catch
-        warning('Yalmip not found in the path, some tests will be skipped');
-        test_suite=MOxUnitTestSuite();
     end
+    initTestSuite;
 end
 
-function test_cases
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+function test_general
+    global matrix231 matrix23451 matrix23451H
+    matrix = matrix23451;
     list1 = matrix.getVariables;
     list2 = getvariables(matrix.fullMatrix);
     assert(isequal(sort(list1), sort(list2)));

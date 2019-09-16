@@ -1,27 +1,22 @@
 function test_suite = sizeTest()
     try
-        yalmip('version');
-        try
-            test_functions = localfunctions();
-        catch
-        end
-        initTestSuite;
+        test_functions = localfunctions();
     catch
-        warning('Yalmip not found in the path, some tests will be skipped');
-        test_suite=MOxUnitTestSuite();
     end
+    initTestSuite;
 end
 
-function test_oneGroup
-    % We do a sanity check with one group
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+function test_general
+    global matrix231 matrix23451 matrix23451H
+    matrix = matrix23451;
     s12 = size(matrix);
     assert(s12(1) == size(matrix,1));
     assert(s12(2) == size(matrix,2));
 end
 
 function test_inputs
-    matrix = replab.CommutantVar.fromPermutations({[3 2 1]});
+    global matrix231 matrix23451 matrix23451H
+    matrix = matrix231;
     
     % Octave > 4.2 has some trouble with anonymous functions that involve class objects
     isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;

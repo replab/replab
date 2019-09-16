@@ -41,7 +41,7 @@ function test_suite = codeCoverageHelperFunction()
     rmpath(replabFolder);
     
     % We define a test which consists of all other tests
-    f = @() moxunit_runtests('tests', '-recursive', '-verbose', '-junit_xml_file', 'testresults.xml');
+    f = @() assert(moxunit_runtests('tests', '-recursive', '-verbose', '-junit_xml_file', 'testresults.xml'));
     testCase = MOxUnitFunctionHandleTestCase('All tests with coverage', replabFolder, f);
     test_suite = addTest(test_suite, testCase);
     

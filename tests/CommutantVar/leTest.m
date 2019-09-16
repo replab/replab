@@ -1,43 +1,42 @@
 function test_suite = leTest()
     try
-        yalmip('version');
-        try
-            test_functions = localfunctions();
-        catch
-        end
-        initTestSuite;
+        test_functions = localfunctions();
     catch
-        warning('Yalmip not found in the path, some tests will be skipped');
-        test_suite=MOxUnitTestSuite();
     end
+    initTestSuite;
 end
 
-function test_cases
-    % We do some sanity checks
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+function test_general
+    global matrix231 matrix23451 matrix23451H
+    matrix = matrix23451;
     assert(length(matrix <= 2) == 3);
     assert(length(matrix <= eye(5)/2) == 3);
     assert(length(2 <= matrix) == 3);
     assert(length(eye(5)/2 <= matrix) == 3);
     
-    matrix = replab.CommutantVar.fromPermutations({[1 3 2]});
+    matrix = matrix231;
     R = rand(3);
-    R = R + R([1 3 2], [1 3 2]);
+    R = R + R([2 3 1], [2 3 1]) + R([3 1 2], [3 1 2]);
     assert(length(matrix <= R+R') == 2);
     assert(length(R+R' <= matrix) == 2);
 
     R = sdpvar(3);
-    R = R + R([1 3 2], [1 3 2]);
+    R = R + R([2 3 1], [2 3 1]) + R([3 1 2], [3 1 2]);
     assert(length(matrix <= R) == 2);
     %assert(length(R <= matrix) == 2); % We cannot check due to a bug in octave
 end
 
-function with_linear_constraint
-    matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(5,5,'hankel'), {[2 3 4 5 1]});
+function test_with_linear_constraint
+    global matrix231 matrix23451 matrix23451H
+    matrix = matrix23451H;
     assert(length(matrix <= 2) == 4);
     assert(length(matrix <= eye(5)/2) == 4);
     assert(length(2 <= matrix) == 4);
     assert(length(eye(5)/2 <= matrix) == 4);
+    
+    if ReplabTestParameters.onlyFastTests
+        return;
+    end
     
     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3,3,'hankel'), {[1 3 2]});
     R = rand(3);
@@ -52,7 +51,8 @@ function with_linear_constraint
 end
 
 function test_inputs
-    matrix = replab.CommutantVar.fromPermutations({[3 2 1]});
+    global matrix231 matrix23451 matrix23451H
+    matrix = matrix231;
     shouldProduceAnError(@(x) matrix <= rand(5));
     shouldProduceAnError(@(x) matrix <= rand(3));
     shouldProduceAnError(@(x) rand(5) <= matrix);

@@ -1,20 +1,20 @@
 function test_suite = blockTest()
     try
-        yalmip('version');
-        try
-            test_functions = localfunctions();
-        catch
-        end
-        initTestSuite;
+        test_functions = localfunctions();
     catch
-        warning('Yalmip not found in the path, some tests will be skipped');
-        test_suite=MOxUnitTestSuite();
     end
+    initTestSuite;
 end
 
 function test_inputs
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    global matrix231 matrix23451 matrix23451H
+    matrix = matrix23451;
     shouldProduceAnError(@(x) matrix.block(-1));
+
+    if ReplabTestParameters.onlyFastTests
+        return;
+    end
+    
     shouldProduceAnError(@(x) matrix.block(1.5));
     shouldProduceAnError(@(x) matrix.block(4));
 end

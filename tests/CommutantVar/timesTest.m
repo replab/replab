@@ -1,29 +1,24 @@
 function test_suite = timesTest()
     try
-        yalmip('version');
-        try
-            test_functions = localfunctions();
-        catch
-        end
-        initTestSuite;
+        test_functions = localfunctions();
     catch
-        warning('Yalmip not found in the path, some tests will be skipped');
-        test_suite=MOxUnitTestSuite();
     end
+    initTestSuite;
 end
 
-function test_cases
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
-
+function test_general
+    global matrix231 matrix23451 matrix23451H
+    matrix = matrix23451;
     difference = 2.*matrix - matrix - matrix;
-    vars = difference.getVariables;
+    vars = [0 difference.getVariables];
     for j = 1:length(vars)
-        coeffs = getbasematrix(difference, vars(j));
+        coeffs = getBaseMatrix(difference, vars(j));
         assert(norm(coeffs(:)) <= replab.Settings.doubleEigTol);
     end
 end
 
 function test_inputs
-    matrix = replab.CommutantVar.fromPermutations({[3 2 1]});
+    global matrix231 matrix23451 matrix23451H
+    matrix = matrix231;
     shouldProduceAnError(@(x) matrix .* matrix);
 end

@@ -1,20 +1,13 @@
 function test_suite = valueTest()
     try
-        yalmip('version');
-        try
-            test_functions = localfunctions();
-        catch
-        end
-        initTestSuite;
+        test_functions = localfunctions();
     catch
-        warning('Yalmip not found in the path, some tests will be skipped');
-        test_suite=MOxUnitTestSuite();
     end
+    initTestSuite;
 end
 
-function test_cases
-    % We do some sanity checks
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
-    
+function test_general
+    global matrix231 matrix23451 matrix23451H
+    matrix = matrix23451;    
     assert(norm(isnan(value(matrix))-1) == 0);
 end

@@ -1,19 +1,16 @@
 function test_suite = ltTest()
     try
-        yalmip('version');
-        try
-            test_functions = localfunctions();
-        catch
-        end
-        initTestSuite;
+        test_functions = localfunctions();
     catch
-        warning('Yalmip not found in the path, some tests will be skipped');
-        test_suite=MOxUnitTestSuite();
     end
+    initTestSuite;
 end
 
-function test_cases
-    % We do some sanity checks
+function test_general
+    if ReplabTestParameters.onlyFastTests
+        return;
+    end
+    
     matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
     assert(length(matrix < 2) == 3);
 end

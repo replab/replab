@@ -119,9 +119,26 @@ classdef Laws < replab.Str
     end
     
     methods (Static)
-        function n = nRuns
-        % Returns the default number of runs (constant)
-            n = 20;
+        function value = nRuns(newValue)
+        % value = nRuns([newValue])
+        % 
+        % Sets/tells the default number of runs
+        %
+        % Args:
+        %     newValue: integer, sets the number of runs (optional)
+        %
+        % Returns:
+        %     value: number of runs
+
+            persistent n;
+            if isempty(n)
+                n = 20;
+            end
+            if nargin >= 1
+                assert((newValue >= 1) && (round(newValue) == newValue), 'newValue should be a positive integer');
+                n = newValue;
+            end
+            value = n;
         end
     end
     
