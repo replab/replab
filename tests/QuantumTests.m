@@ -1,9 +1,11 @@
 function test_suite = QuantumTests()
+    disp(['Setting up tests in ', mfilename()]);
     try
         test_functions = localfunctions();
     catch
     end
     initTestSuite;
+    
     G = replab.quantum.GHZ(3,2,8);
     test_suite = replab.FiniteGroupLaws(G).addTestCases(test_suite);
     test_suite = replab.RepLaws(G.naturalRep).addTestCases(test_suite);

@@ -1,10 +1,12 @@
 function test_suite = RandomBagTest()
+    disp(['Setting up tests in ', mfilename()]);
     try
         test_functions = localfunctions();
     catch
     end
     initTestSuite;
 end
+
 function test_withPermutations
     n = 10;
     g1 = [2:n 1];

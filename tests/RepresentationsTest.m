@@ -1,9 +1,11 @@
 function test_suite = RepresentationsTest()
+    disp(['Setting up tests in ', mfilename()]);
     try
         test_functions = localfunctions();
     catch
     end
     initTestSuite;
+    
     % test orbit decomposition
     G = replab.Permutations(4).subgroup({[2 1 3 4] [2 3 4 1]});
     rho = G.naturalRep;

@@ -1,4 +1,5 @@
 function test_suite = MorphismsTest()
+    disp(['Setting up tests in ', mfilename()]);
     try
         test_functions = localfunctions();
     catch

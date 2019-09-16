@@ -1,9 +1,11 @@
 function test_suite = DivisionAlgebraTest()
+    disp(['Setting up tests in ', mfilename()]);
     try
         test_functions = localfunctions();
     catch
     end
     initTestSuite;
+    
     R = replab.DivisionAlgebra.real;
     C = replab.DivisionAlgebra.complex;
     H = replab.DivisionAlgebra.quaternion;
