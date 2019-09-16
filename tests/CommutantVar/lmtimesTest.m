@@ -6,8 +6,8 @@ function test_suite = lmtimesTest()
     initTestSuite;
 end
 
-function test_cases
-    global matrix231 matrix23451
+function test_general
+    global matrix231 matrix23451 matrix23451H
     matrix = matrix23451;
     difference = 2*matrix - matrix - matrix;
     vars = [0 difference.getVariables];
@@ -18,7 +18,7 @@ function test_cases
 end
 
 function test_inputs
-    global matrix231 matrix23451
+    global matrix231 matrix23451 matrix23451H
     matrix = matrix231;
     shouldProduceAnError(@(x) matrix * matrix);
 end

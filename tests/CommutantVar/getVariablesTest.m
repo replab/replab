@@ -6,8 +6,8 @@ function test_suite = getVariablesTest()
     initTestSuite;
 end
 
-function test_cases
-    global matrix231 matrix23451
+function test_general
+    global matrix231 matrix23451 matrix23451H
     matrix = matrix23451;
     list1 = matrix.getVariables;
     list2 = getvariables(matrix.fullMatrix);

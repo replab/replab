@@ -6,9 +6,8 @@ function test_suite = sizeTest()
     initTestSuite;
 end
 
-function test_oneGroup
-    % We do a sanity check with one group
-    global matrix231 matrix23451
+function test_general
+    global matrix231 matrix23451 matrix23451H
     matrix = matrix23451;
     s12 = size(matrix);
     assert(s12(1) == size(matrix,1));
@@ -16,7 +15,7 @@ function test_oneGroup
 end
 
 function test_inputs
-    global matrix231 matrix23451
+    global matrix231 matrix23451 matrix23451H
     matrix = matrix231;
     
     % Octave > 4.2 has some trouble with anonymous functions that involve class objects

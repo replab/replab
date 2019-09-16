@@ -7,7 +7,7 @@ function test_suite = blockTest()
 end
 
 function test_inputs
-    global matrix231 matrix23451
+    global matrix231 matrix23451 matrix23451H
     matrix = matrix23451;
     shouldProduceAnError(@(x) matrix.block(-1));
 

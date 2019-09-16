@@ -9,17 +9,17 @@ function test_suite = CommutantVarTest()
         % We create just once two CommutantVar objects to be used by all
         % the tests of this class
 
-        disp('Creating two simple CommutantVar objects from Permutations');
-        global matrix231 matrix23451
+        disp('Creating few simple CommutantVar objects');
+        global matrix231 matrix23451 matrix23451H
         matrix231 = replab.CommutantVar.fromPermutations({[2 3 1]});
         matrix23451 = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+        matrix23451H = replab.CommutantVar.fromSdpMatrix(sdpvar(5,5,'hankel'), {[2 3 4 5 1]});
     end
-
 end
 
 function test_fromPermutations
-    % We do a sanity check with one group
-    global matrix231 matrix23451
+    % We do a sanity check with one case
+    global matrix231 matrix23451 matrix23451H
     generators = {[2 3 4 5 1]};
     matrix = matrix23451;
     fullMatrix = matrix.fullMatrix;

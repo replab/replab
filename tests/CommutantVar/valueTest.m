@@ -6,10 +6,8 @@ function test_suite = valueTest()
     initTestSuite;
 end
 
-function test_cases
-    % We do some sanity checks
-    global matrix231 matrix23451
-    matrix = matrix23451;
-    
+function test_general
+    global matrix231 matrix23451 matrix23451H
+    matrix = matrix23451;    
     assert(norm(isnan(value(matrix))-1) == 0);
 end

@@ -132,6 +132,28 @@ classdef CommutantVar < replab.Str
 
             % Input checking
             assert(nargin <= 3, 'Not enough arguments.');
+            
+            % very special case needed to quickly construct a copy of an
+            % object
+            if isa(generators, 'replab.CommutantVar') && isempty(sdpMatrix) && isempty(sdpMatrixIsSym)
+                rhs = generators;
+                % Override properties
+%                 fns = properties(rhs);
+%                 for i=1:length(fns)
+%                     R.(fns{i}) = rhs.(fns{i});
+%                 end
+                % The above is not supported by octave, so we copy all elements
+                % by hand...
+                self.U = rhs.U;
+                self.nComponents = rhs.nComponents;
+                self.dimensions1 = rhs.dimensions1;
+                self.multiplicities = rhs.multiplicities;
+                self.types = rhs.types;
+                self.dim = rhs.dim;
+                self.blocks = rhs.blocks;
+                self.linearConstraints = rhs.linearConstraints;
+                return;
+            end
 
             assert(iscell(generators), 'Please specify generators in cell array.');
             n = size(generators{1}, 2);
@@ -331,23 +353,7 @@ classdef CommutantVar < replab.Str
         %     R: replab.CommutantVar object
 
             % Create a new simple object
-            R = replab.CommutantVar({[2 1]}, [], []);
-
-            % Override properties
-%             fns = properties(rhs);
-%             for i=1:length(fns)
-%                 R.(fns{i}) = rhs.(fns{i});
-%             end
-            % The above is not supported by octave, so we copy all elements
-            % by hand...
-            R.U = rhs.U;
-            R.nComponents = rhs.nComponents;
-            R.dimensions1 = rhs.dimensions1;
-            R.multiplicities = rhs.multiplicities;
-            R.types = rhs.types;
-            R.dim = rhs.dim;
-            R.blocks = rhs.blocks;
-            R.linearConstraints = rhs.linearConstraints;
+            R = replab.CommutantVar(rhs, [], []);
         end
 
     end
@@ -1041,7 +1047,11 @@ classdef CommutantVar < replab.Str
                 end
                 
                 % We keep track of the linear constraints
-                Z.linearConstraints = [X.linearConstraints, Y.linearConstraints];
+                if isa(Y, 'replab.CommutantVar')
+                    Z.linearConstraints = [X.linearConstraints, Y.linearConstraints];
+                else
+                    Z.linearConstraints = X.linearConstraints;
+                end
             elseif ~isa(X, 'replab.CommutantVar') && isa(Y, 'replab.CommutantVar')
                 % sthg + CommutantVar
                 Z = Y+X;
@@ -1147,7 +1157,11 @@ classdef CommutantVar < replab.Str
                 end
                 
                 % We keep track of the linear constraints
-                Z.linearConstraints = [X.linearConstraints, Y.linearConstraints];
+                if isa(Y, 'replab.CommutantVar')
+                    Z.linearConstraints = [X.linearConstraints, Y.linearConstraints];
+                else
+                    Z.linearConstraints = X.linearConstraints;
+                end
             elseif ~isa(X, 'replab.CommutantVar') && isa(Y, 'replab.CommutantVar')
                 % sthg - CommutantVar
                 Z = -(Y-X);

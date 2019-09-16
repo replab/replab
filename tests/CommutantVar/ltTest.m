@@ -6,12 +6,11 @@ function test_suite = ltTest()
     initTestSuite;
 end
 
-function test_cases
+function test_general
     if ReplabTestParameters.onlyFastTests
         return;
     end
     
-    % We do some sanity checks
     matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
     assert(length(matrix < 2) == 3);
 end

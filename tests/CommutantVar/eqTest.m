@@ -6,9 +6,8 @@ function test_suite = eqTest()
     initTestSuite;
 end
 
-function test_cases
-    % We do some sanity checks
-    global matrix231 matrix23451
+function test_general
+    global matrix231 matrix23451 matrix23451H
     matrix = matrix23451;
     assert(length(matrix == 0) == 3);
     
@@ -24,8 +23,9 @@ function test_cases
     %assert(length(R == matrix) == 2); % We cannot check due to a bug in octave
 end
 
-function with_linear_constraint
-    matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(5,5,'hankel'), {[2 3 4 5 1]});
+function test_with_linear_constraint
+    global matrix231 matrix23451 matrix23451H
+    matrix = matrix23451H;
     assert(length(matrix == 0) == 4);
     
     if ReplabTestParameters.onlyFastTests
@@ -44,7 +44,7 @@ function with_linear_constraint
     %assert(length(R == matrix) == 3); % We cannot check due to a bug in octave
 end
 
-function double_combination
+function test_double_combination
     if ReplabTestParameters.onlyFastTests
         return;
     end
@@ -53,13 +53,14 @@ function double_combination
     matrix2 = replab.CommutantVar.fromSdpMatrix(matrix1.fullMatrix, {[2 1 3 4 5]});
 
     obj = matrix2(1,5)-matrix2(1,4);
-    optimize([matrix2 >= 0], obj);
+    optimize([matrix2 >= 0], obj, sdpsettings('verbose', 0));
     assert(abs(value(obj)) < replab.Settings.doubleSdpTol);
-    optimize([matrix2 >= 0], -obj);
+    optimize([matrix2 >= 0], -obj, sdpsettings('verbose', 0));
     assert(abs(value(obj)) < replab.Settings.doubleSdpTol);
 end
 
 function test_inputs
-    matrix = replab.CommutantVar.fromPermutations({[3 2 1]});
+    global matrix231 matrix23451 matrix23451H
+    matrix = matrix231;
     shouldProduceAnError(@(x) matrix == 1);
 end

@@ -6,7 +6,7 @@ function test_suite = gtTest()
     initTestSuite;
 end
 
-function test_cases
+function test_general
     if ReplabTestParameters.onlyFastTests
         return;
     end

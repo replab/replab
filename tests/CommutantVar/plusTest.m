@@ -6,9 +6,8 @@ function test_suite = plusTest()
     initTestSuite;
 end
 
-function test_cases
-    % We do some sanity checks
-    global matrix231 matrix23451
+function test_general
+    global matrix231 matrix23451 matrix23451H
     matrix = matrix23451;
     sum = matrix + matrix;
     difference = sum - sum;
@@ -20,7 +19,7 @@ function test_cases
 end
 
 function test_inputs
-    global matrix231 matrix23451
+    global matrix231 matrix23451 matrix23451H
     matrix = matrix231;
     shouldProduceAnError(@(x) matrix + rand(5));
     shouldProduceAnError(@(x) matrix + rand(3));

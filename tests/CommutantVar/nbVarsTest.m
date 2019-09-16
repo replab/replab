@@ -6,8 +6,8 @@ function test_suite = nbVarsTest()
     initTestSuite;
 end
 
-function test_cases
-    global matrix231 matrix23451
+function test_general
+    global matrix231 matrix23451 matrix23451H
     matrix1 = matrix23451;
     assert(length(matrix1.getVariables) == matrix1.nbVars);
 

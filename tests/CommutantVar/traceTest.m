@@ -6,9 +6,8 @@ function test_suite = traceTest()
     initTestSuite;
 end
 
-function test_oneGroup
-    % We do a sanity check with one group
-    global matrix231 matrix23451
+function test_general
+    global matrix231 matrix23451 matrix23451H
     matrix = matrix23451;
     fullMatrix = matrix.fullMatrix;
     difference = trace(matrix) - trace(fullMatrix);
