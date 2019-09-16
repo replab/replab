@@ -6,8 +6,8 @@ dist: bionic
 
 ###############################################################################
 env:
-  - TEST_COMMAND="exit(~replab_runtests(0,0));";
-  - TEST_COMMAND="exit(~replab_runtests(1,1));";
+  - COVERING=true;
+  - COVERING=false;
       
 ###############################################################################
 cache:
@@ -33,6 +33,12 @@ install:
 
 ###############################################################################
 before_script:
+  - |
+    if [ $COVERING == true ]; then
+      TEST_COMMAND="exit(~replab_runtests(1,1));";
+    else
+      TEST_COMMAND="exit(~replab_runtests(0,0));";
+    fi
   - echo "TEST_COMMAND| $TEST_COMMAND";
   # Double-check we are still in the right directory
   - pwd
@@ -52,4 +58,8 @@ after_success:
   # Check where we ended up and what's going on where we are
   - pwd
   - ls -alh
-  - bash <(curl -s https://codecov.io/bash)
+  - |
+    if [ $COVERING == true ]; then
+      bash <(curl -s https://codecov.io/bash);
+    fi
+
