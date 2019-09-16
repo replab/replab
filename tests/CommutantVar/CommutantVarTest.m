@@ -5,16 +5,13 @@ function test_suite = CommutantVarTest()
     end
     initTestSuite;
     
-    if ReplabTestParameters.onlyFastTests
-        % We create just once two CommutantVar objects to be used by all
-        % the tests of this class
-
-        disp('Creating few simple CommutantVar objects');
-        global matrix231 matrix23451 matrix23451H
-        matrix231 = replab.CommutantVar.fromPermutations({[2 3 1]});
-        matrix23451 = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
-        matrix23451H = replab.CommutantVar.fromSdpMatrix(sdpvar(5,5,'hankel'), {[2 3 4 5 1]});
-    end
+    % We create just once two CommutantVar objects to be used by all
+    % the tests of this class
+    disp('Creating few simple CommutantVar objects');
+    global matrix231 matrix23451 matrix23451H
+    matrix231 = replab.CommutantVar.fromPermutations({[2 3 1]});
+    matrix23451 = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    matrix23451H = replab.CommutantVar.fromSdpMatrix(sdpvar(5,5,'hankel'), {[2 3 4 5 1]});
 end
 
 function test_fromPermutations
