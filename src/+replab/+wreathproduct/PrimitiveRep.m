@@ -37,7 +37,7 @@ classdef PrimitiveRep < replab.Rep
             I = permute(reshape(1:d, dims), fliplr(n + 1 - h));
             I = I(:)';
             rho = sparse(I, 1:d, ones(1, d), d, d) * rho;
-            if ~replab.Settings.useSparse
+            if ~replab.Parameters.useSparse
                 rho = full(rho);
             end
         end

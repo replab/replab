@@ -13,7 +13,7 @@ classdef TrivialRep < replab.Rep
             self.field = field;
             self.dimension = dimension;
             self.isUnitary = true;
-            if replab.Settings.useSparse
+            if replab.Parameters.useSparse
                 self.identity = speye(self.dimension);
             else
                 self.identity = eye(self.dimension);

@@ -11,7 +11,7 @@ function [sub O] = orbitDecomposition(rep)
         block = O.block(b);
         d = length(block);
         basis = sparse(1:d, block, ones(1, d), d, rep.dimension);
-        if ~replab.Settings.useSparse
+        if ~replab.Parameters.useSparse
             basis = full(basis);
         end
         sub{b} = rep.subRepUnitary(basis);

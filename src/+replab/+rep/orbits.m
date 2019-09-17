@@ -4,7 +4,7 @@ function O = orbits(rep)
         mask = false(rep.dimension, rep.dimension);
         for i = 1:rep.group.nGenerators
             rho = rep.image(rep.group.generator(i));
-            mask = mask | (abs(rho) > replab.Settings.doubleEigTol);
+            mask = mask | (abs(rho) > replab.Parameters.doubleEigTol);
         end
         O = replab.Partition.connectedComponents(mask);
     else

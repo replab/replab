@@ -1,4 +1,4 @@
-classdef Settings
+classdef Parameters
     
     methods (Static)
         

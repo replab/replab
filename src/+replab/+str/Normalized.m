@@ -13,7 +13,7 @@ classdef Normalized < replab.Str
         function s = shortStr(self, maxColumns)
             f = self.factor;
             invsquare = 1/f^2;
-            if abs(invsquare - round(invsquare)) < replab.Settings.doubleEigTol
+            if abs(invsquare - round(invsquare)) < replab.Parameters.doubleEigTol
                 n = round(invsquare);
                 if n == 1
                     rhs = '';

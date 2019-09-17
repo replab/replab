@@ -14,7 +14,7 @@ classdef OrthogonalGroup < replab.CompactGroup
         function self = OrthogonalGroup(n)
             self.n = n;
             self.parent = replab.domain.Matrices('R', n, n);
-            if replab.Settings.useSparse
+            if replab.Parameters.useSparse
                 self.identity = speye(n);
             else
                 self.identity = eye(n);

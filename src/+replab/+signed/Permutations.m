@@ -153,7 +153,7 @@ classdef Permutations < replab.signed.PermutationGroup
         % where S = SignedPermutations(domainSize)
             n = length(signedPerm);
             mat = sparse(abs(signedPerm), 1:n, sign(signedPerm), n, n);
-            if ~replab.Settings.useSparse
+            if ~replab.Parameters.useSparse
                 mat = full(mat);
             end
         end

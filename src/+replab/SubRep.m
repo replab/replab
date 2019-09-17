@@ -36,7 +36,7 @@ classdef SubRep < replab.Rep
             hasCorrection = false;
             for i = 1:d
                 nrm = self.U0(i,:) * self.U0(i,:)';
-                if abs(nrm - 1) > replab.Settings.doubleEigTol
+                if abs(nrm - 1) > replab.Parameters.doubleEigTol
                     hasCorrection = true;
                     D0(i) = 1/sqrt(nrm);
                 end

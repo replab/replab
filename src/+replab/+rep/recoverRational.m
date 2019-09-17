@@ -2,7 +2,7 @@ function V = recoverRational(sub)
 % Replaces the basis sub.U by a basis with integer coefficients if possible
     V = [];
     P = sub.U'*sub.U;
-    if replab.isNonZeroMatrix(imag(P), replab.Settings.doubleEigTol)
+    if replab.isNonZeroMatrix(imag(P), replab.Parameters.doubleEigTol)
         return
     end
     P = real(P);

@@ -117,7 +117,7 @@ classdef GeneralizedPauli < replab.FiniteGroup
             d = self.d;
             W = diag(omega(2)*ones(1, d));
             X = sparse([2:d 1], 1:d, ones(1, d));
-            if ~replab.Settings.useSparse
+            if ~replab.Parameters.useSparse
                 X = full(X);
             end
             Z = diag(omega);

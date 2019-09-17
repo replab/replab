@@ -10,3 +10,6 @@
 [submodule "YALMIP"]
 	path = external/YALMIP
 	url = https://github.com/yalmip/YALMIP
+[submodule "external/octave-doctest"]
+	path = external/octave-doctest
+	url = https://github.com/catch22/octave-doctest.git

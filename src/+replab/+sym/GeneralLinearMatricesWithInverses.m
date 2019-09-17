@@ -23,7 +23,7 @@ classdef GeneralLinearMatricesWithInverses < replab.Group
               otherwise
                 error('Unknown field');
             end
-            if replab.Settings.useSparse
+            if replab.Parameters.useSparse
                 self.identity = [speye(n) speye(n)];
             else
                 self.identity = [eye(n) eye(n)];

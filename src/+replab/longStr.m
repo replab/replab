@@ -10,13 +10,13 @@ function lines = longStr(obj, maxRows, maxColumns)
 % after 'maxColumns', and for rows after 'maxRows'. It is up to calling code to shape such
 % overflowing output before finally printing it.  
 %
-%    maxRows: maximum row size; optional parameter with default value given in Settings.m
-% maxColumns: maximum column size; optional parameter with default value given in Settings.m
+%    maxRows: maximum row size; optional parameter with default value given in replab.Parameters
+% maxColumns: maximum column size; optional parameter with default value given in replab.Parameters
     if nargin < 3
-        maxColumns = replab.Settings.strMaxColumns;
+        maxColumns = replab.Parameters.strMaxColumns;
     end
     if nargin < 2
-        maxRows = replab.Settings.strMaxRows;
+        maxRows = replab.Parameters.strMaxRows;
     end
     if isa(obj, 'replab.Str')
         try

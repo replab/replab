@@ -3,7 +3,7 @@ function sub = decomposeUsingCommutant(rep)
 %
 % Uses eigenvalue decomposition on a generic commutant sample
     assert(isa(rep, 'replab.Rep'));
-    tol = replab.Settings.doubleEigTol;
+    tol = replab.Parameters.doubleEigTol;
     % sample a Hermitian 
     C = full(rep.commutant.sampleSelfAdjoint);
     [U D] = replab.rep.sortedEig(C, 'ascend', false);

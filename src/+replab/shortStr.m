@@ -5,10 +5,10 @@ function str = shortStr(obj, maxColumns)
 %
 % maxColumns: maximum column size; if the output does not fit, it may be returned cut at an arbitrary 
 %             place, provided that place is *after* the last column that fits.
-%             Optional parameter with default value given in Settings.m
+%             Optional parameter with default value given in replab.Parameters
 %
     if nargin < 2
-        maxColumns = replab.Settings.strMaxColumns;
+        maxColumns = replab.Parameters.strMaxColumns;
     end
     if isa(obj, 'replab.Str')
         try

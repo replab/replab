@@ -236,7 +236,7 @@ classdef Permutations < replab.PermutationGroup
         %   The permutation matrix corresponding to `perm`.
             n = length(perm);
             mat = sparse(perm, 1:n, ones(1, n), n, n);
-            if ~replab.Settings.useSparse
+            if ~replab.Parameters.useSparse
                 mat = full(mat);
             end
         end
