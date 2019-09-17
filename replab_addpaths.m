@@ -19,6 +19,20 @@ function replab_addpaths(verbose)
         verbose = 1;
     end
 
+    
+    %% If everything was already set up previously we exit rapidly
+    persistent allGood
+    if isempty(allGood)
+        allGood = false;
+    end
+    if allGood
+        if verbose >= 2
+            disp('Exiting because replab_addpaths was already successfully called earlier.');
+        end
+        return;
+    end    
+
+    
     %% Action -- first adding RepLAB itself
     [pathStr, name, extension] = fileparts(which(mfilename));
     pathStr = strrep(pathStr, '\', '/');
@@ -149,8 +163,9 @@ function replab_addpaths(verbose)
 
     % Making sure a woring SDP solver is in the path and working, otherwise
     % tries to add SDPT3
+    decentSDPSolverInPath = false;
+    SDPT3InPath = false;
     if YALMIPInPath
-        decentSDPSolverInPath = false;
         try
             x = sdpvar(2);
             F = [x >= 0, trace(x) == 1];
@@ -164,7 +179,6 @@ function replab_addpaths(verbose)
         catch
         end
         if ~decentSDPSolverInPath
-            SDPT3InPath = false;
             try
                 [blk, Avec, C, b, X0, y0, Z0] = randsdp([2 2], [2 2], 2, 2);
                 options.printlevel = 0;
@@ -222,4 +236,10 @@ function replab_addpaths(verbose)
         disp('MOcov is already in the path');
     end
 
+    
+    %% If everything was successful, the next call will be quicker
+    if VPIInPath && MOxUnitInPath && YALMIPInPath && (decentSDPSolverInPath || SDPT3InPath) && MOcovInPath
+        allGood = true;
+    end
+    
 end
