@@ -92,6 +92,7 @@ classdef GHZBase < replab.CompactGroup
         
         function g = permuteParties(self, p, g)
             g(p, :) = g;
+            g = self.canonical(g);
         end
         
         function g = permuteLevels(self, p, g)
@@ -102,7 +103,8 @@ classdef GHZBase < replab.CompactGroup
         %% Domain methods
         
         function b = eqv(self, x, y)
-            b = ~replab.isNonZeroMatrix(x - y, replab.Settings.doubleEigTol);
+            diff = mod(2*pi + pi + x - y, 2*pi) - pi;
+            b = ~replab.isNonZeroMatrix(diff, replab.Settings.doubleEigTol);
         end
         
         function g = sample(self)

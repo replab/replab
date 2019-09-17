@@ -10,6 +10,10 @@ classdef GHZ < replab.semidirectproduct.OfCompactGroups
         
         function self = GHZ(nParties, nLevels)
         % Constructs the GHZ group for a given number of parties and levels
+        %
+        % Args:
+        %   nParties (integer): Number of parties
+        %   nLevels (integer): Number of levels
             base = replab.quantum.GHZBase(nParties, nLevels);
             SParties = replab.S(nParties);
             SLevels = replab.S(nLevels);
@@ -22,6 +26,20 @@ classdef GHZ < replab.semidirectproduct.OfCompactGroups
         end
         
         function rho = toMatrix(self, g)
+        % Returns the natural matrix action of a group element
+        %
+        % It represents the action on a tensor space (C^d)^n, where
+        % d = self.nLevels and n = self.nParties.
+        %
+        % For the action of the phase part (connected group part), 
+        % see `replab.quantum.GHZBase.toMatrix`. This action is complemented
+        % by the permutation of parties, and the correlated permutation of subsystem levels.
+        %
+        % Args:
+        %   g (element): Group element
+        %
+        % Returns:
+        %   double matrix: Unitary matrix representing `g`
             h = g{1};
             h1 = h{1};
             h2 = h{2};
@@ -43,6 +61,10 @@ classdef GHZ < replab.semidirectproduct.OfCompactGroups
         end
         
         function rep = naturalRep(self)
+        % Returns the natural representation of this group
+        %
+        % Returns:
+        %   replab.Rep: The unitary natural representation
             rep = replab.Rep.lambda(self, 'C', self.N.naturalRep.dimension, true, @(g) self.toMatrix(g));
         end
         
