@@ -14,25 +14,31 @@ function sub1 = niceRep(sub)
         sub1 = [];
         return
     end
-    U0rational = replab.rep.recoverRational(sub);
-    if ~isempty(U0rational)
-        if isa(sub, 'replab.Irrep')
-            sub1 = replab.Irrep(sub.parent, U0rational, sub.realDivisionAlgebra);
-        else
-            sub1 = replab.SubRep(sub.parent, U0rational);
-        end
-        return
-    end
-    if sub.overC
-        Ureal = replab.rep.recoverReal(sub);
-        if ~isempty(Ureal)
+    try
+        U0rational = replab.rep.recoverRational(sub);
+        if ~isempty(U0rational)
             if isa(sub, 'replab.Irrep')
-                sub1 = replab.Irrep(sub.parent, Ureal, sub.realDivisionAlgebra);
+                sub1 = replab.Irrep(sub.parent, U0rational, sub.realDivisionAlgebra);
             else
-                sub1 = replab.SubRep(sub.parent, Ureal);
+                sub1 = replab.SubRep(sub.parent, U0rational);
             end
             return
         end
+    catch ME
+    end
+    try
+        if sub.overC
+            Ureal = replab.rep.recoverReal(sub);
+            if ~isempty(Ureal)
+                if isa(sub, 'replab.Irrep')
+                    sub1 = replab.Irrep(sub.parent, Ureal, sub.realDivisionAlgebra);
+                else
+                    sub1 = replab.SubRep(sub.parent, Ureal);
+            end
+            return
+            end
+        end
+    catch ME
     end
     sub1 = []; % fallback, no transformation possible
 end
