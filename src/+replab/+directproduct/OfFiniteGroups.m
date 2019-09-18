@@ -3,6 +3,7 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
     methods (Access = protected)
         
         function g = atFun(self, ind)
+        % See comments in self.elements
             g = self.identity;
             ind = ind - 1;
             for i = self.nFactors:-1:1
@@ -14,6 +15,7 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
         end
         
         function ind = findFun(self, g)
+        % See comments in self.elements
             ind = vpi(0);
             for i = 1:self.nFactors
                 f = self.factor(i);
@@ -29,6 +31,9 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
         
         function self = OfFiniteGroups(factors)
             self = self@replab.directproduct.OfCompactGroups(factors);
+            % the generators of a direct product of finite groups is
+            % the union of the generators of the factors, lifted into the
+            % proper tuples
             generators = {};
             for i = 1:length(factors)
                 factor = factors{i};
@@ -73,6 +78,8 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
         
         function o = order(self)
             o = vpi(1);
+            % The order of a direct product is the product of the
+            % order of the factors
             for i = 1:self.nFactors
                 o = o * self.factor(i).order;
             end
@@ -82,10 +89,17 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
             e = replab.IndexedFamily.lambda(self.order, ...
                                             @(ind) self.atFun(ind), ...
                                             @(g) self.findFun(g));
+            % The elements of a direct product of finite groups can be
+            % enumerated by considering the direct product as a cartesian
+            % product of sets, and decomposing the index a la ind2sub/sub2ind
+            % which is the role of the `atFun` and `findFun` functions
         end
         
         function gd = decomposition(self)
             T = {};
+            % The decomposition of a direct product into sets
+            % is simply the concatenation of the sequence of sets
+            % corresponding to each factor
             for i = 1:self.nFactors
                 D = self.factor(i).decomposition.T;
                 Ti = cell(1, length(D));
