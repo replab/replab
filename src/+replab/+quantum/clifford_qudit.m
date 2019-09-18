@@ -23,7 +23,7 @@ function [G rep] = clifford_qudit(d)
           W = [E8 0; 0 E8];
           H = [1 1; 1 -1]/sqrt(2);
           S = [1 0; 0 E4];
-          rep = G.rep('C', 2, {W H S});
+          rep = G.rep('C', 2, true, {W H S});
       case 3
         % Generators computed using the following in GAP 4
         % omega := E(3);
@@ -52,7 +52,7 @@ function [G rep] = clifford_qudit(d)
         zeta = exp(2i*pi/9);
         H = -1i/sqrt(3)*[1 1 1; 1 omega omega^2; 1 omega^2 omega];
         S = zeta^8 * [1 0 0; 0 1 0; 0 0 omega];
-        rep = G.rep('C', 3, {H S});
+        rep = G.rep('C', 3, true, {H S});
       otherwise
         error(sprintf('Dimension d=%d is not supported, only d=2,3', d));
     end
