@@ -2,12 +2,18 @@ classdef DirectSumRep < replab.Rep
 % A direct sum of representations whose images are diagonal by blocks
     
     properties
-        blocks % row cell array: Contained subrepresentations
+        blocks % row cell array of replab.Rep: Contained subrepresentations
     end
     
     methods
         
         function self = DirectSumRep(blocks)
+        % Constructs a direct sum from a cell array of representations
+        %
+        % All the subrepresentations should be defined on the same group, and on the same field.
+        %
+        % Args:
+        %   blocks (row cell array of replab.Rep): Subrepresentations
             assert(length(blocks) >= 1);
             d = 0;
             for i = 1:length(blocks)
@@ -26,10 +32,21 @@ classdef DirectSumRep < replab.Rep
         end
         
         function n = nBlocks(self)
+        % Returns the number of blocks in the direct sum
+        %
+        % Returns:
+        %   integer: Number of subrepresentations composing this representation
             n = length(self.blocks);
         end
         
         function block = block(self, i)
+        % Returns a block in the direct sum
+        %
+        % Args:
+        %   i (integer): Index of block
+        %
+        % Returns:
+        %   replab.Rep: Representation corresponding to the i-th block
             block = self.blocks{i};
         end
 

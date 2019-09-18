@@ -1,18 +1,29 @@
 classdef NiceFiniteGroup < replab.FiniteGroup
 % A nice finite group is a finite group equipped with an injective homomorphism into a permutation group
 %
-% The injective homomorphism is called a 'nice monomorphism' to keep up with the GAP System notation.
+% The class that subclasses `replab.NiceFiniteGroup` implements a method `niceMonomorphismImage` that returns a
+% permutation row vector corresponding to a group element.
 %
-% This nice monomorphism enables the computation of a BSGS chain, and thus to transfer group operations
-% to operations on permutation groups.
+% In turn, the `replab.NiceFiniteGroup` infrastructure will use that method to build a BSGS chain to describe
+% the structure of the finite group; this chain also provides a way to compute the preimage of a permutation.
+%
+% Thus, an isomorphism is established between the present `replab.NiceFiniteGroup` and a permutation group; as
+% permutation groups can be handled by efficient BSGS algorithms, the requested computations can be
+% translated back and forth between this group and a permutation group.
+%
+% In particular, the decomposition of the finite group in a product of sets (`replab.FiniteGroupDecomposition`),
+% the enumeration of elements using a `replab.IndexedFamily`, the construction of subgroups is all handled
+% by permutation group algorithms.
+%
+% Handling subgroups
 %
 % Each nice finite group has a parent object, that describes the most general group embedding
 % elements of a particular type. For example, permutations of domain size ``n`` are embedded in the
-% symmetric group of degree ``n``.
-%
+% symmetric group of degree ``n`` (for such groups, their nice monomorphism is the identity).
 % 
 % If this group is its own parent, the methods that are delegated to the parent group
-% (including `eqv`/`compose`/`inverse`) needs to be overriden.
+% (including `eqv`/`compose`/`inverse`) needs to be overriden, otherwise call to their
+% methods will end up recursing to the infinity.
     
     properties (SetAccess = protected)
         parent % replab.NiceFiniteGroup: Parent nice finite group

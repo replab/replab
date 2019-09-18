@@ -1,5 +1,11 @@
 function I = decomposition(rep)
 % Decomposes the given representation into irreducible subrepresentations
+%
+% Args:
+%   rep (replab.Rep): Representation to decompose
+%
+% Returns:
+%   replab.Irreducible: Formal irreducible decomposition
     assert(isa(rep, 'replab.Rep'));
     assert(rep.overR || rep.overC);
     if rep.overR

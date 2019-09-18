@@ -1,9 +1,9 @@
-classdef SubRepLaws < replab.nu.RepLaws
+classdef SubRepNULaws < replab.RepLaws
     
     methods
         
-        function self = SubRepLaws(rep)
-            self = self@replab.nu.RepLaws(rep);
+        function self = SubRepNULaws(rep)
+            self = self@replab.RepLaws(rep);
         end
         
         function law_basis_is_consistent(self)
@@ -12,7 +12,7 @@ classdef SubRepLaws < replab.nu.RepLaws
         
         function law_projector(self)
             proj = self.rep.projector;
-            self.assert(~replab.isNonZeroMatrix(proj*proj - proj));
+            self.assert(~replab.isNonZeroMatrix(proj*proj - proj, replab.Settings.doubleEigTol));
         end
         
         function law_relation_with_parent_rep_G(self, g)
@@ -21,7 +21,7 @@ classdef SubRepLaws < replab.nu.RepLaws
                 proj = self.rep.projector;
                 rho = self.rep.image(g);
                 self.assert(~replab.isNonZeroMatrix(proj*parentRho - parentRho*proj, replab.Settings.doubleEigTol));
-                self.M.assertEqv(self.rep.U*parentRho*self.rep.U', rho);
+                self.M.assertEqv(self.rep.F*parentRho*self.rep.H, rho);
             end
         end
         
