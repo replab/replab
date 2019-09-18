@@ -5,6 +5,9 @@ classdef NiceFiniteGroupLaws < replab.FiniteGroupLaws
         end
     end
     methods
+        function law_contains_T(self, t)
+            self.assert(self.T.contains(t));
+        end
 % $$$         function law_cyclic_subgroup_order_T(self, t)
 % $$$             if self.T.isIdentity(t)
 % $$$                 sub = self.T.subgroup({});

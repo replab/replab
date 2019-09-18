@@ -17,7 +17,7 @@ classdef Parameters
             if nargin == 1
                 AveragingIterations = newValue;
             elseif isempty(AveragingIterations)
-                AveragingIterations = 200;
+                AveragingIterations = 1000;
             end
             value = AveragingIterations;
         end

@@ -9,7 +9,7 @@ classdef SubRepNU < replab.Rep
     
     methods
         
-        function self = SubRep(parent, F, H)
+        function self = SubRepNU(parent, F, H)
             d = size(F, 1);
             dParent = size(F, 2);
             assert(size(H, 1) == dParent);
@@ -50,8 +50,8 @@ classdef SubRepNU < replab.Rep
         end
         
         function rho = image(self, g)
-        % Returns H rho(g) F
-            rho = self.H * self.parent.image(g) * self.F;
+        % Returns F rho(g) H
+            rho = self.F * self.parent.image(g) * self.H;
         end
         
     end

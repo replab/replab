@@ -28,22 +28,14 @@ classdef GeneralizedPauli < replab.FiniteGroup
             self.generators = {w x z};
         end
         
-        function b = contains(self, g)
-            b = all(g >= 0) && all(g < self.d);
-        end
-        
-        function b = knownOrder(self)
-            b = true;
-        end
-        
         function o = order(self)
             o = vpi(self.d)^3;
         end
         
         function E = elements(self)
-            E = replab.Enumerator.lambda(self.order, ...
-                                         @(ind) self.enumeratorAt(ind), ...
-                                         @(el) self.enumeratorFind(el));
+            E = replab.IndexedFamily.lambda(self.order, ...
+                                            @(ind) self.elementAt(ind), ...
+                                            @(el) self.elementFind(el));
         end
         
         function x3 = compose(self, x1, x2)
@@ -87,15 +79,6 @@ classdef GeneralizedPauli < replab.FiniteGroup
             D = replab.FiniteGroupDecomposition(self, {i1 i2 i3});
         end
         
-        function w = factorization(self, x)
-            a = x(1);
-            b = x(2);
-            c = x(3);
-            indices = [1 2 3]; % generators are w, x and z
-            exponents = [a b c]; % can be zero, will be reduced
-            w = replab.Word.fromIndicesAndExponents(indices, exponents);
-        end
-        
         function omega = rootsOfUnity(self)
         % Returns E(d)^0 E(d)^1 ... E(d)^(d-1)
         % where E(d) = exp(2i*pi/d)
@@ -117,18 +100,21 @@ classdef GeneralizedPauli < replab.FiniteGroup
             d = self.d;
             W = diag(omega(2)*ones(1, d));
             X = sparse([2:d 1], 1:d, ones(1, d));
+            Z = diag(omega);
             if ~replab.Parameters.useSparse
                 X = full(X);
+            else
+                W = sparse(W);
+                Z = sparse(Z);
             end
-            Z = diag(omega);
-            rep = self.rep('C', d, {W X Z});
+            rep = replab.Rep.lambda(self, 'C', d, true, @(g) W^g(1)*X^g(2)*Z^g(3));
         end
 
     end
 
     methods (Access = protected) % Implementation of element enumeration
         
-        function el = enumeratorAt(self, index)
+        function el = elementAt(self, index)
             d = self.d;
             ind = index - 1;
             c = double(mod(ind, d));
@@ -139,7 +125,7 @@ classdef GeneralizedPauli < replab.FiniteGroup
             el = [a b c];
         end
         
-        function index = enumeratorFind(self, x);
+        function index = elementFind(self, x);
             d = self.d;
             a = x(1);
             b = x(2);

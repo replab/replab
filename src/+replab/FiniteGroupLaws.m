@@ -17,9 +17,6 @@ classdef FiniteGroupLaws < replab.GroupLaws
         function law_isTrivial(self)
             self.assert(self.T.isTrivial == (self.T.nGenerators == 0));
         end
-        function law_contains_T(self, t)
-            self.assert(self.T.contains(t));
-        end
         function law_order(self)
             self.assert(self.T.isTrivial == (self.T.order == 1));
         end

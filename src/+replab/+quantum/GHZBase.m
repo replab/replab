@@ -1,195 +1,134 @@
-classdef GHZBase < replab.FiniteGroup
-% A discrete approximation of the GHZ abelian invariant group
+classdef GHZBase < replab.CompactGroup
+% The GHZ abelian invariant group
+%
+% An element of the GHZ abelian group is a nParties x nLevels
+% matrix containing real values between 0 and 2*pi, such that
+% the sum of the phase of a level, over all parties, is 0 modulo 2*pi.
+%
+% We also require the first level phase to be one.
+%
+% Let g be an element of the group. We then have the following constraints:
+%
+% 1. `` 0 <= g(i,j) < 2*pi ``, for all i,j,
+%
+% 2. mod(sum(g, 1), 2*pi) == 0
+%
+% 3. g(:, 1) == 0
 
     properties
-        rootOrder;
-        nParties;
-        nLevels;
+        nParties % integer: Number of parties
+        nLevels % integer: Number of levels for each party (i.e. qubit = 2)
     end
     
     methods
         
-        function self = GHZBase(nParties, nLevels, rootOrder)
+        function self = GHZBase(nParties, nLevels)
+        % Constructs a GHZ base group
+        %
+        % Args:
+        %   nParties (integer): Number of parties
+        %   nLevels (integer): Number of levels
             self.nParties = nParties;
             self.nLevels = nLevels;
-            self.rootOrder = rootOrder;
             self.identity = zeros(nParties, nLevels);
-            generators = cell(1, (nParties-1)*(nLevels-1));
-            ind = 1;
-            for i = 1:nParties-1
-                for j = 2:nLevels
-                    g = zeros(nParties, nLevels);
-                    g(i,j) = 1;
-                    g(nParties,j) = rootOrder - 1;
-                    generators{ind} = g;
-                    ind = ind + 1;
-                end
-            end
-            self.generators = generators;
-        end
-        
-        function g1 = canonical(self, g)
-            ro = self.rootOrder;
-            g1 = g;
-            for i = 1:self.nParties
-                s = ro - g(i,1);
-                g1(i,:) = mod(g(i,:) + s, ro);
-            end
-        end
-        
-        function p = partial(self, g)
-            p = g(1:end-1, 2:end);
-        end
-        
-        function g = fromPartial(self, p)
-            nP = self.nParties;
-            nL = self.nLevels;
-            ro = self.rootOrder;
-            last = mod(ro - mod(sum(p, 1), ro), ro);
-            g = [zeros(nP-1, 1) p
-                 0 last];
         end
         
         function rho = toMatrix(self, g)
-            rho = 1;
+        % Returns the natural matrix action of a group element
+        %
+        % The matrix corresponds to kron(U_1, U_2, ..., U_nParties)
+        % where each U_i is a nLevels x nLevels diagonal matrix with
+        % the i-th party phases on the diagonal
+        %
+        % Args:
+        %   g (element): Group element
+        %
+        % Returns:
+        %   double matrix: Complex diagonal matrix representation
+            if replab.Parameters.useSparse
+                rho = sparse(1);
+            else
+                rho = 1;
+            end
             for i = 1:self.nParties
-                D = diag(exp(1i*2*pi*g(i,:)/self.rootOrder));
+                D = diag(exp(1i*g(i,:)));
+                if replab.Parameters.useSparse
+                    D = sparse(D);
+                end
                 rho = kron(rho, D);
             end
         end
         
+        function g = canonical(self, g)
+        % Returns the canonical form of an element of the GHZ base group
+        %
+        % Given a nParties x nLevels matrix with nonnegative entries,
+        % adjust the phases modulo 2*pi so that they are in range,
+        % makes sure that the first level phase is one, and that
+        % the product of phases for each level accross parties is one.
+            assert(all(all(g >= 0)));
+            % force range
+            g = mod(g, 2*pi);
+            % force level phases multiply to one
+            for l = 1:self.nLevels
+                s = (mod(sum(g(:, l)) + pi, 2*pi) - pi)/self.nParties;
+                g(:,l) = mod(g(:,l) + 2*pi - s, 2*pi);
+            end
+            % canonical under party global phase (set first level = 1) 
+            for p = 1:self.nParties
+                e = g(p,1);
+                g(:,l) = mod(g(:,l) + 2*pi - e, 2*pi);
+            end
+        end
+        
         function rep = naturalRep(self)
+        % Returns the natural representation of this group
+        %
+        % Returns:
+        %   replab.Rep: The unitary natural representation
             d = self.nLevels^self.nParties;
-            rep = replab.Rep.lambda(self, 'C', d, @(g) self.toMatrix(g));
+            rep = replab.Rep.lambda(self, 'C', d, true, @(g) self.toMatrix(g));
         end
         
-        function g1 = permuteParties(self, p, g)
-            g1(p, :) = g;
+        function g = permuteParties(self, p, g)
+            g(p, :) = g;
+            g = self.canonical(g);
         end
         
-        function g1 = permuteLevels(self, p, g)
-            g1(:, p) = g;
-            g1 = self.canonical(g1);
+        function g = permuteLevels(self, p, g)
+            g(:, p) = g;
+            g = self.canonical(g);
         end
         
-        % Domain
+        %% Domain methods
         
         function b = eqv(self, x, y)
-            b = isequal(x, y);
+            diff = mod(2*pi + pi + x - y, 2*pi) - pi;
+            b = ~replab.isNonZeroMatrix(diff, replab.Parameters.doubleEigTol);
         end
         
         function g = sample(self)
-            g = randi(self.rootOrder, self.nParties-1, self.nLevels-1);
-            g = self.fromPartial(g - 1);
+            g = self.canonical(rand(self.nParties, self.nLevels));
         end
         
-        % Semigroup
+        %% Monoid methods
         
         function z = compose(self, x, y)
-            z = mod(x + y, self.rootOrder);
+            z = self.canonical(x + y);
         end
         
-        % Group
+        %% Group methods
         
-        function z = inverse(self, x)
-            z = mod(self.rootOrder - x, self.rootOrder);
+        function xInv = inverse(self, x)
+            xInv = self.canonical(2*pi - x);
         end
         
-        % FinitelyGeneratedGroup
-        
-        function w = factorization(self, g)
-            g = g(1:end-1, 2:end)';
-            g = g(:);
-            n = length(g);
-            indices = [];
-            exponents = [];
-            for i = 1:length(g)
-                if g(i) > 0
-                    indices = [indices i];
-                    exponents = [exponents g(i)];
-                end
-            end
-            w = replab.Word.fromIndicesAndExponents(indices, exponents);
-        end
-        
-        % FiniteGroup
-        
-        function b = contains(self, g)
-            assert(isa(g, 'double'));
-            assert(ismatrix(g));
-            assert(size(g, 1) == self.nParties);
-            assert(size(g, 2) == self.nLevels);
-            assert(all(all(g >= 0)));
-            assert(all(all(g < self.rootOrder)));
-            b = true;
-        end
+        %% CompactGroup methods
         
         function g = sampleUniformly(self)
             g = self.sample;
         end
-           
-        function b = knownOrder(self)
-            b = true;
-        end
-        
-        function o = order(self)
-            n = (self.nParties - 1) * (self.nLevels - 1);
-            o = vpi(self.rootOrder)^n;
-        end
-        
-        function e = elements(self)
-            e = replab.Enumerator.lambda(self.order, ...
-                                         @(ind) self.enumeratorAtFun(ind), ...
-                                         @(g) self.enumeratorFindFun(g));
-        end
-        
-        function gd = decomposition(self)
-            F = factor(self.rootOrder);
-            T = {};
-            for i = 1:self.nGenerators
-                g = self.generator(i);
-                p = 1;
-                for j = 1:length(F)
-                    t = {self.identity};
-                    for k = 1:F(j)-1
-                        t{k+1} = g*k*p;
-                    end
-                    T{1,end+1} = t;
-                    p = p * F(j);
-                end
-            end
-            gd = replab.FiniteGroupDecomposition(self, T);
-        end
-        
-    end
-    
-    methods (Access = protected)
-        
-                
-        function g = enumeratorAtFun(self, ind)
-            p = zeros(1, (self.nParties-1)*(self.nLevels-1));
-            ind = ind - 1;
-            for i = length(p):-1:1
-                this = double(mod(ind, self.rootOrder));
-                ind = (ind - this)/self.rootOrder;
-                p(i) = this;
-            end
-            p = reshape(p, [self.nLevels-1 self.nParties-1])';
-            g = self.fromPartial(p);
-        end
-        
-        function ind = enumeratorFindFun(self, g)
-            p = self.partial(g);
-            p = p';
-            p = p(:);
-            ind = vpi(0);
-            for i = 1:length(p)
-                ind = ind * self.rootOrder;
-                ind = ind + p(i);
-            end
-            ind = ind + 1;
-        end
 
     end
-    
+
 end
