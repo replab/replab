@@ -235,10 +235,35 @@ function replab_addpaths(verbose)
     elseif verbose >= 2
         disp('MOcov is already in the path');
     end
+    
+    %% doctest
+
+    % Making sure MOcov is in the path and working
+    doctestInPath = false;
+    try
+        doctest_colors(stdout);
+        doctestInPath = true;
+    catch
+    end
+    if ~doctestInPath
+        if exist([pathStr '/external/octave-doctest/inst/doctest.m']) ~= 2
+            warning(['The octave-doctest library was not found in the folder ', pathStr, '/external/octave-doctest', char(10), ...
+                     'Did you run ''git submodule init'' and ''git submodule update''?', char(10), ...
+                     'It will not be possible to run doctests.']);
+        else
+            addpath([pathStr '/external/octave-doctest/inst']);
+            if verbose >= 1
+                disp('Adding octave-doctest to the path');
+            end
+            doctestInPath = true;
+        end
+    elseif verbose >= 2
+        disp('octave-doctest is already in the path');
+    end
 
     
     %% If everything was successful, the next call will be quicker
-    if VPIInPath && MOxUnitInPath && YALMIPInPath && (decentSDPSolverInPath || SDPT3InPath) && MOcovInPath
+    if VPIInPath && MOxUnitInPath && YALMIPInPath && (decentSDPSolverInPath || SDPT3InPath) && MOcovInPath && doctestInPath
         allGood = true;
     end
     

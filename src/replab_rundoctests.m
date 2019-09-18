@@ -1,0 +1,1 @@
+mocov('-cover', 'src', '-expression', 'doctest(''src'')', '-cover_json_file', 'coverage.json', '-cover_xml_file', 'coverage.xml', '-cover_html_dir', 'coverage_html')
