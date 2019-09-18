@@ -28,10 +28,6 @@ classdef GeneralizedPauli < replab.FiniteGroup
             self.generators = {w x z};
         end
         
-        function b = knownOrder(self)
-            b = true;
-        end
-        
         function o = order(self)
             o = vpi(self.d)^3;
         end
@@ -104,11 +100,14 @@ classdef GeneralizedPauli < replab.FiniteGroup
             d = self.d;
             W = diag(omega(2)*ones(1, d));
             X = sparse([2:d 1], 1:d, ones(1, d));
+            Z = diag(omega);
             if ~replab.Settings.useSparse
                 X = full(X);
+            else
+                W = sparse(W);
+                Z = sparse(Z);
             end
-            Z = diag(omega);
-            rep = self.rep('C', d, {W X Z});
+            rep = replab.Rep.lambda(self, 'C', d, true, @(g) W^g(1)*X^g(2)*Z^g(3));
         end
 
     end
