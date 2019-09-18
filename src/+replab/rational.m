@@ -1,4 +1,4 @@
-classdef (InferiorClasses = {?sym, ?double}) rational
+classdef rational
 % Represents a matrix with rational coefficients
     properties
         N = []; % integer part
