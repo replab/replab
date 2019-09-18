@@ -5,7 +5,9 @@ function test_suite = QuantumTest()
     catch
     end
     initTestSuite;
-    
+    if ReplabTestParameters.onlyFastTests
+        return
+    end
     G = replab.quantum.GHZ(3,2);
     test_suite = replab.GroupLaws(G).addTestCases(test_suite);
     test_suite = replab.RepLaws(G.naturalRep).addTestCases(test_suite);
