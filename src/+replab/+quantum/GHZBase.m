@@ -45,16 +45,9 @@ classdef GHZBase < replab.CompactGroup
         %
         % Returns:
         %   double matrix: Complex diagonal matrix representation
-            if replab.Settings.useSparse
-                rho = sparse(1);
-            else
-                rho = 1;
-            end
+                rho = replab.sparse_(1);
             for i = 1:self.nParties
-                D = diag(exp(1i*g(i,:)));
-                if replab.Settings.useSparse
-                    D = sparse(D);
-                end
+                D = replab.diag_(exp(1i*g(i,:)));
                 rho = kron(rho, D);
             end
         end

@@ -22,28 +22,29 @@ classdef Settings
             value = AveragingIterations;
         end
         
-        function value = useSparse(newValue)
-        % Gets/sets the flag whether to use sparse matrices when possible
+        function value = sparseCutoff(newValue)
+        % Gets/sets the row/column dimension from which RepLAB uses sparse matrices
         %
-        % The default value is `false`.
+        % The default value is 20. When the matrix is not square, we use the
+        % geometric mean of the dimensions.
         %
         % Warnings:
-        %   This flag should be set once before any computations is made,
+        %   This flag should be changed before computations are made,
         %   as matrix values are cached by RepLAB and those cached values
-        %   not updated when this flag changes.
+        %   not updated when this value changes.
         %
         % Args:
-        %   newValue (logical, optional): New flag value
+        %   newValue (integer, optional): New flag value
         %
         % Returns:
-        %   logical: The current flag value.
-            persistent UseSparse;
+        %   logical: The current value.
+            persistent SparseCutoff;
             if nargin == 1
-                UseSparse = newValue;
-            elseif isempty(UseSparse)
-                UseSparse = false;
+                SparseCutoff = newValue;
+            elseif isempty(SparseCutoff)
+                SparseCutoff = 20;
             end
-            value = UseSparse;
+            value = SparseCutoff;
         end
 
         function value = randomizedSchreierSimsTries(newValue)

@@ -60,7 +60,7 @@ classdef SubRep < replab.Rep
         function U = U(self)
         % Returns the basis of this subrepresentation in its parent
             if self.hasCorrection
-                U = diag(self.D0) * self.U0;
+                U = replab.diag_(self.D0) * self.U0;
             else
                 U = self.U0;
             end

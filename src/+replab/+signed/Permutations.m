@@ -152,10 +152,7 @@ classdef Permutations < replab.signed.PermutationGroup
         % S.toMatrix(x) * S.toMatrix(y)
         % where S = SignedPermutations(domainSize)
             n = length(signedPerm);
-            mat = sparse(abs(signedPerm), 1:n, sign(signedPerm), n, n);
-            if ~replab.Settings.useSparse
-                mat = full(mat);
-            end
+            mat = replab.sparse_(abs(signedPerm), 1:n, sign(signedPerm), n, n);
         end
         
         function b = isSignedPermutationMatrix(mat)

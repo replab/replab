@@ -22,10 +22,7 @@ classdef IndexRelabelingRep < replab.Rep
             dims = self.localDimension*ones(1, n);
             I = permute(reshape(1:d, dims), g);
             I = I(:)';
-            rho = sparse(I, 1:d, ones(1, d), d, d);
-            if ~replab.Settings.useSparse
-                rho = full(rho);
-            end
+            rho = replab.sparse_(I, 1:d, ones(1, d), d, d);
         end
         
     end

@@ -30,10 +30,7 @@ classdef ImprimitiveRep < replab.Rep
             rhos = arrayfun(@(i) self.Arep.image(base{i}), 1:n, 'uniform', 0);
             rho = blkdiag(rhos{:});
             dA = self.Arep.dimension;
-            rho = kron(sparse(h, 1:n, ones(1,n), n, n), speye(dA)) * rho;
-            if ~replab.Settings.useSparse
-                rho = full(rho);
-            end
+            rho = kron(replab.sparse_(h, 1:n, ones(1,n), n, n), replab.eye_(dA)) * rho;
         end
         
     end
