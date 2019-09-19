@@ -15,10 +15,10 @@ function rep = youngOrthogonal(partition)
     [~, ~, ~, ~, OA, OB] = replab.sym.symIrrepImages(partition);
     d = size(OA, 1);
     if n == 1
-        rep = replab.RepByImages(Sn, 'R', d, true, {}, {});
+        rep = Sn.repByImages('R', d, true, {}, {});
     elseif n == 2
-        rep = Sn.rep('R', d, true, {OB});
+        rep = Sn.repByImages('R', d, true, {OB});
     else
-        rep = Sn.rep('R', d, true, {OA OB});
+        rep = Sn.repByImages('R', d, true, {OA OB});
     end
 end

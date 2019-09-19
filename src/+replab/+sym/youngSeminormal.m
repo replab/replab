@@ -15,14 +15,14 @@ function rep = youngSeminormal(partition)
     [~, ~, NA, NB, ~, ~] = replab.sym.symIrrepImages(partition);
     d = size(NA, 1);
     if n == 1
-        rep = replab.RepByImages(Sn, 'R', d, true, {}, {});
+        rep = Sn.repByImages('R', d, true, {}, {});
     elseif n == 2
-        rep = replab.RepByImages(Sn, 'R', d, false, {NB}, {NB});
+        rep = Sn.repByImages('R', d, false, {NB}, {NB});
     else
         NAinv = NA;
         for i = 1:n-2
             NAinv = NAinv * NA;
         end
-        rep = replab.RepByImages(Sn, 'R', d, false, {NA NB}, {NAinv NB});
+        rep = Sn.repByImages('R', d, false, {NA NB}, {NAinv NB});
     end
 end

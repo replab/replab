@@ -15,14 +15,14 @@ function rep = specht(partition)
     [SA, SB, ~, ~, ~, ~] = replab.sym.symIrrepImages(partition);
     d = size(SA, 1);
     if n == 1
-        rep = replab.RepByImages(Sn, 'R', d, false, {}, {});
+        rep = Sn.repByImages('R', d, false, {}, {});
     elseif n == 2
-        rep = replab.RepByImages(Sn, 'R', d, false, {SB}, {SB});
+        rep = Sn.repByImages('R', d, false, {SB}, {SB});
     else
         SAinv = SA;
         for i = 1:n-2
             SAinv = SAinv * SA;
         end
-        rep = replab.RepByImages(Sn, 'R', d, false, {SA SB}, {SAinv SB});
+        rep = Sn.repByImages('R', d, false, {SA SB}, {SAinv SB});
     end
 end
