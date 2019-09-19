@@ -48,7 +48,7 @@ classdef Equivariant < replab.Domain
 
         function self = Equivariant(repR, repC)
         % Constructor; please do not call this from user code, but
-        % rather use `replab.EquivariantDispatch.instance.call(repR, repC)`, 
+        % rather use `replab.makeEquivariant(repR, repC)`, 
         % which can eventually select an optimized implementation 
         % depending on the use case.
             self.repR = repR;

@@ -74,7 +74,7 @@ rho.image(gh)
 % representation of it!). 
 dim = 2;
 isUnitary = true;
-rho1 = S4.rep('R', dim, isUnitary, {[0 1; 1 0] [0 1; 1 0]})
+rho1 = S4.repByImages('R', dim, isUnitary, {[0 1; 1 0] [0 1; 1 0]})
 rho2 = S4.permutationRep(2, {[2 1] [2 1]})
 %%
 %
