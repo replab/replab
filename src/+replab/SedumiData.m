@@ -20,20 +20,21 @@ classdef SedumiData
 % s x s double matrix, such that rho{i} is the image of the generator G{i}.
 
     properties
-        A; % sedumi data
-        b; % sedumi data
-        c; % sedumi data
-        s; % size of single SDP block present
-        m; % number of dual variables
-        K; % sedumi data
-        G; % cell array of generators as permutations
-        rho; % cell array of generator images defining the representation
-        rep; % computed replab.FiniteGroupRep
+        A % double: Data matrix of size n x m, where n is the number of primal scalar variables, 
+          %         and m the nubmer of primal constraints (Sedumi data)
+        b % double: Constraint right hand side (Sedumi data)
+        c % double: Primal objective (Sedumi data)
+        K % struct: Cone specification (Sedumi data)
+        m % number of dual variables
+        s % size of single SDP block present
+        G % cell array of generators as permutations
+        rho % cell array of generator images defining the representation
+        rep % computed replab.FiniteGroupRep
     end
     
     methods
         
-        function self = SymmetricSDP(A, b, c, K, G, rho)
+        function self = SedumiData(A, b, c, K, G, rho)
             assert(~isempty(G), 'Can only process SDPs with symmetries, but no generators present');
             self.A = A;
             self.b = b;
