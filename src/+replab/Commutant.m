@@ -24,7 +24,7 @@ classdef Commutant < replab.Domain
         % To avoid code duplication, we delegate computations involving the commutant to
         % the equivariant space of a representation to itself.
             if isempty(self.equivariant_)
-                self.equivariant_ = replab.EquivariantDispatch.instance.call(self.rep, self.rep);
+                self.equivariant_ = replab.makeEquivariant(self.rep, self.rep);
             end
             e = self.equivariant_;
         end
