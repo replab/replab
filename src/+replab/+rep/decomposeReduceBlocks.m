@@ -1,4 +1,4 @@
-function irreps = decomposeReduceBlocks(rep)
+function sub = decomposeReduceBlocks(rep)
 % If a representation has a block diagonal structure, decompose orbits separately
     if rep.isExtraTrue('reducedBlocks')
         error('replab:dispatch:tryNext', 'try next');
@@ -8,7 +8,7 @@ function irreps = decomposeReduceBlocks(rep)
     if rep.isExtraFalse('hasTrivialSubspace')
         extra.hasTrivialSubspace = false;
     end
-    irreps = {}; % start with empty irreps array
+    sub = {}; % start with empty subrepresentation array
     % Compute the block structure of the representation 
     O = replab.rep.orbits(rep);
     n = O.nBlocks;
@@ -18,8 +18,6 @@ function irreps = decomposeReduceBlocks(rep)
         % basis vectors are row vectors
         basis = sparse(1:d, block, ones(1, d), d, rep.dimension);
         % it's ok to pass a sparse matrix to subRepUnitary as they are hidden from the user
-        sub = rep.subRepUnitary(basis, extra).collapseParent;
-        % decompose the subrepresentation recursively
-        irreps = horzcat(irreps, replab.rep.decompose(sub));
+        sub{1, end+1} = rep.subRepUnitary(basis, extra).collapseParent;
     end
 end

@@ -1,4 +1,4 @@
-function irreps = decomposeUsingCommutant(rep)
+function sub = decomposeUsingCommutant(rep)
 % Decomposes the given representation using eigenvalue decomposition on a generic commutant sample
     tol = replab.Settings.doubleEigTol;
     % Sample a self adjoint commutant element 
@@ -9,12 +9,12 @@ function irreps = decomposeUsingCommutant(rep)
     mask = bsxfun(@(x,y) abs(x-y)<tol, D, D');
     runs = replab.Partition.connectedComponents(mask).blocks;
     n = length(runs);
-    irreps = cell(1, n);
+    sub = cell(1, n);
     extra = struct('reducedBlocks', true, 'isIrreducible', true);
     if rep.isExtraFalse('hasTrivialSubspace')
         extra.hasTrivialSubspace = false;
     end
     for i = 1:n
-        irreps{i} = rep.subRepUnitary(U(:, runs{i})', extra);
+        sub{i} = rep.subRepUnitary(U(:, runs{i})', extra).collapseParent;
     end
 end

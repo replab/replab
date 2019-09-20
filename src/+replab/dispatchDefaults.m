@@ -14,6 +14,6 @@ function dispatchDefaults
     replab.dispatch('register', 'replab.rep.decompose', 'Irreducible', 1000, @replab.rep.decomposeIrreducible);
     replab.dispatch('register', 'replab.rep.decompose', 'ReduceBlocks', 500, @replab.rep.decomposeReduceBlocks);
     replab.dispatch('register', 'replab.rep.decompose', 'ExtractAllOnes', 200, @replab.rep.decomposeExtractAllOnes);
-    %replab.dispatch('register', 'replab.rep.decompose', 'ExtractTrivial', 100, @replab.rep.decomposeExtractTrivial);
+    replab.dispatch('register', 'replab.rep.decompose', 'ExtractTrivial', 100, @replab.rep.decomposeExtractTrivial);
     replab.dispatch('register', 'replab.rep.decompose', 'UsingCommutant', 0, @replab.rep.decomposeUsingCommutant);
 end

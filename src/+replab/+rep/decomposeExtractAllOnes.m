@@ -1,4 +1,4 @@
-function irreps = decomposeExtractAllOnes(rep)
+function sub = decomposeExtractAllOnes(rep)
 % If a representation has the vector of all ones as the trivial component, we extract it
     if rep.isExtraFalse('hasTrivialSubspace')
         % trivial subspace has already been removed
@@ -22,7 +22,7 @@ function irreps = decomposeExtractAllOnes(rep)
     if rep.overR
         extra1.divisionAlgebra = 'R';
     end
-    irrep1 = rep.subRepUnitary(U(1,:), extra1).collapseParent;
+    allOnes = rep.subRepUnitary(U(1,:), extra1).collapseParent;
     rest = rep.subRepUnitary(U(2:end,:), extra).collapseParent;
-    irreps = horzcat({irrep1}, replab.rep.decompose(rest));
+    sub = {allOnes rest};
 end
