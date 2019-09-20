@@ -295,7 +295,7 @@ classdef Rep < replab.Str
             sub = replab.SubRepNU(self, F, G);
         end
 
-        function sub = subRepUnitary(self, U)
+        function sub = subRepUnitary(self, U, extra)
         % Returns a unitary subrepresentation of this unitary representation
         %
         % It is described by the row basis vectors in U, such that
@@ -307,12 +307,16 @@ classdef Rep < replab.Str
         % basis vectors will be implicitly normalized
         %
         % Args:
-        %   U: Orthogonal basis vectors stored as row vectors
+        %   U (double matrix, can be sparse): Orthogonal basis vectors stored as row vectors
+        %   extra (struct, optional): Extra information
         %
         % Returns:
         %   replab.SubRep: The subrepresentation
             assert(isequal(self.isUnitary, true), 'Representation must be unitary');
-            sub = replab.SubRep(self, U);
+            if nargin < 3
+                extra = struct;
+            end
+            sub = replab.SubRep(self, U, extra);
         end
 
         function rep1 = leftConjugateUnitary(self, A)

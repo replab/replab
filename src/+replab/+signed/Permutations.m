@@ -144,6 +144,11 @@ classdef Permutations < replab.signed.PermutationGroup
             signedPerm = pperm;
         end
 
+        function mat = toSparseMatrix(signedPerm)
+            n = length(signedPerm);
+            mat = sparse(abs(signedPerm), 1:n, sign(signedPerm), n, n);
+        end
+
         function mat = toMatrix(signedPerm)
         % Returns the signed permutation matrix corresponding to the given
         % signed permutation such that matrix multiplication is
@@ -151,13 +156,9 @@ classdef Permutations < replab.signed.PermutationGroup
         % S.toMatrix(S.compose(x, y)) = 
         % S.toMatrix(x) * S.toMatrix(y)
         % where S = SignedPermutations(domainSize)
-            n = length(signedPerm);
-            mat = sparse(abs(signedPerm), 1:n, sign(signedPerm), n, n);
-            if ~replab.Settings.useSparse
-                mat = full(mat);
-            end
+            mat = full(replab.signed.Permutations.toSparseMatrix(signedPerm));
         end
-        
+
         function b = isSignedPermutationMatrix(mat)
         % Returns true when "mat" is a signed permutation matrix, i.e. a monomial matrix
         % with nonzero entries equal to +1 or -1

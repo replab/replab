@@ -222,6 +222,22 @@ classdef Permutations < replab.PermutationGroup
             Q = replab.Permutations(8).subgroup({g1 g2});
         end
         
+        function mat = toSparseMatrix(perm)
+        % Returns the sparse permutation matrix corresponding to the given permutation
+        %
+        % The returned matrix is such that matrix multiplication is compatible with composition of
+        % permutations, i.e. for ``P = replab.Permutations(domainSize)`` we have
+        % ``P.toMatrix(P.compose(x, y)) = P.toMatrix(x) * P.toMatrix(y)``
+        %
+        % Args:
+        %   perm (permutation row vector): Permutation
+        %
+        % Returns:
+        %   The sparse permutation matrix corresponding to `perm`.
+            n = length(perm);
+            mat = sparse(perm, 1:n, ones(1, n), n, n);
+        end
+        
         function mat = toMatrix(perm)
         % Returns the permutation matrix corresponding to the given permutation
         %
@@ -230,15 +246,11 @@ classdef Permutations < replab.PermutationGroup
         % ``P.toMatrix(P.compose(x, y)) = P.toMatrix(x) * P.toMatrix(y)``
         %
         % Args:
-        %   perm: Permutation
+        %   perm (permutation row vector): Permutation
         %
         % Returns:
         %   The permutation matrix corresponding to `perm`.
-            n = length(perm);
-            mat = sparse(perm, 1:n, ones(1, n), n, n);
-            if ~replab.Settings.useSparse
-                mat = full(mat);
-            end
+            mat = full(replab.Permutations.toSparseMatrix(perm));
         end
         
         function perm = fromMatrix(mat)

@@ -11,8 +11,7 @@ classdef SubRep < replab.Rep
         D0 % double row vector: correction factors of dimension 1 x dChild
         extra % struct: Contains key/value pairs concerning the irreducible decomposition process
               %         'hasTrivialSubspace' whether this contains a trivial subrepresentation
-              %         'isTransitive' whether there are subrepresentations corresponding to
-              %                        subspaces for a subset of Euclidean coordinates
+              %         'reducedBlocks' whether the block diagonal reduction heuristic has been applied
               %         'isIrreducible' whether the representation is irreducible
               %         'divisionAlgebra', if known and self.field == 'R', is the division algebra type
               %                            which can be 'R', 'C', or 'H'
@@ -67,7 +66,18 @@ classdef SubRep < replab.Rep
         %
         % Returns:
         %   logical: Whether the extra value is known and true
-            b = isfield(self.flags, name) && self.flags.(name);
+            b = isfield(self.extra, name) && self.extra.(name);
+        end
+        
+        function b = isExtraFalse(self, name)
+        % Returns whether the value of the given extra is known AND false
+        %
+        % Args:
+        %   name (char): Name of the extra
+        %
+        % Returns:
+        %   logical: Whether the extra value is known and false
+            b = isfield(self.extra, name) && ~self.extra.(name);
         end
         
         function b = isExtraSet(self, name)
@@ -78,7 +88,7 @@ classdef SubRep < replab.Rep
         %
         % Returns:
         %   logical: Whether the extra value is known
-            b = isfield(self.flags, name);
+            b = isfield(self.extra, name);
         end
         
         function b = hasCorrection(self)
@@ -114,7 +124,7 @@ classdef SubRep < replab.Rep
         % Returns this subrepresentation as expressed in self.parent.parent
             assert(isa(self.parent, 'replab.SubRep'));
             newU0 = self.U0 * self.parent.U;
-            newSub = self.parent.parent.subRepUnitary(newU0);
+            newSub = self.parent.parent.subRepUnitary(newU0, self.extra);
         end
         
         %% Str methods

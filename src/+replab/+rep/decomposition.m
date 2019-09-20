@@ -25,7 +25,7 @@ function I = decomposition(rep)
         end
         if size(Ur, 2) > 0
             s2 = s1.subRepUnitary(Ur);
-            sub3 = replab.rep.decomposeUsingCommutant(s2);
+            sub3 = replab.rep.decompositionUsingCommutant(s2);
             for j = 1:length(sub3)
                 s3 = sub3{j};
                 nontrivial{1, end+1} = s3.collapseParent.collapseParent;

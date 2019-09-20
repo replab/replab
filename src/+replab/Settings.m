@@ -21,30 +21,6 @@ classdef Settings
             end
             value = AveragingIterations;
         end
-        
-        function value = useSparse(newValue)
-        % Gets/sets the flag whether to use sparse matrices when possible
-        %
-        % The default value is `false`.
-        %
-        % Warnings:
-        %   This flag should be set once before any computations is made,
-        %   as matrix values are cached by RepLAB and those cached values
-        %   not updated when this flag changes.
-        %
-        % Args:
-        %   newValue (logical, optional): New flag value
-        %
-        % Returns:
-        %   logical: The current flag value.
-            persistent UseSparse;
-            if nargin == 1
-                UseSparse = newValue;
-            elseif isempty(UseSparse)
-                UseSparse = false;
-            end
-            value = UseSparse;
-        end
 
         function value = randomizedSchreierSimsTries(newValue)
         % Gets/sets the number of sifted elements before the BSGS chain is declared complete
