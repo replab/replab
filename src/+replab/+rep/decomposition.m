@@ -7,29 +7,36 @@ function I = decomposition(rep)
 % Returns:
 %   replab.Irreducible: Formal irreducible decomposition
     assert(isa(rep, 'replab.Rep'));
-    assert(rep.overR || rep.overC);
     if rep.overR
         trivialRealDivisionAlgebra = replab.DivisionAlgebra.real;
     else
         trivialRealDivisionAlgebra = [];
     end
+    % use recursively replab.rep.decompose
+    irreps = {};
+    rest = {rep.subRepUnitary(speye(rep.dimension))};
+    while ~isempty(rest)
+        head = rest{1};
+        rest = rest(2:end);
+        if head.isExtraTrue('isIrreducible')
+            
+            irreps{1,end+1} = head;
+        else
+            subs = replab.rep.decompose(head);
+            rest = horzcat(rest, subs);
+        end
+    end
     trivial = cell(1, 0);
     nontrivial = cell(1, 0);
-    sub1 = replab.rep.orbitDecomposition(rep);
-    for i = 1:length(sub1)
-        s1 = sub1{i};
-        [Ut Ur] = replab.rep.extractTrivial(s1);
-        for j = 1:size(Ut, 1)
-            Uthis = Ut(j, :) * s1.U;
-            trivial{1, end+1} = replab.Irrep(rep, Uthis, trivialRealDivisionAlgebra);
-        end
-        if size(Ur, 2) > 0
-            s2 = s1.subRepUnitary(Ur);
-            sub3 = replab.rep.decompositionUsingCommutant(s2);
-            for j = 1:length(sub3)
-                s3 = sub3{j};
-                nontrivial{1, end+1} = s3.collapseParent.collapseParent;
-            end
+    for i = 1:length(irreps)
+        sub = irreps{i};
+        if sub.isExtraTrue('hasTrivialSubspace')
+            irrep = replab.Irrep(rep, sub.U0, trivialRealDivisionAlgebra);
+            trivial{1,end+1} = irrep;
+        elseif sub.isExtraFalse('hasTrivialSubspace')
+            nontrivial{1,end+1} = sub;
+        else
+            error('Irreducible subrepresentations must have had detection of trivial equivalence');
         end
     end
     % regroup equivalent representations
