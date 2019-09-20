@@ -107,9 +107,13 @@ classdef CommutantVar < replab.Str
         %         remain unchanged
         %     sdpMatrix: the SDP matrix on which to impose permutation
         %         invariance (should be empty if none)
-        %     sdpMatrixIsSym: whether the structure of the provided
-        %         sdpMatrix is already invariant under the generators
-        %         (should be empty if no sdpMatrix is provided)
+        %     sdpMatrixIsSym: (should be empty if no sdpMatrix is provided)
+        %         0: if the sdpMatrix is know expected to be invariant
+        %             under the group action
+        %         1: if the sdpMatrix is expected to be invariant under the
+        %             group action but we wish to check it
+        %         2: if the sdpMatrix is known to be invariant under the
+        %             group action. In this case, no checks are made
         %
         % Results:
         %     self: replab.CommutantVar object
@@ -162,7 +166,7 @@ classdef CommutantVar < replab.Str
                 assert(isempty(sdpMatrixIsSym), ['No sdpMatrix provided but sdpMatrixIsSym set to ', num2str(sdpMatrixIsSym)]);
             else
                 assert(isequal(size(sdpMatrix), [n n]), 'Wrong matrix or group dimension.');
-                assert(isequal(sdpMatrixIsSym, false) || isequal(sdpMatrixIsSym, true), 'sdpMatrixIsSym should be a boolean.');
+                assert(isequal(sdpMatrixIsSym, 0) || isequal(sdpMatrixIsSym, 1) || isequal(sdpMatrixIsSym, 2), 'sdpMatrixIsSym can only take value 0,1,2.');
             end
             
             % Representation decomposition
@@ -200,7 +204,7 @@ classdef CommutantVar < replab.Str
             assert(self.dim == size(self.U,2), ['dimension is ', num2str(self.dim), ' but U is of size ', num2str(size(self.U,1)), 'x', num2str(size(self.U,2))]);
 
             % Constructing the SDP blocks now
-            if isempty(sdpMatrix) || ~sdpMatrixIsSym
+            if isempty(sdpMatrix) || (sdpMatrixIsSym == 0)
                 % We construct the SDP blocks from scratch
                 self.blocks = cell(1,self.nComponents);
                 for i = 1:self.nComponents
@@ -253,13 +257,12 @@ classdef CommutantVar < replab.Str
                 end
             else
                 % We construct the SDP blocks from the provided SDP matrix
-                % off-block-diagonal terms should be zero
+                % off-block-diagonal terms should be zero but will be
+                % checked
                 
                 assert(isnumeric(sdpMatrix) || isa(sdpMatrix, 'sdpvar'), ['Wrong type for sdpMatrix: ', class(sdpMatrix), '.']);
                 
                 % We compute each block from the provided SDP matrix
-                blockMatrix = self.U'*sdpMatrix*self.U;
-                
                 co = 0;
                 for i = 1:self.nComponents
                     d = self.dimensions1(i);
@@ -275,33 +278,38 @@ classdef CommutantVar < replab.Str
                             assert(self.dimensions1(i) == 4, ['Dimension ', num2str(self.dimensions1(i)), ' for a quaternionic representation is currently not supported.']);
                             dimBlock = self.multiplicities(i)*4*d;
                     end
-                    self.blocks{i} = blockMatrix(co + (1:dimBlock), co + (1:dimBlock));
+                    self.blocks{i} = self.U(:, co + (1:dimBlock))' * sdpMatrix * self.U(:, co + (1:dimBlock));
                     
                     % TODO: check and enforce the fine-grained
                     % block structure for the C and H cases.
                     
                     % Three sanity checks:
                     % 1. block-diagonal form
-                    shouldBeZero = blockMatrix(co+(1:dimBlock), co+dimBlock+1:end);
-                    indices = [0 getvariables(shouldBeZero)];
-                    for ind = indices
-                        maxOuterEpsilonFound = max([maxOuterEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
+                    if (sdpMatrixIsSym == 1)
+                        shouldBeZero = self.U(:,co+(1:dimBlock))' * sdpMatrix * self.U(:,co+dimBlock+1:end);
+                        indices = [0 getvariables(shouldBeZero)];
+                        for ind = indices
+                            maxOuterEpsilonFound = max([maxOuterEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
+                        end
                     end
                     
                     % 2. Fine-grained form of real blocks
                     if isequal(self.types(i), 'R') && (self.dimensions1(i) > 1)
                         m = self.multiplicities(i);
                         tmp = reshape(permute(reshape(self.blocks{i}, [d m d m]), [2 1 4 3]), d*m*[1 1]);
-                        for j = 1:d-1
-                            for k = j:d
-                                if j == k
-                                    shouldBeZero = tmp((j-1)*m + (1:m), (k-1)*m + (1:m)) - tmp(1:m,1:m);
-                                else
-                                    shouldBeZero = tmp((j-1)*m + (1:m), (k-1)*m + (1:m));
-                                end
-                                indices = [0 getvariables(shouldBeZero)];
-                                for ind = indices
-                                    maxOuterEpsilonFound = max([maxOuterEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
+                        
+                        if (sdpMatrixIsSym == 1)
+                            for j = 1:d-1
+                                for k = j:d
+                                    if j == k
+                                        shouldBeZero = tmp((j-1)*m + (1:m), (k-1)*m + (1:m)) - tmp(1:m,1:m);
+                                    else
+                                        shouldBeZero = tmp((j-1)*m + (1:m), (k-1)*m + (1:m));
+                                    end
+                                    indices = [0 getvariables(shouldBeZero)];
+                                    for ind = indices
+                                        maxOuterEpsilonFound = max([maxOuterEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
+                                    end
                                 end
                             end
                         end
@@ -311,7 +319,7 @@ classdef CommutantVar < replab.Str
                     end
                     
                     % 3. hermitianity
-                    if ~ishermitian(self.blocks{i})
+                    if (sdpMatrixIsSym == 1) && ~ishermitian(self.blocks{i})
                         shouldBeZero = self.blocks{i} - self.blocks{i}';
                         indices = [0 getvariables(shouldBeZero)];
                         for ind = indices
@@ -378,6 +386,7 @@ classdef CommutantVar < replab.Str
         %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]})
         %
         % See also:
+        %     replab.CommutantVar.fromIndexMatrix
         %     replab.CommutantVar.fromSdpMatrix
         %     replab.CommutantVar.fromSymSdpMatrix
         
@@ -408,9 +417,10 @@ classdef CommutantVar < replab.Str
         %
         % See also:
         %     replab.CommutantVar.fromPermutations
+        %     replab.CommutantVar.fromIndexMatrix
         %     replab.CommutantVar.fromSymSdpMatrix
 
-            R = replab.CommutantVar(generators, sdpMatrix, false);
+            R = replab.CommutantVar(generators, sdpMatrix, 0);
         end
 
         function R = fromSymSdpMatrix(sdpMatrix, generators)
@@ -435,9 +445,110 @@ classdef CommutantVar < replab.Str
         %
         % See also:
         %     replab.CommutantVar.fromPermutations
+        %     replab.CommutantVar.fromIndexMatrix
         %     replab.CommutantVar.fromSdpMatrix
 
-            R = replab.CommutantVar(generators, sdpMatrix, true);
+            R = replab.CommutantVar(generators, sdpMatrix, 1);
+        end
+        
+        function R = fromIndexMatrix(indexMatrix, generators)
+        % R = fromIndexMatrix(indexMatrix, generators)
+        % 
+        % Performs an exact Raynolds simplification of the matrix of
+        % indices so that it is invariant under the group. Then, creates a
+        % CommutantVar object with minimal number of variables.
+        %
+        % The produced matrix is always forced to be symmetric.
+        %
+        % Args:
+        %     indexMatrix: the matrix of indices
+        %     generators: a list of generators under which the matrix
+        %         remains unchanged
+        %
+        % Results:
+        %     R: a CommutantVar object
+        %
+        % Example:
+        %     indexMatrix = [1 2 3; 1 5 2; 7 8 9];
+        %     matrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {[3 1 2]})
+        %
+        % See also:
+        %     replab.CommutantVar.fromPermutations
+        %     replab.CommutantVar.fromSdpMatrix
+        %     replab.CommutantVar.fromSymSdpMatrix
+
+            % First, we make the indexMatrix invariant under the group
+            
+            % We renumber all indices so they match default numbering
+            d = size(indexMatrix, 1);
+            [values, indices] = unique(indexMatrix(:), 'first');
+            invPerm = sparse(values, 1, indices);
+            indexMatrix = full(invPerm(indexMatrix));
+            
+            % We make sure the indexMatrix is symmetric
+            indexMatrix = min(indexMatrix, indexMatrix');
+            
+            % We write the action of the generators on the matrix elements
+            generators2 = cell(size(generators));
+            M = reshape(1:d^2, [d d]);
+            for i = 1:length(generators)
+                generators2{i} = reshape(M(generators{i}, generators{i}), 1, d^2);
+            end
+            group = replab.Permutations(d^2).subgroup(generators2);
+
+            % Identify the orbits
+            orbits = group.orbits.blockIndex;
+            
+            % Make sure orbits are numbered in a similar way
+            [values, indices] = unique(orbits(:), 'first');
+            invPerm = sparse(values, 1, indices);
+            orbits = full(invPerm(orbits));
+            
+            % Merge orbits with indices
+            pairs = [reshape(indexMatrix, d^2, 1), orbits];
+            pairs = unique(sort(pairs, 2), 'rows');
+            
+            % We use a burning algorithm to identify all connected subsets
+            uniquesLeft = unique(pairs);
+            subsets = {};
+            co1 = 0;
+            while ~isempty(uniquesLeft)
+                co1 = co1 + 1;
+                set = uniquesLeft(1);
+                co2 = 0;
+                while co2 < length(set)
+                    co2 = co2 + 1;
+                    element = set(co2);
+                    sel1 = find(pairs(:,1) == element);
+                    sel2 = find(pairs(:,2) == element);
+                    newElements = unique([pairs(sel1,2); pairs(sel2,1)])';
+                    newElements = setdiff(newElements, set);
+                    set = [set, newElements];
+                end
+                subsets{co1} = sort(set);
+                uniquesLeft = setdiff(uniquesLeft, set);
+            end
+            %subsets{:}
+            
+            % We attribute the number to each element of each class
+            images = zeros(max(unique(pairs)), 1);
+            for i = 1:length(subsets)
+                images(subsets{i}) = i;
+            end
+            
+            % First we identify the index for each element
+            % We substitute just one index per class of indices
+            [values, indices] = unique(unique(indexMatrix(:)), 'first');
+            invPerm = sparse(values, 1, indices);
+            tmp = sparse(1:numel(indexMatrix), invPerm(reshape(indexMatrix,1,numel(indexMatrix))), true);
+            %indexMatrix = reshape(tmp*images(values), d, d)
+            
+            % Now we can declare the desired number of variables and
+            % attribute them
+            vars = sdpvar(length(subsets),1);
+            sdpMatrix = reshape(tmp*vars(images(values)), d, d);
+            
+            R = replab.CommutantVar(generators, sdpMatrix, 2);
         end
         
     end
