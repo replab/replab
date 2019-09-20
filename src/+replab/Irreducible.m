@@ -2,19 +2,24 @@ classdef Irreducible < replab.Str
 % Describes the irreducible decomposition of a representation
     
     properties
-        parent;     % Parent representation
+        parent % replab.Rep: Parent representation, must be unitary
         components; % Isotypic components
     end
 
     methods
 
         function self = Irreducible(parent, components)
+            assert(isequal(parent.isUnitary, true));
             self.parent = parent;
             self.components = components;
         end
         
+        function r = rep1(self)
+            r = replab.IrreducibleRep(self);
+        end
+        
         function r = rep(self)
-        % Returns the subrepresentation corresponding to this isotypic component
+        % Returns the subrepresentation corresponding to this irreducible decomposition
             U = zeros(0, self.parent.dimension);
             for i = 1:self.nComponents
                 U = [U; self.component(i).rep.U];

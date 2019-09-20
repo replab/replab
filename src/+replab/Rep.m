@@ -134,7 +134,7 @@ classdef Rep < replab.Str
         %
         % Raises:
         %   An error is this representation is not unitary.
-            assert(~isempty(self.isUnitary) && self.isUnitary, 'Representation must be unitary');
+            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
             if isempty(self.decomposition_)
                 dec = replab.rep.decomposition(self);
                 self.decomposition_ = dec.nice;
@@ -229,7 +229,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   replab.Rep: The dual representation
-            if self.isUnitary
+            if isequal(self.isUnitary, true)
                 % If this is unitary, less drama to simply return the conjugate
                 rep = self.conj;
             else
@@ -265,6 +265,17 @@ classdef Rep < replab.Str
             rep = replab.Rep.tensor(reps);
         end
 
+        function rep = directSumOfCopies(self, n)
+        % Returns a direct sum of copies of this representation
+        %
+        % Args:
+        %   n (integer): Number of copies
+        %
+        % Returns:
+        %   replab.Rep: The direct sum representation
+            reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
+            rep = replab.Rep.directSum(reps);
+        end
         
         %% Manipulation of representation space
 
@@ -300,7 +311,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   replab.SubRep: The subrepresentation
-            assert(~isempty(self.isUnitary) && self.isUnitary, 'Representation must be unitary');
+            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
             sub = replab.SubRep(self, U);
         end
 
@@ -318,7 +329,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   replab.ConjugateRep: The conjugated representation
-            assert(~isempty(self.isUnitary) && self.isUnitary, 'Representation must be unitary');
+            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
             rep1 = replab.ConjugateRep(A, self);
         end
 

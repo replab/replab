@@ -2,10 +2,11 @@ classdef Isotypic < replab.Str
 % Describes an isotypic component in the decomposition of a representation
     
     properties
-        parent;
-        copies;
-        multiplicity;
-        copyDimension;
+        parent % replab.Rep: Representation of which this is an isotypic component
+        copies % row cell array of replab.Irrep: Equivalent irreducible subrepresentations in
+               %                                 this isotypic component
+        multiplicity % integer: number of copies in this isotypic component
+        copyDimension % integer: dimension of each irreducible representation in this component
     end
     
     methods
@@ -34,7 +35,7 @@ classdef Isotypic < replab.Str
         
         function n = nCopies(self)
         % Returns the number of copies = the multiplicity
-            n = length(self.copies);
+            n = self.multiplicity;
         end
         
         function c = copy(self, i)

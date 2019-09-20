@@ -1,36 +1,47 @@
 classdef SubRep < replab.Rep
 % Describes a subrepresentation of a unitary finite representation
-    
+%
+% The basis of this subrepresentation in the parent representation is formed by the rows of the
+% matrix ``U = diag(D0) * U0``, and we have ``image(g) = U * parent.image(g) * U'``,
+% where U0 is an orthogonal basis, not necessarily normalized, and D0 is a correction factor vector.
+
     properties (SetAccess = protected)
-        parent; % Parent representation
-                %
-                % The basis of this subrepresentation in the parent
-                % representation is formed by the rows of the
-                % matrix U = diag(D0) * U0, as described below
-                %
-                % We have image(g) = U * parent.image(g) * U'
-                %
-        U0;     % Orthogonal but not necessarily normalized basis
-                % of the subrepresentation, given in a matrix of
-                % dimension dChild x dParent
-                %
-        D0;     % row vector of correction factors of dimension
-                % 1 x dChild
+        parent % replab.Rep: Parent representation
+        U0 % double matrix, can be sparse: Orthogonal basis of dimension dChild x dParent
+        D0 % double row vector: correction factors of dimension 1 x dChild
+        extra % struct: Contains key/value pairs concerning the irreducible decomposition process
+              %         'hasTrivialSubspace' whether this contains a trivial subrepresentation
+              %         'isTransitive' whether there are subrepresentations corresponding to
+              %                        subspaces for a subset of Euclidean coordinates
+              %         'isIrreducible' whether the representation is irreducible
+              %         'divisionAlgebra', if known and self.field == 'R', is the division algebra type
+              %                            which can be 'R', 'C', or 'H'
+              %         'isDivisionAlgebraCanonical', if divisionAlgebra is 'C' or 'H', whether
+              %                                       the representation is expressed in the RepLAB
+              %                                       canonical basis for that algebra
     end
     
     methods
         
-        function self = SubRep(parent, U0)
-        % Constructs a subrepresentation of the 'parent' representation
-        % given by the basis 'U0', which has dimension dThisChild x dParent
+        function self = SubRep(parent, U0, extra)
+        % Constructs a subrepresentation of a parent representation
+        %
+        % Args:
+        %   parent (replab.Rep): Parent representation of which we construct a subrepresentation
+        %   U0 (double matrix, can be sparse): Basis matrix of dimension dThisChild x dParent
+            if nargin < 3
+                extra = struct;
+            end
             d = size(U0, 1);
             dParent = size(U0, 2);
             assert(parent.dimension == dParent);
+            assert(isequal(parent.isUnitary, true), 'We support only unitary representations');
             self.group = parent.group;
             self.field = parent.field;
             self.dimension = d;
             self.parent = parent;
             self.isUnitary = true;
+            self.extra = extra;
             self.U0 = U0;
             D0 = ones(1, d);
             hasCorrection = false;
@@ -47,11 +58,29 @@ classdef SubRep < replab.Rep
                 self.D0 = [];
             end
         end
-
-        function s = headerStr(self)
-            s = 'Subrepresentation';
+        
+        function b = isExtraTrue(self, name)
+        % Returns whether the value of the given extra is known AND true
+        %
+        % Args:
+        %   name (char): Name of the extra
+        %
+        % Returns:
+        %   logical: Whether the extra value is known and true
+            b = isfield(self.flags, name) && self.flags.(name);
         end
-
+        
+        function b = isExtraSet(self, name)
+        % Returns whether the value of the given extra is known
+        %
+        % Args:
+        %   name (char): Name of the extra
+        %
+        % Returns:
+        %   logical: Whether the extra value is known
+            b = isfield(self.flags, name);
+        end
+        
         function b = hasCorrection(self)
         % Returns true if the basis is not normalized and needs correction
             b = ~isequal(self.D0, []);
@@ -60,9 +89,9 @@ classdef SubRep < replab.Rep
         function U = U(self)
         % Returns the basis of this subrepresentation in its parent
             if self.hasCorrection
-                U = diag(self.D0) * self.U0;
+                U = diag(self.D0) * full(self.U0);
             else
-                U = self.U0;
+                U = full(self.U0);
             end
         end
         
@@ -88,21 +117,12 @@ classdef SubRep < replab.Rep
             newSub = self.parent.parent.subRepUnitary(newU0);
         end
         
-        function sub = in(self, newParent)
-        % Returns this subrepresentation as expressed in the given 'newParent'
-        %
-        % newParent must be equal to some self.parent. ... .parent
-            if self.parent == newParent % we want handle equality
-                sub = self;
-            else
-                newU0 = self.U0 * self.parent.U;
-                newRep = self.parent.parent.subRepUnitary(newU0);
-                sub = newRep.in(newParent);
-            end
-        end
-        
         %% Str methods
         
+        function s = headerStr(self)
+            s = 'Subrepresentation';
+        end
+
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Rep(self);
             if self.hasCorrection
@@ -126,11 +146,23 @@ classdef SubRep < replab.Rep
         %% Rep methods
         
         function rho = image(self, g)
-            rho = self.U * self.parent.image(g) * self.U';
+            if self.hasCorrection
+                D = diag(self.D0);
+                rho = D * self.U0 * self.parent.image(g) * self.U0' * D';
+            else
+                rho = self.U0 * self.parent.image(g) * self.U0';
+            end
+            rho = full(rho);
         end
         
         function rho = inverseImage(self, g)
-            rho = self.U * self.parent.inverseImage(g) * self.U';
+            if self.hasCorrection
+                D = diag(self.D0);
+                rho = D * self.U0 * self.parent.inverseImage(g) * self.U0' * D';
+            else
+                rho = self.U0 * self.parent.inverseImage(g) * self.U0';
+            end
+            rho = full(rho);
         end
         
     end

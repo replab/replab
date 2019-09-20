@@ -18,6 +18,8 @@ classdef SedumiData
     
 % rho is also a 1xnG cell array, with each element describing a
 % s x s double matrix, such that rho{i} is the image of the generator G{i}.
+%
+% The representation must be unitary.
 
     properties
         A % double: Data matrix of size n x m, where n is the number of primal scalar variables, 
@@ -29,7 +31,7 @@ classdef SedumiData
         s % size of single SDP block present
         G % cell array of generators as permutations
         rho % cell array of generator images defining the representation
-        rep % computed replab.FiniteGroupRep
+        rep % replab.Rep: group representation commuting with the SDP block
     end
     
     methods
@@ -51,16 +53,18 @@ classdef SedumiData
             self.rho = rho;
             % build permutation group
             assert(~isempty(G), 'Must be nontrivial permutation group');
-            group = replab.Permutations(self.s).subgroup(G);
+            ds = length(G{1}); % group domain size
+            group = replab.Permutations(ds).subgroup(G);
             % check for unitarity
             tol = 1e-12;
             for i = 1:length(rho)
                 assert(norm(rho{i}*rho{i}' - eye(self.s)) < tol);
             end
-            self.rep = group.realRepresentation(self.s, rho);
+            self.rep = group.repByImages('R', self.s, true, rho);
         end
         
         function vec1 = project(self, vec, I)
+        % 
             rep = self.rep;
             if nargin < 3
                 I = rep.irreducible;

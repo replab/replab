@@ -144,9 +144,9 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %   function_handle: The permutation group homomorphism
             phi = @(g) self.indexRelabelingPermutation(g, indexRange);
         end
-        
+
         %% Representation construction
-        
+
         function rho = indexRelabelingRep(self, indexRange)
         % Representation that permutes the indices of a tensor
         %
@@ -165,7 +165,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %   replab.Rep: The desired permutation representation
             rho = replab.rep.IndexRelabelingRep(self, indexRange);
         end
-        
+
         function rho = naturalRep(self)
         % Returns the natural permutation representation of this permutation group
         %
@@ -173,7 +173,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %   replab.Rep: The (real) natural permutation representation
             rho = self.permutationRep(self.domainSize, self.generators);
         end
-        
+
         function rho = standardRep(self)
         % Returns the standard representation of this permutation group
         %
@@ -186,7 +186,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             U = U(2:end, :);
             rho = self.naturalRep.subRepUnitary(U);
         end
-                
+
     end
         
 end

@@ -12,6 +12,14 @@ classdef ImprimitiveRep < replab.Rep
     methods
         
         function self = ImprimitiveRep(group, Arep)
+        % Constructs an imprimitive representation of a wreath product group
+        %
+        % Args:
+        %   group (replab.wreathproduct.Common): Wreath product group
+        %   Arep (replab.Rep): Representation of the wreath product base factor
+        %
+        % Returns:
+        %   replab.Rep: A wreath product group representation
             assert(isa(group, 'replab.wreathproduct.Common'));
             assert(group.A == Arep.group);
             dA = Arep.dimension;
