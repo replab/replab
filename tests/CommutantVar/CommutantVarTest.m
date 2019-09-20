@@ -264,6 +264,43 @@ function test_fromSymSdpMatrix
     assert(abs(obj1 - obj2)/abs(obj1) < replab.Settings.doubleSdpTol, 'Block-diagonalized SDP doesn''t yield the same result as the non-block-diagonalized one');
 end
 
+function test_fromIndexMatrix
+    indexMatrix = [  1   2   3   2   6   7   3   7  10
+                     2   1   4   6   2   8   7   3  11
+                     3   4   1   7   8   2  10  11   3
+                     2   6   7   1   2   3   4   8  11
+                     6   2   8   2   1   4   8   4  13
+                     7   8   2   3   4   1  11  14   4
+                     3   7  10   4   8  11   1   2   3
+                     7   3  11   8   4  14   2   1   4
+                    10  11   3  11  13   4   3   4   1];
+
+    objective = [0 0 0 0 1 1 0 1 -1];
+
+    generators = {[1  4  7  2  5  8  3  6  9]};
+
+    % Non-block-diagonal SDP
+    vars = [0; sdpvar(max(max(indexMatrix)),1)];
+    tmp = sparse(1:numel(indexMatrix), reshape(1+indexMatrix,1,numel(indexMatrix)), true);
+    sdpMatrix = reshape(tmp*vars, size(indexMatrix));
+    obj = objective*sdpMatrix(:,1);
+    if ReplabTestParameters.onlyFastTests
+        obj1 = 2*sqrt(2);
+    else
+        solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+        obj1 = value(obj);
+    end
+    
+    % We do a sanity check with one group
+    blockSdpMatrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, generators);
+    obj = objective*blockSdpMatrix(:,1);
+    solvesdp([blockSdpMatrix >= 0, blockSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    obj2 = value(obj);
+    
+    % We compare the result:
+    assert(abs(obj1 - obj2)/abs(obj1) < replab.Settings.doubleSdpTol, 'Block-diagonalized SDP doesn''t yield the same result as the non-block-diagonalized one');
+end
+
 function test_inputs
     shouldProduceAnError(@(x) replab.CommutantVar.fromPermutations([]));
 end
