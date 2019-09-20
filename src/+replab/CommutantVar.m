@@ -548,13 +548,13 @@ classdef CommutantVar < replab.Str
         %     self: CommutantVar object
         %
         % Results:
-        %     M: sparse matrix
+        %     M: matrix
         %
         % Example:
         %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
-        %     full(matrix.blockMask)
+        %     matrix.blockMask
         
-            M = sparse(self.dim, self.dim);
+            M = zeros(self.dim, self.dim);
             co = 0;
             for i = 1:self.nComponents
                 d = self.dimensions1(i);
