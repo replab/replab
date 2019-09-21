@@ -286,7 +286,7 @@ classdef CommutantVar < replab.Str
                     % Three sanity checks:
                     % 1. block-diagonal form
                     if (sdpMatrixIsSym == 1)
-                        shouldBeZero = self.U(:,co+(1:dimBlock))' * sdpMatrix * self.U(:,co+dimBlock+1:end);
+                        shouldBeZero = (self.U(:,co+(1:dimBlock))' * sdpMatrix) * self.U(:,co+dimBlock+1:end);
                         indices = [0 getvariables(shouldBeZero)];
                         for ind = indices
                             maxOuterEpsilonFound = max([maxOuterEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
