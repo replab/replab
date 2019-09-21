@@ -1,8 +1,18 @@
 classdef CommutantVar < replab.Str
-% CommutantVar is a sdpvar class for matrices satisfying symmetry
-% constraints.
-%
+% CommutantVar is a class of sdpvar matrices satisfying symmetry
+% constraints. The matrices produced are always invariant under
+% transposition.
+% 
+% A general matrix only subject to invariance under a permutation group can
+% be constructed with the method fromPermutations. fromIndexMatrix allows
+% one to construct a symmetry-invariant matrix with additional structure.
+% Symmetry constraints can also be imposed on existing sdpvar object with
+% the fromSdpMatrix constructor. If the provided SDP matrix is already
+% known to be invariant under the group, then fromSymSdpMatrix can be used
+% to only add the induced block structure onto this matrix.
+% 
 % See also replab.CommutantVar.fromPermutations,
+%          replab.CommutantVar.fromIndexMatrix,
 %          replab.CommutantVar.fromSdpMatrix,
 %          replab.CommutantVar.fromSymSdpMatrix
 
@@ -396,10 +406,11 @@ classdef CommutantVar < replab.Str
         function R = fromIndexMatrix(indexMatrix, generators)
         % R = fromIndexMatrix(indexMatrix, generators)
         % 
-        % Creates an SDP matrix that:
+        % Creates an SDP matrix with additional structure. The produced
+        % sdpvar matrix:
         %  - is invariant under the permutation group
-        %  - satisfies the structure imposed by the indexMatrix: two
-        %    matrix elements with same index must be equal to each other
+        %  - satisfies the structure imposed by the index matrix: two
+        %    matrix elements with same index are equal to each other
         % 
         % This is obtained by first performing an exact Reynolds
         % simplification of the matrix of indices so that it is invariant

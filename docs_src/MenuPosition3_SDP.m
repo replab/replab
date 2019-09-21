@@ -8,9 +8,9 @@
 % As always, before using *RepLAB* commands, first add the paths:
 replab_addpaths
 %%
-% In order to solve convex optimization problems, the
-% YALMIP interface is needed, (see the
-% <../installation.html installation instructions> for more details).
+% Commands in this document makes use ot the YALMIP interface to solve
+% convex optimization problems, see
+% <../installation.html installation instructions>.
 
 
 %% Introduction
@@ -66,7 +66,7 @@ MSymOpt = value(MSym)
 % symmetry properties of the considered matrix.
 
 
-%% Imposing symmetry together with additional structure
+%% Constructing a symmetric SDP matrix with additional structure
 % An SDP matrix might sometimes be subject to more than only symmetry
 % constraints. When these additional constraints take the form of equality
 % between some of the matrix elements, it can be conveniently described by
