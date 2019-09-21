@@ -8,17 +8,17 @@ end
 
 function test_general
     global matrix231 matrix23451 matrix23451H
-    matrix = matrix23451;
+    matrix = matrix231;
     mask = matrix.blockMask;
-    assert(issparse(mask));
-    assert(nnz(mask) == 9);
+    %assert(issparse(mask));
+    assert(nnz(mask) == 5);
     
     if ReplabTestParameters.onlyFastTests
         return;
     end
     
-    matrix = matrix231;
+    matrix = matrix23451;
     mask = matrix.blockMask;
-    assert(issparse(mask));
-    assert(nnz(mask) == 5);
+    %assert(issparse(mask));
+    assert(nnz(mask) == 9);
 end
