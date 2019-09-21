@@ -56,19 +56,42 @@ MSym = replab.CommutantVar.fromPermutations({permutation});
 %%
 % We can then perform the optimization with:
 constraintsSym = [trace(MSym) == 1, MSym >= 0];
-diagnosticSym = optimize(constraintsSym, MSym(1,2), sdpsettings('verbose', 0))
+diagnosticSym = optimize(constraintsSym, MSym(1,2), sdpsettings('verbose', 0));
 MSymOpt = value(MSym)
 %%
 % We find the critical value of $-1/6$.
 %
-% At the end of this page, we show how this formulation is more efficient
-% than a direct formulation which would not take advantage of the symmetric
-% properties of the considered matrix.
+% At the end of this page, we discuss how this formulation is more
+% efficient than a direct formulation which would not take advantage of the
+% symmetry properties of the considered matrix.
+
+
+%% Imposing symmetry together with additional structure
+% An SDP matrix might sometimes be subject to more than only symmetry
+% constraints. When these additional constraints take the form of equality
+% between some of the matrix elements, it can be conveniently described by
+% a matrix having at each element the index of the corresponding variable.
+% All elements with identical index are then understood as being equal to
+% each other.
+%%
+% For instance, imposing on a 3x3 matrix that elements (1,1) ans (2,1) are
+% must be equal to each other can be described by the following index
+% matrix:
+indexMatrix = [1 2 3
+               1 4 5
+               6 7 8];
+%%
+% An SDP matrix satisfying this constraint is then obtained
+cstrSdpMatrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {permutation})
+%%
+% In this trivial case, the SDP matrix is left to contain only one
+% variable: the additional constraints collapsed the all group orbits
+% together.
 
 
 %% Imposing symmetry to an existing SDP matrix
 % Symmetry constraints can also be straightforwardly imposed on existing
-% SDP matrices.
+% SDP matrices with arbitrary structure.
 %%
 % For instance, consider the following special SDP matrix
 x = sdpvar;
@@ -101,7 +124,12 @@ MInvariant = [x 1 y
 % It is indeed invariant:
 MInvariant - MInvariant(permutation,permutation)
 %%
-% We can thus block-diagonalize it by calling
+% But not transpose-invariant (which is necessay for PSD matrices), so we
+% enforce it:
+MInvariant = MInvariant + MInvariant';
+MInvariant - MInvariant'
+%%
+% We can now block-diagonalize it by calling
 MInvariantBlock = replab.CommutantVar.fromSymSdpMatrix(MInvariant, {[2 3 1]})
 %%
 % No new variable has been introduced in the new object, but the block

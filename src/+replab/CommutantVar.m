@@ -392,6 +392,120 @@ classdef CommutantVar < replab.Str
         
             R = replab.CommutantVar(generators, [], []);
         end
+        
+        function R = fromIndexMatrix(indexMatrix, generators)
+        % R = fromIndexMatrix(indexMatrix, generators)
+        % 
+        % Creates an SDP matrix that:
+        %  - is invariant under the permutation group
+        %  - satisfies the structure imposed by the indexMatrix: two
+        %    matrix elements with same index must be equal to each other
+        % 
+        % This is obtained by first performing an exact Reynolds
+        % simplification of the matrix of indices so that it is invariant
+        % under the group.
+        %
+        % The produced matrix is always invariant under hermitian
+        % transposition.
+        %
+        % Args:
+        %     indexMatrix: matrix with integer values corresponding to the
+        %         label of the variable at each element. The actual index
+        %         values are irrelevant.
+        %     generators: a list of generators under which the matrix
+        %         remains unchanged
+        %
+        % Results:
+        %     R: a CommutantVar object
+        %
+        % Example:
+        %     indexMatrix = [1 1 3 4; 1 5 6 30; 3 6 10 11; 4 30 11 15];
+        %     matrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {[4 1 2 3]})
+        %
+        % See also:
+        %     replab.CommutantVar.fromPermutations
+        %     replab.CommutantVar.fromSdpMatrix
+        %     replab.CommutantVar.fromSymSdpMatrix
+
+            % Basic tests
+            assert(max(max(abs(indexMatrix - round(indexMatrix)))) == 0, 'The indexMatrix must be a matrix of integers.');
+            d = size(indexMatrix, 1);
+            for i = 1:length(generators)
+                assert(length(generators{i}) == d, 'Generators and indexMatrix dimensions don''t match.');
+            end
+        
+            % First, we make the indexMatrix invariant under the group
+            
+            % We renumber all indices so they match default numbering
+            [values, indices] = unique(indexMatrix(:), 'first');
+            invPerm = sparse(values, 1, indices);
+            indexMatrix = full(invPerm(indexMatrix));
+            
+            % We write the action of the generators on the matrix elements
+            generators2 = cell(size(generators));
+            M = reshape(1:d^2, [d d]);
+            for i = 1:length(generators)
+                generators2{i} = reshape(M(generators{i}, generators{i}), 1, d^2);
+            end
+            group = replab.Permutations(d^2).subgroup(generators2);
+
+            % Identify the orbits
+            orbits = group.orbits.blockIndex;
+            
+            % Make sure orbits are numbered in a similar way
+            [values, indices] = unique(orbits(:), 'first');
+            invPerm = sparse(values, 1, indices);
+            orbits = full(invPerm(orbits));
+            
+            % Merge orbits with indices
+            pairs = [reshape(indexMatrix, d^2, 1), orbits];
+
+            % Also impose that indexMatrix is symmetric
+            pairs = [pairs; reshape(indexMatrix, d^2, 1) reshape(indexMatrix', d^2, 1)];
+            pairs = unique(sort(pairs, 2), 'rows');
+
+            % We use a burning algorithm to identify all connected subsets
+            uniquesLeft = unique(pairs);
+            subsets = {};
+            co1 = 0;
+            while ~isempty(uniquesLeft)
+                co1 = co1 + 1;
+                set = uniquesLeft(1);
+                co2 = 0;
+                while co2 < length(set)
+                    co2 = co2 + 1;
+                    element = set(co2);
+                    sel1 = find(pairs(:,1) == element);
+                    sel2 = find(pairs(:,2) == element);
+                    newElements = unique([pairs(sel1,2); pairs(sel2,1)])';
+                    newElements = setdiff(newElements, set);
+                    set = [set, newElements];
+                end
+                subsets{co1} = sort(set);
+                uniquesLeft = setdiff(uniquesLeft, set);
+            end
+            %subsets{:}
+            
+            % We attribute the number to each element of each class
+            images = zeros(max(unique(pairs)), 1);
+            for i = 1:length(subsets)
+                images(subsets{i}) = i;
+            end
+            
+            % First we identify the index for each element
+            % We substitute just one index per class of indices
+            [values, indices] = unique(unique(indexMatrix(:)), 'first');
+            invPerm = sparse(values, 1, indices);
+            tmp = sparse(1:numel(indexMatrix), invPerm(reshape(indexMatrix,1,numel(indexMatrix))), true);
+            %indexMatrix = reshape(tmp*images(values), d, d)
+                        
+            % Now we can declare the desired number of variables and
+            % attribute them
+            vars = sdpvar(length(subsets),1);
+            sdpMatrix = reshape(tmp*vars(images(values)), d, d);
+            
+            R = replab.CommutantVar(generators, sdpMatrix, 1);%2); For now we still perform structural tests to detect potential bugs
+        end
 
         function R = fromSdpMatrix(sdpMatrix, generators)
         % R = fromSdpMatrix(sdpMatrix, generators)
@@ -449,106 +563,6 @@ classdef CommutantVar < replab.Str
         %     replab.CommutantVar.fromSdpMatrix
 
             R = replab.CommutantVar(generators, sdpMatrix, 1);
-        end
-        
-        function R = fromIndexMatrix(indexMatrix, generators)
-        % R = fromIndexMatrix(indexMatrix, generators)
-        % 
-        % Performs an exact Raynolds simplification of the matrix of
-        % indices so that it is invariant under the group. Then, creates a
-        % CommutantVar object with minimal number of variables.
-        %
-        % The produced matrix is always forced to be symmetric.
-        %
-        % Args:
-        %     indexMatrix: the matrix of indices
-        %     generators: a list of generators under which the matrix
-        %         remains unchanged
-        %
-        % Results:
-        %     R: a CommutantVar object
-        %
-        % Example:
-        %     indexMatrix = [1 2 3; 1 5 2; 7 8 9];
-        %     matrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {[3 1 2]})
-        %
-        % See also:
-        %     replab.CommutantVar.fromPermutations
-        %     replab.CommutantVar.fromSdpMatrix
-        %     replab.CommutantVar.fromSymSdpMatrix
-
-            % First, we make the indexMatrix invariant under the group
-            
-            % We renumber all indices so they match default numbering
-            d = size(indexMatrix, 1);
-            [values, indices] = unique(indexMatrix(:), 'first');
-            invPerm = sparse(values, 1, indices);
-            indexMatrix = full(invPerm(indexMatrix));
-            
-            % We make sure the indexMatrix is symmetric
-            indexMatrix = min(indexMatrix, indexMatrix');
-            
-            % We write the action of the generators on the matrix elements
-            generators2 = cell(size(generators));
-            M = reshape(1:d^2, [d d]);
-            for i = 1:length(generators)
-                generators2{i} = reshape(M(generators{i}, generators{i}), 1, d^2);
-            end
-            group = replab.Permutations(d^2).subgroup(generators2);
-
-            % Identify the orbits
-            orbits = group.orbits.blockIndex;
-            
-            % Make sure orbits are numbered in a similar way
-            [values, indices] = unique(orbits(:), 'first');
-            invPerm = sparse(values, 1, indices);
-            orbits = full(invPerm(orbits));
-            
-            % Merge orbits with indices
-            pairs = [reshape(indexMatrix, d^2, 1), orbits];
-            pairs = unique(sort(pairs, 2), 'rows');
-            
-            % We use a burning algorithm to identify all connected subsets
-            uniquesLeft = unique(pairs);
-            subsets = {};
-            co1 = 0;
-            while ~isempty(uniquesLeft)
-                co1 = co1 + 1;
-                set = uniquesLeft(1);
-                co2 = 0;
-                while co2 < length(set)
-                    co2 = co2 + 1;
-                    element = set(co2);
-                    sel1 = find(pairs(:,1) == element);
-                    sel2 = find(pairs(:,2) == element);
-                    newElements = unique([pairs(sel1,2); pairs(sel2,1)])';
-                    newElements = setdiff(newElements, set);
-                    set = [set, newElements];
-                end
-                subsets{co1} = sort(set);
-                uniquesLeft = setdiff(uniquesLeft, set);
-            end
-            %subsets{:}
-            
-            % We attribute the number to each element of each class
-            images = zeros(max(unique(pairs)), 1);
-            for i = 1:length(subsets)
-                images(subsets{i}) = i;
-            end
-            
-            % First we identify the index for each element
-            % We substitute just one index per class of indices
-            [values, indices] = unique(unique(indexMatrix(:)), 'first');
-            invPerm = sparse(values, 1, indices);
-            tmp = sparse(1:numel(indexMatrix), invPerm(reshape(indexMatrix,1,numel(indexMatrix))), true);
-            %indexMatrix = reshape(tmp*images(values), d, d)
-            
-            % Now we can declare the desired number of variables and
-            % attribute them
-            vars = sdpvar(length(subsets),1);
-            sdpMatrix = reshape(tmp*vars(images(values)), d, d);
-            
-            R = replab.CommutantVar(generators, sdpMatrix, 2);
         end
         
     end
