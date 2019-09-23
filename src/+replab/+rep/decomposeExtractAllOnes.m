@@ -1,4 +1,4 @@
-function sub = decomposeExtractAllOnes(rep)
+function sub = decomposeExtractAllOnes(rep, E1, sampleE, sampleC)
 % If a representation has the vector of all ones as the trivial component, we extract it
     if rep.isExtraFalse('hasTrivialSubspace')
         % trivial subspace has already been removed
@@ -6,8 +6,9 @@ function sub = decomposeExtractAllOnes(rep)
     end 
     d = rep.dimension;
     field = rep.field;
-    E1 = rep.equivariant(rep.group.trivialRep(field, 1));
-    if ~E1.isEquivariant(ones(d, 1))
+    inSub = ones(d, 1);
+    inParent = rep.U0' * rep.D0' * inSub;
+    if ~E1.isEquivariant(inParent)
         % if the vector of all ones is not an invariant subspace, bail out
         error('replab:dispatch:tryNext', 'try next');
     end
@@ -15,14 +16,16 @@ function sub = decomposeExtractAllOnes(rep)
     if rep.isExtraTrue('reducedBlocks')
         extra.reducedBlocks = true;
     end
-    U = replab.rep.standardBasis(d);
+    SB = replab.rep.standardBasis(d);
+    UallOnes = rep.U0' * rep.D0' * SB(1,:) * rep.D0 * rep.U0;
+    Urest = rep.U0' * rep.D0' * SB(2:end,:) * rep.D0 * rep.U0;
     extra1 = extra;
     extra1.hasTrivialSubspace = true;
     extra1.isIrreducible = true;
     if rep.overR
         extra1.divisionAlgebra = 'R';
     end
-    allOnes = rep.subRepUnitary(U(1,:), extra1).collapseParent;
-    rest = rep.subRepUnitary(U(2:end,:), extra).collapseParent;
+    allOnes = rep.subRepUnitary(UallOnes, extra1).collapseParent;
+    rest = rep.subRepUnitary(Urest, extra).collapseParent;
     sub = {allOnes rest};
 end

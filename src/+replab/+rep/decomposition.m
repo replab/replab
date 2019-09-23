@@ -12,6 +12,12 @@ function I = decomposition(rep)
     else
         trivialRealDivisionAlgebra = [];
     end
+    % setup stuff used during the decomposition
+    E1 = rep.equivariant(rep.group.trivialRep(field, 1));
+    E = rep.equivariant(rep.group.trivialRep(field, d));
+    C = rep.commutant.sampleSelfAdjoint;
+    sampleE = E.sample;
+    
     % use recursively replab.rep.decompose
     irreps = {};
     rest = {rep.subRepUnitary(speye(rep.dimension))};

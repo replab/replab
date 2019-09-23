@@ -2,13 +2,14 @@ classdef SubRep < replab.Rep
 % Describes a subrepresentation of a unitary finite representation
 %
 % The basis of this subrepresentation in the parent representation is formed by the rows of the
-% matrix ``U = diag(D0) * U0``, and we have ``image(g) = U * parent.image(g) * U'``,
-% where U0 is an orthogonal basis, not necessarily normalized, and D0 is a correction factor vector.
+% matrix ``U = D0 * U0``, and we have ``image(g) = U * parent.image(g) * U'``,
+% where U0 is an orthogonal basis, not necessarily normalized, and D0 is a correction factor diagonal matrix.
 
     properties (SetAccess = protected)
         parent % replab.Rep: Parent representation
         U0 % double matrix, can be sparse: Orthogonal basis of dimension dChild x dParent
-        D0 % double row vector: correction factors of dimension 1 x dChild
+        D0 % double sparse matrix: Sparse diagonal matrix of correction factors of dimension dChild x dChild
+        hasCorrection % logical: True when D0 differs from the identity matrix
         extra % struct: Contains key/value pairs concerning the irreducible decomposition process
               %         'hasTrivialSubspace' whether this contains a trivial subrepresentation
               %         'reducedBlocks' whether the block diagonal reduction heuristic has been applied
@@ -42,20 +43,17 @@ classdef SubRep < replab.Rep
             self.isUnitary = true;
             self.extra = extra;
             self.U0 = U0;
-            D0 = ones(1, d);
+            D0 = speye(d);
             hasCorrection = false;
             for i = 1:d
                 nrm = self.U0(i,:) * self.U0(i,:)';
                 if abs(nrm - 1) > replab.Settings.doubleEigTol
+                    D0(i,i) = 1/sqrt(nrm);
                     hasCorrection = true;
-                    D0(i) = 1/sqrt(nrm);
                 end
             end
-            if hasCorrection
-                self.D0 = D0;
-            else
-                self.D0 = [];
-            end
+            self.D0 = D0;
+            self.hasCorrection = hasCorrection;
         end
         
         function b = isExtraTrue(self, name)
@@ -91,15 +89,13 @@ classdef SubRep < replab.Rep
             b = isfield(self.extra, name);
         end
         
-        function b = hasCorrection(self)
-        % Returns true if the basis is not normalized and needs correction
-            b = ~isequal(self.D0, []);
-        end
-        
         function U = U(self)
         % Returns the basis of this subrepresentation in its parent
+        %
+        % Returns:
+        %   dense double matrix: The change of basis matrix
             if self.hasCorrection
-                U = diag(self.D0) * full(self.U0);
+                U = full(self.D0 * self.U0);
             else
                 U = full(self.U0);
             end
@@ -107,6 +103,10 @@ classdef SubRep < replab.Rep
         
         function sub1 = nice(self)
         % Tries to recover a nice basis for this subrepresentation
+        %
+        % Returns:
+        %   replab.SubRep: A subrepresentation in the same invariant subspace, 
+        %                  but with a rational change of basis if it can be found
             sub1 = replab.rep.niceRep(self);
             if isempty(sub1)
                 sub1 = self; % fallback
@@ -116,8 +116,10 @@ classdef SubRep < replab.Rep
         function P = projector(self)
         % Returns the projector on this subrepresentation
         %
-        % The projector is expressed in the parent representation
-            P = self.U'*self.U;
+        % Returns:
+        %   dense double matrix: The projector on this invariant subspace,
+        %                        expressed in the parent representation
+            P = full(self.U0'*(self.D0'*self.D0)*self.U0);
         end
         
         function newSub = collapseParent(self)
@@ -137,7 +139,7 @@ classdef SubRep < replab.Rep
             [names values] = additionalFields@replab.Rep(self);
             if self.hasCorrection
                 for i = 1:size(self.U0, 1)
-                    v = replab.str.Normalized(self.U0(i, :), self.D0(i));
+                    v = replab.str.Normalized(self.U0(i, :), self.D0(i,i));
                     names{1, end+1} = sprintf('U(%d,:)', i);
                     values{1, end+1} = v;
                 end
@@ -156,23 +158,11 @@ classdef SubRep < replab.Rep
         %% Rep methods
         
         function rho = image(self, g)
-            if self.hasCorrection
-                D = diag(self.D0);
-                rho = D * self.U0 * self.parent.image(g) * self.U0' * D';
-            else
-                rho = self.U0 * self.parent.image(g) * self.U0';
-            end
-            rho = full(rho);
+            rho = full(self.D0*(self.U0*self.parent.image(g)* self.U0')*self.D0');
         end
         
         function rho = inverseImage(self, g)
-            if self.hasCorrection
-                D = diag(self.D0);
-                rho = D * self.U0 * self.parent.inverseImage(g) * self.U0' * D';
-            else
-                rho = self.U0 * self.parent.inverseImage(g) * self.U0';
-            end
-            rho = full(rho);
+            rho = full(self.D0*(self.U0*self.parent.inverseImage(g)* self.U0')*self.D0');
         end
         
     end

@@ -1,4 +1,4 @@
-function sub = decomposeReduceBlocks(rep)
+function sub = decomposeReduceBlocks(rep, E1, sampleE, sampleC)
 % If a representation has a block diagonal structure, decompose orbits separately
     if rep.isExtraTrue('reducedBlocks')
         error('replab:dispatch:tryNext', 'try next');

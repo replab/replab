@@ -1,4 +1,4 @@
-function sub = decomposeExtractTrivial(rep)
+function sub = decomposeExtractTrivial(rep, E1, sampleE, sampleC)
 % If a representation has a trivial component, we extract it
     if rep.isExtraFalse('hasTrivialSubspace')
         % trivial subspace has already been removed
@@ -10,7 +10,6 @@ function sub = decomposeExtractTrivial(rep)
     if rep.isExtraTrue('reducedBlocks')
         extra.reducedBlocks = true;
     end
-    U = replab.rep.standardBasis(d);
     % Extra for the trivial subspaces extracted
     extraT = extra;
     extraT.hasTrivialSubspace = true;

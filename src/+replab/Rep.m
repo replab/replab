@@ -145,7 +145,21 @@ classdef Rep < replab.Str
         %% Str methods
 
         function s = headerStr(self)
-            f = replab.str.field(self.field, 'Orthogonal real', 'Unitary complex');
+            if self.isUnitary
+                switch self.field
+                  case 'R'
+                    f = 'Orthogonal real';
+                  case 'C'
+                    f = 'Unitary complex';
+                end
+            else
+                switch self.field
+                  case 'R'
+                    f = 'Real';
+                  case 'C'
+                    f = 'Complex';
+                end
+            end
             s = sprintf('%s representation of dimension %d', f, self.dimension);
         end
         

@@ -1,8 +1,13 @@
-function sub = decomposeUsingCommutant(rep)
+function sub = decomposeUsingCommutant(rep, E1, sampleE, sampleC)
 % Decomposes the given representation using eigenvalue decomposition on a generic commutant sample
     tol = replab.Settings.doubleEigTol;
     % Sample a self adjoint commutant element 
-    C = rep.commutant.sampleSelfAdjoint;
+    if rep.hasCorrection
+        V = diag(rep.D0) * rep.U0;
+    else
+        V = rep.U0;
+    end
+    C = full(V * sampleC * V');
     [U D] = replab.rep.sortedEig(C, 'ascend', false);
     D = diag(D);
     D = D(:)';
