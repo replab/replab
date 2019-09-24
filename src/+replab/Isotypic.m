@@ -1,10 +1,16 @@
 classdef Isotypic < replab.Str
 % Describes an isotypic component in the decomposition of a representation
+%
+% An isotypic component regroups equivalent irreducible representations, expressed in the same basis.
+% Note that if the multiplicity is not one, there is a degeneracy in the basis of the copies, and
+% the particular basis choosen is not deterministic.
+%
+% However the subspace spanned by an isotypic component as a whole is unique.
     
     properties
         parent % replab.Rep: Representation of which this is an isotypic component
         copies % row cell array of replab.SubRep: Equivalent irreducible subrepresentations in
-               %                                 this isotypic component
+               %                                  this isotypic component
         multiplicity % integer: number of copies in this isotypic component
         copyDimension % integer: dimension of each irreducible representation in this component
     end

@@ -1,5 +1,8 @@
 classdef IrreducibleRep < replab.Rep
-    
+% Expresses the block-diagonal representation corresponding to an irreducible decomposition
+%
+% It uses the known structure to provide a cleaner expression of the represenation.
+   
     properties
         irreducible % replab.Irreducible: Decomposition of the representation into irreducibles
     end
