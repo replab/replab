@@ -1,4 +1,5 @@
 function tell(msg, varargin)
+% Debug method to give some verbosity to the decomposition process
     persistent level
     if isempty(level)
         level = 0;

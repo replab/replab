@@ -1,6 +1,5 @@
 function [U D] = sortedEig(A, direction, useAbs)
 % Returns the eigenvalues, sorted by magnitude
-% 
     if nargin < 2
         direction = 'ascend';
         useAbs = true;
