@@ -4,7 +4,7 @@ function M = integerGramSchmidt(M)
 % Aborts the process if the magnitude of the coefficients grows bigger than an internal parameter.
 %
 % Args:
-%   M (integer matrix): Matrix to orthogonalize
+%   M (integer matrix): Matrix to orthogonalize, must be full row rank
 %
 % Returns:
 %   double matrix or []: Result of the orthogonalization process

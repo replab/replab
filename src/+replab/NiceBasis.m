@@ -110,6 +110,7 @@ classdef NiceBasis < replab.Str
         %
         % Args:
         %   V (integer matrix): Integer basis
+            assert(isreal(V) && ~any(any(isnan(V))));
             VV = V*V';
             if isdiag(VV)
                 T = diag(1./sqrt(diag(VV)));
