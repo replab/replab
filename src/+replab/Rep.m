@@ -309,28 +309,30 @@ classdef Rep < replab.Str
             sub = replab.SubRepNU(self, F, G);
         end
 
-        function sub = subRepUnitary(self, U, extra)
+        function sub = subRepUnitary(self, U, niceBasis, irrepInfo)
         % Returns a unitary subrepresentation of this unitary representation
         %
         % It is described by the row basis vectors in U, such that
-        % sub.image(g) = U * self.image(g) * U'
+        % `` sub.image(g) = U * self.image(g) * U' ``
         %
-        % U has dimension dim(subRepresentation) x self.dimension
-        %
-        % U needs to be orthogonal; if U is not orthonormal, the
-        % basis vectors will be implicitly normalized
+        % U has dimension dim(subRepresentation) x self.dimension, and the row vectors are orthonormal.
         %
         % Args:
-        %   U (double matrix, can be sparse): Orthogonal basis vectors stored as row vectors
-        %   extra (struct, optional): Extra information
+        %   U (double matrix, can be sparse): Orthonormal basis vectors stored as row vectors
+        %   niceBasis (replab.NiceBasis or [], optional): Optional integer basis with the same span as the basis vectors
+        %   irrepInfo (replab.IrrepInfo or [], optional): When present, indicates that the subrepresentation is
+        %                                                 irreducible with associated information
         %
         % Returns:
         %   replab.SubRep: The subrepresentation
             assert(isequal(self.isUnitary, true), 'Representation must be unitary');
-            if nargin < 3
-                extra = struct;
+            if nargin < 4
+                irrepInfo = [];
             end
-            sub = replab.SubRep(self, U, extra);
+            if nargin < 3
+                niceBasis = [];
+            end
+            sub = replab.SubRep(self, U, niceBasis, irrepInfo);
         end
 
         function rep1 = leftConjugateUnitary(self, A)

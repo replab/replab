@@ -3,7 +3,7 @@ classdef Irreducible < replab.Str
     
     properties
         parent % replab.Rep: Parent representation, must be unitary
-        components; % Isotypic components
+        components % row cell array of replab.Isotypic: Isotypic components
     end
 
     methods
@@ -36,10 +36,23 @@ classdef Irreducible < replab.Str
             c = self.components{i};
         end
         
-        function I = nice(self)
-            components1 = cellfun(@(x) x.nice, self.components, 'uniform', 0);
-            I = replab.Irreducible(self.parent, components1);
+        function r = irrep(self, i, j)
+        % Returns a subrepresentation in the irreducible decomposition
+        %
+        % Args:
+        %   i (integer): Index of the isotypic component
+        %   j (integer, optional): Index of the copy in the `i`-th isotypic component
+        %                          Default value is `1`.
+        %
+        % Returns:
+        %   replab.SubRep: An irreducible subrepresentation
+            if nargin < 3
+                j = 1;
+            end
+            r = self.component(i).copy(j);
         end
+        
+        %% Str methods
         
         function names = hiddenFields(self)
             names = hiddenFields@replab.Str(self);

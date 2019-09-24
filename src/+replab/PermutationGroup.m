@@ -182,11 +182,18 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   replab.Rep: The (real) standard representation
-            U = replab.rep.standardBasis(self.domainSize);
-            U = U(2:end, :);
-            rho = self.naturalRep.subRepUnitary(U);
+            V = replab.rep.standardBasis(self.domainSize);
+            V = V(2:end, :);
+            niceBasis = replab.NiceBasis.fromIntegerBasis(V);
+            if isa(self, 'replab.Permutations')
+                % special case for the symmetric group
+                irrepInfo = replab.IrrepInfo([], 'R', []);
+            else
+                irrepInfo = [];
+            end
+            rho = self.naturalRep.subRepUnitary(niceBasis.U, niceBasis, irrepInfo);
         end
 
     end
-        
+
 end

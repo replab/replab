@@ -43,16 +43,6 @@ classdef Isotypic < replab.Str
             c = self.copies{i};
         end
         
-        function I = nice(self)
-        % Tries to recover "nice" bases for all subrepresentations
-            if self.nCopies > 1
-                % TODO: handle multiplicities better
-                I = self;
-            else
-                I = replab.Isotypic(self.parent, {self.copy(1).nice});
-            end
-        end
-        
         function names = hiddenFields(self)
             names = hiddenFields@replab.Str(self);
             names{1, end+1} = 'copies';
