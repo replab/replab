@@ -14,18 +14,20 @@ classdef Irreducible < replab.Str
             self.components = components;
         end
         
-        function r = rep1(self)
+        function r = asRep(self)
             r = replab.IrreducibleRep(self);
         end
         
-        function r = rep(self)
-        % Returns the subrepresentation corresponding to this irreducible decomposition
+        function U = U(self)
             U = zeros(0, self.parent.dimension);
             for i = 1:self.nComponents
                 U = [U; self.component(i).rep.U];
             end
-            r = self.parent.leftConjugateUnitary(U);
-            % TODO: preserve rational bases
+        end
+        
+        function r = asConjugateRep(self)
+        % Returns the subrepresentation corresponding to this irreducible decomposition
+            r = self.parent.leftConjugateUnitary(self.U);
         end
 
         function n = nComponents(self)
