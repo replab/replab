@@ -1,4 +1,4 @@
-function ir = decomposition(rep)
+function I = decomposition(rep)
 % Decomposes the given representation into an irreducible decomposition, identifying details
 %
 % Details include grouping copies (multiplicities) in isotypic components, identifying division
@@ -12,6 +12,7 @@ function ir = decomposition(rep)
 %
 % Returns:
 %   replab.Irreducible: The irreducible decomposition
+    replab.irreducible.tell('dispatch decomposition')
     assert(isa(rep, 'replab.Rep'));
-    ir = replab.dispatch('call', 'replab.rep.decomposition', rep);
+    I = replab.dispatch('call', 'replab.irreducible.decomposition', rep);
 end

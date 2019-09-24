@@ -44,10 +44,10 @@ classdef Str < handle
             s = replab.str.shortStr(self, maxColumns);
         end
         
-        function s = headerStr(self, maxColumns)
+        function s = headerStr(self)
         % Returns a tiny single line description of the current object type
         % see replab.headerStr for documentation
-            s = self.shortStr(maxColumns);
+            s = replab.str.headerStr(self);
         end
         
         function s = longStr(self, maxRows, maxColumns)

@@ -3,7 +3,7 @@ classdef Isotypic < replab.Str
     
     properties
         parent % replab.Rep: Representation of which this is an isotypic component
-        copies % row cell array of replab.Irrep: Equivalent irreducible subrepresentations in
+        copies % row cell array of replab.SubRep: Equivalent irreducible subrepresentations in
                %                                 this isotypic component
         multiplicity % integer: number of copies in this isotypic component
         copyDimension % integer: dimension of each irreducible representation in this component
@@ -15,7 +15,9 @@ classdef Isotypic < replab.Str
             assert(isa(parent, 'replab.Rep'));
             assert(length(copies) >= 1, 'Isotypic component cannot be empty');
             for i = 1:length(copies)
-                assert(isa(copies{i}, 'replab.Irrep'));
+                ci = copies{i};
+                assert(isa(ci, 'replab.SubRep'));
+                assert(ci.isKnownCanonicalIrreducible);
             end
             self.parent = parent;
             self.copies = copies;
@@ -57,11 +59,11 @@ classdef Isotypic < replab.Str
         end
         
         function s = headerStr(self)
-            rt = self.copy(1).realDivisionAlgebra;
-            if isempty(rt)
+            if isequal(self.copy(1).field, 'C')
                 rt = 'C';
             else
-                rt = rt.shortName;
+                rt = self.copy(1).irrepInfo.divisionAlgebra;
+                assert(~isempty(rt));
             end
             if self.multiplicity > 1
                 s = sprintf('Isotypic component I(%d)x%s(%d)', self.multiplicity, rt, self.copyDimension);

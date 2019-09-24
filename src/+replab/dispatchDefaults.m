@@ -9,7 +9,11 @@ function dispatchDefaults
     % Default method, works for all compact groups
     replab.dispatch('register', 'replab.makeEquivariant', 'ForCompactGroup', 0, ...
                     @(repR, repC) replab.equivariant.ForCompactGroup(repR, repC));
-    
-    replab.dispatch('register', 'replab.rep.split', 'ReduceBlocks', 500, @replab.rep.splitPermutations);
-    replab.dispatch('register', 'replab.rep.split', 'UsingCommutant', 0, @replab.rep.splitUsingCommutant);
+
+    replab.dispatch('register', 'replab.irreducible.decomposition', 'UsingSplit', 0, ...
+                    @replab.irreducible.decompositionUsingSplit);    
+    replab.dispatch('register', 'replab.irreducible.split', 'ReduceBlocks', 500, ...
+                    @replab.irreducible.splitPermutations);
+    replab.dispatch('register', 'replab.irreducible.split', 'UsingCommutant', 0, ...
+                    @replab.irreducible.splitUsingCommutant);
 end

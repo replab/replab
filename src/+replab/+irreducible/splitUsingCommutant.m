@@ -1,8 +1,10 @@
 function sub = splitUsingCommutant(rep, samples, U)
+% Splits a representation into irreducible representations by using a commutant sample
     d = rep.dimension;
     if nargin < 3
         U = speye(d);
     end
+    replab.irreducible.tell('splitUsingCommutant dimension %d', size(U, 1));
     dU = size(U, 1);
     tol = replab.Settings.doubleEigTol;
     if rep.overR
@@ -13,21 +15,27 @@ function sub = splitUsingCommutant(rep, samples, U)
     % extract trivial representations
     S = U*samples.trivialSample(1)*U';
     trivials = {};
-    if ~replab.isNonZeroMatrix(S, replab.Settings.doubleEigTol) % magic epsilon
-        Utrivial = orth(S)';
+    if replab.isNonZeroMatrix(S, replab.Settings.doubleEigTol) % magic epsilon
+        Utrivial = orth(S')';
+        % try to recover real indices
+        rec = replab.irreducible.recoverReal(Utrivial);
+        if ~isempty(rec)
+            Utrivial = rec;
+        end
         Urest = null(Utrivial)';
         assert(size(Utrivial, 2) == dU);
         assert(size(Urest, 2) == dU);
         assert(size(Urest, 1) + size(Utrivial, 1) == dU);
         for i = 1:size(Utrivial, 1)
-            trivials{1,i} = rep.subRepUnitary(Utrivial * U, [], trivialIrrepInfo);
+            trivials{1,i} = rep.subRepUnitary(Utrivial(i,:) * U, [], trivialIrrepInfo);
         end
     else
         Urest = speye(dU);
     end
     % extract nontrivial representations
-    C = full(U*samples.commutantSample(1)*U');
-    [V D] = replab.rep.sortedEig(C, 'ascend', false);
+    C = full(Urest*U*samples.commutantSample(1)*U'*Urest');
+    C = C+C';
+    [V D] = replab.irreducible.sortedEig(C, 'ascend', false);
     D = diag(D);
     D = D(:)';
     mask = bsxfun(@(x,y) abs(x-y)<tol, D, D');
@@ -35,7 +43,7 @@ function sub = splitUsingCommutant(rep, samples, U)
     n = length(runs);
     nontrivials = cell(1, n);
     for i = 1:n
-        nontrivials{i} = rep.subRepUnitary(V(:, runs{i})' * U, [], replab.IrrepInfo);
+        nontrivials{i} = rep.subRepUnitary(V(:, runs{i})' * Urest * U, [], replab.IrrepInfo);
     end
     sub = horzcat(trivials, nontrivials);
 end

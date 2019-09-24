@@ -136,8 +136,8 @@ classdef Rep < replab.Str
         %   An error is this representation is not unitary.
             assert(isequal(self.isUnitary, true), 'Representation must be unitary');
             if isempty(self.decomposition_)
-                dec = replab.rep.decomposition(self);
-                self.decomposition_ = dec.nice;
+                dec = replab.irreducible.decomposition(self);
+                self.decomposition_ = dec;%.nice;
             end
             I = self.decomposition_;
         end
@@ -309,6 +309,30 @@ classdef Rep < replab.Str
             sub = replab.SubRepNU(self, F, G);
         end
 
+        function sub = subRepUnitaryByIntegerBasis(self, V, irrepInfo)
+        % Returns a unitary subrepresentation of this unitary representation
+        %
+        % The unitary change of basis matrix `U` is derived by row transformations
+        % of the integer matrix `V`, such that both have the same row span.
+        %
+        % However, `V` is also used to provide a nice basis representation for display.
+        %
+        % Args:
+        %   V (integer matrix, can be sparse): Integer basis vectors stored as row vectors
+        %   irrepInfo (replab.IrrepInfo or [], optional): When present, indicates that the subrepresentation is
+        %                                                 irreducible with associated information
+        %
+        % Returns:
+        %   replab.SubRep: The subrepresentation
+            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
+            if nargin < 3
+                irrepInfo = [];
+            end
+            niceBasis = replab.NiceBasis.fromIntegerBasis(V);
+            U = nb.U;
+            sub = replab.SubRep(self, U, niceBasis, irrepInfo);
+        end
+        
         function sub = subRepUnitary(self, U, niceBasis, irrepInfo)
         % Returns a unitary subrepresentation of this unitary representation
         %

@@ -1,15 +1,28 @@
-function W = enforceQuaternionEncoding(rep)
-% Finds change of basis that reveals the quaternion division algebra
+function W = enforceQuaternionEncoding(rep, samples, sub)
+% Finds change of basis expressing the canonical basis of a quaternion division algebra
 %
-% Returns W such that W * rep.image(g) * W' is encoded using the
-% quaternion encoding of replab.DivisionAlgebra
+% See `replab.domain.QuaernionTypeMatrices`
+%
+% Args:
+%   rep (replab.Rep): Real representation being decomposed
+%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples for `rep`
+%   sub (row cell array of replab.SubRep): Irreducible quaternion-type real subrepresentation of `rep`
+%
+% Returns
+% -------
+%   M: double matrix
+%     Matrix `W` such that ``W * rep.image(g) * W'`` is in the canonical basis
     assert(isa(rep, 'replab.Rep'));
+    assert(rep == sub.parent);
     assert(isequal(rep.field, 'R'));
-    d = rep.dimension;
-    A1 = rep.commutant.sampleSelfAdjoint;
-    Ai = rep.commutant.sampleSkewAdjoint;
-    Aj = rep.commutant.sampleSkewAdjoint;
-    Ak = rep.commutant.sampleSkewAdjoint;
+    d = sub.dimension;
+    S1 = sub.U*samples.commutantSample(2)*sub.U';
+    S2 = sub.U*samples.commutantSample(3)*sub.U';
+    S3 = sub.U*samples.commutantSample(4)*sub.U';
+    A1 = S1 + S1';
+    Ai = S1 - S1';
+    Aj = S2 - S2';
+    Ak = S3 - S3';
     A = replab.quaternion.H(A1, Ai, Aj, Ak);
     v1 = replab.quaternion.Vectors(d).sample;
     v1 = v1/norm(v1);
@@ -52,12 +65,12 @@ function W = enforceQuaternionEncoding(rep)
     % W is orthonormal
     tol = replab.Settings.doubleEigTol;
     while size(W, 2) < d
-        A = rep.sample;
-        x1 = A * w1;
+        g = rep.group.sample;
+        x1 = sub.matrixRowAction(g, w1);
         if norm(x1 - W * (W' * x1)) > tol
-            x2 = A*w2;
-            x3 = A*w3;
-            x4 = A*w4;
+            x2 = sub.matrixRowAction(g, w2);
+            x3 = sub.matrixRowAction(g, w3);
+            x4 = sub.matrixRowAction(g, w4);
             X = [x1 x2 x4 x3];
             X = X - W*(W'*X);
             t = trace(X'*X)/4;
@@ -67,5 +80,5 @@ function W = enforceQuaternionEncoding(rep)
             W = [W X];
         end
     end
-    W = W'; % returns adjoint as per new convention
+    W = W'; % returns adjoint because we piled up column vectors
 end

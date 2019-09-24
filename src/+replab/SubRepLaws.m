@@ -24,10 +24,10 @@ classdef SubRepLaws < replab.RepLaws
             if isequal(self.rep.field, 'R') && self.rep.isKnownCanonicalIrreducible
                 rho = self.rep.image(g);
                 if isequal(self.rep.irrepInfo.divisionAlgebra, 'C')
-                    rho1 = self.domain.ComplexTypeMatrices.project(rho);
+                    rho1 = replab.domain.ComplexTypeMatrices.project(rho);
                     self.M.assertEqv(rho, rho1);
                 elseif isequal(self.rep.irrepInfo.divisionAlgebra, 'H')
-                    rho1 = self.domain.QuaternionTypeMatrices.project(rho);
+                    rho1 = replab.domain.QuaternionTypeMatrices.project(rho);
                     self.M.assertEqv(rho, rho1);
                 end
             end

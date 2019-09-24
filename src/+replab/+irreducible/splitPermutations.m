@@ -1,14 +1,14 @@
 function sub = splitPermutations(rep, samples, U)
 % Splits a permutation representation
-    disp('sp1')
-    if nargin > 2
+    replab.irreducible.tell('Attempting splitPermutations');
+    if nargin > 2 && ~replab.iseye(U)
+        replab.irreducible.tell('Not full rep');
         error('replab:dispatch:tryNext', 'try next');
     end
-    disp('sp2')
     if ~isa(rep.group, 'replab.FiniteGroup')
+        replab.irreducible.tell('Not finite group');
         error('replab:dispatch:tryNext', 'try next');
     end
-    disp('sp3')
     nG = rep.group.nGenerators;
     d = rep.dimension;
     % Transforms all group generators into permutations, bail out if impossible
@@ -18,10 +18,11 @@ function sub = splitPermutations(rep, samples, U)
         try
             G(i,:) = replab.Permutations.fromMatrix(rhog);
         catch ME
+            replab.irreducible.tell('Not permutation image');
             error('replab:dispatch:tryNext', 'try next');
         end
     end
-    disp('sp4')
+    replab.irreducible.tell('Running splitPermutations');
     if rep.overR
         trivialIrrepInfo = replab.IrrepInfo('1', 'R', []);
     else
@@ -39,10 +40,14 @@ function sub = splitPermutations(rep, samples, U)
         NBtrivial = replab.NiceBasis.fromIntegerBasis(Vtrivial);
         subTrivial = rep.subRepUnitary(NBtrivial.U, NBtrivial, trivialIrrepInfo);
         sub{1, end+1} = subTrivial;
-        % construct the orthogonal complement basis in that block
-        Unontrivial = sparse(dB-1, d);
-        Unontrivial(:, block) = null(ones(1, dB))'; % TODO: algebraic nice balanced exact expression?
-        otherSub = replab.rep.split(rep, samples, Unontrivial);
-        sub = horzcat(sub, otherSub);
+        if dB > 1
+            % construct the orthogonal complement basis in that block
+            Unontrivial = sparse(dB-1, d);
+            Unontrivial(:, block) = null(ones(1, dB))'; % TODO: algebraic nice balanced exact expression?
+            replab.irreducible.tell('down');
+            otherSub = replab.irreducible.split(rep, samples, Unontrivial);
+            replab.irreducible.tell('up');
+            sub = horzcat(sub, otherSub);
+        end
     end
 end

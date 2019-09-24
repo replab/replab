@@ -42,8 +42,8 @@ function test_representation_of_cyclic_group
     dec = rep.decomposition;
     d = cellfun(@(iso) iso.copyDimension, dec.components);
     m = cellfun(@(iso) iso.multiplicity, dec.components);
-    t = cellfun(@(iso) iso.copy(1).realDivisionAlgebra.d, dec.components);
+    t = cellfun(@(iso) iso.copy(1).irrepInfo.divisionAlgebra, dec.components);
     assertEqual(d, [1 1 2 2 2 2 2]);
     assertEqual(m, [1 1 1 1 1 1 1]);
-    assertEqual(t, [1 1 2 2 2 2 2]);
+    assertEqual(t, 'RRCCCCC');
 end

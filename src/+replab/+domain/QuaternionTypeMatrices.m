@@ -55,6 +55,12 @@ classdef QuaternionTypeMatrices < replab.domain.VectorSpace
     
     methods (Static)
         
+        function M = project(M)
+        % Projects a generic matrix 
+            [A B C D] = replab.domain.QuaternionTypeMatrices.fromMatrix(M);
+            M = replab.domain.QuaternionTypeMatrices.toMatrix(A, B, C, D);
+        end
+
         function [A B C D] = fromMatrix(M)
         % Given a matrix encoding quaternion coefficient blocks, returns the quaternion elements
         %

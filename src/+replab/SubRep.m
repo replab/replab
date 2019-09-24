@@ -51,7 +51,7 @@ classdef SubRep < replab.Rep
             b = ~isempty(self.irrepInfo);
         end
         
-        function b = isKnownCanonicalIrreducible()
+        function b = isKnownCanonicalIrreducible(self)
         % Returns whether this subrepresentation is known to be irreducible and in the canonical division algebra basis
         %
         % Returns:

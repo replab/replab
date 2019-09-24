@@ -68,8 +68,8 @@ classdef ComplexTypeMatrices < replab.domain.VectorSpace
             nC = size(M, 2);
             assert(mod(nR, 2) == 0);
             assert(mod(nC, 2) == 0);
-            A = (M(1:4:nR, 1:4:nC) + M(2:4:nR, 2:4:nC))/2;
-            B = (M(2:4:nR, 1:4:nC) - M(1:4:nR, 2:4:nC))/2;
+            A = (M(1:2:nR, 1:2:nC) + M(2:2:nR, 2:2:nC))/2;
+            B = (M(2:2:nR, 1:2:nC) - M(1:2:nR, 2:2:nC))/2;
         end
         
         function M = toMatrix(A, B)
