@@ -19,6 +19,12 @@ classdef SubRepLaws < replab.RepLaws
                 self.M.assertEqv(self.rep.U*parentRho*self.rep.U', rho);
             end
         end
+        
+        function law_nice_basis_reproduces_basis(self)
+            if ~isempty(self.rep.niceBasis)
+                self.assert(~replab.isNonZeroMatrix(self.rep.niceBasis.U - self.rep.U, replab.Settings.doubleEigTol));
+            end
+        end
 
         function law_respects_division_algebra_G(self, g)
             if isequal(self.rep.field, 'R') && self.rep.isKnownCanonicalIrreducible
