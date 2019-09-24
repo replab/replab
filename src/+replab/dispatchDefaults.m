@@ -11,9 +11,9 @@ function dispatchDefaults
                     @(repR, repC) replab.equivariant.ForCompactGroup(repR, repC));
 
     replab.dispatch('register', 'replab.irreducible.decomposition', 'UsingSplit', 0, ...
-                    @replab.irreducible.decompositionUsingSplit);    
+                    @(rep, samples, sub) replab.irreducible.decompositionUsingSplit(rep, samples, sub));
     replab.dispatch('register', 'replab.irreducible.split', 'ReduceBlocks', 500, ...
-                    @replab.irreducible.splitPermutations);
+                    @(rep, samples, sub) replab.irreducible.splitPermutations(rep, samples, sub));
     replab.dispatch('register', 'replab.irreducible.split', 'UsingCommutant', 0, ...
-                    @replab.irreducible.splitUsingCommutant);
+                    @(rep, samples, sub) replab.irreducible.splitUsingCommutant(rep, samples, sub));
 end

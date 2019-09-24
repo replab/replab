@@ -1,7 +1,7 @@
-function sub = splitPermutations(rep, samples, U)
+function sub = splitPermutations(rep, samples, sub)
 % Splits a permutation representation
     replab.irreducible.tell('Attempting splitPermutations');
-    if nargin > 2 && ~replab.iseye(U)
+    if nargin > 2 && ~replab.iseye(sub.U)
         replab.irreducible.tell('Not full rep');
         error('replab:dispatch:tryNext', 'try next');
     end
@@ -36,9 +36,9 @@ function sub = splitPermutations(rep, samples, U)
         block = P.block(i);
         dB = length(block);
         % construct the trivial representation
+        
         Vtrivial = sparse(ones(1, dB), block, ones(1, dB), 1, d);
-        NBtrivial = replab.NiceBasis.fromIntegerBasis(Vtrivial);
-        subTrivial = rep.subRepUnitary(NBtrivial.U, NBtrivial, trivialIrrepInfo);
+        subTrivial = rep.subRepUnitaryByIntegerBasis(Vtrivial, trivialIrrepInfo);
         sub{1, end+1} = subTrivial;
         if dB > 1
             % construct the orthogonal complement basis in that block

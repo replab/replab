@@ -6,8 +6,9 @@ function I = decompositionUsingSplit(rep)
     replab.irreducible.tell('decompositionUsingSplit')
     samples = replab.irreducible.OnDemandSamples(rep);
     % obtain all irreps
-    replab.irreducible.tell('down')    
-    subs = replab.irreducible.split(rep, samples);
+    replab.irreducible.tell('down')
+    mainSub = rep.subRepUnitaryByIntegerBasis(speye(rep.dimension));
+    subs = replab.irreducible.split(rep, samples, mainSub);
     replab.irreducible.tell('up')    
     % sort by trivial / non trivial
     trivial = {};

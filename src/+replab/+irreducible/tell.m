@@ -13,6 +13,6 @@ function tell(msg, varargin)
         for i = 1:level
             prefix = [prefix '..'];
         end
-        disp([prefix sprintf(msg, varargin{:})]);
+        %disp([prefix sprintf(msg, varargin{:})]);
     end        
 end

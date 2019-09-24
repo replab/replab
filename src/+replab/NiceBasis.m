@@ -141,14 +141,14 @@ classdef NiceBasis < replab.Str
             denv = zeros(d, 1); % denominators
             [v1, I] = sort(v); % sort the coefficients to group them when they are close
             start = 1;
-            until = 1;
+            untl = 1;
             den = 1; % current common denominator
             while start <= d
                 % finds a run of values that are closed to each other
-                while until <= d && v1(until) - v1(start) < tol
-                    until = until + 1;
+                while untl <= d && v1(untl) - v1(start) < tol
+                    untl = untl + 1;
                 end
-                range = start:(until-1);
+                range = start:(untl-1);
                 m = mean(v1(range)); % take the average to reduce the noise
                 [num1 den1] = rat(m); % find a rational approximation
                 den = lcm(den, den1); % update the common denominator
@@ -162,7 +162,7 @@ classdef NiceBasis < replab.Str
                 numv(I(range)) = num1;
                 denv(I(range)) = den1;
                 % start the process with the new block
-                start = until;
+                start = untl;
             end
             num = reshape(numv .* (den./denv), size(M));
         end
