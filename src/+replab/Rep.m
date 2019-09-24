@@ -134,10 +134,10 @@ classdef Rep < replab.Str
         %
         % Raises:
         %   An error is this representation is not unitary.
-            assert(~isempty(self.isUnitary) && self.isUnitary, 'Representation must be unitary');
+            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
             if isempty(self.decomposition_)
-                dec = replab.rep.decomposition(self);
-                self.decomposition_ = dec.nice;
+                dec = replab.irreducible.decomposition(self);
+                self.decomposition_ = dec;%.nice;
             end
             I = self.decomposition_;
         end
@@ -145,7 +145,21 @@ classdef Rep < replab.Str
         %% Str methods
 
         function s = headerStr(self)
-            f = replab.str.field(self.field, 'Orthogonal real', 'Unitary complex');
+            if self.isUnitary
+                switch self.field
+                  case 'R'
+                    f = 'Orthogonal real';
+                  case 'C'
+                    f = 'Unitary complex';
+                end
+            else
+                switch self.field
+                  case 'R'
+                    f = 'Real';
+                  case 'C'
+                    f = 'Complex';
+                end
+            end
             s = sprintf('%s representation of dimension %d', f, self.dimension);
         end
         
@@ -229,7 +243,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   replab.Rep: The dual representation
-            if self.isUnitary
+            if isequal(self.isUnitary, true)
                 % If this is unitary, less drama to simply return the conjugate
                 rep = self.conj;
             else
@@ -265,6 +279,17 @@ classdef Rep < replab.Str
             rep = replab.Rep.tensor(reps);
         end
 
+        function rep = directSumOfCopies(self, n)
+        % Returns a direct sum of copies of this representation
+        %
+        % Args:
+        %   n (integer): Number of copies
+        %
+        % Returns:
+        %   replab.Rep: The direct sum representation
+            reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
+            rep = replab.Rep.directSum(reps);
+        end
         
         %% Manipulation of representation space
 
@@ -284,24 +309,54 @@ classdef Rep < replab.Str
             sub = replab.SubRepNU(self, F, G);
         end
 
-        function sub = subRepUnitary(self, U)
+        function sub = subRepUnitaryByIntegerBasis(self, V, irrepInfo)
         % Returns a unitary subrepresentation of this unitary representation
         %
-        % It is described by the row basis vectors in U, such that
-        % sub.image(g) = U * self.image(g) * U'
+        % The unitary change of basis matrix `U` is derived by row transformations
+        % of the integer matrix `V`, such that both have the same row span.
         %
-        % U has dimension dim(subRepresentation) x self.dimension
-        %
-        % U needs to be orthogonal; if U is not orthonormal, the
-        % basis vectors will be implicitly normalized
+        % However, `V` is also used to provide a nice basis representation for display.
         %
         % Args:
-        %   U: Orthogonal basis vectors stored as row vectors
+        %   V (integer matrix, can be sparse): Integer basis vectors stored as row vectors
+        %   irrepInfo (replab.IrrepInfo or [], optional): When present, indicates that the subrepresentation is
+        %                                                 irreducible with associated information
         %
         % Returns:
         %   replab.SubRep: The subrepresentation
-            assert(~isempty(self.isUnitary) && self.isUnitary, 'Representation must be unitary');
-            sub = replab.SubRep(self, U);
+            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
+            if nargin < 3
+                irrepInfo = [];
+            end
+            niceBasis = replab.NiceBasis.fromIntegerBasis(V);
+            U = niceBasis.U;
+            sub = replab.SubRep(self, U, niceBasis, irrepInfo);
+        end
+        
+        function sub = subRepUnitary(self, U, niceBasis, irrepInfo)
+        % Returns a unitary subrepresentation of this unitary representation
+        %
+        % It is described by the row basis vectors in U, such that
+        % `` sub.image(g) = U * self.image(g) * U' ``
+        %
+        % U has dimension dim(subRepresentation) x self.dimension, and the row vectors are orthonormal.
+        %
+        % Args:
+        %   U (double matrix, can be sparse): Orthonormal basis vectors stored as row vectors
+        %   niceBasis (replab.NiceBasis or [], optional): Optional integer basis with the same span as the basis vectors
+        %   irrepInfo (replab.IrrepInfo or [], optional): When present, indicates that the subrepresentation is
+        %                                                 irreducible with associated information
+        %
+        % Returns:
+        %   replab.SubRep: The subrepresentation
+            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
+            if nargin < 4
+                irrepInfo = [];
+            end
+            if nargin < 3
+                niceBasis = [];
+            end
+            sub = replab.SubRep(self, U, niceBasis, irrepInfo);
         end
 
         function rep1 = leftConjugateUnitary(self, A)
@@ -318,7 +373,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   replab.ConjugateRep: The conjugated representation
-            assert(~isempty(self.isUnitary) && self.isUnitary, 'Representation must be unitary');
+            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
             rep1 = replab.ConjugateRep(A, self);
         end
 

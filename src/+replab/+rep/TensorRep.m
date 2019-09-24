@@ -1,10 +1,21 @@
 classdef TensorRep < replab.Rep
+% A tensor product of representations
+%
+% All factor representations must be defined on the same group
+    
     properties
-        factors;
+        factors % row cell array of replab.Rep: Factor representations
     end
+    
     methods
         
         function self = TensorRep(factors)
+        % Constructs a tensor representation from a cell array of representations
+        %
+        % All the subrepresentations should be defined on the same group, and on the same field.
+        %
+        % Args:
+        %   blocks (row cell array of replab.Rep): Factor representations
             assert(length(factors) >= 1);
             d = 1;
             for i = 1:length(factors)
@@ -12,7 +23,8 @@ classdef TensorRep < replab.Rep
                 d = d * factors{i}.dimension;
             end
             self.dimension = d;
-            self.isUnitary = replab.domain.Trilean.and(cellfun(@(x) x.isUnitary, factors, 'uniform', 0));
+            factorsAreUnitary = cellfun(@(x) x.isUnitary, factors, 'uniform', 0);
+            self.isUnitary = replab.trileanAnd(factorsAreUnitary{:});
             for i = 2:length(factors)
                 assert(factors{1}.group == factors{i}.group);
                 assert(isequal(factors{1}.field, factors{i}.field));

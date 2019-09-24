@@ -14,7 +14,7 @@ classdef IrreducibleLaws < replab.Laws
         end
         
         function law_decomposes_entire_space(self)
-            U = self.irreducible.rep.U;
+            U = self.irreducible.U;
             self.M.assertEqv(U' * U, eye(self.irreducible.parent.dimension));
         end
         

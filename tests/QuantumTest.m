@@ -10,7 +10,7 @@ function test_suite = QuantumTest()
     end
     G = replab.quantum.GHZ(3,2);
     test_suite = replab.GroupLaws(G).addTestCases(test_suite);
-    test_suite = replab.RepLaws(G.naturalRep).addTestCases(test_suite);
+    %test_suite = replab.RepLaws(G.naturalRep).addTestCases(test_suite); % slow test with Octave
     G = replab.quantum.GeneralizedPauli(3);
     test_suite = replab.FiniteGroupLaws(G).addTestCases(test_suite);
     test_suite = replab.RepLaws(G.naturalRep).addTestCases(test_suite);

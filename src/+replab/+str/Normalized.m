@@ -1,34 +1,28 @@
 classdef Normalized < replab.Str
-% Represents a vector vec*factor, where 'vec' is nice to print
+% Represents a vector along with a normalization factor for pretty printing
+%
+% The vector value is ``vec * factor``, except that `factor` is already represented by a string
+% to be concatenated with the vector string representation
+    
     properties (SetAccess = protected)
-        vec;
-        factor;
+        vec % double row vector: Vector to print
+        factor % char: String description of the normalization factor
     end
+    
     methods
+        
         function self = Normalized(vec, factor)
-            assert(factor > 0, 'Factor must be positive');
+            assert(isa(factor, 'char'), 'Factor must be  a string');
             self.vec = vec;
             self.factor = factor;
         end
+        
         function s = shortStr(self, maxColumns)
-            f = self.factor;
-            invsquare = 1/f^2;
-            if abs(invsquare - round(invsquare)) < replab.Settings.doubleEigTol
-                n = round(invsquare);
-                if n == 1
-                    rhs = '';
-                elseif sqrt(n) == round(sqrt(n))
-                    n1 = sqrt(n);
-                    rhs = sprintf('/%d', n1);
-                else
-                    rhs = sprintf('/sqrt(%d)', n);
-                end
-            else
-                rhs = sprintf('* %e', 1/f);
-            end
-            maxL = maxColumns - length(rhs);
-            lhs = replab.shortStr(self.vec, maxL);
-            s = [lhs rhs];
+            maxL = maxColumns - length(self.factor);
+            vecStr = replab.shortStr(self.vec, maxL);
+            s = [vecStr self.factor];
         end
+        
     end
+    
 end

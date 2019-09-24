@@ -48,11 +48,7 @@ classdef GHZ < replab.semidirectproduct.OfCompactGroups
             nL = self.nLevels;
             partyRho = replab.Permutations.toMatrix(H1.indexRelabelingPermutation(h1, nL));
             levelMat = replab.Permutations.toMatrix(h2);
-            if replab.Settings.useSparse
-                levelRho = sparse(1);
-            else
-                levelRho = 1;
-            end
+            levelRho = 1;
             for i = 1:self.nParties
                 levelRho = kron(levelRho, levelMat);
             end

@@ -24,7 +24,8 @@ classdef SumRep < replab.Rep
                 d = d + factorReps{i}.dimension;
             end
             self.dimension = d;
-            self.isUnitary = replab.domain.Trilean.and(cellfun(@(x) x.isUnitary, factorReps, 'uniform', 0));
+            factorRepsAreUnitary = cellfun(@(x) x.isUnitary, factorReps, 'uniform', 0);
+            self.isUnitary = replab.trileanAnd(factorRepsAreUnitary{:});
             self.group = group;
         end
         

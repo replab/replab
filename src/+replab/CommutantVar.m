@@ -176,7 +176,7 @@ classdef CommutantVar < replab.Str
                 component = irrDecomp.component(i);
                 dimensions1(i) = component.copyDimension;
                 multiplicities(i) = component.multiplicity;
-                types(i) = component.copy(1).realDivisionAlgebra.shortName;
+                types(i) = component.copy(1).irrepInfo.divisionAlgebra;
                 for j = 1:component.multiplicity
                     copy = component.copy(j);
                     % correction, as the new RepLAB convention

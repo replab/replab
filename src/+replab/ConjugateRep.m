@@ -5,8 +5,8 @@ classdef ConjugateRep < replab.Rep
 % image(g) = U * parent.image(g) * U'
     
     properties (SetAccess = protected)
-        U; % unitary conjugation matrix
-        parent; % representation being conjugated
+        U % unitary conjugation matrix
+        parent % representation being conjugated
     end
     
     methods

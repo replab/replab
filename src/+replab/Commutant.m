@@ -32,7 +32,6 @@ classdef Commutant < replab.Domain
     end
 
     methods
-                
 
         %% Own methods
         

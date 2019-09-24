@@ -1,10 +1,10 @@
 classdef IsotypicLaws < replab.Laws
     
     properties
-        iso; % Isotypic component
-        C;   % commutant algebra
-        G;   % group of which iso is a representation decomposition
-        M1;   % n x n matrices over R or C
+        iso % replab.Isotypic: Isotypic component
+        C % replab.Commutant: Commutant algebra
+        G % replab.CompactGroup: group of which iso is a representation decomposition
+        M1  % replab.domain.Matrices: n x n matrices over R or C
     end
     
     methods
@@ -19,7 +19,7 @@ classdef IsotypicLaws < replab.Laws
         end
         
         function irrepLaws = laws_subReps(self)
-            children = cellfun(@(x) replab.IrrepLaws(x), self.iso.copies, 'uniform', 0);
+            children = cellfun(@(x) replab.SubRepLaws(x), self.iso.copies, 'uniform', 0);
             irrepLaws = replab.LawsCollection(children);
         end
         
