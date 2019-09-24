@@ -118,7 +118,7 @@ classdef NiceBasis < replab.Str
             end
             niceBasis = replab.NiceBasis(T, V);
         end
-        
+                
         function [num den] = attemptRecoverRational(M)
         % Attempts to recover a rational approximation of a double vector/matrix
         %
