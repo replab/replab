@@ -4,7 +4,7 @@ function sub = split(rep, samples, sub)
 % Note: see the default methods applied in `replab.dispatchDefaults`
 %
 % Args:
-%   rep (replab.Rep): Representation to decompose
+%   rep (replab.Rep): Unitary representation to decompose
 %   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples
 %   sub (replab.SubRep): Subrepresentation of `rep` in which to extract irreducible subrepresentations
 %
@@ -14,6 +14,7 @@ function sub = split(rep, samples, sub)
     assert(isa(rep, 'replab.Rep'));
     assert(isa(samples, 'replab.irreducible.OnDemandSamples'));
     assert(isa(sub, 'replab.SubRep'));
+    assert(isequal(rep.isUnitary, true));
     assert(sub.parent == rep);
     replab.irreducible.tell('dispatch split dimension %d', sub.dimension);
     sub = replab.dispatch('call', 'replab.irreducible.split', rep, samples, sub);

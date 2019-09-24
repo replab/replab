@@ -329,7 +329,7 @@ classdef Rep < replab.Str
                 irrepInfo = [];
             end
             niceBasis = replab.NiceBasis.fromIntegerBasis(V);
-            U = nb.U;
+            U = niceBasis.U;
             sub = replab.SubRep(self, U, niceBasis, irrepInfo);
         end
         

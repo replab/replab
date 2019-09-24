@@ -30,7 +30,7 @@ classdef SubRep < replab.Rep
             end
             d = size(U, 1);
             dParent = size(U, 2);
-            assert(parent.dimension == dParent);
+            assert(parent.dimension == dParent, 'Incorrect basis dimension');
             assert(isequal(parent.isUnitary, true), 'We support only unitary representations');
             self.group = parent.group;
             self.field = parent.field;

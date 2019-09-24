@@ -1,7 +1,7 @@
 function sub = splitPermutations(rep, samples, sub)
 % Splits a permutation representation
     replab.irreducible.tell('Attempting splitPermutations');
-    if nargin > 2 && ~replab.iseye(sub.U)
+    if ~replab.iseye(sub.U)
         replab.irreducible.tell('Not full rep');
         error('replab:dispatch:tryNext', 'try next');
     end
@@ -36,16 +36,17 @@ function sub = splitPermutations(rep, samples, sub)
         block = P.block(i);
         dB = length(block);
         % construct the trivial representation
-        
         Vtrivial = sparse(ones(1, dB), block, ones(1, dB), 1, d);
         subTrivial = rep.subRepUnitaryByIntegerBasis(Vtrivial, trivialIrrepInfo);
         sub{1, end+1} = subTrivial;
         if dB > 1
+            stdBasis = replab.rep.standardBasis(dB);
             % construct the orthogonal complement basis in that block
-            Unontrivial = sparse(dB-1, d);
-            Unontrivial(:, block) = null(ones(1, dB))'; % TODO: algebraic nice balanced exact expression?
+            Vnontrivial = sparse(dB-1, d);
+            Vnontrivial(:, block) = stdBasis(2:end, :); % TODO: algebraic nice balanced exact expression?
+            rest = rep.subRepUnitaryByIntegerBasis(Vnontrivial);
             replab.irreducible.tell('down');
-            otherSub = replab.irreducible.split(rep, samples, Unontrivial);
+            otherSub = replab.irreducible.split(rep, samples, rest);
             replab.irreducible.tell('up');
             sub = horzcat(sub, otherSub);
         end
