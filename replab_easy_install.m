@@ -85,7 +85,7 @@ function exitCode = replab_easy_install
     end
     
     disp('Some dependencies are missing. The script will now download the packages and install them.');
-    s = prompt('Do you wish to proceed [Y/n]?', 's');
+    s = input('Do you wish to proceed [Y/n]?', 's');
     s = lower(strtrim(s));
     switch s
       case {'', 'y'}
@@ -109,7 +109,7 @@ function exitCode = replab_easy_install
         disp(['and place it in the root RepLAB folder ' replabPath]);
         disp('Or we can try to download the file automatically.');
         disp('After successful installation, this ZIP file can be deleted.');
-        s = prompt('Do you wish to proceed with download [Y/n]?', 's');
+        s = input('Do you wish to proceed with download [Y/n]?', 's');
         s = lower(strtrim(s));
         switch s
           case {'', 'y'}
