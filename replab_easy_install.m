@@ -84,7 +84,7 @@ function exitCode = replab_easy_install
         error([gitPath ' exists but is not a folder. Restart with a fresh copy of RepLAB.']);
     end
     
-    disp('Some dependencies are missing. The script will now download the packages and install them.');
+    disp('Some dependencies are missing. The script will now install the missing dependencies.');
     s = input('Do you wish to proceed [Y/n]?', 's');
     s = lower(strtrim(s));
     switch s
