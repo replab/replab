@@ -20,8 +20,8 @@ classdef IrreducibleCommutant < replab.Commutant
             I = self.irreducible;
             blocks = {};
             shift = 0;
-            for i = 1:I.nComponents
-                iso = self.irreducible.component(i);
+            for c = 1:I.nComponents
+                iso = self.irreducible.component(c);
                 first = iso.copy(1);
                 d = iso.dimension;
                 m = iso.multiplicity;
@@ -38,7 +38,7 @@ classdef IrreducibleCommutant < replab.Commutant
                     B = zeros(m, m);
                     for i = 1:2:cd
                         A = A + X(shift+(i:cd:d), shift+(i:cd:d)) + X(shift+(i+1:cd:d), shift+(i+1:cd:d));
-                        B = B + X(shift+(i+1:cd:d), shift+(i:cd:d)) - X(shift+(i:cd:d), shift(i+1:cd:d));
+                        B = B + X(shift+(i+1:cd:d), shift+(i:cd:d)) - X(shift+(i:cd:d), shift+(i+1:cd:d));
                     end
                     A = A/cd;
                     B = B/cd;
@@ -78,7 +78,7 @@ classdef IrreducibleCommutant < replab.Commutant
                     block = kron(A, eye(cd)) + kron(B, kron(eye(cd/4), basisB)) + ...
                             kron(C, kron(eye(cd/4), basisC)) + kron(D, kron(eye(cd/4), basisD));
                 end
-                blocks{i} = block;
+                blocks{c} = block;
                 shift = shift + d;
             end
             X1 = blkdiag(blocks{:});
