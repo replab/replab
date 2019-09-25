@@ -27,6 +27,7 @@ classdef IrreducibleCommutant < replab.Commutant
                 m = iso.multiplicity;
                 cd = iso.copyDimension;
                 if self.irreducible.parent.overC || isequal(first.irrepInfo.divisionAlgebra, 'R')
+                    % Complex representation or real-type real representation
                     block = zeros(m, m);
                     for i = 1:cd
                         block = block + X(shift+(i:cd:d), shift+(i:cd:d));
@@ -34,6 +35,7 @@ classdef IrreducibleCommutant < replab.Commutant
                     block = block/cd;
                     block = kron(block, eye(cd));
                 elseif isequal(first.irrepInfo.divisionAlgebra, 'C')
+                    % Complex-type real representation
                     A = zeros(m, m);
                     B = zeros(m, m);
                     for i = 1:2:cd
@@ -44,6 +46,7 @@ classdef IrreducibleCommutant < replab.Commutant
                     B = B/cd;
                     block = kron(A, eye(cd)) + kron(B, kron(eye(cd/2), [0 -1; 1 0]));
                 else
+                    % Quaternion-type real representation
                     assert(isequal(first.irrepInfo.divisionAlgebra, 'H'));
                     % shape of things that commute with our representation quaternion encoding
                     % [ a -b -c -d
