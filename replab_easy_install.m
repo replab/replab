@@ -213,6 +213,8 @@ function exitCode = replab_easy_install
         unzip(YALMIPZipPath, YALMIPPath);
     end
     
+    disp('');
+    disp('Installation successful.');
     exitCode = 0;
 end
 
