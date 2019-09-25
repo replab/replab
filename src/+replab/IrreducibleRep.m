@@ -13,7 +13,10 @@ classdef IrreducibleRep < replab.Rep
         % Constructs a representation from an irreducible decomposition
             parent = irreducible.parent;
             assert(isequal(parent.isUnitary, true));
-            self = self@replab.Rep(parent.group, parent.field, parent.dimension);
+            self.group = parent.group;
+            self.field = parent.field;
+            self.dimension = parent.dimension;
+            self.isUnitary = true;
             self.irreducible = irreducible;
         end
         
@@ -39,6 +42,10 @@ classdef IrreducibleRep < replab.Rep
             end
             % Computes the block diagonal basis
             rho = blkdiag(blocks{:});
+        end
+        
+        function c = commutant(self)
+            c = replab.IrreducibleCommutant(self);
         end
         
     end
