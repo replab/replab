@@ -45,6 +45,11 @@ classdef IrreducibleCommutant < replab.Commutant
                     block = kron(A, eye(cd)) + kron(B, kron(eye(cd/2), [0 -1; 1 0]));
                 else
                     assert(isequal(first.irrepInfo.divisionAlgebra, 'H'));
+                    % shape of things that commute with our representation quaternion encoding
+                    % [ a -b -c -d
+                    %   b  a  d -c
+                    %   c -d  a  b
+                    %   d  c -b  a]
                     A = zeros(m, m);
                     B = zeros(m, m);
                     C = zeros(m, m);
@@ -53,11 +58,11 @@ classdef IrreducibleCommutant < replab.Commutant
                         A = A + X(shift+(i:cd:d),shift+(i:cd:d)) + X(shift+(i+1:cd:d),shift+(i+1:cd:d)) ...
                             + X(shift+(i+2:cd:d),shift+(i+2:cd:d)) + X(shift+(i+3:cd:d),shift+(i+3:cd:d));
                         B = B + X(shift+(i+1:cd:d),shift+(i:cd:d)) - X(shift+(i:cd:d),shift+(i+1:cd:d)) ...
-                            + X(shift+(i+3:cd:d),shift+(i+2:cd:d)) - X(shift+(i+2:cd:d),shift+(i+3:cd:d));
+                            - X(shift+(i+3:cd:d),shift+(i+2:cd:d)) + X(shift+(i+2:cd:d),shift+(i+3:cd:d));
                         C = C + X(shift+(i+2:cd:d),shift+(i:cd:d)) - X(shift+(i:cd:d),shift+(i+2:cd:d)) ...
-                            + X(shift+(i+1:cd:d),shift+(i+3:cd:d)) - X(shift+(i+3:cd:d),shift+(i+1:cd:d));
-                        D = D + X(shift+(i+3:cd:d),shift+(i:cd:d)) + X(shift+(i+2:cd:d),shift+(i+1:cd:d)) ...
-                            - X(shift+(i+1:cd:d),shift+(i+2:cd:d)) - X(shift+(i:cd:d),shift+(i+3:cd:d));
+                            - X(shift+(i+1:cd:d),shift+(i+3:cd:d)) + X(shift+(i+3:cd:d),shift+(i+1:cd:d));
+                        D = D + X(shift+(i+3:cd:d),shift+(i:cd:d)) - X(shift+(i+2:cd:d),shift+(i+1:cd:d)) ...
+                            + X(shift+(i+1:cd:d),shift+(i+2:cd:d)) - X(shift+(i:cd:d),shift+(i+3:cd:d));
                     end
                     A = A/cd;
                     B = B/cd;
@@ -65,15 +70,15 @@ classdef IrreducibleCommutant < replab.Commutant
                     D = D/cd;
                     basisB = [ 0 -1  0  0
                                1  0  0  0
-                               0  0  0 -1
-                               0  0  1  0];
-                    basisC = [ 0  0 -1  0
                                0  0  0  1
+                               0  0 -1  0];
+                    basisC = [ 0  0 -1  0
+                               0  0  0 -1
                                1  0  0  0
-                               0 -1  0  0];
+                               0  1  0  0];
                     basisD = [ 0  0  0 -1
-                               0  0 -1  0
-                               0  1  0  0
+                               0  0  1  0
+                               0 -1  0  0
                                1  0  0  0];
                     block = kron(A, eye(cd)) + kron(B, kron(eye(cd/4), basisB)) + ...
                             kron(C, kron(eye(cd/4), basisC)) + kron(D, kron(eye(cd/4), basisD));
