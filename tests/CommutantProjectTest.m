@@ -8,7 +8,8 @@ function test_suite = CommutantProjectTest()
 end
 
 function test_quaternion_representations
-    W = replab.S(3).wreathProduct(replab.signed.Permutations.quaternionGroup);
+    S3 = replab.S(3);
+    W = S3.wreathProduct(replab.signed.Permutations.quaternionGroup);
     rep = W.primitiveRepFun(@(x) x.naturalRep);
     X = randn(rep.dimension, rep.dimension);
     I = rep.decomposition;
@@ -18,8 +19,9 @@ function test_quaternion_representations
 end
 
 function test_complex_representations
-    C = replab.S(20).cyclicSubgroup;
-    rep = C.naturalRep;
+    S20 = replab.S(20);
+    C20 = S20.cyclicSubgroup;
+    rep = C20.naturalRep;
     X = randn(rep.dimension, rep.dimension);
     I = rep.decomposition;
     X1 = I.asConjugateRep.commutant.project(X); 
