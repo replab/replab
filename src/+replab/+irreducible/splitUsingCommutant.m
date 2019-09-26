@@ -54,27 +54,14 @@ function sub = splitUsingCommutant(rep, samples, sub)
         nNonTrivial = size(URest, 1);
         assert(size(URest, 2) == dSub);
         assert(nTrivial + nNonTrivial == dSub);
-        % try to recover integer coefficients for the orthogonal complement
-        if isreal(URest)
-            [VRest, ~] = replab.rational.integerRowSpan(URest);
-        else
-            VRest = [];
-        end
-        if ~isempty(VRest)
-            % success: construct the subrepresentation that is yet to split using the integer basis
-            rest = sub.subRepUnitaryByIntegerBasis(VRest).collapseParent;
-        else
-            % failure: construct the subrepresentation that is yet to split using the unitary basis
-            rest = sub.subRepUnitary(URest).collapseParent;
-        end
     else
         % no trivial component? what remains to decompose is the whole subspace
-        rest = sub;
+        URest = speye(dSub);
     end
     % extract nontrivial representations by sampling the commutant
     % however, we use a sample of the parent representation, which can be computed often faster,
     % and shared among computations
-    C = full(rest.U*samples.commutantSample(1)*rest.U');
+    C = full(URest*sub.U*samples.commutantSample(1)*sub.U'*URest');
     C = C+C';
     % the eigenspace decomposition is the basis of the numerical decomposition
     [UMat D] = replab.irreducible.sortedEig(C, 'ascend', false);
@@ -86,7 +73,7 @@ function sub = splitUsingCommutant(rep, samples, sub)
     n = length(runs);
     nontrivials = cell(1, n);
     for i = 1:n
-        UIrrep = UMat(:, runs{i})';
+        UIrrep = UMat(:, runs{i})' * URest;
         if rep.overC
             % try to recover real coefficients for the trivial basis
             rec = replab.irreducible.recoverReal(UIrrep);
@@ -101,9 +88,9 @@ function sub = splitUsingCommutant(rep, samples, sub)
             VIrrep = [];
         end
         if ~isempty(VIrrep)
-            nontrivials{i} = rest.subRepUnitaryByIntegerBasis(VIrrep, replab.IrrepInfo).collapseParent;
+            nontrivials{i} = sub.subRepUnitaryByIntegerBasis(VIrrep, replab.IrrepInfo).collapseParent;
         else
-            nontrivials{i} = rest.subRepUnitary(UIrrep, [], replab.IrrepInfo).collapseParent;
+            nontrivials{i} = sub.subRepUnitary(UIrrep, [], replab.IrrepInfo).collapseParent;
         end
     end
     sub = horzcat(trivials, nontrivials);

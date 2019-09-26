@@ -97,7 +97,15 @@ classdef NiceBasis < replab.Str
             if ~rhs.hasCorrection
                 res = replab.NiceBasis(self.T, self.V * rhs.V);
             else
-                res = replab.NiceBasis.fromV(self.V * rhs.V);
+                newV = self.V * rhs.V;
+                newU = self.U * rhs.U;
+               % we solve newU = newT * newV, which is newT = newU / newV
+                newT = newU / newV;                
+                newVV = newV*newV';
+                if isdiag(newVV) && ~replab.isNonZeroMatrix(diag(diag(newT)) - newT, replab.Settings.doubleEigTol)
+                    newT = diag(1./sqrt(diag(newVV)));
+                end
+                res = replab.NiceBasis(newT, newV);
             end
         end
         

@@ -98,10 +98,7 @@ classdef SubRep < replab.Rep
             assert(isa(self.parent, 'replab.SubRep'));
             newU = self.U * self.parent.U;
             if ~isempty(self.niceBasis) && ~isempty(self.parent.niceBasis)
-                newV = self.niceBasis.V * self.parent.niceBasis.V;
-                % we solve newU = newT * newV, which is newT = newU / newV
-                newT = newU / newV;
-                newNiceBasis = replab.NiceBasis(newT, newV);
+                newNiceBasis = self.niceBasis * self.parent.niceBasis;
             else
                 newNiceBasis = [];
             end
@@ -135,6 +132,13 @@ classdef SubRep < replab.Rep
             end
         end
 
+        function names = hiddenFields(self)
+            names = replab.str.uniqueNames( ...
+                hiddenFields@replab.Rep(self), ...
+                {'U'} ...
+                );
+        end
+        
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Rep(self);
             if ~isempty(self.niceBasis) && self.niceBasis.isCorrectionDiagonal
