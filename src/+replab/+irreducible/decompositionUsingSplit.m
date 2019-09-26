@@ -44,7 +44,7 @@ function I = decompositionUsingSplit(rep)
         NT{i} = replab.irreducible.buildIsotypic(rep, samples, subreps);
     end
     % Sort by dimension first and then multiplicity
-    ranks = cellfun(@(iso) iso.copyDimension*100000 + iso.multiplicity, NT);
+    ranks = cellfun(@(iso) iso.irrepDimension*100000 + iso.multiplicity, NT);
     [~, I] = sort(ranks);
     NT = NT(I);
     if length(trivial) > 0

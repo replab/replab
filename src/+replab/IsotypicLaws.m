@@ -14,18 +14,18 @@ classdef IsotypicLaws < replab.Laws
             self.iso = iso;
             self.C = iso.rep.commutant;
             self.G = iso.parent.group;
-            d1 = iso.copyDimension;
+            d1 = iso.irrepDimension;
             self.M1 = replab.domain.Matrices(iso.parent.field, d1, d1);
         end
         
         function irrepLaws = laws_subReps(self)
-            children = cellfun(@(x) replab.SubRepLaws(x), self.iso.copies, 'uniform', 0);
+            children = cellfun(@(x) replab.SubRepLaws(x), self.iso.irreps, 'uniform', 0);
             irrepLaws = replab.LawsCollection(children);
         end
         
         function law_all_irreps_equivalent_C(self, c)
             m = self.iso.multiplicity;
-            d1 = self.iso.copyDimension;
+            d1 = self.iso.irrepDimension;
             for i = 1:m
                 for j = i:m
                     rows = (i-1)*d1+(1:d1);
@@ -36,9 +36,9 @@ classdef IsotypicLaws < replab.Laws
         end
         
         function law_all_irreps_same_basis_G(self, g)
-            image1 = self.iso.copy(1).image(g);
-            for i = 2:self.iso.nCopies
-                imagei = self.iso.copy(i).image(g);
+            image1 = self.iso.irrep(1).image(g);
+            for i = 2:self.iso.nIrreps
+                imagei = self.iso.irrep(i).image(g);
                 self.M1.assertEqv(image1, imagei);
             end
         end

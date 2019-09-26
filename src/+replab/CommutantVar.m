@@ -174,11 +174,11 @@ classdef CommutantVar < replab.Str
             types = '';
             for i = 1:irrDecomp.nComponents
                 component = irrDecomp.component(i);
-                dimensions1(i) = component.copyDimension;
+                dimensions1(i) = component.irrepDimension;
                 multiplicities(i) = component.multiplicity;
-                types(i) = component.copy(1).irrepInfo.divisionAlgebra;
+                types(i) = component.irrep(1).irrepInfo.divisionAlgebra;
                 for j = 1:component.multiplicity
-                    copy = component.copy(j);
+                    copy = component.irrep(j);
                     % correction, as the new RepLAB convention
                     % is to store basis vectors as row vectors
                     U = [U copy.U'];

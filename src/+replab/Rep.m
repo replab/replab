@@ -117,7 +117,7 @@ classdef Rep < replab.Str
         % Returns:
         %   replab.Commutant: The commutant algebra
             if isempty(self.commutant_)
-                self.commutant_ = replab.Commutant(self);
+                self.commutant_ = replab.CommutantFromEquivariant(self);
             end
             c = self.commutant_;
         end

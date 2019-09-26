@@ -117,6 +117,27 @@ classdef NiceBasis < replab.Str
     
     methods (Static)
 
+        function niceBasisOpt = vertcat(niceBasesOpt)
+        % Concatenates an array of nice bases, taking care of empty values
+        %
+        % Args:
+        %   niceBasesOpt (cell(replab.NiceBasis or [])): A row cell array of nice bases, potentially with missing values
+        %
+        % Returns:
+        %   replab.NiceBasis or []: If any element in `niceBasesOpt` is [], returns []. Otherwise
+        %                           returns the vertical concatenation of the nice bases.
+            if any(cellfun(@(x) isequal(x, []), niceBasesOpt))
+                niceBasisOpt = [];
+                return
+            end
+            % we can now assume that all niceBasesOpt values are present
+            Vs = cellfun(@(nb) nb.V, niceBasesOpt, 'uniform', 0);
+            Ts = cellfun(@(nb) nb.T, niceBasesOpt, 'uniform', 0);
+            newV = vertcat(Vs{:});
+            newT = blkdiag(Ts{:});
+            niceBasisOpt = replab.NiceBasis(newT, newV);
+        end
+        
         function niceBasis = fromIntegerBasis(V)
         % Constructs a nice basis from an integer matrix
         %
