@@ -16,7 +16,9 @@ The representation theory code of the library is self-contained. Extended featur
 
 First, download the latest release on [GitHub](https://www.github.com/replab/replab/releases), which includes the core code.
 
-Then, download and unpack the following libraries in the `extern/` folders if you want to use the corresponding features.
+*Experimental*: Run the `replab_easy_install` script which will take care of downloading and installing dependencies.
+
+Or, download and unpack the following libraries in the `extern/` folders if you want to use the corresponding features.
 
 - to run tests: [MOxUnit](https://github.com/MOxUnit/MOxUnit)
 - to test code coverage: [MOcov](https://github.com/MOcov/MOcov)

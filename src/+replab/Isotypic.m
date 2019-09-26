@@ -31,6 +31,11 @@ classdef Isotypic < replab.Str
             self.copyDimension = copies{1}.dimension;
         end
         
+        function d = dimension(self)
+        % Returns the dimension of this isotypic component
+            d = self.copyDimension * self.multiplicity;
+        end
+        
         function r = rep(self)
         % Returns the subrepresentation corresponding to this isotypic component
             U = zeros(0, self.parent.dimension);
