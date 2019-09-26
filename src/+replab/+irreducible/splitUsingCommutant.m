@@ -32,8 +32,12 @@ function sub = splitUsingCommutant(rep, samples, sub)
         end
         % try to recover integer coefficients for the trivial basis
         assert(size(UTrivial, 2) == dSub);
-        [VTrivial isOrtho] = replab.rational.integerRowSpan(UTrivial);
-        assert(size(VTrivial, 1) == nTrivial);
+        if isreal(UTrivial)
+            [VTrivial isOrtho] = replab.rational.integerRowSpan(UTrivial);
+            assert(size(VTrivial, 1) == nTrivial);
+        else
+            VTrivial = [];
+        end
         if ~isempty(VTrivial) && isOrtho
             % success: preserve integer coefficients if they exist
             for i = 1:nTrivial
@@ -51,7 +55,11 @@ function sub = splitUsingCommutant(rep, samples, sub)
         assert(size(URest, 2) == dSub);
         assert(nTrivial + nNonTrivial == dSub);
         % try to recover integer coefficients for the orthogonal complement
-        [VRest, ~] = replab.rational.integerRowSpan(URest);
+        if isreal(URest)
+            [VRest, ~] = replab.rational.integerRowSpan(URest);
+        else
+            VRest = [];
+        end
         if ~isempty(VRest)
             % success: construct the subrepresentation that is yet to split using the integer basis
             rest = sub.subRepUnitaryByIntegerBasis(VRest).collapseParent;
@@ -87,7 +95,11 @@ function sub = splitUsingCommutant(rep, samples, sub)
             end
         end
         % try to recover an integer basis
-        VIrrep = replab.rational.integerRowSpan(UIrrep);
+        if isreal(UIrrep)
+            VIrrep = replab.rational.integerRowSpan(UIrrep);
+        else
+            VIrrep = [];
+        end
         if ~isempty(VIrrep)
             nontrivials{i} = rest.subRepUnitaryByIntegerBasis(VIrrep, replab.IrrepInfo).collapseParent;
         else
