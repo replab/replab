@@ -13,6 +13,8 @@ classdef NiceBasis < replab.Str
         function self = NiceBasis(T, V)
             self.T = T;
             self.V = V;
+            U = T * V;
+            assert(norm(U*U' - eye(size(U, 1))) < 1e-10);
         end
 
         function U = U(self)
@@ -40,7 +42,7 @@ classdef NiceBasis < replab.Str
         %
         % Returns:
         %   logical: Whether the correction matrix `T` differs from the identity
-            b = isequal(self.T, eye(self.childDimension));
+            b = ~isequal(self.T, eye(self.childDimension));
         end
         
         function b = isCorrectionDiagonal(self)
@@ -105,6 +107,8 @@ classdef NiceBasis < replab.Str
                 if isdiag(newVV) && ~replab.isNonZeroMatrix(diag(diag(newT)) - newT, replab.Settings.doubleEigTol)
                     newT = diag(1./sqrt(diag(newVV)));
                 end
+                U = newT * newV;
+                assert(norm(U*U' - eye(size(U, 1))) < 1e-10);
                 res = replab.NiceBasis(newT, newV);
             end
         end
