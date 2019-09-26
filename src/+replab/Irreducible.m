@@ -10,6 +10,10 @@ classdef Irreducible < replab.Str
         parent % replab.Rep: Parent representation, must be unitary
         components % row cell array of replab.Isotypic: Isotypic components
     end
+    
+    properties (Access = protected)
+        U_ % double: Cached change of basis matrix
+    end
 
     methods
 
@@ -34,11 +38,15 @@ classdef Irreducible < replab.Str
         end
         
         function U = U(self)
-        % Returns the change of basis matrix that brings
-            U = zeros(0, self.parent.dimension);
-            for i = 1:self.nComponents
-                U = [U; self.component(i).rep.U];
+        % Returns the change of basis matrix that brings the original representation in the block-diagonal form
+            if isempty(self.U_)
+                U = zeros(0, self.parent.dimension);
+                for i = 1:self.nComponents
+                    U = [U; self.component(i).rep.U];
+                end
+                self.U_ = U;
             end
+            U = self.U_;
         end
         
         function r = asConjugateRep(self)

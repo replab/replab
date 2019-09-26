@@ -63,23 +63,21 @@ classdef SedumiData
             self.rep = group.repByImages('R', self.s, true, rho);
         end
         
-        function vec1 = project(self, vec, I)
-        % 
+        function vec1 = project(self, vec)
             rep = self.rep;
-            if nargin < 3
-                I = rep.irreducible;
-            end
+            I = rep.decomposition;
             s = self.s;
             nc = s*s;
             nb1 = I.nComponents; % number of blocks
-            s1 = cellfun(@(c) c.centralizerAlgebra.blockSize, I.components);
+            C = I.asRep.commutant;
+            s1 = arrayfun(@(c) C.singleBlockSize(c), 1:I.nComponents);
             nc1 = sum(s1.^2);
             vec1 = zeros(nc1, 1);
             shift = 0;
             M = reshape(vec, [s s]);
             for r = 1:nb1 % iterate over representations
-                % apply Reynolds
-                block = I.component(r).centralizerAlgebra.blockOfParentElement(M, 0);
+                          % apply Reynolds
+                block = C.blockOfParentElement(M, r, false);
                 % store block flattened 
                 nels = prod(size(block));
                 vec1(shift+(1:nels)) = block(:);
@@ -88,26 +86,41 @@ classdef SedumiData
             assert(length(vec1) == nc1);
         end
         
-        function [A1 b1 c1 K1] = blockDiagonalize(self, I)
+        function [A1 b1 c1 K1] = blockDiagonalize(self)
             rep = self.rep;
-            if nargin < 2
-                I = rep.irreducible;
-            end
+            I = rep.decomposition;
             m = self.m; % number of dual variables
-            s1 = cellfun(@(c) c.centralizerAlgebra.blockSize, I.components); % output block sizes
+            C = I.asRep.commutant;
+            s1 = arrayfun(@(c) C.singleBlockSize(c), 1:I.nComponents); % output block sizes
             nc1 = sum(s1.^2);
             b1 = self.b;
             c1 = self.project(self.c);
             A1 = zeros(nc1, m);
             for i = 1:m
-                p = self.project(self.A(:,i), I);
+                p = self.project(self.A(:,i));
                 A1(:,i) = p;
             end
             K1 = struct('f', 0, 'l', 0, 'q', 0, 'r', 0, 's', s1);
-            newData = struct('K', K1, 'A', A1, 'b', self.b, 'c', c1);            
+        end
+        
+        function saveBlockDiagonalizedMatFile(self, filename)
+            [A1 b1 c1 K1] = self.blockDiagonalize;
+            newData = struct('K', K1, 'A', A1, 'b', b1, 'c', c1);
+            save(filename, '-struct', 'newData');
         end
         
     end
+    
+    methods (Static)
+        
+        function sedumiData = fromMatFile(filename)
+            data = load(filename);
+            if ~isfield(data, 'G') || ~isfield(data, 'rho')
+                error('The file does not contain symmetry information');
+            end
+            sedumiData = replab.SedumiData(data.A', data.b, data.c, data.K, data.G, data.rho);
+        end
+        
+    end
+    
 end
-
-
