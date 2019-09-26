@@ -40,6 +40,7 @@ function [intBasisOpt isOrtho] = integerRowSpan(basis)
     P = basis'*basis;
     % find a well conditioned basis, see
     % https://www.mathworks.com/matlabcentral/answers/108835-how-to-get-only-linearly-independent-rows-in-a-matrix-or-to-remove-linear-dependency-b-w-rows-in-a-m
+    P = full(P);
     [~,~,jb] = qr(P, 'vector');
     jb = jb(1:nRows);
     U = P(jb, :);
