@@ -9,7 +9,7 @@ classdef IrreducibleLaws < replab.Laws
         
         function self = IrreducibleLaws(irreducible)
             self.irreducible = irreducible;
-            d = self.irreducible.parent.dimension;
+            d = self.irreducible.dimension;
             self.M = replab.domain.Matrices(irreducible.parent.field, d, d);
         end
         

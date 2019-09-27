@@ -1,5 +1,10 @@
-classdef Isotypic < replab.Str
+classdef Isotypic < replab.SubRep
 % Describes an isotypic component in the decomposition of a representation
+%
+% It is expressed as a subrepresentation of the representation being decomposed, however
+% key methods are implemented more efficiently as more structure is available. In particular
+% the computation of images is done in a way that minimizes numerical error and returns
+% true block diagonal matrices.
 %
 % An isotypic component regroups equivalent irreducible representations, expressed in the same basis.
 % Note that if the multiplicity is not one, there is a degeneracy in the basis of the copies, and
@@ -8,79 +13,101 @@ classdef Isotypic < replab.Str
 % However the subspace spanned by an isotypic component as a whole is unique.
     
     properties
-        parent % replab.Rep: Representation of which this is an isotypic component
-        copies % row cell array of replab.SubRep: Equivalent irreducible subrepresentations in
+        irreps % row cell array of replab.SubRep: Equivalent irreducible subrepresentations in
                %                                  this isotypic component
-        multiplicity % integer: number of copies in this isotypic component
-        copyDimension % integer: dimension of each irreducible representation in this component
+        multiplicity % integer: number of equivalent irreducible representations in this isotypic component
+        irrepDimension % integer: dimension of each irreducible representation in this component
     end
     
     methods
         
-        function self = Isotypic(parent, copies)
+        function self = Isotypic(parent, irreps)
+            assert(length(irreps) >= 1, 'Isotypic component cannot be empty');
             assert(isa(parent, 'replab.Rep'));
-            assert(length(copies) >= 1, 'Isotypic component cannot be empty');
-            for i = 1:length(copies)
-                ci = copies{i};
+            for i = 1:length(irreps)
+                ci = irreps{i};
                 assert(isa(ci, 'replab.SubRep'));
                 assert(ci.isKnownCanonicalIrreducible);
             end
-            self.parent = parent;
-            self.copies = copies;
-            self.multiplicity = length(copies);
-            self.copyDimension = copies{1}.dimension;
+            Us = cellfun(@(sr) sr.U, irreps, 'uniform', 0);
+            U = vertcat(Us{:});
+            nbs = cellfun(@(sr) sr.niceBasis, irreps, 'uniform', 0);
+            niceBasis = replab.NiceBasis.vertcat(nbs);
+            self = self@replab.SubRep(parent, U, niceBasis);
+            self.irreps = irreps;
+            self.multiplicity = length(irreps);
+            self.irrepDimension = irreps{1}.dimension;
         end
         
-        function d = dimension(self)
-        % Returns the dimension of this isotypic component
-            d = self.copyDimension * self.multiplicity;
-        end
-        
-        function r = rep(self)
-        % Returns the subrepresentation corresponding to this isotypic component
-            U = zeros(0, self.parent.dimension);
-            for i = 1:self.nCopies
-                U = [U;self.copy(i).U];
-            end
-            r = self.parent.subRepUnitary(U);
-            % TODO: preserve rational bases
-        end
-        
-        function n = nCopies(self)
-        % Returns the number of copies = the multiplicity
+        function n = nIrreps(self)
+        % Returns the number of irreps = the multiplicity
             n = self.multiplicity;
         end
         
-        function c = copy(self, i)
+        function c = irrep(self, i)
         % Returns the i-th copy of the irreducible representation
-            c = self.copies{i};
+            c = self.irreps{i};
         end
         
+        %% Str methods
+        
         function names = hiddenFields(self)
-            names = hiddenFields@replab.Str(self);
-            names{1, end+1} = 'copies';
+            names = hiddenFields@replab.SubRep(self);
+            names{1, end+1} = 'irreps';
         end
         
         function [names values] = additionalFields(self)
-            [names values] = additionalFields@replab.Str(self);
-            for i = 1:self.nCopies
-                names{1, end+1} = sprintf('copy(%d)', i);
-                values{1, end+1} = self.copy(i);
+            [names values] = additionalFields@replab.SubRep(self);
+            for i = 1:self.nIrreps
+                names{1, end+1} = sprintf('irrep(%d)', i);
+                values{1, end+1} = self.irrep(i);
             end
         end
         
         function s = headerStr(self)
-            if isequal(self.copy(1).field, 'C')
+            if isequal(self.irrep(1).field, 'C')
                 rt = 'C';
             else
-                rt = self.copy(1).irrepInfo.divisionAlgebra;
+                rt = self.irrep(1).irrepInfo.divisionAlgebra;
                 assert(~isempty(rt));
             end
             if self.multiplicity > 1
-                s = sprintf('Isotypic component I(%d)x%s(%d)', self.multiplicity, rt, self.copyDimension);
+                s = sprintf('Isotypic component I(%d)x%s(%d)', self.multiplicity, rt, self.irrepDimension);
             else
-                s = sprintf('Isotypic component %s(%d)', rt, self.copyDimension);
+                s = sprintf('Isotypic component %s(%d)', rt, self.irrepDimension);
             end
+        end
+        
+        %% Rep methods
+        
+        function rho = image(self, g)
+            p = self.parent.image(g);
+            U = self.irrep(1).U;
+            rho = U*p*U';
+            for i = 2:self.nIrreps
+                U = self.irrep(i).U;
+                rho = rho + U*p*U';
+            end
+            rho = rho / self.nIrreps;
+            rho = kron(eye(self.nIrreps), rho);
+        end
+        
+        function c = commutant(self)
+            if isempty(self.commutant_)
+                if self.overC
+                    self.commutant_ = replab.IsotypicSimpleCommutant(self);
+                else
+                    switch self.irrep(1).irrepInfo.divisionAlgebra
+                      case 'R'
+                        self.commutant_ = replab.IsotypicSimpleCommutant(self);
+                      case 'C'
+                        self.commutant_ = replab.IsotypicComplexCommutant(self);
+                      case 'H'
+                        self.commutant_ = replab.IsotypicQuaternionCommutant(self);
+                    end
+                end
+            end
+            c = self.commutant_;
         end
         
     end

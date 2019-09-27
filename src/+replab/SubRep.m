@@ -166,4 +166,29 @@ classdef SubRep < replab.Rep
         
     end
 
+    methods (Static)
+        
+        function subRep = directSum(subReps)
+        % Computes the direct sum of subrepresentations of the same parent representation
+        %
+        % The subrepresentations must not overlap.
+        %
+        % Args:
+        %   subReps (cell(replab.SubRep)): A row cell array of subrepresentations of the same representation
+        %
+        % Returns:
+        %   replab.SubRep: A block-diagonal subrepresentation composed of the given subrepresentations
+            n = length(subReps);
+            for i = 2:n
+                assert(subReps{i}.parent == subReps{1}.parent, 'Subrepresentations should have the same parent.');
+            end
+            Us = cellfun(@(sr) sr.U, subReps, 'uniform', 0);
+            newU = vertcat(Us{:});
+            nbs = cellfun(@(sr) sr.niceBasis, subReps, 'uniform', 0);
+            newNiceBasis = replab.NiceBasis.vertcat(nbs);
+            subRep = replab.SubRep(subReps{1}.parent, newU, newNiceBasis);
+        end
+        
+    end
+    
 end

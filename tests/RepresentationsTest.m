@@ -32,7 +32,7 @@ function test_symmetric_group_representations
     rho = G.naturalRep;
     I = rho.decomposition;
     assertEqual(I.nComponents, 2);
-    assertEqual(cellfun(@(c) c.copyDimension, I.components), [1 3]);
+    assertEqual(cellfun(@(c) c.irrepDimension, I.components), [1 3]);
     assertEqual(cellfun(@(c) c.multiplicity, I.components), [1 1]);
 end
 
@@ -40,9 +40,9 @@ function test_representation_of_cyclic_group
     C12 = replab.Permutations(12).cyclicSubgroup;
     rep = C12.naturalRep;
     dec = rep.decomposition;
-    d = cellfun(@(iso) iso.copyDimension, dec.components);
+    d = cellfun(@(iso) iso.irrepDimension, dec.components);
     m = cellfun(@(iso) iso.multiplicity, dec.components);
-    t = cellfun(@(iso) iso.copy(1).irrepInfo.divisionAlgebra, dec.components);
+    t = cellfun(@(iso) iso.irrep(1).irrepInfo.divisionAlgebra, dec.components);
     assertEqual(d, [1 1 2 2 2 2 2]);
     assertEqual(m, [1 1 1 1 1 1 1]);
     assertEqual(t, 'RRCCCCC');
