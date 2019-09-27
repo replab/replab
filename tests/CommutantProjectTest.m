@@ -14,7 +14,7 @@ function test_quaternion_representations
     X = randn(rep.dimension, rep.dimension);
     I = rep.decomposition;
     X1 = I.asConjugateRep.commutant.project(X); 
-    X2 = I.asRep.commutant.project(X1);
+    X2 = I.commutant.project(X1);
     assert(norm(X1 - X2) < replab.Settings.doubleEigTol);
 end
 
@@ -25,6 +25,6 @@ function test_complex_representations
     X = randn(rep.dimension, rep.dimension);
     I = rep.decomposition;
     X1 = I.asConjugateRep.commutant.project(X); 
-    X2 = I.asRep.commutant.project(X1);
+    X2 = I.commutant.project(X1);
     assert(norm(X1 - X2) < replab.Settings.doubleEigTol);
 end

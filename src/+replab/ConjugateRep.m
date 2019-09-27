@@ -36,7 +36,6 @@ classdef ConjugateRep < replab.Rep
             rho = self.U * self.parent.image(g) * self.U';
         end
 
-        % TODO: optimize other methods
     end
     
 end

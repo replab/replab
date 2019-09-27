@@ -1,4 +1,4 @@
-classdef Irreducible < replab.Str
+classdef Irreducible < replab.SubRep
 % Describes the irreducible decomposition of a representation
 %
 % For the background, see Section 2.6 of Jean-Pierre Serre, Linear representations of finite groups
@@ -7,46 +7,23 @@ classdef Irreducible < replab.Str
 % Each isotypic component corresponds to a set of equivalent irreducible representations expressed in the same basis.
     
     properties
-        parent % replab.Rep: Parent representation, must be unitary
         components % row cell array of replab.Isotypic: Isotypic components
     end
     
-    properties (Access = protected)
-        U_ % double: Cached change of basis matrix
-    end
-
     methods
 
         function self = Irreducible(parent, components)
             assert(isequal(parent.isUnitary, true));
-            self.parent = parent;
-            self.components = components;
-        end
-        
-        function r = asRep(self)
-        % Returns the block-diagonal representation corresponding to the decomposition
-        %
-        % Up to the change of basis matrix `self.U`, it corresponds to the representation `parent`.
-        % Indeed, we have ``self.asRep.image(g) = U * self.parent.image(g) * U'``.
-        %
-        % The returned representation is cleaned: off diagonal elements are set to zero, while
-        % repeated blocks are averaged over and then copied when computing images.
-        %
-        % Returns:
-        %   replab.Rep: The block-diagonal representation
-            r = replab.IrreducibleRep(self);
-        end
-        
-        function U = U(self)
-        % Returns the change of basis matrix that brings the original representation in the block-diagonal form
-            if isempty(self.U_)
-                U = zeros(0, self.parent.dimension);
-                for i = 1:self.nComponents
-                    U = [U; self.component(i).rep.U];
-                end
-                self.U_ = U;
+            for i = 1:length(components)
+                c = components{i};
+                assert(isa(c, 'replab.Isotypic'));
             end
-            U = self.U_;
+            Us = cellfun(@(iso) iso.U, components, 'uniform', 0);
+            U = vertcat(Us{:});
+            nbs = cellfun(@(iso) iso.niceBasis, components, 'uniform', 0);
+            niceBasis = replab.NiceBasis.vertcat(nbs);
+            self = self@replab.SubRep(parent, U, niceBasis);
+            self.components = components;
         end
         
         function r = asConjugateRep(self)
@@ -101,16 +78,31 @@ classdef Irreducible < replab.Str
         %% Str methods
         
         function names = hiddenFields(self)
-            names = hiddenFields@replab.Str(self);
+            names = hiddenFields@replab.SubRep(self);
             names{1, end+1} = 'components';
         end
         
         function [names values] = additionalFields(self)
-            [names values] = additionalFields@replab.Str(self);
+            [names values] = additionalFields@replab.SubRep(self);
             for i = 1:self.nComponents
                 names{1, end+1} = sprintf('component(%d)', i);
                 values{1, end+1} = self.component(i);
             end
+        end
+        
+        %% Rep methods
+        
+        function rho = image(self, g)
+            blocks = cellfun(@(iso) iso.image(g), self.components, 'uniform', 0);
+            % Construct the blocks in the block diagonal image
+            rho = blkdiag(blocks{:});
+        end
+
+        function c = commutant(self)
+            if isempty(self.commutant_)
+                self.commutant_ = replab.IrreducibleCommutant(self);
+            end
+            c = self.commutant_;
         end
         
     end

@@ -12,10 +12,10 @@ classdef IsotypicLaws < replab.Laws
         function self = IsotypicLaws(iso)
             assert(isa(iso, 'replab.Isotypic'));
             self.iso = iso;
-            self.C = iso.rep.commutant;
-            self.G = iso.parent.group;
+            self.C = iso.commutant;
+            self.G = iso.group;
             d1 = iso.irrepDimension;
-            self.M1 = replab.domain.Matrices(iso.parent.field, d1, d1);
+            self.M1 = replab.domain.Matrices(iso.field, d1, d1);
         end
         
         function irrepLaws = laws_subReps(self)
@@ -44,4 +44,5 @@ classdef IsotypicLaws < replab.Laws
         end
         
     end
+    
 end

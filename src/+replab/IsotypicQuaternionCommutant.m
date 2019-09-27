@@ -45,19 +45,68 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
             D = D/id;
         end
         
-        function X = projectAndReduce(self, X)
-            [A B C D] = self.block(X);
-            X = kron(A, eye(2)) + kron(B, self.basisB) + kron(C, self.basisC) + kron(D, self.basisD);
+        function [A B C D] = blockFromParent(self, X)
+        % Changes the basis and projects a block on this isotypic component
+        %
+        % Args:
+        %   X (double): Matrix to project on this commutant algebra in the basis of the original representation
+        %
+        % Returns
+        % -------
+        %   A:
+        %    double: The real part of the projected block
+        %   B:
+        %    double: The 'i' part of the projected block
+        %   C:
+        %    double: The 'j' part of the projected block
+        %   D:
+        %    double: The 'k' part of the projected block
+            m = self.rep.multiplicity;
+            id = self.rep.irrepDimension;
+            U = self.rep.U;
+            A = zeros(m, m);
+            B = zeros(m, m);
+            C = zeros(m, m);
+            D = zeros(m, m);
+            % shape of things that commute with our representation quaternion encoding
+            % [ a -b -c -d
+            %   b  a  d -c
+            %   c -d  a  b
+            %   d  c -b  a]
+            for i = 1:4:id
+                U1 = U((i:id:m*id), :);
+                U2 = U((i:id:m*id)+1, :);
+                U3 = U((i:id:m*id)+2, :);
+                U4 = U((i:id:m*id)+3, :);
+                A = A + U1*X*U1' + U2*X*U2' + U3*X*U3' + U4*X*U4';
+                B = B + U2*X*U1' - U1*X*U2' - U4*X*U3' + U3*X*U4';
+                C = C + U3*X*U1' - U1*X*U3' - U2*X*U4' + U4*X*U2';
+                D = D + U4*X*U1' - U3*X*U2' + U2*X*U3' - U1*X*U4';
+            end
+            A = A/id;
+            B = B/id;
+            C = C/id;
+            D = D/id;
         end
         
-        function X = project(self, X)
+        function X1 = projectAndReduceFromParent(self, X)
+            [A B C D] = self.blockFromParent(X);
+            X1 = kron(A, eye(2)) + kron(B, self.basisB) + kron(C, self.basisC) + kron(D, self.basisD);
+        end
+
+        function X1 = projectAndReduce(self, X)
+            [A B C D] = self.block(X);
+            X1 = kron(A, eye(2)) + kron(B, self.basisB) + kron(C, self.basisC) + kron(D, self.basisD);
+        end
+        
+        function X1 = project(self, X)
             id = self.rep.irrepDimension;
             [A B C D] = self.block(X);
             basisA = eye(id);
             basisB = kron(eye(id/4), self.basisB);
             basisC = kron(eye(id/4), self.basisC);
             basisD = kron(eye(id/4), self.basisD);
-            X = kron(A, basisA) + kron(B, basisB) + kron(C, basisC) + kron(D, basisD);
+            X1 = kron(A, basisA) + kron(B, basisB) + kron(C, basisC) + kron(D, basisD);
         end
         
     end
@@ -86,4 +135,5 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
         end
         
     end
+    
 end

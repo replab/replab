@@ -24,12 +24,35 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
             X1 = X1/id;
         end
         
-        function X = projectAndReduce(self, X)
-            X = self.block(X);
+        function X1 = blockFromParent(self, X) 
+        % Changes the basis and projects a block on this isotypic component
+        %
+        % Args:
+        %   X (double): Matrix to project on this commutant algebra in the basis of the original representation
+        %
+        % Returns:
+        %   double: Block corresponding to the isotypic component
+            m = self.rep.multiplicity;
+            id = self.rep.irrepDimension;
+            U = self.rep.U;
+            X1 = zeros(m, m);
+            for i = 1:id
+                U1 = U(i:id:m*id, :);
+                X1 = X1 + U1*X*U1';
+            end
+            X1 = X1/id;
         end
         
-        function X = project(self, X)
-            X = kron(self.block(X), eye(self.rep.irrepDimension));
+        function X1 = projectAndReduce(self, X)
+            X1 = self.block(X);
+        end
+        
+        function X1 = projectAndReduceFromParent(self, X)
+            X1 = self.blockFromParent(X);
+        end
+        
+        function X1 = project(self, X)
+            X1 = kron(self.block(X), eye(self.rep.irrepDimension));
         end
         
     end
