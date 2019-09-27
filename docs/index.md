@@ -46,7 +46,7 @@ That said, other libraries working on the same problem space include:
 
 ## Contributors
 
-RepLAB and the group theory/linear algebra libraries it depends on were written by [Denis Rosset](https://github.com/denisrosset) and [Jean-Daniel Bancal](https://github.com/jdbancal).
+RepLAB and the group theory/linear algebra libraries it depends on were initiated by [Denis Rosset](https://github.com/denisrosset) and [Jean-Daniel Bancal](https://github.com/jdbancal). The project has now more [contributors](https://github.com/replab/replab/graphs/contributors).
 
 RepLAB references in the `/external` directory the following libraries:
 
