@@ -64,21 +64,6 @@ classdef IrreducibleCommutant < replab.Commutant
             B = B/cd;
         end
         
-        function [A B] = extractComplexTypeBlock(X, shift, cd, m)
-        % Projects a block from a commutant element (complex-type real)
-        %
-        % See replab.IrreducibleCommutant.extractRealBlock for arguments
-            A = zeros(m, m);
-            B = zeros(m, m);
-            for i = 1:2:cd
-                r = shift+(i:cd:m*cd);
-                A = A + X(r, r) + X(r+1, r+1);
-                B = B + X(r+1, r) - X(r, r+1);
-            end
-            A = A/cd;
-            B = B/cd;
-        end
-        
         function [A B C D] = extractQuaternionTypeBlock(X, shift, cd, m)
         % Projects a block from a commutant element (quaternion-type real)
         %

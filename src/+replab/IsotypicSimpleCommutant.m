@@ -7,6 +7,19 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
             self.divisionAlgebraDimension = 1;
         end
 
+        function block = projectAndReduceFromParent(self, X)
+        % Projects the given matrix given in the parent representation space and removes its redundancy
+        %
+        % Args:
+        %   X (double): Matrix in the parent representation space
+        %
+        % Returns:
+        %   double: The projected block of size `self.reducedBlockSize` corresponding
+        %           to this isotypic component, having removed the redundancy due to the irrep dimension
+            U = self.rep.U;
+            block = self.projectAndReduce(U*X*U');
+        end
+        
         function X1 = block(self, X)
         % Returns the block of a matrix projected in the commutant algebra
         %

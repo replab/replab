@@ -7,29 +7,40 @@ classdef IsotypicComplexCommutant < replab.IsotypicCommutant
             self.divisionAlgebraDimension = 1;
         end
 
-        function X1 = block(self, X)
+        function [A B] = block(self, X)
         % Returns the block of a matrix projected in the commutant algebra
         %
         % Args:
         %   X (double): Matrix to project on this commutant algebra
         %
-        % Returns:
-        %   double: The projected block
+        % Returns
+        % -------
+        %   A:
+        %    double: The real part of the projected block
+        %   B:
+        %    double: The imaginary part of the projected block
             m = self.rep.multiplicity;
             id = self.rep.irrepDimension;
-            block = zeros(m, m);
-            for i = 1:cd
-                block = block + X(i:id:m*id, i:id:m*id);
+            A = zeros(m, m);
+            B = zeros(m, m);
+            for i = 1:2:id
+                r = i:id:m*id;
+                A = A + X(r, r) + X(r+1, r+1);
+                B = B + X(r+1, r) - X(r, r+1);
             end
-            block = block/id;
+            A = A/id;
+            B = B/id;
         end
         
         function X = projectAndReduce(self, X)
-            X = self.block(X);
+            [A B] = self.block(X);
+            X = kron(A, eye(2)) + kron(B, [0 -1; 1 0]);
         end
         
         function X = project(self, X)
-            X = kron(self.block(X), eye(self.rep.irrepDimension));
+            id = self.rep.irrepDimension;
+            [A B] = self.block(X);
+            X = kron(A, eye(id)) + kron(B, kron(eye(id/2), [0 -1; 1 0]));
         end
         
     end
