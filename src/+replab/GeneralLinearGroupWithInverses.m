@@ -15,11 +15,7 @@ classdef GeneralLinearGroupWithInverses < replab.Group & replab.domain.VectorSpa
             self.field = field;
             self.n = n;
             self.parent = replab.domain.Matrices(field, n, n);
-            if replab.Settings.useSparse
-                self.identity = [speye(n) speye(n)];
-            else
-                self.identity = [eye(n) eye(n)];
-            end
+            self.identity = [eye(n) eye(n)];
         end
         
         % Str

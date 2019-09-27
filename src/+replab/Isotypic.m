@@ -1,11 +1,18 @@
 classdef Isotypic < replab.Str
 % Describes an isotypic component in the decomposition of a representation
+%
+% An isotypic component regroups equivalent irreducible representations, expressed in the same basis.
+% Note that if the multiplicity is not one, there is a degeneracy in the basis of the copies, and
+% the particular basis choosen is not deterministic.
+%
+% However the subspace spanned by an isotypic component as a whole is unique.
     
     properties
-        parent;
-        copies;
-        multiplicity;
-        copyDimension;
+        parent % replab.Rep: Representation of which this is an isotypic component
+        copies % row cell array of replab.SubRep: Equivalent irreducible subrepresentations in
+               %                                  this isotypic component
+        multiplicity % integer: number of copies in this isotypic component
+        copyDimension % integer: dimension of each irreducible representation in this component
     end
     
     methods
@@ -14,12 +21,19 @@ classdef Isotypic < replab.Str
             assert(isa(parent, 'replab.Rep'));
             assert(length(copies) >= 1, 'Isotypic component cannot be empty');
             for i = 1:length(copies)
-                assert(isa(copies{i}, 'replab.Irrep'));
+                ci = copies{i};
+                assert(isa(ci, 'replab.SubRep'));
+                assert(ci.isKnownCanonicalIrreducible);
             end
             self.parent = parent;
             self.copies = copies;
             self.multiplicity = length(copies);
             self.copyDimension = copies{1}.dimension;
+        end
+        
+        function d = dimension(self)
+        % Returns the dimension of this isotypic component
+            d = self.copyDimension * self.multiplicity;
         end
         
         function r = rep(self)
@@ -34,22 +48,12 @@ classdef Isotypic < replab.Str
         
         function n = nCopies(self)
         % Returns the number of copies = the multiplicity
-            n = length(self.copies);
+            n = self.multiplicity;
         end
         
         function c = copy(self, i)
         % Returns the i-th copy of the irreducible representation
             c = self.copies{i};
-        end
-        
-        function I = nice(self)
-        % Tries to recover "nice" bases for all subrepresentations
-            if self.nCopies > 1
-                % TODO: handle multiplicities better
-                I = self;
-            else
-                I = replab.Isotypic(self.parent, {self.copy(1).nice});
-            end
         end
         
         function names = hiddenFields(self)
@@ -66,11 +70,11 @@ classdef Isotypic < replab.Str
         end
         
         function s = headerStr(self)
-            rt = self.copy(1).realDivisionAlgebra;
-            if isempty(rt)
+            if isequal(self.copy(1).field, 'C')
                 rt = 'C';
             else
-                rt = rt.shortName;
+                rt = self.copy(1).irrepInfo.divisionAlgebra;
+                assert(~isempty(rt));
             end
             if self.multiplicity > 1
                 s = sprintf('Isotypic component I(%d)x%s(%d)', self.multiplicity, rt, self.copyDimension);

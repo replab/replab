@@ -1,6 +1,6 @@
-function U1 = recoverReal(sub)
+function U1 = recoverReal(U)
 % Replaces the basis U by a real basis if possible
-    U = sub.U'; % use column vectors
+    U = U';
     d = size(U, 2);
     v = replab.domain.Vectors('C', d).sample;
     v1 = conj(U*v);

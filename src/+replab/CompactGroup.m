@@ -88,10 +88,14 @@ classdef CompactGroup < replab.Group
         % 
         % Args:
         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
-        %   dimension (integer): Representation dimension
+        %   dimension (integer, optional): Representation dimension
+        %                                  Default value 1
         %
         % Returns:
         %   replab.Rep: An instance of the trivial representation
+            if nargin < 2
+                dimension = 1;
+            end
             rep = replab.rep.TrivialRep(self, field, dimension);
         end
         
