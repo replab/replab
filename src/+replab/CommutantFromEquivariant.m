@@ -22,6 +22,10 @@ classdef CommutantFromEquivariant < replab.Commutant
 
     methods
         
+        function self = CommutantFromEquivariant(rep)
+            self = self@replab.Commutant(rep);
+        end
+        
         function X = project(self, X)
         % Projects any n x n matrix in the invariant subspace
             X = self.equivariant.project(X);
