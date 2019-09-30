@@ -724,25 +724,9 @@ classdef CommutantVar < replab.Str
         %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
         %     see(matrix.fullMatrix)
         
-            M = sdpvar(1);
-            M(self.dim^2) = 0;
-            M = reshape(M, self.dim*[1 1]);
-            co = 0;
-            for i = 1:self.nComponents
-                d = self.dimensions1(i);
-                switch self.types(i)
-                    case 'R'
-                    case 'C'
-                        d = d/2;
-                    case 'H'
-                        d = d/4;
-                    otherwise
-                        error('Unknown type');
-                end
-                M(co + (1:d*size(self.blocks{i},1)), co + (1:d*size(self.blocks{i},1))) = kron(self.blocks{i}, eye(d));
-                co = co + d*size(self.blocks{i},1);
-            end
-            M = self.U*M*self.U';
+            instructions = struct('type', '()');
+            instructions.subs = {':', ':'};
+            M = subsref(self, instructions);
         end
 
         function vars = getVariables(self)
@@ -875,6 +859,37 @@ classdef CommutantVar < replab.Str
 %                            utility methods
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 
+        function lastIndex = end(self, k, n)
+        % end - returns the last index
+        %
+        % lastIndex = replab.CommutantVar.end(self, k, n)
+        % Returns the last index in an indexing expression such as 
+        % self(1,2:end) or self(end).
+        %
+        % Args:
+        %     self: CommutantVar object
+        %     k: 
+        %     n: number of dimensions on which the indexing is done
+        %
+        % Returns:
+        %     lastIndex: double
+        %
+        % See also:
+        %     replab.CommutantVar.subsref
+
+            if n == 1
+                % Then the indexing is done with only one index, as in a(end)
+                lastIndex = prod(size(self));
+            else
+                % Then the indexing is done with two indices, as in a(end,1:2)
+                if (k < 1) || (k > 2)
+                    error('Only two dimensions available');
+                end
+                s = size(self);
+                lastIndex = s(k);
+            end
+        end
+
         function varargout = subsref(self, varargin)
         % varargout = subsref(self, varargout)
         % 
@@ -897,7 +912,47 @@ classdef CommutantVar < replab.Str
         
             switch varargin{1}(1).type
                 case '()'
-                    [varargout{1:nargout}] = subsref(self.fullMatrix, varargin{1});
+                    switch length(varargin{1}.subs)
+                        case 1
+                            % call of the form self([1 2 4 5])
+                            [varargout{1:nargout}] = subsref(self.fullMatrix, varargin{1});
+                        case 2
+                            % call of the form self([1 2], [4 5])
+                            
+                            % If needed, we replace ':' by actual indices
+                            for i = 1:2
+                                if isequal(varargin{1}.subs{i}, ':')
+                                    varargin{1}.subs{i} = 1:size(self,i);
+                                end
+                            end
+                            
+                            % Now we extract only the requested part
+                            M = sdpvar(1);
+                            M(self.dim^2) = 0;
+                            M = reshape(M, self.dim*[1 1]);
+                            co = 0;
+                            for i = 1:self.nComponents
+                                d = self.dimensions1(i);
+                                switch self.types(i)
+                                    case 'R'
+                                    case 'C'
+                                        d = d/2;
+                                    case 'H'
+                                        d = d/4;
+                                    otherwise
+                                        error('Unknown type');
+                                end
+                                M(co + (1:d*size(self.blocks{i},1)), co + (1:d*size(self.blocks{i},1))) = kron(self.blocks{i}, eye(d));
+                                co = co + d*size(self.blocks{i},1);
+                            end
+                            if length(varargin{1}.subs{1})*size(self,2) <= size(self,1)*length(varargin{1}.subs{2})
+                                varargout{1} = (self.U(varargin{1}.subs{1},:)*M)*(self.U(varargin{1}.subs{2},:)');
+                            else
+                                varargout{1} = self.U(varargin{1}.subs{1},:)*(M*(self.U(varargin{1}.subs{2},:)'));
+                            end
+                        otherwise
+                            error('Too many indices for 2-dimensional object');
+                    end
                 case '.'
                     % This was actually a function call
                     [varargout{1:nargout}] = builtin('subsref',self,varargin{1});
