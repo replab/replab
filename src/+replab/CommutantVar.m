@@ -183,7 +183,7 @@ classdef CommutantVar < replab.Str
             
             % Representation decomposition
             group = replab.signed.Permutations(n).subgroup(generators);
-            irrDecomp = group.naturalRep.decomposition;
+            irrDecomp = group.definingRep.decomposition;
             U = zeros(n, 0);
             dimensions1 = zeros(1,irrDecomp.nComponents);
             multiplicities = zeros(1,irrDecomp.nComponents);
