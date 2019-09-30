@@ -166,7 +166,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             rho = replab.rep.IndexRelabelingRep(self, indexRange);
         end
 
-        function rho = naturalRep(self)
+        function rho = definingRep(self)
         % Returns the natural permutation representation of this permutation group
         %
         % Returns:
@@ -191,7 +191,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             else
                 irrepInfo = [];
             end
-            rho = self.naturalRep.subRepUnitary(niceBasis.U, niceBasis, irrepInfo);
+            rho = self.definingRep.subRepUnitary(niceBasis.U, niceBasis, irrepInfo);
         end
 
     end

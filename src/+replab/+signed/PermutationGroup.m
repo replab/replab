@@ -93,7 +93,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         
         %% Representation construction
         
-        function rho = naturalRep(self)
+        function rho = definingRep(self)
         % Natural representation on R^d of signed permutations on integers -d..-1, 1..d
             rho = self.signedPermutationRep(self.domainSize, self.generators);
         end

@@ -20,6 +20,6 @@ function test_decomposition
     g4 = [g4,length(g4)+1:160];
     G = replab.Permutations(160).subgroup({g1 g2 g3 g4});
     assert(G.order == 7680);
-    rho = G.naturalRep;
+    rho = G.definingRep;
     rho.decomposition;
 end

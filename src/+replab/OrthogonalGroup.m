@@ -57,7 +57,7 @@ classdef OrthogonalGroup < replab.CompactGroup
 
         %% Representations
         
-        function rep = naturalRep(self)
+        function rep = definingRep(self)
         % Returns the natural representation of this orthonormal group
             rep = replab.Rep.lambda(self, 'R', self.n, true, @(o) o, @(o) o');
         end

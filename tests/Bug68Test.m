@@ -13,6 +13,6 @@ function test_bug
     end
     
     group = replab.signed.Permutations(12).subgroup({[1 3 2 5 6 7 4 9 8 12 10 11]});
-    I = group.naturalRep.decomposition;
+    I = group.definingRep.decomposition;
     assert(isa(I, 'replab.Irreducible'));
 end

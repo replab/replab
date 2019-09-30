@@ -49,7 +49,7 @@ classdef OfCompactGroups < replab.CompactGroup
         function rep = directSumRepFun(self, fun)
         % Constructs a direct sum representation from a function that maps factors to representations
         %
-        % Enables constructions such as ``directProduct.sumRepFun(@(x) x.naturalRep)``
+        % Enables constructions such as ``directProduct.sumRepFun(@(x) x.definingRep)``
         %
         % Args:
         %   fun (function_handle): A function valid for each factor group that maps the group to one of
@@ -64,7 +64,7 @@ classdef OfCompactGroups < replab.CompactGroup
         function rep = directSumRepFunWithIndex(self, fun)
         % Constructs a direct sum representation from a function that maps factors to representations
         %
-        % Enables constructions such as ``directProduct.sumRepFunWithIndex(@(x, i) x.naturalRep)``
+        % Enables constructions such as ``directProduct.sumRepFunWithIndex(@(x, i) x.definingRep)``
         %
         % Args:
         %   fun (function_handle): A function valid for each factor group that maps the group and its index
@@ -91,7 +91,7 @@ classdef OfCompactGroups < replab.CompactGroup
         function rep = tensorRepFun(self, fun)
         % Constructs a direct sum representation from a function that maps factors to representations
         %
-        % Enables constructions such as ``directProduct.tensorRepFun(@(x) x.naturalRep)``
+        % Enables constructions such as ``directProduct.tensorRepFun(@(x) x.definingRep)``
         %
         % Args:
         %   fun (function_handle): A function valid for each factor group that maps the group to one of
@@ -106,7 +106,7 @@ classdef OfCompactGroups < replab.CompactGroup
         function rep = tensorRepFunWithIndex(self, fun)
         % Constructs a direct sum representation from a function that maps factors to representations
         %
-        % Enables constructions such as ``directProduct.tensorRepFunWithIndex(@(x, i) x.naturalRep)``
+        % Enables constructions such as ``directProduct.tensorRepFunWithIndex(@(x, i) x.definingRep)``
         %
         % Args:
         %   fun (function_handle): A function valid for each factor group that maps the group and its index
