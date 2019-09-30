@@ -8,7 +8,7 @@
 % Outputs are binary, so we use the symmetric group of domain size 2
 % and the representation on P(a) is the natural representation
 S2 = replab.S(2)
-outputRep = S2.naturalRep
+outputRep = S2.definingRep
 
 %% Defining the party relabelings
 % We have a copy of S2 acting on the outputs of the first measurement,

@@ -56,7 +56,7 @@ S30.elements
 %% Group representations
 % The natural representation of $S_4$ simply permutes the
 % coordinates of $R^4$:
-rho = S4.naturalRep
+rho = S4.definingRep
 %%
 % We take two elements of $S_4$:
 g = [2 3 1 4]
@@ -90,11 +90,11 @@ I = rho.decomposition
 % We can get isotypic components and the copies of irreducible
 % representations contained inside
 I.component(1)
-subrho1 = I.component(1).copy(1)
+subrho1 = I.component(1).irrep(1)
 %%
 %
 I.component(2)
-subrho2 = I.component(2).copy(1)
+subrho2 = I.component(2).irrep(1)
 %%
 % with their bases:
 subrho1.U
@@ -121,7 +121,7 @@ M = C.project(rand(n,n))
 %%
 %%
 % Which is has a block diagonalization in the symmetry adapted basis:
-U = I.rep.U
+U = I.U
 %%
 %
 U*M*U'
