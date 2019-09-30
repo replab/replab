@@ -78,6 +78,7 @@ classdef CommutantVar < replab.Str
             names{1, end+1} = 'blocks';
             names{1, end+1} = 'nComponents';
             names{1, end+1} = 'linearConstraints';
+            names{1, end+1} = 'fullBlockMatrix_';
         end
 
         function [names, values] = additionalFields(self)
