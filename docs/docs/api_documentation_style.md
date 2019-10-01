@@ -15,13 +15,13 @@ We employ the variants proposed by the [Google style](https://sphinxcontrib-napo
 
 We aim to achieve the following middle ground:
 
-- The documentation comments should be readable on the MATLAB command line when the `help FUN` command is used.
+- The documentation comments can be read on the MATLAB command line when the `help FUN` command is used, and it can be browsed through the `doc FUN` command.
 
 - The documentation comments can be parsed with Sphinx to produce stylish and naviguable documentation.
 
 ## Documentation comments
 
-MATLAB documentation call the documentation strings that appears at the beginning of a class/function/method/property definition 'comments'. To distinguish them from code comments, we call those special comments 'documentation comments`, noting that the `docstring` terminology is specific to the Python language (standalone strings in the source code).
+MATLAB documentation calls the documentation strings that appears at the beginning of a class/function/method/property definition `comments`. To distinguish them from code comments, we call those special comments `documentation comments`, noting that the `docstring` terminology is specific to the Python language (standalone strings in the source code).
 
 The documentation comments are written using a subset of the [reStructuredText](http://docutils.sourceforge.net/rst.html) syntax. This style guide does not list which syntax elements are permitted: use common sense to employ the conventions that are compatible with reStructuredText, and display well standalone on the terminal (as is advocated by the numpydoc guide linked above).
 
@@ -31,52 +31,72 @@ In particular, we use single backticks for class, function, method, property nam
 
 The length of comment lines should be kept to 75 characters; note that this applies to the comment string itself, not including the `%` character, whitespace, and source code tokens. RepLAB uses longer source code lines.
 
-## Sections
+### First part of a documentation comment
 
-The documentation comment consists of a number of sections separated by headings. Each heading is given by a keyword from the following list, with the section content indented.
+For a class, function or method (uniquely referred to as function from now on), a documentation comment starts with the following introductory content:
+
+1. First line with the short name of the function followed by a concise description
+
+2. Second line empty
+
+3. Third line presents a full call to the function with all arguments and outputs. The function name is qualified with full class structure. Optional arguments are surrounded by square brackets.
+
+4. An extended description (and/or discussion) of the function follows the third line. This should clarify the role played by the function, i.e. its *functionality*, not to discuss implementation details or background theory, which should rather be explored in the **Notes** section below. You may refer to the parameters and the function name (using single backticks), but the parameter descriptions belong in the **Parameters** section.
+
+Here is an example of these first few lines of documentation comment:
+
+```matlab
+function suite = fromMethod(testClass, testMethod, varargin)
+% fromMethod - Create a suite from a single test method
+%
+% suite = matlab.unittest.TestSuite.fromMethod(testclass, testmethod, [varargin])
+% creates a TestSuite from the test class described by testclass and the
+% test method described by testmethod and returns it in suite. testclass
+% is a meta.class instance which describes the desired test class. The
+% ...
+```
+
+When the concise description is sufficiently clear to define the function, the complete description can be omitted. Here is an example:
+
+```matlab
+function z = plus(x, y)
+% plus - Addition operation
+%
+% z = plus(x, y)
+```
+
+After these initial informations come the sections described below, providing further systematic details.
+
+### Sections
+
+The documentation comment can contain a number of sections separated by headings. Each heading is given by a keyword from the following list, with the section content indented.
 
 We use the following section headings:
 
 - `Args` as an alias to Sphinx `Parameters`
 
-- `Notes`
-
 - `Returns` (for multiple return arguments, see the use of underlined section headers below).
 
 - `Raises`
 
+- `Example`
+
 - `See Also`
+
+- `Notes`
 
 See also the [Napoleon](https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html) documentation for other possible section headers.
 
-In order, the sections of a funciton comment are:
+In order, the sections of a function comment are:
 
-1. Short summary
-   
-   A one line summary that does not use variable names of the function name, e.g.
-   
-   ```matlab
-   
-   function c = add(a, b)
-   % The sum of two numbers
-   ```
+1. Arguments/Parameters
 
-2. Deprecation warning
-
-   We haven't yet specified a formal syntax for those. The numpydoc convention uses a Sphinx directive which we tend to avoid.
+    Description of the function arguments, keywords and their respective types, using Google style.
    
-3. Extended summary
-
-	A few sentences giving an extended description. This section should be used to clarify *functionality*, not to discuss implementation details or background theory, which should rather be explored in the **Notes** section below. You may refer to the parameters and the function name (using single backticks), but the parameter descriptions belong in the **Parameters** section.
-	
-4. Arguments/Parameters
-
-   Description of the function arguments, keywords and their respective types, using Google style.
-   
-   ```matlab
-   % Args:
-   %   x (type): Description of parameter `x`.
-   %   y: Description of parameter `y` (with type not specified)
+	```matlab
+	% Args:
+	%   x (type): Description of parameter `x`.
+	%   y: Description of parameter `y` (with type not specified)
 	```
 
 	If it is not necessary to specify an argument, use `optional`:
@@ -89,7 +109,7 @@ In order, the sections of a funciton comment are:
 	
 	```matlab
 	%   field ({'R', 'C'})
-    ```
+	```
 	
 	When two or more input parameters have exactly the same type, shape and description, they can be combined:
 	
@@ -105,68 +125,73 @@ In order, the sections of a funciton comment are:
 	
 	Function handles have type `function_handle`.
 
-5. Returns
+2. Returns
 
-   Explanation of the returned values and their types. We distinguish two cases.
+    Explanation of the returned values and their types. We distinguish two cases.
    
-   First, when a single value is returned, we use the Google style:
+    First, when a single value is returned, we use the Google style:
    
-   ```matlab
-   function c = sum(a, b)
-   % Sums two numbers
-   %
-   % Returns:
-   %   double: The sum of the parameters
-   ```
+    ```matlab
+    function c = sum(a, b)
+    % Sums two numbers
+    %
+    % Returns:
+    %   double: The sum of the parameters
+    ```
    
    
-   ```matlab
-   function [c d] = sorted2(a, b)
-   % Sorts two numbers
-   %
-   % Returns
-   % -------
-   %   c: double
-   %     Smallest number
-   %   d: double
-   %     Largest number
-   ```
+    ```matlab
+    function [c d] = sorted2(a, b)
+    % Sorts two numbers
+    %
+    % Returns
+    % -------
+    %   c: double
+    %     Smallest number
+    %   d: double
+    %     Largest number
+    ```
    
-6. Raises
+3. Raises (optional)
 
 	An optional section detailling which errors get raised and under what conditions.
 	
 	TO BE COMPLETED
 	
-7. Warns
+4. Warns (optional)
 
 	An optional section detailling which warnings get raised and under what conditions, formatted similarly to Raises.
 	
-8. Warnings
+5. Warnings (optional)
 
 	An optional section with cautions to the user in free text/reST.
-	
-9. See Also
 
-	An optional section used to refer to related code.
+6. Examples (encouraged)
+
+	A section with explicit commands illustrating as clearly as possible one or several ways of calling the function.
+
+	(TODO: allow examples that would be executed by the test framework, possibly with doctests, to be tested)
+	
+7. See Also (encouraged)
+
+	An optional section used to refer to related code. This will allow for easily browsing the documentation.
 	
 	TO BE COMPLETED
 	
-10. Notes
+8. Notes (optional)
 
-	An optional section that provides additional information about the code, possibly including a discussion of the
-	algorithm.
-	
+	This optional section can provide various additional information about the code of interest to the user, such as a discussion about the algorithm used by the function. Depreciation warnings can also be specified here. We haven't yet specified a formal syntax for those. The numpydoc convention uses a Sphinx directive which we tend to avoid.
+
+	Before the section, the comment should be broken by a single empty line without `%`. This should stop matlab from parsing, and thus allow us to use further formatting such as LaTeX. The content from now on would then only be presented in the Sphinx API. (TODO: check this)
+
 	(TODO: should we allow the use of LaTeX equations with `$` delimitations there, as in the numpydoc guide stipulates?)
 	(Is there a way to filter out this section when the `help` function is called from the REPL?)
-	
-11. References
+
+
+9. References (optional)
 
     (TODO: should we allow references for the **Notes** section here? see numpydoc guide)
 
-12. Examples
-
-	(TODO: allow examples that would be executed by the test framework)
 
 ## Documenting functions
 
