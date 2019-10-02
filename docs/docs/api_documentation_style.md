@@ -133,7 +133,10 @@ In order, the sections of a function comment are:
    
     ```matlab
     function c = sum(a, b)
-    % Sums two numbers
+    % sum - Sums two numbers
+    %
+    % c = sum(a, b)
+    % Adds the value of a and b.
     %
     % Returns:
     %   double: The sum of the parameters
@@ -142,7 +145,10 @@ In order, the sections of a function comment are:
    
     ```matlab
     function [c d] = sorted2(a, b)
-    % Sorts two numbers
+    % sorted2 - Sorts two numbers
+    %
+    % [c d] = sorted2(a, b)
+    % Returns a and b as c and d so as to always satisfy the condition c <= d.
     %
     % Returns
     % -------
@@ -158,27 +164,23 @@ In order, the sections of a function comment are:
 	
 	TO BE COMPLETED
 	
-4. Warns (optional)
+4. Warnings (optional)
 
 	An optional section detailling which warnings get raised and under what conditions, formatted similarly to Raises.
-	
-5. Warnings (optional)
 
-	An optional section with cautions to the user in free text/reST.
-
-6. Examples (encouraged)
+5. Examples (encouraged)
 
 	A section with explicit commands illustrating as clearly as possible one or several ways of calling the function.
 
 	(TODO: allow examples that would be executed by the test framework, possibly with doctests, to be tested)
 	
-7. See Also (encouraged)
+6. See Also (encouraged)
 
 	An optional section used to refer to related code. This will allow for easily browsing the documentation.
 	
 	TO BE COMPLETED
 	
-8. Notes (optional)
+7. Notes (optional)
 
 	This optional section can provide various additional information about the code of interest to the user, such as a discussion about the algorithm used by the function. Depreciation warnings can also be specified here. We haven't yet specified a formal syntax for those. The numpydoc convention uses a Sphinx directive which we tend to avoid.
 
@@ -188,7 +190,7 @@ In order, the sections of a function comment are:
 	(Is there a way to filter out this section when the `help` function is called from the REPL?)
 
 
-9. References (optional)
+8. References (optional)
 
     (TODO: should we allow references for the **Notes** section here? see numpydoc guide)
 
