@@ -35,7 +35,7 @@ The length of comment lines should be kept to 75 characters; note that this appl
 
 For a class, function or method (uniquely referred to as function from now on), a documentation comment starts with the following introductory content:
 
-1. First line with the short name of the function followed by a concise description
+1. First line with the short name of the function followed by a concise description. Names are not capitalized.
 
 2. Second line empty
 
@@ -91,7 +91,7 @@ In order, the sections of a function comment are:
 
 1. Arguments/Parameters
 
-    Description of the function arguments, keywords and their respective types, using Google style.
+  Description of the function arguments, keywords and their respective types, using Google style. Argument names are not capitalized.
    
 	```matlab
 	% Args:
@@ -127,7 +127,7 @@ In order, the sections of a function comment are:
 
 2. Returns
 
-    Explanation of the returned values and their types. We distinguish two cases.
+    Explanation of the returned values and their types. Return values are not capitalized. We distinguish two cases.
    
     First, when a single value is returned, we use the Google style:
    
@@ -176,9 +176,7 @@ In order, the sections of a function comment are:
 	
 6. See Also (encouraged)
 
-	An optional section used to refer to related code. This will allow for easily browsing the documentation.
-	
-	TO BE COMPLETED
+	An optional section used to refer to related code. This will allow for easily browsing the documentation. Fully qualified names should be used for class objects and methods.
 	
 7. Notes (optional)
 
