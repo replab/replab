@@ -8,7 +8,7 @@ function test_suite = RepresentationsTest()
     
     % test orbit decomposition
     G = replab.Permutations(4).subgroup({[2 1 3 4] [2 3 4 1]});
-    rho = G.naturalRep;
+    rho = G.definingRep;
     I = rho.decomposition;
     test_suite = replab.IrreducibleLaws(I).addTestCases(test_suite);
     % test standard representation
@@ -19,17 +19,17 @@ function test_suite = RepresentationsTest()
     Q = replab.signed.Permutations.quaternionGroup;
     S3 = replab.S(3);
     W = S3.wreathProduct(Q);
-    rho = W.primitiveRep(Q.naturalRep);
+    rho = W.primitiveRep(Q.definingRep);
     I = rho.decomposition;
     test_suite = replab.IrreducibleLaws(I).addTestCases(test_suite);
-    rho = W.imprimitiveRep(Q.naturalRep);
+    rho = W.imprimitiveRep(Q.definingRep);
     I = rho.decomposition;
     test_suite = replab.IrreducibleLaws(I).addTestCases(test_suite);
 end
 
 function test_symmetric_group_representations
     G = replab.Permutations(4).subgroup({[2 1 3 4] [2 3 4 1]});
-    rho = G.naturalRep;
+    rho = G.definingRep;
     I = rho.decomposition;
     assertEqual(I.nComponents, 2);
     assertEqual(cellfun(@(c) c.irrepDimension, I.components), [1 3]);
@@ -38,7 +38,7 @@ end
 
 function test_representation_of_cyclic_group
     C12 = replab.Permutations(12).cyclicSubgroup;
-    rep = C12.naturalRep;
+    rep = C12.definingRep;
     dec = rep.decomposition;
     d = cellfun(@(iso) iso.irrepDimension, dec.components);
     m = cellfun(@(iso) iso.multiplicity, dec.components);

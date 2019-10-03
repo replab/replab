@@ -91,7 +91,7 @@ In order, the sections of a function comment are:
 
 1. Arguments/Parameters
 
-    Description of the function arguments, keywords and their respective types, using Google style. Argument names are not capitalized.
+  Description of the function arguments, keywords and their respective types, using Google style. Argument names are not capitalized.
    
 	```matlab
 	% Args:

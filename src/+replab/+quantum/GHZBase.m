@@ -74,7 +74,7 @@ classdef GHZBase < replab.CompactGroup
             end
         end
         
-        function rep = naturalRep(self)
+        function rep = definingRep(self)
         % Returns the natural representation of this group
         %
         % Returns:

@@ -57,7 +57,7 @@ classdef UnitaryGroup < replab.CompactGroup
 
         %% Representation methods
         
-        function rep = naturalRep(self)
+        function rep = definingRep(self)
         % Returns the natural representation of this unitary group
             rep = replab.Rep.lambda(self, 'C', self.n, true, @(u) u, @(u) u');
         end

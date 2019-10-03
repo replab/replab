@@ -56,12 +56,12 @@ classdef GHZ < replab.semidirectproduct.OfCompactGroups
             rho = partyRho*levelRho*phaseRho;
         end
         
-        function rep = naturalRep(self)
+        function rep = definingRep(self)
         % Returns the natural representation of this group
         %
         % Returns:
         %   replab.Rep: The unitary natural representation
-            rep = replab.Rep.lambda(self, 'C', self.N.naturalRep.dimension, true, @(g) self.toMatrix(g));
+            rep = replab.Rep.lambda(self, 'C', self.N.definingRep.dimension, true, @(g) self.toMatrix(g));
         end
         
     end

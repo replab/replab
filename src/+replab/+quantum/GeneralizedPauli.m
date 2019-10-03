@@ -95,7 +95,7 @@ classdef GeneralizedPauli < replab.FiniteGroup
             end
         end
         
-        function rep = naturalRep(self)
+        function rep = definingRep(self)
             omega = self.rootsOfUnity;
             d = self.d;
             W = diag(omega(2)*ones(1, d));
