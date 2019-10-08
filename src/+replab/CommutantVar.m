@@ -967,7 +967,7 @@ classdef CommutantVar < replab.Str
                             
                             % If needed, we replace ':' by actual indices
                             for i = 1:2
-                                if isequal(varargin{1}.subs{i}, ':')
+                                if ischar(varargin{1}.subs{i}) && isequal(varargin{1}.subs{i}, ':')
                                     varargin{1}.subs{i} = 1:size(self,i);
                                 end
                             end
