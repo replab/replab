@@ -101,21 +101,21 @@ In order, the sections of a function comment are:
 
    If it is not necessary to specify an argument, use `optional`:
 
-```matlab
-%   x (type, optional): optional parameter of type `type`
-```
+   ```matlab
+   %   x (type, optional): optional parameter of type `type`
+   ```
 
    When a parameter can only assume one of a fixed set of values, those values can be listed in braces. If the argument is optional, the default value appears first:
 
-```matlab
-%   field ({'R', 'C'})
-```
+   ```matlab
+   %   field ({'R', 'C'})
+   ```
 
    When two or more input parameters have exactly the same type, shape and description, they can be combined:
 
-```matlab
-%   a, b (double): Elements to sum
-```
+   ```matlab
+   %   a, b (double): Elements to sum
+   ```
 
    Matlab/Octave encodes integer values using double floating point numbers. Our convention is to name those values `integer`. In the rare case a primitive integer type is needed, we write that type precisely (as in `int32` or `uint32`). Big integers have type `vpi`, which is the name of the external library that supports them.
 
@@ -131,60 +131,60 @@ In order, the sections of a function comment are:
    
     First, when a single value is returned, we use the Google style:
    
-```matlab
-function c = sum(a, b)
-% sum - Sums two numbers
-%
-% c = sum(a, b)
-% Adds the value of a and b.
-%
-% Returns:
-%   double: The sum of the parameters
-```
+   ```matlab
+   function c = sum(a, b)
+   % sum - Sums two numbers
+   %
+   % c = sum(a, b)
+   % Adds the value of a and b.
+   %
+   % Returns:
+   %   double: The sum of the parameters
+   ```
 
-```matlab
-function [c d] = sorted2(a, b)
-% sorted2 - Sorts two numbers
-%
-% [c d] = sorted2(a, b)
-% Returns a and b as c and d so as to always satisfy the condition c <= d.
-%
-% Returns
-% -------
-%   c: double
-%     Smallest number
-%   d: double
-%     Largest number
-```
+   ```matlab
+   function [c d] = sorted2(a, b)
+   % sorted2 - Sorts two numbers
+   %
+   % [c d] = sorted2(a, b)
+   % Returns a and b as c and d so as to always satisfy the condition c <= d.
+   %
+   % Returns
+   % -------
+   %   c: double
+   %     Smallest number
+   %   d: double
+   %     Largest number
+   ```
 
 3. Raises (optional)
 
-	An optional section detailling which errors get raised and under what conditions.
+   An optional section detailling which errors get raised and under what conditions.
 	
-	TO BE COMPLETED
+   TO BE COMPLETED
 	
 4. Warnings (optional)
 
-	An optional section detailling which warnings get raised and under what conditions, formatted similarly to Raises.
+   An optional section detailling which warnings get raised and under what conditions, formatted similarly to Raises.
 
 5. Examples (encouraged)
 
-	A section with explicit commands illustrating as clearly as possible one or several ways of calling the function.
+   A section with explicit commands illustrating as clearly as possible one or several ways of calling the function.
 
-	(TODO: allow examples that would be executed by the test framework, possibly with doctests, to be tested)
+   (TODO: allow examples that would be executed by the test framework, possibly with doctests, to be tested)
 	
 6. See Also (encouraged)
 
-	An optional section used to refer to related code. This will allow for easily browsing the documentation. Fully qualified names should be used for class objects and methods.
+   An optional section used to refer to related code. This will allow for easily browsing the documentation. Fully qualified names should be used for class objects and methods.
 	
 7. Notes (optional)
 
-	This optional section can provide various additional information about the code of interest to the user, such as a discussion about the algorithm used by the function. Depreciation warnings can also be specified here. We haven't yet specified a formal syntax for those. The numpydoc convention uses a Sphinx directive which we tend to avoid.
+   This optional section can provide various additional information about the code of interest to the user, such as a discussion about the algorithm used by the function. Depreciation warnings can also be specified here. We haven't yet specified a formal syntax for those. The numpydoc convention uses a Sphinx directive which we tend to avoid.
 
-	Before the section, the comment should be broken by a single empty line without `%`. This should stop matlab from parsing, and thus allow us to use further formatting such as LaTeX. The content from now on would then only be presented in the Sphinx API. (TODO: check this)
+   Before the section, the comment should be broken by a single empty line without `%`. This should stop matlab from parsing, and thus allow us to use further formatting such as LaTeX. The content from now on would then only be presented in the Sphinx API. (TODO: check this)
 
-	(TODO: should we allow the use of LaTeX equations with `$` delimitations there, as in the numpydoc guide stipulates?)
-	(Is there a way to filter out this section when the `help` function is called from the REPL?)
+   (TODO: should we allow the use of LaTeX equations with `$` delimitations there, as in the numpydoc guide stipulates?)
+   (Is there a way to filter out this section when the `help` function is called from the REPL?)
 
 
 8. References (optional)
