@@ -91,39 +91,39 @@ In order, the sections of a function comment are:
 
 1. Arguments/Parameters
 
-  Description of the function arguments, keywords and their respective types, using Google style. Argument names are not capitalized.
+   Description of the function arguments, keywords and their respective types, using Google style. Argument names are not capitalized.
    
-	```matlab
-	% Args:
-	%   x (type): Description of parameter `x`.
-	%   y: Description of parameter `y` (with type not specified)
-	```
+```matlab
+% Args:
+%   x (type): Description of parameter `x`.
+%   y: Description of parameter `y` (with type not specified)
+```
 
-	If it is not necessary to specify an argument, use `optional`:
-	
-	```matlab
-	%   x (type, optional): optional parameter of type `type`
-	```
-	
-	When a parameter can only assume one of a fixed set of values, those values can be listed in braces. If the argument is optional, the default value appears first:
-	
-	```matlab
-	%   field ({'R', 'C'})
-	```
-	
-	When two or more input parameters have exactly the same type, shape and description, they can be combined:
-	
-	```matlab
-	%   a, b (double): Elements to sum
-	```
-	
-	Matlab/Octave encodes integer values using double floating point numbers. Our convention is to name those values `integer`. In the rare case a primitive integer type is needed, we write that type precisely (as in `int32` or `uint32`). Big integers have type `vpi`, which is the name of the external library that supports them.
-	
-	Permutations are stored using row double vectors containing integers, and are documented as `permutation`. Same convention for signed permutations, that are documented as `signed permutation`.
-	
-	Strings represented as char arrays have type `char` (recent Matlab versions have a new `string` type which should not be confused with).
-	
-	Function handles have type `function_handle`.
+   If it is not necessary to specify an argument, use `optional`:
+
+```matlab
+%   x (type, optional): optional parameter of type `type`
+```
+
+   When a parameter can only assume one of a fixed set of values, those values can be listed in braces. If the argument is optional, the default value appears first:
+
+```matlab
+%   field ({'R', 'C'})
+```
+
+   When two or more input parameters have exactly the same type, shape and description, they can be combined:
+
+```matlab
+%   a, b (double): Elements to sum
+```
+
+   Matlab/Octave encodes integer values using double floating point numbers. Our convention is to name those values `integer`. In the rare case a primitive integer type is needed, we write that type precisely (as in `int32` or `uint32`). Big integers have type `vpi`, which is the name of the external library that supports them.
+
+   Permutations are stored using row double vectors containing integers, and are documented as `permutation`. Same convention for signed permutations, that are documented as `signed permutation`.
+
+   Strings represented as char arrays have type `char` (recent Matlab versions have a new `string` type which should not be confused with).
+
+   Function handles have type `function_handle`.
 
 2. Returns
 
@@ -131,33 +131,32 @@ In order, the sections of a function comment are:
    
     First, when a single value is returned, we use the Google style:
    
-    ```matlab
-    function c = sum(a, b)
-    % sum - Sums two numbers
-    %
-    % c = sum(a, b)
-    % Adds the value of a and b.
-    %
-    % Returns:
-    %   double: The sum of the parameters
-    ```
-   
-   
-    ```matlab
-    function [c d] = sorted2(a, b)
-    % sorted2 - Sorts two numbers
-    %
-    % [c d] = sorted2(a, b)
-    % Returns a and b as c and d so as to always satisfy the condition c <= d.
-    %
-    % Returns
-    % -------
-    %   c: double
-    %     Smallest number
-    %   d: double
-    %     Largest number
-    ```
-   
+```matlab
+function c = sum(a, b)
+% sum - Sums two numbers
+%
+% c = sum(a, b)
+% Adds the value of a and b.
+%
+% Returns:
+%   double: The sum of the parameters
+```
+
+```matlab
+function [c d] = sorted2(a, b)
+% sorted2 - Sorts two numbers
+%
+% [c d] = sorted2(a, b)
+% Returns a and b as c and d so as to always satisfy the condition c <= d.
+%
+% Returns
+% -------
+%   c: double
+%     Smallest number
+%   d: double
+%     Largest number
+```
+
 3. Raises (optional)
 
 	An optional section detailling which errors get raised and under what conditions.
@@ -204,11 +203,11 @@ We document classes immediately after the `classdef` declaration. However, this 
 Class properties are documented by *not* adding a semicolon `;` to each property, and following them by a comment as in below:
 
 ```matlab
-    properties (SetAccess = protected)
-        group % Group being representation
-        field % 'R' for a representation on a real vector space, 'C' for a representation on a complex vector space
-        dimension % Representation dimension
-    end
+properties (SetAccess = protected)
+    group % Group being representation
+    field % 'R' for a representation on a real vector space, 'C' for a representation on a complex vector space
+    dimension % Representation dimension
+end
 ```
 
 Methods are documented as are standalone functions. Do not include `self` in the list of parameters. The constructor is documented separately as any method.
