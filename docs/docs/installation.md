@@ -29,9 +29,9 @@ The representation theory code of the library is self-contained. Extended featur
 
 ### Option 2: Clone the library
 
-<details>
-<summary>For advanced users only, click here to unfold.</summary>
+<details><summary>For advanced users only, click here to unfold.</summary>
 <p>
+
 Clone the library from GitHub using the following command:
 
 ```
@@ -41,7 +41,9 @@ git clone --recursive https://www.github.com/replab/replab
 which will download the latest `master` version, and update the Git submodules automatically.
 
 This creates a folder **RepLAB** with all the necessary code, including the [VPI](https://ch.mathworks.com/matlabcentral/fileexchange/22725-variable-precision-integer-arithmetic) library for large integers, the testing suite [MOxUnit](https://github.com/MOxUnit/MOxUnit), and the tools needed for semidefinite programming.
+
 </p>
+</details>
 
 ## Setting up the path
 
