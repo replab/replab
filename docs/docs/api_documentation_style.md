@@ -93,11 +93,11 @@ In order, the sections of a function comment are:
 
    Description of the function arguments, keywords and their respective types, using Google style. Argument names are not capitalized.
    
-```matlab
-% Args:
-%   x (type): Description of parameter `x`.
-%   y: Description of parameter `y` (with type not specified)
-```
+   ```matlab
+   % Args:
+   %   x (type): Description of parameter `x`.
+   %   y: Description of parameter `y` (with type not specified)
+   ```
 
    If it is not necessary to specify an argument, use `optional`:
 
