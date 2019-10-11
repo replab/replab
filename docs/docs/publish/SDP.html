@@ -31,12 +31,12 @@ MSymOpt =
 cstrSdpMatrix = 
 
 Commutant variable 3x3 (2 blocks, 1 scalar variables)
-             U: [0.57735, -0.26592, 0.77198; 0.57735, 0.80151, -0.1557; 0.57735, -0.53559, -0.61628]
-           dim: 3                                                                                   
-   dimensions1: [1, 2]                                                                              
-multiplicities: [1, 1]                                                                              
-         types: 'RC'                                                                                
-        blocks: [1, 2]                                                                              
+             U: [0.57735, 0.67796, -0.45501; 0.57735, -0.73303, -0.35962; 0.57735, 0.055074, 0.81464]
+           dim: 3                                                                                    
+   dimensions1: [1, 2]                                                                               
+multiplicities: [1, 1]                                                                               
+         types: 'RC'                                                                                 
+        blocks: [1, 2]                                                                               
 </pre><p>In this trivial case, the SDP matrix is left to contain only one variable: the additional constraints collapsed the all group orbits together.</p><h2>Imposing symmetry to an existing SDP matrix<a name="13"></a></h2><p>Symmetry constraints can also be straightforwardly imposed on existing SDP matrices with arbitrary structure.</p><p>For instance, consider the following special SDP matrix</p><pre class="codeinput">x = sdpvar;
 y = sdpvar
 MSpecial = [1 x y
@@ -49,13 +49,13 @@ Coeffiecient range: 1 to 1
 MSpecialSym = 
 
 Commutant variable 3x3 (2 blocks, 4 scalar variables)
-                U: [0.57735, 0.033343, 0.81582; 0.57735, 0.68985, -0.43678; 0.57735, -0.72319, -0.37903]
-              dim: 3                                                                                    
-      dimensions1: [1, 2]                                                                               
-   multiplicities: [1, 1]                                                                               
-            types: 'RC'                                                                                 
-           blocks: [1, 2]                                                                               
-linearConstraints: constraint                                                                           
+                U: [0.57735, 0.7133, -0.39734; 0.57735, -0.70075, -0.41906; 0.57735, -0.012544, 0.8164]
+              dim: 3                                                                                   
+      dimensions1: [1, 2]                                                                              
+   multiplicities: [1, 1]                                                                              
+            types: 'RC'                                                                                
+           blocks: [1, 2]                                                                              
+linearConstraints: constraint                                                                          
 </pre><p>Requesting this matrix to be PSD now imposes both</p><div><ul><li>Positivity of the 1x1 and 2x2 blocks</li><li>Equality with the imposed form</li></ul></div><p>as can be seen with</p><pre class="codeinput">MSpecialSym &gt;= 0
 </pre><pre class="codeoutput">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |   ID|                    Constraint|   Coefficient range|
@@ -89,12 +89,12 @@ ans =
 MInvariantBlock = 
 
 Commutant variable 3x3 (2 blocks, 2 scalar variables)
-             U: [0.57735, 0.62636, -0.52378; 0.57735, 0.14043, 0.80433; 0.57735, -0.76678, -0.28055]
-           dim: 3                                                                                   
-   dimensions1: [1, 2]                                                                              
-multiplicities: [1, 1]                                                                              
-         types: 'RC'                                                                                
-        blocks: [1, 2]                                                                              
+             U: [0.57735, -0.72331, 0.37881; 0.57735, 0.68971, 0.437; 0.57735, 0.033594, -0.81581]
+           dim: 3                                                                                 
+   dimensions1: [1, 2]                                                                            
+multiplicities: [1, 1]                                                                            
+         types: 'RC'                                                                              
+        blocks: [1, 2]                                                                            
 </pre><p>No new variable has been introduced in the new object, but the block structure has been found:</p><pre class="codeinput">full(MInvariantBlock.blockMask)
 </pre><pre class="codeoutput">
 ans =
@@ -108,7 +108,7 @@ ans =
 |   ID|                    Constraint|   Coefficient range|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |   #1|   Element-wise inequality 1x1|              2 to 2|
-|   #2|         Matrix inequality 2x2|     5.5511e-16 to 2|
+|   #2|         Matrix inequality 2x2|     3.9552e-16 to 2|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 </pre><h2>Comparison with a direct formulation<a name="23"></a></h2><p>To conclude, let us show in more detail why the SDP formulation of a problem is more efficient if it takes advantage of the available symmetry properties. For this, we consider again the problem described at the beginning of this page. This problem can be solved directly as follows:</p><pre class="codeinput">M = sdpvar(3);
 constraints = [trace(M) == 1, M(permutation, permutation) == M, M &gt;= 0];
@@ -120,8 +120,8 @@ diagnostic =
   struct with fields:
 
     yalmipversion: '20190425'
-       yalmiptime: 0.0608
-       solvertime: 0.1078
+       yalmiptime: 0.0737
+       solvertime: 0.1497
              info: 'Successfully solved (SDPT3-4)'
           problem: 0
 
@@ -174,12 +174,12 @@ Coeffiecient range: 1 to 1
 MSym = 
 
 Commutant variable 3x3 (2 blocks, 2 scalar variables)
-             U: [0.57735, 0.81648, 0.0047412; 0.57735, -0.41235, 0.70472; 0.57735, -0.40414, -0.70947]
-           dim: 3                                                                                     
-   dimensions1: [1, 2]                                                                                
-multiplicities: [1, 1]                                                                                
-         types: 'RC'                                                                                  
-        blocks: [1, 2]                                                                                
+             U: [0.57735, 0.795, 0.18613; 0.57735, -0.55869, 0.59542; 0.57735, -0.2363, -0.78155]
+           dim: 3                                                                                
+   dimensions1: [1, 2]                                                                           
+multiplicities: [1, 1]                                                                           
+         types: 'RC'                                                                             
+        blocks: [1, 2]                                                                           
 </pre><p>In other words, the matrix is made of two blocks of size 1x1 and 2x2, and involves altogether just 2 variables.</p><p>The constraints this time are</p><pre class="codeinput">constraintsSym
 </pre><pre class="codeoutput">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |   ID|                    Constraint|   Coefficient range|
