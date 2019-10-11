@@ -6,7 +6,7 @@
 
 %% Defining the output relabelings
 % Outputs are binary, so we use the symmetric group of domain size 2
-% and the representation on P(a) is the natural representation
+% and the representation on P(a) is the defining representation
 S2 = replab.S(2)
 outputRep = S2.definingRep
 
@@ -18,7 +18,7 @@ outputRep = S2.definingRep
 % This is described by the wreath product of S2 by S2.
 %
 % The representation on P(a|x) is the imprimitive representation,
-% given that we use the natural representation for the inner group
+% given that we use the defining representation for the inner group
 party = S2.wreathProduct(S2)
 partyRep = party.imprimitiveRep(outputRep)
 
