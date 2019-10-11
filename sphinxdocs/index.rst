@@ -1,10 +1,33 @@
-.. sphinxcontrib-matlabdomain documentation master file, created by
-   sphinx-quickstart on Tue Jul 17 11:53:15 2018.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Abstract group structures in RepLAB
+===================================
 
-RepLAB documentation prototype in Sphinx
-========================================
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
 
-.. automodule:: +replab
-     :members:
+The following three classes provide basic group structures.
+  
+.. module:: src.+replab
+
+* :class:`.Monoid`: structure with a binary associatvie operation, an identity element (property), and test for identity
+* :class:`.Group`: adds inverse elements
+
+.. _Monoid:
+Monoid
+++++++
+
+.. autoclass:: Monoid
+   :members:
+
+.. _Group:
+Group
+++++++
+      
+.. autoclass:: Group
+   :members:
+
+Indices and tables
+==================
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
