@@ -27,9 +27,25 @@ function replab_release
 % 2. We verify that both the ``develop`` and ``master`` branches are in sync with 
 %    the ``origin`` remote. If not we abort.
 %
-% 2. We display the current snapshot version number, which is going to become master, the new snapshot version 
-% 
-% Move to the right folder
+% 3. We ask the user to confirm the version number of the stable release (by default,
+%    the develop -SNAPSHOT version with the -SNAPSHOT suffix removed), and the number
+%    of the next develop version (by default, the current version number with the
+%    minor release number incremented, and the -SNAPSHOT suffix added).
+%
+% 4. We checkout the develop branch, set the version number to the stable number, and
+%    commit. 
+%
+% 5. We checkout the master branch, merge the develop branch by fast-forward.
+%
+% 6. We tag the master HEAD with a version tag of the form "vMAJOR.MINOR.PATH", as in
+%    "v0.5.0", which is the format that GitHub recognizes for releases.
+%
+% 7. We checkout the develop branch, set the version number to the next snapshot number,
+%    and commit.
+%
+% 8. We output the command that the user should run to push the changes to the remote.
+%    In particular, it involves pushing both the master and develop branches, and the
+%    release tag.
     
     assert(exist('replab_version.txt') == 2, 'The current directory must be the RepLAB root folder.');
     [status, cmdout] = system('git rev-parse --abbrev-ref HEAD');
