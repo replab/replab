@@ -48,9 +48,10 @@ extensions = ['sphinx.ext.autodoc',   # for enumeration of objects stuff
 autodoc_default_flags = ['members']
 autosummary_generate = True
 
-matlab_src_dir = os.path.dirname(os.path.abspath(__file__ + "/../"))
+matlab_src_dir = os.path.dirname(os.path.abspath(__file__ + "/../"))+"/src"
+print matlab_src_dir
 primary_domain = 'mat'
-
+default_role = 'obj'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -82,6 +83,6 @@ pygments_style = 'sphinx'
 
 # -- Options for HTML output -------------------------------------------------
 
-html_theme = 'renga'
-import renga_sphinx_theme
-html_theme_path = [renga_sphinx_theme.get_path()]
+html_theme = 'solar_theme'
+import solar_theme
+html_theme_path = [solar_theme.theme_path]

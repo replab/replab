@@ -67,7 +67,7 @@ classdef Group < replab.Monoid
         %   inverseFun (function_handle): Handle implementing the `inverse` method
         %
         % Returns:
-        %   replab.Group: The constructed group
+        %   :class:`+replab.Group`: The constructed group
             
             group = replab.lambda.Group(header, eqvFun, sampleFun, ...
                                         composeFun, identity, inverseFun);

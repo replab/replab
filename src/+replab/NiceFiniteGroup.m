@@ -1,18 +1,18 @@
 classdef NiceFiniteGroup < replab.FiniteGroup
 % A nice finite group is a finite group equipped with an injective homomorphism into a permutation group
 %
-% The class that subclasses `replab.NiceFiniteGroup` implements a method `niceMonomorphismImage` that returns a
+% The class that subclasses `.NiceFiniteGroup` implements a method `niceMonomorphismImage` that returns a
 % permutation row vector corresponding to a group element.
 %
-% In turn, the `replab.NiceFiniteGroup` infrastructure will use that method to build a BSGS chain to describe
+% In turn, the `.NiceFiniteGroup` infrastructure will use that method to build a BSGS chain to describe
 % the structure of the finite group; this chain also provides a way to compute the preimage of a permutation.
 %
-% Thus, an isomorphism is established between the present `replab.NiceFiniteGroup` and a permutation group; as
+% Thus, an isomorphism is established between the present `.NiceFiniteGroup` and a permutation group; as
 % permutation groups can be handled by efficient BSGS algorithms, the requested computations can be
 % translated back and forth between this group and a permutation group.
 %
-% In particular, the decomposition of the finite group in a product of sets (`replab.FiniteGroupDecomposition`),
-% the enumeration of elements using a `replab.IndexedFamily`, the construction of subgroups is all handled
+% In particular, the decomposition of the finite group in a product of sets (`.FiniteGroupDecomposition`),
+% the enumeration of elements using a `.IndexedFamily`, the construction of subgroups is all handled
 % by permutation group algorithms.
 %
 % Handling subgroups
@@ -174,7 +174,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         function b = contains(self, g)
         % Tests whether this group contains the given parent group element
         %
-        % Abstract in `replab.FiniteSubgroup`
+        % Abstract in `+replab.FiniteSubgroup`
         %
         % Args:
         %   g (element of `self.parent`): Element to test membership of
@@ -196,7 +196,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %   images (row cell array of matrices): Images of the group generators
         %   inverseImages (row cell array of matrices): Inverse images of the group generators
         % Returns:
-        %   replab.Rep: The constructed group representation
+        %   `+replab.Rep`: The constructed group representation
             if nargin < 6
                 inverseImages = [];
             end
