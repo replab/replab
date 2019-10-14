@@ -171,10 +171,26 @@ function replab_addpaths(verbose)
             F = [x >= 0, trace(x) == 1];
             [interfacedata,recoverdata,solver,diagnostic] = compileinterfacedata(F, [], [], [], sdpsettings, 0, 0);
             decentSDPSolverInPath = isempty(diagnostic);
+
             % If LMILAB was identified as the best solver to solve the
             % problem, this means that no good solver was found.
             if ~isempty(strfind(upper(solver.tag), 'LMILAB'))
                 decentSDPSolverInPath = false;
+            end
+            
+            % If a decent solver was found, we make sure it can actually
+            % solve an SDP (e.g. the license is valid ;-)
+            if decentSDPSolverInPath
+                sol = solvesdp(F, x(1,2));
+                if isempty(sol) || ~isequal(sol, 0)
+                    decentSDPSolverInPath = false;
+                    if verbose >= 2
+                        disp(['The solver ', solver.tag, ' was found, but it produced the following error when called']);
+                        disp('to solve and SDP:');
+                        disp(['    ', sol.info]);
+                        disp('Trying to use the embedded solver instead.');
+                    end
+                end
             end
         catch
         end
