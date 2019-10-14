@@ -46,7 +46,7 @@ classdef Group < replab.Monoid
         %   y (element): Second element
         %
         % Returns:
-        %   element: the result of `x * y^-1` in multiplicative notation
+        %   element: the result of ``x * y^-1`` in multiplicative notation
             z = self.compose(x, self.inverse(y));
         end
         
