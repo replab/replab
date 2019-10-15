@@ -32,7 +32,7 @@ classdef Group < replab.Monoid
         %   on (element): Element conjugated
         %  
         % Returns:
-        %   element: left conjuagate, i.e. `by * on * by^-1` in multiplicative notation
+        %   element: left conjugate, i.e. `by * on * by^-1` in multiplicative notation
             x = self.composeWithInverse(self.compose(by, on), by);
         end
         
