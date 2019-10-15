@@ -68,7 +68,7 @@ classdef NiceBasis < replab.Str
             for i = 1:d
                 c = self.T(i, i);
                 inv2 = 1/(c*c);
-                if abs(inv2 - round(inv2)) < replab.Settings.doubleEigTol
+                if abs(inv2 - round(inv2)) < replab.Parameters.doubleEigTol
                     n = round(inv2);
                     if n == 1
                         D{i} = '';
@@ -104,7 +104,7 @@ classdef NiceBasis < replab.Str
                % we solve newU = newT * newV, which is newT = newU / newV
                 newT = newU / newV;                
                 newVV = newV*newV';
-                if isdiag(newVV) && ~replab.isNonZeroMatrix(diag(diag(newT)) - newT, replab.Settings.doubleEigTol)
+                if isdiag(newVV) && ~replab.isNonZeroMatrix(diag(diag(newT)) - newT, replab.Parameters.doubleEigTol)
                     newT = diag(1./sqrt(diag(newVV)));
                 end
                 U = newT * newV;

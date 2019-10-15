@@ -7,8 +7,8 @@ classdef ForCompactGroup < replab.Equivariant
         end
 
         function X = project(self, X)
-            nI = replab.Settings.averagingIterations;
-            nS = replab.Settings.averagingSamples;
+            nI = replab.Parameters.averagingIterations;
+            nS = replab.Parameters.averagingSamples;
             for i = 1:nI
                 g = self.group.sample;
                 S = self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X));
