@@ -3,7 +3,9 @@ function prd = of(phi)
     className = replab.directproduct.commonClass({phi.G phi.P});
     switch className
       case 'replab.NiceFiniteGroup'
-        prd = replab.semidirectproduct.OfNiceFiniteGroups(phi);
+        % we disabled the NiceFiniteGroup construction which is
+        % buggy, see issue #132
+        prd = replab.semidirectproduct.OfFiniteGroups(phi);
       case 'replab.FiniteGroup'
         prd = replab.semidirectproduct.OfFiniteGroups(phi);
       case 'replab.CompactGroup'
