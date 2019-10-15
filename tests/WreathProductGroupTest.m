@@ -15,5 +15,5 @@ function test_wreath_subgroup
     S2 = replab.Permutations(2);
     W = S2.wreathProduct(S2);
     g = {[2 1] {[1 2] [2 1]}};
-    assertEqual(W.subgroup({g}).order, 4);
+    assertEqual(W.subgroup({g}).order, vpi(4));
 end
