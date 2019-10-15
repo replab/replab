@@ -1,4 +1,4 @@
-function exitCode = replab_easy_install
+function exitCode = replab_easyinstall
 % Checks if the external dependencies are present, 
 %
 % If everything is setup correctly already, the script does not require user interaction, but will

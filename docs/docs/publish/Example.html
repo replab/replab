@@ -46,26 +46,26 @@ Indexed family of 24 elements
  2 = [1, 2, 4, 3]
  3 = [1, 3, 4, 2]
  4 = [1, 3, 2, 4]
- 5 = [1, 4, 2, 3]
- 6 = [1, 4, 3, 2]
+ 5 = [1, 4, 3, 2]
+ 6 = [1, 4, 2, 3]
  7 = [2, 3, 4, 1]
  8 = [2, 3, 1, 4]
  9 = [2, 4, 1, 3]
 10 = [2, 4, 3, 1]
-11 = [2, 1, 3, 4]
-12 = [2, 1, 4, 3]
+11 = [2, 1, 4, 3]
+12 = [2, 1, 3, 4]
 13 = [3, 4, 1, 2]
 14 = [3, 4, 2, 1]
 15 = [3, 1, 2, 4]
 16 = [3, 1, 4, 2]
-17 = [3, 2, 4, 1]
-18 = [3, 2, 1, 4]
+17 = [3, 2, 1, 4]
+18 = [3, 2, 4, 1]
 19 = [4, 1, 2, 3]
 20 = [4, 1, 3, 2]
 21 = [4, 2, 3, 1]
 22 = [4, 2, 1, 3]
-23 = [4, 3, 1, 2]
-24 = [4, 3, 2, 1]
+23 = [4, 3, 2, 1]
+24 = [4, 3, 1, 2]
 </pre><p>a technique that works even for big groups.</p><pre class="codeinput">S30 = replab.Permutations(30).subgroup({[2:30 1] [2 1 3:30]})
 S30.order
 </pre><pre class="codeoutput">
@@ -97,22 +97,22 @@ Indexed family of 265252859812191058636308480000000 elements
                                   11 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22...
                                   12 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22...
 .. 265252859812191058636308479999977   elements omitted                                                                 
-   265252859812191058636308479999990 = [30, 29, 20, 22, 15, 25, 26, 17, 24, 19, 21, 23, 5, 1, 27, 6, 9, 18, 2, 7, 3, ...
-   265252859812191058636308479999991 = [30, 29, 20, 22, 15, 25, 26, 17, 24, 19, 21, 23, 5, 1, 27, 6, 9, 18, 2, 7, 3, ...
-   265252859812191058636308479999992 = [30, 29, 20, 22, 15, 25, 26, 17, 24, 19, 21, 23, 5, 1, 27, 6, 9, 18, 2, 7, 3, ...
-   265252859812191058636308479999993 = [30, 29, 20, 22, 15, 25, 26, 17, 24, 19, 21, 23, 5, 1, 27, 6, 9, 18, 2, 7, 3, ...
-   265252859812191058636308479999994 = [30, 29, 20, 22, 15, 25, 26, 17, 24, 19, 21, 23, 5, 1, 27, 6, 9, 18, 2, 7, 3, ...
-   265252859812191058636308479999995 = [30, 29, 20, 22, 15, 25, 26, 17, 24, 19, 21, 23, 5, 1, 27, 6, 9, 18, 2, 7, 3, ...
-   265252859812191058636308479999996 = [30, 29, 20, 22, 15, 25, 26, 17, 24, 19, 21, 23, 5, 1, 27, 6, 9, 18, 2, 7, 3, ...
-   265252859812191058636308479999997 = [30, 29, 20, 22, 15, 25, 26, 17, 24, 19, 21, 23, 5, 1, 27, 6, 9, 18, 2, 7, 3, ...
-   265252859812191058636308479999998 = [30, 29, 20, 22, 15, 25, 26, 17, 24, 19, 21, 23, 5, 1, 27, 6, 9, 18, 2, 7, 3, ...
-   265252859812191058636308479999999 = [30, 29, 20, 22, 15, 25, 26, 17, 24, 19, 21, 23, 5, 1, 27, 6, 9, 18, 2, 7, 3, ...
-   265252859812191058636308480000000 = [30, 29, 20, 22, 15, 25, 26, 17, 24, 19, 21, 23, 5, 1, 27, 6, 9, 18, 2, 7, 3, ...
-</pre><h2>Group representations<a name="11"></a></h2><p>The natural representation of <img src="Example_eq04512613085109396518.png" alt="$S_4$"> simply permutes the coordinates of <img src="Example_eq13786275735700711008.png" alt="$R^4$">:</p><pre class="codeinput">rho = S4.naturalRep
+   265252859812191058636308479999990 = [30, 29, 12, 11, 5, 10, 24, 9, 25, 2, 8, 13, 14, 27, 1, 26, 6, 28, 16, 17, 19,...
+   265252859812191058636308479999991 = [30, 29, 12, 11, 5, 10, 24, 9, 25, 2, 8, 13, 14, 27, 1, 26, 6, 28, 16, 17, 19,...
+   265252859812191058636308479999992 = [30, 29, 12, 11, 5, 10, 24, 9, 25, 2, 8, 13, 14, 27, 1, 26, 6, 28, 16, 17, 19,...
+   265252859812191058636308479999993 = [30, 29, 12, 11, 5, 10, 24, 9, 25, 2, 8, 13, 14, 27, 1, 26, 6, 28, 16, 17, 19,...
+   265252859812191058636308479999994 = [30, 29, 12, 11, 5, 10, 24, 9, 25, 2, 8, 13, 14, 27, 1, 26, 6, 28, 16, 17, 19,...
+   265252859812191058636308479999995 = [30, 29, 12, 11, 5, 10, 24, 9, 25, 2, 8, 13, 14, 27, 1, 26, 6, 28, 16, 17, 19,...
+   265252859812191058636308479999996 = [30, 29, 12, 11, 5, 10, 24, 9, 25, 2, 8, 13, 14, 27, 1, 26, 6, 28, 16, 17, 19,...
+   265252859812191058636308479999997 = [30, 29, 12, 11, 5, 10, 24, 9, 25, 2, 8, 13, 14, 27, 1, 26, 6, 28, 16, 17, 19,...
+   265252859812191058636308479999998 = [30, 29, 12, 11, 5, 10, 24, 9, 25, 2, 8, 13, 14, 27, 1, 26, 6, 28, 16, 17, 19,...
+   265252859812191058636308479999999 = [30, 29, 12, 11, 5, 10, 24, 9, 25, 2, 8, 13, 14, 27, 1, 26, 6, 28, 16, 17, 19,...
+   265252859812191058636308480000000 = [30, 29, 12, 11, 5, 10, 24, 9, 25, 2, 8, 13, 14, 27, 1, 26, 6, 28, 16, 17, 19,...
+</pre><h2>Group representations<a name="11"></a></h2><p>The defining representation of <img src="Example_eq04512613085109396518.png" alt="$S_4$"> simply permutes the coordinates of <img src="Example_eq13786275735700711008.png" alt="$R^4$">:</p><pre class="codeinput">rho = S4.definingRep
 </pre><pre class="codeoutput">
 rho = 
 
-replab.RepByImages
+Orthogonal real representation of dimension 4
     dimension: 4                                                                                                   
         field: 'R'                                                                                                 
         group: replab.PermutationSubgroup                                                                          
@@ -163,7 +163,7 @@ rho2 = S4.permutationRep(2, {[2 1] [2 1]})
 </pre><pre class="codeoutput">
 rho1 = 
 
-replab.RepByImages
+Orthogonal real representation of dimension 2
     dimension: 2                           
         field: 'R'                         
         group: replab.PermutationSubgroup  
@@ -174,7 +174,7 @@ inverseImages: {[0, 1; 1, 0], [0, 1; 1, 0]}
 
 rho2 = 
 
-replab.RepByImages
+Orthogonal real representation of dimension 2
     dimension: 2                           
         field: 'R'                         
         group: replab.PermutationSubgroup  
@@ -200,122 +200,165 @@ ans =
 </pre><pre class="codeoutput">
 I = 
 
-replab.Irreducible
-      parent: replab.RepByImages     
-component(1): Isotypic component R(1)
-component(2): Isotypic component R(3)
+Subrepresentation
+   dimension: 4                                            
+       field: 'R'                                          
+       group: replab.PermutationSubgroup                   
+   irrepInfo: []                                           
+   isUnitary: true                                         
+   niceBasis: replab.NiceBasis                             
+      parent: Orthogonal real representation of dimension 4
+      U(1,:): [1, 1, 1, 1]/2                               
+      U(2,:): [1, -1, 1, -1]/2                             
+      U(3,:): [1, 1, -1, -1]/2                             
+      U(4,:): [1, -1, -1, 1]/2                             
+component(1): Isotypic component R(1)                      
+component(2): Isotypic component R(3)                      
 </pre><p>We can get isotypic components and the copies of irreducible representations contained inside</p><pre class="codeinput">I.component(1)
-subrho1 = I.component(1).copy(1)
+subrho1 = I.component(1).irrep(1)
 </pre><pre class="codeoutput">
 ans = 
 
 Isotypic component R(1)
-copyDimension: 1                                           
- multiplicity: 1                                           
-       parent: replab.RepByImages                          
-      copy(1): Real-type real irreducible subrepresentation
+     dimension: 1                                              
+         field: 'R'                                            
+         group: replab.PermutationSubgroup                     
+irrepDimension: 1                                              
+     irrepInfo: []                                             
+     isUnitary: true                                           
+  multiplicity: 1                                              
+     niceBasis: replab.NiceBasis                               
+        parent: Orthogonal real representation of dimension 4  
+        U(1,:): [1, 1, 1, 1]/2                                 
+      irrep(1): Real irreducible subrepresentation of real type
 
 subrho1 = 
 
-Real-type real irreducible subrepresentation
-          dimension: 1                         
-              field: 'R'                       
-              group: replab.PermutationSubgroup
-          isUnitary: true                      
-             parent: replab.RepByImages        
-realDivisionAlgebra: R                         
-             U(1,:): [1, 1, 1, 1]/2            
+Real irreducible subrepresentation of real type
+dimension: 1                                            
+    field: 'R'                                          
+    group: replab.PermutationSubgroup                   
+irrepInfo: irreducible, '1', real of real type          
+isUnitary: true                                         
+niceBasis: replab.NiceBasis                             
+   parent: Orthogonal real representation of dimension 4
+   U(1,:): [1, 1, 1, 1]/2                               
 </pre><pre class="codeinput">I.component(2)
-subrho2 = I.component(2).copy(1)
+subrho2 = I.component(2).irrep(1)
 </pre><pre class="codeoutput">
 ans = 
 
 Isotypic component R(3)
-copyDimension: 3                                           
- multiplicity: 1                                           
-       parent: replab.RepByImages                          
-      copy(1): Real-type real irreducible subrepresentation
+     dimension: 3                                              
+         field: 'R'                                            
+         group: replab.PermutationSubgroup                     
+irrepDimension: 3                                              
+     irrepInfo: []                                             
+     isUnitary: true                                           
+  multiplicity: 1                                              
+     niceBasis: replab.NiceBasis                               
+        parent: Orthogonal real representation of dimension 4  
+        U(1,:): [1, -1, 1, -1]/2                               
+        U(2,:): [1, 1, -1, -1]/2                               
+        U(3,:): [1, -1, -1, 1]/2                               
+      irrep(1): Real irreducible subrepresentation of real type
 
 subrho2 = 
 
-Real-type real irreducible subrepresentation
-          dimension: 3                         
-              field: 'R'                       
-              group: replab.PermutationSubgroup
-          isUnitary: true                      
-             parent: replab.RepByImages        
-realDivisionAlgebra: R                         
-             U(1,:): [3, -1, -1, -1]/sqrt(12)  
-             U(2,:): [0, 2, -1, -1]/sqrt(6)    
-             U(3,:): [0, 0, 1, -1]/sqrt(2)     
+Real irreducible subrepresentation of real type
+dimension: 3                                            
+    field: 'R'                                          
+    group: replab.PermutationSubgroup                   
+irrepInfo: irreducible, real of real type               
+isUnitary: true                                         
+niceBasis: replab.NiceBasis                             
+   parent: Orthogonal real representation of dimension 4
+   U(1,:): [1, -1, 1, -1]/2                             
+   U(2,:): [1, 1, -1, -1]/2                             
+   U(3,:): [1, -1, -1, 1]/2                             
 </pre><p>with their bases:</p><pre class="codeinput">subrho1.U
 subrho2.U
 </pre><pre class="codeoutput">
 ans =
 
-    0.5000    0.5000    0.5000    0.5000
+   (1,1)       0.5000
+   (1,2)       0.5000
+   (1,3)       0.5000
+   (1,4)       0.5000
 
 
 ans =
 
-    0.8660   -0.2887   -0.2887   -0.2887
-         0    0.8165   -0.4082   -0.4082
-         0         0    0.7071   -0.7071
+    0.5000   -0.5000    0.5000   -0.5000
+    0.5000    0.5000   -0.5000   -0.5000
+    0.5000   -0.5000   -0.5000    0.5000
 
 </pre><h2>The commutant algebra<a name="21"></a></h2><p>The commutant algebra of <img src="Example_eq11905270608999804013.png" alt="$\rho$"> is composed of all the matrices <img src="Example_eq00802513524912003067.png" alt="$M$"> that commute with <img src="Example_eq11905270608999804013.png" alt="$\rho$">, that is <img src="Example_eq04980856141982846267.png" alt="$M \rho_g = \rho_g M$"> for all <img src="Example_eq07585311203459331132.png" alt="$g$"> in the group.</p><p><b>RepLAB</b> gives an access to that algebra:</p><pre class="codeinput">C = rho.commutant
 </pre><pre class="codeoutput">
 C = 
 
-replab.Commutant
- field: 'R'                       
- group: replab.PermutationSubgroup
-     n: 4                         
-parent: 4 x 4 real matrices       
-   rep: replab.RepByImages        
+replab.CommutantFromEquivariant
+ field: 'R'                                          
+ group: replab.PermutationSubgroup                   
+     n: 4                                            
+parent: 4 x 4 real matrices                          
+   rep: Orthogonal real representation of dimension 4
 </pre><p>and we can sample generic matrices from that algebra</p><pre class="codeinput">C.sample
 </pre><pre class="codeoutput">
 ans =
 
-    0.0398   -0.1140   -0.1140   -0.1140
-   -0.1140    0.0398   -0.1140   -0.1140
-   -0.1140   -0.1140    0.0398   -0.1140
-   -0.1140   -0.1140   -0.1140    0.0398
+   -0.5967   -0.2546   -0.2546   -0.2546
+   -0.2546   -0.5967   -0.2546   -0.2546
+   -0.2546   -0.2546   -0.5967   -0.2546
+   -0.2546   -0.2546   -0.2546   -0.5967
 
 </pre><p>or perform an orthogonal projection of arbitrary matrices in that algebra</p><pre class="codeinput">Mgen = rand(n, n)
 </pre><pre class="codeoutput">
 Mgen =
 
-    0.4514    0.1927    0.3569    0.4216
-    0.2435    0.8941    0.5466    0.3771
-    0.8555    0.7763    0.1359    0.5754
-    0.0507    0.1342    0.5612    0.8544
+    0.8343    0.2874    0.6532    0.3759
+    0.0156    0.5933    0.0406    0.3279
+    0.2400    0.7958    0.5468    0.9907
+    0.9846    0.5047    0.8417    0.4312
 
 </pre><pre class="codeinput">M = C.project(rand(n,n))
 </pre><pre class="codeoutput">
 M =
 
-    0.7527    0.5491    0.5491    0.5491
-    0.5491    0.7527    0.5491    0.5491
-    0.5491    0.5491    0.7527    0.5491
-    0.5491    0.5491    0.5491    0.7527
+    0.6755    0.4379    0.4379    0.4379
+    0.4379    0.6755    0.4379    0.4379
+    0.4379    0.4379    0.6755    0.4379
+    0.4379    0.4379    0.4379    0.6755
 
-</pre><p>Which is has a block diagonalization in the symmetry adapted basis:</p><pre class="codeinput">U = I.rep.U
+</pre><p>Which is has a block diagonalization in the symmetry adapted basis:</p><pre class="codeinput">U = I.U
 </pre><pre class="codeoutput">
 U =
 
-    0.5000    0.5000    0.5000    0.5000
-    0.8660   -0.2887   -0.2887   -0.2887
-         0    0.8165   -0.4082   -0.4082
-         0         0    0.7071   -0.7071
+   (1,1)       0.5000
+   (2,1)       0.5000
+   (3,1)       0.5000
+   (4,1)       0.5000
+   (1,2)       0.5000
+   (2,2)      -0.5000
+   (3,2)       0.5000
+   (4,2)      -0.5000
+   (1,3)       0.5000
+   (2,3)       0.5000
+   (3,3)      -0.5000
+   (4,3)      -0.5000
+   (1,4)       0.5000
+   (2,4)      -0.5000
+   (3,4)      -0.5000
+   (4,4)       0.5000
 
 </pre><pre class="codeinput">U*M*U'
 </pre><pre class="codeoutput">
 ans =
 
-    2.3999    0.0000         0         0
-    0.0000    0.2036    0.0000   -0.0000
-    0.0000    0.0000    0.2036    0.0000
-   -0.0000   -0.0000   -0.0000    0.2036
+    1.9893    0.0000    0.0000   -0.0000
+   -0.0000    0.2376   -0.0000    0.0000
+   -0.0000   -0.0000    0.2376    0.0000
+    0.0000    0.0000    0.0000    0.2376
 
 </pre></div><!--
 ##### SOURCE BEGIN #####
@@ -375,9 +418,9 @@ S30.elements
 
 
 %% Group representations
-% The natural representation of $S_4$ simply permutes the
+% The defining representation of $S_4$ simply permutes the
 % coordinates of $R^4$:
-rho = S4.naturalRep
+rho = S4.definingRep
 %%
 % We take two elements of $S_4$:
 g = [2 3 1 4]
@@ -411,11 +454,11 @@ I = rho.decomposition
 % We can get isotypic components and the copies of irreducible
 % representations contained inside
 I.component(1)
-subrho1 = I.component(1).copy(1)
+subrho1 = I.component(1).irrep(1)
 %%
 %
 I.component(2)
-subrho2 = I.component(2).copy(1)
+subrho2 = I.component(2).irrep(1)
 %%
 % with their bases:
 subrho1.U
@@ -442,7 +485,7 @@ M = C.project(rand(n,n))
 %%
 %%
 % Which is has a block diagonalization in the symmetry adapted basis:
-U = I.rep.U
+U = I.U
 %%
 %
 U*M*U'
