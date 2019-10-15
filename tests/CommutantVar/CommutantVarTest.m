@@ -26,7 +26,7 @@ function test_fromPermutations
         vars = getvariables(difference);
         for j = 1:length(vars)
             coeffs = getbasematrix(difference, vars(j));
-            assert(norm(coeffs(:)) <= replab.Settings.doubleEigTol);
+            assert(norm(coeffs(:)) <= replab.Parameters.doubleEigTol);
         end
     end
 end
@@ -75,7 +75,7 @@ function test_fromSdpMatrix_SDP_CHSH
     obj2 = value(obj);
     
     % We compare the result:
-    assert(abs(obj1 - obj2)/abs(obj1) < replab.Settings.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
+    assert(abs(obj1 - obj2)/abs(obj1) < replab.Parameters.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
 end
 
 function test_fromSdpMatrix_SDP_CHSH_FullProb
@@ -138,7 +138,7 @@ function test_fromSdpMatrix_SDP_CHSH_FullProb
     obj2 = value(obj);
     
     % We compare the result:
-    assert(abs(obj1 - obj2)/abs(obj1) < replab.Settings.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
+    assert(abs(obj1 - obj2)/abs(obj1) < replab.Parameters.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
 end
 
 function test_fromSdpMatrix_SDP_CGLMP3_FullProb
@@ -225,7 +225,7 @@ function test_fromSdpMatrix_SDP_CGLMP3_FullProb
     obj2 = value(obj);
     
     % We compare the result:
-    assert(abs(obj1 - obj2)/abs(obj1) < replab.Settings.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
+    assert(abs(obj1 - obj2)/abs(obj1) < replab.Parameters.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
 end
 
 function test_fromSymSdpMatrix
@@ -261,7 +261,7 @@ function test_fromSymSdpMatrix
     obj2 = value(obj);
     
     % We compare the result:
-    assert(abs(obj1 - obj2)/abs(obj1) < replab.Settings.doubleSdpTol, 'Block-diagonalized SDP doesn''t yield the same result as the non-block-diagonalized one');
+    assert(abs(obj1 - obj2)/abs(obj1) < replab.Parameters.doubleSdpTol, 'Block-diagonalized SDP doesn''t yield the same result as the non-block-diagonalized one');
 end
 
 function test_fromIndexMatrix
@@ -298,7 +298,7 @@ function test_fromIndexMatrix
     obj2 = value(obj);
     
     % We compare the result:
-    assert(abs(obj1 - obj2)/abs(obj1) < replab.Settings.doubleSdpTol, 'Block-diagonalized SDP doesn''t yield the same result as the non-block-diagonalized one');
+    assert(abs(obj1 - obj2)/abs(obj1) < replab.Parameters.doubleSdpTol, 'Block-diagonalized SDP doesn''t yield the same result as the non-block-diagonalized one');
 end
 
 function test_inputs
