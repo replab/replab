@@ -211,11 +211,25 @@ function replab_addpaths(verbose)
                     end
                 else
                     addpath([pathStr '/external/SDPT3']);
+                    
                     % Now we run install_sdpt3
+                    compilationSuccessfull = false;
                     cd external/SDPT3;
-                    install_sdpt3;
+                    try
+                        install_sdpt3;
+                        compilationSuccessfull = true;
+                    catch
+                    end
                     cd ../..;
-                    SDPT3InPath = true;
+                    
+                    if compilationSuccessfull
+                        SDPT3InPath = true;
+                    else
+                        warning(['An error occured while trying to set up the SDPT3 solver. This can happen if no', char(10), ...
+                                 'compiler is available on the system. The functionalities of the library related', char(10), ...
+                                 'to Semi-definite programming will be disabled. To remedy this, you can install', char(10), ...
+                                 'an SDP solver listed in https://yalmip.github.io/allsolvers/ .']);
+                    end
                 end
             elseif verbose >= 2
                 disp('SDPT3 is already in the path');
