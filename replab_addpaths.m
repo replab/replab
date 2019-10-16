@@ -32,6 +32,23 @@ function replab_addpaths(verbose)
         return;
     end    
 
+
+    %% Let us check the Matlab/Octave version
+    isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
+    if ~isOctave
+        platform = 'Matlab';
+        minimalVersion = '8.6';
+        currentVersion = version;
+        currentVersion = currentVersion(1:find(currentVersion==' ',1)-1);
+    else
+        platform = 'Octave';
+        minimalVersion = '4.2.2';
+        currentVersion = version;
+    end
+    if ~isLaterVersion(minimalVersion, currentVersion)
+        warning(['Current version of ', platform, ' is ', currentVersion, ' but the minimal supported version is ', minimalVersion, '.']);
+    end
+    
     
     %% Action -- first adding RepLAB itself
     [pathStr, name, extension] = fileparts(which(mfilename));
@@ -272,4 +289,41 @@ function replab_addpaths(verbose)
         allGood = true;
     end
     
+end
+
+
+function ok = isLaterVersion(minimalVersion, currentVersion)
+% isLaterVersion - checks if the current version is old enough
+%
+% ok = isLaterVersion(minimalVersion, currentVersion)
+%
+% Args:
+%     minimalVersion (string) : threshold version
+%     currentVersion (string) : actual version
+%
+% Returns:
+%     ok (boolean) : answer
+%
+% Example:
+%     isLaterVersion('4.2.2', '04.3') % true
+%     isLaterVersion('4.2.2', '4.2.2.01') % true
+
+    minimalVersion = [minimalVersion, '.'];
+    currentVersion = [currentVersion, '.'];
+    
+    while (sum(minimalVersion == '.') >= 1) && (sum(currentVersion == '.') >= 1)
+        minPoint = find(minimalVersion == '.', 1);
+        currPoint = find(currentVersion == '.', 1);
+        if str2num(minimalVersion(1:minPoint-1)) < str2num(currentVersion(1:currPoint-1))
+            ok = true;
+            return;
+        elseif str2num(minimalVersion(1:minPoint-1)) > str2num(currentVersion(1:currPoint-1))
+            ok = false;
+            return;
+        end
+        minimalVersion = minimalVersion(minPoint+1:end);
+        currentVersion = currentVersion(currPoint+1:end);
+    end
+    
+    ok = ~((sum(minimalVersion == '.') >= 1) && (sum(currentVersion == '.') < 1));
 end
