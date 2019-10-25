@@ -7,7 +7,9 @@ classdef Domain < replab.Str
     methods % ABSTRACT
         
         function b = eqv(self, t, u)
-        % Tests domain elements for equality/equivalence
+        % eqv - Tests domain elements for equality/equivalence
+        %
+        % b = eqv(self, t, u)
         %
         % Args:
         %   t (domain element): First element to test
@@ -19,13 +21,14 @@ classdef Domain < replab.Str
         end
         
         function t = sample(self)
-        % Samples an element from this domain
+        % sample - Samples an element from this domain
         %
-        % This method does not make any guarantees about genericity, and is primarily
-        % used for law checks.
+        % t = sample(self)
+        % Sample an element from a domain. This method does not make any
+        % guarantees about genericity, and is primarily used for law checks.
         %
         % Returns:
-        %   domain element: Random domain element
+        %   t (domain element): Random domain element
             error('Abstract');
         end
         
@@ -34,7 +37,9 @@ classdef Domain < replab.Str
     methods (Static)
         
         function domain = lambda(header, eqvFun, sampleFun)
-        % Constructs a domain from function handles
+        % lambda - Constructs a domain from function handles
+        %
+        % domain = lambda(header, eqvFun, sampleFun)
         %
         % Args:
         %   header (char): Header display string
@@ -51,7 +56,15 @@ classdef Domain < replab.Str
     methods % Test helpers
        
         function assertNotEqv(self, x, y, context)
+        % assertNotEqv - compare two elements
+        %
+        % assertNotEqv(self, x, y, context)
         % Asserts that "x" and "y" are equivalent
+        %
+        % Args:
+        %   x (domain element): first element
+        %   y (domain element): second element to compare
+        %   context (char): context
             if self.eqv(x, y)
                 errorDesc = 'The values %s and %s are equivalent, but they should not be';
                 errorId = 'assertNotEqual:equal';
@@ -80,7 +93,15 @@ classdef Domain < replab.Str
         end
             
         function assertEqv(self, x, y, context)
+        % assertEqv - compare two elements
+        %
+        % assertEqv(self, x, y, context)
         % Asserts that "x" and "y" are not equivalent
+        %
+        % Args:
+        %   x (domain element): first element
+        %   y (domain element): second element to compare
+        %   context (char): context
             if ~self.eqv(x, y)
                 errorDesc = 'The values %s and %s are not equivalent';
                 errorId = 'assertEqual:nonEqual';
