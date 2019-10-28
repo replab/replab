@@ -72,7 +72,7 @@ classdef Irreducible < replab.SubRep
             if nargin < 3
                 j = 1;
             end
-            r = self.component(i).copy(j);
+            r = self.component(i).irrep(j);
         end
         
         %% Str methods

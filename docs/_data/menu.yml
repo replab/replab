@@ -20,3 +20,6 @@ options:
 
   - title: CHSH example 
     url: docs/publish/CHSHScenario.html
+
+  - title: API documentation style 
+    url: docs/api_documentation_style.html

@@ -15,14 +15,14 @@ classdef SubRepLaws < replab.RepLaws
                 parentRho = self.rep.parent.image(g);
                 proj = self.rep.projector;
                 rho = self.rep.image(g);
-                self.assert(~replab.isNonZeroMatrix(proj*parentRho - parentRho*proj, replab.Settings.doubleEigTol));
+                self.assert(~replab.isNonZeroMatrix(proj*parentRho - parentRho*proj, replab.Parameters.doubleEigTol));
                 self.M.assertEqv(self.rep.U*parentRho*self.rep.U', rho);
             end
         end
         
         function law_nice_basis_reproduces_basis(self)
             if ~isempty(self.rep.niceBasis)
-                self.assert(~replab.isNonZeroMatrix(self.rep.niceBasis.U - self.rep.U, replab.Settings.doubleEigTol));
+                self.assert(~replab.isNonZeroMatrix(self.rep.niceBasis.U - self.rep.U, replab.Parameters.doubleEigTol));
             end
         end
 

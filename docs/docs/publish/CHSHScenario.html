@@ -7,8 +7,8 @@ comments: true
 <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
---><div class="content"><!--introduction--><h1>Relabelings in the CHSH scenario</h1><p>We describe the output/input/party relabelings in the CHSH scenario, and decompose their action on probability distributions P(ab|xy).</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Defining the output relabelings</a></li><li><a href="#2">Defining the party relabelings</a></li><li><a href="#3">Defining the scenario relabelings</a></li><li><a href="#4">We now compute the decomposition of the representation</a></li></ul></div><h2>Defining the output relabelings<a name="1"></a></h2><p>Outputs are binary, so we use the symmetric group of domain size 2 and the representation on P(a) is the natural representation</p><pre class="codeinput">S2 = replab.S(2)
-outputRep = S2.naturalRep
+--><div class="content"><!--introduction--><h1>Relabelings in the CHSH scenario</h1><p>We describe the output/input/party relabelings in the CHSH scenario, and decompose their action on probability distributions P(ab|xy).</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Defining the output relabelings</a></li><li><a href="#2">Defining the party relabelings</a></li><li><a href="#3">Defining the scenario relabelings</a></li><li><a href="#4">We now compute the decomposition of the representation</a></li></ul></div><h2>Defining the output relabelings<a name="1"></a></h2><p>Outputs are binary, so we use the symmetric group of domain size 2 and the representation on P(a) is the defining representation</p><pre class="codeinput">S2 = replab.S(2)
+outputRep = S2.definingRep
 </pre><pre class="codeoutput">
 S2 = 
 
@@ -20,14 +20,14 @@ generator(1): [2, 1]
 
 outputRep = 
 
-replab.RepByImages
+Orthogonal real representation of dimension 2
     dimension: 2                                
         field: 'R'                              
         group: Permutations acting on 2 elements
 inverseImages: {[0, 1; 1, 0]}                   
     isUnitary: true                             
     images{1}: [0, 1; 1, 0]                     
-</pre><h2>Defining the party relabelings<a name="2"></a></h2><p>We have a copy of S2 acting on the outputs of the first measurement, and a second copy of S2 acting on the outputs of the second measurement, while another copy of S2 permutes the choice of measurement (input).</p><p>This is described by the wreath product of S2 by S2.</p><p>The representation on P(a|x) is the imprimitive representation, given that we use the natural representation for the inner group</p><pre class="codeinput">party = S2.wreathProduct(S2)
+</pre><h2>Defining the party relabelings<a name="2"></a></h2><p>We have a copy of S2 acting on the outputs of the first measurement, and a second copy of S2 acting on the outputs of the second measurement, while another copy of S2 permutes the choice of measurement (input).</p><p>This is described by the wreath product of S2 by S2.</p><p>The representation on P(a|x) is the imprimitive representation, given that we use the defining representation for the inner group</p><pre class="codeinput">party = S2.wreathProduct(S2)
 partyRep = party.imprimitiveRep(outputRep)
 </pre><pre class="codeoutput">
 party = 
@@ -46,12 +46,12 @@ generator(3): {[1, 2], {[1, 2], [2, 1]}}
 
 partyRep = 
 
-replab.wreathproduct.ImprimitiveRep
-     Arep: replab.RepByImages                    
-dimension: 4                                     
-    field: 'R'                                   
-    group: replab.wreathproduct.OfNiceFiniteGroup
-isUnitary: true                                  
+Orthogonal real representation of dimension 4
+     Arep: Orthogonal real representation of dimension 2
+dimension: 4                                            
+    field: 'R'                                          
+    group: replab.wreathproduct.OfNiceFiniteGroup       
+isUnitary: true                                         
 </pre><h2>Defining the scenario relabelings<a name="3"></a></h2><p>The same story repeats for scenario relabelings; we have two copies of the party relabeling group (one for Alice, one for Bob), and a copy of S2 that permutes the parties.</p><p>The representation on P(ab|xy) is however a primitive representation, as P(a|x; b|y) ressembles a tensor. Inside each party, we use the imprimitive representation seen before.</p><pre class="codeinput">scenario = S2.wreathProduct(party)
 probRep = scenario.primitiveRep(partyRep);
 </pre><pre class="codeoutput">
@@ -76,14 +76,31 @@ generator(7): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [2, 1]}}}}
 </pre><pre class="codeoutput">
 ans = 
 
-replab.Irreducible
-      parent: replab.wreathproduct.PrimitiveRep
-component(1): Isotypic component R(1)          
-component(2): Isotypic component R(1)          
-component(3): Isotypic component R(2)          
-component(4): Isotypic component R(4)          
-component(5): Isotypic component R(4)          
-component(6): Isotypic component R(4)          
+Subrepresentation
+   dimension: 16                                                        
+       field: 'R'                                                       
+       group: replab.wreathproduct.OfNiceFiniteGroup                    
+   irrepInfo: []                                                        
+   isUnitary: true                                                      
+   niceBasis: replab.NiceBasis                                          
+      parent: Orthogonal real representation of dimension 16            
+      U(1,:): [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]/4        
+      U(2,:): [1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1]/4
+      U(3,:): [1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1]/4
+      U(4,:): [1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1]/4
+      U(5,:): [1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, 1, 1, -1, -1]/4
+      U(6,:): [1, -1, 1, -1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, 1]/4
+      U(7,:): [1, -1, -1, 1, 1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1]/4
+      U(8,:): [1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1]/4
+      U(9,:): [1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1]/4
+     U(10,:): [1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1]/4
+     U(11,:): [1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1]/4
+     U(12,:): [1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1]/4
+     U(13,:): [1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1]/4
+     U(14,:): [1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1]/4
+     U(15,:): [1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1, 1, -1]/4
+     U(16,:): [1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, -1, -1, 1]/4
+...
 </pre></div><!--
 ##### SOURCE BEGIN #####
 %% Relabelings in the CHSH scenario
@@ -94,9 +111,9 @@ component(6): Isotypic component R(4)
 
 %% Defining the output relabelings
 % Outputs are binary, so we use the symmetric group of domain size 2
-% and the representation on P(a) is the natural representation
+% and the representation on P(a) is the defining representation
 S2 = replab.S(2)
-outputRep = S2.naturalRep
+outputRep = S2.definingRep
 
 %% Defining the party relabelings
 % We have a copy of S2 acting on the outputs of the first measurement,
@@ -106,7 +123,7 @@ outputRep = S2.naturalRep
 % This is described by the wreath product of S2 by S2.
 %
 % The representation on P(a|x) is the imprimitive representation,
-% given that we use the natural representation for the inner group
+% given that we use the defining representation for the inner group
 party = S2.wreathProduct(S2)
 partyRep = party.imprimitiveRep(outputRep)
 

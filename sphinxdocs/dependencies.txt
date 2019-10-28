@@ -1,3 +1,7 @@
+Run somewhere
+
+python3 -m venv sphinx
+
 I tried with Python 3 in a dedicated virtualenv in Ubuntu 18.04.
 
 On top of Sphinx, install the following python packages:

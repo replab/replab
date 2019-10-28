@@ -32,6 +32,23 @@ function replab_addpaths(verbose)
         return;
     end    
 
+
+    %% Let us check the Matlab/Octave version
+    isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
+    if ~isOctave
+        platform = 'Matlab';
+        minimalVersion = '8.6';
+        currentVersion = version;
+        currentVersion = currentVersion(1:find(currentVersion==' ',1)-1);
+    else
+        platform = 'Octave';
+        minimalVersion = '4.2.2';
+        currentVersion = version;
+    end
+    if ~isLaterVersion(minimalVersion, currentVersion)
+        warning(['Current version of ', platform, ' is ', currentVersion, ' but the minimal supported version is ', minimalVersion, '.']);
+    end
+    
     
     %% Action -- first adding RepLAB itself
     [pathStr, name, extension] = fileparts(which(mfilename));
@@ -171,10 +188,26 @@ function replab_addpaths(verbose)
             F = [x >= 0, trace(x) == 1];
             [interfacedata,recoverdata,solver,diagnostic] = compileinterfacedata(F, [], [], [], sdpsettings, 0, 0);
             decentSDPSolverInPath = isempty(diagnostic);
+
             % If LMILAB was identified as the best solver to solve the
             % problem, this means that no good solver was found.
             if ~isempty(strfind(upper(solver.tag), 'LMILAB'))
                 decentSDPSolverInPath = false;
+            end
+            
+            % If a decent solver was found, we make sure it can actually
+            % solve an SDP (e.g. the license is valid ;-)
+            if decentSDPSolverInPath
+                sol = solvesdp(F, x(1,2));
+                if isempty(sol) || ~isequal(sol, 0)
+                    decentSDPSolverInPath = false;
+                    if verbose >= 2
+                        disp(['The solver ', solver.tag, ' was found, but it produced the following error when called']);
+                        disp('to solve and SDP:');
+                        disp(['    ', sol.info]);
+                        disp('Trying to use the embedded solver instead.');
+                    end
+                end
             end
         catch
         end
@@ -195,11 +228,25 @@ function replab_addpaths(verbose)
                     end
                 else
                     addpath([pathStr '/external/SDPT3']);
+                    
                     % Now we run install_sdpt3
+                    compilationSuccessfull = false;
                     cd external/SDPT3;
-                    install_sdpt3;
+                    try
+                        install_sdpt3;
+                        compilationSuccessfull = true;
+                    catch
+                    end
                     cd ../..;
-                    SDPT3InPath = true;
+                    
+                    if compilationSuccessfull
+                        SDPT3InPath = true;
+                    else
+                        warning(['An error occured while trying to set up the SDPT3 solver. This can happen if no', char(10), ...
+                                 'compiler is available on the system. The functionalities of the library related', char(10), ...
+                                 'to Semi-definite programming will be disabled. To remedy this, you can install', char(10), ...
+                                 'an SDP solver listed in https://yalmip.github.io/allsolvers/ .']);
+                    end
                 end
             elseif verbose >= 2
                 disp('SDPT3 is already in the path');
@@ -242,4 +289,41 @@ function replab_addpaths(verbose)
         allGood = true;
     end
     
+end
+
+
+function ok = isLaterVersion(minimalVersion, currentVersion)
+% isLaterVersion - checks if the current version is old enough
+%
+% ok = isLaterVersion(minimalVersion, currentVersion)
+%
+% Args:
+%     minimalVersion (string) : threshold version
+%     currentVersion (string) : actual version
+%
+% Returns:
+%     ok (boolean) : answer
+%
+% Example:
+%     isLaterVersion('4.2.2', '04.3') % true
+%     isLaterVersion('4.2.2', '4.2.2.01') % true
+
+    minimalVersion = [minimalVersion, '.'];
+    currentVersion = [currentVersion, '.'];
+    
+    while (sum(minimalVersion == '.') >= 1) && (sum(currentVersion == '.') >= 1)
+        minPoint = find(minimalVersion == '.', 1);
+        currPoint = find(currentVersion == '.', 1);
+        if str2num(minimalVersion(1:minPoint-1)) < str2num(currentVersion(1:currPoint-1))
+            ok = true;
+            return;
+        elseif str2num(minimalVersion(1:minPoint-1)) > str2num(currentVersion(1:currPoint-1))
+            ok = false;
+            return;
+        end
+        minimalVersion = minimalVersion(minPoint+1:end);
+        currentVersion = currentVersion(currPoint+1:end);
+    end
+    
+    ok = ~((sum(minimalVersion == '.') >= 1) && (sum(currentVersion == '.') < 1));
 end

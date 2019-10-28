@@ -13,12 +13,9 @@ classdef IrreducibleCommutant < replab.Commutant
         function X = projectAndReduceFromParent(self, X)
             n = self.rep.nComponents;
             blocks = cell(1, n);
-            shift = 0;
             for i = 1:n
                 iso = self.rep.component(i);
-                r = shift + (1:iso.dimension);
-                blocks{i} = iso.commutant.projectAndReduceFromParent(X(r, r));
-                shift = shift + iso.dimension;
+                blocks{i} = iso.commutant.projectAndReduceFromParent(X);
             end
             X = blkdiag(blocks{:});
         end

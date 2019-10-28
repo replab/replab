@@ -19,7 +19,7 @@ function t = computeRealType(rep, samples, sub)
     v = replab.domain.Vectors('C', d).sample;
     v1 = C*v;
     v2 = C*v1;
-    tol = replab.Settings.doubleEigTol;
+    tol = replab.Parameters.doubleEigTol;
     switch rank([v v1 v2], tol)
       case 1
         t = 'R';

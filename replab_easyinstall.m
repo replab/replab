@@ -1,4 +1,4 @@
-function exitCode = replab_easy_install
+function exitCode = replab_easyinstall
 % Checks if the external dependencies are present, 
 %
 % If everything is setup correctly already, the script does not require user interaction, but will
@@ -52,12 +52,12 @@ function exitCode = replab_easy_install
     
     YALMIPPath = fullfile(externalPath, 'YALMIP');
     YALMIPPathExists = exist(YALMIPPath) == 7;
-    YALMIPTestPath = fullfile(YALMIPPath, 'README.md');
+    YALMIPTestPath = fullfile(YALMIPPath, 'README.txt');
     YALMIPZipPath = fullfile(externalPath, 'YALMIP.zip');
     YALMIPInstalled = YALMIPPathExists && exist(YALMIPTestPath) == 2;
 
     if MOcovInstalled && MOxUnitInstalled && SDPT3Installed && YALMIPInstalled
-        disp('All external dependencies are present (or at least their README.md file).');
+        disp('All external dependencies are present (or at least their README file).');
         disp('This script is thus not necessary');
         disp('You can directly run ''replab_addpaths'' to setup the RepLAB path.');
         exitCode = 0;
