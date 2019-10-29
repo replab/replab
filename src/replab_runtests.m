@@ -81,6 +81,11 @@ function result = replab_runtests(withCoverage, onlyFastTests)
         warning('No working SDP solver found, some tests will fail.');
     end
     
+    % Create doctests
+    if ReplabTestParameters.onlyFastTests == 0
+        replab_generatedoctests;
+    end
+    
     % calls the relevant test suite
     if ReplabTestParameters.withCoverage == 1
         result = moxunit_runtests('tests/codeCoverageHelperFunction.m', '-verbose', ...

@@ -2,11 +2,11 @@ classdef Permutations < replab.PermutationGroup
 % Describes permutations over n = "domainSize" elements, i.e. the symmetric group Sn
 %
 % Example:
-%   >>> S5 = replab.Permutations(5); S5.order
+%   >>> S5 = replab.Permutations(5);
+%   >>> S5.order
 %      ans =
 %      120
-%
-%
+
     methods % Implementations of abstract methods
         
         function self = Permutations(domainSize)

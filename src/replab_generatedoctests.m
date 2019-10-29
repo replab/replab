@@ -86,31 +86,50 @@ function replab_generatedoctests
         fid = fopen(sourceFile, 'r');
         l = fgetl(fid);
         % we read the file line by line, with a state machine
-        % state = 0: waiting for a >>> prompt
+        % state = 0: waiting for a >>> prompt (corresponding to a new test)
         % state = 1: reading expected output lines
         % state = 2: reading expected output, already got one blank line
         tests = {};
         test = {};
+        subtestNb = 1;
+        messages = {};
+        message = {};
         state = 0;
+        lineCount = 1;
         while ~isequal(l, -1)
             l = strtrim(l);
             if length(l) < 1 || l(1) ~= '%'
                 % no longer a comment block
-                if length(test) > 1
+                if numel(test) > 1
                     % if there is a parsed test, register it
                     tests{end+1} = test;
                     test = {};
+                    messages{end+1} = message;
+                    message = {};
+                    subtestNb = 1;
                 end
                 state = 0;
             else
                 % we have a comment line, remove the leading % and trim
                 l = strtrim(l(2:end));
                 if length(l) > 3 && isequal(l(1:3), '>>>')
-                    % register current test if there was one
-                    if length(test) > 1
-                        tests{end+1} = test;
+                    % register current test if there was one and new
+                    % command belongs to a new test
+                    if (numel(test) >= 1)
+                        if state == 0
+                            % command belongs to a new test
+                            tests{end+1} = test;
+                            test = {};
+                            messages{end+1} = message;
+                            message = {};
+                            subtestNb = 1;
+                        else
+                            % command adds to current test
+                            subtestNb = subtestNb + 1;
+                        end
                     end
-                    test = {strtrim(l(4:end))};
+                    test{subtestNb} = {strtrim(l(4:end))};
+                    message{subtestNb} = ['Doctest failure on line ', num2str(lineCount), ' of ', sourceFile];
                     state = 1;
                 elseif length(l) == 0
                     switch state
@@ -118,19 +137,23 @@ function replab_generatedoctests
                       case 1
                         state = 2;
                       case 2
-                        if length(test) > 1
+                        if numel(test) > 1
                             tests{end+1} = test;
+                            messages{end+1} = message;
                         end
                         test = {};
+                        message = {};
+                        subtestNb = 1;
                         state = 0;
                     end
                 else
                     if state > 0
-                        test{1, end+1} = l;
+                        test{subtestNb}{1, end+1} = l;
                     end
                 end
             end
             l = fgetl(fid);
+            lineCount = lineCount + 1;
         end
         fclose(fid);
         fprintf('-- Read %d tests\n', length(tests));
@@ -145,15 +168,18 @@ function replab_generatedoctests
             fprintf(fid, '  catch\n');
             fprintf(fid, '  end\n');
             fprintf(fid, '  initTestSuite;\n');
-            fprintf(fid, 'end\n');
+            fprintf(fid, 'end\n\n');
             for i = 1:length(tests)
                 test = tests{i};
-                outs = cellfun(@(x) ['''' strrep(x, '''', '''''') ''''], test(2:end), 'uniform', 0);
-                out = strjoin(outs, ' ');
+                message = messages{i};
                 fprintf(fid, 'function test%d\n', i);
-                fprintf(fid, '  out = evalc(''%s'');\n', test{1});
-                fprintf(fid, '  assertEqualEvalcOutput(out, {%s});\n', out);
-                fprintf(fid, 'end');
+                for j = 1:length(test)
+                    outs = cellfun(@(x) ['''' strrep(x, '''', '''''') ''''], test{j}(2:end), 'uniform', 0);
+                    out = strjoin(outs, ' ');
+                    fprintf(fid, '  out = evalc(''%s'');\n', test{j}{1});
+                    fprintf(fid, '  assertEqualEvalcOutput(out, {%s}, ''%s'');\n', out, message{j});
+                end
+                fprintf(fid, 'end\n\n');
             end
             fclose(fid);
         end
