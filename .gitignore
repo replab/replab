@@ -116,6 +116,11 @@ docs/_site/
 coverage.*
 coverage_html
 
+##---------------------------------------------------
+# doctests generated files .gitignore
+##---------------------------------------------------
+tests/doctest
+
 ## Jupyter checkpoints
 .ipynb_checkpoints
 
