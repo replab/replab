@@ -198,7 +198,7 @@ function replab_addpaths(verbose)
             % If a decent solver was found, we make sure it can actually
             % solve an SDP (e.g. the license is valid ;-)
             if decentSDPSolverInPath
-                sol = solvesdp(F, x(1,2));
+                sol = solvesdp(F, x(1,2), sdpsettings('verbose',0));
                 if isempty(sol) || ~isequal(sol, 0)
                     decentSDPSolverInPath = false;
                     if verbose >= 2
