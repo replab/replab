@@ -176,7 +176,7 @@ function replab_generatedoctests
                 for j = 1:length(test)
                     outs = cellfun(@(x) ['''' strrep(x, '''', '''''') ''''], test{j}(2:end), 'uniform', 0);
                     out = strjoin(outs, ' ');
-                    fprintf(fid, '  out = evalc(''%s'');\n', test{j}{1});
+                    fprintf(fid, '  out = evalc(''%s'');\n', strrep(test{j}{1}, '''', ''''''));
                     fprintf(fid, '  assertEqualEvalcOutput(out, {%s}, ''%s'');\n', out, message{j});
                 end
                 fprintf(fid, 'end\n\n');
