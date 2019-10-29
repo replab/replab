@@ -70,12 +70,12 @@ classdef DirectSumRep < replab.Rep
 
         function rho = image(self, g)
             rhos = cellfun(@(rep) rep.image(g), self.blocks, 'uniform', 0);
-            rho = blkdiag(rho{:});
+            rho = blkdiag(rhos{:});
         end
         
         function rho = inverseImage(self, g)
             rhos = cellfun(@(rep) rep.inverseImage(g), self.blocks, 'uniform', 0);
-            rho = blkdiag(rho{:});
+            rho = blkdiag(rhos{:});
         end
 
     end
