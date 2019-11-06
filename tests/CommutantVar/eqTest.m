@@ -54,9 +54,9 @@ function test_double_combination
 
     obj = matrix2(1,5)-matrix2(1,4);
     optimize([matrix2 >= 0], obj, sdpsettings('verbose', 0));
-    assert(abs(value(obj)) < replab.Settings.doubleSdpTol);
+    assert(abs(value(obj)) < replab.Parameters.doubleSdpTol);
     optimize([matrix2 >= 0], -obj, sdpsettings('verbose', 0));
-    assert(abs(value(obj)) < replab.Settings.doubleSdpTol);
+    assert(abs(value(obj)) < replab.Parameters.doubleSdpTol);
 end
 
 function test_inputs

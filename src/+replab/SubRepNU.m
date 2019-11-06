@@ -54,6 +54,17 @@ classdef SubRepNU < replab.Rep
             rho = self.F * self.parent.image(g) * self.H;
         end
         
+        function [newRep A Ainv] = unitarize(self)
+            if isequal(self.parent.isUnitary, true)
+                X = self.F * self.F';
+                A = chol(X, 'lower');
+                U = inv(A) * self.F;
+                newRep = self.parent.subRepUnitary(U);
+            else
+                [newRep A Ainv] = unitarize@replab.Rep(self);
+            end
+        end
+        
     end
 
 end

@@ -4,7 +4,7 @@ function U1 = recoverReal(U)
     d = size(U, 2);
     v = replab.domain.Vectors('C', d).sample;
     v1 = conj(U*v);
-    if norm(v1 - U * (U \ v1)) < replab.Settings.doubleEigTol
+    if norm(v1 - U * (U \ v1)) < replab.Parameters.doubleEigTol
         U1 = orth(real(U * replab.UnitaryGroup(d).sample));
         U1 = U1'; % return to row vector convention
     else

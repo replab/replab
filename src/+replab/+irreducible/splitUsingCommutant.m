@@ -10,7 +10,7 @@ function sub = splitUsingCommutant(rep, samples, sub)
     d = rep.dimension;
     replab.irreducible.tell('splitUsingCommutant dimension %d', sub.dimension);
     dSub = sub.dimension;
-    tol = replab.Settings.doubleEigTol;
+    tol = replab.Parameters.doubleEigTol;
     if rep.overR
         trivialIrrepInfo = replab.IrrepInfo('1', 'R', []);
     else
@@ -19,7 +19,7 @@ function sub = splitUsingCommutant(rep, samples, sub)
     trivials = {};
     % extract trivial representations
     S = sub.U*samples.trivialSample(1)*sub.U';
-    if replab.isNonZeroMatrix(S, replab.Settings.doubleEigTol) % magic epsilon
+    if replab.isNonZeroMatrix(S, replab.Parameters.doubleEigTol) % magic epsilon
         UTrivial = orth(S')';
         nTrivial = size(UTrivial, 1);
         trivial = cell(1, nTrivial);

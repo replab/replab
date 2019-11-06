@@ -293,6 +293,67 @@ classdef Rep < replab.Str
         
         %% Manipulation of representation space
 
+        function [A Ainv] = unitaryChangeOfBasis(self)
+        % Returns the change of basis to a unitary representation
+        %
+        % Returns `A` and `Ainv` so that ``A * self.image(g) * Ainv`` is unitary.
+        %
+        % Returns
+        % -------
+        %   A: double
+        %     Change of basis matrix
+        %   Ainv: double
+        %     Inverse of change of basis matrix
+            if isequal(self.isUnitary, true)
+                A = eye(self.dimension);
+                Ainv = eye(self.dimension);
+            else
+                E = self.dual.conj.equivariant(self);
+                X = E.project(eye(self.dimension));
+                for i = 1:self.dimension
+                    X(i,i) = real(X(i,i));
+                end
+                A = chol(X);
+                Ainv = inv(A);
+            end
+        end
+        
+        function [newRep A Ainv] = unitarize(self)
+        % Returns a unitary representation equivalent to this representation
+        %
+        % We have ``newRep.image(g) = A * self.image(g) * Ainv``.
+        %
+        %
+        % Example:
+        %   >>> S3 = replab.Permutations(3);
+        %   >>> defRep = S3.definingRep.complexification;
+        %   >>> C = randn(3,3) + 1i * rand(3,3);
+        %   >>> nonUnitaryRep = defRep.subRep(C, inv(C));
+        %   >>> unitaryRep = nonUnitaryRep.unitarize;
+        %   >>> U = unitaryRep.sample;
+        %   >>> norm(U*U' - eye(3)) < 1e-10
+        %      ans =
+        %       logical
+        %       1
+        %
+        %
+        % Returns
+        % -------
+        %   newRep: replab.Rep
+        %     Unitary representation
+        %   A: double
+        %     Change of basis matrix
+        %   Ainv: double
+        %     Inverse of change of basis matrix
+            [A Ainv] = self.unitaryChangeOfBasis;
+            if isequal(self.isUnitary, true)
+                newRep = self;
+            else
+                newRep = replab.Rep.lambda(self.group, self.field, self.dimension, true, ...
+                                           @(g) A*self.image(g)*Ainv, @(g) Ainv*self.inverseImage(g)*A);
+            end
+        end
+        
         function sub = subRep(self, F, G)
         % Returns a subrepresentation of this representation
         %

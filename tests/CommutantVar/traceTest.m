@@ -14,6 +14,6 @@ function test_general
     vars = [0 getvariables(difference)];
     for j = 1:length(vars)
         coeffs = getbasematrix(difference, vars(j));
-        assert(norm(coeffs(:)) <= replab.Settings.doubleEigTol);
+        assert(norm(coeffs(:)) <= replab.Parameters.doubleEigTol);
     end
 end

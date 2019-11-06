@@ -111,7 +111,7 @@ RepLAB has several classes to work with centralizer algebras.
 - `DivisionAlgebra`: generic representation of the real, complex and quaternionic algebras over the reals,
 - `rational`: a hacky implementation of rational matrices with double-representable integer coefficients,
 - `quaternion.H`: a minimal implementation of quaternion matrices,
-- `Settings`: various global settings such as tolerances,
+- `Parameters`: various global settings such as tolerances,
 - `GroupMorphismLaws`: laws for function handles that are group homomorphisms.
 
 ## Methods

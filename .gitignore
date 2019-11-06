@@ -6,7 +6,7 @@ sphinxdocs/_build/
 # Ignore test result XML files
 testresults.xml
 coverage.xml
-
+*.ipynb
 
 ##---------------------------------------------------
 # MATLAB default .gitignore
@@ -115,6 +115,11 @@ docs/_site/
 ##---------------------------------------------------
 coverage.*
 coverage_html
+
+##---------------------------------------------------
+# doctests generated files .gitignore
+##---------------------------------------------------
+tests/doctest
 
 ## Jupyter checkpoints
 .ipynb_checkpoints

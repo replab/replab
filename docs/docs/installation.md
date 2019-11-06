@@ -17,7 +17,7 @@ The representation theory code of the library is self-contained. Extended featur
 
 1. Download the latest release on [GitHub](https://www.github.com/replab/replab/releases), which includes the core code.
 
-2. Launch MATLAB/Octave, run the `replab_easy_install` script in the root folder which will take care of downloading and installing dependencies, which are:
+2. Launch MATLAB/Octave, run the `replab_easyinstall` script in the root folder which will take care of downloading and installing dependencies, which are:
 
 - to run tests: [MOxUnit](https://github.com/MOxUnit/MOxUnit)
 - to test code coverage: [MOcov](https://github.com/MOcov/MOcov)

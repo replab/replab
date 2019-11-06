@@ -26,9 +26,8 @@ classdef Str < handle
         end
         
         function disp(self)
-        % disp - display
-            maxRows = replab.Settings.strMaxRows;
-            maxColumns = replab.Settings.strMaxColumns;
+            maxRows = replab.Parameters.strMaxRows;
+            maxColumns = replab.Parameters.strMaxColumns;
             lines = replab.longStr(self, maxRows, maxColumns);
             lines = replab.str.longFit(lines, maxRows, maxColumns);
             disp(strjoin(lines, '\n'));
