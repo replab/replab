@@ -46,7 +46,7 @@ classdef Group < replab.Monoid
         %   y (element): Second element
         %
         % Returns:
-        %   element: the result of `x * y^-1` in multiplicative notation
+        %   element: the result of ``x * y^-1`` in multiplicative notation
             z = self.compose(x, self.inverse(y));
         end
         
@@ -67,7 +67,7 @@ classdef Group < replab.Monoid
         %   inverseFun (function_handle): Handle implementing the `inverse` method
         %
         % Returns:
-        %   replab.Group: The constructed group
+        %   :class:`+replab.Group`: The constructed group
             
             group = replab.lambda.Group(header, eqvFun, sampleFun, ...
                                         composeFun, identity, inverseFun);
