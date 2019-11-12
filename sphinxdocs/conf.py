@@ -45,11 +45,12 @@ extensions = ['sphinx.ext.autodoc',   # for enumeration of objects stuff
               'sphinx.ext.mathjax',   # LaTeX support
               'texext.math_dollar']   # lightweight LaTeX filter
 
-autodoc_default_flags = ['members']
+autodoc_default_options = {'members': True, 'show-inheritance': True}
 autosummary_generate = True
 
+matlab_keep_package_prefix = False
+
 matlab_src_dir = os.path.dirname(os.path.abspath(__file__ + "/../"))+"/src"
-print matlab_src_dir
 primary_domain = 'mat'
 default_role = 'obj'
 
