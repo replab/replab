@@ -19,36 +19,36 @@ printing infrastructure, a `.Domain.eqv` equality test method, and a
 		      construction of subgroups
 
 .. _Monoid:
+
 Monoid
 ++++++
 
 .. autoclass:: Monoid
-   :members:
       
 .. _Group:
+
 Group
 +++++
       
 .. autoclass:: Group
-   :members:
 
 .. _CompactGroup:
+
 CompactGroup
 ++++++++++++
 
 .. autoclass:: CompactGroup
-   :members:
 
 .. _FiniteGroup:
+
 FiniteGroup
 +++++++++++
 
 .. autoclass:: FiniteGroup
-   :members:
       
 .. _NiceFiniteGroup:
+
 NiceFiniteGroup
 +++++++++++++++
 
 .. autoclass:: NiceFiniteGroup
-   :members:
