@@ -199,7 +199,7 @@ function replab_addpaths(verbose)
             % solve an SDP (e.g. the license is valid ;-)
             if decentSDPSolverInPath
                 sol = solvesdp(F, x(1,2), sdpsettings('verbose',0));
-                if isempty(sol) || ~isequal(sol, 0)
+                if isempty(sol) || ~isequal(sol.problem, 0)
                     decentSDPSolverInPath = false;
                     if verbose >= 2
                         disp(['The solver ', solver.tag, ' was found, but it produced the following error when called']);
@@ -231,13 +231,11 @@ function replab_addpaths(verbose)
                     
                     % Now we run install_sdpt3
                     compilationSuccessfull = false;
-                    cd external/SDPT3;
                     try
                         install_sdpt3;
                         compilationSuccessfull = true;
                     catch
                     end
-                    cd ../..;
                     
                     if compilationSuccessfull
                         SDPT3InPath = true;
