@@ -1,12 +1,26 @@
 function sub = splitUsingCommutant(rep, samples, sub)
-% Splits a representation into irreducible representations by using a commutant sample
+% splitUsingCommutant - Splits a representation into irreducible representations by using a commutant sample
 %
-% We first extract the trivial component, as the irreducible construction depends on having
-% that component identified. We then split the orthogonal subspace using a commutant sample.
+% ``sub = replab.irreducible.splitUsingCommutant(rep, samples, sub)``
 %
-% At each step of the process below, we attempt rational basis recovery and construct
-% subrepresentations accordingly so that "nice bases" are presented to user as much as
-% possible.
+% Decomposes a possibly non-irreducible subrepresentation of `rep` into irreducible subrepresentations.
+% Does not group the irreducible subrepresentations into isotypic components, but identifies every instance of
+% the trivial representation by setting ``label`` to ``'1'`` in the subrepresentation `+replab.IrrepInfo`.
+%
+% Args:
+%   rep (`+replab.Rep`): Parent representation to decompose
+%   samples (`+replab.+irreducible.OnDemandSamples`): Samples from the parent representation
+%   sub (`+replab.SubRep`): Subrepresentation of `rep` to decompose
+%
+% Returns:
+%   row cell array of `+replab.SubRep`: Irreducible subrepresentations inside `sub` as subrepresentations of `rep`
+%
+% Notes:
+%   We first extract the trivial component, as the irreducible construction depends on having
+%   that component identified. We then split the orthogonal subspace using a commutant sample.
+%   At each step of the process below, we attempt rational basis recovery and construct
+%   subrepresentations accordingly so that "nice bases" are presented to user as much as
+%   possible.
     d = rep.dimension;
     replab.irreducible.tell('splitUsingCommutant dimension %d', sub.dimension);
     dSub = sub.dimension;
