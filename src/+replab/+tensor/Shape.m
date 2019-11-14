@@ -137,9 +137,10 @@ classdef Shape
                 shape = replab.tensor.RowMajorShape(dimensions, group, isOrderColumnMajor);
                 return
             end
+            partition = group.orbits;
             % Now, we assume that isOrderColumnMajor == true
-            elseif group.order == replab.Permutations(length(dimensions)).order
-                shape
+            if group.order == replab.Permutations(length(dimensions)).order
+                shape = replab.tensor.FullSymmetryShape(dimensions, group, isOrderColumnMajor);
             elseif group.isTrivial
                 shape = replab.tensor.NoSymmetryShape(dimensions, group, isOrderColumnMajor);
             end
