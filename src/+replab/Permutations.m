@@ -165,11 +165,7 @@ classdef Permutations < replab.PermutationGroup
                 p = self.compose(newEl, p);
             end
         end
-       
-        function grp = trivialSubgroup(self)
-            grp = self.subgroup({}, vpi(1));
-        end
-        
+               
         function grp = cyclicSubgroup(self)
             n = self.domainSize;
             if n == 1

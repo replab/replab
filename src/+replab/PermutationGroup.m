@@ -2,7 +2,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 % A base class for all permutation groups
 
     properties (SetAccess = protected)
-        domainSize; % d when this group acts on {1, ..., d}
+        domainSize % integer: The integer ``d``, as this group acts on ``{1, ..., d}``
     end
     
     methods
