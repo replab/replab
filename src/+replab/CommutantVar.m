@@ -405,8 +405,42 @@ classdef CommutantVar < replab.Str
             R = replab.CommutantVar(generators, [], []);
         end
         
-        function R = fromIndexMatrix(indexMatrix, generators)
-        % R = fromIndexMatrix(indexMatrix, generators)
+        function subsets = burn(pairs)
+        % subsets = burn(pairs)
+        %
+        % Performs the burning algorithm on the network described by the
+        % edges given in pairs.
+        %
+        % Args:
+        %     pairs: nx2 array of vertices linked by an edge
+        %
+        % Returns:
+        %     subsets: cell array with connex components
+        
+            uniquesLeft = unique(pairs);
+            subsets = {};
+            co1 = 0;
+            while ~isempty(uniquesLeft)
+                co1 = co1 + 1;
+                set = uniquesLeft(1);
+                co2 = 0;
+                while co2 < length(set)
+                    co2 = co2 + 1;
+                    element = set(co2);
+                    sel1 = find(pairs(:,1) == element);
+                    sel2 = find(pairs(:,2) == element);
+                    newElements = unique([pairs(sel1,2); pairs(sel2,1)])';
+                    newElements = setdiff(newElements, set);
+                    set = [set, newElements];
+                end
+                subsets{co1} = sort(set);
+                uniquesLeft = setdiff(uniquesLeft, set);
+            end
+            %subsets{:}
+        end
+        
+        function R = fromIndexMatrix(indexMatrix, generators, matrixType, field)
+        % R = fromIndexMatrix(indexMatrix, generators, matrixType, field)
         % 
         % Creates an SDP matrix with additional structure. The produced
         % sdpvar matrix:
@@ -427,6 +461,11 @@ classdef CommutantVar < replab.Str
         %         values are irrelevant.
         %     generators: a list of generators under which the matrix
         %         remains unchanged
+        %     matrixType: one of the following:
+        %         'full' : full matrix
+        %         'symmetric' : symmetric matrix
+        %         'hermitian' : hermitian matrix
+        %     field: matrix elements are either 'real' or 'complex'
         %
         % Results:
         %     R: a CommutantVar object
@@ -446,7 +485,12 @@ classdef CommutantVar < replab.Str
             for i = 1:length(generators)
                 assert(length(generators{i}) == d, 'Generators and indexMatrix dimensions don''t match.');
             end
-        
+            assert(isequal(matrixType, 'full') || isequal(matrixType, 'symmetric') || isequal(matrixType, 'hermitian'), 'The matrix type must be ''full'', ''symmetric'' or ''hermitian''.');
+            assert(isequal(field, 'real') || isequal(field, 'complex'), 'The field must be ''real'' or ''complex''.');
+            if isequal(matrixType, 'hermitian') && isequal(field, 'real')
+                matrixType = 'symmetric';
+            end
+            
             % First, we make the indexMatrix invariant under the group
             
             % We renumber all indices so they match default numbering
@@ -473,31 +517,14 @@ classdef CommutantVar < replab.Str
             % Merge orbits with indices
             pairs = [reshape(indexMatrix, d^2, 1), orbits];
 
-            % Also impose that indexMatrix is symmetric
-            pairs = [pairs; reshape(indexMatrix, d^2, 1) reshape(indexMatrix', d^2, 1)];
+            if isequal(matrixType, 'symmetric')
+                % Also impose that indexMatrix is symmetric
+                pairs = [pairs; reshape(indexMatrix, d^2, 1) reshape(indexMatrix', d^2, 1)];
+            end
             pairs = unique(sort(pairs, 2), 'rows');
 
             % We use a burning algorithm to identify all connected subsets
-            uniquesLeft = unique(pairs);
-            subsets = {};
-            co1 = 0;
-            while ~isempty(uniquesLeft)
-                co1 = co1 + 1;
-                set = uniquesLeft(1);
-                co2 = 0;
-                while co2 < length(set)
-                    co2 = co2 + 1;
-                    element = set(co2);
-                    sel1 = find(pairs(:,1) == element);
-                    sel2 = find(pairs(:,2) == element);
-                    newElements = unique([pairs(sel1,2); pairs(sel2,1)])';
-                    newElements = setdiff(newElements, set);
-                    set = [set, newElements];
-                end
-                subsets{co1} = sort(set);
-                uniquesLeft = setdiff(uniquesLeft, set);
-            end
-            %subsets{:}
+            subsets = replab.CommutantVar.burn(pairs);
             
             % We attribute the number to each element of each class
             images = zeros(max(unique(pairs)), 1);
@@ -511,10 +538,70 @@ classdef CommutantVar < replab.Str
             invPerm = sparse(values, 1, indices);
             tmp = sparse(1:numel(indexMatrix), invPerm(reshape(indexMatrix,1,numel(indexMatrix))), true);
             %indexMatrix = reshape(tmp*images(values), d, d)
-                        
+            
             % Now we can declare the desired number of variables and
             % attribute them
-            vars = sdpvar(length(subsets),1);
+            if isequal(field, 'real')
+                vars = sdpvar(length(subsets), 1);
+            else
+                % complex coefficients
+                if isequal(matrixType, 'full')
+                    vars = sdpvar(length(subsets), 1, 'full', 'complex');
+                elseif isequal(matrixType, 'symmetric')
+                    %diagImages = unique(images(diag(indexMatrix)));
+                    imagesMatrix = reshape(tmp*images(values), d, d);
+                    pairsR = [reshape(imagesMatrix, d^2, 1) reshape(imagesMatrix', d^2, 1)];
+                    pairsR = unique(sort(pairsR, 2), 'rows');
+
+                    subsetsR = replab.CommutantVar.burn(pairsR);
+                    
+                    nbRealVariables = length(subsetsR);
+                    
+                    % place the real variables
+                    ind1 = [subsetsR{:}];
+                    ind2 = zeros(size(ind1));
+                    co = 1;
+                    for i = 1:nbRealVariables
+                        ind2(co:co+length(subsetsR{i})-1) = i;
+                        co = co + length(subsetsR{i});
+                    end
+                    
+                    % place the complex variables
+                    complexImages = setdiff(1:length(subsets), ind1);
+                    nbComplexVariables = length(complexImages);
+                    ind1 = [ind1, complexImages];
+                    ind2 = [ind2, ind2(end)+[1:length(complexImages)]];
+                    
+                    vars = sparse(ind1, ind2, 1)*[sdpvar(nbRealVariables,1); sdpvar(nbComplexVariables,1,'full','complex')];
+                elseif isequal(matrixType, 'hermitian')
+                    % find coefficients which must be real
+                    %diagImages = unique(images(diag(indexMatrix)));
+                    imagesMatrix = reshape(tmp*images(values), d, d);
+                    pairsR = [reshape(imagesMatrix, d^2, 1) reshape(imagesMatrix', d^2, 1)];
+                    pairsR = unique(sort(pairsR, 2), 'rows');
+
+                    subsetsR = replab.CommutantVar.burn(pairsR);
+                    
+                    nbRealVariables = length(subsetsR);
+                    
+                    % place the real variables
+                    ind1 = [subsetsR{:}];
+                    ind2 = zeros(size(ind1));
+                    co = 1;
+                    for i = 1:nbRealVariables
+                        ind2(co:co+length(subsetsR{i})-1) = i;
+                        co = co + length(subsetsR{i});
+                    end
+                    
+                    % place the complex variables
+                    complexImages = setdiff(1:length(subsets), ind1);
+                    nbComplexVariables = length(complexImages);
+                    ind1 = [ind1, complexImages];
+                    ind2 = [ind2, ind2(end)+[1:length(complexImages)]];
+                    
+                    vars = sparse(ind1, ind2, 1)*[sdpvar(nbRealVariables,1); sdpvar(nbComplexVariables,1,'full','complex')];
+                end
+            end
             sdpMatrix = reshape(tmp*vars(images(values)), d, d);
             
             R = replab.CommutantVar(generators, sdpMatrix, 1);%2); For now we still perform structural tests to detect potential bugs
