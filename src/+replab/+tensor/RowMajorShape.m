@@ -6,10 +6,9 @@ classdef RowMajorShape < replab.tensor.Shape
     
     methods
         
-        function self = RowMajorShape(dimensions, group, isOrderColumnMajor)
-            assert(~isOrderColumnMajor);
+        function self = RowMajorShape(dimensions, group)
             n = length(dimensions);
-            self = self@replab.tensor.Shape(dimensions, group, isOrderColumnMajor);
+            self = self@replab.tensor.Shape(dimensions, group, false);
             acmDimensions = fliplr(dimensions);
             acmGroup = group.leftConjugateGroup(n:-1:1);
             self.asColumnMajor = replab.tensor.Shape.make(acmDimensions, acmGroup, true);

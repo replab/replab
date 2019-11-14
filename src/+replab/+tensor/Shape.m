@@ -31,6 +31,12 @@ classdef Shape
             assert(isa(dimensions, 'double'));
             assert(isa(group, 'replab.PermutationGroup'));
             assert(group.domainSize == length(dimensions));
+            partition = group.orbits;
+            for i = 1:partition.nBlocks
+                b = partition.block(i);
+                bdim = dimensions(b);
+                assert(all(bdim(1) == bdim));
+            end
             self.dimensions = dimensions;
             self.group = group;
             self.isOrderColumnMajor = isOrderColumnMajor;
@@ -134,15 +140,17 @@ classdef Shape
        
         function shape = make(dimensions, group, isOrderColumnMajor)
             if ~isOrderColumnMajor
-                shape = replab.tensor.RowMajorShape(dimensions, group, isOrderColumnMajor);
+                shape = replab.tensor.RowMajorShape(dimensions, group);
                 return
             end
             partition = group.orbits;
             % Now, we assume that isOrderColumnMajor == true
             if group.order == replab.Permutations(length(dimensions)).order
-                shape = replab.tensor.FullSymmetryShape(dimensions, group, isOrderColumnMajor);
+                shape = replab.tensor.FullySymmetricShape(length(dimensions), dimensions(1));
             elseif group.isTrivial
-                shape = replab.tensor.NoSymmetryShape(dimensions, group, isOrderColumnMajor);
+                shape = replab.tensor.NoSymmetryShape(dimensions);
+            else
+                shape = replab.tensor.GenericShape(dimensions, group, isOrderColumnMajor);
             end
         end
         

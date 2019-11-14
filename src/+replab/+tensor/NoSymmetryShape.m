@@ -7,10 +7,8 @@ classdef NoSymmetryShape < replab.tensor.Shape
     
     methods
         
-        function self = NoSymmetryShape(dimensions, group, isOrderColumnMajor)
-            assert(group.isTrivial);
-            assert(isOrderColumnMajor);
-            self = self@replab.tensor.Shape(dimensions, group, isOrderColumnMajor);
+        function self = NoSymmetryShape(dimensions)
+            self = self@replab.tensor.Shape(dimensions, replab.Permutations(length(dimensions)).trivialSubgroup, true);
             cp = cumprod(uint32(dimensions));
             self.cumProd = [uint32(1) cp(1:end-1)];
        end
