@@ -68,7 +68,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   replab.NiceFiniteGroup: The conjugated group
-            newGenerators = cellfun(@(g) self.leftConjugate(by, g), self.generators);
+            newGenerators = cellfun(@(g) self.leftConjugate(by, g), self.generators, 'uniform', 0);
             newOrder = self.order;
             conj = self.parent.subgroup(newGenerators, newOrder);
         end
