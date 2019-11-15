@@ -109,8 +109,8 @@ classdef CommutantVar < replab.Str
 %                               constructors
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 
-        function self = CommutantVar(generators, sdpMatrix, sdpMatrixIsSym)
-        % self = CommutantVar(generators, sdpMatrix, sdpMatrixIsSym)
+        function self = CommutantVar(generators, sdpMatrix, sdpMatrixIsSym, matrixType, field)
+        % self = CommutantVar(generators, sdpMatrix, sdpMatrixIsSym, matrixType, field)
         %
         % Class constructor, not to be used directly.
         %
@@ -126,6 +126,11 @@ classdef CommutantVar < replab.Str
         %             group action but we wish to check it
         %         2: if the sdpMatrix is known to be invariant under the
         %             group action. In this case, no checks are made
+        %     matrixType: one of the following:
+        %         'full' : no particular structure
+        %         'symmetric' : transpose-invariant matrix
+        %         'hermitian' : hermitian matrix
+        %     field: matrix elements are either 'real' or 'complex'
         %
         % Results:
         %     self: replab.CommutantVar object
@@ -147,7 +152,7 @@ classdef CommutantVar < replab.Str
             epsilonWarning = 1e-10;
 
             % Input checking
-            assert(nargin <= 3, 'Not enough arguments.');
+            assert(nargin <= 5, 'Not enough arguments.');
             
             % very special case needed to quickly construct a copy of an
             % object
@@ -179,6 +184,12 @@ classdef CommutantVar < replab.Str
             else
                 assert(isequal(size(sdpMatrix), [n n]), 'Wrong matrix or group dimension.');
                 assert(isequal(sdpMatrixIsSym, 0) || isequal(sdpMatrixIsSym, 1) || isequal(sdpMatrixIsSym, 2), 'sdpMatrixIsSym can only take value 0,1,2.');
+            end
+            
+            assert(isequal(matrixType, 'full') || isequal(matrixType, 'symmetric') || isequal(matrixType, 'hermitian'), 'The matrix type must be ''full'', ''symmetric'' or ''hermitian''.');
+            assert(isequal(field, 'real') || isequal(field, 'complex'), 'The field must be ''real'' or ''complex''.');
+            if isequal(matrixType, 'hermitian') && isequal(field, 'real')
+                matrixType = 'symmetric';
             end
             
             % Representation decomposition
@@ -222,7 +233,17 @@ classdef CommutantVar < replab.Str
                 for i = 1:self.nComponents
                     switch self.types(i)
                         case 'R'
-                            self.blocks{i} = sdpvar(self.multiplicities(i));
+                            if isequal(matrixType, 'full') && isequal(field, 'real')
+                                self.blocks{i} = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full');
+                            elseif isequal(matrixType, 'symmetric') && isequal(field, 'real')
+                                self.blocks{i} = sdpvar(self.multiplicities(i));
+                            elseif isequal(matrixType, 'full') && isequal(field, 'complex')
+                                self.blocks{i} = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'complex');
+                            elseif isequal(matrixType, 'symmetric') && isequal(field, 'complex')
+                                self.blocks{i} = sdpvar(self.multiplicities(i), self.multiplicities(i), 'symmetric', 'complex');
+                            elseif isequal(matrixType, 'hermitian') && isequal(field, 'complex')
+                                self.blocks{i} = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
+                            end
                         case 'C'
                             assert(self.dimensions1(i) == 2, ['Dimension ', num2str(self.dimensions1(i)), ' for a complex representation is currently not supported.']);
                             self.blocks{i} = kron(sdpvar(self.multiplicities(i)), eye(2));
@@ -380,8 +401,8 @@ classdef CommutantVar < replab.Str
 
     methods (Static) % Factory methods
 
-        function R = fromPermutations(generators)
-        % R = fromPermutations(generators)
+        function R = fromPermutations(generators, matrixType, field)
+        % R = fromPermutations(generators, matrixType, field)
         % 
         % Creates a CommutantVar object: a sdpvar matrix that is invariant
         % under joint permutations of its lines and columns by the provided
@@ -390,6 +411,11 @@ classdef CommutantVar < replab.Str
         % Args:
         %     generators: list of generators under which the matrix is to
         %         remain unchanged
+        %     matrixType: one of the following:
+        %         'full' : no particular structure
+        %         'symmetric' : transpose-invariant matrix
+        %         'hermitian' : hermitian matrix
+        %     field: matrix elements are either 'real' or 'complex'
         %
         % Results:
         %     R: CommutantVar object
@@ -402,7 +428,7 @@ classdef CommutantVar < replab.Str
         %     replab.CommutantVar.fromSdpMatrix
         %     replab.CommutantVar.fromSymSdpMatrix
         
-            R = replab.CommutantVar(generators, [], []);
+            R = replab.CommutantVar(generators, [], [], matrixType, field);
         end
         
         function subsets = burn(pairs)
@@ -439,49 +465,80 @@ classdef CommutantVar < replab.Str
             %subsets{:}
         end
         
-        function result = graphIsBipartite(pairs)
-        % result = graphIsBipartite(pairs)
+        function [ok, coloring] = graphIsBipartite(pairs)
+        % [ok, coloring] = graphIsBipartite(pairs)
         %
         % Checks whether the graph described by a list of pairs of
         % connected vertices is bipartite, i.e. whether the graph can be
         % colored with 2 colors.
         %
-        % Note:
-        %     This algorithm assumes that the provided (undirected) graph
-        %     is connected. If it is not the case, the result is not
-        %     reliable.
-        %
         % Args:
-        %     pairs: nx2 array listing the edges connecting pairs of
-        %         vertices
+        %     pairs: nx2 array listing the (undirected) edges connecting
+        %         pairs of vertices. Should only contain strictly positive
+        %         integers.
         %
         % Returns:
-        %     result: 1 if the graph is bipartite
-        %             0 if the graph requires more than 2 colors to be
-        %               colored
+        %     ok: 1 if the graph is bipartite
+        %         0 if the graph requires more than 2 colors to be
+        %           colored
+        %     coloring: coloring of the vertices in case of success
         
             % We list all vertices
-            vertices = unique(pairs(:));
+            vertices = unique(pairs(:))';
             
             % We assign a neutral color to every vertex
             colors = zeros(1,max(vertices));
             
-            % We assign color 1 to one vertex
-            covered = pairs(1,1);
-            colors(covered) = 1;
-            
-            % We assign alternating colors to neighbours
-            for i = 1:size(pairs,1)
-                if pairs(i,1) == covered(end)
-                    new = pairs(i,2);
+            coloredVertices = zeros(size(vertices));
+            coColoredVertices = 0;
+            coV = 0;
+            ok = 0;
+            while coColoredVertices < length(vertices)
+                % We assign color 1 to one new un-reached vertex
+                newVertex = vertices(find(setdiff(vertices, coloredVertices), 1, 'first'));
+                colors(newVertex) = 1;
+                coColoredVertices = coColoredVertices + 1;
+                coloredVertices(coColoredVertices) = newVertex;
+
+                % We assign alternating colors to neighbours
+                while coV < length(coloredVertices)
+                    coV = coV + 1;
+
+                    % We pick the next 
+                    currentVertex = coloredVertices(coV); % current vertex
+                    currentColor = colors(currentVertex); % color of current vertex
+
+                    % We color all neighbours of this vertex
+                    for i = 1:size(pairs,1)
+                        newVertex = 0; % new vertex
+                        newColor = mod(currentColor,2)+1; % color of neighbouring vertices
+
+                        if pairs(i,1) == currentVertex
+                            newVertex = pairs(i,2);
+                        elseif pairs(i,2) == currentVertex
+                            newVertex = pairs(i,1);
+                        end
+
+                        if (newVertex ~= 0) && (newVertex ~= currentVertex)
+                            if ismember(newVertex, coloredVertices)
+                                % We already passed through this vertex, checking
+                                % that coloring is consistent with previous choice
+                                if colors(newVertex) ~= newColor
+                                    coloring = [];
+                                    return;
+                                end
+                            else
+                                % We found a new vertex, let us color it
+                                colors(newVertex) = newColor;
+                                coColoredVertices = coColoredVertices + 1;
+                                coloredVertices(coColoredVertices) = newVertex;
+                            end
+                        end
+                    end
                 end
-                if pairs(i,2) == covered(end)
-                    new = pairs(i,1);
-                end
-                
             end
-            
-        
+            ok = 1;
+            coloring = [coloredVertices; colors(coloredVertices)];
         end
         
         function R = fromIndexMatrix(indexMatrix, generators, matrixType, field)
@@ -507,8 +564,8 @@ classdef CommutantVar < replab.Str
         %     generators: a list of generators under which the matrix
         %         remains unchanged
         %     matrixType: one of the following:
-        %         'full' : full matrix
-        %         'symmetric' : symmetric matrix
+        %         'full' : no particular structure
+        %         'symmetric' : transpose-invariant matrix
         %         'hermitian' : hermitian matrix
         %     field: matrix elements are either 'real' or 'complex'
         %
@@ -517,7 +574,7 @@ classdef CommutantVar < replab.Str
         %
         % Example:
         %     indexMatrix = [1 1 3 4; 1 5 6 30; 3 6 10 11; 4 30 11 15];
-        %     matrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {[4 1 2 3]})
+        %     matrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {[4 1 2 3]}, 'symmetric', 'real')
         %
         % See also:
         %     replab.CommutantVar.fromPermutations
@@ -547,7 +604,7 @@ classdef CommutantVar < replab.Str
             generators2 = cell(size(generators));
             M = reshape(1:d^2, [d d]);
             for i = 1:length(generators)
-                generators2{i} = reshape(M(generators{i}, generators{i}), 1, d^2);[subsetsR, 
+                generators2{i} = reshape(M(generators{i}, generators{i}), 1, d^2);
             end
             group = replab.Permutations(d^2).subgroup(generators2);
 
@@ -604,36 +661,77 @@ classdef CommutantVar < replab.Str
                     subsetsR = {}; % real variables
                     subsetsC = {}; % mutually conjugated variables
                     for i = 1:length(subsetsH)
+                        isReal = false;
                         for j = 1:length(diagImages)
                             if ismember(diagImages(j), subsetsH{i})
                                 subsetsR{end+1} = subsetsH{i};
+                                isReal = true;
+                                break;
+                            end
+                        end
+                        if ~isReal
+                            % We try to find a 2-coloring of the graph
+                            % corresponding to these indices. If it does
+                            % not exist, then the variables must be real.
+                            
+                            % Fist we select the edges connecting vertices
+                            % in this set
+                            maskPairs = 0*pairsH;
+                            for j = 1:length(subsetsH{i})
+                                maskPairs = maskPairs + (pairsH == subsetsH{i}(j));
+                            end
+                            selPairs = pairsH(find(sum(maskPairs,2)),:);
+                            
+                            if sum(diff(selPairs,1,2) == 0) >= 1
+                                % element must be equal to its conjugate,
+                                % so it must be real
+                                subsetsR{end+1} = subsetsH{i};
                             else
-                                % We need to find out if the corresponding
-                                % pairing can be colored with 2 colors. If
-                                % not, then the variables must be real
-                                subsetsC{end+1} = subsetsH{i};
+                                % We try to split the element with respect
+                                % to conjugacy
+                                [colorable, coloring] = replab.CommutantVar.graphIsBipartite(selPairs);
+                                if colorable == 0
+                                    subsetsR{end+1} = subsetsH{i};
+                                else
+                                    subsetsC{end+1} = coloring;
+                                end
                             end
                         end
                     end
                     
-                    nbRealVariables = length();
+                    % the real variables
+                    nbRealVariables = length(subsetsR);
+                    varsR = sdpvar(nbRealVariables,1);
                     
-                    % place the real variables
-                    ind1 = [subsetsR{:}];
-                    ind2 = zeros(size(ind1));
+                    % placement of the real variables
+                    indR1 = [subsetsR{:}];
+                    indR2 = zeros(size(indR1));
                     co = 1;
                     for i = 1:nbRealVariables
-                        ind2(co:co+length(subsetsR{i})-1) = i;
+                        indR2(co:co+length(subsetsR{i})-1) = i;
                         co = co + length(subsetsR{i});
                     end
                     
-                    % place the complex variables
-                    complexImages = setdiff(1:length(subsets), ind1);
-                    nbComplexVariables = length(complexImages);
-                    ind1 = [ind1, complexImages];
-                    ind2 = [ind2, ind2(end)+[1:length(complexImages)]];
+                    % the complex variables
+                    nbComplexVariables = length(subsetsC);
+                    varsC = sdpvar(nbComplexVariables,1,'full','complex');
+                    varsC = reshape([varsC conj(varsC)].', 2*nbComplexVariables,1);
                     
-                    vars = sparse(ind1, ind2, 1)*[sdpvar(nbRealVariables,1); sdpvar(nbComplexVariables,1,'full','complex')];
+                    % placement of the complex variables
+                    indC1 = [subsetsC{:}];
+                    indC2 = zeros(1,size(indC1,2));
+                    co = 1;
+                    for i = 1:nbComplexVariables
+                        indC2(co+find(subsetsC{i}(2,:)==1)-1) = 2*(i-1)+1;
+                        indC2(co+find(subsetsC{i}(2,:)==2)-1) = 2*(i-1)+2;
+                        co = co + size(subsetsC{i},2);
+                    end
+                    
+                    % All together
+                    ind1 = [indR1, indC1(1,:)];
+                    ind2 = [indR2, indR2(end)+indC2];
+                    
+                    vars = sparse(ind1, ind2, 1)*[varsR; varsC];
                 else
                     vars = sdpvar(length(subsets), 1, 'full', 'complex');
                 end
@@ -651,6 +749,8 @@ classdef CommutantVar < replab.Str
         %     - the structure encoded into sdpMatrix
         %     - invariance under joint permutations of its lines and
         %       columns by the provided generators.
+        % The type of matrix (full/symmetric/hermitian) as well as the
+        % field (real/complex) is inferred from the provided matrix.
         %
         % Args:
         %     sdpMatrix: the SDP matrix on which to impose permutation
@@ -670,7 +770,21 @@ classdef CommutantVar < replab.Str
         %     replab.CommutantVar.fromIndexMatrix
         %     replab.CommutantVar.fromSymSdpMatrix
 
-            R = replab.CommutantVar(generators, sdpMatrix, 0);
+            if issymmetric(sdpMatrix)
+                matrixType = 'symmetric';
+            elseif ishermitian(sdpMatrix)
+                matrixType = 'hermitian';
+            else
+                matrixType = 'full';
+            end
+            
+            if isreal(sdpMatrix)
+                field = 'real';
+            else
+                field = 'complex';
+            end
+            
+            R = replab.CommutantVar(generators, sdpMatrix, 0, matrixType, field);
         end
 
         function R = fromSymSdpMatrix(sdpMatrix, generators)
@@ -678,6 +792,8 @@ classdef CommutantVar < replab.Str
         % 
         % Block-diagonalizes an existing SDP matrix which is already
         % invariant under the group generators.
+        % The type of matrix (full/symmetric/hermitian) as well as the
+        % field (real/complex) is inferred from the provided matrix.
         %
         % Args:
         %     sdpMatrix: the SDP matrix to block diagonlize
@@ -698,7 +814,21 @@ classdef CommutantVar < replab.Str
         %     replab.CommutantVar.fromIndexMatrix
         %     replab.CommutantVar.fromSdpMatrix
 
-            R = replab.CommutantVar(generators, sdpMatrix, 1);
+            if issymmetric(sdpMatrix)
+                matrixType = 'symmetric';
+            elseif ishermitian(sdpMatrix)
+                matrixType = 'hermitian';
+            else
+                matrixType = 'full';
+            end
+            
+            if isreal(sdpMatrix)
+                field = 'real';
+            else
+                field = 'complex';
+            end
+            
+            R = replab.CommutantVar(generators, sdpMatrix, 1, matrixType, field);
         end
         
     end
