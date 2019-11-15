@@ -439,6 +439,51 @@ classdef CommutantVar < replab.Str
             %subsets{:}
         end
         
+        function result = graphIsBipartite(pairs)
+        % result = graphIsBipartite(pairs)
+        %
+        % Checks whether the graph described by a list of pairs of
+        % connected vertices is bipartite, i.e. whether the graph can be
+        % colored with 2 colors.
+        %
+        % Note:
+        %     This algorithm assumes that the provided (undirected) graph
+        %     is connected. If it is not the case, the result is not
+        %     reliable.
+        %
+        % Args:
+        %     pairs: nx2 array listing the edges connecting pairs of
+        %         vertices
+        %
+        % Returns:
+        %     result: 1 if the graph is bipartite
+        %             0 if the graph requires more than 2 colors to be
+        %               colored
+        
+            % We list all vertices
+            vertices = unique(pairs(:));
+            
+            % We assign a neutral color to every vertex
+            colors = zeros(1,max(vertices));
+            
+            % We assign color 1 to one vertex
+            covered = pairs(1,1);
+            colors(covered) = 1;
+            
+            % We assign alternating colors to neighbours
+            for i = 1:size(pairs,1)
+                if pairs(i,1) == covered(end)
+                    new = pairs(i,2);
+                end
+                if pairs(i,2) == covered(end)
+                    new = pairs(i,1);
+                end
+                
+            end
+            
+        
+        end
+        
         function R = fromIndexMatrix(indexMatrix, generators, matrixType, field)
         % R = fromIndexMatrix(indexMatrix, generators, matrixType, field)
         % 
@@ -502,7 +547,7 @@ classdef CommutantVar < replab.Str
             generators2 = cell(size(generators));
             M = reshape(1:d^2, [d d]);
             for i = 1:length(generators)
-                generators2{i} = reshape(M(generators{i}, generators{i}), 1, d^2);
+                generators2{i} = reshape(M(generators{i}, generators{i}), 1, d^2);[subsetsR, 
             end
             group = replab.Permutations(d^2).subgroup(generators2);
 
@@ -545,44 +590,33 @@ classdef CommutantVar < replab.Str
                 vars = sdpvar(length(subsets), 1);
             else
                 % complex coefficients
-                if isequal(matrixType, 'full')
-                    vars = sdpvar(length(subsets), 1, 'full', 'complex');
-                elseif isequal(matrixType, 'symmetric')
-                    %diagImages = unique(images(diag(indexMatrix)));
-                    imagesMatrix = reshape(tmp*images(values), d, d);
-                    pairsR = [reshape(imagesMatrix, d^2, 1) reshape(imagesMatrix', d^2, 1)];
-                    pairsR = unique(sort(pairsR, 2), 'rows');
-
-                    subsetsR = replab.CommutantVar.burn(pairsR);
-                    
-                    nbRealVariables = length(subsetsR);
-                    
-                    % place the real variables
-                    ind1 = [subsetsR{:}];
-                    ind2 = zeros(size(ind1));
-                    co = 1;
-                    for i = 1:nbRealVariables
-                        ind2(co:co+length(subsetsR{i})-1) = i;
-                        co = co + length(subsetsR{i});
-                    end
-                    
-                    % place the complex variables
-                    complexImages = setdiff(1:length(subsets), ind1);
-                    nbComplexVariables = length(complexImages);
-                    ind1 = [ind1, complexImages];
-                    ind2 = [ind2, ind2(end)+[1:length(complexImages)]];
-                    
-                    vars = sparse(ind1, ind2, 1)*[sdpvar(nbRealVariables,1); sdpvar(nbComplexVariables,1,'full','complex')];
-                elseif isequal(matrixType, 'hermitian')
+                if isequal(matrixType, 'hermitian')
                     % find coefficients which must be real
-                    %diagImages = unique(images(diag(indexMatrix)));
                     imagesMatrix = reshape(tmp*images(values), d, d);
-                    pairsR = [reshape(imagesMatrix, d^2, 1) reshape(imagesMatrix', d^2, 1)];
-                    pairsR = unique(sort(pairsR, 2), 'rows');
+                    diagImages = unique(diag(imagesMatrix));
+                    pairsH = [reshape(imagesMatrix, d^2, 1) reshape(imagesMatrix', d^2, 1)];
+                    pairsH = unique(sort(pairsH, 2), 'rows');
 
-                    subsetsR = replab.CommutantVar.burn(pairsR);
+                    subsetsH = replab.CommutantVar.burn(pairsH);
                     
-                    nbRealVariables = length(subsetsR);
+                    % We distinguish between images which are real, and
+                    % images which are conjugated to each other
+                    subsetsR = {}; % real variables
+                    subsetsC = {}; % mutually conjugated variables
+                    for i = 1:length(subsetsH)
+                        for j = 1:length(diagImages)
+                            if ismember(diagImages(j), subsetsH{i})
+                                subsetsR{end+1} = subsetsH{i};
+                            else
+                                % We need to find out if the corresponding
+                                % pairing can be colored with 2 colors. If
+                                % not, then the variables must be real
+                                subsetsC{end+1} = subsetsH{i};
+                            end
+                        end
+                    end
+                    
+                    nbRealVariables = length();
                     
                     % place the real variables
                     ind1 = [subsetsR{:}];
@@ -600,6 +634,8 @@ classdef CommutantVar < replab.Str
                     ind2 = [ind2, ind2(end)+[1:length(complexImages)]];
                     
                     vars = sparse(ind1, ind2, 1)*[sdpvar(nbRealVariables,1); sdpvar(nbComplexVariables,1,'full','complex')];
+                else
+                    vars = sdpvar(length(subsets), 1, 'full', 'complex');
                 end
             end
             sdpMatrix = reshape(tmp*vars(images(values)), d, d);
