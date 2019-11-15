@@ -738,7 +738,7 @@ classdef CommutantVar < replab.Str
             end
             sdpMatrix = reshape(tmp*vars(images(values)), d, d);
             
-            R = replab.CommutantVar(generators, sdpMatrix, 1);%2); For now we still perform structural tests to detect potential bugs
+            R = replab.CommutantVar(generators, sdpMatrix, 1, matrixType, field);%2); For now we still perform structural tests to detect potential bugs
         end
 
         function R = fromSdpMatrix(sdpMatrix, generators)
