@@ -10,8 +10,8 @@ function test_suite = CommutantVarTest()
     % the tests of this class
     disp('Creating few simple CommutantVar objects');
     global matrix231 matrix23451 matrix23451H
-    matrix231 = replab.CommutantVar.fromPermutations({[2 3 1]});
-    matrix23451 = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    matrix231 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+    matrix23451 = replab.CommutantVar.fromPermutations({[2 3 4 5 1]}, 'symmetric', 'real');
     matrix23451H = replab.CommutantVar.fromSdpMatrix(sdpvar(5,5,'hankel'), {[2 3 4 5 1]});
 end
 
@@ -292,7 +292,7 @@ function test_fromIndexMatrix
     end
     
     % We do a sanity check with one group
-    blockSdpMatrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, generators);
+    blockSdpMatrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, generators, 'symmetric', 'real');
     obj = objective*blockSdpMatrix(:,1);
     solvesdp([blockSdpMatrix >= 0, blockSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
     obj2 = value(obj);
@@ -302,5 +302,8 @@ function test_fromIndexMatrix
 end
 
 function test_inputs
-    shouldProduceAnError(@(x) replab.CommutantVar.fromPermutations([]));
+    shouldProduceAnError(@(x) replab.CommutantVar.fromPermutations([], 'symmetric', 'real'));
+    shouldProduceAnError(@(x) replab.CommutantVar.fromPermutations({[2 1]}, 'symmetric', 'reals'));
+    shouldProduceAnError(@(x) replab.CommutantVar.fromPermutations({[2 1]}, 'symetric', 'real'));
+    shouldProduceAnError(@(x) replab.CommutantVar.fromPermutations({[2 1]}, 'symmetric'));
 end

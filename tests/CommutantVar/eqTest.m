@@ -49,7 +49,7 @@ function test_double_combination
         return;
     end
     
-    matrix1 = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    matrix1 = replab.CommutantVar.fromPermutations({[2 3 4 5 1]}, 'symmetric', 'real');
     matrix2 = replab.CommutantVar.fromSdpMatrix(matrix1.fullMatrix, {[2 1 3 4 5]});
 
     obj = matrix2(1,5)-matrix2(1,4);

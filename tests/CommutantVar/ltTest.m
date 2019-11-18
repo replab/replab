@@ -11,6 +11,6 @@ function test_general
         return;
     end
     
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]}, 'symmetric', 'real');
     assert(length(matrix < 2) == 3);
 end
