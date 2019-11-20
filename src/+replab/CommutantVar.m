@@ -475,9 +475,9 @@ classdef CommutantVar < replab.Str
                             end
                         end
                         if isequal(matrixType, 'symmetric')
-                            assert(issymmetric(self.blocks{i}));
+                            assert(issymmetric(self.blocks{i}) == 1);
                         elseif isequal(matrixType, 'hermitian')
-                            assert(ishermitian(self.blocks{i}));
+                            assert(ishermitian(self.blocks{i}) == 1);
                         end
                     end
                     
@@ -855,8 +855,17 @@ classdef CommutantVar < replab.Str
                     end
                     
                     % All together
-                    ind1 = [indR1, indC1(1,:)];
-                    ind2 = [indR2, indR2(end)+indC2];
+                    if nbComplexVariables == 0
+                        ind1 = indR1;
+                        ind2 = indR2;
+                        field = 'real';
+                        if isequal(matrixType, 'hermitian')
+                            matrixType = 'symmetric';
+                        end
+                    else
+                        ind1 = [indR1, indC1(1,:)];
+                        ind2 = [indR2, indR2(end)+indC2];
+                    end
                     
                     vars = sparse(ind1, ind2, 1)*[varsR; varsC];
                 else
@@ -1644,16 +1653,6 @@ classdef CommutantVar < replab.Str
                         Ytype = 'full';
                     end
                 end
-                expectedType = 'full';
-                if isequal(X.matrixType, 'symmetric') && isequal(Ytype, 'symmetric')
-                    expectedType = 'symmetric';
-                elseif isequal(X.matrixType, 'hermitian') && isequal(Ytype, 'hermitian')
-                    expectedType = 'hermitian';
-                elseif (isequal(X.field, 'real') && isequal(X.matrixType, 'symmetric')) && isequal(Ytype, 'hermitian')
-                    expectedType = 'hermitian';
-                elseif isequal(X.matrixType, 'hermitian') && (isequal(Yfield, 'real') && isequal(Ytype, 'symmetric'))
-                    expectedType = 'hermitian';
-                end
                 
                 % The block structure matches fully, we procede to perform the
                 % addition on each block
@@ -1674,30 +1673,30 @@ classdef CommutantVar < replab.Str
                     
                     % We make sure that the symmetry or hermitianity is
                     % preserved if possible
-                    if ~isequal(expectedType, 'full')
-                        if isequal(expectedType, 'symmetric')
+                    if ~isequal(YType, 'full')
+                        if isequal(YType, 'symmetric')
                             shouldBeZero = constantBlock - constantBlock.';
-                        elseif isequal(expectedType, 'hermitian')
+                        elseif isequal(YType, 'hermitian')
                             shouldBeZero = constantBlock - constantBlock';
                         end
                         if isa(shouldBeZero, 'sdpvar')
                             indices = [0 getvariables(shouldBeZero)];
                             for ind = indices
                                 if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
-                                    error(['Non-', expectedType,' component of ', num2str(max(max(abs(getbasematrix(shouldBeZero,ind))))), ' introduced.']);
+                                    error(['Non-', YType,' component of ', num2str(max(max(abs(getbasematrix(shouldBeZero,ind))))), ' introduced.']);
                                 end
                                 maxNonHermiticity = max([maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
                             end
                         else
                             if max(max(abs(shouldBeZero))) > epsilon
-                                error(['Non-', expectedType,' component of ', num2str(max(max(abs(getbasematrix(shouldBeZero))))), ' introduced.']);
+                                error(['Non-', YType,' component of ', num2str(max(max(abs(getbasematrix(shouldBeZero))))), ' introduced.']);
                             end
                             maxNonHermiticity = max([maxNonHermiticity, max(max(abs(shouldBeZero)))]);
                         end
-                        if isequal(expectedType, 'symmetric') && ~ishermitian(constantBlock)
+                        if isequal(YType, 'symmetric') && ~ishermitian(constantBlock)
                             % We force exact symmetry
                             constantBlock = (constantBlock + constantBlock.')/2;
-                        elseif isequal(expectedType, 'hermitian') && ~ishermitian(constantBlock)
+                        elseif isequal(YType, 'hermitian') && ~ishermitian(constantBlock)
                             % We force exact hermiticity
                             constantBlock = (constantBlock + constantBlock')/2;
                         end
@@ -1711,6 +1710,24 @@ classdef CommutantVar < replab.Str
                     Z.linearConstraints = [X.linearConstraints, Y.linearConstraints];
                 else
                     Z.linearConstraints = X.linearConstraints;
+                end
+                
+                % We update the matrix attributes
+                expectedType = 'full';
+                if isequal(X.matrixType, 'symmetric') && isequal(Ytype, 'symmetric')
+                    expectedType = 'symmetric';
+                elseif isequal(X.matrixType, 'hermitian') && isequal(Ytype, 'hermitian')
+                    expectedType = 'hermitian';
+                elseif (isequal(X.field, 'real') && isequal(X.matrixType, 'symmetric')) && isequal(Ytype, 'hermitian')
+                    expectedType = 'hermitian';
+                elseif isequal(X.matrixType, 'hermitian') && (isequal(Yfield, 'real') && isequal(Ytype, 'symmetric'))
+                    expectedType = 'hermitian';
+                end
+                Z.matrixType = expectedType;
+                if isequal(X.field, 'real') && isequal(Yfield, 'real')
+                    Z.field = 'real';
+                else
+                    Z.field = 'complex';
                 end
             elseif ~isa(X, 'replab.CommutantVar') && isa(Y, 'replab.CommutantVar')
                 % sthg + CommutantVar
@@ -1798,16 +1815,6 @@ classdef CommutantVar < replab.Str
                         Ytype = 'full';
                     end
                 end
-                expectedType = 'full';
-                if isequal(X.matrixType, 'symmetric') && isequal(Ytype, 'symmetric')
-                    expectedType = 'symmetric';
-                elseif isequal(X.matrixType, 'hermitian') && isequal(Ytype, 'hermitian')
-                    expectedType = 'hermitian';
-                elseif (isequal(X.field, 'real') && isequal(X.matrixType, 'symmetric')) && isequal(Ytype, 'hermitian')
-                    expectedType = 'hermitian';
-                elseif isequal(X.matrixType, 'hermitian') && (isequal(Yfield, 'real') && isequal(Ytype, 'symmetric'))
-                    expectedType = 'hermitian';
-                end
                 
                 % The block structure matches fully, we procede to perform the
                 % substraction on each block
@@ -1828,30 +1835,30 @@ classdef CommutantVar < replab.Str
                     
                     % We make sure that the symmetry or hermitianity is
                     % preserved if possible
-                    if ~isequal(expectedType, 'full')
-                        if isequal(expectedType, 'symmetric')
+                    if ~isequal(YType, 'full')
+                        if isequal(YType, 'symmetric')
                             shouldBeZero = constantBlock - constantBlock.';
-                        elseif isequal(expectedType, 'hermitian')
+                        elseif isequal(YType, 'hermitian')
                             shouldBeZero = constantBlock - constantBlock';
                         end
                         if isa(shouldBeZero, 'sdpvar')
                             indices = [0 getvariables(shouldBeZero)];
                             for ind = indices
                                 if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
-                                    error(['Non-', expectedType,' component of ', num2str(max(max(abs(getbasematrix(shouldBeZero,ind))))), ' introduced.']);
+                                    error(['Non-', YType,' component of ', num2str(max(max(abs(getbasematrix(shouldBeZero,ind))))), ' introduced.']);
                                 end
                                 maxNonHermiticity = max([maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
                             end
                         else
                             if max(max(abs(shouldBeZero))) > epsilon
-                                error(['Non-', expectedType,' component of ', num2str(max(max(abs(getbasematrix(shouldBeZero))))), ' introduced.']);
+                                error(['Non-', YType,' component of ', num2str(max(max(abs(getbasematrix(shouldBeZero))))), ' introduced.']);
                             end
                             maxNonHermiticity = max([maxNonHermiticity, max(max(abs(shouldBeZero)))]);
                         end
-                        if isequal(expectedType, 'symmetric') && ~ishermitian(constantBlock)
+                        if isequal(YType, 'symmetric') && ~ishermitian(constantBlock)
                             % We force exact symmetry
                             constantBlock = (constantBlock + constantBlock.')/2;
-                        elseif isequal(expectedType, 'hermitian') && ~ishermitian(constantBlock)
+                        elseif isequal(YType, 'hermitian') && ~ishermitian(constantBlock)
                             % We force exact hermiticity
                             constantBlock = (constantBlock + constantBlock')/2;
                         end
@@ -1865,6 +1872,24 @@ classdef CommutantVar < replab.Str
                     Z.linearConstraints = [X.linearConstraints, Y.linearConstraints];
                 else
                     Z.linearConstraints = X.linearConstraints;
+                end
+                
+                % We update the matrix attributes
+                expectedType = 'full';
+                if isequal(X.matrixType, 'symmetric') && isequal(Ytype, 'symmetric')
+                    expectedType = 'symmetric';
+                elseif isequal(X.matrixType, 'hermitian') && isequal(Ytype, 'hermitian')
+                    expectedType = 'hermitian';
+                elseif (isequal(X.field, 'real') && isequal(X.matrixType, 'symmetric')) && isequal(Ytype, 'hermitian')
+                    expectedType = 'hermitian';
+                elseif isequal(X.matrixType, 'hermitian') && (isequal(Yfield, 'real') && isequal(Ytype, 'symmetric'))
+                    expectedType = 'hermitian';
+                end
+                Z.matrixType = expectedType;
+                if isequal(X.field, 'real') && isequal(Yfield, 'real')
+                    Z.field = 'real';
+                else
+                    Z.field = 'complex';
                 end
             elseif ~isa(X, 'replab.CommutantVar') && isa(Y, 'replab.CommutantVar')
                 % sthg - CommutantVar
@@ -1937,6 +1962,38 @@ classdef CommutantVar < replab.Str
                 for i = 1:Z.nComponents
                     Z.blocks{i} = Y.*Z.blocks{i};
                 end
+                
+                % Extract attributes of Y
+                if isreal(Y)
+                    Yfield = 'real';
+                else
+                    Yfield = 'complex';
+                end
+                if issymmetric(Y)
+                    Ytype = 'symmetric';
+                elseif ishermitian(Y)
+                    Ytype = 'hermitian';
+                else
+                    Ytype = 'full';
+                end
+                
+                % We update the matrix attributes
+                expectedType = 'full';
+                if isequal(X.matrixType, 'symmetric') && isequal(Ytype, 'symmetric')
+                    expectedType = 'symmetric';
+                elseif isequal(X.matrixType, 'hermitian') && isequal(Ytype, 'hermitian')
+                    expectedType = 'hermitian';
+                elseif (isequal(X.field, 'real') && isequal(X.matrixType, 'symmetric')) && isequal(Ytype, 'hermitian')
+                    expectedType = 'hermitian';
+                elseif isequal(X.matrixType, 'hermitian') && (isequal(Yfield, 'real') && isequal(Ytype, 'symmetric'))
+                    expectedType = 'hermitian';
+                end
+                Z.matrixType = expectedType;
+                if isequal(X.field, 'real') && isequal(Yfield, 'real')
+                    Z.field = 'real';
+                else
+                    Z.field = 'complex';
+                end
             elseif ~isa(X, 'replab.CommutantVar') && isa(Y, 'replab.CommutantVar')
                 % sthg .* CommutantVar
                 Z = Y.*X;
@@ -1975,6 +2032,27 @@ classdef CommutantVar < replab.Str
             Z = X.copy;
             for i = 1:Z.nComponents
                 Z.blocks{i} = Z.blocks{i}./Y;
+            end
+            
+            % Extract attributes of Y
+            if isreal(Y)
+                Yfield = 'real';
+            else
+                Yfield = 'complex';
+            end
+
+            % We update the matrix attributes
+            expectedType = 'full';
+            if isequal(X.matrixType, 'symmetric')
+                expectedType = 'symmetric';
+            elseif isequal(X.matrixType, 'hermitian') && isequal(Yfield, 'real')
+                expectedType = 'hermitian';
+            end
+            Z.matrixType = expectedType;
+            if isequal(X.field, 'real') && isequal(Yfield, 'real')
+                Z.field = 'real';
+            else
+                Z.field = 'complex';
             end
         end
 
