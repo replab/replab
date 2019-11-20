@@ -12,6 +12,9 @@ function test_general
     s12 = size(matrix);
     assert(s12(1) == size(matrix,1));
     assert(s12(2) == size(matrix,2));
+    [s1 s2] = size(matrix);
+    assert(s1 == size(matrix,1));
+    assert(s2 == size(matrix,2));
 end
 
 function test_inputs
