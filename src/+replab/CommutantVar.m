@@ -363,7 +363,7 @@ classdef CommutantVar < replab.Str
                 else
                     assert(isnumeric(sdpMatrix) || isa(sdpMatrix, 'sdpvar'), ['Wrong type for sdpMatrix: ', class(sdpMatrix), '.']);
                     self.sdpMatrix_ = sdpMatrix;
-                    self.linearConstraints = (self.fullMatrix == sdpMatrix);
+                    self.linearConstraints = (self.U_*self.fullBlockMatrix*self.U_' == sdpMatrix);
                 end
             else
                 % We construct the SDP blocks from the provided SDP matrix
@@ -1748,10 +1748,10 @@ classdef CommutantVar < replab.Str
                 end
                 
                 % We keep track of the linear constraints
-                if ~isempy(X.sdpMatrix_) && ~isempty(YSdpMatrix)
-                    Z = X.sdpMatrix_ + YSdpMatrix;
+                if ~isempty(X.sdpMatrix_) && ~isempty(YSdpMatrix)
+                    Z.sdpMatrix_ = X.sdpMatrix_ + YSdpMatrix;
                 else
-                    Z = [];
+                    Z.sdpMatrix_ = [];
                 end
                 if isa(Y, 'replab.CommutantVar')
                     Z.linearConstraints = [X.linearConstraints, Y.linearConstraints];
@@ -1920,10 +1920,10 @@ classdef CommutantVar < replab.Str
                 end
                 
                 % We keep track of the linear constraints
-                if ~isempy(X.sdpMatrix_) && ~isempty(YSdpMatrix)
-                    Z = X.sdpMatrix_ - YSdpMatrix;
+                if ~isempty(X.sdpMatrix_) && ~isempty(YSdpMatrix)
+                    Z.sdpMatrix_ = X.sdpMatrix_ - YSdpMatrix;
                 else
-                    Z = [];
+                    Z.sdpMatrix_ = [];
                 end
                 if isa(Y, 'replab.CommutantVar')
                     Z.linearConstraints = [X.linearConstraints, Y.linearConstraints];
@@ -2022,8 +2022,8 @@ classdef CommutantVar < replab.Str
                 end
                 
                 % Keeping track of linear constraints
-                if ~isempy(X.sdpMatrix_)
-                    Z = X.sdpMatrix_.*Y;
+                if ~isempty(X.sdpMatrix_)
+                    Z.sdpMatrix_ = X.sdpMatrix_.*Y;
                 end
                 
                 % Extract attributes of Y
@@ -2098,8 +2098,8 @@ classdef CommutantVar < replab.Str
             end
             
             % Keeping track of linear constraints
-            if ~isempy(X.sdpMatrix_)
-                Z = X.sdpMatrix_./Y;
+            if ~isempty(X.sdpMatrix_)
+                Z.sdpMatrix_ = X.sdpMatrix_./Y;
             end
 
             % Extract attributes of Y
