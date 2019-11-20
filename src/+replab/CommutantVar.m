@@ -1386,6 +1386,16 @@ classdef CommutantVar < replab.Str
                             else
                                 varargout{1} = self.U_(varargin{1}.subs{1},:)*(M*(self.U_(varargin{1}.subs{2},:)'));
                             end
+                            
+                            % Make sure the hermiticity is preserved
+                            if isequal(varargin{1}.subs{1}, varargin{1}.subs{2})
+                                if isequal(self.matrixType, 'symmetric')
+                                    varargout{1} = (varargout{1} + varargout{1}.')/2;
+                                elseif isequal(self.matrixType, 'hermitian')
+                                    varargout{1} = (varargout{1} + varargout{1}')/2;
+                                end
+                            end
+                            
                         otherwise
                             error('Too many indices for 2-dimensional object');
                     end
