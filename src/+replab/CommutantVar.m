@@ -658,6 +658,7 @@ classdef CommutantVar < replab.Str
             pairs = unique(sort(pairs, 2), 'rows');
 
             % We use a burning algorithm to identify all connected subsets
+            %images = replab.Partition.connectedComponents(replab.graph.edge2adj(pairs)).blockIndex;
             subsets = replab.graph.burning(pairs);
             
             % We attribute the number to each element of each class
