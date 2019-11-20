@@ -572,117 +572,7 @@ classdef CommutantVar < replab.Str
         
             R = replab.CommutantVar(generators, [], [], matrixType, field);
         end
-        
-        function subsets = burn(pairs)
-        % subsets = burn(pairs)
-        %
-        % Performs the burning algorithm on the network described by the
-        % edges given in pairs.
-        %
-        % Args:
-        %     pairs: nx2 array of vertices linked by an edge
-        %
-        % Returns:
-        %     subsets: cell array with connex components
-        
-            uniquesLeft = unique(pairs);
-            subsets = {};
-            co1 = 0;
-            while ~isempty(uniquesLeft)
-                co1 = co1 + 1;
-                set = uniquesLeft(1);
-                co2 = 0;
-                while co2 < length(set)
-                    co2 = co2 + 1;
-                    element = set(co2);
-                    sel1 = find(pairs(:,1) == element);
-                    sel2 = find(pairs(:,2) == element);
-                    newElements = unique([pairs(sel1,2); pairs(sel2,1)])';
-                    newElements = setdiff(newElements, set);
-                    set = [set, newElements];
-                end
-                subsets{co1} = sort(set);
-                uniquesLeft = setdiff(uniquesLeft, set);
-            end
-            %subsets{:}
-        end
-        
-        function [ok, coloring] = graphIsBipartite(pairs)
-        % [ok, coloring] = graphIsBipartite(pairs)
-        %
-        % Checks whether the graph described by a list of pairs of
-        % connected vertices is bipartite, i.e. whether the graph can be
-        % colored with 2 colors.
-        %
-        % Args:
-        %     pairs: nx2 array listing the (undirected) edges connecting
-        %         pairs of vertices. Should only contain strictly positive
-        %         integers.
-        %
-        % Returns:
-        %     ok: 1 if the graph is bipartite
-        %         0 if the graph requires more than 2 colors to be
-        %           colored
-        %     coloring: coloring of the vertices in case of success
-        
-            % We list all vertices
-            vertices = unique(pairs(:))';
-            
-            % We assign a neutral color to every vertex
-            colors = zeros(1,max(vertices));
-            
-            coloredVertices = zeros(size(vertices));
-            coColoredVertices = 0;
-            coV = 0;
-            ok = 0;
-            while coColoredVertices < length(vertices)
-                % We assign color 1 to one new un-reached vertex
-                newVertex = vertices(find(setdiff(vertices, coloredVertices), 1, 'first'));
-                colors(newVertex) = 1;
-                coColoredVertices = coColoredVertices + 1;
-                coloredVertices(coColoredVertices) = newVertex;
 
-                % We assign alternating colors to neighbours
-                while coV < length(coloredVertices)
-                    coV = coV + 1;
-
-                    % We pick the next 
-                    currentVertex = coloredVertices(coV); % current vertex
-                    currentColor = colors(currentVertex); % color of current vertex
-
-                    % We color all neighbours of this vertex
-                    for i = 1:size(pairs,1)
-                        newVertex = 0; % new vertex
-                        newColor = mod(currentColor,2)+1; % color of neighbouring vertices
-
-                        if pairs(i,1) == currentVertex
-                            newVertex = pairs(i,2);
-                        elseif pairs(i,2) == currentVertex
-                            newVertex = pairs(i,1);
-                        end
-
-                        if (newVertex ~= 0) && (newVertex ~= currentVertex)
-                            if ismember(newVertex, coloredVertices)
-                                % We already passed through this vertex, checking
-                                % that coloring is consistent with previous choice
-                                if colors(newVertex) ~= newColor
-                                    coloring = [];
-                                    return;
-                                end
-                            else
-                                % We found a new vertex, let us color it
-                                colors(newVertex) = newColor;
-                                coColoredVertices = coColoredVertices + 1;
-                                coloredVertices(coColoredVertices) = newVertex;
-                            end
-                        end
-                    end
-                end
-            end
-            ok = 1;
-            coloring = [coloredVertices; colors(coloredVertices)];
-        end
-        
         function R = fromIndexMatrix(indexMatrix, generators, matrixType, field)
         % R = fromIndexMatrix(indexMatrix, generators, matrixType, field)
         % 
@@ -768,7 +658,7 @@ classdef CommutantVar < replab.Str
             pairs = unique(sort(pairs, 2), 'rows');
 
             % We use a burning algorithm to identify all connected subsets
-            subsets = replab.CommutantVar.burn(pairs);
+            subsets = replab.graph.burning(pairs);
             
             % We attribute the number to each element of each class
             images = zeros(max(unique(pairs)), 1);
@@ -796,7 +686,7 @@ classdef CommutantVar < replab.Str
                     pairsH = [reshape(imagesMatrix, d^2, 1) reshape(imagesMatrix', d^2, 1)];
                     pairsH = unique(sort(pairsH, 2), 'rows');
 
-                    subsetsH = replab.CommutantVar.burn(pairsH);
+                    subsetsH = replab.graph.burning(pairsH);
                     
                     % We distinguish between images which are real, and
                     % images which are conjugated to each other
@@ -831,7 +721,7 @@ classdef CommutantVar < replab.Str
                             else
                                 % We try to split the element with respect
                                 % to conjugacy
-                                [colorable, coloring] = replab.CommutantVar.graphIsBipartite(selPairs);
+                                [colorable, coloring] = replab.graph.graphIsBipartite(selPairs);
                                 if colorable == 0
                                     subsetsR{end+1} = subsetsH{i};
                                 else
