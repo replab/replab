@@ -31,7 +31,7 @@ classdef CommutantVar < replab.Str
 
     properties (SetAccess = protected)
         % The block structure : dimension1 x multiplicity
-        U; % Unitary operator block-diagonalizing the matrix
+        U_; % Unitary operator block-diagonalizing the matrix
         nComponents; % Number of block components
         dimensions1; % Dimensions of all irreducible representations
         multiplicities; % Multipliticies of all irreducible representations
@@ -40,6 +40,9 @@ classdef CommutantVar < replab.Str
         blocks; % The sdp blocks corresponding to each irreducible representation
         linearConstraints; % linear constraints imposed on the matrix
         fullBlockMatrix_; % The combinations, lazy evaluated
+        matrixType; % full, symmetric of hermitian
+        field; % real or complex
+        sdpMatrix_; % The provided or constructed sdpMatrix
     end
 
     methods
@@ -79,6 +82,8 @@ classdef CommutantVar < replab.Str
             names{1, end+1} = 'nComponents';
             names{1, end+1} = 'linearConstraints';
             names{1, end+1} = 'fullBlockMatrix_';
+            names{1, end+1} = 'U_';
+            names{1, end+1} = 'sdpMatrix_';
         end
 
         function [names, values] = additionalFields(self)
@@ -90,6 +95,9 @@ classdef CommutantVar < replab.Str
         %     replab.Str.additionalFields
 
             [names, values] = additionalFields@replab.Str(self);
+
+            names{1,end+1} = 'U';
+            values{1,end+1} = self.U;
 
             names{1, end+1} = 'blocks';
             dims = zeros(1,length(self.blocks));
@@ -109,8 +117,8 @@ classdef CommutantVar < replab.Str
 %                               constructors
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 
-        function self = CommutantVar(generators, sdpMatrix, sdpMatrixIsSym)
-        % self = CommutantVar(generators, sdpMatrix, sdpMatrixIsSym)
+        function self = CommutantVar(generators, sdpMatrix, sdpMatrixIsSym, matrixType, field)
+        % self = CommutantVar(generators, sdpMatrix, sdpMatrixIsSym, matrixType, field)
         %
         % Class constructor, not to be used directly.
         %
@@ -126,6 +134,11 @@ classdef CommutantVar < replab.Str
         %             group action but we wish to check it
         %         2: if the sdpMatrix is known to be invariant under the
         %             group action. In this case, no checks are made
+        %     matrixType: one of the following:
+        %         'full' : no particular structure
+        %         'symmetric' : transpose-invariant matrix
+        %         'hermitian' : hermitian matrix
+        %     field: matrix elements are either 'real' or 'complex'
         %
         % Results:
         %     self: replab.CommutantVar object
@@ -142,16 +155,15 @@ classdef CommutantVar < replab.Str
             end
             
             % We keep track if some big rounding is done
-            maxOuterEpsilonFound = 0;
-            maxEpsilonFound = 0;
+            maxOuterEpsilonFound = 0; % Out of the block structure elements
+            maxEpsilonFoundCH = 0; % If the internal complex/quaternionic structure is not exact
+            maxEpsilonFoundField = 0; % If real numbers are not exactly real
+            maxEpsilonFoundType = 0; % If symmetric/hermitian matrix structure is not exact
             epsilonWarning = 1e-10;
 
-            % Input checking
-            assert(nargin <= 3, 'Not enough arguments.');
-            
             % very special case needed to quickly construct a copy of an
             % object
-            if isa(generators, 'replab.CommutantVar') && isempty(sdpMatrix) && isempty(sdpMatrixIsSym)
+            if isa(generators, 'replab.CommutantVar') && isempty(sdpMatrix) && isempty(sdpMatrixIsSym) && isempty(matrixType) && isempty(field)
                 rhs = generators;
                 % Override properties
 %                 fns = properties(rhs);
@@ -160,7 +172,7 @@ classdef CommutantVar < replab.Str
 %                 end
                 % The above is not supported by octave, so we copy all elements
                 % by hand...
-                self.U = rhs.U;
+                self.U_ = rhs.U_;
                 self.nComponents = rhs.nComponents;
                 self.dimensions1 = rhs.dimensions1;
                 self.multiplicities = rhs.multiplicities;
@@ -168,9 +180,15 @@ classdef CommutantVar < replab.Str
                 self.dim = rhs.dim;
                 self.blocks = rhs.blocks;
                 self.linearConstraints = rhs.linearConstraints;
+                self.matrixType = rhs.matrixType;
+                self.field = rhs.field;
+                self.sdpMatrix_ = rhs.sdpMatrix_;
                 return;
             end
 
+            % Input checking
+            assert(nargin <= 5, 'Not enough arguments.');
+            
             assert(iscell(generators), 'Please specify generators in cell array.');
             n = size(generators{1}, 2);
 
@@ -180,6 +198,14 @@ classdef CommutantVar < replab.Str
                 assert(isequal(size(sdpMatrix), [n n]), 'Wrong matrix or group dimension.');
                 assert(isequal(sdpMatrixIsSym, 0) || isequal(sdpMatrixIsSym, 1) || isequal(sdpMatrixIsSym, 2), 'sdpMatrixIsSym can only take value 0,1,2.');
             end
+            
+            assert(isequal(matrixType, 'full') || isequal(matrixType, 'symmetric') || isequal(matrixType, 'hermitian'), 'The matrix type must be ''full'', ''symmetric'' or ''hermitian''.');
+            assert(isequal(field, 'real') || isequal(field, 'complex'), 'The field must be ''real'' or ''complex''.');
+            if isequal(matrixType, 'hermitian') && isequal(field, 'real')
+                matrixType = 'symmetric';
+            end
+            self.matrixType = matrixType;
+            self.field = field;
             
             % Representation decomposition
             group = replab.signed.Permutations(n).subgroup(generators);
@@ -202,7 +228,7 @@ classdef CommutantVar < replab.Str
             end
             
             % We set most class attributes
-            self.U = U;
+            self.U_ = U;
             self.nComponents = length(dimensions1);
             self.dimensions1 = dimensions1;
             self.multiplicities = multiplicities;
@@ -212,8 +238,8 @@ classdef CommutantVar < replab.Str
             % sanity checks
             assert(self.nComponents == length(self.multiplicities), [num2str(self.nComponents), ' components but ', num2str(length(self.multiplicities)), ' multiplicities']);
             assert(self.nComponents == length(self.types), [num2str(self.nComponents), ' components but ', num2str(length(self.types)), ' types']);
-            assert(self.dim == size(self.U,1), ['dimension is ', num2str(self.dim), ' but U is of size ', num2str(size(self.U,1)), 'x', num2str(size(self.U,2))]);
-            assert(self.dim == size(self.U,2), ['dimension is ', num2str(self.dim), ' but U is of size ', num2str(size(self.U,1)), 'x', num2str(size(self.U,2))]);
+            assert(self.dim == size(self.U_,1), ['dimension is ', num2str(self.dim), ' but U is of size ', num2str(size(self.U_,1)), 'x', num2str(size(self.U_,2))]);
+            assert(self.dim == size(self.U_,2), ['dimension is ', num2str(self.dim), ' but U is of size ', num2str(size(self.U_,1)), 'x', num2str(size(self.U_,2))]);
 
             % Constructing the SDP blocks now
             if isempty(sdpMatrix) || (sdpMatrixIsSym == 0)
@@ -222,39 +248,109 @@ classdef CommutantVar < replab.Str
                 for i = 1:self.nComponents
                     switch self.types(i)
                         case 'R'
-                            self.blocks{i} = sdpvar(self.multiplicities(i));
-                        case 'C'
-                            assert(self.dimensions1(i) == 2, ['Dimension ', num2str(self.dimensions1(i)), ' for a complex representation is currently not supported.']);
-                            self.blocks{i} = kron(sdpvar(self.multiplicities(i)), eye(2));
-                            tmp = kron(sdpvar(self.multiplicities(i), self.multiplicities(i), 'skew'), [1 0; 0 -1]);
-                            reOrder = reshape(1:2*self.multiplicities(i), 2, self.multiplicities(i));
-                            reOrder = reOrder([2 1],:);
-                            reOrder = reOrder(:)';
-                            self.blocks{i} = self.blocks{i} + tmp(:, reOrder);
-                        case 'H'
-                            assert(self.dimensions1(i) == 4, ['Dimension ', num2str(self.dimensions1(i)), ' for a quaternionic representation is currently not supported.']);
-                            da = replab.DivisionAlgebra.quaternion;
-                            self.blocks{i} = sdpvar(1)*ones(4*self.multiplicities(i));
-                            for x = 1:self.multiplicities(i)
-                                for y = x:self.multiplicities(i)
-                                    vars = sdpvar(4,1);
-                                    if (x == y)
-                                        % Only keep the symmetric part
-                                        self.blocks{i}(4*(x-1)+[1:4], 4*(y-1)+[1:4]) = da.toMatrix([1 0 0 0]'.*vars);
-                                    else
-                                        % keep everything
-                                        self.blocks{i}(4*(x-1)+[1:4], 4*(y-1)+[1:4]) = da.toMatrix(vars);
-                                        % Set the off-diagonal terms as well
-                                        self.blocks{i}(4*(y-1)+[1:4], 4*(x-1)+[1:4]) = da.toMatrix([1 -1 -1 -1]'.*vars);
-                                    end
-                                end
+                            if isequal(matrixType, 'full') && isequal(field, 'real')
+                                self.blocks{i} = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'real');
+                            elseif isequal(matrixType, 'symmetric') && isequal(field, 'real')
+                                self.blocks{i} = sdpvar(self.multiplicities(i), self.multiplicities(i), 'symmetric', 'real');
+                            elseif isequal(matrixType, 'full') && isequal(field, 'complex')
+                                self.blocks{i} = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'complex');
+                            elseif isequal(matrixType, 'symmetric') && isequal(field, 'complex')
+                                self.blocks{i} = sdpvar(self.multiplicities(i), self.multiplicities(i), 'symmetric', 'complex');
+                            elseif isequal(matrixType, 'hermitian') && isequal(field, 'complex')
+                                self.blocks{i} = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
                             end
+                            
+                        case 'C'
+                            basis1 = [1  0   % from replab.domain.ComplexTypeMatrices.toMatrix(1,0);
+                                      0  1];
+                            basis2 = [0 -1   % from replab.domain.ComplexTypeMatrices.toMatrix(0,1);
+                                      1  0];
+                            
+                            if isequal(matrixType, 'full') && isequal(field, 'real')
+                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'real');
+                                vars2 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'real');
+                            elseif isequal(matrixType, 'symmetric') && isequal(field, 'real')
+                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'symmetric', 'real');
+                                vars2 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars2 = imag(vars2); % this part should be antisymmetric
+                            elseif isequal(matrixType, 'full') && isequal(field, 'complex')
+                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'complex');
+                                vars2 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'complex');
+                            elseif isequal(matrixType, 'symmetric') && isequal(field, 'complex')
+                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'symmetric', 'complex');
+                                vars2R = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
+                                vars2I = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
+                                vars2 = imag(vars2R) + 1i*imag(vars2I); % this part should be fully antisymmetric
+                            elseif isequal(matrixType, 'hermitian') && isequal(field, 'complex')
+                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
+                                vars2 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
+                                vars2 = 1i*vars2; % Real part should be antisymmetric, and imaginary part symmetric
+                            end
+                            
+                            self.blocks{i} = kron(vars1, basis1) + kron(vars2, basis2);
+                            
+                        case 'H'
+                            basis1 = [1  0  0  0   % from replab.domain.QuaternionTypeMatrices.toMatrix(1,0,0,0);
+                                      0  1  0  0
+                                      0  0  1  0
+                                      0  0  0  1];
+                            basis2 = [0 -1  0  0   % from replab.domain.QuaternionTypeMatrices.toMatrix(0,1,0,0);
+                                      1  0  0  0
+                                      0  0  0 -1
+                                      0  0  1  0];
+                            basis3 = [0  0 -1  0   % from replab.domain.QuaternionTypeMatrices.toMatrix(0,0,1,0);
+                                      0  0  0  1
+                                      1  0  0  0
+                                      0 -1  0  0];
+                            basis4 = [0  0  0 -1   % from replab.domain.QuaternionTypeMatrices.toMatrix(0,0,0,1);
+                                      0  0 -1  0
+                                      0  1  0  0
+                                      1  0  0  0];
+                            
+                            if isequal(matrixType, 'full') && isequal(field, 'real')
+                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'real');
+                                vars2 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'real');
+                                vars3 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'real');
+                                vars4 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'real');
+                            elseif isequal(matrixType, 'symmetric') && isequal(field, 'real')
+                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'symmetric', 'real');
+                                vars2 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars2 = imag(vars2); % this part should be antisymmetric
+                                vars3 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars3 = imag(vars3); % this part should be antisymmetric
+                                vars4 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars4 = imag(vars4); % this part should be antisymmetric
+                            elseif isequal(matrixType, 'full') && isequal(field, 'complex')
+                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'complex');
+                                vars2 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'complex');
+                                vars3 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'complex');
+                                vars4 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'complex');
+                            elseif isequal(matrixType, 'symmetric') && isequal(field, 'complex')
+                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'symmetric', 'real');
+                                vars2R = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars2I = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars2 = imag(vars2R) + 1i*imag(vars2I); % this part should be fully antisymmetric
+                                vars3R = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars3I = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars3 = imag(vars3R) + 1i*imag(vars3I); % this part should be fully antisymmetric
+                                vars4R = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars4I = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars4 = imag(vars4R) + 1i*imag(vars4I); % this part should be fully antisymmetric
+                            elseif isequal(matrixType, 'hermitian') && isequal(field, 'complex')
+                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'symmetric', 'real');
+                                vars2 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars2 = 1i*vars2; % Real part should be antisymmetric, and imaginary part symmetric
+                                vars3 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars3 = 1i*vars3; % Real part should be antisymmetric, and imaginary part symmetric
+                                vars4 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars4 = 1i*vars4; % Real part should be antisymmetric, and imaginary part symmetric
+                            end
+                            
+                            self.blocks{i} = kron(vars1, basis1) + kron(vars2, basis2) + kron(vars3, basis3) + kron(vars4, basis4);
+
                         otherwise
                             error('Unknown type');
                     end
-
-                    % sanity check
-                    assert(issymmetric(self.blocks{i}));
                 end
                 
                 % We keep in memory the constraint imposed by the SDP matrix
@@ -262,10 +358,12 @@ classdef CommutantVar < replab.Str
                 %       constraints cleanly by applying the generators
                 %       to the SDP matrix. This would be much better.
                 if isempty(sdpMatrix)
+                    self.sdpMatrix_ = [];
                     self.linearConstraints = [];
                 else
                     assert(isnumeric(sdpMatrix) || isa(sdpMatrix, 'sdpvar'), ['Wrong type for sdpMatrix: ', class(sdpMatrix), '.']);
-                    self.linearConstraints = (self.fullMatrix == sdpMatrix);
+                    self.sdpMatrix_ = sdpMatrix;
+                    self.linearConstraints = (self.U_*self.fullBlockMatrix*self.U_' == sdpMatrix);
                 end
             else
                 % We construct the SDP blocks from the provided SDP matrix
@@ -278,45 +376,47 @@ classdef CommutantVar < replab.Str
                 co = 0;
                 for i = 1:self.nComponents
                     d = self.dimensions1(i);
+                    m = self.multiplicities(i);
+                    dimBlock = m*d;
+                    self.blocks{i} = self.U_(:, co + (1:dimBlock))' * sdpMatrix * self.U_(:, co + (1:dimBlock));
+                    
+                    % We also compute the structure when the field
+                    % representation dimension is associated with the
+                    % multiplicity
                     switch self.types(i)
                         case 'R'
-                            dimBlock = self.multiplicities(i)*d;
+                            mp = m;
+                            dp = d;
                         case 'C'
-                            d = d/2;
-                            assert(self.dimensions1(i) == 2, ['Dimension ', num2str(self.dimensions1(i)), ' for a complex representation is currently not supported.']);
-                            dimBlock = self.multiplicities(i)*2*d;
+                            mp = m*2;
+                            dp = d/2;
                         case 'H'
-                            d = d/4;
-                            assert(self.dimensions1(i) == 4, ['Dimension ', num2str(self.dimensions1(i)), ' for a quaternionic representation is currently not supported.']);
-                            dimBlock = self.multiplicities(i)*4*d;
+                            mp = m*4;
+                            dp = d/4;
                     end
-                    self.blocks{i} = self.U(:, co + (1:dimBlock))' * sdpMatrix * self.U(:, co + (1:dimBlock));
-                    
-                    % TODO: check and enforce the fine-grained
-                    % block structure for the C and H cases.
-                    
-                    % Three sanity checks:
+
+                    % Five sanity checks (plus reducing the block size if possible):
                     % 1. block-diagonal form
                     if (sdpMatrixIsSym == 1)
-                        shouldBeZero = (self.U(:,co+(1:dimBlock))' * sdpMatrix) * self.U(:,co+dimBlock+1:end);
+                        shouldBeZero = (self.U_(:,co+(1:dimBlock))' * sdpMatrix) * self.U_(:,co+dimBlock+1:end);
                         indices = [0 getvariables(shouldBeZero)];
                         for ind = indices
                             maxOuterEpsilonFound = max([maxOuterEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
                         end
                     end
                     
-                    % 2. Fine-grained form of real blocks
-                    if isequal(self.types(i), 'R') && (self.dimensions1(i) > 1)
-                        m = self.multiplicities(i);
-                        tmp = reshape(permute(reshape(self.blocks{i}, [d m d m]), [2 1 4 3]), d*m*[1 1]);
+                    % 2. Fine-grained form of blocks in presence of large
+                    % dimensions
+                    if (dp > 1)
+                        tmp = reshape(permute(reshape(self.blocks{i}, [dp mp dp mp]), [2 1 4 3]), dp*mp*[1 1]);
                         
                         if (sdpMatrixIsSym == 1)
-                            for j = 1:d-1
-                                for k = j:d
+                            for j = 1:dp-1
+                                for k = j:dp
                                     if j == k
-                                        shouldBeZero = tmp((j-1)*m + (1:m), (k-1)*m + (1:m)) - tmp(1:m,1:m);
+                                        shouldBeZero = tmp((j-1)*mp + (1:mp), (k-1)*mp + (1:mp)) - tmp(1:mp,1:mp);
                                     else
-                                        shouldBeZero = tmp((j-1)*m + (1:m), (k-1)*m + (1:m));
+                                        shouldBeZero = tmp((j-1)*mp + (1:mp), (k-1)*mp + (1:mp));
                                     end
                                     indices = [0 getvariables(shouldBeZero)];
                                     for ind = indices
@@ -327,20 +427,71 @@ classdef CommutantVar < replab.Str
                         end
                         
                         % Enforce the structure
-                        self.blocks{i} = tmp(1:m, 1:m);
+                        self.blocks{i} = tmp(1:mp, 1:mp);
                     end
                     
-                    % 3. hermitianity
-                    if (sdpMatrixIsSym == 1) && ~ishermitian(self.blocks{i})
-                        shouldBeZero = self.blocks{i} - self.blocks{i}';
-                        indices = [0 getvariables(shouldBeZero)];
-                        for ind = indices
-                            maxEpsilonFound = max([maxEpsilonFound, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
+                    % 3. Check the block structure for complex and
+                    % quaternionic representations
+                    if (sdpMatrixIsSym == 1) && ~isequal(self.types(i), 'R')
+                        if isequal(self.types(i), 'C')
+                            checkbases = {[1 0; 0 -1], [0 1; 1 0]};
+                        elseif isequal(self.types(i), 'H')
+                            checkbases = {[1 0 0 0; 0 -1 0 0; 0 0 0 0], [1 0 0 0; 0 0 0 0; 0 0 -1 0; 0 0 0 0], [1 0 0 0; 0 0 0 0; 0 0 0 0; 0 0 0 -1], ...
+                                [0 1 0 0; 1 0 0 0; 0 0 0 0; 0 0 0 0], [0 1 0 0; 0 0 0 0; 0 0 0 -1; 0 0 0 0], [0 1 0 0; 0 0 0 0; 0 0 0 0; 0 0 1 0], ...
+                                [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0], [0 0 1 0; 0 0 0 0; 1 0 0 0; 0 0 0 0], [0 0 1 0; 0 0 0 0; 0 0 0 0; 0 -1 0 0], ...
+                                [0 0 0 1; 0 0 -1 0; 0 0 0 0; 0 0 0 0], [0 0 0 1; 0 0 0 0; 0 1 0 0; 0 0 0 0], [0 0 0 1; 0 0 0 0; 0 0 0 0; 1 0 0 0]};
                         end
-                        self.blocks{i} = self.blocks{i} + self.blocks{i}';
+                        for j = 1:length(checkbases)
+                            % We just need to check the first element
+                            shouldBeZero = sum(sum( checkbases{j}.*self.blocks{i}(1:size(checkbases{j},1), 1:size(checkbases{j},2)) ));
+                            indices = [0 getvariables(shouldBeZero)];
+                            for ind = indices
+                                maxEpsilonFoundCH = max([maxEpsilonFoundCH, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
+                            end
+                        end
+                    end
+                
+                    % 4. Check for complexity
+                    if (sdpMatrixIsSym == 1) && isequal(field, 'real')
+                        shouldBeZero = imag(self.blocks{i});
+                        indices = [0 getvariables(shouldBeZero)];
+                        tmp = 0;
+                        for ind = indices
+                            tmp = max([tmp, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
+                        end
+                        maxEpsilonFoundType = max([maxEpsilonFoundType, tmp]);
+                        if tmp > 0
+                            self.blocks{i} = real(self.blocks{i});
+                        end
                     end
                     
-                    assert(issymmetric(self.blocks{i}));
+                    % 5. Check symmetry or hermiticity
+                    if (sdpMatrixIsSym == 1) && ~isequal(matrixType, 'full')
+                        if isequal(matrixType, 'symmetric')
+                            shouldBeZero = self.blocks{i} - self.blocks{i}.';
+                        elseif isequal(matrixType, 'hermitian')
+                            shouldBeZero = self.blocks{i} - self.blocks{i}';
+                        end
+                        indices = [0 getvariables(shouldBeZero)];
+                        tmp = 0;
+                        for ind = indices
+                            tmp = max([tmp, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
+                        end
+                        maxEpsilonFoundType = max([maxEpsilonFoundType, tmp]);
+                        if tmp > 0
+                            if isequal(matrixType, 'symmetric')
+                                self.blocks{i} = (self.blocks{i} + self.blocks{i}.')/2;
+                            elseif isequal(matrixType, 'hermitian')
+                                self.blocks{i} = (self.blocks{i} + self.blocks{i}')/2;
+                            end
+                        end
+                        if isequal(matrixType, 'symmetric')
+                            assert(issymmetric(self.blocks{i}) == 1);
+                        elseif isequal(matrixType, 'hermitian')
+                            assert(ishermitian(self.blocks{i}) == 1);
+                        end
+                    end
+                    
                     co = co + dimBlock;
                 end
                 assert(co == size(sdpMatrix,1))
@@ -350,11 +501,23 @@ classdef CommutantVar < replab.Str
                         'Off-block-diagonal elements have been replaced by zeros.', char(10), ...
                         'It might be better to use replab.CommutantVar.fromSdpMatrix.']);
                 end
-                if maxEpsilonFound > epsilonWarning
-                    warning(['The provided SDP matrix does not block-diagonalizes into symmetric blocks: max delta = ', num2str(maxEpsilonFound), char(10), ...
-                        'Blocks have been symmetrized. It might be better to use replab.CommutantVar.fromSdpMatrix.']);
+                if maxEpsilonFoundCH > epsilonWarning
+                    warning(['The provided SDP matrix does not block-diagonalizes into blocks of the expected real/complex/quaternionic structure: max delta = ', num2str(maxEpsilonFoundCH), char(10), ...
+                        'The structure has not been enforced.', char(10), ...
+                        'It might be better to use replab.CommutantVar.fromSdpMatrix.']);
+                end
+                if maxEpsilonFoundField > epsilonWarning
+                    warning(['The provided SDP matrix does not block-diagonalizes into real blocks: max delta = ', num2str(maxEpsilonFoundField), char(10), ...
+                        'Imaginary part has been set to zero.', char(10), ...
+                        'It might be better to use replab.CommutantVar.fromSdpMatrix.']);
+                end
+                if maxEpsilonFoundType > epsilonWarning
+                    warning(['The provided SDP matrix does not block-diagonalizes into symmetric/hermitian form: max delta = ', num2str(maxEpsilonFoundType), char(10), ...
+                        'Blocks have been symmetrized.', char(10), ...
+                        'It might be better to use replab.CommutantVar.fromSdpMatrix.']);
                 end
                 
+                self.sdpMatrix_ = sdpMatrix;
                 self.linearConstraints = [];
             end
         end
@@ -373,15 +536,15 @@ classdef CommutantVar < replab.Str
         %     R: replab.CommutantVar object
 
             % Create a new simple object
-            R = replab.CommutantVar(rhs, [], []);
+            R = replab.CommutantVar(rhs, [], [], [], []);
         end
 
     end
 
     methods (Static) % Factory methods
 
-        function R = fromPermutations(generators)
-        % R = fromPermutations(generators)
+        function R = fromPermutations(generators, matrixType, field)
+        % R = fromPermutations(generators, matrixType, field)
         % 
         % Creates a CommutantVar object: a sdpvar matrix that is invariant
         % under joint permutations of its lines and columns by the provided
@@ -390,23 +553,28 @@ classdef CommutantVar < replab.Str
         % Args:
         %     generators: list of generators under which the matrix is to
         %         remain unchanged
+        %     matrixType: one of the following:
+        %         'full' : no particular structure
+        %         'symmetric' : transpose-invariant matrix
+        %         'hermitian' : hermitian matrix
+        %     field: matrix elements are either 'real' or 'complex'
         %
         % Results:
         %     R: CommutantVar object
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]})
+        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
         %
         % See also:
         %     replab.CommutantVar.fromIndexMatrix
         %     replab.CommutantVar.fromSdpMatrix
         %     replab.CommutantVar.fromSymSdpMatrix
         
-            R = replab.CommutantVar(generators, [], []);
+            R = replab.CommutantVar(generators, [], [], matrixType, field);
         end
-        
-        function R = fromIndexMatrix(indexMatrix, generators)
-        % R = fromIndexMatrix(indexMatrix, generators)
+
+        function R = fromIndexMatrix(indexMatrix, generators, matrixType, field)
+        % R = fromIndexMatrix(indexMatrix, generators, matrixType, field)
         % 
         % Creates an SDP matrix with additional structure. The produced
         % sdpvar matrix:
@@ -427,13 +595,18 @@ classdef CommutantVar < replab.Str
         %         values are irrelevant.
         %     generators: a list of generators under which the matrix
         %         remains unchanged
+        %     matrixType: one of the following:
+        %         'full' : no particular structure
+        %         'symmetric' : transpose-invariant matrix
+        %         'hermitian' : hermitian matrix
+        %     field: matrix elements are either 'real' or 'complex'
         %
         % Results:
         %     R: a CommutantVar object
         %
         % Example:
         %     indexMatrix = [1 1 3 4; 1 5 6 30; 3 6 10 11; 4 30 11 15];
-        %     matrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {[4 1 2 3]})
+        %     matrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {[4 1 2 3]}, 'symmetric', 'real')
         %
         % See also:
         %     replab.CommutantVar.fromPermutations
@@ -446,7 +619,12 @@ classdef CommutantVar < replab.Str
             for i = 1:length(generators)
                 assert(length(generators{i}) == d, 'Generators and indexMatrix dimensions don''t match.');
             end
-        
+            assert(isequal(matrixType, 'full') || isequal(matrixType, 'symmetric') || isequal(matrixType, 'hermitian'), 'The matrix type must be ''full'', ''symmetric'' or ''hermitian''.');
+            assert(isequal(field, 'real') || isequal(field, 'complex'), 'The field must be ''real'' or ''complex''.');
+            if isequal(matrixType, 'hermitian') && isequal(field, 'real')
+                matrixType = 'symmetric';
+            end
+            
             % First, we make the indexMatrix invariant under the group
             
             % We renumber all indices so they match default numbering
@@ -473,31 +651,15 @@ classdef CommutantVar < replab.Str
             % Merge orbits with indices
             pairs = [reshape(indexMatrix, d^2, 1), orbits];
 
-            % Also impose that indexMatrix is symmetric
-            pairs = [pairs; reshape(indexMatrix, d^2, 1) reshape(indexMatrix', d^2, 1)];
+            if isequal(matrixType, 'symmetric')
+                % Also impose that indexMatrix is symmetric
+                pairs = [pairs; reshape(indexMatrix, d^2, 1) reshape(indexMatrix', d^2, 1)];
+            end
             pairs = unique(sort(pairs, 2), 'rows');
 
             % We use a burning algorithm to identify all connected subsets
-            uniquesLeft = unique(pairs);
-            subsets = {};
-            co1 = 0;
-            while ~isempty(uniquesLeft)
-                co1 = co1 + 1;
-                set = uniquesLeft(1);
-                co2 = 0;
-                while co2 < length(set)
-                    co2 = co2 + 1;
-                    element = set(co2);
-                    sel1 = find(pairs(:,1) == element);
-                    sel2 = find(pairs(:,2) == element);
-                    newElements = unique([pairs(sel1,2); pairs(sel2,1)])';
-                    newElements = setdiff(newElements, set);
-                    set = [set, newElements];
-                end
-                subsets{co1} = sort(set);
-                uniquesLeft = setdiff(uniquesLeft, set);
-            end
-            %subsets{:}
+            %images = replab.Partition.connectedComponents(replab.graph.edge2adj(pairs)).blockIndex;
+            subsets = replab.graph.burning(pairs);
             
             % We attribute the number to each element of each class
             images = zeros(max(unique(pairs)), 1);
@@ -511,13 +673,114 @@ classdef CommutantVar < replab.Str
             invPerm = sparse(values, 1, indices);
             tmp = sparse(1:numel(indexMatrix), invPerm(reshape(indexMatrix,1,numel(indexMatrix))), true);
             %indexMatrix = reshape(tmp*images(values), d, d)
-                        
+            
             % Now we can declare the desired number of variables and
             % attribute them
-            vars = sdpvar(length(subsets),1);
+            if isequal(field, 'real')
+                vars = sdpvar(length(subsets), 1);
+            else
+                % complex coefficients
+                if isequal(matrixType, 'hermitian')
+                    % find coefficients which must be real
+                    imagesMatrix = reshape(tmp*images(values), d, d);
+                    diagImages = unique(diag(imagesMatrix));
+                    pairsH = [reshape(imagesMatrix, d^2, 1) reshape(imagesMatrix', d^2, 1)];
+                    pairsH = unique(sort(pairsH, 2), 'rows');
+
+                    subsetsH = replab.graph.burning(pairsH);
+                    
+                    % We distinguish between images which are real, and
+                    % images which are conjugated to each other
+                    subsetsR = {}; % real variables
+                    subsetsC = {}; % mutually conjugated variables
+                    for i = 1:length(subsetsH)
+                        isReal = false;
+                        for j = 1:length(diagImages)
+                            if ismember(diagImages(j), subsetsH{i})
+                                subsetsR{end+1} = subsetsH{i};
+                                isReal = true;
+                                break;
+                            end
+                        end
+                        if ~isReal
+                            % We try to find a 2-coloring of the graph
+                            % corresponding to these indices. If it does
+                            % not exist, then the variables must be real.
+                            
+                            % Fist we select the edges connecting vertices
+                            % in this set
+                            maskPairs = 0*pairsH;
+                            for j = 1:length(subsetsH{i})
+                                maskPairs = maskPairs + (pairsH == subsetsH{i}(j));
+                            end
+                            selPairs = pairsH(find(sum(maskPairs,2)),:);
+                            
+                            if sum(diff(selPairs,1,2) == 0) >= 1
+                                % element must be equal to its conjugate,
+                                % so it must be real
+                                subsetsR{end+1} = subsetsH{i};
+                            else
+                                % We try to split the element with respect
+                                % to conjugacy
+                                [colorable, coloring] = replab.graph.graphIsBipartite(selPairs);
+                                if colorable == 0
+                                    subsetsR{end+1} = subsetsH{i};
+                                else
+                                    subsetsC{end+1} = coloring;
+                                end
+                            end
+                        end
+                    end
+                    
+                    % the real variables
+                    nbRealVariables = length(subsetsR);
+                    varsR = sdpvar(nbRealVariables,1);
+                    
+                    % placement of the real variables
+                    indR1 = [subsetsR{:}];
+                    indR2 = zeros(size(indR1));
+                    co = 1;
+                    for i = 1:nbRealVariables
+                        indR2(co:co+length(subsetsR{i})-1) = i;
+                        co = co + length(subsetsR{i});
+                    end
+                    
+                    % the complex variables
+                    nbComplexVariables = length(subsetsC);
+                    varsC = sdpvar(nbComplexVariables,1,'full','complex');
+                    varsC = reshape([varsC conj(varsC)].', 2*nbComplexVariables,1);
+                    
+                    % placement of the complex variables
+                    indC1 = [subsetsC{:}];
+                    indC2 = zeros(1,size(indC1,2));
+                    co = 1;
+                    for i = 1:nbComplexVariables
+                        indC2(co+find(subsetsC{i}(2,:)==1)-1) = 2*(i-1)+1;
+                        indC2(co+find(subsetsC{i}(2,:)==2)-1) = 2*(i-1)+2;
+                        co = co + size(subsetsC{i},2);
+                    end
+                    
+                    % All together
+                    if nbComplexVariables == 0
+                        ind1 = indR1;
+                        ind2 = indR2;
+                        field = 'real';
+                        if isequal(matrixType, 'hermitian')
+                            matrixType = 'symmetric';
+                        end
+                    else
+                        ind1 = [indR1, indC1(1,:)];
+                        ind2 = [indR2, indR2(end)+indC2];
+                    end
+                    
+                    vars = sparse(ind1, ind2, 1)*[varsR; varsC];
+                else
+                    vars = sdpvar(length(subsets), 1, 'full', 'complex');
+                end
+            end
             sdpMatrix = reshape(tmp*vars(images(values)), d, d);
             
-            R = replab.CommutantVar(generators, sdpMatrix, 1);%2); For now we still perform structural tests to detect potential bugs
+            R = replab.CommutantVar(generators, sdpMatrix, 1, matrixType, field);
         end
 
         function R = fromSdpMatrix(sdpMatrix, generators)
@@ -528,6 +791,8 @@ classdef CommutantVar < replab.Str
         %     - the structure encoded into sdpMatrix
         %     - invariance under joint permutations of its lines and
         %       columns by the provided generators.
+        % The type of matrix (full/symmetric/hermitian) as well as the
+        % field (real/complex) is inferred from the provided matrix.
         %
         % Args:
         %     sdpMatrix: the SDP matrix on which to impose permutation
@@ -547,7 +812,21 @@ classdef CommutantVar < replab.Str
         %     replab.CommutantVar.fromIndexMatrix
         %     replab.CommutantVar.fromSymSdpMatrix
 
-            R = replab.CommutantVar(generators, sdpMatrix, 0);
+            if issymmetric(sdpMatrix)
+                matrixType = 'symmetric';
+            elseif ishermitian(sdpMatrix)
+                matrixType = 'hermitian';
+            else
+                matrixType = 'full';
+            end
+            
+            if isreal(sdpMatrix)
+                field = 'real';
+            else
+                field = 'complex';
+            end
+            
+            R = replab.CommutantVar(generators, sdpMatrix, 0, matrixType, field);
         end
 
         function R = fromSymSdpMatrix(sdpMatrix, generators)
@@ -555,6 +834,8 @@ classdef CommutantVar < replab.Str
         % 
         % Block-diagonalizes an existing SDP matrix which is already
         % invariant under the group generators.
+        % The type of matrix (full/symmetric/hermitian) as well as the
+        % field (real/complex) is inferred from the provided matrix.
         %
         % Args:
         %     sdpMatrix: the SDP matrix to block diagonlize
@@ -575,7 +856,21 @@ classdef CommutantVar < replab.Str
         %     replab.CommutantVar.fromIndexMatrix
         %     replab.CommutantVar.fromSdpMatrix
 
-            R = replab.CommutantVar(generators, sdpMatrix, 1);
+            if issymmetric(sdpMatrix)
+                matrixType = 'symmetric';
+            elseif ishermitian(sdpMatrix)
+                matrixType = 'hermitian';
+            else
+                matrixType = 'full';
+            end
+            
+            if isreal(sdpMatrix)
+                field = 'real';
+            else
+                field = 'complex';
+            end
+            
+            R = replab.CommutantVar(generators, sdpMatrix, 1, matrixType, field);
         end
         
     end
@@ -637,11 +932,12 @@ classdef CommutantVar < replab.Str
         %     s2: The second dimension (optional)
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]})
+        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
         %     size(matrix)
         %
         % See also:
         %     size
+        %     replab.CommutantVar.numel
         
             if (nargin >= 2) && (d ~= 1) && (d ~= 2)
                 error('Wrong dimension in gem::size');
@@ -654,6 +950,102 @@ classdef CommutantVar < replab.Str
             elseif nargout == 2
                 s2 = s1(2);
                 s1 = s1(1);
+            end
+        end
+        
+        function nb = numel(self)
+        % nb = numel(self)
+        %
+        % Returns the number of objects (i.e. 1). To obtain the number of
+        % elements in the matrix, use prod(size(self)) instead.
+        %
+        % Args:
+        %     self: CommutantVar object
+        %
+        % Results:
+        %     nb: 1
+        %
+        % Example:
+        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
+        %     numel(matrix)
+        %
+        % See also:
+        %     numel
+        %     replab.CommutantVar.size
+        
+            nb = 1;
+        end
+        
+        function bool = isreal(self)
+        % bool = isreal(self)
+        %
+        % Tells whether the matrix is real
+        %
+        % Args:
+        %     self: CommutantVar object
+        %
+        % Results:
+        %     bool: 1 iff the matrix is real
+        %
+        % Example:
+        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
+        %     isreal(matrix)
+        %
+        % See also:
+        %     isreal
+        %     replab.CommutantVar.issymmetric
+        %     replab.CommutantVar.ishermitian
+        
+            bool = isequal(self.field, 'real');
+        end
+
+        function bool = issymmetric(self)
+        % bool = issymmetric(self)
+        %
+        % Tells whether the matrix is invariant under transposition
+        %
+        % Args:
+        %     self: CommutantVar object
+        %
+        % Results:
+        %     bool: 1 iff the matrix is invariant under transposition
+        %
+        % Example:
+        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
+        %     issymmetric(matrix)
+        %
+        % See also:
+        %     issymmetric
+        %     replab.CommutantVar.isreal
+        %     replab.CommutantVar.ishermitian
+        
+            bool = isequal(self.matrixType, 'symmetric');
+        end
+
+        function bool = ishermitian(self)
+        % bool = ishermitian(self)
+        %
+        % Tells whether the matrix is invariant under complex transposition
+        %
+        % Args:
+        %     self: CommutantVar object
+        %
+        % Results:
+        %     bool: 1 iff the matrix is invariant under complex transposition
+        %
+        % Example:
+        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'hermitian', 'complex')
+        %     ishermitian(matrix)
+        %
+        % See also:
+        %     ishermitian
+        %     replab.CommutantVar.isreal
+        %     replab.CommutantVar.issymmetric
+        
+            if isequal(self.field, 'real')
+                bool = isequal(self.matrixType, 'symmetric') | isequal(self.matrixType, 'hermitian');
+            else
+                bool = isequal(self.matrixType, 'hermitian');
             end
         end
 
@@ -670,7 +1062,7 @@ classdef CommutantVar < replab.Str
         %     M: sdpvar block
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]})
+        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
         %     matrix.block(2)
         %
         % See also:
@@ -692,7 +1084,7 @@ classdef CommutantVar < replab.Str
         %     M: matrix
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
+        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
         %     matrix.blockMask
         
             M = zeros(self.dim, self.dim);
@@ -725,7 +1117,7 @@ classdef CommutantVar < replab.Str
         %     M: sdpvar matrix in block diagonal form
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
+        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
         %     see(matrix.fullBlockMatrix)
             
             if isempty(self.fullBlockMatrix_)
@@ -767,12 +1159,34 @@ classdef CommutantVar < replab.Str
         %     M: sdpvar matrix
         % 
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
+        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
         %     see(matrix.fullMatrix)
         
-            instructions = struct('type', '()');
-            instructions.subs = {':', ':'};
-            M = subsref(self, instructions);
+            if ~isempty(self.sdpMatrix_)
+                M = self.sdpMatrix_;
+            else
+                instructions = struct('type', '()');
+                instructions.subs = {':', ':'};
+                M = subsref(self, instructions);
+            end
+        end
+
+        function M = U(self)
+        % M = U(self)
+        %
+        % Returns the block-diagonalizing unitary.
+        %
+        % Args:
+        %     self: CommutantVar object
+        %
+        % Returns:
+        %     U: matrix
+        % 
+        % Example:
+        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
+        %     matrix.U
+        
+            M = full(self.U_);
         end
 
         function vars = getVariables(self)
@@ -789,7 +1203,7 @@ classdef CommutantVar < replab.Str
         %     vars: vector of indices 
         %
         % Example:
-        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]})
+        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
         %     matrix1.getVariables
         %     matrix2 = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
         %     matrix2.getVariables
@@ -827,7 +1241,7 @@ classdef CommutantVar < replab.Str
         %     n: number of SDP variables
         %
         % Example:
-        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]})
+        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
         %     matrix1.nbVars
         %     matrix2 = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
         %     matrix2.nbVars
@@ -950,7 +1364,7 @@ classdef CommutantVar < replab.Str
         %     varargout: depends on the usage
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
+        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
         %     matrix(1)
         %
         % See also:
@@ -958,6 +1372,15 @@ classdef CommutantVar < replab.Str
         
             switch varargin{1}(1).type
                 case '()'
+                    % If the matrix in full form is known, we extract the
+                    % elements directly from it
+                    if ~isempty(self.sdpMatrix_)
+                        [varargout{1:nargout}] = subsref(self.sdpMatrix_, varargin{1});
+                        return;
+                    end
+                    
+                    % The matrix in full form has not been constructed, we
+                    % rely on the matrix in block form
                     switch length(varargin{1}.subs)
                         case 1
                             % call of the form self([1 2 4 5])
@@ -975,10 +1398,20 @@ classdef CommutantVar < replab.Str
                             % Now we extract only the requested part
                             M = self.fullBlockMatrix;
                             if length(varargin{1}.subs{1})*size(self,2) <= size(self,1)*length(varargin{1}.subs{2})
-                                varargout{1} = (self.U(varargin{1}.subs{1},:)*M)*(self.U(varargin{1}.subs{2},:)');
+                                varargout{1} = (self.U_(varargin{1}.subs{1},:)*M)*(self.U_(varargin{1}.subs{2},:)');
                             else
-                                varargout{1} = self.U(varargin{1}.subs{1},:)*(M*(self.U(varargin{1}.subs{2},:)'));
+                                varargout{1} = self.U_(varargin{1}.subs{1},:)*(M*(self.U_(varargin{1}.subs{2},:)'));
                             end
+                            
+                            % Make sure symmetry/hermiticity is preserved
+                            if isequal(varargin{1}.subs{1}, varargin{1}.subs{2})
+                                if isequal(self.matrixType, 'symmetric')
+                                    varargout{1} = (varargout{1} + varargout{1}.')/2;
+                                elseif isequal(self.matrixType, 'hermitian')
+                                    varargout{1} = (varargout{1} + varargout{1}')/2;
+                                end
+                            end
+                            
                         otherwise
                             error('Too many indices for 2-dimensional object');
                     end
@@ -1008,8 +1441,8 @@ classdef CommutantVar < replab.Str
         %             in X correspond to identical blocks in Y
         %
         % Example:
-        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]})
-        %     matrix2 = replab.CommutantVar.fromPermutations({[2 1 3]})
+        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
+        %     matrix2 = replab.CommutantVar.fromPermutations({[2 1 3]}, 'symmetric', 'real')
         %     % both matrices have comparable block structures ...
         %     full(blockMask(matrix1)) 
         %     full(blockMask(matrix2))
@@ -1041,9 +1474,9 @@ classdef CommutantVar < replab.Str
 
                 % We put Y in the block basis of X
                 if isa(Y, 'replab.CommutantVar')
-                    rotatedY = X.U'*Y.fullMatrix*X.U;
+                    rotatedY = X.U_'*Y.U_*Y.fullBlockMatrix*Y.U_'*X.U_;
                 else
-                    rotatedY = X.U'*Y*X.U;
+                    rotatedY = X.U_'*Y*X.U_;
                 end
 
                 % We check the structure of rotatedY
@@ -1110,7 +1543,7 @@ classdef CommutantVar < replab.Str
                 % CommutantVar vs sthg
 
                 % We put Y in the block basis of X
-                rotatedY = X.U'*Y*X.U;
+                rotatedY = X.U_'*Y*X.U_;
 
                 % We check the structure of rotatedY
                 co = 0;
@@ -1221,11 +1654,36 @@ classdef CommutantVar < replab.Str
 
                 % We express Y in the block basis of X
                 if isa(Y, 'replab.CommutantVar')
-                    rotatedY = X.U'*Y.fullMatrix*X.U;
+                    rotatedY = X.U_'*Y.fullMatrix*X.U_;
                 else
-                    rotatedY = X.U'*Y*X.U;
+                    rotatedY = X.U_'*Y*X.U_;
                 end
-
+    
+                % We want to make sure that the symmetry or hermitianity is
+                % preserved if possible. So we check what symmetry is
+                % expected in the result of the operation
+                if isa(Y, 'replab.CommutantVar')
+                    YType = Y.matrixType;
+                    YField = Y.field;
+                    
+                    YSdpMatrix = Y.sdpMatrix_;
+                else
+                    if isreal(Y)
+                        YField = 'real';
+                    else
+                        YField = 'complex';
+                    end
+                    if issymmetric(Y)
+                        YType = 'symmetric';
+                    elseif ishermitian(Y)
+                        YType = 'hermitian';
+                    else
+                        YType = 'full';
+                    end
+                    
+                    YSdpMatrix = Y;
+                end
+                
                 % The block structure matches fully, we procede to perform the
                 % addition on each block
                 Z = copy(X);
@@ -1242,36 +1700,71 @@ classdef CommutantVar < replab.Str
                             error('Unknown type');
                     end
                     constantBlock = rotatedY(co + (1:d:d*size(X.blocks{i},1)), co + (1:d:d*size(X.blocks{i},1)));
-                    % We make sure that the constant block is hermitian
-                    shouldBeZero = constantBlock - constantBlock';
-                    if isa(shouldBeZero, 'sdpvar')
-                        indices = [0 getvariables(shouldBeZero)];
-                        for ind = indices
-                            if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
-                                error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(getbasematrix(shouldBeZero,ind))))), '.']);
+                    
+                    % We make sure that the symmetry or hermitianity is
+                    % preserved if possible
+                    if ~isequal(YType, 'full')
+                        if isequal(YType, 'symmetric')
+                            shouldBeZero = constantBlock - constantBlock.';
+                        elseif isequal(YType, 'hermitian')
+                            shouldBeZero = constantBlock - constantBlock';
+                        end
+                        if isa(shouldBeZero, 'sdpvar')
+                            indices = [0 getvariables(shouldBeZero)];
+                            for ind = indices
+                                if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
+                                    error(['Non-', YType,' component of ', num2str(max(max(abs(getbasematrix(shouldBeZero,ind))))), ' introduced.']);
+                                end
+                                maxNonHermiticity = max([maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
                             end
-                            maxNonHermiticity = max([maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
+                        else
+                            if max(max(abs(shouldBeZero))) > epsilon
+                                error(['Non-', YType,' component of ', num2str(max(max(abs(getbasematrix(shouldBeZero))))), ' introduced.']);
+                            end
+                            maxNonHermiticity = max([maxNonHermiticity, max(max(abs(shouldBeZero)))]);
                         end
-                    else
-                        if max(max(abs(shouldBeZero))) > epsilon
-                            error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(shouldBeZero)))), '.']);
+                        if isequal(YType, 'symmetric') && ~issymmetric(constantBlock)
+                            % We force exact symmetry
+                            constantBlock = (constantBlock + constantBlock.')/2;
+                        elseif isequal(YType, 'hermitian') && ~ishermitian(constantBlock)
+                            % We force exact hermiticity
+                            constantBlock = (constantBlock + constantBlock')/2;
                         end
-                        maxNonHermiticity = max([maxNonHermiticity, max(max(abs(shouldBeZero)))]);
-                    end
-                    if ~ishermitian(constantBlock)
-                        % We force exact hermiticity
-                        constantBlock = (constantBlock + constantBlock')/2;
                     end
                     Z.blocks{i} = Z.blocks{i} + constantBlock;
-                    co = co + d*size(X.blocks{i},1);
+                    co = co + d*size(X.blocks{i}, 1);
                 end
                 
                 % We keep track of the linear constraints
+                if ~isempty(X.sdpMatrix_) && ~isempty(YSdpMatrix)
+                    Z.sdpMatrix_ = X.sdpMatrix_ + YSdpMatrix;
+                else
+                    Z.sdpMatrix_ = [];
+                end
                 if isa(Y, 'replab.CommutantVar')
                     Z.linearConstraints = [X.linearConstraints, Y.linearConstraints];
                 else
                     Z.linearConstraints = X.linearConstraints;
                 end
+                
+                % We update the matrix attributes
+                newType = 'full';
+                if isequal(X.matrixType, 'symmetric') && isequal(YType, 'symmetric')
+                    newType = 'symmetric';
+                elseif isequal(X.matrixType, 'hermitian') && isequal(YType, 'hermitian')
+                    newType = 'hermitian';
+                elseif (isequal(X.field, 'real') && isequal(X.matrixType, 'symmetric')) && isequal(YType, 'hermitian')
+                    newType = 'hermitian';
+                elseif isequal(X.matrixType, 'hermitian') && (isequal(YField, 'real') && isequal(YType, 'symmetric'))
+                    newType = 'hermitian';
+                end
+                Z.matrixType = newType;
+                if isequal(X.field, 'real') && isequal(YField, 'real')
+                    Z.field = 'real';
+                else
+                    Z.field = 'complex';
+                end
+                
             elseif ~isa(X, 'replab.CommutantVar') && isa(Y, 'replab.CommutantVar')
                 % sthg + CommutantVar
                 Z = Y+X;
@@ -1282,7 +1775,9 @@ classdef CommutantVar < replab.Str
             
             % We produce a warning if some small but not too small coefficients
             % have been neglected
-            if maxNonHermiticity > epsilonWarning
+            if isequal(newType, 'symmetric') && (maxNonHermiticity > epsilonWarning)
+                warning(['Non-symmetry of order ', num2str(maxEpsilonFound), ' was corrected.']);
+            elseif isequal(newType, 'hermitian') && (maxNonHermiticity > epsilonWarning)
                 warning(['Non-hermiticity of order ', num2str(maxEpsilonFound), ' was corrected.']);
             end
         end
@@ -1331,11 +1826,36 @@ classdef CommutantVar < replab.Str
 
                 % We express Y in the block basis of X
                 if isa(Y, 'replab.CommutantVar')
-                    rotatedY = X.U'*Y.fullMatrix*X.U;
+                    rotatedY = X.U_'*Y.fullMatrix*X.U_;
                 else
-                    rotatedY = X.U'*Y*X.U;
+                    rotatedY = X.U_'*Y*X.U_;
                 end
-
+    
+                % We want to make sure that the symmetry or hermitianity is
+                % preserved if possible. So we check what symmetry is
+                % expected in the result of the operation
+                if isa(Y, 'replab.CommutantVar')
+                    YType = Y.matrixType;
+                    YField = Y.field;
+                    
+                    YSdpMatrix = Y.sdpMatrix_;
+                else
+                    if isreal(Y)
+                        YField = 'real';
+                    else
+                        YField = 'complex';
+                    end
+                    if issymmetric(Y)
+                        YType = 'symmetric';
+                    elseif ishermitian(Y)
+                        YType = 'hermitian';
+                    else
+                        YType = 'full';
+                    end
+                    
+                    YSdpMatrix = Y;
+                end
+                
                 % The block structure matches fully, we procede to perform the
                 % substraction on each block
                 Z = copy(X);
@@ -1352,35 +1872,69 @@ classdef CommutantVar < replab.Str
                             error('Unknown type');
                     end
                     constantBlock = rotatedY(co + (1:d:d*size(X.blocks{i},1)), co + (1:d:d*size(X.blocks{i},1)));
-                    % We make sure that the constant block is hermitian
-                    shouldBeZero = constantBlock - constantBlock';
-                    if isa(shouldBeZero, 'sdpvar')
-                        indices = [0 getvariables(shouldBeZero)];
-                        for ind = indices
-                            if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
-                                error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(getbasematrix(shouldBeZero,ind))))), '.']);
+                    
+                    % We make sure that the symmetry or hermitianity is
+                    % preserved if possible
+                    if ~isequal(YType, 'full')
+                        if isequal(YType, 'symmetric')
+                            shouldBeZero = constantBlock - constantBlock.';
+                        elseif isequal(YType, 'hermitian')
+                            shouldBeZero = constantBlock - constantBlock';
+                        end
+                        if isa(shouldBeZero, 'sdpvar')
+                            indices = [0 getvariables(shouldBeZero)];
+                            for ind = indices
+                                if max(max(abs(getbasematrix(shouldBeZero,ind)))) > epsilon
+                                    error(['Non-', YType,' component of ', num2str(max(max(abs(getbasematrix(shouldBeZero,ind))))), ' introduced.']);
+                                end
+                                maxNonHermiticity = max([maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
                             end
-                            maxNonHermiticity = max([maxNonHermiticity, max(max(abs(getbasematrix(shouldBeZero,ind))))]);
+                        else
+                            if max(max(abs(shouldBeZero))) > epsilon
+                                error(['Non-', YType,' component of ', num2str(max(max(abs(getbasematrix(shouldBeZero))))), ' introduced.']);
+                            end
+                            maxNonHermiticity = max([maxNonHermiticity, max(max(abs(shouldBeZero)))]);
                         end
-                    else
-                        if max(max(abs(shouldBeZero))) > epsilon
-                            error(['Positivity requires hermitian matrices. Non-hermiticity of ', num2str(max(max(abs(shouldBeZero)))), '.']);
+                        if isequal(YType, 'symmetric') && ~issymmetric(constantBlock)
+                            % We force exact symmetry
+                            constantBlock = (constantBlock + constantBlock.')/2;
+                        elseif isequal(YType, 'hermitian') && ~ishermitian(constantBlock)
+                            % We force exact hermiticity
+                            constantBlock = (constantBlock + constantBlock')/2;
                         end
-                        maxNonHermiticity = max([maxNonHermiticity, max(max(abs(shouldBeZero)))]);
-                    end
-                    if ~ishermitian(constantBlock)
-                        % We force exact hermiticity
-                        constantBlock = (constantBlock + constantBlock')/2;
                     end
                     Z.blocks{i} = Z.blocks{i} - constantBlock;
-                    co = co + d*size(X.blocks{i},1);
+                    co = co + d*size(X.blocks{i}, 1);
                 end
                 
                 % We keep track of the linear constraints
+                if ~isempty(X.sdpMatrix_) && ~isempty(YSdpMatrix)
+                    Z.sdpMatrix_ = X.sdpMatrix_ - YSdpMatrix;
+                else
+                    Z.sdpMatrix_ = [];
+                end
                 if isa(Y, 'replab.CommutantVar')
                     Z.linearConstraints = [X.linearConstraints, Y.linearConstraints];
                 else
                     Z.linearConstraints = X.linearConstraints;
+                end
+                
+                % We update the matrix attributes
+                newType = 'full';
+                if isequal(X.matrixType, 'symmetric') && isequal(YType, 'symmetric')
+                    newType = 'symmetric';
+                elseif isequal(X.matrixType, 'hermitian') && isequal(YType, 'hermitian')
+                    newType = 'hermitian';
+                elseif (isequal(X.field, 'real') && isequal(X.matrixType, 'symmetric')) && isequal(YType, 'hermitian')
+                    newType = 'hermitian';
+                elseif isequal(X.matrixType, 'hermitian') && (isequal(YField, 'real') && isequal(YType, 'symmetric'))
+                    newType = 'hermitian';
+                end
+                Z.matrixType = newType;
+                if isequal(X.field, 'real') && isequal(YField, 'real')
+                    Z.field = 'real';
+                else
+                    Z.field = 'complex';
                 end
             elseif ~isa(X, 'replab.CommutantVar') && isa(Y, 'replab.CommutantVar')
                 % sthg - CommutantVar
@@ -1392,7 +1946,9 @@ classdef CommutantVar < replab.Str
 
             % We produce a warning if some small but not too small coefficients
             % have been neglected
-            if maxNonHermiticity > epsilonWarning
+            if isequal(newType, 'symmetric') && (maxNonHermiticity > epsilonWarning)
+                warning(['Non-symmetry of order ', num2str(maxEpsilonFound), ' was corrected.']);
+            elseif isequal(newType, 'hermitian') && (maxNonHermiticity > epsilonWarning)
                 warning(['Non-hermiticity of order ', num2str(maxEpsilonFound), ' was corrected.']);
             end
         end
@@ -1416,6 +1972,7 @@ classdef CommutantVar < replab.Str
             for i = 1:X.nComponents
                 X.blocks{i} = -X.blocks{i};
             end
+            X.sdpMatrix_ = -X.sdpMatrix_;
         end
 
         function Z = times(X, Y)
@@ -1437,7 +1994,7 @@ classdef CommutantVar < replab.Str
         %     replab.CommutantVar.fullMatrix
 
             % Check that dimensions are compatible
-            if (numel(X) ~= 1) && (numel(Y) ~= 1)
+            if (prod(size(X)) ~= 1) && (prod(size(Y)) ~= 1)
                 error('Use fullMatrix for non-scalar multiplications.');
             end
 
@@ -1450,6 +2007,43 @@ classdef CommutantVar < replab.Str
                 Z = X.copy;
                 for i = 1:Z.nComponents
                     Z.blocks{i} = Y.*Z.blocks{i};
+                end
+                
+                % Keeping track of linear constraints
+                if ~isempty(X.sdpMatrix_)
+                    Z.sdpMatrix_ = X.sdpMatrix_.*Y;
+                end
+                
+                % Extract attributes of Y
+                if isreal(Y)
+                    YField = 'real';
+                else
+                    YField = 'complex';
+                end
+                if issymmetric(Y)
+                    YType = 'symmetric';
+                elseif ishermitian(Y)
+                    YType = 'hermitian';
+                else
+                    YType = 'full';
+                end
+                
+                % We update the matrix attributes
+                newType = 'full';
+                if isequal(X.matrixType, 'symmetric') && isequal(YType, 'symmetric')
+                    newType = 'symmetric';
+                elseif isequal(X.matrixType, 'hermitian') && isequal(YType, 'hermitian')
+                    newType = 'hermitian';
+                elseif (isequal(X.field, 'real') && isequal(X.matrixType, 'symmetric')) && isequal(YType, 'hermitian')
+                    newType = 'hermitian';
+                elseif isequal(X.matrixType, 'hermitian') && (isequal(YField, 'real') && isequal(YType, 'symmetric'))
+                    newType = 'hermitian';
+                end
+                Z.matrixType = newType;
+                if isequal(X.field, 'real') && isequal(YField, 'real')
+                    Z.field = 'real';
+                else
+                    Z.field = 'complex';
                 end
             elseif ~isa(X, 'replab.CommutantVar') && isa(Y, 'replab.CommutantVar')
                 % sthg .* CommutantVar
@@ -1479,7 +2073,7 @@ classdef CommutantVar < replab.Str
         %     replab.CommutantVar.fullMatrix
 
             % Check that dimensions are compatible
-            if numel(Y) ~= 1
+            if prod(size(Y)) ~= 1
                 error('Use fullMatrix for non-scalar multiplications.');
             end
             if ~isa(X, 'replab.CommutantVar') || isa(Y, 'replab.CommutantVar')
@@ -1489,6 +2083,32 @@ classdef CommutantVar < replab.Str
             Z = X.copy;
             for i = 1:Z.nComponents
                 Z.blocks{i} = Z.blocks{i}./Y;
+            end
+            
+            % Keeping track of linear constraints
+            if ~isempty(X.sdpMatrix_)
+                Z.sdpMatrix_ = X.sdpMatrix_./Y;
+            end
+
+            % Extract attributes of Y
+            if isreal(Y)
+                YField = 'real';
+            else
+                YField = 'complex';
+            end
+
+            % We update the matrix attributes
+            newType = 'full';
+            if isequal(X.matrixType, 'symmetric')
+                newType = 'symmetric';
+            elseif isequal(X.matrixType, 'hermitian') && isequal(YField, 'real')
+                newType = 'hermitian';
+            end
+            Z.matrixType = newType;
+            if isequal(X.field, 'real') && isequal(YField, 'real')
+                Z.field = 'real';
+            else
+                Z.field = 'complex';
             end
         end
 
@@ -1533,7 +2153,7 @@ classdef CommutantVar < replab.Str
         %     replab.CommutantVar.fullMatrix
 
             % Check that dimensions are compatible
-            if (numel(X) ~= 1) && (numel(Y) ~= 1)
+            if (prod(size(X)) ~= 1) && (prod(size(Y)) ~= 1)
                 error('Incompatible size for multiplication, use fullMatrix for non-scalar multiplications.');
             end
 
@@ -1560,7 +2180,7 @@ classdef CommutantVar < replab.Str
         %     replab.CommutantVar.fullMatrix
 
             % Only scalar division is supported
-            if numel(Y) ~= 1
+            if prod(size(Y)) ~= 1
                 error('Use fullMatrix for non-scalar division.');
             end
 
@@ -1587,7 +2207,7 @@ classdef CommutantVar < replab.Str
         %     replab.CommutantVar.fullMatrix
 
             % Only scalar division is supported
-            if numel(X) ~= 1
+            if prod(size(X)) ~= 1
                 error('Use fullMatrix for non-scalar division.');
             end
 
@@ -1611,25 +2231,29 @@ classdef CommutantVar < replab.Str
         %     X: sdpvar
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
+        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
         %     trace(matrix)
         % 
         % See also:
         %     trace
 
-            X = 0;
-            for i = 1:self.nComponents
-                d = self.dimensions1(i);
-                switch self.types(i)
-                    case 'R'
-                    case 'C'
-                        d = d/2;
-                    case 'H'
-                        d = d/4;
-                    otherwise
-                        error('Unknown type');
+            if ~isempty(self.sdpMatrix_)
+                X = trace(self.sdpMatrix_);
+            else
+                X = 0;
+                for i = 1:self.nComponents
+                    d = self.dimensions1(i);
+                    switch self.types(i)
+                        case 'R'
+                        case 'C'
+                            d = d/2;
+                        case 'H'
+                            d = d/4;
+                        otherwise
+                            error('Unknown type');
+                    end
+                    X = X + trace(self.blocks{i})*d;
                 end
-                X = X + trace(self.blocks{i})*d;
             end
         end
 
@@ -1655,7 +2279,7 @@ classdef CommutantVar < replab.Str
         %     F: Yalmip constraint
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
+        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
         %     F = [matrix == 0]
         %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
         %     F = [matrix == 0]
@@ -1665,7 +2289,7 @@ classdef CommutantVar < replab.Str
         %     replab.CommutantVar.ge
 
             % We examine each case independently
-            if isa(X, 'replab.CommutantVar') && ~isa(Y, 'replab.CommutantVar') && (numel(Y) == 1)
+            if isa(X, 'replab.CommutantVar') && ~isa(Y, 'replab.CommutantVar') && (prod(size(Y)) == 1)
                 % CommutantVar == scalar
 
                 if ~isequal(Y, 0)
@@ -1690,9 +2314,9 @@ classdef CommutantVar < replab.Str
 
                 % We express Y in the block basis of X
                 if isa(Y, 'replab.CommutantVar')
-                    rotatedY = X.U'*Y.U*Y.blockMask*Y.U'*X.U;
+                    rotatedY = X.U_'*Y.U_*Y.blockMask*Y.U_'*X.U_;
                 else
-                    rotatedY = X.U'*Y*X.U;
+                    rotatedY = X.U_'*Y*X.U_;
                 end
 
                 % We impose the constraint (the constraints might be slightly
@@ -1755,7 +2379,7 @@ classdef CommutantVar < replab.Str
         %     F: Yalmip constraint
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
+        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
         %     F = [matrix >= 0]
         %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
         %     F = [matrix >= 0]
@@ -1772,7 +2396,7 @@ classdef CommutantVar < replab.Str
             epsilonWarning = 1e-13;
 
             % We examine each case independently
-            if isa(X, 'replab.CommutantVar') && ~isa(Y, 'replab.CommutantVar') && (numel(Y) == 1)
+            if isa(X, 'replab.CommutantVar') && ~isa(Y, 'replab.CommutantVar') && (prod(size(Y)) == 1)
                 % CommutantVar >= scalar
 
                 F = (X.blocks{1} >= Y);
@@ -1793,9 +2417,9 @@ classdef CommutantVar < replab.Str
 
                 % We express Y in the block basis of X
                 if isa(Y, 'replab.CommutantVar')
-                    rotatedY = X.U'*Y.U*Y.blockMask*Y.U'*X.U;
+                    rotatedY = X.U_'*Y.U_*Y.blockMask*Y.U_'*X.U_;
                 else
-                    rotatedY = X.U'*Y*X.U;
+                    rotatedY = X.U_'*Y*X.U_;
                 end
 
                 % We impose the constraint (the constraints might be slightly
@@ -1886,7 +2510,7 @@ classdef CommutantVar < replab.Str
         %     F: Yalmip constraint
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]})
+        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
         %     F = [matrix <= 0]
         %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
         %     F = [matrix <= 0]
@@ -1903,7 +2527,7 @@ classdef CommutantVar < replab.Str
             epsilonWarning = 1e-13;
 
             % We examine each case independently
-            if isa(X, 'replab.CommutantVar') && ~isa(Y, 'replab.CommutantVar') && (numel(Y) == 1)
+            if isa(X, 'replab.CommutantVar') && ~isa(Y, 'replab.CommutantVar') && (prod(size(Y)) == 1)
                 % CommutantVar <= scalar
 
                 F = (X.blocks{1} <= Y);
@@ -1924,9 +2548,9 @@ classdef CommutantVar < replab.Str
 
                 % We express Y in the block basis of X
                 if isa(Y, 'replab.CommutantVar')
-                    rotatedY = X.U'*Y.U*Y.blockMask*Y.U'*X.U;
+                    rotatedY = X.U_'*Y.U_*Y.blockMask*Y.U_'*X.U_;
                 else
-                    rotatedY = X.U'*Y*X.U;
+                    rotatedY = X.U_'*Y*X.U_;
                 end
 
                 % We impose the constraint (the constraints might be slightly

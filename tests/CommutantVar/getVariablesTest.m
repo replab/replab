@@ -12,4 +12,9 @@ function test_general
     list1 = matrix.getVariables;
     list2 = getvariables(matrix.fullMatrix);
     assert(isequal(sort(list1), sort(list2)));
+
+    matrix = matrix23451H;
+    list1 = matrix.getVariables;
+    list2 = getvariables(matrix.fullMatrix);
+    assert(isempty(setdiff(list2, list1)));
 end
