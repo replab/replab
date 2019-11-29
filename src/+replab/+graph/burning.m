@@ -25,9 +25,13 @@ function subsets = burning(pairs)
             newElements = unique([pairs(sel1,2); pairs(sel2,1)])';
             newElements = setdiff(newElements, set);
             set = [set, newElements];
+            
+%             % We could also burn the links that were already used, but
+%             % this way of doing so is super slow...
+%             pairs = pairs(setdiff(1:size(pairs,1), union(sel1,sel2)),:);
         end
         subsets{co1} = sort(set);
         uniquesLeft = setdiff(uniquesLeft, set);
     end
-    %subsets{:}
+    %subsets{:} % To see the result
 end
