@@ -10,6 +10,27 @@ function subsets = burning(pairs)
 % Returns:
 %     subsets: cell array with connex components
 
+    % If possible, we try to use the optimized code
+    
+    % Make sure we are in the current path
+    initialPath = pwd;
+    try
+        % If the program was never compiled, we try to do so
+        if exist(['burning_mex.', mexext], 'file') ~= 2
+            [pathStr, name, extension] = fileparts(which('replab.graph.burning'));
+            pathStr = strrep(pathStr, '\', '/');
+            cd(pathStr)
+            mex('-largeArrayDims','burning_mex.cpp');
+        end
+
+        % We call the optimized method
+        a = replab.graph.burning_mex(pairs);
+    catch
+    end
+    % return to the previous path
+    cd(initialPath);
+
+    
     uniquesLeft = unique(pairs);
     subsets = {};
     co1 = 0;
