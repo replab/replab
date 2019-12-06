@@ -10,27 +10,50 @@ function subsets = burning(pairs)
 % Returns:
 %     subsets: cell array with connex components
 
-    % If possible, we try to use the optimized code
-    
-    % Make sure we are in the current path
-    initialPath = pwd;
-    try
-        % If the program was never compiled, we try to do so
-        if exist(['burning_mex.', mexext], 'file') ~= 2
-            [pathStr, name, extension] = fileparts(which('replab.graph.burning'));
-            pathStr = strrep(pathStr, '\', '/');
-            cd(pathStr)
-            mex('-largeArrayDims','burning_mex.cpp');
-        end
-
-        % We call the optimized method
-        a = replab.graph.burning_mex(pairs);
-    catch
+    persistent triedFastOption fastOptionWorks
+    if isempty(triedFastOption) || isempty(fastOptionWorks)
+        triedFastOption = false;
+        fastOptionWorks = false;
     end
-    % return to the previous path
-    cd(initialPath);
-
     
+    % If possible, we try to use the optimized code
+    if (~triedFastOption) || fastOptionWorks
+        firstPartWorks = true;
+        if ~triedFastOption
+            % We try to use the fast option
+            % Make sure we are in the current path
+            initialPath = pwd;
+            try
+                % If the program was never compiled, we try to do so
+                [pathStr, name, extension] = fileparts(which('replab.graph.burning'));
+                pathStr = strrep(pathStr, '\', '/');
+                cd(pathStr)
+                if exist(['burning_mex.', mexext], 'file') ~= 2
+                    mex('-largeArrayDims','burning_mex.cpp')
+                end
+            catch
+                firstPartWorks = false;
+            end
+            % return to the previous path
+            cd(initialPath);
+            triedFastOption = true;
+        end
+        if firstPartWorks
+            % The preparation worked, we try call the optimized method
+            fastOptionWorks = true;
+            try
+                subsets = replab.graph.burning_mex(pairs);
+            catch
+                fastOptionWorks = false;
+            end
+        end
+        if fastOptionWorks
+            return;
+        end
+    end
+
+    % If we end up here, we must use the matlab implementation of the
+    % algorithm
     uniquesLeft = unique(pairs);
     subsets = {};
     co1 = 0;
