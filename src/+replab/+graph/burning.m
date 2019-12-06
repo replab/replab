@@ -25,8 +25,9 @@ function subsets = burning(pairs)
             initialPath = pwd;
             try
                 % If the program was never compiled, we try to do so
-                [pathStr, name, extension] = fileparts(which('replab.graph.burning'));
+                [pathStr, name, extension] = fileparts(which('replab_addpaths'));
                 pathStr = strrep(pathStr, '\', '/');
+                pathStr = [pathStr, '/src/+replab/+graph'];
                 cd(pathStr)
                 if exist(['burning_mex.', mexext], 'file') ~= 2
                     mex('-largeArrayDims','burning_mex.cpp')
