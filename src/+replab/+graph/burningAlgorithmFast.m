@@ -1,14 +1,23 @@
-function subsets = burning(pairs)
-% subsets = burning(pairs)
+function subsets = burningFastAlgorithm(edges)
+% subsets = burningFastAlgorithm(edges)
 %
 % Performs the burning algorithm on the network described by the
-% edges given in pairs.
+% edges given in pairs. This tries to call the fast c++ implementation and
+% throws a replab:dispatch:tryNext error if it didn't manage to do so.
 %
 % Args:
-%     pairs: nx2 array of vertices linked by an edge
+%     edges: nx2 array of vertices linked by an edge
 %
 % Returns:
 %     subsets: cell array with connex components
+%
+% Example:
+%     replab.graph.burningAlgorithmFast([1 2; 2 6; 3 4]) % a graph with 5 nodes labelled 1, 2, 3, 4, 6
+%
+% See also:
+%     replab.Partition.connectedComponents
+%     replab.graph.connectedComponents
+%     replab.graph.burningAlgorithm
 
     persistent triedFastOption fastOptionWorks
     if isempty(triedFastOption) || isempty(fastOptionWorks)
@@ -29,8 +38,8 @@ function subsets = burning(pairs)
                 pathStr = strrep(pathStr, '\', '/');
                 pathStr = [pathStr, '/src/+replab/+graph'];
                 cd(pathStr)
-                if exist(['burning_mex.', mexext], 'file') ~= 2
-                    mex('-largeArrayDims','burning_mex.cpp')
+                if exist(['burningAlgorithm_mex.', mexext], 'file') ~= 2
+                    mex('-largeArrayDims','burningAlgorithm_mex.cpp')
                 end
             catch
                 firstPartWorks = false;
@@ -43,40 +52,17 @@ function subsets = burning(pairs)
             % The preparation worked, we try call the optimized method
             fastOptionWorks = true;
             try
-                subsets = replab.graph.burning_mex(pairs);
+                subsets = replab.graph.burningAlgorithm_mex(edges);
             catch
                 fastOptionWorks = false;
             end
-        end
-        if fastOptionWorks
-            return;
+        else
+            fastOptionWorks = false;
         end
     end
 
-    % If we end up here, we must use the matlab implementation of the
-    % algorithm
-    uniquesLeft = unique(pairs);
-    subsets = {};
-    co1 = 0;
-    while ~isempty(uniquesLeft)
-        co1 = co1 + 1;
-        set = uniquesLeft(1);
-        co2 = 0;
-        while co2 < length(set)
-            co2 = co2 + 1;
-            element = set(co2);
-            sel1 = find(pairs(:,1) == element);
-            sel2 = find(pairs(:,2) == element);
-            newElements = unique([pairs(sel1,2); pairs(sel2,1)])';
-            newElements = setdiff(newElements, set);
-            set = [set, newElements];
-            
-%             % We could also burn the links that were already used, but
-%             % this way of doing so is super slow...
-%             pairs = pairs(setdiff(1:size(pairs,1), union(sel1,sel2)),:);
-        end
-        subsets{co1} = sort(set);
-        uniquesLeft = setdiff(uniquesLeft, set);
+    if ~fastOptionWorks
+        % Inform the dispatcher that this method did not succeed
+        error('replab:dispatch:tryNext', 'try next');
     end
-    %subsets{:} % To see the result
 end

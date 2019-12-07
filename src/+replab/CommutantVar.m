@@ -657,9 +657,8 @@ classdef CommutantVar < replab.Str
             end
             pairs = unique(sort(pairs, 2), 'rows');
 
-            % We use a burning algorithm to identify all connected subsets
-            %images = replab.Partition.connectedComponents(replab.graph.edge2adj(pairs)).blockIndex;
-            subsets = replab.graph.burning(pairs);
+            % We identify all connected subsets
+            subsets = replab.graph.connectedComponents(pairs);
             
             % We attribute the number to each element of each class
             images = zeros(max(unique(pairs)), 1);
@@ -687,7 +686,7 @@ classdef CommutantVar < replab.Str
                     pairsH = [reshape(imagesMatrix, d^2, 1) reshape(imagesMatrix', d^2, 1)];
                     pairsH = unique(sort(pairsH, 2), 'rows');
 
-                    subsetsH = replab.graph.burning(pairsH);
+                    subsetsH = replab.graph.connectedComponents(pairsH);
                     
                     % We distinguish between images which are real, and
                     % images which are conjugated to each other

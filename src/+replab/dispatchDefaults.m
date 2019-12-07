@@ -17,4 +17,9 @@ function dispatchDefaults
                     @(rep, samples, sub) replab.irreducible.splitPermutations(rep, samples, sub));
     replab.dispatch('register', 'replab.irreducible.split', 'UsingCommutant', 0, ...
                     @(rep, samples, sub) replab.irreducible.splitUsingCommutant(rep, samples, sub));
+
+    replab.dispatch('register', 'replab.graph.burningAlgorithm', 'Fast', 500, ...
+                    @(edges) replab.graph.burningAlgorithmFast(edges));
+    replab.dispatch('register', 'replab.graph.burningAlgorithm', 'Fallback', 0, ...
+                    @(edges) replab.graph.burningAlgorithm(edges));
 end

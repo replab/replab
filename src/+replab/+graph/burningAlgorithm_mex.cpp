@@ -50,13 +50,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   
   // We check that the parameters are correct
   if (nrhs != 1)
-    mexErrMsgTxt("burning_mex: Unexpected number of arguments.");
+    mexErrMsgTxt("burningAlgorithm_mex: Unexpected number of arguments.");
   if (nlhs != 1)
-    mexErrMsgTxt("burning_mex: Unexpected number of outputs.");
+    mexErrMsgTxt("burningAlgorithm_mex: Unexpected number of outputs.");
 
   // The matlab object is supposed to be an array
   if (!mxIsDouble(prhs[0]))
-    mexErrMsgTxt("burning_mex: The argument should be an array of double.");
+    mexErrMsgTxt("burningAlgorithm_mex: The argument should be an array of double.");
   
   // Get the size and pointers to input data
   mwSize m(mxGetM(prhs[0]));
@@ -67,11 +67,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   // The input should be real
   if (isComplex != 0)
-    mexErrMsgTxt("burning_mex: The argument should not be complex.");
+    mexErrMsgTxt("burningAlgorithm_mex: The argument should not be complex.");
 
   // Second dimension should be 2
   if (n != 2)
-    mexErrMsgTxt("burning_mex: The input should be of dimension m x 2.");
+    mexErrMsgTxt("burningAlgorithm_mex: The input should be of dimension m x 2.");
   
   
   

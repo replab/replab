@@ -180,35 +180,39 @@ classdef Partition < replab.Str
         % vertices corresponding to connected components
         %
         % For adj = [0 0 1; 0 0 0; 1 0 0], it returns the partition {[1 3] [2]}
+        
             n = size(adjacencyMatrix, 1);
             assert(size(adjacencyMatrix, 2) == n);
-            blockIndex = zeros(1, n);
-            start = [];
-            next = zeros(1, n);
-            block = 1;
-            for i = 1:n
-                if blockIndex(i) == 0
-                    % new block discovered, starting with i
-                    start = [start i];
-                    added = i;
-                    blockIndex(i) = block;
-                    test = i;
-                    while ~isempty(test)
-                        t = test(1);
-                        test = test(2:end);
-                        c = (blockIndex == 0) & (adjacencyMatrix(t, :) | adjacencyMatrix(:, t)');
-                        newAdded = find(c);
-                        added = [added newAdded];
-                        blockIndex(newAdded) = block;
-                        test = [test newAdded];
-                    end
-                    added = sort(added);
-                    for i = 1:length(added) - 1
-                        next(added(i)) = added(i + 1);
-                    end
-                    block = block + 1;
+            
+            edges = replab.graph.adj2edge(adjacencyMatrix);
+            [subsets blockIndex start next] = replab.graph.connectedComponents(edges);
+            
+            % We don't want sparse objects here
+            blockIndex = full(blockIndex);
+            next = full(next);
+            
+            % If some elements are isolated, we add them
+            connectedVertices = [subsets{:}];
+            isolatedVertices = setdiff(1:n, connectedVertices);
+            nbConnectedSets = length(subsets);
+            
+            if length(isolatedVertices) >= 1
+                % allocate memory
+                subsets{nbConnectedSets + length(isolatedVertices)} = 0;
+                start(nbConnectedSets + length(isolatedVertices)) = start(end);
+                next(n) = next(end);
+                
+                % assign values
+                co = nbConnectedSets;
+                for i = 1:length(isolatedVertices)
+                    co = co + 1;
+                    subsets{co} = isolatedVertices(i);
+                    blockIndex(isolatedVertices(i)) = co;
+                    start(co) = isolatedVertices(i);
                 end
             end
+            
+            % construct the Partition object
             P = replab.Partition(n, blockIndex, start, next);
         end
         
