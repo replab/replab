@@ -67,7 +67,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %   by (element of `parent`): Element to conjugate the group with
         %
         % Returns:
-        %   replab.NiceFiniteGroup: The conjugated group
+        %   `+replab.NiceFiniteGroup`: The conjugated group
             newGenerators = cellfun(@(g) self.leftConjugate(by, g), self.generators, 'uniform', 0);
             newOrder = self.order;
             conj = self.parent.subgroup(newGenerators, newOrder);
@@ -77,7 +77,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Returns the trivial subgroup of this group
         %
         % Returns:
-        %   `+replab.+NiceFiniteGroup`: The trivial subgroup
+        %   `+replab.NiceFiniteGroup`: The trivial subgroup
             grp = self.subgroup({}, vpi(1));
         end
         
