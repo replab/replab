@@ -52,7 +52,7 @@ replab_addpaths
 %
 % We start by defining a matrix which satisfies the desired symmetry
 permutation = [2 3 1];
-MSym = replab.CommutantVar.fromPermutations({permutation});
+MSym = replab.CommutantVar.fromPermutations({permutation}, 'symmetric', 'real');
 %%
 % We can then perform the optimization with:
 constraintsSym = [trace(MSym) == 1, MSym >= 0];
@@ -82,7 +82,7 @@ indexMatrix = [1 2 3
                6 7 8];
 %%
 % An SDP matrix satisfying this constraint is then obtained
-cstrSdpMatrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {permutation})
+cstrSdpMatrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {permutation}, 'symmetric', 'real')
 %%
 % In this trivial case, the SDP matrix is left to contain only one
 % variable: the additional constraints collapsed the all group orbits

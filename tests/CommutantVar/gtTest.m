@@ -12,6 +12,6 @@ function test_general
     end
     
     % We do some sanity checks
-    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]});
+    matrix = replab.CommutantVar.fromPermutations({[2 3 4 5 1]}, 'symmetric', 'real');
     assert(length(matrix > 2) == 3);
 end
