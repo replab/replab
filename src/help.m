@@ -57,8 +57,7 @@ function help(varargin)
             % We call the matlab help function
             currentPath = strrep(pwd, '\', '/');
             
-            isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
-            if ~isOctave
+            if ~replab.platformIsOctave
                 cd(replab.Parameters.matlabHelpPath);
                 message = [];
                 try
@@ -95,8 +94,6 @@ function help(varargin)
 end
 
 function help_package(codeBase, package)
-    isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
-
     disp(['Package ' strjoin(package.nameParts)]);
     disp(' ');
     sub = codeBase.subPackagesNames(package.nameParts);
@@ -105,7 +102,7 @@ function help_package(codeBase, package)
         for i = 1:length(sub)
             name = sub{i};
             fullName = strjoin(horzcat(package.nameParts, {name}), '.');
-            if isOctave
+            if replab.platformIsOctave
                 ref = name;
             else
                 ref = sprintf('<a href="matlab: help(''%s'')">%s</a>', fullName, name);
@@ -120,7 +117,7 @@ function help_package(codeBase, package)
     for i = 1:length(fn)
         name = fn{i};
         member = package.members.(name);
-        if isOctave
+        if replab.platformIsOctave
             ref = name;
         else
             ref = sprintf('<a href="matlab: help(''%s'')">%s</a>', member.fullName, name);
