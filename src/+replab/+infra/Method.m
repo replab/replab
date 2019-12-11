@@ -8,12 +8,14 @@ classdef Method < replab.infra.ClassElement
     
     methods
         
-        function self = Method(name, attributes, declaration, docLines, isAbstract)
+        function self = Method(name, attributes, declaration, doc, isAbstract, packageNameParts, className)
             self.name = name;
             self.attributes = attributes;
             self.declaration = declaration;
-            self.docLines = docLines;
+            self.doc = doc;
             self.isAbstract = isAbstract;
+            self.packageNameParts = packageNameParts;
+            self.className = className;
         end
         
         function str = headerStr(self)

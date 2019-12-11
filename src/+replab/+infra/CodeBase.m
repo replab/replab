@@ -1,6 +1,7 @@
 classdef CodeBase < replab.Str
     
     properties
+        rootDirectoryName % charstring: Path of the root directory
         packages % struct-based hash map
     end
     
@@ -34,7 +35,7 @@ classdef CodeBase < replab.Str
             end
         end
         
-        function subpackageNames = subPackages(self, packageNameParts)
+        function subpackageNames = subPackagesNames(self, packageNameParts)
             fn = fieldnames(self.packages);
             subpackageNames = {};
             if length(packageNameParts) == 0
@@ -145,9 +146,9 @@ classdef CodeBase < replab.Str
                         parseState = replab.infra.ParseState.fromFile(filename);
                         switch parseState.peek
                           case 'CLASSDEF'
-                            member = replab.infra.Class.fromParseState(parseState);
+                            member = replab.infra.Class.fromParseState(parseState, packageNameParts);
                           case 'FUNCTION'
-                            member = replab.infra.Function.fromParseState(parseState);
+                            member = replab.infra.Function.fromParseState(parseState, packageNameParts);
                           otherwise
                             error(['Unrecognized first tag ' parseState.peek]);
                         end

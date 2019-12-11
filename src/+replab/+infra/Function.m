@@ -9,14 +9,12 @@ classdef Function < replab.infra.PackageElement
     
     methods
         
-        function self = Function(name, declaration, docLines)
+        function self = Function(name, declaration, doc, packageNameParts)
             self.name = name;
             self.declaration = declaration;
-            self.docLines = docLines;
-        end
-        
-        function str = headerStr(self)
-            str = sprintf('%s (function)', self.name);
+            self.doc = doc;
+            self.packageNameParts = packageNameParts;
+            self.kind = 'function';
         end
         
     end
@@ -118,12 +116,13 @@ classdef Function < replab.infra.PackageElement
             end
         end
         
-        function f = fromParseState(ps)
+        function f = fromParseState(ps, packageNameParts)
         % Parses a function and returns a `replab.infra.Function` instance
             [ps name declaration docLines isAbstract] = replab.infra.Function.parse(ps);
             assert(~isempty(ps));
             assert(~isAbstract);
-            f = replab.infra.Function(name, declaration, docLines);
+            doc = replab.infra.Doc.leftTrimmed(docLines);
+            f = replab.infra.Function(name, declaration, doc, packageNameParts);
         end
         
     end

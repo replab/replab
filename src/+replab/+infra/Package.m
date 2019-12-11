@@ -18,6 +18,10 @@ classdef Package < replab.Str
             self.members = members;
         end
         
+        function str = fullName(self)
+            str = strjoin(self.nameParts, '.');
+        end
+        
         function m = member(self, name)
             m = self.members.(name);
         end
