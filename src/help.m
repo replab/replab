@@ -60,8 +60,14 @@ function help(varargin)
             isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
             if ~isOctave
                 cd(replab.Parameters.matlabHelpPath);
-                help(varargin{:});
+                try
+                    help(varargin{:});
+                catch message
+                end
                 cd(currentPath);
+                if ~isempty(message)
+                    error(message);
+                end
             else
                 % In some versions of octave earlier than 5.1.0, the
                 % current path had a lower priority than the path order.
@@ -72,15 +78,24 @@ function help(varargin)
                 
                 cd(replab.Parameters.matlabHelpPath);
                 addpath(replab.Parameters.matlabHelpPath);
-                help(varargin{:});
+                message = [];
+                try
+                    help(varargin{:});
+                catch message
+                end
                 cd(currentPath);
                 addpath(replabHelpPath);
+                if ~isempty(message)
+                    error(message);
+                end
             end
         end
     end
 end
 
 function help_package(codeBase, package)
+    isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
+
     disp(['Package ' strjoin(package.nameParts)]);
     disp(' ');
     sub = codeBase.subPackagesNames(package.nameParts);
@@ -89,7 +104,11 @@ function help_package(codeBase, package)
         for i = 1:length(sub)
             name = sub{i};
             fullName = strjoin(horzcat(package.nameParts, {name}), '.');
-            ref = sprintf('<a href="matlab: help(''%s'')">%s</a>', fullName, name);
+            if isOctave
+                ref = name;
+            else
+                ref = sprintf('<a href="matlab: help(''%s'')">%s</a>', fullName, name);
+            end
             disp(sprintf('    %s', ref));
         end
         disp(' ');
@@ -100,7 +119,11 @@ function help_package(codeBase, package)
     for i = 1:length(fn)
         name = fn{i};
         member = package.members.(name);
-        ref = sprintf('<a href="matlab: help(''%s'')">%s</a>', member.fullName, name);
+        if isOctave
+            ref = name;
+        else
+            ref = sprintf('<a href="matlab: help(''%s'')">%s</a>', member.fullName, name);
+        end
         switch member.kind
           case 'class'
             k = 'cls';

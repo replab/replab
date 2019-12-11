@@ -53,7 +53,50 @@ function replab_addpaths(verbose)
     %% Action -- first capture the folder containg matlab's help.m
     matlabHelpPath = fileparts(which('help'));
     matlabHelpPath = strrep(matlabHelpPath, '\', '/');
-    
+    if ~isempty(strfind(matlabHelpPath, 'replab'))
+        % matlab path should not contain string 'replab', we try to
+        % find the original matlab path
+        
+        % first we identify the paths containing the string replab
+        allPaths = [':', path, ':'];
+        sep = strfind(allPaths, ':');
+        replabContainingPaths = {};
+        for i = 2:length(sep)
+            if ~isempty(strfind(allPaths(sep(i-1)+1:sep(i)-1), 'replab'))
+                replabContainingPaths{end+1} = allPaths(sep(i-1)+1:sep(i)-1);
+            end
+        end
+
+        currentPathStr = strrep(pwd, '\', '/');
+        try
+            % We remove them from the path
+            for i = 1:length(replabContainingPaths)
+                rmpath(replabContainingPaths{i});
+            end
+
+            % ... go to a neutral folder
+            cd('/');
+
+            % ... try again to find matlab's help
+            matlabHelpPath = fileparts(which('help'));
+            matlabHelpPath = strrep(matlabHelpPath, '\', '/');
+        catch
+            % In case an error occurs we want to be able to restore the path
+        end
+        
+        % come back to the original directory
+        cd(currentPathStr);
+        
+        % ... and add them back to the path
+        for i = length(replabContainingPaths):-1:1
+            addpath(replabContainingPaths{i});
+        end
+        
+        if ~isempty(strfind(matlabHelpPath, 'replab'))
+            error('Please remove all occurences of replab in the path, go to a neutral folder, and run replab_addpath again.');
+        end
+    end
+
     
     %% Adding RepLAB itself
     [pathStr, name, extension] = fileparts(which(mfilename));
@@ -100,10 +143,6 @@ function replab_addpaths(verbose)
     
     %% Memorizing matlab's help folder if not done before
     if isempty(replab.Parameters.matlabHelpPath)
-        if ~isempty(strfind(matlabHelpPath, 'replab'))
-            % matlab path should not contain string 'replab'
-            error('Please remove all occurences of replab in the path and run replab_addpath again.');
-        end
         replab.Parameters.matlabHelpPath(matlabHelpPath);
     end
     
