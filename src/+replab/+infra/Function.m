@@ -17,11 +17,16 @@ classdef Function < replab.Str
             self.docLines = docLines;
         end
         
+        function str = headerStr(self)
+            str = sprintf('%s (function)', self.name);
+        end
+        
     end
     
     methods (Static)
         
         function name = nameFromDeclaration(declaration)
+        % Retrievs the function name from its declaration line
         %
         % Args:
         %   declaration (charstring): Trimmed function/method declaration line
@@ -50,7 +55,7 @@ classdef Function < replab.Str
         end
         
         function ps = parseAbstractBody(ps)
-        % Parses the body of an abstract method
+        % Parses the body of an abstract method, used for methods and not functions
             [ps line] = ps.expect('CODE');
             if isempty(ps) || ~isequal(strtrim(line), 'error(''Abstract'');')
                 ps = [];
@@ -60,9 +65,10 @@ classdef Function < replab.Str
         end
         
         function ps = parseControlStructure(ps)
-        % Parses the rest of a control structure after the starting token has been consumed
+        % Parses a control structure such as 'if' or 'while'
         %
-        % Consumes also the terminal 'end'
+        % Assumes that the first line has already been consumed, and consumes the
+        % rest of a control structure, including the final 'end'
             while 1
                 res = replab.infra.Function.parseFunctionElement(ps);
                 if isempty(res)
@@ -75,6 +81,7 @@ classdef Function < replab.Str
         end
         
         function ps = parseFunctionElement(ps)
+        % Parses an element appearing in a function or method body
             tag = ps.peek;
             switch tag
               case 'EOF'
@@ -92,6 +99,7 @@ classdef Function < replab.Str
         end
         
         function [ps name declaration docLines isAbstract] = parse(ps)
+        % Parses a function or a method and returns the information fields
             name = [];
             declaration = [];
             docLines = {};
@@ -113,6 +121,7 @@ classdef Function < replab.Str
         end
         
         function f = fromParseState(ps)
+        % Parses a function and returns a `replab.infra.Function` instance
             [ps name declaration docLines isAbstract] = replab.infra.Function.parse(ps);
             assert(~isempty(ps));
             assert(~isAbstract);

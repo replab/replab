@@ -1,7 +1,7 @@
 function attributes = parseAttributes(string)
 % Parses property/method block attributes into a structure
 %
-% An example of input is 'SetAccess = private, Access = protected'
+% An example of input is 'SetAccess = private, Static, Access = protected'
     attrs = strsplit(string, ',');
     attributes = struct;
     for i = 1:length(attrs)

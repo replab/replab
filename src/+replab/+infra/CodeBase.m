@@ -5,7 +5,11 @@ classdef CodeBase < replab.Str
     end
     
     methods
-        
+
+        function self = CodeBase(packages)
+            self.packages = packages;
+        end
+
         function p = lookupPackage(self, nameParts)
         % Looks for a package from its name parts
         %
@@ -14,7 +18,7 @@ classdef CodeBase < replab.Str
         %
         % Returns:
         %   :class:`+replab.+infra.Package`: The corresponding package, or ``[]`` if not found
-            fname = strjoin(nameParts, '_');
+            fname = replab.infra.CodeBase.fieldName(nameParts);
             if isfield(self.packages, fname)
                 p = getfield(self.packages, fname);
             else
@@ -65,6 +69,65 @@ classdef CodeBase < replab.Str
             nameParts = strsplit(name, '.');
             [package packageNameParts restNameParts] = self.lookupPackageGreedy(nameParts);
             obj = package.lookupMemberName(restNameParts);
+        end
+        
+    end
+   
+    methods (Static)
+        
+        function fn = fieldName(nameParts)
+            if isempty(nameParts)
+                fn = 'root_';
+            else
+                fn = strjoin(nameParts, '_');
+            end
+        end
+        
+        function c = crawl(rootDirectoryName)
+            packages = struct;
+            % toExplore represents a stack of subpaths to explore
+            % toExplore is a row cell array, each element inside
+            % is a cell array of char strings, which represent a
+            % sequence of subfolders of pathStr
+            toExplore = {{}};
+            while length(toExplore) > 0
+                % the current path explored
+                subpath = toExplore{1};
+                packageNameParts = cellfun(@(x) x(2:end), subpath, 'uniform', 0);
+                toExplore = toExplore(2:end);
+                % the path to explore
+                path = fullfile(rootDirectoryName, subpath{:});
+                children = dir(path);
+                members = {};
+                for i = 1:length(children)
+                    name = children(i).name;
+                    if isequal(name, '.') || isequal(name, '..')
+                        % do nothing
+                    elseif children(i).isdir
+                        % folder
+                        assert(name(1) == '+', 'We only support crawling subpackages');
+                        newsubpath = horzcat(subpath, {name});
+                        toExplore{1,end+1} = newsubpath;
+                    elseif isequal(name(end-1:end), '.m')
+                        % is not a folder and has a Matlab file extension
+                        filename = fullfile(rootDirectoryName, subpath{:}, name);
+                        parseState = replab.infra.ParseState.fromFile(filename);
+                        switch parseState.peek
+                          case 'CLASSDEF'
+                            member = replab.infra.Class.fromParseState(parseState);
+                          case 'FUNCTION'
+                            member = replab.infra.Function.fromParseState(parseState);
+                          otherwise
+                            error(['Unrecognized first tag ' parseState.peek]);
+                        end
+                        members{1,end+1} = member;
+                    end
+                end
+                package = replab.infra.Package(packageNameParts, members);
+                fname = replab.infra.CodeBase.fieldName(packageNameParts);
+                packages.(fname) = package;
+            end
+            c = replab.infra.CodeBase(packages);
         end
         
     end

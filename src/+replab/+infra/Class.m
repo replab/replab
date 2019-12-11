@@ -1,7 +1,7 @@
 classdef Class < replab.Str
 
     properties
-        className
+        name
         parentsNames
         docLines
         members
@@ -11,8 +11,8 @@ classdef Class < replab.Str
     
     methods
         
-        function self = Class(className, parentsNames, docLines, members)
-            self.className = className;
+        function self = Class(name, parentsNames, docLines, members)
+            self.name = name;
             self.parentsNames = parentsNames;
             self.docLines = docLines;
             self.members = members;
@@ -37,6 +37,10 @@ classdef Class < replab.Str
                 names{1, end+1} = sprintf('member(%d)', i);
                 values{1, end+1} = self.member(i);
             end
+        end
+
+        function str = headerStr(self)
+            str = sprintf('%s (class)', self.name);
         end
         
         function member = lookupMemberName(self, name)

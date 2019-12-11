@@ -1,8 +1,9 @@
 classdef ParseState < replab.Str
-% Stores the contents and the parsing position of a source code file
+% Stores the contents and the parsing position (=state) of a source code file
 %
 % We process the source code files line by line, i.e. each line is a token
-% for the parser; whitespace is trimmed from the lines we read. 
+% for the parser; whitespace is trimmed from the lines we read.
+%
 % Each line has an associated tag.
 % 
 % Possible tags are:
@@ -40,6 +41,9 @@ classdef ParseState < replab.Str
         end
         
         function [nextParseState tag line] = take(self)
+        % Consumes a line from the input, and returns the updated parser state
+        %
+        % `tag` and `line` correspond to the consumed line.
             tag = self.tags{self.pos};
             if ~isequal(tag, 'EOF')
                 line = self.lines{self.pos};
@@ -50,6 +54,7 @@ classdef ParseState < replab.Str
         end
         
         function [nextParseState line] = expect(self, expectedTag)
+        % Equivalent to `take`, conditioned on the consumed tag to be `expectedTag`
             [nextParseState tag line] = self.take;
             if ~isequal(tag, expectedTag)
                 nextParseState = [];
@@ -58,6 +63,7 @@ classdef ParseState < replab.Str
         end
         
         function tag = peek(self)
+        % Peeks at the tag of the next line to be consumed, without consuming it
             tag = self.tags{self.pos};
         end
         

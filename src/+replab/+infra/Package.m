@@ -2,15 +2,37 @@ classdef Package < replab.Str
     
     properties
         nameParts % row cell vector of string: parts of the package
-        elements % struct-based hash map
+        members % struct-based hash map
     end
 
     methods
        
-        function self = Package(nameParts)
+        function self = Package(nameParts, members)
             self.nameParts = nameParts;
+            self.members = members;
+        end
+
+        function n = nMembers(self)
+            n = length(self.members);
         end
         
+        function m = member(self, i)
+            m = self.members{i};
+        end
+        
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Str(self);
+            names{1, end+1} = 'members';
+        end
+        
+        function [names values] = additionalFields(self)
+            [names values] = additionalFields@replab.Str(self);
+            for i = 1:self.nMembers
+                names{1, end+1} = sprintf('member(%d)', i);
+                values{1, end+1} = self.member(i);
+            end
+        end
+
         function s = headerStr(self)
             s = ['Package ' strjoin(self.nameParts, '.')];
         end
@@ -33,7 +55,7 @@ classdef Package < replab.Str
             else
                 elementName = nameParts{1};
                 if isfield(self.elements, elementName)
-                    element = getfield(self.elements, elementName);
+                    element = getfield(self.members, elementName);
                     if isa(element, 'replab.infra.Function')
                         if length(nameParts) > 1
                             error('A function does not have members');

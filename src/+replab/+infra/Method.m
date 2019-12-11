@@ -1,11 +1,12 @@
 classdef Method < replab.Str
+% Describes a method in a class
     
     properties
-        name
-        attributes
-        declaration
-        docLines
-        isAbstract
+        name % charstring: Method identifier
+        attributes % struct: Attributes from the ``methods`` block
+        declaration % charstring: Declaration line of the method
+        docLines % row cell vector of charstring: Documentation comment lines
+        isAbstract % logical: Whether this method is abstract
     end
     
     methods
