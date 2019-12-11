@@ -8,6 +8,7 @@ classdef Property < replab.infra.ClassElement
             self.doc = doc;
             self.packageNameParts = packageNameParts;
             self.className = className;
+            self.kind = 'property';
         end
         
         function str = headerStr(self)

@@ -31,6 +31,17 @@ classdef Doc < replab.Str
             flines = cellfun(@(l) replab.infra.Doc.filterSphinxLine(l), self.lines, 'uniform', 0);
         end
         
+        function dispFilteredLines(self)
+            flines = self.filteredLines;
+            for i = 1:length(flines)
+                if isempty(flines{i})
+                    disp(' ');
+                else
+                    disp(flines{i});
+                end
+            end
+        end
+        
         function b = isempty(self)
             b = true;
             for i = 1:length(self.lines)
