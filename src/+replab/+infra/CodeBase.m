@@ -10,6 +10,30 @@ classdef CodeBase < replab.Str
             self.packages = packages;
         end
 
+        function p = package(self, varargin)
+            p = self.lookupPackage(varargin);
+        end
+        
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Str(self);
+            names{1, end+1} = 'packages';
+        end
+
+        function [names values] = additionalFields(self)
+            [names values] = additionalFields@replab.Str(self);
+            fn = fieldnames(self.packages);
+            for i = 1:length(fn)
+                if isequal(fn{i}, 'root_')
+                    nameParts = {};
+                else
+                    nameParts = strsplit(fn{i}, '_');
+                end
+                args = strjoin(cellfun(@(x) ['''' x ''''], nameParts, 'uniform', 0), ', ');
+                names{1, end+1} = sprintf('package(%s)', args);
+                values{1, end+1} = self.packages.(fn{i});
+            end
+        end
+        
         function p = lookupPackage(self, nameParts)
         % Looks for a package from its name parts
         %
@@ -26,7 +50,7 @@ classdef CodeBase < replab.Str
             end
         end
         
-        function [package packageNameParts restNameParts] = lookupPackageGreedy(self, nameParts)
+        function [package packageNameParts restNameParts] = lookupGreedy(self, nameParts)
         % Greedily looks up for a package from its name parts, disregarding the suffix that does not match 
         %
         % Returns `package` which matches `packageNameParts`, and `restNameParts` such that
@@ -67,7 +91,7 @@ classdef CodeBase < replab.Str
         % Raises:
         %   An error if the object cannot be found or the name is malformed
             nameParts = strsplit(name, '.');
-            [package packageNameParts restNameParts] = self.lookupPackageGreedy(nameParts);
+            [package packageNameParts restNameParts] = self.lookupGreedy(nameParts);
             obj = package.lookupMemberName(restNameParts);
         end
         

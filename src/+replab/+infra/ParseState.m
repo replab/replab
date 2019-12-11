@@ -25,7 +25,10 @@ classdef ParseState < replab.Str
 % - 'FOR': The line contains a for statement
 % - 'END': The line contains an end statement
 % - 'EOF': The end of file token
-
+%
+% See https://jayconrod.com/posts/65/how-to-build-a-parser-by-hand
+% for another example of a hand-written parser
+    
     properties
         lines % row cell array of charstring: Source code lines
         tags % row cell array of charstring: Tag describing the line type

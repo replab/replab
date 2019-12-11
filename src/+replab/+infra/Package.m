@@ -7,17 +7,19 @@ classdef Package < replab.Str
 
     methods
        
-        function self = Package(nameParts, members)
+        function self = Package(nameParts, memberList)
             self.nameParts = nameParts;
+            members = struct;
+            for i = 1:length(memberList)
+                member = memberList{i};
+                members.(member.name) = member;
+            end
+            members = orderfields(members);
             self.members = members;
         end
-
-        function n = nMembers(self)
-            n = length(self.members);
-        end
         
-        function m = member(self, i)
-            m = self.members{i};
+        function m = member(self, name)
+            m = self.members.(name);
         end
         
         function names = hiddenFields(self)
@@ -27,9 +29,10 @@ classdef Package < replab.Str
         
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Str(self);
-            for i = 1:self.nMembers
-                names{1, end+1} = sprintf('member(%d)', i);
-                values{1, end+1} = self.member(i);
+            fn = fieldnames(self.members);
+            for i = 1:length(fn)
+                names{1, end+1} = sprintf('member(''%s'')', fn{i});
+                values{1, end+1} = self.member(fn{i});
             end
         end
 
@@ -54,7 +57,7 @@ classdef Package < replab.Str
                 member = self;
             else
                 elementName = nameParts{1};
-                if isfield(self.elements, elementName)
+                if isfield(self.members, elementName)
                     element = getfield(self.members, elementName);
                     if isa(element, 'replab.infra.Function')
                         if length(nameParts) > 1
@@ -67,7 +70,7 @@ classdef Package < replab.Str
                           case 1
                             member = element;
                           case 2
-                            member = element.lookupMemberName(nameParts{2});
+                            member = element.member(nameParts{2});
                           otherwise
                             error('Members of a class do not have submembers');
                         end

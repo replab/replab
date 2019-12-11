@@ -1,9 +1,7 @@
-classdef Class < replab.Str
+classdef Class < replab.infra.PackageElement
 
     properties
-        name
         parentsNames
-        docLines
         members
         %myMethods
         %myProperties
@@ -11,19 +9,21 @@ classdef Class < replab.Str
     
     methods
         
-        function self = Class(name, parentsNames, docLines, members)
+        function self = Class(name, parentsNames, docLines, memberList)
             self.name = name;
             self.parentsNames = parentsNames;
             self.docLines = docLines;
+            members = struct;
+            for i = 1:length(memberList)
+                member = memberList{i};
+                members.(member.name) = member;
+            end
+            members = orderfields(members);
             self.members = members;
         end
-        
-        function n = nMembers(self)
-            n = length(self.members);
-        end
-        
-        function m = member(self, i)
-            m = self.members{i};
+                
+        function m = member(self, name)
+            m = self.members.(name);
         end
         
         function names = hiddenFields(self)
@@ -33,18 +33,15 @@ classdef Class < replab.Str
         
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Str(self);
-            for i = 1:self.nMembers
-                names{1, end+1} = sprintf('member(%d)', i);
-                values{1, end+1} = self.member(i);
+            fn = fieldnames(self.members);
+            for i = 1:length(fn)
+                names{1, end+1} = sprintf('member(''%s'')', fn{i});
+                values{1, end+1} = self.member(fn{i});
             end
         end
 
         function str = headerStr(self)
             str = sprintf('%s (class)', self.name);
-        end
-        
-        function member = lookupMemberName(self, name)
-            
         end
         
     end
@@ -239,7 +236,7 @@ classdef Class < replab.Str
             members = {};
         end
         
-        function [className parentsNames docLines members] = parse(ps)
+        function [className parentsNames docLines memberList] = parse(ps)
             [ps line] = ps.expect('CLASSDEF');
             assert(~isempty(ps));
             tokens = cellfun(@strtrim, regexp(line, '[&<]', 'split'), 'uniform', 0);
@@ -248,14 +245,14 @@ classdef Class < replab.Str
             parentsNames = tokens(2:end);
             [ps docLines] = replab.infra.parseDocLines(ps);
             assert(~isempty(ps));
-            members = {};
+            memberList = {};
             while 1
                 [res newMembers] = replab.infra.Class.parseClassElement(ps);
                 if isempty(res)
                     break
                 else
                     ps = res;
-                    members = horzcat(members, newMembers);
+                    memberList = horzcat(memberList, newMembers);
                 end
             end
             [ps line] = ps.expect('END');
@@ -263,8 +260,8 @@ classdef Class < replab.Str
         end
         
         function c = fromParseState(ps)
-            [className parentsNames docLines members] = replab.infra.Class.parse(ps);
-            c = replab.infra.Class(className, parentsNames, docLines, members);
+            [className parentsNames docLines memberList] = replab.infra.Class.parse(ps);
+            c = replab.infra.Class(className, parentsNames, docLines, memberList);
         end
         
     end

@@ -1,12 +1,10 @@
-classdef Function < replab.Str
+classdef Function < replab.infra.PackageElement
 % Describes a MATLAB function
 %
 % Is also used to parse methods, thus the `parseAbstractBody` parsing node
     
     properties
-        name
         declaration
-        docLines
     end
    
     methods
