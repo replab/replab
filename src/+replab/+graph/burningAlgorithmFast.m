@@ -1,5 +1,5 @@
-function subsets = burningFastAlgorithm(edges)
-% subsets = burningFastAlgorithm(edges)
+function subsets = burningAlgorithmFast(edges)
+% subsets = burningAlgorithmFast(edges)
 %
 % Performs the burning algorithm on the network described by the
 % edges given in pairs. This tries to call the fast c++ implementation and
@@ -33,13 +33,34 @@ function subsets = burningFastAlgorithm(edges)
             % Make sure we are in the current path
             initialPath = pwd;
             try
-                % If the program was never compiled, we try to do so
                 [pathStr, name, extension] = fileparts(which('replab_addpaths'));
                 pathStr = strrep(pathStr, '\', '/');
                 pathStr = [pathStr, '/src/+replab/+graph'];
                 cd(pathStr)
-                if exist(['burningAlgorithm_mex.', mexext], 'file') ~= 2
-                    mex('-largeArrayDims','burningAlgorithm_mex.cpp')
+                
+                needToCompile = true;
+                if (exist(['burningAlgorithmFast_mex.', mexext], 'file') == 2) || (exist(['burningAlgorithmFast_mex.', mexext], 'file') == 3)
+                    % If the program was already compiled, we check that the
+                    % compilation is up to date
+                    if exist('burningAlgorithmFast_timestamp.mat', 'file')
+                        savedData = load('burningAlgorithmFast_timestamp.mat');
+                        fileProperties = dir('burningAlgorithmFast_mex.cpp');
+                        if isequal(savedData.timestamp, fileProperties.date)
+                            needToCompile = false;
+                        end
+                    end
+                end
+                
+                if needToCompile
+                    % If the program was never compiled, or the source was
+                    % modified, we try to compile it
+                    mex('-largeArrayDims','burningAlgorithmFast_mex.cpp')
+
+                    % We save the timestamp corresponding to this
+                    % compilation
+                    fileProperties = dir('burningAlgorithmFast_mex.cpp');
+                    timestamp = fileProperties.date;
+                    save('burningAlgorithmFast_timestamp.mat', 'timestamp')
                 end
             catch
                 firstPartWorks = false;
@@ -52,7 +73,7 @@ function subsets = burningFastAlgorithm(edges)
             % The preparation worked, we try call the optimized method
             fastOptionWorks = true;
             try
-                subsets = replab.graph.burningAlgorithm_mex(edges);
+                subsets = replab.graph.burningAlgorithmFast_mex(edges);
             catch
                 fastOptionWorks = false;
             end
