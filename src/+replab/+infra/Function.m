@@ -28,7 +28,7 @@ classdef Function < replab.infra.PackageElement
         %
         % Args:
         %   declaration (charstring): Trimmed function/method declaration line
-            if contains(declaration, '=')
+            if sum(declaration == '=') >= 1
                 parts = strsplit(declaration, '=');
                 assert(length(parts) == 2);
                 tokens = regexp(strtrim(parts{2}), '^(\w+)', 'tokens', 'once');

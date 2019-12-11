@@ -6,7 +6,7 @@ function attributes = parseAttributes(string)
     attributes = struct;
     for i = 1:length(attrs)
         attr = strtrim(attrs{i});
-        if contains(attr, '=')
+        if sum(attr == '=') >= 1
             % this attribute is a key value pair, like 'Access = public'
             tokens = regexp(attr, '^([A-Za-z]+)\s*=\s*([A-Za-z]+)$', 'tokens', 'once');
             if isempty(tokens)
