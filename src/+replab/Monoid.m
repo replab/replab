@@ -2,7 +2,7 @@ classdef Monoid < replab.Domain
 % Describes a monoid
     
     properties (SetAccess = protected)
-        identity;
+        identity
     end
     
     methods % Abstract methods

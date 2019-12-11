@@ -181,3 +181,4 @@ elseif isequal(partition, [3 1 1]) %exterior square of standard rep
     OB = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 -1 0 0 0; 0 0 0 1 0 0; 0 0 0 0 -1 0; 0 0 0 0 0 -1];
     OA = [1/3 -sqrt(2)/6 0 sqrt(30)/6 0 0; sqrt(2)/3 1/24 -sqrt(3)/8 -sqrt(15)/24 sqrt(45)/8 0; sqrt(6)/3 sqrt(3)/24 1/8 -sqrt(45)/24 -sqrt(15)/8 0; 0 sqrt(15)/8 -sqrt(45)/24 1/8 -sqrt(3)/24 sqrt(6)/3; 0 sqrt(45)/8 sqrt(15)/24 sqrt(3)/8 1/24 -sqrt(2)/3; 0 0 sqrt(30)/6 0 sqrt(2)/6 1/3];
 end
+end
