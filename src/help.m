@@ -9,16 +9,46 @@ function help(varargin)
         end
         parts = strsplit(name, '.');
         [package packageNameParts restNameParts] = codeBase.lookupGreedy(parts);
-        try
-            obj = package.lookupMemberName(restNameParts);
-        catch
-        end
-        if isa(obj, 'replab.infra.Function')
-            help_function(codeBase, packageNameParts, obj);
-        elseif isa(obj, 'replab.infra.Class')
-            help_class(codeBase, packageNameParts, obj);
-        elseif isa(obj, 'replab.infra.Package')
-            help_package(codeBase, obj);
+        switch length(restNameParts)
+          case 0
+            % we have a package
+            help_package(codeBase, package);
+          case 1
+            % we have a package member
+            memberName = restNameParts{1};
+            if ~package.hasMember(memberName)
+                  err = 'In package %s, we are looking for member %s, and the member %s is unavailable.';
+                  error(sprintf(err, package.fullName, memberName, memberName));
+            end
+            obj = package.member(memberName);
+            if isa(obj, 'replab.infra.Function')
+                help_function(codeBase, obj);
+            elseif isa(obj, 'replab.infra.Class')
+                help_class(codeBase, obj);
+            else
+                error(sprintf('The object %s should not be directly a member of package %s', obj.headerStr, package.fullName));
+            end
+          case 2
+            % we have a class and a class member
+            className = restNameParts{1};
+            classElementName = restNameParts{2};
+            if ~package.hasMember(className)
+                err = 'In package %s, we are looking for class %s with member %s, and the class %s is unavailable.';
+                error(sprintf(err, package.fullName, className, classElementName, className));
+            end
+            class = package.member(className);
+            if ~isa(class, 'replab.infra.Class')
+                err = 'In package %s, we are looking for class %s with member %s, and %s is not a class.';
+                error(sprintf(err, package.fullName, className, classElementName, className));
+            end
+            if ~class.hasInheritedMember(codeBase, classElementName)
+                err = 'In package %s, we are looking for class %s with member %s, and the member %s is not found.';
+                error(sprintf(err, package.fullName, className, classElementName, classElementName));
+            end
+            help_classElement(codeBase, class, classElementName);
+          otherwise
+            err = 'In package %s, we are looking for the path %s which is too long to describe something sensible';
+            error(sprintf(err, package.fullName, strjoin(restNameParts, '.')));
         end
     else
         if isempty(replab.Parameters.matlabHelpPath)
@@ -66,39 +96,93 @@ function help_package(codeBase, package)
     end
     disp('  Members:')
     fn = fieldnames(package.members);
-    table = cell(0, 3);
+    table = cell(0, 2);
     for i = 1:length(fn)
         name = fn{i};
         member = package.members.(name);
         ref = sprintf('<a href="matlab: help(''%s'')">%s</a>', member.fullName, name);
-        table{i,1} = ['    ' ref];
-        table{i,2} = [' ' member.kind];
-        table{i,3} = '';
+        switch member.kind
+          case 'class'
+            k = 'cls';
+          case 'function'
+            k = 'fun';
+          otherwise
+            k = member.kind;
+        end
+        table{i,1} = sprintf('    %s (%s)', ref, k);
+        table{i,2} = '';
         if ~member.doc.isempty
-            table{i,3} = [' ' member.doc.firstLine];
+            table{i,2} = [' ' member.doc.firstLine];
         end
     end
-    t = replab.infra.align(table, 'lll');
+    t = replab.infra.align(table, 'll');
     for i = 1:length(t)
         disp(t{i});
     end
 end
 
 function help_class(codeBase, class)
+    disp(' ');
+    str = ['Class ' class.fullName];
+    switch class.nParents 
+      case 0
+      case 1
+        str = [str ' with parent '];
+      otherwise
+        str = [str ' with parents '];
+    end
+    sep = '';
+    for i = 1:class.nParents
+        pn = class.parentName(i);
+        str = sprintf('%s%s<a href="matlab: help(''%s'')">%s</a>', str, sep, pn, pn);
+        sep = ', ';
+    end
+    disp(str);
+    class.doc.dispFilteredLines;
+    disp(' ');
 end
 
-function help_method(codeBase, method)
-end
-
-function help_property(codeBase, property)
+function help_classElement(codeBase, class, elementName)
+    elements = class.findInheritedMember(codeBase, elementName);
+    k = elements{1}.kind;
+    disp(sprintf('%s.%s (%s)', class.fullName, elementName, k));
+    disp('present in:');
+    doc = [];
+    for i = 1:length(elements)
+        el = elements{i};
+        s = strjoin(horzcat(el.packageNameParts, {el.className}), '.');
+        if el.doc.isempty
+            d = '(no doc)';
+        else
+            d = '(doc)';
+            if isempty(doc)
+                doc = el;
+                d = '(doc, shown below)';
+            end
+        end
+        disp(sprintf('  %s %s', s, d));
+    end
+    disp(' ');
+    if isequal(k, 'method');
+        el1 = elements{1};
+        disp(['Declaration in ' el1.classFullName ':']);
+        disp(el1.declaration);
+        disp(' ');
+    end
+    if ~isempty(doc)
+        if isequal(k, 'method')
+            disp(['Documentation in ' doc.classFullName ':']);
+            disp(doc.declaration);
+        end
+        doc.doc.dispFilteredLines;
+    end
+    disp(' ');    
 end
 
 function help_function(codeBase, fun)
-    disp(['In package ' strjoin(packageNameParts, '.')]);
-    disp(' ')
-    disp(fun.declaration);
     disp(' ');
-    for i = 1:length(fun.docLines)
-        disp([fun.docLines{i} ' ']);
-    end
+    disp(['In package ' strjoin(fun.packageNameParts, '.') ':']);
+    disp(fun.declaration);
+    fun.doc.dispFilteredLines;
+    disp(' ');
 end

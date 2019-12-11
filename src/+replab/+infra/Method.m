@@ -16,6 +16,7 @@ classdef Method < replab.infra.ClassElement
             self.isAbstract = isAbstract;
             self.packageNameParts = packageNameParts;
             self.className = className;
+            self.kind = 'method';
         end
         
         function str = headerStr(self)

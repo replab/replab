@@ -23,6 +23,10 @@ classdef Class < replab.infra.PackageElement
             self.members = members;
             self.kind = 'class';
         end
+        
+        function str = fullName(self)
+            str = strjoin(horzcat(self.packageNameParts, {self.name}), '.');
+        end
 
         function n = nParents(self)
             n = length(self.parentsNames);
@@ -49,6 +53,22 @@ classdef Class < replab.infra.PackageElement
         
         function b = hasMember(self, name)
             b = isfield(self.members, name);
+        end
+        
+        function b = hasInheritedMember(self, codeBase, name)
+            b = true;
+            if self.hasMember(name)
+                return
+            end
+            for i = 1:self.nParents
+                p = self.parent(codeBase, i);
+                if ~isempty(p)
+                    if p.hasInheritedMember(codeBase, name)
+                        return
+                    end
+                end
+            end
+            b = false;
         end
         
         function m = member(self, name)
