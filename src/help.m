@@ -1,7 +1,8 @@
-function help(name)
+function help(varargin)
 % Help function
     persistent codeBase
-    if isequal(name(1:6), 'replab')
+    if (length(varargin) == 1) && (length(varargin{1}) >= 6) && (isequal(varargin{1}(1:6), 'replab'))
+        name = varargin{1};
         if isempty(codeBase)
             [srcRoot, ~, ~] = fileparts(mfilename('fullpath'));
             codeBase = replab.infra.CodeBase.crawl(srcRoot);
@@ -20,7 +21,32 @@ function help(name)
             help_package(codeBase, obj);
         end
     else
-        error('JDB: put your special code here');
+        if isempty(replab.Parameters.matlabHelpPath)
+            error('The matlab help path was not captured. Please use replab_addpath first.');
+        else
+            % We call the matlab help function
+            currentPath = strrep(pwd, '\', '/');
+            
+            isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
+            if ~isOctave
+                cd(replab.Parameters.matlabHelpPath);
+                help(varargin{:});
+                cd(currentPath);
+            else
+                % In some versions of octave earlier than 5.1.0, the
+                % current path had a lower priority than the path order.
+                % Then we also need replab's path...
+                
+                replabHelpPath = fileparts(which('replab_addpaths'));
+                replabHelpPath = [strrep(replabHelpPath, '\', '/'), '/src'];
+                
+                cd(replab.Parameters.matlabHelpPath);
+                addpath(replab.Parameters.matlabHelpPath);
+                help(varargin{:});
+                cd(currentPath);
+                addpath(replabHelpPath);
+            end
+        end
     end
 end
 

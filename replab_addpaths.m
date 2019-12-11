@@ -50,7 +50,12 @@ function replab_addpaths(verbose)
     end
     
     
-    %% Action -- first adding RepLAB itself
+    %% Action -- first capture the folder containg matlab's help.m
+    matlabHelpPath = fileparts(which('help'));
+    matlabHelpPath = strrep(matlabHelpPath, '\', '/');
+    
+    
+    %% Adding RepLAB itself
     [pathStr, name, extension] = fileparts(which(mfilename));
     pathStr = strrep(pathStr, '\', '/');
     
@@ -91,6 +96,17 @@ function replab_addpaths(verbose)
             disp('RepLAB package is already in the path');
         end
     end
+    
+    
+    %% Memorizing matlab's help folder if not done before
+    if isempty(replab.Parameters.matlabHelpPath)
+        if ~isempty(strfind(matlabHelpPath, 'replab'))
+            % matlab path should not contain string 'replab'
+            error('Please remove all occurences of replab in the path and run replab_addpath again.');
+        end
+        replab.Parameters.matlabHelpPath(matlabHelpPath);
+    end
+    
     
     %% VPI
     
