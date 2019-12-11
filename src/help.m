@@ -23,9 +23,26 @@ function help(varargin)
         else
             % We call the matlab help function
             currentPath = strrep(pwd, '\', '/');
-            cd(replab.Parameters.matlabHelpPath);
-            help(varargin{:});
-            cd(currentPath);
+            
+            isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
+            if ~isOctave
+                cd(replab.Parameters.matlabHelpPath);
+                help(varargin{:});
+                cd(currentPath);
+            else
+                % In some versions of octave earlier than 5.1.0, the
+                % current path had a lower priority than the path order.
+                % Then we also need replab's path...
+                
+                replabHelpPath = fileparts(which('replab_addpaths'));
+                replabHelpPath = [strrep(replabHelpPath, '\', '/'), '/src'];
+                
+                cd(replab.Parameters.matlabHelpPath);
+                addpath(replab.Parameters.matlabHelpPath);
+                help(varargin{:});
+                cd(currentPath);
+                addpath(replabHelpPath);
+            end
         end
     end
 end

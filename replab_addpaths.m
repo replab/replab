@@ -100,6 +100,10 @@ function replab_addpaths(verbose)
     
     %% Memorizing matlab's help folder if not done before
     if isempty(replab.Parameters.matlabHelpPath)
+        if ~isempty(strfind(matlabHelpPath, 'replab'))
+            % matlab path should not contain string 'replab'
+            error('Please remove all occurences of replab in the path and run replab_addpath again.');
+        end
         replab.Parameters.matlabHelpPath(matlabHelpPath);
     end
     
