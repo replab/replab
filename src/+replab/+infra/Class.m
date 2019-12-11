@@ -18,6 +18,27 @@ classdef Class < replab.Str
             self.members = members;
         end
         
+        function n = nMembers(self)
+            n = length(self.members);
+        end
+        
+        function m = member(self, i)
+            m = self.members{i};
+        end
+        
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Str(self);
+            names{1, end+1} = 'members';
+        end
+        
+        function [names values] = additionalFields(self)
+            [names values] = additionalFields@replab.Str(self);
+            for i = 1:self.nMembers
+                names{1, end+1} = sprintf('member(%d)', i);
+                values{1, end+1} = self.member(i);
+            end
+        end
+        
         function member = lookupMemberName(self, name)
             
         end
@@ -27,12 +48,12 @@ classdef Class < replab.Str
     methods (Static)
 
         function [ps members] = parseMethod(ps, attributes)
-            [ps name declaration docLines] = replab.infra.Function.parse(ps);
+            [ps name declaration docLines isAbstract] = replab.infra.Function.parse(ps);
             if isempty(ps)
                 members = {};
                 return
             end
-            members = {replab.infra.Method(name, attributes, declaration, docLines)};
+            members = {replab.infra.Method(name, attributes, declaration, docLines, isAbstract)};
         end
 
         function [res members] = parseMethodsElement(ps, attributes)
@@ -58,11 +79,17 @@ classdef Class < replab.Str
             if isempty(ps)
                 return
             end
+            % Remove an eventual comment
+            parts = strsplit(line, '%');
+            line = strtrim(parts{1});
             if isequal(line, 'methods')
+                % No attributes
                 attributes = struct;
             else
+                % Has attributes
                 tokens = regexp(line, '^methods\s*\((.*)\)$', 'tokens', 'once');
                 assert(length(tokens) == 1);
+                attributes = replab.infra.parseAttributes(tokens{1});
             end
             while 1
                 [res newMembers] = replab.infra.Class.parseMethodsElement(ps, attributes);
@@ -152,9 +179,14 @@ classdef Class < replab.Str
             if isempty(ps)
                 return
             end
+            % Remove an eventual comment
+            parts = strsplit(line, '%');
+            line = strtrim(parts{1});
             if isequal(line, 'properties')
+                % No attributes
                 attributes = struct;
             else
+                % Has attributes
                 tokens = regexp(line, '^properties\s*\((.*)\)$', 'tokens', 'once');
                 assert(length(tokens) == 1);
                 attributes = replab.infra.parseAttributes(tokens{1});

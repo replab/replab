@@ -5,10 +5,21 @@ function attributes = parseAttributes(string)
     attrs = strsplit(string, ',');
     attributes = struct;
     for i = 1:length(attrs)
-        tokens = regexp(attrs{i}, '\s*([A-Za-z]+)\s*=\s*([A-Za-z]+)\s*', 'tokens', 'once');
-        if length(tokens) == 0
-            error([attrs{i} ' is not a recognized property attribute']);
+        attr = strtrim(attrs{i});
+        if contains(attr, '=')
+            % this attribute is a key value pair, like 'Access = public'
+            tokens = regexp(attr, '^([A-Za-z]+)\s*=\s*([A-Za-z]+)$', 'tokens', 'once');
+            if isempty(tokens)
+                error([attr ' is not a recognized property attribute']);
+            end
+            attributes.(tokens{1}) = tokens{2};
+        else
+            % this attribute is just a flag, like 'Static'
+            tokens = regexp(attr, '^([A-Za-z]+)$', 'tokens', 'once');
+            if isempty(tokens)
+                error([attr ' is not a recognized property attribute']);
+            end
+            attributes.(tokens{1}) = true;
         end
-        attributes.(tokens{1}) = tokens{2};
     end
 end
