@@ -1,11 +1,8 @@
-classdef Method < replab.Str
+classdef Method < replab.infra.ClassElement
 % Describes a method in a class
     
     properties
-        name % charstring: Method identifier
-        attributes % struct: Attributes from the ``methods`` block
         declaration % charstring: Declaration line of the method
-        docLines % row cell vector of charstring: Documentation comment lines
         isAbstract % logical: Whether this method is abstract
     end
     

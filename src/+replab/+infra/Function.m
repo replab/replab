@@ -6,7 +6,7 @@ classdef Function < replab.infra.PackageElement
     properties
         declaration
     end
-   
+    
     methods
         
         function self = Function(name, declaration, docLines)
@@ -127,5 +127,5 @@ classdef Function < replab.infra.PackageElement
         end
         
     end
-        
+    
 end

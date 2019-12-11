@@ -47,8 +47,9 @@ classdef Class < replab.infra.PackageElement
     end
     
     methods (Static)
-
+        
         function [ps members] = parseMethod(ps, attributes)
+        % Parses a method declaration
             [ps name declaration docLines isAbstract] = replab.infra.Function.parse(ps);
             if isempty(ps)
                 members = {};
@@ -58,6 +59,7 @@ classdef Class < replab.infra.PackageElement
         end
 
         function [res members] = parseMethodsElement(ps, attributes)
+        % Parses an element that can appear in a methods block
             [res members] = replab.infra.Class.parseBlankAsEmptyCell(ps);
             if ~isempty(res)
                 return
@@ -75,6 +77,7 @@ classdef Class < replab.infra.PackageElement
         end
 
         function [ps members] = parseMethods(ps)
+        % Parses a methods block
             members = {};
             [ps line] = ps.expect('METHODS');
             if isempty(ps)
@@ -158,6 +161,7 @@ classdef Class < replab.infra.PackageElement
         end
         
         function [res members] = parsePropertiesElement(ps, attributes)
+        % Parses an element that can appear in a properties block
             [res members] = replab.infra.Class.parseBlankAsEmptyCell(ps);
             if ~isempty(res)
                 return
@@ -175,6 +179,7 @@ classdef Class < replab.infra.PackageElement
         end
 
         function [ps members] = parseProperties(ps)
+        % Parses a properties block
             members = {};
             [ps line] = ps.expect('PROPERTIES');
             if isempty(ps)
@@ -206,16 +211,19 @@ classdef Class < replab.infra.PackageElement
         end
         
         function [res newMembers] = parseBlankAsEmptyCell(ps)
+        % Parses a blank line returning an empty list of members
             res = ps.expect('BLANK');
             newMembers = {};
         end
 
         function [res newMembers] = parseCommentAsEmptyCell(ps)
+        % Parses a comment line returning an empty list of members
             res = ps.expect('COMMENT');
             newMembers = {};
         end
         
         function [res members] = parseClassElement(ps)
+        % Parses an element that can appear in a class definition
             [res members] = replab.infra.Class.parseBlankAsEmptyCell(ps);
             if ~isempty(res)
                 return
@@ -237,6 +245,7 @@ classdef Class < replab.infra.PackageElement
         end
         
         function [className parentsNames docLines memberList] = parse(ps)
+        % Parses a full class definition
             [ps line] = ps.expect('CLASSDEF');
             assert(~isempty(ps));
             tokens = cellfun(@strtrim, regexp(line, '[&<]', 'split'), 'uniform', 0);
@@ -260,6 +269,7 @@ classdef Class < replab.infra.PackageElement
         end
         
         function c = fromParseState(ps)
+        % Parses a full definition and constructs a `+replab.+infra.Class` instance
             [className parentsNames docLines memberList] = replab.infra.Class.parse(ps);
             c = replab.infra.Class(className, parentsNames, docLines, memberList);
         end

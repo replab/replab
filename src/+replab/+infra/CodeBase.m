@@ -34,6 +34,29 @@ classdef CodeBase < replab.Str
             end
         end
         
+        function subpackageNames = subPackages(self, packageNameParts)
+            fn = fieldnames(self.packages);
+            subpackageNames = {};
+            if length(packageNameParts) == 0
+                for i = 1:length(fn)
+                    if all(fn{i} ~= '_')
+                        subpackageNames{1, end+1} = fn{i};
+                    end
+                end
+            else
+                pn = strjoin(packageNameParts, '_');
+                for i = 1:length(fn)
+                    fni = fn{i};
+                    if length(fni) > length(pn) && isequal(fni(1:length(pn)), pn)
+                        rest = fni(length(pn)+2:end);
+                        if all(rest ~= '_')
+                            subpackageNames{1, end+1} = rest;
+                        end
+                    end
+                end
+            end
+        end
+        
         function p = lookupPackage(self, nameParts)
         % Looks for a package from its name parts
         %
@@ -77,22 +100,6 @@ classdef CodeBase < replab.Str
                 end
             end
             error('Should not happen: empty name parts match the root package');
-        end
-
-        function obj = lookupName(self, name)
-        % Finds an object from its fully qualified name
-        %
-        % Args:
-        %   name (charstring): Name of the object to lookup
-        %
-        % Returns:
-        %   The looked up object
-        %
-        % Raises:
-        %   An error if the object cannot be found or the name is malformed
-            nameParts = strsplit(name, '.');
-            [package packageNameParts restNameParts] = self.lookupGreedy(nameParts);
-            obj = package.lookupMemberName(restNameParts);
         end
         
     end

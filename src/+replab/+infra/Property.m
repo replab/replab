@@ -1,10 +1,4 @@
-classdef Property < replab.Str
-
-    properties
-        name % charstring: Property identifier
-        attributes % struct: Attributes from the ``properties`` block
-        docLines % row cell vector of charstring: Documentation comment lines
-    end
+classdef Property < replab.infra.ClassElement
 
     methods
 
