@@ -59,7 +59,11 @@ function help_package(codeBase, package)
         for i = 1:length(sub)
             name = sub{i};
             fullName = strjoin(horzcat(package.nameParts, {name}), '.');
-            ref = sprintf('<a href="matlab: help(''%s'')">%s</a>', fullName, name);
+            if isOctave
+                ref = name;
+            else
+                ref = sprintf('<a href="matlab: help(''%s'')">%s</a>', fullName, name);
+            end
             disp(sprintf('    %s', ref));
         end
         disp(' ');
@@ -70,7 +74,11 @@ function help_package(codeBase, package)
     for i = 1:length(fn)
         name = fn{i};
         member = package.members.(name);
-        ref = sprintf('<a href="matlab: help(''%s'')">%s</a>', member.fullName, name);
+        if isOctave
+            ref = name;
+        else
+            ref = sprintf('<a href="matlab: help(''%s'')">%s</a>', member.fullName, name);
+        end
         table{i,1} = ['    ' ref];
         table{i,2} = [' ' member.kind];
         table{i,3} = '';
