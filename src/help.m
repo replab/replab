@@ -30,6 +30,7 @@ function help(varargin)
             isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
             if ~isOctave
                 cd(replab.Parameters.matlabHelpPath);
+                message = [];
                 try
                     help(varargin{:});
                 catch message
