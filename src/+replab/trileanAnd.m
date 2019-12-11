@@ -6,7 +6,6 @@ function res = trileanAnd(varargin)
 % True and false are represented by `logical` values, while unknown
 % is represented by ``[]``.
 %
-%
 % Args:
 %   varargin: Trilean values
 %
