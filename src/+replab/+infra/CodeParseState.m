@@ -1,4 +1,4 @@
-classdef ParseState < replab.Str
+classdef CodeParseState < replab.Str
 % Stores the contents and the parsing position (=state) of a source code file
 %
 % We process the source code files line by line, i.e. each line is a token
@@ -37,7 +37,7 @@ classdef ParseState < replab.Str
     
     methods
         
-        function self = ParseState(lines, tags, pos)
+        function self = CodeParseState(lines, tags, pos)
             self.tags = tags;
             self.lines = lines;
             self.pos = pos;
@@ -53,7 +53,7 @@ classdef ParseState < replab.Str
             else
                 line = [];
             end
-            nextParseState = replab.infra.ParseState(self.lines, self.tags, self.pos + 1);
+            nextParseState = replab.infra.CodeParseState(self.lines, self.tags, self.pos + 1);
         end
         
         function [nextParseState line] = expect(self, expectedTag)
@@ -75,13 +75,13 @@ classdef ParseState < replab.Str
     methods (Static)
        
         function ps = fromSourceLines(lines)
-        % Constructs a ParseState instance from source code lines
+        % Constructs a CodeParseState instance from source code lines
         %
         % Args:
         %   lines (row cell array of charstring): Trimmed source code lines
         %
         % Returns:
-        %   :class:`replab.infra.ParseState`: A fresh ParseState instance
+        %   :class:`replab.infra.CodeParseState`: A fresh CodeParseState instance
             n = length(lines);
             tags = cell(1, n+1);
             tags{n+1} = 'EOF';
@@ -106,31 +106,31 @@ classdef ParseState < replab.Str
                     end
                 end
             end
-            ps = replab.infra.ParseState(lines, tags, 1);
+            ps = replab.infra.CodeParseState(lines, tags, 1);
         end
         
         function ps = fromSource(contents)
-        % Constructs a ParseState instance from the source code
+        % Constructs a CodeParseState instance from the source code
         %
         % Args:
         %   contents (charstring): File contents as a single char string
         %
         % Returns:
-        %   :class:`replab.infra.ParseState`: A fresh ParseState instance
-            lines = cellfun(@strtrim, regexp(contents, '[\n\r]+', 'split'), 'uniform', 0);
-            ps = replab.infra.ParseState.fromSourceLines(lines);
+        %   :class:`replab.infra.CodeParseState`: A fresh CodeParseState instance
+            lines = cellfun(@strtrim, regexp(contents, '(\r?\n)', 'split'), 'uniform', 0);
+            ps = replab.infra.CodeParseState.fromSourceLines(lines);
         end
         
         function ps = fromFile(filename)
-        % Constructs a ParseState instance from the contents of the given filename
+        % Constructs a CodeParseState instance from the contents of the given filename
         %
         % Args:
         %   filename (charstring): Name of the source file to read and lex
         %
         % Returns:
-        %   :class:`replab.infra.ParseState`: A fresh ParseState instance
+        %   :class:`replab.infra.CodeParseState`: A fresh CodeParseState instance
             contents = fileread(filename);
-            ps = replab.infra.ParseState.fromSource(contents);
+            ps = replab.infra.CodeParseState.fromSource(contents);
         end
         
     end
