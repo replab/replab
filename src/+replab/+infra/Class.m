@@ -359,7 +359,7 @@ classdef Class < replab.infra.PackageElement
                     memberList = horzcat(memberList, newMembers);
                 end
             end
-            [ps line] = ps.expect('END');
+            ps = ps.expect('END');
             assert(~isempty(ps));
         end
         
