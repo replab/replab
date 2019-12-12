@@ -121,7 +121,7 @@ In order, the sections of a function comment are:
 
    Permutations are stored using row double vectors containing integers, and are documented as `permutation`. Same convention for signed permutations, that are documented as `signed permutation`.
 
-   Strings represented as char arrays have type `char` (recent Matlab versions have a new `string` type which should not be confused with).
+   Strings represented as char arrays have type `charstring` (recent Matlab versions have a new `string` type which should not be confused with).
 
    Function handles have type `function_handle`.
 
