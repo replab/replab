@@ -10,6 +10,14 @@ classdef Doc < replab.Str
             self.lines = lines;
         end
         
+        function n = nLines(self)
+            n = length(self.lines);
+        end
+        
+        function l = line(self, i)
+            l = self.lines{i};
+        end
+        
         function fl = firstLine(self)
             if ~isempty(self.lines)
                 fl = self.lines{1};

@@ -143,7 +143,7 @@ classdef CodeBase < replab.Str
                     elseif isequal(name(end-1:end), '.m')
                         % is not a folder and has a Matlab file extension
                         filename = fullfile(rootDirectoryName, subpath{:}, name);
-                        parseState = replab.infra.ParseState.fromFile(filename);
+                        parseState = replab.infra.CodeParseState.fromFile(filename);
                         switch parseState.peek
                           case 'CLASSDEF'
                             member = replab.infra.Class.fromParseState(parseState, packageNameParts);
