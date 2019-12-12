@@ -7,40 +7,132 @@ classdef DocTest < replab.Str
 
     methods
         
+        function self = DocTest(commands, outputs)
+            self.commands = commands;
+            self.outputs = outputs;
+        end
+        
     end
     
     methods (Static)
         
-        function dt = parseDocTest(doclines)
-            
-        end
-        
-        
-        function [command output] = parseCommand(ps)
-        end
-        
-        function [commands outputs] = parse(ps)
-            
-        end
-        
-        function dt = parseDoc(doc)
-            doctests = {};
-            
-            for i = 1:doc.nLines
-                l = doc.line(i);
-                tokens = regexp(l, '^(\s*)(.*)', 'tokens', 'once');
-                indent = length(tokens{1});
-                content = strtrim(tokens{2});
-                if ~isempty(content)
-                    if isequal(content, 'Example:')
-                        
-                    end
-                end
-                
+       
+        function [ps command output] = parseCommandOutputPair(ps)
+        % Parses a command/output pair, where the output may be omitted, and each can be multiline
+        %
+        % Args:
+        %   ps (+replab.+infra.DocTestParseState): Current parse state
+        %
+        % Returns
+        % -------
+        %   ps:
+        %     +replab.+infra.DocTestParseState: Updated parse state (or [] if parse unsuccessful)
+        %   command:
+        %     charstring: Doctest command; if multiline, lines are separated by '\n'
+        %   output:
+        %     charstring: Doctest output; may be empty, if multiline, lines are separated by '\n'
+            [ps command comment] = ps.expect('START');
+            if isempty(ps)
+                command = [];
+                output = [];
+                return
             end
-            
+            while 1
+                [res newCommand comment] = ps.expect('CONT');
+                if isempty(res)
+                    break
+                else
+                    ps = res;
+                    command = [command '\n' newCommand];
+                end
+            end
+            output = '';
+            sep = '';
+            while 1
+                [res newOutput comment] = ps.expect('OUT');
+                if isempty(res)
+                    break
+                else
+                    ps = res;
+                    output = [output sep newOutput];
+                    sep = '\n';
+                end
+            end
         end
         
+        function dt = parseDocTest(ps)
+        % Parses a doctest, containing multiple command/output pairs
+        %
+        % Args:
+        %   ps (+replab.+infra.DocTestParseState): Current parse state
+        %
+        % Returns
+        % -------
+        %   dt:
+        %     +replab.+infra.DocTest: The parsed doctest, or [] is unsuccessful
+            commands = {};
+            outputs = {};
+            while 1
+                [res command output] = replab.infra.DocTest.parseCommandOutputPair(ps);
+                if isempty(res)
+                    break
+                else
+                    ps = res;
+                    commands{1,end+1} = command;
+                    outputs{1,end+1} = output;
+                end
+            end
+            ps = ps.expect('EOF');
+            assert(~isempty(ps));
+            dt = replab.infra.DocTest(commands, outputs);
+        end
+        
+        function doctests = parseDoc(doc)
+        % Finds and parses the doctests in the documentation of an object
+        %
+        % Args:
+        %   doc (+replab.+infra.Doc): Documentation
+        %
+        % Returns:
+        %   row cell array of +replab.+infra.DocTest: The parsed doctests
+        %
+        % Raises:
+        %   A warning if some of the parses are unsuccesful.
+            n = doc.nLines;
+            content = cell(1, n);
+            indent = zeros(1, n);
+            for i = 1:n
+                l = doc.line(i);
+                if isempty(l)
+                    indent(i) = 0;
+                    content{i} = '';
+                else
+                    tokens = regexp(l, '^(\s*)(.*)', 'tokens', 'once');
+                    indent(i) = length(tokens{1});
+                    content{i} = strtrim(tokens{2});
+                end
+            end
+            doctests = {};
+            i = 1;
+            while i <= n
+                if isequal(content{i}, 'Example:')
+                    j = i + 1;
+                    while j <= n && (isempty(content{j}) || indent(j) > indent(i))
+                        j = j + 1;
+                    end
+                    ps = replab.infra.DocTestParseState.fromDocTestBlock(content(i+1:j-1));
+                    dt = replab.infra.DocTest.parseDocTest(ps);
+                    if isempty(dt)
+                        warning(sprintf('Error while parsing Example: block at line %d'), i);
+                    else
+                        doctests{1, end+1} = dt;
+                    end
+                    i = j;
+                end
+                i = i + 1;
+            end
+        end
         
     end
+
 end
