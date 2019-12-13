@@ -4,6 +4,8 @@ classdef CodeParseState < replab.Str
 % We process the source code files line by line, i.e. each line is a token
 % for the parser; whitespace is trimmed from the lines we read.
 %
+% We do not filter blank lines, so line numbers match (unlike DocTestParseState).
+%
 % Each line has an associated tag.
 % 
 % Possible tags are:
@@ -48,11 +50,7 @@ classdef CodeParseState < replab.Str
         %
         % `tag` and `line` correspond to the consumed line.
             tag = self.tags{self.pos};
-            if ~isequal(tag, 'EOF')
-                line = self.lines{self.pos};
-            else
-                line = [];
-            end
+            line = self.lines{self.pos};
             nextParseState = replab.infra.CodeParseState(self.lines, self.tags, self.pos + 1);
         end
         
@@ -85,6 +83,7 @@ classdef CodeParseState < replab.Str
             n = length(lines);
             tags = cell(1, n+1);
             tags{n+1} = 'EOF';
+            lines{n+1} = '';
             for i = 1:n
                 line = lines{i};
                 if isempty(line)
