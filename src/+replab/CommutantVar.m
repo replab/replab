@@ -1062,7 +1062,7 @@ classdef CommutantVar < replab.Str
         %     M: sdpvar block
         %
         % Example:
-        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real');
         %     >>> matrix.block(2);
         %
         % See also:
@@ -1084,7 +1084,7 @@ classdef CommutantVar < replab.Str
         %     M: matrix
         %
         % Example:
-        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
         %     >>> matrix.blockMask;
         
             M = zeros(self.dim, self.dim);
@@ -1118,7 +1118,7 @@ classdef CommutantVar < replab.Str
         %
         % Example:
         %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
-        %     >>> see(matrix.fullBlockMatrix);
+        %     >>> % see(matrix.fullBlockMatrix); TODO: correct
             
             if isempty(self.fullBlockMatrix_)
                 % We construct the matrix for the first time
@@ -1160,7 +1160,7 @@ classdef CommutantVar < replab.Str
         % 
         % Example:
         %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
-        %     >>> see(matrix.fullMatrix);
+        %     >>> % see(matrix.fullMatrix); TODO: correct
         
             if ~isempty(self.sdpMatrix_)
                 M = self.sdpMatrix_;

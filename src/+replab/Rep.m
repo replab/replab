@@ -4,7 +4,15 @@ classdef Rep < replab.Str
 % Only "image" needs to be implemented in principle.
 %
 % For optimization purposes, actions can also be specialized.
-    
+%
+% Example:
+%   >>> s = 0;
+%   >>> for i = 1:3
+%   ...   s = s + 1;
+%   ... end
+%   ... s
+%       ans =
+%          3
     properties (SetAccess = protected)
         group     % replab.CompactGroup: Group being represented
         field     % {'R', 'C'}: Vector space defined on real (R) or complex (C) field
