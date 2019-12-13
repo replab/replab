@@ -122,7 +122,7 @@ classdef CodeTokens < replab.Str
         %
         % Returns:
         %   :class:`+replab.+infra.CodeTokens`: A fresh CodeTokens instance
-            lines = cellfun(@strtrim, strsplit(contents, '\n'), 'uniform', 0);
+            lines = cellfun(@strtrim, strsplit(contents, '\n', 'CollapseDelimiters', false), 'uniform', 0);
             ct = replab.infra.CodeTokens.fromSourceLines(lines);
         end
         

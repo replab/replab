@@ -65,7 +65,7 @@ classdef DocTest < replab.Str
             end
         end
         
-        function dt = parseDocTest(ps)
+        function dt = parseDocTest(ps, lineOffset)
         % Parses a doctest, containing multiple command/output pairs
         %
         % Args:
@@ -91,7 +91,7 @@ classdef DocTest < replab.Str
             end
             ps = ps.expect('EOF');
             assert(~isempty(ps));
-            dt = replab.infra.DocTest(lineNumbers, commands, outputs);
+            dt = replab.infra.DocTest(lineNumbers + lineOffset, commands, outputs);
         end
         
         function doctests = parseDoc(doc)
@@ -128,7 +128,7 @@ classdef DocTest < replab.Str
                         j = j + 1;
                     end
                     ps = replab.infra.DocTestParseState.fromDocTestBlock(content(i+1:j-1));
-                    dt = replab.infra.DocTest.parseDocTest(ps);
+                    dt = replab.infra.DocTest.parseDocTest(ps, i);
                     if isempty(dt)
                         warning(sprintf('Error while parsing Example: block at line %d'), i);
                     else

@@ -1,14 +1,15 @@
 classdef CodeBase < replab.Str
     
     properties
-        rootDirectoryName % charstring: Path of the root directory
         packages % struct-based hash map
+        subclasses % struct-based hash map with class subclasses
     end
     
     methods
 
-        function self = CodeBase(packages)
+        function self = CodeBase(packages, subclasses)
             self.packages = packages;
+            self.subclasses = subclasses;
         end
 
         function p = package(self, varargin)
@@ -136,6 +137,7 @@ classdef CodeBase < replab.Str
         % Args:
         %   rootDirectoryName (charstring): Absolute path of the source directory (usually '$REPLAB_ROOT/src')
             packages = struct;
+            subclasses = struct;
             % toExplore represents a stack of subpaths to explore
             % toExplore is a row cell array, each element inside
             % is a cell array of char strings, which represent a
@@ -166,6 +168,16 @@ classdef CodeBase < replab.Str
                         switch ct.peek(1)
                           case 'c'
                             member = replab.infra.Class.fromParseState(ct, packageNameParts, filename);
+                            for i = 1:member.nParents
+                                parentName = member.parentName(i);
+                                parentKey = strrep(parentName, '.', '_');
+                                if isfield(subclasses, parentKey)
+                                    current = subclasses.(parentKey);
+                                else 
+                                    current = {};
+                                end
+                                subclasses.(parentKey) = horzcat(current, {member.fullName});
+                            end
                           case 'f'
                             member = replab.infra.Function.fromParseState(ct, packageNameParts, filename);
                           otherwise
@@ -178,7 +190,7 @@ classdef CodeBase < replab.Str
                 fname = replab.infra.CodeBase.fieldName(packageNameParts);
                 packages.(fname) = package;
             end
-            c = replab.infra.CodeBase(packages);
+            c = replab.infra.CodeBase(packages, subclasses);
         end
         
     end
