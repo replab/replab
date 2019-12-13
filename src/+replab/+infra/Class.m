@@ -52,12 +52,14 @@ classdef Class < replab.infra.PackageElement
             end
         end
         
-        function c = children(self, codeBase)
+        function c = childrenNames(self, codeBase)
+        % Returns the names of the children of the current class
+        % 
         % Args:
         %   codeBase (`.CodeBase`): Code base containing this class
         %
         % Returns:
-        %   row cell vector of `.Class`: Subclasses of the current class
+        %   row cell vector of charstring: Names of the subclasses of the current class
             fne = self.fieldNameEncoding;
             if isfield(codeBase.subclasses, fne)
                 c = codeBase.subclasses.(fne);
