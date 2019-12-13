@@ -1,8 +1,7 @@
 classdef Str < handle
 % Defines a 'str' default method and overloads 'disp'
 %
-% Also provides methods 'additionalFields' and 'hiddenFields' to
-% guide long form object pretty printg
+% Also provides methods 'additionalFields' and 'hiddenFields' to guide long form object pretty printing
     
     methods
         
