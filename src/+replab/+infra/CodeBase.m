@@ -103,6 +103,23 @@ classdef CodeBase < replab.Str
             error('Should not happen: empty name parts match the root package');
         end
         
+        function writeDocTests(self, doctestPath)
+        % Writes the doc tests of the whole code base in the specified folder
+        %
+        % Args:
+        %   doctestPath (charstring): Path of the doctests generated code, must exist
+            names = fieldnames(self.packages);
+            for i = 1:length(names)
+                package = self.packages.(names{i});
+                fprintf('Writing tests for package %s:\n', package.fullName);
+                memberNames = fieldnames(package.members);
+                for j = 1:length(memberNames)
+                    fprintf('.. member %s:\n', memberNames{j});
+                    replab.infra.writeDocTests(doctestPath, package.member(memberNames{j}));
+                end
+            end
+        end
+        
     end
    
     methods (Static)
