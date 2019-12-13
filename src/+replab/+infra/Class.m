@@ -52,6 +52,15 @@ classdef Class < replab.infra.PackageElement
             end
         end
         
+        function c = children(self, codeBase)
+        % Args:
+        %   codeBase (`.CodeBase`): Code base containing this class
+        %
+        % Returns:
+        %   row cell vector of `.Class`: Subclasses of the current class
+            c = {};
+        end
+        
         function b = hasMember(self, name)
             b = isfield(self.members, name);
         end
