@@ -2,13 +2,14 @@ classdef Property < replab.infra.ClassElement
 
     methods
 
-        function self = Property(name, attributes, doc, packageNameParts, className)
+        function self = Property(name, attributes, doc, packageNameParts, className, lineNumber)
             self.name = name;
             self.attributes = attributes;
             self.doc = doc;
             self.packageNameParts = packageNameParts;
             self.className = className;
             self.kind = 'property';
+            self.lineNumber = lineNumber;
         end
         
         function str = headerStr(self)

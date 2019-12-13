@@ -563,7 +563,7 @@ classdef CommutantVar < replab.Str
         %     R: CommutantVar object
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real');
         %
         % See also:
         %     replab.CommutantVar.fromIndexMatrix
@@ -605,8 +605,8 @@ classdef CommutantVar < replab.Str
         %     R: a CommutantVar object
         %
         % Example:
-        %     indexMatrix = [1 1 3 4; 1 5 6 30; 3 6 10 11; 4 30 11 15];
-        %     matrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {[4 1 2 3]}, 'symmetric', 'real')
+        %     >>> indexMatrix = [1 1 3 4; 1 5 6 30; 3 6 10 11; 4 30 11 15];
+        %     >>> matrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {[4 1 2 3]}, 'symmetric', 'real');
         %
         % See also:
         %     replab.CommutantVar.fromPermutations
@@ -804,8 +804,8 @@ classdef CommutantVar < replab.Str
         %     R: a CommutantVar object
         %
         % Example:
-        %     sdpMatrix = sdpvar(3);
-        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, {[3 1 2]})
+        %     >>> sdpMatrix = sdpvar(3);
+        %     >>> matrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, {[3 1 2]});
         %
         % See also:
         %     replab.CommutantVar.fromPermutations
@@ -846,10 +846,10 @@ classdef CommutantVar < replab.Str
         %     R: a CommutantVar object
         %
         % Example:
-        %     x = sdpvar;
-        %     y = sdpvar;
-        %     sdpMatrix = [x y y; y x y; y y x];
-        %     matrix = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[3 1 2]})
+        %     >>> x = sdpvar;
+        %     >>> y = sdpvar;
+        %     >>> sdpMatrix = [x y y; y x y; y y x];
+        %     >>> matrix = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[3 1 2]});
         %
         % See also:
         %     replab.CommutantVar.fromPermutations
@@ -932,8 +932,8 @@ classdef CommutantVar < replab.Str
         %     s2: The second dimension (optional)
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
-        %     size(matrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real');
+        %     >>> size(matrix);
         %
         % See also:
         %     size
@@ -966,8 +966,8 @@ classdef CommutantVar < replab.Str
         %     nb: 1
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
-        %     numel(matrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real');
+        %     >>> numel(matrix);
         %
         % See also:
         %     numel
@@ -988,8 +988,8 @@ classdef CommutantVar < replab.Str
         %     bool: 1 iff the matrix is real
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
-        %     isreal(matrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real');
+        %     >>> isreal(matrix);
         %
         % See also:
         %     isreal
@@ -1011,8 +1011,8 @@ classdef CommutantVar < replab.Str
         %     bool: 1 iff the matrix is invariant under transposition
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
-        %     issymmetric(matrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real');
+        %     >>> issymmetric(matrix);
         %
         % See also:
         %     issymmetric
@@ -1034,8 +1034,8 @@ classdef CommutantVar < replab.Str
         %     bool: 1 iff the matrix is invariant under complex transposition
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'hermitian', 'complex')
-        %     ishermitian(matrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'hermitian', 'complex');
+        %     >>> ishermitian(matrix);
         %
         % See also:
         %     ishermitian
@@ -1062,8 +1062,8 @@ classdef CommutantVar < replab.Str
         %     M: sdpvar block
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
-        %     matrix.block(2)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real');
+        %     >>> matrix.block(2);
         %
         % See also:
         %     replab.CommutantVar.nComponents
@@ -1084,8 +1084,8 @@ classdef CommutantVar < replab.Str
         %     M: matrix
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     matrix.blockMask
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> matrix.blockMask;
         
             M = zeros(self.dim, self.dim);
             co = 0;
@@ -1117,8 +1117,8 @@ classdef CommutantVar < replab.Str
         %     M: sdpvar matrix in block diagonal form
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     see(matrix.fullBlockMatrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> % see(matrix.fullBlockMatrix); TODO: correct
             
             if isempty(self.fullBlockMatrix_)
                 % We construct the matrix for the first time
@@ -1159,8 +1159,8 @@ classdef CommutantVar < replab.Str
         %     M: sdpvar matrix
         % 
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     see(matrix.fullMatrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> % see(matrix.fullMatrix); TODO: correct
         
             if ~isempty(self.sdpMatrix_)
                 M = self.sdpMatrix_;
@@ -1183,8 +1183,8 @@ classdef CommutantVar < replab.Str
         %     U: matrix
         % 
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     matrix.U
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> matrix.U;
         
             M = full(self.U_);
         end
@@ -1203,14 +1203,14 @@ classdef CommutantVar < replab.Str
         %     vars: vector of indices 
         %
         % Example:
-        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     matrix1.getVariables
-        %     matrix2 = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
-        %     matrix2.getVariables
-        %     x = sdpvar;
-        %     sdpMatrix = [1 x x; x 1 x; x x 1];
-        %     matrix3 = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[2 3 1]})
-        %     matrix3.getVariables
+        %     >>> matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> matrix1.getVariables;
+        %     >>> matrix2 = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]});
+        %     >>> matrix2.getVariables;
+        %     >>> x = sdpvar;
+        %     >>> sdpMatrix = [1 x x; x 1 x; x x 1];
+        %     >>> matrix3 = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[2 3 1]});
+        %     >>> matrix3.getVariables;
         %
         % See also:
         %     replab.CommutantVar.nbVars
@@ -1241,14 +1241,14 @@ classdef CommutantVar < replab.Str
         %     n: number of SDP variables
         %
         % Example:
-        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     matrix1.nbVars
-        %     matrix2 = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
-        %     matrix2.nbVars
-        %     x = sdpvar;
-        %     sdpMatrix = [1 x x; x 1 x; x x 1];
-        %     matrix3 = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[2 3 1]})
-        %     matrix3.nbVars
+        %     >>> matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> matrix1.nbVars;
+        %     >>> matrix2 = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]});
+        %     >>> matrix2.nbVars;
+        %     >>> x = sdpvar;
+        %     >>> sdpMatrix = [1 x x; x 1 x; x x 1];
+        %     >>> matrix3 = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[2 3 1]});
+        %     >>> matrix3.nbVars;
         %
         % See also:
         %     replab.CommutantVar.getVariables
@@ -1269,8 +1269,6 @@ classdef CommutantVar < replab.Str
         %
         % Returns:
         %     basis: the matrix of coefficients
-        %
-        % Example:
         %
         % See also:
         %     replab.CommutantVar.getVariables
@@ -1364,8 +1362,8 @@ classdef CommutantVar < replab.Str
         %     varargout: depends on the usage
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     matrix(1)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> matrix(1);
         %
         % See also:
         %     subsref
@@ -1441,16 +1439,16 @@ classdef CommutantVar < replab.Str
         %             in X correspond to identical blocks in Y
         %
         % Example:
-        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     matrix2 = replab.CommutantVar.fromPermutations({[2 1 3]}, 'symmetric', 'real')
-        %     % both matrices have comparable block structures ...
-        %     full(blockMask(matrix1)) 
-        %     full(blockMask(matrix2))
-        %     % ... but not in the same basis
-        %     matrix1.compatibleWith(matrix2)
-        %     % The following matrix has the correct structure in the right basis:
-        %     M = matrix1.U*(rand(3).*matrix1.blockMask)*matrix1.U'
-        %     matrix1.compatibleWith(M);
+        %     >>> matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> matrix2 = replab.CommutantVar.fromPermutations({[2 1 3]}, 'symmetric', 'real');
+        %     >>> % both matrices have comparable block structures ...
+        %     >>> full(blockMask(matrix1));
+        %     >>> full(blockMask(matrix2));
+        %     >>> % ... but not in the same basis
+        %     >>> matrix1.compatibleWith(matrix2);
+        %     >>> % The following matrix has the correct structure in the right basis:
+        %     >>> M = matrix1.U*(rand(3).*matrix1.blockMask)*matrix1.U';
+        %     >>> matrix1.compatibleWith(M);
 
             % Numerical tolerance to decide whether numbers are close to zero in
             % this function.
@@ -2231,8 +2229,8 @@ classdef CommutantVar < replab.Str
         %     X: sdpvar
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     trace(matrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> trace(matrix);
         % 
         % See also:
         %     trace
@@ -2279,10 +2277,10 @@ classdef CommutantVar < replab.Str
         %     F: Yalmip constraint
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     F = [matrix == 0]
-        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
-        %     F = [matrix == 0]
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> F = [matrix == 0];
+        %     >>> matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]});
+        %     >>> F = [matrix == 0];
         %
         % See also:
         %     eq
@@ -2379,10 +2377,10 @@ classdef CommutantVar < replab.Str
         %     F: Yalmip constraint
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     F = [matrix >= 0]
-        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
-        %     F = [matrix >= 0]
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> F = [matrix >= 0];
+        %     >>> matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]});
+        %     >>> F = [matrix >= 0];
         %
         % See also:
         %     replab.CommutantVar.le
@@ -2510,10 +2508,10 @@ classdef CommutantVar < replab.Str
         %     F: Yalmip constraint
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     F = [matrix <= 0]
-        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
-        %     F = [matrix <= 0]
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> F = [matrix <= 0];
+        %     >>> matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]});
+        %     >>> F = [matrix <= 0];
         %
         % See also:
         %     replab.CommutantVar.ge

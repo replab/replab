@@ -5,6 +5,7 @@ classdef PackageElement < replab.Str
         doc % `.Doc`: Documentation
         packageNameParts % row cell vector of cellstring: parent package identifier
         kind % {'function' 'class'}: Human readable description of type
+        fullFilename % charstring: Full path of the source file
     end
     
     methods

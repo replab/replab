@@ -4,9 +4,8 @@ function result = replab_runtests(withCoverage, onlyFastTests)
 % replab_runtests tests the library functionalities
 %
 % Args:
-%     withCoverage: boolean to enable code coverage (optional, default
-%         value is false)
-%     onlyFastTests: boolean to run only a selection of fast tests
+%     withCoverage (boolean): Enable code coverage (optional, default  value is false)
+%     onlyFastTests (boolean): Run only a selection of fast tests
 %         (optional, default value if false)
 %
 % Results:

@@ -103,6 +103,23 @@ classdef CodeBase < replab.Str
             error('Should not happen: empty name parts match the root package');
         end
         
+        function writeDocTests(self, doctestPath)
+        % Writes the doc tests of the whole code base in the specified folder
+        %
+        % Args:
+        %   doctestPath (charstring): Path of the doctests generated code, must exist
+            names = fieldnames(self.packages);
+            for i = 1:length(names)
+                package = self.packages.(names{i});
+                fprintf('Writing tests for package %s:\n', package.fullName);
+                memberNames = fieldnames(package.members);
+                for j = 1:length(memberNames)
+                    fprintf('.. member %s:\n', memberNames{j});
+                    replab.infra.writeDocTests(doctestPath, package.member(memberNames{j}));
+                end
+            end
+        end
+        
     end
    
     methods (Static)
@@ -116,6 +133,8 @@ classdef CodeBase < replab.Str
         end
         
         function c = crawl(rootDirectoryName)
+        % Args:
+        %   rootDirectoryName (charstring): Absolute path of the source directory (usually '$REPLAB_ROOT/src')
             packages = struct;
             % toExplore represents a stack of subpaths to explore
             % toExplore is a row cell array, each element inside
@@ -143,14 +162,14 @@ classdef CodeBase < replab.Str
                     elseif isequal(name(end-1:end), '.m')
                         % is not a folder and has a Matlab file extension
                         filename = fullfile(rootDirectoryName, subpath{:}, name);
-                        parseState = replab.infra.CodeParseState.fromFile(filename);
-                        switch parseState.peek
-                          case 'CLASSDEF'
-                            member = replab.infra.Class.fromParseState(parseState, packageNameParts);
-                          case 'FUNCTION'
-                            member = replab.infra.Function.fromParseState(parseState, packageNameParts);
+                        ct = replab.infra.CodeTokens.fromFile(filename);
+                        switch ct.peek(1)
+                          case 'c'
+                            member = replab.infra.Class.fromParseState(ct, packageNameParts, filename);
+                          case 'f'
+                            member = replab.infra.Function.fromParseState(ct, packageNameParts, filename);
                           otherwise
-                            error(['Unrecognized first tag ' parseState.peek]);
+                            error(['Unrecognized first tag ' ct.peek(1)]);
                         end
                         members{1,end+1} = member;
                     end
