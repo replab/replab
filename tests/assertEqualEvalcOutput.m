@@ -8,6 +8,6 @@ function assertEqualEvalcOutput(obtainedString, expectedLines, sourceFilename, l
     obtainedLines = filterEvalcOutput(strsplit(obtainedString, '\n'));
     expectedLines = filterEvalcOutput(expectedLines);
     link = sprintf('matlab: matlab.desktop.editor.openAndGoToLine(''%s'', %d)', sourceFilename, lineNumber);
-    message = sprintf('Doctest failure on <a href = "%s">line %d of %s</a>', link, lineNumber, sourceFilename);
+    message = sprintf('Doctest failure on <a href="%s">line %d of %s</a>', link, lineNumber, sourceFilename);
     assertEqual(obtainedLines, expectedLines, message);
 end

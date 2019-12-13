@@ -23,7 +23,7 @@ function writeDocTest(fid, filename, sourceLine, elementName, testNumber, docTes
         if length(command) == 1
             fprintf(fid, '  out = evalc(%s);\n', command{1});
         else
-            fprintf(fid, '  out = evalc(strjoin(%s, char(10)));\n', strjoin(command, ', '));
+            fprintf(fid, '  out = evalc(strjoin({%s}, char(10)));\n', strjoin(command, ', '));
         end
         lineNumber = sourceLine +docTest.lineNumbers(i) - 1;
         fprintf(fid, '  assertEqualEvalcOutput(out, {%s}, filename, %d);\n', output, lineNumber);

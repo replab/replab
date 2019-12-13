@@ -48,5 +48,10 @@ function writeDocTests(doctestPath, packageElement)
         for i = 1:length(doctests)
             replab.infra.writeDocTest(fid, packageElement.fullFilename, lineNumbers(i), elementNames{i}, testNumbers(i), doctests{i});
         end
+        if length(doctests) == 1
+            disp('  One doctest found.');
+        else
+            fprintf('  %d doctests found.\n', length(doctests));
+        end
     end
 end
