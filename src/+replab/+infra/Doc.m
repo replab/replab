@@ -20,7 +20,11 @@ classdef Doc < replab.Str
         
         function fl = firstLine(self)
             if ~isempty(self.lines)
-                fl = self.lines{1};
+                if (length(self.lines) == 1) || isempty(self.lines{2})
+                    fl = self.lines{1};
+                else
+                    fl = [self.lines{1}, ' ...'];
+                end
             else
                 fl = '';
             end
@@ -39,13 +43,13 @@ classdef Doc < replab.Str
             flines = cellfun(@(l) replab.infra.Doc.filterSphinxLine(l), self.lines, 'uniform', 0);
         end
         
-        function dispFilteredLines(self, keyword, helpFunctionName)
+        function dispFilteredLines(self, keyword, helpFunctionName, fullMode)
             flines = self.filteredLines;
             for i = 1:length(flines)
                 if isempty(flines{i})
                     disp(' ');
                 else
-                    replab.infra.dispH(['  ', flines{i}], keyword, helpFunctionName);
+                    replab.infra.dispH(['   ', flines{i}], keyword, helpFunctionName, fullMode);
                 end
             end
         end

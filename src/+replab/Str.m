@@ -6,9 +6,8 @@ classdef Str < handle
     methods
         
         function res = eq(self, rhs)
-        % eq - equality test
+        % Equality test
         %
-        % res = replab.Str.eq(self, rhs)
         % Workaround bug of == not implemented for handles
         %
         % Args:

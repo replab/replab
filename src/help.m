@@ -1,13 +1,37 @@
 function help(varargin)
-% Help function overloading
+% Displays help on a function/object/...
+%
+% Arg:
+%     varargin: - if a single element, provides help for this element,
+%                 whether it is a variable, object, function, class, 
+%                 package, ...
+%               - if two elements, with one of them being the string '-f'
+%                 or '--full', provides full help on this element
+%
+% Note:
+%     This function overloads matlab's 'help' function. Renaming this file
+%     does not alter its functionality.
 
     % extract own name
     [pathStr, helpFunctionName, extension] = fileparts(which(mfilename));
 
     persistent codeBase
     
+    % Are we in full mode or not?
+    fullMode = false;
+    if (length(varargin) == 2)
+        if isequal(varargin{1}, '-f') || isequal(varargin{1}, '--full')
+            fullMode = true;
+            varargin = {varargin{2}};
+        elseif isequal(varargin{2}, '-f') || isequal(varargin{2}, '--full')
+            fullMode = true;
+            varargin = {varargin{1}};
+        end
+    end
+    
+    % Are we asking help on an object or method applied to an object?
     if (length(varargin) == 1) && ischar(varargin{1})
-        % we check if the the subject starts with a variable
+        % we check if the subject starts with a variable
         dotPositions = strfind(varargin{1}, '.');
         if isempty(dotPositions)
             firstPart = varargin{1};
@@ -16,21 +40,29 @@ function help(varargin)
             firstPart = varargin{1}(1:dotPositions(1)-1);
             secondPart = varargin{1}(dotPositions(1)+1:end);
         end
-        isObject = false;
+        isVar = 0;
         try
-            isObject = evalin('caller', ['isobject(', firstPart, ')']);
+            isVar = evalin('caller', ['exist(''', firstPart, ''')']);
         catch
         end
-        if isObject
-            % If asking help regarding an object, we see if it is a replab
-            % object
+        if isVar == 1
+            % object of interest is a variable or object (or method applied
+            % to an object)
             type = evalin('caller', ['class(', firstPart, ')']);
             if (length(type) >= 6) && isequal(type(1:6), 'replab')
+                % object is a replab object
                 if isempty(secondPart)
                     varargin{1} = type;
+                    replab.infra.dispH([firstPart, ' is an object of type ', type, '.'], firstPart);
+                    disp(' ');
                 else
                     varargin{1} = [type, '.', secondPart];
                 end
+                replab.infra.dispH(['--- help for ', varargin{1}, ' ---'], varargin{1});
+            else
+                % non-replab variable/object. We need to make a copy to our
+                % workspace for the next function to see it
+                eval([firstPart, ' = evalin(''caller'', ''', firstPart, ''');']);
             end
         end
     end
@@ -39,15 +71,17 @@ function help(varargin)
         % We are looking for a replab-related help
         name = varargin{1};
         if isempty(codeBase)
+            fprintf('Building help index...');
             [srcRoot, ~, ~] = fileparts(mfilename('fullpath'));
             codeBase = replab.infra.CodeBase.crawl(srcRoot);
+            disp('done.');
         end
         parts = strsplit(name, '.');
         [package packageNameParts restNameParts] = codeBase.lookupGreedy(parts);
         switch length(restNameParts)
           case 0
             % we have a package
-            help_package(codeBase, package, helpFunctionName);
+            help_package(codeBase, package, helpFunctionName, fullMode);
           case 1
             % we have a package member
             memberName = restNameParts{1};
@@ -57,9 +91,9 @@ function help(varargin)
             end
             obj = package.member(memberName);
             if isa(obj, 'replab.infra.Function')
-                help_function(codeBase, obj, helpFunctionName);
+                help_function(codeBase, obj, helpFunctionName, fullMode);
             elseif isa(obj, 'replab.infra.Class')
-                help_class(codeBase, obj, helpFunctionName);
+                help_class(codeBase, obj, helpFunctionName, fullMode);
             else
                 error(sprintf('The object %s should not be directly a member of package %s', obj.headerStr, package.fullName));
             end
@@ -80,7 +114,7 @@ function help(varargin)
                 err = 'In package %s, we are looking for class %s with member %s, and the member %s is not found.';
                 error(sprintf(err, package.fullName, className, classElementName, classElementName));
             end
-            help_classElement(codeBase, classe, classElementName, helpFunctionName);
+            help_classElement(codeBase, classe, classElementName, helpFunctionName, fullMode);
           otherwise
             err = 'In package %s, we are looking for the path %s which is too long to describe something sensible';
             error(sprintf(err, package.fullName, strjoin(restNameParts, '.')));
@@ -89,7 +123,7 @@ function help(varargin)
         if isempty(replab.Parameters.matlabHelpPath)
             error('The matlab help path was not captured. Please use replab_addpaths first.');
         else
-            % We call the matlab help function
+            % We call matlab's help function
             currentPath = strrep(pwd, '\', '/');
             
             if ~replab.platformIsOctave
@@ -128,35 +162,63 @@ function help(varargin)
     end
 end
 
-function help_package(codeBase, package, helpFunctionName)
+function help_package(codeBase, package, helpFunctionName, fullMode)
     keyword = strjoin(package.nameParts);
-    replab.infra.dispH(['Package ' strjoin(package.nameParts), ':'], keyword, helpFunctionName);
+    replab.infra.dispH([' Package ' strjoin(package.nameParts), ':'], keyword, helpFunctionName, fullMode);
     disp(' ');
-    sub = codeBase.subPackagesNames(package.nameParts);
-    if ~isempty(sub)
-        disp('  Subpackages:');
-        for i = 1:length(sub)
-            name = sub{i};
-            fullName = strjoin(horzcat(package.nameParts, {name}), '.');
-            if replab.platformIsOctave
-                ref = name;
+    
+    % Package:
+    if length(package.nameParts) > 1
+        disp('   In package:');
+        packageName = strjoin(package.nameParts(1:end-1), '.');
+        if replab.platformIsOctave  || (~usejava('desktop'))
+            disp(['     ', packageName]);
+        else
+            if fullMode
+                replab.infra.dispH(['     <a href="matlab: ', helpFunctionName, '(''', packageName, ''')">', packageName, '</a>'], keyword, helpFunctionName, fullMode);
             else
-                ref = sprintf('<a href="matlab: %s(''%s'')">%s</a>', helpFunctionName, fullName, name);
+                replab.infra.dispH(['     <a href="matlab: ', helpFunctionName, '(''-f'',''', packageName, ''')">', packageName, '</a>'], keyword, helpFunctionName, fullMode);
             end
-            disp(sprintf('    %s', ref));
         end
         disp(' ');
     end
-    disp('  Members:')
+    
+    % Subpackages:
+    sub = codeBase.subPackagesNames(package.nameParts);
+    if ~isempty(sub)
+        disp('   Subpackages:');
+        for i = 1:length(sub)
+            name = sub{i};
+            fullName = strjoin(horzcat(package.nameParts, {name}), '.');
+            if replab.platformIsOctave || (~usejava('desktop'))
+                ref = name;
+            else
+                if fullMode
+                    ref = sprintf('<a href="matlab: %s(''-f'',''%s'')">%s</a>', helpFunctionName, fullName, name);
+                else
+                    ref = sprintf('<a href="matlab: %s(''%s'')">%s</a>', helpFunctionName, fullName, name);
+                end
+            end
+            disp(sprintf('     %s', ref));
+        end
+        disp(' ');
+    end
+    
+    % Members:
+    disp('   Members:')
     fn = fieldnames(package.members);
-    table = cell(0, 2);
+    table = cell(length(fn), 2);
     for i = 1:length(fn)
         name = fn{i};
         member = package.members.(name);
-        if replab.platformIsOctave
+        if replab.platformIsOctave || (~usejava('desktop'))
             ref = name;
         else
-            ref = sprintf('<a href="matlab: %s(''%s'')">%s</a>', helpFunctionName, member.fullName, name);
+            if fullMode
+                ref = sprintf('<a href="matlab: %s(''-f'',''%s'')">%s</a>', helpFunctionName, member.fullName, name);
+            else
+                ref = sprintf('<a href="matlab: %s(''%s'')">%s</a>', helpFunctionName, member.fullName, name);
+            end
         end
         switch member.kind
           case 'class'
@@ -166,7 +228,7 @@ function help_package(codeBase, package, helpFunctionName)
           otherwise
             k = member.kind;
         end
-        table{i,1} = sprintf('    %s (%s)', ref, k);
+        table{i,1} = sprintf('     %s (%s)', ref, k);
         table{i,2} = '';
         if ~member.doc.isempty
             table{i,2} = [' ' member.doc.firstLine];
@@ -176,36 +238,197 @@ function help_package(codeBase, package, helpFunctionName)
     for i = 1:length(t)
         disp(t{i});
     end
+    disp(' ');
 end
 
-function help_class(codeBase, class, helpFunctionName)
+
+function help_class(codeBase, class, helpFunctionName, fullMode)
     keyword = class.name;
-    disp(' ');
-    str = ['Class ' class.fullName];
-    switch class.nParents 
-      case 0
-      case 1
-        str = [str ' with parent '];
-      otherwise
-        str = [str ' with parents '];
+    str = [' Class ' class.fullName];
+
+    if ~fullMode
+        switch class.nParents
+          case 0
+          case 1
+            str = [str ' with parent '];
+          otherwise
+            str = [str ' with parents '];
+        end
+        sep = '';
+        for i = 1:class.nParents
+            pn = class.parentName(i);
+            str = sprintf('%s%s%s', str, sep, pn);
+            sep = ', ';
+        end
+        replab.infra.dispH(str, keyword, helpFunctionName, fullMode);
+        
+        % Doc
+        class.doc.dispFilteredLines(keyword, helpFunctionName, fullMode);
+        disp(' ');
+        
+        % Link to ref
+        if ~(replab.platformIsOctave  || (~usejava('desktop')))
+            disp(['    <a href="matlab: ', helpFunctionName, '(''-f'',''', class.fullName, ''')">Reference page for ', class.fullName, '</a>'])
+        end
+        disp(' ');
+    else
+        replab.infra.dispH([str, ':'], keyword, helpFunctionName, fullMode);
+        disp(' ');
+        
+        % Package:
+        if ~isempty(class.packageNameParts)
+            disp('   In package:');
+            packageName = strjoin(class.packageNameParts, '.');
+            if replab.platformIsOctave  || (~usejava('desktop'))
+                disp(['     ', packageName]);
+            else
+                disp(['     <a href="matlab: ', helpFunctionName, '(''-f'',''', packageName, ''')">', packageName, '</a>']);
+            end
+            disp(' ');
+        end
+        
+        % Parent classes:
+        if class.nParents > 0
+            switch class.nParents
+              case 1
+                disp('   Parent:');
+              otherwise
+                disp('   Parents:');
+            end
+            table = cell(0,2);
+            for i = 1:class.nParents
+                table{end+1,1} = ['     ', class.parentName(i), ' '];
+                [package packageNameParts restNameParts] = codeBase.lookupGreedy(class.parentNameParts(i));
+                if package.hasMember(restNameParts{1})
+                    table{end,2} = package.member(restNameParts{1}).doc.firstLine;
+                else
+                    table{end,2} = '';
+                end
+            end
+            t = replab.infra.align(table, 'll');
+            for i = 1:length(t)
+                replab.infra.dispH(t{i}, keyword, helpFunctionName, fullMode);
+            end
+            disp(' ');
+        end
+
+        % Children classes:
+        children = class.childrenNames(codeBase);
+        if ~isempty(children)
+            switch length(children)
+                case 1
+                    disp('   Child:');
+                otherwise
+                    disp('   Children:');
+            end
+            table = cell(0,2);
+            for i = 1:class.nParents
+                table{end+1,1} = ['     ', children{i}, ' '];
+                [package packageNameParts restNameParts] = codeBase.lookupGreedy(strsplit(children{i},'.'));
+                if package.hasMember(restNameParts{1})
+                    table{end,2} = package.member(restNameParts{1}).doc.firstLine;
+                else
+                    table{end,2} = '';
+                end
+            end
+            t = replab.infra.align(table, 'll');
+            for i = 1:length(t)
+                replab.infra.dispH(t{i}, keyword, helpFunctionName, fullMode);
+            end
+            disp(' ');
+        end
+        
+        % Properties and Methods:
+        fn = fieldnames(class.members);
+        table = cell(length(fn), 2);
+        tableProperties = cell(0,2);
+        tableMethods = cell(0,2);
+        tableElse = cell(0,2);
+        for i = 1:length(fn)
+            name = fn{i};
+            member = class.members.(name);
+            if replab.platformIsOctave || (~usejava('desktop'))
+                ref = name;
+            else
+                ref = sprintf('<a href="matlab: %s(''-f'',''%s'')">%s</a>', helpFunctionName, member.fullName, name);
+            end
+            switch member.kind
+              case 'class'
+                tableElse{end+1,1} = sprintf('     %s (%s)', ref, 'cls');
+                tableElse{end,2} = '';
+                if ~member.doc.isempty
+                    tableElse{end,2} = [' ' member.doc.firstLine];
+                end
+              case 'function'
+                tableElse{end+1,1} = sprintf('     %s (%s)', ref, 'fun');
+                tableElse{end,2} = '';
+                if ~member.doc.isempty
+                    tableElse{end,2} = [' ' member.doc.firstLine];
+                end
+              case 'property'
+                tableProperties{end+1,1} = sprintf('     %s', ref);
+                tableProperties{end,2} = '';
+                if ~member.doc.isempty
+                    tableProperties{end,2} = [' ' member.doc.firstLine];
+                end
+              case 'method'
+                tableMethods{end+1,1} = sprintf('     %s', ref);
+                tableMethods{end,2} = '';
+                if ~member.doc.isempty
+                    tableMethods{end,2} = [' ' member.doc.firstLine];
+                end
+              otherwise
+                tableElse{end+1,1} = sprintf('     %s (%s)', ref, member.kind);
+                tableElse{end,2} = '';
+                if ~member.doc.isempty
+                    tableElse{end,2} = [' ' member.doc.firstLine];
+                end
+            end
+        end
+        if ~isempty(tableProperties)
+            disp('   Properties:');
+            t = replab.infra.align(tableProperties, 'll');
+            for i = 1:length(t)
+                disp(t{i});
+            end
+            disp(' ');
+        end
+        if ~isempty(tableMethods)
+            disp('   Methods:')
+            t = replab.infra.align(tableMethods, 'll');
+            for i = 1:length(t)
+                disp(t{i});
+            end
+            disp(' ');
+        end
+        if ~isempty(tableElse)
+            disp('   Additional members:')
+            t = replab.infra.align(tableElse, 'll');
+            for i = 1:length(t)
+                disp(t{i});
+            end
+            disp(' ');
+        end
+        
+        % Link to help
+        if ~(replab.platformIsOctave  || (~usejava('desktop')))
+            disp(['    <a href="matlab: ', helpFunctionName, '(''', class.fullName, ''')">Help page for ', class.fullName, '</a>'])
+        end
+        disp(' ');
     end
-    sep = '';
-    for i = 1:class.nParents
-        pn = class.parentName(i);
-        str = sprintf('%s%s%s', str, sep, pn);
-        sep = ', ';
-    end
-    replab.infra.dispH(str, keyword, helpFunctionName);
-    class.doc.dispFilteredLines(keyword, helpFunctionName);
+    
+    % Link to source code
+    disp(sprintf('    <a href="matlab: opentoline(''%s'',%d,1)">See source</a>', class.fullFilename, 1));
     disp(' ');
 end
 
-function help_classElement(codeBase, class, elementName, helpFunctionName)
+function help_classElement(codeBase, class, elementName, helpFunctionName, fullMode)
     elements = class.findInheritedMember(codeBase, elementName);
     k = elements{1}.kind;
+    fullName = [class.fullName, '.', elementName];
     keyword = elementName;
-    replab.infra.dispH(sprintf('%s.%s (%s)', class.fullName, elementName, k), keyword, helpFunctionName);
-    disp('present in:');
+
+    % We look for the best declaration and doc
     doc = [];
     for i = 1:length(elements)
         el = elements{i};
@@ -219,34 +442,133 @@ function help_classElement(codeBase, class, elementName, helpFunctionName)
                 d = '(doc, shown below)';
             end
         end
-        replab.infra.dispH(sprintf('  %s %s', s, d), keyword, helpFunctionName);
     end
-    disp(' ');
-    if isequal(k, 'method')
-        el1 = elements{1};
-        replab.infra.dispH(['Declaration in ' el1.classFullName ':'], keyword, helpFunctionName);
-        replab.infra.dispH(el1.declaration, keyword, helpFunctionName);
-        disp(' ');
-    end
-    if ~isempty(doc)
-        if isequal(k, 'method')
-            replab.infra.dispH(['Documentation in ' doc.classFullName ':'], keyword, helpFunctionName);
-            replab.infra.dispH(doc.declaration, keyword, helpFunctionName);
+    
+    if ~fullMode
+        replab.infra.dispH([' ', upper(k(1)), k(2:end), ' ', fullName], keyword, helpFunctionName, fullMode);
+        
+        % Doc
+        if ~isempty(doc)
+            if ~isequal(doc.classFullName, class.fullName)
+                replab.infra.dispH(['  Documentation from ', doc.classFullName, ':'], keyword, helpFunctionName, fullMode);
+            end
+            doc.doc.dispFilteredLines(keyword, helpFunctionName, fullMode);
         end
-        doc.doc.dispFilteredLines(keyword, helpFunctionName);
+        disp(' ');
+        
+        % Link to ref
+        if ~(replab.platformIsOctave  || (~usejava('desktop')))
+            disp(['    <a href="matlab: ', helpFunctionName, '(''-f'',''', fullName, ''')">Reference page for ', fullName, '</a>'])
+        end
+        disp(' ');
+   else
+        replab.infra.dispH([' ', upper(k(1)), k(2:end), ' ', elementName, ':'], keyword, helpFunctionName, fullMode);
+        disp(' ');
+        
+        % Class
+        disp('   In class:');
+        replab.infra.dispH(['     ', class.fullName], keyword, helpFunctionName, fullMode);
+        disp(' ');
+        
+        % Also present in
+        if length(elements) > 1
+            disp('   Also present in:');
+            for i = 2:length(elements)
+                eli = elements{i};
+                replab.infra.dispH(['     ', eli.classFullName], keyword, helpFunctionName, fullMode);
+            end
+            disp(' ');
+        end
+        
+        % Declaration
+        if isequal(k, 'method')
+            el1 = elements{1};
+            replab.infra.dispH(['   Declaration in ' el1.classFullName ':'], keyword, helpFunctionName, fullMode);
+            replab.infra.dispH(['     ', el1.declaration], keyword, helpFunctionName, fullMode);
+            disp(' ');
+        end
+        
+        % type
+        if isequal(k, 'property') && ~isempty(doc)
+            type = doc.doc.firstLine;
+            semicols = strfind(type, ':');
+            if isempty(semicols)
+                type = '';
+            else
+                type = type(1:semicols(1)-1);
+            end
+            if ~isempty(type)
+                disp(['   Type: ', type]);
+                disp(' ');
+            end
+        end
+        
+        % Attributes
+        if isequal(k, 'property')
+            if ~isempty(doc) && ~isempty(doc.attributes) && isfield(doc.attributes, 'SetAccess')
+                disp(['   Attributes: ', doc.attributes.SetAccess]);
+                disp(' ');
+            end
+        elseif isequal(k, 'method')
+            % TODO : display method attributes
+%             el1 = elements{1};
+%             if ~isempty(el1.attributes)
+%                 el1.attributes;
+%             end
+        end
+        
+        % Link to help
+        if ~(replab.platformIsOctave  || (~usejava('desktop')))
+            disp(['    <a href="matlab: ', helpFunctionName, '(''', fullName, ''')">Help page for ', fullName, '</a>'])
+        end
+        disp(' ');
+        
     end
-    disp(' ');    
+    
+    % Link to source code
+    disp(sprintf('    <a href="matlab: opentoline(''%s'',%d,1)">See source</a>', class.fullFilename, elements{1}.lineNumber));
+    disp(' ');
 end
 
-function help_function(codeBase, fun, helpFunctionName)
+function help_function(codeBase, fun, helpFunctionName, fullMode)
     keyword = fun.name;
-    disp(' ');
-    replab.infra.dispH(['In package ' strjoin(fun.packageNameParts, '.') ':'], keyword, helpFunctionName);
-    disp(' ');
-    replab.infra.dispH(fun.declaration, keyword, helpFunctionName);
-    fun.doc.dispFilteredLines(keyword, helpFunctionName);
-    disp(' ');
-    if ~replab.platformIsOctave
-        disp(['    <a href="matlab: rdoc(''', strjoin(fun.packageNameParts, '.'), ''')">Reference page for ', strjoin(fun.packageNameParts, '.'), '</a>'])
+    fullName = [strjoin(fun.packageNameParts, '.'), '.', fun.name];
+    if ~fullMode
+        replab.infra.dispH([' ', fun.declaration], keyword, helpFunctionName, fullMode);
+        
+        % Doc
+        fun.doc.dispFilteredLines(keyword, helpFunctionName, fullMode);
+        disp(' ');
+        
+        % Link to ref
+        if ~(replab.platformIsOctave  || (~usejava('desktop')))
+            disp(['    <a href="matlab: ', helpFunctionName, '(''-f'',''', fullName, ''')">Reference page for ', fullName, '</a>'])
+        end
+        disp(' ');
+    else
+        replab.infra.dispH([' Function ', fun.name, ':'], keyword, helpFunctionName, fullMode);
+        disp(' ');
+        
+        % Package:
+        if ~isempty(fun.packageNameParts)
+            disp('   In package:');
+            packageName = strjoin(fun.packageNameParts, '.');
+            if replab.platformIsOctave  || (~usejava('desktop'))
+                disp(['     ', packageName]);
+            else
+                disp(['     <a href="matlab: ', helpFunctionName, '(''-f'',''', packageName, ''')">', packageName, '</a>']);
+            end
+            disp(' ');
+        end
+        
+        % Link to help
+        if ~(replab.platformIsOctave  || (~usejava('desktop')))
+            disp(['    <a href="matlab: ', helpFunctionName, '(''', fullName, ''')">Help page for ', fullName, '</a>'])
+        end
+        disp(' ');
     end
+    
+    % Link to source code
+    disp(sprintf('    <a href="matlab: opentoline(''%s'',%d,1)">See source</a>', fun.fullFilename, 1));
+    disp(' ');
 end

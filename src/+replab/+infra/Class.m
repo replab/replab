@@ -37,6 +37,10 @@ classdef Class < replab.infra.PackageElement
             nm = self.parentsNames{i};
         end
         
+        function nm = parentNameParts(self, i)
+            nm = strsplit(self.parentsNames{i}, '.');
+        end
+        
         function mn = memberNames(self)
             mn = fieldnames(self.members)';
         end
