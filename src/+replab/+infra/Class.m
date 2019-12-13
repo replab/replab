@@ -58,7 +58,12 @@ classdef Class < replab.infra.PackageElement
         %
         % Returns:
         %   row cell vector of `.Class`: Subclasses of the current class
-            c = {};
+            fne = self.fieldNameEncoding;
+            if isfield(codeBase.subclasses, fne)
+                c = codeBase.subclasses.(fne);
+            else
+                c = {};
+            end
         end
         
         function b = hasMember(self, name)
