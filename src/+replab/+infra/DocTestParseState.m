@@ -128,7 +128,6 @@ classdef DocTestParseState < replab.Str
             lines{1,end+1} = '';
             comments{1,end+1} = '';
             lineNumbers(1,end+1) = 0;
-            tags, lines, comments, lineNumbers
             ps = replab.infra.DocTestParseState(tags, lines, comments, lineNumbers, 1);
         end
         

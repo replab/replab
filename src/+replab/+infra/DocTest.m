@@ -2,8 +2,8 @@ classdef DocTest < replab.Str
     
     properties
         lineNumbers % row vector of integer: line number of first line of the command
-        commands % row cell vector of charstring: commands to be evaluated
-        outputs % row cell vector of charstring: expected output
+        commands % row cell vector of row vector of charstring: commands to be evaluated
+        outputs % row cell vector of row vector of charstring: expected output
     end
 
     methods
@@ -14,10 +14,13 @@ classdef DocTest < replab.Str
             self.outputs = outputs;
         end
         
+        function n = nCommands(self)
+            n = length(self.commands);
+        end
+        
     end
     
     methods (Static)
-        
        
         function [ps command output lineNumber] = parseCommandOutputPair(ps)
         % Parses a command/output pair, where the output may be omitted, and each can be multiline
@@ -33,10 +36,11 @@ classdef DocTest < replab.Str
         %     charstring: Doctest command; if multiline, lines are separated by '\n'
         %   output:
         %     charstring: Doctest output; may be empty, if multiline, lines are separated by '\n'
-            [ps command comment lineNumber] = ps.expect('START');
+            [ps newCommand comment lineNumber] = ps.expect('START');
+            command = {newCommand};
             if isempty(ps)
-                command = [];
-                output = [];
+                command = {};
+                output = {};
                 lineNumber = [];
                 return
             end
@@ -46,19 +50,17 @@ classdef DocTest < replab.Str
                     break
                 else
                     ps = res;
-                    command = [command '\n' newCommand];
+                    command{1,end+1} = newCommand;
                 end
             end
-            output = '';
-            sep = '';
+            output = {};
             while 1
                 [res newOutput comment] = ps.expect('OUT');
                 if isempty(res)
                     break
                 else
                     ps = res;
-                    output = [output sep newOutput];
-                    sep = '\n';
+                    output{1,end+1} = newOutput;
                 end
             end
         end

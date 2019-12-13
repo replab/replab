@@ -7,6 +7,7 @@ classdef ClassElement < replab.Str
         packageNameParts % row cell vector of charstring: parent package identifier
         className % charstring: parent class name
         kind % {'property' 'method'}: Human readable description of type
+        lineNumber % integer: First line of the element declaration 
     end
     
     methods

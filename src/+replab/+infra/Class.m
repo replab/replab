@@ -9,7 +9,7 @@ classdef Class < replab.infra.PackageElement
     
     methods
         
-        function self = Class(name, parentsNames, doc, memberList, packageNameParts)
+        function self = Class(name, parentsNames, doc, memberList, packageNameParts, fullFilename)
             self.name = name;
             self.parentsNames = parentsNames;
             self.doc = doc;
@@ -22,6 +22,7 @@ classdef Class < replab.infra.PackageElement
             members = orderfields(members);
             self.members = members;
             self.kind = 'class';
+            self.fullFilename = fullFilename;
         end
         
         function str = fullName(self)
@@ -142,6 +143,7 @@ classdef Class < replab.infra.PackageElement
         
         function [pos members] = parseMethod(ct, pos, packageNameParts, className, attributes)
         % Parses a method declaration
+            startLine = pos;
             [pos name declaration docLines isAbstract] = replab.infra.Function.parse(ct, pos);
             if isempty(pos)
                 members = {};
@@ -149,7 +151,7 @@ classdef Class < replab.infra.PackageElement
             end
             doc = replab.infra.Doc.leftTrimmed(docLines);
             members = {replab.infra.Method(name, attributes, declaration, doc, isAbstract, ...
-                                           packageNameParts, className)};
+                                           packageNameParts, className, startLine)};
         end
 
         function [res members] = parseMethodsElement(ct, pos, packageNameParts, className, attributes)
@@ -202,7 +204,7 @@ classdef Class < replab.infra.PackageElement
             assert(~isempty(pos));
         end
 
-        function [pos members] = parseProperty(ct, pos, attributes, packageNameParts, className)
+        function [pos members] = parseProperty(ct, pos, attributes, packageNameParts, className, filename)
         % Parses a property definition
         %
         % The formats can be
@@ -220,6 +222,7 @@ classdef Class < replab.infra.PackageElement
         %
         % name = value; % documentation comment
         %               % comment continued
+            startLine = pos;
             [pos line] = ct.expect(pos, '!');
             if isempty(pos)
                 members = {};
@@ -251,7 +254,7 @@ classdef Class < replab.infra.PackageElement
                 docLines = horzcat({firstDocLine}, nextDocLines);
             end
             doc = replab.infra.Doc.leftTrimmed(docLines);
-            property = replab.infra.Property(name, attributes, doc, packageNameParts, className);
+            property = replab.infra.Property(name, attributes, doc, packageNameParts, className, startLine);
             members = {property};
         end
         
@@ -364,11 +367,11 @@ classdef Class < replab.infra.PackageElement
             assert(~isempty(pos));
         end
         
-        function c = fromParseState(ct, packageNameParts)
+        function c = fromParseState(ct, packageNameParts, filename)
         % Parses a full definition and constructs a `+replab.+infra.Class` instance
             [className parentsNames docLines memberList] = replab.infra.Class.parse(ct, packageNameParts);
             doc = replab.infra.Doc.leftTrimmed(docLines);
-            c = replab.infra.Class(className, parentsNames, doc, memberList, packageNameParts);
+            c = replab.infra.Class(className, parentsNames, doc, memberList, packageNameParts, filename);
         end
         
     end

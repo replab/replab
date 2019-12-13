@@ -116,6 +116,8 @@ classdef CodeBase < replab.Str
         end
         
         function c = crawl(rootDirectoryName)
+        % Args:
+        %   rootDirectoryName (charstring): Absolute path of the source directory (usually '$REPLAB_ROOT/src')
             packages = struct;
             % toExplore represents a stack of subpaths to explore
             % toExplore is a row cell array, each element inside
@@ -146,9 +148,9 @@ classdef CodeBase < replab.Str
                         ct = replab.infra.CodeTokens.fromFile(filename);
                         switch ct.peek(1)
                           case 'c'
-                            member = replab.infra.Class.fromParseState(ct, packageNameParts);
+                            member = replab.infra.Class.fromParseState(ct, packageNameParts, filename);
                           case 'f'
-                            member = replab.infra.Function.fromParseState(ct, packageNameParts);
+                            member = replab.infra.Function.fromParseState(ct, packageNameParts, filename);
                           otherwise
                             error(['Unrecognized first tag ' ct.peek(1)]);
                         end

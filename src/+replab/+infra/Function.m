@@ -9,12 +9,13 @@ classdef Function < replab.infra.PackageElement
     
     methods
         
-        function self = Function(name, declaration, doc, packageNameParts)
+        function self = Function(name, declaration, doc, packageNameParts, fullFilename)
             self.name = name;
             self.declaration = declaration;
             self.doc = doc;
             self.packageNameParts = packageNameParts;
             self.kind = 'function';
+            self.fullFilename = fullFilename;
         end
         
     end
@@ -116,14 +117,14 @@ classdef Function < replab.infra.PackageElement
             end
         end
         
-        function f = fromParseState(ct, packageNameParts)
+        function f = fromParseState(ct, packageNameParts, filename)
         % Parses a function and returns a `replab.infra.Function` instance
             pos = 1;
             [pos name declaration docLines isAbstract] = replab.infra.Function.parse(ct, pos);
             assert(~isempty(pos));
             assert(~isAbstract);
             doc = replab.infra.Doc.leftTrimmed(docLines);
-            f = replab.infra.Function(name, declaration, doc, packageNameParts);
+            f = replab.infra.Function(name, declaration, doc, packageNameParts, filename);
         end
         
     end
