@@ -1,13 +1,15 @@
 classdef DocTest < replab.Str
     
     properties
+        lineNumbers % row vector of integer: line number of first line of the command
         commands % row cell vector of charstring: commands to be evaluated
         outputs % row cell vector of charstring: expected output
     end
 
     methods
         
-        function self = DocTest(commands, outputs)
+        function self = DocTest(lineNumbers, commands, outputs)
+            self.lineNumbers = lineNumbers;
             self.commands = commands;
             self.outputs = outputs;
         end
@@ -17,7 +19,7 @@ classdef DocTest < replab.Str
     methods (Static)
         
        
-        function [ps command output] = parseCommandOutputPair(ps)
+        function [ps command output lineNumber] = parseCommandOutputPair(ps)
         % Parses a command/output pair, where the output may be omitted, and each can be multiline
         %
         % Args:
@@ -31,10 +33,11 @@ classdef DocTest < replab.Str
         %     charstring: Doctest command; if multiline, lines are separated by '\n'
         %   output:
         %     charstring: Doctest output; may be empty, if multiline, lines are separated by '\n'
-            [ps command comment] = ps.expect('START');
+            [ps command comment lineNumber] = ps.expect('START');
             if isempty(ps)
                 command = [];
                 output = [];
+                lineNumber = [];
                 return
             end
             while 1
@@ -72,19 +75,21 @@ classdef DocTest < replab.Str
         %     +replab.+infra.DocTest: The parsed doctest, or [] is unsuccessful
             commands = {};
             outputs = {};
+            lineNumbers = [];
             while 1
-                [res command output] = replab.infra.DocTest.parseCommandOutputPair(ps);
+                [res command output lineNumber] = replab.infra.DocTest.parseCommandOutputPair(ps);
                 if isempty(res)
                     break
                 else
                     ps = res;
                     commands{1,end+1} = command;
                     outputs{1,end+1} = output;
+                    lineNumbers(1,end+1) = lineNumber;
                 end
             end
             ps = ps.expect('EOF');
             assert(~isempty(ps));
-            dt = replab.infra.DocTest(commands, outputs);
+            dt = replab.infra.DocTest(lineNumbers, commands, outputs);
         end
         
         function doctests = parseDoc(doc)

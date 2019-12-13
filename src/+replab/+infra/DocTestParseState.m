@@ -19,43 +19,42 @@ classdef DocTestParseState < replab.Str
 % for another example of a hand-written parser
     
     properties
+        tags % row cell array of charstring: Tag describing the line type
         lines % row cell array of charstring: Content lines
         comments % row cell array of charstring: Comments
-        tags % row cell array of charstring: Tag describing the line type
+        lineNumbers % row vector of integer: Original line number 
         pos % integer: Current line position
     end
     
     methods
         
-        function self = DocTestParseState(lines, comments, tags, pos)
+        function self = DocTestParseState(tags, lines, comments, lineNumbers, pos)
             self.tags = tags;
             self.lines = lines;
+            self.lineNumbers = lineNumbers;
             self.comments = comments;
             self.pos = pos;
         end
         
-        function [nextParseState tag line comment] = take(self)
+        function [nextParseState tag line comment lineNumber] = take(self)
         % Consumes a line from the input, and returns the updated parser state
         %
         % `tag` and `line` correspond to the consumed line.
             tag = self.tags{self.pos};
-            if isequal(tag, 'EOF')
-                line = [];
-                comment = [];
-            else
-                line = self.lines{self.pos};
-                comment = self.comments{self.pos};
-            end
-            nextParseState = replab.infra.DocTestParseState(self.lines, self.comments, self.tags, self.pos + 1);
+            line = self.lines{self.pos};
+            comment = self.comments{self.pos};
+            lineNumber = self.lineNumbers(self.pos);
+            nextParseState = replab.infra.DocTestParseState(self.tags, self.lines, self.comments, self.lineNumbers, self.pos + 1);
         end
         
-        function [nextParseState line comment] = expect(self, expectedTag)
+        function [nextParseState line comment lineNumber] = expect(self, expectedTag)
         % Equivalent to `take`, conditioned on the consumed tag to be `expectedTag`
-            [nextParseState tag line comment] = self.take;
+            [nextParseState tag line comment lineNumber] = self.take;
             if ~isequal(tag, expectedTag)
                 nextParseState = [];
                 line = [];
                 comment = [];
+                lineNumber = [];
             end
         end
         
@@ -101,6 +100,7 @@ classdef DocTestParseState < replab.Str
             lines = {};
             comments = {};
             tags = {};
+            lineNumbers = [];
             for i = 1:length(inputLines)
                 l = strtrim(inputLines{i});
                 if isempty(l) || l(1) == '%'
@@ -110,19 +110,26 @@ classdef DocTestParseState < replab.Str
                     [code comment] = replab.infra.DocTestParseState.splitComment(l(4:end));
                     lines{1,end+1} = strtrim(code);
                     comments{1,end+1} = strtrim(comment);
+                    lineNumbers(1,end+1) = i;
                 elseif length(l) >= 3 && isequal(l(1:3), '...')
                     tags{1,end+1} = 'CONT';
                     [code comment] = replab.infra.DocTestParseState.splitComment(l(4:end));
                     lines{1,end+1} = strtrim(code);
                     comments{1,end+1} = strtrim(comment);
+                    lineNumbers(1,end+1) = i;
                 else
                     tags{1,end+1} = 'OUT';
                     lines{1,end+1} = l;
                     comments{1,end+1} = '';
+                    lineNumbers(1,end+1) = i;
                 end
             end
             tags{1,end+1} = 'EOF';
-            ps = replab.infra.DocTestParseState(lines, comments, tags, 1);
+            lines{1,end+1} = '';
+            comments{1,end+1} = '';
+            lineNumbers(1,end+1) = 0;
+            tags, lines, comments, lineNumbers
+            ps = replab.infra.DocTestParseState(tags, lines, comments, lineNumbers, 1);
         end
         
     end
