@@ -268,7 +268,7 @@ function help_class(codeBase, class, helpFunctionName, fullMode)
         
         % Link to ref
         if ~(replab.platformIsOctave  || (~usejava('desktop')))
-            disp(['    <a href="matlab: ', helpFunctionName, '(''-f'',''', class.fullName, ''')">Reference page for ', class.fullName, '</a>'])
+            disp(['   <a href="matlab: ', helpFunctionName, '(''-f'',''', class.fullName, ''')">Reference page for ', class.fullName, '</a>'])
         end
         disp(' ');
     else
@@ -412,13 +412,13 @@ function help_class(codeBase, class, helpFunctionName, fullMode)
         
         % Link to help
         if ~(replab.platformIsOctave  || (~usejava('desktop')))
-            disp(['    <a href="matlab: ', helpFunctionName, '(''', class.fullName, ''')">Help page for ', class.fullName, '</a>'])
+            disp(['   <a href="matlab: ', helpFunctionName, '(''', class.fullName, ''')">Help page for ', class.fullName, '</a>'])
         end
         disp(' ');
     end
     
     % Link to source code
-    disp(sprintf('    <a href="matlab: opentoline(''%s'',%d,1)">See source</a>', class.fullFilename, 1));
+    disp(sprintf('   <a href="matlab: opentoline(''%s'',%d,1)">See source</a>', class.fullFilename, 1));
     disp(' ');
 end
 
@@ -458,7 +458,7 @@ function help_classElement(codeBase, class, elementName, helpFunctionName, fullM
         
         % Link to ref
         if ~(replab.platformIsOctave  || (~usejava('desktop')))
-            disp(['    <a href="matlab: ', helpFunctionName, '(''-f'',''', fullName, ''')">Reference page for ', fullName, '</a>'])
+            disp(['   <a href="matlab: ', helpFunctionName, '(''-f'',''', fullName, ''')">Reference page for ', fullName, '</a>'])
         end
         disp(' ');
    else
@@ -519,14 +519,14 @@ function help_classElement(codeBase, class, elementName, helpFunctionName, fullM
         
         % Link to help
         if ~(replab.platformIsOctave  || (~usejava('desktop')))
-            disp(['    <a href="matlab: ', helpFunctionName, '(''', fullName, ''')">Help page for ', fullName, '</a>'])
+            disp(['   <a href="matlab: ', helpFunctionName, '(''', fullName, ''')">Help page for ', fullName, '</a>'])
         end
         disp(' ');
         
     end
     
     % Link to source code
-    disp(sprintf('    <a href="matlab: opentoline(''%s'',%d,1)">See source</a>', class.fullFilename, elements{1}.lineNumber));
+    disp(sprintf('   <a href="matlab: opentoline(''%s'',%d,1)">See source</a>', class.fullFilename, elements{1}.lineNumber));
     disp(' ');
 end
 
@@ -542,7 +542,7 @@ function help_function(codeBase, fun, helpFunctionName, fullMode)
         
         % Link to ref
         if ~(replab.platformIsOctave  || (~usejava('desktop')))
-            disp(['    <a href="matlab: ', helpFunctionName, '(''-f'',''', fullName, ''')">Reference page for ', fullName, '</a>'])
+            disp(['   <a href="matlab: ', helpFunctionName, '(''-f'',''', fullName, ''')">Reference page for ', fullName, '</a>'])
         end
         disp(' ');
     else
@@ -563,12 +563,12 @@ function help_function(codeBase, fun, helpFunctionName, fullMode)
         
         % Link to help
         if ~(replab.platformIsOctave  || (~usejava('desktop')))
-            disp(['    <a href="matlab: ', helpFunctionName, '(''', fullName, ''')">Help page for ', fullName, '</a>'])
+            disp(['   <a href="matlab: ', helpFunctionName, '(''', fullName, ''')">Help page for ', fullName, '</a>'])
         end
         disp(' ');
     end
     
     % Link to source code
-    disp(sprintf('    <a href="matlab: opentoline(''%s'',%d,1)">See source</a>', fun.fullFilename, 1));
+    disp(sprintf('   <a href="matlab: opentoline(''%s'',%d,1)">See source</a>', fun.fullFilename, 1));
     disp(' ');
 end

@@ -56,11 +56,6 @@ classdef Class < replab.infra.PackageElement
             end
         end
         
-        function c = children(self, codeBase)
-            warning('Deprecated method replab.infra.Class.children, use childrenNames instead');
-            c = self.childrenNames(codeBase);
-        end
-        
         function c = childrenNames(self, codeBase)
         % Returns the names of the children of the current class
         % 
@@ -126,11 +121,6 @@ classdef Class < replab.infra.PackageElement
                     end
                 end
             end
-        end
-        
-        function names = inheritedMembers(self, codeBase)
-            warning('Deprecated method replab.infra.Class.inheritedMembers, use inheritedMemberNames instead');
-            names = self.inheritedMemberNames(codeBase);
         end
         
         function names = inheritedMemberNames(self, codeBase)
