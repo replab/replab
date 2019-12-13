@@ -121,6 +121,24 @@ classdef CodeBase < replab.Str
             end
         end
         
+        function writeEnrichedSource(self, docSrcPath)
+        % Writes the enriched source with the TOC elements
+        %
+        % Args:
+        %   docSrcPath (charstring): Path of the enriched source, folder must exist, without trailing separator
+            names = fieldnames(self.packages);
+            for i = 1:length(names)
+                package = self.packages.(names{i});
+                fprintf('Writing enriched source for package %s:\n', package.fullName);
+                memberNames = fieldnames(package.members);
+                for j = 1:length(memberNames)
+                    fprintf('.. member %s:\n', memberNames{j});
+                    replab.infra.writeEnrichedSource(self, docSrcPath, package.member(memberNames{j}));
+                end
+            end
+        end
+
+        
     end
    
     methods (Static)

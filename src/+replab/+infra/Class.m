@@ -48,8 +48,13 @@ classdef Class < replab.infra.PackageElement
                 nameParts = strsplit(self.parentName(i), '.');
                 [package packageNameParts restNameParts] = codeBase.lookupGreedy(nameParts);
                 assert(length(restNameParts) == 1);
-                p = package.member(restNameParts{i});
+                p = package.member(restNameParts{1});
             end
+        end
+        
+        function c = children(self, codeBase)
+            warning('Deprecated method replab.infra.Class.children, use childrenNames instead');
+            c = self.childrenNames(codeBase);
         end
         
         function c = childrenNames(self, codeBase)
@@ -120,6 +125,11 @@ classdef Class < replab.infra.PackageElement
         end
         
         function names = inheritedMembers(self, codeBase)
+            warning('Deprecated method replab.infra.Class.inheritedMembers, use inheritedMemberNames instead');
+            names = self.inheritedMemberNames(codeBase);
+        end
+        
+        function names = inheritedMemberNames(self, codeBase)
             names = {};
             stack = {self};
             % breath-first search through the inheritance tree
