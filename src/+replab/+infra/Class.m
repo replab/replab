@@ -140,10 +140,10 @@ classdef Class < replab.infra.PackageElement
     
     methods (Static)
         
-        function [ps members] = parseMethod(ps, packageNameParts, className, attributes)
+        function [pos members] = parseMethod(ct, pos, packageNameParts, className, attributes)
         % Parses a method declaration
-            [ps name declaration docLines isAbstract] = replab.infra.Function.parse(ps);
-            if isempty(ps)
+            [pos name declaration docLines isAbstract] = replab.infra.Function.parse(ct, pos);
+            if isempty(pos)
                 members = {};
                 return
             end
@@ -152,17 +152,17 @@ classdef Class < replab.infra.PackageElement
                                            packageNameParts, className)};
         end
 
-        function [res members] = parseMethodsElement(ps, packageNameParts, className, attributes)
+        function [res members] = parseMethodsElement(ct, pos, packageNameParts, className, attributes)
         % Parses an element that can appear in a methods block
-            [res members] = replab.infra.Class.parseBlankAsEmptyCell(ps);
+            [res members] = replab.infra.Class.parseBlankAsEmptyCell(ct, pos);
             if ~isempty(res)
                 return
             end
-            [res members] = replab.infra.Class.parseCommentAsEmptyCell(ps);
+            [res members] = replab.infra.Class.parseCommentAsEmptyCell(ct, pos);
             if ~isempty(res)
                 return
             end
-            [res members] = replab.infra.Class.parseMethod(ps, packageNameParts, className, attributes);
+            [res members] = replab.infra.Class.parseMethod(ct, pos, packageNameParts, className, attributes);
             if ~isempty(res)
                 return
             end
@@ -170,11 +170,11 @@ classdef Class < replab.infra.PackageElement
             members = {};
         end
 
-        function [ps members] = parseMethods(ps, packageNameParts, className)
+        function [pos members] = parseMethods(ct, pos, packageNameParts, className)
         % Parses a methods block
             members = {};
-            [ps line] = ps.expect('METHODS');
-            if isempty(ps)
+            [pos line] = ct.expect(pos, 'm');
+            if isempty(pos)
                 return
             end
             % Remove an eventual comment
@@ -190,19 +190,19 @@ classdef Class < replab.infra.PackageElement
                 attributes = replab.infra.parseAttributes(tokens{1});
             end
             while 1
-                [res newMembers] = replab.infra.Class.parseMethodsElement(ps, packageNameParts, className, attributes);
+                [res newMembers] = replab.infra.Class.parseMethodsElement(ct, pos, packageNameParts, className, attributes);
                 if isempty(res)
                     break
                 else
-                    ps = res;
+                    pos = res;
                     members = horzcat(members, newMembers);
                 end
             end
-            [ps line] = ps.expect('END');
-            assert(~isempty(ps));
+            [pos line] = ct.expect(pos, '<');
+            assert(~isempty(pos));
         end
 
-        function [ps members] = parseProperty(ps, attributes, packageNameParts, className)
+        function [pos members] = parseProperty(ct, pos, attributes, packageNameParts, className)
         % Parses a property definition
         %
         % The formats can be
@@ -220,8 +220,8 @@ classdef Class < replab.infra.PackageElement
         %
         % name = value; % documentation comment
         %               % comment continued
-            [ps line] = ps.expect('CODE');
-            if isempty(ps)
+            [pos line] = ct.expect(pos, '!');
+            if isempty(pos)
                 members = {};
                 return
             end
@@ -240,12 +240,12 @@ classdef Class < replab.infra.PackageElement
             else
                 nextDocLines = {};
                 while 1
-                    [res line] = ps.expect('COMMENT');
+                    [res line] = ct.expect(pos, '%');
                     if isempty(res)
                         break
                     else
                         nextDocLines{1, end+1} = line(2:end);
-                        ps = res;
+                        pos = res;
                     end
                 end
                 docLines = horzcat({firstDocLine}, nextDocLines);
@@ -255,17 +255,17 @@ classdef Class < replab.infra.PackageElement
             members = {property};
         end
         
-        function [res members] = parsePropertiesElement(ps, attributes, packageNameParts, className)
+        function [res members] = parsePropertiesElement(ct, pos, attributes, packageNameParts, className)
         % Parses an element that can appear in a properties block
-            [res members] = replab.infra.Class.parseBlankAsEmptyCell(ps);
+            [res members] = replab.infra.Class.parseBlankAsEmptyCell(ct, pos);
             if ~isempty(res)
                 return
             end
-            [res members] = replab.infra.Class.parseCommentAsEmptyCell(ps);
+            [res members] = replab.infra.Class.parseCommentAsEmptyCell(ct, pos);
             if ~isempty(res)
                 return
             end
-            [res members] = replab.infra.Class.parseProperty(ps, attributes, packageNameParts, className);
+            [res members] = replab.infra.Class.parseProperty(ct, pos, attributes, packageNameParts, className);
             if ~isempty(res)
                 return
             end
@@ -273,11 +273,11 @@ classdef Class < replab.infra.PackageElement
             members = {};
         end
 
-        function [ps members] = parseProperties(ps, packageNameParts, className)
+        function [pos members] = parseProperties(ct, pos, packageNameParts, className)
         % Parses a properties block
             members = {};
-            [ps line] = ps.expect('PROPERTIES');
-            if isempty(ps)
+            [pos line] = ct.expect(pos, 'p');
+            if isempty(pos)
                 return
             end
             % Remove an eventual comment
@@ -293,45 +293,45 @@ classdef Class < replab.infra.PackageElement
                 attributes = replab.infra.parseAttributes(tokens{1});
             end
             while 1
-                [res newMembers] = replab.infra.Class.parsePropertiesElement(ps, attributes, packageNameParts, className);
+                [res newMembers] = replab.infra.Class.parsePropertiesElement(ct, pos, attributes, packageNameParts, className);
                 if isempty(res)
                     break
                 else
-                    ps = res;
+                    pos = res;
                     members = horzcat(members, newMembers);
                 end
             end
-            [ps line] = ps.expect('END');
-            assert(~isempty(ps));
+            [pos line] = ct.expect(pos, '<');
+            assert(~isempty(pos));
         end
         
-        function [res newMembers] = parseBlankAsEmptyCell(ps)
+        function [res newMembers] = parseBlankAsEmptyCell(ct, pos)
         % Parses a blank line returning an empty list of members
-            res = ps.expect('BLANK');
+            res = ct.expect(pos, ' ');
             newMembers = {};
         end
 
-        function [res newMembers] = parseCommentAsEmptyCell(ps)
+        function [res newMembers] = parseCommentAsEmptyCell(ct, pos)
         % Parses a comment line returning an empty list of members
-            res = ps.expect('COMMENT');
+            res = ct.expect(pos, '%');
             newMembers = {};
         end
         
-        function [res members] = parseClassElement(ps, packageNameParts, className)
+        function [res members] = parseClassElement(ct, pos, packageNameParts, className)
         % Parses an element that can appear in a class definition
-            [res members] = replab.infra.Class.parseBlankAsEmptyCell(ps);
+            [res members] = replab.infra.Class.parseBlankAsEmptyCell(ct, pos);
             if ~isempty(res)
                 return
             end
-            [res members] = replab.infra.Class.parseCommentAsEmptyCell(ps);
+            [res members] = replab.infra.Class.parseCommentAsEmptyCell(ct, pos);
             if ~isempty(res)
                 return
             end
-            [res members] = replab.infra.Class.parseProperties(ps, packageNameParts, className);
+            [res members] = replab.infra.Class.parseProperties(ct, pos, packageNameParts, className);
             if ~isempty(res)
                 return
             end
-            [res members] = replab.infra.Class.parseMethods(ps, packageNameParts, className);
+            [res members] = replab.infra.Class.parseMethods(ct, pos, packageNameParts, className);
             if ~isempty(res)
                 return
             end
@@ -339,33 +339,34 @@ classdef Class < replab.infra.PackageElement
             members = {};
         end
         
-        function [className parentsNames docLines memberList] = parse(ps, packageNameParts)
+        function [className parentsNames docLines memberList] = parse(ct, packageNameParts)
         % Parses a full class definition
-            [ps line] = ps.expect('CLASSDEF');
-            assert(~isempty(ps));
+            pos = 1;
+            [pos line] = ct.expect(pos, 'c');
+            assert(~isempty(pos));
             tokens = cellfun(@strtrim, regexp(line, '[&<]', 'split'), 'uniform', 0);
             matches = regexp(tokens{1}, '^classdef\s+(\w+)$', 'tokens', 'once');
             className = matches{1};
             parentsNames = tokens(2:end);
-            [ps docLines] = replab.infra.parseDocLines(ps);
-            assert(~isempty(ps));
+            [pos docLines] = replab.infra.parseDocLines(ct, pos);
+            assert(~isempty(pos));
             memberList = {};
             while 1
-                [res newMembers] = replab.infra.Class.parseClassElement(ps, packageNameParts, className);
+                [res newMembers] = replab.infra.Class.parseClassElement(ct, pos, packageNameParts, className);
                 if isempty(res)
                     break
                 else
-                    ps = res;
+                    pos = res;
                     memberList = horzcat(memberList, newMembers);
                 end
             end
-            ps = ps.expect('END');
-            assert(~isempty(ps));
+            pos = ct.expect(pos, '<');
+            assert(~isempty(pos));
         end
         
-        function c = fromParseState(ps, packageNameParts)
+        function c = fromParseState(ct, packageNameParts)
         % Parses a full definition and constructs a `+replab.+infra.Class` instance
-            [className parentsNames docLines memberList] = replab.infra.Class.parse(ps, packageNameParts);
+            [className parentsNames docLines memberList] = replab.infra.Class.parse(ct, packageNameParts);
             doc = replab.infra.Doc.leftTrimmed(docLines);
             c = replab.infra.Class(className, parentsNames, doc, memberList, packageNameParts);
         end

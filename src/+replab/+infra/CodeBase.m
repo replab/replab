@@ -143,14 +143,14 @@ classdef CodeBase < replab.Str
                     elseif isequal(name(end-1:end), '.m')
                         % is not a folder and has a Matlab file extension
                         filename = fullfile(rootDirectoryName, subpath{:}, name);
-                        parseState = replab.infra.CodeParseState.fromFile(filename);
-                        switch parseState.peek
-                          case 'CLASSDEF'
-                            member = replab.infra.Class.fromParseState(parseState, packageNameParts);
-                          case 'FUNCTION'
-                            member = replab.infra.Function.fromParseState(parseState, packageNameParts);
+                        ct = replab.infra.CodeTokens.fromFile(filename);
+                        switch ct.peek(1)
+                          case 'c'
+                            member = replab.infra.Class.fromParseState(ct, packageNameParts);
+                          case 'f'
+                            member = replab.infra.Function.fromParseState(ct, packageNameParts);
                           otherwise
-                            error(['Unrecognized first tag ' parseState.peek]);
+                            error(['Unrecognized first tag ' ct.peek(1)]);
                         end
                         members{1,end+1} = member;
                     end

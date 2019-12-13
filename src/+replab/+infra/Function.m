@@ -38,88 +38,89 @@ classdef Function < replab.infra.PackageElement
             end
         end
         
-        function res = parseBlank(ps)
-            res = ps.expect('BLANK');
+        function res = parseBlank(ct, pos)
+            res = ct.expect(pos, ' ');
         end
         
-        function res = parseComment(ps)
-            res = ps.expect('COMMENT');
+        function res = parseComment(ct, pos)
+            res = ct.expect(pos, '%');
         end
         
-        function res = parseCode(ps)
-            res = ps.expect('CODE');
+        function res = parseCode(ct, pos)
+            res = ct.expect(pos, '!');
         end
         
-        function ps = parseAbstractBody(ps)
+        function pos = parseAbstractBody(ct, pos)
         % Parses the body of an abstract method, used for methods and not functions
-            [ps line] = ps.expect('CODE');
-            if isempty(ps) || ~isequal(strtrim(line), 'error(''Abstract'');')
-                ps = [];
+            [pos line] = ct.expect(pos, '!');
+            if isempty(pos) || ~isequal(strtrim(line), 'error(''Abstract'');')
+                pos = [];
                 return
             end
-            ps = ps.expect('END');
+            pos = ct.expect(pos, '<');
         end
         
-        function ps = parseControlStructure(ps)
+        function pos = parseControlStructure(ct, pos)
         % Parses a control structure such as 'if' or 'while'
         %
         % Assumes that the first line has already been consumed, and consumes the
         % rest of a control structure, including the final 'end'
             while 1
-                res = replab.infra.Function.parseFunctionElement(ps);
+                res = replab.infra.Function.parseFunctionElement(ct, pos);
                 if isempty(res)
                     break
                 else
-                    ps = res;
+                    pos = res;
                 end
             end
-            ps = ps.expect('END');
+            pos = ct.expect(pos, '<');
         end
         
-        function ps = parseFunctionElement(ps)
+        function pos = parseFunctionElement(ct, pos)
         % Parses an element appearing in a function or method body
-            tag = ps.peek;
+            tag = ct.peek(pos);
             switch tag
-              case 'EOF'
+              case '$'
                 error('End of file encountered: functions must end with an end statement');
-              case {'CLASSDEF', 'PROPERTIES', 'METHODS', 'ENUMERATION'}
-                error(sprintf('Token %s invalid inside a function or method', tag));
-              case {'BLANK', 'COMMENT', 'CODE'}
-                ps = ps.take;
-              case {'FUNCTION', 'IF', 'TRY', 'WHILE', 'SWITCH', 'PARFOR', 'SPMD', 'FOR'}
-                ps = ps.take; % consume token
-                ps = replab.infra.Function.parseControlStructure(ps);
+              case {'c', 'p', 'm', 'e'}
+                error(sprintf('classdef/properties/methods or enumeration are all invalid inside a function or method'));
+              case {' ', '%', '!'}
+                pos = ct.take(pos);
+              case {'f', '>'}
+                pos = ct.take(pos); % consume token
+                pos = replab.infra.Function.parseControlStructure(ct, pos);
               otherwise
-                ps = [];
+                pos = [];
             end
         end
         
-        function [ps name declaration docLines isAbstract] = parse(ps)
+        function [pos name declaration docLines isAbstract] = parse(ct, pos)
         % Parses a function or a method and returns the information fields
             name = [];
             declaration = [];
             docLines = {};
             isAbstract = false;
-            [ps declaration] = ps.expect('FUNCTION');
-            if isempty(ps)
+            [pos declaration] = ct.expect(pos, 'f');
+            if isempty(pos)
                 return
             end
-            assert(~isempty(ps));
+            assert(~isempty(pos));
             name = replab.infra.Function.nameFromDeclaration(declaration);
-            [ps docLines] = replab.infra.parseDocLines(ps);
-            res = replab.infra.Function.parseAbstractBody(ps);
+            [pos docLines] = replab.infra.parseDocLines(ct, pos);
+            res = replab.infra.Function.parseAbstractBody(ct, pos);
             if ~isempty(res)
                 isAbstract = true;
-                ps = res;
+                pos = res;
             else
-                ps = replab.infra.Function.parseControlStructure(ps);
+                pos = replab.infra.Function.parseControlStructure(ct, pos);
             end
         end
         
-        function f = fromParseState(ps, packageNameParts)
+        function f = fromParseState(ct, packageNameParts)
         % Parses a function and returns a `replab.infra.Function` instance
-            [ps name declaration docLines isAbstract] = replab.infra.Function.parse(ps);
-            assert(~isempty(ps));
+            pos = 1;
+            [pos name declaration docLines isAbstract] = replab.infra.Function.parse(ct, pos);
+            assert(~isempty(pos));
             assert(~isAbstract);
             doc = replab.infra.Doc.leftTrimmed(docLines);
             f = replab.infra.Function(name, declaration, doc, packageNameParts);
