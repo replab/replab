@@ -53,5 +53,6 @@ function writeDocTests(doctestPath, packageElement)
         else
             fprintf('  %d doctests found.\n', length(doctests));
         end
+        fclose(fid);
     end
 end
