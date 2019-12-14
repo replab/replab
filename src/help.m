@@ -53,12 +53,12 @@ function help(varargin)
                 % object is a replab object
                 if isempty(secondPart)
                     varargin{1} = type;
-                    replab.infra.dispH([firstPart, ' is an object of type ', type, '.'], firstPart);
+                    replab.infra.dispH([firstPart, ' is an object of type ', type, '.'], firstPart, helpFunctionName, fullMode);
                     disp(' ');
                 else
                     varargin{1} = [type, '.', secondPart];
                 end
-                replab.infra.dispH(['--- help for ', varargin{1}, ' ---'], varargin{1});
+                replab.infra.dispH(['--- help for ', varargin{1}, ' ---'], varargin{1}, helpFunctionName, fullMode);
             else
                 % non-replab variable/object. We need to make a copy to our
                 % workspace for the next function to see it
@@ -163,8 +163,8 @@ function help(varargin)
 end
 
 function help_package(codeBase, package, helpFunctionName, fullMode)
-    keyword = strjoin(package.nameParts);
-    replab.infra.dispH([' Package ' strjoin(package.nameParts), ':'], keyword, helpFunctionName, fullMode);
+    fullName = strjoin(package.nameParts,'.');
+    replab.infra.dispH([' Package ' fullName, ':'], fullName, helpFunctionName, fullMode);
     disp(' ');
     
     % Package:
@@ -175,9 +175,9 @@ function help_package(codeBase, package, helpFunctionName, fullMode)
             disp(['     ', packageName]);
         else
             if fullMode
-                replab.infra.dispH(['     <a href="matlab: ', helpFunctionName, '(''', packageName, ''')">', packageName, '</a>'], keyword, helpFunctionName, fullMode);
+                replab.infra.dispH(['     <a href="matlab: ', helpFunctionName, '(''', packageName, ''')">', packageName, '</a>'], fullName, helpFunctionName, fullMode);
             else
-                replab.infra.dispH(['     <a href="matlab: ', helpFunctionName, '(''-f'',''', packageName, ''')">', packageName, '</a>'], keyword, helpFunctionName, fullMode);
+                replab.infra.dispH(['     <a href="matlab: ', helpFunctionName, '(''-f'',''', packageName, ''')">', packageName, '</a>'], fullName, helpFunctionName, fullMode);
             end
         end
         disp(' ');
@@ -243,8 +243,8 @@ end
 
 
 function help_class(codeBase, class, helpFunctionName, fullMode)
-    keyword = class.name;
     str = [' Class ' class.fullName];
+    fullName = class.fullName;
 
     if ~fullMode
         switch class.nParents
@@ -260,10 +260,10 @@ function help_class(codeBase, class, helpFunctionName, fullMode)
             str = sprintf('%s%s%s', str, sep, pn);
             sep = ', ';
         end
-        replab.infra.dispH(str, keyword, helpFunctionName, fullMode);
+        replab.infra.dispH(str, fullName, helpFunctionName, fullMode);
         
         % Doc
-        class.doc.dispFilteredLines(keyword, helpFunctionName, fullMode);
+        class.doc.dispFilteredLines(fullName, helpFunctionName, fullMode);
         disp(' ');
         
         % Link to ref
@@ -272,7 +272,7 @@ function help_class(codeBase, class, helpFunctionName, fullMode)
         end
         disp(' ');
     else
-        replab.infra.dispH([str, ':'], keyword, helpFunctionName, fullMode);
+        replab.infra.dispH([str, ':'], fullName, helpFunctionName, fullMode);
         disp(' ');
         
         % Package:
@@ -307,7 +307,7 @@ function help_class(codeBase, class, helpFunctionName, fullMode)
             end
             t = replab.infra.align(table, 'll');
             for i = 1:length(t)
-                replab.infra.dispH(t{i}, keyword, helpFunctionName, fullMode);
+                replab.infra.dispH(t{i}, fullName, helpFunctionName, fullMode);
             end
             disp(' ');
         end
@@ -322,7 +322,7 @@ function help_class(codeBase, class, helpFunctionName, fullMode)
                     disp('   Children:');
             end
             table = cell(0,2);
-            for i = 1:class.nParents
+            for i = 1:length(children)
                 table{end+1,1} = ['     ', children{i}, ' '];
                 [package packageNameParts restNameParts] = codeBase.lookupGreedy(strsplit(children{i},'.'));
                 if package.hasMember(restNameParts{1})
@@ -333,7 +333,7 @@ function help_class(codeBase, class, helpFunctionName, fullMode)
             end
             t = replab.infra.align(table, 'll');
             for i = 1:length(t)
-                replab.infra.dispH(t{i}, keyword, helpFunctionName, fullMode);
+                replab.infra.dispH(t{i}, fullName, helpFunctionName, fullMode);
             end
             disp(' ');
         end
@@ -426,7 +426,6 @@ function help_classElement(codeBase, class, elementName, helpFunctionName, fullM
     elements = class.findInheritedMember(codeBase, elementName);
     k = elements{1}.kind;
     fullName = [class.fullName, '.', elementName];
-    keyword = elementName;
 
     % We look for the best declaration and doc
     doc = [];
@@ -445,14 +444,22 @@ function help_classElement(codeBase, class, elementName, helpFunctionName, fullM
     end
     
     if ~fullMode
-        replab.infra.dispH([' ', upper(k(1)), k(2:end), ' ', fullName], keyword, helpFunctionName, fullMode);
+        replab.infra.dispH([' ', upper(k(1)), k(2:end), ' ', fullName], fullName, helpFunctionName, fullMode);
+        
+        % Declaration
+        if isequal(k, 'method')
+            el1 = elements{1};
+            disp(' ');
+            replab.infra.dispH(['   ', el1.declaration], fullName, helpFunctionName, fullMode);
+            disp(' ');
+        end
         
         % Doc
         if ~isempty(doc)
             if ~isequal(doc.classFullName, class.fullName)
-                replab.infra.dispH(['  Documentation from ', doc.classFullName, ':'], keyword, helpFunctionName, fullMode);
+                replab.infra.dispH(['  Documentation from ', doc.classFullName, ':'], fullName, helpFunctionName, fullMode);
             end
-            doc.doc.dispFilteredLines(keyword, helpFunctionName, fullMode);
+            doc.doc.dispFilteredLines(fullName, helpFunctionName, fullMode);
         end
         disp(' ');
         
@@ -461,13 +468,13 @@ function help_classElement(codeBase, class, elementName, helpFunctionName, fullM
             disp(['   <a href="matlab: ', helpFunctionName, '(''-f'',''', fullName, ''')">Reference page for ', fullName, '</a>'])
         end
         disp(' ');
-   else
-        replab.infra.dispH([' ', upper(k(1)), k(2:end), ' ', elementName, ':'], keyword, helpFunctionName, fullMode);
+    else
+        replab.infra.dispH([' ', upper(k(1)), k(2:end), ' ', elementName, ':'], fullName, helpFunctionName, fullMode);
         disp(' ');
         
         % Class
         disp('   In class:');
-        replab.infra.dispH(['     ', class.fullName], keyword, helpFunctionName, fullMode);
+        replab.infra.dispH(['     ', class.fullName], fullName, helpFunctionName, fullMode);
         disp(' ');
         
         % Also present in
@@ -475,7 +482,7 @@ function help_classElement(codeBase, class, elementName, helpFunctionName, fullM
             disp('   Also present in:');
             for i = 2:length(elements)
                 eli = elements{i};
-                replab.infra.dispH(['     ', eli.classFullName], keyword, helpFunctionName, fullMode);
+                replab.infra.dispH(['     ', eli.classFullName], fullName, helpFunctionName, fullMode);
             end
             disp(' ');
         end
@@ -483,8 +490,8 @@ function help_classElement(codeBase, class, elementName, helpFunctionName, fullM
         % Declaration
         if isequal(k, 'method')
             el1 = elements{1};
-            replab.infra.dispH(['   Declaration in ' el1.classFullName ':'], keyword, helpFunctionName, fullMode);
-            replab.infra.dispH(['     ', el1.declaration], keyword, helpFunctionName, fullMode);
+            replab.infra.dispH(['   Declaration in ' el1.classFullName ':'], fullName, helpFunctionName, fullMode);
+            replab.infra.dispH(['     ', el1.declaration], fullName, helpFunctionName, fullMode);
             disp(' ');
         end
         
@@ -506,7 +513,7 @@ function help_classElement(codeBase, class, elementName, helpFunctionName, fullM
         % Attributes
         if isequal(k, 'property')
             if ~isempty(doc) && ~isempty(doc.attributes) && isfield(doc.attributes, 'SetAccess')
-                disp(['   Attributes: ', doc.attributes.SetAccess]);
+                disp(['   Attributes: SetAccess ', doc.attributes.SetAccess]);
                 disp(' ');
             end
         elseif isequal(k, 'method')
@@ -531,13 +538,12 @@ function help_classElement(codeBase, class, elementName, helpFunctionName, fullM
 end
 
 function help_function(codeBase, fun, helpFunctionName, fullMode)
-    keyword = fun.name;
     fullName = [strjoin(fun.packageNameParts, '.'), '.', fun.name];
     if ~fullMode
-        replab.infra.dispH([' ', fun.declaration], keyword, helpFunctionName, fullMode);
+        replab.infra.dispH([' ', fun.declaration], fullName, helpFunctionName, fullMode);
         
         % Doc
-        fun.doc.dispFilteredLines(keyword, helpFunctionName, fullMode);
+        fun.doc.dispFilteredLines(fullName, helpFunctionName, fullMode);
         disp(' ');
         
         % Link to ref
@@ -546,7 +552,7 @@ function help_function(codeBase, fun, helpFunctionName, fullMode)
         end
         disp(' ');
     else
-        replab.infra.dispH([' Function ', fun.name, ':'], keyword, helpFunctionName, fullMode);
+        replab.infra.dispH([' Function ', fun.name, ':'], fullName, helpFunctionName, fullMode);
         disp(' ');
         
         % Package:
