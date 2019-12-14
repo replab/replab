@@ -115,8 +115,15 @@ classdef DocTest < replab.Str
                     content{i} = '';
                 else
                     tokens = regexp(l, '^(\s*)(.*)', 'tokens', 'once');
-                    indent(i) = length(tokens{1});
-                    content{i} = strtrim(tokens{2});
+                    if length(tokens) == 1
+                        % octave doesn't produce first token if string
+                        % doesn't start with some spaces
+                        indent(i) = 0;
+                        content{i} = strtrim(tokens{1});
+                    else
+                        indent(i) = length(tokens{1});
+                        content{i} = strtrim(tokens{2});
+                    end
                 end
             end
             doctests = {};

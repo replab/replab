@@ -107,13 +107,15 @@ classdef DocTestParseState < replab.Str
                     % omit that line
                 elseif length(l) >= 3 && isequal(l(1:3), '>>>')
                     tags{1,end+1} = 'START';
-                    [code comment] = replab.infra.DocTestParseState.splitComment(l(4:end));
+                    tmp = l(4:end);
+                    [code comment] = replab.infra.DocTestParseState.splitComment(tmp);
                     lines{1,end+1} = strtrim(code);
                     comments{1,end+1} = strtrim(comment);
                     lineNumbers(1,end+1) = i;
                 elseif length(l) >= 3 && isequal(l(1:3), '...')
                     tags{1,end+1} = 'CONT';
-                    [code comment] = replab.infra.DocTestParseState.splitComment(l(4:end));
+                    tmp = l(4:end);
+                    [code comment] = replab.infra.DocTestParseState.splitComment(tmp);
                     lines{1,end+1} = strtrim(code);
                     comments{1,end+1} = strtrim(comment);
                     lineNumbers(1,end+1) = i;

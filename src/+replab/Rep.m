@@ -11,7 +11,7 @@ classdef Rep < replab.Str
 %   ...   s = s + 1;
 %   ... end
 %   ... s
-%       ans =
+%       s =
 %          3
     properties (SetAccess = protected)
         group     % replab.CompactGroup: Group being represented
