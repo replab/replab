@@ -11,8 +11,7 @@ classdef Rep < replab.Str
 %   ...   s = s + 1;
 %   ... end
 %   ... s
-%       s =
-%          3
+%       s =  3
     properties (SetAccess = protected)
         group     % replab.CompactGroup: Group being represented
         field     % {'R', 'C'}: Vector space defined on real (R) or complex (C) field
