@@ -4,7 +4,7 @@
 
 %%
 % Before trying any of the *RepLAB* commands, we must first add the paths:
-replab_addpaths
+replab_init
 
 %% Working with permutation groups
 % *RepLAB* decomposes representations of permutation groups; this

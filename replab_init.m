@@ -1,5 +1,5 @@
-function replab_addpaths(verbose)
-% replab_addpaths([verbose])
+function replab_init(verbose)
+% replab_init([verbose])
 %
 % Sets up the search path in order to enable all functionalities of the
 % RepLAB library.
@@ -12,7 +12,7 @@ function replab_addpaths(verbose)
 %         2: prints full information
 %
 % Example:
-%     replab_addpaths
+%     replab_init
     
     %% Parameter checking
     if nargin < 1
@@ -27,7 +27,7 @@ function replab_addpaths(verbose)
     end
     if allGood
         if verbose >= 2
-            disp('Exiting because replab_addpaths was already successfully called earlier.');
+            disp('Exiting because replab_init was already successfully called earlier.');
         end
         return;
     end    
@@ -106,7 +106,7 @@ function replab_addpaths(verbose)
     currentPathStr = strrep(pwd, '\', '/');
     dirName = currentPathStr(find(currentPathStr=='/',1,'last')+1:end);
     cd ..
-    AmIMyself = strrep(which('replab_addpaths'), '\', '/');
+    AmIMyself = strrep(which('replab_init'), '\', '/');
     cd(dirName);
     if ~isempty(AmIMyself) && ~isequal(AmIMyself, [pathStr, '/', name, extension])
         error(['Another instance of RepLAB in folder ', fileparts(AmIMyself), ' is already in the path.', char(10), ...

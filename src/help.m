@@ -121,7 +121,7 @@ function help(varargin)
         end
     else
         if isempty(replab.Parameters.matlabHelpPath)
-            error('The matlab help path was not captured. Please use replab_addpaths first.');
+            error('The matlab help path was not captured. Please use replab_init first.');
         else
             % We call matlab's help function
             currentPath = strrep(pwd, '\', '/');
@@ -142,7 +142,7 @@ function help(varargin)
                 % current path had a lower priority than the path order.
                 % Then we also need replab's path...
                 
-                replabHelpPath = fileparts(which('replab_addpaths'));
+                replabHelpPath = fileparts(which('replab_init'));
                 replabHelpPath = [strrep(replabHelpPath, '\', '/'), '/src'];
                 
                 cd(replab.Parameters.matlabHelpPath);

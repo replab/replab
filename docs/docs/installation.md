@@ -49,10 +49,10 @@ This creates a folder **RepLAB** with all the necessary code, including the [VPI
 
 To use the library, the **RepLAB** folder must be added in Matlab or Octave. Additional paths are also necessary to enable specific functionalities, as mentioned above. Setting up the path can be done with
 ```
-replab_addpaths
+replab_init
 ```
 
-This command checks in particular whether an instance of YALMIP is  [available](https://yalmip.github.io/download/) and [configured](https://yalmip.github.io/tutorial/installation/) on your system. If this is not the case, the embedded version of yalmip is used. **RepLAB** uses the [YALMIP](https://yalmip.github.io) interface to solve convex optimization problems. The `replab_addpaths` command also ensures that an [SDP solver](https://yalmip.github.io/allsolvers/) such as [SeDuMi](https://github.com/SQLP/SeDuMi) is properly set up. If this is not the case, it activates the embedded SDPT3 solver. The proper installation of a YALMIP instance can be checked with the command `yalmiptest`.
+This command checks in particular whether an instance of YALMIP is  [available](https://yalmip.github.io/download/) and [configured](https://yalmip.github.io/tutorial/installation/) on your system. If this is not the case, the embedded version of yalmip is used. **RepLAB** uses the [YALMIP](https://yalmip.github.io) interface to solve convex optimization problems. The `replab_init` command also ensures that an [SDP solver](https://yalmip.github.io/allsolvers/) such as [SeDuMi](https://github.com/SQLP/SeDuMi) is properly set up. If this is not the case, it activates the embedded SDPT3 solver. The proper installation of a YALMIP instance can be checked with the command `yalmiptest`.
 
 
 ## Testing
