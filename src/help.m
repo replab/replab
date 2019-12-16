@@ -67,7 +67,8 @@ function help(varargin)
         end
     end
     
-    if (length(varargin) == 1) && (length(varargin{1}) >= 6) && (isequal(varargin{1}(1:6), 'replab'))
+    if (length(varargin) == 1) && (length(varargin{1}) >= 6) && (isequal(varargin{1}(1:6), 'replab')) ...
+            && ((length(varargin{1}) < 7) || (varargin{1}(7) == '.'))
         % We are looking for a replab-related help
         name = varargin{1};
         if isempty(codeBase)
