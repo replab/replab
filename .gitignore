@@ -7,7 +7,7 @@ sphinxdocs/_build/
 testresults.xml
 coverage.xml
 *.ipynb
-docsrc/
+tmp_sphinxsrc/
 
 ##---------------------------------------------------
 # MATLAB default .gitignore

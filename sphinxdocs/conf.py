@@ -50,7 +50,7 @@ autosummary_generate = True
 
 matlab_keep_package_prefix = False
 
-matlab_src_dir = os.path.dirname(os.path.abspath(__file__ + "/../"))+"/docsrc"
+matlab_src_dir = os.path.dirname(os.path.abspath(__file__ + "/../"))+"/tmp_sphinxsrc"
 primary_domain = 'mat'
 default_role = 'obj'
 

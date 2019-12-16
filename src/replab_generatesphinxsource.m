@@ -1,7 +1,8 @@
 function replab_generaterichsource
+    folderName = 'tmp_sphinxsrc';
     [srcRoot, name, ~] = fileparts(mfilename('fullpath'));
     [root, ~] = fileparts(srcRoot);
-    docsrcRoot = fullfile(root, 'docsrc');
+    docsrcRoot = fullfile(root, folderName);
 
     %% Prepare test directory structure
     switch exist(docsrcRoot)
@@ -18,7 +19,7 @@ function replab_generaterichsource
     end
 
     % Create subfolder if inexistent
-    [success, message, messageid] = mkdir(root, 'docsrc');
+    [success, message, messageid] = mkdir(root, folderName);
     
     disp('Crawling code base');
     codeBase = replab.infra.CodeBase.crawl(fullfile(root, 'src'));
