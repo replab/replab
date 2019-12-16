@@ -1,15 +1,13 @@
 classdef Str < handle
 % Defines a 'str' default method and overloads 'disp'
 %
-% Also provides methods 'additionalFields' and 'hiddenFields' to
-% guide long form object pretty printg
+% Also provides methods 'additionalFields' and 'hiddenFields' to guide long form object pretty printing
     
     methods
         
         function res = eq(self, rhs)
-        % eq - equality test
+        % Equality test
         %
-        % res = replab.Str.eq(self, rhs)
         % Workaround bug of == not implemented for handles
         %
         % Args:

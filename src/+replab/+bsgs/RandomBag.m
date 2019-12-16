@@ -1,3 +1,4 @@
+classdef RandomBag < replab.Str
 % Generator of random elements from generators of a permutation group.
 % 
 % A random bag is a set of random group elements that always generates
@@ -13,8 +14,6 @@
 %
 % When the group homomorphism support is not desired, the `replab.bsgs.TrivialGroup`
 % trivial group can be used as a placeholder.
-
-classdef RandomBag < replab.Str
     
     properties (SetAccess = protected)
         n % domainSize

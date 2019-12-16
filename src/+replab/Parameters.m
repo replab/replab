@@ -2,6 +2,16 @@ classdef Parameters
     
     methods (Static)
         
+        function value = matlabHelpPath(newValue)
+            persistent MatlabHelpPath;
+            if nargin == 1
+                MatlabHelpPath = newValue;
+            elseif isempty(MatlabHelpPath)
+                MatlabHelpPath = '';
+            end
+            value = MatlabHelpPath;
+        end
+        
         function value = averagingSamples(newValue)
             persistent AveragingSamples;
             if nargin == 1

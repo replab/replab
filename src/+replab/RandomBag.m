@@ -1,3 +1,4 @@
+classdef RandomBag < replab.Str
 % Generator of random elements from generators of a group.
 % 
 % A random bag is a set of random group elements that always generates
@@ -8,7 +9,6 @@
 % section 3.2.2, pp. 70-71 of Holt 2005 (Handbook of Computational Group Theory)
 %
 % Is generic in the group element type.
-classdef RandomBag < replab.Str
     
     properties (SetAccess = protected)
         G % Group definition

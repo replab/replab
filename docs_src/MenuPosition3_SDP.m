@@ -6,7 +6,7 @@
 
 %% Preparation
 % As always, before using *RepLAB* commands, first add the paths:
-replab_addpaths
+replab_init
 %%
 % Commands in this document makes use ot the YALMIP interface to solve
 % convex optimization problems, see

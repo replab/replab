@@ -27,7 +27,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             y(x) = 1:n;
         end
         
-        %% NiceFiniteGroup
+        %% NiceFiniteGroup methods
         
         function p = niceMonomorphismImage(self, p)
         end

@@ -59,7 +59,7 @@ function exitCode = replab_easyinstall
     if MOcovInstalled && MOxUnitInstalled && SDPT3Installed && YALMIPInstalled
         disp('All external dependencies are present (or at least their README file).');
         disp('This script is thus not necessary');
-        disp('You can directly run ''replab_addpaths'' to setup the RepLAB path.');
+        disp('You can directly run ''replab_init'' to setup the RepLAB path.');
         exitCode = 0;
         return
     end

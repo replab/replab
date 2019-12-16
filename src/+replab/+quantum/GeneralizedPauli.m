@@ -13,7 +13,7 @@ classdef GeneralizedPauli < replab.FiniteGroup
 % z is a level-dependent phase 
 
     properties
-        d; % Dimension of the qudit
+        d % Dimension of the qudit
     end
         
     methods
