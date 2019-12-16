@@ -9,8 +9,7 @@ classdef Monoid < replab.Monoid
 
     methods
         
-        function self = Monoid(header, eqvFun, sampleFun, ... % Domain
-                               composeFun, identity) % Monoid
+        function self = Monoid(header, eqvFun, sampleFun, composeFun, identity)
             self.header = header;
             self.eqvFun = eqvFun;
             self.sampleFun = sampleFun;
@@ -44,7 +43,6 @@ classdef Monoid < replab.Monoid
         % Monoid methods
         
         function z = compose(self, x, y)
-            error('Not implemented');
             f = self.composeFun;
             z = f(x, y);
         end
