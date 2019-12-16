@@ -124,42 +124,48 @@ function help(varargin)
         end
     else
         if isempty(replab.Parameters.matlabHelpPath)
-            error('The matlab help path was not captured. Please use replab_init first.');
+            try
+                % Some clear happened, we try to capture matlab's help
+                % again...
+                replab_init(0);
+            catch
+                error('The matlab help path was not captured. Please use replab_init first.');
+            end
+        end
+        
+        % We call matlab's help function
+        currentPath = strrep(pwd, '\', '/');
+
+        if ~replab.platformIsOctave
+            cd(replab.Parameters.matlabHelpPath);
+            message = [];
+            try
+                help(varargin{:});
+            catch message
+            end
+            cd(currentPath);
+            if ~isempty(message)
+                error(message);
+            end
         else
-            % We call matlab's help function
-            currentPath = strrep(pwd, '\', '/');
-            
-            if ~replab.platformIsOctave
-                cd(replab.Parameters.matlabHelpPath);
-                message = [];
-                try
-                    help(varargin{:});
-                catch message
-                end
-                cd(currentPath);
-                if ~isempty(message)
-                    error(message);
-                end
-            else
-                % In some versions of octave earlier than 5.1.0, the
-                % current path had a lower priority than the path order.
-                % Then we also need replab's path...
-                
-                replabHelpPath = fileparts(which('replab_init'));
-                replabHelpPath = [strrep(replabHelpPath, '\', '/'), '/src'];
-                
-                cd(replab.Parameters.matlabHelpPath);
-                addpath(replab.Parameters.matlabHelpPath);
-                message = [];
-                try
-                    help(varargin{:});
-                catch message
-                end
-                cd(currentPath);
-                addpath(replabHelpPath);
-                if ~isempty(message)
-                    error(message);
-                end
+            % In some versions of octave earlier than 5.1.0, the
+            % current path had a lower priority than the path order.
+            % Then we also need replab's path...
+
+            replabHelpPath = fileparts(which('replab_init'));
+            replabHelpPath = [strrep(replabHelpPath, '\', '/'), '/src'];
+
+            cd(replab.Parameters.matlabHelpPath);
+            addpath(replab.Parameters.matlabHelpPath);
+            message = [];
+            try
+                help(varargin{:});
+            catch message
+            end
+            cd(currentPath);
+            addpath(replabHelpPath);
+            if ~isempty(message)
+                error(message);
             end
         end
     end
