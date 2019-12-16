@@ -101,6 +101,9 @@ function help(varargin)
             % we have a class and a class member
             className = restNameParts{1};
             classElementName = restNameParts{2};
+            % remove arguments if present
+            classElementName = regexp(classElementName, '^[^\(\[\{]*', 'match');
+            classElementName = classElementName{1};
             if ~package.hasMember(className)
                 err = 'In package %s, we are looking for class %s with member %s, and the class %s is unavailable.';
                 error(sprintf(err, package.fullName, className, classElementName, className));
