@@ -18,6 +18,11 @@ classdef PackageElement < replab.Str
             str = strjoin(horzcat(self.packageNameParts, {self.name}), '.');
         end
         
+        function str = sphinxFullName(self)
+            pp = strjoin(cellfun(@(x) ['+' x], self.packageNameParts, 'uniform', 0), '.');
+            str = [pp '.' self.name];
+        end
+        
     end
 
 end
