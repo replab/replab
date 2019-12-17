@@ -1,4 +1,4 @@
-function replab_generaterichsource
+function replab_generatesphinxsource
     folderName = 'tmp_sphinxsrc';
     [srcRoot, name, ~] = fileparts(mfilename('fullpath'));
     [root, ~] = fileparts(srcRoot);
@@ -22,7 +22,7 @@ function replab_generaterichsource
     [success, message, messageid] = mkdir(root, folderName);
     
     disp('Crawling code base');
-    codeBase = replab.infra.CodeBase.crawl(fullfile(root, 'src'));
+    codeBase = replab.infra.OldCodeBase.crawl(fullfile(root, 'src'));
     
     disp('Writing tests');
     codeBase.writeEnrichedSource(docsrcRoot);

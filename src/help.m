@@ -73,7 +73,7 @@ function help(varargin)
         if isempty(codeBase)
             fprintf('Building help index...');
             [srcRoot, ~, ~] = fileparts(mfilename('fullpath'));
-            codeBase = replab.infra.CodeBase.crawl(srcRoot);
+            codeBase = replab.infra.OldCodeBase.crawl(srcRoot);
             disp('done.');
         end
         parts = strsplit(name, '.');

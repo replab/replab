@@ -38,7 +38,7 @@ function replab_generatedoctests
     [success, message, messageid] = mkdir(testRoot, 'doctest');
     
     disp('Crawling code base');
-    codeBase = replab.infra.CodeBase.crawl(fullfile(root, 'src'));
+    codeBase = replab.infra.OldCodeBase.crawl(fullfile(root, 'src'));
     
     disp('Writing tests');
     codeBase.writeDocTests(doctestRoot);
