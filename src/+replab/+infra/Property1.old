@@ -1,8 +1,8 @@
-classdef Property < replab.infra.ClassElement
+classdef Property1 < replab.infra.ClassElement
 
     methods
 
-        function self = Property(name, attributes, doc, packageNameParts, className, lineNumber)
+        function self = Property1(name, attributes, doc, packageNameParts, className, lineNumber)
             self.name = name;
             self.attributes = attributes;
             self.doc = doc;

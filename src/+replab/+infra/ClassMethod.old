@@ -1,0 +1,9 @@
+classdef ClassMethod < replab.infra.ClassMember
+
+    methods
+        
+        function self = ClassMethod(codeBase, package)
+        end
+    end
+    
+end

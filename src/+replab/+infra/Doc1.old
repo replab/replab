@@ -1,46 +1,32 @@
-classdef Doc < replab.Str
+classdef Doc1 < replab.Str
     
     properties
-        parent % `.SourceElement`: Member containing this documentation
-        lines % row cell array of charstring: Trimmed documentation lines
-        lineNumbers % row integer vector: Line numbers
+        lines % row cell array of charstring: Documentation lines
     end
     
     methods
         
-        function self = Doc(parent, rawLines, lineNumbers)
-            self.parent = parent;
-            self.lines = replab.infra.uniformLeftTrim(rawLines);
-            self.lineNumbers = lineNumbers;
+        function self = Doc1(lines)
+            self.lines = lines;
         end
         
         function n = nLines(self)
-        % Returns the number of lines in this documentation comment block
             n = length(self.lines);
         end
         
         function l = line(self, i)
-        % Returns the i-th line of this documentation comment block
             l = self.lines{i};
         end
         
         function fl = firstLine(self)
-        % Returns the first line of the documentation comment block
-        %
-        % Care is taken to return an empty string if the comment block is empty,
-        % and to add trailing ``...`` if for some reason the first paragraph
-        % spans multiple lines.
-            switch self.nLines
-              case 0
-                fl = '';
-              case 1
-                fl = self.line(1);
-              otherwise
-                if isempty(self.line(2))
-                    fl = self.line(1);
+            if ~isempty(self.lines)
+                if (length(self.lines) == 1) || isempty(self.lines{2})
+                    fl = self.lines{1};
                 else
-                    fl = [self.line(1) ' ...'];
+                    fl = [self.lines{1}, ' ...'];
                 end
+            else
+                fl = '';
             end
         end
         
@@ -90,6 +76,34 @@ classdef Doc < replab.Str
                 parts{i} = strrep(parts{i}, '+', '');
             end
             l = strjoin(parts, '');
+        end
+        
+        function dc = leftTrimmed(lines)
+        % Constructs a DocComments instance with the left whitespace uniformly trimmed
+        %
+        % We count the amount of leading whitespace for each line, and computes the minimum
+        % among all lines, then remove that number of whitespace characters from each line.
+        %
+        % We thus trim unnecessary leading whitespace while preserving the semantic information
+        % the remaining whitespace contains.
+            if ~isempty(lines)
+                l = [];
+                for i = 1:length(lines)
+                    cl = lines{i};
+                    if ~isempty(strtrim(cl))
+                        token = regexp(cl, '^(\s*)', 'tokens', 'once');
+                        if isempty(l)
+                            l = length(token);
+                        else
+                            l = min(l, length(token));
+                        end
+                    end
+                end
+                if ~isempty(l)
+                    lines = cellfun(@(x) x(l+1:end), lines, 'uniform', 0);
+                end
+            end
+            dc = replab.infra.Doc(lines);
         end
         
     end

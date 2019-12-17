@@ -1,53 +1,84 @@
-classdef Package < replab.Str
+classdef Package < replab.infra.Element
     
     properties
-        nameParts % row cell vector of string: parts of the package
-        members % struct-based hash map
+        packagePath % row cell vector of charstring: Package path
+        elements % struct-based hash map: Package elements that are not subpackages
+        ownFunctions 
+        ownClasses
     end
 
     methods
        
-        function self = Package(nameParts, memberList)
-            self.nameParts = nameParts;
-            members = struct;
-            for i = 1:length(memberList)
-                member = memberList{i};
-                members.(member.name) = member;
+        function self = Package(codeBase, packageData)
+        % Constructs a package instance
+        %
+        % Args:
+        %   codeBase (`.CodeBase`): Code base this object is part of
+        %   packageData (`.PackageData`): Data corresponding to this package
+            self = self@replab.infra.Element(codeBase);
+            self.packagePath = packageData.path;
+            elements = struct;
+            ownFunctions = {};
+            ownClasses = {};
+            for i = 1:length(packageData.ownFunctions)
+                fd = packageData.ownFunctions{i};
+                fun = replab.infra.Function(codeBase, self, fd);
+                ownFunctions{1,end+1} = fun;
+                elements.(fd.name) = fun;
             end
-            members = orderfields(members);
-            self.members = members;
+            for i = 1:length(packageData.ownClasses)
+                cd = packageData.ownClasses{i};
+                cls = replab.infra.Class(codeBase, self, cd);
+                ownClasses{1,end+1} = cls;
+                elements.(cls.name) = cls;
+            end
+            self.elements = elements;
+            self.ownFunctions = ownFunctions;
+            self.ownClasses = ownClasses;
         end
         
-        function str = fullName(self)
-            str = strjoin(self.nameParts, '.');
+        function [packagePath elementPath] = splitPath(self)
+            packagePath = self.packagePath;
+            elementPath = cell(1, 0);
         end
         
-        function b = hasMember(self, name)
-            b = isfield(self.members, name);
-        end
-        
-        function m = member(self, name)
-            m = self.members.(name);
-        end
-        
-        function names = hiddenFields(self)
-            names = hiddenFields@replab.Str(self);
-            names{1, end+1} = 'members';
-        end
-        
-        function [names values] = additionalFields(self)
-            [names values] = additionalFields@replab.Str(self);
-            fn = fieldnames(self.members);
-            for i = 1:length(fn)
-                names{1, end+1} = sprintf('member(''%s'')', fn{i});
-                values{1, end+1} = self.member(fn{i});
+        function e = lookup(self, id)
+            if isfield(self.elements, id)
+                pkgel = self.elements.(id);
+            else
+                pkgel = [];
+            end
+            p = horzcat(self.path, {id});
+            subpkg = self.codeBase.package(p{:});
+            if ~isempty(pkgel) && ~isempty(subpkg)
+                error('Package %s has both an element and a subpackage named %s', self.fullIdentifier, id);
+            end
+            e = [];
+            if ~isempty(pkgel)
+                e = pkgel;
+            end
+            if ~isempty(subpkg)
+                e = subpkg;
             end
         end
 
-        function s = headerStr(self)
-            s = ['Package ' strjoin(self.nameParts, '.')];
+        function c = childrenNames(self)
+        % Returns the names of all direct children of this package
+        %
+        % This includes its subpackages, the classes and functions it contains.
+            spn = cellfun(@(x) x.packagePath{end}, self.codeBase.subpackages(self), 'uniform', 0);
+            fn = fieldnames(self.elements);
+            fn = fn(:).';
+            c = horzcat(spn, fn);
         end
-                
+        
+        function c = children(self)
+        % Returns all the direct children of this package
+        %
+        % Children includes its subpackages, the classes and functions it contains.
+            c = horzcat(self.codeBase.subpackages(self), self.ownFunctions, self.ownClasses);
+        end
+        
     end
     
 end

@@ -1,9 +1,10 @@
 function writeEnrichedSource(codeBase, docSrcPath, packageElement)
+% Writes the enriched source code for Sphinx documentation generation
 %
 % Args:
 %   docSrcPath (charstring): Base folder for doctest generation, not including trailing path separator
 %                            That folder must exist.
-    if isa(packageElement, 'replab.infra.Class')
+    if isa(packageElement, 'replab.infra.Class1')
         src = replab.infra.classWithTOC(codeBase, packageElement);
     else
         src = fileread(packageElement.fullFilename);

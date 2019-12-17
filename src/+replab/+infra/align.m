@@ -1,11 +1,10 @@
 function s = align(table, spec)
 % Renders a table using the given LaTeX-inspired specification
 %
-% spec: contains as many 'l', 'c', or 'r' to prescribe alignement
-% as there are columns
+% Args:
+%   spec (charstring): contains as many 'l', 'c', or 'r' to prescribe alignement as there are columns
 %
-% compared to replab.str.align, does not count the <a> tags in the
-% length computation
+% Compared to replab.str.align, this does not count the ``<a>`` tags in the length computation
     nR = size(table, 1);
     nC = size(table, 2);
     s = cell(nR, 1);

@@ -1,4 +1,5 @@
 function writeDocTests(doctestPath, packageElement)
+% Writes the doctests for the given package element
 %
 % Args:
 %   doctestPath (charstring): Base folder for doctest generation, not including trailing path separator

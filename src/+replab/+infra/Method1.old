@@ -1,4 +1,4 @@
-classdef Method < replab.infra.ClassElement
+classdef Method1 < replab.infra.ClassElement1
 % Describes a method in a class
     
     properties
@@ -7,7 +7,7 @@ classdef Method < replab.infra.ClassElement
     
     methods
         
-        function self = Method(name, attributes, declaration, doc, packageNameParts, className, lineNumber)
+        function self = Method1(name, attributes, declaration, doc, packageNameParts, className, lineNumber)
             self.name = name;
             self.attributes = attributes;
             self.declaration = declaration;

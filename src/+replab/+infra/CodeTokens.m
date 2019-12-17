@@ -25,19 +25,48 @@ classdef CodeTokens < replab.Str
 % See https://jayconrod.com/posts/65/how-to-build-a-parser-by-hand
 % for another example of a hand-written parser
 %
-% However, DocTestParseState is closer to that example; here
-% we don't allocate new parse states, we instead mutate the line position.
+% However, DocTestParseState is closer to that example; here we don't allocate new parse states,
+% we instead mutate the line position.
     
     properties
+        filename % charstring: Filename or ``[]``
         lines % row cell array of charstring: Source code lines
         tags % charstring: Tag describing the line type, one char per tag
     end
     
     methods
         
-        function self = CodeTokens(lines, tags)
+        function self = CodeTokens(filename, lines, tags)
+            self.filename = filename;
             self.tags = tags;
             self.lines = lines;
+        end
+        
+        function id = sourceIdentifier(self)
+        % Returns the source identifier, i.e. the name of the .m file without extension
+            if isempty(self.filename)
+                id = [];
+            else
+                [~,id,~] = fileparts(self.filename);
+            end
+        end
+        
+        function data = parse(self)
+            switch self.peek(1)
+              case 'c'
+                data = replab.infra.ClassData.parse(self);
+              case 'f'
+                [pos data] = replab.infra.FunctionLikeData.parse(self, 1, []);
+                if ~isequal(self.sourceIdentifier, data.name)
+                    replab.infra.parseError(ct, pos, 'Function declaration name %s does not match filename %s.m', ...
+                                            data.name, self.sourceIdentifier);
+                end
+            end
+        end
+        
+        function n = nLines(self)
+        % Returns the number of actual lines, not counting the "end of file" added line
+            n = length(self.lines) - 1;
         end
         
         function [nextPos tag line] = take(self, pos)
@@ -67,14 +96,16 @@ classdef CodeTokens < replab.Str
     
     methods (Static)
        
-        function ct = fromSourceLines(lines)
+        function ct = lex(filename, source)
         % Constructs a CodeTokens instance from source code lines
         %
         % Args:
+        %   source (charstring): Source code
         %   lines (row cell array of charstring): Trimmed source code lines
         %
         % Returns:
         %   :class:`+replab.+infra.CodeTokens`: A fresh CodeTokens instance
+            lines = cellfun(@strtrim, strsplit(source, '\n', 'CollapseDelimiters', false), 'uniform', 0);
             n = length(lines);
             tags = blanks(n+1);
             tags(n+1) = '$';
@@ -111,19 +142,18 @@ classdef CodeTokens < replab.Str
                     end
                 end
             end
-            ct = replab.infra.CodeTokens(lines, tags);
+            ct = replab.infra.CodeTokens(filename, lines, tags);
         end
         
-        function ct = fromSource(contents)
+        function ct = fromSource(source)
         % Constructs a CodeTokens instance from the source code
         %
         % Args:
-        %   contents (charstring): File contents as a single char string
+        %   source (charstring): Source code a single char string
         %
         % Returns:
         %   :class:`+replab.+infra.CodeTokens`: A fresh CodeTokens instance
-            lines = cellfun(@strtrim, strsplit(contents, '\n', 'CollapseDelimiters', false), 'uniform', 0);
-            ct = replab.infra.CodeTokens.fromSourceLines(lines);
+            ct = replab.infra.CodeTokens.lex([], contents);
         end
         
         function ct = fromFile(filename)
@@ -135,7 +165,7 @@ classdef CodeTokens < replab.Str
         % Returns:
         %   :class:`+replab.+infra.CodeTokens`: A fresh CodeTokens instance
             contents = fileread(filename);
-            ct = replab.infra.CodeTokens.fromSource(contents);
+            ct = replab.infra.CodeTokens.lex(filename, contents);
         end
         
     end

@@ -1,4 +1,4 @@
-classdef ClassElement < replab.Str
+classdef ClassElement1 < replab.Str
 
     properties
         name % charstring: Method or property identifier

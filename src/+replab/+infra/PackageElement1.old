@@ -1,4 +1,4 @@
-classdef PackageElement < replab.Str
+classdef PackageElement1 < replab.Str
     
     properties
         name % charstring: function or class identifier

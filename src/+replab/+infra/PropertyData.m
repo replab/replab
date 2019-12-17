@@ -4,9 +4,9 @@ classdef PropertyData < replab.Str
     properties
         name % charstring: Property name
         declarationLineNumber % integer: Line number of the property declaration
-        docLines % row cell array of charstring: Documentation comment lines
-                 %                                 stripped of leading whitespace and leading ``%``
+        docLines % row cell array of charstring: Documentation comment lines stripped of leading whitespace and leading ``%``
         docLineNumbers % row integer vector: Line numbers of the documentation comment
+                       %
                        %                     Overlaps with `declarationLineNumber`
         attributes % struct: Attributes from the ``properties`` block
     end
@@ -58,22 +58,34 @@ classdef PropertyData < replab.Str
             % splits the property code to get the property name (i.e. anything before the first = or ;)
             parts = regexp(def, '[=;]', 'split');
             name = strtrim(parts{1});
-            assert(~isempty(name));
+            if isempty(name)
+                replab.infra.parseError(ct, startPos, 'Cannot find property name');
+            end
+            underpos = regexp(name, '_[^_]');
+            if ~isempty(underpos)
+                replab.infra.parseError(ct, pos, 'Name of property cannot contain underscore except in terminal position');
+            end
             if isempty(firstDocLine)
                 docLines = {};
                 docLineNumbers = [];
             else
                 docLines = {firstDocLine};
                 docLineNumbers = startPos;
+                l = 2;
                 while 1
                     [res line] = ct.expect(pos, '%');
                     if isempty(res)
                         break
                     else
-                        docLines{1, end+1} = line(2:end);
-                        docLineNumbers(1, end+1) = pos;
+                        content = line(2:end);
+                        if l == 2 && ~isempty(strtrim(content))
+                            replab.infra.parseError(ct, pos, 'Second documentation comment line should be empty');
+                        end
+                        docLines{1,l} = content;
+                        docLineNumbers(1,l) = pos;
                         pos = res;
                     end
+                    l = l + 1;
                 end
             end
             pd = replab.infra.PropertyData(name, startPos, docLines, docLineNumbers, attributes);

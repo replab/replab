@@ -1,36 +1,26 @@
-classdef Function < replab.infra.PackageElement
+classdef Function < replab.infra.SourceElement
 % Describes a MATLAB function
-%
-% Is also used to parse methods, thus the `parseAbstractBody` parsing node
     
     properties
-        declaration
+        declaration % charstring: Function or method declaration line
     end
     
     methods
         
-        function self = Function(name, declaration, doc, packageNameParts, fullFilename)
-            self.name = name;
-            self.declaration = declaration;
-            self.doc = doc;
-            self.packageNameParts = packageNameParts;
-            self.kind = 'function';
-            self.fullFilename = fullFilename;
+        function self = Function(codeBase, package, functionData)
+            self = self@replab.infra.SourceElement(codeBase, package, functionData.name, functionData.declarationLineNumber, ...
+                                                   functionData.docLines, functionData.docLineNumbers);
+            self.declaration = functionData.declaration;
         end
         
-    end
-    
-    methods (Static)
-                
-        function f = fromParseState(ct, packageNameParts, filename)
-        % Parses a function and returns a `replab.infra.Function` instance
-            pos = 1;
-            [pos fld] = replab.infra.FunctionLikeData.parse(ct, pos, []);
-            assert(~isempty(pos));
-            doc = replab.infra.Doc.leftTrimmed(fld.docLines);
-            f = replab.infra.Function(fld.name, fld.declaration, doc, packageNameParts, filename);
+        function str = name(self)
+            str = self.sourceIdentifier;
         end
         
+        function p = elementPath(self)
+            p = {self.name};
+        end
+               
     end
     
 end

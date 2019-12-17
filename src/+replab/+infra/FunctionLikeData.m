@@ -9,8 +9,7 @@ classdef FunctionLikeData < replab.Str
         name % charstring: Function or method name
         declaration % charstring: Function or method declaration line
         declarationLineNumber % integer: Line number of the declaration
-        docLines % row cell array of charstring: Documentation comment lines
-                 %                               stripped of leading whitespace and leading ``%``
+        docLines % row cell array of charstring: Documentation comment lines stripped of leading whitespace and leading ``%``
         docLineNumbers % row integer vector: Line numbers of the documentation comment
         attributes % struct: Attributes from the ``methods`` block (or ``[]`` if this describes a function)
     end
@@ -31,20 +30,30 @@ classdef FunctionLikeData < replab.Str
     
     methods (Static)
         
-        function name = nameFromDeclaration(declaration)
+        function name = nameFromDeclaration(ct, pos, declaration)
         % Retrievs the function name from its declaration line
         %
         % Args:
         %   declaration (charstring): Trimmed function/method declaration line
             if sum(declaration == '=') >= 1
                 parts = strsplit(declaration, '=');
-                assert(length(parts) == 2);
+                if length(parts) ~= 2
+                    replab.infra.parseError(ct, pos, 'Invalid number of =');
+                end
                 tokens = regexp(strtrim(parts{2}), '^(\w+)', 'tokens', 'once');
-                assert(length(tokens) == 1);
+                if length(tokens) ~= 1
+                    replab.infra.parseError(ct, pos, 'Cannot find method/function name in declaration');
+                end
                 name = tokens{1};
             else
                 tokens = regexp(declaration, '^function\s+(\w+)', 'tokens', 'once');
+                if length(tokens) ~= 1
+                    replab.infra.parseError(ct, pos, 'Cannot find method/function name in declaration');
+                end                
                 name = tokens{1};
+            end
+            if ~isempty(regexp(name, '__'))
+                replab.infra.parseError(ct, pos, 'Name of method/function cannot contain double underscore');
             end
         end
         
@@ -91,9 +100,9 @@ classdef FunctionLikeData < replab.Str
             tag = ct.peek(pos);
             switch tag
               case '$'
-                error('End of file encountered: functions must end with an end statement');
+                replab.infra.parseError(ct, pos, 'Functions must end with an end statement');
               case {'c', 'p', 'm', 'e'}
-                error(sprintf('classdef/properties/methods or enumeration are all invalid inside a function or method'));
+                replab.infra.parseError(ct, pos, 'Invalid token inside a function or method');
               case {' ', '%', '!'}
                 pos = ct.take(pos);
               case {'f', '>'}
@@ -112,14 +121,13 @@ classdef FunctionLikeData < replab.Str
             if isempty(pos)
                 return
             end
-            assert(~isempty(pos));
-            name = replab.infra.FunctionLikeData.nameFromDeclaration(declaration);
+            name = replab.infra.FunctionLikeData.nameFromDeclaration(ct, startPos, declaration);
             [pos docLines docLineNumbers] = replab.infra.parseDocLines(ct, pos);
             res = replab.infra.FunctionLikeData.parseAbstractBody(ct, pos);
             if ~isempty(res)
                 % The function/method has an abstract body
                 if isempty(attributes)
-                    error('Can only parse an abstract body for a method, which has an attributes struct');
+                    replab.infra.parseError(ct, pos, 'Only methods can have an abstract body');
                 else
                     attributes.Abstract = true;
                 end
