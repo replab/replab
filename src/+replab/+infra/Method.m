@@ -3,17 +3,15 @@ classdef Method < replab.infra.ClassElement
     
     properties
         declaration % charstring: Declaration line of the method
-        isAbstract % logical: Whether this method is abstract
     end
     
     methods
         
-        function self = Method(name, attributes, declaration, doc, isAbstract, packageNameParts, className, lineNumber)
+        function self = Method(name, attributes, declaration, doc, packageNameParts, className, lineNumber)
             self.name = name;
             self.attributes = attributes;
             self.declaration = declaration;
             self.doc = doc;
-            self.isAbstract = isAbstract;
             self.packageNameParts = packageNameParts;
             self.className = className;
             self.kind = 'method';
@@ -22,7 +20,7 @@ classdef Method < replab.infra.ClassElement
         
         function str = headerStr(self)
             keywords = {};
-            if self.isAbstract
+            if isfield(self.attributes, 'Abstract') && self.attributes.Abstract
                 keywords{1,end+1} = 'abstract';
             end
             if isfield(self.attributes, 'Access') && ismember(self.attributes.Access, {'private', 'protected'})

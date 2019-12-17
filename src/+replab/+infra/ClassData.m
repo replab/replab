@@ -1,15 +1,17 @@
-classdef Class < replab.infra.PackageElement
+classdef ClassData < replab.Str
 
     properties
-        parentsNames
-        members
-        %myMethods
-        %myProperties
+        name % charstring: Class name
+        parentNames % row cell array of charstring: Full qualified names of parents
+        docLines % row cell array of charstring: Documentation comment lines
+                 %                               stripped of leading whitespace and leading ``%``
+        docLineNumbers % row integer vector: Line numbers of the documentation comment
+        members % row
     end
     
     methods
         
-        function self = Class(name, parentsNames, doc, memberList, packageNameParts, fullFilename)
+        function self = Class(name, parentNames, docLines, docLineNumbers, members)
             self.name = name;
             self.parentsNames = parentsNames;
             self.doc = doc;
