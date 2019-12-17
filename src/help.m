@@ -18,13 +18,13 @@ function help(varargin)
     persistent codeBase
     
     % Are we in full mode or not?
-    fullMode = false;
+    flags = {};
     if (length(varargin) == 2)
         if isequal(varargin{1}, '-f') || isequal(varargin{1}, '--full')
-            fullMode = true;
+            flags = {'-f'};
             varargin = {varargin{2}};
         elseif isequal(varargin{2}, '-f') || isequal(varargin{2}, '--full')
-            fullMode = true;
+            flags = {'-f'};
             varargin = {varargin{1}};
         end
     end
@@ -80,15 +80,15 @@ function help(varargin)
         el = codeBase.get(parts{:});
         switch class(el)
           case 'replab.infra.Package'
-            help_package(el, helpFunctionName, fullMode);
+            help_package(el, helpFunctionName, flags);
           case 'replab.infra.Class'
-            help_class(codeBase, el, helpFunctionName, fullMode);
+            help_class(codeBase, el, helpFunctionName, flags);
           case 'replab.infra.InheritedClassElement'
             % help_classElement(codeBase, classe, classElementName, helpFunctionName, fullMode);
           case 'replab.infra.ConcreteClassElement'
             % help_classElement(codeBase, classe, classElementName, helpFunctionName, fullMode);
           case 'replab.infra.Function'
-            help_function(codeBase, el, helpFunctionName, fullMode);
+            help_function(codeBase, el, helpFunctionName, flags);
           otherwise
             error(sprintf('Unknown code base element type %s', class(el)));
         end
@@ -135,7 +135,7 @@ function help(varargin)
     end
 end
 
-function help_package(package, helpFunctionName, fullMode)
+function help_package(package, helpFunctionName, flags)
     fullName = package.fullIdentifier;
     replab.infra.dispH([' Package ' fullName, ':'], fullName, helpFunctionName, fullMode);
     disp(' ');
@@ -150,11 +150,7 @@ function help_package(package, helpFunctionName, fullMode)
         if replab.platformIsOctave  || (~usejava('desktop'))
             disp(['     ', packageName]);
         else
-            if fullMode
-                replab.infra.dispH(['     <a href="matlab: ', helpFunctionName, '(''', packageName, ''')">', packageName, '</a>'], fullName, helpFunctionName, fullMode);
-            else
-                replab.infra.dispH(['     <a href="matlab: ', helpFunctionName, '(''-f'',''', packageName, ''')">', packageName, '</a>'], fullName, helpFunctionName, fullMode);
-            end
+            dispH(['     ' replab.infra.linkHelp(helpFunctionName, packageName, packageName, flags)]);
         end
         disp(' ');
     end

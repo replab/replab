@@ -6,41 +6,17 @@ function str = linkHelp(helpFunctionName, linkText, helpArg, flags)
 %   linkText (charstring): Link text
 %   helpArg (charstring): Main argument to the help command
 %   flags (charstring, row cell vector of charstring, optional): Flag, or flags to pass on to the help command
-    if nargin < 3
-        lineNumber = [];
+    if nargin < 4
+        flags = {};
     end
-    
-    if replab.Parameters.consoleUseHTML
+    if isa(flags, 'char')
+        flags = {flags};
+    end
+    if replab.Parametres.consoleUseHTML
+        args = horzcat(flags, {helpArg});
+        args = strjoin(cellfun(@(a) ['''' a ''''], args, 'uniform', 0), ',');
+        t = sprintf('<a href="matlab: %s(%s)>%s</a>', helpFunctionName, args, linkText);
+    else
         t = linkText;
-    else
-        t = altText;
-    end
-    tokens = regexp(t, '(%\w)', 'tokens');
-    n = length(tokens);
-    args = cell(1, n);
-    for i = 1:n
-        token = tokens{i};
-        token = token{1};
-        switch token
-          case '%s'
-            args{i} = filename;
-          case '%d'
-            if isempty(lineNumber)
-                error('Line number cannot be empty if used in the link message');
-            end
-            args{i} = lineNumber;
-          otherwise
-            error('Unknown format specifier');
-        end
-    end
-    t = sprintf(t, args{:});
-    if replab.Parameters.consoleUseHTML
-        if isempty(lineNumber)
-            lineNumber = 1;
-        end
-        link = sprintf('matlab: opentoline(''%s'', %d)', filename, lineNumber);
-        str = ['<a href ="' link '">' t '</a>'];
-    else
-        str = t;
     end
 end
