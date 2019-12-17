@@ -2,12 +2,15 @@ classdef IrrepInfo < replab.Str
 
     properties (SetAccess = protected)
         label % char or []: Short description of the irreducible representation, or [] if no description is known
+              %
               %             By convention, the string '1' represents the trivial representation
         divisionAlgebra % {'R', 'C', 'H', []} : For representations over the reals, the division algebra type if known
+                        %                
                         %                       If it is unknown, or the subrepresentation is complex, must be [].
-        isDivisionAlgebraCanonical % logical or []: Whether the division algebra is known to be in the canonical form,
-                                   %                as in `replab.domain.ComplexTypeMatrices` and
-                                   %          `     replab.domain.QuaternionTypeMatrices`.
+        isDivisionAlgebraCanonical % logical or []: Whether the division algebra is known to be in the canonical form
+                                   %
+                                   %                (as in `replab.domain.ComplexTypeMatrices` and
+                                   %          `     replab.domain.QuaternionTypeMatrices`.)
     end
    
     methods

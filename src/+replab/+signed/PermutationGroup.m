@@ -72,21 +72,23 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %% Actions
 
         function A = naturalAction(self)
-        % Returns the action of elements of this group on its domain
-        % its domain {-d..-1 1..d} where d is self.domainSize
+        % Returns the action of elements of this group on {-d..-1 1..d}
+        %
+        % Here, d is self.domainSize
             A = replab.perm.SignedPermutationNaturalAction(self);
         end
         
         function A = vectorAction(self)
-        % Returns the action of elements of this group on
-        % (self.domainSize)-dimensional vectors by permuting their
-        % coefficients and flipping their signs
+        % Returns the action of elements of this group on vectors
+        %
+        % Vectors are (self.domainSize)-dimensional vectors, and this permutes their coefficients and flips their signs
             A = replab.perm.SignedPermutationVectorAction(self);
         end
 
         function A = matrixAction(self)
         % Returns the action of elements of this group on d x d matrices
-        % where d = self.domainSize, by simultaneous permutations of their
+        %
+        % Note that d = self.domainSize, and this acts by simultaneous permutations of their
         % rows and columns and flipping their signs
             A = replab.perm.SignedPermutationMatrixAction(self);
         end

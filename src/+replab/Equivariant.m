@@ -47,10 +47,9 @@ classdef Equivariant < replab.Domain
         end
 
         function self = Equivariant(repR, repC)
-        % Constructor; please do not call this from user code, but
-        % rather use `replab.makeEquivariant(repR, repC)`, 
-        % which can eventually select an optimized implementation 
-        % depending on the use case.
+        % Constructor; use `replab.makeEquivariant(repR, repC)` in user code
+        %
+        % It can eventually select an optimized implementation depending on the use case.
             self.repR = repR;
             self.nR = repR.dimension;
             self.repC = repC;

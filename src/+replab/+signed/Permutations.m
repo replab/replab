@@ -1,6 +1,5 @@
 classdef Permutations < replab.signed.PermutationGroup
-% Describes the signed permutation group over
-% {-n...-1, 1...n} where n = domainSize
+% Describes the signed permutation group over {-n...-1, 1...n} where n = domainSize
     
     methods
         
@@ -108,8 +107,7 @@ classdef Permutations < replab.signed.PermutationGroup
     methods (Static)
         
         function perm = toPermutation(signedPerm)
-        % Returns the permutation corresponding to the given signed permutation
-        % where the permutation acts on the list [-d,..,-1,1,..,d]
+        % Returns the permutation corresponding to the given signed permutation where the permutation acts on the list [-d,..,-1,1,..,d]
             n = length(signedPerm);
             perm = zeros(1, 2*n);
             for i = 1:length(signedPerm)
@@ -130,7 +128,8 @@ classdef Permutations < replab.signed.PermutationGroup
         
         function signedPerm = fromPermutation(perm)
         % Returns the signed permutation corresponding to the given permutation encoding
-        % see SignedPermutations.toPermutation
+        %
+        % See `.SignedPermutations.toPermutation`
             n2 = length(perm);
             if mod(n2, 2) ~= 0
                 error('Not an image of a signed permutation');
@@ -150,8 +149,9 @@ classdef Permutations < replab.signed.PermutationGroup
         end
 
         function mat = toMatrix(signedPerm)
-        % Returns the signed permutation matrix corresponding to the given
-        % signed permutation such that matrix multiplication is
+        % Returns the signed permutation matrix corresponding to the given signed permutation
+        %
+        % Such that matrix multiplication is
         % compatible with composition of permutations, i.e. 
         % S.toMatrix(S.compose(x, y)) = 
         % S.toMatrix(x) * S.toMatrix(y)
@@ -160,8 +160,7 @@ classdef Permutations < replab.signed.PermutationGroup
         end
 
         function b = isSignedPermutationMatrix(mat)
-        % Returns true when "mat" is a signed permutation matrix, i.e. a monomial matrix
-        % with nonzero entries equal to +1 or -1
+        % Returns true when "mat" is a signed permutation matrix, i.e. a monomial matrix with nonzero entries equal to +1 or -1
             if isequal(size(mat), [0 0])
                 b = true;
                 return
@@ -177,8 +176,7 @@ classdef Permutations < replab.signed.PermutationGroup
         end
         
         function signedPerm = fromMatrix(mat)
-        % Returns the signed permutation corresponding to the given matrix representation
-        % or throws an error
+        % Returns the signed permutation corresponding to the given matrix representation or throws an error
             if isequal(size(mat), [0 0])
                 signedPerm = zeros(1, 0);
                 return

@@ -22,7 +22,9 @@ classdef SedumiData
 % The representation must be unitary.
 
     properties
-        At % double: Data matrix of size n x m, where n is the number of primal scalar variables, 
+        At % double: Data matrix of size n x m
+           %       
+           %         Where n is the number of primal scalar variables, 
            %         and m the nubmer of primal constraints (Sedumi data)
         b % double: Constraint right hand side (Sedumi data)
         c % double: Primal objective (Sedumi data)
@@ -31,7 +33,7 @@ classdef SedumiData
         s % size of single SDP block present
         G % cell array of generators as permutations
         rho % cell array of generator images defining the representation
-        rep % replab.Rep: group representation commuting with the SDP block
+        rep % `.Rep`: group representation commuting with the SDP block
     end
     
     methods

@@ -50,8 +50,9 @@ classdef RandomBag < replab.Str
         end
         
         function self = RandomBag(G, generators, r, n)
-        % Constructs a random bag from the given generators, given
-        % as a 1 x k cell array of group elements, where k >= 0.
+        % Constructs a random bag from generators
+        %
+        % Generators are given as a 1 x k cell array of group elements, where k >= 0.
         %
         % G must be an instance of replab.Group
         %

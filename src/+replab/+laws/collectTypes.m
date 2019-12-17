@@ -1,6 +1,7 @@
 function [lawName argFuns] = collectTypes(laws, methodName)
 % Splits the given "methodName" according to the law naming convention
-% (see replab.Laws documentation)
+%
+% (see `replab.Laws` documentation)
 %
 % Returns
 % - "lawName", the function name transformed from camel case

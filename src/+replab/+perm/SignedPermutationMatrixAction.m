@@ -1,6 +1,5 @@
 classdef SignedPermutationMatrixAction < replab.Action
-% Describes the action of signed permutations on square matrices by simultaneous
-% permutations of rows and columns and sign flips
+% Describes the action of signed permutations on square matrices by simultaneous permutations of rows and columns and sign flips
     methods
         function self = SignedPermutationMatrixAction(G)
             assert(isa(G, 'replab.signed.PermutationGroup'));

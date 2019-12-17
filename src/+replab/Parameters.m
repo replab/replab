@@ -2,6 +2,16 @@ classdef Parameters
     
     methods (Static)
         
+        function value = consoleUseHTML(newValue)
+            persistent ConsoleUseHTML;
+            if nargin == 1
+                ConsoleUseHTML = newValue;
+            elseif isempty(ConsoleUseHTML)
+                ConsoleUseHTML = ~replab.platformIsOctave && usejava('desktop');
+            end
+            value = ConsoleUseHTML;
+        end
+            
         function value = matlabHelpPath(newValue)
             persistent MatlabHelpPath;
             if nargin == 1

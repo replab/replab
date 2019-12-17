@@ -1,6 +1,5 @@
 classdef PermutationMatrixAction < replab.Action
-% Describes the action of permutations on square matrices by simultaneous
-% permutations of rows and columns
+% Describes the action of permutations on square matrices by simultaneous permutations of rows and columns
     methods
         function self = PermutationMatrixAction(G)
             assert(isa(G, 'replab.PermutationGroup'));

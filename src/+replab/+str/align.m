@@ -1,7 +1,12 @@
 function s = align(table, spec)
 % Renders a table using the given LaTeX-inspired specification
 %
-% spec: contains as many 'l', 'c', or 'r' to prescribe alignement as there are columns
+% Args:
+%   table (cell array of charstring): Cell contents as strings, cell cannot be multiline
+%   spec (charstring): Contains as many 'l', 'c', or 'r' to prescribe alignement as there are columns
+%
+% Returns:
+%   column vector of charstring: Formatted text lines
     nR = size(table, 1);
     nC = size(table, 2);
     s = cell(nR, 1);

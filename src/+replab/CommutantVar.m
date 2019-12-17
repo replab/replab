@@ -1,7 +1,7 @@
 classdef CommutantVar < replab.Str
-% CommutantVar is a class of sdpvar matrices satisfying symmetry
-% constraints. The matrices produced are always invariant under
-% transposition.
+% CommutantVar is a class of sdpvar matrices satisfying symmetry constraints. 
+%
+% The matrices produced are always invariant under transposition.
 % 
 % A general matrix only subject to invariance under a permutation group can
 % be constructed with the method fromPermutations. fromIndexMatrix allows
@@ -509,9 +509,10 @@ classdef CommutantVar < replab.Str
         end
 
         function R = copy(rhs)
-        % Creates an identical but independent copy of rhs: modifying the 
-        % copy does not modify the original object. This is useful
-        % internally.
+        % Creates an identical but independent copy of rhs
+        %
+        % Thus, modifying the copy does not modify the original object. 
+        % This is useful internally.
         %
         % Arg:
         %     rhs (+replab.CommutantVar): object to be copied
@@ -528,9 +529,10 @@ classdef CommutantVar < replab.Str
     methods (Static) % Factory methods
 
         function R = fromPermutations(generators, matrixType, field)
-        % Creates a CommutantVar object: a sdpvar matrix that is invariant
-        % under joint permutations of its lines and columns by the provided
-        % generators.
+        % Creates a CommutantVar invariant under joint row/col permutation
+        %
+        % This corresponds to a sdpvar matrix that is invariant% under joint permutations of its lines
+        % and columns by the provided generators.
         %
         % Args:
         %     generators (permutation): list of generators under which the 
@@ -557,8 +559,9 @@ classdef CommutantVar < replab.Str
         end
 
         function R = fromIndexMatrix(indexMatrix, generators, matrixType, field)
-        % Creates an SDP matrix with additional structure. The produced
-        % sdpvar matrix:
+        % Creates an SDP matrix with additional structure. 
+        %
+        % The produced sdpvar matrix:
         %  - is invariant under the permutation group
         %  - satisfies the structure imposed by the index matrix: two
         %    matrix elements with same index are equal to each other
@@ -765,8 +768,9 @@ classdef CommutantVar < replab.Str
         end
 
         function R = fromSdpMatrix(sdpMatrix, generators)
-        % Imposes symmetry constraints onto an existing SDP matrix. This
-        % creates a CommutantVar matrix which satisfies both:
+        % Imposes symmetry constraints onto an existing SDP matrix. 
+        %
+        % This creates a CommutantVar matrix which satisfies both:
         %     - the structure encoded into sdpMatrix
         %     - invariance under joint permutations of its lines and
         %       columns by the provided generators.
@@ -809,8 +813,8 @@ classdef CommutantVar < replab.Str
         end
 
         function R = fromSymSdpMatrix(sdpMatrix, generators)
-        % Block-diagonalizes an existing SDP matrix which is already
-        % invariant under the group generators.
+        % Blockdiags an existing SDP matrix which is already invariant under the group generators.
+        %
         % The type of matrix (full/symmetric/hermitian) as well as the
         % field (real/complex) is inferred from the provided matrix.
         %
@@ -923,8 +927,9 @@ classdef CommutantVar < replab.Str
         end
         
         function nb = numel(self)
-        % Returns the number of objects (i.e. 1). To obtain the number of
-        % elements in the matrix, use prod(size(self)) instead.
+        % Returns the number of objects (i.e. 1). 
+        %
+        % To obtain the number of elements in the matrix, use prod(size(self)) instead.
         %
         % Results:
         %     nb: 1
@@ -1018,8 +1023,7 @@ classdef CommutantVar < replab.Str
         end
 
         function M = blockMask(self)
-        % Returns a 0-1-filled matrix showing the block structure of the
-        % matrix in the irreducible basis.
+        % Returns a 0-1-filled matrix showing the block structure of the matrix in the irrep basis.
         %
         % Results:
         %     M: matrix
@@ -1083,8 +1087,7 @@ classdef CommutantVar < replab.Str
         end
         
         function M = fullMatrix(self)
-        % Constructs the full form of the invariant matrix in the natural
-        % basis.
+        % Constructs the full form of the invariant matrix in the natural basis.
         %
         % Returns:
         %     M: sdpvar matrix
@@ -1116,8 +1119,9 @@ classdef CommutantVar < replab.Str
         end
 
         function vars = getVariables(self)
-        % Returns the Yalmip indices of the SDP variable used by the
-        % object. If the object includes linear constraints, variables from
+        % Returns the Yalmip indices of the SDP variable used by the object. 
+        %
+        % If the object includes linear constraints, variables from
         % the constraints are also counted.
         %
         % Returns:
@@ -1174,8 +1178,7 @@ classdef CommutantVar < replab.Str
         end
 
         function basis = getBaseMatrix(self, index)
-        % Returns the coefficients contributing the the SDP variable with
-        % given index.
+        % Returns the coefficients contributing the the SDP variable with given index.
         %
         % Args:
         %     index (integer): index of the sdp variable (or 0 for the
@@ -1196,8 +1199,7 @@ classdef CommutantVar < replab.Str
         end
 
         function see(self)
-        % Displays internal info about the structure of the matrix in full
-        % form.
+        % Displays internal info about the structure of the matrix in full form.
         %
         % See also:
         %     sdpvar.see
@@ -1252,8 +1254,9 @@ classdef CommutantVar < replab.Str
         end
 
         function varargout = subsref(self, varargin)
-        % Overload of subsref. This function is called when using the
-        % syntax '()' to extract one part of a matrix.
+        % Overload of subsref.
+        %
+        % This function is called when using the syntax '()' to extract one part of a matrix.
         %
         % Args:
         %     varargin: as usual
@@ -1322,8 +1325,7 @@ classdef CommutantVar < replab.Str
         end
 
         function okLevel = compatibleWith(X, Y)
-        % Checks whether the block structure of Y is compatible with that
-        % of X.
+        % Checks whether the block structure of Y is compatible with that of X.
         % 
         % Args:
         %     X: CommutantVar, sdpvar object or numeric matrix
@@ -1507,7 +1509,7 @@ classdef CommutantVar < replab.Str
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 
         function Z = plus(X,Y)
-        % addition operator
+        % Addition operator
         %
         % Args:
         %     X: CommutantVar, sdpvar object or numeric matrix
@@ -1677,7 +1679,7 @@ classdef CommutantVar < replab.Str
         end
 
         function Z = minus(X,Y)
-        % substraction operator
+        % Substraction operator
         %
         % Args:
         %     X: CommutantVar, sdpvar object or numeric matrix
@@ -1863,8 +1865,9 @@ classdef CommutantVar < replab.Str
         end
 
         function Z = times(X, Y)
-        % Element-wise multiplication. Only for multiplication by a scalar,
-        % use fullMatrix otherwise.
+        % Element-wise multiplication. 
+        %
+        % Only for multiplication by a scalar, use fullMatrix otherwise.
         %
         % Args:
         %     X: CommutantVar, sdpvar object or numeric matrix
@@ -1939,8 +1942,9 @@ classdef CommutantVar < replab.Str
         end
 
         function Z = rdivide(X, Y)
-        % Element-wise right division operator. Only for division by a
-        % scalar, use fullMatrix otherwise.
+        % Element-wise right division operator.
+        %
+        % Only for division by a scalar, use fullMatrix otherwise.
         %
         % Args:
         %     X: CommutantVar, sdpvar object or numeric matrix
@@ -1996,8 +2000,9 @@ classdef CommutantVar < replab.Str
         end
 
         function Z = ldivide(X, Y)
-        % Element-wise left division operator. Only for division by a
-        % scalar, use fullMatrix otherwise.
+        % Element-wise left division operator. 
+        %
+        % Only for division by a scalar, use fullMatrix otherwise.
         %
         % Args:
         %     X: CommutantVar, sdpvar object or numeric matrix
@@ -2016,8 +2021,9 @@ classdef CommutantVar < replab.Str
         end
 
         function Z = mtimes(X, Y)
-        % Matrix multiplication. Only for multiplication by a scalar, use
-        % fullMatrix otherwise.
+        % Matrix multiplication.
+        %
+        % Only for multiplication by a scalar, use fullMatrix otherwise.
         %
         % Args:
         %     X: CommutantVar, sdpvar object or numeric matrix
@@ -2040,8 +2046,9 @@ classdef CommutantVar < replab.Str
         end
 
         function Z = mrdivide(X, Y)
-        % Matrix right division operator. Only for division by a scalar,
-        % use fullMatrix otherwise.
+        % Matrix right division operator.
+        %
+        % Only for division by a scalar, use fullMatrix otherwise.
         %
         % Args:
         %     X: CommutantVar, sdpvar object or numeric matrix
@@ -2065,8 +2072,9 @@ classdef CommutantVar < replab.Str
         end
 
         function Z = mldivide(X, Y)
-        % Matrix left division operator. Only for division by a scalar,
-        % use fullMatrix otherwise.
+        % Matrix left division operator.
+        %
+        % Only for division by a scalar, use fullMatrix otherwise.
         %
         % Args:
         %     X: CommutantVar, sdpvar object or numeric matrix

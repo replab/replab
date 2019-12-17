@@ -63,6 +63,7 @@ classdef Chain < replab.Str
         boinv % inverse permutation of bo, permutation that starts with B and then the remaining domain elements increasing
         S % n x nS matrix of strong generators stored as columns vectors (nS = # of strong generators)
         Sind % starting index of strong generators for each stabilizer subgroup, of length k+1 if k = length(B)
+             %
              % S^(k+1) corresponds to strong generators that are stabilized by all base points
              % if no strong generators are present, use the default starting index 1
         Delta % row cell array of orbits, each orbit is a row double vector with orbit elements sorted according to the base order
@@ -306,9 +307,10 @@ classdef Chain < replab.Str
                 
         function g = uinv(self, i, b)
         % Looks up the inverse transversal element that maps b to beta_i
+        %
         % Args:
-        %   i: Index of transversal
-        %   b: Orbit element
+        %   i (integer): Index of transversal
+        %   b (integer): Orbit element
         %
         % Returns:
         %   The corresponding inverse transversal element or [] if b is not part
@@ -326,8 +328,8 @@ classdef Chain < replab.Str
         % Looks up the image of the transversal element that maps beta_i to b
         %
         % Args:
-        %   i: Index of transversal
-        %   b: Orbit element
+        %   i (integer): Index of transversal
+        %   b (integer): Orbit element
         %
         % Returns:
         %   The corresponding transversal element image if it exists

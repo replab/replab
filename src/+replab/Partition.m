@@ -90,8 +90,9 @@ classdef Partition < replab.Str
         end
         
         function [P1 pind] = restrictedToBlocks(self, blocks)
-        % Returns the partition containing only the given blocks,
-        % where the selected blocks are ordered
+        % Returns the partition containing only the given blocks
+        %
+        % The selected blocks are ordered
             pind = [];
             n1 = 0;
             blockIndex1 = [];
@@ -176,8 +177,7 @@ classdef Partition < replab.Str
         end
                             
         function P = connectedComponents(adjacencyMatrix)
-        % Given an adjacency matrix adj, returns the sets of
-        % vertices corresponding to connected components
+        % Given an adjacency matrix adj, returns the sets of vertices corresponding to connected components
         %
         % For adj = [0 0 1; 0 0 0; 1 0 0], it returns the partition {[1 3] [2]}
             n = size(adjacencyMatrix, 1);
@@ -214,7 +214,8 @@ classdef Partition < replab.Str
         
         function P = permutationsOrbits(permutations)
         % Returns the partition of the domain 1...N into orbits
-        % where permutations are a nG x domainSize double matrix
+        %
+        % The permutations are a nG x domainSize double matrix
             n = size(permutations, 2);
             nG = size(permutations, 1);
             blockIndex = zeros(1, n);

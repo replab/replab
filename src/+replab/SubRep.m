@@ -8,7 +8,9 @@ classdef SubRep < replab.Rep
         parent % replab.Rep: Parent representation
         U % double matrix, can be sparse: Unitary basis of dimension dChild x dParent
         niceBasis % replab.NiceBasis: Nice decomposition of the basis
-        irrepInfo % replab.IrrepInfo or []: Irreducible status information; this representation is known to be
+        irrepInfo % replab.IrrepInfo or []: Irreducible status information
+                  %
+                  %                         This representation is known to be
                   %                         irreducible when this field is non empty
     end
     

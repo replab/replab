@@ -1,6 +1,5 @@
 function [names values] = fieldsList(obj)
-% Returns a list of field names and values for the given object,
-% returned as column vectors
+% Returns a list of field names and values for the given object, returned as column vectors
     if isstruct(obj) || isobject(obj)
         % Octave has a bug in some versions: it prints a
         % warning that the object is converted to a struct

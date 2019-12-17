@@ -43,8 +43,7 @@ classdef Laws < replab.Str
         end
         
         function [testNames testFuns] = getTestCases(self)
-        % Enumerates the laws present in "self" by looking for
-        % methods of the form law_propertyName_TYPES
+        % Enumerates the laws present in "self" by looking for methods of the form law_propertyName_TYPES
             testNames = {};
             testFuns = {};
             MC = metaclass(self);
@@ -120,8 +119,6 @@ classdef Laws < replab.Str
     
     methods (Static)
         function value = nRuns(newValue)
-        % value = nRuns([newValue])
-        % 
         % Sets/tells the default number of runs
         %
         % Args:

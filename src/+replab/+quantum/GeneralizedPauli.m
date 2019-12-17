@@ -80,8 +80,7 @@ classdef GeneralizedPauli < replab.FiniteGroup
         end
         
         function omega = rootsOfUnity(self)
-        % Returns E(d)^0 E(d)^1 ... E(d)^(d-1)
-        % where E(d) = exp(2i*pi/d)
+        % Returns E(d)^0 E(d)^1 ... E(d)^(d-1) where E(d) = exp(2i*pi/d)
             d = self.d;
             switch d
               case 1

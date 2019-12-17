@@ -24,8 +24,10 @@ classdef Monoid < replab.Domain
     methods % Default implementations
         
         function z = composeAll(self, elements)
-        % For self.composeAll({x1 x2 ... xn}), returns
-        % x1*x2*...*xn (shown here in multiplaticative notation)
+        % Composes a sequence of monoid elements
+        %
+        % For ``self.composeAll({x1 x2 ... xn})``, returns
+        % ``x1*x2*...*xn`` (shown here in multiplaticative notation)
             if length(elements) == 0
                 assert(isa(self, 'replab.Monoid'));
                 z = self.identity;
@@ -38,7 +40,7 @@ classdef Monoid < replab.Domain
         end
         
         function y = composeN(self, x, n)
-        % Computes y = x^n by repeated squaring
+        % Computes ``y = x^n`` by repeated squaring
         %
         % When "self" is a
         % - "Semigroup", we need n > 0
