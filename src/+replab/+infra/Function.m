@@ -2,14 +2,14 @@ classdef Function < replab.infra.SourceElement
 % Describes a MATLAB function
     
     properties
-        declaration % charstring: Function or method declaration line
+        declaration % charstring: Function declaration line
     end
     
     methods
         
         function self = Function(codeBase, package, functionData)
             self = self@replab.infra.SourceElement(codeBase, package, functionData.name, functionData.declarationLineNumber, ...
-                                                   functionData.docLines, functionData.docLineNumbers);
+                                                   functionData.name, functionData.docLines, functionData.docLineNumbers);
             self.declaration = functionData.declaration;
         end
         

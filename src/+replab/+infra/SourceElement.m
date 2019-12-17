@@ -7,33 +7,42 @@ classdef SourceElement < replab.infra.Element
         doc % `.Doc`: Documentation comment
     end
     
+    methods % Abstract
+        
+        function p = elementPath(self)
+        % Returns the path of the element relative to its package
+            error('Abstract');
+        end
+        
+    end 
+    
     methods
         
-        function self = SourceElement(codeBase, package, sourceIdentifier, startLineNumber, docLines, docLineNumbers)
-            self = self@replab.infra.Element(codeBase);
+        function self = SourceElement(codeBase, package, sourceIdentifier, startLineNumber, name, docLines, docLineNumbers)
+            self = self@replab.infra.Element(codeBase, name);
             self.package = package;
             self.sourceIdentifier = sourceIdentifier;
             self.startLineNumber = startLineNumber;
             self.doc = replab.infra.Doc(self, docLines, docLineNumbers);
         end
         
-        function p = elementPath(self)
-            error('Abstract');
-        end
+        % replab.infra.Element
         
         function [packagePath elementPath] = splitPath(self)
             packagePath = self.package.packagePath;
             elementPath = self.elementPath;
         end
         
-        function str = sourceLinkOpen(self)
-            str = replab.infra.linkOpen('%s:%d', '%s:%d', self.filename, self.startLineNumber);
-        end
+        % Own methods
         
         function fn = absoluteFilename(self)
         % Returns the full path to the file containing the source code of this object
             parts = self.relativeFilenameParts;
             fn = fullfile(self.codeBase.rootFolder, parts{:});
+        end
+        
+        function str = linkOpen(self)
+            str = replab.infra.linkOpen('%s:%d', '%s:%d', self.absoluteFilename, self.startLineNumber);
         end
         
         function parts = relativeFilenameParts(self)

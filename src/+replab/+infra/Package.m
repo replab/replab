@@ -15,7 +15,12 @@ classdef Package < replab.infra.Element
         % Args:
         %   codeBase (`.CodeBase`): Code base this object is part of
         %   packageData (`.PackageData`): Data corresponding to this package
-            self = self@replab.infra.Element(codeBase);
+            if isempty(packageData.path)
+                name = [];
+            else
+                name = packageData.path{end};
+            end
+            self = self@replab.infra.Element(codeBase, name);
             self.packagePath = packageData.path;
             elements = struct;
             ownFunctions = {};
@@ -66,7 +71,7 @@ classdef Package < replab.infra.Element
         % Returns the names of all direct children of this package
         %
         % This includes its subpackages, the classes and functions it contains.
-            spn = cellfun(@(x) x.packagePath{end}, self.codeBase.subpackages(self), 'uniform', 0);
+            spn = cellfun(@(x) x.name, self.codeBase.subpackages(self), 'uniform', 0);
             fn = fieldnames(self.elements);
             fn = fn(:).';
             c = horzcat(spn, fn);
