@@ -1,15 +1,17 @@
 classdef DocTest < replab.Str
     
     properties
-        lineNumbers % row vector of integer: line number of first line of the command
+        parentDoc % `.Doc`: Parent documentation block
+        relativeLineNumbers % row vector of integer: 1-based line numbers of first line of the command
         commands % row cell vector of row vector of charstring: commands to be evaluated
         outputs % row cell vector of row vector of charstring: expected output
     end
 
     methods
         
-        function self = DocTest(lineNumbers, commands, outputs)
-            self.lineNumbers = lineNumbers;
+        function self = DocTest(parentDoc, relativeLineNumbers, commands, outputs)
+            self.parentDoc = parentDoc;
+            self.relativeLineNumbers = relativeLineNumbers;
             self.commands = commands;
             self.outputs = outputs;
         end
@@ -94,14 +96,14 @@ classdef DocTest < replab.Str
             dt = replab.infra.DocTest(lineNumbers + lineOffset, commands, outputs);
         end
         
-        function doctests = parseDoc(doc)
+        function doctests = parse(doc)
         % Finds and parses the doctests in the documentation of an object
         %
         % Args:
-        %   doc (+replab.+infra.Doc): Documentation
+        %   doc (.Doc): Documentation
         %
         % Returns:
-        %   row cell array of +replab.+infra.DocTest: The parsed doctests
+        %   row cell array of `.DocTest`: The parsed doctests
         %
         % Raises:
         %   A warning if some of the parses are unsuccesful.

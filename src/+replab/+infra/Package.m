@@ -2,7 +2,7 @@ classdef Package < replab.infra.Element
     
     properties
         packagePath % row cell vector of charstring: Package path
-        elements % struct-based hash map: Package elements that are not subpackages
+        nspElements % struct-based hash map: Package elements that are not subpackages
         ownFunctions 
         ownClasses
     end
@@ -22,22 +22,22 @@ classdef Package < replab.infra.Element
             end
             self = self@replab.infra.Element(codeBase, name);
             self.packagePath = packageData.path;
-            elements = struct;
+            nspElements = struct;
             ownFunctions = {};
             ownClasses = {};
             for i = 1:length(packageData.ownFunctions)
                 fd = packageData.ownFunctions{i};
                 fun = replab.infra.Function(codeBase, self, fd);
                 ownFunctions{1,end+1} = fun;
-                elements.(fd.name) = fun;
+                nspElements.(fd.name) = fun;
             end
             for i = 1:length(packageData.ownClasses)
                 cd = packageData.ownClasses{i};
                 cls = replab.infra.Class(codeBase, self, cd);
                 ownClasses{1,end+1} = cls;
-                elements.(cls.name) = cls;
+                nspElements.(cls.name) = cls;
             end
-            self.elements = elements;
+            self.nspElements = nspElements;
             self.ownFunctions = ownFunctions;
             self.ownClasses = ownClasses;
         end
@@ -48,8 +48,8 @@ classdef Package < replab.infra.Element
         end
         
         function e = lookup(self, id)
-            if isfield(self.elements, id)
-                pkgel = self.elements.(id);
+            if isfield(self.nspElements, id)
+                pkgel = self.nspElements.(id);
             else
                 pkgel = [];
             end
@@ -72,7 +72,7 @@ classdef Package < replab.infra.Element
         %
         % This includes its subpackages, the classes and functions it contains.
             spn = cellfun(@(x) x.name, self.codeBase.subpackages(self), 'uniform', 0);
-            fn = fieldnames(self.elements);
+            fn = fieldnames(self.nspElements);
             fn = fn(:).';
             c = horzcat(spn, fn);
         end
@@ -81,7 +81,12 @@ classdef Package < replab.infra.Element
         % Returns all the direct children of this package
         %
         % Children includes its subpackages, the classes and functions it contains.
-            c = horzcat(self.codeBase.subpackages(self), self.ownFunctions, self.ownClasses);
+            c = horzcat(self.ownSubpackages, self.ownFunctions, self.ownClasses);
+        end
+        
+        function c = ownSubpackages(self)
+        % Returns all direct subpackages of this package
+            c = self.codeBase.subpackages(self);
         end
         
     end

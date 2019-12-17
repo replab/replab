@@ -73,7 +73,8 @@ classdef Element < replab.Str
             if isempty(self.path)
                 p = [];
             else
-                pp = self.path(1:end-1);
+                pp = self.path;
+                pp = pp(1:end-1);
                 p = self.codeBase.get(pp{:});
             end
         end

@@ -1,4 +1,5 @@
 classdef Doc < replab.Str
+% Contents of a documentation block comment
     
     properties
         parent % `.SourceElement`: Member containing this documentation
