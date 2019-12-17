@@ -111,6 +111,11 @@ classdef Class < replab.infra.SourceElement
             if isempty(self.inheritedElements_)
                 ie = struct;
                 already = struct;
+                names = fieldnames(self.ownElements);
+                for i = 1:length(names)
+                    name = names{i};
+                    already.(name) = true;
+                end
                 asc = self.allSuperclasses;
                 for i = 1:length(asc)
                     sup = asc{i};

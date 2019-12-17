@@ -1,5 +1,6 @@
 classdef ConcreteClassElement < replab.infra.SourceElement & replab.infra.ClassElement
-    
+% An element of a class that has a declaration in its class
+
     methods
         
         function self = ConcreteClassElement(codeBase, package, parentClass, name, startLineNumber, kind, declaration, ...
@@ -11,7 +12,7 @@ classdef ConcreteClassElement < replab.infra.SourceElement & replab.infra.ClassE
         end
         
         function [packagePath elementPath] = splitPath(self)
-            packagePath = self.parentClass.packagePath;
+            packagePath = self.parentClass.package.packagePath;
             elementPath = {self.parentClass.name self.name};
         end
         
