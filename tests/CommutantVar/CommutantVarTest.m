@@ -340,8 +340,8 @@ end
 
 function test_print
     global matrix231
-    disp(matrix231);
-    disp(str(matrix231));
+    evalc('disp(matrix231)');
+    evalc('disp(str(matrix231))');
 end
 
 function test_inputs
