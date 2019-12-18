@@ -7,12 +7,12 @@ options:
         url: docs/tutorials/installation.html
       - title: Representations of S(n)
         url: docs/publish/RepSn.html
-      - title: The Singlet state
+      - title: The singlet state
         url: docs/publish/singlet.html
-      - title: Quick start
-        url: docs/publish/Example.html
       - title: CHSH example
         url: docs/publish/CHSHScenario.html
+      - title: More examples
+        url: docs/publish/Example.html
 
   - title: How-to guides
     url: docs/howto/howto.html
@@ -21,7 +21,7 @@ options:
         url: docs/publish/SDP.html
 
   - title: Topic guides
-    url: docs/topics/guides.html
+    url: docs/topic/guides.html
 
   - title: Technical Reference
     url: docs/reference/reference.html # point to Sphinx output

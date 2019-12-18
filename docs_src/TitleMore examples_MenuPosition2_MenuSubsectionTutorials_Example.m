@@ -1,6 +1,10 @@
 %% Short RepLAB tutorial
 %
-% This document will show some features of *RepLAB*.
+% This document various features of *RepLAB*.
+
+% TODO : clean up this file to remove redundance with other and/or split it
+%     into multiple tutorials focused on specific topics
+%     (a tutorial = a lesson teaching something)
 
 %%
 % Before trying any of the *RepLAB* commands, we must first add the paths:

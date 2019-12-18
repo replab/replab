@@ -17,7 +17,7 @@ Once you are familiar with the basics of **RepLAB** usage, the following resourc
 
  - [Installation](installation.html)
  - [Representations of S(n)](../publish/RepSn.html)
- - [The Singlet state](../publish/singlet.html)
+ - [The singlet state](../publish/singlet.html)
  - [Symmetries of the CHSH Bell scenario](../publish/CHSHScenario.html)
- - [Quick start](../publish/Example.html)
  - [CHSH example](../publish/CHSHScenario.html)
+ - [More examples](../publish/Example.html)

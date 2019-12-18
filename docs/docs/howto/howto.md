@@ -8,8 +8,9 @@ subsection: How-to guides
 
 These guides present concrete recipes with step-by-step instructions that show how to obtain specific results with **RepLAB**. They assume some [familiarity](../tutorials/tutorials.html) with **RepLAB**.
 
+<!-- TODO:
  - [Permutation groups]()
  - [Group representation]()
  - [Decomposing a group representation]()
- - [The group algebra]()
+ - [The group algebra]() -->
  - [How to solve a semi-definite program (SDP) subject to symmetries](../publish/SDP.html)
