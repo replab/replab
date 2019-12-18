@@ -5,6 +5,10 @@ options:
     nested_options:
       - title: Installation
         url: docs/tutorials/installation.html
+      - title: Representations of S(n)
+        url: docs/publish/RepSn.html
+      - title: The Singlet state
+        url: docs/publish/singlet.html
       - title: Quick start
         url: docs/publish/Example.html
       - title: CHSH example
