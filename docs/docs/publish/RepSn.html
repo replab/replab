@@ -8,7 +8,7 @@ comments: true
 <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
---><div class="content"><!--introduction--><h1>Representations of the symmetric group S(n)</h1><p>The symmetric group <img src="RepSn_eq01920565190774833493.png" alt="$S(n)$"> is group of primary importance. This document presents several representations of this group with <b>*RepLAB</b>*.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">The symmetric group</a></li><li><a href="#8">Group representations</a></li><li><a href="#9">Defining representation of S(n)</a></li></ul></div><p>Before trying any of the <b>RepLAB</b> commands, we must initialize the library:</p><pre class="codeinput">replab_init
+--><div class="content"><!--introduction--><h1>Representations of the symmetric group S(n)</h1><p>The symmetric group S(n) is group of primary importance. This document presents several representations of this group with <b>*RepLAB</b>*.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">The symmetric group</a></li><li><a href="#8">Defining representation of S(n)</a></li></ul></div><p>Before trying any of the <b>RepLAB</b> commands, we must initialize the library:</p><pre class="codeinput">replab_init
 </pre><h2>The symmetric group<a name="2"></a></h2><p>Consider <img src="RepSn_eq08984225997457563733.png" alt="$n$"> distinct elements, numbered <img src="RepSn_eq07968994301754079172.png" alt="$1,2,\ldots,n$">. The symmetric group describes all possible ways in which these elements can be permuted.</p><p>With <img src="RepSn_eq00013378311338420650.png" alt="$n=3$">, for instance, two possible arrangements are</p><pre class="codeinput">[1 2 3];
 </pre><p>and</p><pre class="codeinput">[1 3 2];
 </pre><p>In general there are <img src="RepSn_eq13135424669412081744.png" alt="$n!$"> such arrangements (i.e. <img src="RepSn_eq01663736040536833074.png" alt="$6$"> arrangements for <img src="RepSn_eq00013378311338420650.png" alt="$n=3$">).</p><p>In <b>RepLAB</b>, the symmetric group can be constructed with a simple command</p><pre class="codeinput">n = 3;
@@ -35,7 +35,7 @@ ans =
 
      2     3     1
 
-</pre><h2>Group representations<a name="8"></a></h2><p>A group can always be represented by matrices of finite dimension. In a <img src="RepSn_eq17615571056258974497.png" alt="$d$">-dimensional matrix representation, each group element is associated with a d x d matrix called the image of the group element. The matrix multiplication rule then reflects the group composition rule.</p><p>Several matrix representations are possible for the same group, possibly with various dimension <img src="RepSn_eq17615571056258974497.png" alt="$d$">. Here, we are going to explore some representations of our group S(3).</p><h2>Defining representation of S(n)<a name="9"></a></h2><p>When permuting n elements, a natural choice of representation consists in associating one dimension to each element, hence choosing <img src="RepSn_eq13732147775896216079.png" alt="$d=n$">. Matrices then act on <img src="RepSn_eq13560274181536256371.png" alt="$R^n$">. This is called the <b>defining represention</b> of a group. It can be constructed easily:</p><pre class="codeinput">defRep = S3.definingRep
+</pre><h2>Defining representation of S(n)<a name="8"></a></h2><p>A group can always be represented by matrices of finite dimension. In a <img src="RepSn_eq17615571056258974497.png" alt="$d$">-dimensional matrix representation, each group element is associated with a d x d matrix called the image of the group element. The matrix multiplication rule then reflects the group composition rule.</p><p>Several matrix representations are possible for the same group, possibly with various dimension <img src="RepSn_eq17615571056258974497.png" alt="$d$">. Here, we are going to explore some representations of our group S(3).</p><p>When seeing the group as a permutation within <img src="RepSn_eq08984225997457563733.png" alt="$n$"> elements, a natural choice of representation arises in dimension <img src="RepSn_eq13732147775896216079.png" alt="$d=n$">, where the permutation is applied to the coordinates of the vector space <img src="RepSn_eq13560274181536256371.png" alt="$R^n$">. This is called the <b>defining representation</b> of a group. The images of each group element is then a <img src="RepSn_eq14662025674782596410.png" alt="$n \times n$"> permutation matrix. This representation can be constructed easily:</p><pre class="codeinput">defRep = S3.definingRep
 </pre><pre class="codeoutput">
 defRep = 
 
@@ -86,7 +86,7 @@ ans =
 ##### SOURCE BEGIN #####
 %% Representations of the symmetric group S(n)
 %
-% The symmetric group $S(n)$ is group of primary importance. This
+% The symmetric group S(n) is group of primary importance. This
 % document presents several representations of this group with **RepLAB**.
 
 %%
@@ -128,7 +128,7 @@ element1 = [2 1 3];
 element2 = [1 3 2];
 S3.compose(element1, element2)
 
-%% Group representations
+%% Defining representation of S(n)
 % A group can always be represented by matrices of finite dimension.
 % In a $d$-dimensional matrix representation, each group element is
 % associated with a d x d matrix called the image of the group element. The
@@ -137,13 +137,13 @@ S3.compose(element1, element2)
 % Several matrix representations are possible for the same group, possibly
 % with various dimension $d$. Here, we are going to explore some
 % representations of our group S(3).
-
-%% Defining representation of S(n)
 %
-% When permuting n elements, a natural choice of representation consists in
-% associating one dimension to each element, hence choosing $d=n$. Matrices
-% then act on $R^n$. This is called the *defining represention* of
-% a group. It can be constructed easily:
+% When seeing the group as a permutation within $n$ elements, a natural
+% choice of representation arises in dimension $d=n$, where the permutation
+% is applied to the coordinates of the vector space $R^n$. This is called
+% the *defining representation* of a group. The images of each group
+% element is then a $n \times n$ permutation matrix. This representation
+% can be constructed easily:
 defRep = S3.definingRep
 %%
 % The image of a group element in this representation can be extracted
