@@ -143,18 +143,25 @@ end
 function help_package(codeBase, package, helpFunctionName, fullMode)
     fn = fullfile(codeBase.rootFolder, '+replab', '+infra', 'help_package.liquid');
     tmpl = replab.lobster.Template.load(fn);
-    disp(tmpl.render(struct('package', package)));
+    if fullMode
+        flags = {'-f'};
+    else
+        flags = {};
+    end
+    disp(replab.infra.formatHelp(tmpl.render(struct('package', package)), package, helpFunctionName, flags));
 end
 
 
 function help_class(codeBase, element, helpFunctionName, fullMode)
     if fullMode
         fn = fullfile(codeBase.rootFolder, '+replab', '+infra', 'help_full_class.liquid');
+        flags = {'-f'};
     else
         fn = fullfile(codeBase.rootFolder, '+replab', '+infra', 'help_class.liquid');
+        flags = {};
     end
     tmpl = replab.lobster.Template.load(fn);
-    disp(tmpl.render(struct('cls', element)));
+    disp(replab.infra.formatHelp(tmpl.render(struct('cls', element)), element, helpFunctionName, flags));
     if replab.Parameters.consoleUseHTML
         if fullMode
             link = replab.infra.linkHelp(helpFunctionName, element.fullIdentifier, element.fullIdentifier);

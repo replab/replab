@@ -49,7 +49,7 @@ classdef SourceElement < replab.infra.Element
         % Returns the relative path to the source code of this object
         %
         % For example, this could return ``{'+replab' 'Group.m'}``
-            parts = horzcat(cellfun(@(x) ['+' x], self.packagePathParts, 'uniform', 0), {[self.sourceIdentifier '.m']});
+            parts = horzcat(cellfun(@(x) ['+' x], self.package.packagePath, 'uniform', 0), {[self.sourceIdentifier '.m']});
         end
 
     end

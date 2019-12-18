@@ -7,7 +7,7 @@ function res = formatHelp(txt, context, helpFunctionName, flags)
 %
 % Returns:
 %   charstring: The interpreted documentation string
-    lines = strsplit(txt, '\n');
+    lines = strsplit(txt, '\n', 'CollapseDelimiters', false);
     tab = sprintf('\t');
     tables = {}; % to memorize table lines
     tableStart = []; % toggles between [] (if not in a table), and the table start line
@@ -22,8 +22,8 @@ function res = formatHelp(txt, context, helpFunctionName, flags)
         refs = parts(2:2:end);
         for j = 1:length(refs)
             ref = refs{j};
-            [el linkText] = replab.infra.resolve(ref, context, @(id) any(exist(id) == [3 4 5 6 8]));
-            if isa(el, 'replab.Element')
+            [el linkText] = replab.infra.resolveRef(ref, context, @(id) any(exist(id) == [3 4 5 6 8]));
+            if isa(el, 'replab.infra.Element')
                 ref = replab.infra.linkHelp(helpFunctionName, linkText, el.fullIdentifier, flags);
             elseif isa(el, 'char')
                 ref = replab.infra.linkHelp(helpFunctionName, linkText, el, flags);
@@ -53,12 +53,22 @@ function res = formatHelp(txt, context, helpFunctionName, flags)
         lines{i} = l;
     end
     
-    newLines = {};
+    %% Format identified tables
     for i = length(tables):-1:1
         % process backwards so we don't crapify line numbers if the table formatting
         % ends up later taking a different number of lines
-        table = tables{i};
-        tableLines = lines(table);
+        tableLN = tables{i};
+        nRows = length(tableLN);
+        tableLines = lines(tableLN);
+        nCols = max(cellfun(@(l) sum(l == tab), tableLines)) + 1;
+        table = cell(nRows, nCols);
+        for r = 1:nRows
+            cols = strsplit(tableLines{r}, '\t');
+            table(r, 1:length(cols)) = cols;
+        end
+        tableLines = replab.infra.align(table, repmat('l', 1, nCols));
+        lines = {lines{1:tableLN(1)-1} tableLines{:} lines{tableLN(end)+1:end}};
     end
-        
+    
+    res = strjoin(lines, '\n');
 end
