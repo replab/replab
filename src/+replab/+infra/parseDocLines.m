@@ -12,7 +12,7 @@ function [pos docLines docLineNumbers] = parseDocLines(ct, pos)
         else
             content = line(2:end);
             if l == 2 && ~isempty(strtrim(content))
-                replab.infra.parseError(ct, pos, 'Second documentation comment line should be empty');
+                replab.infra.parseWarning(ct, pos, 'Second documentation comment line should be empty');
             end
             docLines{1,l} = content;
             docLineNumbers(1,l) = pos;
