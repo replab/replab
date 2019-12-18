@@ -61,9 +61,8 @@ classdef PropertyData < replab.Str
             if isempty(name)
                 replab.infra.parseError(ct, startPos, 'Cannot find property name');
             end
-            underpos = regexp(name, '_[^_]');
-            if ~isempty(underpos)
-                replab.infra.parseError(ct, pos, 'Name of property cannot contain underscore except in terminal position');
+            if ~isempty(regexp(name, '__'))
+                replab.infra.parseError(ct, pos, 'Name of method/function cannot contain double underscore');
             end
             if isempty(firstDocLine)
                 docLines = {};
