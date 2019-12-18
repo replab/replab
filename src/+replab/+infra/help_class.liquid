@@ -1,9 +1,9 @@
  Class {{ cls.fullIdentifier }}
 {% if ~isempty(cls.superclassIdentifiers) %}
 {% if length(cls.superclassIdentifiers) == 1 %}
- with parent `{{ cls.superclassIdentifiers{1} }}`
+ with direct parent `{{ cls.superclassIdentifiers{1} }}`
 {% else %}
- with parents `{{ cls.superclassIdentifiers{1} }}`
+ with direct parents `{{ cls.superclassIdentifiers{1} }}`
 {% for p in cls.superclassIdentifiers(2:end) %}
 , `{{p}}`
 {% end %}

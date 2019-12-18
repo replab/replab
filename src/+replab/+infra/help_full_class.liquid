@@ -1,11 +1,19 @@
- Class {{ cls.fullIdentifier }}
-{% if ~isempty(cls.superclassIdentifiers) %}
-{% if length(cls.superclassIdentifiers) == 1 %}
- with parent `{{ cls.superclassIdentifiers{1} }}`
+ Class {{ cls.fullIdentifier }}:
+\n
+   In package:\n
+     `{{cls.package.fullIdentifier}}`\n
+\n
+{% if ~isempty(cls.ownSuperclasses) %}
+{% if length(cls.ownSuperclasses) == 1 %}
+   Direct parent:\n
 {% else %}
- with parents `{{ cls.superclassIdentifiers{1} }}`
-{% for p in cls.superclassIdentifiers(2:end) %}
-, `{{p}}`
+   Direct parents:\n
+{% end %}
+{% for parent in cls.ownSuperclasses %}
+{% if parent.doc.isempty %}
+     `{{parent.fullIdentifier}}`\t\n
+{% else %}
+     `{{parent.fullIdentifier}}` \t{{parent.doc.firstLine}}\n
 {% end %}
 {% end %}
 {% end %}

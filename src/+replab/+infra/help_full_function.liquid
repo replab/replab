@@ -1,0 +1,13 @@
+ Function {{ fun.fullIdentifier }}:\n
+{% if isempty(fun.package.packagePath) %}
+   In root package\n
+\n
+{% else %}
+   In package:\n
+     `{{fun.package.fullIdentifier}}`\n
+\n
+{% end %}
+{% call strjoin(fun.doc.lines, char(10)) %}
+\n
+\n
+TODO add link externally: Reference page for {{ fun.fullIdentifier }}
