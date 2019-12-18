@@ -11,8 +11,9 @@ options:
         url: docs/publish/singlet.html
       - title: CHSH example
         url: docs/publish/CHSHScenario.html
-      - title: More examples
-        url: docs/publish/Example.html
+# Maybe add a tutorial on the Commutant Algebra, or extract more info from the following tutorial:
+#      - title: More examples
+#        url: docs/publish/Example.html
 
   - title: How-to guides
     url: docs/howto/howto.html

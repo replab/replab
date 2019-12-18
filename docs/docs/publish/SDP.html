@@ -9,7 +9,7 @@ comments: true
 <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
---><div class="content"><!--introduction--><h1>Symmetric SDPs</h1><p>This document illustrated how <b>RepLAB</b> can be used to solve Semidefinite Programs (SDP) subject to symmetries.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Preparation</a></li><li><a href="#3">Introduction</a></li><li><a href="#4">Formulating a symmetric SDP</a></li><li><a href="#9">Constructing a symmetric SDP matrix with additional structure</a></li><li><a href="#13">Imposing symmetry to an existing SDP matrix</a></li><li><a href="#17">Block-diagonalizing a symmetric SDP matrix</a></li><li><a href="#23">Comparison with a direct formulation</a></li></ul></div><h2>Preparation<a name="1"></a></h2><p>As always, before using <b>RepLAB</b> commands, first add the paths:</p><pre class="codeinput">replab_init
+--><div class="content"><!--introduction--><h1>Symmetric SDPs</h1><p>This document illustrated how <b>RepLAB</b> can be used to solve Semidefinite Programs (SDP) subject to symmetries. Several methods for constructing SDPs subject to symmetries are presented.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Preparation</a></li><li><a href="#3">Introduction</a></li><li><a href="#4">Formulating a symmetric SDP</a></li><li><a href="#9">Constructing a symmetric SDP matrix with additional structure</a></li><li><a href="#13">Imposing symmetry to an existing SDP matrix</a></li><li><a href="#17">Block-diagonalizing a symmetric SDP matrix</a></li><li><a href="#23">Comparison with a direct formulation</a></li></ul></div><h2>Preparation<a name="1"></a></h2><p>As always, before using <b>RepLAB</b> commands, first add the paths:</p><pre class="codeinput">replab_init
 </pre><p>Commands in this document makes use ot the YALMIP interface to solve convex optimization problems, see <a href="../installation.html">installation instructions</a>.</p><h2>Introduction<a name="3"></a></h2><p><a href="https://en.wikipedia.org/wiki/Semidefinite_programming">Semidefinite Programming</a> is a form of optimization that admits semidefinite constraints (as in the condition that all eigenvalues of a matrix must be positive). It naturally arises in various fields, including operational research and polynomial optimization.</p><p>The ability to solve a semidefinite program depends heavily on:</p><div><ul><li>the size of the positive semi-definite (PSD) blocks</li><li>the number of variables and constraints involved</li></ul></div><p>A positive semi-definite matrix that is invariant under some joint permutation of its lines and columns can be decomposed into a block diagonal form. This allows to:</p><div><ul><li>decompose PSD blocks into smaller PSD blocks</li><li>set many variables to zero, hence reducing the number of variables in the problem</li></ul></div><p>As we shows below, <b>RepLAB</b> performs this simplification automatically.</p><h2>Formulating a symmetric SDP<a name="4"></a></h2><p>To illustrate the usage of <b>RepLAB</b> for symmetric SDPs, we consider a simple example involving a 3x3 matrix <img src="SDP_eq00802513524912003067.png" alt="$M$"> with trace 1 that is symmetric under cyclic permutation of its indices, i.e. it satisfies <img src="SDP_eq13757903373084850403.png" alt="$M([2\ 3\ 1], [2\ 3\ 1]) = M$">. We ask what is the smallest value that the off-diagonal element <img src="SDP_eq11726414244992110607.png" alt="$M(1,2)$"> can take if this matrix <img src="SDP_eq00802513524912003067.png" alt="$M$"> has only positive eigenvalues.</p><p>
 <h3>Symmetric formulation</h3>
 </p><p>Using <b>RepLAB</b>, we can solve this problem as follows.</p><p>We start by defining a matrix which satisfies the desired symmetry</p><pre class="codeinput">permutation = [2 3 1];
@@ -32,14 +32,14 @@ MSymOpt =
 cstrSdpMatrix = 
 
 Commutant variable 3x3 (2 blocks, 1 scalar variables)
-           dim: 3                                                                                     
-   dimensions1: [1, 2]                                                                                
-         field: 'real'                                                                                
-    matrixType: 'symmetric'                                                                           
-multiplicities: [1, 1]                                                                                
-         types: 'RC'                                                                                  
-             U: [0.57735, -0.44165, -0.68674; 0.57735, -0.37391, 0.72585; 0.57735, 0.81556, -0.039114]
-        blocks: [1, 2]                                                                                
+           dim: 3                                                                                 
+   dimensions1: [1, 2]                                                                            
+         field: 'real'                                                                            
+    matrixType: 'symmetric'                                                                       
+multiplicities: [1, 1]                                                                            
+         types: 'RC'                                                                              
+             U: [0.57735, 0.12371, 0.80707; 0.57735, 0.63709, -0.51067; 0.57735, -0.7608, -0.2964]
+        blocks: [1, 2]                                                                            
 </pre><p>In this trivial case, the SDP matrix is left to contain only one variable: the additional constraints collapsed the all group orbits together.</p><h2>Imposing symmetry to an existing SDP matrix<a name="13"></a></h2><p>Symmetry constraints can also be straightforwardly imposed on existing SDP matrices with arbitrary structure.</p><p>For instance, consider the following special SDP matrix</p><pre class="codeinput">x = sdpvar;
 y = sdpvar
 MSpecial = [1 x y
@@ -52,15 +52,15 @@ Coeffiecient range: 1 to 1
 MSpecialSym = 
 
 Commutant variable 3x3 (2 blocks, 5 scalar variables)
-              dim: 3                                                                                   
-      dimensions1: [1, 2]                                                                              
-            field: 'real'                                                                              
-       matrixType: 'full'                                                                              
-   multiplicities: [1, 1]                                                                              
-            types: 'RC'                                                                                
-                U: [0.57735, 0.51966, -0.62978; 0.57735, 0.28557, 0.76493; 0.57735, -0.80523, -0.13515]
-           blocks: [1, 2]                                                                              
-linearConstraints: constraint                                                                          
+              dim: 3                                                                                     
+      dimensions1: [1, 2]                                                                                
+            field: 'real'                                                                                
+       matrixType: 'full'                                                                                
+   multiplicities: [1, 1]                                                                                
+            types: 'RC'                                                                                  
+                U: [0.57735, -0.68822, -0.43934; 0.57735, 0.72459, -0.37635; 0.57735, -0.036369, 0.81569]
+           blocks: [1, 2]                                                                                
+linearConstraints: constraint                                                                            
 </pre><p>Requesting this matrix to be PSD now imposes both</p><div><ul><li>Positivity of the 1x1 and 2x2 blocks</li><li>Equality with the imposed form</li></ul></div><p>as can be seen with</p><pre class="codeinput">MSpecialSym &gt;= 0
 </pre><pre class="codeoutput">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |   ID|                    Constraint|   Coefficient range|
@@ -94,14 +94,14 @@ ans =
 MInvariantBlock = 
 
 Commutant variable 3x3 (2 blocks, 2 scalar variables)
-           dim: 3                                                                                  
-   dimensions1: [1, 2]                                                                             
-         field: 'real'                                                                             
-    matrixType: 'symmetric'                                                                        
-multiplicities: [1, 1]                                                                             
-         types: 'RC'                                                                               
-             U: [0.57735, 0.12408, -0.80701; 0.57735, -0.76094, 0.29605; 0.57735, 0.63685, 0.51096]
-        blocks: [1, 2]                                                                             
+           dim: 3                                                                                   
+   dimensions1: [1, 2]                                                                              
+         field: 'real'                                                                              
+    matrixType: 'symmetric'                                                                         
+multiplicities: [1, 1]                                                                              
+         types: 'RC'                                                                                
+             U: [0.57735, 0.66992, 0.46676; 0.57735, -0.73919, 0.34679; 0.57735, 0.069267, -0.81355]
+        blocks: [1, 2]                                                                              
 </pre><p>No new variable has been introduced in the new object, but the block structure has been found:</p><pre class="codeinput">full(MInvariantBlock.blockMask)
 </pre><pre class="codeoutput">
 ans =
@@ -115,7 +115,7 @@ ans =
 |   ID|                    Constraint|   Coefficient range|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |   #1|   Element-wise inequality 1x1|              2 to 2|
-|   #2|         Matrix inequality 2x2|     5.5511e-17 to 2|
+|   #2|         Matrix inequality 2x2|     1.2938e-14 to 2|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 </pre><h2>Comparison with a direct formulation<a name="23"></a></h2><p>To conclude, let us show in more detail why the SDP formulation of a problem is more efficient if it takes advantage of the available symmetry properties. For this, we consider again the problem described at the beginning of this page. This problem can be solved directly as follows:</p><pre class="codeinput">M = sdpvar(3);
 constraints = [trace(M) == 1, M(permutation, permutation) == M, M &gt;= 0];
@@ -127,8 +127,8 @@ diagnostic =
   struct with fields:
 
     yalmipversion: '20190425'
-       yalmiptime: 0.0596
-       solvertime: 0.0207
+       yalmiptime: 0.1119
+       solvertime: 0.1250
              info: 'Successfully solved (SeDuMi-1.3)'
           problem: 0
 
@@ -181,14 +181,14 @@ Coeffiecient range: 1 to 1
 MSym = 
 
 Commutant variable 3x3 (2 blocks, 2 scalar variables)
-           dim: 3                                                                                     
-   dimensions1: [1, 2]                                                                                
-         field: 'real'                                                                                
-    matrixType: 'symmetric'                                                                           
-multiplicities: [1, 1]                                                                                
-         types: 'RC'                                                                                  
-             U: [0.57735, -0.44651, -0.68359; 0.57735, -0.36875, 0.72848; 0.57735, 0.81526, -0.044894]
-        blocks: [1, 2]                                                                                
+           dim: 3                                                                                  
+   dimensions1: [1, 2]                                                                             
+         field: 'real'                                                                             
+    matrixType: 'symmetric'                                                                        
+multiplicities: [1, 1]                                                                             
+         types: 'RC'                                                                               
+             U: [0.57735, 0.10255, -0.81003; 0.57735, 0.65023, 0.49382; 0.57735, -0.75278, 0.31621]
+        blocks: [1, 2]                                                                             
 </pre><p>In other words, the matrix is made of two blocks of size 1x1 and 2x2, and involves altogether just 2 variables.</p><p>The constraints this time are</p><pre class="codeinput">constraintsSym
 </pre><pre class="codeoutput">+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |   ID|                    Constraint|   Coefficient range|
@@ -202,7 +202,8 @@ multiplicities: [1, 1]
 %% Symmetric SDPs
 %
 % This document illustrated how *RepLAB* can be used to solve Semidefinite
-% Programs (SDP) subject to symmetries.
+% Programs (SDP) subject to symmetries. Several methods for constructing
+% SDPs subject to symmetries are presented.
 
 
 %% Preparation
