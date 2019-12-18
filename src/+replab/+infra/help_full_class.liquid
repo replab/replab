@@ -1,0 +1,17 @@
+ Class {{ cls.fullIdentifier }}
+{% if ~isempty(cls.superclassIdentifiers) %}
+{% if length(cls.superclassIdentifiers) == 1 %}
+ with parent `{{ cls.superclassIdentifiers{1} }}`
+{% else %}
+ with parents `{{ cls.superclassIdentifiers{1} }}`
+{% for p in cls.superclassIdentifiers(2:end) %}
+, `{{p}}`
+{% end %}
+{% end %}
+{% end %}
+\n
+\n
+{% call strjoin(cls.doc.lines, char(10)) %}
+\n
+\n
+TODO add link externally: Reference page for {{ cls.fullIdentifier }}

@@ -60,6 +60,7 @@ classdef Class < replab.infra.SourceElement
                 e = ie.(id);
                 return
             end
+            e = [];
         end
 
         % replab.infra.SourceElement

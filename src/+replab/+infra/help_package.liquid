@@ -1,0 +1,44 @@
+ Package {{ package.fullIdentifier }}:\n
+\n
+{% if ~isempty(package.parent) %}
+{% if isempty(package.parent.packagePath) %}
+   In root package\n
+\n
+{% else %}
+   In package:\n
+     `{{package.parent.fullIdentifier}}`\n
+\n
+{% end %}
+{% end %}
+
+{% if ~isempty(package.ownSubpackages) %}
+   Subpackages:\n
+{% for sub in package.ownSubpackages %}
+     `~{{sub.fullIdentifier}}`\n
+{% end %}
+\n
+{% end %}
+
+{% if ~isempty(package.ownFunctions) %}
+   Functions:\n
+{% for fun in package.ownFunctions %}
+{% if fun.doc.isempty %}
+     `~{{fun.fullIdentifier}}`\t\n
+{% else %}
+     `~{{fun.fullIdentifier}}` \t{{fun.doc.firstLine}}\n
+{% end %}
+{% end %}
+\n
+{% end %}
+
+{% if ~isempty(package.ownClasses) %}
+   Classes:\n
+{% for cls in package.ownClasses %}
+{% if cls.doc.isempty %}
+     `~{{cls.fullIdentifier}}`\t\n
+{% else %}
+     `~{{cls.fullIdentifier}}` \t{{cls.doc.firstLine}}\n
+{% end %}
+{% end %}
+\n
+{% end %}

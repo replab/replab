@@ -56,19 +56,6 @@ classdef Compiler < handle
             
             tokens = tokens(cellfun(@(x) ~isempty(x), tokens));
             fragments = cellfun(@(x) replab.lobster.Fragment(x), tokens, 'Uniform', false);
-            
-            % Post process the fragments to remove text fragments that only
-            % contain a newline after a block:
-            discard = zeros(1, length(fragments));
-            for k = 2:length(fragments)
-                if fragments{k-1}.type ~= replab.lobster.FRAGMENT_TYPE.TEXT && ...
-                   fragments{k}.type   == replab.lobster.FRAGMENT_TYPE.TEXT && ...
-                   strcmp(fragments{k}.raw, sprintf('\n'))
-                    discard(k) = 1;
-                end
-            end
-            
-            fragments = fragments(~discard);
         end
         
         function new_node = create_node(~, fragment)

@@ -6,6 +6,5 @@ function parseWarning(ct, pos, message, varargin)
         disp(replab.infra.formatCodeContext(ct.lines, pos, 7));
     end
     warningId = 'replab:parseWarning';
-    warningMsg = sprintf(message, varargin{:});
-    warning(warningId, warningMsg);
+    warning(warningId, message, varargin{:});
 end

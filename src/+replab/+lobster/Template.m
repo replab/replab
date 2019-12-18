@@ -26,4 +26,12 @@ classdef Template < handle
         end
     end
     
+    methods (Static)
+        
+        function t = load(filename)
+            t = replab.lobster.Template(fileread(filename));
+        end
+        
+    end
+    
 end

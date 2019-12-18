@@ -15,7 +15,10 @@ classdef Fragment < handle
             if length(raw) >= 2 && ~isempty(find(strcmp(raw(1:2), token_starts)))
                 cleaned_text = strtrim(raw(3:end-2));
             else 
-                cleaned_text = raw;
+                cleaned_text = strrep(raw, char(10), '');
+                cleaned_text = strrep(cleaned_text, '\n', char(10));
+                cleaned_text = strrep(cleaned_text, '\t', char(9));
+                cleaned_text = strrep(cleaned_text, '\\', '\');
             end
         end
         

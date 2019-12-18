@@ -21,6 +21,10 @@ classdef Function < replab.infra.SourceElement
             p = {self.name};
         end
                
+        function c = childrenNames(self)
+            c = {};
+        end
+
     end
     
 end
