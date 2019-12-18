@@ -5,6 +5,7 @@ classdef Template < handle
     end
     
     methods
+        
         function self = Template(template_string)
             if iscell(template_string)
                 template_string = strjoin(template_string, '\n');

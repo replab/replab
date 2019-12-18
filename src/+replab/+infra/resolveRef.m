@@ -1,4 +1,4 @@
-function [el linkText] = resolveRef(context, ref, isExternal)
+function [el linkText] = resolveRef(ref, context, isExternal)
 % Resolves a Sphinx reference and returns the corresponding `.SourceElement`
 %
 % We accept two possible prefixes.

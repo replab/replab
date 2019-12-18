@@ -1,16 +1,26 @@
 classdef Compiler < handle
-   
+    
     properties (Constant)
         VAR_TOKEN_START   = '{{'
         VAR_TOKEN_END     = '}}'
         BLOCK_TOKEN_START = '{%'
         BLOCK_TOKEN_END   = '%}'
+    end
+    
+    methods (Static)
         
-        TOKEN_REGEX_PATTERN = sprintf('(%s.*?%s|%s.*?%s)', replab.lobster.Compiler.VAR_TOKEN_START, replab.lobster.Compiler.VAR_TOKEN_END, replab.lobster.Compiler.BLOCK_TOKEN_START, replab.lobster.Compiler.BLOCK_TOKEN_END)
+        function t = TOKEN_REGEX_PATTERN
+            t = sprintf('(%s.*?%s|%s.*?%s)', ...
+                        replab.lobster.Compiler.VAR_TOKEN_START, ...
+                        replab.lobster.Compiler.VAR_TOKEN_END, ...
+                        replab.lobster.Compiler.BLOCK_TOKEN_START, ...
+                        replab.lobster.Compiler.BLOCK_TOKEN_END);
+        end
+        
     end
     
     properties
-       template_string
+        template_string
     end
     
     methods (Access = private)

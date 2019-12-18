@@ -149,9 +149,9 @@ end
 
 function help_class(codeBase, element, helpFunctionName, fullMode)
     if fullMode
-        fn = fullfile(codeBase.rootFolder, '+replab', '+infra', 'help_class.liquid');
-    else
         fn = fullfile(codeBase.rootFolder, '+replab', '+infra', 'help_full_class.liquid');
+    else
+        fn = fullfile(codeBase.rootFolder, '+replab', '+infra', 'help_class.liquid');
     end
     tmpl = replab.lobster.Template.load(fn);
     disp(tmpl.render(struct('cls', element)));
