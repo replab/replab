@@ -18,13 +18,13 @@ function help(varargin)
     persistent codeBase
     
     % Are we in full mode or not?
-    flags = {};
+    fullMode = false;
     if (length(varargin) == 2)
         if isequal(varargin{1}, '-f') || isequal(varargin{1}, '--full')
-            flags = {'-f'};
+            fullMode = true;
             varargin = {varargin{2}};
         elseif isequal(varargin{2}, '-f') || isequal(varargin{2}, '--full')
-            flags = {'-f'};
+            fullMode = true;
             varargin = {varargin{1}};
         end
     end
@@ -67,7 +67,8 @@ function help(varargin)
         end
     end
     
-    if (length(varargin) == 1) && (length(varargin{1}) >= 6) && (isequal(varargin{1}(1:6), 'replab'))
+    if (length(varargin) == 1) && (length(varargin{1}) >= 6) && (isequal(varargin{1}(1:6), 'replab')) ...
+            && ((length(varargin{1}) < 7) || (varargin{1}(7) == '.'))
         % We are looking for a replab-related help
         name = varargin{1};
         if isempty(codeBase)
@@ -77,98 +78,135 @@ function help(varargin)
             disp('done.');
         end
         parts = strsplit(name, '.');
-        el = codeBase.get(parts{:});
-        switch class(el)
-          case 'replab.infra.Package'
-            help_package(el, helpFunctionName, flags);
-          case 'replab.infra.Class'
-            help_class(codeBase, el, helpFunctionName, flags);
-          case 'replab.infra.InheritedClassElement'
-            % help_classElement(codeBase, classe, classElementName, helpFunctionName, fullMode);
-          case 'replab.infra.ConcreteClassElement'
-            % help_classElement(codeBase, classe, classElementName, helpFunctionName, fullMode);
-          case 'replab.infra.Function'
-            help_function(codeBase, el, helpFunctionName, flags);
+        [package packageNameParts restNameParts] = codeBase.lookupGreedy(parts);
+        switch length(restNameParts)
+          case 0
+            % we have a package
+            help_package(codeBase, package, helpFunctionName, fullMode);
+          case 1
+            % we have a package member
+            memberName = restNameParts{1};
+            if ~package.hasMember(memberName)
+                  err = 'In package %s, we are looking for member %s, and the member %s is unavailable.';
+                  error(sprintf(err, package.fullName, memberName, memberName));
+            end
+            obj = package.member(memberName);
+            if isa(obj, 'replab.infra.Function')
+                help_function(codeBase, obj, helpFunctionName, fullMode);
+            elseif isa(obj, 'replab.infra.Class')
+                help_class(codeBase, obj, helpFunctionName, fullMode);
+            else
+                error(sprintf('The object %s should not be directly a member of package %s', obj.headerStr, package.fullName));
+            end
+          case 2
+            % we have a class and a class member
+            className = restNameParts{1};
+            classElementName = restNameParts{2};
+            % remove arguments if present
+            classElementName = regexp(classElementName, '^[^\(\[\{]*', 'match');
+            classElementName = classElementName{1};
+            if ~package.hasMember(className)
+                err = 'In package %s, we are looking for class %s with member %s, and the class %s is unavailable.';
+                error(sprintf(err, package.fullName, className, classElementName, className));
+            end
+            classe = package.member(className);
+            if ~isa(classe, 'replab.infra.Class')
+                err = 'In package %s, we are looking for class %s with member %s, and %s is not a class.';
+                error(sprintf(err, package.fullName, className, classElementName, className));
+            end
+            if ~classe.hasInheritedMember(codeBase, classElementName)
+                err = 'In package %s, we are looking for class %s with member %s, and the member %s is not found.';
+                error(sprintf(err, package.fullName, className, classElementName, classElementName));
+            end
+            help_classElement(codeBase, classe, classElementName, helpFunctionName, fullMode);
           otherwise
-            error(sprintf('Unknown code base element type %s', class(el)));
+            err = 'In package %s, we are looking for the path %s which is too long to describe something sensible';
+            error(sprintf(err, package.fullName, strjoin(restNameParts, '.')));
         end
     else
         if isempty(replab.Parameters.matlabHelpPath)
-            error('The matlab help path was not captured. Please use replab_init first.');
+            try
+                % Some clear happened, we try to capture matlab's help
+                % again...
+                replab_init(0);
+            catch
+                error('The matlab help path was not captured. Please use replab_init first.');
+            end
+        end
+        
+        % We call matlab's help function
+        currentPath = strrep(pwd, '\', '/');
+
+        if ~replab.platformIsOctave
+            cd(replab.Parameters.matlabHelpPath);
+            message = [];
+            try
+                help(varargin{:});
+            catch message
+            end
+            cd(currentPath);
+            if ~isempty(message)
+                error(message);
+            end
         else
-            % We call matlab's help function
-            currentPath = strrep(pwd, '\', '/');
-            
-            if ~replab.platformIsOctave
-                cd(replab.Parameters.matlabHelpPath);
-                message = [];
-                try
-                    help(varargin{:});
-                catch message
-                end
-                cd(currentPath);
-                if ~isempty(message)
-                    error(message);
-                end
-            else
-                % In some versions of octave earlier than 5.1.0, the
-                % current path had a lower priority than the path order.
-                % Then we also need replab's path...
-                
-                replabHelpPath = fileparts(which('replab_init'));
-                replabHelpPath = [strrep(replabHelpPath, '\', '/'), '/src'];
-                
-                cd(replab.Parameters.matlabHelpPath);
-                addpath(replab.Parameters.matlabHelpPath);
-                message = [];
-                try
-                    help(varargin{:});
-                catch message
-                end
-                cd(currentPath);
-                addpath(replabHelpPath);
-                if ~isempty(message)
-                    error(message);
-                end
+            % In some versions of octave earlier than 5.1.0, the
+            % current path had a lower priority than the path order.
+            % Then we also need replab's path...
+
+            replabHelpPath = fileparts(which('replab_init'));
+            replabHelpPath = [strrep(replabHelpPath, '\', '/'), '/src'];
+
+            cd(replab.Parameters.matlabHelpPath);
+            addpath(replab.Parameters.matlabHelpPath);
+            message = [];
+            try
+                help(varargin{:});
+            catch message
+            end
+            cd(currentPath);
+            addpath(replabHelpPath);
+            if ~isempty(message)
+                error(message);
             end
         end
     end
 end
 
-function help_package(package, helpFunctionName, flags)
-    fullName = package.fullIdentifier;
+function help_package(codeBase, package, helpFunctionName, fullMode)
+    fullName = strjoin(package.nameParts,'.');
     replab.infra.dispH([' Package ' fullName, ':'], fullName, helpFunctionName, fullMode);
     disp(' ');
     
-    % calling convention linkHelp(helpFunctionName, 'Group', 'replab.Group', '-f')
-    
     % Package:
-    parent = package.parent;
-    if ~isempty(parent) && ~isempty(parent.name)
+    if length(package.nameParts) > 1
         disp('   In package:');
-        packageName = parent.fullIdentifier;
+        packageName = strjoin(package.nameParts(1:end-1), '.');
         if replab.platformIsOctave  || (~usejava('desktop'))
             disp(['     ', packageName]);
         else
-            dispH(['     ' replab.infra.linkHelp(helpFunctionName, packageName, packageName, flags)]);
+            if fullMode
+                replab.infra.dispH(['     <a href="matlab: ', helpFunctionName, '(''', packageName, ''')">', packageName, '</a>'], fullName, helpFunctionName, fullMode);
+            else
+                replab.infra.dispH(['     <a href="matlab: ', helpFunctionName, '(''-f'',''', packageName, ''')">', packageName, '</a>'], fullName, helpFunctionName, fullMode);
+            end
         end
         disp(' ');
     end
     
     % Subpackages:
-    sub = package.ownSubpackages;
+    sub = codeBase.subPackagesNames(package.nameParts);
     if ~isempty(sub)
         disp('   Subpackages:');
         for i = 1:length(sub)
-            subi = sub{i};
-            fullName = subi.fullIdentifier;
+            name = sub{i};
+            fullName = strjoin(horzcat(package.nameParts, {name}), '.');
             if replab.platformIsOctave || (~usejava('desktop'))
-                ref = subi.name;
+                ref = name;
             else
                 if fullMode
-                    ref = sprintf('<a href="matlab: %s(''-f'',''%s'')">%s</a>', helpFunctionName, fullName, subi.name);
+                    ref = sprintf('<a href="matlab: %s(''-f'',''%s'')">%s</a>', helpFunctionName, fullName, name);
                 else
-                    ref = sprintf('<a href="matlab: %s(''%s'')">%s</a>', helpFunctionName, fullName, subi.name);
+                    ref = sprintf('<a href="matlab: %s(''%s'')">%s</a>', helpFunctionName, fullName, name);
                 end
             end
             disp(sprintf('     %s', ref));
@@ -178,32 +216,32 @@ function help_package(package, helpFunctionName, flags)
     
     % Members:
     disp('   Members:')
-    fn = fieldnames(package.nspElements);
+    fn = fieldnames(package.members);
     table = cell(length(fn), 2);
     for i = 1:length(fn)
         name = fn{i};
-        element = package.nspElements.(name);
+        member = package.members.(name);
         if replab.platformIsOctave || (~usejava('desktop'))
             ref = name;
         else
             if fullMode
-                ref = sprintf('<a href="matlab: %s(''-f'',''%s'')">%s</a>', helpFunctionName, element.fullIdentifier, name);
+                ref = sprintf('<a href="matlab: %s(''-f'',''%s'')">%s</a>', helpFunctionName, member.fullName, name);
             else
-                ref = sprintf('<a href="matlab: %s(''%s'')">%s</a>', helpFunctionName, element.fullIdentifier, name);
+                ref = sprintf('<a href="matlab: %s(''%s'')">%s</a>', helpFunctionName, member.fullName, name);
             end
         end
-        switch class(element)
-          case 'replab.infra.Class'
+        switch member.kind
+          case 'class'
             k = 'cls';
-          case 'replab.infra.Function'
+          case 'function'
             k = 'fun';
           otherwise
-            error(sprintf('Unknown type %s', class(element)));
+            k = member.kind;
         end
         table{i,1} = sprintf('     %s (%s)', ref, k);
         table{i,2} = '';
-        if ~element.doc.isempty
-            table{i,2} = [' ' element.doc.firstLine];
+        if ~member.doc.isempty
+            table{i,2} = [' ' member.doc.firstLine];
         end
     end
     t = replab.infra.align(table, 'll');
