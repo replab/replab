@@ -12,7 +12,7 @@ function str = linkHelp(helpFunctionName, linkText, helpArg, flags)
     if isa(flags, 'char')
         flags = {flags};
     end
-    if replab.Parametres.consoleUseHTML
+    if replab.Parameters.consoleUseHTML
         args = horzcat(flags, {helpArg});
         args = strjoin(cellfun(@(a) ['''' a ''''], args, 'uniform', 0), ',');
         t = sprintf('<a href="matlab: %s(%s)>%s</a>', helpFunctionName, args, linkText);

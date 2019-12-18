@@ -266,7 +266,6 @@ classdef CodeBase < replab.Str
                     elseif isequal(name(end-1:end), '.m')
                         % is not a folder and has a Matlab file extension
                         filename = fullfile(rootFolder, subpath{:}, name);
-                        disp(filename);
                         data = replab.infra.CodeTokens.fromFile(filename).parse;
                         switch class(data)
                           case 'replab.infra.FunctionLikeData'
