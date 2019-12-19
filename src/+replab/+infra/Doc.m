@@ -53,22 +53,6 @@ classdef Doc < replab.Str
             end
         end
         
-        function flines = filteredLines(self)
-        % Returns the documentation lines with some of the Sphinx formatting filtered out
-            flines = cellfun(@(l) replab.infra.Doc.filterSphinxLine(l), self.lines, 'uniform', 0);
-        end
-        
-        function dispFilteredLines(self, keyword, helpFunctionName, fullMode)
-            flines = self.filteredLines;
-            for i = 1:length(flines)
-                if isempty(flines{i})
-                    disp(' ');
-                else
-                    replab.infra.dispH(['   ', flines{i}], keyword, helpFunctionName, fullMode);
-                end
-            end
-        end
-        
         function b = isempty(self)
             b = true;
             for i = 1:length(self.lines)
@@ -77,22 +61,5 @@ classdef Doc < replab.Str
         end
 
     end
-    
-    methods (Static)
         
-        function l = filterSphinxLine(l)
-        % Filters the Sphinx formatting out of a line
-            
-        % 1. we replace double backticks by single quotes
-            l = strrep(l, '``', '''');
-            % 2. we remove the plus '+' inside single backticks `bla`, and remove the backticks
-            parts = strsplit(l, '`');
-            for i = 2:2:length(parts)
-                parts{i} = strrep(parts{i}, '+', '');
-            end
-            l = strjoin(parts, '');
-        end
-        
-    end
-    
 end
