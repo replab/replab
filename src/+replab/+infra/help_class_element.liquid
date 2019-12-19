@@ -1,0 +1,11 @@
+{% if isequal(el.kind, 'property') %}
+ Property `{{ el.fullIdentifier }}`:\n
+{% else %}
+ Method `{{ el.fullIdentifier }}`:\n
+{% end %}
+\n
+{% if el.declarations.hasDoc %}
+{% call strjoin(el.declarations.findBestDocumented.doc.lines, char(10)) %}
+{% end %}
+\n
+\n

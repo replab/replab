@@ -54,6 +54,10 @@ classdef Declarations < replab.Str
             end
         end
         
+        function b = hasDoc(self)
+            b = ~isempty(self.findBestDocumented);
+        end
+        
         function el = findBestDocumented(self)
         % Returns the documented declaration with highest priority
             els = self.findDocumentedElements;

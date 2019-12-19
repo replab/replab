@@ -27,20 +27,25 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
         for j = 1:length(refs)
             ref = refs{j};
             [el linkText] = replab.infra.resolveRef(ref, context, @(id) any(exist(id) == [3 4 5 6 8]));
+            failed = false;
             if isa(el, 'replab.infra.Element')
                 id = el.fullIdentifier;
             elseif isa(el, 'char')
                 id = el;
             else
-                error('replab:formatHelpError', 'Unknown element type %s', class(el));
+                failed = true;
             end
-            if ismember(id, strongIds)
-                linkText = replab.infra.strong(linkText);
-            end
-            if ismember(id, plainIds)
-                ref = linkText;
+            if ~failed
+                if ismember(id, strongIds)
+                    linkText = replab.infra.strong(linkText);
+                end
+                if ismember(id, plainIds)
+                    ref = linkText;
+                else
+                    ref = replab.infra.linkHelp(helpCommand, linkText, id);
+                end
             else
-                ref = replab.infra.linkHelp(helpCommand, linkText, id);
+                ref = linkText;
             end
             refs{j} = ref;
         end

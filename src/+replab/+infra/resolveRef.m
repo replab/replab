@@ -1,5 +1,5 @@
 function [el linkText] = resolveRef(ref, context, isExternal)
-% Resolves a Sphinx reference and returns the corresponding `.SourceElement`
+% Resolves a Sphinx reference and returns the corresponding `.Element`
 %
 % We accept two possible prefixes.
 %
@@ -39,7 +39,7 @@ function [el linkText] = resolveRef(ref, context, isExternal)
 %  
 % Returns
 % -------
-%   el: `.SourceElement` or ``charstring`` or ``[]``
+%   el: `.Element` or ``charstring`` or ``[]``
 %     The corresponding element, or ``[]`` if the reference could not be resolved
 %   linkText: charstring
 %     Extracted link text
@@ -86,9 +86,12 @@ function [el linkText] = resolveRef(ref, context, isExternal)
           case 3 % lookup current package
             if isa(context, 'replab.infra.Package')
                 pkg = context;
-            else
-                assert(isa(context, 'replab.infra.SourceElement'));
+            elseif isa(context, 'replab.infra.SourceElement')
                 pkg = context.package;
+            elseif isa(context, 'replab.infra.ClassElement')
+                pkg = context.parentClass.package;
+            else
+                error('replab:resolveRefError', 'Invalid Sphinx reference %s', ref);
             end
             e = pkg.lookup(head);
             if ~isempty(e) && ~isa(e, 'replab.infra.Package')
