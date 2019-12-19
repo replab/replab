@@ -33,6 +33,10 @@ classdef ClassElement < replab.infra.Element
             d = replab.infra.Declarations(self.codeBase, self);
         end
         
+        function b = isAccessible(self)
+            b = ~isfield(self.attributes, 'Access') || isequal(self.attributes.Access, 'public');
+        end
+        
     end
 
 end

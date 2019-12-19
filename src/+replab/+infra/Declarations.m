@@ -42,10 +42,22 @@ classdef Declarations < replab.Str
             els = els(mask);
         end
         
+        function l = bestEffortDocFirstLine(self)
+            el = self.findBestDocumented;
+            if isempty(el)
+                l = '';
+            else
+                l = el.doc.firstLine;
+                if isempty(l)
+                    l = '';
+                end
+            end
+        end
+        
         function el = findBestDocumented(self)
         % Returns the documented declaration with highest priority
             els = self.findDocumentedElements;
-            if isempty(els{1})
+            if isempty(els)
                 el = [];
             else
                 el = els{1};

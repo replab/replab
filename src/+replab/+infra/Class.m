@@ -2,7 +2,7 @@ classdef Class < replab.infra.SourceElement
 
     properties
         superclassIdentifiers
-        ownElements
+        ownElements % struct
     end
 
     properties (Access = protected)
@@ -76,35 +76,47 @@ classdef Class < replab.infra.SourceElement
         % Own methods
         
         function ae = allElements(self)
-        % Returns a struct whose fields contain 
+        % Returns a struct whose fields contain all elements
             ae = replab.infra.shmMerge(self.ownElements, self.inheritedElements);
         end
         
         function am = allMethods(self)
+        % Returns a row cell vector containing all methods, inc. inherited, sorted by name
             am = horzcat(self.ownMethods, self.inheritedMethods);
+            names = cellfun(@(el) el.name, am, 'uniform', 0);
+            [~, ind] = sort(names);
+            am = am(ind);
         end
         
         function ap = allProperties(self)
+        % Returns a row cell vector containing all properties, inc. inherited, sorted by name
             ap = horzcat(self.ownProperties, self.inheritedProperties);
+            names = cellfun(@(el) el.name, ap, 'uniform', 0);
+            [~, ind] = sort(names);
+            ap = ap(ind);
         end
 
         function om = ownMethods(self)
-            oe = self.ownElements;
+            oe = struct2cell(self.ownElements);
+            oe = oe(:).';
             om = oe(cellfun(@(x) isequal(x.kind, 'method'), oe));
         end
         
         function op = ownProperties(self)
-            oe = self.ownElements;
+            oe = struct2cell(self.ownElements);
+            oe = oe(:).';
             op = oe(cellfun(@(x) isequal(x.kind, 'property'), oe));
         end
         
         function im = inheritedMethods(self)
-            ie = self.inheritedElements;
-            im = oe(cellfun(@(x) isequal(x.kind, 'method'), ie));
+            ie = struct2cell(self.inheritedElements);
+            ie = ie(:).';
+            im = ie(cellfun(@(x) isequal(x.kind, 'method'), ie));
         end
         
-        function op = inheritedProperties(self)
-            ie = self.inheritedElements;
+        function ip = inheritedProperties(self)
+            ie = struct2cell(self.inheritedElements);
+            ie = ie(:).';
             ip = ie(cellfun(@(x) isequal(x.kind, 'property'), ie));
         end
         
