@@ -13,4 +13,8 @@ These guides present concrete recipes with step-by-step instructions that show h
  - [Group representation]()
  - [Decomposing a group representation]()
  - [The group algebra]() -->
+ - How to define a representation from the images of the generators
+ - How to decompose a representation
+ - How to sample the group algebra
+ - How to sample the commutant algebra
  - [How to solve a semi-definite program (SDP) subject to symmetries](../publish/SDP.html)

@@ -1,7 +1,7 @@
 %% Short overview of some basic features of RepLAB
 
 %%
-% Before trying any of the *RepLAB* commands, we must first add the paths:
+% Before using *RepLAB* commands, we must first initialize the library:
 replab_init
 
 %% Permutation groups

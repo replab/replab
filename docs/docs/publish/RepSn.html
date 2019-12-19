@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Representations of S(n)
+title: Representations of S(3)
 category: posts
 subsection: Tutorials
 comments: true
@@ -8,7 +8,7 @@ comments: true
 <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
---><div class="content"><!--introduction--><h1>Representations of the symmetric group S(n)</h1><p>The symmetric group S(n) is group of primary importance. This document presents several representations of this group with <b>RepLAB</b>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">The symmetric group</a></li><li><a href="#8">The defining representation of S(3)</a></li><li><a href="#12">The parity representation of S(3)</a></li><li><a href="#18">The trivial representation of S(3)</a></li><li><a href="#20">Direct sum of representation of S(3)</a></li><li><a href="#23">Irreducible representations of S(3)</a></li></ul></div><p>Before trying any of the <b>RepLAB</b> commands, we must initialize the library:</p><pre class="codeinput">replab_init
+--><div class="content"><!--introduction--><h1>Representations of the symmetric group S(3)</h1><p>The symmetric group S(n) is group of primary importance. Here, we consider this group for <img src="RepSn_eq00013378311338420650.png" alt="$n=3$"> and discuss several of its representations with <b>RepLAB</b>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">The symmetric group</a></li><li><a href="#8">The defining representation of S(3)</a></li><li><a href="#12">The parity representation of S(3)</a></li><li><a href="#18">The trivial representation of S(3)</a></li><li><a href="#20">Direct sum of representation of S(3)</a></li><li><a href="#23">Irreducible representations of S(3)</a></li></ul></div><p>Before trying any of the <b>RepLAB</b> commands, we must initialize the library:</p><pre class="codeinput">replab_init
 </pre><h2>The symmetric group<a name="2"></a></h2><p>Consider <img src="RepSn_eq08984225997457563733.png" alt="$n$"> distinct elements, numbered <img src="RepSn_eq07968994301754079172.png" alt="$1,2,\ldots,n$">. The symmetric group describes all possible ways in which these elements can be permuted.</p><p>With <img src="RepSn_eq00013378311338420650.png" alt="$n=3$">, for instance, two possible arrangements are</p><pre class="codeinput">[1 2 3];
 </pre><p>and</p><pre class="codeinput">[1 3 2];
 </pre><p>In general there are <img src="RepSn_eq13135424669412081744.png" alt="$n!$"> such arrangements (i.e. <img src="RepSn_eq01663736040536833074.png" alt="$6$"> arrangements for <img src="RepSn_eq00013378311338420650.png" alt="$n=3$">).</p><p>In <b>RepLAB</b>, the symmetric group can be constructed with a simple command</p><pre class="codeinput">n = 3;
@@ -189,10 +189,11 @@ ans =
 </ul>
 </p></div><!--
 ##### SOURCE BEGIN #####
-%% Representations of the symmetric group S(n)
+%% Representations of the symmetric group S(3)
 %
-% The symmetric group S(n) is group of primary importance. This
-% document presents several representations of this group with *RepLAB*.
+% The symmetric group S(n) is group of primary importance. Here, we
+% consider this group for $n=3$ and discuss several of its representations
+% with *RepLAB*.
 
 %%
 % Before trying any of the *RepLAB* commands, we must initialize the library:

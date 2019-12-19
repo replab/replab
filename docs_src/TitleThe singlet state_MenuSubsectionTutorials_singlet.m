@@ -2,10 +2,12 @@
 %
 % The unitary group $U(n)$ describes the possible change of basis in the
 % complex Hilbert space of dimension $n$. For $n=2$, this captures the
-% possible choices of basis in the qubit space $C^2$. Using *RepLAB*'s
-% decomposition algorithm, we identify here the subspace of the two-qubits
-% Hilbert space $(C^2)^{\otimes 2}$ which is invariant under the join
-% change of basis for both subsystems.
+% possible choices of basis in the qubit space $C^2$. For a system composed
+% of two qubits, we can similarly define the effect of a joint change of
+% basis performed on both subsystems simultaneously. It is known that a
+% single state is invariant under such joint change of basis. Here, we
+% identify this state by extracting the subspace of $(C^2)^{\otimes 2}$
+% which is invariant under the joint change of basis for both subsystems.
 
 %%
 % Before trying any of the *RepLAB* commands, we must initialize the library:

@@ -1,7 +1,8 @@
-%% Representations of the symmetric group S(n)
+%% Representations of the symmetric group S(3)
 %
-% The symmetric group S(n) is group of primary importance. This
-% document presents several representations of this group with *RepLAB*.
+% The symmetric group S(n) is group of primary importance. Here, we
+% consider this group for $n=3$ and discuss several of its representations
+% with *RepLAB*.
 
 %%
 % Before trying any of the *RepLAB* commands, we must initialize the library:

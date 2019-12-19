@@ -14,6 +14,7 @@
 %
 % The style used when displaying objects in the REPL/command line is the
 % 'long' style. For example:
+replab_init
 P = replab.Permutations(3)
 
 %%

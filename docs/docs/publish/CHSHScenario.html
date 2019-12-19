@@ -8,13 +8,14 @@ comments: true
 <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
---><div class="content"><!--introduction--><h1>Relabelings in the CHSH scenario</h1><p>We describe the output/input/party relabelings in the CHSH scenario, and decompose their action on probability distributions <img src="CHSHScenario_eq15875943300748122308.png" alt="$P(ab|xy)$">.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Relabelings the outputs</a></li><li><a href="#2">Adding the relabelings of inputs</a></li><li><a href="#4">Adding the relabelings of parties</a></li><li><a href="#6">Decomposition of the full probability space</a></li></ul></div><h2>Relabelings the outputs<a name="1"></a></h2><p>Outputs are binary, so the relabelling of outputs is the symmetric group of domain size 2. The representation of this relabelling on the probabilities <img src="CHSHScenario_eq02224836646815287894.png" alt="$P(a)$"> is then the defining representation</p><pre class="codeinput">outputGroup = replab.S(2);
+--><div class="content"><!--introduction--><h1>Relabelings in the CHSH scenario</h1><p>We describe the output/input/party relabelings in the CHSH scenario, and decompose their action on probability distributions <img src="CHSHScenario_eq15875943300748122308.png" alt="$P(ab|xy)$">.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Relabelings the outputs</a></li><li><a href="#3">Adding the relabelings of inputs</a></li><li><a href="#5">Adding the relabelings of parties</a></li><li><a href="#7">Decomposition of the full probability space</a></li></ul></div><p>Before using <b>RepLAB</b> commands, we must first initialize the library:</p><pre class="codeinput">replab_init
+</pre><h2>Relabelings the outputs<a name="2"></a></h2><p>Outputs are binary, so the relabelling of outputs is the symmetric group of domain size 2. The representation of this relabelling on the probabilities <img src="CHSHScenario_eq02224836646815287894.png" alt="$P(a)$"> is then the defining representation</p><pre class="codeinput">outputGroup = replab.S(2);
 outputRep = outputGroup.definingRep;
-</pre><h2>Adding the relabelings of inputs<a name="2"></a></h2><p>In the CHSH scenario, each party has two binary measurements. Therefore, a copy of S(2) acts on the outputs of the first measurement, and a second copy of S(2) acting on the outputs of the second measurement, while another copy of S(2) permutes the choice of measurement (input).</p><p>This is described by the wreath product of S(2) by S(2).</p><pre class="codeinput">ioGroup = replab.S(2).wreathProduct(outputGroup);
+</pre><h2>Adding the relabelings of inputs<a name="3"></a></h2><p>In the CHSH scenario, each party has two binary measurements. Therefore, a copy of S(2) acts on the outputs of the first measurement, and a second copy of S(2) acting on the outputs of the second measurement, while another copy of S(2) permutes the choice of measurement (input).</p><p>This is described by the wreath product of S(2) by S(2).</p><pre class="codeinput">ioGroup = replab.S(2).wreathProduct(outputGroup);
 </pre><p>The representation on the conditional probility <img src="CHSHScenario_eq13125476778068594889.png" alt="$P(a|x)$"> is the imprimitive representation, given that we use the defining representation for the inner group</p><pre class="codeinput">ioRep = ioGroup.imprimitiveRep(outputRep);
-</pre><h2>Adding the relabelings of parties<a name="4"></a></h2><p>The same story repeats for relabelings of parties: the scenario involves two homogeneous parties. We thus have two copies of the group relabeling inputs and/or outputs (one for Alice, one for Bob), and a copy of S2 that permutes the parties. This group desribing all possible relabellings in this scenario is thus given by:</p><pre class="codeinput">scenarioGroup = outputGroup.wreathProduct(ioGroup);
+</pre><h2>Adding the relabelings of parties<a name="5"></a></h2><p>The same story repeats for relabelings of parties: the scenario involves two homogeneous parties. We thus have two copies of the group relabeling inputs and/or outputs (one for Alice, one for Bob), and a copy of S2 that permutes the parties. This group desribing all possible relabellings in this scenario is thus given by:</p><pre class="codeinput">scenarioGroup = outputGroup.wreathProduct(ioGroup);
 </pre><p>The representation on the behavior <img src="CHSHScenario_eq15875943300748122308.png" alt="$P(ab|xy)$"> is however a primitive representation, as <img src="CHSHScenario_eq16577252330521769272.png" alt="$P(a|x; b|y)$"> ressembles a tensor. Inside each party, we use the imprimitive representation constructed before.</p><pre class="codeinput">probRep = scenarioGroup.primitiveRep(ioRep);
-</pre><h2>Decomposition of the full probability space<a name="6"></a></h2><p>We can now compute the decomposition of this representation on <img src="CHSHScenario_eq15875943300748122308.png" alt="$P(ab|xy)$">:</p><pre class="codeinput">dec = probRep.decomposition
+</pre><h2>Decomposition of the full probability space<a name="7"></a></h2><p>We can now compute the decomposition of this representation on <img src="CHSHScenario_eq15875943300748122308.png" alt="$P(ab|xy)$">:</p><pre class="codeinput">dec = probRep.decomposition
 </pre><pre class="codeoutput">
 dec = 
 
@@ -30,18 +31,18 @@ Subrepresentation
       U(2,:): [1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1]/4
       U(3,:): [1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1]/4
       U(4,:): [1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1]/4
-      U(5,:): [1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1]/4
-      U(6,:): [1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1]/4
+      U(5,:): [1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1]/4
+      U(6,:): [1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1]/4
       U(7,:): [1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1, 1, -1]/4
       U(8,:): [1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, -1, -1, 1]/4
-      U(9,:): [1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1]/4
-     U(10,:): [1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1]/4
-     U(11,:): [1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1]/4
+      U(9,:): [1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1]/4
+     U(10,:): [1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1]/4
+     U(11,:): [1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1]/4
      U(12,:): [1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1]/4
      U(13,:): [1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, 1, 1, -1, -1]/4
-     U(14,:): [1, -1, -1, 1, 1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1]/4
+     U(14,:): [1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1]/4
      U(15,:): [1, -1, 1, -1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, 1]/4
-     U(16,:): [1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1]/4
+     U(16,:): [1, -1, -1, 1, 1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1]/4
 ...
 </pre><p>There are 6 irreducible componenta</p><pre class="codeinput">dec.nComponents
 </pre><pre class="codeoutput">
@@ -65,6 +66,10 @@ ans =
 % We describe the output/input/party relabelings in the CHSH scenario,
 % and decompose their action on probability distributions $P(ab|xy)$.
 %
+
+%%
+% Before using *RepLAB* commands, we must first initialize the library:
+replab_init
 
 %% Relabelings the outputs
 % Outputs are binary, so the relabelling of outputs is the symmetric group

@@ -4,6 +4,10 @@
 % and decompose their action on probability distributions $P(ab|xy)$.
 %
 
+%%
+% Before using *RepLAB* commands, we must first initialize the library:
+replab_init
+
 %% Relabelings the outputs
 % Outputs are binary, so the relabelling of outputs is the symmetric group
 % of domain size 2. The representation of this relabelling on the

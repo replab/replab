@@ -10,6 +10,7 @@ This section explains and analyses some key concepts that appear in **RepLAB**. 
 
 Scientific articles :
  - ["RepLAB: a computational/numerical approach to representation theory"](https://arxiv.org/abs/1911.09154) presents a concise overview of the approach used by **RepLAB**
+ - An introduction to representation theory: 
 
 Online articles:
  - [...]
