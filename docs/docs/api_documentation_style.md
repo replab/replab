@@ -92,14 +92,14 @@ In order, the sections of a function comment are:
    
    ```matlab
    % Args:
-   %   x (type): Description of parameter `x`.
-   %   y: Description of parameter `y` (with type not specified)
+   %   x (type): Description of parameter ``x``.
+   %   y: Description of parameter ``y`` (with type not specified)
    ```
 
    If it is not necessary to specify an argument, use `optional`:
 
    ```matlab
-   %   x (type, optional): optional parameter of type `type`
+   %   x (type, optional): optional parameter of type ``type``
    ```
 
    When a parameter can only assume one of a fixed set of values, those values can be listed in braces. If the argument is optional, the default value appears first:
@@ -130,9 +130,8 @@ In order, the sections of a function comment are:
    
    ```matlab
    function c = sum(a, b)
-   % sum - Sums two numbers
+   % Sums two numbers
    %
-   % c = sum(a, b)
    % Adds the value of a and b.
    %
    % Returns:
@@ -141,9 +140,8 @@ In order, the sections of a function comment are:
 
    ```matlab
    function [c d] = sorted2(a, b)
-   % sorted2 - Sorts two numbers
+   % Sorts two numbers
    %
-   % [c d] = sorted2(a, b)
    % Returns a and b as c and d so as to always satisfy the condition c <= d.
    %
    % Returns
@@ -199,11 +197,13 @@ Class properties are documented by *not* adding a semicolon `;` to each property
 
 ```matlab
 properties (SetAccess = protected)
-    group % Group being representation
+    group % `replab.Group`: Group being representation
     field % 'R' for a representation on a real vector space, 'C' for a representation on a complex vector space
     dimension % Representation dimension
 end
 ```
+
+Property types are specified before a semicolon, as in return types.
 
 Methods are documented as standalone functions. Do not include `self` in the list of parameters. The constructor is documented separately as any method.
 
@@ -213,4 +213,4 @@ Abstract methods should have a single code line in their body `error('Abstract')
 
 - Equations: we do not use currently LaTeX formatting. (TODO: should we, in the future?)
 
-- We use sparingly the reST conventions for italics, bold and monospace, but not for variable names. Variable, package, method, function and class names should be written between single back-ticks.
+- We use sparingly the reST conventions for italics, bold and monospace, but not for variable names. Only package, method, function and class names should be written between single backticks, so that the reference is valid for our infrastructure. One cannot use single backticks for argument names. Matlab/YALMIP objects can be referred with single backticks, as long as they are in the global scope.
