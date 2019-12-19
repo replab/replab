@@ -4,6 +4,14 @@
  Method `~{{ el.fullIdentifier }}` in class `{{ el.parentClass.fullIdentifier }}`:\n
 {% end %}
 \n
+{% if length(el.declarations.findAll) > 1 %}
+All declarations:\n
+{% for p in el.declarations.findAll %}
+- `{{ p.fullIdentifier }}`\n
+    {{ p.declaration }}\n
+{% end %}
+{% end %}
+\n
 {% if isempty(docEl) %}
 {% if isequal(el.kind, 'method') %}
   {{ el.declarations.findBest.declaration }}\n

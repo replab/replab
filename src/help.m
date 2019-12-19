@@ -105,7 +105,7 @@ function help(varargin)
           otherwise
             error('replab:helpError', 'Object referenced by %s is of type %s', name, class(element));
         end
-        if ~isempty(docEl) && docEl.doc.isempty
+        if ~isempty(docEl) && (~isa(docEl, 'replab.infra.SourceElement') || docEl.doc.isempty)
             docEl = [];
         end
         if fullMode
