@@ -16,8 +16,23 @@
      `{{parent.fullIdentifier}}` \t{{parent.doc.firstLine}}\n
 {% end %}
 {% end %}
+\n
+{% end %}
+{% if ~isempty(el.ownSubclasses) %}
+{% if length(el.ownSubclasses) == 1 %}
+   Direct child:\n
+{% else %}
+   Direct children:\n
+{% end %}
+{% for child in el.ownSubclasses %}
+{% if child.doc.isempty %}
+     `{{child.fullIdentifier}}`\t\n
+{% else %}
+     `{{child.fullIdentifier}}` \t{{child.doc.firstLine}}\n
+{% end %}
 {% end %}
 \n
+{% end %}
 \n
 {% call strjoin(el.doc.lines, char(10)) %}
 \n
