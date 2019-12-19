@@ -6,15 +6,17 @@ classdef Partition < replab.Str
         blockIndex % integer row vector: Index of the block for each element
         start % integer row vector: Starting index for each block
         next % integer row vector: Next index in the same block, or 0 if at the end
+        blocks % cell array row vector of integer row vector: group elements by partition
     end
     
     methods (Access = protected)
         
-        function self = Partition(n, blockIndex, start, next)
+        function self = Partition(n, blockIndex, start, next, blocks)
             self.n = n;
             self.blockIndex = blockIndex;
             self.start = start;
             self.next = next;
+            self.blocks = blocks;
         end
         
     end
@@ -48,12 +50,7 @@ classdef Partition < replab.Str
         end
         
         function B = block(self, i)
-            el = self.start(i);
-            B = [];
-            while el > 0
-                B = [B el];
-                el = self.next(el);
-            end
+            B = self.blocks{i};
         end
         
         function sz = blockSizes(self)
@@ -62,7 +59,7 @@ classdef Partition < replab.Str
         % Returns:
         %   (row integer vector): block sizes
             nB = self.nBlocks;
-            sz = arrayfun(@(i) self.blockSize(i), 1:nB);
+            sz = arrayfun(@(i) length(self.blocks{i}), 1:nB);
         end
             
         function sz = blockSize(self, i)
@@ -73,23 +70,10 @@ classdef Partition < replab.Str
         %
         % Returns:
         %   integer: Size of the i-th block in this partition
-            el = self.start(i);
-            sz = 0;
-            while el > 0
-                sz = sz + 1;
-                el = self.next(el);
-            end
+            sz = length(self.block{i});
         end
         
-        function B = blocks(self)
-            nB = self.nBlocks;
-            B = cell(1, nB);
-            for i = 1:nB
-                B{i} = self.block(i);
-            end
-        end
-        
-        function [P1 pind] = restrictedToBlocks(self, blocks)
+        function [P1 pind] = restrictedToBlocks(self, selBlocks)
         % Returns the partition containing only the given blocks,
         % where the selected blocks are ordered
             pind = [];
@@ -98,7 +82,7 @@ classdef Partition < replab.Str
             start1 = [];
             next1 = [];
             b1 = 1;
-            for b = blocks
+            for b = selBlocks
                 block = self.block(b);
                 m = length(block);
                 blockIndex1 = [blockIndex1 b1 * ones(1, m)];
@@ -110,7 +94,7 @@ classdef Partition < replab.Str
             end
             rest = setdiff(1:self.n, pind);
             pind = [pind rest];
-            P1 = replab.Partition(n1, blockIndex1, start1, next1);
+            P1 = replab.Partition(n1, blockIndex1, start1, next1, self.blocks(selBlocks));
         end
 
         
@@ -162,17 +146,35 @@ classdef Partition < replab.Str
         function P = fromBlockIndices(blockIndex)
             n = length(blockIndex);
             nBlocks = max(blockIndex);
-            start = zeros(1, nBlocks);
-            next = zeros(1, n);
+
+            % Construct the subsets
+            blocks = cell(1, nBlocks);
             for i = 1:nBlocks
-                blockInd = find(blockIndex == i);
-                assert(length(blockInd) > 0, 'Blocks cannot be empty');
-                start(i) = blockInd(1);
-                for j = 1:length(blockInd)-1
-                    next(blockInd(j)) = blockInd(j+1);
+                blocks{i} = find(blockIndex == i);
+                assert(length(blocks{i}) > 0, 'Blocks cannot be empty');
+            end
+            
+            % Construct the start vector
+            start = zeros(1,length(blocks));
+            for i = 1:length(blocks)
+                start(i) = blocks{i}(1);
+            end
+
+            % Construct the next vector
+            c = zeros(1,length(a)-length(blocks));
+            d = zeros(size(c));
+            co = 0;
+            for i = 1:length(blocks)
+                for j = 1:length(blocks{i})-1
+                    co = co + 1;
+                    c(co) = blocks{i}(j);
+                    d(co) = blocks{i}(j+1);
                 end
             end
-            P = replab.Partition(n, blockIndex, start, next);
+            next = full(sparse(1,c,d,1,max(max(edges))));
+            
+            % Construct the Partition object
+            P = replab.Partition(n, blockIndex, start, next, blocks);
         end
                             
         function P = connectedComponents(adjacencyMatrix)
@@ -185,73 +187,63 @@ classdef Partition < replab.Str
             assert(size(adjacencyMatrix, 2) == n);
             
             edges = replab.graph.adj2edge(adjacencyMatrix);
-            [subsets blockIndex start next] = replab.graph.connectedComponents(edges);
-            
-            % We don't want sparse objects here
-            blockIndex = full(blockIndex);
-            next = full(next);
-            
-            % If some elements are isolated, we add them
-            connectedVertices = [subsets{:}];
-            isolatedVertices = setdiff(1:n, connectedVertices);
-            nbConnectedSets = length(subsets);
-            
-            if length(isolatedVertices) >= 1
-                % allocate memory
-                subsets{nbConnectedSets + length(isolatedVertices)} = 0;
-                start(nbConnectedSets + length(isolatedVertices)) = start(end);
-                next(n) = next(end);
-                
-                % assign values
-                co = nbConnectedSets;
-                for i = 1:length(isolatedVertices)
-                    co = co + 1;
-                    subsets{co} = isolatedVertices(i);
-                    blockIndex(isolatedVertices(i)) = co;
-                    start(co) = isolatedVertices(i);
+            if isempty(edges)
+                % Special case
+                blockIndex = 1:n;
+                start = 1:n;
+                next = zeros(1,n);
+                blocks = num2cell(1:n, 1);
+            else
+                [blocks blockIndex start next] = replab.graph.connectedComponents(edges);
+
+                % We don't want sparse objects here
+                blockIndex = full(blockIndex);
+                next = full(next);
+
+                % If some elements are isolated, we add them
+                connectedVertices = [blocks{:}];
+                isolatedVertices = setdiff(1:n, connectedVertices);
+                nbConnectedSets = length(blocks);
+
+                if length(isolatedVertices) >= 1
+                    % allocate memory
+                    blocks{nbConnectedSets + length(isolatedVertices)} = 0;
+                    start(nbConnectedSets + length(isolatedVertices)) = start(end);
+                    next(n) = next(end);
+
+                    % assign values
+                    co = nbConnectedSets;
+                    for i = 1:length(isolatedVertices)
+                        co = co + 1;
+                        blocks{co} = isolatedVertices(i);
+                        blockIndex(isolatedVertices(i)) = co;
+                        start(co) = isolatedVertices(i);
+                    end
                 end
             end
             
-            % construct the Partition object
-            P = replab.Partition(n, blockIndex, start, next);
+            % Construct the Partition object
+            P = replab.Partition(n, blockIndex, start, next, blocks);
         end
         
         function P = permutationsOrbits(permutations)
         % Returns the partition of the domain 1...N into orbits
         % where permutations are a nG x domainSize double matrix
+        
             n = size(permutations, 2);
             nG = size(permutations, 1);
-            blockIndex = zeros(1, n);
-            start = [];
-            next = zeros(1, n);
-            block = 1;
-            for i = 1:n
-                if blockIndex(i) == 0
-                    % new block discovered, starting with i
-                    start = [start i];
-                    added = i;
-                    blockIndex(i) = block;
-                    test = i;
-                    while ~isempty(test)
-                        t = test(1);
-                        test = test(2:end);
-                        for j = 1:nG
-                            ti = permutations(j, t);
-                            if blockIndex(ti) == 0
-                                added = [added ti];
-                                blockIndex(ti) = block;
-                                test = [test ti];
-                            end
-                        end
-                    end
-                    added = sort(added);
-                    for i = 1:length(added) - 1
-                        next(added(i)) = added(i + 1);
-                    end
-                    block = block + 1;
-                end
+
+            % We construct the adjacency matrix
+            edges = cell(nG,1);
+            for i = 1:nG
+                edges{i} = [(1:n); permutations(i,:)].';
             end
-            P = replab.Partition(n, blockIndex, start, next);
+            edges = unique(cat(1, edges{:}), 'rows');
+            adj = replab.graph.edge2adj(edges, n);
+            
+            % Call connected component method to construct the Partition
+            % object
+            P = replab.Partition.connectedComponents(adj);
         end
                 
     end

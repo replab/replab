@@ -1,5 +1,5 @@
 function [subsets componentIndex start next] = connectedComponents(edges)
-% [subsets componentIndex start next] = connectedComponents(edges)
+% Identifies connected components of a graph
 %
 % Performs the burning algorithm on the network described by the
 % edges given in pairs.
@@ -8,27 +8,38 @@ function [subsets componentIndex start next] = connectedComponents(edges)
 % the existence of vertices which are linked with other vertices.
 %
 % Args:
-%     edges: nx2 array of vertices linked by an edge
+%     edges (double array) : nx2 array of vertices linked by an edge
 %
 % Returns:
-%     subsets: cell array with connex components
-%     componentIndex: sparse horizontal vector with the index of the 
-%         component to which each vertex belongs
-%     start: full horizontal vector identifying a first element within each
-%         each component
-%     next: a sparse horizontl vector returning for each vertex a next
-%         vertex belonging to the same connected component. Value is 0 for 
-%         the last element of the set. Useful to iterateover all elements 
-%         of a connected component.
+% --------
+%     subsets: cell array
+%         connex components
+%     componentIndex: sparse horizontal vector
+%         the index of the component to which each vertex belongs
+%     start: full horizontal vector
+%         identifies a first element within each each component
+%     next: sparse horizontal vector
+%         returns for each vertex a next vertex belonging to the same
+%         connected component. Value is 0 for the last element of the set.
+%         Useful to iterateover all elements of a connected component.
 %
 % Example:
 %     replab.graph.connectedComponents([1 2; 2 6; 3 4]) % a graph with 5 nodes labelled 1, 2, 3, 4, 6
 %
 % See also:
-%     replab.Partition.connectedComponents
-%     replab.graph.burningAlgorithmFast
-%     replab.graph.burningAlgorithm
+%     `replab.Partition.connectedComponents`
+%     `replab.graph.burningAlgorithmFast`
+%     `replab.graph.burningAlgorithm`
 
+
+    if isempty(edges)
+        % trivial case
+        subsets = {};
+        componentIndex = [];
+        start = [];
+        next = [];
+        return;
+    end
 
     if size(edges,2) ~= 2
         error('List of edges has wrong size');
