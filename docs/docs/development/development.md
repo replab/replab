@@ -1,7 +1,8 @@
 ---
 layout: docs
-title: Development
+title: Development & Community
 subsection: Development & Community
+position: 5
 ---
 
 # Development and Community

@@ -2,6 +2,7 @@
 layout: docs
 title: How to Guides
 subsection: How-to guides
+position: 2
 ---
 
 # How-to guides

@@ -2,6 +2,7 @@
 layout: docs
 title: Topic guides
 subsection: Topic guides
+position: 3
 ---
 
 # Topic guides

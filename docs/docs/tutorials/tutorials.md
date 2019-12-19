@@ -2,6 +2,7 @@
 layout: docs
 title: Tutorials
 subsection: Tutorials
+position: 1
 ---
 
 # Tutorials

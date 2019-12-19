@@ -1,7 +1,6 @@
 ---
 layout: docs
 title: Installation
-position: 1
 subsection: Tutorials
 ---
 
