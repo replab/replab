@@ -79,18 +79,50 @@ function help(varargin)
         end
         parts = strsplit(name, '.');
         element = codeBase.get(parts{:});
+        hasToggle = false;
         switch class(element)
           case 'replab.infra.Package'
-            help_package(codeBase, element, helpFunctionName, fullMode);
+            hasToggle = false;
+            templateSuffix = 'package';
           case 'replab.infra.Class'
-            help_class(codeBase, element, helpFunctionName, fullMode);
+            hasToggle = true;
+            templateSuffix = 'class';
           case 'replab.infra.Function'
-            help_function(codeBase, element, helpFunctionName, fullMode);
+            hasToggle = true;
+            templateSuffix = 'function';
           case {'replab.infra.ConcreteClassElement', 'replab.infra.InheritedClassElement'}
-            help_classElement(codeBase, element, helpFunctionName, fullMode);
+            hasToggle = true;
+            templateSuffix = 'class_element';
           otherwise
             error('replab:helpError', 'Object referenced by %s is of type %s', name, class(element));
         end
+        if fullMode
+            helpCurrent = [helpFunctionName ' -f'];
+            helpToggled = helpFunctionName;
+        else
+            helpCurrent = helpFunctionName;
+            helpToggled = [helpFunctionName ' -f'];
+        end
+        if hasToggle && fullMode
+            templateName = ['help_full_' templateSuffix];
+        else
+            templateName = ['help_' templateSuffix];
+        end
+        stdout = 1;
+        fwrite(stdout, replab.infra.templateHelp(templateName, element, helpCurrent, {element.fullIdentifier}, {element.fullIdentifier}));
+        if hasToggle && replab.Parameters.consoleUseHTML
+            if fullMode
+                link = replab.infra.linkHelp(helpToggled, element.fullIdentifier, element.fullIdentifier);
+                disp(['Toggle display to help page for ' link]);
+            else
+                link = replab.infra.linkHelp(helpToggled, element.fullIdentifier, element.fullIdentifier);
+                disp(['Toggle display to reference page for ' link]);
+            end
+        end
+        if isa(element, 'replab.infra.SourceElement')
+            disp(replab.infra.linkOpen('See source', '', element.absoluteFilename, element.startLineNumber));
+        end
+        disp(' ');
     else
         if isempty(replab.Parameters.matlabHelpPath)
             try
@@ -137,79 +169,5 @@ function help(varargin)
                 error(message);
             end
         end
-    end
-end
-
-function help_package(codeBase, package, helpFunctionName, fullMode)
-    fn = fullfile(codeBase.rootFolder, '+replab', '+infra', 'help_package.liquid');
-    tmpl = replab.lobster.Template.load(fn);
-    if fullMode
-        flags = {'-f'};
-    else
-        flags = {};
-    end
-    disp(replab.infra.formatHelp(tmpl.render(struct('package', package)), package, helpFunctionName, flags));
-end
-
-
-function help_class(codeBase, element, helpFunctionName, fullMode)
-    if fullMode
-        fn = fullfile(codeBase.rootFolder, '+replab', '+infra', 'help_full_class.liquid');
-        flags = {'-f'};
-    else
-        fn = fullfile(codeBase.rootFolder, '+replab', '+infra', 'help_class.liquid');
-        flags = {};
-    end
-    tmpl = replab.lobster.Template.load(fn);
-    disp(replab.infra.formatHelp(tmpl.render(struct('cls', element)), element, helpFunctionName, flags));
-    if replab.Parameters.consoleUseHTML
-        if fullMode
-            link = replab.infra.linkHelp(helpFunctionName, element.fullIdentifier, element.fullIdentifier);
-            disp(sprintf('Toggle display to help page for %s', link));
-        else
-            link = replab.infra.linkHelp(helpFunctionName, element.fullIdentifier, element.fullIdentifier, '-f');
-            disp(sprintf('Toggle display to reference page for %s', link));
-        end
-        disp(replab.infra.linkOpen('See source', '', element.absoluteFilename, element.startLineNumber));
-    end
-end
-
-function help_classElement(codeBase, element, helpFunctionName, fullMode)
-    if fullMode
-        fn = fullfile(codeBase.rootFolder, '+replab', '+infra', 'help_class_element.liquid');
-    else
-        fn = fullfile(codeBase.rootFolder, '+replab', '+infra', 'help_full_class_element.liquid');
-    end
-    tmpl = replab.lobster.Template.load(fn);
-    disp(tmpl.render(struct('el', element)));
-    if replab.Parameters.consoleUseHTML
-        if fullMode
-            link = replab.infra.linkHelp(helpFunctionName, element.fullIdentifier, element.fullIdentifier);
-            disp(sprintf('Toggle display to help page for %s', link));
-        else
-            link = replab.infra.linkHelp(helpFunctionName, element.fullIdentifier, element.fullIdentifier, '-f');
-            disp(sprintf('Toggle display to reference page for %s', link));
-        end
-        disp(replab.infra.linkOpen('See source', '', element.absoluteFilename, element.startLineNumber));
-    end
-end
-
-function help_function(codeBase, fun, helpFunctionName, fullMode)
-    if fullMode
-        fn = fullfile(codeBase.rootFolder, '+replab', '+infra', 'help_function.liquid');
-    else
-        fn = fullfile(codeBase.rootFolder, '+replab', '+infra', 'help_full_function.liquid');
-    end
-    tmpl = replab.lobster.Template.load(fn);
-    disp(tmpl.render(struct('fun', fun)));
-    if replab.Parameters.consoleUseHTML
-        if fullMode
-            link = replab.infra.linkHelp(helpFunctionName, fun.fullIdentifier, fun.fullIdentifier);
-            disp(sprintf('Toggle display to help page for %s', link));
-        else
-            link = replab.infra.linkHelp(helpFunctionName, fun.fullIdentifier, fun.fullIdentifier, '-f');
-            disp(sprintf('Toggle display to reference page for %s', link));
-        end
-        disp(replab.infra.linkOpen('See source', '', fun.absoluteFilename, fun.startLineNumber));
     end
 end

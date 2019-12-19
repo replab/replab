@@ -1,15 +1,15 @@
- Class {{ cls.fullIdentifier }}:
+ Class `{{ el.fullIdentifier }}`:
 \n
    In package:\n
-     `{{cls.package.fullIdentifier}}`\n
+     `{{el.package.fullIdentifier}}`\n
 \n
-{% if ~isempty(cls.ownSuperclasses) %}
-{% if length(cls.ownSuperclasses) == 1 %}
+{% if ~isempty(el.ownSuperclasses) %}
+{% if length(el.ownSuperclasses) == 1 %}
    Direct parent:\n
 {% else %}
    Direct parents:\n
 {% end %}
-{% for parent in cls.ownSuperclasses %}
+{% for parent in el.ownSuperclasses %}
 {% if parent.doc.isempty %}
      `{{parent.fullIdentifier}}`\t\n
 {% else %}
@@ -19,6 +19,6 @@
 {% end %}
 \n
 \n
-{% call strjoin(cls.doc.lines, char(10)) %}
+{% call strjoin(el.doc.lines, char(10)) %}
 \n
 \n

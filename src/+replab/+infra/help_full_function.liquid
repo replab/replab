@@ -1,12 +1,12 @@
- Function {{ fun.fullIdentifier }}:\n
-{% if isempty(fun.package.packagePath) %}
+ Function `{{ el.fullIdentifier }}`:\n
+{% if isempty(el.package.packagePath) %}
    In root package\n
 \n
 {% else %}
    In package:\n
-     `{{fun.package.fullIdentifier}}`\n
+     `{{el.package.fullIdentifier}}`\n
 \n
 {% end %}
-{% call strjoin(fun.doc.lines, char(10)) %}
+{% call strjoin(el.doc.lines, char(10)) %}
 \n
 \n

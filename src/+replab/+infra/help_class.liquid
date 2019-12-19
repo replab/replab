@@ -1,16 +1,16 @@
- Class {{ cls.fullIdentifier }}
-{% if ~isempty(cls.superclassIdentifiers) %}
-{% if length(cls.superclassIdentifiers) == 1 %}
- with direct parent `{{ cls.superclassIdentifiers{1} }}`
+ Class `{{ el.fullIdentifier }}`
+{% if ~isempty(el.superclassIdentifiers) %}
+{% if length(el.superclassIdentifiers) == 1 %}
+ with direct parent `{{ el.superclassIdentifiers{1} }}`
 {% else %}
- with direct parents `{{ cls.superclassIdentifiers{1} }}`
-{% for p in cls.superclassIdentifiers(2:end) %}
+ with direct parents `{{ el.superclassIdentifiers{1} }}`
+{% for p in el.superclassIdentifiers(2:end) %}
 , `{{p}}`
 {% end %}
 {% end %}
 {% end %}
 \n
 \n
-{% call strjoin(cls.doc.lines, char(10)) %}
+{% call strjoin(el.doc.lines, char(10)) %}
 \n
 \n

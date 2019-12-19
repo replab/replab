@@ -1,21 +1,17 @@
-function str = linkHelp(helpFunctionName, linkText, helpArg, flags)
+function str = linkHelp(helpCommand, linkText, identifier)
 % Returns a HTML link that runs a help command if the console supports HTML, or plain text as a fallback
 %
 % Args:
-%   helpFunctionName (charstring): Name of the help command
+%   helpCommand (charstring): Invocation of the help command, possibly including flags, without trailing space
+%                             Examples would be 'help -f' or 'help'
 %   linkText (charstring): Link text
-%   helpArg (charstring): Main argument to the help command
-%   flags (charstring, row cell vector of charstring, optional): Flag, or flags to pass on to the help command
-    if nargin < 4
-        flags = {};
-    end
-    if isa(flags, 'char')
-        flags = {flags};
-    end
+%   identifier (charstring): Identifier to ask help for
+    parts = strsplit(strtrim(helpCommand));
+    helpName = parts{1};
+    args = {parts{2:end} identifier};
     if replab.Parameters.consoleUseHTML
-        args = horzcat(flags, {helpArg});
-        args = strjoin(cellfun(@(a) ['''' a ''''], args, 'uniform', 0), ',');
-        str = sprintf('<a href="matlab: %s(%s)">%s</a>', helpFunctionName, args, linkText);
+        argString = strjoin(cellfun(@replab.infra.quote, args, 'uniform', 0), ',');
+        str = sprintf('<a href="matlab: %s(%s)">%s</a>', helpName, argString, linkText);
     else
         str = linkText;
     end

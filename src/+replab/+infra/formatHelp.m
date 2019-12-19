@@ -1,9 +1,13 @@
-function res = formatHelp(txt, context, helpFunctionName, flags)
+function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
 % Formats a documentation string for console output
 %
 % Args:
 %   txt (charstring): String, possibly multiline (using ASCII 10 characters) 
 %   context (`replab.infra.Element`): Element in the context of which the reference is interpreted
+%   helpCommand (charstring): Invocation of the help command, possibly including flags, without trailing space
+%                             Examples would be 'help -f' or 'help'
+%   strongIds (row cell vector of charstring): List of full identifiers to format with <strong> when supported)
+%   plainIds (row cell vector of charstring): List of full identifiers to avoid linking
 %
 % Returns:
 %   charstring: The interpreted documentation string
@@ -24,9 +28,19 @@ function res = formatHelp(txt, context, helpFunctionName, flags)
             ref = refs{j};
             [el linkText] = replab.infra.resolveRef(ref, context, @(id) any(exist(id) == [3 4 5 6 8]));
             if isa(el, 'replab.infra.Element')
-                ref = replab.infra.linkHelp(helpFunctionName, linkText, el.fullIdentifier, flags);
+                id = el.fullIdentifier;
             elseif isa(el, 'char')
-                ref = replab.infra.linkHelp(helpFunctionName, linkText, el, flags);
+                id = el;
+            else
+                error('replab:formatHelpError', 'Unknown element type %s', class(el));
+            end
+            if ismember(id, strongIds)
+                linkText = replab.infra.strong(linkText);
+            end
+            if ismember(id, plainIds)
+                ref = linkText;
+            else
+                ref = replab.infra.linkHelp(helpCommand, linkText, id);
             end
             refs{j} = ref;
         end
