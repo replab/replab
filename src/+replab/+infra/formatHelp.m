@@ -32,10 +32,10 @@ function res = formatHelp(txt, context, helpFunctionName, flags)
         end
         
         parts(2:2:end) = refs;
-        l = strjoin(parts);
+        l = strjoin(parts, '');
         
         %% Replace Sphinx double backticks by single quotes
-        l = strrep(l, '``', '''');        
+        l = strrep(l, '``', '''');
         
         %% Identify tables
         if any(l == tab)
