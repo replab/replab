@@ -3,7 +3,7 @@ classdef OnDemandSamples < replab.Str
     properties (SetAccess = protected)
         rep % replab.Rep: Representation to compute things from
         commutantSamples % row cell array of double matrix: Samples from the commutant
-        trivialSamples % row cell array of double matrix: Self adjoint samples from the trivial space
+        trivialSamples % row cell array of double matrix: Self adjoint samples (TODO ?) from the trivial space
     end
 
     properties (Access = protected)
