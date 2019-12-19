@@ -18,6 +18,8 @@ classdef VarNode < replab.lobster.Node
             var = replab.lobster.eval_with_context(self.name, context);
             if ischar(var) && isrow(var)
                 str = var;
+            elseif ischar(var) && isempty(var)
+                str = '';
             else
                 str = replab.shortStr(var);
             end
