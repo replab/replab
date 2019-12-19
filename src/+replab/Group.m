@@ -6,15 +6,15 @@ classdef Group < replab.Monoid
         function xInv = inverse(self, x)
         % Computes the inverse of an element
         %
-        % Given `x`, returns `xInv` such that
+        % Given ``x``, returns ``xInv`` such that
         %
-        % `x xInv = identity`
+        % ``x xInv = identity``
         % 
         % Args:
         %   x (element): Group element to compute the inverse of
         %
         % Returns:
-        %   element: Inverse of `x`
+        %   element: Inverse of ``x``
             error('Abstract');
         end
         
@@ -32,7 +32,7 @@ classdef Group < replab.Monoid
         %   on (element): Element conjugated
         %  
         % Returns:
-        %   element: left conjugate, i.e. `by * on * by^-1` in multiplicative notation
+        %   element: left conjugate, i.e. ``by * on * by^-1`` in multiplicative notation
             x = self.composeWithInverse(self.compose(by, on), by);
         end
         

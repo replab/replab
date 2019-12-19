@@ -15,7 +15,7 @@ classdef Monoid < replab.Domain
         %   y (element): Right hand side of the binary operation
         %
         % Returns:
-        %   element: Result of the binary operation `x` op `y`
+        %   element: Result of the binary operation ``x`` op ``y``
             error('Abstract');
         end
 
@@ -92,8 +92,7 @@ classdef Monoid < replab.Domain
         %
         % Returns:
         %   replab.Monoid: The constructed monoid
-            monoid = replab.lambda.Monoid(header, eqvFun, sampleFun, ...
-                                          composeFun, identity);
+            monoid = replab.lambda.Monoid(header, eqvFun, sampleFun, composeFun, identity);
         end
         
     end

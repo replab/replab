@@ -1,16 +1,21 @@
 function help(varargin)
 % Displays help on a function/object/...
 %
-% Arg:
-%     varargin: - if a single element, provides help for this element,
-%                 whether it is a variable, object, function, class, 
-%                 package, ...
-%               - if two elements, with one of them being the string '-f'
-%                 or '--full', provides full help on this element
+% Args:
+%   varargin: - if a single element, provides help for this element,
+%               whether it is a variable, object, function, class, 
+%               package, ...
+%             - if two elements, with one of them being the string '-f'
+%               or '--full', provides full help on this element
 %
 % Note:
-%     This function overloads matlab's 'help' function. Renaming this file
-%     does not alter its functionality.
+%   This function overloads matlab's 'help' function. Renaming this file
+%   does not alter its functionality.
+%
+% Note:
+%   The display of RepLAB objects is driven by the liquid-like templates
+%   in ``src/+replab/+infra``. Those templates support Sphinx-like reference
+%   syntax using backticks.
 
     % extract own name
     [pathStr, helpFunctionName, extension] = fileparts(which(mfilename));
@@ -78,23 +83,30 @@ function help(varargin)
             disp('done.');
         end
         parts = strsplit(name, '.');
-        element = codeBase.get(parts{:});
+        el = codeBase.get(parts{:});
         hasToggle = false;
-        switch class(element)
+        switch class(el)
           case 'replab.infra.Package'
             hasToggle = false;
             templateSuffix = 'package';
+            docEl = el;
           case 'replab.infra.Class'
             hasToggle = true;
             templateSuffix = 'class';
+            docEl = el;
           case 'replab.infra.Function'
             hasToggle = true;
             templateSuffix = 'function';
+            docEl = el;
           case {'replab.infra.ConcreteClassElement', 'replab.infra.InheritedClassElement'}
             hasToggle = true;
             templateSuffix = 'class_element';
+            docEl = el.declarations.findBestDocumented;
           otherwise
             error('replab:helpError', 'Object referenced by %s is of type %s', name, class(element));
+        end
+        if ~isempty(docEl) && docEl.doc.isempty
+            docEl = [];
         end
         if fullMode
             helpCurrent = [helpFunctionName ' -f'];
@@ -109,18 +121,19 @@ function help(varargin)
             templateName = ['help_' templateSuffix];
         end
         stdout = 1;
-        fwrite(stdout, replab.infra.templateHelp(templateName, element, helpCurrent, {element.fullIdentifier}, {element.fullIdentifier}));
+        fullId = el.fullIdentifier;
+        fwrite(stdout, replab.infra.templateHelp(templateName, el, docEl, helpCurrent, {fullId}, {fullId}));
         if hasToggle && replab.Parameters.consoleUseHTML
             if fullMode
-                link = replab.infra.linkHelp(helpToggled, element.fullIdentifier, element.fullIdentifier);
+                link = replab.infra.linkHelp(helpToggled, fullId, fullId);
                 disp(['Toggle display to help page for ' link]);
             else
-                link = replab.infra.linkHelp(helpToggled, element.fullIdentifier, element.fullIdentifier);
+                link = replab.infra.linkHelp(helpToggled, fullId, fullId);
                 disp(['Toggle display to reference page for ' link]);
             end
         end
-        if isa(element, 'replab.infra.SourceElement')
-            disp(replab.infra.linkOpen('See source', '', element.absoluteFilename, element.startLineNumber));
+        if isa(el, 'replab.infra.SourceElement')
+            disp(replab.infra.linkOpen('See source', '', el.absoluteFilename, el.startLineNumber));
         end
         disp(' ');
     else

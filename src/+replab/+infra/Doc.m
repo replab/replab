@@ -15,6 +15,11 @@ classdef Doc < replab.Str
             self.lineNumbers = lineNumbers;
         end
         
+        function c = content(self)
+        % Returns the lines joined with newlines
+            c = strjoin(self.lines, char(10));
+        end
+        
         function n = nLines(self)
         % Returns the number of lines in this documentation comment block
             n = length(self.lines);

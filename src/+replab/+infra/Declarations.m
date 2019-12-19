@@ -35,6 +35,11 @@ classdef Declarations < replab.Str
             els = cellfun(@(c) c.ownElements.(name), cls, 'uniform', 0);
         end
         
+        function el = findBest(self)
+            els = self.findAll;
+            el = els{1};
+        end
+        
         function els = findDocumentedElements(self)
         % Returns all declarations of the method/property that have documentation 
             els = self.findAll;
