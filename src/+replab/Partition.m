@@ -179,23 +179,22 @@ classdef Partition < replab.Str
             P = replab.Partition(n, blockIndex, start, next, blocks);
         end
                             
-        function P = connectedComponents(adjacencyMatrix)
-        % Given an adjacency matrix adj, returns the sets of
+        function P = connectedComponentsFromEdges(edges, n)
+        % Given list of edges, returns the sets of
         % vertices corresponding to connected components
         %
-        % For adj = [0 0 1; 0 0 0; 1 0 0], it returns the partition {[1 3] [2]}
+        % For edges = [1 3] and n = 3, it returns the partition {[1 3] [2]}
         
-            n = size(adjacencyMatrix, 1);
-            assert(size(adjacencyMatrix, 2) == n);
-            
-            edges = replab.graph.adj2edge(adjacencyMatrix);
             if isempty(edges)
-                % Special case
+                % Trivial case
                 blockIndex = 1:n;
                 start = 1:n;
                 next = zeros(1,n);
                 blocks = num2cell(1:n, 1);
             else
+                assert(max(edges(:)) <= n);
+                assert(size(edges,2) == 2);
+
                 [blocks blockIndex start next] = replab.graph.connectedComponents(edges);
 
                 % We don't want sparse objects here
@@ -227,7 +226,20 @@ classdef Partition < replab.Str
             % Construct the Partition object
             P = replab.Partition(n, blockIndex, start, next, blocks);
         end
+
+        function P = connectedComponents(adjacencyMatrix)
+        % Given an adjacency matrix adj, returns the sets of
+        % vertices corresponding to connected components
+        %
+        % For adj = [0 0 1; 0 0 0; 1 0 0], it returns the partition {[1 3] [2]}
         
+            n = size(adjacencyMatrix, 1);
+            assert(size(adjacencyMatrix, 2) == n);
+            
+            edges = replab.graph.adj2edge(adjacencyMatrix);
+            P = replab.Partition.connectedComponentsFromEdges(edges, n);
+        end
+
         function P = permutationsOrbits(permutations)
         % Returns the partition of the domain 1...N into orbits
         % where permutations are a nG x domainSize double matrix
@@ -235,17 +247,16 @@ classdef Partition < replab.Str
             n = size(permutations, 2);
             nG = size(permutations, 1);
 
-            % We construct the adjacency matrix
+            % We list the edges of the graph
             edges = cell(nG,1);
             for i = 1:nG
                 edges{i} = [(1:n); permutations(i,:)].';
             end
             edges = unique(cat(1, edges{:}), 'rows');
-            adj = replab.graph.edge2adj(edges, n);
             
             % Call connected component method to construct the Partition
             % object
-            P = replab.Partition.connectedComponents(adj);
+            P = replab.Partition.connectedComponentsFromEdges(edges, n);
         end
                 
     end
