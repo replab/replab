@@ -1,8 +1,8 @@
 classdef IndexedFamily < replab.IndexedFamily
     
     properties (SetAccess = protected)
-        atFun; % Handle that implements IndexedFamily.at
-        findFun; % Handle that implements IndexedFamily.find
+        atFun % Handle that implements IndexedFamily.at
+        findFun % Handle that implements IndexedFamily.find
     end
     
     methods

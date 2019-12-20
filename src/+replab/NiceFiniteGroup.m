@@ -55,6 +55,32 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             end
         end
         
+        function conj = leftConjugateGroup(self, by)
+        % Returns the left conjugate of the current group by the given element
+        %
+        % ``res = self.leftConjugateGroup(by)``
+        %
+        % In particular, it ensures that 
+        % ``res.generator(i) = self.parent.leftConjugate(by, self.generator(i))``
+        %
+        % Args:
+        %   by (element of `parent`): Element to conjugate the group with
+        %
+        % Returns:
+        %   `+replab.NiceFiniteGroup`: The conjugated group
+            newGenerators = cellfun(@(g) self.leftConjugate(by, g), self.generators, 'uniform', 0);
+            newOrder = self.order;
+            conj = self.parent.subgroup(newGenerators, newOrder);
+        end
+        
+        function grp = trivialSubgroup(self)
+        % Returns the trivial subgroup of this group
+        %
+        % Returns:
+        %   `+replab.NiceFiniteGroup`: The trivial subgroup
+            grp = self.subgroup({}, vpi(1));
+        end
+        
         function g = niceMonomorphismPreimage(self, p)
         % Returns the group element corresponding to a permutation
         %

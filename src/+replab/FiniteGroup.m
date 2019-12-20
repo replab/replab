@@ -186,8 +186,4 @@ classdef FiniteGroup < replab.CompactGroup
 
     end
 
-    methods (Static)
-        
-    end
-    
 end

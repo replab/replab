@@ -1,13 +1,15 @@
+I tried with Python 3 in a dedicated virtualenv in Ubuntu 18.04 as follows:
+
 Run somewhere
+    python3 -m venv sphinx
+Then enter the environment
+    source sphinx/bin/activate
 
-python3 -m venv sphinx
-
-I tried with Python 3 in a dedicated virtualenv in Ubuntu 18.04.
-
-On top of Sphinx, install the following python packages:
+Install the following python packages:
+ - sphinx
  - sphinxcontrib-matlabdomain
  - texext
  - solar_theme
-This can be done with the command `pip install --user sphinxcontrib-matlabdomain texext solar_theme`
+This can be done with the command `pip install sphinx sphinxcontrib-matlabdomain texext solar_theme` (add the option "--user" if not installing inside a virtual environment)
 
 I then used the provided Makefile with `make html`. This creates the web pages in the folder `_build`.

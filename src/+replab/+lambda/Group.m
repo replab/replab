@@ -1,11 +1,11 @@
 classdef Group < replab.Group
     
     properties (SetAccess = protected)
-        header;
-        eqvFun;
-        sampleFun;
-        composeFun;        
-        inverseFun;
+        header
+        eqvFun
+        sampleFun
+        composeFun
+        inverseFun
     end
     
     methods

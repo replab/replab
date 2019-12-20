@@ -1,6 +1,6 @@
 classdef PermutationGroupLaws < replab.NiceFiniteGroupLaws
     properties (SetAccess = protected)
-        P;
+        P
     end
     methods
         function self = PermutationGroupLaws(T)

@@ -60,9 +60,9 @@ classdef Group < replab.Monoid
         %
         % Args:
         %   header (char): Header display string
-        %   eqvFun (function_handle): Handle implementing the `eqv` method
-        %   sampleFun (function_handle): Handle implementing the `sample` method
-        %   composeFun (function_handle): Handle implementing the `compose` method
+        %   eqvFun (function_handle): Handle implementing the parent `.Domain.eqv` method
+        %   sampleFun (function_handle): Handle implementing the parent `.Domain.sample` method
+        %   composeFun (function_handle): Handle implementing the parent `.Monoid.compose` method
         %   identity (element): Identity element of this monoid
         %   inverseFun (function_handle): Handle implementing the `inverse` method
         %

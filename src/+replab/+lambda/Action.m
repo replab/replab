@@ -1,8 +1,8 @@
 classdef Action < replab.Action
     
     properties (SetAccess = protected)
-        header;
-        leftActionFun;
+        header
+        leftActionFun
     end
     
     methods

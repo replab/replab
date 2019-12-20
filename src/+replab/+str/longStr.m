@@ -60,8 +60,8 @@ function lines = longStr(obj, maxRows, maxColumns)
         header = replab.shortStr(obj, maxColumns);
         if numel(obj) > 9 || length(header) > maxColumns
             header = replab.str.headerStr(obj);
-            nR = size(obj, 1)
-            nC = size(obj, 2)
+            nR = size(obj, 1);
+            nC = size(obj, 2);
             table = cell(nR, nC*2 + 1);
             for r = 1:nR
                 table{r, 1} = ' ';

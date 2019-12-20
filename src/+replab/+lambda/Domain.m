@@ -1,9 +1,9 @@
 classdef Domain < replab.Domain
     
     properties (SetAccess = protected)
-        header;
-        eqvFun;
-        sampleFun;
+        header
+        eqvFun
+        sampleFun
     end
     
     methods

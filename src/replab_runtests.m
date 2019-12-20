@@ -4,9 +4,8 @@ function result = replab_runtests(withCoverage, onlyFastTests)
 % replab_runtests tests the library functionalities
 %
 % Args:
-%     withCoverage: boolean to enable code coverage (optional, default
-%         value is false)
-%     onlyFastTests: boolean to run only a selection of fast tests
+%     withCoverage (boolean): Enable code coverage (optional, default  value is false)
+%     onlyFastTests (boolean): Run only a selection of fast tests
 %         (optional, default value if false)
 %
 % Results:
@@ -47,7 +46,7 @@ function result = replab_runtests(withCoverage, onlyFastTests)
     catch
     end
     if ~MOxUnitInPath
-        error('The MOxUnit library was not found. Did you run replab_addpaths?')
+        error('The MOxUnit library was not found. Did you run replab_init?')
     end
     
     % Check the presence of the MOcov library if needed
@@ -59,7 +58,7 @@ function result = replab_runtests(withCoverage, onlyFastTests)
         catch
         end
         if ~MOcovInPath
-            error('The MOcov library was not found. Did you run replab_addpaths?')
+            error('The MOcov library was not found. Did you run replab_init?')
         end
     end
     

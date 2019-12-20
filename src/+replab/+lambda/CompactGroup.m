@@ -1,12 +1,12 @@
 classdef CompactGroup < replab.Group
     
     properties (SetAccess = protected)
-        header;
-        eqvFun;
-        sampleFun;
-        composeFun;
-        inverseFun;
-        sampleUniformlyFun;
+        header
+        eqvFun
+        sampleFun
+        composeFun
+        inverseFun
+        sampleUniformlyFun
     end
     
     methods

@@ -15,7 +15,7 @@ We employ the variants proposed by the [Google style](https://sphinxcontrib-napo
 
 We aim to achieve the following middle ground:
 
-- The documentation comments can be read on the MATLAB command line when the `help FUN` command is used, and it can be browsed through the `doc FUN` command.
+- The documentation comments can be processed easily by the embedded `help` function to present very readable and complete documentation to the matlab prompt.
 
 - The documentation comments can be parsed with Sphinx to produce stylish and naviguable documentation.
 
@@ -25,7 +25,7 @@ MATLAB documentation calls the documentation strings that appears at the beginni
 
 The documentation comments are written using a subset of the [reStructuredText](http://docutils.sourceforge.net/rst.html) syntax. This style guide does not list which syntax elements are permitted: use common sense to employ the conventions that are compatible with reStructuredText, and display well standalone on the terminal (as is advocated by the numpydoc guide linked above).
 
-In particular, we use single backticks for class, function, method, property names, and double backticks for verbatim text.
+In particular, we use single backticks for class, function, method, property names, and double backticks for verbatim text. Moreover, we include the `+` symbol in from of packages.
 
 > A guiding principle is that human readers of the text are given precedence over contorting docstrings so our tools produce nice output.
 
@@ -35,22 +35,19 @@ The length of comment lines should be kept to 75 characters; note that this appl
 
 For a class, function or method (uniquely referred to as function from now on), a documentation comment starts with the following introductory content:
 
-1. First line with the short name of the function followed by a concise description. Names are not capitalized.
+1. First line with a concise description of the function. Names are not capitalized.
 
 2. Second line empty
 
-3. Third line presents a full call to the function with all arguments and outputs. The function name is qualified with full class structure. Optional arguments are surrounded by square brackets.
-
-4. An extended description (and/or discussion) of the function follows the third line. This should clarify the role played by the function, i.e. its *functionality*, not to discuss implementation details or background theory, which should rather be explored in the **Notes** section below. You may refer to the parameters and the function name (using single backticks), but the parameter descriptions belong in the **Parameters** section.
+3. Third line starts an extended description (and/or discussion) of the function follows the third line. This should clarify the role played by the function, i.e. its *functionality*, not to discuss implementation details or background theory, which should rather be explored in the **Notes** section below. You may refer to the parameters and the function name (using single backticks), but the parameter descriptions belong in the **Parameters** section.
 
 Here is an example of these first few lines of documentation comment:
 
 ```matlab
 function suite = fromMethod(testClass, testMethod, varargin)
-% fromMethod - Create a suite from a single test method
+% Create a suite from a single test method
 %
-% suite = matlab.unittest.TestSuite.fromMethod(testclass, testmethod, [varargin])
-% creates a TestSuite from the test class described by testclass and the
+% Creates a TestSuite from the test class described by testclass and the
 % test method described by testmethod and returns it in suite. testclass
 % is a meta.class instance which describes the desired test class. The
 % ...
@@ -60,10 +57,10 @@ When the concise description is sufficiently clear to define the function, the c
 
 ```matlab
 function z = plus(x, y)
-% plus - Addition operation
-%
-% z = plus(x, y)
+% Addition operation
 ```
+
+When no one-line description of the function is present, the first line of the extended description will be used as a summary description (possibly incomprehensible).
 
 After these initial informations come the sections described below, providing further systematic details.
 
@@ -121,7 +118,7 @@ In order, the sections of a function comment are:
 
    Permutations are stored using row double vectors containing integers, and are documented as `permutation`. Same convention for signed permutations, that are documented as `signed permutation`.
 
-   Strings represented as char arrays have type `char` (recent Matlab versions have a new `string` type which should not be confused with).
+   Strings represented as char arrays have type `charstring` (recent Matlab versions have a new `string` type which should not be confused with).
 
    Function handles have type `function_handle`.
 
@@ -169,9 +166,7 @@ In order, the sections of a function comment are:
 
 5. Examples (encouraged)
 
-   A section with explicit commands illustrating as clearly as possible one or several ways of calling the function.
-
-   (TODO: allow examples that would be executed by the test framework, possibly with doctests, to be tested)
+   A section with explicit commands illustrating as clearly as possible one or several ways of calling the function. These commands should be written in the doctest format. In partiular, they include the expected output.
 	
 6. See Also (encouraged)
 
@@ -210,7 +205,7 @@ properties (SetAccess = protected)
 end
 ```
 
-Methods are documented as are standalone functions. Do not include `self` in the list of parameters. The constructor is documented separately as any method.
+Methods are documented as standalone functions. Do not include `self` in the list of parameters. The constructor is documented separately as any method.
 
 Abstract methods should have a single code line in their body `error('Abstract');`.
 

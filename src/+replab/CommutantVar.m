@@ -1,48 +1,56 @@
 classdef CommutantVar < replab.Str
-% CommutantVar is a class of sdpvar matrices satisfying symmetry
-% constraints. The matrices produced are always invariant under
-% transposition.
+% Sdpvar matrices subject to symmetry constraints.
 % 
-% A general matrix only subject to invariance under a permutation group can
-% be constructed with the method fromPermutations. fromIndexMatrix allows
-% one to construct a symmetry-invariant matrix with additional structure.
-% Symmetry constraints can also be imposed on existing sdpvar object with
-% the fromSdpMatrix constructor. If the provided SDP matrix is already
-% known to be invariant under the group, then fromSymSdpMatrix can be used
-% to only add the induced block structure onto this matrix.
+% A general matrix invariant under a permutation group can be constructed 
+% with the method `fromPermutations`. `fromIndexMatrix` allows for the 
+% construction of a symmetry-invariant matrix with additional structure. 
+% Symmetry constraints can also be imposed on existing sdpvar object with 
+% the `fromSdpMatrix` constructor. If the provided SDP matrix is already 
+% known to be invariant under the group, then `fromSymSdpMatrix` can be 
+% used to only add the induced block structure onto this matrix.
 % 
-% See also replab.CommutantVar.fromPermutations,
-%          replab.CommutantVar.fromIndexMatrix,
-%          replab.CommutantVar.fromSdpMatrix,
-%          replab.CommutantVar.fromSymSdpMatrix
-
+% The class implements basic algebra for invariant matrices, such as
+% addition, trace, comparison, etc. These operations take precedence over
+% matlab's when combining a `CommutantVar` object with a matlab builtin
+% type, such as a double matrix. Due to a bug in octave, correct precedence
+% cannot be guaranteed when combining a `CommutantVar` object with another
+% class object on the left, such as a sdpvar. Doing so typically results in
+% an error. This can be avoided in two ways:
+%  1. Always put the `CommutantVar` on the left of other class objects
+%     (e.g. write M >= N instead of N <= M if M is a `CommutantVar` and N a
+%     sdpvar object)
+%  2. Embed the sdpvar object into a `CommutantVar` object with trivial
+%     symmetry: both M >= N2 and N2 >= M are possible after defining
+%     N2 = replab.CommutantVar.fromSdpMatrix(N, {[]})
+%
 % Warning: this object inherits from a handle object, therefore it is also
 % a handle object. To copy this object and obtain two identical but
-% independent objects, use the 'copy' method
+% independent objects, use the `copy` method.
+%
+% See also `replab.CommutantVar.fromPermutations`,
+%          `replab.CommutantVar.fromIndexMatrix`,
+%          `replab.CommutantVar.fromSdpMatrix`,
+%          `replab.CommutantVar.fromSymSdpMatrix`
 
-% Current limitations:
-% - The sdp matrix produced is currently always square, real, and symmetric
-% - Only supports complex and quaternionic representations with dimension 2
-%   and 4 respectively.
-
-% For correct class precedence in matlab, rather use this declaration:
+% For correct class precedence use this declaration (currently not possible
+% on octave due to https://savannah.gnu.org/bugs/?56864):
 % classdef (InferiorClasses = {?sdpvar,?gem,?sgem}) CommutantVar < replab.Str
 
 
     properties (SetAccess = protected)
         % The block structure : dimension1 x multiplicity
-        U_; % Unitary operator block-diagonalizing the matrix
-        nComponents; % Number of block components
-        dimensions1; % Dimensions of all irreducible representations
-        multiplicities; % Multipliticies of all irreducible representations
-        types; % Type of all irreducible representations
-        dim; % matrix dimension
-        blocks; % The sdp blocks corresponding to each irreducible representation
-        linearConstraints; % linear constraints imposed on the matrix
-        fullBlockMatrix_; % The combinations, lazy evaluated
-        matrixType; % full, symmetric of hermitian
-        field; % real or complex
-        sdpMatrix_; % The provided or constructed sdpMatrix
+        U_ % Unitary operator block-diagonalizing the matrix
+        nComponents % Number of block components
+        dimensions1 % Dimensions of all irreducible representations
+        multiplicities % Multipliticies of all irreducible representations
+        types % Type of all irreducible representations
+        dim % matrix dimension
+        blocks % The sdp blocks corresponding to each irreducible representation
+        linearConstraints % linear constraints imposed on the matrix
+        fullBlockMatrix_ % The combinations, lazy evaluated
+        matrixType % full, symmetric of hermitian
+        field % real or complex
+        sdpMatrix_ % The provided or constructed sdpMatrix
     end
 
     methods
@@ -53,26 +61,19 @@ classdef CommutantVar < replab.Str
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 
         function s = headerStr(self)
-        % s = headerStr(self)
-        %
         % Header string representing the object
         %
-        % Arg:
-        %     self: CommutantVar
-        % 
         % Returns:
-        %     s: string 
+        %     charstring: description of the object
         %
         % See also:
-        %     replab.CommutantVar.str
+        %     `replab.CommutantVar.str`
         
             s = sprintf('Commutant variable %dx%d (%d blocks, %d scalar variables)', self.dim, self.dim, length(self.blocks), self.nbVars());
         end
 
         function names = hiddenFields(self)
-        % names = hiddenFields(self)
-        %
-        % Overload of replab.Str.hiddenFields
+        % Overload of `replab.Str.hiddenFields`
         %
         % See also:
         %     replab.Str.hiddenFields
@@ -87,12 +88,10 @@ classdef CommutantVar < replab.Str
         end
 
         function [names, values] = additionalFields(self)
-        % [names, values] = additionalFields(self)
-        %
-        % Overload of replab.Str.additionalFields
+        % Overload of `replab.Str.additionalFields`
         %
         % See also:
-        %     replab.Str.additionalFields
+        %     `replab.Str.additionalFields`
 
             [names, values] = additionalFields@replab.Str(self);
 
@@ -112,41 +111,44 @@ classdef CommutantVar < replab.Str
             end
         end
 
-
+    end
+    
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 %                               constructors
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 
+    methods (Access = private)
+
         function self = CommutantVar(generators, sdpMatrix, sdpMatrixIsSym, matrixType, field)
-        % self = CommutantVar(generators, sdpMatrix, sdpMatrixIsSym, matrixType, field)
-        %
         % Class constructor, not to be used directly.
         %
         % Args:
-        %     generators: a list of generators under which the matrix is to
-        %         remain unchanged
-        %     sdpMatrix: the SDP matrix on which to impose permutation
-        %         invariance (should be empty if none)
-        %     sdpMatrixIsSym: (should be empty if no sdpMatrix is provided)
+        %     generators (permutation): a list of generators under which 
+        %         the matrix is to remain unchanged
+        %     sdpMatrix (sdpvar): the SDP matrix on which to impose 
+        %         permutation invariance (should be empty if none)
+        %     sdpMatrixIsSym (integer): (should be empty if no sdpMatrix 
+        %         is provided)
         %         0: if the sdpMatrix is know expected to be invariant
         %             under the group action
         %         1: if the sdpMatrix is expected to be invariant under the
         %             group action but we wish to check it
         %         2: if the sdpMatrix is known to be invariant under the
         %             group action. In this case, no checks are made
-        %     matrixType: one of the following:
+        %     matrixType (charstring): one of the following:
         %         'full' : no particular structure
         %         'symmetric' : transpose-invariant matrix
         %         'hermitian' : hermitian matrix
-        %     field: matrix elements are either 'real' or 'complex'
+        %     field (charstring): matrix elements are either 'real' or
+        %         'complex'
         %
-        % Results:
-        %     self: replab.CommutantVar object
+        % Returns:
+        %     `CommutantVar`: result
         %
         % See also:
-        %     replab.CommutantVar.fromPermutations,
-        %     replab.CommutantVar.fromSdpMatrix,
-        %     replab.CommutantVar.fromSymSdpMatrix
+        %     `replab.CommutantVar.fromPermutations`,
+        %     `replab.CommutantVar.fromSdpMatrix`,
+        %     `replab.CommutantVar.fromSymSdpMatrix`
         
             try
                 yalmip('version');
@@ -221,8 +223,6 @@ classdef CommutantVar < replab.Str
                 types(i) = component.irrep(1).irrepInfo.divisionAlgebra;
                 for j = 1:component.multiplicity
                     copy = component.irrep(j);
-                    % correction, as the new RepLAB convention
-                    % is to store basis vectors as row vectors
                     U = [U copy.U'];
                 end
             end
@@ -354,9 +354,9 @@ classdef CommutantVar < replab.Str
                 end
                 
                 % We keep in memory the constraint imposed by the SDP matrix
-                % TODO: if a SDP matrix was provided, eliminate linear
-                %       constraints cleanly by applying the generators
-                %       to the SDP matrix. This would be much better.
+                % Possible improvement: if a SDP matrix was provided,
+                %       eliminate linear constraints cleanly by applying 
+                %       the generators to the SDP matrix.
                 if isempty(sdpMatrix)
                     self.sdpMatrix_ = [];
                     self.linearConstraints = [];
@@ -521,19 +521,23 @@ classdef CommutantVar < replab.Str
                 self.linearConstraints = [];
             end
         end
+        
+    end
+    
+    methods
 
         function R = copy(rhs)
-        % R = copy(rhs)
+        % Copies a `CommutantVar` object
         %
-        % Creates an identical but independent copy of rhs: modifying the 
+        % Creates an identical but independent copy of rhs. Modifying the 
         % copy does not modify the original object. This is useful
         % internally.
         %
         % Arg:
-        %     rhs: replab.CommutantVar object
+        %     rhs (`CommutantVar`): object to be copied
         %
-        % Result:
-        %     R: replab.CommutantVar object
+        % Returns:
+        %     `CommutantVar`: result
 
             % Create a new simple object
             R = replab.CommutantVar(rhs, [], [], [], []);
@@ -544,40 +548,40 @@ classdef CommutantVar < replab.Str
     methods (Static) % Factory methods
 
         function R = fromPermutations(generators, matrixType, field)
-        % R = fromPermutations(generators, matrixType, field)
-        % 
-        % Creates a CommutantVar object: a sdpvar matrix that is invariant
-        % under joint permutations of its lines and columns by the provided
-        % generators.
+        % A matrix invariant under joint permutations of lines and columns.
+        %
+        % Creates a `CommutantVar` matrix that is invariant under joint
+        % permutations of its lines and columns by the provided generators.
         %
         % Args:
-        %     generators: list of generators under which the matrix is to
-        %         remain unchanged
-        %     matrixType: one of the following:
+        %     generators (permutation): list of generators under which the 
+        %         matrix is to remain unchanged
+        %     matrixType (charstring): one of the following:
         %         'full' : no particular structure
         %         'symmetric' : transpose-invariant matrix
         %         'hermitian' : hermitian matrix
-        %     field: matrix elements are either 'real' or 'complex'
+        %     field (charstring): matrix elements are either 'real' or 
+        %         'complex'
         %
-        % Results:
-        %     R: CommutantVar object
+        % Returns:
+        %     `CommutantVar`: result
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real');
         %
         % See also:
-        %     replab.CommutantVar.fromIndexMatrix
-        %     replab.CommutantVar.fromSdpMatrix
-        %     replab.CommutantVar.fromSymSdpMatrix
+        %     `replab.CommutantVar.fromIndexMatrix`
+        %     `replab.CommutantVar.fromSdpMatrix`
+        %     `replab.CommutantVar.fromSymSdpMatrix`
         
             R = replab.CommutantVar(generators, [], [], matrixType, field);
         end
 
         function R = fromIndexMatrix(indexMatrix, generators, matrixType, field)
-        % R = fromIndexMatrix(indexMatrix, generators, matrixType, field)
-        % 
-        % Creates an SDP matrix with additional structure. The produced
-        % sdpvar matrix:
+        % An invariant matrix with additional constraints.
+        %
+        % Creates a `CommutantVar` matrix with additional structure. The 
+        % produced sdpvar matrix:
         %  - is invariant under the permutation group
         %  - satisfies the structure imposed by the index matrix: two
         %    matrix elements with same index are equal to each other
@@ -586,32 +590,29 @@ classdef CommutantVar < replab.Str
         % simplification of the matrix of indices so that it is invariant
         % under the group.
         %
-        % The produced matrix is always invariant under hermitian
-        % transposition.
-        %
         % Args:
-        %     indexMatrix: matrix with integer values corresponding to the
-        %         label of the variable at each element. The actual index
-        %         values are irrelevant.
-        %     generators: a list of generators under which the matrix
-        %         remains unchanged
-        %     matrixType: one of the following:
+        %     indexMatrix (integer array): matrix with integer values 
+        %         corresponding to the label of the variable at each 
+        %         element. The actual index values are irrelevant.
+        %     generators (permutation): a list of generators under which 
+        %         the matrix remains unchanged
+        %     matrixType (charstring): one of the following:
         %         'full' : no particular structure
         %         'symmetric' : transpose-invariant matrix
         %         'hermitian' : hermitian matrix
-        %     field: matrix elements are either 'real' or 'complex'
+        %     field (charstring): matrix elements are either 'real' or 'complex'
         %
-        % Results:
-        %     R: a CommutantVar object
+        % Returns:
+        %     `CommutantVar`: result
         %
         % Example:
-        %     indexMatrix = [1 1 3 4; 1 5 6 30; 3 6 10 11; 4 30 11 15];
-        %     matrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {[4 1 2 3]}, 'symmetric', 'real')
+        %     >>> indexMatrix = [1 1 3 4; 1 5 6 30; 3 6 10 11; 4 30 11 15];
+        %     >>> matrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, {[4 1 2 3]}, 'symmetric', 'real');
         %
         % See also:
-        %     replab.CommutantVar.fromPermutations
-        %     replab.CommutantVar.fromSdpMatrix
-        %     replab.CommutantVar.fromSymSdpMatrix
+        %     `replab.CommutantVar.fromPermutations`
+        %     `replab.CommutantVar.fromSdpMatrix`
+        %     `replab.CommutantVar.fromSymSdpMatrix`
 
             % Basic tests
             assert(max(max(abs(indexMatrix - round(indexMatrix)))) == 0, 'The indexMatrix must be a matrix of integers.');
@@ -783,10 +784,10 @@ classdef CommutantVar < replab.Str
         end
 
         function R = fromSdpMatrix(sdpMatrix, generators)
-        % R = fromSdpMatrix(sdpMatrix, generators)
-        % 
+        % An sdpvar matrix with symmetry constraints
+        %
         % Imposes symmetry constraints onto an existing SDP matrix. This
-        % creates a CommutantVar matrix which satisfies both:
+        % creates a `CommutantVar` matrix which satisfies both:
         %     - the structure encoded into sdpMatrix
         %     - invariance under joint permutations of its lines and
         %       columns by the provided generators.
@@ -794,22 +795,22 @@ classdef CommutantVar < replab.Str
         % field (real/complex) is inferred from the provided matrix.
         %
         % Args:
-        %     sdpMatrix: the SDP matrix on which to impose permutation
-        %         invariance
-        %     generators: a list of generators under which the matrix is to
-        %         remain unchanged
+        %     sdpMatrix (sdpvar): the SDP matrix on which to impose
+        %         permutation invariance
+        %     generators (permutation): a list of generators under which 
+        %         the matrix is to remain unchanged
         %
-        % Results:
-        %     R: a CommutantVar object
+        % Returns:
+        %     `CommutantVar`: result
         %
         % Example:
-        %     sdpMatrix = sdpvar(3);
-        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, {[3 1 2]})
+        %     >>> sdpMatrix = sdpvar(3);
+        %     >>> matrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, {[3 1 2]});
         %
         % See also:
-        %     replab.CommutantVar.fromPermutations
-        %     replab.CommutantVar.fromIndexMatrix
-        %     replab.CommutantVar.fromSymSdpMatrix
+        %     `replab.CommutantVar.fromPermutations`
+        %     `replab.CommutantVar.fromIndexMatrix`
+        %     `replab.CommutantVar.fromSymSdpMatrix`
 
             if issymmetric(sdpMatrix)
                 matrixType = 'symmetric';
@@ -829,31 +830,31 @@ classdef CommutantVar < replab.Str
         end
 
         function R = fromSymSdpMatrix(sdpMatrix, generators)
-        % R = fromSymSdpMatrix(sdpMatrix, generators)
-        % 
+        % An invariant sdpvar matrix with symmetry constraints
+        %
         % Block-diagonalizes an existing SDP matrix which is already
-        % invariant under the group generators.
-        % The type of matrix (full/symmetric/hermitian) as well as the
-        % field (real/complex) is inferred from the provided matrix.
+        % invariant under the group generators. The type of matrix
+        % (full/symmetric/hermitian) as well as the field (real/complex) is
+        % inferred from the provided matrix.
         %
         % Args:
-        %     sdpMatrix: the SDP matrix to block diagonlize
-        %     generators: a list of generators under which the matrix
-        %         remains unchanged
+        %     sdpMatrix (sdpvar): the SDP matrix to block diagonlize
+        %     generators (permutation): a list of generators under which
+        %         the matrix remains unchanged
         %
-        % Results:
-        %     R: a CommutantVar object
+        % Returns:
+        %     `CommutantVar`: result
         %
         % Example:
-        %     x = sdpvar;
-        %     y = sdpvar;
-        %     sdpMatrix = [x y y; y x y; y y x];
-        %     matrix = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[3 1 2]})
+        %     >>> x = sdpvar;
+        %     >>> y = sdpvar;
+        %     >>> sdpMatrix = [x y y; y x y; y y x];
+        %     >>> matrix = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[3 1 2]});
         %
         % See also:
-        %     replab.CommutantVar.fromPermutations
-        %     replab.CommutantVar.fromIndexMatrix
-        %     replab.CommutantVar.fromSdpMatrix
+        %     `replab.CommutantVar.fromPermutations`
+        %     `replab.CommutantVar.fromIndexMatrix`
+        %     `replab.CommutantVar.fromSdpMatrix`
 
             if issymmetric(sdpMatrix)
                 matrixType = 'symmetric';
@@ -882,21 +883,15 @@ classdef CommutantVar < replab.Str
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 
         function s = str(self)
-        % s = str(self)
-        %
         % Nice string representation
         %
-        % Args:
-        %     self: CommutantVar object
-        %
-        % Results:
-        %     s: string
+        % Returns:
+        %     charstring: result
         %
         % See also:
-        %     replab.CommutantVar.headerStr
+        %     `replab.CommutantVar.headerStr`
         
-        % TODO: integrate this function into the interaction with the Str
-        % class
+        % TODO: merge this function into the interaction with the Str class
         
             s = ['SDP matrix of size ', num2str(self.dim), 'x', num2str(self.dim), ' with ', num2str(self.nbVars), ' variables.'];
             s = [s, char(10)];
@@ -917,26 +912,26 @@ classdef CommutantVar < replab.Str
         end
 
         function [s1, s2] = size(self, d)
-        % [s1, s2] = size(self, [d])
-        %
         % Returns the matrix size
         %
         % Args:
-        %     self: CommutantVar object
-        %     d: specific dimension (optional)
+        %     d (integer, optional): specific dimension
         %
-        % Results:
-        %     s1: The dimension array, or first dimension if s2 is also
+        % Returns:
+        % --------
+        %     s1: integer
+        %         The dimension array, or first dimension if s2 is also
         %         requested
-        %     s2: The second dimension (optional)
+        %     s2: integer
+        %         The second dimension (optional)
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
-        %     size(matrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real');
+        %     >>> size(matrix);
         %
         % See also:
-        %     size
-        %     replab.CommutantVar.numel
+        %     `size`
+        %     `replab.CommutantVar.numel`
         
             if (nargin >= 2) && (d ~= 1) && (d ~= 2)
                 error('Wrong dimension in gem::size');
@@ -953,93 +948,75 @@ classdef CommutantVar < replab.Str
         end
         
         function nb = numel(self)
-        % nb = numel(self)
+        % Number of elements
         %
         % Returns the number of objects (i.e. 1). To obtain the number of
         % elements in the matrix, use prod(size(self)) instead.
         %
-        % Args:
-        %     self: CommutantVar object
-        %
-        % Results:
-        %     nb: 1
+        % Returns:
+        %     integer: 1
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
-        %     numel(matrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real');
+        %     >>> numel(matrix);
         %
         % See also:
-        %     numel
-        %     replab.CommutantVar.size
+        %     `numel`
+        %     `replab.CommutantVar.size`
         
             nb = 1;
         end
         
         function bool = isreal(self)
-        % bool = isreal(self)
-        %
         % Tells whether the matrix is real
         %
-        % Args:
-        %     self: CommutantVar object
-        %
-        % Results:
-        %     bool: 1 iff the matrix is real
+        % Returns:
+        %     bool: true iff the matrix is real
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
-        %     isreal(matrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real');
+        %     >>> isreal(matrix);
         %
         % See also:
-        %     isreal
-        %     replab.CommutantVar.issymmetric
-        %     replab.CommutantVar.ishermitian
+        %     `isreal`
+        %     `replab.CommutantVar.issymmetric`
+        %     `replab.CommutantVar.ishermitian`
         
             bool = isequal(self.field, 'real');
         end
 
         function bool = issymmetric(self)
-        % bool = issymmetric(self)
-        %
         % Tells whether the matrix is invariant under transposition
         %
-        % Args:
-        %     self: CommutantVar object
-        %
-        % Results:
-        %     bool: 1 iff the matrix is invariant under transposition
+        % Returns:
+        %     bool: true iff the matrix is invariant under transposition
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
-        %     issymmetric(matrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real');
+        %     >>> issymmetric(matrix);
         %
         % See also:
-        %     issymmetric
-        %     replab.CommutantVar.isreal
-        %     replab.CommutantVar.ishermitian
+        %     `issymmetric`
+        %     `replab.CommutantVar.isreal`
+        %     `replab.CommutantVar.ishermitian`
         
             bool = isequal(self.matrixType, 'symmetric');
         end
 
         function bool = ishermitian(self)
-        % bool = ishermitian(self)
-        %
         % Tells whether the matrix is invariant under complex transposition
         %
-        % Args:
-        %     self: CommutantVar object
-        %
-        % Results:
-        %     bool: 1 iff the matrix is invariant under complex transposition
+        % Returns:
+        %     bool: true iff the matrix is invariant under complex transposition
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'hermitian', 'complex')
-        %     ishermitian(matrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'hermitian', 'complex');
+        %     >>> ishermitian(matrix);
         %
         % See also:
-        %     ishermitian
-        %     replab.CommutantVar.isreal
-        %     replab.CommutantVar.issymmetric
+        %     `ishermitian`
+        %     `replab.CommutantVar.isreal`
+        %     `replab.CommutantVar.issymmetric`
         
             if isequal(self.field, 'real')
                 bool = isequal(self.matrixType, 'symmetric') | isequal(self.matrixType, 'hermitian');
@@ -1049,42 +1026,36 @@ classdef CommutantVar < replab.Str
         end
 
         function M = block(self, i)
-        % M = block(self, i)
-        %
         % Returns the desired block
         %
         % Args:
-        %     self: CommutantVar object
-        %     i: block component number
+        %     i (integer): block component number
         % 
-        % Results:
-        %     M: sdpvar block
+        % Returns:
+        %     sdpvar: sdpvar block
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real')
-        %     matrix.block(2)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[3 1 2]}, 'symmetric', 'real');
+        %     >>> matrix.block(2);
         %
         % See also:
-        %     replab.CommutantVar.nComponents
+        %     `replab.CommutantVar.nComponents`
         
             M = self.blocks{i};
         end
 
         function M = blockMask(self)
-        % M = blockMask(self)
-        % 
+        % Block structure
+        %
         % Returns a 0-1-filled matrix showing the block structure of the
         % matrix in the irreducible basis.
         %
-        % Args:
-        %     self: CommutantVar object
-        %
-        % Results:
-        %     M: matrix
+        % Returns:
+        %     integer matrix: matrix
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     matrix.blockMask
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> matrix.blockMask;
         
             M = zeros(self.dim, self.dim);
             co = 0;
@@ -1105,19 +1076,14 @@ classdef CommutantVar < replab.Str
         end
 
         function M = fullBlockMatrix(self)
-        % M = fullBlockMatrix(self)
-        %
         % Returns the full matrix in its block-diagonal form.
         %
-        % Args:
-        %     self: CommutantVar object
-        %
         % Returns:
-        %     M: sdpvar matrix in block diagonal form
+        %     sdpvar matrix: sdpvar matrix in block diagonal form
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     see(matrix.fullBlockMatrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> % see(matrix.fullBlockMatrix); TODO: correct
             
             if isempty(self.fullBlockMatrix_)
                 % We construct the matrix for the first time
@@ -1146,20 +1112,14 @@ classdef CommutantVar < replab.Str
         end
         
         function M = fullMatrix(self)
-        % M = fullMatrix(self)
-        %
-        % Constructs the full form of the invariant matrix in the natural
-        % basis.
-        %
-        % Args:
-        %     self: CommutantVar object
+        % Constructs the invariant matrix in the natural basis.
         %
         % Returns:
-        %     M: sdpvar matrix
+        %     sdpvar matrix: sdpvar matrix
         % 
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     see(matrix.fullMatrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> % see(matrix.fullMatrix); TODO: correct
         
             if ~isempty(self.sdpMatrix_)
                 M = self.sdpMatrix_;
@@ -1171,50 +1131,42 @@ classdef CommutantVar < replab.Str
         end
 
         function M = U(self)
-        % M = U(self)
-        %
         % Returns the block-diagonalizing unitary.
         %
-        % Args:
-        %     self: CommutantVar object
-        %
         % Returns:
-        %     U: matrix
+        %     double matrix: unitary
         % 
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     matrix.U
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> matrix.U;
         
             M = full(self.U_);
         end
 
         function vars = getVariables(self)
-        % vars = getVariables(self)
+        % Lists sdp variables used by the object
         %
         % Returns the Yalmip indices of the SDP variable used by the
         % object. If the object includes linear constraints, variables from
         % the constraints are also counted.
         %
-        % Args:
-        %     self: CommutantVar object
-        %
         % Returns:
-        %     vars: vector of indices 
+        %     integer row vector: vector of indices 
         %
         % Example:
-        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     matrix1.getVariables
-        %     matrix2 = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
-        %     matrix2.getVariables
-        %     x = sdpvar;
-        %     sdpMatrix = [1 x x; x 1 x; x x 1];
-        %     matrix3 = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[2 3 1]})
-        %     matrix3.getVariables
+        %     >>> matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> matrix1.getVariables;
+        %     >>> matrix2 = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]});
+        %     >>> matrix2.getVariables;
+        %     >>> x = sdpvar;
+        %     >>> sdpMatrix = [1 x x; x 1 x; x x 1];
+        %     >>> matrix3 = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[2 3 1]});
+        %     >>> matrix3.getVariables;
         %
         % See also:
-        %     replab.CommutantVar.nbVars
-        %     replab.CommutantVar.getBaseMatrix
-        %     sdpvar.getvariables
+        %     `replab.CommutantVar.nbVars`
+        %     `replab.CommutantVar.getBaseMatrix`
+        %     `sdpvar.getvariables`
 
             vars = getvariables(self.blocks{1});
             for i = 2:self.nComponents
@@ -1229,52 +1181,45 @@ classdef CommutantVar < replab.Str
         end
 
         function n = nbVars(self)
-        % n = nbVars(self)
-        %
         % Returns the number of SDP variable used be the object.
         %
-        % Args:
-        %     self: CommutantVar object
-        %
         % Returns:
-        %     n: number of SDP variables
+        %     integer: number of SDP variables
         %
         % Example:
-        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     matrix1.nbVars
-        %     matrix2 = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
-        %     matrix2.nbVars
-        %     x = sdpvar;
-        %     sdpMatrix = [1 x x; x 1 x; x x 1];
-        %     matrix3 = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[2 3 1]})
-        %     matrix3.nbVars
+        %     >>> matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> matrix1.nbVars;
+        %     >>> matrix2 = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]});
+        %     >>> matrix2.nbVars;
+        %     >>> x = sdpvar;
+        %     >>> sdpMatrix = [1 x x; x 1 x; x x 1];
+        %     >>> matrix3 = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, {[2 3 1]});
+        %     >>> matrix3.nbVars;
         %
         % See also:
-        %     replab.CommutantVar.getVariables
-        %     replab.CommutantVar.getBaseMatrix
+        %     `replab.CommutantVar.getVariables`
+        %     `replab.CommutantVar.getBaseMatrix`
         
             n = length(self.getVariables);
         end
 
         function basis = getBaseMatrix(self, index)
-        % basis = getBaseMatrix(self, index)
+        % Matrix of coefficient for a given sdp variable index
         %
         % Returns the coefficients contributing the the SDP variable with
         % given index.
         %
         % Args:
-        %     self: CommutantVar object
-        %     index: index of the sdp variable (or 0 for the constant term)
+        %     index (integer): index of the sdp variable (or 0 for the
+        %         constant term)
         %
         % Returns:
-        %     basis: the matrix of coefficients
-        %
-        % Example:
+        %     double matrix: the matrix of coefficients
         %
         % See also:
-        %     replab.CommutantVar.getVariables
-        %     replab.CommutantVar.see
-        %     sdpvar.getBaseMatrix
+        %     `replab.CommutantVar.getVariables`
+        %     `replab.CommutantVar.see`
+        %     `sdpvar.getBaseMatrix`
 
             % For now, we simply return the coefficients if they are in the
             % fullMatrix, TODO : also take into account the linear
@@ -1283,33 +1228,25 @@ classdef CommutantVar < replab.Str
         end
 
         function see(self)
-        % see(self)
+        % Displays internal structure of variables
         %
         % Displays internal info about the structure of the matrix in full
         % form.
         %
-        % Args:
-        %     self: CommutantVar object
-        %
         % See also:
-        %     sdpvar.see
+        %     `sdpvar.see`
         
             see(self.fullMatrix);
         end
 
         function val = value(self)
-        % val = value(self)
-        %
         % Returns the current numerical value of the object.
         %
-        % Args:
-        %     self: CommutantVar object
-        %
         % Returns:
-        %     val: numerical value taken by the object
+        %     double matrix: numerical value taken by the object
         %
         % See also:
-        %     sdpvar.value
+        %     `sdpvar.value`
         
             val = value(self.fullMatrix);
         end
@@ -1319,22 +1256,20 @@ classdef CommutantVar < replab.Str
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 
         function lastIndex = end(self, k, n)
-        % end - returns the last index
+        % Returns the last index
         %
-        % lastIndex = replab.CommutantVar.end(self, k, n)
         % Returns the last index in an indexing expression such as 
         % self(1,2:end) or self(end).
         %
         % Args:
-        %     self: CommutantVar object
-        %     k: 
+        %     k: dimension
         %     n: number of dimensions on which the indexing is done
         %
         % Returns:
-        %     lastIndex: double
+        %     double: result
         %
         % See also:
-        %     replab.CommutantVar.subsref
+        %     `replab.CommutantVar.subsref`
 
             if n == 1
                 % Then the indexing is done with only one index, as in a(end)
@@ -1350,24 +1285,23 @@ classdef CommutantVar < replab.Str
         end
 
         function varargout = subsref(self, varargin)
-        % varargout = subsref(self, varargout)
-        % 
-        % Overload of subsref. This function is called when using the
-        % syntax '()' to extract one part of a matrix.
+        % Overload of subsref.
+        %
+        % This function is called when using the syntax '()' to extract one
+        % part of a matrix.
         %
         % Args:
-        %     self: CommutantVar object
-        %     varargin: usual
+        %     varargin: as usual
         %
-        % Results:
-        %     varargout: depends on the usage
+        % Returns:
+        %     depends on the usage: depends on usage
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     matrix(1)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> matrix(1);
         %
         % See also:
-        %     subsref
+        %     `subsref`
         
             switch varargin{1}(1).type
                 case '()'
@@ -1423,33 +1357,34 @@ classdef CommutantVar < replab.Str
         end
 
         function okLevel = compatibleWith(X, Y)
-        % okLevel = compatibleWith(X, Y)
+        % Compares the block structure
         %
         % Checks whether the block structure of Y is compatible with that
         % of X.
         % 
         % Args:
-        %     X: CommutantVar, sdpvar object or numeric matrix
-        %     Y: CommutantVar, sdpvar object or numeric matrix
+        %     X (`CommutantVar`, sdpvar or double)
+        %     Y (`CommutantVar`, sdpvar or double)
         %
-        % Results:
-        %     okLevel:
+        % Returns:
+        % --------
+        %     integer:
         %         0 if Y is not compatible with X
         %         1 if Y has the block structure of X
         %         2 if Y has the block structure of X and identical blocks
         %             in X correspond to identical blocks in Y
         %
         % Example:
-        %     matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     matrix2 = replab.CommutantVar.fromPermutations({[2 1 3]}, 'symmetric', 'real')
-        %     % both matrices have comparable block structures ...
-        %     full(blockMask(matrix1)) 
-        %     full(blockMask(matrix2))
-        %     % ... but not in the same basis
-        %     matrix1.compatibleWith(matrix2)
-        %     % The following matrix has the correct structure in the right basis:
-        %     M = matrix1.U*(rand(3).*matrix1.blockMask)*matrix1.U'
-        %     matrix1.compatibleWith(M);
+        %     >>> matrix1 = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> matrix2 = replab.CommutantVar.fromPermutations({[2 1 3]}, 'symmetric', 'real');
+        %     >>> % both matrices have comparable block structures ...
+        %     >>> full(blockMask(matrix1));
+        %     >>> full(blockMask(matrix2));
+        %     >>> % ... but not in the same basis
+        %     >>> matrix1.compatibleWith(matrix2);
+        %     >>> % The following matrix has the correct structure in the right basis:
+        %     >>> M = matrix1.U*(rand(3).*matrix1.blockMask)*matrix1.U';
+        %     >>> matrix1.compatibleWith(M);
 
             % Numerical tolerance to decide whether numbers are close to zero in
             % this function.
@@ -1610,20 +1545,18 @@ classdef CommutantVar < replab.Str
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 
         function Z = plus(X,Y)
-        % Z = plus(X, Y)
-        %
-        % addition operator
+        % Addition operator
         %
         % Args:
-        %     X: CommutantVar, sdpvar object or numeric matrix
-        %     Y: CommutantVar, sdpvar object or numeric matrix
+        %     X (`CommutantVar`, sdpvar or double)
+        %     Y (`CommutantVar`, sdpvar or double)
         %
-        % Results:
-        %     Z: CommutantVar
+        % Returns:
+        %     `CommutantVar`: result
         %
         % See also:
-        %     plus
-        %     replab.CommutantVar.plus
+        %     `plus`
+        %     `replab.CommutantVar.minus`
 
             % Numerical tolerance to decide whether numbers are close to zero in
             % this function.
@@ -1782,20 +1715,18 @@ classdef CommutantVar < replab.Str
         end
 
         function Z = minus(X,Y)
-        % Z = minus(X, Y)
-        %
-        % substraction operator
+        % Substraction operator
         %
         % Args:
-        %     X: CommutantVar, sdpvar object or numeric matrix
-        %     Y: CommutantVar, sdpvar object or numeric matrix
+        %     X (`CommutantVar`, sdpvar or double)
+        %     Y (`CommutantVar`, sdpvar or double)
         %
-        % Results:
-        %     Z: CommutantVar
+        % Returns:
+        %     `CommutantVar`: result
         %
         % See also:
-        %     minus
-        %     replab.CommutantVar.plus
+        %     `minus`
+        %     `replab.CommutantVar.plus`
 
             % Numerical tolerance to decide whether numbers are close to zero in
             % this function.
@@ -1953,19 +1884,14 @@ classdef CommutantVar < replab.Str
         end
 
         function X = uminus(self)
-        % X = uminus(self)
+        % Unary minus operator
         %
-        % unary minus operator
-        %
-        % Args:
-        %     self: CommutantVar
-        %
-        % Results:
-        %     X: CommutantVar
+        % Returns:
+        %     `CommutantVar`: result
         %
         % See also:
-        %     uminus
-        %     replab.CommutantVar.minus
+        %     `uminus`
+        %     `replab.CommutantVar.minus`
 
             X = self.copy;
             for i = 1:X.nComponents
@@ -1975,22 +1901,22 @@ classdef CommutantVar < replab.Str
         end
 
         function Z = times(X, Y)
-        % Z = times(X, Y)
+        % Element-wise multiplication
         %
-        % Element-wise multiplication. Only for multiplication by a scalar,
-        % use fullMatrix otherwise.
+        % This is to be used only for multiplication by a scalar. Use
+        % fullMatrix otherwise.
         %
         % Args:
-        %     X: CommutantVar, sdpvar object or numeric matrix
-        %     Y: CommutantVar, sdpvar object or numeric matrix
+        %     X (`CommutantVar`, sdpvar or double)
+        %     Y (`CommutantVar`, sdpvar or double)
         %
-        % Results:
-        %     Z: CommutantVar
+        % Returns:
+        %     `CommutantVar`: result
         %
         % See also:
-        %     times
-        %     replab.CommutantVar.rdivide
-        %     replab.CommutantVar.fullMatrix
+        %     `times`
+        %     `replab.CommutantVar.rdivide`
+        %     `replab.CommutantVar.fullMatrix`
 
             % Check that dimensions are compatible
             if (prod(size(X)) ~= 1) && (prod(size(Y)) ~= 1)
@@ -2053,23 +1979,23 @@ classdef CommutantVar < replab.Str
         end
 
         function Z = rdivide(X, Y)
-        % Z = rdivide(X, Y)
+        % Element-wise right division operator
         %
-        % Element-wise right division operator. Only for division by a
-        % scalar, use fullMatrix otherwise.
+        % This is to be used only for division by a scalar. Use fullMatrix
+        % otherwise.
         %
         % Args:
-        %     X: CommutantVar, sdpvar object or numeric matrix
-        %     Y: CommutantVar, sdpvar object or numeric matrix
+        %     X (`CommutantVar`, sdpvar or double)
+        %     Y (`CommutantVar`, sdpvar or double)
         %
-        % Results:
-        %     Z: CommutantVar
+        % Returns:
+        %     `CommutantVar`: result
         %
         % See also:
-        %     rdivide
-        %     replab.CommutantVar.times
-        %     replab.CommutantVar.ldivide
-        %     replab.CommutantVar.fullMatrix
+        %     `rdivide`
+        %     `replab.CommutantVar.times`
+        %     `replab.CommutantVar.ldivide`
+        %     `replab.CommutantVar.fullMatrix`
 
             % Check that dimensions are compatible
             if prod(size(Y)) ~= 1
@@ -2112,44 +2038,44 @@ classdef CommutantVar < replab.Str
         end
 
         function Z = ldivide(X, Y)
-        % Z = ldivide(X, Y)
+        % Element-wise left division operator
         %
-        % Element-wise left division operator. Only for division by a
-        % scalar, use fullMatrix otherwise.
+        % This is to be used only for division by a scalar. Use fullMatrix
+        % otherwise.
         %
         % Args:
-        %     X: CommutantVar, sdpvar object or numeric matrix
-        %     Y: CommutantVar, sdpvar object or numeric matrix
+        %     X (`CommutantVar`, sdpvar or double)
+        %     Y (`CommutantVar`, sdpvar or double)
         %
-        % Results:
-        %     Z: CommutantVar
+        % Returns:
+        %     `CommutantVar`: result
         %
         % See also:
-        %     ldivide
-        %     replab.CommutantVar.times
-        %     replab.CommutantVar.rdivide
-        %     replab.CommutantVar.fullMatrix
+        %     `ldivide`
+        %     `replab.CommutantVar.times`
+        %     `replab.CommutantVar.rdivide`
+        %     `replab.CommutantVar.fullMatrix`
 
             Z = Y./X;
         end
 
         function Z = mtimes(X, Y)
-        % Z = mtimes(X, Y)
+        % Matrix multiplication
         %
-        % Matrix multiplication. Only for multiplication by a scalar, use
-        % fullMatrix otherwise.
+        % This is to be used only for division by a scalar. Use fullMatrix
+        % otherwise.
         %
         % Args:
-        %     X: CommutantVar, sdpvar object or numeric matrix
-        %     Y: CommutantVar, sdpvar object or numeric matrix
+        %     X (`CommutantVar`, sdpvar or double)
+        %     Y (`CommutantVar`, sdpvar or double)
         %
-        % Results:
-        %     Z: CommutantVar
+        % Returns:
+        %     `CommutantVar`: result
         %
         % See also:
-        %     mtimes
-        %     replab.CommutantVar.mrdivide
-        %     replab.CommutantVar.fullMatrix
+        %     `mtimes`
+        %     `replab.CommutantVar.mrdivide`
+        %     `replab.CommutantVar.fullMatrix`
 
             % Check that dimensions are compatible
             if (prod(size(X)) ~= 1) && (prod(size(Y)) ~= 1)
@@ -2160,23 +2086,23 @@ classdef CommutantVar < replab.Str
         end
 
         function Z = mrdivide(X, Y)
-        % Z = mrdivide(X, Y)
+        % Matrix right division operator
         %
-        % Matrix right division operator. Only for division by a scalar,
-        % use fullMatrix otherwise.
+        % This is to be used only for division by a scalar. Use fullMatrix
+        % otherwise.
         %
         % Args:
-        %     X: CommutantVar, sdpvar object or numeric matrix
-        %     Y: CommutantVar, sdpvar object or numeric matrix
+        %     X (`CommutantVar`, sdpvar or double)
+        %     Y (`CommutantVar`, sdpvar or double)
         %
-        % Results:
-        %     Z: CommutantVar
+        % Returns:
+        %     `CommutantVar`: result
         %
         % See also:
-        %     mrdivide
-        %     replab.CommutantVar.mtimes
-        %     replab.CommutantVar.mldivide
-        %     replab.CommutantVar.fullMatrix
+        %     `mrdivide`
+        %     `replab.CommutantVar.mtimes`
+        %     `replab.CommutantVar.mldivide`
+        %     `replab.CommutantVar.fullMatrix`
 
             % Only scalar division is supported
             if prod(size(Y)) ~= 1
@@ -2187,23 +2113,23 @@ classdef CommutantVar < replab.Str
         end
 
         function Z = mldivide(X, Y)
-        % Z = mldivide(X, Y)
+        % Matrix left division operator
         %
-        % Matrix left division operator. Only for division by a scalar,
-        % use fullMatrix otherwise.
+        % This is to be used only for division by a scalar. Use fullMatrix
+        % otherwise.
         %
         % Args:
-        %     X: CommutantVar, sdpvar object or numeric matrix
-        %     Y: CommutantVar, sdpvar object or numeric matrix
+        %     X (`CommutantVar`, sdpvar or double)
+        %     Y (`CommutantVar`, sdpvar or double)
         %
-        % Results:
-        %     Z: CommutantVar
+        % Returns:
+        %     `CommutantVar`: result
         %
         % See also:
-        %     mldivide
-        %     replab.CommutantVar.mtimes
-        %     replab.CommutantVar.mrdivide
-        %     replab.CommutantVar.fullMatrix
+        %     `mldivide`
+        %     `replab.CommutantVar.mtimes`
+        %     `replab.CommutantVar.mrdivide`
+        %     `replab.CommutantVar.fullMatrix`
 
             % Only scalar division is supported
             if prod(size(X)) ~= 1
@@ -2219,22 +2145,17 @@ classdef CommutantVar < replab.Str
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 
         function X = trace(self)
-        % X = trace(self)
-        %
         % Trace operator
         %
-        % Args:
-        %     self: CommutantVar
-        %
-        % Results:
-        %     X: sdpvar
+        % Returns:
+        %     sdpvar: trace
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     trace(matrix)
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> trace(matrix);
         % 
         % See also:
-        %     trace
+        %     `trace`
 
             if ~isempty(self.sdpMatrix_)
                 X = trace(self.sdpMatrix_);
@@ -2262,30 +2183,28 @@ classdef CommutantVar < replab.Str
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %
 
         function F = eq(X,Y)
-        % F = eq(X, Y)
+        % Equality constraint
         %
-        % Equality constraint. The constraint is imposed through a series
-        % of equality constraint for each block. If X or Y includes linear
-        % constraints, they are also added to the result.
+        % The constraint is imposed through a series of equality constraint
+        % for each block. If X or Y includes linear constraints, they are
+        % also added to the result.
         %
         % Args:
-        %     X: CommutantVar, compatible sdpvar object or numeric matrix,
-        %         or numeric scalar
-        %     Y: CommutantVar, compatible sdpvar object or numeric matrix,
-        %         or numeric scalar
+        %     X (`CommutantVar`, sdpvar or double): matrix or scalar
+        %     Y (`CommutantVar`, sdpvar or double): matrix of scalar
         %
-        % Results:
-        %     F: Yalmip constraint
+        % Returns:
+        %     constraint: constraint
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     F = [matrix == 0]
-        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
-        %     F = [matrix == 0]
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> F = [matrix == 0];
+        %     >>> matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]});
+        %     >>> F = [matrix == 0];
         %
         % See also:
-        %     eq
-        %     replab.CommutantVar.ge
+        %     `eq`
+        %     `replab.CommutantVar.ge`
 
             % We examine each case independently
             if isa(X, 'replab.CommutantVar') && ~isa(Y, 'replab.CommutantVar') && (prod(size(Y)) == 1)
@@ -2361,30 +2280,27 @@ classdef CommutantVar < replab.Str
         end
 
         function F = ge(X,Y)
-        % F = ge(X, Y)
-        %
-        % Greater or equal semi-definite constraint. The constraint on the
-        % matrices are imposed through a series of constraint for each
-        % block. If X or Y includes linear constraints, they are also added
-        % to the result.
+        % Greater or equal semi-definite constraint.
+        % 
+        % The constraint on the matrices are imposed through a series of
+        % constraint for each block. If X or Y includes linear constraints,
+        % they are also added to the result.
         %
         % Args:
-        %     X: CommutantVar, compatible sdpvar object or numeric matrix,
-        %         or numeric scalar
-        %     Y: CommutantVar, compatible sdpvar object or numeric matrix,
-        %         or numeric scalar
+        %     X (`CommutantVar`, sdpvar or double): matrix or scalar
+        %     Y (`CommutantVar`, sdpvar or double): matrix or scalar
         %
-        % Results:
-        %     F: Yalmip constraint
+        % Returns:
+        %     constraint: constraint
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     F = [matrix >= 0]
-        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
-        %     F = [matrix >= 0]
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> F = [matrix >= 0];
+        %     >>> matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]});
+        %     >>> F = [matrix >= 0];
         %
         % See also:
-        %     replab.CommutantVar.le
+        %     `replab.CommutantVar.le`
 
             % Numerical tolerance to decide whether numbers are close to zero in
             % this function.
@@ -2492,30 +2408,27 @@ classdef CommutantVar < replab.Str
         end
 
         function F = le(X,Y)
-        % F = le(X, Y)
+        % Lesser or equal semi-definite constraint.
         %
-        % Lesser or equal semi-definite constraint. The constraint on the
-        % matrices are imposed through a series of constraint for each
-        % block. If X or Y includes linear constraints, they are also added
-        % to the result.
+        % The constraint on the matrices are imposed through a series of
+        % constraint for each block. If X or Y includes linear constraints,
+        % they are also added to the result.
         %
         % Args:
-        %     X: CommutantVar, compatible sdpvar object or numeric matrix,
-        %         or numeric scalar
-        %     Y: CommutantVar, compatible sdpvar object or numeric matrix,
-        %         or numeric scalar
+        %     X (`CommutantVar`, sdpvar or double): matrix or scalar
+        %     Y (`CommutantVar`, sdpvar or double): matrix or scalar
         %
-        % Results:
-        %     F: Yalmip constraint
+        % Returns:
+        %     constraint: constraint
         %
         % Example:
-        %     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real')
-        %     F = [matrix <= 0]
-        %     matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]})
-        %     F = [matrix <= 0]
+        %     >>> matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'symmetric', 'real');
+        %     >>> F = [matrix <= 0];
+        %     >>> matrix = replab.CommutantVar.fromSdpMatrix(sdpvar(3), {[2 3 1]});
+        %     >>> F = [matrix <= 0];
         %
         % See also:
-        %     replab.CommutantVar.ge
+        %     `replab.CommutantVar.ge`
 
             % Numerical tolerance to decide whether numbers are close to zero in
             % this function.
@@ -2623,44 +2536,40 @@ classdef CommutantVar < replab.Str
         end
 
         function F = gt(X,Y)
-        % F = gt(X, Y)
-        %
-        % Greater than constraint. Strict constraints cannot be guarantees,
-        % please use ge(X,Y) instead.
+        % Greater than constraint.
+        % 
+        % Strict constraints cannot be guarantees, please use ge(X,Y)
+        % instead.
         %
         % Args:
-        %     X: CommutantVar, compatible sdpvar object or numeric matrix,
-        %         or numeric scalar
-        %     Y: CommutantVar, compatible sdpvar object or numeric matrix,
-        %         or numeric scalar
+        %     X (`CommutantVar`, sdpvar or double): matrix or scalar
+        %     Y (`CommutantVar`, sdpvar or double): matrix or scalar
         %
-        % Results:
-        %     F: Yalmip constraint
+        % Returns:
+        %     constraint: constraint
         %
         % See also:
-        %     replab.CommutantVar.ge
+        %     `replab.CommutantVar.ge`
         
             warning('Strict inequalities cannot be guaranteed. Imposing a non-strict constraint instead.');
             F = (X >= Y);
         end
 
         function F = lt(X,Y)
-        % F = lt(X, Y)
+        % Lesser than constraint.
         %
-        % Lesser than constraint. Strict constraints cannot be guarantees,
-        % please use le(X,Y) instead.
+        % Strict constraints cannot be guarantees, please use le(X,Y)
+        % instead.
         %
         % Args:
-        %     X: CommutantVar, compatible sdpvar object or numeric matrix,
-        %         or numeric scalar
-        %     Y: CommutantVar, compatible sdpvar object or numeric matrix,
-        %         or numeric scalar
+        %     X (`CommutantVar`, sdpvar or double): matrix or scalar
+        %     Y (`CommutantVar`, sdpvar or double): matrix or scalar
         %
-        % Results:
-        %     F: Yalmip constraint
+        % Returns:
+        %     constraint: constraint
         %
         % See also:
-        %     replab.CommutantVar.le
+        %     `replab.CommutantVar.le`
         
             warning('Strict inequalities cannot be guaranteed. Imposing a non-strict constraint instead.');
             F = (X <= Y);

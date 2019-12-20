@@ -1,10 +1,10 @@
 classdef Monoid < replab.Monoid
     
     properties (SetAccess = protected)
-        header;
-        eqvFun;
-        sampleFun;
-        composeFun;
+        header
+        eqvFun
+        sampleFun
+        composeFun
     end
 
     methods
