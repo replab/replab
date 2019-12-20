@@ -82,6 +82,7 @@ classdef Partition < replab.Str
             start1 = [];
             next1 = [];
             b1 = 1;
+            newBlocks = cell(1,length(selBlocks));
             for b = selBlocks
                 block = self.block(b);
                 m = length(block);
@@ -89,12 +90,13 @@ classdef Partition < replab.Str
                 start1 = [start1 (n1 + 1)];
                 next1 = [next1 (n1+(2:m)) 0];
                 pind = [pind block];
+                newBlocks{b1} = n1+[1:m];
                 b1 = b1 + 1;
                 n1 = n1 + m;
             end
             rest = setdiff(1:self.n, pind);
             pind = [pind rest];
-            P1 = replab.Partition(n1, blockIndex1, start1, next1, self.blocks(selBlocks));
+            P1 = replab.Partition(n1, blockIndex1, start1, next1, newBlocks);
         end
 
         
