@@ -1,5 +1,5 @@
 function adj = edge2adj(edges, n)
-% adj = edge2adj(edges, n)
+% adjacency matrix of the graph
 %
 % Returns the adjacency matrix for a graph described by a list
 % of edges.

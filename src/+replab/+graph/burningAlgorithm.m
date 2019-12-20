@@ -1,5 +1,5 @@
 function subsets = burningAlgorithm(edges)
-% subsets = burningAlgorithm(edges)
+% burning algorithm on a graph
 %
 % Performs the burning algorithm on the network described by the
 % edges given in pairs. This is the matlab fallback implementation.
@@ -11,7 +11,7 @@ function subsets = burningAlgorithm(edges)
 %     subsets: cell array with connex components
 %
 % Example:
-%     replab.graph.burningAlgorithm([1 2; 2 6; 3 4]) % a graph with 5 nodes labelled 1, 2, 3, 4, 6
+%     >>> replab.graph.burningAlgorithm([1 2; 2 6; 3 4]); % a graph with 5 nodes labelled 1, 2, 3, 4, 6
 %
 % See also:
 %     replab.Partition.connectedComponents

@@ -1,5 +1,5 @@
 function subsets = burningAlgorithmFast(edges)
-% subsets = burningAlgorithmFast(edges)
+% Fast implementation of the burning algorithm
 %
 % Performs the burning algorithm on the network described by the
 % edges given in pairs. This tries to call the fast c++ implementation and
@@ -11,8 +11,11 @@ function subsets = burningAlgorithmFast(edges)
 % Returns:
 %     subsets: cell array with connex components
 %
+% Throws:
+%     replab:dispatch:tryNext if fails
+%
 % Example:
-%     replab.graph.burningAlgorithmFast([1 2; 2 6; 3 4]) % a graph with 5 nodes labelled 1, 2, 3, 4, 6
+%     >>> % replab.graph.burningAlgorithmFast([1 2; 2 6; 3 4]); % a graph with 5 nodes labelled 1, 2, 3, 4, 6
 %
 % See also:
 %     replab.Partition.connectedComponents

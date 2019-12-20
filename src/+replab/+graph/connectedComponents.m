@@ -24,7 +24,7 @@ function [subsets componentIndex start next] = connectedComponents(edges)
 %         Useful to iterateover all elements of a connected component.
 %
 % Example:
-%     replab.graph.connectedComponents([1 2; 2 6; 3 4]) % a graph with 5 nodes labelled 1, 2, 3, 4, 6
+%     >>> replab.graph.connectedComponents([1 2; 2 6; 3 4]); % a graph with 5 nodes labelled 1, 2, 3, 4, 6
 %
 % See also:
 %     `replab.Partition.connectedComponents`
