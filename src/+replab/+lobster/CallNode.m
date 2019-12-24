@@ -6,7 +6,7 @@ classdef CallNode < replab.lobster.Node
     
     methods
         function self = CallNode(fragment)
-            self@replab.lobster.Node(fragment);
+            process_fragment(self, fragment);
         end
         
         function process_fragment(self, fragment)

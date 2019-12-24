@@ -17,7 +17,7 @@ classdef Template < handle
         end
         
         function str = render(self, context)
-            if ~exist('context', 'var')
+            if nargin < 2
                 context = struct();
             end
             

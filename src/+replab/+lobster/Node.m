@@ -7,12 +7,7 @@ classdef Node < handle
     
     methods 
         
-        function self = Node(fragment)
-            if ~exist('fragment', 'var')
-                fragment = '';
-            end
-            
-            self.process_fragment(fragment);
+        function self = Node()
         end
         
         function process_fragment(self, fragment)
@@ -32,7 +27,7 @@ classdef Node < handle
         end
         
         function str = render_children(self, context, children)
-            if ~exist('children', 'var')
+            if nargin < 3
                 children = self.children;
             end
             

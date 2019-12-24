@@ -7,7 +7,7 @@ classdef ForNode < replab.lobster.Node
     
     methods 
         function self = ForNode(fragment)
-            self@replab.lobster.Node(fragment);
+            process_fragment(self, fragment);
             self.creates_scope = true;
         end
         

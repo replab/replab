@@ -13,7 +13,7 @@ classdef IfNode < replab.lobster.Node
     
     methods 
         function self = IfNode(fragment)
-            self@replab.lobster.Node(fragment);
+            process_fragment(self, fragment);
             self.creates_scope = true;
         end
 

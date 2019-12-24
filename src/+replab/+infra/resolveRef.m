@@ -46,6 +46,10 @@ function [el linkText] = resolveRef(ref, context, isExternal)
     rx = ['^'  '([.~]*)' '([A-Za-z][A-za-z0-9_.]*)' '$'];
     %           prefix            identifier
     tokens = regexp(ref, rx, 'tokens', 'once');
+    if length(tokens) == 1
+        % For Octave compatibilty: octave will not separate an empty prefix
+        tokens = {'' tokens{1}};
+    end
     if length(tokens) ~= 2
         error('replab:resolveRefError', 'Invalid Sphinx reference %s', ref);
     end
@@ -112,5 +116,12 @@ function [el linkText] = resolveRef(ref, context, isExternal)
         el = [];
         return
     end
-    el = headElement.get(parts{2:end});
+    
+    % Circumventing direct assignment for octave
+    if length(parts) == 1
+        newParts = '';
+    else
+        newParts = parts{2:end};
+    end
+    el = headElement.get(newParts);
 end

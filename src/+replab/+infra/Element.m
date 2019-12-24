@@ -81,7 +81,7 @@ classdef Element < replab.Str
 
         function e = get(self, varargin)
         % Retrieves a (grand) child of this element from path elements
-            if isempty(varargin)
+            if isempty(varargin) || isempty(varargin{1})
                 e = self;
             else
                 id = varargin{1};
