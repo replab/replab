@@ -7,13 +7,10 @@ function replab_generatesphinxsource
     %% Prepare test directory structure
     switch exist(docsrcRoot)
       case 7
-        disp('docsrc directory exists, removing it');
-        if replab.settings.isOctave
-            confirm_recursive_rmdir (false, 'local');
-        end
-        rmdir(docsrcRoot, 's');
+        disp('./tmp_sphinxsrc directory exists, removing it');
+        replab.infra.rmdirRec(docsrcRoot);
       case 0
-        disp('Docsrc directory does not exist yet');
+        disp('./tmp_sphinxsrc directory does not exist yet');
       otherwise
         error('Unknown type')
     end
