@@ -22,7 +22,7 @@ function test_inputs
     matrix = matrix231;
     
     % Octave > 4.2 has some trouble with anonymous functions that involve class objects
-    isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
+    isOctave = replab.settings.isOctave;
     ver = version;
     
     if ~isOctave || (isOctave && isequal(ver(1:3),'4.2'))

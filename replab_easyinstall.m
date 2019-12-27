@@ -14,7 +14,6 @@ function exitCode = replab_easyinstall
 % Returns:
 %   integer: 0 if the external dependencies are present now, a positive number indicates an error
     
-    isOctave = logical(exist('OCTAVE_VERSION', 'builtin'));
     scriptPath = mfilename('fullpath');
     [replabPath, ~, ~] = fileparts(scriptPath);
     
@@ -121,7 +120,7 @@ function exitCode = replab_easyinstall
             error('Unrecognized answer.');
         end
         try
-            if isOctave
+            if replab.settings.isOctave
                 [f, success] = urlwrite (url, zipPath);
                 assert(success, 'Download did not work');
             else
