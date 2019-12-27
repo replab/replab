@@ -60,7 +60,7 @@ function replab_init(verbose)
     end
     if allGood
         if verbose >= 2
-            disp('Exiting because replab_init was already successfully called earlier.');
+            disp('Replab_init has already been successfully called.');
         end
         return;
     end    
@@ -320,18 +320,31 @@ function replab_init(verbose)
                     end
                 else
                     addpath([pathStr '/external/SDPT3']);
+                    if verbose >= 1
+                        disp('Adding embedded SDPT3 solver to the path');
+                    end
                     
                     % Now we run install_sdpt3
                     compilationSuccessfull = false;
+                    logSDPT3 = '';
                     try
-                        install_sdpt3;
+                        logSDPT3 = evalc('install_sdpt3;');
+                        if ~isempty(regexp(logSDPT3, 'Looking for existing binaries...incomplete set found.'))
+                            logSDPT3 = evalc('install_sdpt3 -rebuild;');
+                        end
                         compilationSuccessfull = true;
                     catch
                     end
                     
                     if compilationSuccessfull
                         SDPT3InPath = true;
+                        if (verbose == 1) && ~isempty(regexp(logSDPT3, 'Looking for existing binaries...none found; building...'))
+                            disp('Compiled SDPT3 binaries');
+                        elseif verbose >= 2
+                            disp(logSDPT3);
+                        end
                     else
+                        disp(logSDPT3);
                         warning(['An error occured while trying to set up the SDPT3 solver. This can happen if no', char(10), ...
                                  'compiler is available on the system. The functionalities of the library related', char(10), ...
                                  'to Semi-definite programming will be disabled. To remedy this, you can install', char(10), ...
@@ -378,7 +391,7 @@ function replab_init(verbose)
     if VPIInPath && MOxUnitInPath && YALMIPInPath && (decentSDPSolverInPath || SDPT3InPath) && MOcovInPath
         allGood = true;
     end
-    
+
 end
 
 
