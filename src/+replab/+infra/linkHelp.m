@@ -9,7 +9,7 @@ function str = linkHelp(helpCommand, linkText, identifier)
     parts = strsplit(strtrim(helpCommand));
     helpName = parts{1};
     args = {parts{2:end} identifier};
-    if replab.Parameters.consoleUseHTML
+    if replab.settings.consoleUseHTML
         argString = strjoin(cellfun(@replab.infra.quote, args, 'uniform', 0), ',');
         str = sprintf('<a href="matlab: %s(%s)">%s</a>', helpName, argString, linkText);
     else

@@ -10,7 +10,7 @@ function parseError(ct, pos, message, varargin)
     disp(' ');
     disp(replab.infra.formatCodeContext(ct.lines, pos, 7));
     errorId = 'replab:parseError';
-    if replab.platformIsOctave
+    if replab.settings.isOctave
         error(errorId, message, varargin{:});
     else
         throwAsCaller(MException(errorId, message, varargin{:}));

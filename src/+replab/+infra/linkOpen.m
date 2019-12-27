@@ -12,7 +12,7 @@ function str = linkOpen(linkText, altText, filename, lineNumber)
         lineNumber = [];
     end
     
-    if replab.Parameters.consoleUseHTML
+    if replab.settings.consoleUseHTML
         t = linkText;
     else
         t = altText;
@@ -36,7 +36,7 @@ function str = linkOpen(linkText, altText, filename, lineNumber)
         end
     end
     t = sprintf(t, args{:});
-    if replab.Parameters.consoleUseHTML
+    if replab.settings.consoleUseHTML
         if isempty(lineNumber)
             lineNumber = 1;
         end

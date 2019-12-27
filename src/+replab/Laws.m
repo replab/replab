@@ -35,7 +35,7 @@ classdef Laws < replab.Str
                 values{i} = evalin('caller', names{i});
             end
             message = replab.laws.message(errorDesc, context, {predicate}, names, values);
-            if replab.platformIsOctave()
+            if replab.settings.isOctave
                 error(errorId, '%s', message);
             else
                 throwAsCaller(MException(errorId, '%s', message));

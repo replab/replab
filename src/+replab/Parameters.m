@@ -2,26 +2,6 @@ classdef Parameters
     
     methods (Static)
         
-        function value = consoleUseHTML(newValue)
-            persistent ConsoleUseHTML;
-            if nargin == 1
-                ConsoleUseHTML = newValue;
-            elseif isempty(ConsoleUseHTML)
-                ConsoleUseHTML = ~replab.platformIsOctave && usejava('desktop');
-            end
-            value = ConsoleUseHTML;
-        end
-            
-        function value = matlabHelpPath(newValue)
-            persistent MatlabHelpPath;
-            if nargin == 1
-                MatlabHelpPath = newValue;
-            elseif isempty(MatlabHelpPath)
-                MatlabHelpPath = '';
-            end
-            value = MatlabHelpPath;
-        end
-        
         function value = averagingSamples(newValue)
             persistent AveragingSamples;
             if nargin == 1
@@ -61,26 +41,6 @@ classdef Parameters
                 RandomizedSchreierSimsTries = 1000;
             end
             value = RandomizedSchreierSimsTries;
-        end
-        
-        function value = strMaxColumns(newValue)
-            persistent StrMaxColumns;
-            if nargin == 1
-                StrMaxColumns = newValue;
-            elseif isempty(StrMaxColumns)
-                StrMaxColumns = 120;
-            end
-            value = StrMaxColumns;
-        end
-        
-        function value = strMaxRows(newValue)
-            persistent StrMaxRows;
-            if nargin == 1
-                StrMaxRows = newValue;
-            elseif isempty(StrMaxRows)
-                StrMaxRows = 25;
-            end
-            value = StrMaxRows;
         end
         
         function value = bsgsFailureProbability(newValue)

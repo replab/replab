@@ -24,7 +24,7 @@ function replab_generatedoctests
     switch exist(doctestRoot)
       case 7
         disp('Doctest directory exists, removing it');
-        if replab.platformIsOctave
+        if replab.settings.isOctave
             confirm_recursive_rmdir (false, 'local');
         end
         rmdir(doctestRoot, 's');

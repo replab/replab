@@ -8,7 +8,7 @@ function replab_generatesphinxsource
     switch exist(docsrcRoot)
       case 7
         disp('docsrc directory exists, removing it');
-        if replab.platformIsOctave
+        if replab.settings.isOctave
             confirm_recursive_rmdir (false, 'local');
         end
         rmdir(docsrcRoot, 's');

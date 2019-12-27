@@ -16,7 +16,7 @@ function dispH(text, fullKeyword, helpFunctionName, fullMode)
 %     fullMode (bool): whether links should be created to the help in
 %         simple or full mode
 
-    if (replab.platformIsOctave) || (~usejava('desktop'))
+    if (replab.settings.isOctave) || (~usejava('desktop'))
         disp(text);
     else
         % extract the final element

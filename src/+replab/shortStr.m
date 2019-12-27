@@ -1,14 +1,17 @@
 function str = shortStr(obj, maxColumns)
 % Returns a one-line description of the given object, that fits within the given width maxColumns
 %
-%        obj: Object to pretty print
+% Args:
+%   obj: Object to pretty print
+%   maxColumns (integer or ``[]``, optional): Maximum column size; if the output does not fit, 
+%                                             it may be returned cut at an arbitrary place, provided 
+%                                             that place is *after* the last column that fits.
+%                                             Optional parameter with default value given in `replab.settings.strMaxColumns`
 %
-% maxColumns: maximum column size; if the output does not fit, it may be returned cut at an arbitrary 
-%             place, provided that place is *after* the last column that fits.
-%             Optional parameter with default value given in Parameters.m
-%
-    if nargin < 2
-        maxColumns = replab.Parameters.strMaxColumns;
+% Returns:
+%   charstring: String representation
+    if nargin < 2 || isempty(maxColumns)
+        maxColumns = replab.settings.strMaxColumns;
     end
     if isa(obj, 'replab.Str')
         try

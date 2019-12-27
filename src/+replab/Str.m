@@ -16,7 +16,7 @@ classdef Str < handle
         %
         % Returns:
         %   res (boolean): true iff self == rhs
-            if replab.platformIsOctave
+            if replab.settings.isOctave
                 res = true(size(self));
             else
                 res = eq@handle(self, rhs);
@@ -24,8 +24,8 @@ classdef Str < handle
         end
         
         function disp(self)
-            maxRows = replab.Parameters.strMaxRows;
-            maxColumns = replab.Parameters.strMaxColumns;
+            maxRows = replab.settings.strMaxRows;
+            maxColumns = replab.settings.strMaxColumns;
             lines = replab.longStr(self, maxRows, maxColumns);
             lines = replab.str.longFit(lines, maxRows, maxColumns);
             disp(strjoin(lines, '\n'));

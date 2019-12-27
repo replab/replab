@@ -123,7 +123,7 @@ function help(varargin)
         stdout = 1;
         fullId = el.fullIdentifier;
         fwrite(stdout, replab.infra.templateHelp(templateName, el, docEl, helpCurrent, {fullId}, {fullId}));
-        if hasToggle && replab.Parameters.consoleUseHTML
+        if hasToggle && replab.settings.consoleUseHTML
             if fullMode
                 link = replab.infra.linkHelp(helpToggled, fullId, fullId);
                 disp(['Toggle display to help page for ' link]);
@@ -137,7 +137,7 @@ function help(varargin)
         end
         disp(' ');
     else
-        if isempty(replab.Parameters.matlabHelpPath)
+        if isempty(replab.settings.systemHelpPath)
             try
                 % Some clear happened, we try to capture matlab's help
                 % again...
@@ -150,8 +150,8 @@ function help(varargin)
         % We call matlab's help function
         currentPath = strrep(pwd, '\', '/');
 
-        if ~replab.platformIsOctave
-            cd(replab.Parameters.matlabHelpPath);
+        if ~replab.settings.isOctave
+            cd(replab.settings.systemHelpPath);
             message = [];
             try
                 help(varargin{:});
@@ -169,8 +169,8 @@ function help(varargin)
             replabHelpPath = fileparts(which('replab_init'));
             replabHelpPath = [strrep(replabHelpPath, '\', '/'), '/src'];
 
-            cd(replab.Parameters.matlabHelpPath);
-            addpath(replab.Parameters.matlabHelpPath);
+            cd(replab.settings.systemHelpPath);
+            addpath(replab.settings.systemHelpPath);
             message = [];
             try
                 help(varargin{:});

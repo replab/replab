@@ -1,18 +1,51 @@
 function replab_init(verbose)
 % replab_init([verbose])
 %
-% Sets up the search path in order to enable all functionalities of the
-% RepLAB library.
+% Sets up the search path in order to enable all functionalities of the RepLAB library,
+% verifies that a SDP solver is available, installs and registers the bundled SDPT3 solver if needed,
+% and initializes important variables.
+%
+% A few persistent variables in functions presentin  `replab.settings` are initialized by this script;
+% those persistent varibales are locked by `mlock` to avoid being cleared when ``clear all`` is used;
+% this concerns in particular `replab.settings.replabPath` and  `replab.settings.helpPath`.
 %
 % Args:
-%     verbose: controls the display level (optional):
-%         0: only produce a display in case of error/warning or for
-%             critical cases
-%         1: informs of the changes made (default value)
-%         2: prints full information
+%     verbose ({0, 1, 2}, optional): Controls the display level
+%                                    - 0: only produce a display in case of error/warning or for critical cases
+%                                    - 1: informs of the changes made (default value)
+%                                    - 2: prints full information
 %
 % Example:
-%     replab_init
+%     >>> replab_init   % doctest: +SKIP
+%         Adding RepLAB to the path
+%         Adding RepLAB package to the path
+%         Adding VPI to the path
+%         Adding MOxUnit to the path
+%         Adding embedded YALMIP to the path
+%         
+%         ---------------------------------------------------------------------------
+%         SDPT3 installation script
+%            Directory: /home/denis/w/replab/external/SDPT3
+%            Matlab 9.4.0.813654 (R2018a) on GLNXA64
+%         ---------------------------------------------------------------------------
+%         Looking for existing binaries...found!
+%            If for some reason you need to rebuild the binaries, use this command:
+%               install_sdpt3 -rebuild
+%         ---------------------------------------------------------------------------
+%         Adding SDPT3 to the Matlab path:
+%            Base...already there.
+%            Solver...added.
+%            HSDSolver...added.
+%            Binaries...added.
+%            Examples...added.
+%         Please save the Matlab path if you want to use SDPT3 from any directory.
+%         ---------------------------------------------------------------------------
+%         SDPT3 has been succesfully installed.
+%         For more information, type "help sdpt3" or see the user guide.
+%         ---------------------------------------------------------------------------
+%         
+%         Adding MOcov to the path
+
     
     %% Parameter checking
     if nargin < 1
@@ -142,10 +175,14 @@ function replab_init(verbose)
     
     
     %% Memorizing matlab's help folder if not done before
-    if isempty(replab.Parameters.matlabHelpPath)
-        replab.Parameters.matlabHelpPath(matlabHelpPath);
+    if isempty(replab.settings.systemHelpPath)
+        replab.settings.systemHelpPath(matlabHelpPath);
     end
     
+    %% Memorizing RepLAB root folder if not done before
+    if isempty(replab.settings.replabPath)
+        replab.settings.replabPath(pathStr);
+    end
     
     %% VPI
     
