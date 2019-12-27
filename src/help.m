@@ -58,12 +58,15 @@ function help(varargin)
                 % object is a replab object
                 if isempty(secondPart)
                     varargin{1} = type;
-                    replab.infra.dispH([firstPart, ' is an object of type ', type, '.'], firstPart, helpFunctionName, fullMode);
+                    msg = sprintf('%s is an object of type %s.', firstPart, ...
+                                  replab.infra.linkHelp(helpFunctionName, type, type));
+                    disp(msg);
                     disp(' ');
                 else
                     varargin{1} = [type, '.', secondPart];
                 end
-                replab.infra.dispH(['--- help for ', varargin{1}, ' ---'], varargin{1}, helpFunctionName, fullMode);
+                msg = sprintf('--- help for %s ---', replab.infra.strong(varargin{1}));
+                disp(msg);
             else
                 % non-replab variable/object. We need to make a copy to our
                 % workspace for the next function to see it
