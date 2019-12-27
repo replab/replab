@@ -520,7 +520,9 @@ classdef CommutantVar < replab.Str
         end
 
         function R = copy(rhs)
-        % Creates an identical but independent copy of rhs. Modifying the 
+        % Creates an identical but independent copy of rhs. 
+        %
+        % Modifying the 
         % copy does not modify the original object. This is useful
         % internally.
         %
@@ -937,7 +939,9 @@ classdef CommutantVar < replab.Str
         end
         
         function nb = numel(self)
-        % Returns the number of objects (i.e. 1). To obtain the number of
+        % Returns the number of objects (i.e. 1). 
+        %
+        % To obtain the number of
         % elements in the matrix, use prod(size(self)) instead.
         %
         % Results:
@@ -1032,8 +1036,7 @@ classdef CommutantVar < replab.Str
         end
 
         function M = blockMask(self)
-        % Returns a 0-1-filled matrix showing the block structure of the
-        % matrix in the irreducible basis.
+        % Returns a 0-1-filled matrix showing the block structure of the matrix in the irreducible basis.
         %
         % Results:
         %     M: matrix
@@ -1097,8 +1100,7 @@ classdef CommutantVar < replab.Str
         end
         
         function M = fullMatrix(self)
-        % Constructs the full form of the invariant matrix in the natural
-        % basis.
+        % Constructs the full form of the invariant matrix in the natural basis.
         %
         % Returns:
         %     M: sdpvar matrix
@@ -1130,8 +1132,9 @@ classdef CommutantVar < replab.Str
         end
 
         function vars = getVariables(self)
-        % Returns the Yalmip indices of the SDP variable used by the
-        % object. If the object includes linear constraints, variables from
+        % Returns the Yalmip indices of the SDP variable used by the object. 
+        %
+        % If the object includes linear constraints, variables from
         % the constraints are also counted.
         %
         % Returns:
@@ -1188,8 +1191,7 @@ classdef CommutantVar < replab.Str
         end
 
         function basis = getBaseMatrix(self, index)
-        % Returns the coefficients contributing the the SDP variable with
-        % given index.
+        % Returns the coefficients contributing the the SDP variable with given index.
         %
         % Args:
         %     index (integer): index of the sdp variable (or 0 for the
@@ -1210,8 +1212,7 @@ classdef CommutantVar < replab.Str
         end
 
         function see(self)
-        % Displays internal info about the structure of the matrix in full
-        % form.
+        % Displays internal info about the structure of the matrix in full form.
         %
         % See also:
         %     sdpvar.see
@@ -1265,7 +1266,9 @@ classdef CommutantVar < replab.Str
         end
 
         function varargout = subsref(self, varargin)
-        % Overload of subsref. This function is called when using the
+        % Overload of subsref.
+        %
+        % This function is called when using the
         % syntax '()' to extract one part of a matrix.
         %
         % Args:
