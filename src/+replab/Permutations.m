@@ -114,7 +114,7 @@ classdef Permutations < replab.PermutationGroup
     methods
         
         function p = transposition(self, i, j)
-        % Returns the transposition permuting `i` and `j`.
+        % Returns the transposition permuting ``i`` and ``j``.
         %
         % Args:
         %   i: First domain element to be transposed.
@@ -132,7 +132,7 @@ classdef Permutations < replab.PermutationGroup
         end
         
         function p = shift(self, i)
-        % Returns the cyclic permutation that shifts the domain indices by `i`.
+        % Returns the cyclic permutation that shifts the domain indices by ``i``.
         %
         % Args:
         %   i: Shift so that ``j`` is sent to ``j + i`` (wrapping around).
