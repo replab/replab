@@ -22,28 +22,6 @@ function replab_init(verbose)
 %         Adding VPI to the path
 %         Adding MOxUnit to the path
 %         Adding embedded YALMIP to the path
-%         
-%         ---------------------------------------------------------------------------
-%         SDPT3 installation script
-%            Directory: /home/denis/w/replab/external/SDPT3
-%            Matlab 9.4.0.813654 (R2018a) on GLNXA64
-%         ---------------------------------------------------------------------------
-%         Looking for existing binaries...found!
-%            If for some reason you need to rebuild the binaries, use this command:
-%               install_sdpt3 -rebuild
-%         ---------------------------------------------------------------------------
-%         Adding SDPT3 to the Matlab path:
-%            Base...already there.
-%            Solver...added.
-%            HSDSolver...added.
-%            Binaries...added.
-%            Examples...added.
-%         Please save the Matlab path if you want to use SDPT3 from any directory.
-%         ---------------------------------------------------------------------------
-%         SDPT3 has been succesfully installed.
-%         For more information, type "help sdpt3" or see the user guide.
-%         ---------------------------------------------------------------------------
-%         
 %         Adding MOcov to the path
 
     
