@@ -119,9 +119,9 @@ function [el linkText] = resolveRef(ref, context, isExternal)
     
     % Circumventing direct assignment for octave
     if length(parts) == 1
-        newParts = '';
+        newParts = {};
     else
-        newParts = parts{2:end};
+        newParts = parts(2:end);
     end
-    el = headElement.get(newParts);
+    el = headElement.get(newParts{:});
 end
