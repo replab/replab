@@ -307,7 +307,7 @@ function replab_init(verbose)
                     logSDPT3 = '';
                     try
                         logSDPT3 = evalc('install_sdpt3;');
-                        if ~isempty(regexp(logSDPT3, 'Looking for existing binaries...incomplete set found.'))
+                        if ~isempty(regexp(logSDPT3, 'Looking for existing binaries\.\.\.incomplete set found\.'))
                             logSDPT3 = evalc('install_sdpt3 -rebuild;');
                         end
                         compilationSuccessfull = true;
@@ -316,7 +316,7 @@ function replab_init(verbose)
                     
                     if compilationSuccessfull
                         SDPT3InPath = true;
-                        if (verbose == 1) && ~isempty(regexp(logSDPT3, 'Looking for existing binaries...none found; building...'))
+                        if (verbose == 1) && ~isempty(regexp(logSDPT3, 'Looking for existing binaries\.\.\.none found; building\.\.\.'))
                             disp('Compiled SDPT3 binaries');
                         elseif verbose >= 2
                             disp(logSDPT3);
