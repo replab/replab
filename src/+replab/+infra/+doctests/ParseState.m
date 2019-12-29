@@ -1,8 +1,8 @@
 classdef ParseState < replab.Str
 % Stores the contents and the parsing position (=state) of a doctest block
 %
-% We process the doctest block line by line, i.e. each line is a token
-% for the parser; whitespace is trimmed from the lines we read.
+% We process the doctest block line by line, i.e. each line is a token for the parser;
+% whitespace is trimmed from the lines we read, and empty lines are removed.
 %
 % For source code lines ('START' or 'CONT'), we also split the line into a code part and a comment part.
 %
@@ -22,7 +22,7 @@ classdef ParseState < replab.Str
         tags % row cell array of charstring: Tag describing the line type
         lines % row cell array of charstring: Content lines
         comments % row cell array of charstring: Comments
-        lineNumbers % row vector of integer: Original line number
+        lineNumbers % row vector of integer: Original position of remaining lines
         pos % integer: Current line position
     end
 
@@ -48,7 +48,7 @@ classdef ParseState < replab.Str
         end
 
         function [nextParseState line comment lineNumber] = expect(self, expectedTag)
-        % Equivalent to `take`, conditioned on the consumed tag to be `expectedTag`
+        % Equivalent to `take`, conditioned on the consumed tag to be ``expectedTag``
             [nextParseState tag line comment lineNumber] = self.take;
             if ~isequal(tag, expectedTag)
                 nextParseState = [];
@@ -62,7 +62,6 @@ classdef ParseState < replab.Str
 
     methods (Static)
 
-
         function ps = fromDocTestBlock(inputLines)
         % Constructs a ParseState instance from a doctest block lines
         %
@@ -70,7 +69,7 @@ classdef ParseState < replab.Str
         %   lines (row cell array of charstring): Doctest block lines
         %
         % Returns:
-        %   :class:`replab.infra.ParseState`: A fresh ParseState instance
+        %   `.ParseState`: A fresh ParseState instance
             lines = {};
             comments = {};
             tags = {};

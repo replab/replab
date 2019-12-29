@@ -1,0 +1,4 @@
+Migrate the DocTest parsing to the `errFun` convention; start with the DocTest
+static methods, then update parseTests.m
+
+Add tests to exercise this code

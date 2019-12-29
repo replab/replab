@@ -10,7 +10,7 @@ classdef DocSample
         % A sample method with a doctest
         %
         % Example:
-        %   >>> 2 + 2
+        %   >>> 2 + 2 % doctest: +skip
         %   ans = 4
         %   >>> 2 * 2
         %   ans = 4

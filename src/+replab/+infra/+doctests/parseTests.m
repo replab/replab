@@ -1,20 +1,27 @@
-function doctests = parseDoc(doc)
-% Finds and parses the doctests in the documentation of an object
+function doctests = parseTests(lines, errFun)
+% Finds and parses the doctests in documentation
 %
 % Args:
-%   doc (`replab.infra.Doc`): Documentation
+%   lines (row cell array of charstring): Lines to parse
+%   errFun (function_handle): Function called when a parse error is encountered
+%                             The calling convention is ``errFun(message, relLN)``
+%                             where ``message`` is a charstring and ``relLN`` is
+%                             is the line number in ``lines`` where the error was
+%                             encountered
+%                             That function should not return, as we do not try to
+%                             recover from parse errors.
 %
 % Returns:
 %   row cell array of `.DocTest`: The parsed doctests
 %
 % Raises:
-%   A warning if some of the parses are unsuccesful.
-    n = doc.nLines;
+%   An error if the parse is unsuccesful
+    n = length(lines);
     content = cell(1, n);
     indent = zeros(1, n);
     % Remove leading whitespace but remember identation level for each line
     for i = 1:n
-        l = doc.line(i);
+        l = lines{i};
         if isempty(l)
             indent(i) = 0;
             content{i} = '';
@@ -41,7 +48,7 @@ function doctests = parseDoc(doc)
                 j = j + 1;
             end
             ps = replab.infra.doctests.ParseState.fromDocTestBlock(content(i+1:j-1));
-            dt = replab.infra.doctests.DocTest.parseDocTest(doc, ps, i);
+            dt = replab.infra.doctests.DocTest.parseDocTest(ps, i);
             if isempty(dt)
                 warning(sprintf('Error while parsing Example: block at line %d'), i);
             else
