@@ -360,7 +360,7 @@ classdef Rep < replab.Str
                                            @(g) A*self.image(g)*Ainv, @(g) Ainv*self.inverseImage(g)*A);
             end
         end
-        
+
         function sub = subRep(self, F, G)
         % Returns a subrepresentation of this representation
         %

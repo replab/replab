@@ -1,10 +1,11 @@
-function writeDocTests(doctestPath, packageElement)
+function writeDocTests(doctestPath, el)
 % Writes the doctests for the given package element
 %
 % Args:
 %   doctestPath (charstring): Base folder for doctest generation, not including trailing path separator
 %                             That folder must exist.
-    doctests = replab.infra.DocTest.parseDoc(packageElement.doc);
+%   el (`replab.infra.SourceElement`): Element to inspect for doctests
+    doctests = replab.infra.DocTest.parseDoc(el.doc);
     lineNumbers = cellfun(@(x) 2, doctests);
     elementNames = cellfun(@(x) '', doctests, 'uniform', 0);
     testNumbers = 1:length(doctests);
