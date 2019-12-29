@@ -18,7 +18,7 @@ function test_if_false_with_context(self)
 end
 
 function test_if_true_with_context(self)
-    values = {true, 1, -1, 2, 5, -7, 'true', 'stuff', [1, 1]}
+    values = {true, 1, -1, 2, 5, -7, 'true', 'stuff', [1, 1]};
     for i = 1:length(values)
         truthy_value = values{i};
         context.var = truthy_value;
