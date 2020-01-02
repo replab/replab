@@ -52,9 +52,6 @@ classdef ParseState < replab.Str
             [nextParseState tag line comment lineNumber] = self.take;
             if ~isequal(tag, expectedTag)
                 nextParseState = [];
-                line = [];
-                comment = [];
-                lineNumber = [];
             end
         end
 

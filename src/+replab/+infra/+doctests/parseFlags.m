@@ -7,9 +7,13 @@ function flags = parseFlags(s, errFun)
 %
 % Returns:
 %   struct: Flags structure
+    if nargin < 2
+        errFun = @(msg) error(msg);
+    end
     s = strtrim(s);
     flags = struct;
     while true
+        s
         token = regexp(s, '^((+|-)?[A-Za-z][A-Za-z_0-9]*)', 'tokens', 'once');
         if isempty(token)
             errFun('Invalid syntax in flags');
@@ -40,6 +44,7 @@ function flags = parseFlags(s, errFun)
         end
         if isfield(flags, k)
             errFun(sprintf('Flag %s defined twice', k));
+        end
         flags.(k) = v;
         s = strtrim(s);
         if isempty(s)

@@ -2,7 +2,7 @@ classdef DocTest < replab.Str
 % Describes an executable code sample
     properties
         lineNumbers % row vector of integer: 1-based line numbers of first line of the command
-                    %                        (relative to the parsed comment block)
+                    %                        (interpretation of those line numbers depend on context)
         commands % row cell vector of row vector of charstring: commands to be evaluated
         outputs % row cell vector of row vector of charstring: expected output
         flags % row cell vector of struct: flags corresponding to the command evaluation
@@ -21,6 +21,11 @@ classdef DocTest < replab.Str
             n = length(self.commands);
         end
 
+        function newDT = withLineOffset(self, lo)
+            newDT = replab.infra.doctests.DocTest(self.lineNumbers + lo, ...
+                                                  self.commands, self.outputs, self.flags);
+        end
+
     end
 
     methods (Static)
@@ -31,6 +36,7 @@ classdef DocTest < replab.Str
         % Args:
         %   ps (`.ParseState`): Current parse state
         %   errFun (function_handle): Error function, see `.parseTests`
+        %                             Call as ``errFun(message, relLN)``
         %
         % Returns
         % -------
@@ -50,26 +56,34 @@ classdef DocTest < replab.Str
             lineNumber = [];
             [ps newCommand comment lineNumber] = ps.expect('START');
             if isempty(ps)
+                % not having a command input/output pair is not an
+                % error, just a failed parse
                 return
             end
+            % but once we start it has to be valid, so anything unexpected is an error
+            % (no backtrack)
             command = {newCommand};
             flagsText = regexp(comment, '^\s*doctest:(.+)', 'tokens', 'once');
             if ~isempty(flagsText)
                 if iscell(flagsText)
                     flagsText = flagsText{1};
                 end
-                flags = replab.infra.doctests.parseFlags(flagsText);
+                errFun1 = @(msg) errFun(msg, lineNumber);
+                flags = replab.infra.doctests.parseFlags(flagsText, errFun1);
             else
                 flags = struct;
             end
             while 1
-                [res newCommand comment] = ps.expect('CONT');
+                [res newCommand comment lineNumber1] = ps.expect('CONT');
                 if isempty(res)
+                    % No continuation? then we are at the end
                     break
                 else
                     ps = res;
-                    assert(isempty(regexp(comment, '^\s*doctest:')), ...
-                           'Doctest flags can only be present on the first command line');
+                    if ~isempty(regexp(comment, '^\s*doctest:'))
+                        msg = 'Doctest flags can only be present on the first command line';
+                        errFun(lineNumber1, msg);
+                    end
                     command{1,end+1} = newCommand;
                 end
             end
@@ -77,6 +91,7 @@ classdef DocTest < replab.Str
             while 1
                 [res newOutput comment] = ps.expect('OUT');
                 if isempty(res)
+                    % end of output lines? then we are done
                     break
                 else
                     ps = res;
@@ -85,24 +100,32 @@ classdef DocTest < replab.Str
             end
         end
 
-        function dt = parseDocTest(doc, ps, lineOffset)
+        function dt = parse(ps, errFun)
         % Parses a doctest, containing multiple command/output pairs
         %
         % Args:
-        %   doc (`replab.infra.Doc`): Doc comment block in which this is contained
         %   ps (`replab.infra.doctests.ParseState`): Current parse state
-        %   lineOffset (integer): Line number of the ``Example:`` directive
+        %   errFun (function_handle, optional): Error function, see `.parseTests`
+        %                                       Call as ``errFun(message, relLN)``
+        %
         %
         % Returns
         % -------
         %   dt:
-        %     `.DocTest`: The parsed doctest, or [] is unsuccessful
+        %     `.DocTest`: The parsed doctest, with line numbers corresponding to
+        %                 position in the parsed block
+        %
+        % Raises:
+        %   An error if the parse is unsuccessful
+            if nargin < 2
+                errFun = @(m, l) error('Line %d: %s', l, m);
+            end
             commands = {};
             outputs = {};
             flags = {};
             lineNumbers = [];
             while 1
-                [res command output flagss lineNumber] = replab.infra.doctests.DocTest.parseCommandOutputPair(ps);
+                [res command output flagss lineNumber] = replab.infra.doctests.DocTest.parseCommandOutputPair(ps, errFun);
                 if isempty(res)
                     break
                 else
@@ -115,7 +138,7 @@ classdef DocTest < replab.Str
             end
             ps = ps.expect('EOF');
             assert(~isempty(ps));
-            dt = replab.infra.doctests.DocTest(doc, lineNumbers + lineOffset, commands, outputs, flags);
+            dt = replab.infra.doctests.DocTest(lineNumbers, commands, outputs, flags);
         end
 
     end
