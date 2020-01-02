@@ -21,7 +21,17 @@ function test_flags
     s = replab.infra.doctests.parseFlags(flags);
     assertEqual(s, struct('retries', {{'3'}}, 'matrixRange', {{'1e-10'}}));
 end
-    
+
+function test_parseTestsError
+    lines = {'Blablabla' ...
+             '' ...
+             'Example:' ...
+             '  >>> 2 + 2 % doctest: fun(' ...
+             '      ans = 4'};
+    assertError(@() replab.infra.doctests.parseTests(lines), '*', ...
+                'Line 4: Argument list of fun should be closed by )');
+end
+
 % $$$ function test_docTestLineNumbers
 % $$$     path = fullfile(replab.settings.replabPath, 'tests/infra/sample');
 % $$$     c = replab.infra.CodeBase.crawl(path);

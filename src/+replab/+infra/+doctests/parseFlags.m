@@ -13,7 +13,6 @@ function flags = parseFlags(s, errFun)
     s = strtrim(s);
     flags = struct;
     while true
-        s
         token = regexp(s, '^((+|-)?[A-Za-z][A-Za-z_0-9]*)', 'tokens', 'once');
         if isempty(token)
             errFun('Invalid syntax in flags');

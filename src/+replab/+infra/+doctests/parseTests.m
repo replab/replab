@@ -16,6 +16,9 @@ function doctests = parseTests(lines, errFun)
 %
 % Raises:
 %   An error if the parse is unsuccesful
+    if nargin < 2
+        errFun = @(m, l) error(sprintf('Line %d: %s', l, m));
+    end
     n = length(lines);
     content = cell(1, n);
     indent = zeros(1, n);
@@ -48,7 +51,8 @@ function doctests = parseTests(lines, errFun)
                 j = j + 1;
             end
             ps = replab.infra.doctests.ParseState.fromDocTestBlock(content(i+1:j-1));
-            dt = replab.infra.doctests.DocTest.parseDocTest(ps, i);
+            errFun1 = @(m, l) errFun(m, l + i);
+            dt = replab.infra.doctests.DocTest.parse(ps, errFun1);
             if isempty(dt)
                 warning(sprintf('Error while parsing Example: block at line %d'), i);
             else

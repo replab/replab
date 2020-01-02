@@ -118,7 +118,7 @@ classdef DocTest < replab.Str
         % Raises:
         %   An error if the parse is unsuccessful
             if nargin < 2
-                errFun = @(m, l) error('Line %d: %s', l, m);
+                errFun = @(m, l) error(sprintf('Line %d: %s', l, m));
             end
             commands = {};
             outputs = {};
