@@ -12,7 +12,8 @@ function doctests = parseTests(lines, errFun)
 %                             recover from parse errors.
 %
 % Returns:
-%   row cell array of `.DocTest`: The parsed doctests
+%   row cell array of `.DocTest`: The parsed doctests, with line numbers corresponding
+%                                 to the position in the ``lines`` cell array
 %
 % Raises:
 %   An error if the parse is unsuccesful
@@ -56,7 +57,7 @@ function doctests = parseTests(lines, errFun)
             if isempty(dt)
                 warning(sprintf('Error while parsing Example: block at line %d'), i);
             else
-                doctests{1, end+1} = dt;
+                doctests{1, end+1} = dt.withLineOffset(i);
             end
             i = j;
         end

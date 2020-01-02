@@ -8,9 +8,9 @@ classdef Class < replab.infra.SourceElement
     properties (Access = protected)
         inheritedElements_
     end
-    
+
     methods
-        
+
         function self = Class(codeBase, package, classData)
             startLineNumber = 1;
             self = self@replab.infra.SourceElement(codeBase, package, classData.name, startLineNumber, classData.name, ...
@@ -42,14 +42,14 @@ classdef Class < replab.infra.SourceElement
             end
             self.ownElements = oe;
         end
-        
+
         % replab.infra.Element
-        
+
         function c = childrenNames(self)
             c = vertcat(fieldnames(self.ownElements), fieldnames(self.inheritedElements));
             c = c(:).';
         end
-        
+
         function e = lookup(self, id)
             if isfield(self.ownElements, id)
                 e = self.ownElements.(id);
@@ -64,22 +64,22 @@ classdef Class < replab.infra.SourceElement
         end
 
         % replab.infra.SourceElement
-        
+
         function str = name(self)
             str = self.sourceIdentifier;
         end
-        
+
         function p = elementPath(self)
             p = {self.name};
         end
-        
+
         % Own methods
-        
+
         function ae = allElements(self)
         % Returns a struct whose fields contain all elements
-            ae = replab.infra.shmMerge(self.ownElements, self.inheritedElements);
+            ae = replab.infra.shm.merge(self.ownElements, self.inheritedElements);
         end
-        
+
         function am = allMethods(self)
         % Returns a row cell vector containing all methods, inc. inherited, sorted by name
             am = horzcat(self.ownMethods, self.inheritedMethods);
@@ -87,7 +87,7 @@ classdef Class < replab.infra.SourceElement
             [~, ind] = sort(names);
             am = am(ind);
         end
-        
+
         function ap = allProperties(self)
         % Returns a row cell vector containing all properties, inc. inherited, sorted by name
             ap = horzcat(self.ownProperties, self.inheritedProperties);
@@ -101,25 +101,25 @@ classdef Class < replab.infra.SourceElement
             oe = oe(:).';
             om = oe(cellfun(@(x) isequal(x.kind, 'method'), oe));
         end
-        
+
         function op = ownProperties(self)
             oe = struct2cell(self.ownElements);
             oe = oe(:).';
             op = oe(cellfun(@(x) isequal(x.kind, 'property'), oe));
         end
-        
+
         function im = inheritedMethods(self)
             ie = struct2cell(self.inheritedElements);
             ie = ie(:).';
             im = ie(cellfun(@(x) isequal(x.kind, 'method'), ie));
         end
-        
+
         function ip = inheritedProperties(self)
             ie = struct2cell(self.inheritedElements);
             ie = ie(:).';
             ip = ie(cellfun(@(x) isequal(x.kind, 'property'), ie));
         end
-        
+
         function ie = inheritedElements(self)
             if isempty(self.inheritedElements_)
                 ie = struct;
@@ -164,7 +164,7 @@ classdef Class < replab.infra.SourceElement
                 end
             end
         end
-        
+
         function asc = allSubclasses(self)
         % Returns all subclasses of this class, not including itself
             asc = {};
@@ -181,15 +181,15 @@ classdef Class < replab.infra.SourceElement
                 end
             end
         end
-        
+
         function c = ownSubclasses(self)
             c = self.codeBase.subclasses(self);
         end
-        
+
         function c = ownSuperclasses(self)
             c = cellfun(@(id) self.codeBase.getIdentifier(id), self.superclassIdentifiers, 'uniform', 0);
         end
-        
+
     end
-    
+
 end

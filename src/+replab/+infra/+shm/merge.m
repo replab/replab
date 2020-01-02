@@ -1,4 +1,4 @@
-function s = shmMerge(s1, s2, mergeFun)
+function s = merge(s1, s2, mergeFun)
 % Merges two hashmaps represented by two structs
 %
 % Args:

@@ -2,6 +2,7 @@ classdef DocTest < replab.Str
 % Describes an executable code sample
     properties
         lineNumbers % row vector of integer: 1-based line numbers of first line of the command
+                    %
                     %                        (interpretation of those line numbers depend on context)
         commands % row cell vector of row vector of charstring: commands to be evaluated
         outputs % row cell vector of row vector of charstring: expected output

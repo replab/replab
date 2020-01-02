@@ -1,4 +1,4 @@
-function id = shmEncode(parts)
+function id = encode(parts)
     if isempty(parts)
         id = 'root__';
     else

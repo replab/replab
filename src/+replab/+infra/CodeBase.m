@@ -27,21 +27,21 @@ classdef CodeBase < replab.Str
             packages = struct;
             for i = 1:length(packageData)
                 pkg = replab.infra.Package(self, packageData{i});
-                id = replab.infra.shmEncode(pkg.path);
+                id = replab.infra.shm.encode(pkg.path);
                 packages.(id) = pkg;
             end
             self.packages = packages;
         end
-        
+
         function p = package(self, varargin)
-            id = replab.infra.shmEncode(varargin);
+            id = replab.infra.shm.encode(varargin);
             if isfield(self.packages, id)
                 p = self.packages.(id);
             else
                 p = [];
             end
         end
-        
+
         function c = subpackages(self, package)
         % Returns the direct subpackages of the given package
         %
@@ -58,20 +58,20 @@ classdef CodeBase < replab.Str
                     pp = pkg.path;
                     if ~isempty(pp)
                         parentPath = pp(1:end-1);
-                        s = replab.infra.shmUpdate(s, parentPath, @(c) horzcat(c, {pkg}), {pkg});
+                        s = replab.infra.shm.update(s, parentPath, @(c) horzcat(c, {pkg}), {pkg});
                     end
                 end
                 self.subpackages_ = s;
             end
-            c = replab.infra.shmLookup(self.subpackages_, package.path, {});
+            c = replab.infra.shm.lookup(self.subpackages_, package.path, {});
         end
-        
+
         function p = allPackages(self)
         % Returns all packages present in this code base
             pkgNames = fieldnames(self.packages);
             p = cellfun(@(name) self.packages.(name), pkgNames, 'uniform', 0);
         end
-        
+
         function f = allFunctions(self)
         % Returns all functions present in this code base
             p = self.allPackages;
@@ -80,7 +80,7 @@ classdef CodeBase < replab.Str
                 f = horzcat(f, p{i}.ownFunctions);
             end
         end
-        
+
         function c = allClasses(self)
         % Returns all classes present in this code base
             p = self.allPackages;
@@ -89,7 +89,7 @@ classdef CodeBase < replab.Str
                 c = horzcat(c, p{i}.ownClasses);
             end
         end
-        
+
         function c = subclasses(self, cls)
         % Returns the direct subclasses of the given class
         %
@@ -105,27 +105,27 @@ classdef CodeBase < replab.Str
                     cl = classes{i};
                     sup = cl.ownSuperclasses;
                     for j = 1:length(sup)
-                        s = replab.infra.shmUpdate(s, sup{j}.path, @(c) horzcat(c, {cl}), {cl});
+                        s = replab.infra.shm.update(s, sup{j}.path, @(c) horzcat(c, {cl}), {cl});
                     end
                 end
                 self.subclasses_ = s;
             end
-            c = replab.infra.shmLookup(self.subclasses_, cls.path, {});
+            c = replab.infra.shm.lookup(self.subclasses_, cls.path, {});
         end
-        
+
         function e = getIdentifier(self, id)
             path = strsplit(id, '.');
             e = self.get(path{:});
         end
-        
+
         function e = get(self, varargin)
             e = self.root.get(varargin{:});
         end
-        
+
         function p = root(self)
-            p = self.packages.(replab.infra.shmEncode({}));
+            p = self.packages.(replab.infra.shm.encode({}));
         end
-        
+
 % $$$        function subpackageNames = subPackagesNames(self, packageNameParts)
 % $$$             fn = fieldnames(self.packages);
 % $$$             subpackageNames = {};
@@ -148,7 +148,7 @@ classdef CodeBase < replab.Str
 % $$$                 end
 % $$$             end
 % $$$         end
-        
+
 % $$$         function p = lookupPackage(self, nameParts)
 % $$$         % Looks for a package from its name parts
 % $$$         %
@@ -164,7 +164,7 @@ classdef CodeBase < replab.Str
 % $$$                 p = [];
 % $$$             end
 % $$$         end
-        
+
 % $$$         function [package packageNameParts restNameParts] = lookupGreedy(self, nameParts)
 % $$$         % Greedily looks up for a package from its name parts, disregarding the suffix that does not match 
 % $$$         %
@@ -193,7 +193,7 @@ classdef CodeBase < replab.Str
 % $$$             end
 % $$$             error('Should not happen: empty name parts match the root package');
 % $$$         end
-        
+
 % $$$         function writeDocTests(self, doctestPath)
 % $$$         % Writes the doc tests of the whole code base in the specified folder
 % $$$         %
@@ -228,11 +228,11 @@ classdef CodeBase < replab.Str
 % $$$             end
 % $$$         end
 
-        
+
     end
-   
+
     methods (Static)
-                       
+
         function c = crawl(rootFolder)
         % Crawls the RepLAB source repository
         %
@@ -281,7 +281,7 @@ classdef CodeBase < replab.Str
             end
             c = replab.infra.CodeBase(rootFolder, packageData);
         end
-        
+
     end
-    
+
 end

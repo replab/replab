@@ -1,4 +1,4 @@
-function el = shmLookup(s, path, ifEmpty)
+function el = lookup(s, path, ifEmpty)
 % Looks up an element in a struct-encoded String Hash Map (SHM)
 %
 % Args:
@@ -8,7 +8,7 @@ function el = shmLookup(s, path, ifEmpty)
 %
 % Raises:
 %   An error if the path is not found and `ifempty` is not given
-    id = replab.infra.shmEncode(path);
+    id = replab.infra.shm.encode(path);
     if isfield(s, id)
         el = s.(id);
     else
