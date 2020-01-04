@@ -149,50 +149,6 @@ classdef CodeBase < replab.Str
 % $$$             end
 % $$$         end
 
-% $$$         function p = lookupPackage(self, nameParts)
-% $$$         % Looks for a package from its name parts
-% $$$         %
-% $$$         % Args:
-% $$$         %   nameParts (cell row vector of charstring): Parts of the package name
-% $$$         %
-% $$$         % Returns:
-% $$$         %   :class:`+replab.+infra.Package`: The corresponding package, or ``[]`` if not found
-% $$$             fname = replab.infra.OldCodeBase.fieldName(nameParts);
-% $$$             if isfield(self.packages, fname)
-% $$$                 p = getfield(self.packages, fname);
-% $$$             else
-% $$$                 p = [];
-% $$$             end
-% $$$         end
-
-% $$$         function [package packageNameParts restNameParts] = lookupGreedy(self, nameParts)
-% $$$         % Greedily looks up for a package from its name parts, disregarding the suffix that does not match 
-% $$$         %
-% $$$         % Returns `package` which matches `packageNameParts`, and `restNameParts` such that
-% $$$         % ``nameParts = horzcat(packageNameParts, restNameParts)``.
-% $$$         %
-% $$$         % Args:
-% $$$         %   nameParts (cell row vector of charstring): Parts of a fully qualified object name
-% $$$         %
-% $$$         % Returns
-% $$$         % -------
-% $$$         %   package: 
-% $$$         %     :class:`+replab.+infra.Package`: The package looked up for
-% $$$         %   packageNameParts:
-% $$$         %     cell row vector of charstring: The maximal prefix of `nameParts` that matches a package name
-% $$$         %   restNameParts:
-% $$$         %     cell row vector of charstring: The tail of `nameParts` that could not be matched
-% $$$             n = length(nameParts);
-% $$$             for i = n:-1:0
-% $$$                 packageNameParts = nameParts(1:i);
-% $$$                 restNameParts = nameParts(i+1:n);
-% $$$                 package = self.lookupPackage(packageNameParts);
-% $$$                 if ~isempty(package)
-% $$$                     return
-% $$$                 end
-% $$$             end
-% $$$             error('Should not happen: empty name parts match the root package');
-% $$$         end
 
 % $$$         function writeDocTests(self, doctestPath)
 % $$$         % Writes the doc tests of the whole code base in the specified folder
@@ -227,60 +183,6 @@ classdef CodeBase < replab.Str
 % $$$                 end
 % $$$             end
 % $$$         end
-
-
-    end
-
-    methods (Static)
-
-        function c = crawl(rootFolder)
-        % Crawls the RepLAB source repository
-        %
-        % Args:
-        %   rootFolder (charstring): Absolute path of the source directory (usually '$REPLAB_ROOT/src')
-            packageData = {};
-            % toExplore represents a stack of subpaths to explore
-            % toExplore is a row cell array, each element inside
-            % is a cell array of char strings, which represent a
-            % sequence of subfolders of pathStr
-            toExplore = {{}};
-            while length(toExplore) > 0
-                % the current path explored
-                subpath = toExplore{1};
-                packageNameParts = cellfun(@(x) x(2:end), subpath, 'uniform', 0);
-                toExplore = toExplore(2:end);
-                % the path to explore
-                path = fullfile(rootFolder, subpath{:});
-                children = dir(path);
-                ownFunctions = {};
-                ownClasses = {};
-                for i = 1:length(children)
-                    name = children(i).name;
-                    if isequal(name, '.') || isequal(name, '..')
-                        % do nothing
-                    elseif children(i).isdir
-                        % folder
-                        assert(name(1) == '+', 'We only support crawling subpackages');
-                        newsubpath = horzcat(subpath, {name});
-                        toExplore{1,end+1} = newsubpath;
-                    elseif isequal(name(end-1:end), '.m')
-                        % is not a folder and has a Matlab file extension
-                        filename = fullfile(rootFolder, subpath{:}, name);
-                        data = replab.infra.CodeTokens.fromFile(filename).parse;
-                        switch class(data)
-                          case 'replab.infra.FunctionLikeData'
-                            ownFunctions{1,end+1} = data;
-                          case 'replab.infra.ClassData'
-                            ownClasses{1,end+1} = data;
-                          otherwise
-                            error(sprintf('Unknown type %s', class(data)));
-                        end
-                    end
-                end
-                packageData{1,end+1} = replab.infra.PackageData(packageNameParts, ownFunctions, ownClasses);
-            end
-            c = replab.infra.CodeBase(rootFolder, packageData);
-        end
 
     end
 
