@@ -5,21 +5,21 @@ classdef CodeBase < replab.Str
 %
 % - ``element``: Generic term for a subobject (class in a package, method in a class, etc)
 % - ``member``: Methods/properties of a class, seen across the inheritance tree
-% - ``parent``, ``children``: Package had subpackage children, 
+% - ``parent``, ``children``: Package had subpackage children,
 %                             with functions/classes as children, classes have methods/properties children
 % - ``superclass``, ``subclass``: Terminology used in inheritance hierarchies
-% 
-% 
+%
+%
     properties
         rootFolder % charstring: Path to the root folder
         packages % struct-based hash map
     end
-    
+
     properties% (Access = protected)
         subpackages_ % struct-based hash map: Maps package paths to a cell array of their subpackages
         subclasses_ % struct-based hash map: Maps class paths to a cell array of their subclasses
     end
-    
+
     methods
 
         function self = CodeBase(rootFolder, packageData)

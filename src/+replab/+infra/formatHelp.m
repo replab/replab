@@ -2,7 +2,7 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
 % Formats a documentation string for console output
 %
 % Args:
-%   txt (charstring): String, possibly multiline (using ASCII 10 characters) 
+%   txt (charstring): String, possibly multiline (using ASCII 10 characters)
 %   context (`replab.infra.Element`): Element in the context of which the reference is interpreted
 %   helpCommand (charstring): Invocation of the help command, possibly including flags, without trailing space
 %                             Examples would be 'help -f' or 'help'
@@ -17,7 +17,7 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
     tableStart = []; % toggles between [] (if not in a table), and the table start line
     for i = 1:length(lines)
         l = lines{i};
-        
+
         %% Process Sphinx references
         ref_re = ['(?<!`)'       '`'        '(?!`)'];
         %        no ` before    backtick    no ` after
@@ -44,13 +44,13 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
             end
             refs{j} = ref;
         end
-        
+
         parts(2:2:end) = refs;
         l = strjoin(parts, '');
-        
+
         %% Replace Sphinx double backticks by single quotes
         l = strrep(l, '``', '''');
-        
+
         %% Identify tables
         if any(l == tab)
             if isempty(tableStart)
@@ -62,11 +62,11 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
                 tableStart = [];
             end
         end
-        
+
         %% Substitute formatted line
         lines{i} = l;
     end
-    
+
     %% Format identified tables
     for i = length(tables):-1:1
         % process backwards so we don't crapify line numbers if the table formatting
@@ -83,6 +83,6 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
         tableLines = replab.infra.align(table, repmat('l', 1, nCols));
         lines = {lines{1:tableLN(1)-1} tableLines{:} lines{tableLN(end)+1:end}};
     end
-    
+
     res = strjoin(lines, '\n');
 end
