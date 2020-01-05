@@ -47,4 +47,5 @@ function writeElementDocTests(doctestPath, el)
             fprintf(fid, '\n');
         end
     end
+    fclose(fid);
 end
