@@ -1,0 +1,2 @@
+replab:resolveRefError Sphinx references (see `replab.infra.resolveRef`)
+replab:docTestParseError Doctest parsing (mostly in `replab.infra.doctests`)
