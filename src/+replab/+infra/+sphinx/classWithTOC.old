@@ -1,2 +1,0 @@
-    str = strjoin(horzcat(lines(1:pos-1), t, lines(pos:end)), char(10));
-end

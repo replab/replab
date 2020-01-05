@@ -15,7 +15,9 @@
 % .. method:: {{ el.name }}\n
 %\n
 {% if ~isempty(el.declarations.findBestDocumented) %}
-%    Inherited from :meth:`{{ el.declarations.findBestDocumented.matlabDomainIdentifier }}`\n
+%    Documentation in :meth:`{{ el.declarations.findBestDocumented.matlabDomainIdentifier }}`\n
+{% else %}
+     No documentation\n
 {% end %}
 %\n
 {% end %}
