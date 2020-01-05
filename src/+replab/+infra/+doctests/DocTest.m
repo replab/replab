@@ -18,6 +18,25 @@ classdef DocTest < replab.Str
             self.flags = flags;
         end
 
+        function b = isSingleLineCommand(self, i)
+            b = length(self.commands{i}) == 1;
+        end
+
+        function c = quotedCommand(self, i)
+            c = self.commands{i};
+            c = cellfun(@(x) ['''' strrep(x, '''', '''''') ''''], c, 'uniform', 0);
+            if length(c) == 1
+                c = c{1};
+            else
+                c = ['strjoin({' strjoin(c, ', ') '}, char(10))'];
+            end
+        end
+
+        function o = quotedOutput(self, i)
+            o = self.outputs{i};
+            o = ['{' strjoin(cellfun(@(x) ['''' strrep(x, '''', '''''') ''''], o, 'uniform', 0), ', ') '}'];
+        end
+
         function n = nCommands(self)
             n = length(self.commands);
         end

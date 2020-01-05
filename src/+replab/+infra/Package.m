@@ -1,14 +1,14 @@
 classdef Package < replab.infra.Element
-    
+
     properties
         packagePath % row cell vector of charstring: Package path
         nspElements % struct-based hash map: Package elements that are not subpackages
-        ownFunctions 
+        ownFunctions
         ownClasses
     end
 
     methods
-       
+
         function self = Package(codeBase, packageData)
         % Constructs a package instance
         %
@@ -41,12 +41,12 @@ classdef Package < replab.infra.Element
             self.ownFunctions = ownFunctions;
             self.ownClasses = ownClasses;
         end
-        
+
         function [packagePath elementPath] = splitPath(self)
             packagePath = self.packagePath;
             elementPath = cell(1, 0);
         end
-        
+
         function e = lookup(self, id)
             if isfield(self.nspElements, id)
                 pkgel = self.nspElements.(id);
@@ -76,19 +76,19 @@ classdef Package < replab.infra.Element
             fn = fn(:).';
             c = horzcat(spn, fn);
         end
-        
+
         function c = children(self)
         % Returns all the direct children of this package
         %
         % Children includes its subpackages, the classes and functions it contains.
             c = horzcat(self.ownSubpackages, self.ownFunctions, self.ownClasses);
         end
-        
+
         function c = ownSubpackages(self)
         % Returns all direct subpackages of this package
             c = self.codeBase.subpackages(self);
         end
-        
+
     end
-    
+
 end

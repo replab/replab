@@ -14,21 +14,21 @@ function result = replab_runtests(withCoverage, onlyFastTests)
     if nargin < 1
         withCoverage = false;
     end
-    
+
     if nargin < 2
         onlyFastTests = false;
     end
-    
+
     % Make sure we are in the current path
     initialPath = pwd;
     [pathStr, name, extension] = fileparts(which(mfilename));
     pathStr = strrep(pathStr, '\', '/');
     cd(pathStr)
     cd ..
-    
+
     % Add the tests folder to the path
     addpath([pathStr '/../tests']);
-    
+
     % Set test paramters
     ReplabTestParameters.withCoverage(withCoverage);
     ReplabTestParameters.onlyFastTests(onlyFastTests);
@@ -37,7 +37,7 @@ function result = replab_runtests(withCoverage, onlyFastTests)
     else
         replab.Laws.nRuns(20);
     end
-    
+
     % Check the presence of the MOxUnit library
     MOxUnitInPath = false;
     try
@@ -48,7 +48,7 @@ function result = replab_runtests(withCoverage, onlyFastTests)
     if ~MOxUnitInPath
         error('The MOxUnit library was not found. Did you run replab_init?')
     end
-    
+
     % Check the presence of the MOcov library if needed
     if withCoverage == 1
         MOcovInPath = false;
@@ -61,7 +61,7 @@ function result = replab_runtests(withCoverage, onlyFastTests)
             error('The MOcov library was not found. Did you run replab_init?')
         end
     end
-    
+
     % Check the presence of a SDP solver
     decentSDPSolverInPath = false;
     try
@@ -79,12 +79,12 @@ function result = replab_runtests(withCoverage, onlyFastTests)
     if ~decentSDPSolverInPath
         warning('No working SDP solver found, some tests will fail.');
     end
-    
+
     % Create doctests
     if ReplabTestParameters.onlyFastTests == 0
         replab_generatedoctests;
     end
-    
+
     % calls the relevant test suite
     if ReplabTestParameters.withCoverage == 1
         result = moxunit_runtests('tests/codeCoverageHelperFunction.m', '-verbose', ...
@@ -92,10 +92,10 @@ function result = replab_runtests(withCoverage, onlyFastTests)
     else
         result = moxunit_runtests('tests', '-verbose', '-recursive');
     end
-    
+
     % Remove the tests folder to the path
     rmpath([pathStr '/../tests']);
-    
+
     % return to the previous path
     cd(initialPath);
 end

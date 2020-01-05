@@ -12,13 +12,10 @@ function replab_generatedoctests
 % Test files are written in the MoXUnit format, using functions and subfunctions as the
 % rest of the RepLAB test suite; the helper function ``assertEqualEvalcOutput`` is used
 % to verify the test output.
-    [srcRoot, name, ~] = fileparts(mfilename('fullpath'));
-    % RepLAB root folder
-    [root, ~] = fileparts(srcRoot);
-    % Folder with tests
-    testRoot = fullfile(root, 'tests');
-    % Subfolder with doctests
-    doctestRoot = fullfile(root, 'tests', 'doctest');
+    rp = replab.settings.replabPath;
+    srcRoot = fullfile(rp, 'src');
+    testRoot = fullfile(rp, 'tests');
+    doctestRoot = fullfile(rp, 'tests', 'doctest');
 
     %% Prepare test directory structure
     switch exist(doctestRoot)
@@ -33,10 +30,17 @@ function replab_generatedoctests
 
     % Create subfolder if inexistent
     [success, message, messageid] = mkdir(testRoot, 'doctest');
-    
+
     disp('Crawling code base');
-    codeBase = replab.infra.OldCodeBase.crawl(fullfile(root, 'src'));
-    
-    disp('Writing tests');
-    codeBase.writeDocTests(doctestRoot);
+    cb = replab.infra.crawl(srcRoot);
+    af = cb.allFunctions;
+    for i = 1:length(af)
+        replab.infra.doctests.writeElementDocTests(doctestRoot, af{i});
+    end
+    ac = cb.allClasses;
+    for i = 1:length(ac)
+        replab.infra.doctests.writeElementDocTests(doctestRoot, ac{i});
+    end
 end
+
+

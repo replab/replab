@@ -1,0 +1,9 @@
+function test_suite = {{ testFunName }}()\n
+  disp(['Setting up tests in ', mfilename()]);\n
+  try\n
+    test_functions = localfunctions();\n
+  catch\n
+  end\n
+  initTestSuite;\n
+end\n
+\n
