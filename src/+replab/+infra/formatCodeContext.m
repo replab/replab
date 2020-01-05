@@ -7,23 +7,21 @@ function res = formatCodeContext(source, pos, nRows)
 %   nRows (integer): How many lines to display in total
 %
 % Returns:
-%   row cell vector of charstring: Formatted code fragment
-    switch class(source)
-      case 'cell'
+%   charstring: Formatted code fragment, with lines separated by '\n'
+    if iscell(source)
         lines = source;
-      case 'replab.infra.CodeTokens'
+    elseif isa(source, 'replab.infra.CodeTokens')
         lines = source.lines;
-      case 'replab.infra.SourceElement'
+    elseif isa(source, 'replab.infra.SourceElement')
         ct = replab.infra.CodeTokens.fromFile(source.absoluteFilename);
         lines = ct.lines;
-      otherwise
-        error('Invalid argument source');
+    else
+        error('Invalid argument source %s', class(source));
     end
-        
     start = pos - floor(nRows/2);
     start = max(start, 1);
     to = min(start + nRows - 1, length(lines));
-    range = start:pos;
+    range = start:to;
     numbers = arrayfun(@(i) sprintf('  %d: ', i), range, 'uniform', 0);
     w = find((start:to) == pos);
     if ~isempty(w)
@@ -31,5 +29,5 @@ function res = formatCodeContext(source, pos, nRows)
         l(1) = '*';
         numbers{w} = l;
     end
-    res = replab.str.align(horzcat(numbers.', lines(range).'), 'rl');
+    res = strjoin(replab.str.align(horzcat(numbers.', lines(range).'), 'rl'), '\n');
 end
