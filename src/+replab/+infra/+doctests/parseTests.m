@@ -3,13 +3,11 @@ function doctests = parseTests(lines, errFun)
 %
 % Args:
 %   lines (row cell array of charstring): Lines to parse
-%   errFun (function_handle): Function called when a parse error is encountered
-%                             The calling convention is ``errFun(message, relLN)``
-%                             where ``message`` is a charstring and ``relLN`` is
-%                             is the line number in ``lines`` where the error was
-%                             encountered
-%                             That function should not return, as we do not try to
-%                             recover from parse errors.
+%   errFun (function_handle): Error context function called before raising an error
+%                             The calling convention is ``errFun(lineNumber)`` where ``message`` is
+%                             a charstring and ``lineNumber`` is the line number in ``lines`` where the error was
+%                             encountered. The function may, for example, print the context in which the error
+%                             occured to the console.
 %
 % Returns:
 %   row cell array of `.DocTest`: The parsed doctests, with line numbers corresponding
@@ -17,8 +15,9 @@ function doctests = parseTests(lines, errFun)
 %
 % Raises:
 %   An error if the parse is unsuccesful
+    errId = 'replab:docTestParseError';
     if nargin < 2
-        errFun = @(m, l) error(sprintf('Line %d: %s', l, m));
+        errFun = @(l) fprintf('Error in line %d\n', l);
     end
     n = length(lines);
     content = cell(1, n);
@@ -52,12 +51,13 @@ function doctests = parseTests(lines, errFun)
                 j = j + 1;
             end
             ps = replab.infra.doctests.ParseState.fromDocTestBlock(content(i+1:j-1));
-            errFun1 = @(m, l) errFun(m, l + i);
+            errFun1 = @(l) errFun(l + i);
             dt = replab.infra.doctests.DocTest.parse(ps, errFun1);
             if isempty(dt)
-                warning(sprintf('Error while parsing Example: block at line %d'), i);
+                errFun(i);
+                error(errId, 'Error parsing the doctest block');
             else
-                doctests{1, end+1} = dt.withLineOffset(i);
+                doctests{1, end+1} = dt.mapLineNumbers(@(ln) ln + i);
             end
             i = j;
         end

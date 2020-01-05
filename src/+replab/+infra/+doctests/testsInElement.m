@@ -11,5 +11,6 @@ function dt = testsInElement(el)
         return
     end
     ps = replab.infra.doctests.ParseState.fromDocTestBlock(el.doc.lines);
-    
+    errFun = @(ln) replab.infra.doctests.errFunElement(el, el.doc.lineNumbers(ln));
+    dt = replab.infra.doctests.parseTests(el.doc.lines, errFun);
 end

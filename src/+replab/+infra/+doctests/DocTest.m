@@ -22,8 +22,16 @@ classdef DocTest < replab.Str
             n = length(self.commands);
         end
 
-        function newDT = withLineOffset(self, lo)
-            newDT = replab.infra.doctests.DocTest(self.lineNumbers + lo, ...
+        function newDT = mapLineNumbers(self, fun)
+        % Returns a new `.DocTest` with the line numbers mapped according to the given function
+        %
+        % Args:
+        %   fun (function_handle): Function that transforms the line numbers (integer -> integer)
+        %
+        % Returns:
+        %   `.DocTest`: The transformed doctest
+            newLineNumbers = arrayfun(fun, self.lineNumbers);
+            newDT = replab.infra.doctests.DocTest(newLineNumbers, ...
                                                   self.commands, self.outputs, self.flags);
         end
 
@@ -36,9 +44,9 @@ classdef DocTest < replab.Str
         %
         % Args:
         %   ps (`.ParseState`): Current parse state
-        %   errFun (function_handle): Error function, see `.parseTests`
-        %                             Call as ``errFun(message, relLN)``
-        %
+        %   errFun (function_handle): Error context display function, see `.parseTests`
+        %                             Called as ``errFun(lineNumber)``
+       %
         % Returns
         % -------
         %   ps:
@@ -51,6 +59,7 @@ classdef DocTest < replab.Str
         %     struct: Struct containing the doctest flags, if present
         %   lineNumber:
         %     integer: Position of the first command line in the doctest block being parsed
+            errId = 'replab:docTestParseError';
             command = [];
             output = [];
             flags = [];
@@ -69,7 +78,7 @@ classdef DocTest < replab.Str
                 if iscell(flagsText)
                     flagsText = flagsText{1};
                 end
-                errFun1 = @(msg) errFun(msg, lineNumber);
+                errFun1 = @() errFun(lineNumber);
                 flags = replab.infra.doctests.parseFlags(flagsText, errFun1);
             else
                 flags = struct;
@@ -82,8 +91,8 @@ classdef DocTest < replab.Str
                 else
                     ps = res;
                     if ~isempty(regexp(comment, '^\s*doctest:'))
-                        msg = 'Doctest flags can only be present on the first command line';
-                        errFun(lineNumber1, msg);
+                        errFun(lineNumber1);
+                        error(errId, 'Doctest flags can only be present on the first command line');
                     end
                     command{1,end+1} = newCommand;
                 end
@@ -106,9 +115,8 @@ classdef DocTest < replab.Str
         %
         % Args:
         %   ps (`replab.infra.doctests.ParseState`): Current parse state
-        %   errFun (function_handle, optional): Error function, see `.parseTests`
-        %                                       Call as ``errFun(message, relLN)``
-        %
+        %   errFun (function_handle, optional): Error context display function, see `.parseTests`
+        %                                       Called as ``errFun(lineNumber)``
         %
         % Returns
         % -------
@@ -118,8 +126,9 @@ classdef DocTest < replab.Str
         %
         % Raises:
         %   An error if the parse is unsuccessful
+            errId = 'replab:docTestParseError';
             if nargin < 2
-                errFun = @(m, l) error(sprintf('Line %d: %s', l, m));
+                errFun = @(l) fprintf('Error in line %d\n', l);
             end
             commands = {};
             outputs = {};
@@ -137,8 +146,11 @@ classdef DocTest < replab.Str
                     lineNumbers(1,end+1) = lineNumber;
                 end
             end
-            ps = ps.expect('EOF');
-            assert(~isempty(ps));
+            [res, ~, ~, lineNumber] = ps.expect('EOF');
+            if isempty(res)
+                errFun(lineNumber);
+                error(errId, 'End of file expected');
+            end
             dt = replab.infra.doctests.DocTest(lineNumbers, commands, outputs, flags);
         end
 
