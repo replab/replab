@@ -2,9 +2,9 @@ classdef FunctionLikeData < replab.Str
 % Describes the data recovered when parsing a MATLAB function or method
 %
 % The code below also contains the parser static methods to parse that data, and
-% that parsing code is also used for class methods; thus the presence of a `parseAbstractBody` 
+% that parsing code is also used for class methods; thus the presence of a `parseAbstractBody`
 % parsing node, and a isAbstract property.
-    
+
     properties
         name % charstring: Function or method name
         declaration % charstring: Function or method declaration line
@@ -13,9 +13,9 @@ classdef FunctionLikeData < replab.Str
         docLineNumbers % row integer vector: Line numbers of the documentation comment
         attributes % struct: Attributes from the ``methods`` block (or ``[]`` if this describes a function)
     end
-    
+
     methods
-        
+
         function self = FunctionLikeData(name, declaration, declarationLineNumber, ...
                                          docLines, docLineNumbers, attributes)
             self.name = name;
@@ -25,11 +25,11 @@ classdef FunctionLikeData < replab.Str
             self.docLineNumbers = docLineNumbers;
             self.attributes = attributes;
         end
-        
+
     end
-    
+
     methods (Static)
-        
+
         function name = nameFromDeclaration(ct, pos, declaration)
         % Retrievs the function name from its declaration line
         %
@@ -49,26 +49,26 @@ classdef FunctionLikeData < replab.Str
                 tokens = regexp(declaration, '^function\s+(\w+)', 'tokens', 'once');
                 if length(tokens) ~= 1
                     replab.infra.parseError(ct, pos, 'Cannot find method/function name in declaration');
-                end                
+                end
                 name = tokens{1};
             end
             if ~isempty(regexp(name, '__'))
                 replab.infra.parseError(ct, pos, 'Name of method/function cannot contain double underscore');
             end
         end
-        
+
         function res = parseBlank(ct, pos)
             res = ct.expect(pos, ' ');
         end
-        
+
         function res = parseComment(ct, pos)
             res = ct.expect(pos, '%');
         end
-        
+
         function res = parseCode(ct, pos)
             res = ct.expect(pos, '!');
         end
-        
+
         function pos = parseAbstractBody(ct, pos)
         % Parses the body of an abstract method, used for methods and not functions
             [pos line] = ct.expect(pos, '!');
@@ -78,7 +78,7 @@ classdef FunctionLikeData < replab.Str
             end
             pos = ct.expect(pos, '<');
         end
-        
+
         function pos = parseControlStructure(ct, pos)
         % Parses a control structure such as 'if' or 'while'
         %
@@ -94,7 +94,7 @@ classdef FunctionLikeData < replab.Str
             end
             pos = ct.expect(pos, '<');
         end
-        
+
         function pos = parseFunctionElement(ct, pos)
         % Parses an element appearing in a function or method body
             tag = ct.peek(pos);
@@ -112,7 +112,7 @@ classdef FunctionLikeData < replab.Str
                 pos = [];
             end
         end
-        
+
         function [pos fld] = parse(ct, pos, attributes)
         % Parses a function or a method and returns the information
             fld = [];
@@ -138,7 +138,7 @@ classdef FunctionLikeData < replab.Str
             end
             fld = replab.infra.FunctionLikeData(name, declaration, startPos, docLines, docLineNumbers, attributes);
         end
-        
+
     end
-    
+
 end

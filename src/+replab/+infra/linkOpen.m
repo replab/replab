@@ -11,7 +11,7 @@ function str = linkOpen(linkText, altText, filename, lineNumber)
     if nargin < 3
         lineNumber = [];
     end
-    
+
     if replab.settings.consoleUseHTML
         t = linkText;
     else

@@ -6,18 +6,18 @@ classdef SourceElement < replab.infra.Element
         startLineNumber % integer: Line number at which this object starts in the source file
         doc % `.Doc`: Documentation comment
     end
-    
+
     methods % Abstract
-        
+
         function p = elementPath(self)
         % Returns the path of the element relative to its package
             error('Abstract');
         end
-        
-    end 
-    
+
+    end
+
     methods
-        
+
         function self = SourceElement(codeBase, package, sourceIdentifier, startLineNumber, name, docLines, docLineNumbers)
             self = self@replab.infra.Element(codeBase, name);
             self.package = package;
@@ -25,26 +25,26 @@ classdef SourceElement < replab.infra.Element
             self.startLineNumber = startLineNumber;
             self.doc = replab.infra.Doc(self, docLines, docLineNumbers);
         end
-        
+
         % replab.infra.Element
-        
+
         function [packagePath elementPath] = splitPath(self)
             packagePath = self.package.packagePath;
             elementPath = self.elementPath;
         end
-        
+
         % Own methods
-        
+
         function fn = absoluteFilename(self)
         % Returns the full path to the file containing the source code of this object
             parts = self.relativeFilenameParts;
             fn = fullfile(self.codeBase.rootFolder, parts{:});
         end
-        
+
         function str = linkOpen(self)
             str = replab.infra.linkOpen('%s:%d', '%s:%d', self.absoluteFilename, self.startLineNumber);
         end
-        
+
         function parts = relativeFilenameParts(self)
         % Returns the relative path to the source code of this object
         %
