@@ -33,7 +33,7 @@
 {% end %}
 {% for prop in el.allProperties %}
 {% if prop.isAccessible %}
-     `~{{prop.fullIdentifier}}` \t{{prop.declarations.findBestDocumented.doc.firstLine}}\n
+     `~{{prop.fullIdentifier}}` \t{{prop.declarations.bestEffortDocFirstLine}}\n
 {% end %}
 {% end %}
 \t\n
