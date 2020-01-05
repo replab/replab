@@ -15,7 +15,7 @@ All declarations:\n
 {% if isempty(docEl) %}
 {% if isequal(el.kind, 'method') %}
   {{ el.declarations.findBest.declaration }}\n
-{% end %}  
+{% end %}
 {% else %}
 {% if ~isequal(el.fullIdentifier, docEl.fullIdentifier) %}
 (documentation taken from inherited {{ el.kind }} `{{ docEl.fullIdentifier }}`)\n
