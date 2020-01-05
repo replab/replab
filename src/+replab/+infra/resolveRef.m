@@ -5,9 +5,9 @@ function [el linkText] = resolveRef(ref, context, isExternal)
 %
 % The ``~`` prefix signifies that the link text is composed of the last element, for example
 % ``~replab.Group.compose`` has link text ``compose`.
-%   
+%
 % The ``.`` prefix signifies that we look up names first from the most precise scope then go
-% to the general scope (thus from 4. to 1. below). 
+% to the general scope (thus from 4. to 1. below).
 %
 % If the ``.`` prefix is not present, we look in the order 1. to 4.
 %
@@ -36,7 +36,7 @@ function [el linkText] = resolveRef(ref, context, isExternal)
 %   ref (charstring): Reference
 %   isExternal (function_handle): Function that accepts a charstring identifier argument (without dots) and returns a logical value
 %                                 that states whether the identifier is present in the external scope.
-%  
+%
 % Returns
 % -------
 %   el: `.Element` or ``charstring`` or ``[]``
@@ -67,7 +67,7 @@ function [el linkText] = resolveRef(ref, context, isExternal)
         linkText = parts{end};
     else
         linkText = id;
-    end       
+    end
     if any(prefix == '.');
         order = [4 3 2 1];
     else
@@ -116,7 +116,7 @@ function [el linkText] = resolveRef(ref, context, isExternal)
         el = [];
         return
     end
-    
+
     % Circumventing direct assignment for octave
     if length(parts) == 1
         newParts = {};
