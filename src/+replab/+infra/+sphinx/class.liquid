@@ -1,0 +1,24 @@
+%\n
+% .. raw:: html\n
+%\n
+%    <h3>Summary of class members</h3>\n
+%\n
+{% for el in cl.allElements %}
+% - `~{{ el.matlabDomainIdentifier }}` -- {{ el.declarations.bestEffortDocFirstLine }}\n
+{% end %}
+%\n
+% .. raw:: html\n
+%\n
+%    <h3>Inherited members</h3>\n
+%\n
+{% for el in cl.inheritedElements %}
+% .. method:: {{ el.name }}\n
+%\n
+{% if ~isempty(el.declarations.findBestDocumented) %}
+%    Inherited from :meth:`{{ el.declarations.findBestDocumented.matlabDomainIdentifier }}`\n
+{% end %}
+%\n
+{% end %}
+% .. raw:: html\n
+%\n
+%    <h3>Own members</h3>\n

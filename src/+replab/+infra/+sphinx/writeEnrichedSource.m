@@ -1,28 +1,31 @@
-function writeEnrichedSource(codeBase, docSrcPath, packageElement)
+function writeEnrichedSource(docSrcPath, el)
 % Writes the enriched source code for Sphinx documentation generation
 %
 % Args:
 %   docSrcPath (charstring): Base folder for doctest generation, not including trailing path separator
 %                            That folder must exist.
-    if isa(packageElement, 'replab.infra.Class1')
-        src = replab.infra.classWithTOC(codeBase, packageElement);
-    else
-        src = fileread(packageElement.fullFilename);
+%   el (`replab.infra.SourceElement`): Either a function or a class
+    src = fileread(el.absoluteFilename);
+    if isa(el, 'replab.infra.Class')
+        lines = strsplit(src, '\n', 'CollapseDelimiters', false);
+        pos = replab.infra.sphinx.findClassCommentEnd(lines);
+        tocFN = fullfile(replab.settings.replabPath, 'src', '+replab', '+infra', '+sphinx', 'class.liquid');
+        t = replab.lobster.Template.load(tocFN);
+        content = t.render(struct('cl', el));
+        src = strjoin(horzcat(lines(1:pos-1), content, lines(pos:end)), char(10));
     end
-    base = docSrcPath;
-    for i = 1:length(packageElement.packageNameParts)
-        part = ['+' packageElement.packageNameParts{i}];
-        switch exist(fullfile(base, part))
-          case 0
-            assert(mkdir(base, part), sprintf('Could not create %s in directory %s', part, base));
-          case 7
-            % directory already exists
-          otherwise
-            error(sprintf('%s already exists in directory %s, but is not a folder', part, base));
-        end
-        base = fullfile(base, part);
+    pkgParts = cellfun(@(s) ['+' s], el.package.packagePath, 'uniform', 0);
+    folder = fullfile(docSrcPath, pkgParts{:});
+    % Make path
+    switch exist(folder)
+      case 0
+        assert(mkdir(folder), sprintf('Could not create directory %s', folder));
+      case 7
+        % directory already exists
+      otherwise
+        error(sprintf('%s already exists but is not a folder', folder));
     end
-    filename = fullfile(base, [packageElement.name '.m']);
+    filename = fullfile(folder, [el.name '.m']);
     fid = fopen(filename, 'w');
     fwrite(fid, src);
     fclose(fid);

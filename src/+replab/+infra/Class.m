@@ -2,11 +2,11 @@ classdef Class < replab.infra.SourceElement
 
     properties
         superclassIdentifiers
-        ownElements % struct
+        ownElementsStruct % struct
     end
 
     properties (Access = protected)
-        inheritedElements_
+        inheritedElementsStruct_
     end
 
     methods
@@ -40,22 +40,22 @@ classdef Class < replab.infra.SourceElement
                                                       pd.docLines, pd.docLineNumbers);
                 oe.(p.name) = p;
             end
-            self.ownElements = oe;
+            self.ownElementsStruct = oe;
         end
 
         % replab.infra.Element
 
         function c = childrenNames(self)
-            c = vertcat(fieldnames(self.ownElements), fieldnames(self.inheritedElements));
+            c = vertcat(fieldnames(self.ownElementsStruct), fieldnames(self.inheritedElementsStruct));
             c = c(:).';
         end
 
         function e = lookup(self, id)
-            if isfield(self.ownElements, id)
-                e = self.ownElements.(id);
+            if isfield(self.ownElementsStruct, id)
+                e = self.ownElementsStruct.(id);
                 return
             end
-            ie = self.inheritedElements;
+            ie = self.inheritedElementsStruct;
             if isfield(ie, id)
                 e = ie.(id);
                 return
@@ -76,8 +76,13 @@ classdef Class < replab.infra.SourceElement
         % Own methods
 
         function ae = allElements(self)
+            ae = struct2cell(orderfields(self.allElementsStruct));
+            ae = ae(:).';
+        end
+
+        function ae = allElementsStruct(self)
         % Returns a struct whose fields contain all elements
-            ae = replab.infra.shm.merge(self.ownElements, self.inheritedElements);
+            ae = replab.infra.shm.merge(self.ownElementsStruct, self.inheritedElementsStruct);
         end
 
         function am = allMethods(self)
@@ -96,35 +101,41 @@ classdef Class < replab.infra.SourceElement
             ap = ap(ind);
         end
 
-        function om = ownMethods(self)
-            oe = struct2cell(self.ownElements);
+        function oe = ownElements(self)
+            oe = struct2cell(orderfields(self.ownElementsStruct));
             oe = oe(:).';
+        end
+
+        function om = ownMethods(self)
+            oe = self.ownElements;
             om = oe(cellfun(@(x) isequal(x.kind, 'method'), oe));
         end
 
         function op = ownProperties(self)
-            oe = struct2cell(self.ownElements);
-            oe = oe(:).';
+            oe = self.ownElements;
             op = oe(cellfun(@(x) isequal(x.kind, 'property'), oe));
         end
 
         function im = inheritedMethods(self)
-            ie = struct2cell(self.inheritedElements);
-            ie = ie(:).';
+            ie = self.inheritedElements;
             im = ie(cellfun(@(x) isequal(x.kind, 'method'), ie));
         end
 
         function ip = inheritedProperties(self)
-            ie = struct2cell(self.inheritedElements);
-            ie = ie(:).';
+            ie = self.inheritedElements;
             ip = ie(cellfun(@(x) isequal(x.kind, 'property'), ie));
         end
 
         function ie = inheritedElements(self)
-            if isempty(self.inheritedElements_)
+            ie = struct2cell(orderfields(self.inheritedElementsStruct));
+            ie = ie(:).';
+        end
+
+        function ie = inheritedElementsStruct(self)
+            if isempty(self.inheritedElementsStruct_)
                 ie = struct;
                 already = struct;
-                names = fieldnames(self.ownElements);
+                names = fieldnames(self.ownElementsStruct);
                 for i = 1:length(names)
                     name = names{i};
                     already.(name) = true;
@@ -132,20 +143,20 @@ classdef Class < replab.infra.SourceElement
                 asc = self.allSuperclasses;
                 for i = 1:length(asc)
                     sup = asc{i};
-                    names = fieldnames(sup.ownElements);
+                    names = fieldnames(sup.ownElementsStruct);
                     mask = cellfun(@(n) ~isfield(already, n), names);
                     names = names(mask);
                     for j = 1:length(names)
                         name = names{j};
                         already.(name) = true;
-                        se = sup.ownElements.(name);
+                        se = sup.ownElementsStruct.(name);
                         iel = replab.infra.InheritedClassElement(self.codeBase, self, name, se.kind, se.attributes);
                         ie.(name) = iel;
                     end
                 end
-                self.inheritedElements_ = ie;
+                self.inheritedElementsStruct_ = ie;
             end
-            ie = self.inheritedElements_;
+            ie = self.inheritedElementsStruct_;
         end
 
         function asc = allSuperclasses(self)

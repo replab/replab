@@ -28,11 +28,11 @@ classdef Declarations < replab.Str
             % concatenate the class under investigation and superclasses
             cls = horzcat({cl}, cl.allSuperclasses);
             % find all classes which have a declaration of our element
-            mask = cellfun(@(c) isfield(c.ownElements, name), cls);
+            mask = cellfun(@(c) isfield(c.ownElementsStruct, name), cls);
             % select those
             cls = cls(mask);
             % find members
-            els = cellfun(@(c) c.ownElements.(name), cls, 'uniform', 0);
+            els = cellfun(@(c) c.ownElementsStruct.(name), cls, 'uniform', 0);
         end
 
         function el = findBest(self)
@@ -41,7 +41,7 @@ classdef Declarations < replab.Str
         end
 
         function els = findDocumentedElements(self)
-        % Returns all declarations of the method/property that have documentation 
+        % Returns all declarations of the method/property that have documentation
             els = self.findAll;
             mask = cellfun(@(e) ~e.doc.isempty, els);
             els = els(mask);

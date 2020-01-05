@@ -1,0 +1,5 @@
+function linkClassElement(linkText, context, linked)
+% Creates a link to the 
+%
+% Args:
+%   linkText: Text of the link

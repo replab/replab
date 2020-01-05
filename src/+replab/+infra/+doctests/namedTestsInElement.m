@@ -16,7 +16,7 @@ function s = namedTestsInElement(sel)
         s.(sel.name) = dt;
     end
     if isa(sel, 'replab.infra.Class')
-        cels = struct2cell(sel.ownElements);
+        cels = struct2cell(sel.ownElementsStruct);
         for i = 1:length(cels)
             cel = cels{i};
             dt = replab.infra.doctests.testsInElement(cel);

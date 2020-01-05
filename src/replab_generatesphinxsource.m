@@ -1,26 +1,35 @@
 function replab_generatesphinxsource
+% Creates a copy of the source code with the Sphinx references fixed up
     folderName = 'tmp_sphinxsrc';
-    [srcRoot, name, ~] = fileparts(mfilename('fullpath'));
-    [root, ~] = fileparts(srcRoot);
-    docsrcRoot = fullfile(root, folderName);
+    rp = replab.settings.replabPath;
+    srcRoot = fullfile(rp, 'src');
+    docsrcRoot = fullfile(rp, folderName);
 
     %% Prepare test directory structure
     switch exist(docsrcRoot)
       case 7
-        disp('./tmp_sphinxsrc directory exists, removing it');
+        disp('Temp source directory exists, removing it');
         replab.infra.rmdirRec(docsrcRoot);
       case 0
-        disp('./tmp_sphinxsrc directory does not exist yet');
+        disp('Temp source directory does not exist yet');
+        % Create subfolder if inexistent
+        assert(mkdir(docsrcRoot), sprintf('Could not create directory %s', docsrcRoot));
       otherwise
         error('Unknown type')
     end
 
-    % Create subfolder if inexistent
-    [success, message, messageid] = mkdir(root, folderName);
-    
     disp('Crawling code base');
-    codeBase = replab.infra.OldCodeBase.crawl(fullfile(root, 'src'));
-    
-    disp('Writing tests');
-    codeBase.writeEnrichedSource(docsrcRoot);
+    cb = replab.infra.crawl(srcRoot);
+
+    disp('Generating rich source code');
+    af = cb.allFunctions;
+    for i = 1:length(af)
+        disp(af{i}.absoluteFilename)
+        replab.infra.sphinx.writeEnrichedSource(docsrcRoot, af{i});
+    end
+    ac = cb.allClasses;
+    for i = 1:length(ac)
+        disp(ac{i}.absoluteFilename)
+        replab.infra.sphinx.writeEnrichedSource(docsrcRoot, ac{i});
+    end
 end
