@@ -1,5 +1,5 @@
 function str = headerStr(obj)
-% Returns a tiny one-line description of the object type without inspecting its contents 
+% Returns a tiny one-line description of the object type without inspecting its contents
 %
 % Args:
 %   obj: Object to pretty print

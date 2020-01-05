@@ -7,14 +7,14 @@ classdef Element < replab.Str
     end
 
     methods % Abstract methods
-        
+
         function [packagePath elementPath] = splitPath(self)
         % Returns the package path and the element relative path
         %
         % For example, this could be ``{'replab'}, {'Group' 'compose'}``
             error('Abstract');
         end
-        
+
         function c = childrenNames(self)
         % Returns a cell vector of the children names of this element
             error('Abstract');
@@ -32,7 +32,7 @@ classdef Element < replab.Str
         end
 
     end
-    
+
     methods
 
         function self = Element(codeBase, name)
@@ -43,9 +43,9 @@ classdef Element < replab.Str
                 self.name = name;
             end
         end
-        
+
         % replab.Str methods
-        
+
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Str(self);
             c = self.childrenNames;
@@ -62,7 +62,7 @@ classdef Element < replab.Str
         end
 
         % Own methods
-        
+
         function c = children(self)
         % Returns a cell vector of the children of this element
             c = cellfun(@(n) self.lookup(n), self.childrenNames, 'uniform', 0);
