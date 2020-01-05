@@ -43,5 +43,3 @@ function replab_generatedoctests
         replab.infra.doctests.writeElementDocTests(doctestRoot, ac{i});
     end
 end
-
-
