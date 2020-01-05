@@ -63,7 +63,7 @@ classdef CodeBase < replab.Str
                 end
                 self.subpackages_ = s;
             end
-            c = replab.infra.shm.lookup(self.subpackages_, package.path, {});
+            c = replab.infra.shm.look_up(self.subpackages_, package.path, {});
         end
 
         function p = allPackages(self)
@@ -110,7 +110,7 @@ classdef CodeBase < replab.Str
                 end
                 self.subclasses_ = s;
             end
-            c = replab.infra.shm.lookup(self.subclasses_, cls.path, {});
+            c = replab.infra.shm.look_up(self.subclasses_, cls.path, {});
         end
 
         function e = getIdentifier(self, id)

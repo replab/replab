@@ -82,7 +82,7 @@ classdef Class < replab.infra.SourceElement
 
         function ae = allElementsStruct(self)
         % Returns a struct whose fields contain all elements
-            ae = replab.infra.shm.merge(self.ownElementsStruct, self.inheritedElementsStruct);
+            ae = replab.infra.shm.merge2(self.ownElementsStruct, self.inheritedElementsStruct);
         end
 
         function am = allMethods(self)
