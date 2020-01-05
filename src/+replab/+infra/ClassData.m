@@ -8,9 +8,9 @@ classdef ClassData < replab.Str
         ownMethods % row cell array of `+replab.+infra.FunctionLikeData`: Data about methods
         ownProperties % row cell array of `+replab.+infra.PropertyData`: Data about properties
     end
-    
+
     methods
-        
+
         function self = ClassData(name, superclassIdentifiers, docLines, docLineNumbers, ownMethods, ownProperties)
             self.name = name;
             self.superclassIdentifiers = superclassIdentifiers;
@@ -21,9 +21,9 @@ classdef ClassData < replab.Str
         end
 
     end
-    
+
     methods (Static)
-        
+
         function res = parseBlank(ct, pos)
         % Parses a blank line
             res = ct.expect(pos, ' ');
@@ -87,7 +87,7 @@ classdef ClassData < replab.Str
             end
             [res line] = ct.expect(pos, '<');
             if isempty(res)
-                replab.infra.parseError(ct, pos, 'Expected ''end'' token here');  
+                replab.infra.parseError(ct, pos, 'Expected ''end'' token here');
             end
             pos = res;
         end
@@ -98,7 +98,7 @@ classdef ClassData < replab.Str
                 prop = [];
             end
         end
-        
+
         function [res prop] = parsePropertiesElement(ct, pos, attributes)
         % Parses an element that can appear in a properties block
             prop = [];
@@ -152,11 +152,11 @@ classdef ClassData < replab.Str
             end
             [res line] = ct.expect(pos, '<');
             if isempty(res)
-                replab.infra.parseError(ct, pos, 'Expected ''end'' token here');  
+                replab.infra.parseError(ct, pos, 'Expected ''end'' token here');
             end
             pos = res;
         end
-                
+
         function [res mets props] = parseClassElement(ct, pos)
         % Parses an element that can appear in a class definition
             mets = {};
@@ -183,7 +183,7 @@ classdef ClassData < replab.Str
             mets = {};
             props = {};
         end
-        
+
         function c = parse(ct)
         % Parses a full class definition
             pos = 1;
@@ -198,7 +198,7 @@ classdef ClassData < replab.Str
             if ~isequal(name, ct.sourceIdentifier)
                 replab.infra.parseError(ct, pos, 'Class declaration name %s does not match filename %s.m', ...
                                         name, ct.sourceIdentifier);
-            end                
+            end
             parentNames = tokens(2:end);
             [res docLines docLineNumbers] = replab.infra.parseDocLines(ct, pos);
             if isempty(res)
@@ -224,7 +224,7 @@ classdef ClassData < replab.Str
             pos = res;
             c = replab.infra.ClassData(name, parentNames, docLines, docLineNumbers, mets, props);
         end
-                
+
     end
-    
+
 end
