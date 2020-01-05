@@ -2,9 +2,9 @@ classdef Str < handle
 % Defines a 'str' default method and overloads 'disp'
 %
 % Also provides methods 'additionalFields' and 'hiddenFields' to guide long form object pretty printing
-    
+
     methods
-        
+
         function res = eq(self, rhs)
         % Equality test
         %
@@ -22,7 +22,7 @@ classdef Str < handle
                 res = eq@handle(self, rhs);
             end
         end
-        
+
         function disp(self)
             maxRows = replab.settings.strMaxRows;
             maxColumns = replab.settings.strMaxColumns;
@@ -30,7 +30,7 @@ classdef Str < handle
             lines = replab.str.longFit(lines, maxRows, maxColumns);
             disp(strjoin(lines, '\n'));
         end
-        
+
         function [names, values] = additionalFields(self)
         % additionalFields - additional name/value pairs
         %
@@ -45,7 +45,7 @@ classdef Str < handle
             names = {};
             values = {};
         end
-        
+
         function names = hiddenFields(self)
         % hiddenFields - Fields that should not be printed
         %
@@ -57,21 +57,21 @@ classdef Str < handle
         %   names (cell array): row vector of names
             names = {};
         end
-        
+
         function s = shortStr(self, maxColumns)
         % shortStr - Single line text description of the current object
         %
         % See also: replab.shortStr
             s = replab.str.shortStr(self, maxColumns);
         end
-        
+
         function s = headerStr(self)
         % headerStr - Tiny single line description of the current object type
         %
         % See also replab.headerStr
             s = replab.str.headerStr(self);
         end
-        
+
         function s = longStr(self, maxRows, maxColumns)
         % longStr - Multi-line description of the current object
         %
@@ -80,5 +80,5 @@ classdef Str < handle
         end
 
     end
-    
+
 end
