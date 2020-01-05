@@ -10,8 +10,8 @@ classdef Rep < replab.Str
 %   >>> for i = 1:3
 %   ...   s = s + 1;
 %   ... end
-%   ... s
-%       s =  3
+%   ... disp(s)
+%         3
     properties (SetAccess = protected)
         group     % replab.CompactGroup: Group being represented
         field     % {'R', 'C'}: Vector space defined on real (R) or complex (C) field
@@ -341,7 +341,7 @@ classdef Rep < replab.Str
         %   >>> norm(U*U' - eye(3)) < 1e-10
         %      ans =
         %       logical
-        %       true
+        %       1
         %
         %
         % Returns

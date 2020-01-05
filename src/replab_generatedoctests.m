@@ -33,6 +33,7 @@ function replab_generatedoctests
 
     disp('Crawling code base');
     cb = replab.infra.crawl(srcRoot);
+    disp('Generating doctests');
     af = cb.allFunctions;
     for i = 1:length(af)
         replab.infra.doctests.writeElementDocTests(doctestRoot, af{i});
