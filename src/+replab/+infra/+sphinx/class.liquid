@@ -12,6 +12,8 @@
 %    <h3>Inherited members</h3>\n
 %\n
 {% for el in cl.inheritedElements %}
+
+{% if isequal(el.kind, 'method') %}
 % .. method:: {{ el.name }}\n
 %\n
 {% if ~isempty(el.declarations.findBestDocumented) %}
@@ -19,7 +21,17 @@
 {% else %}
      No documentation\n
 {% end %}
+{% else %}
+% .. attribute:: {{ el.name }}\n
 %\n
+{% if ~isempty(el.declarations.findBestDocumented) %}
+%    Documentation in :attr:`{{ el.declarations.findBestDocumented.matlabDomainIdentifier }}`\n
+{% else %}
+     No documentation\n
+{% end %}
+{% end %}
+%\n
+
 {% end %}
 % .. raw:: html\n
 %\n
