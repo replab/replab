@@ -98,6 +98,8 @@ html_theme = 'guzzle_sphinx_theme'
 # Register the theme as an extension to generate a sitemap.xml
 extensions.append("guzzle_sphinx_theme")
 
+html_static_path = ['_static']
+
 # Guzzle theme options (see theme.conf for more information)
 html_theme_options = {
     # Set the name of the project to appear in the sidebar
