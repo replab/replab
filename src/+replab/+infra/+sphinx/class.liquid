@@ -1,36 +1,38 @@
 %\n
-% .. raw:: html\n
-%\n
-%    <h3>Summary of class members</h3>\n
+% .. admonition:: Class members list\n
+%    :class: collapsed\n
 %\n
 {% for el in cl.allElements %}
-% - `~{{ el.matlabDomainIdentifier }}` -- {{ el.declarations.bestEffortDocFirstLine }}\n
+%    - `~{{ el.matlabDomainIdentifier }}` -- {{ el.declarations.bestEffortDocFirstLine }}\n
 {% end %}
 %\n
-% .. raw:: html\n
+
+{% if ~isempty(cl.inheritedElements) %}
+% .. admonition:: Inherited elements\n
+%    :class: collapsed\n
 %\n
-%    <h3>Inherited members</h3>\n
 %\n
 {% for el in cl.inheritedElements %}
 
 {% if isequal(el.kind, 'method') %}
-% .. method:: {{ el.name }}\n
+%    .. method:: {{ el.name }}\n
 %\n
 {% if ~isempty(el.declarations.findBestDocumented) %}
-%    Documentation in :meth:`{{ el.declarations.findBestDocumented.matlabDomainIdentifier }}`\n
+%       Documentation in :meth:`{{ el.declarations.findBestDocumented.matlabDomainIdentifier }}`\n
 {% else %}
-     No documentation\n
+%       No documentation\n
 {% end %}
 {% else %}
-% .. attribute:: {{ el.name }}\n
+%    .. attribute:: {{ el.name }}\n
 %\n
 {% if ~isempty(el.declarations.findBestDocumented) %}
-%    Documentation in :attr:`{{ el.declarations.findBestDocumented.matlabDomainIdentifier }}`\n
+%       Documentation in :attr:`{{ el.declarations.findBestDocumented.matlabDomainIdentifier }}`\n
 {% else %}
-     No documentation\n
+%       No documentation\n
 {% end %}
 {% end %}
 %\n
+{% end %}
 
 {% end %}
 % .. raw:: html\n

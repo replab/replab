@@ -1,9 +1,8 @@
 function replab_generatesphinxsource
 % Creates a copy of the source code with the Sphinx references fixed up
-    folderName = 'tmp_sphinxsrc';
     rp = replab.settings.replabPath;
     srcRoot = fullfile(rp, 'src');
-    docsrcRoot = fullfile(rp, folderName);
+    docsrcRoot = fullfile(rp, 'sphinxdocs', '_src');
 
     %% Prepare test directory structure
     switch exist(docsrcRoot)

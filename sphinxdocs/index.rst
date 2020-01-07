@@ -2,13 +2,13 @@ RepLAB documentation
 ====================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 	      
-   base
-   groups
+   api/index
 
 Indices and tables
 ==================
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+  
