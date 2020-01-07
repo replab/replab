@@ -36,7 +36,7 @@ function subsets = burningAlgorithmFast(edges)
             % Make sure we are in the current path
             initialPath = pwd;
             try
-                [pathStr, name, extension] = fileparts(which('replab_addpaths'));
+                [pathStr, name, extension] = fileparts(which('replab_init'));
                 pathStr = strrep(pathStr, '\', '/');
                 pathStr = [pathStr, '/src/+replab/+graph'];
                 cd(pathStr)
