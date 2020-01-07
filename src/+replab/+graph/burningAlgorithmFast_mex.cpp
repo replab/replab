@@ -117,10 +117,15 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   vector < Index > reached(nbVertices, 0);
   vector < Index > neighbors [2];
   short int ptr(0);
-  neighbors[ptr].push_back(0); // We begin the algorithm by reaching the first site 0.
+  Index lastStart(0);    // We monitor the last starting point and begin the algorithm by reaching the first site 0.
+  neighbors[ptr].push_back(lastStart);
   Index nbSets(0);       // The same set number is assigned to each vertices belonging to a connex group
 
   vector < vector < Index > > allSets(0); // We keep track of which vertex ends up in which set, here with the original numbering
+
+  /*// For debugging purpose
+  Index nbTouchedVertices(0);
+  Index lastPercentage(0);*/
 
   // Let's "burn" all the sites that touch a reached site recursively until there is no left.
   do {
@@ -140,9 +145,18 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
       ptr = 1-ptr;
     } while (neighbors[ptr].size() > 0);
 
+
+    /*// Update on advancement, for debugging purpose
+    nbTouchedVertices += allSets[nbSets-1].size();
+    if (nbTouchedVertices*100/nbVertices > lastPercentage) {
+      ++lastPercentage;
+      cout << lastPercentage << "% : " << nbTouchedVertices << "/" << nbVertices << endl << flush;
+    }*/
+
     // We look for the next un-attained vertex
-    for (Index i(0); i < nbVertices; ++i) {
+    for (Index i(lastStart+1); i < nbVertices; ++i) {
       if (reached[i] == 0) {
+        lastStart = i;
         neighbors[ptr].push_back(i);
         break;
       }
