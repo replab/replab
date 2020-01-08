@@ -42,9 +42,11 @@ function test_var_and_text(self)
 end
 
 function test_var_with_map_access(self)
-    context.var = containers.Map('some_key', 'the value');
-    tpl = replab.lobster.Template('{{ var(''some_key'') }} is cool');
-    assertEqual(tpl.render(context), 'the value is cool');
+    if ~replab.settings.isOctave
+        context.var = containers.Map('some_key', 'the value');
+        tpl = replab.lobster.Template('{{ var(''some_key'') }} is cool');
+        assertEqual(tpl.render(context), 'the value is cool');
+    end
 end
 
 function test_undefined_var_error(self)
