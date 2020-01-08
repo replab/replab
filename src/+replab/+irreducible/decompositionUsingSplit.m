@@ -28,10 +28,11 @@ function I = decompositionUsingSplit(rep)
     mask = logical(zeros(nNT, nNT));
     tol = replab.Parameters.doubleEigTol;
     for i = 1:nNT
+        subI = nontrivial{i};
+        C2 = subI.U * C;
         for j = 1:nNT
-            subI = nontrivial{i};
             subJ = nontrivial{j};
-            mask(i,j) = replab.isNonZeroMatrix(subI.U * C * subJ.U', tol);
+            mask(i,j) = replab.isNonZeroMatrix(C2 * subJ.U', tol);
         end
     end
     cc = replab.Partition.connectedComponents(mask).blocks;
