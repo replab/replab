@@ -3,7 +3,9 @@
 %    :class: collapsed\n
 %\n
 {% for el in cl.allElements %}
+{% if el.isAccessible %}
 %    - `~{{ el.matlabDomainIdentifier }}` -- {{ el.declarations.bestEffortDocFirstLine }}\n
+{% end %}
 {% end %}
 %\n
 
@@ -13,9 +15,9 @@
 %\n
 %\n
 {% for el in cl.inheritedDocumentationElements %}
-
+{% if el.isAccessible %}
 {% if isequal(el.kind, 'method') %}
-%    .. method:: {{ el.name }}\n
+%    .. method:: {{ el.name }}{{ el.declarations.bestEffortArgumentString }}\n
 %\n
 {% if ~isempty(el.declarations.findBestDocumented) %}
 %       Documentation in :meth:`{{ el.declarations.findBestDocumented.matlabDomainIdentifier }}`\n
@@ -32,6 +34,7 @@
 {% end %}
 {% end %}
 %\n
+{% end %}
 {% end %}
 
 {% end %}

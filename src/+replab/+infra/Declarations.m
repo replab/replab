@@ -59,6 +59,20 @@ classdef Declarations < replab.Str
             end
         end
 
+        function l = bestEffortArgumentString(self)
+            l = '';
+            if self.classElement.isProperty
+                return
+            else
+                el = self.findBestDocumented;
+                if isempty(el)
+                    l = '';
+                else
+                    l = el.argumentString;
+                end
+            end
+        end
+
         function b = hasDoc(self)
             b = ~isempty(self.findBestDocumented);
         end

@@ -25,6 +25,27 @@ classdef ClassElement < replab.infra.Element
             elementPath = {self.parentClass.name self.name};
         end
 
+        function a = argumentString(self)
+        % Returns the part of the method declaration that describes the method arguments
+        %
+        % Returns the empty string if this class element is a property, or if the method
+        % is declared without arguments
+        %
+        % Returns:
+        %   charstring: Argument declaration including parentheses
+            a = '';
+            if ~isempty(self.declaration)
+                token = regexp(self.declaration, '(\([^\(]*\))', 'tokens', 'once');
+                if isempty(token)
+                    return
+                end
+                if iscell(token)
+                    token = token{1};
+                end
+                a = token;
+            end
+        end
+
         function c = childrenNames(self)
             c = {};
         end
