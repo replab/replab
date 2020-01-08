@@ -16,8 +16,9 @@ function [el linkText] = resolveRef(ref, context, isExternal)
 % 1. External objects: Objects outside the current `CodeBase`, for example in the Matlab global scope.
 %    Those objects are looked up for using the `isExternal` function handle.
 %
-% 2. Package names: the reference should start with a first-level package such as ``replab``.
-%    We do not interpret second-level package names such as ``lobster`` (for ``replab.lobster``).
+% 2. Package names: the reference should start with a first-level package such as ``+replab``.
+%    We do not interpret second-level package names such as ``+lobster`` (for ``+replab.+lobster``).
+%    The package names have a leading ``+`` as in the Sphinx Matlab domain references.
 %
 % 3. Class/function names in the current package
 %
@@ -32,7 +33,7 @@ function [el linkText] = resolveRef(ref, context, isExternal)
 % when the ``~`` prefix is present, we return the rightmost identifier as the link text.
 %
 % Args:
-%   context (`replab.infra.Element`): Element in the context of which the reference is interpreted
+%   context (`+replab.+infra.Element`): Element in the context of which the reference is interpreted
 %   ref (charstring): Reference
 %   isExternal (function_handle): Function that accepts a charstring identifier argument (without dots) and returns a logical value
 %                                 that states whether the identifier is present in the external scope.
@@ -43,7 +44,7 @@ function [el linkText] = resolveRef(ref, context, isExternal)
 %     The corresponding element, or ``[]`` if the reference could not be resolved
 %   linkText: charstring
 %     Extracted link text
-    rx = ['^'  '([.~]*)' '([A-Za-z][A-za-z0-9_.]*)' '$'];
+    rx = ['^'  '([.~]*)' '([+A-Za-z][+A-za-z0-9_.]*)' '$'];
     %           prefix            identifier
     tokens = regexp(ref, rx, 'tokens', 'once');
     if length(tokens) == 1
@@ -55,6 +56,7 @@ function [el linkText] = resolveRef(ref, context, isExternal)
     end
     prefix = tokens{1};
     id = tokens{2};
+    id = strrep(id, '+', ''); % strip + prefixes
     parts = strsplit(id, '.');
     head = parts{1};
     if isempty(parts) || any(cellfun(@isempty, parts))
