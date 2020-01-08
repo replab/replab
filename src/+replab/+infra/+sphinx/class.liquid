@@ -7,12 +7,12 @@
 {% end %}
 %\n
 
-{% if ~isempty(cl.inheritedElements) %}
+{% if ~isempty(cl.inheritedDocumentationElements) %}
 % .. admonition:: Inherited elements\n
 %    :class: collapsed\n
 %\n
 %\n
-{% for el in cl.inheritedElements %}
+{% for el in cl.inheritedDocumentationElements %}
 
 {% if isequal(el.kind, 'method') %}
 %    .. method:: {{ el.name }}\n

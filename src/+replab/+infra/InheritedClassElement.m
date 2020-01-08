@@ -1,6 +1,6 @@
 classdef InheritedClassElement < replab.infra.ClassElement
 % Describes an inherited class element, present by the virtue of a superclass
-    
+
     methods
 
         function self = InheritedClassElement(codeBase, parentClass, name, kind, attributes)

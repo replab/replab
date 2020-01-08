@@ -37,6 +37,14 @@ classdef ClassElement < replab.infra.Element
             b = ~isfield(self.attributes, 'Access') || isequal(self.attributes.Access, 'public');
         end
 
+        function b = isMethod(self)
+            b = isequal(self.kind, 'method');
+        end
+
+        function b = isProperty(self)
+            b = isequal(self.kind, 'property');
+        end
+
     end
 
 end

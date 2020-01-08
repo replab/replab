@@ -6,7 +6,11 @@ classdef Class < replab.infra.SourceElement
     end
 
     properties (Access = protected)
+        ownDocumentationElements_
+        inheritedDocumentationElements_
         inheritedElementsStruct_
+        allSuperclasses_
+        allSubclasses_
     end
 
     methods
@@ -43,7 +47,7 @@ classdef Class < replab.infra.SourceElement
             self.ownElementsStruct = oe;
         end
 
-        % replab.infra.Element
+        %% replab.infra.Element
 
         function c = childrenNames(self)
             c = vertcat(fieldnames(self.ownElementsStruct), fieldnames(self.inheritedElementsStruct));
@@ -63,7 +67,7 @@ classdef Class < replab.infra.SourceElement
             e = [];
         end
 
-        % replab.infra.SourceElement
+        %% replab.infra.SourceElement
 
         function str = name(self)
             str = self.sourceIdentifier;
@@ -73,62 +77,81 @@ classdef Class < replab.infra.SourceElement
             p = {self.name};
         end
 
-        % Own methods
+        %% Own methods
 
         function ae = allElements(self)
+        % Returns all elements of this class (including inherited) as a (sorted by name) row cell vector of `.ClassElement`
             ae = struct2cell(orderfields(self.allElementsStruct));
             ae = ae(:).';
         end
 
         function ae = allElementsStruct(self)
-        % Returns a struct whose fields contain all elements
+        % Returns a struct whose fields contain all elements (including inherited)
             ae = replab.infra.shm.merge2(self.ownElementsStruct, self.inheritedElementsStruct);
         end
 
         function am = allMethods(self)
         % Returns a row cell vector containing all methods, inc. inherited, sorted by name
-            am = horzcat(self.ownMethods, self.inheritedMethods);
-            names = cellfun(@(el) el.name, am, 'uniform', 0);
-            [~, ind] = sort(names);
-            am = am(ind);
+            ae = self.allElements;
+            am = ae(cellfun(@(x) x.isMethod, ae));
         end
 
         function ap = allProperties(self)
         % Returns a row cell vector containing all properties, inc. inherited, sorted by name
-            ap = horzcat(self.ownProperties, self.inheritedProperties);
-            names = cellfun(@(el) el.name, ap, 'uniform', 0);
-            [~, ind] = sort(names);
-            ap = ap(ind);
+            ae = self.allElements;
+            ap = ae(cellfun(@(x) x.isProperty, ae));
+        end
+
+        function oe = ownDocumentationElements(self)
+        % Returns all elements that have documentation in this class
+            if isempty(self.ownDocumentationElements_)
+                self.ownDocumentationElements_ = self.computeOwnDocumentationElements;
+            end
+            oe = self.ownDocumentationElements_;
+        end
+
+        function op = ownDocumentationProperties(self)
+            oe = self.ownDocumentationElements;
+            op = oe(cellfun(@(x) x.isProperty, oe));
+        end
+
+        function om = ownDocumentationMethods(self)
+            oe = self.ownDocumentationElements;
+            om = oe(cellfun(@(x) x.isProperty, oe));
+        end
+
+        function ie = inheritedDocumentationElements(self)
+        % Returns all elements that have documentation in a parent class
+            if isempty(self.inheritedDocumentationElements_)
+                self.inheritedDocumentationElements_ = self.computeInheritedDocumentation;
+            end
+            ie = self.inheritedDocumentationElements_;
+        end
+
+        function ip = inheritedDocumentationProperties(self)
+            ie = self.inheritedDocumentationElements;
+            ip = ip(cellfun(@(x) x.isProperty, ie));
+        end
+
+        function im = inheritedDocumentationMethods(self)
+            ie = self.inheritedDocumentationElements;
+            im = im(cellfun(@(x) x.isMethod, ie));
         end
 
         function oe = ownElements(self)
+        % Returns all elements declared in this class as a (sorted by name) row cell vector of `.ClassElement`
             oe = struct2cell(orderfields(self.ownElementsStruct));
             oe = oe(:).';
         end
 
         function om = ownMethods(self)
             oe = self.ownElements;
-            om = oe(cellfun(@(x) isequal(x.kind, 'method'), oe));
+            om = oe(cellfun(@(x) x.isMethod, oe));
         end
 
         function op = ownProperties(self)
             oe = self.ownElements;
-            op = oe(cellfun(@(x) isequal(x.kind, 'property'), oe));
-        end
-
-        function im = inheritedMethods(self)
-            ie = self.inheritedElements;
-            im = ie(cellfun(@(x) isequal(x.kind, 'method'), ie));
-        end
-
-        function ip = inheritedProperties(self)
-            ie = self.inheritedElements;
-            ip = ie(cellfun(@(x) isequal(x.kind, 'property'), ie));
-        end
-
-        function ie = inheritedElements(self)
-            ie = struct2cell(orderfields(self.inheritedElementsStruct));
-            ie = ie(:).';
+            op = oe(cellfun(@(x) x.isProperty, oe));
         end
 
         function ie = inheritedElementsStruct(self)
@@ -159,8 +182,58 @@ classdef Class < replab.infra.SourceElement
             ie = self.inheritedElementsStruct_;
         end
 
+        function ie = inheritedElements(self)
+            ie = struct2cell(orderfields(self.inheritedElementsStruct));
+            ie = ie(:).';
+        end
+
+        function im = inheritedMethods(self)
+            ie = self.inheritedElements;
+            im = ie(cellfun(@(x) x.isMethod, ie));
+        end
+
+        function ip = inheritedProperties(self)
+            ie = self.inheritedElements;
+            ip = ie(cellfun(@(x) x.isProperty, ie));
+        end
+
+        function c = ownSubclasses(self)
+        % Returns all direct subclasses of this class
+        %
+        % Returns:
+        %   row cell vector of `.Class`: Subclasses
+            c = self.codeBase.subclasses(self);
+        end
+
+        function c = ownSuperclasses(self)
+        % Returns all direct superclasses of this class
+        %
+        % Returns:
+        %   row cell vector of `.Class`: Superclasses
+            c = cellfun(@(id) self.codeBase.getIdentifier(id), self.superclassIdentifiers, 'uniform', 0);
+        end
+
         function asc = allSuperclasses(self)
         % Returns all superclasses of this class, not including itself
+            if isempty(self.allSuperclasses_)
+                self.allSuperclasses_ = self.computeAllSuperclasses;
+            end
+            asc = self.allSuperclasses_;
+        end
+
+        function asc = allSubclasses(self)
+        % Returns all subclasses of this class, not including itself
+            if isempty(self.allSubclasses_)
+                self.allSubclasses_ = self.computeAllSubclasses;
+            end
+            asc = self.allSubclasses_;
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function asc = computeAllSuperclasses(self)
             asc = {};
             visitedClassIds = struct;
             queue = self.ownSuperclasses;
@@ -176,8 +249,7 @@ classdef Class < replab.infra.SourceElement
             end
         end
 
-        function asc = allSubclasses(self)
-        % Returns all subclasses of this class, not including itself
+        function asc = computeAllSubclasses(self)
             asc = {};
             visitedClassIds = struct;
             queue = self.ownSubclasses;
@@ -193,12 +265,16 @@ classdef Class < replab.infra.SourceElement
             end
         end
 
-        function c = ownSubclasses(self)
-            c = self.codeBase.subclasses(self);
+        function oe = computeOwnDocumentationElements(self)
+            ae = self.allElements;
+            mask = cellfun(@(el) isa(el, 'replab.infra.ConcreteClassElement') && ~el.doc.isempty, ae);
+            oe = ae(mask);
         end
 
-        function c = ownSuperclasses(self)
-            c = cellfun(@(id) self.codeBase.getIdentifier(id), self.superclassIdentifiers, 'uniform', 0);
+        function ie = computeInheritedDocumentation(self)
+            ae = self.allElements;
+            mask = cellfun(@(el) isa(el, 'replab.infra.ConcreteClassElement') && ~el.doc.isempty, ae);
+            ie = ae(~mask);
         end
 
     end
