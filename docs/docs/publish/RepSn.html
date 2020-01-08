@@ -1,0 +1,382 @@
+---
+layout: docs
+title: Representations of S(3)
+category: posts
+subsection: Tutorials
+comments: true
+---
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+--><div class="content"><!--introduction--><h1>Representations of the symmetric group S(3)</h1><p>The symmetric group S(n) is group of primary importance. Here, we consider this group for <img src="RepSn_eq00013378311338420650.png" alt="$n=3$"> and discuss several of its representations with <b>RepLAB</b>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">The symmetric group</a></li><li><a href="#8">The defining representation of S(3)</a></li><li><a href="#12">The parity representation of S(3)</a></li><li><a href="#18">The trivial representation of S(3)</a></li><li><a href="#20">Direct sum of representation of S(3)</a></li><li><a href="#23">Irreducible representations of S(3)</a></li></ul></div><p>Before trying any of the <b>RepLAB</b> commands, we must initialize the library:</p><pre class="codeinput">replab_init
+</pre><h2>The symmetric group<a name="2"></a></h2><p>Consider <img src="RepSn_eq08984225997457563733.png" alt="$n$"> distinct elements, numbered <img src="RepSn_eq07968994301754079172.png" alt="$1,2,\ldots,n$">. The symmetric group describes all possible ways in which these elements can be permuted.</p><p>With <img src="RepSn_eq00013378311338420650.png" alt="$n=3$">, for instance, two possible arrangements are</p><pre class="codeinput">[1 2 3];
+</pre><p>and</p><pre class="codeinput">[1 3 2];
+</pre><p>In general there are <img src="RepSn_eq13135424669412081744.png" alt="$n!$"> such arrangements (i.e. <img src="RepSn_eq01663736040536833074.png" alt="$6$"> arrangements for <img src="RepSn_eq00013378311338420650.png" alt="$n=3$">).</p><p>In <b>RepLAB</b>, the symmetric group can be constructed with a simple command</p><pre class="codeinput">n = 3;
+S3 = replab.S(n);
+</pre><p>The elements of the group can be easily listed</p><pre class="codeinput">S3.elements
+</pre><pre class="codeoutput">
+ans = 
+
+Indexed family of 6 elements
+1 = [1, 2, 3]
+2 = [1, 3, 2]
+3 = [2, 1, 3]
+4 = [2, 3, 1]
+5 = [3, 1, 2]
+6 = [3, 2, 1]
+</pre><p>The number of elements is the order of the group</p><pre class="codeinput">S3.order
+</pre><pre class="codeoutput">ans =
+    6
+</pre><p>As we see, permutations are represented by row-vectors with an arrangement of the elements <img src="RepSn_eq12822402510362721356.png" alt="$1,\ldots,n$">.</p><p>The group structure defines how elements of the group compose with each other. For instance, permuting the first two elements in <img src="RepSn_eq09224634603081680380.png" alt="$1,2,3$">, followed by a permutation of the second and third elements results in a cyclic permutation:</p><pre class="codeinput">element1 = [2 1 3];
+element2 = [1 3 2];
+S3.compose(element1, element2)
+</pre><pre class="codeoutput">
+ans =
+
+     2     3     1
+
+</pre><h2>The defining representation of S(3)<a name="8"></a></h2><p>A group can always be represented by matrices of finite dimension. In a <img src="RepSn_eq17615571056258974497.png" alt="$d$">-dimensional matrix representation, each group element is associated with a <img src="RepSn_eq07624057174283395935.png" alt="$d \times d$"> matrix called the image of the group element. The action of matrix multiplication on the images then reflects the group composition rule.</p><p>Several matrix representations are possible for the same group, possibly in various dimension <img src="RepSn_eq17615571056258974497.png" alt="$d$">. Here, we are going to explore some representations of the group S(3).</p><p>When seeing the group as a permutation within <img src="RepSn_eq08984225997457563733.png" alt="$n$"> elements, a natural choice of representation arises in dimension <img src="RepSn_eq13732147775896216079.png" alt="$d=n$">, where the permutation is applied to the coordinates of the vector space <img src="RepSn_eq13560274181536256371.png" alt="$R^n$">. This is called the <b>defining representation</b> of a group. It can be constructed easily:</p><pre class="codeinput">defRep = S3.definingRep;
+</pre><p>The image of a group element in this representation can be extracted</p><pre class="codeinput">defRep.image([2 1 3])
+</pre><pre class="codeoutput">
+ans =
+
+     0     1     0
+     1     0     0
+     0     0     1
+
+</pre><p>We see that the matrices representing the group elements are <img src="RepSn_eq14662025674782596410.png" alt="$n \times n$"> permutation matrices, which simply apply the permutation to the coordinates of the vector space <img src="RepSn_eq13560274181536256371.png" alt="$R^n$">.</p><p>For a representation to be valid, the images must follow the structure of the group:</p><pre class="codeinput">image1 = defRep.image(element1);
+image2 = defRep.image(element2);
+image1*image2
+defRep.image(S3.compose(element1, element2))
+</pre><pre class="codeoutput">
+ans =
+
+     0     0     1
+     1     0     0
+     0     1     0
+
+
+ans =
+
+     0     0     1
+     1     0     0
+     0     1     0
+
+</pre><p>We see that the image of the product of elements is indeed the product of the images of the respective elements, i.e. the algebra of matrices acting on the representation images accurately reflects the group algebra.</p><p>It can be checked, moreover, that the defining representation is faithful, i.e. each group element has its own distinct image. This needs not always be the case as in the following two examples.</p><h2>The parity representation of S(3)<a name="12"></a></h2><p>To construct an arbitrary group representation in <b>RepLAB</b>, it is sufficient to provide the image of the generators of the group. The group S(3) has two generators:</p><pre class="codeinput">generators = S3.generators;
+generators{:}
+</pre><pre class="codeoutput">
+ans =
+
+     2     3     1
+
+
+ans =
+
+     2     1     3
+
+</pre><p>Let us construct a representation of this group in dimension</p><pre class="codeinput">d = 1;
+</pre><p>associating the each generator its parity (i.e. either <img src="RepSn_eq13250000916521689025.png" alt="$+1$"> or <img src="RepSn_eq09495369197506271969.png" alt="$-1$">). Since the parity of [2 3 1] is 1 and the parity of [2 1 3] is -1, this is achieved by instantiating the class <b>RepByImage</b> as follows:</p><pre class="codeinput">parRep = replab.RepByImages(S3, <span class="string">'R'</span>, d, true, {1 -1});
+</pre><p>We can check that this representation is valid</p><pre class="codeinput">image1 = parRep.image(element1)
+image2 = parRep.image(element2)
+image1*image2
+parRep.image(S3.compose(element1, element2))
+</pre><pre class="codeoutput">
+image1 =
+
+    -1
+
+
+image2 =
+
+    -1
+
+
+ans =
+
+     1
+
+
+ans =
+
+     1
+
+</pre><p>The parity of each binary permutation [2 1 3] and [1 3 2] is <img src="RepSn_eq09495369197506271969.png" alt="$-1$">, and their product, the cycle [2 3 1], has parity <img src="RepSn_eq18395870634560867587.png" alt="$1$">.</p><p>Clearly, this representation carries some information about the group, namely the parity, but some elements have the same image:</p><pre class="codeinput">allElements = S3.elements.toCell;
+<span class="keyword">for</span> i = 1:length(allElements)
+    disp([<span class="string">'Image of ['</span>, num2str(allElements{i}), <span class="string">'] : '</span>, num2str(parRep.image(allElements{i}))]);
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Image of [1  2  3] : 1
+Image of [1  3  2] : -1
+Image of [2  1  3] : -1
+Image of [2  3  1] : 1
+Image of [3  1  2] : 1
+Image of [3  2  1] : -1
+</pre><p>Therefore, this representation is not <b>faithful</b>.</p><h2>The trivial representation of S(3)<a name="18"></a></h2><p>An even simpler representation of the group S(n) is one in which the image of all elements is set to <img src="RepSn_eq18395870634560867587.png" alt="$1$">. This is called the <b>trivial representation</b>.</p><p>It can be constructed similarly from the image of the generators:</p><pre class="codeinput">trivRep = replab.RepByImages(S3, <span class="string">'R'</span>, d, true, {1 1});
+</pre><p>This time, the group law is trivially satisfied since all images are indeed equal to <img src="RepSn_eq18395870634560867587.png" alt="$1$">:</p><pre class="codeinput"><span class="keyword">for</span> i = 1:length(allElements)
+    disp([<span class="string">'Image of ['</span>, num2str(allElements{i}), <span class="string">'] : '</span>, num2str(trivRep.image(allElements{i}))]);
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Image of [1  2  3] : 1
+Image of [1  3  2] : 1
+Image of [2  1  3] : 1
+Image of [2  3  1] : 1
+Image of [3  1  2] : 1
+Image of [3  2  1] : 1
+</pre><h2>Direct sum of representation of S(3)<a name="20"></a></h2><p>We have seen that a group can admit several representations. Any two representations of a group in dimension <img src="RepSn_eq05561619272819148944.png" alt="$d_1$"> and <img src="RepSn_eq11134621714878033189.png" alt="$d_2$"> can be joined together by taking their <b>direct sum</b> in order to create a new valid representation in dimension <img src="RepSn_eq05766785178984989104.png" alt="$d_1 + d_2$">.</p><p>For instance, we can construct a <img src="RepSn_eq04941290416507909356.png" alt="$4$">-dimensional representation of S(3) by taking the direct sum of the defining representation with the parity representation</p><pre class="codeinput">newRep = replab.Rep.directSum({defRep, parRep});
+</pre><p>The images are then <img src="RepSn_eq17452142193152507074.png" alt="$4 \times 4$"> matrices</p><pre class="codeinput">newRep.image(element1)
+newRep.image(element2)
+</pre><pre class="codeoutput">
+ans =
+
+     0     1     0     0
+     1     0     0     0
+     0     0     1     0
+     0     0     0    -1
+
+
+ans =
+
+     1     0     0     0
+     0     0     1     0
+     0     1     0     0
+     0     0     0    -1
+
+</pre><p>As expected, the images have a block diagonal structure. The properties of a direct sum representation are thus captured by the properties of the representation in each block. Such a representation is <b>reducible</b>.</p><h2>Irreducible representations of S(3)<a name="23"></a></h2><p>Given a representation, it is not always obvious whether it is the direct sum of more fundamental representations or if the representation is <b>irreducible</b>. For instance, the images of the defining representation introduced above are not obviously block-diagonal. Yet, this representation is also reducible. To see this, one needs to find a basis of the vector space <img src="RepSn_eq09209259671399047839.png" alt="$R^d$"> in which the images have a block diagonal structure.</p><p>This can be achieved in <b>RepLAB</b> by decomposing the representation</p><pre class="codeinput">defDec = defRep.decomposition;
+defDec.nComponents
+</pre><pre class="codeoutput">
+ans =
+
+     2
+
+</pre><p>This shows that the defininig representation of S(3) has two <b>irreducible components</b>, of dimension <img src="RepSn_eq18395870634560867587.png" alt="$1$"> and <img src="RepSn_eq17262503285923366262.png" alt="$2$"> respectively:</p><pre class="codeinput">defDec.component(1).irrepDimension
+defDec.component(2).irrepDimension
+</pre><pre class="codeoutput">
+ans =
+
+     1
+
+
+ans =
+
+     2
+
+</pre><p>The decomposition also provides the change of basis matrix which makes this decomposition apparent</p><pre class="codeinput">U = full(defDec.U)
+</pre><pre class="codeoutput">
+U =
+
+    0.5774    0.5774    0.5774
+    0.8165   -0.4082   -0.4082
+         0    0.7071   -0.7071
+
+</pre><p>The images of the two elements of S(3), [2 1 3] and [1 3 2] are indeed block-diagonal in this basis:</p><pre class="codeinput">U*defRep.image(element1)*U'
+U*defRep.image(element2)*U'
+</pre><pre class="codeoutput">
+ans =
+
+    1.0000   -0.0000   -0.0000
+   -0.0000   -0.5000    0.8660
+   -0.0000    0.8660    0.5000
+
+
+ans =
+
+    1.0000   -0.0000   -0.0000
+   -0.0000    1.0000   -0.0000
+    0.0000    0.0000   -1.0000
+
+</pre><p>This shows that the defining representation of S(3) contains</p><p>
+<ul>
+ <li>One copy of the trivial representation of S(3)</li>
+ <li>One copy of the a faithful 2 x 2 representation of S(3)</li>
+</ul>
+</p></div><!--
+##### SOURCE BEGIN #####
+%% Representations of the symmetric group S(3)
+%
+% The symmetric group S(n) is group of primary importance. Here, we
+% consider this group for $n=3$ and discuss several of its representations
+% with *RepLAB*.
+
+%%
+% Before trying any of the *RepLAB* commands, we must initialize the library:
+replab_init
+
+%% The symmetric group
+% Consider $n$ distinct elements, numbered $1,2,\ldots,n$. The symmetric
+% group describes all possible ways in which these elements can be
+% permuted.
+% 
+% With $n=3$, for instance, two possible arrangements are
+[1 2 3];
+%%
+% and
+[1 3 2];
+%%
+% In general there are $n!$ such arrangements (i.e. $6$ arrangements for
+% $n=3$).
+%
+% In *RepLAB*, the symmetric group can be constructed with a simple command
+n = 3;
+S3 = replab.S(n);
+%%
+% The elements of the group can be easily listed
+S3.elements
+%%
+% The number of elements is the order of the group
+S3.order
+%%
+% As we see, permutations are represented by row-vectors with an
+% arrangement of the elements $1,\ldots,n$.
+%
+% The group structure defines how elements of the group compose with each
+% other. For instance, permuting the first two elements in $1,2,3$,
+% followed by a permutation of the second and third elements results in a
+% cyclic permutation:
+element1 = [2 1 3];
+element2 = [1 3 2];
+S3.compose(element1, element2)
+
+%% The defining representation of S(3)
+% A group can always be represented by matrices of finite dimension.
+% In a $d$-dimensional matrix representation, each group element is
+% associated with a $d \times d$ matrix called the image of the group
+% element. The action of matrix multiplication on the images then reflects
+% the group composition rule.
+%
+% Several matrix representations are possible for the same group, possibly
+% in various dimension $d$. Here, we are going to explore some
+% representations of the group S(3).
+%
+% When seeing the group as a permutation within $n$ elements, a natural
+% choice of representation arises in dimension $d=n$, where the permutation
+% is applied to the coordinates of the vector space $R^n$. This is called
+% the *defining representation* of a group. It can be constructed easily:
+defRep = S3.definingRep;
+%%
+% The image of a group element in this representation can be extracted
+defRep.image([2 1 3])
+%%
+% We see that the matrices representing the group elements are $n \times n$
+% permutation matrices, which simply apply the permutation to the
+% coordinates of the vector space $R^n$.
+%
+% For a representation to be valid, the images must follow the structure of
+% the group:
+image1 = defRep.image(element1);
+image2 = defRep.image(element2);
+image1*image2
+defRep.image(S3.compose(element1, element2))
+%%
+% We see that the image of the product of elements is indeed the product of
+% the images of the respective elements, i.e. the algebra of matrices
+% acting on the representation images accurately reflects the group
+% algebra.
+%
+% It can be checked, moreover, that the defining representation is
+% faithful, i.e. each group element has its own distinct image. This needs
+% not always be the case as in the following two examples.
+
+%% The parity representation of S(3)
+% To construct an arbitrary group representation in *RepLAB*, it is
+% sufficient to provide the image of the generators of the group. The group
+% S(3) has two generators:
+generators = S3.generators;
+generators{:}
+%%
+% Let us construct a representation of this group in dimension
+d = 1;
+%%
+% associating the each generator its parity (i.e. either $+1$ or $-1$).
+% Since the parity of [2 3 1] is 1 and the parity of [2 1 3] is -1, this
+% is achieved by instantiating the class *RepByImage* as follows:
+parRep = replab.RepByImages(S3, 'R', d, true, {1 -1});
+%%
+% We can check that this representation is valid
+image1 = parRep.image(element1)
+image2 = parRep.image(element2)
+image1*image2
+parRep.image(S3.compose(element1, element2))
+%%
+% The parity of each binary permutation [2 1 3] and [1 3 2] is $-1$, and
+% their product, the cycle [2 3 1], has parity $1$.
+%
+% Clearly, this representation carries some information about the group,
+% namely the parity, but some elements have the same image:
+allElements = S3.elements.toCell;
+for i = 1:length(allElements)
+    disp(['Image of [', num2str(allElements{i}), '] : ', num2str(parRep.image(allElements{i}))]);
+end
+%%
+% Therefore, this representation is not *faithful*.
+
+%% The trivial representation of S(3)
+% An even simpler representation of the group S(n) is one in which the
+% image of all elements is set to $1$. This is called the *trivial
+% representation*.
+%
+% It can be constructed similarly from the image of the generators:
+trivRep = replab.RepByImages(S3, 'R', d, true, {1 1});
+%%
+% This time, the group law is trivially satisfied since all images are
+% indeed equal to $1$:
+for i = 1:length(allElements)
+    disp(['Image of [', num2str(allElements{i}), '] : ', num2str(trivRep.image(allElements{i}))]);
+end
+
+%% Direct sum of representation of S(3)
+% We have seen that a group can admit several representations. Any two
+% representations of a group in dimension $d_1$ and $d_2$ can be joined
+% together by taking their *direct sum* in order to create a new valid
+% representation in dimension $d_1 + d_2$.
+%
+% For instance, we can construct a $4$-dimensional representation of S(3)
+% by taking the direct sum of the defining representation with the parity
+% representation
+newRep = replab.Rep.directSum({defRep, parRep});
+%%
+% The images are then $4 \times 4$ matrices
+newRep.image(element1)
+newRep.image(element2)
+%%
+% As expected, the images have a block diagonal structure. The properties
+% of a direct sum representation are thus captured by the properties of
+% the representation in each block. Such a representation is *reducible*.
+
+
+%% Irreducible representations of S(3)
+% Given a representation, it is not always obvious whether it is the direct
+% sum of more fundamental representations or if the representation is
+% *irreducible*. For instance, the images of the defining representation
+% introduced above are not obviously block-diagonal. Yet, this
+% representation is also reducible. To see this, one needs to find a basis
+% of the vector space $R^d$ in which the images have a block diagonal
+% structure.
+%
+% This can be achieved in *RepLAB* by decomposing the representation
+defDec = defRep.decomposition;
+defDec.nComponents
+%%
+% This shows that the defininig representation of S(3) has two *irreducible
+% components*, of dimension $1$ and $2$ respectively:
+defDec.component(1).irrepDimension
+defDec.component(2).irrepDimension
+%%
+% The decomposition also provides the change of basis matrix which makes
+% this decomposition apparent
+U = full(defDec.U)
+%%
+% The images of the two elements of S(3), [2 1 3] and [1 3 2] are indeed
+% block-diagonal in this basis:
+U*defRep.image(element1)*U'
+U*defRep.image(element2)*U'
+%%
+% This shows that the defining representation of S(3) contains
+%
+% <html>
+% <ul>
+%  <li>One copy of the trivial representation of S(3)</li>
+%  <li>One copy of the a faithful 2 x 2 representation of S(3)</li>
+% </ul> 
+% </html>
+
+
+##### SOURCE END #####
+-->

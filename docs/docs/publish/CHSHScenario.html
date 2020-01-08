@@ -1,80 +1,23 @@
 ---
 layout: docs
-title: Relabelings in the CHSH scenario
+title: CHSH example
 category: posts
+subsection: Tutorials
 comments: true
 ---
 <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
---><div class="content"><!--introduction--><h1>Relabelings in the CHSH scenario</h1><p>We describe the output/input/party relabelings in the CHSH scenario, and decompose their action on probability distributions P(ab|xy).</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Defining the output relabelings</a></li><li><a href="#2">Defining the party relabelings</a></li><li><a href="#3">Defining the scenario relabelings</a></li><li><a href="#4">We now compute the decomposition of the representation</a></li></ul></div><h2>Defining the output relabelings<a name="1"></a></h2><p>Outputs are binary, so we use the symmetric group of domain size 2 and the representation on P(a) is the defining representation</p><pre class="codeinput">S2 = replab.S(2)
-outputRep = S2.definingRep
+--><div class="content"><!--introduction--><h1>Relabelings in the CHSH scenario</h1><p>We describe the output/input/party relabelings in the CHSH scenario, and decompose their action on probability distributions <img src="CHSHScenario_eq15875943300748122308.png" alt="$P(ab|xy)$">.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Relabelings the outputs</a></li><li><a href="#3">Adding the relabelings of inputs</a></li><li><a href="#5">Adding the relabelings of parties</a></li><li><a href="#7">Decomposition of the full probability space</a></li></ul></div><p>Before using <b>RepLAB</b> commands, we must first initialize the library:</p><pre class="codeinput">replab_init
+</pre><h2>Relabelings the outputs<a name="2"></a></h2><p>Outputs are binary, so the relabelling of outputs is the symmetric group of domain size 2. The representation of this relabelling on the probabilities <img src="CHSHScenario_eq02224836646815287894.png" alt="$P(a)$"> is then the defining representation</p><pre class="codeinput">outputGroup = replab.S(2);
+outputRep = outputGroup.definingRep;
+</pre><h2>Adding the relabelings of inputs<a name="3"></a></h2><p>In the CHSH scenario, each party has two binary measurements. Therefore, a copy of S(2) acts on the outputs of the first measurement, and a second copy of S(2) acting on the outputs of the second measurement, while another copy of S(2) permutes the choice of measurement (input).</p><p>This is described by the wreath product of S(2) by S(2).</p><pre class="codeinput">ioGroup = replab.S(2).wreathProduct(outputGroup);
+</pre><p>The representation on the conditional probility <img src="CHSHScenario_eq13125476778068594889.png" alt="$P(a|x)$"> is the imprimitive representation, given that we use the defining representation for the inner group</p><pre class="codeinput">ioRep = ioGroup.imprimitiveRep(outputRep);
+</pre><h2>Adding the relabelings of parties<a name="5"></a></h2><p>The same story repeats for relabelings of parties: the scenario involves two homogeneous parties. We thus have two copies of the group relabeling inputs and/or outputs (one for Alice, one for Bob), and a copy of S2 that permutes the parties. This group desribing all possible relabellings in this scenario is thus given by:</p><pre class="codeinput">scenarioGroup = outputGroup.wreathProduct(ioGroup);
+</pre><p>The representation on the behavior <img src="CHSHScenario_eq15875943300748122308.png" alt="$P(ab|xy)$"> is however a primitive representation, as <img src="CHSHScenario_eq16577252330521769272.png" alt="$P(a|x; b|y)$"> ressembles a tensor. Inside each party, we use the imprimitive representation constructed before.</p><pre class="codeinput">probRep = scenarioGroup.primitiveRep(ioRep);
+</pre><h2>Decomposition of the full probability space<a name="7"></a></h2><p>We can now compute the decomposition of this representation on <img src="CHSHScenario_eq15875943300748122308.png" alt="$P(ab|xy)$">:</p><pre class="codeinput">dec = probRep.decomposition
 </pre><pre class="codeoutput">
-S2 = 
-
-Permutations acting on 2 elements
-  domainSize: 2                                
-    identity: [1, 2]                           
-      parent: Permutations acting on 2 elements
-generator(1): [2, 1]                           
-
-outputRep = 
-
-Orthogonal real representation of dimension 2
-    dimension: 2                                
-        field: 'R'                              
-        group: Permutations acting on 2 elements
-inverseImages: {[0, 1; 1, 0]}                   
-    isUnitary: true                             
-    images{1}: [0, 1; 1, 0]                     
-</pre><h2>Defining the party relabelings<a name="2"></a></h2><p>We have a copy of S2 acting on the outputs of the first measurement, and a second copy of S2 acting on the outputs of the second measurement, while another copy of S2 permutes the choice of measurement (input).</p><p>This is described by the wreath product of S2 by S2.</p><p>The representation on P(a|x) is the imprimitive representation, given that we use the defining representation for the inner group</p><pre class="codeinput">party = S2.wreathProduct(S2)
-partyRep = party.imprimitiveRep(outputRep)
-</pre><pre class="codeoutput">
-party = 
-
-replab.wreathproduct.OfNiceFiniteGroup
-           A: Permutations acting on 2 elements      
-           H: Permutations acting on 2 elements      
-           N: replab.directproduct.OfNiceFiniteGroups
-    identity: {[1, 2], {[1, 2], [1, 2]}}             
-           n: 2                                      
-      parent: replab.wreathproduct.OfNiceFiniteGroup 
-         phi: replab.perm.PermutationCellAction      
-generator(1): {[2, 1], {[1, 2], [1, 2]}}             
-generator(2): {[1, 2], {[2, 1], [1, 2]}}             
-generator(3): {[1, 2], {[1, 2], [2, 1]}}             
-
-partyRep = 
-
-Orthogonal real representation of dimension 4
-     Arep: Orthogonal real representation of dimension 2
-dimension: 4                                            
-    field: 'R'                                          
-    group: replab.wreathproduct.OfNiceFiniteGroup       
-isUnitary: true                                         
-</pre><h2>Defining the scenario relabelings<a name="3"></a></h2><p>The same story repeats for scenario relabelings; we have two copies of the party relabeling group (one for Alice, one for Bob), and a copy of S2 that permutes the parties.</p><p>The representation on P(ab|xy) is however a primitive representation, as P(a|x; b|y) ressembles a tensor. Inside each party, we use the imprimitive representation seen before.</p><pre class="codeinput">scenario = S2.wreathProduct(party)
-probRep = scenario.primitiveRep(partyRep);
-</pre><pre class="codeoutput">
-scenario = 
-
-replab.wreathproduct.OfNiceFiniteGroup
-           A: replab.wreathproduct.OfNiceFiniteGroup                            
-           H: Permutations acting on 2 elements                                 
-           N: replab.directproduct.OfNiceFiniteGroups                           
-    identity: {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}
-           n: 2                                                                 
-      parent: replab.wreathproduct.OfNiceFiniteGroup                            
-         phi: replab.perm.PermutationCellAction                                 
-generator(1): {[2, 1], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}
-generator(2): {[1, 2], {{[2, 1], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}
-generator(3): {[1, 2], {{[1, 2], {[2, 1], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}
-generator(4): {[1, 2], {{[1, 2], {[1, 2], [2, 1]}}, {[1, 2], {[1, 2], [1, 2]}}}}
-generator(5): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[2, 1], {[1, 2], [1, 2]}}}}
-generator(6): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[2, 1], [1, 2]}}}}
-generator(7): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [2, 1]}}}}
-</pre><h2>We now compute the decomposition of the representation<a name="4"></a></h2><pre class="codeinput">probRep.decomposition
-</pre><pre class="codeoutput">
-ans = 
+dec = 
 
 Subrepresentation
    dimension: 16                                                        
@@ -88,59 +31,100 @@ Subrepresentation
       U(2,:): [1, 1, -1, -1, 1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1]/4
       U(3,:): [1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1]/4
       U(4,:): [1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1]/4
-      U(5,:): [1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1]/4
-      U(6,:): [1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1]/4
-      U(7,:): [1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1]/4
-      U(8,:): [1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1]/4
-      U(9,:): [1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1, 1, -1]/4
-     U(10,:): [1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, -1, -1, 1]/4
-     U(11,:): [1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1]/4
-     U(12,:): [1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1]/4
-     U(13,:): [1, -1, -1, 1, 1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1]/4
-     U(14,:): [1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, 1, 1, -1, -1]/4
-     U(15,:): [1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1]/4
-     U(16,:): [1, -1, 1, -1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, 1]/4
+      U(5,:): [1, -1, -1, 1, 1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1]/4
+      U(6,:): [1, 1, -1, -1, -1, -1, 1, 1, -1, -1, 1, 1, 1, 1, -1, -1]/4
+      U(7,:): [1, -1, 1, -1, 1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, 1]/4
+      U(8,:): [1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1]/4
+      U(9,:): [1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1, -1]/4
+     U(10,:): [1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1]/4
+     U(11,:): [1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1]/4
+     U(12,:): [1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1]/4
+     U(13,:): [1, -1, 1, -1, -1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1]/4
+     U(14,:): [1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1, 1, -1]/4
+     U(15,:): [1, -1, -1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, -1, -1, 1]/4
+     U(16,:): [1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1]/4
 ...
-</pre></div><!--
+</pre><p>There are 6 irreducible componenta</p><pre class="codeinput">dec.nComponents
+</pre><pre class="codeoutput">
+ans =
+
+     6
+
+</pre><p>These components correspond to the following physical elements (see <a href="https://arxiv.org/abs/1610.01833">arXiv:1610.01833</a> for more details):</p><p>
+<ul>
+ <li>The global normalization of probabilities</li>
+ <li>The difference of normalization between x=y and x≠y</li>
+ <li>The difference of normalization between x=0 and 1</li>
+ <li>The signaling between Alice and Bob</li>
+ <li>The marginal probabilities of Alice and Bob</li>
+ <li>The correlation between Alice and Bob</li>
+</ul>
+</p></div><!--
 ##### SOURCE BEGIN #####
 %% Relabelings in the CHSH scenario
 %
 % We describe the output/input/party relabelings in the CHSH scenario,
-% and decompose their action on probability distributions P(ab|xy).
+% and decompose their action on probability distributions $P(ab|xy)$.
 %
 
-%% Defining the output relabelings
-% Outputs are binary, so we use the symmetric group of domain size 2
-% and the representation on P(a) is the defining representation
-S2 = replab.S(2)
-outputRep = S2.definingRep
+%%
+% Before using *RepLAB* commands, we must first initialize the library:
+replab_init
 
-%% Defining the party relabelings
-% We have a copy of S2 acting on the outputs of the first measurement,
-% and a second copy of S2 acting on the outputs of the second measurement,
-% while another copy of S2 permutes the choice of measurement (input).
+%% Relabelings the outputs
+% Outputs are binary, so the relabelling of outputs is the symmetric group
+% of domain size 2. The representation of this relabelling on the
+% probabilities $P(a)$ is then the defining representation
+outputGroup = replab.S(2);
+outputRep = outputGroup.definingRep;
+
+%% Adding the relabelings of inputs
+% In the CHSH scenario, each party has two binary measurements. Therefore,
+% a copy of S(2) acts on the outputs of the first measurement, and a second
+% copy of S(2) acting on the outputs of the second measurement, while
+% another copy of S(2) permutes the choice of measurement (input).
 %
-% This is described by the wreath product of S2 by S2.
+% This is described by the wreath product of S(2) by S(2).
+ioGroup = replab.S(2).wreathProduct(outputGroup);
+%%
+% The representation on the conditional probility $P(a|x)$ is the
+% imprimitive representation, given that we use the defining representation
+% for the inner group
+ioRep = ioGroup.imprimitiveRep(outputRep);
+
+%% Adding the relabelings of parties
+% The same story repeats for relabelings of parties: the scenario involves
+% two homogeneous parties. We thus have two copies of the group relabeling
+% inputs and/or outputs (one for Alice, one for Bob), and a copy of S2 that
+% permutes the parties. This group desribing all possible relabellings in
+% this scenario is thus given by:
+scenarioGroup = outputGroup.wreathProduct(ioGroup);
+%%
+% The representation on the behavior $P(ab|xy)$ is however a primitive
+% representation, as $P(a|x; b|y)$ ressembles a tensor. Inside each party,
+% we use the imprimitive representation constructed before.
+probRep = scenarioGroup.primitiveRep(ioRep);
+
+%% Decomposition of the full probability space
+% We can now compute the decomposition of this representation on $P(ab|xy)$:
+dec = probRep.decomposition
+%%
+% There are 6 irreducible componenta
+dec.nComponents
+%%
+% These components correspond to the following physical elements (see
+% <https://arxiv.org/abs/1610.01833 arXiv:1610.01833> for more details):
 %
-% The representation on P(a|x) is the imprimitive representation,
-% given that we use the defining representation for the inner group
-party = S2.wreathProduct(S2)
-partyRep = party.imprimitiveRep(outputRep)
-
-%% Defining the scenario relabelings
-% The same story repeats for scenario relabelings; we have two copies
-% of the party relabeling group (one for Alice, one for Bob), and a copy
-% of S2 that permutes the parties.
-%
-% The representation on P(ab|xy) is however a primitive representation,
-% as P(a|x; b|y) ressembles a tensor. Inside each party, we use the
-% imprimitive representation seen before.
-
-scenario = S2.wreathProduct(party)
-probRep = scenario.primitiveRep(partyRep);
-
-%% We now compute the decomposition of the representation
-probRep.decomposition
+% <html>
+% <ul>
+%  <li>The global normalization of probabilities</li>
+%  <li>The difference of normalization between x=y and x≠y</li>
+%  <li>The difference of normalization between x=0 and 1</li>
+%  <li>The signaling between Alice and Bob</li>
+%  <li>The marginal probabilities of Alice and Bob</li>
+%  <li>The correlation between Alice and Bob</li>
+% </ul> 
+% </html>
 
 ##### SOURCE END #####
 -->
