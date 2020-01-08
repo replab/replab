@@ -42,7 +42,7 @@ function test_var_and_text(self)
 end
 
 function test_var_with_map_access(self)
-    if ~replab.settings.isOctave
+    if ~replab.settings.isOctave % old versions of Octave don't have containers
         context.var = containers.Map('some_key', 'the value');
         tpl = replab.lobster.Template('{{ var(''some_key'') }} is cool');
         assertEqual(tpl.render(context), 'the value is cool');
@@ -52,7 +52,9 @@ end
 function test_undefined_var_error(self)
     context = struct();
     tpl = replab.lobster.Template('{{ var }} is cool');
-    assertExceptionThrown(@() tpl.render(), 'Lobster:TemplateContextError');
+    if ~replab.settings.isOctave % old versions of Octave rather throw Octave:invalid-fun-call
+        assertExceptionThrown(@() tpl.render(), 'Lobster:TemplateContextError');
+    end
 end
 
 function test_if_true_with_no_context(self)
