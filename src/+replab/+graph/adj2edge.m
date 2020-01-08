@@ -1,4 +1,6 @@
 function edges = adj2edge(adj)
+% liste of graph edges
+%
 % Returns the list of (undirected) edges for a graph described by
 % a given adjacency matrix.
 %
