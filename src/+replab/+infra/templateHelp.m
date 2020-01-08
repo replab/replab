@@ -26,5 +26,5 @@ function res = templateHelp(templateName, el, docEl, helpCommand, strongIds, bla
     else
         renderEl = docEl;
     end
-    res = replab.infra.formatHelp(template.render(context), renderEl, helpCommand, strongIds, blackIds);
+    res = replab.infra.repl.formatHelp(template.render(context), renderEl, helpCommand, strongIds, blackIds);
 end

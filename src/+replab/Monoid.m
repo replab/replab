@@ -1,7 +1,7 @@
 classdef Monoid < replab.Domain
 % Describes a monoid
 %
-% See `https://en.wikipedia.org/wiki/Monoid`_
+% See https://en.wikipedia.org/wiki/Monoid
 
     properties (SetAccess = protected)
         identity % Monoid identity element
