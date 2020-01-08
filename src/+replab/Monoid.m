@@ -1,12 +1,14 @@
 classdef Monoid < replab.Domain
 % Describes a monoid
-    
+%
+% See `https://en.wikipedia.org/wiki/Monoid`_
+
     properties (SetAccess = protected)
         identity % Monoid identity element
     end
-    
+
     methods % Abstract methods
-        
+
         function z = compose(self, x, y)
         % Composes two monoid/group elements
         %
@@ -15,14 +17,14 @@ classdef Monoid < replab.Domain
         %   y (element): Right hand side of the binary operation
         %
         % Returns:
-        %   element: Result of the binary operation ``x`` op ``y``
+        %   element: Result of the binary operation ``x op y``
             error('Abstract');
         end
 
     end
-    
+
     methods % Default implementations
-        
+
         function z = composeAll(self, elements)
         % Composes a sequence of monoid elements
         %
@@ -38,14 +40,14 @@ classdef Monoid < replab.Domain
                 end
             end
         end
-        
+
         function y = composeN(self, x, n)
         % Computes ``y = x^n`` by repeated squaring
         %
         % When "self" is a
-        % - "Semigroup", we need n > 0
-        % - "Monoid", we need n >= 0
-        % - "Group", "n" is an arbitrary integer
+        % - `.Semigroup`, we need n > 0
+        % - `.Monoid`, we need n >= 0
+        % - `.Group`, ``n`` is an arbitrary integer
             if n < 0
                 assert(isa(self, 'replab.Group'));
                 y = self.composeN(self.inverse(x), -n);
@@ -70,16 +72,16 @@ classdef Monoid < replab.Domain
                 y = self.compose(x, y);
             end
         end
-        
+
         function b = isIdentity(self, x)
         % Returns true if x is the identity, false otherwise
             b = self.eqv(x, self.identity);
         end
-        
+
     end
 
     methods (Static)
-        
+
         function monoid = lambda(header, eqvFun, sampleFun, composeFun, identity)
         % Constructs a monoid from function handles
         %
@@ -94,7 +96,7 @@ classdef Monoid < replab.Domain
         %   replab.Monoid: The constructed monoid
             monoid = replab.lambda.Monoid(header, eqvFun, sampleFun, composeFun, identity);
         end
-        
+
     end
-    
+
 end

@@ -15,5 +15,5 @@ function tell(msg, varargin)
             prefix = [prefix '..'];
         end
         %disp([prefix sprintf(msg, varargin{:})]);
-    end        
+    end
 end

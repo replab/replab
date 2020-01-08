@@ -1,15 +1,17 @@
 classdef Group < replab.Monoid
 % Describes a group
-    
+%
+% A group is a `.Monoid` where each element has an inverse.
+
     methods % Abstract methods
-        
+
         function xInv = inverse(self, x)
         % Computes the inverse of an element
         %
         % Given ``x``, returns ``xInv`` such that
         %
         % ``x xInv = identity``
-        % 
+        %
         % Args:
         %   x (element): Group element to compute the inverse of
         %
@@ -17,11 +19,11 @@ classdef Group < replab.Monoid
         %   element: Inverse of ``x``
             error('Abstract');
         end
-        
+
     end
 
     methods % Methods with default implementations
-        
+
         function x = leftConjugate(self, by, on)
         % Returns the left conjugate of a group element
         %
@@ -30,12 +32,12 @@ classdef Group < replab.Monoid
         % Args:
         %   by (element): Element conjugating
         %   on (element): Element conjugated
-        %  
+        %
         % Returns:
         %   element: left conjugate, i.e. ``by * on * by^-1`` in multiplicative notation
             x = self.composeWithInverse(self.compose(by, on), by);
         end
-        
+
         function z = composeWithInverse(self, x, y)
         % Returns the composition of an element with the inverse of another element
         %
@@ -49,11 +51,11 @@ classdef Group < replab.Monoid
         %   element: the result of ``x * y^-1`` in multiplicative notation
             z = self.compose(x, self.inverse(y));
         end
-        
+
     end
 
     methods (Static)
-        
+
         function group = lambda(header, eqvFun, sampleFun, ...
                                 composeFun, identity, inverseFun)
         % Constructs a group from function handles
@@ -67,12 +69,12 @@ classdef Group < replab.Monoid
         %   inverseFun (function_handle): Handle implementing the `inverse` method
         %
         % Returns:
-        %   :class:`+replab.Group`: The constructed group
-            
+        %   `+replab.Group`: The constructed group
+
             group = replab.lambda.Group(header, eqvFun, sampleFun, ...
                                         composeFun, identity, inverseFun);
         end
-        
+
     end
-    
+
 end

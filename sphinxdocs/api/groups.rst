@@ -42,7 +42,7 @@ FiniteGroup
 +++++++++++
 
 .. autoclass:: FiniteGroup
-      
+
 .. _NiceFiniteGroup:
 
 NiceFiniteGroup

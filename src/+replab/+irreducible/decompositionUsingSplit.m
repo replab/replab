@@ -9,7 +9,7 @@ function I = decompositionUsingSplit(rep)
     replab.irreducible.tell('down')
     mainSub = rep.subRepUnitaryByIntegerBasis(speye(rep.dimension));
     subs = replab.irreducible.split(rep, samples, mainSub);
-    replab.irreducible.tell('up')    
+    replab.irreducible.tell('up')
     % sort by trivial / non trivial
     trivial = {};
     nontrivial = {};

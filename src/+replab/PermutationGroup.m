@@ -4,34 +4,35 @@ classdef PermutationGroup < replab.NiceFiniteGroup
     properties (SetAccess = protected)
         domainSize % integer: The integer ``d``, as this group acts on ``{1, ..., d}``
     end
-    
+
     methods
-        
+
         %% Domain methods
-        
+
         function b = eqv(self, x, y)
             b = isequal(x, y);
         end
-        
+
         %% Monoid methods
-        
+
         function z = compose(self, x, y)
             z = x(y);
         end
-        
+
         %% Group methods
-        
+
         function y = inverse(self, x)
             n = self.domainSize;
             y = zeros(1, n);
             y(x) = 1:n;
         end
-        
+
         %% NiceFiniteGroup methods
-        
+
         function p = niceMonomorphismImage(self, p)
+            p = p;
         end
-        
+
         %% Methods specific to permutation groups
 
         function o = orbits(self)
@@ -41,7 +42,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         % see https://www.encyclopediaofmath.org/index.php/Transitive_group
         %
         % Returns:
-        %   replab.Partition: The orbit partition
+        %   `.Partition`: The orbit partition
             G = zeros(self.nGenerators, self.domainSize);
             for i = 1:self.nGenerators
                 G(i, :) = self.generators{i};
@@ -50,7 +51,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         end
 
         %% Group construction
-        
+
         function w = wreathProduct(self, A)
         % Returns the wreath product of a compact group by this permutation group
         %
@@ -61,20 +62,19 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         % for semidirect product places the group acted upon on the right.
         %
         % Note that the return type depends on the argument type:
-        % if `A` is a `replab.FiniteGroup`, the result will be a finite group
-        % too, and if `A` is a `replab.NiceFiniteGroup`, the result will be of
-        % that type.
+        % if ``A`` is a `.FiniteGroup`, the result will be a finite group too,
+        % and if ``A`` is a `.NiceFiniteGroup`, the result will be of that type.
         %
         % Args:
-        %   A (replab.CompactGroup): The group whose copies are acted upon
+        %   A (`.CompactGroup`): The group whose copies are acted upon
         %
         % Returns:
-        %   replab.wreathproduct.Common: A wreath product group
+        %   `+replab.+wreathproduct.Common`: A wreath product group
             w = replab.wreathproduct.of(self, A);
         end
-        
+
         %% Actions
-        
+
         function A = naturalAction(self)
         % Returns the natural action of elements of this group on its domain
         %

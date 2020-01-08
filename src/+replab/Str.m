@@ -1,7 +1,7 @@
 classdef Str < handle
 % Defines a 'str' default method and overloads 'disp'
 %
-% Also provides methods 'additionalFields' and 'hiddenFields' to guide long form object pretty printing
+% Also provides methods `.additionalFields` and `.hiddenFields` to guide long form object pretty printing
 
     methods
 
@@ -15,7 +15,7 @@ classdef Str < handle
         %   rhs (object): second object to compare to
         %
         % Returns:
-        %   res (boolean): true iff self == rhs
+        %   boolean: true iff self == rhs
             if replab.settings.isOctave
                 res = true(size(self));
             else
@@ -32,50 +32,51 @@ classdef Str < handle
         end
 
         function [names, values] = additionalFields(self)
-        % additionalFields - additional name/value pairs
+        % Returns the name/value pairs corresponding to additional fields to be printed
         %
-        % [names, values] = replab.Str.additionalFields(self)
-        % Returns the name/value pairs corresponding to additional fields
-        % to be printed. Classes that override this method should call the
-        % superclass method.
+        % Classes that override this method should call the superclass method.
         %
-        % Returns:
-        %   names (cell array): row vector of names
-        %   values (cell array): row vector of values
+        % Returns
+        % -------
+        %   names: row cell vector of charstring
+        %     Additional names to display
+        %   values: row cell vector of charstring
+        %     Additional values to display
             names = {};
             values = {};
         end
 
         function names = hiddenFields(self)
-        % hiddenFields - Fields that should not be printed
-        %
-        % names = replab.Str.hiddenFields(self)
         % Returns the names of the fields that are not printed as a row vector
-        % Classes that override this method should call the superclass method
+        %
+        % Classes that override this method should call the superclass method.
         %
         % Returns:
-        %   names (cell array): row vector of names
+        %   row cell vector of charstring: Field names to hide
             names = {};
         end
 
         function s = shortStr(self, maxColumns)
-        % shortStr - Single line text description of the current object
+        % Single line text description of the current object
         %
-        % See also: replab.shortStr
+        % See also:
+        %   `+replab.shortStr`
             s = replab.str.shortStr(self, maxColumns);
         end
 
         function s = headerStr(self)
-        % headerStr - Tiny single line description of the current object type
+        % Tiny single line description of the current object type
         %
-        % See also replab.headerStr
+        % See also:
+        %   `+replab.headerStr`
             s = replab.str.headerStr(self);
         end
 
         function s = longStr(self, maxRows, maxColumns)
-        % longStr - Multi-line description of the current object
+        % Multi-line description of the current object
         %
-        % See also: replab.longStr
+        % See also:
+        %   `+replab.longStr`
             s = replab.str.longStr(self, maxRows, maxColumns);
         end
 
