@@ -258,7 +258,7 @@ classdef Permutations < replab.PermutationGroup
         function perm = fromMatrix(mat)
         % Returns the signed permutation corresponding to the given matrix representation
         %
-        % See `replab.Permutations.toMatrix`
+        % See `+replab.Permutations.toMatrix`
         %
         % Args:
         %   mat: A permutation matrix.

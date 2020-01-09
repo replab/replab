@@ -263,14 +263,14 @@ classdef Rep < replab.Str
         function rep = blkdiag(varargin)
         % Direct sum of representations
         %
-        % See `replab.Rep.directSum`
+        % See `+replab.Rep.directSum`
             rep = replab.Rep.directSum(varargin);
         end
 
         function rep = kron(varargin)
         % Tensor product of representations
         %
-        % See `replab.Rep.tensor`
+        % See `+replab.Rep.tensor`
             rep = replab.Rep.tensor(varargin);
         end
 

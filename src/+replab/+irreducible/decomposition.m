@@ -5,7 +5,7 @@ function I = decomposition(rep)
 % algebras (for representations over the reals), and making sure that complex-type and quaternion-type
 % real representations are expressed in a canonical basis for the division algebra encoding.
 %
-% Note: see the default methods applied in `replab.dispatchDefaults`
+% Note: see the default methods applied in `+replab.dispatchDefaults`
 %
 % Args:
 %   rep (replab.Rep): Representation to decompose

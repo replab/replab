@@ -1,7 +1,7 @@
 classdef IrreducibleCommutant < replab.Commutant
 % Algebra of matrices that commute with an irreducible decomposition
 %
-% Note that the `self.rep` property must be of type `replab.Irreducible`.
+% Note that the `self.rep` property must be of type `+replab.Irreducible`.
 % TODO: should we repeat a property block with the new documentation for `self.rep`?
     
     methods

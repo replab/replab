@@ -2,7 +2,7 @@ classdef Element < replab.Str
 % A code base element which can be retrieved from an identifier
 
     properties
-        codeBase % `replab.infra.CodeBase`: Code base this object is part of
+        codeBase % `+replab.+infra.CodeBase`: Code base this object is part of
         name % charstring: Name of the current element, i.e. last part of its identifier
     end
 
@@ -27,7 +27,7 @@ classdef Element < replab.Str
         %   id (charstring): Package element identifier
         %
         % Returns:
-        %   `replab.infra.Element` or []: Package element, or ``[]`` if not found
+        %   `+replab.+infra.Element` or []: Package element, or ``[]`` if not found
             error('Abstract');
         end
 

@@ -56,7 +56,7 @@ classdef ComplexTypeMatrices < replab.domain.VectorSpace
         % Given a matrix encoding complex blocks, returns the complex elements
         %
         % Args:
-        %   M (double matrix): Matrix part of a `replab.domain.ComplexTypeMatrices` domain
+        %   M (double matrix): Matrix part of a `+replab.+domain.ComplexTypeMatrices` domain
         %
         % Returns
         % -------

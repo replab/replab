@@ -1,7 +1,7 @@
 function W = enforceQuaternionEncoding(rep, samples, sub)
 % Finds change of basis expressing the canonical basis of a quaternion division algebra
 %
-% See `replab.domain.QuaernionTypeMatrices`
+% See `+replab.+domain.QuaernionTypeMatrices`
 %
 % Args:
 %   rep (replab.Rep): Real representation being decomposed

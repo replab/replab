@@ -1,7 +1,7 @@
 classdef SourceElement < replab.infra.Element
 
     properties
-        package % `replab.infra.Package`: Package this element is part of
+        package % `+replab.+infra.Package`: Package this element is part of
         sourceIdentifier % charstring: Name of the ``.m`` file without extension
         startLineNumber % integer: Line number at which this object starts in the source file
         doc % `.Doc`: Documentation comment

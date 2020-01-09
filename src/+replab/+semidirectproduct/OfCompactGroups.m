@@ -1,7 +1,7 @@
 classdef OfCompactGroups < replab.CompactGroup
 % Describes an external semidirect product of compact groups
 %
-% See `replab.CompactGroup.semidirectProduct`
+% See `+replab.CompactGroup.semidirectProduct`
     
     properties (SetAccess = protected)
         H % replab.CompactGroup: Group acting

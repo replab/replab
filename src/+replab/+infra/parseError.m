@@ -2,7 +2,7 @@ function parseError(ct, pos, message, varargin)
 % Displays context information on the standard output and raises a parse error
 %
 % Args:
-%   ct (`replab.infra.CodeTokens` or `replab.infra.SourceElement`): Context
+%   ct (`+replab.+infra.CodeTokens` or `+replab.+infra.SourceElement`): Context
 %   pos (integer): Line number
 %   message (charstring): Error message
 %   varargin: Extra arguments for string formatting

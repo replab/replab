@@ -10,7 +10,7 @@ classdef TensorRep < replab.Rep
         function self = TensorRep(group, factorReps, varargin)
         % Constructs a representation of a direct product
         %
-        % See `replab.directproduct.OfCompactGroups.tensorRep`
+        % See `+replab.+directproduct.OfCompactGroups.tensorRep`
             
             assert(isa(group, 'replab.directproduct.OfCompactGroups'));
             n = group.nFactors;

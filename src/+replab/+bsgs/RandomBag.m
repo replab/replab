@@ -8,11 +8,11 @@ classdef RandomBag < replab.Str
 % Straight-forward implementation of PRINITIALIZE and PRRANDOM of 
 % section 3.2.2, pp. 70-71 of Holt 2005 (Handbook of Computational Group Theory)
 %
-% This implementation differs from `replab.RandomBag` by specializing for
+% This implementation differs from `+replab.RandomBag` by specializing for
 % permutation groups, and keeping track of images of the generated
 % elements under some group homomorphism.
 %
-% When the group homomorphism support is not desired, the `replab.bsgs.TrivialGroup`
+% When the group homomorphism support is not desired, the `+replab.+bsgs.TrivialGroup`
 % trivial group can be used as a placeholder.
     
     properties (SetAccess = protected)

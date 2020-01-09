@@ -3,8 +3,8 @@ function res = templateHelp(templateName, el, docEl, helpCommand, strongIds, bla
 %
 % Args:
 %   template (charstring): Name of the template to use, without path elements and without extension
-%   el (`replab.infra.Element`): Element passed as the parameter ``el`` in the template context
-%   docEl (`replab.infra.Element` or ``[]``): Element containing a documentation comment block. Can differ
+%   el (`+replab.+infra.Element`): Element passed as the parameter ``el`` in the template context
+%   docEl (`+replab.+infra.Element` or ``[]``): Element containing a documentation comment block. Can differ
 %                                             from ``el`` for class methods/properties, when the documentation is
 %                                             inherited. Note that the rendered template references are expanded with
 %                                             respect to ``docEl``, not ``el``, when ``docEl`` is present; so care

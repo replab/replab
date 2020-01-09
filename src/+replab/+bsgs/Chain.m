@@ -32,7 +32,7 @@ classdef Chain < replab.Str
 % Transversal element inverses are stored as column vectors in a matrix, in a row cell array Uinv.
 %
 % This class also stores the images of a group homomorphism. When no homomorphism computation is required,
-% we use the trivial group `replab.bsgs.TrivialGroup` as a placeholder.
+% we use the trivial group `+replab.+bsgs.TrivialGroup` as a placeholder.
 %
 % For that, images of the strong generators are stored in J, and the images of transversal
 % elements are stored in row cell arrays (containing row cell arrays of group elements) V and Vinv, with
@@ -85,7 +85,7 @@ classdef Chain < replab.Str
         % Args:
         %   n: Domain size
         %   J (replab.Group, optional): Group structure for morphism images
-        %                               The default value is `replab.bsgs.TrivialGroup`
+        %                               The default value is `+replab.+bsgs.TrivialGroup`
         %
         % Returns:
         %   A constructed empty BSGS chain

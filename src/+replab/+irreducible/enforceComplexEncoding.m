@@ -1,7 +1,7 @@
 function W = enforceComplexEncoding(rep, samples, sub)
 % Finds change of basis that expresses the canonical basis of a complex division algebra
 %
-% See `replab.domain.ComplexTypeMatrices`
+% See `+replab.+domain.ComplexTypeMatrices`
 %
 % Args:
 %   rep (replab.Rep): Real representation being decomposed

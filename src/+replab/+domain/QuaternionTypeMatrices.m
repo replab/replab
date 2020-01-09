@@ -65,7 +65,7 @@ classdef QuaternionTypeMatrices < replab.domain.VectorSpace
         % Given a matrix encoding quaternion coefficient blocks, returns the quaternion elements
         %
         % Args:
-        %   M (double matrix): Matrix part of a `replab.domain.QuaternionTypeMatrices` domain
+        %   M (double matrix): Matrix part of a `+replab.+domain.QuaternionTypeMatrices` domain
         %
         % Returns
         % -------

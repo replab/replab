@@ -135,7 +135,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         % where ir = indexRange
         %
         % See also:
-        %   `replab.PermutationGroup.indexRelabelingPermutation`
+        %   `+replab.PermutationGroup.indexRelabelingPermutation`
         %
         % Args:
         %   indexRange (integer): Dimension of each subindex
@@ -156,7 +156,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         % The representation returned is real.
         %
         % See also:
-        %   `replab.PermutationGroup.indexRelabelingPermutation`
+        %   `+replab.PermutationGroup.indexRelabelingPermutation`
         %
         % Args:
         %   indexRange (integer): Dimension of the tensor components/range of the subindices

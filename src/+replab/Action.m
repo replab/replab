@@ -56,8 +56,8 @@ classdef Action < replab.Str
         % Constructs an action from a function handle
         %
         % Args:
-        %   G (`replab.Group`): Group acting
-        %   P (`replab.Domain`: Set acted upon
+        %   G (`+replab.Group`): Group acting
+        %   P (`+replab.Domain`: Set acted upon
         %   leftActionFun (function_handle): Handle implementing `leftAction`
         %
         % Returns:

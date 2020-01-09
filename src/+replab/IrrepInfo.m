@@ -9,7 +9,7 @@ classdef IrrepInfo < replab.Str
                         %                       If it is unknown, or the subrepresentation is complex, must be [].
         isDivisionAlgebraCanonical % logical or []: Whether the division algebra is known to be in the canonical form
                                    %
-                                   %                (as in `replab.domain.ComplexTypeMatrices` and
+                                   %                (as in `+replab.+domain.ComplexTypeMatrices` and
                                    %          `     replab.domain.QuaternionTypeMatrices`.)
     end
    

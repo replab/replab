@@ -1,7 +1,7 @@
 function sub = split(rep, samples, sub)
 % Decomposes the given representation into subrepresentations
 %
-% Note: see the default methods applied in `replab.dispatchDefaults`
+% Note: see the default methods applied in `+replab.dispatchDefaults`
 %
 % Args:
 %   rep (replab.Rep): Unitary representation to decompose

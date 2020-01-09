@@ -31,7 +31,7 @@ classdef IndexedFamily < replab.Str
         %
         % If the element is not part of the family, the behavior is undefined.
         % Best effort can be made to return `[]`, but this is not guaranteed unless
-        % documented by specific `replab.IndexedFamily` implementations
+        % documented by specific `+replab.IndexedFamily` implementations
         %
         % Args:
         %   obj: Element to retrieve
