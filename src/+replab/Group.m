@@ -56,8 +56,7 @@ classdef Group < replab.Monoid
 
     methods (Static)
 
-        function group = lambda(header, eqvFun, sampleFun, ...
-                                composeFun, identity, inverseFun)
+        function group = lambda(header, eqvFun, sampleFun, composeFun, identity, inverseFun)
         % Constructs a group from function handles
         %
         % Args:
