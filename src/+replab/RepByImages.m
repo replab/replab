@@ -3,7 +3,7 @@ classdef RepByImages < replab.Rep
 %
 % It works by representing the finite group as a permutation group (if it is not already a permutation group),
 % then using a BSGS construction that stores the stabilizer chain with transversal elements both encoding the
-% group transversals and their images (see `replab.bsgs.Chain`).
+% group transversals and their images (see `+replab.+bsgs.Chain`).
 %
 % If the finite group is not a permutation group, a "nice monomorphism" in the sense of GAP is used, see:
 % https://www.gap-system.org/Manuals/doc/ref/chap40.html#X7FFD731684606BC6)
@@ -25,10 +25,10 @@ classdef RepByImages < replab.Rep
         % Constructs a representation from images of group generators and their inverses
         %
         % Args:
-        %   group (instance of `replab.FiniteGroup`): Finite group represented
+        %   group (instance of `+replab.FiniteGroup`): Finite group represented
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
         %   isUnitary ({true, false, []}): Whether the representation is unitary
-        %   images (row cell array of double matrices): Images of the generators of `group` in the same order
+        %   images (row cell array of double matrices): Images of the generators of ``group`` in the same order
         %   inverseImages (row cell array of double matrices, optional): Inverse images of the generators
         %                                                                Optional if the representation is unitary
             assert(isa(group, 'replab.NiceFiniteGroup'));

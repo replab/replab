@@ -19,14 +19,14 @@ classdef CompactGroup < replab.Group
         % Returns the direct product of groups
         %
         % Args:
-        %   varargin: Variable number of arguments of type `replab.CompactGroup`
+        %   varargin: Variable number of arguments of type `+replab.CompactGroup`
         %
         % Returns:
         %   replab.CompactGroup: The direct product group
-        %                        If all groups are of type `replab.NiceFiniteGroup`, the return type
-        %                        is `replab.NiceFiniteGroup` as well.
-        %                        If all groups are of type `replab.FiniteGroup`, the return type
-        %                        is `replab.FiniteGroup` as well.
+        %                        If all groups are of type `+replab.NiceFiniteGroup`, the return type
+        %                        is `+replab.NiceFiniteGroup` as well.
+        %                        If all groups are of type `+replab.FiniteGroup`, the return type
+        %                        is `+replab.FiniteGroup` as well.
             prd = replab.directproduct.of(varargin);
         end
         
@@ -38,7 +38,7 @@ classdef CompactGroup < replab.Group
         %
         % Returns:
         %   replab.CompactGroup: The direct product self x ...(n times)... x self
-        %                        The return type is specialized as in `replab.CompactGroup.directProduct`.
+        %                        The return type is specialized as in `+replab.CompactGroup.directProduct`.
             factors = arrayfun(@(x) self, 1:n, 'uniform', 0);
             prd = replab.directproduct.of(factors);
         end
@@ -49,7 +49,7 @@ classdef CompactGroup < replab.Group
         % See the construction in https://en.wikipedia.org/wiki/Semidirect_product
         %
         %    
-        % Let ``H = self`` be a group, `N` a group.
+        % Let ``H = self`` be a group, ``N`` a group.
         %
         % The semidirect product is defined using a homomorphism 
         %
@@ -65,7 +65,7 @@ classdef CompactGroup < replab.Group
         % We write each semidirect group element {h n}.
         %
         % The type of the return value depends on the most refined type at the intersection
-        % of the type of `self` and `N`, with possible types CompactGroup/FiniteGroup/NiceFiniteGroup.
+        % of the type of ``self`` and ``N``, with possible types CompactGroup/FiniteGroup/NiceFiniteGroup.
         %
         % Args:
         %   N (replab.CompactGroup): Group acted upon

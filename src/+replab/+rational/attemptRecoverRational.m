@@ -7,9 +7,9 @@ function [num den] = attemptRecoverRational(M)
 % Returns
 % -------
 %   num: double vector or matrix
-%     Numerator of the approximation with the same shape as `M`
+%     Numerator of the approximation with the same shape as ``M``
 %   den: double scalar
-%     Denominator such that ``num/den`` approximates `M`
+%     Denominator such that ``num/den`` approximates ``M``
 
     tol = replab.Parameters.doubleEigTol; % magic epsilon to remove
     maxden = 1200; % maximum denominator

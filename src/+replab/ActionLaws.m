@@ -1,8 +1,8 @@
 classdef ActionLaws < replab.Laws
     properties (SetAccess = protected)
-        action % `replab.Action`: Action
-        G % `replab.Group`: Group acting
-        P % `replab.Domain`: Set acted upon
+        action % `+replab.Action`: Action
+        G % `+replab.Group`: Group acting
+        P % `+replab.Domain`: Set acted upon
     end
     methods
         function self = ActionLaws(action)

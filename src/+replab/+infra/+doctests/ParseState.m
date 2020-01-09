@@ -39,7 +39,7 @@ classdef ParseState < replab.Str
         function [nextParseState tag line comment lineNumber] = take(self)
         % Consumes a line from the input, and returns the updated parser state
         %
-        % `tag` and `line` correspond to the consumed line.
+        % ``tag`` and ``line`` correspond to the consumed line.
             tag = self.tags{self.pos};
             line = self.lines{self.pos};
             comment = self.comments{self.pos};
@@ -48,7 +48,7 @@ classdef ParseState < replab.Str
         end
 
         function [nextParseState line comment lineNumber] = expect(self, expectedTag)
-        % Equivalent to `take`, conditioned on the consumed tag to be ``expectedTag``
+        % Equivalent to ``take``, conditioned on the consumed tag to be ``expectedTag``
             [nextParseState tag line comment lineNumber] = self.take;
             if ~isequal(tag, expectedTag)
                 nextParseState = [];

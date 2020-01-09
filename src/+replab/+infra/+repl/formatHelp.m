@@ -3,7 +3,7 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
 %
 % Args:
 %   txt (charstring): String, possibly multiline (using ASCII 10 characters)
-%   context (`replab.infra.Element`): Element in the context of which the reference is interpreted
+%   context (`+replab.+infra.Element`): Element in the context of which the reference is interpreted
 %   helpCommand (charstring): Invocation of the help command, possibly including flags, without trailing space
 %                             Examples would be 'help -f' or 'help'
 %   strongIds (row cell vector of charstring): List of full identifiers to format with <strong> when supported)

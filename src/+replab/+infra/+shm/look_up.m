@@ -10,7 +10,7 @@ function el = look_up(s, path, ifEmpty)
 %   ifEmpty (optional): Value to return if empty
 %
 % Raises:
-%   An error if the path is not found and `ifempty` is not given
+%   An error if the path is not found and ``ifempty`` is not given
     id = replab.infra.shm.encode(path);
     if isfield(s, id)
         el = s.(id);

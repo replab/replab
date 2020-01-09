@@ -95,8 +95,8 @@ classdef SubRep < replab.Rep
         % performed recursively.
         %
         % Returns:
-        %   replab.SubRep: A subrepresentation with parent equal to `self.parent.parent`, which
-        %                  has in fine the same basis as `self`
+        %   replab.SubRep: A subrepresentation with parent equal to ``self.parent.parent``, which
+        %                  has in fine the same basis as ``self``
             assert(isa(self.parent, 'replab.SubRep'));
             newU = self.U * self.parent.U;
             if ~isempty(self.niceBasis) && ~isempty(self.parent.niceBasis)

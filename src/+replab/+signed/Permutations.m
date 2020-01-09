@@ -129,7 +129,7 @@ classdef Permutations < replab.signed.PermutationGroup
         function signedPerm = fromPermutation(perm)
         % Returns the signed permutation corresponding to the given permutation encoding
         %
-        % See `.SignedPermutations.toPermutation`
+        % See `toPermutation`
             n2 = length(perm);
             if mod(n2, 2) ~= 0
                 error('Not an image of a signed permutation');

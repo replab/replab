@@ -2,7 +2,7 @@ function dts = testsInElement(el)
 % Extracts all tests in a source element
 %
 % Args:
-%   el (`replab.infra.SourceElement`): Source element to extract tests from
+%   el (`+replab.+infra.SourceElement`): Source element to extract tests from
 %
 % Returns:
 %   row cell array of `.DocTest`: Extracted doctests

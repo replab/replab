@@ -1,17 +1,17 @@
 function varargout = dispatch(cmd, name, varargin)
 % Supports multiple and flexible dispatch through a registry of functions
 %
-% For the ``register`` command, the next four arguments are ``name``, ``description``,
+% For the 'register' command, the next four arguments are 'name', ``description``,
 % ``priority`` and ``handle`` in that order. The argument ``name`` corresponds to the
 % name of the function implementing multiple dispatch; ``description`` is a short
-% description of the particular implementation of that function, while
+% description of the particular implementation of that funciton, while
 % ``priority`` is an integer with bigger numbers take higher priority, and
 % finally ``handle`` is a function handle implementing the function.
 %
 % For the ``get`` command, no additional arguments are required and the whole
 % dispatch registry is returned.
 %
-% For the ``call`` command, the ``name`` argument is the function being dispatched,
+% For the 'call' command, the ``name`` argument is the function being dispatched,
 % followed by that function arguments.
 %
 % Args:

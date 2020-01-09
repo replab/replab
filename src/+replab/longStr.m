@@ -8,9 +8,9 @@ function lines = longStr(obj, maxRows, maxColumns)
 % Args:
 %   obj: Object to pretty print
 %   maxRows (integer or ``[]``): Maximum row size
-%                                Optional parameter with default value given in `replab.settings.strMaxRows`
+%                                Optional parameter with default value given in `+replab.+settings.strMaxRows`
 %   maxColumns (integer or ``[]``): Maximum column size
-%                                   Optional parameter with default value given in `replab.settings.strMaxColumns`
+%                                   Optional parameter with default value given in `+replab.+settings.strMaxColumns`
     if nargin < 3 || isempty(maxColumns)
         maxColumns = replab.settings.strMaxColumns;
     end

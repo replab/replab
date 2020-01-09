@@ -3,17 +3,17 @@ function sub = splitUsingCommutant(rep, samples, sub)
 %
 % ``sub = replab.irreducible.splitUsingCommutant(rep, samples, sub)``
 %
-% Decomposes a possibly non-irreducible subrepresentation of `rep` into irreducible subrepresentations.
+% Decomposes a possibly non-irreducible subrepresentation of ``rep`` into irreducible subrepresentations.
 % Does not group the irreducible subrepresentations into isotypic components, but identifies every instance of
 % the trivial representation by setting ``label`` to ``'1'`` in the subrepresentation `+replab.IrrepInfo`.
 %
 % Args:
 %   rep (`+replab.Rep`): Parent representation to decompose
 %   samples (`+replab.+irreducible.OnDemandSamples`): Samples from the parent representation
-%   sub (`+replab.SubRep`): Subrepresentation of `rep` to decompose
+%   sub (`+replab.SubRep`): Subrepresentation of ``rep`` to decompose
 %
 % Returns:
-%   row cell array of `+replab.SubRep`: Irreducible subrepresentations inside `sub` as subrepresentations of `rep`
+%   row cell array of `+replab.SubRep`: Irreducible subrepresentations inside ``sub`` as subrepresentations of ``rep``
 %
 % Notes:
 %   We first extract the trivial component, as the irreducible construction depends on having

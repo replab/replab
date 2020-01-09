@@ -32,7 +32,7 @@ classdef Chain < replab.Str
 % Transversal element inverses are stored as column vectors in a matrix, in a row cell array Uinv.
 %
 % This class also stores the images of a group homomorphism. When no homomorphism computation is required,
-% we use the trivial group `replab.bsgs.TrivialGroup` as a placeholder.
+% we use the trivial group `+replab.+bsgs.TrivialGroup` as a placeholder.
 %
 % For that, images of the strong generators are stored in J, and the images of transversal
 % elements are stored in row cell arrays (containing row cell arrays of group elements) V and Vinv, with
@@ -85,7 +85,7 @@ classdef Chain < replab.Str
         % Args:
         %   n: Domain size
         %   J (replab.Group, optional): Group structure for morphism images
-        %                               The default value is `replab.bsgs.TrivialGroup`
+        %                               The default value is `+replab.+bsgs.TrivialGroup`
         %
         % Returns:
         %   A constructed empty BSGS chain
@@ -204,8 +204,8 @@ classdef Chain < replab.Str
         % -------
         %  g: permutation
         %    Random group element
-        %  v: element of `self.J`
-        %    Image of `g`
+        %  v: element of `J`
+        %    Image of ``g``
             g = 1:self.n;
             v = self.J.identity;
             for i = 1:self.length
@@ -238,7 +238,7 @@ classdef Chain < replab.Str
         %  i (integer): Strong generator index
         %
         % Returns:
-        %   A group element of `self.J`
+        %   A group element of `J`
         end
         
         function u = randomTransversal(self, i)
@@ -264,8 +264,8 @@ classdef Chain < replab.Str
         % -------
         %  u: permutation
         %    Random transversal element
-        %  v: element of `self.J`
-        %    Image of `g`
+        %  v: element of `J`
+        %    Image of ``g``
             j = randi(length(self.Delta{i}));
             Ui = self.U{i};
             u = Ui(:,j)';
@@ -281,7 +281,7 @@ classdef Chain < replab.Str
         %   b (integer): Orbit element to lookup
         %
         % Returns:
-        %   integer: When `b` is part of the i-th orbit, returns an integer `j` such that ``self.Delta{i}(j) = b``,
+        %   integer: When ``b`` is part of the i-th orbit, returns an integer ``j`` such that ``self.Delta{i}(j) = b``,
         %            otherwise returns 0.
         %   if 
             [~, j] = ismember(b, self.Delta{i});
@@ -335,7 +335,7 @@ classdef Chain < replab.Str
         %   The corresponding transversal element image if it exists
         %
         % Raises:
-        %   An error if `b` is not part of the orbit Delta^i
+        %   An error if ``b`` is not part of the orbit Delta^i
             [~, j] = ismember(b, self.Delta{i});
             assert(j ~= 0, 'Element not part of orbit');
             Vi = self.V{i};
@@ -353,7 +353,7 @@ classdef Chain < replab.Str
         %   The corresponding image of the inverse transversal element
         %
         % Raises:
-        %   An error if `b` is not part of the orbit Delta^i
+        %   An error if ``b`` is not part of the orbit Delta^i
             [~, j] = ismember(b, self.Delta{i});
             assert(j ~= 0, 'Element not part of orbit');
             Vinvi = self.Vinv{i};
@@ -367,7 +367,7 @@ classdef Chain < replab.Str
         %   g (permutation row vector): Permutation part of this chain
         %
         % Returns:
-        %   The image of the given element `g`
+        %   The image of the given element ``g``
         %
         % Raises:
         %   An error if the element is not part of the chain
@@ -398,7 +398,7 @@ classdef Chain < replab.Str
         %   g (permutation row vector): Permutation part of this chain
         %
         % Returns:
-        %   The inverse image of the given element `g`
+        %   The inverse image of the given element ``g``
         %
         % Raises:
         %   An error if the element is not part of the chain
@@ -447,7 +447,7 @@ classdef Chain < replab.Str
         %     The part of the group element that could not be sifted
         %   i: integer
         %     Index i-th such that h(beta_i) was not part of the orbit Delta^i
-        %   w: element of `self.J`, optional
+        %   w: element of `J`, optional
         %     The part of the image that could not be sifted
             k = self.length;
             h = g;
@@ -475,7 +475,7 @@ classdef Chain < replab.Str
         %   index (vpi): Group element index
         %
         % Returns:
-        %   element of `self.J`: Image
+        %   element of `J`: Image
             v = self.imageFromIndices(self.indicesFromIndex(index));
         end
         
@@ -504,7 +504,7 @@ classdef Chain < replab.Str
         function g = elementFromIndices(self, indices)
         % Computes the group element from transversal indices
         %
-        % See `self.toIndices`
+        % See ``self.toIndices``
         %
         % Args:
         %   indices (row integer vector): Transversal indices
@@ -526,7 +526,7 @@ classdef Chain < replab.Str
         %   indices (row integer vector): Transversal indices
         %
         % Returns:
-        %   element of `self.J`: Image for the given indices
+        %   element of `J`: Image for the given indices
             v = self.J.identity;
             for i = 1:self.length
                 Vi = self.V{i};
@@ -607,7 +607,7 @@ classdef Chain < replab.Str
         %
         % Args:
         %   g (row permutation vector): A permutation group element
-        %   v (element of `self.J`): The image of `g` under the encoded homomorphism
+        %   v (element of `J`): The image of ``g`` under the encoded homomorphism
         %
         % Returns
         % -------
@@ -615,7 +615,7 @@ classdef Chain < replab.Str
         %     The part of the group element that could not be sifted
         %   i: integer
         %     Index i-th such that h(beta_i) was not part of the orbit Delta^i
-        %   w: element of `self.J`
+        %   w: element of `J`
         %     The part of the image that could not be sifted
             k = self.length;
             h = g;
@@ -645,7 +645,7 @@ classdef Chain < replab.Str
         %
         % Args:
         %   newJ: New image parent group
-        %   f: Group homomorphism from the current `self.J` to `newJ`
+        %   f: Group homomorphism from the current `J` to ``newJ``
             k = self.length;
             self.T = cellfun(f, self.T, 'uniform', 0);
             for i = 1:k
@@ -711,7 +711,7 @@ classdef Chain < replab.Str
             newuinv(newu) = 1:n; % newuinv = inverse(newu)
             newv = self.J.compose(self.T{iS}, self.v(i, b));
             newvinv = self.J.inverse(newv);
-            % Look for the position `pos` where to insert the new orbit point
+            % Look for the position ``pos`` where to insert the new orbit point
             while pos <= length(D) && self.bo(D(pos)) < self.bo(newb)
                 pos = pos + 1;
             end
@@ -797,9 +797,9 @@ classdef Chain < replab.Str
         % Adds a strong generator at a particular place in the BSGS chain
         %
         % Args:
-        %   i (integer): Smallest i such that the strong generator `newS` is part of S^(i)
+        %   i (integer): Smallest i such that the strong generator ``newS`` is part of S^(i)
         %   newS (row permutation vector): New strong generator
-        %   newT (element of `self.J`): Image of the new strong generator 
+        %   newT (element of `J`): Image of the new strong generator 
             I = self.Sind;
             self.S = [self.S(:, 1:(I(i+1)-1)) newS' self.S(:, I(i+1):end)];
             self.Sind((i+1):end) = self.Sind((i+1):end) + 1;
@@ -820,7 +820,7 @@ classdef Chain < replab.Str
         %
         % Args:
         %   g (row permutation vector): Element to strip
-        %   v (element of `self.J`, optional): Image of the element
+        %   v (element of `J`, optional): Image of the element
         %
         % Returns:
         %   true if a new strong generator has been found

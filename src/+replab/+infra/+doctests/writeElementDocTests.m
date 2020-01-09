@@ -4,7 +4,7 @@ function writeElementDocTests(doctestPath, el)
 % Args:
 %   doctestPath (charstring): Base folder for doctest generation, not including trailing path separator
 %                             That folder must exist.
-%   el (`replab.infra.SourceElement`): Element to inspect for doctests
+%   el (`+replab.+infra.SourceElement`): Element to inspect for doctests
     s = replab.infra.doctests.namedTestsInElement(el);
     if isempty(fieldnames(s))
         return

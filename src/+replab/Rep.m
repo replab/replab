@@ -67,7 +67,7 @@ classdef Rep < replab.Str
         %   rho: double matrix
         %     Image of the random group element
         %   rhoInverse: double matrix
-        %     Inverse of image `rho`
+        %     Inverse of image ``rho``
             g = self.group.sample;
             rho = self.image(g);
             if nargout > 1
@@ -184,7 +184,7 @@ classdef Rep < replab.Str
         % self.matrixRowAction(self.group.compose(g, h), M)
         %
         % Args:
-        %   g (`self.group` element): Group element acting
+        %   g (`group` element): Group element acting
         %   M (double matrix): Matrix acted upon
         %
         % Returns:
@@ -204,7 +204,7 @@ classdef Rep < replab.Str
         % self.matrixColAction(self.group.compose(g, h), M)
 
         % Args:
-        %   g (`self.group` element): Group element acting
+        %   g (`group` element): Group element acting
         %   M (double matrix): Matrix acted upon
         %
         % Returns:
@@ -263,14 +263,14 @@ classdef Rep < replab.Str
         function rep = blkdiag(varargin)
         % Direct sum of representations
         %
-        % See `replab.Rep.directSum`
+        % See `+replab.Rep.directSum`
             rep = replab.Rep.directSum(varargin);
         end
 
         function rep = kron(varargin)
         % Tensor product of representations
         %
-        % See `replab.Rep.tensor`
+        % See `+replab.Rep.tensor`
             rep = replab.Rep.tensor(varargin);
         end
 
@@ -303,7 +303,7 @@ classdef Rep < replab.Str
         function [A Ainv] = unitaryChangeOfBasis(self)
         % Returns the change of basis to a unitary representation
         %
-        % Returns `A` and `Ainv` so that ``A * self.image(g) * Ainv`` is unitary.
+        % Returns ``A`` and ``Ainv`` so that ``A * self.image(g) * Ainv`` is unitary.
         %
         % Returns
         % -------
@@ -381,9 +381,9 @@ classdef Rep < replab.Str
         % Returns a unitary subrepresentation of this unitary representation
         %
         % The unitary change of basis matrix `U` is derived by row transformations
-        % of the integer matrix `V`, such that both have the same row span.
+        % of the integer matrix ``V``, such that both have the same row span.
         %
-        % However, `V` is also used to provide a nice basis representation for display.
+        % However, ``V`` is also used to provide a nice basis representation for display.
         %
         % Args:
         %   V (integer matrix, can be sparse): Integer basis vectors stored as row vectors

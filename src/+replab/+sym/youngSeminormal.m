@@ -9,7 +9,7 @@ function rep = youngSeminormal(partition)
 %   partition (double): A Young diagram described by a row vector of row lengths
 %
 % Returns:
-%   A `replab.nu.Rep` nonunitary irreducible representation
+%   A `+replab.+nu.Rep` nonunitary irreducible representation
     n = sum(partition);
     Sn = replab.Permutations(n);
     [~, ~, NA, NB, ~, ~] = replab.sym.symIrrepImages(partition);

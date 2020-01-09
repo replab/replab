@@ -9,7 +9,7 @@ function rep = youngOrthogonal(partition)
 %   partition (double): A Young diagram described by a row vector of row lengths
 %
 % Returns:
-%   A `replab.Rep` orthonormal irreducible representation
+%   A `+replab.Rep` orthonormal irreducible representation
     n = sum(partition);
     Sn = replab.Permutations(n);
     [~, ~, ~, ~, OA, OB] = replab.sym.symIrrepImages(partition);

@@ -4,7 +4,7 @@ function s = namedTestsInElement(sel)
 % When called on a class, it includes the tests of the class members.
 %
 % Args:
-%   sel (`replab.infra.SourceElement`): Source element to extract tests from
+%   sel (`+replab.+infra.SourceElement`): Source element to extract tests from
 %
 % Returns:
 %   struct: A structure whose field names are the test names, and values

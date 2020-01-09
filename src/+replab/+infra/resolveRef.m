@@ -4,17 +4,17 @@ function [el linkText] = resolveRef(ref, context, isExternal)
 % We accept two possible prefixes.
 %
 % The ``~`` prefix signifies that the link text is composed of the last element, for example
-% ``~replab.Group.compose`` has link text ``compose`.
+% ``~replab.Group.compose`` has link text ``compose``.
 %
 % The ``.`` prefix signifies that we look up names first from the most precise scope then go
 % to the general scope (thus from 4. to 1. below).
 %
 % If the ``.`` prefix is not present, we look in the order 1. to 4.
 %
-% We search for the leading identifier in `ref` in the following scopes, from most general to most precise:
+% We search for the leading identifier in ``ref`` in the following scopes, from most general to most precise:
 %
-% 1. External objects: Objects outside the current `CodeBase`, for example in the Matlab global scope.
-%    Those objects are looked up for using the `isExternal` function handle.
+% 1. External objects: Objects outside the current ``CodeBase``, for example in the Matlab global scope.
+%    Those objects are looked up for using the ``isExternal`` function handle.
 %
 % 2. Package names: the reference should start with a first-level package such as ``+replab``.
 %    We do not interpret second-level package names such as ``+lobster`` (for ``+replab.+lobster``).
@@ -25,7 +25,7 @@ function [el linkText] = resolveRef(ref, context, isExternal)
 % 4. Method/property names in the current class (when applicable)
 %
 % When the leading identifier is of the first kind (1.), we do not resolve further, and simply return
-% the charstring `ref` as the return value `el`.
+% the charstring ``ref`` as the return value ``el``.
 %
 % Otherwise, we return the corresponding `.SourceElement`.
 %

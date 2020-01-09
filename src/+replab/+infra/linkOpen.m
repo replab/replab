@@ -3,9 +3,9 @@ function str = linkOpen(linkText, altText, filename, lineNumber)
 %
 % Args:
 %   linkText (charstring): Link text
-%                         In there, ``%s`` is replaced by `filename` and ``%d`` by `lineNumber`
+%                         In there, ``%s`` is replaced by ``filename`` and ``%d`` by ``lineNumber``
 %   altText (charstring): Alternative text if the console output does not support HTML
-%                         In there, ``%s`` is replaced by `filename` and ``%d`` by `lineNumber`
+%                         In there, ``%s`` is replaced by ``filename`` and ``%d`` by ``lineNumber``
 %   filename (charstring): Full path of the filename to open
 %   lineNumber (integer, optional): Line number to open the file at
     if nargin < 3

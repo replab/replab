@@ -4,7 +4,7 @@ function s = merge2(s1, s2, mergeFun)
 % Args:
 %   s1 (struct): First struct to merge
 %   s2 (struct): Second struct to merge
-%   mergeFun (function_handle): Function handle @(x1, x2) that merges elements present in both `s1` and `s2`
+%   mergeFun (function_handle): Function handle @(x1, x2) that merges elements present in both ``s1`` and ``s2``
     s = s1;
     f = fieldnames(s2);
     for i = 1:length(f)

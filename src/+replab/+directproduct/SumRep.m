@@ -10,7 +10,7 @@ classdef SumRep < replab.Rep
         function self = SumRep(group, factorReps)
         % Constructs a representation of a direct product
         %
-        % See `replab.directproduct.OfCompactGroups.directSumRep`
+        % See `+replab.+directproduct.OfCompactGroups.directSumRep`
             assert(isa(group, 'replab.directproduct.OfCompactGroups'));
             n = group.nFactors;
             assert(n >= 1, 'Direct sum cannot be empty');

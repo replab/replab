@@ -5,7 +5,7 @@ function E = makeEquivariant(repR, repC)
 %
 % self.image(g) * X = X * repC.image(g)
 %
-% Note: default implementations are registered in `replab.dispatchDefaults`
+% Note: default implementations are registered in `+replab.dispatchDefaults`
 %
 % Args:
 %   repR (replab.Rep): Representation on the target/row space

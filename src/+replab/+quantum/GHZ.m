@@ -32,14 +32,14 @@ classdef GHZ < replab.semidirectproduct.OfCompactGroups
         % d = self.nLevels and n = self.nParties.
         %
         % For the action of the phase part (connected group part), 
-        % see `replab.quantum.GHZBase.toMatrix`. This action is complemented
+        % see `+replab.+quantum.GHZBase.toMatrix`. This action is complemented
         % by the permutation of parties, and the correlated permutation of subsystem levels.
         %
         % Args:
         %   g (element): Group element
         %
         % Returns:
-        %   double matrix: Unitary matrix representing `g`
+        %   double matrix: Unitary matrix representing ``g``
             h = g{1};
             h1 = h{1};
             h2 = h{2};

@@ -4,7 +4,7 @@ function writeEnrichedSource(docSrcPath, el)
 % Args:
 %   docSrcPath (charstring): Base folder for doctest generation, not including trailing path separator
 %                            That folder must exist.
-%   el (`replab.infra.SourceElement`): Either a function or a class
+%   el (`+replab.+infra.SourceElement`): Either a function or a class
     src = fileread(el.absoluteFilename);
     if isa(el, 'replab.infra.Class')
         lines = strsplit(src, '\n', 'CollapseDelimiters', false);

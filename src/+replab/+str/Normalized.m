@@ -1,7 +1,7 @@
 classdef Normalized < replab.Str
 % Represents a vector along with a normalization factor for pretty printing
 %
-% The vector value is ``vec * factor``, except that `factor` is already represented by a string
+% The vector value is ``vec * factor``, except that ``factor`` is already represented by a string
 % to be concatenated with the vector string representation
     
     properties (SetAccess = protected)

@@ -26,7 +26,7 @@ classdef Common < handle
         %                                    A is a permutation group
         %
         % Returns:
-        %   permutation: The permutation corresponding to the imprimitive action of `w`
+        %   permutation: The permutation corresponding to the imprimitive action of ``w``
             if nargin < 3 || isempty(phiA)
                 assert(isa(self.A, 'replab.PermutationGroup'));
                 phiA = @(x) x;
@@ -61,7 +61,7 @@ classdef Common < handle
         %                                    A is a permutation group
         %
         % Returns:
-        %   permutation: The permutation corresponding to the primitive action of `w`
+        %   permutation: The permutation corresponding to the primitive action of ``w``
             if nargin < 3 || isempty(phiA)
                 assert(isa(self.A, 'replab.PermutationGroup'));
                 phiA = @(x) x;
@@ -89,12 +89,12 @@ classdef Common < handle
         function rep = imprimitiveRep(self, Arep)
         % Returns an imprimitive representation of this wreath product
         %
-        % It acts on a space of dimension `self.n * Arep.dimension`, which
-        % is a direct sum of copies of `Arep`. The permutation group acts
+        % It acts on a space of dimension ``self.n * Arep.dimension``, which
+        % is a direct sum of copies of ``Arep``. The permutation group acts
         % by permuting the blocks.
         %
         % Args:
-        %   Arep (replab.Rep): A representation of `self.A`
+        %   Arep (replab.Rep): A representation of `A`
         %
         % Returns:
         %   replab.Rep: The corresponding imprimitive representation
@@ -107,8 +107,8 @@ classdef Common < handle
         % See `imprimitiveRep`
         %
         % Args:
-        %   fun (function_handle): A function that returns a representation of `self.A`
-        %                          when called on `self.A` as in `Arep = fun(self.A)`
+        %   fun (function_handle): A function that returns a representation of `A`
+        %                          when called on `A` as in ``Arep = fun(self.A)``
         %
         % Returns:
         %   replab.Rep: The corresponding imprimitive representation
@@ -118,12 +118,12 @@ classdef Common < handle
         function rep = primitiveRep(self, Arep)
         % Returns a primitive representation of this wreath product
         %
-        % It acts on a space of dimension `Arep.dimension^self.n`, which
-        % is a tensor product of copies of `Arep`. The permutation group acts
+        % It acts on a space of dimension ``Arep.dimension^self.n``, which
+        % is a tensor product of copies of ``Arep``. The permutation group acts
         % by permuting tensor indices.
         %
         % Args:
-        %   Arep (replab.Rep): A representation of `self.A`
+        %   Arep (replab.Rep): A representation of `A`
         %
         % Returns:
         %   replab.Rep: The corresponding primitive representation
@@ -136,8 +136,8 @@ classdef Common < handle
         % See `primitiveRep`
         %
         % Args:
-        %   fun (function_handle): A function that returns a representation of `self.A`
-        %                          when called on `self.A` as in `Arep = fun(self.A)`
+        %   fun (function_handle): A function that returns a representation of `A`
+        %                          when called on `A` as in ``Arep = fun(self.A)``
         %
         % Returns:
         %   replab.Rep: The corresponding primitive representation

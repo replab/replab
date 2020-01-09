@@ -7,7 +7,7 @@ classdef PropertyData < replab.Str
         docLines % row cell array of charstring: Documentation comment lines stripped of leading whitespace and leading ``%``
         docLineNumbers % row integer vector: Line numbers of the documentation comment
                        %
-                       %                     Overlaps with `declarationLineNumber`
+                       %                     Overlaps with ``declarationLineNumber``
         attributes % struct: Attributes from the ``properties`` block
     end
     

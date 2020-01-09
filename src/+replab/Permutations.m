@@ -235,7 +235,7 @@ classdef Permutations < replab.PermutationGroup
         %   perm (permutation row vector): Permutation
         %
         % Returns:
-        %   The sparse permutation matrix corresponding to `perm`.
+        %   The sparse permutation matrix corresponding to ``perm``.
             n = length(perm);
             mat = sparse(perm, 1:n, ones(1, n), n, n);
         end
@@ -251,23 +251,23 @@ classdef Permutations < replab.PermutationGroup
         %   perm (permutation row vector): Permutation
         %
         % Returns:
-        %   The permutation matrix corresponding to `perm`.
+        %   The permutation matrix corresponding to ``perm``.
             mat = full(replab.Permutations.toSparseMatrix(perm));
         end
         
         function perm = fromMatrix(mat)
         % Returns the signed permutation corresponding to the given matrix representation
         %
-        % See `replab.Permutations.toMatrix`
+        % See `+replab.Permutations.toMatrix`
         %
         % Args:
         %   mat: A permutation matrix.
         %
         % Returns:
-        %   The permutation corresponding to matrix `mat`.
+        %   The permutation corresponding to matrix ``mat``.
         %
         % Raises:
-        %   Error: if `mat` is not a permutation matrix, throws an error
+        %   Error: if ``mat`` is not a permutation matrix, throws an error
             if isequal(size(mat), [0 0])
                 perm = zeros(1, 0);
                 return

@@ -133,7 +133,7 @@ classdef DocTest < replab.Str
         % Parses a doctest, containing multiple command/output pairs
         %
         % Args:
-        %   ps (`replab.infra.doctests.ParseState`): Current parse state
+        %   ps (`+replab.+infra.+doctests.ParseState`): Current parse state
         %   errFun (function_handle, optional): Error context display function, see `.parseTests`
         %                                       Called as ``errFun(lineNumber)``
         %

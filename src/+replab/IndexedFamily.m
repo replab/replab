@@ -2,7 +2,7 @@ classdef IndexedFamily < replab.Str
 % Describes an indexed family of elements
 %
 % See https://en.wikipedia.org/wiki/Indexed_family , and our indices are
-% (bounded) integers, represented by `vpi` instances.
+% (bounded) integers, represented by ``vpi`` instances.
 %
 % The family supports element indexing and searching for elements.
 
@@ -15,11 +15,11 @@ classdef IndexedFamily < replab.Str
         function obj = at(self, ind)
         % Retrieves a element by position
         %
-        % Normally, RepLAB encodes big integers using the `vpi` type. As a user convenience
+        % Normally, RepLAB encodes big integers using the ``vpi`` type. As a user convenience
         % (esp. on the command line), this method must also accept string and double arguments.
         %
         % Args:
-        %   ind (vpi or double or string): Index of element to be retrieved, 1 <= `ind` <= `self.size`
+        %   ind (vpi or double or string): Index of element to be retrieved, 1 <= ``ind`` <= ``self.size``
         %
         % Returns:
         %   The element at the "ind" position
@@ -30,8 +30,8 @@ classdef IndexedFamily < replab.Str
         % Returns the index of a given element
         %
         % If the element is not part of the family, the behavior is undefined.
-        % Best effort can be made to return `[]`, but this is not guaranteed unless
-        % documented by specific `replab.IndexedFamily` implementations
+        % Best effort can be made to return ``[]``, but this is not guaranteed unless
+        % documented by specific `+replab.IndexedFamily` implementations
         %
         % Args:
         %   obj: Element to retrieve
@@ -98,7 +98,7 @@ classdef IndexedFamily < replab.Str
         % Returns a row cell array containing all elements of this family
         %
         % Returns:
-        %   row cell array of elements: A cell array `C` such that C{i} = self.at(i)
+        %   row cell array of elements: A cell array ``C`` such that C{i} = self.at(i)
         %
         % Raises:
         %   An error if the enumerator is too big and the elements cannot fit in a cell array.
@@ -124,11 +124,11 @@ classdef IndexedFamily < replab.Str
         % Constructs an indexed family from function handles
         %
         % Args:
-        %   size (vpi): Size of the indexed family, so that the index set is 1..`size`
-        %   atFun (function_handle): Handle that implements the `at` method
+        %   size (vpi): Size of the indexed family, so that the index set is 1..``size``
+        %   atFun (function_handle): Handle that implements the ``at`` method
         %                            To simplify implementation, it is guaranteed
-        %                            that `atFun` will receive an argument of type `vpi`.
-        %   findFun (function_handle): Handle that implements the `find` method
+        %                            that ``atFun`` will receive an argument of type `vpi`.
+        %   findFun (function_handle): Handle that implements the ``find`` method
         %
         % Returns:
         %   replab.IndexedFamily: The constructed indexed family

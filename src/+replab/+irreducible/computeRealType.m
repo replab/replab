@@ -3,8 +3,8 @@ function t = computeRealType(rep, samples, sub)
 %
 % Args:
 %   rep (replab.Rep): Real representation being decomposed
-%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples for `rep`
-%   sub (replab.SubRep): An irreducible subrepresentation of `rep`
+%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples for ``rep``
+%   sub (replab.SubRep): An irreducible subrepresentation of ``rep``
 %
 % Returns:
 %   {'R', 'C', 'H'}: Type of the division algebra over the reals

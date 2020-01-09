@@ -42,7 +42,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         function G = permutationPart(self)
         % Returns the permutation part of the current group
         %
-        % Corresponds to the group image under the homomorphism `elementPermutationPart`.
+        % Corresponds to the group image under the homomorphism `.elementPermutationPart`.
         %
         % Returns:
         %   replab.PermutationGroup: The corresponding permutation group
@@ -65,7 +65,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %   g (signed permutation): Signed permutation
         %
         % Returns:
-        %   permutation: The permutation part of `g`
+        %   permutation: The permutation part of ``g``
             p = abs(g);
         end
         

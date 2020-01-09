@@ -4,7 +4,7 @@ function value = systemHelpPath(newValue)
 % If called without argument, returns the stored value.
 %
 % The call with one argument changes the stored value; it should only be called
-% as part of `replab_init`.
+% as part of ``replab_init``.
 %
 % The stored value survives ``clear all`` as this function is locked.
 %
