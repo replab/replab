@@ -105,12 +105,15 @@ function [el linkText] = resolveRef(ref, context, isExternal)
                 break
             end
           case 4 % lookup in current class if the context is a class
-            if isa(context, 'replab.infra.Class')
+            e = [];
+            if isa(context, 'replab.infra.ClassElement')
+                e = context.parent.lookup(head);
+            elseif isa(context, 'replab.infra.Class')
                 e = context.lookup(head);
-                if ~isempty(e)
-                    headElement = e;
-                    break
-                end
+            end
+            if ~isempty(e)
+                headElement = e;
+                break
             end
         end
     end
