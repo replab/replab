@@ -5,9 +5,9 @@ classdef Equivariant < replab.Domain
 %
 % This describes the set of matrices X such that repR.image(g) * X = X * repC.image(g)
 %
-% See Proposition 4 of 
+% See Proposition 4 of
 % J.-P. Serre, Linear Representations of Finite Groups (Springer, 1977).
-    
+
     properties (SetAccess = protected)
         field % {'R', 'C'}: field of the vector space real (R) or complex x(C)
         nR % integer: row size
@@ -16,16 +16,16 @@ classdef Equivariant < replab.Domain
         repR % replab.Rep: representation of row space
         repC % replab.Rep: representation of column space
     end
-    
+
     properties (Access = protected)
         parent % parent domain, real or complex matrices
     end
-    
+
     methods
 
-        
+
         %% Abstract
-        
+
         function b = isEquivariant(self, X)
         % Returns whether the matrix X represents an equivariant linear map
         %
@@ -36,7 +36,7 @@ classdef Equivariant < replab.Domain
         %   logical: Whether the given linear map is equivariant
             b = self.parent.eqv(X, self.project(X));
         end
-        
+
         function X1 = project(self, X)
         % Projects any nR x nC matrix in the equivariant subspace
         %
@@ -47,7 +47,7 @@ classdef Equivariant < replab.Domain
         end
 
         function self = Equivariant(repR, repC)
-        % Constructor; use `replab.makeEquivariant(repR, repC)` in user code
+        % Constructor; use `replab.makeEquivariant` in user code
         %
         % It can eventually select an optimized implementation depending on the use case.
             self.repR = repR;
@@ -64,23 +64,23 @@ classdef Equivariant < replab.Domain
         end
 
         %% Str methods
-        
+
         function s = headerStr(self)
             s = sprintf('%d x %d %s equivariant matrices', ...
                         self.nR, self.nC, ...
                         replab.str.field(self.field));
         end
-        
+
         %% Domain methods
-        
+
         function b = eqv(self, X, Y)
             b = self.parent.eqv(X, Y);
         end
-        
+
         function X = sample(self)
             X = self.project(self.parent.sample);
         end
-        
+
     end
-    
+
 end

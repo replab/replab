@@ -4,9 +4,9 @@ classdef ForRepByImages < replab.Equivariant
         decompositionR % transversal images for repR
         decompositionC % transversal inverse images for repC
     end
-    
+
     methods (Access = protected)
-       
+
         function computeImages(self)
             self.decompositionR = self.repR.chain.V;
             if self.repR == self.repC
@@ -27,9 +27,9 @@ classdef ForRepByImages < replab.Equivariant
                 self.decompositionC = decC;
             end
         end
-        
+
     end
-    
+
     methods
 
         function self = ForRepByImages(repR, repC)
@@ -41,7 +41,7 @@ classdef ForRepByImages < replab.Equivariant
             end
             self = self@replab.Equivariant(repR, repC);
         end
-        
+
         function X = project(self, X)
             if isempty(self.decompositionR) || isempty(self.decompositionC)
                 self.computeImages;
@@ -60,7 +60,7 @@ classdef ForRepByImages < replab.Equivariant
                 X = S/nEls;
             end
         end
-        
+
     end
-    
+
 end
