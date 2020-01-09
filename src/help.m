@@ -3,7 +3,7 @@ function help(varargin)
 %
 % Args:
 %   varargin: - if a single element, provides help for this element,
-%               whether it is a variable, object, function, class, 
+%               whether it is a variable, object, function, class,
 %               package, ...
 %             - if two elements, with one of them being the string '-f'
 %               or '--full', provides full help on this element
