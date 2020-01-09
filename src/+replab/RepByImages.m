@@ -28,7 +28,7 @@ classdef RepByImages < replab.Rep
         %   group (instance of `+replab.FiniteGroup`): Finite group represented
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
         %   isUnitary ({true, false, []}): Whether the representation is unitary
-        %   images (row cell array of double matrices): Images of the generators of `group` in the same order
+        %   images (row cell array of double matrices): Images of the generators of ``group`` in the same order
         %   inverseImages (row cell array of double matrices, optional): Inverse images of the generators
         %                                                                Optional if the representation is unitary
             assert(isa(group, 'replab.NiceFiniteGroup'));

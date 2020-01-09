@@ -49,7 +49,7 @@ classdef CompactGroup < replab.Group
         % See the construction in https://en.wikipedia.org/wiki/Semidirect_product
         %
         %    
-        % Let ``H = self`` be a group, `N` a group.
+        % Let ``H = self`` be a group, ``N`` a group.
         %
         % The semidirect product is defined using a homomorphism 
         %
@@ -65,7 +65,7 @@ classdef CompactGroup < replab.Group
         % We write each semidirect group element {h n}.
         %
         % The type of the return value depends on the most refined type at the intersection
-        % of the type of `self` and `N`, with possible types CompactGroup/FiniteGroup/NiceFiniteGroup.
+        % of the type of ``self`` and ``N``, with possible types CompactGroup/FiniteGroup/NiceFiniteGroup.
         %
         % Args:
         %   N (replab.CompactGroup): Group acted upon

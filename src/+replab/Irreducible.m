@@ -3,7 +3,7 @@ classdef Irreducible < replab.SubRep
 %
 % For the background, see Section 2.6 of Jean-Pierre Serre, Linear representations of finite groups
 %
-% The irreducible decomposition of `parent` contains isotypic components in the cell vector `components`.
+% The irreducible decomposition of ``parent`` contains isotypic components in the cell vector ``components``.
 % Each isotypic component corresponds to a set of equivalent irreducible representations expressed in the same basis.
     
     properties
@@ -29,11 +29,11 @@ classdef Irreducible < replab.SubRep
         function r = asConjugateRep(self)
         % Returns the block-diagonal representation corresponding to the decomposition
         %
-        % Up to the change of basis matrix `self.U`, it corresponds to the representation `parent`.
+        % Up to the change of basis matrix `U`, it corresponds to the representation ``parent``.
         % Indeed, we have ``self.asRep.image(g) = U * self.parent.image(g) * U'``.
         %
         % The returned representation is a conjugate of the parent representation, so it does
-        % not look as clean as `self.asRep`. For efficiency and numerical stability, use `self.asRep`.
+        % not look as clean as ``self.asRep``. For efficiency and numerical stability, use ``self.asRep``.
         %
         % Returns:
         %   replab.Rep: The block-diagonal representation as a left conjugate representation
@@ -55,7 +55,7 @@ classdef Irreducible < replab.SubRep
         %   i (logical): Index of the isotypic component
         %
         % Returns:
-        %   replab.Isotypic: The `i`-th isotypic component
+        %   replab.Isotypic: The ``i``-th isotypic component
             c = self.components{i};
         end
         
@@ -64,8 +64,8 @@ classdef Irreducible < replab.SubRep
         %
         % Args:
         %   i (integer): Index of the isotypic component
-        %   j (integer, optional): Index of the copy in the `i`-th isotypic component
-        %                          Default value is `1`.
+        %   j (integer, optional): Index of the copy in the ``i``-th isotypic component
+        %                          Default value is ``1``.
         %
         % Returns:
         %   replab.SubRep: An irreducible subrepresentation

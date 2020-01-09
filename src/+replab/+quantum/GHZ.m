@@ -39,7 +39,7 @@ classdef GHZ < replab.semidirectproduct.OfCompactGroups
         %   g (element): Group element
         %
         % Returns:
-        %   double matrix: Unitary matrix representing `g`
+        %   double matrix: Unitary matrix representing ``g``
             h = g{1};
             h1 = h{1};
             h2 = h{2};

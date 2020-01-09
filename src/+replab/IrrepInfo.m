@@ -10,7 +10,7 @@ classdef IrrepInfo < replab.Str
         isDivisionAlgebraCanonical % logical or []: Whether the division algebra is known to be in the canonical form
                                    %
                                    %                (as in `+replab.+domain.ComplexTypeMatrices` and
-                                   %          `     replab.domain.QuaternionTypeMatrices`.)
+                                   %                `+replab.+domain.QuaternionTypeMatrices`.)
     end
    
     methods

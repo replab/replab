@@ -22,7 +22,7 @@ classdef IsotypicCommutant < replab.Commutant
         %   X (double): Matrix in the isotypic component space
         %
         % Returns:
-        %   double: The corresponding block of size `self.reducedBlockSize`, 
+        %   double: The corresponding block of size `reducedBlockSize`, 
         %           removing the redundancy due to the irrep dimension
             error('Abstract');
         end
@@ -34,7 +34,7 @@ classdef IsotypicCommutant < replab.Commutant
         %   X (double): Matrix in the parent representation space
         %
         % Returns:
-        %   double: The projected block of size `self.reducedBlockSize` corresponding
+        %   double: The projected block of size `reducedBlockSize` corresponding
         %           to this isotypic component, having removed the redundancy due to the irrep dimension
             U = self.rep.U;
             block = self.projectAndReduce(U*X*U');

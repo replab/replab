@@ -6,7 +6,7 @@ function sub = split(rep, samples, sub)
 % Args:
 %   rep (replab.Rep): Unitary representation to decompose
 %   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples
-%   sub (replab.SubRep): Subrepresentation of `rep` in which to extract irreducible subrepresentations
+%   sub (replab.SubRep): Subrepresentation of ``rep`` in which to extract irreducible subrepresentations
 %
 % Returns:
 %   row cell array of replab.SubRep: A cell array of irreducible subrepresentations

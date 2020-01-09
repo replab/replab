@@ -72,14 +72,14 @@ classdef CodeTokens < replab.Str
         function [nextPos tag line] = take(self, pos)
         % Consumes a line from the input, and returns the updated parser state
         %
-        % `tag` and `line` correspond to the consumed line.
+        % ``tag`` and ``line`` correspond to the consumed line.
             tag = self.tags(pos);
             line = self.lines{pos};
             nextPos = pos + 1;
         end
 
         function [nextPos line] = expect(self, pos, expectedTag)
-        % Equivalent to `take`, conditioned on the consumed tag to be `expectedTag`
+        % Equivalent to ``take``, conditioned on the consumed tag to be ``expectedTag``
             [nextPos tag line] = self.take(pos);
             if tag ~= expectedTag
                 nextPos = [];

@@ -3,11 +3,11 @@ function W = findCommonBasis(rep, samples, sub1, sub2)
 %
 % Args:
 %   rep (replab.Rep): Representation decomposed
-%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples for `rep`
+%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples for ``rep``
 %   sub1 (replab.SubRep): Irreducible subrepresentation of rep
-%   sub2 (replab.SubRep): Irreducible subrepresentation of rep equivalent to `sub1`
+%   sub2 (replab.SubRep): Irreducible subrepresentation of rep equivalent to ``sub1``
 %
-% Returns W such that W * sub2.image(g) * W' = sub1.image(g)
+% Returns ``W`` such that ``W * sub2.image(g) * W' = sub1.image(g)``
     assert(isa(sub1, 'replab.SubRep'));
     assert(isa(sub2, 'replab.SubRep'));
     assert(sub1.parent == rep);

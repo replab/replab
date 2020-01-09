@@ -7,8 +7,8 @@ function iso = buildIsotypic(rep, samples, sub)
 %
 % Args:
 %   rep (replab.Rep): Real representation being decomposed
-%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples for `rep`
-%   sub (row cell array of replab.SubRep): Equivalent irreducible subrepresentations of `rep`
+%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples for ``rep``
+%   sub (row cell array of replab.SubRep): Equivalent irreducible subrepresentations of ``rep``
 %
 % Returns:
 %   replab.Isotypic: The isotypic component

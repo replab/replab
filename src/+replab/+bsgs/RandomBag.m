@@ -78,7 +78,7 @@ classdef RandomBag < replab.Str
         function self = RandomBag(n, generators, r, m, J, images)
         % Constructs a random bag from the given permutations
         %
-        % If a image group `J` and generator images are not given, the trivial group is used.
+        % If a image group ``J`` and generator images are not given, the trivial group is used.
         %
         % Args:
         %   n: Domain size
@@ -89,7 +89,7 @@ classdef RandomBag < replab.Str
         %   m (integer, optional): Number of shuffles done during initialization 
         %                          Default value is 50
         %   J (replab.Group, optional): Group structure for images
-        %   images (row cell array of elements of `J`): Images of `generators`
+        %   images (row cell array of elements of ``J``): Images of ``generators``
             self.n = n;
             if nargin < 5
                 J = replab.bsgs.TrivialGroup;

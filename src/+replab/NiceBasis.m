@@ -88,8 +88,8 @@ classdef NiceBasis < replab.Str
         % Returns the decomposition of the composition of two bases
         %
         % We have that the parent representation has a subrepresentation given by the basis
-        % expressed by `rhs`, and that subrepresentation has a subrepresentation given by the
-        % basis of `self`.
+        % expressed by ``rhs``, and that subrepresentation has a subrepresentation given by the
+        % basis of ``self``.
         %  
         % Args:
         %   rhs (replab.NiceBasis): The basis in the middle representation
@@ -124,7 +124,7 @@ classdef NiceBasis < replab.Str
         %   niceBasesOpt (cell(replab.NiceBasis or [])): A row cell array of nice bases, potentially with missing values
         %
         % Returns:
-        %   replab.NiceBasis or []: If any element in `niceBasesOpt` is [], returns []. Otherwise
+        %   replab.NiceBasis or []: If any element in ``niceBasesOpt`` is [], returns []. Otherwise
         %                           returns the vertical concatenation of the nice bases.
             if any(cellfun(@(x) isequal(x, []), niceBasesOpt))
                 niceBasisOpt = [];
@@ -156,7 +156,7 @@ classdef NiceBasis < replab.Str
         function niceBasisOpt = attemptFromUnitary(U)
         % Attempts integer basis recovery from the given unitary basis
         %
-        % Tries to find a rational matrix that has the same row span as the given matrix `U`. It uses the `rat`
+        % Tries to find a rational matrix that has the same row span as the given matrix ``U``. It uses the ``rat``
         % Matlab function that uses truncated continued fraction expansions. Additionally, the function attemps
         % to perform Gram Schmidt orthogonalization over the integers (but will skip that step if it would make the
         % coefficients to grow too big).

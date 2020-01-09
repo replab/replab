@@ -2,7 +2,7 @@ classdef FunctionLikeData < replab.Str
 % Describes the data recovered when parsing a MATLAB function or method
 %
 % The code below also contains the parser static methods to parse that data, and
-% that parsing code is also used for class methods; thus the presence of a `parseAbstractBody`
+% that parsing code is also used for class methods; thus the presence of a ``parseAbstractBody``
 % parsing node, and a isAbstract property.
 
     properties

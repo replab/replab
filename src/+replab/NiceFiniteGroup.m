@@ -200,10 +200,10 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         function b = contains(self, g)
         % Tests whether this group contains the given parent group element
         %
-        % Abstract in `+replab.FiniteSubgroup`
+        % Abstract in `+replab.NiceFiniteSubgroup`
         %
         % Args:
-        %   g (element of `self.parent`): Element to test membership of
+        %   g (element of `parent`): Element to test membership of
         %
         % Returns:
         %   logical: True if this group contains ``g`` and false otherwise

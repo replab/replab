@@ -5,13 +5,13 @@ function W = enforceComplexEncoding(rep, samples, sub)
 %
 % Args:
 %   rep (replab.Rep): Real representation being decomposed
-%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples for `rep`
-%   sub (row cell array of replab.SubRep): Irreducible complex-type real subrepresentation of `rep`
+%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples for ``rep``
+%   sub (row cell array of replab.SubRep): Irreducible complex-type real subrepresentation of ``rep``
 %
 % Returns
 % -------
 %   M: double matrix
-%     Matrix `W` such that ``W * rep.image(g) * W'`` is in the canonical basis
+%     Matrix ``W`` such that ``W * rep.image(g) * W'`` is in the canonical basis
     assert(isa(rep, 'replab.Rep'));
     assert(rep == sub.parent);
     assert(isequal(rep.field, 'R'));

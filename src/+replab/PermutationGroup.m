@@ -88,7 +88,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         function A = vectorAction(self)
         % Returns the action of permutations on column vectors
         %
-        % Acts on vectors of size `self.domainSize` by permuting their coefficients
+        % Acts on vectors of size `domainSize` by permuting their coefficients
         %
         % Returns:
         %   replab.Action: The vector action
@@ -114,7 +114,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         % We enumerate elements of I by first incrementing id, then i_(d-1), etc...
         %
         % We compute the permutation of domain size ``indexRange^domainSize`` that acts on the
-        % indices of I according to the argument `g`.
+        % indices of I according to the argument ``g``.
         %
         % Args:
         %   g (permutation): Permutation of subindices

@@ -1167,7 +1167,7 @@ classdef CommutantVar < replab.Str
         % See also:
         %     `+replab.CommutantVar.nbVars`
         %     `+replab.CommutantVar.getBaseMatrix`
-        %     `sdpvar.getvariables`
+        %     ``sdpvar.getvariables``
 
             vars = getvariables(self.blocks{1});
             for i = 2:self.nComponents
@@ -1220,7 +1220,7 @@ classdef CommutantVar < replab.Str
         % See also:
         %     `+replab.CommutantVar.getVariables`
         %     `+replab.CommutantVar.see`
-        %     `sdpvar.getBaseMatrix`
+        %     ``sdpvar.getBaseMatrix``
 
             % For now, we simply return the coefficients if they are in the
             % fullMatrix, TODO : also take into account the linear
@@ -1235,7 +1235,7 @@ classdef CommutantVar < replab.Str
         % form.
         %
         % See also:
-        %     `sdpvar.see`
+        %     ``sdpvar.see``
         
             see(self.fullMatrix);
         end
@@ -1247,7 +1247,7 @@ classdef CommutantVar < replab.Str
         %     double matrix: numerical value taken by the object
         %
         % See also:
-        %     `sdpvar.value`
+        %     ``sdpvar.value``
         
             val = value(self.fullMatrix);
         end

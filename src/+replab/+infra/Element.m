@@ -124,7 +124,7 @@ classdef Element < replab.Str
         function id = shmIdentifier(self)
         % Returns the fieldname-encoded identifier corresponding to this object
         %
-        % For example, this could be `replab__Group__compose`
+        % For example, this could be ``replab__Group__compose``
             id = replab.infra.shm.encode(self.path);
         end
 
