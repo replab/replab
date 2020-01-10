@@ -40,6 +40,7 @@ release = '0.6.0-SNAPSHOT'
 # ones.
 extensions = ['sphinx.ext.autodoc',   # for enumeration of objects stuff
               'sphinx.ext.autosummary',
+              'nbsphinx',
               'sphinx_collapse_admonitions',
               'sphinxcontrib.fulltoc', # for sidebar TOC
               'sphinxcontrib.matlab', # support for Matlab
@@ -82,7 +83,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**.ipynb_checkpoints']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'

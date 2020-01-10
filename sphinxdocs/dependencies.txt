@@ -16,3 +16,10 @@ Install the following python packages:
 This can be done with the command `pip install sphinx sphinxcontrib-matlabdomain texext guzzle_sphinx_theme sphinx-collapse-admonitions sphinxcontrib-fulltoc` (add the option "--user" if not installing inside a virtual environment)
 
 I then used the provided Makefile with `make html`. This creates the web pages in the folder `_build`.
+
+
+For the Jupyter notebooks:
+
+Follow https://nbsphinx.readthedocs.io/en/latest/installation.html
+
+In particular, install the Python package nbsphinx, and the Ubuntu package pandoc

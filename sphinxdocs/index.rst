@@ -5,6 +5,7 @@ RepLAB documentation
    :maxdepth: 1
 	      
    Tutorials <http://127.0.0.1:4000/replab/docs/tutorials/tutorials.html>
+   tutorials/S3
    How-to guides <http://127.0.0.1:4000/replab/docs/howto/howto.html>
    Topic guides <http://127.0.0.1:4000/replab/docs/topic/guides.html>
    api/index
