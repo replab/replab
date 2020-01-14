@@ -23,3 +23,10 @@ For the Jupyter notebooks:
 Follow https://nbsphinx.readthedocs.io/en/latest/installation.html
 
 In particular, install the Python package nbsphinx, and the Ubuntu package pandoc
+
+
+Later on?
+
+Proof environment? https://framagit.org/spalax/sphinxcontrib-proof/
+
+Resources: https://github.com/yoloseem/awesome-sphinxdoc

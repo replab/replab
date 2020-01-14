@@ -3,6 +3,7 @@
 % This short example demonstrates law checking.
 %
 % We define the group of permutations acting on 1..10.
+replab_init
 n = 10;
 eqvFun = @(x, y) isequal(x, y);
 sampleFun = @() randperm(n);

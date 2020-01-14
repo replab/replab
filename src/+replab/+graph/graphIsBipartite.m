@@ -1,9 +1,9 @@
 function [ok, coloring] = graphIsBipartite(pairs)
-% [ok, coloring] = graphIsBipartite(pairs)
+% Tests if a graph is bipartite
 %
 % Checks whether the graph described by a list of pairs of
 % connected vertices is bipartite, i.e. whether the graph can be
-% colored with 2 colors.
+% colored with 2 colors. Returns the coloring in case of success.
 %
 % Args:
 %     pairs: nx2 array listing the (undirected) edges connecting

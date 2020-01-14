@@ -1,6 +1,7 @@
 ---
 layout: docs
 title: Abbreviations
+subsection: Development & Community
 ---
 
 # Abbreviations in RepLAB

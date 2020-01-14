@@ -1,6 +1,7 @@
 ---
 layout: docs
-title: API Documentation style guide
+title: API documentation style
+subsection: Development & Community
 ---
 
 # API Documentation style guide
