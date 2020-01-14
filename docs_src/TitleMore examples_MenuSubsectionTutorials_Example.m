@@ -1,12 +1,10 @@
-%% Short RepLAB tutorial
-%
-% This document will show some features of *RepLAB*.
+%% Short overview of some basic features of RepLAB
 
 %%
-% Before trying any of the *RepLAB* commands, we must first add the paths:
+% Before using *RepLAB* commands, we must first initialize the library:
 replab_init
 
-%% Working with permutation groups
+%% Permutation groups
 % *RepLAB* decomposes representations of permutation groups; this
 % does not lose generality as all finite groups can be represented
 % by permutation groups.
@@ -53,7 +51,7 @@ S30.order
 S30.elements
 
 
-%% Group representations
+%% The representation of a group
 % The defining representation of $S_4$ simply permutes the
 % coordinates of $R^4$:
 rho = S4.definingRep
@@ -81,7 +79,7 @@ rho2 = S4.permutationRep(2, {[2 1] [2 1]})
 rho1.image(g)
 rho2.image(g)
 
-%% Decomposing group representations
+%% The decompositions of a representation
 % *RepLAB* provides the irreducible decomposition of representations
 % over the real numbers, identifying the representation type
 % (real, complex or quaternionic):

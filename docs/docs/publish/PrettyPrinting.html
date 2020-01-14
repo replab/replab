@@ -1,13 +1,15 @@
 ---
 layout: docs
-title: Pretty printing infrastructure
+title: Pretty printing
 category: posts
+subsection: Development & Community
 comments: true
 ---
 <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
---><div class="content"><h1>Pretty printing infrastructure</h1><p>Matlab has little support for consistent pretty printing of objects. Thus, RepLAB contains helper classes and functions to print arbitrary objects in a clear style.</p><p>Three styles of printing are used by default:</p><p>- a 'tiny' style that prints only the size and type of the object,</p><p>- a 'short' style that fits on a single display line,</p><p>- a 'long' style that can use multiple lines.</p><p>The style used when displaying objects in the REPL/command line is the 'long' style. For example:</p><pre class="codeinput">P = replab.Permutations(3)
+--><div class="content"><h1>Pretty printing infrastructure</h1><p>Matlab has little support for consistent pretty printing of objects. Thus, RepLAB contains helper classes and functions to print arbitrary objects in a clear style.</p><p>Three styles of printing are used by default:</p><p>- a 'tiny' style that prints only the size and type of the object,</p><p>- a 'short' style that fits on a single display line,</p><p>- a 'long' style that can use multiple lines.</p><p>The style used when displaying objects in the REPL/command line is the 'long' style. For example:</p><pre class="codeinput">replab_init
+P = replab.Permutations(3)
 </pre><pre class="codeoutput">
 P = 
 
@@ -94,6 +96,7 @@ generator(1): [2, 3, 1]
 %
 % The style used when displaying objects in the REPL/command line is the
 % 'long' style. For example:
+replab_init
 P = replab.Permutations(3)
 
 %%

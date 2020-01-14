@@ -1,11 +1,12 @@
 %% Symmetric SDPs
 %
 % This document illustrated how *RepLAB* can be used to solve Semidefinite
-% Programs (SDP) subject to symmetries.
+% Programs (SDP) subject to symmetries. Several methods for constructing
+% SDPs subject to symmetries are presented.
 
 
 %% Preparation
-% As always, before using *RepLAB* commands, first add the paths:
+% As always, before using *RepLAB* commands, initialize the library:
 replab_init
 %%
 % Commands in this document makes use ot the YALMIP interface to solve

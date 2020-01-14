@@ -1,6 +1,7 @@
 ---
 layout: docs
-title: Installation
+title: Code organization
+subsection: Development & Community
 ---
 
 # Code organization in RepLAB

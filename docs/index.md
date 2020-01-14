@@ -13,13 +13,16 @@ Current version: **{{site.replabVersion}}**.
 **RepLAB** provides tools to study representations of finite groups and decompose them numerically. It is compatible with both MATLAB and Octave.
 
 
-## A simple example
+## How to start using RepLAB?
 
-The construction of permutation groups and their representations can be achieved in a few lines of code, including the decomposition of their representations into irreducible representations. See the [**full explanation**](docs/publish/Example.html) ...
+Have a look at the [**tutorials**](docs/tutorials/tutorials.html)! They have everything to get you started, from installation instructions to hands-on examples.
 
-## How to start using RepLAB
+The documentation of **RepLAB** is organized along 4 directions, following a recent [discussion on software documentation](https://www.divio.com/blog/documentation/):
 
-See the [**Installation guide**](docs/installation.html).
+- [Tutorial](docs/tutorials/tutorials.html): are short hands-on presentations that give you a taste of the goodness of **RepLAB**
+- [How-to guides](docs/howto/howto.html): are concise recipes that show you how to achieve a specific goal
+- [Topic guides](docs/topic/guides.html): are understanding-oriented presentations that explain the big picture and the key notions on which this software is built
+- [Technical reference](docs/reference/reference.html): contains a complete and accurate description of each object of the library
 
 ## Work in progress
 
@@ -35,7 +38,7 @@ Because no open source library exists to decomposes arbitrary permutation/monomi
 
 That said, other libraries working on the same problem space include:
 
-- The [GAP System 3 package AREP](https://www.gap-system.org/Gap3/Packages3/arep.html) by Sebastian Egner and Markus Püschel. 
+- The [GAP System 3 package AREP](https://www.gap-system.org/Gap3/Packages3/arep.html) by Sebastian Egner and Markus Püschel.
 - [NCSOStools](http://ncsostools.fis.unm.si/documentation/awbd) includes an implementation of the Murota-Kanno-Kojima-Kojima-Maehara algorithm to decompose matrix *-algebras.
 
 

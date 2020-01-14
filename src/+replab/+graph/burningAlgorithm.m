@@ -1,16 +1,25 @@
-function subsets = burning(pairs)
-% subsets = burning(pairs)
+function subsets = burningAlgorithm(edges)
+% burning algorithm on a graph
 %
 % Performs the burning algorithm on the network described by the
-% edges given in pairs.
+% edges given in pairs. This is the matlab fallback implementation.
 %
 % Args:
-%     pairs: nx2 array of vertices linked by an edge
+%     edges: nx2 array of vertices linked by an edge
 %
 % Returns:
 %     subsets: cell array with connex components
+%
+% Example:
+%     >>> replab.graph.burningAlgorithm([1 2; 2 6; 3 4]); % a graph with 5 nodes labelled 1, 2, 3, 4, 6
+%
+% See also:
+%     replab.Partition.connectedComponents
+%     replab.graph.connectedComponents
+%     replab.graph.burningAlgorithmFast
 
-    uniquesLeft = unique(pairs);
+    uniquesLeft = unique(edges);
+    nbVertices = length(uniquesLeft);
     subsets = {};
     co1 = 0;
     while ~isempty(uniquesLeft)
@@ -20,9 +29,9 @@ function subsets = burning(pairs)
         while co2 < length(set)
             co2 = co2 + 1;
             element = set(co2);
-            sel1 = find(pairs(:,1) == element);
-            sel2 = find(pairs(:,2) == element);
-            newElements = unique([pairs(sel1,2); pairs(sel2,1)])';
+            sel1 = find(edges(:,1) == element);
+            sel2 = find(edges(:,2) == element);
+            newElements = unique([edges(sel1,2); edges(sel2,1)])';
             newElements = setdiff(newElements, set);
             set = [set, newElements];
             
