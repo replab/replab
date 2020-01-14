@@ -12,12 +12,7 @@ function indentedLines = indent(lines, nbSpaces, cellMode)
 %         is a cell array iff parameter ``cellMode`` is true.
 %
 % Example:
-%     >>> replab.infra.indent({'Some text'}, 2)
-%         ans =
-% 
-%           1×1 cell array
-%     
-%             {'  Some text'}
+%      >>> replab.infra.indent({'Some text'}, 2);
 
     if nargin < 3
         cellMode = true;
