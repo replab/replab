@@ -1,19 +1,17 @@
 classdef Laws < replab.Str
 % Describes a structure that obeys to algebraic laws
 %
-% Laws are described by methods called law_METHODNAME_TYPES
-% where
-% - METHODNAME is a snake_case identifier with each word starting
-%   with a lower case character,
-% - TYPES is a string composed of the concatenation of the possible definitions below
-%   - Zn is an integer from -n to n, represented as a double
-%   - Nn is an integer from 1 to n, represented as a double
-%   - N0n is an integer from 0 to n, represented as a double
-%   - any other letter should be the name of a property of this Laws instance
-%     representing a domain
-    
+% Laws are described by methods called ``law_METHODNAME_TYPES`` where
+%
+% - ``METHODNAME`` is a snake_case identifier with each word starting with a lower case character,
+% - ``TYPES`` is a string composed of the concatenation of the possible definitions below
+% - ``Zn`` is an integer from -n to n, represented as a double
+% - ``Nn`` is an integer from 1 to n, represented as a double
+% - ``N0n`` is an integer from 0 to n, represented as a double
+% - any other letter should be the name of a property of this Laws instance representing a domain
+
     methods
-        
+
         function assert(self, predicate, context)
         % Assert function with a verbose error message
             if ~isscalar(predicate) || ~islogical(predicate)
@@ -41,7 +39,7 @@ classdef Laws < replab.Str
                 throwAsCaller(MException(errorId, '%s', message));
             end
         end
-        
+
         function [testNames testFuns] = getTestCases(self)
         % Enumerates the laws present in "self" by looking for methods of the form law_propertyName_TYPES
             testNames = {};
@@ -50,7 +48,7 @@ classdef Laws < replab.Str
             M = MC.MethodList;
             for i = 1:length(M)
                 if isa(M, 'cell')
-                    % Octave returns a cell array 
+                    % Octave returns a cell array
                     method = M{i};
                 else
                     % Matlab an object array
@@ -81,7 +79,7 @@ classdef Laws < replab.Str
                 end
             end
         end
-        
+
         function check(self)
         % Runs the randomized tests without using MOxUnit
         %
@@ -93,13 +91,13 @@ classdef Laws < replab.Str
                 f();
             end
         end
-        
+
         function testSuite = addTestCases(self, testSuite, testName)
         % Adds law checks as test cases to the given test suite
         %
-        % Inputs:
-        % testSuite      - MOxUnitTestSuite object
-        % testName       - (optional) name of the test
+        % Args:
+        %   testSuite (MOxUnitTestSuite object): Adds the test cases of these laws to this
+        %   testName (charstring, optional): name of the test
             nRuns = replab.Laws.nRuns;
             if nargin < 3
                 testName = class(self);
@@ -114,18 +112,18 @@ classdef Laws < replab.Str
                 testSuite = addTest(testSuite, testCase);
             end
         end
-        
+
     end
-    
+
     methods (Static)
         function value = nRuns(newValue)
         % Sets/tells the default number of runs
         %
         % Args:
-        %     newValue: integer, sets the number of runs (optional)
+        %     newValue (integer, optional): Sets the number of runs
         %
         % Returns:
-        %     value: number of runs
+        %     integer: number of runs
 
             persistent n;
             if isempty(n)
@@ -138,5 +136,5 @@ classdef Laws < replab.Str
             value = n;
         end
     end
-    
+
 end

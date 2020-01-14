@@ -2,7 +2,7 @@ Base object types in RepLAB
 ===========================
 
 The following classes are at the base of many RepLAB objects.
-  
+
 .. module:: +replab
 
 * `.Str`: provides infrastructure for pretty printing of objects, in a way compatible with Matlab and Octave
@@ -14,10 +14,24 @@ Str
 +++
 
 .. autoclass:: Str
-      
+
 .. _Domain:
 
 Domain
 ++++++
-      
+
 .. autoclass:: Domain
+
+.. _DomainLaws:
+
+DomainLaws
+++++++++++
+
+.. autoclass:: DomainLaws
+
+.. _IndexedFamily:
+
+IndexedFamily
++++++++++++++
+
+.. autoclass:: IndexedFamily

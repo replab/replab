@@ -7,11 +7,11 @@ classdef IndexedFamily < replab.Str
 % The family supports element indexing and searching for elements.
 
     properties (SetAccess = protected)
-        size; % vpi: Number of elements contained in this enumerator
+        size % vpi: Number of elements contained in this enumerator
     end
-    
+
     methods % Abstract
-        
+
         function obj = at(self, ind)
         % Retrieves a element by position
         %
@@ -25,7 +25,7 @@ classdef IndexedFamily < replab.Str
         %   The element at the "ind" position
             error('Abstract');
         end
-        
+
         function ind = find(self, obj)
         % Returns the index of a given element
         %
@@ -40,15 +40,15 @@ classdef IndexedFamily < replab.Str
         %   vpi: 1-based index of the given element
             error('Abstract');
         end
-        
+
     end
-    
+
     methods
-        
+
         function s = shortStr(self, maxColumns)
             s = sprintf('Indexed family of %s elements', replab.shortStr(self.size, maxColumns));
         end
-        
+
         function lines = longStr(self, maxRows, maxColumns)
             if self.size > maxRows - 1
                 n = maxRows - 2;
@@ -85,7 +85,7 @@ classdef IndexedFamily < replab.Str
             end
             lines = vertcat({self.shortStr(maxColumns)}, replab.str.align(table, 'rcl'));
         end
-        
+
         function obj = sample(self)
         % Returns an element sampled uniformly
         %
@@ -93,7 +93,7 @@ classdef IndexedFamily < replab.Str
         %   Random element of this family
             obj = self.at(randint(self.size)); % use randint as it is the method equivalent to randi on @vpi
         end
-        
+
         function C = toCell(self)
         % Returns a row cell array containing all elements of this family
         %
@@ -115,11 +115,11 @@ classdef IndexedFamily < replab.Str
                 end
             end
         end
-        
+
     end
 
     methods (Static)
-    
+
         function family = lambda(size, atFun, findFun)
         % Constructs an indexed family from function handles
         %
@@ -131,10 +131,10 @@ classdef IndexedFamily < replab.Str
         %   findFun (function_handle): Handle that implements the ``find`` method
         %
         % Returns:
-        %   replab.IndexedFamily: The constructed indexed family
+        %   `.IndexedFamily`: The constructed indexed family
             family = replab.lambda.IndexedFamily(size, atFun, findFun);
         end
-        
+
     end
-    
+
 end
