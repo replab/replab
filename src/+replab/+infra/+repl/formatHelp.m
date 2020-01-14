@@ -26,7 +26,7 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
         refs = parts(2:2:end);
         for j = 1:length(refs)
             ref = refs{j};
-            [el linkText] = replab.infra.resolveRef(ref, context, @(id) any(exist(id) == [3 4 5 6 8]));
+            [el, linkText] = replab.infra.resolveRef(ref, context, @(id) any(exist(id) == [3 4 5 6 8]));
             if isa(el, 'replab.infra.Element')
                 id = el.fullIdentifier;
             elseif isa(el, 'char')
@@ -45,6 +45,26 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
             refs{j} = ref;
         end
 
+        % Also strongify any appearance of the identifier outside single
+        % quotes
+        for j = 1:length(txts)
+            if ~isempty(txts{j})
+                [aMatch, notAMatch] = regexp(txts{j}, ['(^|(?<=\W)|[\w\.\+]*\.)', context.name, '(?![\w\.]+)'], 'match', 'split');
+
+                tokens = cell(1,length(aMatch)+length(notAMatch));
+                for k = 1:length(aMatch)
+                    tokens{k*2} = replab.infra.strong(aMatch{k});
+                end
+                for k = 1:length(notAMatch)
+                    tokens{(k-1)*2 + 1} = notAMatch{k};
+                end
+                tokens = tokens(cellfun(@(x) ~isempty(x), tokens));
+
+                txts{j} = [tokens{:}];
+            end
+        end
+        
+        parts(1:2:end) = txts;
         parts(2:2:end) = refs;
         l = strjoin(parts, '');
 

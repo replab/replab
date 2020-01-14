@@ -10,7 +10,6 @@
 {% end %}
 {% end %}
 \n
-\n
-{% call strjoin(el.doc.lines, char(10)) %}
+{% call strjoin(replab.infra.indent(el.doc.lines, 3), char(10)) %}
 \n
 \n

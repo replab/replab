@@ -1,31 +1,31 @@
 {% if isequal(el.kind, 'property') %}
- Property `~{{ el.fullIdentifier }}` in class `{{ el.parentClass.fullIdentifier }}`:\n
+ Property `~{{ el.fullIdentifier }}`:\n
 {% else %}
- Method `~{{ el.fullIdentifier }}` in class `{{ el.parentClass.fullIdentifier }}`:\n
+ Method `~{{ el.fullIdentifier }}`:\n
 {% end %}
+
+{% if ~isempty(docEl) %}
+   {{ docEl.doc.firstLine }}\n
 \n
+{% else %}
+\n
+{% end %}
+
+   In class:\n
+     `{{ el.parentClass.fullIdentifier }}`\n
+\n
+
 {% if length(el.declarations.findAll) > 1 %}
-All declarations:\n
+   Also present in:\n
 {% for p in el.declarations.findAll %}
-- `{{ p.fullIdentifier }}`\n
-    {{ p.declaration }}\n
+{% if ~isequal(p.fullIdentifier, el.fullIdentifier) %}
+     `{{ p.parent.fullIdentifier }}`: `~{{ p.fullIdentifier }}`\n
 {% end %}
 {% end %}
 \n
-{% if isempty(docEl) %}
-{% if isequal(el.kind, 'method') %}
-  {{ el.declarations.findBest.declaration }}\n
 {% end %}
-{% else %}
-{% if ~isequal(el.fullIdentifier, docEl.fullIdentifier) %}
-(documentation taken from inherited {{ el.kind }} `{{ docEl.fullIdentifier }}`)\n
+
+{% if ~isequal(el.fullIdentifier, el.declarations.findBest.fullIdentifier) %}
+   Inherited from `{{ el.declarations.findBest.fullIdentifier }}`\n
 \n
 {% end %}
-{% if isequal(el.kind, 'method') %}
-  {{ docEl.declaration }}\n
-{% end %}
-\n
-{{ docEl.doc.content }}
-{% end %}
-\n
-\n

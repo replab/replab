@@ -128,17 +128,21 @@ function help(varargin)
         fwrite(stdout, replab.infra.templateHelp(templateName, el, docEl, helpCurrent, {fullId}, {fullId}));
         if hasToggle && replab.settings.consoleUseHTML
             if fullMode
-                link = replab.infra.linkHelp(helpToggled, fullId, fullId);
-                disp(['Toggle display to help page for ' link]);
+                link = replab.infra.linkHelp(helpToggled, 'help mode', fullId);
+                disp(['   Toggle display to ', link]);
             else
-                link = replab.infra.linkHelp(helpToggled, fullId, fullId);
-                disp(['Toggle display to reference page for ' link]);
+                link = replab.infra.linkHelp(helpToggled, 'reference mode', fullId);
+                disp(['   Toggle display to ', link]);
             end
         end
         if isa(el, 'replab.infra.SourceElement')
-            disp(replab.infra.linkOpen('See source', '', el.absoluteFilename, el.startLineNumber));
+            disp(' ');
+            disp(['   ', replab.infra.linkOpen('See source', '', el.absoluteFilename, el.startLineNumber)]);
         end
-        disp(' ');
+        fprintf('\n\n');
+%        separationPattern = '   .  ';
+%        disp(repmat(separationPattern, 1, floor(replab.settings.strMaxColumns/length(separationPattern))));
+%        disp(' ');
     else
         if isempty(replab.settings.systemHelpPath)
             try

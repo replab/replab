@@ -66,6 +66,17 @@ classdef ClassElement < replab.infra.Element
             b = isequal(self.kind, 'property');
         end
 
+        function decl = contextualizeDeclaration(self, fullIdentifier)
+        % Returns the declaration, expressed with the given full name
+            decl = strrep(self.declaration, self.name, fullIdentifier);
+            switch self.kind
+                case 'method'
+                    if isequal(lower(decl(1:9)), 'function ')
+                        decl = ['Method ', decl(10:end)];
+                    end
+            end
+        end
+        
     end
 
 end

@@ -25,6 +25,11 @@ classdef Function < replab.infra.SourceElement
             c = {};
         end
 
+        function decl = fullDeclaration(self)
+        % Returns the declaration, expressed with the full identifier
+            decl = strrep(self.declaration, self.name, self.fullIdentifier);
+        end
+        
     end
     
 end

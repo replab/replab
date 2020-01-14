@@ -1,23 +1,19 @@
 {% if isequal(el.kind, 'property') %}
- Property `~{{ el.fullIdentifier }}` in class `{{ el.parentClass.fullIdentifier }}`:\n
-{% else %}
- Method `~{{ el.fullIdentifier }}` in class `{{ el.parentClass.fullIdentifier }}`:\n
+ Property `{{ el.fullIdentifier }}`:\n
+{% if ~isempty(docEl) %}
+   {{ docEl.doc.firstLine }}\n
 {% end %}
-\n
+{% else %}
 {% if isempty(docEl) %}
-{% if isequal(el.kind, 'method') %}
-  {{ el.declarations.findBest.declaration }}\n
-{% end %}
+ {{ el.declarations.findBest.contextualizeDeclaration(el.fullIdentifier) }}\n
 {% else %}
-{% if ~isequal(el.fullIdentifier, docEl.fullIdentifier) %}
-(documentation taken from inherited {{ el.kind }} `{{ docEl.fullIdentifier }}`)\n
-\n
+ {{ docEl.contextualizeDeclaration(el.fullIdentifier) }}\n
+{{ replab.infra.indent(docEl.doc.content, 3, false) }}\n
 {% end %}
-{% if isequal(el.kind, 'method') %}
-  {{ docEl.declaration }}\n
 {% end %}
 \n
-{{ docEl.doc.content }}
+
+{% if ~isempty(docEl) && ~isequal(el.fullIdentifier, docEl.fullIdentifier) && ~isequal(el.declarations.findBest.fullIdentifier, docEl.fullIdentifier)%}
+   (documentation from inherited {{ el.kind }} `{{ docEl.fullIdentifier }}`)\n
+\n
 {% end %}
-\n
-\n

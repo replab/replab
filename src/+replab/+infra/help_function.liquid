@@ -1,5 +1,6 @@
- Function `{{ el.fullIdentifier }}`:\n
+ {{ el.fullDeclaration }}:\n
+{% if ~isempty(el.doc.lines) %}
+{% call strjoin(replab.infra.indent(el.doc.lines, 3), char(10)) %}
 \n
-{% call strjoin(el.doc.lines, char(10)) %}
-\n
+{% end %}
 \n

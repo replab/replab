@@ -3,6 +3,7 @@
    In package:\n
      `{{el.package.fullIdentifier}}`\n
 \n
+
 {% if ~isempty(el.ownSuperclasses) %}
 {% if length(el.ownSuperclasses) == 1 %}
    Direct parent:\n
@@ -14,6 +15,7 @@
 {% end %}
 \n
 {% end %}
+
 {% if ~isempty(el.ownSubclasses) %}
 {% if length(el.ownSubclasses) == 1 %}
    Direct child:\n
@@ -25,6 +27,7 @@
 {% end %}
 \n
 {% end %}
+
 {% if ~isempty(el.allProperties) %}
 {% if length(el.allProperties) == 1 %}
    Property:\n
@@ -38,6 +41,7 @@
 {% end %}
 \t\n
 {% end %}
+
 {% if ~isempty(el.allMethods) %}
 {% if length(el.allMethods) == 1 %}
    Method:\t\n
@@ -49,9 +53,5 @@
      `~{{m.fullIdentifier}}` \t{{m.declarations.bestEffortDocFirstLine}}\n
 {% end %}
 {% end %}
-\n
 {% end %}
-\n
-{% call strjoin(el.doc.lines, char(10)) %}
-\n
 \n

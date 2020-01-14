@@ -1,14 +1,12 @@
  Package `{{ el.fullIdentifier }}`:\n
-\n
 {% if ~isempty(el.parent) %}
 {% if isempty(el.parent.packagePath) %}
    In root package\n
-\n
 {% else %}
    In package:\n
      `{{el.parent.fullIdentifier}}`\n
-\n
 {% end %}
+\n
 {% end %}
 
 {% if ~isempty(el.ownSubpackages) %}
@@ -40,5 +38,4 @@
      `~{{cls.fullIdentifier}}` \t{{cls.doc.firstLine}}\n
 {% end %}
 {% end %}
-\n
 {% end %}

@@ -1,4 +1,11 @@
- Function `{{ el.fullIdentifier }}`:\n
+ Function `{{ el.name }}`:\n
+{% if ~isempty(docEl) %}
+   {{ docEl.doc.firstLine }}\n
+\n
+{% else %}
+\n
+{% end %}
+
 {% if isempty(el.package.packagePath) %}
    In root package\n
 \n
@@ -7,6 +14,3 @@
      `{{el.package.fullIdentifier}}`\n
 \n
 {% end %}
-{% call strjoin(el.doc.lines, char(10)) %}
-\n
-\n
