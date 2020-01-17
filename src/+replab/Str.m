@@ -1,8 +1,43 @@
 classdef Str < handle
-% Defines a 'str' default method and overloads 'disp'
+% Base class that provides sane pretty printing for all RepLAB objects
 %
-% Also provides methods `.additionalFields` and `.hiddenFields` to guide long form object pretty printing
-
+% All classes in RepLAB inherit the `.Str` base class, which provides explicit `~+replab.Str.longStr` and `~+replab.Str.shortStr` methods.
+% Those methods take a dimension limit for width (and possibly height).
+% In contrast, the functions `+replab.shortStr` and `+replab.longStr` use default values that are
+% deduced from the terminal size.
+%
+% This base class overloads 'disp'
+%
+% It also provides methods `.additionalFields` and `.hiddenFields` to guide long form object pretty printing.
+%
+% Compare the two outputs:
+%
+% Example:
+%   >>> P = replab.Permutations(3)
+%     Permutations acting on 3 elements
+%       domainSize: 3
+%         identity: [1, 2, 3]
+%           parent: Permutations acting on 3 elements
+%     generator(1): [2, 3, 1]
+%     generator(2): [2, 1, 3]
+%   >>> replab.longStr(P)
+%
+%   ans =
+%
+%    6x1 cell array
+%
+%     {'Permutations acting on 3 elements'              }
+%     {'  domainSize: 3                                '}
+%     {'    identity: [1, 2, 3]                        '}
+%     {'      parent: Permutations acting on 3 elements'}
+%     {'generator(1): [2, 3, 1]                        '}
+%     {'generator(2): [2, 1, 3]                        '}
+%
+%   >>> replab.shortStr(P)
+%
+%     ans =
+%
+%       'Permutations acting on 3 elements'
     methods
 
         function res = eq(self, rhs)
@@ -24,6 +59,7 @@ classdef Str < handle
         end
 
         function disp(self)
+        % Standard MATLAB/Octave display method
             maxRows = replab.settings.strMaxRows;
             maxColumns = replab.settings.strMaxColumns;
             lines = replab.longStr(self, maxRows, maxColumns);
@@ -74,6 +110,9 @@ classdef Str < handle
 
         function s = longStr(self, maxRows, maxColumns)
         % Multi-line description of the current object
+        %
+        % The default implementation of 'longStr' is to print a short description of
+        % the object on the first line, followed by public properties.
         %
         % See also:
         %   `+replab.longStr`
