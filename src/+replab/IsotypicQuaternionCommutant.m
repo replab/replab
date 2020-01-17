@@ -1,7 +1,7 @@
 classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
-    
+
     methods
-        
+
         function self = IsotypicQuaternionCommutant(isotypic)
             self = self@replab.IsotypicCommutant(isotypic);
             self.divisionAlgebraDimension = 4;
@@ -44,7 +44,7 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
             C = C/id;
             D = D/id;
         end
-        
+
         function [A B C D] = blockFromParent(self, X)
         % Changes the basis and projects a block on this isotypic component
         %
@@ -88,7 +88,7 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
             C = C/id;
             D = D/id;
         end
-        
+
         function X1 = projectAndReduceFromParent(self, X)
             [A B C D] = self.blockFromParent(X);
             X1 = kron(A, eye(2)) + kron(B, self.basisB) + kron(C, self.basisC) + kron(D, self.basisD);
@@ -98,7 +98,7 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
             [A B C D] = self.block(X);
             X1 = kron(A, eye(2)) + kron(B, self.basisB) + kron(C, self.basisC) + kron(D, self.basisD);
         end
-        
+
         function X1 = project(self, X)
             id = self.rep.irrepDimension;
             [A B C D] = self.block(X);
@@ -108,32 +108,32 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
             basisD = kron(eye(id/4), self.basisD);
             X1 = kron(A, basisA) + kron(B, basisB) + kron(C, basisC) + kron(D, basisD);
         end
-        
+
     end
 
     methods (Static)
-        
+
         function X = basisB
             X = [ 0 -1  0  0
                   1  0  0  0
                   0  0  0  1
                   0  0 -1  0];
         end
-        
+
         function X = basisC
             X = [ 0  0 -1  0
                   0  0  0 -1
                   1  0  0  0
                   0  1  0  0];
         end
-        
+
         function X = basisD
             X = [ 0  0  0 -1
                   0  0  1  0
                   0 -1  0  0
                   1  0  0  0];
         end
-        
+
     end
-    
+
 end

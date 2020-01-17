@@ -2,7 +2,7 @@ classdef DomainLaws < replab.Laws
 % Law checks for a generic Domain
 
     properties (SetAccess = protected)
-        T % (replab.Domain): Domain under test
+        T % (`+replab.Domain`): Domain under test
     end
 
     methods

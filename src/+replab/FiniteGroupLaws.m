@@ -22,22 +22,22 @@ classdef FiniteGroupLaws < replab.GroupLaws
             self.T.assertEqv(t, t1);
         end
 
-        function law_isTrivial(self)
+        function law_isTrivial_(self)
         % Checks that a group is trivial iff it has no generators
             self.assert(self.T.isTrivial == (self.T.nGenerators == 0));
         end
 
-        function law_order(self)
+        function law_order_(self)
         % Checks that a group is trivial iff its order is 1
             self.assert(self.T.isTrivial == (self.T.order == 1));
         end
 
-        function law_order_elements(self)
+        function law_order_elements_(self)
         % Checks that the number of elements corresponds to the group order
             self.assert(self.T.elements.size == self.T.order);
         end
 
-        function law_generators(self)
+        function law_generators_(self)
         % Performs various safety checks on the group generators
             T = self.T;
             for i = 1:T.nGenerators
@@ -54,7 +54,7 @@ classdef FiniteGroupLaws < replab.GroupLaws
             elementsLaws = replab.IndexedFamilyLaws(self.T.elements);
         end
 
-        function law_decomposition_size(self)
+        function law_decomposition_size_(self)
         % Checks that the cartesian product set decomposition has the correct size
             D = self.T.decomposition.T;
             o = vpi(1);

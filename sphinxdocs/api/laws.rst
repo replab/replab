@@ -12,9 +12,29 @@ and `ScalaCheck <https://www.scalacheck.org/>`_.
 
 The infrastructure is provided by the base class `.Laws`.
 
-.. _Laws:
-
 Laws
 ++++
 
 .. autoclass:: Laws
+
+.. module:: +replab.+laws
+
+laws.Collection
++++++++++++++++
+
+.. autoclass:: Collection
+
+laws.message
+++++++++++++
+
+.. autofunction:: message
+
+laws.parseLawMethodName
++++++++++++++++++++++++
+
+.. autofunction:: parseLawMethodName
+
+laws.runNTimes
+++++++++++++++
+
+.. autofunction:: runNTimes
