@@ -18,3 +18,33 @@ Laws
 ++++
 
 .. autoclass:: Laws
+
+.. module:: +replab.+laws
+
+.. _laws_Collection:
+
+laws.Collection
++++++++++++++++
+
+.. autoclass:: Collection
+
+.. _laws_message:
+
+laws.message
+++++++++++++
+
+.. autofunction:: message
+
+.. _laws_parseLawMethodName:
+
+laws.parseLawMethodName
++++++++++++++++++++++++
+
+.. autofunction:: parseLawMethodName
+
+.. _laws_runNTimes:
+
+laws.runNTimes
+++++++++++++++
+
+.. autofunction:: runNTimes

@@ -16,12 +16,13 @@ classdef Laws < replab.Str
 %   those samplable sets will be used to sample the random instances passed to the law check method.
 %   Note that a law that does not require any arguments corresponds to a method name ending with an underscore.
 %
-% - Methods that start with a ``laws_`` prefix must return another `.Laws` instance. It enables delegation
-%   of checks when a tested object has subparts (for example, a `.FiniteGroup` has a `~+replab.FiniteGroup.elements`
+% - Methods that start with a ``laws_`` prefix must return another `.Laws` instance (see also `+replab.+laws.Collection`).
+%   It enables delegation of checks when a tested object has subparts (for example, a `.FiniteGroup` has a `~+replab.FiniteGroup.elements`
 %   method of type `.IndexedFamily` that is conveniently checked by `.IndexedFamilyLaws`, see `.FiniteGroupLaws`).
 %
 % Example:
-%    >>> % We build a group from scratch, using function handles, and verify that it obeys the group laws
+%    >>> % We build a group from scratch, using function handles,
+%    >>> % and verify that it obeys the group laws.
 %    >>> n = 10;
 %    >>> eqvFun = @(x, y) isequal(x, y);
 %    >>> sampleFun = @() randperm(n);
