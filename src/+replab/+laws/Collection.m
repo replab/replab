@@ -1,12 +1,12 @@
-classdef LawsCollection
+classdef Collection < replab.Laws
 
     properties
-        children;
+        children % cell{1,:} of `+replab.Laws`: Laws instances in the collection
     end
 
     methods
 
-        function self = LawsCollection(children)
+        function self = Collection(children)
             self.children = children;
         end
 

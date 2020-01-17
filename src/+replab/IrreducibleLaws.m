@@ -1,8 +1,8 @@
 classdef IrreducibleLaws < replab.Laws
 
     properties
-        irreducible; % Irreducible decomposition
-        M;
+        irreducible % Irreducible decomposition
+        M % d x d matrices of the real/complex relevant field
     end
 
     methods
@@ -13,14 +13,14 @@ classdef IrreducibleLaws < replab.Laws
             self.M = replab.domain.Matrices(irreducible.parent.field, d, d);
         end
 
-        function law_decomposes_entire_space(self)
+        function law_decomposes_entire_space_(self)
             U = self.irreducible.U;
             self.M.assertEqv(U' * U, eye(self.irreducible.parent.dimension));
         end
 
         function isotypicLaws = laws_isotypic_components(self)
             children = cellfun(@(x) replab.IsotypicLaws(x), self.irreducible.components, 'uniform', 0);
-            isotypicLaws = replab.LawsCollection(children);
+            isotypicLaws = replab.laws.Collection(children);
         end
 
     end

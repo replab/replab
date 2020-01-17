@@ -1,4 +1,4 @@
-classdef IndexedFamily < replab.Str
+classdef IndexedFamily < replab.Samplable
 % Describes an indexed family of elements
 %
 % See https://en.wikipedia.org/wiki/Indexed_family , and our indices are
@@ -45,6 +45,8 @@ classdef IndexedFamily < replab.Str
 
     methods
 
+        % replab.Str methods
+
         function s = shortStr(self, maxColumns)
             s = sprintf('Indexed family of %s elements', replab.shortStr(self.size, maxColumns));
         end
@@ -86,6 +88,8 @@ classdef IndexedFamily < replab.Str
             lines = vertcat({self.shortStr(maxColumns)}, replab.str.align(table, 'rcl'));
         end
 
+        % replab.Samplable methods
+
         function obj = sample(self)
         % Returns an element sampled uniformly
         %
@@ -93,6 +97,8 @@ classdef IndexedFamily < replab.Str
         %   Random element of this family
             obj = self.at(randint(self.size)); % use randint as it is the method equivalent to randi on @vpi
         end
+
+        % Own methods
 
         function C = toCell(self)
         % Returns a row cell array containing all elements of this family

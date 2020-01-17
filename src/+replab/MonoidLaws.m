@@ -1,9 +1,15 @@
 classdef MonoidLaws < replab.DomainLaws
+% Laws obeyed by a monoid
+
+    properties
+        N10 % Integer between 1 and 10
+    end
 
     methods
 
         function self = MonoidLaws(T)
             self@replab.DomainLaws(T);
+            self.N10 = replab.domain.intAsDouble(1, 10);
         end
 
         function law_associativity_TTT(self, x, y, z)
@@ -41,7 +47,7 @@ classdef MonoidLaws < replab.DomainLaws
             self.T.assertEqv(id1, id2);
         end
 
-        function law_identity(self)
+        function law_identity_(self)
         % Checks that the identity element is equal to the identity
             id = self.T.identity;
             self.assert(self.T.isIdentity(id));

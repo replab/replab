@@ -1,15 +1,15 @@
 classdef SubRepLaws < replab.RepLaws
-    
+
     methods
-        
+
         function self = SubRepLaws(rep)
             self = self@replab.RepLaws(rep);
         end
-        
-        function law_basis_is_unitary(self)
+
+        function law_basis_is_unitary_(self)
             self.M.assertEqv(self.rep.U * self.rep.U', eye(self.rep.dimension));
         end
-        
+
         function law_relation_with_parent_rep_G(self, g)
             if ~isempty(self.rep.parent)
                 parentRho = self.rep.parent.image(g);
@@ -19,8 +19,8 @@ classdef SubRepLaws < replab.RepLaws
                 self.M.assertEqv(self.rep.U*parentRho*self.rep.U', rho);
             end
         end
-        
-        function law_nice_basis_reproduces_basis(self)
+
+        function law_nice_basis_reproduces_basis_(self)
             if ~isempty(self.rep.niceBasis)
                 self.assert(~replab.isNonZeroMatrix(self.rep.niceBasis.U - self.rep.U, replab.Parameters.doubleEigTol));
             end
@@ -38,7 +38,7 @@ classdef SubRepLaws < replab.RepLaws
                 end
             end
         end
-        
+
     end
-    
+
 end

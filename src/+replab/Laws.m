@@ -1,14 +1,37 @@
 classdef Laws < replab.Str
-% Describes a structure that obeys to algebraic laws
+% Describes the laws that an algebraic structure should obey
 %
-% Laws are described by methods called ``law_METHODNAME_TYPES`` where
+% Those laws are tested using random instances of the elements in the laws by the testing framework.
 %
-% - ``METHODNAME`` is a snake_case identifier with each word starting with a lower case character,
-% - ``TYPES`` is a string composed of the concatenation of the possible definitions below
-% - ``Zn`` is an integer from -n to n, represented as a double
-% - ``Nn`` is an integer from 1 to n, represented as a double
-% - ``N0n`` is an integer from 0 to n, represented as a double
-% - any other letter should be the name of a property of this Laws instance representing a domain
+% Laws are discovered by the `.getTestCases` method, by enumerating the methods of this class.
+%
+% - Methods that start with a ``law_`` prefix describe a single law. Then the method name has the
+%   following structure: ``law_{method name}_{types}``. The part ``{method name}`` is the law name
+%   and corresponds to any valid identifier (thus the characters ``A-Z``, ``a-z``, ``0-9`` and ``_`` are allowed).
+%   It will be interpreted as the law name, replacing underscore characters by spaces.
+%   The ``{types}`` part contains zero or more type identifiers: a type identifier is a letter (``A-Z``, ``a-z``)
+%   followed by zero of more digits (``0-9``). This part does not contain any underscore.
+%   The number of type identifiers must correspond to the number of arguments of the method (excluding ``self``).
+%   Each type identifier must correspond to a property field of this class of type `+replab.Samplable`, and
+%   those samplable sets will be used to sample the random instances passed to the law check method.
+%   Note that a law that does not require any arguments corresponds to a method name ending with an underscore.
+%
+% - Methods that start with a ``laws_`` prefix must return another `.Laws` instance. It enables delegation
+%   of checks when a tested object has subparts (for example, a `.FiniteGroup` has a `~+replab.FiniteGroup.elements`
+%   method of type `.IndexedFamily` that is conveniently checked by `.IndexedFamilyLaws`, see `.FiniteGroupLaws`).
+%
+% Example:
+%    >>> % We build a group from scratch, using function handles, and verify that it obeys the group laws
+%    >>> n = 10;
+%    >>> eqvFun = @(x, y) isequal(x, y);
+%    >>> sampleFun = @() randperm(n);
+%    >>> composeFun = @(x, y) x(y);
+%    >>> identity = 1:n;
+%    >>> inverseFun = @(x) arrayfun(@(i) find(x == i), 1:10);
+%    >>> S10 = replab.Group.lambda('Permutations of 1..10', eqvFun, sampleFun, composeFun, identity, inverseFun)
+%        output
+%    >>> S10laws = replab.GroupLaws(S10)
+%    >>> S10laws.check
 
     methods
 
@@ -41,41 +64,42 @@ classdef Laws < replab.Str
         end
 
         function [testNames testFuns] = getTestCases(self)
-        % Enumerates the laws present in "self" by looking for methods of the form law_propertyName_TYPES
+        % Enumerates the laws present in this instance by looking for methods with the correct prefix
+        %
+        % We look for the ``law_`` and ``laws_`` prefixes, see the `.Laws` class description.
             testNames = {};
             testFuns = {};
-            MC = metaclass(self);
-            M = MC.MethodList;
+            M = replab.compat.methodList(metaclass(self));
             for i = 1:length(M)
-                if isa(M, 'cell')
-                    % Octave returns a cell array
-                    method = M{i};
-                else
-                    % Matlab an object array
-                    method = M(i);
-                end
+                method = M{i};
                 name = method.Name;
-                if length(name) > 5 && isequal(name(1:5), 'laws_')
-                    % It is a method that populates test cases from a Laws
-                    % subinstance
-                    nameParts = strsplit(name, '_');
-                    prefix = [strjoin(nameParts(2:end), ' ') '->'];
-                    newLaws = self.(name);
-                    [newTestNames newTestFuns] = newLaws.getTestCases;
-                    newTestNames = cellfun(@(x) [prefix x], newTestNames, 'UniformOutput', false);
-                    testNames = horzcat(testNames, newTestNames);
-                    testFuns = horzcat(testFuns, newTestFuns);
-                end
-                if length(name) > 4 && isequal(name(1:4), 'law_')
-                    % It is a method that describes a test case
-                    [lawName argFuns] = replab.laws.collectTypes(self, name);
-                    if length(argFuns) > 0
-                        testFun = @() replab.laws.runNTimes(replab.Laws.nRuns, self, name, argFuns);
-                    else
-                        testFun = @() replab.laws.runNTimes(1, self, name, {});
+                pos = find(name == '_', 1);
+                if ~isempty(pos)
+                    prefix = name(1:pos);
+                    switch prefix
+                      case 'laws_'
+                        % It is a method that populates test cases from a Laws
+                        % subinstance
+                        nameParts = strsplit(name, '_');
+                        prefix = [strjoin(nameParts(2:end), ' ') '->'];
+                        newLaws = self.(name);
+                        [newTestNames newTestFuns] = newLaws.getTestCases;
+                        newTestNames = cellfun(@(x) [prefix x], newTestNames, 'UniformOutput', false);
+                        testNames = horzcat(testNames, newTestNames);
+                        testFuns = horzcat(testFuns, newTestFuns);
+                      case 'law_'
+                        % It is a method that describes a test case
+                        [lawName domains] = replab.laws.parseLawMethodName(self, name);
+                        if length(domains) > 0
+                            % has randomized arguments
+                            testFun = @() replab.laws.runNTimes(replab.Laws.nRuns, self, name, domains);
+                        else
+                            % does not have randomized arguments
+                            testFun = @() replab.laws.runNTimes(1, self, name, {});
+                        end
+                        testNames{end+1} = lawName;
+                        testFuns{end+1} = testFun;
                     end
-                    testNames{end+1} = lawName;
-                    testFuns{end+1} = testFun;
                 end
             end
         end
@@ -83,7 +107,13 @@ classdef Laws < replab.Str
         function check(self)
         % Runs the randomized tests without using MOxUnit
         %
-        % Useful from the REPL command line
+        % This method is useful from the REPL command line.
+        %
+        % Example:
+        %   >>> S5 = replab.S(5);
+        %   >>> L = replab.GroupLaws(S5);
+        %   >>> L.check
+        %       output
             [testNames testFuns] = self.getTestCases;
             for i = 1:length(testNames)
                 disp(sprintf('Checking %s...', testNames{i}));
@@ -96,7 +126,7 @@ classdef Laws < replab.Str
         % Adds law checks as test cases to the given test suite
         %
         % Args:
-        %   testSuite (MOxUnitTestSuite object): Adds the test cases of these laws to this
+        %   testSuite (MOxUnitTestSuite): Adds the test cases of these laws to this
         %   testName (charstring, optional): name of the test
             nRuns = replab.Laws.nRuns;
             if nargin < 3
@@ -116,16 +146,16 @@ classdef Laws < replab.Str
     end
 
     methods (Static)
+
         function value = nRuns(newValue)
-        % Sets/tells the default number of runs
+        % Sets/gets the default number of runs
         %
         % Args:
-        %     newValue (integer, optional): Sets the number of runs
+        %     newValue (integer, optional): Sets the number of runs; if omitted returns the current number of runs
         %
         % Returns:
         %     integer: number of runs
-
-            persistent n;
+            persistent n
             if isempty(n)
                 n = 20;
             end
@@ -135,6 +165,7 @@ classdef Laws < replab.Str
             end
             value = n;
         end
+
     end
 
 end

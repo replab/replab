@@ -1,4 +1,4 @@
-classdef Domain < replab.Str
+classdef Domain < replab.Samplable
 % Describes a set of elements with a common structure
 %
 % Those elements can be compared (`.eqv`), and random elements can be produced (`.sample`).
@@ -14,16 +14,6 @@ classdef Domain < replab.Str
         %
         % Returns:
         %   logical: True when ``t`` and ``u`` are equivalent, and false otherwise
-            error('Abstract');
-        end
-
-        function t = sample(self)
-        % Samples an element from this domain
-        %
-        % This method does not make any guarantees about genericity, and is primarily used for law checks.
-        %
-        % Returns:
-        %   domain element: Random domain element
             error('Abstract');
         end
 
