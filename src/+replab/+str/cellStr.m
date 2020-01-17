@@ -10,6 +10,9 @@ function s = cellStr(obj, maxColumns, r, c)
 %   maxColumns (integer): Maximum number of columns
 %   r (integer): Row index
 %   c (integer): Column index
+%
+% Returns:
+%   charstring: String representation of the cell
     if iscell(obj)
         if nargin < 4
             s = replab.str.shortStr(obj{r}, maxColumns);

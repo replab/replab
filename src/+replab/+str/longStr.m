@@ -1,7 +1,7 @@
 function lines = longStr(obj, maxRows, maxColumns)
 % Returns a multiline description of the given object, that fits within the given width/height limit
 %
-% (this is the fallback implementation; call 'replab.longStr' in user code)
+% (this is the fallback implementation; call `+replab.longStr` in user code)
 %
 % Args:
 %   obj: Object to pretty print

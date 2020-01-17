@@ -1,8 +1,7 @@
 function z = horzcatForce(varargin)
 % Returns a 'horzcat' of multiple (nargin >= 0) arguments
 %
-% If any of the arguments is not a horizontal cell array vector,
-% reshapes it.
+% If any of the arguments is not a horizontal cell array vector, reshapes it.
     switch nargin
       case 0
         z = cell(1, 0);

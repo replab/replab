@@ -1,9 +1,8 @@
 function s = pluralize(n, singular, plural)
 % Returns a string description of a given number of given things
 %
-% pluralize(3, 'horse', 'horses') is 'three horses'
-% pluralize(0, 'apple', 'apples') is 'zero apple'
-% and so on.
+% ``pluralize(3, 'horse', 'horses')`` is ``'three horses'``
+% ``pluralize(0, 'apple', 'apples')`` is ``'zero apple'`` and so on.
 %
 % The plural form can be omitted if it is formed by the suffix -s.
     if nargin < 3

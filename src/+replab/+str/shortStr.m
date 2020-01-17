@@ -1,5 +1,5 @@
 function s = shortStr(obj, maxColumns)
-% Default implementation for replab.shortStr
+% Default implementation for `+replab.shortStr`
     overLimit = false;
     if isscalar(obj) % prints scalars using the relevant method
         if isa(obj, 'cell')
