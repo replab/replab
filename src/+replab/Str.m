@@ -16,7 +16,7 @@ classdef Str < handle
         %
         % Returns:
         %   boolean: true iff self == rhs
-            if replab.settings.isOctave
+            if replab.compat.isOctave
                 res = true(size(self));
             else
                 res = eq@handle(self, rhs);

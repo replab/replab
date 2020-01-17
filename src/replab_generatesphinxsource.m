@@ -8,7 +8,7 @@ function replab_generatesphinxsource
     switch exist(docsrcRoot)
       case 7
         disp('Temp source directory exists, removing it');
-        replab.infra.rmdirRec(docsrcRoot);
+        replab.compat.rmdirRec(docsrcRoot);
       case 0
         disp('Temp source directory does not exist yet');
         % Create subfolder if inexistent

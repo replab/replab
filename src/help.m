@@ -21,7 +21,7 @@ function help(varargin)
     [pathStr, helpFunctionName, extension] = fileparts(which(mfilename));
 
     persistent codeBase
-    
+
     % Are we in full mode or not?
     fullMode = false;
     if (length(varargin) == 2)
@@ -33,7 +33,7 @@ function help(varargin)
             varargin = {varargin{1}};
         end
     end
-    
+
     % Are we asking help on an object or method applied to an object?
     if (length(varargin) == 1) && ischar(varargin{1})
         % we check if the subject starts with a variable
@@ -74,7 +74,7 @@ function help(varargin)
             end
         end
     end
-    
+
     if (length(varargin) == 1) && (length(varargin{1}) >= 6) && (isequal(varargin{1}(1:6), 'replab')) ...
             && ((length(varargin{1}) < 7) || (varargin{1}(7) == '.'))
         % We are looking for a replab-related help
@@ -153,11 +153,11 @@ function help(varargin)
                 error('The matlab help path was not captured. Please use replab_init first.');
             end
         end
-        
+
         % We call matlab's help function
         currentPath = strrep(pwd, '\', '/');
 
-        if ~replab.settings.isOctave
+        if ~replab.compat.isOctave
             cd(replab.settings.systemHelpPath);
             message = [];
             try

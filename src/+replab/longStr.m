@@ -3,7 +3,7 @@ function lines = longStr(obj, maxRows, maxColumns)
 %
 % Returns a ``nRows x 1`` cell array of strings ``lines``; the output may be cut arbitrarily at columns
 % after ``maxColumns``, and for rows after ``maxRows``. It is up to
-% calling code to shape such overflowing output before finally printing it.  
+% calling code to shape such overflowing output before finally printing it.
 %
 % Args:
 %   obj: Object to pretty print

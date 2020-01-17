@@ -21,7 +21,7 @@ function replab_generatedoctests
     switch exist(doctestRoot)
       case 7
         disp('Doctest directory exists, removing it');
-        replab.infra.rmdirRec(doctestRoot);
+        replab.compat.rmdirRec(doctestRoot);
       case 0
         disp('Doctest directory does not exist yet');
       otherwise

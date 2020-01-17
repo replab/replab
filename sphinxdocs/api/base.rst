@@ -5,14 +5,9 @@ The following classes are at the base of many RepLAB objects.
 
 .. module:: +replab
 
-* `.Str`: provides infrastructure for pretty printing of objects, in a way compatible with Matlab and Octave
 * `.Samplable`: describes a set of elements that can be sampled from
-* `.Domain`: describes a set of elements that can be compared for equality, and sampled from
-
-Str
-+++
-
-.. autoclass:: Str
+* `.Domain`: describes a set of elements that can be compared for equality, and sampled from, obeying `.DomainLaws`
+* `.IndexedFamily`: describes a lazily evaluated sequence of elements, with 1-based big integer indices, obeying `.IndexedFamilyLaws`
 
 Samplable
 +++++++++

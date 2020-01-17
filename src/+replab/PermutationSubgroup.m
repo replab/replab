@@ -1,8 +1,8 @@
 classdef PermutationSubgroup < replab.PermutationGroup
 % Represents a subgroup of a permutation group
-    
+
     methods
-        
+
         function self = PermutationSubgroup(parent, generators, order)
             % stuff derived from parent
             self.parent = parent;
@@ -17,7 +17,7 @@ classdef PermutationSubgroup < replab.PermutationGroup
             end
             self.generators = generators;
         end
-        
+
     end
-        
+
 end
