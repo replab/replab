@@ -23,10 +23,10 @@ project = 'RepLAB'
 copyright = '2018-2019, Denis Rosset, Jean-Daniel Bancal and collaborators'
 author = 'Denis Rosset, Jean-Daniel Bancal and collaborators'
 
-# The short X.Y version
-version = '0.6'
-# The full version, including alpha/beta/rc tags
-release = '0.6.0-SNAPSHOT'
+from pathlib import Path
+
+version = Path('../replab_version.txt').read_text().strip()
+release = version
 
 
 # -- General configuration ---------------------------------------------------
