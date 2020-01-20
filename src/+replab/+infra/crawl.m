@@ -7,6 +7,8 @@ function c = crawl(rootFolder)
 % Returns:
 %   `.CodeBase`: The parsed code base
 
+    % First, we crawl the source code repository and enumerate files.
+    % This is quick.
     toExplore = {{}};
     % toExplore represents a stack of subpaths to explore
     %
@@ -44,6 +46,7 @@ function c = crawl(rootFolder)
         packages.(fn) = filenames;
     end
 
+    % Now we parse source code data.
     packageData = {};
     ind = 1; % current file index
     fns = fieldnames(packages);
@@ -52,11 +55,11 @@ function c = crawl(rootFolder)
         fn = fns{i};
         filenames = packages.(fn);
         packageNameParts = replab.infra.shm.decode(fn);
-        for j = 1:length(filenames);
+        ownFunctions = {};
+        ownClasses = {};
+        for j = 1:length(filenames)
             filename = filenames{j};
             pb.step(ind, filename);
-            ownFunctions = {};
-            ownClasses = {};
             data = replab.infra.CodeTokens.fromFile(filename).parse;
             switch class(data)
               case 'replab.infra.FunctionLikeData'
@@ -66,10 +69,10 @@ function c = crawl(rootFolder)
               otherwise
                 error(sprintf('Unknown type %s', class(data)));
             end
-        ind = ind + 1;
+            ind = ind + 1;
         end
         packageData{1,end+1} = replab.infra.PackageData(packageNameParts, ownFunctions, ownClasses);
     end
-    pb.finish;
+    pb.finish('Code crawl finished.');
     c = replab.infra.CodeBase(rootFolder, packageData);
 end

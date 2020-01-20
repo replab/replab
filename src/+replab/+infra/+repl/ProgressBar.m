@@ -62,11 +62,18 @@ classdef ProgressBar < handle
             self.consoleLine.update(str);
         end
 
-        function finish(self)
+        function finish(self, finishStr)
         % Finishes the progress bar
         %
         % This method should be called after the last step has been completed
-            self.consoleLine.update('Task finished');
+        %
+        % Args:
+        %   finishStr (charstring, optional): String to replace the progress bar with
+        %                                     Default is ``'Task finished'``
+            if nargin < 2
+                finishStr = 'Task finished';
+            end
+            self.consoleLine.update(finishStr);
             fprintf('\n');
             self.consoleLine = [];
         end

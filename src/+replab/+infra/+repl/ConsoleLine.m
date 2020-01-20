@@ -14,13 +14,18 @@ classdef ConsoleLine < handle
         function update(self, str)
         % Updates the displayed line
             n1 = length(self.lineContent);
+            % truncate the displayed line if terminal is not big enough
+            [nR, nC] = replab.compat.terminalSize;
+            if ~isempty(nC) && length(str) > nC
+                str = str(1:nC);
+            end
             n2 = length(str);
-            backslash = 8;
+            backslash = char(8);
             if n1 > 0
                 fprintf('%s', repmat(backslash, 1, n1));
             end
             nErased = max(0, n1 - n2);
-            fprintf('%s%s%s', str, repmat(' ', 1, nErased), repmat(backslash, nErased));
+            fprintf('%s%s%s', str, repmat(' ', 1, nErased), repmat(backslash, 1, nErased));
             self.lineContent = str;
         end
 
