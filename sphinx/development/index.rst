@@ -20,3 +20,4 @@ Further tools and guidelines useful for development can be found here:
    doctests
    style
    scope
+   tips
