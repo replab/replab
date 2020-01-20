@@ -40,6 +40,7 @@ release = version
 # ones.
 extensions = ['sphinx.ext.autodoc',   # for enumeration of objects stuff
               'sphinx.ext.autosummary',
+              'sphinx.ext.githubpages',
               'nbsphinx',
               'sphinx_collapse_admonitions',
               'sphinxcontrib.fulltoc', # for sidebar TOC
