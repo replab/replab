@@ -71,10 +71,14 @@ classdef ProgressBar < handle
         %   finishStr (charstring, optional): String to replace the progress bar with
         %                                     Default is ``'Task finished'``
             if nargin < 2
-                finishStr = 'Task finished';
+                finishStr = [];
             end
-            self.consoleLine.update(finishStr);
-            fprintf('\n');
+            if isempty(finishStr)
+                self.consoleLine.update('');
+            else
+                self.consoleLine.update(finishStr);
+                fprintf('\n');
+            end
             self.consoleLine = [];
         end
 

@@ -73,6 +73,6 @@ function c = crawl(rootFolder)
         end
         packageData{1,end+1} = replab.infra.PackageData(packageNameParts, ownFunctions, ownClasses);
     end
-    pb.finish('Code crawl finished.');
+    pb.finish;
     c = replab.infra.CodeBase(rootFolder, packageData);
 end
