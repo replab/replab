@@ -1,14 +1,16 @@
 function replab_generate(what)
 % Code generation function
 %
-% With ``what = 'sphinx'``, this preprocesses the RepLAB source code to complement the
+% With ``what = 'sphinxsrc'``, this preprocesses the RepLAB source code to complement the
 % `Sphinx Matlab domain <https://github.com/sphinx-contrib/matlabdomain>`_ job.
+%
+% With ``what = 'sphinx'``, this runs the Sphinx documentation generation
 %
 % With ``what = 'doctests'``, this extracts the doctests from the source code and write
 % them to the doctests code folder.
 %
 % Args:
-%   what ({'sphinx', 'doctests', 'all'}, optional): What to generate, default ``'all'``
+%   what ({'sphinxsrc', 'sphinx', 'doctests', 'all'}, optional): What to generate, default ``'all'``
 
     if nargin < 1
         what = 'all';
@@ -24,10 +26,10 @@ function replab_generate(what)
     disp('Crawling code base');
     cb = replab.infra.crawl(srcRoot);
 
-    if isequal(what, 'sphinx') || isequal(what, 'all')
+    if isequal(what, 'sphinxsrc') || isequal(what, 'all')
         % Generate Sphinx preprocessed source files
         srcRoot = fullfile(rp, 'src');
-        sphinxRoot = fullfile(rp, 'sphinxdocs');
+        sphinxRoot = fullfile(rp, 'sphinx');
         sphinxSrcRoot = fullfile(sphinxRoot, '_src');
         replab.infra.mkCleanDir(sphinxRoot, '_src', logFun);
         logFun('Generating rich source code');
@@ -38,6 +40,14 @@ function replab_generate(what)
             replab.infra.sphinx.writeEnrichedSource(sphinxSrcRoot, els{i});
         end
         pb.finish;
+    end
+
+    if isequal(what, 'sphinx') || isequal(what, 'all')
+        replab.infra.mkCleanDir(rp, 'docs', logFun);
+        disp('Running Sphinx');
+        lastPath = pwd;
+        system('sphinx-build -b html sphinx docs');
+        cd(lastPath);
     end
 
     if isequal(what, 'doctests') || isequal(what, 'all')

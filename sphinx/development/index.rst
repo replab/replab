@@ -17,5 +17,6 @@ Further tools and guidelines useful for development can be found here:
    A description of the abbrevations used by the library <abbreviations>
    A succint presentation of the code structure <organization>
    A description of the API documentation style <api_documentation_style>
+   doctests
    style
    scope
