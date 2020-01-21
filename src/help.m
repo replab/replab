@@ -80,8 +80,20 @@ function help(varargin)
         end
     end
 
-    if (length(varargin) == 1) && (length(varargin{1}) >= 6) && (isequal(varargin{1}(1:6), 'replab')) ...
-            && ((length(varargin{1}) < 7) || (varargin{1}(7) == '.'))
+    replabOwns = false;
+
+    if length(varargin) == 1
+        token = varargin{1};
+        if isequal(token, 'replab')
+            replabOwns = true;
+        elseif length(token) > 6 && isequal(token(1:7), 'replab.')
+            replabOwns = true;
+        elseif length(token) > 6 && isequal(token(1:7), 'replab_')
+            replabOwns = true;
+        end
+    end
+
+    if replabOwns
         % We are looking for a replab-related help
         name = varargin{1};
         if isempty(codeBase)

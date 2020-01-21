@@ -44,8 +44,8 @@ function [el linkText] = resolveRef(ref, context, isExternal)
 %     The corresponding element, or ``[]`` if the reference could not be resolved
 %   linkText: charstring
 %     Extracted link text
-    rx = ['^'  '([.~]*)' '([+A-Za-z][+A-za-z0-9_.]*)' '$'];
-    %           prefix            identifier
+    rx = ['^'  '([.~]*)' '(?:root[.])?' '([+A-Za-z][+A-za-z0-9_.]*)' '$'];
+    %           prefix                   identifier
     tokens = regexp(ref, rx, 'tokens', 'once');
     if length(tokens) == 1
         % For Octave compatibilty: octave will not separate an empty prefix
@@ -58,10 +58,10 @@ function [el linkText] = resolveRef(ref, context, isExternal)
     id = tokens{2};
     id = strrep(id, '+', ''); % strip + prefixes
     parts = strsplit(id, '.');
-    head = parts{1};
     if isempty(parts) || any(cellfun(@isempty, parts))
         error('replab:resolveRefError', 'Invalid Sphinx reference %s', ref);
     end
+    head = parts{1};
     if ~ismember(prefix, {'', '.', '~', '~.', '.~'})
         error('replab:resolveRefError', 'Invalid prefix % in reference %s', prefix, ref);
     end

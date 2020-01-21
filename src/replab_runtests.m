@@ -1,7 +1,7 @@
 function result = replab_runtests(withCoverage, onlyFastTests)
-% result = replab_runtests([withCoverage], [onlyFastTests])
+% Tests the library functionalities.
 %
-% replab_runtests tests the library functionalities
+% This function calls the `root.replab_generate` function with the ``doctests`` argument.
 %
 % Args:
 %     withCoverage (boolean): Enable code coverage (optional, default  value is false)
