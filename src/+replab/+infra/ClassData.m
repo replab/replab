@@ -200,6 +200,9 @@ classdef ClassData < replab.Str
             if isempty(res)
                 replab.infra.parseError(ct, pos, 'Expected class definition here');
             end
+            if replab.infra.isContinuation(line)
+                replab.infra.parseError(ct, pos, 'Continuations ... are not supported');
+            end
             pos = res;
             tokens = cellfun(@strtrim, regexp(line, '[&<]', 'split'), 'uniform', 0);
             matches = regexp(tokens{1}, '^classdef\s+(\w+)$', 'tokens', 'once');
