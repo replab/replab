@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Style guide &#8212; RepLAB 0.5.2-SNAPSHOT documentation</title>
+    <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script type="text/javascript" src="../_static/js/collapse_helper.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Scope of the RepLAB project" href="scope.html" />
+    <link rel="prev" title="Doctests guide" href="doctests.html" />
+  
+   
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="scope.html" title="Scope of the RepLAB project"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="doctests.html" title="Doctests guide"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.5.2-SNAPSHOT documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Development and Community</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><a href="
+    ../index.html" class="text-logo">RepLAB</a>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2>Table Of Contents</h2>
+  </div>
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-to guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference/API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Development and Community</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="abbreviations.html">A description of the abbrevations used by the library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="organization.html">A succint presentation of the code structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_documentation_style.html">A description of the API documentation style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doctests.html">Doctests guide</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Style guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#capitalization">Capitalization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#object-creation">Object creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#no-abstract-methods-in-abstract-base-classes">No abstract methods in abstract base classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scope.html">Scope of the RepLAB project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tips.html">A few tips and tricks</a></li>
+</ul>
+</li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <div id="main-search">
+      <form class="form-inline" action="../search.html" method="GET" role="form">
+        <div class="input-group">
+          <input name="q" type="text" class="form-control" placeholder="Search...">
+        </div>
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../index.html">Docs</a></li>
+              
+                <li><a href="index.html">Development and Community</a></li>
+              
+              <li>Style guide</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+            
+  <div class="section" id="style-guide">
+<h1>Style guide<a class="headerlink" href="#style-guide" title="Permalink to this headline">¶</a></h1>
+<p>We describe guiding principles used in the code.</p>
+<div class="section" id="capitalization">
+<h2>Capitalization<a class="headerlink" href="#capitalization" title="Permalink to this headline">¶</a></h2>
+<p>CamelCase/camelCase follows the separations of US English; words
+separated either by a hyphen or a space are separated in the camel case.
+Class names are <code class="docutils literal notranslate"><span class="pre">UpperCamelCase</span></code>. Method and function names are
+<code class="docutils literal notranslate"><span class="pre">lowerCamelCase</span></code>.</p>
+</div>
+<div class="section" id="object-creation">
+<h2>Object creation<a class="headerlink" href="#object-creation" title="Permalink to this headline">¶</a></h2>
+<p>When there is only one implementation of an interface, the constructor
+is public and can be called directly.</p>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">S4</span> <span class="pre">=</span> <span class="pre">replab.Permutations(4)</span></code></p>
+<p>When a base interface is available and several optimized implementations
+are available, the object should be constructed by calling a function
+with the same name as the base interface, in <code class="docutils literal notranslate"><span class="pre">lowerCamelCase</span></code>.</p>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">=</span> <span class="pre">replab.equivariant(rep1,</span> <span class="pre">rep2)</span></code></p>
+<p>That function will then construct the object with the best performance
+characteristics.</p>
+</div>
+<div class="section" id="no-abstract-methods-in-abstract-base-classes">
+<h2>No abstract methods in abstract base classes<a class="headerlink" href="#no-abstract-methods-in-abstract-base-classes" title="Permalink to this headline">¶</a></h2>
+<p>As Octave does not support the <code class="docutils literal notranslate"><span class="pre">methods</span> <span class="pre">(Abstract)</span></code> syntax, we provide
+generic implementations for abstract methods by throwing
+<code class="docutils literal notranslate"><span class="pre">error('Abstract')</span></code>.</p>
+</div>
+</div>
+
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="doctests.html" title="previous chapter (use the left arrow)">Doctests guide</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="scope.html" title="next chapter (use the right arrow)">Scope of the RepLAB project</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="scope.html" title="Scope of the RepLAB project"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="doctests.html" title="Doctests guide"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.5.2-SNAPSHOT documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Development and Community</a> &#187;</li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2019, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>

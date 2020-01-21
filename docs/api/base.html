@@ -1,0 +1,897 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Base object types in RepLAB &#8212; RepLAB 0.5.2-SNAPSHOT documentation</title>
+    <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script type="text/javascript" src="../_static/js/collapse_helper.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Laws" href="laws.html" />
+    <link rel="prev" title="Pretty printing in RepLAB" href="print.html" />
+  
+   
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="laws.html" title="Laws"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="print.html" title="Pretty printing in RepLAB"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.5.2-SNAPSHOT documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference/API</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><a href="
+    ../index.html" class="text-logo">RepLAB</a>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2>Table Of Contents</h2>
+  </div>
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-to guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference/API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="print.html">Pretty printing in RepLAB</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Base object types in RepLAB</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#samplable">Samplable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#domain">Domain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#domainlaws">DomainLaws</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#indexedfamily">IndexedFamily</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#indexedfamilylaws">IndexedFamilyLaws</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="laws.html">Laws</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groups.html">Basic group structures in RepLAB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permutations.html">Permutation groups in RepLAB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="infrastructure.html">Infrastructure</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development and Community</a></li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <div id="main-search">
+      <form class="form-inline" action="../search.html" method="GET" role="form">
+        <div class="input-group">
+          <input name="q" type="text" class="form-control" placeholder="Search...">
+        </div>
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../index.html">Docs</a></li>
+              
+                <li><a href="index.html">Technical Reference/API</a></li>
+              
+              <li>Base object types in RepLAB</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+            
+  <div class="section" id="base-object-types-in-replab">
+<h1>Base object types in RepLAB<a class="headerlink" href="#base-object-types-in-replab" title="Permalink to this headline">¶</a></h1>
+<p>The following classes are at the base of many RepLAB objects.</p>
+<span class="target" id="module-+replab"></span><ul class="simple">
+<li><p><a class="reference internal" href="#+replab.Samplable" title="+replab.Samplable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Samplable</span></code></a>: describes a set of elements that can be sampled from</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain" title="+replab.Domain"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Domain</span></code></a>: describes a set of elements that can be compared for equality, and sampled from, obeying <a class="reference internal" href="#+replab.DomainLaws" title="+replab.DomainLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">DomainLaws</span></code></a></p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamily" title="+replab.IndexedFamily"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">IndexedFamily</span></code></a>: describes a lazily evaluated sequence of elements, with 1-based big integer indices, obeying <a class="reference internal" href="#+replab.IndexedFamilyLaws" title="+replab.IndexedFamilyLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">IndexedFamilyLaws</span></code></a></p></li>
+</ul>
+<div class="section" id="samplable">
+<h2>Samplable<a class="headerlink" href="#samplable" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="+replab.Samplable">
+<em class="property">class </em><code class="sig-prename descclassname">replab.</code><code class="sig-name descname">Samplable</code><a class="headerlink" href="#+replab.Samplable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="print.html#+replab.Str" title="+replab.Str"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Str</span></code></a></p>
+<p>Describes a set of elements that can be sample</p>
+<p>Random elements are produced by the method <a class="reference internal" href="#+replab.Samplable.sample" title="+replab.Samplable.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a>.</p>
+<div class="collapsed admonition">
+<p class="admonition-title">Class members list</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.Samplable.additionalFields" title="+replab.Samplable.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
+<li><p><a class="reference internal" href="#+replab.Samplable.disp" title="+replab.Samplable.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.Samplable.eq" title="+replab.Samplable.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.Samplable.headerStr" title="+replab.Samplable.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.Samplable.hiddenFields" title="+replab.Samplable.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
+<li><p><a class="reference internal" href="#+replab.Samplable.lambda" title="+replab.Samplable.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a domain from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.Samplable.longStr" title="+replab.Samplable.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.Samplable.sample" title="+replab.Samplable.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from this domain</p></li>
+<li><p><a class="reference internal" href="#+replab.Samplable.shortStr" title="+replab.Samplable.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+</ul>
+</div>
+<div class="collapsed admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="method">
+<dt id="+replab.Samplable.additionalFields">
+<code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Samplable.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Samplable.disp">
+<code class="sig-name descname">disp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Samplable.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Samplable.eq">
+<code class="sig-name descname">eq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Samplable.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.eq" title="+replab.Str.eq"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.eq()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Samplable.headerStr">
+<code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Samplable.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.headerStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Samplable.hiddenFields">
+<code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Samplable.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Samplable.longStr">
+<code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Samplable.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Samplable.shortStr">
+<code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Samplable.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="staticmethod">
+<dt id="+replab.Samplable.lambda">
+<em class="property">static </em><code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">sampleFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Samplable.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a domain from function handles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>header</strong> (<em>char</em>) – Header display string</p></li>
+<li><p><strong>sampleFun</strong> (<em>function_handle</em>) – Handle implementing the <a class="reference internal" href="#+replab.Samplable.sample" title="+replab.Samplable.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> method</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The constructed domain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.Samplable" title="+replab.Samplable"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Samplable</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Samplable.sample">
+<code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Samplable.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Samples an element from this domain</p>
+<p>This method does not make any guarantees about genericity, and is primarily used for law checks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Random domain element</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>element</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="domain">
+<h2>Domain<a class="headerlink" href="#domain" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="+replab.Domain">
+<em class="property">class </em><code class="sig-prename descclassname">replab.</code><code class="sig-name descname">Domain</code><a class="headerlink" href="#+replab.Domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#+replab.Samplable" title="+replab.Samplable"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Samplable</span></code></a></p>
+<p>Describes a set of elements with a common structure</p>
+<p>Those elements can be compared (<a class="reference internal" href="#+replab.Domain.eqv" title="+replab.Domain.eqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eqv</span></code></a>), and random elements can be produced (<a class="reference internal" href="#+replab.Domain.sample" title="+replab.Domain.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a>).</p>
+<div class="collapsed admonition">
+<p class="admonition-title">Class members list</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.Domain.additionalFields" title="+replab.Domain.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.assertEqv" title="+replab.Domain.assertEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertEqv</span></code></a> – Compares two elements for equality</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.assertNotEqv" title="+replab.Domain.assertNotEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertNotEqv</span></code></a> – Compares two elements for inequality</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.disp" title="+replab.Domain.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.eq" title="+replab.Domain.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.eqv" title="+replab.Domain.eqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eqv</span></code></a> – Tests domain elements for equality/equivalence</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.headerStr" title="+replab.Domain.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.hiddenFields" title="+replab.Domain.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.lambda" title="+replab.Domain.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a domain from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.longStr" title="+replab.Domain.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.sample" title="+replab.Domain.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from this domain</p></li>
+<li><p><a class="reference internal" href="#+replab.Domain.shortStr" title="+replab.Domain.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+</ul>
+</div>
+<div class="collapsed admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="method">
+<dt id="+replab.Domain.additionalFields">
+<code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Domain.disp">
+<code class="sig-name descname">disp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Domain.eq">
+<code class="sig-name descname">eq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.eq" title="+replab.Str.eq"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.eq()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Domain.headerStr">
+<code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.headerStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Domain.hiddenFields">
+<code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Domain.longStr">
+<code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Domain.sample">
+<code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.Samplable.sample" title="+replab.Samplable.sample"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Samplable.sample()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Domain.shortStr">
+<code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="method">
+<dt id="+replab.Domain.assertEqv">
+<code class="sig-name descname">assertEqv</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.assertEqv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares two elements for equality</p>
+<p>Asserts that <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are not equivalent</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>domain element</em>) – first element</p></li>
+<li><p><strong>y</strong> (<em>domain element</em>) – second element to compare</p></li>
+<li><p><strong>context</strong> (<em>charstring</em>) – context</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Domain.assertNotEqv">
+<code class="sig-name descname">assertNotEqv</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.assertNotEqv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares two elements for inequality</p>
+<p>Asserts that <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are equivalent</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>domain element</em>) – first element</p></li>
+<li><p><strong>y</strong> (<em>domain element</em>) – second element to compare</p></li>
+<li><p><strong>context</strong> (<em>charstring</em>) – context</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Domain.eqv">
+<code class="sig-name descname">eqv</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">t</em>, <em class="sig-param">u</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.eqv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests domain elements for equality/equivalence</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>domain element</em>) – First element to test</p></li>
+<li><p><strong>u</strong> (<em>domain element</em>) – Second element to test</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True when <code class="docutils literal notranslate"><span class="pre">t</span></code> and <code class="docutils literal notranslate"><span class="pre">u</span></code> are equivalent, and false otherwise</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>logical</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="+replab.Domain.lambda">
+<em class="property">static </em><code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Domain.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a domain from function handles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>header</strong> (<em>char</em>) – Header display string</p></li>
+<li><p><strong>eqvFun</strong> (<em>function_handle</em>) – Handle implementing the <a class="reference internal" href="#+replab.Domain.eqv" title="+replab.Domain.eqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eqv</span></code></a> method</p></li>
+<li><p><strong>sampleFun</strong> (<em>function_handle</em>) – Handle implementing the <a class="reference internal" href="#+replab.Domain.sample" title="+replab.Domain.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> method</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The constructed domain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.Domain" title="+replab.Domain"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Domain</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="domainlaws">
+<h2>DomainLaws<a class="headerlink" href="#domainlaws" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="+replab.DomainLaws">
+<em class="property">class </em><code class="sig-prename descclassname">replab.</code><code class="sig-name descname">DomainLaws</code><span class="sig-paren">(</span><em class="sig-param">T</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="laws.html#+replab.Laws" title="+replab.Laws"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Laws</span></code></a></p>
+<p>Law checks for a generic Domain</p>
+<div class="collapsed admonition">
+<p class="admonition-title">Class members list</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.DomainLaws.DomainLaws" title="+replab.DomainLaws.DomainLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">DomainLaws</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.T" title="+replab.DomainLaws.T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">T</span></code></a> – (<a class="reference internal" href="#+replab.Domain" title="+replab.Domain"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Domain</span></code></a>): Domain under test</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.addTestCases" title="+replab.DomainLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.additionalFields" title="+replab.DomainLaws.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.assert" title="+replab.DomainLaws.assert"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assert</span></code></a> – Assert function with a verbose error message</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.check" title="+replab.DomainLaws.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Runs the randomized tests without using MOxUnit</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.disp" title="+replab.DomainLaws.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.eq" title="+replab.DomainLaws.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.getTestCases" title="+replab.DomainLaws.getTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">getTestCases</span></code></a> – Enumerates the laws present in this instance by looking for methods with the correct prefix</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.headerStr" title="+replab.DomainLaws.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.hiddenFields" title="+replab.DomainLaws.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.law_eqv_T" title="+replab.DomainLaws.law_eqv_T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">law_eqv_T</span></code></a> – Checks that an element is equivalent to itself</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.longStr" title="+replab.DomainLaws.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.nRuns" title="+replab.DomainLaws.nRuns"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nRuns</span></code></a> – Sets/gets the default number of runs</p></li>
+<li><p><a class="reference internal" href="#+replab.DomainLaws.shortStr" title="+replab.DomainLaws.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+</ul>
+</div>
+<div class="collapsed admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="method">
+<dt id="+replab.DomainLaws.DomainLaws">
+<code class="sig-name descname">DomainLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.DomainLaws" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.DomainLaws.addTestCases">
+<code class="sig-name descname">addTestCases</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">testSuite</em>, <em class="sig-param">testName</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.addTestCases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="laws.html#+replab.Laws.addTestCases" title="+replab.Laws.addTestCases"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Laws.addTestCases()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.DomainLaws.additionalFields">
+<code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.DomainLaws.assert">
+<code class="sig-name descname">assert</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">predicate</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.assert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="laws.html#+replab.Laws.assert" title="+replab.Laws.assert"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Laws.assert()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.DomainLaws.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="laws.html#+replab.Laws.check" title="+replab.Laws.check"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Laws.check()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.DomainLaws.disp">
+<code class="sig-name descname">disp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.DomainLaws.eq">
+<code class="sig-name descname">eq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.eq" title="+replab.Str.eq"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.eq()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.DomainLaws.getTestCases">
+<code class="sig-name descname">getTestCases</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.getTestCases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="laws.html#+replab.Laws.getTestCases" title="+replab.Laws.getTestCases"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Laws.getTestCases()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.DomainLaws.headerStr">
+<code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.headerStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.DomainLaws.hiddenFields">
+<code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.DomainLaws.longStr">
+<code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.DomainLaws.nRuns">
+<code class="sig-name descname">nRuns</code><span class="sig-paren">(</span><em class="sig-param">newValue</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.nRuns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="laws.html#+replab.Laws.nRuns" title="+replab.Laws.nRuns"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Laws.nRuns()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.DomainLaws.shortStr">
+<code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="attribute">
+<dt id="+replab.DomainLaws.T">
+<code class="sig-name descname">T</code><em class="property"> = None</em><a class="headerlink" href="#+replab.DomainLaws.T" title="Permalink to this definition">¶</a></dt>
+<dd><p>(<a class="reference internal" href="#+replab.Domain" title="+replab.Domain"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Domain</span></code></a>): Domain under test</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.DomainLaws.law_eqv_T">
+<code class="sig-name descname">law_eqv_T</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.law_eqv_T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that an element is equivalent to itself</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="indexedfamily">
+<h2>IndexedFamily<a class="headerlink" href="#indexedfamily" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="+replab.IndexedFamily">
+<em class="property">class </em><code class="sig-prename descclassname">replab.</code><code class="sig-name descname">IndexedFamily</code><a class="headerlink" href="#+replab.IndexedFamily" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#+replab.Samplable" title="+replab.Samplable"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Samplable</span></code></a></p>
+<p>Describes an indexed family of elements</p>
+<p>See <a class="reference external" href="https://en.wikipedia.org/wiki/Indexed_family">https://en.wikipedia.org/wiki/Indexed_family</a> , and our indices are
+(bounded) integers, represented by <code class="docutils literal notranslate"><span class="pre">vpi</span></code> instances.</p>
+<p>The family supports element indexing and searching for elements.</p>
+<div class="collapsed admonition">
+<p class="admonition-title">Class members list</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.IndexedFamily.additionalFields" title="+replab.IndexedFamily.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamily.at" title="+replab.IndexedFamily.at"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">at</span></code></a> – Retrieves a element by position</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamily.disp" title="+replab.IndexedFamily.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamily.eq" title="+replab.IndexedFamily.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamily.find" title="+replab.IndexedFamily.find"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">find</span></code></a> – Returns the index of a given element</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamily.headerStr" title="+replab.IndexedFamily.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamily.hiddenFields" title="+replab.IndexedFamily.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamily.lambda" title="+replab.IndexedFamily.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs an indexed family from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamily.longStr" title="+replab.IndexedFamily.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamily.sample" title="+replab.IndexedFamily.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Returns an element sampled uniformly</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamily.shortStr" title="+replab.IndexedFamily.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamily.size" title="+replab.IndexedFamily.size"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">size</span></code></a> – vpi: Number of elements contained in this enumerator</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamily.toCell" title="+replab.IndexedFamily.toCell"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">toCell</span></code></a> – Returns a row cell array containing all elements of this family</p></li>
+</ul>
+</div>
+<div class="collapsed admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="method">
+<dt id="+replab.IndexedFamily.additionalFields">
+<code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamily.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamily.disp">
+<code class="sig-name descname">disp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamily.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamily.eq">
+<code class="sig-name descname">eq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamily.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.eq" title="+replab.Str.eq"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.eq()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamily.headerStr">
+<code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamily.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.headerStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamily.hiddenFields">
+<code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamily.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamily.longStr">
+<code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamily.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamily.shortStr">
+<code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamily.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="method">
+<dt id="+replab.IndexedFamily.at">
+<code class="sig-name descname">at</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ind</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamily.at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves a element by position</p>
+<p>Normally, RepLAB encodes big integers using the <code class="docutils literal notranslate"><span class="pre">vpi</span></code> type. As a user convenience
+(esp. on the command line), this method must also accept string and double arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ind</strong> (<em>vpi or double or string</em>) – Index of element to be retrieved, 1 &lt;= <code class="docutils literal notranslate"><span class="pre">ind</span></code> &lt;= <code class="docutils literal notranslate"><span class="pre">self.size</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The element at the “ind” position</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamily.find">
+<code class="sig-name descname">find</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">obj</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamily.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the index of a given element</p>
+<p>If the element is not part of the family, the behavior is undefined.
+Best effort can be made to return <code class="docutils literal notranslate"><span class="pre">[]</span></code>, but this is not guaranteed unless
+documented by specific <a class="reference internal" href="#+replab.IndexedFamily" title="+replab.IndexedFamily"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.IndexedFamily</span></code></a> implementations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – Element to retrieve</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>1-based index of the given element</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>vpi</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="+replab.IndexedFamily.lambda">
+<em class="property">static </em><code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">size</em>, <em class="sig-param">atFun</em>, <em class="sig-param">findFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamily.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an indexed family from function handles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>size</strong> (<em>vpi</em>) – Size of the indexed family, so that the index set is 1..``size``</p></li>
+<li><p><strong>atFun</strong> (<em>function_handle</em>) – Handle that implements the <code class="docutils literal notranslate"><span class="pre">at</span></code> method
+To simplify implementation, it is guaranteed
+that <code class="docutils literal notranslate"><span class="pre">atFun</span></code> will receive an argument of type <code class="docutils literal notranslate"><span class="pre">vpi</span></code>.</p></li>
+<li><p><strong>findFun</strong> (<em>function_handle</em>) – Handle that implements the <code class="docutils literal notranslate"><span class="pre">find</span></code> method</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The constructed indexed family</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.IndexedFamily" title="+replab.IndexedFamily"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">IndexedFamily</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamily.sample">
+<code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamily.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an element sampled uniformly</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Random element of this family</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.IndexedFamily.size">
+<code class="sig-name descname">size</code><em class="property"> = None</em><a class="headerlink" href="#+replab.IndexedFamily.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>vpi: Number of elements contained in this enumerator</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamily.toCell">
+<code class="sig-name descname">toCell</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamily.toCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a row cell array containing all elements of this family</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A cell array <code class="docutils literal notranslate"><span class="pre">C</span></code> such that C{i} = self.at(i)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>row cell array of elements</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>An error if the enumerator is too big and the elements cannot fit in a cell array.</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="indexedfamilylaws">
+<h2>IndexedFamilyLaws<a class="headerlink" href="#indexedfamilylaws" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="+replab.IndexedFamilyLaws">
+<em class="property">class </em><code class="sig-prename descclassname">replab.</code><code class="sig-name descname">IndexedFamilyLaws</code><span class="sig-paren">(</span><em class="sig-param">I</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="laws.html#+replab.Laws" title="+replab.Laws"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Laws</span></code></a></p>
+<p>Laws for indexed families</p>
+<div class="collapsed admonition">
+<p class="admonition-title">Class members list</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.B" title="+replab.IndexedFamilyLaws.B"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">B</span></code></a> – Domain of element indices as type vpi</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.D" title="+replab.IndexedFamilyLaws.D"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">D</span></code></a> – Domain of element indices as type double (capped by 2^53 -1)</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.I" title="+replab.IndexedFamilyLaws.I"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">I</span></code></a> – <a class="reference internal" href="#+replab.IndexedFamily" title="+replab.IndexedFamily"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.IndexedFamily</span></code></a>: Indexed family to test</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.IndexedFamilyLaws" title="+replab.IndexedFamilyLaws.IndexedFamilyLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">IndexedFamilyLaws</span></code></a> – Constructs a laws instance</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.addTestCases" title="+replab.IndexedFamilyLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.additionalFields" title="+replab.IndexedFamilyLaws.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.assert" title="+replab.IndexedFamilyLaws.assert"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assert</span></code></a> – Assert function with a verbose error message</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.check" title="+replab.IndexedFamilyLaws.check"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">check</span></code></a> – Runs the randomized tests without using MOxUnit</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.disp" title="+replab.IndexedFamilyLaws.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.eq" title="+replab.IndexedFamilyLaws.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.getTestCases" title="+replab.IndexedFamilyLaws.getTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">getTestCases</span></code></a> – Enumerates the laws present in this instance by looking for methods with the correct prefix</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.headerStr" title="+replab.IndexedFamilyLaws.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.hiddenFields" title="+replab.IndexedFamilyLaws.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.law_at_find_roundtrip_B" title="+replab.IndexedFamilyLaws.law_at_find_roundtrip_B"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">law_at_find_roundtrip_B</span></code></a> – Find/at roundtrip using the <code class="docutils literal notranslate"><span class="pre">vpi</span></code> index type</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.law_at_find_roundtrip_double_D" title="+replab.IndexedFamilyLaws.law_at_find_roundtrip_double_D"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">law_at_find_roundtrip_double_D</span></code></a> – Find/at roundtrip using the <code class="docutils literal notranslate"><span class="pre">double</span></code> index type</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.law_at_find_roundtrip_string_B" title="+replab.IndexedFamilyLaws.law_at_find_roundtrip_string_B"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">law_at_find_roundtrip_string_B</span></code></a> – Find/at roundtrip using the <code class="docutils literal notranslate"><span class="pre">charstring</span></code> index type</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.law_sample_is_contained_I" title="+replab.IndexedFamilyLaws.law_sample_is_contained_I"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">law_sample_is_contained_I</span></code></a> – Checks that every sample can be retrieved</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.longStr" title="+replab.IndexedFamilyLaws.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.nRuns" title="+replab.IndexedFamilyLaws.nRuns"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nRuns</span></code></a> – Sets/gets the default number of runs</p></li>
+<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.shortStr" title="+replab.IndexedFamilyLaws.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+</ul>
+</div>
+<div class="collapsed admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.addTestCases">
+<code class="sig-name descname">addTestCases</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">testSuite</em>, <em class="sig-param">testName</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.addTestCases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="laws.html#+replab.Laws.addTestCases" title="+replab.Laws.addTestCases"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Laws.addTestCases()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.additionalFields">
+<code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.assert">
+<code class="sig-name descname">assert</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">predicate</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.assert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="laws.html#+replab.Laws.assert" title="+replab.Laws.assert"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Laws.assert()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.check">
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="laws.html#+replab.Laws.check" title="+replab.Laws.check"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Laws.check()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.disp">
+<code class="sig-name descname">disp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.eq">
+<code class="sig-name descname">eq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.eq" title="+replab.Str.eq"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.eq()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.getTestCases">
+<code class="sig-name descname">getTestCases</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.getTestCases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="laws.html#+replab.Laws.getTestCases" title="+replab.Laws.getTestCases"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Laws.getTestCases()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.headerStr">
+<code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.headerStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.hiddenFields">
+<code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.longStr">
+<code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.nRuns">
+<code class="sig-name descname">nRuns</code><span class="sig-paren">(</span><em class="sig-param">newValue</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.nRuns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="laws.html#+replab.Laws.nRuns" title="+replab.Laws.nRuns"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Laws.nRuns()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.shortStr">
+<code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="attribute">
+<dt id="+replab.IndexedFamilyLaws.B">
+<code class="sig-name descname">B</code><em class="property"> = None</em><a class="headerlink" href="#+replab.IndexedFamilyLaws.B" title="Permalink to this definition">¶</a></dt>
+<dd><p>Domain of element indices as type vpi</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.IndexedFamilyLaws.D">
+<code class="sig-name descname">D</code><em class="property"> = None</em><a class="headerlink" href="#+replab.IndexedFamilyLaws.D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Domain of element indices as type double (capped by 2^53 -1)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.IndexedFamilyLaws.I">
+<code class="sig-name descname">I</code><em class="property"> = None</em><a class="headerlink" href="#+replab.IndexedFamilyLaws.I" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#+replab.IndexedFamily" title="+replab.IndexedFamily"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.IndexedFamily</span></code></a>: Indexed family to test</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.IndexedFamilyLaws">
+<code class="sig-name descname">IndexedFamilyLaws</code><span class="sig-paren">(</span><em class="sig-param">I</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.IndexedFamilyLaws" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a laws instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>I</strong> (<a class="reference internal" href="#+replab.IndexedFamily" title="+replab.IndexedFamily"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">IndexedFamily</span></code></a>) – Indexed family to test</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.law_at_find_roundtrip_B">
+<code class="sig-name descname">law_at_find_roundtrip_B</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ind</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.law_at_find_roundtrip_B" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find/at roundtrip using the <code class="docutils literal notranslate"><span class="pre">vpi</span></code> index type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.law_at_find_roundtrip_double_D">
+<code class="sig-name descname">law_at_find_roundtrip_double_D</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ind</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.law_at_find_roundtrip_double_D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find/at roundtrip using the <code class="docutils literal notranslate"><span class="pre">double</span></code> index type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.law_at_find_roundtrip_string_B">
+<code class="sig-name descname">law_at_find_roundtrip_string_B</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ind</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.law_at_find_roundtrip_string_B" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find/at roundtrip using the <code class="docutils literal notranslate"><span class="pre">charstring</span></code> index type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.IndexedFamilyLaws.law_sample_is_contained_I">
+<code class="sig-name descname">law_sample_is_contained_I</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">el</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IndexedFamilyLaws.law_sample_is_contained_I" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that every sample can be retrieved</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="print.html" title="previous chapter (use the left arrow)">Pretty printing in RepLAB</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="laws.html" title="next chapter (use the right arrow)">Laws</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="laws.html" title="Laws"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="print.html" title="Pretty printing in RepLAB"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.5.2-SNAPSHOT documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference/API</a> &#187;</li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2019, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>

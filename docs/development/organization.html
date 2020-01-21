@@ -1,0 +1,370 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Code organization in RepLAB &#8212; RepLAB 0.5.2-SNAPSHOT documentation</title>
+    <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script type="text/javascript" src="../_static/js/collapse_helper.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Documentation style guide" href="api_documentation_style.html" />
+    <link rel="prev" title="Abbreviations in RepLAB" href="abbreviations.html" />
+  
+   
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="api_documentation_style.html" title="API Documentation style guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="abbreviations.html" title="Abbreviations in RepLAB"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.5.2-SNAPSHOT documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Development and Community</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><a href="
+    ../index.html" class="text-logo">RepLAB</a>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2>Table Of Contents</h2>
+  </div>
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-to guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference/API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Development and Community</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="abbreviations.html">A description of the abbrevations used by the library</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">A succint presentation of the code structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#directories">Directories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-class-classfun-and-classlaws-triad">The <code class="docutils literal notranslate"><span class="pre">Class</span></code>, <code class="docutils literal notranslate"><span class="pre">ClassFun</span></code> and <code class="docutils literal notranslate"><span class="pre">ClassLaws</span></code> triad</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#structured-sets">Structured sets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#domains">Domains</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#blackbox-groups">Blackbox groups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#finite-groups">Finite groups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#abstract-group-constructions">Abstract group constructions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#permutation-groups">Permutation groups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#actions">Actions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#representations">Representations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#commutant-algebras">Commutant algebras</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#sequences-of-elements">Sequences of elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utility-classes">Utility classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api_documentation_style.html">A description of the API documentation style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doctests.html">Doctests guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style.html">Style guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scope.html">Scope of the RepLAB project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tips.html">A few tips and tricks</a></li>
+</ul>
+</li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <div id="main-search">
+      <form class="form-inline" action="../search.html" method="GET" role="form">
+        <div class="input-group">
+          <input name="q" type="text" class="form-control" placeholder="Search...">
+        </div>
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../index.html">Docs</a></li>
+              
+                <li><a href="index.html">Development and Community</a></li>
+              
+              <li>Code organization in RepLAB</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+            
+  <div class="section" id="code-organization-in-replab">
+<h1>Code organization in RepLAB<a class="headerlink" href="#code-organization-in-replab" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="directories">
+<h2>Directories<a class="headerlink" href="#directories" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">docs</span></code>: compiled documentation ready to be served by Jekyll,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs_src</span></code>: source files for the executable documentation, to be
+compiled by <code class="docutils literal notranslate"><span class="pre">replab_compiledoc.m</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">external</span></code>: external libraries, either included as a Git submodule
+(if available on a public repository such as Github), or vendored
+(like <code class="docutils literal notranslate"><span class="pre">vpi</span></code>),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src/+replab</span></code>: the main RepLAB package, containing the main
+classes/methods,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src/+replab/+subpackages</span></code>: implementation files for different
+submodules, or experimental stuff,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tests</span></code>: tests written using MOxUnit, augmented with our laws test
+framework.</p></li>
+</ul>
+</div>
+<div class="section" id="the-class-classfun-and-classlaws-triad">
+<h2>The <code class="docutils literal notranslate"><span class="pre">Class</span></code>, <code class="docutils literal notranslate"><span class="pre">ClassFun</span></code> and <code class="docutils literal notranslate"><span class="pre">ClassLaws</span></code> triad<a class="headerlink" href="#the-class-classfun-and-classlaws-triad" title="Permalink to this headline">¶</a></h2>
+<p>This works for <code class="docutils literal notranslate"><span class="pre">Class</span></code> = <code class="docutils literal notranslate"><span class="pre">Domain</span></code>, <code class="docutils literal notranslate"><span class="pre">Class</span></code> = <code class="docutils literal notranslate"><span class="pre">Semigroup</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Class</span></code> = <code class="docutils literal notranslate"><span class="pre">Action</span></code>, and so on.</p>
+<p>There, <code class="docutils literal notranslate"><span class="pre">Class</span></code> is an abstract base class, while <code class="docutils literal notranslate"><span class="pre">ClassFun</span></code> requires
+function handles that implement the abstract methods of <code class="docutils literal notranslate"><span class="pre">Class</span></code> as
+parameters to its constructor. This enables the creation of “anonymous”
+classes in the spirit of MATLAB’s “anonymous” functions.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ClassLaws</span></code> class lists the algebraic laws that should be obeyed
+by a particular structure.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Laws</span></code>: abstract base class for the laws checking framework.</p></li>
+</ul>
+</div>
+<div class="section" id="structured-sets">
+<h2>Structured sets<a class="headerlink" href="#structured-sets" title="Permalink to this headline">¶</a></h2>
+<p>Most classes in RepLAB describe sets of elements with additional
+structure.</p>
+<div class="section" id="domains">
+<h3>Domains<a class="headerlink" href="#domains" title="Permalink to this headline">¶</a></h3>
+<p>At the base of the hierarchy, the <code class="docutils literal notranslate"><span class="pre">Domain</span></code> describes a set of elements
+that can be tested for equality (<code class="docutils literal notranslate"><span class="pre">eqv</span></code>) and from which random samples
+can be taken (<code class="docutils literal notranslate"><span class="pre">sample</span></code>). Such sets are potentially infinite.</p>
+<p>As <code class="docutils literal notranslate"><span class="pre">Domain</span></code> is an abstract base class, it contains abstract methods
+(<code class="docutils literal notranslate"><span class="pre">eqv</span></code>, <code class="docutils literal notranslate"><span class="pre">sample</span></code>).</p>
+<p>To quickly create an instance of <code class="docutils literal notranslate"><span class="pre">Domain</span></code>, the helper class
+<code class="docutils literal notranslate"><span class="pre">DomainFun</span></code> can be used, passing the method implementations as
+function handles to the <code class="docutils literal notranslate"><span class="pre">DomainFun</span></code> constructor.</p>
+</div>
+<div class="section" id="blackbox-groups">
+<h3>Blackbox groups<a class="headerlink" href="#blackbox-groups" title="Permalink to this headline">¶</a></h3>
+<p>The following three classes provide basic group structures.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Monoid</span></code>: structure with a binary associatvie operation, an
+identity element (property), and test for identity</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Group</span></code>: + inverse elements</p></li>
+</ul>
+</div>
+<div class="section" id="finite-groups">
+<h3>Finite groups<a class="headerlink" href="#finite-groups" title="Permalink to this headline">¶</a></h3>
+<p>Finite groups contain a finite number of elements.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">FiniteGroup</span></code>: abstract base class for finite groups,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NiceFiniteGroup</span></code>: describes a finite group that has an injective
+morphism to a permutation group,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FiniteGroupDecomposition</span></code>: describes the decomposition of a group
+into a product of sets.</p></li>
+</ul>
+</div>
+<div class="section" id="abstract-group-constructions">
+<h3>Abstract group constructions<a class="headerlink" href="#abstract-group-constructions" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">replab.directproduct.*</span></code>: represents the (outer) direct product of
+finite groups, the elements are represented by row cell arrays,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">replab.semidirectproduct.*</span></code>: represents an outer semidirect
+product from a homomorphism, with both factors finite groups,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">replab.wreathproduct.*</span></code>: describes the wreath product of a finite
+group by a permutation group.</p></li>
+</ul>
+</div>
+<div class="section" id="permutation-groups">
+<h3>Permutation groups<a class="headerlink" href="#permutation-groups" title="Permalink to this headline">¶</a></h3>
+<p>Permutation groups are finite groups that are subgroups of the symmetric
+group acting on <code class="docutils literal notranslate"><span class="pre">n</span></code> elements.</p>
+<p>In particular, the decomposition of <span class="math notranslate nohighlight">\(\{1,...,n\}\)</span> into orbits, the
+natural action and representation of the group are all defined.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">PermutationGroup</span></code>: abstract base class for permutation groups,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Permutations</span></code>: describes the symmetric group acting on <code class="docutils literal notranslate"><span class="pre">n</span></code>
+points.</p></li>
+</ul>
+<p>As a closely related variant, we describe signed permutations.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">signed.PermutationGroup</span></code>: provides an abstract base class for all
+signed permutation groups,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">signed.Permutations</span></code>: describes the signed permutations on
+<span class="math notranslate nohighlight">\(\{-n,...,-1, 1,...,n\}\)</span>,</p></li>
+</ul>
+</div>
+<div class="section" id="actions">
+<h3>Actions<a class="headerlink" href="#actions" title="Permalink to this headline">¶</a></h3>
+<p>The following two classes in RepLAB do not define a domain, but rather
+express a relation between domains.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Action</span></code>: abstract base class that defines the action of elements
+of a group <code class="docutils literal notranslate"><span class="pre">G</span></code> on elements of a domain <code class="docutils literal notranslate"><span class="pre">P</span></code>,</p></li>
+</ul>
+</div>
+<div class="section" id="representations">
+<h3>Representations<a class="headerlink" href="#representations" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Rep</span></code> is a real or complex representation of a finitely generated
+group.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RepByImages</span></code> is a real or complex representation described by the
+(matrix) images of the group generators; the computation of images
+rests on the factorization of group elements.</p></li>
+</ul>
+<p>Once a <code class="docutils literal notranslate"><span class="pre">Rep</span></code> has been constructed, it can be decomposed into
+irreducible representations using the <code class="docutils literal notranslate"><span class="pre">realRep.decomposition</span></code> method.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SubRep</span></code> describes a subrepresentation of an existing
+representation. The instance can remember which representation it
+splits (as a <code class="docutils literal notranslate"><span class="pre">parent</span></code>) and the change of basis matrix (<code class="docutils literal notranslate"><span class="pre">U</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Irrep</span></code> describes an irreducible subrepresentation; for
+representations over the reals, it also takes care to express the
+complex/quaternion division algebras in a regular manner.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Isotypic</span></code> are isotypic components, which group equivalent
+irreducible representations present in a reprsentation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Irreducible</span></code> regroups isotypic components.</p></li>
+</ul>
+</div>
+<div class="section" id="commutant-algebras">
+<h3>Commutant algebras<a class="headerlink" href="#commutant-algebras" title="Permalink to this headline">¶</a></h3>
+<p>The key to the simplification of invariant semidefinite programs is the
+decomposition of <em>matrices that commute with a group representation</em>;
+the set of all such matrices is the <em>commutant algebra</em>.</p>
+<p>RepLAB has several classes to work with centralizer algebras.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Equivariant</span></code> describes the vector space of equivariant linear maps
+between two representations of the same group.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Commutant</span></code> describes a generic commutant algebra.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DivisionAlgebra</span></code> describes a division algebra present in an
+irreducible representation.</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="sequences-of-elements">
+<h2>Sequences of elements<a class="headerlink" href="#sequences-of-elements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">IndexedFamily</span></code>: describes an indexed family, whose index is a big
+integer (<code class="docutils literal notranslate"><span class="pre">vpi</span></code>).</p></li>
+</ul>
+</div>
+<div class="section" id="utility-classes">
+<h2>Utility classes<a class="headerlink" href="#utility-classes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Partition</span></code>: describes an unordered partition of the integers
+<span class="math notranslate nohighlight">\(\{1,...,n\}\)</span>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DivisionAlgebra</span></code>: generic representation of the real, complex and
+quaternionic algebras over the reals,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rational</span></code>: a hacky implementation of rational matrices with
+double-representable integer coefficients,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">quaternion.H</span></code>: a minimal implementation of quaternion matrices,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Parameters</span></code>: various global settings such as tolerances,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GroupMorphismLaws</span></code>: laws for function handles that are group
+homomorphisms.</p></li>
+</ul>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">isNonZeroMatrix</span></code>, tests whether a matrix is nonzero up to a given
+tolerance using the 2-norm (singular value), with accelerations
+provided by matrix norm inequalities and cheap norms,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">headerStr</span></code>: returns a short description of an object without
+digging into its contents,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shortStr</span></code>: returns a short description of an object, with a best
+effort to include its contents,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">longStr</span></code>: returns a long description of an object, including an
+enumeration of its properties.</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="abbreviations.html" title="previous chapter (use the left arrow)">Abbreviations in RepLAB</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="api_documentation_style.html" title="next chapter (use the right arrow)">API Documentation style guide</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="api_documentation_style.html" title="API Documentation style guide"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="abbreviations.html" title="Abbreviations in RepLAB"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.5.2-SNAPSHOT documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Development and Community</a> &#187;</li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2019, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>
