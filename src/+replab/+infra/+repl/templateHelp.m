@@ -18,7 +18,7 @@ function res = templateHelp(templateName, el, docEl, helpCommand, strongIds, bla
 % Returns:
 %   charstring: The interpreted documentation string
     codeBase = el.codeBase;
-    templateFN = fullfile(codeBase.rootFolder, '+replab', '+infra', [templateName '.liquid']);
+    templateFN = fullfile(codeBase.rootFolder, '+replab', '+infra', '+repl', [templateName '.liquid']);
     template = replab.lobster.Template.load(templateFN);
     context = struct('el', el, 'docEl', docEl);
     if isempty(docEl)

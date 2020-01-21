@@ -6,7 +6,7 @@ function parseError(ct, pos, message, varargin)
 %   pos (integer): Line number
 %   message (charstring): Error message
 %   varargin: Extra arguments for string formatting
-    disp(sprintf('In %s', replab.infra.linkOpen('%s:%d', '%s:%d', ct.filename, pos)));
+    disp(sprintf('In %s', replab.infra.repl.linkOpen('%s:%d', '%s:%d', ct.filename, pos)));
     disp(' ');
     disp(replab.infra.formatCodeContext(ct.lines, pos, 7));
     errorId = 'replab:parseError';

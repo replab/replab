@@ -44,7 +44,7 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
                 if ismember(id, plainIds)
                     ref = linkText;
                 else
-                    ref = replab.infra.linkHelp(helpCommand, linkText, id);
+                    ref = replab.infra.repl.linkHelp(helpCommand, linkText, id);
                 end
                 refs{j} = ref;
             end

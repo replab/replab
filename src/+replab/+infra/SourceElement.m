@@ -42,7 +42,7 @@ classdef SourceElement < replab.infra.Element
         end
 
         function str = linkOpen(self)
-            str = replab.infra.linkOpen('%s:%d', '%s:%d', self.absoluteFilename, self.startLineNumber);
+            str = replab.infra.repl.linkOpen('%s:%d', '%s:%d', self.absoluteFilename, self.startLineNumber);
         end
 
         function parts = relativeFilenameParts(self)
