@@ -130,8 +130,10 @@ They have everything to get you started, from installation instructions to hands
 <p><strong>RepLAB</strong> is a work-in-progress. In particular:</p>
 <ul class="simple">
 <li><p>RepLAB only works in double floating-point precision.</p></li>
-<li><p>We are still working on the estimation/control of numerical errors. That said, <strong>RepLAB</strong> works fine for representations of medium size (<span class="math notranslate nohighlight">\(d\)</span> equal to a few thousands).</p></li>
+<li><p>We are still working on the estimation/control of numerical errors.
+That said, <strong>RepLAB</strong> works fine for representations of medium size (<span class="math notranslate nohighlight">\(d\)</span> equal to a few thousands).</p></li>
 <li><p>While RepLAB has a basic implementation of the BSGS construction, it does not offer much to work with permutation groups.</p></li>
+<li><p>Construction of representation by images (<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.RepByImages</span></code>) should be done only with matrices that can be represented exactly in floating-point arithmetic, as errors accumulate quickly otherwise (signed permutation matrices are fine for example).</p></li>
 </ul>
 </div>
 <div class="section" id="why-replab">

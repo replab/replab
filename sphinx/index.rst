@@ -39,8 +39,10 @@ Work in progress
 **RepLAB** is a work-in-progress. In particular:
 
 - RepLAB only works in double floating-point precision.
-- We are still working on the estimation/control of numerical errors. That said, **RepLAB** works fine for representations of medium size ($d$ equal to a few thousands).
+- We are still working on the estimation/control of numerical errors.
+  That said, **RepLAB** works fine for representations of medium size ($d$ equal to a few thousands).
 - While RepLAB has a basic implementation of the BSGS construction, it does not offer much to work with permutation groups.
+- Construction of representation by images (`replab.RepByImages`) should be done only with matrices that can be represented exactly in floating-point arithmetic, as errors accumulate quickly otherwise (signed permutation matrices are fine for example).
 
 Why RepLAB?
 -----------
