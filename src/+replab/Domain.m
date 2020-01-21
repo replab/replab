@@ -7,7 +7,7 @@ classdef Domain < replab.Samplable
 %
 % As `~replab.Domain` is an abstract base class, it contains abstract methods.
 %
-% To quickly create an instance of `~replab.Domain`, the method `~replab.Domain.lambda`` can be used,
+% To quickly create an instance of `~replab.Domain`, the method `~replab.Domain.lambda` can be used,
 % passing the method implementations as function handles.
 
 % Those elements can be compared (`~replab.Domain.eqv`), and random elements can be produced (`~replab.Domain.sample`).

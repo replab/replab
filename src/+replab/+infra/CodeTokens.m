@@ -7,7 +7,7 @@ classdef CodeTokens < replab.Str
 % We do not filter blank lines, so line numbers match (unlike DocTestParseState).
 %
 % Each line has an associated tag.
-% 
+%
 % Possible tags are:
 %
 % - ' ': The line contains only whitespace

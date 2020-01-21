@@ -8,7 +8,7 @@ function str = linkURL(linkText, altText, url)
 %                         In there, ``%s`` is replaced by ``filename`` and ``%d`` by ``lineNumber``
 %   url (charstring): Linked URL
     if replab.settings.consoleUseHTML
-        str = sprintf('<a href="%s">%s</a>', url, linkText);
+        str = sprintf('<a href="matlab: web(''%s'', ''-browser'')">%s</a>', url, linkText);
     else
         str = altText;
     end

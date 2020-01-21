@@ -103,9 +103,7 @@ classdef CompactGroup < replab.Group
 
     methods (Static)
 
-        function group = lambda(header, eqvFun, sampleFun, ...
-                                composeFun, identity, inverseFun, ...
-                                sampleUniformlyFun)
+        function group = lambda(header, eqvFun, sampleFun, composeFun, identity, inverseFun, sampleUniformlyFun)
         % Constructs a compact group from function handles
         %
         % Args:
@@ -120,9 +118,7 @@ classdef CompactGroup < replab.Group
         % Returns:
         %   replab.CompactGroup: The constructed compact group
 
-            group = replab.lambda.CompactGroup(header, eqvFun, sampleFun, ...
-                                               composeFun, identity, inverseFun, ...
-                                               sampleUniformlyFun);
+            group = replab.lambda.CompactGroup(header, eqvFun, sampleFun, composeFun, identity, inverseFun, sampleUniformlyFun);
         end
 
     end
