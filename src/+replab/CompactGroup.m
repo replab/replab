@@ -2,9 +2,9 @@ classdef CompactGroup < replab.Group
 % A group equipped with a Haar measure
 
     methods
-        
+
         %% Abstract
-        
+
         function g = sampleUniformly(self)
         % Samples from the Haar measure
         %
@@ -12,9 +12,9 @@ classdef CompactGroup < replab.Group
         %   element: Group element sampled from the Haar measure
             error('Abstract');
         end
-        
+
         %% Group construction
-        
+
         function prd = directProduct(varargin)
         % Returns the direct product of groups
         %
@@ -29,7 +29,7 @@ classdef CompactGroup < replab.Group
         %                        is `+replab.FiniteGroup` as well.
             prd = replab.directproduct.of(varargin);
         end
-        
+
         function prd = directPower(self, n)
         % Returns the direct product of this group with itself a number of times
         %
@@ -42,21 +42,21 @@ classdef CompactGroup < replab.Group
             factors = arrayfun(@(x) self, 1:n, 'uniform', 0);
             prd = replab.directproduct.of(factors);
         end
-        
+
         function sd = semidirectProduct(self, N, phi)
         % Describes an external semidirect product of groups
         %
         % See the construction in https://en.wikipedia.org/wiki/Semidirect_product
         %
-        %    
+        %
         % Let ``H = self`` be a group, ``N`` a group.
         %
-        % The semidirect product is defined using a homomorphism 
+        % The semidirect product is defined using a homomorphism
         %
         % `` phi: H -> Aut(N) ``
         %
         % which we write here
-        % 
+        %
         % `` phi: H x N -> N ``, ``n1 = phi(h, n)``
         %
         % Here, we describe this homomorphism by a function handle with parameters of type
@@ -76,16 +76,16 @@ classdef CompactGroup < replab.Group
             action = replab.Action.lambda('Semidirect homomorphism', self, N, phi);
             sd = replab.semidirectproduct.of(action);
         end
-        
+
         %% Representations
-        
+
         function rep = trivialRep(self, field, dimension)
         % Returns the trivial representation of this group on a finite dimensional vector space
         %
         % For convenience, either the representation can act on a real or complex vector space,
         % and multiple copies of the 1-dimensional trivial representation can be included, when
         % dimension > 1.
-        % 
+        %
         % Args:
         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
         %   dimension (integer, optional): Representation dimension
@@ -98,11 +98,11 @@ classdef CompactGroup < replab.Group
             end
             rep = replab.rep.TrivialRep(self, field, dimension);
         end
-        
+
     end
 
     methods (Static)
-        
+
         function group = lambda(header, eqvFun, sampleFun, ...
                                 composeFun, identity, inverseFun, ...
                                 sampleUniformlyFun)
@@ -119,12 +119,12 @@ classdef CompactGroup < replab.Group
         %
         % Returns:
         %   replab.CompactGroup: The constructed compact group
-            
+
             group = replab.lambda.CompactGroup(header, eqvFun, sampleFun, ...
                                                composeFun, identity, inverseFun, ...
                                                sampleUniformlyFun);
         end
-        
+
     end
-    
+
 end

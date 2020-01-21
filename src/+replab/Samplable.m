@@ -24,8 +24,7 @@ classdef Samplable < replab.Str
         %
         % Args:
         %   header (char): Header display string
-        %   eqvFun (function_handle): Handle implementing the `eqv` method
-        %   sampleFun (function_handle): Handle implementing the `sample` method
+        %   sampleFun (function_handle): Handle implementing the `.sample` method
         %
         % Returns:
         %   `+replab.Samplable`: The constructed domain

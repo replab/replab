@@ -133,7 +133,7 @@ classdef IndexedFamily < replab.Samplable
         %   size (vpi): Size of the indexed family, so that the index set is 1..``size``
         %   atFun (function_handle): Handle that implements the ``at`` method
         %                            To simplify implementation, it is guaranteed
-        %                            that ``atFun`` will receive an argument of type `vpi`.
+        %                            that ``atFun`` will receive an argument of type ``vpi``.
         %   findFun (function_handle): Handle that implements the ``find`` method
         %
         % Returns:

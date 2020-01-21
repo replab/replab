@@ -45,7 +45,6 @@ classdef Monoid < replab.Domain
         % Computes ``y = x^n`` by repeated squaring
         %
         % When "self" is a
-        % - `.Semigroup`, we need n > 0
         % - `.Monoid`, we need n >= 0
         % - `.Group`, ``n`` is an arbitrary integer
             if n < 0

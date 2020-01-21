@@ -2,7 +2,7 @@ function rep = youngOrthogonal(partition)
 % Returns an irrep of S(n) according to the Young orthogonal basis
 %
 % Follows the SAGE conventions
-% 
+%
 % http://doc.sagemath.org/html/en/reference/combinat/sage/combinat/symmetric_group_representations.html
 %
 % Args:
