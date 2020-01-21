@@ -41,7 +41,7 @@ function replab_generate(what)
     disp('Crawling code base');
     cb = replab.infra.crawl(srcRoot);
 
-    if isequal(what, 'sphinxjupyter') || isequal(what, 'sphinx') || isequal(what, 'all')
+    if isequal(what, 'sphinxjupyter') || isequal(what, 'sphinx') || isequal(what, 'all') || isequal(what, 'clear')
         toExplore = {{'sphinx'}};
         notebooks = {};
         sourceSuffix = '_source.ipynb';
@@ -71,60 +71,72 @@ function replab_generate(what)
             [~, sourceName, sourceExt] = fileparts(source);
             target = [sourceName sourceExt];
             target = [target(1:end-length(sourceSuffix)) targetSuffix];
-            cmd = sprintf('jupyter nbconvert --to notebook --execute "%s" --output="%s"', source, target);
-            disp(['Running ' cmd]);
-            system(cmd);
+            if isequal(what, 'clear')
+                if exist(target) == 2
+                    delete(target);
+                end
+            else
+                cmd = sprintf('jupyter nbconvert --to notebook --execute "%s" --output="%s"', source, target);
+                disp(['Running ' cmd]);
+                system(cmd);
+            end
         end
         cd(lastPath);
     end
 
-    if isequal(what, 'sphinxsrc') || isequal(what, 'sphinx') || isequal(what, 'all')
+    if isequal(what, 'sphinxsrc') || isequal(what, 'sphinx') || isequal(what, 'all') || isequal(what, 'clear')
         % Generate Sphinx preprocessed source files
         srcRoot = fullfile(rp, 'src');
         sphinxRoot = fullfile(rp, 'sphinx');
         sphinxSrcRoot = fullfile(sphinxRoot, '_src');
         replab.infra.mkCleanDir(sphinxRoot, '_src', logFun);
-        logFun('Generating rich source code');
-        els = cb.allSourceElements;
-        pb = replab.infra.repl.ProgressBar(length(els));
-        for i = 1:length(els)
-            pb.step(i, els{i}.fullIdentifier);
-            replab.infra.sphinx.writeEnrichedSource(sphinxSrcRoot, els{i});
-        end
-        pb.finish;
-        % Copy root files from the root source folder to a subfolder named 'root'
-        mkdir(sphinxSrcRoot, 'root');
-        files = dir([sphinxSrcRoot filesep '*.m']);
-        for i = 1:length(files)
-            assert(~files(i).isdir, 'Files ending in .m cannot be directories');
-            name = files(i).name;
-            copyfile(fullfile(sphinxSrcRoot, name), fullfile(sphinxSrcRoot, 'root', name));
+        if ~isequal(what, 'clear')
+            logFun('Generating rich source code');
+            els = cb.allSourceElements;
+            pb = replab.infra.repl.ProgressBar(length(els));
+            for i = 1:length(els)
+                pb.step(i, els{i}.fullIdentifier);
+                replab.infra.sphinx.writeEnrichedSource(sphinxSrcRoot, els{i});
+            end
+            pb.finish;
+            % Copy root files from the root source folder to a subfolder named 'root'
+            mkdir(sphinxSrcRoot, 'root');
+            files = dir([sphinxSrcRoot filesep '*.m']);
+            for i = 1:length(files)
+                assert(~files(i).isdir, 'Files ending in .m cannot be directories');
+                name = files(i).name;
+                copyfile(fullfile(sphinxSrcRoot, name), fullfile(sphinxSrcRoot, 'root', name));
+            end
         end
     end
 
     if isequal(what, 'sphinxbuild') || isequal(what, 'sphinx') || isequal(what, 'all')
         replab.infra.mkCleanDir(rp, 'docs', logFun);
-        disp('Running Sphinx');
-        lastPath = pwd;
-        cmd = 'sphinx-build -b html sphinx docs';
-        disp(['Running ' cmd]);
-        system(cmd);
-        cd(lastPath);
+        if ~isequal(what, 'clear')
+            disp('Running Sphinx');
+            lastPath = pwd;
+            cmd = 'sphinx-build -b html sphinx docs';
+            disp(['Running ' cmd]);
+            system(cmd);
+            cd(lastPath);
+        end
     end
 
-    if isequal(what, 'doctests') || isequal(what, 'all')
+    if isequal(what, 'doctests') || isequal(what, 'all') || isequal(what, 'clear')
         % Generate doctests
         testRoot = fullfile(rp, 'tests');
         doctestRoot = fullfile(rp, 'tests', 'doctest');
         replab.infra.mkCleanDir(testRoot, 'doctest');
-        logFun('Generating doctests');
-        els = cb.allSourceElements;
-        pb = replab.infra.repl.ProgressBar(length(els));
-        for i = 1:length(els)
-            pb.step(i, els{i}.fullIdentifier);
-            replab.infra.doctests.writeElementDocTests(doctestRoot, els{i});
+        if ~isequal(what, 'clear')
+            logFun('Generating doctests');
+            els = cb.allSourceElements;
+            pb = replab.infra.repl.ProgressBar(length(els));
+            for i = 1:length(els)
+                pb.step(i, els{i}.fullIdentifier);
+                replab.infra.doctests.writeElementDocTests(doctestRoot, els{i});
+            end
+            pb.finish;
         end
-        pb.finish;
     end
 
 end
