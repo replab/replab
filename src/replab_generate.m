@@ -107,6 +107,12 @@ function replab_generate(what)
                 name = files(i).name;
                 copyfile(fullfile(sphinxSrcRoot, name), fullfile(sphinxSrcRoot, 'root', name));
             end
+            files = dir([rp filesep '*.m']);
+            for i = 1:length(files)
+                assert(~files(i).isdir, 'Files ending in .m cannot be directories');
+                name = files(i).name;
+                copyfile(fullfile(rp, name), fullfile(sphinxSrcRoot, 'root', name));
+            end
         end
     end
 
