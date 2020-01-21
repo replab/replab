@@ -26,14 +26,18 @@ function replab_checkhelp
             evalc(sprintf('help -f %s', el.fullIdentifier));
         catch
             le = lasterror;
+            last = p.consoleLine.lineContent;
+            p.consoleLine.update('');
+            replab.infra.doctests.errFunElement(el, el.startLineNumber);
             fprintf('\n');
-            fprintf('Error in documentation of %s (line %d)\n', el.fullIdentifier, el.startLineNumber);
             fprintf('Error identifier: %s\n', le.identifier);
             disp(le.message);
             fprintf('\n\n');
-            %for i = 1:length(le.stack)
-            %    disp(strjoin(replab.longStr(le.stack(i)), '\n'));
-            %end
+            p.consoleLine.update(last);
+            % Uncomment below for stack display
+            % for i = 1:length(le.stack)
+            %     disp(strjoin(replab.longStr(le.stack(i)), '\n'));
+            % end
         end
     end
     p.finish('Check done');
