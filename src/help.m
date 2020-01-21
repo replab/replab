@@ -64,7 +64,7 @@ function help(varargin)
                 if isempty(secondPart)
                     varargin{1} = type;
                     msg = sprintf('%s is an object of type %s.', firstPart, ...
-                                  replab.infra.linkHelp(helpFunctionName, type, type));
+                                  replab.infra.repl.linkHelp(helpFunctionName, type, type));
                     disp(msg);
                     disp(' ');
                 else
@@ -130,19 +130,19 @@ function help(varargin)
         end
         stdout = 1;
         fullId = el.fullIdentifier;
-        fwrite(stdout, replab.infra.templateHelp(templateName, el, docEl, helpCurrent, {fullId}, {fullId}));
+        fwrite(stdout, replab.infra.repl.templateHelp(templateName, el, docEl, helpCurrent, {fullId}, {fullId}));
         if hasToggle && replab.settings.consoleUseHTML
             if fullMode
-                link = replab.infra.linkHelp(helpToggled, 'help mode', fullId);
+                link = replab.infra.repl.linkHelp(helpToggled, 'help mode', fullId);
                 disp(['   Toggle display to ', link]);
             else
-                link = replab.infra.linkHelp(helpToggled, 'reference mode', fullId);
+                link = replab.infra.repl.linkHelp(helpToggled, 'reference mode', fullId);
                 disp(['   Toggle display to ', link]);
             end
         end
         if isa(el, 'replab.infra.SourceElement')
             disp(' ');
-            disp(['   ', replab.infra.linkOpen('See source', '', el.absoluteFilename, el.startLineNumber)]);
+            disp(['   ', replab.infra.repl.linkOpen('See source', '', el.absoluteFilename, el.startLineNumber)]);
         end
         fprintf('\n\n');
 %        separationPattern = '   .  ';
