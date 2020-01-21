@@ -26,8 +26,8 @@ function replab_checkhelp
             evalc(sprintf('help -f %s', el.fullIdentifier));
         catch
             le = lasterror;
+            replab.infra.doctests.errFunElement(el, el.startLineNumbe);
             fprintf('\n');
-            fprintf('Error in documentation of %s (line %d)\n', el.fullIdentifier, el.startLineNumber);
             fprintf('Error identifier: %s\n', le.identifier);
             disp(le.message);
             fprintf('\n\n');
