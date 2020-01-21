@@ -1,4 +1,4 @@
-docs/* linguist-documentation linguist-generated=true
-external/* linguist-vendored
-sphinx/_src/* linguist-generated=true
-tests/doctest/* linguist-generated=true
+docs/** linguist-documentation linguist-generated=true
+external/** linguist-vendored
+sphinx/_src/** linguist-generated=true
+tests/doctest/** linguist-generated=true
