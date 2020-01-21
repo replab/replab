@@ -290,6 +290,23 @@ any method.
 Abstract methods should have a single code line in their body
 ``error('Abstract');``.
 
+Documenting types
+-----------------
+
+- row cell vectors of a particular type: ``cell{1,:} of TYPE`` or ``cell{1,n} of TYPE``
+
+- row double vectors ``double(1,n)`` or ``double(1,:)``
+
+- square matrices ``double(n,n)``
+
+- matrices ``double(m,n)`` if `m`, `n` are used elsewhere, or `double(:,:)` if the sizes are not referenced elsewhere
+
+- ``charstring`` for row char vectors used as strings (as opposed to the new ``string`` Matlab type unsupported by Octave)
+
+- ``integer`` for integers stored as doubles
+
+- RepLAB own types using Sphinx reference syntax with backticks
+
 Other points
 ------------
 
