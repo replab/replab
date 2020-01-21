@@ -4,7 +4,7 @@ classdef Monoid < replab.Domain
 % See `Monoid on Wikipedia <https://en.wikipedia.org/wiki/Monoid>`_
 
     properties (SetAccess = protected)
-        identity % Monoid identity element
+        identity % (element): Monoid identity element
     end
 
     methods % Abstract methods
@@ -28,8 +28,11 @@ classdef Monoid < replab.Domain
         function z = composeAll(self, elements)
         % Composes a sequence of monoid elements
         %
-        % For ``self.composeAll({x1 x2 ... xn})``, returns
-        % ``x1*x2*...*xn`` (shown here in multiplaticative notation)
+        % For ``self.composeAll({x1 x2 ... xn})``, returns ``x1*x2*...*xn``
+        % (shown here in multiplaticative notation)
+        %
+        % Args:
+        %   elements (cell(1,:) of element): Elements to compose
             if length(elements) == 0
                 assert(isa(self, 'replab.Monoid'));
                 z = self.identity;

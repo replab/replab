@@ -18,12 +18,12 @@ classdef SourceElement < replab.infra.Element
 
     methods
 
-        function self = SourceElement(codeBase, package, sourceIdentifier, startLineNumber, name, docLines, docLineNumbers)
+        function self = SourceElement(codeBase, package, sourceIdentifier, startLineNumber, name, docLines, docLineNumbers, isProperty)
             self = self@replab.infra.Element(codeBase, name);
             self.package = package;
             self.sourceIdentifier = sourceIdentifier;
             self.startLineNumber = startLineNumber;
-            self.doc = replab.infra.Doc(self, docLines, docLineNumbers);
+            self.doc = replab.infra.Doc(self, docLines, docLineNumbers, isProperty);
         end
 
         % replab.infra.Element

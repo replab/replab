@@ -8,6 +8,14 @@ function writeEnrichedSource(docSrcPath, el)
     src = fileread(el.absoluteFilename);
     if isa(el, 'replab.infra.Class')
         lines = strsplit(src, '\n', 'CollapseDelimiters', false);
+        % filter comments in property lines
+        for i = el.propertyLines
+            l = lines{i};
+            pos = find(l == '%', 1);
+            if ~isempty(pos)
+                lines{i} = l(1:pos-1);
+            end
+        end
         pos = replab.infra.sphinx.findClassCommentEnd(lines);
         tocFN = fullfile(replab.settings.replabPath, 'src', '+replab', '+infra', '+sphinx', 'class.liquid');
         t = replab.lobster.Template.load(tocFN);

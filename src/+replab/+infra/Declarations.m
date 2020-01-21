@@ -47,6 +47,23 @@ classdef Declarations < replab.Str
             els = els(mask);
         end
 
+        function l = bestEffortHasPropertyType(self)
+            el = self.findBestDocumented;
+            l = el.doc.hasPropertyType;
+        end
+
+        function t = bestEffortPropertyType(self)
+            el = self.findBestDocumented;
+            if isempty(el)
+                t = '';
+            else
+                t = el.doc.propertyType;
+                if isempty(t)
+                    t = '';
+                end
+            end
+        end
+
         function l = bestEffortDocFirstLine(self)
             el = self.findBestDocumented;
             if isempty(el)

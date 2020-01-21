@@ -2,7 +2,8 @@ classdef Class < replab.infra.SourceElement
 
     properties
         superclassIdentifiers
-        ownElementsStruct % struct
+        ownElementsStruct % struct: Elements of this class of type `.ClassElement`
+        propertyLines % integer(1,:): Line numbers of properties
     end
 
     properties (Access = protected)
@@ -18,7 +19,7 @@ classdef Class < replab.infra.SourceElement
         function self = Class(codeBase, package, classData)
             startLineNumber = 1;
             self = self@replab.infra.SourceElement(codeBase, package, classData.name, startLineNumber, classData.name, ...
-                                                   classData.docLines, classData.docLineNumbers);
+                                                   classData.docLines, classData.docLineNumbers, false);
             sci = {};
             for i = 1:length(classData.superclassIdentifiers)
                 id = classData.superclassIdentifiers{i};
@@ -45,6 +46,7 @@ classdef Class < replab.infra.SourceElement
                 oe.(p.name) = p;
             end
             self.ownElementsStruct = oe;
+            self.propertyLines = classData.propertyLines;
         end
 
         %% replab.infra.Element
