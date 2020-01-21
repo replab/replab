@@ -1,5 +1,5 @@
-Code organization in RepLAB
-===========================
+Code organization and release process
+=====================================
 
 Directories
 -----------
@@ -21,3 +21,14 @@ Directories
 
 -  ``tests``: tests written using MOxUnit, augmented with our laws test
    framework.
+
+The release process
+-------------------
+
+RepLAB has a ``major.minor.patch`` version number.
+
+The ``develop`` branch contains a snapshot, i.e. a version number that ends in ``-SNAP``.
+
+The ``master`` branch contains a release, i.e. a version number that does not end in ``-SNAP``.
+
+See `~root.replab_release` for a description of the release process.
