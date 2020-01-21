@@ -22,6 +22,11 @@ function help(varargin)
 
     persistent codeBase
 
+    if nargin == 1 && isequal(varargin{1}, '--clear')
+        codeBase = [];
+        return
+    end
+
     % Are we in full mode or not?
     fullMode = false;
     if (length(varargin) == 2)
