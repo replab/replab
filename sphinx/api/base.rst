@@ -1,5 +1,5 @@
-Base object types in RepLAB
-===========================
+Base object types
+=================
 
 The following classes are at the base of many RepLAB objects.
 

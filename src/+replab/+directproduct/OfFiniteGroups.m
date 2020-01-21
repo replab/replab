@@ -1,7 +1,8 @@
 classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGroups
-    
+% Describes an external direct product of finite groups
+
     methods (Access = protected)
-        
+
         function g = atFun(self, ind)
         % See comments in self.elements
             g = self.identity;
@@ -13,7 +14,7 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
                 g{i} = f.elements.at(this + 1);
             end
         end
-        
+
         function ind = findFun(self, g)
         % See comments in self.elements
             ind = vpi(0);
@@ -26,9 +27,9 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
         end
 
     end
-    
+
     methods
-        
+
         function self = OfFiniteGroups(factors)
             self = self@replab.directproduct.OfCompactGroups(factors);
             % the generators of a direct product of finite groups is
@@ -45,7 +46,7 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
             end
             self.generators = generators;
         end
-        
+
         %% Str methods
 
         function names = hiddenFields(self)
@@ -54,28 +55,28 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
                 hiddenFields@replab.FiniteGroup(self) ...
                 );
         end
-        
+
         function [names values] = additionalFields(self)
             [names1 values1] = additionalFields@replab.directproduct.OfCompactGroups(self);
             [names2 values2] = additionalFields@replab.FiniteGroup(self);
             names = replab.str.horzcatForce(names1, names2);
             values = replab.str.horzcatForce(values1, values2);
         end
-        
+
         %% Domain methods
-        
+
         function g = sample(self)
             g = sample@replab.directproduct.OfCompactGroups(self); % force method selection
         end
-        
+
         %% CompactGroup methods
-        
+
         function g = sampleUniformly(self)
             g = sampleUniformly@replab.directproduct.OfCompactGroups(self); % force method selection
         end
 
         %% FiniteGroup methods
-        
+
         function o = order(self)
             o = vpi(1);
             % The order of a direct product is the product of the
@@ -84,7 +85,7 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
                 o = o * self.factor(i).order;
             end
         end
-                
+
         function e = elements(self)
             e = replab.IndexedFamily.lambda(self.order, ...
                                             @(ind) self.atFun(ind), ...
@@ -94,7 +95,7 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
             % product of sets, and decomposing the index a la ind2sub/sub2ind
             % which is the role of the `atFun` and `findFun` functions
         end
-        
+
         function gd = decomposition(self)
             T = {};
             % The decomposition of a direct product into sets
@@ -118,7 +119,7 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
             end
             gd = replab.FiniteGroupDecomposition(self, T);
         end
-        
+
     end
-    
+
 end

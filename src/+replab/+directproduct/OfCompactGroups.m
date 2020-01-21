@@ -1,14 +1,12 @@
 classdef OfCompactGroups < replab.CompactGroup
-% Describes an external direct product of groups
-%
-% The type of the factors depends on the instance of direct product
+% Describes an external direct product of compact groups
 
     properties (SetAccess = protected)
-        factors % row cell array: Factor groups
+        factors % (factors{1,:} of subclass of `+replab.CompactGroup`): Factor groups
     end
-    
+
     methods
-        
+
         function self = OfCompactGroups(factors)
         % Constructs a direct product of groups
         %
@@ -21,19 +19,19 @@ classdef OfCompactGroups < replab.CompactGroup
             self.factors = factors;
             self.identity = cellfun(@(f) f.identity, factors, 'uniform', 0);
         end
-        
+
         function t = requiredType(self)
             t = 'replab.CompactGroup';
         end
-        
+
         function n = nFactors(self)
             n = length(self.factors);
         end
-        
+
         function f = factor(self, i)
             f = self.factors{i};
         end
-        
+
         function rep = directSumRep(self, factorReps)
         % Constructs a direct sum representation
         %
@@ -45,7 +43,7 @@ classdef OfCompactGroups < replab.CompactGroup
         %   replab.Rep: A direct sum representation
             rep = replab.directproduct.SumRep(self, factorReps);
         end
-        
+
         function rep = directSumRepFun(self, fun)
         % Constructs a direct sum representation from a function that maps factors to representations
         %
@@ -60,7 +58,7 @@ classdef OfCompactGroups < replab.CompactGroup
             reps = arrayfun(@(i) fun(self.factor(i)), 1:self.nFactors, 'uniform', 0);
             rep = self.directSumRep(reps);
         end
-        
+
         function rep = directSumRepFunWithIndex(self, fun)
         % Constructs a direct sum representation from a function that maps factors to representations
         %
@@ -75,7 +73,7 @@ classdef OfCompactGroups < replab.CompactGroup
             reps = arrayfun(@(i) fun(self.factor(i), i), 1:self.nFactors, 'uniform', 0);
             rep = self.directSumRep(reps);
         end
-        
+
         function rep = tensorRep(self, factorReps)
         % Constructs a tensor product representation
         %
@@ -87,7 +85,7 @@ classdef OfCompactGroups < replab.CompactGroup
         %   replab.Rep: A tensor representation
             rep = replab.directproduct.TensorRep(self, factorReps);
         end
-        
+
         function rep = tensorRepFun(self, fun)
         % Constructs a direct sum representation from a function that maps factors to representations
         %
@@ -118,14 +116,14 @@ classdef OfCompactGroups < replab.CompactGroup
             rep = self.tensorRep(reps);
         end
 
-        
+
         %% Str methods
-        
+
         function names = hiddenFields(self)
             names = hiddenFields@replab.CompactGroup(self);
             names{1, end+1} = 'factors';
         end
-        
+
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.CompactGroup(self);
             for i = 1:self.nFactors
@@ -133,9 +131,9 @@ classdef OfCompactGroups < replab.CompactGroup
                 values{1, end+1} = self.factor(i);
             end
         end
-            
+
         %% Domain methods
-        
+
         function b = eqv(self, x, y)
             b = true;
             for i = 1:self.nFactors
@@ -145,14 +143,14 @@ classdef OfCompactGroups < replab.CompactGroup
                 end
             end
         end
-        
+
         function g = sample(self)
             g = cell(1, self.nFactors);
             for i = 1:self.nFactors
                 g{i} = self.factor(i).sample;
             end
         end
-        
+
         %% Monoid methods
 
         function z = compose(self, x, y)
@@ -161,18 +159,18 @@ classdef OfCompactGroups < replab.CompactGroup
                 z{i} = self.factor(i).compose(x{i}, y{i});
             end
         end
-        
+
         %% Group methods
-        
+
         function xInv = inverse(self, x)
             xInv = cell(1, self.nFactors);
             for i = 1:self.nFactors
                 xInv{i} = self.factor(i).inverse(x{i});
             end
         end
-        
+
         %% CompactGroup methods
-        
+
         function g = sampleUniformly(self)
             g = cell(1, self.nFactors);
             for i = 1:self.nFactors
@@ -181,5 +179,5 @@ classdef OfCompactGroups < replab.CompactGroup
         end
 
     end
-    
+
 end

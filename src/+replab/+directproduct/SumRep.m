@@ -1,12 +1,12 @@
 classdef SumRep < replab.Rep
 % Representation of a direct product using a direct sum of factor representations
-    
+
     properties (SetAccess = protected)
-        factorReps % row cell array of replab.Rep: Representations of factors
+        factorReps % (cell{1,:} `+replab.Rep`): Representations of factors
     end
-    
+
     methods
-        
+
         function self = SumRep(group, factorReps)
         % Constructs a representation of a direct product
         %
@@ -28,13 +28,13 @@ classdef SumRep < replab.Rep
             self.isUnitary = replab.trileanAnd(factorRepsAreUnitary{:});
             self.group = group;
         end
-        
+
         function rho = image(self, g)
             n = length(g);
             rhos = arrayfun(@(i) self.factorReps{i}.image(g{i}), 1:n, 'uniform', 0);
             rho = blkdiag(rhos{:});
         end
-        
+
     end
-    
+
 end

@@ -15,5 +15,7 @@ An API Reference, as described in the table of contents below:
    base
    laws
    groups
+   rep
    permutations
+   group_constructions
    infrastructure

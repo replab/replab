@@ -1,6 +1,6 @@
 classdef PermutationSubgroup < replab.signed.PermutationGroup
 % Represents a subgroup of a signed permutation group
-    
+
     methods
 
         function self = PermutationSubgroup(parent, generators, order)
@@ -17,7 +17,7 @@ classdef PermutationSubgroup < replab.signed.PermutationGroup
                 assert(~parent.isIdentity(generators{i}), 'Generator cannot be identity');
             end
         end
-        
+
     end
-        
+
 end

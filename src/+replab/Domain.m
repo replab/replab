@@ -1,7 +1,16 @@
 classdef Domain < replab.Samplable
 % Describes a set of elements with a common structure
 %
-% Those elements can be compared (`.eqv`), and random elements can be produced (`.sample`).
+% At the base of the hierarchy, `~replab.Domain` describes a set of elements
+% that can be tested for equality (`~replab.Domain.eqv`) and from which random samples
+% can be taken (`~replab.Domain.sample`). Such sets are potentially infinite.
+%
+% As `~replab.Domain` is an abstract base class, it contains abstract methods.
+%
+% To quickly create an instance of `~replab.Domain`, the method `~replab.Domain.lambda`` can be used,
+% passing the method implementations as function handles.
+
+% Those elements can be compared (`~replab.Domain.eqv`), and random elements can be produced (`~replab.Domain.sample`).
 
     methods % ABSTRACT
 

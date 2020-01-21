@@ -1,5 +1,5 @@
-Pretty printing in RepLAB
-=========================
+Pretty printing
+===============
 
 At the root of our object hierarchy, the base class `+replab.Str` is in charge of pretty printing all the objects defined
 in RepLAB. This is important for several reasons: Matlab has some support to pretty print objects, support which is missing

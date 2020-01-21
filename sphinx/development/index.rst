@@ -21,3 +21,4 @@ Further tools and guidelines useful for development can be found here:
    style
    scope
    tips
+   octave_bugs
