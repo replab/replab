@@ -21,5 +21,6 @@ the following resources will help you go further and start using **RepLAB** crea
    S3
    singlet
    CHSH
+   quickstart
 
 .. "example" has been removed from the tutorial list

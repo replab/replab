@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Short overview of some basic features of RepLAB &#8212; RepLAB 0.6.0-SNAP documentation</title>
+    <title>Quick start &#8212; RepLAB 0.6.0-SNAP documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -29,6 +29,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How-to guides" href="../howto/index.html" />
+    <link rel="prev" title="Relabelings in the CHSH scenario" href="CHSH.html" />
   
    
 
@@ -42,7 +44,14 @@
         <li class="right" >
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li> 
+        <li class="right" >
+          <a href="../howto/index.html" title="How-to guides"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="CHSH.html" title="Relabelings in the CHSH scenario"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Tutorials</a> &#187;</li> 
       </ul>
     </div>
     <div class="container-wrapper">
@@ -60,8 +69,21 @@
   <div class="sidebar-toc">
     
     
-      <ul>
-<li class="toctree-l1"><a class="reference internal" href="index.html">Tutorials</a></li>
+      <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="S3.html">Representations of the symmetric group <span class="math notranslate nohighlight">\(S_3\)</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="singlet.html">The antisymmetric subspace of U(2)xU(2) and the singlet state</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CHSH.html">Relabelings in the CHSH scenario</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Quick start</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Permutation-groups">Permutation groups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#The-representation-of-a-group">The representation of a group</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#The-decompositions-of-a-representation">The decompositions of a representation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#The-commutant-algebra">The commutant algebra</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-to guides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference/API</a></li>
@@ -93,7 +115,9 @@
             <ol class="breadcrumb">
               <li><a href="../index.html">Docs</a></li>
               
-              <li>Short overview of some basic features of RepLAB</li>
+                <li><a href="index.html">Tutorials</a></li>
+              
+              <li>Quick start</li>
             </ol>
           </div>
           
@@ -299,8 +323,8 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="Short-overview-of-some-basic-features-of-RepLAB">
-<h1>Short overview of some basic features of RepLAB<a class="headerlink" href="#Short-overview-of-some-basic-features-of-RepLAB" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Quick-start">
+<h1>Quick start<a class="headerlink" href="#Quick-start" title="Permalink to this headline">¶</a></h1>
 <p>Before using <em>RepLAB</em> commands, we must first initialize the library:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
@@ -317,7 +341,7 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
+warning: function /home/denis/Projects/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Adding VPI to the path
 Adding MOxUnit to the path
@@ -454,25 +478,25 @@ ans =
 Indexed family of 24 elements
    1 = [1, 2, 3, 4]
    2 = [1, 4, 3, 2]
-   3 = [1, 4, 2, 3]
-   4 = [1, 3, 2, 4]
+   3 = [1, 3, 2, 4]
+   4 = [1, 4, 2, 3]
    5 = [1, 2, 4, 3]
    6 = [1, 3, 4, 2]
    7 = [3, 4, 1, 2]
    8 = [3, 2, 1, 4]
-   9 = [3, 2, 4, 1]
-  10 = [3, 1, 4, 2]
+   9 = [3, 1, 4, 2]
+  10 = [3, 2, 4, 1]
   11 = [3, 4, 2, 1]
 .. 2   elements omitted
   14 = [2, 1, 4, 3]
-  15 = [2, 1, 3, 4]
-  16 = [2, 4, 3, 1]
+  15 = [2, 4, 3, 1]
+  16 = [2, 1, 3, 4]
   17 = [2, 3, 1, 4]
   18 = [2, 4, 1, 3]
   19 = [4, 1, 2, 3]
   20 = [4, 3, 2, 1]
-  21 = [4, 3, 1, 2]
-  22 = [4, 2, 1, 3]
+  21 = [4, 2, 1, 3]
+  22 = [4, 3, 1, 2]
   23 = [4, 1, 3, 2]
   24 = [4, 2, 3, 1]
 
@@ -536,17 +560,17 @@ Indexed family of 265252859812191058636308480000000 elements
                                   10 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12...
                                   11 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12...
 .. 265252859812191058636308479999978   elements omitted
-   265252859812191058636308479999990 = [30, 29, 5, 23, 22, 1, 2, 21, 13, 19, ...
-   265252859812191058636308479999991 = [30, 29, 5, 23, 22, 1, 2, 21, 13, 19, ...
-   265252859812191058636308479999992 = [30, 29, 5, 23, 22, 1, 2, 21, 13, 19, ...
-   265252859812191058636308479999993 = [30, 29, 5, 23, 22, 1, 2, 21, 13, 19, ...
-   265252859812191058636308479999994 = [30, 29, 5, 23, 22, 1, 2, 21, 13, 19, ...
-   265252859812191058636308479999995 = [30, 29, 5, 23, 22, 1, 2, 21, 13, 19, ...
-   265252859812191058636308479999996 = [30, 29, 5, 23, 22, 1, 2, 21, 13, 19, ...
-   265252859812191058636308479999997 = [30, 29, 5, 23, 22, 1, 2, 21, 13, 19, ...
-   265252859812191058636308479999998 = [30, 29, 5, 23, 22, 1, 2, 21, 13, 19, ...
-   265252859812191058636308479999999 = [30, 29, 5, 23, 22, 1, 2, 21, 13, 19, ...
-   265252859812191058636308480000000 = [30, 29, 5, 23, 22, 1, 2, 21, 13, 19, ...
+   265252859812191058636308479999990 = [30, 29, 3, 6, 24, 18, 19, 11, 5, 26, ...
+   265252859812191058636308479999991 = [30, 29, 3, 6, 24, 18, 19, 11, 5, 26, ...
+   265252859812191058636308479999992 = [30, 29, 3, 6, 24, 18, 19, 11, 5, 26, ...
+   265252859812191058636308479999993 = [30, 29, 3, 6, 24, 18, 19, 11, 5, 26, ...
+   265252859812191058636308479999994 = [30, 29, 3, 6, 24, 18, 19, 11, 5, 26, ...
+   265252859812191058636308479999995 = [30, 29, 3, 6, 24, 18, 19, 11, 5, 26, ...
+   265252859812191058636308479999996 = [30, 29, 3, 6, 24, 18, 19, 11, 5, 26, ...
+   265252859812191058636308479999997 = [30, 29, 3, 6, 24, 18, 19, 11, 5, 26, ...
+   265252859812191058636308479999998 = [30, 29, 3, 6, 24, 18, 19, 11, 5, 26, ...
+   265252859812191058636308479999999 = [30, 29, 3, 6, 24, 18, 19, 11, 5, 26, ...
+   265252859812191058636308480000000 = [30, 29, 3, 6, 24, 18, 19, 11, 5, 26, ...
 
 </pre></div></div>
 </div>
@@ -939,10 +963,10 @@ parent: 4 x 4 real matrices
 <div class="highlight"><pre>
 ans =
 
-   0.79053   0.15074   0.15074   0.15074
-   0.15074   0.79053   0.15074   0.15074
-   0.15074   0.15074   0.79053   0.15074
-   0.15074   0.15074   0.15074   0.79053
+   0.471745   0.029312   0.029312   0.029312
+   0.029312   0.471745   0.029312   0.029312
+   0.029312   0.029312   0.471745   0.029312
+   0.029312   0.029312   0.029312   0.471745
 
 </pre></div></div>
 </div>
@@ -963,10 +987,10 @@ ans =
 <div class="highlight"><pre>
 Mgen =
 
-   0.762814   0.064514   0.629743   0.476722
-   0.765906   0.823069   0.295183   0.612500
-   0.576125   0.198434   0.593103   0.434332
-   0.334787   0.555980   0.912773   0.465875
+   0.923053   0.505498   0.313809   0.580415
+   0.624525   0.760532   0.023790   0.692925
+   0.114859   0.954686   0.878465   0.164688
+   0.453154   0.690168   0.107855   0.905771
 
 </pre></div></div>
 </div>
@@ -986,10 +1010,10 @@ Mgen =
 <div class="highlight"><pre>
 M =
 
-   0.41288   0.59255   0.59255   0.59255
-   0.59255   0.41288   0.59255   0.59255
-   0.59255   0.59255   0.41288   0.59255
-   0.59255   0.59255   0.59255   0.41288
+   0.54475   0.51783   0.51783   0.51783
+   0.51783   0.54475   0.51783   0.51783
+   0.51783   0.51783   0.54475   0.51783
+   0.51783   0.51783   0.51783   0.54475
 
 </pre></div></div>
 </div>
@@ -1047,10 +1071,10 @@ Compressed Column Sparse (rows = 4, cols = 4, nnz = 16 [100%])
 <div class="highlight"><pre>
 ans =
 
-   2.19054   0.00000   0.00000   0.00000
-   0.00000  -0.17967  -0.00000   0.00000
-  -0.00000   0.00000  -0.17967  -0.00000
-  -0.00000   0.00000   0.00000  -0.17967
+   2.09823  -0.00000   0.00000   0.00000
+   0.00000   0.02692   0.00000   0.00000
+   0.00000   0.00000   0.02692   0.00000
+   0.00000   0.00000   0.00000   0.02692
 
 </pre></div></div>
 </div>
@@ -1060,6 +1084,18 @@ ans =
 
           </div>
             
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="CHSH.html" title="previous chapter (use the left arrow)">Relabelings in the CHSH scenario</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="../howto/index.html" title="next chapter (use the right arrow)">How-to guides</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
         </div>
         <div class="clearfix"></div>
     </div>
@@ -1072,7 +1108,14 @@ ans =
         <li class="right" >
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li> 
+        <li class="right" >
+          <a href="../howto/index.html" title="How-to guides"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="CHSH.html" title="Relabelings in the CHSH scenario"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Tutorials</a> &#187;</li> 
       </ul>
     </div>
 <script type="text/javascript">

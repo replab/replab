@@ -349,7 +349,7 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
+warning: function /home/denis/Projects/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Adding VPI to the path
 Adding MOxUnit to the path
@@ -377,7 +377,7 @@ Adding MOcov to the path
 </div>
 <div class="section" id="Formulating-a-symmetric-SDP">
 <h2>Formulating a symmetric SDP<a class="headerlink" href="#Formulating-a-symmetric-SDP" title="Permalink to this headline">¶</a></h2>
-<p>To illustrate the usage of <em>RepLAB</em> for symmetric SDPs, we consider a simple example involving a 3x3 matrix <span class="math notranslate nohighlight">\(M\)</span> with trace 1 that is symmetric under cyclic permutation of its indices, i.e. it satisfies <span class="math notranslate nohighlight">\(M([2\ 3\ 1], [2\ 3\ 1]) = M\)</span>. We ask what is the smallest value that the off-diagonal element <span class="math notranslate nohighlight">\(M(1,2)\)</span> can take if this matrix <span class="math notranslate nohighlight">\(M\)</span> has only positive eigenvalues.</p>
+<p>To illustrate the usage of <em>RepLAB</em> for symmetric SDPs, we consider a simple example involving a 3x3 matrix <span class="math notranslate nohighlight">\(M\)</span> with trace 1 that is symmetric under cyclic permutation of its indices, i.e. it satisfies <span class="math notranslate nohighlight">\(M([2\ 3\ 1], [2\ 3\ 1]) = M\)</span>. We ask what is the smallest value that the off-diagonal element <span class="math notranslate nohighlight">\(M(1,2)\)</span> can take if this matrix <span class="math notranslate nohighlight">\(M\)</span> has only positive eigenvalues.</p>
 <div class="section" id="Symmetric-formulation">
 <h3>Symmetric formulation<a class="headerlink" href="#Symmetric-formulation" title="Permalink to this headline">¶</a></h3>
 <p>Using <em>RepLAB</em>, we can solve this problem as follows.</p>
@@ -685,7 +685,7 @@ ans =
 |   ID|                    Constraint|   Coefficient range|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |   #1|   Element-wise inequality 1x1|              2 to 2|
-|   #2|         Matrix inequality 2x2|     1.1519e-15 to 2|
+|   #2|         Matrix inequality 2x2|     3.8858e-16 to 2|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 </pre></div></div>
 </div>
@@ -715,8 +715,8 @@ diagnostic =
   scalar structure containing the fields:
 
     yalmipversion = 20190425
-    yalmiptime =  0.089573
-    solvertime =  0.51940
+    yalmiptime =  0.16546
+    solvertime =  0.83084
     info = Successfully solved (SDPT3-4)
     problem = 0
 
@@ -734,8 +734,8 @@ MOpt =
 <p>The symmetric formulation of the above problem involves fewer variables and simpler constraints, as summarized in the following table:</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 51%" />
-<col style="width: 20%" />
+<col style="width: 53%" />
+<col style="width: 18%" />
 <col style="width: 29%" />
 </colgroup>
 <thead>

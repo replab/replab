@@ -82,6 +82,7 @@
 <li class="toctree-l2"><a class="reference internal" href="style.html">Style guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scope.html">Scope of the RepLAB project</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Sphinx tips and tricks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sphinx-and-jupyter-required-packages">Sphinx and Jupyter required packages</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#to-convert-matlab-live-scripts-to-jupyter-notebooks">To convert Matlab Live Scripts to Jupyter notebooks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#generation-of-jupyter-notebooks">Generation of Jupyter notebooks</a></li>
 </ul>
@@ -127,6 +128,38 @@
   <div class="section" id="sphinx-tips-and-tricks">
 <h1>Sphinx tips and tricks<a class="headerlink" href="#sphinx-tips-and-tricks" title="Permalink to this headline">¶</a></h1>
 <p>We write here miscellaneous tips and tricks.</p>
+<div class="section" id="sphinx-and-jupyter-required-packages">
+<h2>Sphinx and Jupyter required packages<a class="headerlink" href="#sphinx-and-jupyter-required-packages" title="Permalink to this headline">¶</a></h2>
+<p>I tried with Python 3 in a dedicated virtualenv in Ubuntu 18.04 as follows:</p>
+<p>Run somewhere</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="n">sphinx</span>
+</pre></div>
+</div>
+<p>Then enter the environment</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="n">sphinx</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</pre></div>
+</div>
+<p>Install the following python packages:</p>
+<ul class="simple">
+<li><p>sphinx</p></li>
+<li><p>sphinxcontrib-matlabdomain</p></li>
+<li><p>texext</p></li>
+<li><p>guzzle_sphinx_theme</p></li>
+<li><p>sphinx-collapse-admonitions</p></li>
+<li><p>sphinxcontrib-fulltoc</p></li>
+</ul>
+<p>This can be done with the command</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">sphinx</span> <span class="n">sphinxcontrib</span><span class="o">-</span><span class="n">matlabdomain</span> <span class="n">texext</span> <span class="n">guzzle_sphinx_theme</span> <span class="n">sphinx</span><span class="o">-</span><span class="n">collapse</span><span class="o">-</span><span class="n">admonitions</span> <span class="n">sphinxcontrib</span><span class="o">-</span><span class="n">fulltoc</span>
+</pre></div>
+</div>
+<p>(add the option “–user” if not installing inside a virtual environment)</p>
+<p>For the Jupyter notebooks:</p>
+<p>Follow <a class="reference external" href="https://nbsphinx.readthedocs.io/en/latest/installation.html">https://nbsphinx.readthedocs.io/en/latest/installation.html</a></p>
+<p>In particular, install the Python package nbsphinx, and the Ubuntu package pandoc</p>
+<p>Later on?</p>
+<p>Proof environment? <a class="reference external" href="https://framagit.org/spalax/sphinxcontrib-proof/">https://framagit.org/spalax/sphinxcontrib-proof/</a></p>
+<p>Resources: <a class="reference external" href="https://github.com/yoloseem/awesome-sphinxdoc">https://github.com/yoloseem/awesome-sphinxdoc</a></p>
+</div>
 <div class="section" id="to-convert-matlab-live-scripts-to-jupyter-notebooks">
 <h2>To convert Matlab Live Scripts to Jupyter notebooks<a class="headerlink" href="#to-convert-matlab-live-scripts-to-jupyter-notebooks" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="https://github.com/mwouts/jupytext">Jupytext</a> works fantastically well.</p>
