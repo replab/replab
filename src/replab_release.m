@@ -1,8 +1,11 @@
 function replab_release
 % replab_release Release the current develop branch contents as a stable release
 %
-% replab_release runs the release process to send the current ``develop``
+% This runs the release process to send the current ``develop``
 % branch snapshot to the branch ``master``, taking care of version numbers in the process.
+%
+% This script works fully offline, interactions with the remote repository are done manually
+% by the user.
 %
 % There are two types of version numbers in RepLAB:
 %
@@ -141,7 +144,6 @@ function replab_release
     assert(status == 0, 'Git command failed');
     status = system(sprintf('git commit -m "Version %s"', releaseVersion.toText));
     assert(status == 0, 'Git command failed');
-
 
     disp(' ');
     disp('Step 13: Code to copy/paste');
