@@ -59,6 +59,7 @@ function replab_release
     assert(exist('replab_version.txt') == 2, 'The current directory must be the RepLAB root folder.');
     [status, cmdout] = system('git rev-parse --abbrev-ref HEAD');
     assert(isequal(strtrim(cmdout), 'develop'), 'The current repository must be on the develop branch to continue.');
+    assert(~isempty(getenv('VIRTUAL_ENV')), 'The Python virtual environment must be setup');
 
     input('Step 0: Press ENTER to confirm that you ran "git fetch origin develop master"');
 
