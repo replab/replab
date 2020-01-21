@@ -42,7 +42,7 @@ function test_var_and_text(self)
 end
 
 function test_var_with_map_access(self)
-    if ~replab.settings.isOctave % old versions of Octave don't have containers
+    if ~replab.compat.isOctave % old versions of Octave don't have containers
         context.var = containers.Map('some_key', 'the value');
         tpl = replab.lobster.Template('{{ var(''some_key'') }} is cool');
         assertEqual(tpl.render(context), 'the value is cool');
@@ -52,7 +52,7 @@ end
 function test_undefined_var_error(self)
     context = struct();
     tpl = replab.lobster.Template('{{ var }} is cool');
-    if ~replab.settings.isOctave % old versions of Octave rather throw Octave:invalid-fun-call
+    if ~replab.compat.isOctave % old versions of Octave rather throw Octave:invalid-fun-call
         assertExceptionThrown(@() tpl.render(), 'Lobster:TemplateContextError');
     end
 end
@@ -110,7 +110,7 @@ function test_for_with_struct(self)
     assertEqual(tpl.render(context), '1 2 3 4 5 ');
 end
 
-function test_for_with_empty_struct(self)   
+function test_for_with_empty_struct(self)
     context.collection = struct([]);
     tpl = replab.lobster.Template('{% for k in collection %}{{ k.val }} {% end %}');
     assertEqual(tpl.render(context), '');

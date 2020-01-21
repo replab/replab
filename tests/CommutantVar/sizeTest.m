@@ -20,14 +20,14 @@ end
 function test_inputs
     global matrix231 matrix23451 matrix23451H
     matrix = matrix231;
-    
+
     % Octave > 4.2 has some trouble with anonymous functions that involve class objects
-    isOctave = replab.settings.isOctave;
+    isOctave = replab.compat.isOctave;
     ver = version;
-    
+
     if ~isOctave || (isOctave && isequal(ver(1:3),'4.2'))
         shouldProduceAnError(@(x) size(matrix, 3));
     end
-    
+
     shouldProduceAnError(@(x) size(1, matrix));
 end

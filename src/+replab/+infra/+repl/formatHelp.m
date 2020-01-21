@@ -26,23 +26,28 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
         refs = parts(2:2:end);
         for j = 1:length(refs)
             ref = refs{j};
-            [el, linkText] = replab.infra.resolveRef(ref, context, @(id) any(exist(id) == [3 4 5 6 8]));
-            if isa(el, 'replab.infra.Element')
-                id = el.fullIdentifier;
-            elseif isa(el, 'char')
-                id = el;
+            if any(ref == '<')
+                refs{j} = replab.infra.repl.processURLRef(ref);
             else
-                error('replab:formatHelpError', 'Unknown element type %s in ref. %s', class(el), ref);
+                % Process a standard Sphinx ref
+                [el, linkText] = replab.infra.resolveRef(ref, context, @(id) any(exist(id) == [3 4 5 6 8]));
+                if isa(el, 'replab.infra.Element')
+                    id = el.fullIdentifier;
+                elseif isa(el, 'char')
+                    id = el;
+                else
+                    error('replab:formatHelpError', 'Unknown element type %s in ref. %s', class(el), ref);
+                end
+                if ismember(id, strongIds)
+                    linkText = replab.infra.strong(linkText);
+                end
+                if ismember(id, plainIds)
+                    ref = linkText;
+                else
+                    ref = replab.infra.linkHelp(helpCommand, linkText, id);
+                end
+                refs{j} = ref;
             end
-            if ismember(id, strongIds)
-                linkText = replab.infra.strong(linkText);
-            end
-            if ismember(id, plainIds)
-                ref = linkText;
-            else
-                ref = replab.infra.linkHelp(helpCommand, linkText, id);
-            end
-            refs{j} = ref;
         end
 
         % Also strongify any appearance of the identifier outside single
@@ -63,7 +68,7 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
                 txts{j} = [tokens{:}];
             end
         end
-        
+
         parts(1:2:end) = txts;
         parts(2:2:end) = refs;
         l = strjoin(parts, '');

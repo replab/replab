@@ -15,7 +15,7 @@ function value = strMaxColumns(newValue)
     end
     if isempty(storedValue)
         try
-            if replab.settings.isOctave
+            if replab.compat.isOctave
                 pair = terminal_size;
                 value = pair(2);
             else

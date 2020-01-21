@@ -1,8 +1,5 @@
 function s = shortStr(obj, maxColumns)
-% Default implementation for replab.shortStr
-%   
-% Thank you Matlab for being a regular language, we totally don't have to consider a thousand
-% particular cases below.
+% Default implementation for `+replab.shortStr`
     overLimit = false;
     if isscalar(obj) % prints scalars using the relevant method
         if isa(obj, 'cell')

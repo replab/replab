@@ -7,17 +7,19 @@ classdef ClassData < replab.Str
         docLineNumbers % row integer vector: Line numbers of the documentation comment
         ownMethods % row cell array of `+replab.+infra.FunctionLikeData`: Data about methods
         ownProperties % row cell array of `+replab.+infra.PropertyData`: Data about properties
+        propertyLines % integer(1,:): Line numbers of properties
     end
 
     methods
 
-        function self = ClassData(name, superclassIdentifiers, docLines, docLineNumbers, ownMethods, ownProperties)
+        function self = ClassData(name, superclassIdentifiers, docLines, docLineNumbers, ownMethods, ownProperties, propertyLines)
             self.name = name;
             self.superclassIdentifiers = superclassIdentifiers;
             self.docLines = docLines;
             self.docLineNumbers = docLineNumbers;
             self.ownMethods = ownMethods;
             self.ownProperties = ownProperties;
+            self.propertyLines = propertyLines;
         end
 
     end
@@ -118,9 +120,11 @@ classdef ClassData < replab.Str
             prop = [];
         end
 
-        function [pos props] = parseProperties(ct, pos)
+        function [pos props propLines] = parseProperties(ct, pos)
         % Parses a properties block
             props = {};
+            propLines = [];
+            startLine = pos;
             [pos line] = ct.expect(pos, 'p');
             if isempty(pos)
                 return
@@ -150,17 +154,20 @@ classdef ClassData < replab.Str
                     pos = res;
                 end
             end
+            endLine = pos;
             [res line] = ct.expect(pos, '<');
             if isempty(res)
                 replab.infra.parseError(ct, pos, 'Expected ''end'' token here');
             end
             pos = res;
+            propLines = startLine:endLine;
         end
 
-        function [res mets props] = parseClassElement(ct, pos)
+        function [res mets props propLines] = parseClassElement(ct, pos)
         % Parses an element that can appear in a class definition
             mets = {};
             props = {};
+            propLines = [];
             res = replab.infra.ClassData.parseBlank(ct, pos);
             if ~isempty(res)
                 return
@@ -169,12 +176,13 @@ classdef ClassData < replab.Str
             if ~isempty(res)
                 return
             end
-            [res props] = replab.infra.ClassData.parseProperties(ct, pos);
+            [res props propLines] = replab.infra.ClassData.parseProperties(ct, pos);
             if ~isempty(res)
                 return
             end
             mets = {};
             props = {};
+            propLines = [];
             [res mets] = replab.infra.ClassData.parseMethods(ct, pos);
             if ~isempty(res)
                 return
@@ -182,6 +190,7 @@ classdef ClassData < replab.Str
             res = [];
             mets = {};
             props = {};
+            propLines = [];
         end
 
         function c = parse(ct)
@@ -207,14 +216,16 @@ classdef ClassData < replab.Str
             pos = res;
             mets = {};
             props = {};
+            propLines = [];
             while 1
-                [res newMets newProps] = replab.infra.ClassData.parseClassElement(ct, pos);
+                [res newMets newProps newPropLines] = replab.infra.ClassData.parseClassElement(ct, pos);
                 if isempty(res)
                     break
                 else
                     pos = res;
                     mets = horzcat(mets, newMets);
                     props = horzcat(props, newProps);
+                    propLines = horzcat(propLines, newPropLines);
                 end
             end
             res = ct.expect(pos, '<');
@@ -222,7 +233,7 @@ classdef ClassData < replab.Str
                 replab.infra.parseError(ct, pos, 'Expected ''end'' token here');
             end
             pos = res;
-            c = replab.infra.ClassData(name, parentNames, docLines, docLineNumbers, mets, props);
+            c = replab.infra.ClassData(name, parentNames, docLines, docLineNumbers, mets, props, propLines);
         end
 
     end

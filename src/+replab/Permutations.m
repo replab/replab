@@ -8,8 +8,12 @@ classdef Permutations < replab.PermutationGroup
 %      120
 
     methods % Implementations of abstract methods
-        
+
         function self = Permutations(domainSize)
+        % Constructs the symmetric over a given domain size
+        %
+        % Args:
+        %   domainSize (integer): Domain size, must be > 0
             self.identity = 1:domainSize;
             self.domainSize = domainSize;
             self.parent = self;
@@ -21,29 +25,29 @@ classdef Permutations < replab.PermutationGroup
                 self.generators = {[2:domainSize 1] [2 1 3:domainSize]};
             end
         end
-        
+
         %% Str methods
-                
+
         function s = headerStr(self)
             s = sprintf('Permutations acting on %d elements', self.domainSize);
         end
 
         %% Domain methods
-        
+
         function s = sample(self)
             s = randperm(self.domainSize); % overriden for efficiency
         end
 
         %% FiniteGroup methods
-        
+
         function b = contains(self, g)
             assert(length(g) == self.domainSize, 'Permutation in wrong domain');
             assert(all(g > 0), 'Permutation should have positive coefficients');
             b = true;
         end
-        
+
         %% NiceFiniteGroup methods
-        
+
         function grp = subgroup(self, generators, order)
         % Constructs a permutation subgroup from its generators
         %
@@ -58,21 +62,21 @@ classdef Permutations < replab.PermutationGroup
             end
             grp = replab.PermutationSubgroup(self, generators, order);
         end
-        
+
     end
-    
+
     methods (Access = protected)
 
         function o = computeOrder(self)
             o = factorial(vpi(self.domainSize));
         end
-        
+
         function E = computeElements(self)
             E = replab.IndexedFamily.lambda(self.order, ...
                                             @(ind) self.enumeratorAt(ind), ...
                                             @(el) self.enumeratorFind(el));
         end
-        
+
         function d = computeDecomposition(self)
             G = self.subgroup(self.generators, self.order);
             d = G.decomposition;
@@ -89,7 +93,7 @@ classdef Permutations < replab.PermutationGroup
             end
             ind = ind0 + 1;
         end
-        
+
         function g = enumeratorAt(self, ind)
             n = self.domainSize;
             ind0 = ind - 1; % make it 0-based
@@ -108,11 +112,11 @@ classdef Permutations < replab.PermutationGroup
                 els = setdiff(els, e);
             end
         end
-        
+
     end
 
     methods
-        
+
         function p = transposition(self, i, j)
         % Returns the transposition permuting ``i`` and ``j``.
         %
@@ -130,7 +134,7 @@ classdef Permutations < replab.PermutationGroup
             p = 1:self.domainSize;
             p([i j]) = [j i];
         end
-        
+
         function p = shift(self, i)
         % Returns the cyclic permutation that shifts the domain indices by ``i``.
         %
@@ -142,7 +146,7 @@ classdef Permutations < replab.PermutationGroup
             n = self.domainSize;
             p = mod((0:n-1)+i, n)+1;
         end
-        
+
         function p = fromCycles(self, varargin)
         % Constructs a permutation from a product of cycles.
         %
@@ -151,7 +155,7 @@ classdef Permutations < replab.PermutationGroup
         %
         % Args:
         %  *args: Sequence of cycles as row vectors of indices
-        % 
+        %
         % Returns:
         %  The permutation corresponding to the product of cycles.
             n = self.domainSize;
@@ -165,7 +169,7 @@ classdef Permutations < replab.PermutationGroup
                 p = self.compose(newEl, p);
             end
         end
-               
+
         function grp = cyclicSubgroup(self)
             n = self.domainSize;
             if n == 1
@@ -174,7 +178,7 @@ classdef Permutations < replab.PermutationGroup
                 grp = self.subgroup({[2:n 1]}, vpi(n));
             end
         end
-        
+
         function grp = alternatingSubgroup(self)
             n = self.domainSize;
             if n <= 2
@@ -189,11 +193,11 @@ classdef Permutations < replab.PermutationGroup
                 grp = self.subgroup({c3 s}, self.order/2);
             end
         end
-        
+
         function grp = symmetricGroup(self)
             grp = self.subgroup(self.generators, self.order);
         end
-        
+
         function grp = dihedralSubgroup(self)
             n = self.domainSize;
             if n <= 2
@@ -204,15 +208,15 @@ classdef Permutations < replab.PermutationGroup
                 grp = self.subgroup({g1 g2});
             end
         end
-        
+
     end
-    
+
     methods (Static)
-        
+
         function Q = quaternionGroup(self)
         % Returns a permutation representation of the quaternion group
         %
-        % The quaternion group returned can be seen as the multiplication of 
+        % The quaternion group returned can be seen as the multiplication of
         % of the four quaternion generators 1, i, j, k with a sign +/-1, thus
         % can be represented by permutations on 8 elements.
         %
@@ -223,7 +227,7 @@ classdef Permutations < replab.PermutationGroup
             g2 = S8.fromCycles([1 3 4 8], [2 5 7 6]);
             Q = replab.Permutations(8).subgroup({g1 g2});
         end
-        
+
         function mat = toSparseMatrix(perm)
         % Returns the sparse permutation matrix corresponding to the given permutation
         %
@@ -239,7 +243,7 @@ classdef Permutations < replab.PermutationGroup
             n = length(perm);
             mat = sparse(perm, 1:n, ones(1, n), n, n);
         end
-        
+
         function mat = toMatrix(perm)
         % Returns the permutation matrix corresponding to the given permutation
         %
@@ -254,7 +258,7 @@ classdef Permutations < replab.PermutationGroup
         %   The permutation matrix corresponding to ``perm``.
             mat = full(replab.Permutations.toSparseMatrix(perm));
         end
-        
+
         function perm = fromMatrix(mat)
         % Returns the signed permutation corresponding to the given matrix representation
         %
@@ -330,7 +334,7 @@ classdef Permutations < replab.PermutationGroup
                 end
             end
         end
-        
+
     end
-    
+
 end

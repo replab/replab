@@ -10,6 +10,9 @@ classdef PackageData < replab.Str
 
         function self = PackageData(path, ownFunctions, ownClasses)
             self.path = path;
+            assert(all(cellfun(@(x) all(x ~= '_'), path)), 'Package names cannot contain _');
+            % if the restriction above needs to be lifted, the package name mangling needs to
+            % be revised, in crawl.m and in the shm code
             self.ownFunctions = ownFunctions;
             self.ownClasses = ownClasses;
         end

@@ -41,3 +41,14 @@
 % .. raw:: html\n
 %\n
 %    <h3>Own members</h3>\n
+%\n
+{% for el in cl.ownDocumentationProperties %}
+% .. attribute:: {{ el.name }}\n
+%\n
+%    {{ el.declarations.bestEffortDocFirstLine }}\n
+%\n
+{% if el.declarations.bestEffortHasPropertyType %}
+%    :type: {{ el.declarations.bestEffortPropertyType }}\n
+%\n
+{% end %}
+{% end %}

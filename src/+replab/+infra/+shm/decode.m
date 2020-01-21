@@ -1,4 +1,8 @@
 function path = decode(id)
-    id = strrep(id, '__', '$');
-    path = strsplit(id, '$');
+    if isequal(id, 'root__')
+        path = {};
+    else
+        id = strrep(id, '__', '$');
+        path = strsplit(id, '$');
+    end
 end

@@ -7,7 +7,7 @@ classdef ConcreteClassElement < replab.infra.SourceElement & replab.infra.ClassE
                                              attributes, docLines, docLineNumbers)
             sourceIdentifier = parentClass.name;
             self = self@replab.infra.SourceElement(codeBase, package, sourceIdentifier, startLineNumber, ...
-                                                   name, docLines, docLineNumbers);
+                                                   name, docLines, docLineNumbers, isequal(kind, 'property'));
             self = self@replab.infra.ClassElement(codeBase, parentClass, name, kind, declaration, attributes);
         end
 

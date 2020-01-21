@@ -68,12 +68,30 @@ classdef CodeBase < replab.Str
 
         function p = allPackages(self)
         % Returns all packages present in this code base
+        %
+        % Returns:
+        %   cell{:,1} of `.Package`: Packages
             pkgNames = fieldnames(self.packages);
             p = cellfun(@(name) self.packages.(name), pkgNames, 'uniform', 0);
         end
 
+        function e = allSourceElements(self)
+        % Returns all source elements (functions, classes) in this code base
+        %
+        % Returns:
+        %   cell{:,1} of `.SourceElement`: Source elements
+            p = self.allPackages;
+            e = {};
+            for i = 1:length(p)
+                e = horzcat(e, p{i}.ownClasses, p{i}.ownFunctions);
+            end
+        end
+
         function f = allFunctions(self)
         % Returns all functions present in this code base
+        %
+        % Returns:
+        %   cell{:,1} of `.Function`: All functions
             p = self.allPackages;
             f = {};
             for i = 1:length(p)
@@ -83,6 +101,9 @@ classdef CodeBase < replab.Str
 
         function c = allClasses(self)
         % Returns all classes present in this code base
+        %
+        % Returns:
+        %   cell{:,1} of `.Class`: All classes
             p = self.allPackages;
             c = {};
             for i = 1:length(p)
@@ -125,64 +146,6 @@ classdef CodeBase < replab.Str
         function p = root(self)
             p = self.packages.(replab.infra.shm.encode({}));
         end
-
-% $$$        function subpackageNames = subPackagesNames(self, packageNameParts)
-% $$$             fn = fieldnames(self.packages);
-% $$$             subpackageNames = {};
-% $$$             if length(packageNameParts) == 0
-% $$$                 for i = 1:length(fn)
-% $$$                     if all(fn{i} ~= '_')
-% $$$                         subpackageNames{1, end+1} = fn{i};
-% $$$                     end
-% $$$                 end
-% $$$             else
-% $$$                 pn = strjoin(packageNameParts, '_');
-% $$$                 for i = 1:length(fn)
-% $$$                     fni = fn{i};
-% $$$                     if length(fni) > length(pn) && isequal(fni(1:length(pn)), pn)
-% $$$                         rest = fni(length(pn)+2:end);
-% $$$                         if all(rest ~= '_')
-% $$$                             subpackageNames{1, end+1} = rest;
-% $$$                         end
-% $$$                     end
-% $$$                 end
-% $$$             end
-% $$$         end
-
-
-% $$$         function writeDocTests(self, doctestPath)
-% $$$         % Writes the doc tests of the whole code base in the specified folder
-% $$$         %
-% $$$         % Args:
-% $$$         %   doctestPath (charstring): Path of the doctests generated code, must exist
-% $$$             names = fieldnames(self.packages);
-% $$$             for i = 1:length(names)
-% $$$                 package = self.packages.(names{i});
-% $$$                 fprintf('Writing tests for package %s:\n', package.fullName);
-% $$$                 memberNames = fieldnames(package.members);
-% $$$                 for j = 1:length(memberNames)
-% $$$                     fprintf('.. member %s:\n', memberNames{j});
-% $$$                     replab.infra.writeDocTests(doctestPath, package.member(memberNames{j}));
-% $$$                 end
-% $$$             end
-% $$$         end
-% $$$         
-% $$$         function writeEnrichedSource(self, docSrcPath)
-% $$$         % Writes the enriched source with the TOC elements
-% $$$         %
-% $$$         % Args:
-% $$$         %   docSrcPath (charstring): Path of the enriched source, folder must exist, without trailing separator
-% $$$             names = fieldnames(self.packages);
-% $$$             for i = 1:length(names)
-% $$$                 package = self.packages.(names{i});
-% $$$                 fprintf('Writing enriched source for package %s:\n', package.fullName);
-% $$$                 memberNames = fieldnames(package.members);
-% $$$                 for j = 1:length(memberNames)
-% $$$                     fprintf('.. member %s:\n', memberNames{j});
-% $$$                     replab.infra.writeEnrichedSource(self, docSrcPath, package.member(memberNames{j}));
-% $$$                 end
-% $$$             end
-% $$$         end
 
     end
 

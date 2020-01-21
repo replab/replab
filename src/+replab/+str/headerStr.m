@@ -1,7 +1,7 @@
 function s = headerStr(obj)
 % Returns a tiny string description containing just the class name and size (when relevant)
 %
-% Default implementation; user code should call replab.headerStr(obj) instead
+% This is the default implementation for `+replab.headerStr`
     if isa(obj, 'vpi')
         s = sprintf('vpi(~%.2e)', double(obj));
     elseif isequal(obj, {})

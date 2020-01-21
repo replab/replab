@@ -1,5 +1,5 @@
 function exitCode = replab_easyinstall
-% Checks if the external dependencies are present, 
+% Checks if the external dependencies are present,
 %
 % If everything is setup correctly already, the script does not require user interaction, but will
 % display output on the command line.
@@ -13,10 +13,10 @@ function exitCode = replab_easyinstall
 %
 % Returns:
 %   integer: 0 if the external dependencies are present now, a positive number indicates an error
-    
+
     scriptPath = mfilename('fullpath');
     [replabPath, ~, ~] = fileparts(scriptPath);
-    
+
     externalPath = fullfile(replabPath, 'external');
     switch exist(externalPath)
       case 7
@@ -27,28 +27,28 @@ function exitCode = replab_easyinstall
         disp('This script cannot help. Restart with a fresh copy of RepLAB');
         exitCode = 1;
       otherwise
-        error('Path error for external'); 
+        error('Path error for external');
     end
 
-    
+
     MOcovPath = fullfile(externalPath, 'MOcov');
     MOcovPathExists = exist(MOcovPath) == 7;
     MOcovTestPath = fullfile(MOcovPath, 'README.md');
     MOcovZipPath = fullfile(externalPath, 'MOcov.zip');
     MOcovInstalled = MOcovPathExists && exist(MOcovTestPath) == 2;
-    
+
     MOxUnitPath = fullfile(externalPath, 'MOxUnit');
     MOxUnitPathExists = exist(externalPath) == 7;
     MOxUnitTestPath = fullfile(MOxUnitPath, 'README.md');
     MOxUnitZipPath = fullfile(externalPath, 'MOxUnit.zip');
     MOxUnitInstalled = MOxUnitPathExists && exist(MOxUnitTestPath) == 2;
-    
+
     SDPT3Path = fullfile(externalPath, 'SDPT3');
     SDPT3PathExists = exist(SDPT3Path) == 7;
     SDPT3TestPath = fullfile(SDPT3Path, 'README.md');
     SDPT3ZipPath = fullfile(externalPath, 'SDPT3.zip');
     SDPT3Installed = SDPT3PathExists && exist(SDPT3TestPath) == 2;
-    
+
     YALMIPPath = fullfile(externalPath, 'YALMIP');
     YALMIPPathExists = exist(YALMIPPath) == 7;
     YALMIPTestPath = fullfile(YALMIPPath, 'README.txt');
@@ -62,7 +62,7 @@ function exitCode = replab_easyinstall
         exitCode = 0;
         return
     end
-    
+
     % Test if we are in a Git repository
     gitPath = fullfile(replabPath, '.git');
     switch exist(gitPath)
@@ -82,7 +82,7 @@ function exitCode = replab_easyinstall
       otherwise
         error([gitPath ' exists but is not a folder. Restart with a fresh copy of RepLAB.']);
     end
-    
+
     disp('Some dependencies are missing. The script will now install the missing dependencies.');
     s = input('Do you wish to proceed [Y/n]?', 's');
     s = lower(strtrim(s));
@@ -95,7 +95,7 @@ function exitCode = replab_easyinstall
       otherwise
         error('Unrecognized answer.');
     end
-    
+
     zipName = 'replab_externals.zip';
     zipPath = fullfile(replabPath, zipName);
     url = 'https://github.com/replab/replab/raw/externals/replab_externals.zip';
@@ -120,7 +120,7 @@ function exitCode = replab_easyinstall
             error('Unrecognized answer.');
         end
         try
-            if replab.settings.isOctave
+            if replab.compat.isOctave
                 [f, success] = urlwrite (url, zipPath);
                 assert(success, 'Download did not work');
             else
@@ -130,7 +130,7 @@ function exitCode = replab_easyinstall
             disp('Download failed. Download the file manually and restart the script.');
             exitCode = 1;
             return
-        end            
+        end
         if exist(zipPath) ~= 2
             disp('Download failed, file not present. Download the file manually and restart the script.');
             exitCode = 1;
@@ -144,7 +144,7 @@ function exitCode = replab_easyinstall
         end
       case 2
         % zip file exists, proceed
-        disp(['Externals ZIP file ' zipPath ' available locally.']); 
+        disp(['Externals ZIP file ' zipPath ' available locally.']);
         s = dir(zipPath);
         if s.bytes < 1e6
             disp('The external ZIP file is too small');
@@ -154,7 +154,7 @@ function exitCode = replab_easyinstall
       otherwise
         error('Unrecognized type for the ZIP file path');
     end
-    
+
     disp(['Unzipping ' zipPath]);
     try
         unzip(zipPath, externalPath);
@@ -163,7 +163,7 @@ function exitCode = replab_easyinstall
         exitCode = 1;
         return
     end
-    
+
     % MOcov
     if ~MOcovPathExists
         disp('Directory MOcovPath not present. Creating.');
@@ -175,7 +175,7 @@ function exitCode = replab_easyinstall
         disp('Unzipping MOcov...');
         unzip(MOcovZipPath, MOcovPath);
     end
-    
+
     % MOxUnit
     if ~MOxUnitPathExists
         disp('Directory MOxUnit not present. Creating.');
@@ -187,7 +187,7 @@ function exitCode = replab_easyinstall
         disp('Unzipping MOxUnit...');
         unzip(MOxUnitZipPath, MOxUnitPath);
     end
-    
+
     % SDPT3
     if ~SDPT3PathExists
         disp('Directory SDPT3 not present. Creating.');
@@ -199,7 +199,7 @@ function exitCode = replab_easyinstall
         disp('Unzipping SDPT3...');
         unzip(SDPT3ZipPath, SDPT3Path);
     end
-    
+
     % YALMIP
     if ~YALMIPPathExists
         disp('Directory YALMIP not present. Creating.');
@@ -211,9 +211,8 @@ function exitCode = replab_easyinstall
         disp('Unzipping YALMIP...');
         unzip(YALMIPZipPath, YALMIPPath);
     end
-    
+
     disp('');
     disp('Installation successful.');
     exitCode = 0;
 end
-

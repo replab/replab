@@ -1,8 +1,8 @@
 classdef Permutations < replab.signed.PermutationGroup
 % Describes the signed permutation group over {-n...-1, 1...n} where n = domainSize
-    
+
     methods
-        
+
         function self = Permutations(domainSize)
             self.identity = 1:domainSize;
             self.domainSize = domainSize;
@@ -21,45 +21,45 @@ classdef Permutations < replab.signed.PermutationGroup
                 self.generators = {shift trans flip};
             end
         end
-        
+
         %% Str methods
-                
+
         function s = headerStr(self)
             s = sprintf('Signed permutations acting on {-%d..-1 1..%d}', self.domainSize, self.domainSize);
         end
-        
+
         %% Domain methods
-        
+
         function s = sample(self)
             n = self.domainSize;
             s = randperm(n) .* (randi([0 1], 1, n)*2-1);
         end
-        
+
         %% Finite group methods
-                
+
         function b = contains(self, g)
             assert(length(g) == self.domainSize, 'Signed permutation in wrong domain');
             assert(all(g ~= 0) && all(abs(g) <= self.domainSize), ...
                    'Signed permutation has out of range coefficients');
             b = true;
         end
-        
-        
+
+
         function G = subgroup(self, generators, order)
             if nargin < 3
                 order = [];
             end
             G = replab.signed.PermutationSubgroup(self, generators, order);
         end
-        
+
     end
-    
+
     methods (Access = protected)
-        
+
         function o = computeOrder(self)
             o = factorial(vpi(self.domainSize)) * vpi(2)^self.domainSize;
-        end        
-        
+        end
+
         function E = computeElements(self)
             E = replab.IndexedFamily.lambda(self.order, ...
                                             @(ind) self.enumeratorAt(ind), ...
@@ -82,7 +82,7 @@ classdef Permutations < replab.signed.PermutationGroup
             end
             ind = ind0 + 1;
         end
-        
+
         function g = enumeratorAt(self, ind)
             n = self.domainSize;
             ind0 = ind - 1; % make it 0-based
@@ -103,9 +103,9 @@ classdef Permutations < replab.signed.PermutationGroup
         end
 
     end
-        
+
     methods (Static)
-        
+
         function perm = toPermutation(signedPerm)
         % Returns the permutation corresponding to the given signed permutation where the permutation acts on the list [-d,..,-1,1,..,d]
             n = length(signedPerm);
@@ -125,7 +125,7 @@ classdef Permutations < replab.signed.PermutationGroup
                 end
             end
         end
-        
+
         function signedPerm = fromPermutation(perm)
         % Returns the signed permutation corresponding to the given permutation encoding
         %
@@ -152,8 +152,8 @@ classdef Permutations < replab.signed.PermutationGroup
         % Returns the signed permutation matrix corresponding to the given signed permutation
         %
         % Such that matrix multiplication is
-        % compatible with composition of permutations, i.e. 
-        % S.toMatrix(S.compose(x, y)) = 
+        % compatible with composition of permutations, i.e.
+        % S.toMatrix(S.compose(x, y)) =
         % S.toMatrix(x) * S.toMatrix(y)
         % where S = SignedPermutations(domainSize)
             mat = full(replab.signed.Permutations.toSparseMatrix(signedPerm));
@@ -174,7 +174,7 @@ classdef Permutations < replab.signed.PermutationGroup
             [sJ IJ] = sort(J);
             b = isequal(sI, 1:n) && isequal(sJ, 1:n) && isequal(abs(S), ones(1, n));
         end
-        
+
         function signedPerm = fromMatrix(mat)
         % Returns the signed permutation corresponding to the given matrix representation or throws an error
             if isequal(size(mat), [0 0])
@@ -201,11 +201,11 @@ classdef Permutations < replab.signed.PermutationGroup
             signedPerm = I.*S;
             signedPerm = signedPerm(IJ);
         end
-    
+
     end
-    
+
     methods (Static)
-        
+
         function Q = quaternionGroup(self)
         % Returns a signed representation of the quaternion group
             SS4 = replab.signed.Permutations(4);
@@ -214,7 +214,7 @@ classdef Permutations < replab.signed.PermutationGroup
             gj = [3 -4 -1 2];
             Q = SS4.subgroup({g1 gi gj});
         end
-        
+
     end
-    
+
 end

@@ -2,20 +2,20 @@ classdef Action < replab.Str
 % A group action describing the action of a group on a set
 %
 % Elements of the group ``G`` act upon elements of type ``P``.
-    
+
     properties (SetAccess = protected)
         G % replab.Group: Group acting
         P % replab.Domain: Set acted upon
     end
-    
-    methods 
-        
+
+    methods
+
         %% Abstract methods
-        
+
         function p1 = leftAction(self, g, p)
         % Computes the left action of a group element on a set element
         %
-        % Returns the left action, often denoted by ``p1 = g(p)`` of G over P, 
+        % Returns the left action, often denoted by ``p1 = g(p)`` of G over P,
         % which is compatible with group composition as in:
         %
         % `` p2 = g(h(p)) = (g compose h)(p) ``
@@ -28,13 +28,13 @@ classdef Action < replab.Str
         %   element of `P`: Result of the left action
             error('Abstract');
         end
-        
+
         %% Default implementations
-        
+
         function p1 = rightAction(self, p, g)
         % Computes the right action of a group element on a set element
         %
-        % Returns the right action, often denoted ``p1 = p^g``, 
+        % Returns the right action, often denoted ``p1 = p^g``,
         % compatible with the group composition as in
         %
         % ``p2 = (p^g)^h = p^(g compose h)``
@@ -49,9 +49,9 @@ classdef Action < replab.Str
         end
 
     end
-    
+
     methods (Static)
-        
+
         function action = lambda(header, G, P, leftActionFun)
         % Constructs an action from a function handle
         %
@@ -64,7 +64,7 @@ classdef Action < replab.Str
         %   replab.Action: The action
             action = replab.lambda.Action(header, G, P, leftActionFun);
         end
-        
+
     end
-    
+
 end

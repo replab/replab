@@ -24,13 +24,13 @@ function replab_init(verbose)
 %         Adding embedded YALMIP to the path
 %         Adding MOcov to the path
 
-    
+
     %% Parameter checking
     if nargin < 1
         verbose = 1;
     end
 
-    
+
     %% If everything was already set up previously we exit rapidly
     persistent allGood
     if isempty(allGood)
@@ -41,7 +41,7 @@ function replab_init(verbose)
             disp('Replab_init has already been successfully called.');
         end
         return;
-    end    
+    end
 
 
     %% Let us check the Matlab/Octave version
@@ -59,15 +59,15 @@ function replab_init(verbose)
     if ~isLaterVersion(minimalVersion, currentVersion)
         warning(['Current version of ', platform, ' is ', currentVersion, ' but the minimal supported version is ', minimalVersion, '.']);
     end
-    
-    
+
+
     %% Action -- first capture the folder containg matlab's help.m
     matlabHelpPath = fileparts(which('help'));
     matlabHelpPath = strrep(matlabHelpPath, '\', '/');
     if ~isempty(strfind(matlabHelpPath, 'replab'))
         % matlab path should not contain string 'replab', we try to
         % find the original matlab path
-        
+
         % first we identify the paths containing the string replab
         allPaths = [':', path, ':'];
         sep = strfind(allPaths, ':');
@@ -94,25 +94,25 @@ function replab_init(verbose)
         catch
             % In case an error occurs we want to be able to restore the path
         end
-        
+
         % come back to the original directory
         cd(currentPathStr);
-        
+
         % ... and add them back to the path
         for i = length(replabContainingPaths):-1:1
             addpath(replabContainingPaths{i});
         end
-        
+
         if ~isempty(strfind(matlabHelpPath, 'replab'))
             error('Please remove all occurences of replab in the path, go to a neutral folder, and run replab_addpath again.');
         end
     end
 
-    
+
     %% Adding RepLAB itself
     [pathStr, name, extension] = fileparts(which(mfilename));
     pathStr = strrep(pathStr, '\', '/');
-    
+
     % Check if another instance of RepLAB is already in the path
     currentPathStr = strrep(pwd, '\', '/');
     dirName = currentPathStr(find(currentPathStr=='/',1,'last')+1:end);
@@ -150,20 +150,20 @@ function replab_init(verbose)
             disp('RepLAB package is already in the path');
         end
     end
-    
-    
+
+
     %% Memorizing matlab's help folder if not done before
     if isempty(replab.settings.systemHelpPath)
         replab.settings.systemHelpPath(matlabHelpPath);
     end
-    
+
     %% Memorizing RepLAB root folder if not done before
     if isempty(replab.settings.replabPath)
         replab.settings.replabPath(pathStr);
     end
-    
+
     %% VPI
-    
+
     % Making sure the VPI library is in the path and working
     VPIInPath = false;
     try
@@ -183,9 +183,9 @@ function replab_init(verbose)
     elseif verbose >= 2
         disp('VPI is already in the path');
     end
-    
+
     %% MOxUnit
-    
+
     % Making sure MOxUnit is in the path and working
     MOxUnitInPath = false;
     try
@@ -209,7 +209,7 @@ function replab_init(verbose)
     elseif verbose >= 2
         disp('MOxUnit is already in the path');
     end
-    
+
     %% YALMIP
 
     % Making sure YALMIP is in the path and working
@@ -264,7 +264,7 @@ function replab_init(verbose)
             if ~isempty(strfind(upper(solver.tag), 'LMILAB'))
                 decentSDPSolverInPath = false;
             end
-            
+
             % If a decent solver was found, we make sure it can actually
             % solve an SDP (e.g. the license is valid ;-)
             if decentSDPSolverInPath
@@ -301,7 +301,7 @@ function replab_init(verbose)
                     if verbose >= 1
                         disp('Adding embedded SDPT3 solver to the path');
                     end
-                    
+
                     % Now we run install_sdpt3
                     compilationSuccessfull = false;
                     logSDPT3 = '';
@@ -313,7 +313,7 @@ function replab_init(verbose)
                         compilationSuccessfull = true;
                     catch
                     end
-                    
+
                     if compilationSuccessfull
                         SDPT3InPath = true;
                         if (verbose == 1) && ~isempty(regexp(logSDPT3, 'Looking for existing binaries\.\.\.none found; building\.\.\.'))
@@ -340,7 +340,7 @@ function replab_init(verbose)
     end
 
     %% MOcov
-    
+
     % Making sure MOcov is in the path and working
     MOcovInPath = false;
     try
@@ -364,7 +364,7 @@ function replab_init(verbose)
         disp('MOcov is already in the path');
     end
 
-    
+
     %% If everything was successful, the next call will be quicker
     if VPIInPath && MOxUnitInPath && YALMIPInPath && (decentSDPSolverInPath || SDPT3InPath) && MOcovInPath
         allGood = true;
@@ -391,7 +391,7 @@ function ok = isLaterVersion(minimalVersion, currentVersion)
 
     minimalVersion = [minimalVersion, '.'];
     currentVersion = [currentVersion, '.'];
-    
+
     while (sum(minimalVersion == '.') >= 1) && (sum(currentVersion == '.') >= 1)
         minPoint = find(minimalVersion == '.', 1);
         currPoint = find(currentVersion == '.', 1);
@@ -405,6 +405,6 @@ function ok = isLaterVersion(minimalVersion, currentVersion)
         minimalVersion = minimalVersion(minPoint+1:end);
         currentVersion = currentVersion(currPoint+1:end);
     end
-    
+
     ok = ~((sum(minimalVersion == '.') >= 1) && (sum(currentVersion == '.') < 1));
 end

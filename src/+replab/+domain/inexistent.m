@@ -1,6 +1,6 @@
 function out = inexistent(msg)
     errorId = 'replab:inexistent';
-    if replab.settings.isOctave
+    if replab.compat.isOctave
         error(errorId, msg);
     else
         throwAsCaller(MException(errorId, '%s', msg));

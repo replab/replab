@@ -1,6 +1,6 @@
 classdef PropertyData < replab.Str
 % Describes the data recovered when parsing a MATLAB class property
-    
+
     properties
         name % charstring: Property name
         declarationLineNumber % integer: Line number of the property declaration
@@ -10,7 +10,7 @@ classdef PropertyData < replab.Str
                        %                     Overlaps with ``declarationLineNumber``
         attributes % struct: Attributes from the ``properties`` block
     end
-    
+
     methods
 
         function self = PropertyData(name, declarationLineNumber, docLines, docLineNumbers, attributes)
@@ -20,11 +20,11 @@ classdef PropertyData < replab.Str
             self.docLineNumbers = docLineNumbers;
             self.attributes = attributes;
         end
-        
+
     end
-    
+
     methods (Static)
-       
+
         function [pos pd] = parse(ct, pos, attributes)
         % Parses a property definition
         %
@@ -49,12 +49,12 @@ classdef PropertyData < replab.Str
                 pd = [];
                 return
             end
-            
+
             % splits the property line around a possible % indicating a comment
             parts = strsplit(line, '%');
             def = parts{1};
             firstDocLine = strjoin(parts(2:end), '%');
-            
+
             % splits the property code to get the property name (i.e. anything before the first = or ;)
             parts = regexp(def, '[=;]', 'split');
             name = strtrim(parts{1});
@@ -89,7 +89,7 @@ classdef PropertyData < replab.Str
             end
             pd = replab.infra.PropertyData(name, startPos, docLines, docLineNumbers, attributes);
         end
-        
+
     end
 
 end

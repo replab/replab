@@ -82,7 +82,8 @@ function result = replab_runtests(withCoverage, onlyFastTests)
 
     % Create doctests
     if ReplabTestParameters.onlyFastTests == 0
-        replab_generatedoctests;
+        % Disable doc tests as they are not stable yet
+        % replab_generate('doctests');
     end
 
     % calls the relevant test suite

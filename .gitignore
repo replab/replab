@@ -1,8 +1,7 @@
 ##---------------------------------------------------
 # Continuous Integration .gitignore files
 ##---------------------------------------------------
-sphinxdocs/_src/
-sphinxdocs/_build/
+sphinx/_src/
 # Ignore test result XML files
 testresults.xml
 coverage.xml
@@ -128,4 +127,3 @@ tests/doctest
 
 ## Jupyter checkpoints
 .ipynb_checkpoints
-

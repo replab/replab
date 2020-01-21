@@ -76,7 +76,7 @@ classdef ClassElement < replab.infra.Element
                     end
             end
         end
-        
+
     end
 
 end

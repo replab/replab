@@ -26,7 +26,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 % methods will end up recursing to the infinity.
 
     properties (SetAccess = protected)
-        parent % `.NiceFiniteGroup`: Parent nice finite group
+        parent % `+replab.NiceFiniteGroup`: Parent nice finite group
     end
 
 

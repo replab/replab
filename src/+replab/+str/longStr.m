@@ -1,17 +1,15 @@
 function lines = longStr(obj, maxRows, maxColumns)
 % Returns a multiline description of the given object, that fits within the given width/height limit
 %
-% (this is the fallback implementation; call 'replab.longStr' in user code)
+% (this is the fallback implementation; call `+replab.longStr` in user code)
 %
-%        obj: Object to pretty print
+% Args:
+%   obj: Object to pretty print
+%   maxRows (integer): maximum number of rows
+%   maxColumns (integer): maximum number of columns
 %
-%    maxRows: maximum number of rows
-% maxColumns: maximum number of columns
-%
-% Returns a nRows x 1 cell array of strings 's'.
-%   
-% Thank you Matlab for being a regular language, we totally don't have to consider a thousand
-% particular cases below.
+% Returns:
+%   cell{:,1} of charstring: A text description of the object
     header = [];
     body = {};
     if isobject(obj) || (isscalar(obj) && isstruct(obj))

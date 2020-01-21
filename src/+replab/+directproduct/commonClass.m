@@ -1,4 +1,5 @@
 function className = commonClass(groups)
+% Returns the lowest denominator class type for the factor groups
     priority = 3;
     for i = 1:length(groups)
         group = groups{i};

@@ -1,4 +1,5 @@
 function prd = of(factors)
+% Creates a direct product group as specialized as possible
     className = replab.directproduct.commonClass(factors);
     switch className
       case 'replab.NiceFiniteGroup'

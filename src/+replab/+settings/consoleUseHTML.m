@@ -8,7 +8,7 @@ function value = consoleUseHTML(newValue)
         storedValue = newValue;
     end
     if isempty(storedValue)
-        storedValue = ~replab.settings.isOctave && usejava('desktop');
+        storedValue = ~replab.compat.isOctave && usejava('desktop');
     end
     value = storedValue;
 end
