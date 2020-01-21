@@ -270,3 +270,6 @@ Other points
    the reference is valid for our infrastructure. One cannot use single
    backticks for argument names. Matlab/YALMIP objects can be referred
    with single backticks, as long as they are in the global scope.
+
+-  Use fully qualified references in the first line comment, because that first line comment
+   will be used in descriptions of subclasses in other packages.
