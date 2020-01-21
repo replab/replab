@@ -1,5 +1,5 @@
-A few tips and tricks
-=====================
+Sphinx tips and tricks
+======================
 
 We write here miscellaneous tips and tricks.
 

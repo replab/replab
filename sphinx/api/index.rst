@@ -19,3 +19,4 @@ An API Reference, as described in the table of contents below:
    permutations
    group_constructions
    infrastructure
+   misc

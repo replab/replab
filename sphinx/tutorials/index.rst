@@ -9,7 +9,7 @@ Once you are familiar with the basics of **RepLAB** usage,
 the following resources will help you go further and start using **RepLAB** creatively:
 
 - A selection of :doc:`in-depth examples </howto/index>`
-- A :doc:`detailed description </reference/index>` of the structure of the **RepLAB** code,
+- A :doc:`detailed description </api/index>` of the structure of the **RepLAB** code,
   including possible usage of each of available function
 - :doc:`Higher-level explanations </topic/index>` of the main concepts, and of the
   inner working of the library organized around a list of topics
