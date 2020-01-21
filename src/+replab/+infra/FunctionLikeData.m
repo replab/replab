@@ -16,8 +16,7 @@ classdef FunctionLikeData < replab.Str
 
     methods
 
-        function self = FunctionLikeData(name, declaration, declarationLineNumber, ...
-                                         docLines, docLineNumbers, attributes)
+        function self = FunctionLikeData(name, declaration, declarationLineNumber, docLines, docLineNumbers, attributes)
             self.name = name;
             self.declaration = declaration;
             self.declarationLineNumber = declarationLineNumber;
@@ -120,6 +119,9 @@ classdef FunctionLikeData < replab.Str
             [pos declaration] = ct.expect(pos, 'f');
             if isempty(pos)
                 return
+            end
+            if replab.infra.isContinuation(declaration)
+                replab.infra.parseError(ct, startPos, 'Continuations ... are not supported');
             end
             name = replab.infra.FunctionLikeData.nameFromDeclaration(ct, startPos, declaration);
             [pos docLines docLineNumbers] = replab.infra.parseDocLines(ct, pos);

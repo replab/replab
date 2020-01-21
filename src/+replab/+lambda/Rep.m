@@ -5,9 +5,9 @@ classdef Rep < replab.Rep
         imageFun % function_handle: Image function
         inverseImageFun % function_handle: Inverse image function
     end
-    
+
     methods
-        
+
         function self = Rep(group, field, dimension, isUnitary, imageFun, inverseImageFun)
             assert(isa(group, 'replab.Group'));
             self.group = group;
@@ -22,7 +22,7 @@ classdef Rep < replab.Rep
             f = self.imageFun;
             rho = f(g);
         end
-        
+
         function rho = inverseImage(self, g)
             f = self.inverseImageFun;
             if isempty(f)
@@ -32,7 +32,7 @@ classdef Rep < replab.Rep
                 rho = f(g);
             end
         end
-       
+
     end
-    
+
 end

@@ -3,8 +3,7 @@ classdef ConcreteClassElement < replab.infra.SourceElement & replab.infra.ClassE
 
     methods
 
-        function self = ConcreteClassElement(codeBase, package, parentClass, name, startLineNumber, kind, declaration, ...
-                                             attributes, docLines, docLineNumbers)
+        function self = ConcreteClassElement(codeBase, package, parentClass, name, startLineNumber, kind, declaration, attributes, docLines, docLineNumbers)
             sourceIdentifier = parentClass.name;
             self = self@replab.infra.SourceElement(codeBase, package, sourceIdentifier, startLineNumber, ...
                                                    name, docLines, docLineNumbers, isequal(kind, 'property'));

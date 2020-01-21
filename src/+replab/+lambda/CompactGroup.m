@@ -1,5 +1,6 @@
 classdef CompactGroup < replab.Group
-    
+% An implementation of a compact group defined by image functions
+
     properties (SetAccess = protected)
         header
         eqvFun
@@ -8,13 +9,10 @@ classdef CompactGroup < replab.Group
         inverseFun
         sampleUniformlyFun
     end
-    
+
     methods
-        
-        function self = Group(header, eqvFun, sampleFun, ... % Domain
-                              composeFun, identity, ... % Monoid
-                              inverseFun, ... % Group
-                              sampleUniformlyFun) % CompactGroup
+
+        function self = Group(header, eqvFun, sampleFun, composeFun, identity, inverseFun, sampleUniformlyFun)
             self.header = header;
             self.eqvFun = eqvFun;
             self.sampleFun
@@ -23,7 +21,7 @@ classdef CompactGroup < replab.Group
             self.inverseFun = inverseFun;
             self.sampleUniformlyFun = sampleUniformlyFun;
         end
-        
+
         function str = headerStr(self)
             str = self.header;
         end
@@ -34,9 +32,9 @@ classdef CompactGroup < replab.Group
                 {'header'} ...
                 );
         end
-        
+
         % Domain methods
-        
+
         function b = eqv(self, t, u)
             f = self.eqvFun;
             b = f(t, u);
@@ -48,27 +46,27 @@ classdef CompactGroup < replab.Group
         end
 
         % Monoid methods
-        
+
         function z = compose(self, x, y)
             error('Not implemented');
             f = self.composeFun;
             z = f(x, y);
         end
-        
+
         % Group methods
-        
+
         function xInv = inverse(self, x)
             f = self.inverseFun;
             xInv = f(x);
         end
-        
+
         % CompactGroup methods
-        
+
         function g = sampleUniformly(self)
             f = self.sampleUniformlyFun;
             g = f();
         end
-    
+
     end
-    
+
 end
