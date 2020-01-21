@@ -13,16 +13,17 @@ function [names values] = fieldNamesValues(obj)
     if replab.compat.isOctave
         % Octave has a bug in some versions: it prints a warning that the object is converted to a struct
         % and lists private/protected properties as well
+        prev = warning('off'); % turn off warnings
         err = [];
         try
             candidates = fieldnames(obj);
         catch
             err = lasterror;
         end
+        warning(prev);
         if ~isempty(err)
             rethrow(err);
         end
-        warning(prev); % reset warnings
     else
         candidates = fieldnames(obj);
     end
