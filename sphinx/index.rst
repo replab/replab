@@ -93,7 +93,6 @@ Indices and tables
 ------------------
 
 * :ref:`genindex`
-* `MATLAB Module Index <mat-modindex.html>`_
 * :ref:`search`
 
 .. |Join the chat at https://gitter.im/denisrosset/replab| image:: https://badges.gitter.im/Join%20Chat.svg
