@@ -2,7 +2,6 @@
 # Continuous Integration .gitignore files
 ##---------------------------------------------------
 sphinx/_src/
-docs/
 # Ignore test result XML files
 testresults.xml
 coverage.xml

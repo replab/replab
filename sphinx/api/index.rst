@@ -16,3 +16,4 @@ An API Reference, as described in the table of contents below:
    laws
    groups
    permutations
+   infrastructure
