@@ -22,5 +22,3 @@ the following resources will help you go further and start using **RepLAB** crea
    singlet
    CHSH
    quickstart
-
-.. "example" has been removed from the tutorial list
