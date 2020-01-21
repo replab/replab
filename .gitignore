@@ -4,7 +4,7 @@
 sphinx/_src/
 
 # Ignore SDPT3 compiled files changes
-SDPT3
+external/SDPT3
 
 # Ignore test result XML files
 testresults.xml
