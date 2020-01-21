@@ -4,6 +4,7 @@
 
    tutorials/index
    howto/index
+   talks/index
    topic/index
    api/index
    development/index
