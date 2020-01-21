@@ -1,0 +1,14 @@
+div.collapsed.admonition>:not(.admonition-title):not(button) {
+    display: none;
+}
+
+button.admonition-button {
+    float: right;
+    width: 2em;
+    height: 2em;
+    font-size: 0.7em;
+    border-radius: 15px;
+    background-color: white;
+    border: 1px solid black;
+    text-align: center;
+}

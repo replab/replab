@@ -1,0 +1,707 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Pretty printing &#8212; RepLAB 0.6.0-SNAP documentation</title>
+    <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script type="text/javascript" src="../_static/js/collapse_helper.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Base object types" href="base.html" />
+    <link rel="prev" title="Technical Reference/API" href="index.html" />
+  
+   
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="base.html" title="Base object types"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Technical Reference/API"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference/API</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><a href="
+    ../index.html" class="text-logo">RepLAB</a>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2>Table Of Contents</h2>
+  </div>
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-to guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference/API</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Pretty printing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#str">Str</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#headerstr">headerStr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#longstr">longStr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#shortstr">shortStr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-align">str.align</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-brackets">str.brackets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-cellstr">str.cellStr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-escape">str.escape</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-fieldslist">str.fieldsList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-headerstr">str.headerStr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-horzcatforce">str.horzcatForce</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-longfit">str.longFit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-longstr">str.longStr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-normalized">str.Normalized</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-pluralize">str.pluralize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-shortstr">str.shortStr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-sizestr">str.sizeStr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#str-uniquenames">str.uniqueNames</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="base.html">Base object types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="laws.html">Laws</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groups.html">Basic group structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permutations.html">Permutation groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_constructions.html">Abstract group constructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="infrastructure.html">Infrastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development and Community</a></li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <div id="main-search">
+      <form class="form-inline" action="../search.html" method="GET" role="form">
+        <div class="input-group">
+          <input name="q" type="text" class="form-control" placeholder="Search...">
+        </div>
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../index.html">Docs</a></li>
+              
+                <li><a href="index.html">Technical Reference/API</a></li>
+              
+              <li>Pretty printing</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+            
+  <div class="section" id="pretty-printing">
+<h1>Pretty printing<a class="headerlink" href="#pretty-printing" title="Permalink to this headline">¶</a></h1>
+<p>At the root of our object hierarchy, the base class <a class="reference internal" href="#+replab.Str" title="+replab.Str"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Str</span></code></a> is in charge of pretty printing all the objects defined
+in RepLAB. This is important for several reasons: Matlab has some support to pretty print objects, support which is missing
+in Octave. For standard objects (matrices, vectors), there are discrepancies between the output of Matlab and Octave. Finally
+the standard display of matrices and vectors can be a bit bulky.</p>
+<p>We define three styles of printing for objects:</p>
+<ul class="simple">
+<li><p>a <code class="docutils literal notranslate"><span class="pre">header</span></code> style that prints only the size and the type of the object,</p></li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">short</span></code> style that fits on a single display line,</p></li>
+<li><p>a <code class="docutils literal notranslate"><span class="pre">long</span></code> style that can use multiple lines.</p></li>
+</ul>
+<p>The style used when displaying objects in the REPL/command line is the <code class="docutils literal notranslate"><span class="pre">long</span></code> style.</p>
+<p>The following classes and functions are at the base of the RepLAB pretty printing framework.</p>
+<span class="target" id="module-+replab"></span><ul class="simple">
+<li><p><a class="reference internal" href="#+replab.Str" title="+replab.Str"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Str</span></code></a>: provides infrastructure for pretty printing of objects, in a way compatible with Matlab and Octave</p></li>
+<li><p><a class="reference internal" href="#+replab.headerStr" title="+replab.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.headerStr</span></code></a>, <a class="reference internal" href="#+replab.longStr" title="+replab.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.longStr</span></code></a>, <a class="reference internal" href="#+replab.shortStr" title="+replab.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.shortStr</span></code></a>: Prints arbitrary objects</p></li>
+<li><p>… the rest of the elements below are helpers in the <code class="docutils literal notranslate"><span class="pre">replab.str</span></code> package</p></li>
+</ul>
+<div class="section" id="str">
+<h2>Str<a class="headerlink" href="#str" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="+replab.Str">
+<em class="property">class </em><code class="sig-prename descclassname">replab.</code><code class="sig-name descname">Str</code><a class="headerlink" href="#+replab.Str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref mat mat-class docutils literal notranslate"><span class="pre">handle</span></code></p>
+<p>Base class that provides sane pretty printing for all RepLAB objects</p>
+<p>All classes in RepLAB inherit the <a class="reference internal" href="#+replab.Str" title="+replab.Str"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Str</span></code></a> base class, which provides explicit <a class="reference internal" href="#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> and <a class="reference internal" href="#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> methods.
+Those methods take a dimension limit for width (and possibly height).
+In contrast, the functions <a class="reference internal" href="#+replab.shortStr" title="+replab.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.shortStr</span></code></a> and <a class="reference internal" href="#+replab.longStr" title="+replab.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.longStr</span></code></a> use default values that are
+deduced from the terminal size.</p>
+<p>This base class overloads ‘disp’</p>
+<p>It also provides methods <a class="reference internal" href="#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> and <a class="reference internal" href="#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> to guide long form object pretty printing.</p>
+<p>Compare the two outputs:</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">Permutations</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">  P =</span>
+<span class="go">  Permutations acting on 3 elements</span>
+<span class="go">    domainSize: 3</span>
+<span class="go">      identity: [1, 2, 3]</span>
+<span class="go">        parent: Permutations acting on 3 elements</span>
+<span class="go">  generator(1): [2, 3, 1]</span>
+<span class="go">  generator(2): [2, 1, 3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">longStr</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+<span class="go">ans =</span>
+<span class="go"> 6x1 cell array</span>
+<span class="go">  {&#39;Permutations acting on 3 elements&#39;              }</span>
+<span class="go">  {&#39;  domainSize: 3                                &#39;}</span>
+<span class="go">  {&#39;    identity: [1, 2, 3]                        &#39;}</span>
+<span class="go">  {&#39;      parent: Permutations acting on 3 elements&#39;}</span>
+<span class="go">  {&#39;generator(1): [2, 3, 1]                        &#39;}</span>
+<span class="go">  {&#39;generator(2): [2, 1, 3]                        &#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">shortStr</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+<span class="go">  ans =</span>
+<span class="go">    &#39;Permutations acting on 3 elements&#39;</span>
+</pre></div>
+</div>
+<div class="collapsed admonition">
+<p class="admonition-title">Class members list</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
+<li><p><a class="reference internal" href="#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.Str.eq" title="+replab.Str.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
+<li><p><a class="reference internal" href="#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+</ul>
+</div>
+<h3>Own members</h3><dl class="method">
+<dt id="+replab.Str.additionalFields">
+<code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Str.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name/value pairs corresponding to additional fields to be printed</p>
+<p>Classes that override this method should call the superclass method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>names</strong> (<em>row cell vector of charstring</em>) – Additional names to display</p></li>
+<li><p><strong>values</strong> (<em>row cell vector of charstring</em>) – Additional values to display</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Str.disp">
+<code class="sig-name descname">disp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Str.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard MATLAB/Octave display method</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Str.eq">
+<code class="sig-name descname">eq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Str.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equality test</p>
+<p>Workaround bug of == not implemented for handles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<em>object</em>) – first object</p></li>
+<li><p><strong>rhs</strong> (<em>object</em>) – second object to compare to</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>true iff self == rhs</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Str.headerStr">
+<code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Str.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tiny single line description of the current object type</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.headerStr" title="+replab.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.headerStr</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Str.hiddenFields">
+<code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Str.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the names of the fields that are not printed as a row vector</p>
+<p>Classes that override this method should call the superclass method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Field names to hide</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>row cell vector of charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Str.longStr">
+<code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Str.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multi-line description of the current object</p>
+<p>The default implementation of ‘longStr’ is to print a short description of
+the object on the first line, followed by public properties.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.longStr" title="+replab.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.longStr</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Str.shortStr">
+<code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Str.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Single line text description of the current object</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.shortStr" title="+replab.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.shortStr</span></code></a></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="headerstr">
+<h2>headerStr<a class="headerlink" href="#headerstr" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.headerStr">
+<code class="sig-prename descclassname">replab.</code><code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tiny one-line description of the object type without inspecting its contents</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> – Object to pretty print</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String representation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="longstr">
+<h2>longStr<a class="headerlink" href="#longstr" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.longStr">
+<code class="sig-prename descclassname">replab.</code><code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a multiline description of the given object, that fits within the given width/height limit</p>
+<p>Returns a <code class="docutils literal notranslate"><span class="pre">nRows</span> <span class="pre">x</span> <span class="pre">1</span></code> cell array of strings <code class="docutils literal notranslate"><span class="pre">lines</span></code>; the output may be cut arbitrarily at columns
+after <code class="docutils literal notranslate"><span class="pre">maxColumns</span></code>, and for rows after <code class="docutils literal notranslate"><span class="pre">maxRows</span></code>. It is up to
+calling code to shape such overflowing output before finally printing it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – Object to pretty print</p></li>
+<li><p><strong>maxRows</strong> (integer or <code class="docutils literal notranslate"><span class="pre">[]</span></code>) – Maximum row size
+Optional parameter with default value given in <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.settings.strMaxRows</span></code></p></li>
+<li><p><strong>maxColumns</strong> (integer or <code class="docutils literal notranslate"><span class="pre">[]</span></code>) – Maximum column size
+Optional parameter with default value given in <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.settings.strMaxColumns</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="shortstr">
+<h2>shortStr<a class="headerlink" href="#shortstr" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.shortStr">
+<code class="sig-prename descclassname">replab.</code><code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a one-line description of the given object, that fits within the given width maxColumns</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – Object to pretty print</p></li>
+<li><p><strong>maxColumns</strong> (integer or <code class="docutils literal notranslate"><span class="pre">[]</span></code>, optional) – Maximum column size; if the output does not fit,
+it may be returned cut at an arbitrary place, provided
+that place is after the last column that fits.
+Optional parameter with default value given in <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.settings.strMaxColumns</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String representation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-+replab.+str"></span></div>
+<div class="section" id="str-align">
+<h2>str.align<a class="headerlink" href="#str-align" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+str.align">
+<code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">align</code><span class="sig-paren">(</span><em class="sig-param">table</em>, <em class="sig-param">spec</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders a table using the given LaTeX-inspired specification</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>table</strong> (<em>cell array of charstring</em>) – Cell contents as strings, cell cannot be multiline</p></li>
+<li><p><strong>spec</strong> (<em>charstring</em>) – Contains as many ‘l’, ‘c’, or ‘r’ to prescribe alignement as there are columns</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Formatted text lines</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>column vector of charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="str-brackets">
+<h2>str.brackets<a class="headerlink" href="#str-brackets" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+str.brackets">
+<code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">brackets</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.brackets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the pair <code class="docutils literal notranslate"><span class="pre">{,</span> <span class="pre">}</span></code> for cell arrays or <code class="docutils literal notranslate"><span class="pre">[,</span> <span class="pre">]</span></code> for other objects</p>
+</dd></dl>
+
+</div>
+<div class="section" id="str-cellstr">
+<h2>str.cellStr<a class="headerlink" href="#str-cellstr" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+str.cellStr">
+<code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">cellStr</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">maxColumns</em>, <em class="sig-param">r</em>, <em class="sig-param">c</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.cellStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string representation of an element in a vector/matrix/cell array</p>
+<p>Delegates the pretty printing to <a class="reference internal" href="#+replab.+str.shortStr" title="+replab.+str.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.str.shortStr</span></code></a>.</p>
+<p>The indexing is given by (r, c) for 2D structures; or just by (r) for vectors, then c is omitted</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – Object to index</p></li>
+<li><p><strong>maxColumns</strong> (<em>integer</em>) – Maximum number of columns</p></li>
+<li><p><strong>r</strong> (<em>integer</em>) – Row index</p></li>
+<li><p><strong>c</strong> (<em>integer</em>) – Column index</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String representation of the cell</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>charstring</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="str-escape">
+<h2>str.escape<a class="headerlink" href="#str-escape" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+str.escape">
+<code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">escape</code><span class="sig-paren">(</span><em class="sig-param">str</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.escape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Escapes special characters in strings, like ‘n’, ‘’’’, etc…</p>
+</dd></dl>
+
+</div>
+<div class="section" id="str-fieldslist">
+<h2>str.fieldsList<a class="headerlink" href="#str-fieldslist" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+str.fieldsList">
+<code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">fieldsList</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.fieldsList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of field names and values for the given object, returned as column vectors</p>
+</dd></dl>
+
+</div>
+<div class="section" id="str-headerstr">
+<h2>str.headerStr<a class="headerlink" href="#str-headerstr" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+str.headerStr">
+<code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tiny string description containing just the class name and size (when relevant)</p>
+<p>This is the default implementation for <a class="reference internal" href="#+replab.headerStr" title="+replab.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.headerStr</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="str-horzcatforce">
+<h2>str.horzcatForce<a class="headerlink" href="#str-horzcatforce" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+str.horzcatForce">
+<code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">horzcatForce</code><span class="sig-paren">(</span><em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.horzcatForce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a ‘horzcat’ of multiple (nargin &gt;= 0) arguments</p>
+<p>If any of the arguments is not a horizontal cell array vector, reshapes it.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="str-longfit">
+<h2>str.longFit<a class="headerlink" href="#str-longfit" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+str.longFit">
+<code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">longFit</code><span class="sig-paren">(</span><em class="sig-param">lines</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.longFit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits the string description given in ‘lines’ in the box of size maxRows x maxColumns</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(cell{</strong> (<em>lines</em>) – ,1} of charstring): each cell element is a string representing a row</p></li>
+<li><p><strong>maxRows</strong> (<em>integer</em>) – maximum number of rows</p></li>
+<li><p><strong>maxColumns</strong> (<em>integer</em>) – maximum number of columns</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>lines</em> – cell{:,1} of charstring: the lines that now fit in maxRows x maxColumns</p></li>
+<li><p><em>overLimit</em> – logical: if we had to trim due to breaking a limit</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="str-longstr">
+<h2>str.longStr<a class="headerlink" href="#str-longstr" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+str.longStr">
+<code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a multiline description of the given object, that fits within the given width/height limit</p>
+<p>(this is the fallback implementation; call <a class="reference internal" href="#+replab.longStr" title="+replab.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.longStr</span></code></a> in user code)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> – Object to pretty print</p></li>
+<li><p><strong>maxRows</strong> (<em>integer</em>) – maximum number of rows</p></li>
+<li><p><strong>maxColumns</strong> (<em>integer</em>) – maximum number of columns</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>,1} of charstring: A text description of the object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>cell{</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="str-normalized">
+<h2>str.Normalized<a class="headerlink" href="#str-normalized" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="+replab.+str.Normalized">
+<em class="property">class </em><code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">Normalized</code><span class="sig-paren">(</span><em class="sig-param">vec</em>, <em class="sig-param">factor</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.Normalized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#+replab.Str" title="+replab.Str"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Str</span></code></a></p>
+<p>Represents a vector along with a normalization factor for pretty printing</p>
+<p>The vector value is <code class="docutils literal notranslate"><span class="pre">vec</span> <span class="pre">*</span> <span class="pre">factor</span></code>, except that <code class="docutils literal notranslate"><span class="pre">factor</span></code> is already represented by a string
+to be concatenated with the vector string representation</p>
+<div class="collapsed admonition">
+<p class="admonition-title">Class members list</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.+str.Normalized.Normalized" title="+replab.+str.Normalized.Normalized"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Normalized</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.+str.Normalized.additionalFields" title="+replab.+str.Normalized.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
+<li><p><a class="reference internal" href="#+replab.+str.Normalized.disp" title="+replab.+str.Normalized.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.+str.Normalized.eq" title="+replab.+str.Normalized.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.+str.Normalized.factor" title="+replab.+str.Normalized.factor"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factor</span></code></a> – char: String description of the normalization factor</p></li>
+<li><p><a class="reference internal" href="#+replab.+str.Normalized.headerStr" title="+replab.+str.Normalized.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.+str.Normalized.hiddenFields" title="+replab.+str.Normalized.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
+<li><p><a class="reference internal" href="#+replab.+str.Normalized.longStr" title="+replab.+str.Normalized.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+str.Normalized.shortStr" title="+replab.+str.Normalized.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+str.Normalized.vec" title="+replab.+str.Normalized.vec"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vec</span></code></a> – double row vector: Vector to print</p></li>
+</ul>
+</div>
+<div class="collapsed admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="method">
+<dt id="+replab.+str.Normalized.Normalized">
+<code class="sig-name descname">Normalized</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.Normalized.Normalized" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+str.Normalized.additionalFields">
+<code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.Normalized.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+str.Normalized.disp">
+<code class="sig-name descname">disp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.Normalized.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+str.Normalized.eq">
+<code class="sig-name descname">eq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.Normalized.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.Str.eq" title="+replab.Str.eq"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.eq()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+str.Normalized.headerStr">
+<code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.Normalized.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.headerStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+str.Normalized.hiddenFields">
+<code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.Normalized.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+str.Normalized.longStr">
+<code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.Normalized.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+str.Normalized.shortStr">
+<code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.Normalized.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="attribute">
+<dt id="+replab.+str.Normalized.factor">
+<code class="sig-name descname">factor</code><a class="headerlink" href="#+replab.+str.Normalized.factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>char: String description of the normalization factor</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.+str.Normalized.vec">
+<code class="sig-name descname">vec</code><a class="headerlink" href="#+replab.+str.Normalized.vec" title="Permalink to this definition">¶</a></dt>
+<dd><p>double row vector: Vector to print</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="str-pluralize">
+<h2>str.pluralize<a class="headerlink" href="#str-pluralize" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+str.pluralize">
+<code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">pluralize</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">singular</em>, <em class="sig-param">plural</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.pluralize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string description of a given number of given things</p>
+<p><code class="docutils literal notranslate"><span class="pre">pluralize(3,</span> <span class="pre">'horse',</span> <span class="pre">'horses')</span></code> is <code class="docutils literal notranslate"><span class="pre">'three</span> <span class="pre">horses'</span></code>
+<code class="docutils literal notranslate"><span class="pre">pluralize(0,</span> <span class="pre">'apple',</span> <span class="pre">'apples')</span></code> is <code class="docutils literal notranslate"><span class="pre">'zero</span> <span class="pre">apple'</span></code> and so on.</p>
+<p>The plural form can be omitted if it is formed by the suffix -s.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="str-shortstr">
+<h2>str.shortStr<a class="headerlink" href="#str-shortstr" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+str.shortStr">
+<code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default implementation for <a class="reference internal" href="#+replab.shortStr" title="+replab.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.shortStr</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="str-sizestr">
+<h2>str.sizeStr<a class="headerlink" href="#str-sizestr" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+str.sizeStr">
+<code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">sizeStr</code><span class="sig-paren">(</span><em class="sig-param">sz</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.sizeStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pretty prints size information about an object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sz</strong> – a vector of integers</p>
+</dd>
+</dl>
+<p>Returns ‘s’, a text representation of the form ‘2 x 2 x 2’.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="str-uniquenames">
+<h2>str.uniqueNames<a class="headerlink" href="#str-uniquenames" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+str.uniqueNames">
+<code class="sig-prename descclassname">replab.str.</code><code class="sig-name descname">uniqueNames</code><span class="sig-paren">(</span><em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+str.uniqueNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges cell arrays of strings given as arguments (nargin &gt;= 0)</p>
+<p>Makes sure that the returned cell array is a row cell array,
+and removes duplicates</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="index.html" title="previous chapter (use the left arrow)">Technical Reference/API</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="base.html" title="next chapter (use the right arrow)">Base object types</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="base.html" title="Base object types"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Technical Reference/API"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference/API</a> &#187;</li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2019, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>

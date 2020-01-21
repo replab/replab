@@ -1,0 +1,875 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Representations of the symmetric group \(S_3\) &#8212; RepLAB 0.6.0-SNAP documentation</title>
+    <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script type="text/javascript" src="../_static/js/collapse_helper.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="The antisymmetric subspace of U(2)xU(2) and the singlet state" href="singlet.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+  
+   
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="singlet.html" title="The antisymmetric subspace of U(2)xU(2) and the singlet state"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Tutorials</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><a href="
+    ../index.html" class="text-logo">RepLAB</a>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2>Table Of Contents</h2>
+  </div>
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Representations of the symmetric group <span class="math notranslate nohighlight">\(S_3\)</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#The-symmetric-group">The symmetric group</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#The-defining-representation-of-S(3)">The defining representation of S(3)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#The-parity-representation-of-S_3">The parity representation of <span class="math notranslate nohighlight">\(S_3\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#The-trivial-representation-of-S(3)">The trivial representation of S(3)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Direct-sum-of-representation-of-S(3)">Direct sum of representation of S(3)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Irreducible-representations-of-S(3)">Irreducible representations of S(3)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Summary">Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="singlet.html">The antisymmetric subspace of U(2)xU(2) and the singlet state</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CHSH.html">Relabelings in the CHSH scenario</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-to guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference/API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development and Community</a></li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <div id="main-search">
+      <form class="form-inline" action="../search.html" method="GET" role="form">
+        <div class="input-group">
+          <input name="q" type="text" class="form-control" placeholder="Search...">
+        </div>
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../index.html">Docs</a></li>
+              
+                <li><a href="index.html">Tutorials</a></li>
+              
+              <li>Representations of the symmetric group <span class="math notranslate nohighlight">\(S_3\)</span></li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    min-width: 6ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Representations-of-the-symmetric-group-S_3">
+<h1>Representations of the symmetric group <span class="math notranslate nohighlight">\(S_3\)</span><a class="headerlink" href="#Representations-of-the-symmetric-group-S_3" title="Permalink to this headline">¶</a></h1>
+<p>The symmetric group <span class="math notranslate nohighlight">\(S_n\)</span> is group of primary importance. Here, we consider this group for <span class="math notranslate nohighlight">\(n=3\)</span> and discuss several of its representations with <em>RepLAB</em>.</p>
+<p>Before trying any of the <em>RepLAB</em> commands, we must initialize the library:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">run</span> <span class="p">.</span><span class="o">./</span><span class="p">.</span><span class="o">./</span><span class="n">replab_init</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Adding RepLAB to the path
+warning: function /home/denis/w/replab/src/help.m shadows a core library function
+Adding RepLAB package to the path
+Adding VPI to the path
+Adding MOxUnit to the path
+Adding embedded YALMIP to the path
+Adding embedded SDPT3 solver to the path
+Adding MOcov to the path
+</pre></div></div>
+</div>
+<div class="section" id="The-symmetric-group">
+<h2>The symmetric group<a class="headerlink" href="#The-symmetric-group" title="Permalink to this headline">¶</a></h2>
+<p>Consider <span class="math notranslate nohighlight">\(n\)</span> distinct elements, numbered <span class="math notranslate nohighlight">\(1,2,\ldots,n\)</span>. The symmetric group describes all possible ways in which these elements can be permuted.</p>
+<p>With <span class="math notranslate nohighlight">\(n=3\)</span>, for instance, two possible arrangements are</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="p">[</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">];</span>
+</pre></div>
+</div>
+</div>
+<p>and</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="p">[</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">2</span><span class="p">];</span>
+</pre></div>
+</div>
+</div>
+<p>In general there are <span class="math notranslate nohighlight">\(n!\)</span> such arrangements (i.e. <span class="math notranslate nohighlight">\(6\)</span> arrangements for <span class="math notranslate nohighlight">\(n=3\)</span>).</p>
+<p>In <em>RepLAB</em>, the symmetric group can be constructed with a simple command</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">n</span> <span class="p">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="n">S3</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<p>The elements of the group can be easily listed</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">S3</span><span class="p">.</span><span class="n">elements</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+Indexed family of 6 elements
+1 = [1, 2, 3]
+2 = [1, 3, 2]
+3 = [2, 1, 3]
+4 = [2, 3, 1]
+5 = [3, 1, 2]
+6 = [3, 2, 1]
+
+</pre></div></div>
+</div>
+<p>The number of elements is the order of the group</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">S3</span><span class="p">.</span><span class="n">order</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+    6
+</pre></div></div>
+</div>
+<p>As we see, permutations are represented by row-vectors with an arrangement of the elements <span class="math notranslate nohighlight">\(1,\ldots,n\)</span>.</p>
+<p>The group structure defines how elements of the group compose with each other. For instance, permuting the first two elements in <span class="math notranslate nohighlight">\(1,2,3\)</span>, followed by a permutation of the second and third elements results in a cyclic permutation:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">element1</span> <span class="p">=</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">];</span>
+<span class="n">element2</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">2</span><span class="p">];</span>
+<span class="n">S3</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">element1</span><span class="p">,</span> <span class="n">element2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+   2   3   1
+
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="The-defining-representation-of-S(3)">
+<h2>The defining representation of S(3)<a class="headerlink" href="#The-defining-representation-of-S(3)" title="Permalink to this headline">¶</a></h2>
+<p>A group can always be represented by matrices of finite dimension. In a <span class="math notranslate nohighlight">\(d\)</span>-dimensional matrix representation, each group element is associated with a <span class="math notranslate nohighlight">\(d \times d\)</span> matrix called the image of the group element. The action of matrix multiplication on the images then reflects the group composition rule.</p>
+<p>Several matrix representations are possible for the same group, possibly in various dimension <span class="math notranslate nohighlight">\(d\)</span>. Here, we are going to explore some representations of the group <span class="math notranslate nohighlight">\(S_3\)</span></p>
+<p>When seeing the group as a permutation within <span class="math notranslate nohighlight">\(n\)</span> elements, a natural choice of representation arises in dimension <span class="math notranslate nohighlight">\(d=n\)</span>, where the permutation is applied to the coordinates of the vector space <span class="math notranslate nohighlight">\(R^n\)</span>. This is called the <em>defining representation</em> of a group. It can be constructed easily:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">defRep</span> <span class="p">=</span> <span class="n">S3</span><span class="p">.</span><span class="n">definingRep</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<p>The image of a group element in this representation can be extracted</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">defRep</span><span class="p">.</span><span class="nb">image</span><span class="p">([</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+   0   1   0
+   1   0   0
+   0   0   1
+
+</pre></div></div>
+</div>
+<p>We see that the matrices representing the group elements are <span class="math notranslate nohighlight">\(n \times n\)</span> permutation matrices, which simply apply the permutation to the coordinates of the vector space <span class="math notranslate nohighlight">\(R^n\)</span>.</p>
+<p>For a representation to be valid, the images must follow the structure of the group:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">image1</span> <span class="p">=</span> <span class="n">defRep</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">element1</span><span class="p">);</span>
+<span class="n">image2</span> <span class="p">=</span> <span class="n">defRep</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">element2</span><span class="p">);</span>
+<span class="n">image1</span><span class="o">*</span><span class="n">image2</span>
+<span class="n">defRep</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">S3</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">element1</span><span class="p">,</span> <span class="n">element2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+   0   0   1
+   1   0   0
+   0   1   0
+
+ans =
+
+   0   0   1
+   1   0   0
+   0   1   0
+
+</pre></div></div>
+</div>
+<p>We see that the image of the product of elements is indeed the product of the images of the respective elements, i.e. the algebra of matrices acting on the representation images accurately reflects the group algebra.</p>
+<p>It can be checked, moreover, that the defining representation is faithful, i.e. each group element has its own distinct image. This needs not always be the case as in the following two examples.</p>
+</div>
+<div class="section" id="The-parity-representation-of-S_3">
+<h2>The parity representation of <span class="math notranslate nohighlight">\(S_3\)</span><a class="headerlink" href="#The-parity-representation-of-S_3" title="Permalink to this headline">¶</a></h2>
+<p>To construct an arbitrary group representation in <em>RepLAB</em>, it is sufficient to provide the image of the generators of the group. The group <span class="math notranslate nohighlight">\(S_3\)</span> has two generators:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">generators</span> <span class="p">=</span> <span class="n">S3</span><span class="p">.</span><span class="n">generators</span><span class="p">;</span>
+<span class="n">generators</span><span class="p">{:}</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+   2   3   1
+
+ans =
+
+   2   1   3
+
+</pre></div></div>
+</div>
+<p>Let us construct a representation of this group in dimension</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">d</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+</div>
+<p>associating the each generator its parity (i.e. either <span class="math notranslate nohighlight">\(+1\)</span> or <span class="math notranslate nohighlight">\(-1\)</span>). Since the parity of [2 3 1] is 1 and the parity of [2 1 3] is -1, this is achieved by instantiating the class <em>RepByImage</em> as follows:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">parRep</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">RepByImages</span><span class="p">(</span><span class="n">S3</span><span class="p">,</span> <span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span><span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<p>We can check that this representation is valid</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">image1</span> <span class="p">=</span> <span class="n">parRep</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">element1</span><span class="p">)</span>
+<span class="n">image2</span> <span class="p">=</span> <span class="n">parRep</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">element2</span><span class="p">)</span>
+<span class="n">image1</span><span class="o">*</span><span class="n">image2</span>
+<span class="n">parRep</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">S3</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">element1</span><span class="p">,</span> <span class="n">element2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+image1 = -1
+image2 = -1
+ans =  1
+ans =  1
+</pre></div></div>
+</div>
+<p>The parity of each binary permutation <code class="docutils literal notranslate"><span class="pre">[2</span> <span class="pre">1</span> <span class="pre">3]</span></code> and <code class="docutils literal notranslate"><span class="pre">[1</span> <span class="pre">3</span> <span class="pre">2]</span></code> is <span class="math notranslate nohighlight">\(-1\)</span>, and their product, the cycle [2 3 1], has parity <span class="math notranslate nohighlight">\(1\)</span>.</p>
+<p>Clearly, this representation carries some information about the group, namely the parity, but some elements have the same image:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">allElements</span> <span class="p">=</span> <span class="n">S3</span><span class="p">.</span><span class="n">elements</span><span class="p">.</span><span class="n">toCell</span><span class="p">;</span>
+<span class="k">for</span> <span class="n">i</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">allElements</span><span class="p">)</span>
+    <span class="nb">disp</span><span class="p">([</span><span class="s">&#39;Image of [&#39;</span><span class="p">,</span> <span class="n">num2str</span><span class="p">(</span><span class="n">allElements</span><span class="p">{</span><span class="n">i</span><span class="p">}),</span> <span class="s">&#39;] : &#39;</span><span class="p">,</span> <span class="n">num2str</span><span class="p">(</span><span class="n">parRep</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">allElements</span><span class="p">{</span><span class="n">i</span><span class="p">}))]);</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Image of [1  2  3] : 1
+Image of [1  3  2] : -1
+Image of [2  1  3] : -1
+Image of [2  3  1] : 1
+Image of [3  1  2] : 1
+Image of [3  2  1] : -1
+</pre></div></div>
+</div>
+<p>Therefore, this representation is not <em>faithful</em>.</p>
+</div>
+<div class="section" id="The-trivial-representation-of-S(3)">
+<h2>The trivial representation of S(3)<a class="headerlink" href="#The-trivial-representation-of-S(3)" title="Permalink to this headline">¶</a></h2>
+<p>An even simpler representation of the group S(n) is one in which the image of all elements is set to <span class="math notranslate nohighlight">\(1\)</span>. This is called the <em>trivial representation</em>.</p>
+<p>It can be constructed similarly from the image of the generators:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">trivRep</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">RepByImages</span><span class="p">(</span><span class="n">S3</span><span class="p">,</span> <span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span> <span class="mi">1</span><span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<p>This time, the group law is trivially satisfied since all images are indeed equal to <span class="math notranslate nohighlight">\(1\)</span>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">i</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="nb">length</span><span class="p">(</span><span class="n">allElements</span><span class="p">)</span>
+    <span class="nb">disp</span><span class="p">([</span><span class="s">&#39;Image of [&#39;</span><span class="p">,</span> <span class="n">num2str</span><span class="p">(</span><span class="n">allElements</span><span class="p">{</span><span class="n">i</span><span class="p">}),</span> <span class="s">&#39;] : &#39;</span><span class="p">,</span> <span class="n">num2str</span><span class="p">(</span><span class="n">trivRep</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">allElements</span><span class="p">{</span><span class="n">i</span><span class="p">}))]);</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Image of [1  2  3] : 1
+Image of [1  3  2] : 1
+Image of [2  1  3] : 1
+Image of [2  3  1] : 1
+Image of [3  1  2] : 1
+Image of [3  2  1] : 1
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Direct-sum-of-representation-of-S(3)">
+<h2>Direct sum of representation of S(3)<a class="headerlink" href="#Direct-sum-of-representation-of-S(3)" title="Permalink to this headline">¶</a></h2>
+<p>We have seen that a group can admit several representations. Any two representations of a group in dimension <span class="math notranslate nohighlight">\(d_1\)</span> and <span class="math notranslate nohighlight">\(d_2\)</span> can be joined together by taking their <em>direct sum</em> in order to create a new valid representation in dimension <span class="math notranslate nohighlight">\(d_1 + d_2\)</span>.</p>
+<p>For instance, we can construct a <span class="math notranslate nohighlight">\(4\)</span>-dimensional representation of S(3) by taking the direct sum of the defining representation with the parity representation</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">newRep</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">Rep</span><span class="p">.</span><span class="n">directSum</span><span class="p">({</span><span class="n">defRep</span><span class="p">,</span> <span class="n">parRep</span><span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<p>The images are then <span class="math notranslate nohighlight">\(4 \times 4\)</span> matrices</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">newRep</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">element1</span><span class="p">)</span>
+<span class="n">newRep</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">element2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+   0   1   0   0
+   1   0   0   0
+   0   0   1   0
+   0   0   0  -1
+
+ans =
+
+   1   0   0   0
+   0   0   1   0
+   0   1   0   0
+   0   0   0  -1
+
+</pre></div></div>
+</div>
+<p>As expected, the images have a block diagonal structure. The properties of a direct sum representation are thus captured by the properties of the representation in each block. Such a representation is <em>reducible</em>.</p>
+</div>
+<div class="section" id="Irreducible-representations-of-S(3)">
+<h2>Irreducible representations of S(3)<a class="headerlink" href="#Irreducible-representations-of-S(3)" title="Permalink to this headline">¶</a></h2>
+<p>Given a representation, it is not always obvious whether it is the direct sum of more fundamental representations or if the representation is <em>irreducible</em>. For instance, the images of the defining representation introduced above are not obviously block-diagonal. Yet, this representation is also reducible. To see this, one needs to find a basis of the vector space <span class="math notranslate nohighlight">\(R^d\)</span> in which the images have a block diagonal structure.</p>
+<p>This can be achieved in <em>RepLAB</em> by decomposing the representation</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">defDec</span> <span class="p">=</span> <span class="n">defRep</span><span class="p">.</span><span class="n">decomposition</span><span class="p">;</span>
+<span class="n">defDec</span><span class="p">.</span><span class="n">nComponents</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =  2
+</pre></div></div>
+</div>
+<p>This shows that the defininig representation of <span class="math notranslate nohighlight">\(S_3\)</span> has two <em>irreducible components</em>, of dimension <span class="math notranslate nohighlight">\(1\)</span> and <span class="math notranslate nohighlight">\(2\)</span> respectively:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">defDec</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">irrepDimension</span>
+<span class="n">defDec</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">irrepDimension</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =  1
+ans =  2
+</pre></div></div>
+</div>
+<p>The decomposition also provides the change of basis matrix which makes |this decomposition apparent</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">U</span> <span class="p">=</span> <span class="nb">full</span><span class="p">(</span><span class="n">defDec</span><span class="p">.</span><span class="n">U</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+U =
+
+   0.57735   0.57735   0.57735
+   0.81650  -0.40825  -0.40825
+   0.00000   0.70711  -0.70711
+
+</pre></div></div>
+</div>
+<p>The images of the two elements of <span class="math notranslate nohighlight">\(S_3\)</span>, <code class="docutils literal notranslate"><span class="pre">[2</span> <span class="pre">1</span> <span class="pre">3]</span></code> and <code class="docutils literal notranslate"><span class="pre">[1</span> <span class="pre">3</span> <span class="pre">2]</span></code> are indeed block-diagonal in this basis:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">U</span><span class="o">*</span><span class="n">defRep</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">element1</span><span class="p">)</span><span class="o">*</span><span class="n">U</span><span class="o">&#39;</span>
+<span class="n">U</span><span class="o">*</span><span class="n">defRep</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">element2</span><span class="p">)</span><span class="o">*</span><span class="n">U</span><span class="o">&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+   1.00000   0.00000   0.00000
+   0.00000  -0.50000   0.86603
+   0.00000   0.86603   0.50000
+
+ans =
+
+   1.00000   0.00000   0.00000
+   0.00000   1.00000   0.00000
+   0.00000   0.00000  -1.00000
+
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Summary">
+<h2>Summary<a class="headerlink" href="#Summary" title="Permalink to this headline">¶</a></h2>
+<p>This shows that the defining representation of S(3) contains</p>
+<ul class="simple">
+<li><p>One copy of the trivial representation of S(3)</p></li>
+<li><p>One copy of the a faithful 2 x 2 representation of S(3)</p></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="installation.html" title="previous chapter (use the left arrow)">Installation</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="singlet.html" title="next chapter (use the right arrow)">The antisymmetric subspace of U(2)xU(2) and the singlet state</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="singlet.html" title="The antisymmetric subspace of U(2)xU(2) and the singlet state"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Tutorials</a> &#187;</li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2019, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>

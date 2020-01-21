@@ -1,5 +1,5 @@
-Actions
-=======
+Permutation groups
+==================
 
 .. module:: +replab
 
