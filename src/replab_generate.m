@@ -33,7 +33,7 @@ function replab_generate(what)
     end
 
     logFun = @(str) disp(str);
-    valid = {'sphinx' 'sphinxbuild' 'sphinxsrc' 'sphinxjupyter' 'doctests' 'all'};
+    valid = {'clear' 'sphinx' 'sphinxbuild' 'sphinxsrc' 'sphinxjupyter' 'doctests' 'all'};
     validStr = strjoin(cellfun(@(x) sprintf('''%s''', x), valid, 'uniform', 0), ', ');
     assert(ismember(what, valid), 'Argument must be one of: %s', validStr);
 
