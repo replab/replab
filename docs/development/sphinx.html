@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Sphinx tips and tricks &#8212; RepLAB 0.6.0-SNAP documentation</title>
+    <title>Sphinx tips and tricks &#8212; RepLAB 0.6.0 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -50,7 +50,7 @@
         <li class="right" >
           <a href="scope.html" title="Scope of the RepLAB project"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Development and Community</a> &#187;</li> 
       </ul>
     </div>
@@ -72,6 +72,7 @@
       <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-to guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks and tutorials given</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference/API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Development and Community</a><ul class="current">
@@ -83,6 +84,7 @@
 <li class="toctree-l2"><a class="reference internal" href="scope.html">Scope of the RepLAB project</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Sphinx tips and tricks</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#sphinx-and-jupyter-required-packages">Sphinx and Jupyter required packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#references-to-root-level-scripts">References to root-level scripts</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#to-convert-matlab-live-scripts-to-jupyter-notebooks">To convert Matlab Live Scripts to Jupyter notebooks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#generation-of-jupyter-notebooks">Generation of Jupyter notebooks</a></li>
 </ul>
@@ -160,6 +162,11 @@
 <p>Proof environment? <a class="reference external" href="https://framagit.org/spalax/sphinxcontrib-proof/">https://framagit.org/spalax/sphinxcontrib-proof/</a></p>
 <p>Resources: <a class="reference external" href="https://github.com/yoloseem/awesome-sphinxdoc">https://github.com/yoloseem/awesome-sphinxdoc</a></p>
 </div>
+<div class="section" id="references-to-root-level-scripts">
+<h2>References to root-level scripts<a class="headerlink" href="#references-to-root-level-scripts" title="Permalink to this headline">¶</a></h2>
+<p>Scripts such as <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab_init</span></code>, <a class="reference internal" href="../api/infrastructure.html#root.replab_generate" title="root.replab_generate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab_generate</span></code></a> live in the fake <code class="docutils literal notranslate"><span class="pre">root</span></code> package, so these references look actually like <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">root.replab_init</span></code> and <a class="reference internal" href="../api/infrastructure.html#root.replab_generate" title="root.replab_generate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">root.replab_generate</span></code></a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">root</span></code> prefix is stripped when displayed on the console. In the Sphinx documentation, one should use the <code class="docutils literal notranslate"><span class="pre">~</span></code> prefix.</p>
+</div>
 <div class="section" id="to-convert-matlab-live-scripts-to-jupyter-notebooks">
 <h2>To convert Matlab Live Scripts to Jupyter notebooks<a class="headerlink" href="#to-convert-matlab-live-scripts-to-jupyter-notebooks" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="https://github.com/mwouts/jupytext">Jupytext</a> works fantastically well.</p>
@@ -203,7 +210,7 @@
         <li class="right" >
           <a href="scope.html" title="Scope of the RepLAB project"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Development and Community</a> &#187;</li> 
       </ul>
     </div>

@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Permutation groups &#8212; RepLAB 0.6.0-SNAP documentation</title>
+    <title>Permutation groups &#8212; RepLAB 0.6.0 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -50,7 +50,7 @@
         <li class="right" >
           <a href="rep.html" title="Representations"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference/API</a> &#187;</li> 
       </ul>
     </div>
@@ -72,6 +72,7 @@
       <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-to guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks and tutorials given</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="print.html">Pretty printing</a></li>
@@ -194,7 +195,7 @@ natural action and representation of the group are all defined.</p>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.inverse" title="+replab.PermutationGroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.isIdentity" title="+replab.PermutationGroup.isIdentity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code></a> – Returns true if x is the identity, false otherwise</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.isTrivial" title="+replab.PermutationGroup.isTrivial"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isTrivial</span></code></a> – Tests whether this group is trivial</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationGroup.lambda" title="+replab.PermutationGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a group from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.PermutationGroup.lambda" title="+replab.PermutationGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a compact group from function handles</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.leftConjugate" title="+replab.PermutationGroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.leftConjugateGroup" title="+replab.PermutationGroup.leftConjugateGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugateGroup</span></code></a> – Returns the left conjugate of the current group by the given element</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroup.leftRegularRep" title="+replab.PermutationGroup.leftRegularRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftRegularRep</span></code></a> – Returns the left regular representation of this group</p></li>
@@ -383,8 +384,8 @@ natural action and representation of the group are all defined.</p>
 
 <dl class="method">
 <dt id="+replab.PermutationGroup.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationGroup.lambda" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.lambda" title="+replab.Group.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.lambda()</span></code></a></p>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationGroup.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.lambda()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1064,7 +1065,7 @@ and if <code class="docutils literal notranslate"><span class="pre">A</span></co
 <li><p><a class="reference internal" href="#+replab.PermutationSubgroup.inverse" title="+replab.PermutationSubgroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationSubgroup.isIdentity" title="+replab.PermutationSubgroup.isIdentity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code></a> – Returns true if x is the identity, false otherwise</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationSubgroup.isTrivial" title="+replab.PermutationSubgroup.isTrivial"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isTrivial</span></code></a> – Tests whether this group is trivial</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationSubgroup.lambda" title="+replab.PermutationSubgroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a group from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.PermutationSubgroup.lambda" title="+replab.PermutationSubgroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a compact group from function handles</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationSubgroup.leftConjugate" title="+replab.PermutationSubgroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationSubgroup.leftConjugateGroup" title="+replab.PermutationSubgroup.leftConjugateGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugateGroup</span></code></a> – Returns the left conjugate of the current group by the given element</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationSubgroup.leftRegularRep" title="+replab.PermutationSubgroup.leftRegularRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftRegularRep</span></code></a> – Returns the left regular representation of this group</p></li>
@@ -1283,8 +1284,8 @@ and if <code class="docutils literal notranslate"><span class="pre">A</span></co
 
 <dl class="method">
 <dt id="+replab.PermutationSubgroup.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationSubgroup.lambda" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.lambda" title="+replab.Group.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.lambda()</span></code></a></p>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationSubgroup.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.lambda()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1507,7 +1508,7 @@ and if <code class="docutils literal notranslate"><span class="pre">A</span></co
 <li><p><a class="reference internal" href="#+replab.Permutations.inverse" title="+replab.Permutations.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.Permutations.isIdentity" title="+replab.Permutations.isIdentity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code></a> – Returns true if x is the identity, false otherwise</p></li>
 <li><p><a class="reference internal" href="#+replab.Permutations.isTrivial" title="+replab.Permutations.isTrivial"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isTrivial</span></code></a> – Tests whether this group is trivial</p></li>
-<li><p><a class="reference internal" href="#+replab.Permutations.lambda" title="+replab.Permutations.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a group from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.Permutations.lambda" title="+replab.Permutations.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a compact group from function handles</p></li>
 <li><p><a class="reference internal" href="#+replab.Permutations.leftConjugate" title="+replab.Permutations.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.Permutations.leftConjugateGroup" title="+replab.Permutations.leftConjugateGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugateGroup</span></code></a> – Returns the left conjugate of the current group by the given element</p></li>
 <li><p><a class="reference internal" href="#+replab.Permutations.leftRegularRep" title="+replab.Permutations.leftRegularRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftRegularRep</span></code></a> – Returns the left regular representation of this group</p></li>
@@ -1751,8 +1752,8 @@ and if <code class="docutils literal notranslate"><span class="pre">A</span></co
 
 <dl class="method">
 <dt id="+replab.Permutations.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Permutations.lambda" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.lambda" title="+replab.Group.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.lambda()</span></code></a></p>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Permutations.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.lambda()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -2468,7 +2469,7 @@ permutations, i.e. for <code class="docutils literal notranslate"><span class="p
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationGroup.inverse" title="+replab.+signed.PermutationGroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationGroup.isIdentity" title="+replab.+signed.PermutationGroup.isIdentity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code></a> – Returns true if x is the identity, false otherwise</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationGroup.isTrivial" title="+replab.+signed.PermutationGroup.isTrivial"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isTrivial</span></code></a> – Tests whether this group is trivial</p></li>
-<li><p><a class="reference internal" href="#+replab.+signed.PermutationGroup.lambda" title="+replab.+signed.PermutationGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a group from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.+signed.PermutationGroup.lambda" title="+replab.+signed.PermutationGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a compact group from function handles</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationGroup.leftConjugate" title="+replab.+signed.PermutationGroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationGroup.leftConjugateGroup" title="+replab.+signed.PermutationGroup.leftConjugateGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugateGroup</span></code></a> – Returns the left conjugate of the current group by the given element</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationGroup.leftRegularRep" title="+replab.+signed.PermutationGroup.leftRegularRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftRegularRep</span></code></a> – Returns the left regular representation of this group</p></li>
@@ -2655,8 +2656,8 @@ permutations, i.e. for <code class="docutils literal notranslate"><span class="p
 
 <dl class="method">
 <dt id="+replab.+signed.PermutationGroup.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+signed.PermutationGroup.lambda" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.lambda" title="+replab.Group.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.lambda()</span></code></a></p>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+signed.PermutationGroup.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.lambda()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -2890,7 +2891,7 @@ rows and columns and flipping their signs</p>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationSubgroup.inverse" title="+replab.+signed.PermutationSubgroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationSubgroup.isIdentity" title="+replab.+signed.PermutationSubgroup.isIdentity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code></a> – Returns true if x is the identity, false otherwise</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationSubgroup.isTrivial" title="+replab.+signed.PermutationSubgroup.isTrivial"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isTrivial</span></code></a> – Tests whether this group is trivial</p></li>
-<li><p><a class="reference internal" href="#+replab.+signed.PermutationSubgroup.lambda" title="+replab.+signed.PermutationSubgroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a group from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.+signed.PermutationSubgroup.lambda" title="+replab.+signed.PermutationSubgroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a compact group from function handles</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationSubgroup.leftConjugate" title="+replab.+signed.PermutationSubgroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationSubgroup.leftConjugateGroup" title="+replab.+signed.PermutationSubgroup.leftConjugateGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugateGroup</span></code></a> – Returns the left conjugate of the current group by the given element</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationSubgroup.leftRegularRep" title="+replab.+signed.PermutationSubgroup.leftRegularRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftRegularRep</span></code></a> – Returns the left regular representation of this group</p></li>
@@ -3095,8 +3096,8 @@ rows and columns and flipping their signs</p>
 
 <dl class="method">
 <dt id="+replab.+signed.PermutationSubgroup.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+signed.PermutationSubgroup.lambda" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.lambda" title="+replab.Group.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.lambda()</span></code></a></p>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+signed.PermutationSubgroup.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.lambda()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -3296,7 +3297,7 @@ rows and columns and flipping their signs</p>
 <li><p><a class="reference internal" href="#+replab.+signed.Permutations.isIdentity" title="+replab.+signed.Permutations.isIdentity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code></a> – Returns true if x is the identity, false otherwise</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.Permutations.isSignedPermutationMatrix" title="+replab.+signed.Permutations.isSignedPermutationMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isSignedPermutationMatrix</span></code></a> – Returns true when “mat” is a signed permutation matrix, i.e. a monomial matrix with nonzero entries equal to +1 or -1</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.Permutations.isTrivial" title="+replab.+signed.Permutations.isTrivial"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isTrivial</span></code></a> – Tests whether this group is trivial</p></li>
-<li><p><a class="reference internal" href="#+replab.+signed.Permutations.lambda" title="+replab.+signed.Permutations.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a group from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.+signed.Permutations.lambda" title="+replab.+signed.Permutations.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a compact group from function handles</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.Permutations.leftConjugate" title="+replab.+signed.Permutations.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.Permutations.leftConjugateGroup" title="+replab.+signed.Permutations.leftConjugateGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugateGroup</span></code></a> – Returns the left conjugate of the current group by the given element</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.Permutations.leftRegularRep" title="+replab.+signed.Permutations.leftRegularRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftRegularRep</span></code></a> – Returns the left regular representation of this group</p></li>
@@ -3511,8 +3512,8 @@ rows and columns and flipping their signs</p>
 
 <dl class="method">
 <dt id="+replab.+signed.Permutations.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+signed.Permutations.lambda" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.lambda" title="+replab.Group.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.lambda()</span></code></a></p>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+signed.Permutations.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.lambda()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -4070,7 +4071,7 @@ where S = SignedPermutations(domainSize)</p>
         <li class="right" >
           <a href="rep.html" title="Representations"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference/API</a> &#187;</li> 
       </ul>
     </div>

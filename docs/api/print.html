@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Pretty printing &#8212; RepLAB 0.6.0-SNAP documentation</title>
+    <title>Pretty printing &#8212; RepLAB 0.6.0 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -50,7 +50,7 @@
         <li class="right" >
           <a href="index.html" title="Technical Reference/API"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference/API</a> &#187;</li> 
       </ul>
     </div>
@@ -72,6 +72,7 @@
       <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-to guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks and tutorials given</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference/API</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Pretty printing</a><ul>
@@ -183,16 +184,18 @@ deduced from the terminal size.</p>
 <span class="go">        parent: Permutations acting on 3 elements</span>
 <span class="go">  generator(1): [2, 3, 1]</span>
 <span class="go">  generator(2): [2, 1, 3]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">strjoin</span><span class="p">(</span><span class="n">replab</span><span class="o">.</span><span class="n">longStr</span><span class="p">(</span><span class="n">P</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="go">ans =</span>
-<span class="go">  Permutations acting on 3 elements&#39;</span>
-<span class="go">    domainSize: 3</span>
-<span class="go">      identity: [1, 2, 3]</span>
-<span class="go">        parent: Permutations acting on 3 elements</span>
-<span class="go">  generator(1): [2, 3, 1]</span>
-<span class="go">  generator(2): [2, 1, 3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">longStr</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+<span class="go">  ans =</span>
+<span class="go">  6x1 cell array</span>
+<span class="go">  {&#39;Permutations acting on 3 elements&#39;              }</span>
+<span class="go">  {&#39;  domainSize: 3                                &#39;}</span>
+<span class="go">  {&#39;    identity: [1, 2, 3]                        &#39;}</span>
+<span class="go">  {&#39;      parent: Permutations acting on 3 elements&#39;}</span>
+<span class="go">  {&#39;generator(1): [2, 3, 1]                        &#39;}</span>
+<span class="go">  {&#39;generator(2): [2, 1, 3]                        &#39;}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">replab</span><span class="o">.</span><span class="n">shortStr</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
-<span class="go">  ans = Permutations acting on 3 elements</span>
+<span class="go">  ans =</span>
+<span class="go">  &#39;Permutations acting on 3 elements&#39;</span>
 </pre></div>
 </div>
 <div class="collapsed admonition">
@@ -688,7 +691,7 @@ and removes duplicates</p>
         <li class="right" >
           <a href="index.html" title="Technical Reference/API"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference/API</a> &#187;</li> 
       </ul>
     </div>

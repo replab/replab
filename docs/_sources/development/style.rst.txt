@@ -5,6 +5,13 @@ Style guide
 
 We describe guiding principles used in the code.
 
+No continuations in method/function/class declarations
+------------------------------------------------------
+
+Lines with a ``function`` or ``classdef`` declaration must be standalone, i.e. must not end with a continuation ``...``.
+
+This mean that those lines can go over the column limit (TODO: add link to this limit when we decide on one.)
+
 Reuse of primitive types
 ------------------------
 

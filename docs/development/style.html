@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Style guide &#8212; RepLAB 0.6.0-SNAP documentation</title>
+    <title>Style guide &#8212; RepLAB 0.6.0 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -50,7 +50,7 @@
         <li class="right" >
           <a href="doctests.html" title="Doctests guide"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Development and Community</a> &#187;</li> 
       </ul>
     </div>
@@ -72,6 +72,7 @@
       <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-to guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks and tutorials given</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference/API</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Development and Community</a><ul class="current">
@@ -80,6 +81,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api_documentation_style.html">API Documentation style guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="doctests.html">Doctests guide</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Style guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#no-continuations-in-method-function-class-declarations">No continuations in method/function/class declarations</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#reuse-of-primitive-types">Reuse of primitive types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#typeclasses">Typeclasses</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#domain-defining-typeclasses">Domain defining typeclasses</a></li>
@@ -137,6 +139,11 @@
   <div class="section" id="module-+replab">
 <span id="style-guide"></span><h1>Style guide<a class="headerlink" href="#module-+replab" title="Permalink to this headline">¶</a></h1>
 <p>We describe guiding principles used in the code.</p>
+<div class="section" id="no-continuations-in-method-function-class-declarations">
+<h2>No continuations in method/function/class declarations<a class="headerlink" href="#no-continuations-in-method-function-class-declarations" title="Permalink to this headline">¶</a></h2>
+<p>Lines with a <code class="docutils literal notranslate"><span class="pre">function</span></code> or <code class="docutils literal notranslate"><span class="pre">classdef</span></code> declaration must be standalone, i.e. must not end with a continuation <code class="docutils literal notranslate"><span class="pre">...</span></code>.</p>
+<p>This mean that those lines can go over the column limit (TODO: add link to this limit when we decide on one.)</p>
+</div>
 <div class="section" id="reuse-of-primitive-types">
 <h2>Reuse of primitive types<a class="headerlink" href="#reuse-of-primitive-types" title="Permalink to this headline">¶</a></h2>
 <p>Whenever possible, we reuse primitive types and do not wrap them in classes.</p>
@@ -246,7 +253,7 @@ a single line with <code class="docutils literal notranslate"><span class="pre">
         <li class="right" >
           <a href="doctests.html" title="Doctests guide"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Development and Community</a> &#187;</li> 
       </ul>
     </div>

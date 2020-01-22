@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Basic group structures &#8212; RepLAB 0.6.0-SNAP documentation</title>
+    <title>Basic group structures &#8212; RepLAB 0.6.0 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -50,7 +50,7 @@
         <li class="right" >
           <a href="laws.html" title="Laws"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference/API</a> &#187;</li> 
       </ul>
     </div>
@@ -72,6 +72,7 @@
       <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-to guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks and tutorials given</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference/API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="print.html">Pretty printing</a></li>
@@ -954,7 +955,7 @@ a <a class="reference internal" href="base.html#+replab.Domain.eqv" title="+repl
 <li><p><a class="reference internal" href="#+replab.CompactGroup.identity" title="+replab.CompactGroup.identity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identity</span></code></a> – Monoid identity element</p></li>
 <li><p><a class="reference internal" href="#+replab.CompactGroup.inverse" title="+replab.CompactGroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.CompactGroup.isIdentity" title="+replab.CompactGroup.isIdentity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code></a> – Returns true if x is the identity, false otherwise</p></li>
-<li><p><a class="reference internal" href="#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a group from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a compact group from function handles</p></li>
 <li><p><a class="reference internal" href="#+replab.CompactGroup.leftConjugate" title="+replab.CompactGroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.CompactGroup.longStr" title="+replab.CompactGroup.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
 <li><p><a class="reference internal" href="#+replab.CompactGroup.sample" title="+replab.CompactGroup.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from this domain</p></li>
@@ -1057,12 +1058,6 @@ a <a class="reference internal" href="base.html#+replab.Domain.eqv" title="+repl
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.CompactGroup.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CompactGroup.lambda" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.Group.lambda" title="+replab.Group.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.lambda()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
 <dt id="+replab.CompactGroup.leftConjugate">
 <code class="sig-name descname">leftConjugate</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">by</em>, <em class="sig-param">on</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CompactGroup.leftConjugate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.Group.leftConjugate" title="+replab.Group.leftConjugate"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.leftConjugate()</span></code></a></p>
@@ -1133,8 +1128,8 @@ is <a class="reference internal" href="#+replab.FiniteGroup" title="+replab.Fini
 </dd></dl>
 
 <dl class="staticmethod">
-<dt>
-<em class="property">static </em><code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span></dt>
+<dt id="+replab.CompactGroup.lambda">
+<em class="property">static </em><code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CompactGroup.lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a compact group from function handles</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1268,7 +1263,7 @@ Default value 1</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.inverse" title="+replab.FiniteGroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.isIdentity" title="+replab.FiniteGroup.isIdentity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code></a> – Returns true if x is the identity, false otherwise</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.isTrivial" title="+replab.FiniteGroup.isTrivial"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isTrivial</span></code></a> – Tests whether this group is trivial</p></li>
-<li><p><a class="reference internal" href="#+replab.FiniteGroup.lambda" title="+replab.FiniteGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a group from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteGroup.lambda" title="+replab.FiniteGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a compact group from function handles</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.leftConjugate" title="+replab.FiniteGroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.leftRegularRep" title="+replab.FiniteGroup.leftRegularRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftRegularRep</span></code></a> – Returns the left regular representation of this group</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.longStr" title="+replab.FiniteGroup.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
@@ -1388,8 +1383,8 @@ Default value 1</p></li>
 
 <dl class="method">
 <dt id="+replab.FiniteGroup.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroup.lambda" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.Group.lambda" title="+replab.Group.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.lambda()</span></code></a></p>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroup.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.lambda()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -2026,7 +2021,7 @@ methods will end up recursing to the infinity.</p>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.inverse" title="+replab.NiceFiniteGroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.isIdentity" title="+replab.NiceFiniteGroup.isIdentity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code></a> – Returns true if x is the identity, false otherwise</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.isTrivial" title="+replab.NiceFiniteGroup.isTrivial"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isTrivial</span></code></a> – Tests whether this group is trivial</p></li>
-<li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.lambda" title="+replab.NiceFiniteGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a group from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.lambda" title="+replab.NiceFiniteGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a compact group from function handles</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.leftConjugate" title="+replab.NiceFiniteGroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.leftConjugateGroup" title="+replab.NiceFiniteGroup.leftConjugateGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugateGroup</span></code></a> – Returns the left conjugate of the current group by the given element</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.leftRegularRep" title="+replab.NiceFiniteGroup.leftRegularRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftRegularRep</span></code></a> – Returns the left regular representation of this group</p></li>
@@ -2191,8 +2186,8 @@ methods will end up recursing to the infinity.</p>
 
 <dl class="method">
 <dt id="+replab.NiceFiniteGroup.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroup.lambda" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.Group.lambda" title="+replab.Group.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.lambda()</span></code></a></p>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroup.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.lambda()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -2796,7 +2791,7 @@ homomorphism into a permutation group.</p>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.inverse" title="+replab.NiceFiniteSubgroup.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.isIdentity" title="+replab.NiceFiniteSubgroup.isIdentity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code></a> – Returns true if x is the identity, false otherwise</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.isTrivial" title="+replab.NiceFiniteSubgroup.isTrivial"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isTrivial</span></code></a> – Tests whether this group is trivial</p></li>
-<li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.lambda" title="+replab.NiceFiniteSubgroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a group from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.lambda" title="+replab.NiceFiniteSubgroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a compact group from function handles</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.leftConjugate" title="+replab.NiceFiniteSubgroup.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.leftConjugateGroup" title="+replab.NiceFiniteSubgroup.leftConjugateGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugateGroup</span></code></a> – Returns the left conjugate of the current group by the given element</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.leftRegularRep" title="+replab.NiceFiniteSubgroup.leftRegularRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftRegularRep</span></code></a> – Returns the left regular representation of this group</p></li>
@@ -2985,8 +2980,8 @@ homomorphism into a permutation group.</p>
 
 <dl class="method">
 <dt id="+replab.NiceFiniteSubgroup.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteSubgroup.lambda" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.Group.lambda" title="+replab.Group.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.lambda()</span></code></a></p>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteSubgroup.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.lambda()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -3614,7 +3609,7 @@ compatible with the group composition as in</p>
         <li class="right" >
           <a href="laws.html" title="Laws"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference/API</a> &#187;</li> 
       </ul>
     </div>
