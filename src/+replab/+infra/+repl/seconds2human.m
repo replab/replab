@@ -6,7 +6,7 @@ function string = seconds2human(secs, outputFormat)
 % Example:
 %   >>> str = replab.infra.repl.seconds2human(1463456.3)
 %       str =
-%       'About 2 weeks and 2 days.'
+%       'About 2 weeks and 2 days'
 %
 %
 % You may also call the function with a second input argument; either
@@ -16,7 +16,7 @@ function string = seconds2human(secs, outputFormat)
 % Example:
 %   >>> str = replab.infra.repl.seconds2human(1463456.3, 'full')
 %       str =
-%       '2 weeks, 2 days, 22 hours, 30 minutes, 56 seconds.'
+%       '2 weeks, 2 days, 22 hours, 30 minutes, 56 seconds'
 %
 %
 % The ``'short'`` format returns only the two largest units of time.

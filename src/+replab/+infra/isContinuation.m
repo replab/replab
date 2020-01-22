@@ -6,11 +6,11 @@ function b = isContinuation(line)
 %   >>> replab.infra.isContinuation('function res = test(a, b, ... % function')
 %       ans =
 %       logical
-%       true
+%       1
 %   >>> replab.infra.isContinuation('x = 2; % sets x to 2')
 %       ans =
 %       logical
-%       false
+%       0
 %
 % Args:
 %   line (charstring): Line to check, without newline
