@@ -8,6 +8,7 @@
    topic/index
    api/index
    development/index
+   blog/index
 
 Welcome to RepLAB!
 ==================

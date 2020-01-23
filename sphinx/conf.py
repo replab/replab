@@ -28,6 +28,7 @@ from pathlib import Path
 version = Path('../replab_version.txt').read_text().strip()
 release = version
 
+rst_epilog = '.. _LatestZIP: https://github.com/replab/replab/archive/v' + version + '.zip'
 
 # -- General configuration ---------------------------------------------------
 
@@ -47,7 +48,8 @@ extensions = ['sphinx.ext.autodoc',   # for enumeration of objects stuff
               'sphinxcontrib.matlab', # support for Matlab
               'sphinx.ext.napoleon',  # support for shorthand syntax
               'sphinx.ext.mathjax',   # LaTeX support
-              'texext.math_dollar']   # lightweight LaTeX filter
+              'texext.math_dollar',   # lightweight LaTeX filter
+              'ablog']
 
 html_sidebars = {
     '**': ['logo-text.html', 'globaltoc.html', 'searchbox.html']
@@ -113,3 +115,8 @@ html_theme_options = {
 html_js_files = [
     'js/collapse_helper.js',
 ]
+
+# -- Module ablog -----------------------------------------------------------------
+import ablog
+
+templates_path.append(ablog.get_html_templates_path())
