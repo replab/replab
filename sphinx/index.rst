@@ -4,8 +4,8 @@
 
    tutorials/index
    howto/index
-   talks/index
    topic/index
+   talks/index
    api/index
    development/index
 
@@ -13,6 +13,8 @@ Welcome to RepLAB!
 ==================
 
 Current version: |version|.
+
+Download `the latest release <LatestZIP>`_ and the `external modules ZIP <https://github.com/replab/replab/raw/externals/replab_externals.zip>`_.
 
 |Join the chat at https://gitter.im/denisrosset/replab|
 |Travis CI|

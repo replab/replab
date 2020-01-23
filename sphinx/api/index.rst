@@ -1,5 +1,5 @@
-Technical Reference/API
-=======================
+Technical Reference
+===================
 
 Technical reference material is available in two forms.
 
