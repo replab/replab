@@ -53,6 +53,15 @@ Option 2: Clone the library
    `MOxUnit <https://github.com/MOxUnit/MOxUnit>`__, and the tools needed
    for semidefinite programming.
 
+   Ignore the changes in the SDPT3 submodule, for example when compiling MEX files:
+
+   ::
+
+      git config submodule.SDPT3.ignore untracked
+
+   or add a ``ignore = untracked`` line to the ``[submodule "SDPT3"]`` section
+   in ``.git/config``.
+
 
 Initializing the library
 ------------------------
