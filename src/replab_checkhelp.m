@@ -1,5 +1,9 @@
-function replab_checkhelp
+function ok = replab_checkhelp
 % Checks the soundness of documentation comments
+%
+% Returns:
+%   logical: True if no problems were detected
+    ok = true;
     help('--clear');
 
     rp = replab.settings.replabPath;
@@ -25,6 +29,7 @@ function replab_checkhelp
             evalc(sprintf('help %s', el.fullIdentifier));
             evalc(sprintf('help -f %s', el.fullIdentifier));
         catch
+            ok = false;
             le = lasterror;
             last = p.consoleLine.lineContent;
             p.consoleLine.update('');

@@ -20,7 +20,7 @@ import os
 # -- Project information -----------------------------------------------------
 
 project = 'RepLAB'
-copyright = '2018-2019, Denis Rosset, Jean-Daniel Bancal and collaborators'
+copyright = '2018-2020, Denis Rosset, Jean-Daniel Bancal and collaborators'
 author = 'Denis Rosset, Jean-Daniel Bancal and collaborators'
 
 from pathlib import Path
@@ -28,7 +28,7 @@ from pathlib import Path
 version = Path('../replab_version.txt').read_text().strip()
 release = version
 
-rst_epilog = '.. _LatestZIP: https://github.com/replab/replab/archive/v' + version + '.zip'
+rst_epilog = '.. _latest release ZIP: https://github.com/replab/replab/archive/v' + version + '.zip'
 
 # -- General configuration ---------------------------------------------------
 
@@ -105,8 +105,6 @@ html_static_path = ['_static']
 html_theme_options = {
     # Set the name of the project to appear in the sidebar
     "project_nav_name": "RepLAB",
-    # Visible levels of the global TOC; -1 means unlimited
-    "globaltoc_depth": 4,
 }
 
 html_css_files = [

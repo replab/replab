@@ -69,9 +69,9 @@ function replab_release
     disp(' ');
     disp('Step 1: Verifying that the current working tree and index are clean');
     [status, cmdout] = system('git diff --exit-code');
-    assert(status == 0, 'The repository has local unstaged changes.');
+    assert(status == 0, 'The repository has local unstaged changes. Verify you followed the installation instructions on the website.');
     [status, cmdout] = system('git diff --cached --exit-code');
-    assert(status == 0, 'The repository has staged but uncommitted changes.');
+    assert(status == 0, 'The repository has staged but uncommitted changes. Verify you followed the installation instructions on the website.');
 
     disp(' ');
     disp('Step 2: Verifying that master and develop branches are in sync with remote origin.');
@@ -109,11 +109,11 @@ function replab_release
 
     disp(' ');
     disp('Step 7: Run "replab_runtests"');
-    replab_runtests;
+    assert(replab_runtests, 'Tests failed');
 
     disp(' ');
     disp('Step 8: Run "replab_checkhelp"');
-    replab_checkhelp;
+    assert(replab_checkhelp, 'Help check failed');
 
     disp(' ');
     disp('Step 9: Commit the stable release on the develop branch');

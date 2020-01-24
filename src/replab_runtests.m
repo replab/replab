@@ -3,13 +3,14 @@ function result = replab_runtests(withCoverage, onlyFastTests)
 %
 % This function calls the `root.replab_generate` function with the ``doctests`` argument.
 %
+% See the ``patternsToExclude`` variable below to exclude files from code coverage.
+%
 % Args:
-%     withCoverage (boolean): Enable code coverage (optional, default  value is false)
-%     onlyFastTests (boolean): Run only a selection of fast tests
-%         (optional, default value if false)
+%     withCoverage (logical): Enable code coverage (optional, default value is false)
+%     onlyFastTests (logical): Run only a selection of fast tests (optional, default value if false)
 %
 % Results:
-%     result: test results
+%     logical: True if all tests passed.
 
     if nargin < 1
         withCoverage = false;
@@ -93,8 +94,20 @@ function result = replab_runtests(withCoverage, onlyFastTests)
 
     % calls the relevant test suite
     if ReplabTestParameters.withCoverage == 1
-        result = moxunit_runtests('tests/codeCoverageHelperFunction.m', '-verbose', ...
-            '-with_coverage', '-cover', 'src', '-cover_json_file', 'coverage.json', '-cover_xml_file', 'coverage.xml', '-cover_html_dir', 'coverage_html');
+        % Here are the files patterns we don't want to include in the
+        % coverage monitoring. These are checked by MOcov individually in
+        % each subdirectory.
+        patternsToExclude = {'replab_*.m'};
+
+        % We define the test command
+        command = 'moxunit_runtests(''tests/codeCoverageHelperFunction.m'', ''-verbose'', ''-with_coverage'', ''-cover'', ''src'', ''-cover_json_file'', ''coverage.json'', ''-cover_xml_file'', ''coverage.xml'', ''-cover_html_dir'', ''coverage_html''';
+        for i = 1:numel(patternsToExclude)
+            command = [command, ', ''-cover_exclude'', ''', patternsToExclude{i}, ''''];
+        end
+        command = [command, ')']
+
+        % and call it
+        result = eval(command);
     else
         result = moxunit_runtests('tests', '-verbose', '-recursive');
     end

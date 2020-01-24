@@ -65,13 +65,13 @@ function test_fromSdpMatrix_SDP_CHSH
     if ReplabTestParameters.onlyFastTests
         obj1 = 2*sqrt(2);
     else
-        solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+        evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
         obj1 = value(obj);
     end
     
     % We formulate the symmetrized SDP:
     symSdpMatrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix,generators);
-    solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    evalc('solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj2 = value(obj);
     
     % We compare the result:
@@ -129,12 +129,12 @@ function test_fromSdpMatrix_SDP_CHSH_FullProb
     tmp = sparse(1:numel(indexMatrix), reshape(1+indexMatrix,1,numel(indexMatrix)), true);
     sdpMatrix = reshape(tmp*vars, size(indexMatrix));
     obj = objective*sdpMatrix(:,1);
-    solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj1 = value(obj);
     
     % We formulate the symmetrized SDP:
     symSdpMatrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, generators);
-    solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    evalc('solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj2 = value(obj);
     
     % We compare the result:
@@ -216,12 +216,12 @@ function test_fromSdpMatrix_SDP_CGLMP3_FullProb
     tmp = sparse(1:numel(indexMatrix), reshape(1+indexMatrix,1,numel(indexMatrix)), true);
     sdpMatrix = reshape(tmp*vars, size(indexMatrix));
     obj = objective*sdpMatrix(:,1);
-    solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj1 = value(obj);
     
     % We formulate the symmetrized SDP:
     symSdpMatrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, generators);
-    solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    evalc('solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj2 = value(obj);
     
     % We compare the result:
@@ -251,13 +251,13 @@ function test_fromSymSdpMatrix
     if ReplabTestParameters.onlyFastTests
         obj1 = 2*sqrt(2);
     else
-        solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+        evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
         obj1 = value(obj);
     end
     
     % We do a sanity check with one group
     blockSdpMatrix = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, generators);
-    solvesdp([blockSdpMatrix >= 0, blockSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    evalc('solvesdp([blockSdpMatrix >= 0, blockSdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj2 = value(obj);
     
     % We compare the result:
@@ -287,14 +287,14 @@ function test_fromIndexMatrix
     if ReplabTestParameters.onlyFastTests
         obj1 = 2*sqrt(2);
     else
-        solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+        evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
         obj1 = value(obj);
     end
     
     % We do a sanity check with one group
     blockSdpMatrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, generators, 'symmetric', 'real');
     obj = objective*blockSdpMatrix(:,1);
-    solvesdp([blockSdpMatrix >= 0, blockSdpMatrix(1,1) == 1], -obj, sdpsettings('verbose', 0));
+    evalc('solvesdp([blockSdpMatrix >= 0, blockSdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj2 = value(obj);
     
     % We compare the result:

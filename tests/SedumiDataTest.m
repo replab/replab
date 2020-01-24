@@ -13,7 +13,7 @@ function test_CHSH
     dataPath = fullfile(testsPath, 'CHSH_sedumi.mat');
     S = replab.SedumiData.fromMatFile(dataPath);
     [F h x] = S.toYalmip;
-    solvesdp(F, h);
+    evalc('solvesdp(F, h)');
     obj = -2*sqrt(2);
     assert(abs(double(h) - obj) < 1e-6);
 end

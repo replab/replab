@@ -20,5 +20,3 @@ the following resources will help you go further and start using **RepLAB** crea
    installation
    S3
    singlet
-   CHSH
-   quickstart

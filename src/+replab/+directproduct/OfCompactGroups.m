@@ -40,7 +40,7 @@ classdef OfCompactGroups < replab.CompactGroup
         %                                i.e. factorReps{i} is a representation of factor(i)
         %
         % Returns:
-        %   replab.Rep: A direct sum representation
+        %   `+replab.Rep`: A direct sum representation
             rep = replab.directproduct.SumRep(self, factorReps);
         end
 
