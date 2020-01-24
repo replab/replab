@@ -28,7 +28,7 @@ from pathlib import Path
 version = Path('../replab_version.txt').read_text().strip()
 release = version
 
-rst_epilog = '.. _LatestZIP: https://github.com/replab/replab/archive/v' + version + '.zip'
+rst_epilog = '.. _latest release ZIP: https://github.com/replab/replab/archive/v' + version + '.zip'
 
 # -- General configuration ---------------------------------------------------
 

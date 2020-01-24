@@ -14,12 +14,10 @@ desired set of features to get started. Choose the one which suits you best.
 Option 1: Download the latest RepLAB release, and use our easy install script.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Download the latest release on
-   `GitHub <https://www.github.com/replab/replab/releases>`__, which
-   includes the core code.
+1. Download the `latest release ZIP`_, see the `GitHub release page <https://www.github.com/replab/replab/releases>`_ for all releases.
+   This ZIP file includes the core code, but not the external dependencies.
 
-2. Launch MATLAB/Octave, run the ``replab_easyinstall`` script in the
-   root folder which will take care of downloading and installing
+2. Launch MATLAB/Octave, run the ``replab_easyinstall`` script in the root folder which will take care of downloading and installing
    dependencies, which are:
 
 -  to run tests: `MOxUnit <https://github.com/MOxUnit/MOxUnit>`__
