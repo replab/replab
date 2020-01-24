@@ -1,5 +1,5 @@
-Development and Community
-=========================
+Development/Community
+=====================
 
 As an open-source project, **RepLAB** relies on a community of users to
 keep get better and develop in relevant directions. The project is

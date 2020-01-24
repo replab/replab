@@ -23,10 +23,10 @@ replab_runtests
 
 .. autofunction:: replab_runtests
 
-replab_version
+replab_Version
 ++++++++++++++
 
-.. autofunction:: replab_version
+.. autoclass:: replab_Version
 
 .. module:: +replab.+infra
 

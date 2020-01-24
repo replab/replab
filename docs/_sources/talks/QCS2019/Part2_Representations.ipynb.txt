@@ -244,7 +244,7 @@
       "   isUnitary: true                                         \r\n",
       "   niceBasis: replab.NiceBasis                             \r\n",
       "      parent: Unitary complex representation of dimension 4\r\n",
-      "      U(1,:): [0, -1, 1, 0]/sqrt(2)                        \r\n",
+      "      U(1,:): [0, 1, -1, 0]/sqrt(2)                        \r\n",
       "      U(2,:): [1, 0, 0, 0]                                 \r\n",
       "      U(3,:): [0, 0, 0, 1]                                 \r\n",
       "      U(4,:): [0, 1, 1, 0]/sqrt(2)                         \r\n",

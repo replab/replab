@@ -22,4 +22,4 @@ directproduct.commonClass
 directproduct.OfCompactGroups
 +++++++++++++++++++++++++++++
 
-.. autofunction:: OfCompactGroups
+.. autoclass:: OfCompactGroups
