@@ -4,6 +4,7 @@
 
 #right-column {
     margin-left: 350px;
+    max-width: none;
 }
 
 @media screen and (max-width: 768px) {
