@@ -17,7 +17,7 @@ classdef CommutantVar < replab.Str
 % class object on the left, such as a sdpvar. Doing so typically results in
 % an error. This can be avoided in two ways:
 %  1. Always put the `CommutantVar` on the left of other class objects
-%     (e.g. write ``M >= N`` instead of ``N <= M`` if ``M` is a `CommutantVar` and ``N`` a
+%     (e.g. write ``M >= N`` instead of ``N <= M`` if ``M`` is a `CommutantVar` and ``N`` a
 %     sdpvar object)
 %  2. Embed the sdpvar object into a `CommutantVar` object with trivial
 %     symmetry: both ``M >= N2`` and ``N2 >= M`` are possible after defining
