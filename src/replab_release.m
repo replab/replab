@@ -109,11 +109,11 @@ function replab_release
 
     disp(' ');
     disp('Step 7: Run "replab_runtests"');
-    replab_runtests;
+    assert(replab_runtests, 'Tests failed');
 
     disp(' ');
     disp('Step 8: Run "replab_checkhelp"');
-    replab_checkhelp;
+    assert(replab_checkhelp, 'Help check failed');
 
     disp(' ');
     disp('Step 9: Commit the stable release on the develop branch');
