@@ -63,6 +63,20 @@ mentioned above, and a few variables mush be initialized. This can be done with
 
     replab_init
 
+which should lead to the following output
+
+::
+
+    >> replab_init
+    Adding RepLAB to the path
+    Adding RepLAB package to the path
+    Adding VPI to the path
+    Adding MOxUnit to the path
+    Adding embedded YALMIP to the path
+    Adding embedded SDPT3 solver to the path
+    Adding MOcov to the path
+    >> 
+
 This command checks in particular whether an instance of YALMIP is
 `available <https://yalmip.github.io/download/>`__ and
 `configured <https://yalmip.github.io/tutorial/installation/>`__ on your
