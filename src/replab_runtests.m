@@ -3,13 +3,14 @@ function result = replab_runtests(withCoverage, onlyFastTests)
 %
 % This function calls the `root.replab_generate` function with the ``doctests`` argument.
 %
+% See the ``patternsToExclude`` variable below to exclude files from code coverage.
+%
 % Args:
-%     withCoverage (boolean): Enable code coverage (optional, default  value is false)
-%     onlyFastTests (boolean): Run only a selection of fast tests
-%         (optional, default value if false)
+%     withCoverage (logical): Enable code coverage (optional, default value is false)
+%     onlyFastTests (logical): Run only a selection of fast tests (optional, default value if false)
 %
 % Results:
-%     result: test results
+%     logical: True if all tests passed.
 
     if nargin < 1
         withCoverage = false;
