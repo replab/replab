@@ -12,13 +12,15 @@
 Welcome to RepLAB!
 ==================
 
-Current version: |version|.
+Current version: |version|
 
-Download `LatestZIP`_ and the `external modules ZIP <https://github.com/replab/replab/raw/externals/replab_externals.zip>`_.
-
+`GitHub <https://github.com/replab/replab>`_
 |Join the chat at https://gitter.im/denisrosset/replab|
 |Travis CI|
 |codecov|
+
+Download `latest release ZIP`_ and follow the :doc:`installation tutorial <tutorials/installation>`.
+
 
 **RepLAB** provides tools to study representations of finite groups and decompose them numerically.
 It is compatible with both MATLAB and Octave.
@@ -29,7 +31,7 @@ How to start using RepLAB?
 Have a look at the :doc:`tutorials <tutorials/index>`!
 They have everything to get you started, from installation instructions to hands-on examples.
 
-The documentation of **RepLAB** is organized along 4 directions, following a recent `discussion on software documentation <https://www.divio.com/blog/documentation/>`_:
+The documentation of **RepLAB** is organized along 4 directions, following those `suggestions <https://www.divio.com/blog/documentation/>`_:
 
 -  :doc:`Tutorials <tutorials/index>`: are short hands-on presentations that give you a taste of the goodness of **RepLAB**
 -  :doc:`How-to guides <howto/index>`: are concise recipes that show you how to achieve a specific goal
@@ -74,16 +76,7 @@ initiated by `Denis Rosset <https://github.com/denisrosset>`_ and
 `Jean-Daniel Bancal <https://github.com/jdbancal>`_. The project has
 now more `contributors <https://github.com/replab/replab/graphs/contributors>`_.
 
-RepLAB references in the ``/external`` directory the following libraries:
-
-As Git submodules:
-
-- the `MOxUnit <https://github.com/MOxUnit/MOxUnit>`_ test framework by Nikolaas N. Oosterhof,
-- the `MOcov <https://github.com/MOcov/MOcov>`_ code coverage report generator by Nikolaas N. Oosterhof,
-- the `YALMIP <https://github.com/yalmip/YALMIP>`_ toolbox for optimization modeling by Johan Löfberg,
-- the `SDPT3 <https://github.com/sqlp/sdpt3>`_ solver
-
-It also contains a copy of the `VPI <https://www.mathworks.com/matlabcentral/fileexchange/22725-variable-precision-integer-arithmetic>`_ big integer library by John D'Errico.
+RepLAB references in the ``/external`` directory the following libraries: the `MOxUnit <https://github.com/MOxUnit/MOxUnit>`_ test framework by Nikolaas N. Oosterhof, the `MOcov <https://github.com/MOcov/MOcov>`_ code coverage report generator by Nikolaas N. Oosterhof, the `YALMIP <https://github.com/yalmip/YALMIP>`_ toolbox for optimization modeling by Johan Löfberg, the `SDPT3 <https://github.com/sqlp/sdpt3>`_ solver, and the `VPI <https://www.mathworks.com/matlabcentral/fileexchange/22725-variable-precision-integer-arithmetic>`_ big integer library by John D'Errico.
 
 Feedback and suggestions are always welcome. We ask participants to follow the guidelines of the `Typelevel Code of Conduct <https://typelevel.org/conduct.html>`_.
 
@@ -91,12 +84,6 @@ License
 -------
 
 RepLAB is (C) 2018-2020 Denis Rosset, Jean-Daniel Bancal and other collaborators, and licensed under the `Mozilla Public License 2.0 <https://github.com/replab/replab/LICENSE>`_.
-
-Indices and tables
-------------------
-
-* :ref:`genindex`
-* :ref:`search`
 
 .. |Join the chat at https://gitter.im/denisrosset/replab| image:: https://badges.gitter.im/Join%20Chat.svg
    :target: https://gitter.im/denisrosset/replab
