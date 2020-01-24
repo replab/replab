@@ -52,7 +52,7 @@ extensions = ['sphinx.ext.autodoc',   # for enumeration of objects stuff
               'ablog']
 
 html_sidebars = {
-    '**': ['logo-text.html', 'globaltoc.html', 'searchbox.html']
+    '**': ['logo-text.html', 'globaltoc.html', 'recentposts.html']
 }
 
 autodoc_default_options = {'members': True, 'show-inheritance': True}
@@ -63,9 +63,6 @@ matlab_keep_package_prefix = False
 matlab_src_dir = os.path.dirname(os.path.abspath(__file__ + "/"))+"/_src"
 primary_domain = 'mat'
 default_role = 'obj'
-
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -112,6 +109,10 @@ html_theme_options = {
     "globaltoc_depth": 4,
 }
 
+html_css_files = [
+    'css/custom.css',
+]
+
 html_js_files = [
     'js/collapse_helper.js',
 ]
@@ -119,4 +120,4 @@ html_js_files = [
 # -- Module ablog -----------------------------------------------------------------
 import ablog
 
-templates_path.append(ablog.get_html_templates_path())
+templates_path = ['_templates', ablog.get_html_templates_path()]

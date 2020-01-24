@@ -1,0 +1,17 @@
+#left-column {
+    width: 350px;
+}
+
+#right-column {
+    margin-left: 350px;
+}
+
+@media screen and (max-width: 768px) {
+  #right-column {
+    width: 100%;
+    margin-left: 0;
+  }
+  #left-column {
+    width: 100%;
+  }
+}
