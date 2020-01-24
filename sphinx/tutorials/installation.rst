@@ -53,7 +53,8 @@ Option 2: Clone the library
    `MOxUnit <https://github.com/MOxUnit/MOxUnit>`__, and the tools needed
    for semidefinite programming.
 
-   Ignore the changes in the SDPT3 submodule, for example when compiling MEX files:
+   To ignore changes that will happen when the SDPT3 submodule is compiled,
+   (and thus untracked files are created), run the following command:
 
    ::
 
