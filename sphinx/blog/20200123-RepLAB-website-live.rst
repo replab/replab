@@ -14,7 +14,7 @@ Our ambition for RepLAB is two-fold: reduce the complexity of hard problems usin
 
 Until now, no immediately accessible tool was available for beginners in those topics. `GAP System <https://www.gap-system.org/>`_ and `SageMath <https://www.sagemath.org/>`_ are pretty incredible pieces of software, but they do not directly integrate with environments used in the first year of undergraduate teaching. RepLAB can provide that experience, and be used to explore group representations numerically in the `MATLAB <https://www.mathworks.com/products/matlab.html>`_/`Octave <https://www.gnu.org/software/octave/>`_ environment familiar to students.
 
-It was thus paramount for us to document the use our code well.
+It was thus paramount for us to document the use of our code well.
 
 MATLAB has comprehensive documentation, and an internal help system integrated with the REPL (the `help` command). Still, MathWorks does not provide a comprehensive documentation solution such as `Sphinx <http://www.sphinx-doc.org/en/master>`_ that can integrate documentation with API reference and publish a website.
 
