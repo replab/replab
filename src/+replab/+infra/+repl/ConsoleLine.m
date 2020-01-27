@@ -17,8 +17,8 @@ classdef ConsoleLine < handle
             % truncate the displayed line if terminal is not big enough
             [nR, nC] = replab.compat.terminalSize;
             nC = nC - 3;
-            if ~isempty(nC) && length(str) > nC
-                str = [str(1:nC-3), '...'];
+            if ~isempty(nC) && length(str) > nC-2
+                str = [str(1:nC-5), '...'];
             end
             n2 = length(str);
             backslash = char(8);
