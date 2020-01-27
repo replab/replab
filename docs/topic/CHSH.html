@@ -13,10 +13,12 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Relabelings in the CHSH scenario &#8212; RepLAB 0.6.1 documentation</title>
+    <title>Relabelings in the CHSH scenario &#8212; RepLAB 0.6.2-SNAP documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
@@ -32,7 +34,19 @@
     <link rel="next" title="Talks" href="../talks/index.html" />
     <link rel="prev" title="Topic guides" href="index.html" />
   
+  
    
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -50,7 +64,7 @@
         <li class="right" >
           <a href="index.html" title="Topic guides"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.2-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Topic guides</a> &#187;</li> 
       </ul>
     </div>
@@ -60,12 +74,15 @@
         <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
       </div>
   <div id="left-column">
-    <div class="sphinxsidebar"><a href="
-    ../index.html" class="text-logo">RepLAB</a>
-<div class="sidebar-block">
-  <div class="sidebar-wrapper">
-    <h2>Table Of Contents</h2>
-  </div>
+    <div class="sphinxsidebar"><div class="text-logo">
+  <a href="
+    ../index.html">RepLAB</a>&nbsp;&nbsp;
+  <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.2-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
+  <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
+  <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
+</div><div class="sidebar-block">
   <div class="sidebar-toc">
     
     
@@ -73,14 +90,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Topic guides</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="index.html#our-topic-guides">Our topic guides</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Relabelings in the CHSH scenario</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Relabelings-the-outputs">Relabelings the outputs</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Adding-the-relabelings-of-inputs">Adding the relabelings of inputs</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Adding-the-relabelings-of-parties">Adding the relabelings of parties</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Decomposition-of-the-full-probability-space">Decomposition of the full probability space</a></li>
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Relabelings in the CHSH scenario</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Relabelings-the-outputs">Relabelings the outputs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Adding-the-relabelings-of-inputs">Adding the relabelings of inputs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Adding-the-relabelings-of-parties">Adding the relabelings of parties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Decomposition-of-the-full-probability-space">Decomposition of the full probability space</a></li>
 </ul>
 </li>
 </ul>
@@ -88,11 +102,26 @@
 <li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../blog/index.html">Blog</a></li>
 </ul>
 
     
   </div>
 </div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2><a href="../blog.html">Recent Blog Posts</a></h2>
+  </div>
+  <div class="sidebar-toc">
+    <ul>
+      
+      
+      <li class="toctree-l1"><a href="../blog/20200123-RepLAB-website-live.html">26 January - The RepLAB documentation and the infrastructure behind it</a></li>
+      
+    </ul>
+  </div>
+</div>
+
       
     </div>
   </div>
@@ -330,7 +359,7 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
+warning: function /home/denis/Projects/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Adding VPI to the path
 Adding MOxUnit to the path
@@ -396,24 +425,11 @@ inverseImages: {[0, 1; 1, 0]}
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-ioGroup =
-
-replab.wreathproduct.OfNiceFiniteGroup
-           A: Permutations acting on 2 elements
-           H: Permutations acting on 2 elements
-           N: replab.directproduct.OfNiceFiniteGroups
-    identity: {[1, 2], {[1, 2], [1, 2]}}
-           n: 2
-      parent: replab.wreathproduct.OfNiceFiniteGroup
-         phi: replab.perm.PermutationCellAction
-generator(1): {[2, 1], {[1, 2], [1, 2]}}
-generator(2): {[1, 2], {[2, 1], [1, 2]}}
-generator(3): {[1, 2], {[1, 2], [2, 1]}}
-
+error: can&#39;t perform indexing operations for user-defined function type
 </pre></div></div>
 </div>
 <p>The representation on the conditional probility <span class="math notranslate nohighlight">\(P(a|x)\)</span> is the imprimitive representation, given that we use the defining representation for the inner group</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
@@ -422,11 +438,19 @@ generator(3): {[1, 2], {[1, 2], [2, 1]}}
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+error: &#39;ioGroup&#39; undefined near line 1 column 9
+</pre></div></div>
+</div>
 </div>
 <div class="section" id="Adding-the-relabelings-of-parties">
 <h2>Adding the relabelings of parties<a class="headerlink" href="#Adding-the-relabelings-of-parties" title="Permalink to this headline">¶</a></h2>
 <p>The same story repeats for relabelings of parties: the scenario involves two homogeneous parties. We thus have two copies of the group relabeling inputs and/or outputs (one for Alice, one for Bob), and a copy of <span class="math notranslate nohighlight">\(S_2\)</span> that permutes the parties. This group desribing all possible relabellings in this scenario is thus given by:</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
@@ -435,8 +459,16 @@ generator(3): {[1, 2], {[1, 2], [2, 1]}}
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+error: &#39;ioGroup&#39; undefined near line 1 column 43
+</pre></div></div>
+</div>
 <p>The representation on the behavior <span class="math notranslate nohighlight">\(P(ab|xy)\)</span> is however a primitive representation, as <span class="math notranslate nohighlight">\(P(a|x; b|y)\)</span> ressembles a tensor. Inside each party, we use the imprimitive representation constructed before.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
@@ -444,6 +476,14 @@ generator(3): {[1, 2], {[1, 2], [2, 1]}}
 <span></span><span class="n">probRep</span> <span class="p">=</span> <span class="n">scenarioGroup</span><span class="p">.</span><span class="n">primitiveRep</span><span class="p">(</span><span class="n">ioRep</span><span class="p">);</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+error: &#39;scenarioGroup&#39; undefined near line 1 column 11
+</pre></div></div>
 </div>
 </div>
 <div class="section" id="Decomposition-of-the-full-probability-space">
@@ -463,33 +503,7 @@ generator(3): {[1, 2], {[1, 2], [2, 1]}}
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-dec =
-
-Subrepresentation
-   dimension: 16
-       field: &#39;R&#39;
-       group: replab.wreathproduct.OfNiceFiniteGroup
-   irrepInfo: []
-   isUnitary: true
-   niceBasis: replab.NiceBasis
-      parent: Orthogonal real representation of dimension 16
-      U(1,:): [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]/4
-      U(2,:): [2, 2, -2, -2, 2, 2, -2, -2, -2, -2, 2, 2, -2, -2, 2, 2]/8
-      U(3,:): [0, 0, -4, -4, 0, 0, -4, -4, 4, 4, 0, 0, 4, 4, 0, 0]/sqrt(128)
-      U(4,:): [4, 4, 0, 0, 4, 4, 0, 0, 0, 0, -4, -4, 0, 0, -4, -4]/sqrt(128)
-      U(5,:): [1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1]/4
-      U(6,:): [0, 0, -4, 4, 0, 0, 4, -4, 4, -4, 0, 0, -4, 4, 0, 0]/sqrt(128)
-      U(7,:): [4, -4, 0, 0, -4, 4, 0, 0, 0, 0, -4, 4, 0, 0, 4, -4]/sqrt(128)
-      U(8,:): [2, -2, -2, 2, -2, 2, 2, -2, -2, 2, 2, -2, 2, -2, -2, 2]/8
-      U(9,:): [0, 4, -4, 0, -4, 0, 0, 4, 4, 0, 0, -4, 0, -4, 4, 0]/sqrt(128)
-     U(10,:): [4, 0, 0, -4, 0, -4, 4, 0, 0, 4, -4, 0, -4, 0, 0, 4]/sqrt(128)
-     U(11,:): [2, -2, -2, 2, 2, -2, -2, 2, -2, 2, 2, -2, -2, 2, 2, -2]/8
-     U(12,:): [2, 2, -2, -2, -2, -2, 2, 2, -2, -2, 2, 2, 2, 2, -2, -2]/8
-     U(13,:): [0, -4, -4, 0, 4, 0, 0, 4, 4, 0, 0, 4, 0, -4, -4, 0]/sqrt(128)
-     U(14,:): [4, 0, 0, 4, 0, -4, -4, 0, 0, -4, -4, 0, 4, 0, 0, 4]/sqrt(128)
-     U(15,:): [2, 2, 2, 2, -2, -2, -2, -2, 2, 2, 2, 2, -2, -2, -2, -2]/8
-...
-
+error: &#39;probRep&#39; undefined near line 1 column 7
 </pre></div></div>
 </div>
 <p>There are 6 irreducible components</p>
@@ -507,7 +521,7 @@ Subrepresentation
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-ans =  6
+error: &#39;dec&#39; undefined near line 1 column 1
 </pre></div></div>
 </div>
 <p>These components correspond to the following physical elements ( see <a class="reference external" href="https://arxiv.org/abs/1610.01833">arXiv:1610.01833</a> ) for more details:</p>
@@ -522,6 +536,10 @@ ans =  6
 </div>
 </div>
 
+  <div class="section">
+  
+  
+  </div>
 
           </div>
             
@@ -555,7 +573,7 @@ ans =  6
         <li class="right" >
           <a href="index.html" title="Topic guides"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.2-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Topic guides</a> &#187;</li> 
       </ul>
     </div>

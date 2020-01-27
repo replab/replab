@@ -34,3 +34,8 @@ infra.align
 +++++++++++
 
 .. autofunction:: align
+
+infra.CodeBase
+++++++++++++++
+
+.. autoclass:: CodeBase

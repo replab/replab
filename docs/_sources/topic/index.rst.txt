@@ -12,9 +12,6 @@ Scientific articles:
   presents a concise overview of the approach used by **RepLAB**
 - An introduction to representation theory: `Linear Representations of Finite Groups <https://link.springer.com/book/10.1007/978-1-4684-9458-7>`_ by Jean-Pierre Serre
 
-Our topic guides
-----------------
-
 .. toctree::
    :maxdepth: 1
 
