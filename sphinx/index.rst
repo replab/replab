@@ -16,7 +16,7 @@ Welcome to RepLAB!
 Current version: |version| (`GitHub <https://github.com/replab/replab>`_ / `latest release ZIP`_ / :doc:`installation instructions <tutorials/installation>`).
 
 **RepLAB** provides tools to study representations of finite groups and decompose them numerically.
-It is compatible with both MATLAB and Octave.
+It is compatible with both `MATLAB <https://www.mathworks.com/products/matlab.html>`_ and `Octave <https://www.gnu.org/software/octave/>`_.
 
 
 .. figure:: CompactGroups.gif
