@@ -148,5 +148,5 @@ function replab_release
     disp(' ');
     disp('Step 13: Code to copy/paste');
     disp(' ');
-    fprintf('git push origin develop master v%s\n', releaseVersion.tag);
+    fprintf('git push origin develop master %s\n', releaseVersion.tag);
 end
