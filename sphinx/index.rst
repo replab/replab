@@ -13,18 +13,29 @@
 Welcome to RepLAB!
 ==================
 
-Current version: |version|
-
-`GitHub <https://github.com/replab/replab>`_
-|Join the chat at https://gitter.im/denisrosset/replab|
-|Travis CI|
-|codecov|
-
-Download `latest release ZIP`_ and follow the :doc:`installation tutorial <tutorials/installation>`.
-
+Current version: |version| (`GitHub <https://github.com/replab/replab>`_ / `latest release ZIP`_ / :doc:`installation instructions <tutorials/installation>`).
 
 **RepLAB** provides tools to study representations of finite groups and decompose them numerically.
 It is compatible with both MATLAB and Octave.
+
+
+.. figure:: CompactGroups.gif
+   :width: 483px
+   :height: 361px
+   :align: center
+   :figclass: align-center
+
+   Decomposition of the :math:`U \otimes U` representation of the unitary group of dimension 2.
+
+
+.. figure:: HelpSystem.gif
+   :width: 483px
+   :height: 361px
+   :align: center
+   :figclass: align-center
+
+   Integrated help system in RepLAB
+
 
 How to start using RepLAB?
 --------------------------
@@ -32,7 +43,7 @@ How to start using RepLAB?
 Have a look at the :doc:`tutorials <tutorials/index>`!
 They have everything to get you started, from installation instructions to hands-on examples.
 
-The documentation of **RepLAB** is organized along 4 directions, following those `suggestions <https://www.divio.com/blog/documentation/>`_:
+The documentation of **RepLAB** is organized along 4 directions, following this `approach <https://www.divio.com/blog/documentation/>`_:
 
 -  :doc:`Tutorials <tutorials/index>`: are short hands-on presentations that give you a taste of the goodness of **RepLAB**
 -  :doc:`How-to guides <howto/index>`: are concise recipes that show you how to achieve a specific goal
@@ -44,17 +55,16 @@ Work in progress
 
 **RepLAB** is a work-in-progress. In particular:
 
-- RepLAB only works in double floating-point precision.
-- We are still working on the estimation/control of numerical errors.
+- RepLAB works in double floating-point precision.
+- We are still working on the estimation/control of numerical errors (a few criteria are currently hard-coded).
   That said, **RepLAB** works fine for representations of medium size ($d$ equal to a few thousands).
-- While RepLAB has a basic implementation of the BSGS construction, it does not offer much to work with permutation groups.
-- Construction of representation by images (`replab.RepByImages`) should be done only with matrices that can be represented exactly in floating-point arithmetic, as errors accumulate quickly otherwise (signed permutation matrices are fine for example).
+- While RepLAB has a basic implementation of computational group theory algorithms, it does not offer much to work with groups.
+- Construction of representation by images (`replab.RepByImages`) should be done only with matrices that can be represented exactly in floating-point arithmetic, as errors accumulate quickly otherwise (in most of our cases, we use signed permutation matrices which are fine).
 
 Why RepLAB?
 -----------
 
-Because no open source library exists to decomposes arbitrary permutation/monomial representations into irreducible representations
-over the reals. RepLAB implements numerical methods that perform this decomposition up to machine precision.
+Because no open source library exists to decomposes arbitrary permutation/monomial representations into irreducible representations over the reals. RepLAB implements numerical methods that perform this decomposition up to machine precision.
 
 That said, other libraries working on the same problem space include:
 
@@ -62,12 +72,6 @@ That said, other libraries working on the same problem space include:
    Sebastian Egner and Markus Püschel.
 
 -  `NCSOStools <http://ncsostools.fis.unm.si/documentation/awbd>`_ includes an implementation of the Murota-Kanno-Kojima-Kojima-Maehara algorithm to decompose matrix \*-algebras.
-
-Documentation and Support
--------------------------
-
--  Chat it up on `Gitter <https://gitter.im/replab/replab>`__.
--  Check the :doc:`installation tutorial <tutorials/installation>`.
 
 Contributors
 ------------
@@ -85,10 +89,3 @@ License
 -------
 
 RepLAB is (C) 2018-2020 Denis Rosset, Jean-Daniel Bancal and other collaborators, and licensed under the `Mozilla Public License 2.0 <https://github.com/replab/replab/LICENSE>`_.
-
-.. |Join the chat at https://gitter.im/denisrosset/replab| image:: https://badges.gitter.im/Join%20Chat.svg
-   :target: https://gitter.im/denisrosset/replab
-.. |Travis CI| image:: https://travis-ci.com/replab/replab.svg?branch=master
-   :target: https://travis-ci.com/replab/replab
-.. |codecov| image:: https://codecov.io/gh/replab/replab/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/replab/replab

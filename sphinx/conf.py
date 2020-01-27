@@ -109,6 +109,7 @@ html_theme_options = {
 
 html_css_files = [
     'css/custom.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css'
 ]
 
 html_js_files = [
