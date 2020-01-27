@@ -16,3 +16,7 @@
     width: 100%;
   }
 }
+
+.text-logo > a {
+  color: #fff;
+}
