@@ -60,6 +60,7 @@ Work in progress
   That said, **RepLAB** works fine for representations of medium size ($d$ equal to a few thousands).
 - While RepLAB has a basic implementation of computational group theory algorithms, it does not offer much to work with groups.
 - Construction of representation by images (`replab.RepByImages`) should be done only with matrices that can be represented exactly in floating-point arithmetic, as errors accumulate quickly otherwise (in most of our cases, we use signed permutation matrices which are fine).
+- The documentation is still a work in progress, and tutorials/how to guides/... will be added as the project progresses.
 
 Why RepLAB?
 -----------
