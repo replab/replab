@@ -30,6 +30,15 @@ Option 1: Download the latest RepLAB release, and use our easy install script.
 3. Go to the "Initializing the library" section below and follow the
    usage instructions there.
 
+.. figure:: EasyInstall.gif
+   :width: 483px
+   :height: 361px
+   :align: center
+   :figclass: align-center
+
+   From the release ZIP file to a successful RepLAB installation.
+
+
 Option 2: Clone the library
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

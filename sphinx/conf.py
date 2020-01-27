@@ -48,10 +48,11 @@ extensions = ['sphinx.ext.autodoc',   # for enumeration of objects stuff
               'sphinxcontrib.matlab', # support for Matlab
               'sphinx.ext.napoleon',  # support for shorthand syntax
               'sphinx.ext.mathjax',   # LaTeX support
-              'texext.math_dollar']   # lightweight LaTeX filter
+              'texext.math_dollar',   # lightweight LaTeX filter
+              'ablog']
 
 html_sidebars = {
-    '**': ['logo-text.html', 'globaltoc.html']
+    '**': ['logo-text.html', 'globaltoc.html', 'recentposts.html']
 }
 
 autodoc_default_options = {'members': True, 'show-inheritance': True}
@@ -62,9 +63,6 @@ matlab_keep_package_prefix = False
 matlab_src_dir = os.path.dirname(os.path.abspath(__file__ + "/"))+"/_src"
 primary_domain = 'mat'
 default_role = 'obj'
-
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -109,6 +107,16 @@ html_theme_options = {
     "project_nav_name": "RepLAB",
 }
 
+html_css_files = [
+    'css/custom.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css'
+]
+
 html_js_files = [
     'js/collapse_helper.js',
 ]
+
+# -- Module ablog -----------------------------------------------------------------
+import ablog
+
+templates_path = ['_templates', ablog.get_html_templates_path()]

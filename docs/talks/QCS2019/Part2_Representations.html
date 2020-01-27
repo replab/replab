@@ -13,10 +13,12 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>2. Constructing representations with RepLAB &#8212; RepLAB 0.6.1 documentation</title>
+    <title>2. Constructing representations with RepLAB &#8212; RepLAB 0.6.2-SNAP documentation</title>
     <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
@@ -32,7 +34,19 @@
     <link rel="next" title="4. A taste of composition with RepLAB" href="Part4_TasteOfComposition.html" />
     <link rel="prev" title="1. Constructing groups with RepLAB" href="Part1_Groups.html" />
   
+  
    
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -50,7 +64,7 @@
         <li class="right" >
           <a href="Part1_Groups.html" title="1. Constructing groups with RepLAB"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.2-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Quantum Causal Structures Oxford 2019</a> &#187;</li> 
       </ul>
@@ -61,12 +75,15 @@
         <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
       </div>
   <div id="left-column">
-    <div class="sphinxsidebar"><a href="
-    ../../index.html" class="text-logo">RepLAB</a>
-<div class="sidebar-block">
-  <div class="sidebar-wrapper">
-    <h2>Table Of Contents</h2>
-  </div>
+    <div class="sphinxsidebar"><div class="text-logo">
+  <a href="
+    ../../index.html">RepLAB</a>&nbsp;&nbsp;
+  <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.2-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
+  <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
+  <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
+</div><div class="sidebar-block">
   <div class="sidebar-toc">
     
     
@@ -93,11 +110,26 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/index.html">Technical Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development/Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../blog/index.html">Blog</a></li>
 </ul>
 
     
   </div>
 </div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2><a href="../../blog.html">Recent Blog Posts</a></h2>
+  </div>
+  <div class="sidebar-toc">
+    <ul>
+      
+      
+      <li class="toctree-l1"><a href="../../blog/20200123-RepLAB-website-live.html">26 January - The RepLAB documentation and the infrastructure behind it</a></li>
+      
+    </ul>
+  </div>
+</div>
+
       
     </div>
   </div>
@@ -335,7 +367,7 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
+warning: function /home/denis/Projects/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Adding VPI to the path
 Adding MOxUnit to the path
@@ -363,7 +395,7 @@ Adding MOcov to the path
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;piInput&#39; undefined near line 1 column 32
+error: can&#39;t perform indexing operations for user-defined function type
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -524,7 +556,7 @@ Subrepresentation
    isUnitary: true
    niceBasis: replab.NiceBasis
       parent: Unitary complex representation of dimension 4
-      U(1,:): [0, 1, -1, 0]/sqrt(2)
+      U(1,:): [0, -1, 1, 0]/sqrt(2)
       U(2,:): [1, 0, 0, 0]
       U(3,:): [0, 0, 0, 1]
       U(4,:): [0, 1, 1, 0]/sqrt(2)
@@ -669,6 +701,10 @@ error: subsref: unknown method or property: copy
 </div>
 </div>
 
+  <div class="section">
+  
+  
+  </div>
 
           </div>
             
@@ -702,7 +738,7 @@ error: subsref: unknown method or property: copy
         <li class="right" >
           <a href="Part1_Groups.html" title="1. Constructing groups with RepLAB"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.2-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" >Quantum Causal Structures Oxford 2019</a> &#187;</li> 
       </ul>

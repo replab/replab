@@ -28,7 +28,7 @@
      "output_type": "stream",
      "text": [
       "Adding RepLAB to the path\r\n",
-      "warning: function /home/denis/w/replab/src/help.m shadows a core library function\r\n",
+      "warning: function /home/denis/Projects/replab/src/help.m shadows a core library function\r\n",
       "Adding RepLAB package to the path\r\n",
       "Adding VPI to the path\r\n",
       "Adding MOxUnit to the path\r\n",
@@ -111,20 +111,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "ioGroup =\r\n",
-      "\r\n",
-      "replab.wreathproduct.OfNiceFiniteGroup\r\n",
-      "           A: Permutations acting on 2 elements      \r\n",
-      "           H: Permutations acting on 2 elements      \r\n",
-      "           N: replab.directproduct.OfNiceFiniteGroups\r\n",
-      "    identity: {[1, 2], {[1, 2], [1, 2]}}             \r\n",
-      "           n: 2                                      \r\n",
-      "      parent: replab.wreathproduct.OfNiceFiniteGroup \r\n",
-      "         phi: replab.perm.PermutationCellAction      \r\n",
-      "generator(1): {[2, 1], {[1, 2], [1, 2]}}             \r\n",
-      "generator(2): {[1, 2], {[2, 1], [1, 2]}}             \r\n",
-      "generator(3): {[1, 2], {[1, 2], [2, 1]}}             \r\n",
-      "\r\n"
+      "error: can't perform indexing operations for user-defined function type\r\n"
      ]
     }
    ],
@@ -145,7 +132,15 @@
    "cell_type": "code",
    "execution_count": 4,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "error: 'ioGroup' undefined near line 1 column 9\r\n"
+     ]
+    }
+   ],
    "source": [
     "ioRep = ioGroup.imprimitiveRep(outputRep);"
    ]
@@ -167,7 +162,15 @@
    "cell_type": "code",
    "execution_count": 5,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "error: 'ioGroup' undefined near line 1 column 43\r\n"
+     ]
+    }
+   ],
    "source": [
     "scenarioGroup = outputGroup.wreathProduct(ioGroup);"
    ]
@@ -185,7 +188,15 @@
    "cell_type": "code",
    "execution_count": 6,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "error: 'scenarioGroup' undefined near line 1 column 11\r\n"
+     ]
+    }
+   ],
    "source": [
     "probRep = scenarioGroup.primitiveRep(ioRep);"
    ]
@@ -208,33 +219,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "dec =\r\n",
-      "\r\n",
-      "Subrepresentation\r\n",
-      "   dimension: 16                                                            \r\n",
-      "       field: 'R'                                                           \r\n",
-      "       group: replab.wreathproduct.OfNiceFiniteGroup                        \r\n",
-      "   irrepInfo: []                                                            \r\n",
-      "   isUnitary: true                                                          \r\n",
-      "   niceBasis: replab.NiceBasis                                              \r\n",
-      "      parent: Orthogonal real representation of dimension 16                \r\n",
-      "      U(1,:): [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]/4            \r\n",
-      "      U(2,:): [2, 2, -2, -2, 2, 2, -2, -2, -2, -2, 2, 2, -2, -2, 2, 2]/8    \r\n",
-      "      U(3,:): [0, 0, -4, -4, 0, 0, -4, -4, 4, 4, 0, 0, 4, 4, 0, 0]/sqrt(128)\r\n",
-      "      U(4,:): [4, 4, 0, 0, 4, 4, 0, 0, 0, 0, -4, -4, 0, 0, -4, -4]/sqrt(128)\r\n",
-      "      U(5,:): [1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1]/4    \r\n",
-      "      U(6,:): [0, 0, -4, 4, 0, 0, 4, -4, 4, -4, 0, 0, -4, 4, 0, 0]/sqrt(128)\r\n",
-      "      U(7,:): [4, -4, 0, 0, -4, 4, 0, 0, 0, 0, -4, 4, 0, 0, 4, -4]/sqrt(128)\r\n",
-      "      U(8,:): [2, -2, -2, 2, -2, 2, 2, -2, -2, 2, 2, -2, 2, -2, -2, 2]/8    \r\n",
-      "      U(9,:): [0, 4, -4, 0, -4, 0, 0, 4, 4, 0, 0, -4, 0, -4, 4, 0]/sqrt(128)\r\n",
-      "     U(10,:): [4, 0, 0, -4, 0, -4, 4, 0, 0, 4, -4, 0, -4, 0, 0, 4]/sqrt(128)\r\n",
-      "     U(11,:): [2, -2, -2, 2, 2, -2, -2, 2, -2, 2, 2, -2, -2, 2, 2, -2]/8    \r\n",
-      "     U(12,:): [2, 2, -2, -2, -2, -2, 2, 2, -2, -2, 2, 2, 2, 2, -2, -2]/8    \r\n",
-      "     U(13,:): [0, -4, -4, 0, 4, 0, 0, 4, 4, 0, 0, 4, 0, -4, -4, 0]/sqrt(128)\r\n",
-      "     U(14,:): [4, 0, 0, 4, 0, -4, -4, 0, 0, -4, -4, 0, 4, 0, 0, 4]/sqrt(128)\r\n",
-      "     U(15,:): [2, 2, 2, 2, -2, -2, -2, -2, 2, 2, 2, 2, -2, -2, -2, -2]/8    \r\n",
-      "...\r\n",
-      "\r\n"
+      "error: 'probRep' undefined near line 1 column 7\r\n"
      ]
     }
    ],
@@ -258,7 +243,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "ans =  6\r\n"
+      "error: 'dec' undefined near line 1 column 1\r\n"
      ]
     }
    ],
@@ -313,7 +298,7 @@
    ],
    "mimetype": "text/x-octave",
    "name": "octave",
-   "version": "4.2.2"
+   "version": "4.4.1"
   }
  },
  "nbformat": 4,
