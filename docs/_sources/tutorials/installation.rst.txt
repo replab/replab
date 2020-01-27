@@ -14,12 +14,10 @@ desired set of features to get started. Choose the one which suits you best.
 Option 1: Download the latest RepLAB release, and use our easy install script.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Download the latest release on
-   `GitHub <https://www.github.com/replab/replab/releases>`__, which
-   includes the core code.
+1. Download the `latest release ZIP`_, see the `GitHub release page <https://www.github.com/replab/replab/releases>`_ for all releases.
+   This ZIP file includes the core code, but not the external dependencies.
 
-2. Launch MATLAB/Octave, run the ``replab_easyinstall`` script in the
-   root folder which will take care of downloading and installing
+2. Launch MATLAB/Octave, run the ``replab_easyinstall`` script in the root folder which will take care of downloading and installing
    dependencies, which are:
 
 -  to run tests: `MOxUnit <https://github.com/MOxUnit/MOxUnit>`__
@@ -53,6 +51,16 @@ Option 2: Clone the library
    `MOxUnit <https://github.com/MOxUnit/MOxUnit>`__, and the tools needed
    for semidefinite programming.
 
+   To ignore changes that will happen when the SDPT3 submodule is compiled,
+   (and thus untracked files are created), run the following command:
+
+   ::
+
+      git config submodule.SDPT3.ignore untracked
+
+   or add a ``ignore = untracked`` line to the ``[submodule "SDPT3"]`` section
+   in ``.git/config``.
+
 
 Initializing the library
 ------------------------
@@ -64,6 +72,20 @@ mentioned above, and a few variables mush be initialized. This can be done with
 ::
 
     replab_init
+
+which should lead to the following output
+
+::
+
+    >> replab_init
+    Adding RepLAB to the path
+    Adding RepLAB package to the path
+    Adding VPI to the path
+    Adding MOxUnit to the path
+    Adding embedded YALMIP to the path
+    Adding embedded SDPT3 solver to the path
+    Adding MOcov to the path
+    >> 
 
 This command checks in particular whether an instance of YALMIP is
 `available <https://yalmip.github.io/download/>`__ and

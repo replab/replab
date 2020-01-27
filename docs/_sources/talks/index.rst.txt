@@ -1,5 +1,5 @@
-Talks and tutorials given
-=========================
+Talks
+=====
 
 
 .. toctree::

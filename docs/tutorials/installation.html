@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Installation &#8212; RepLAB 0.6.1-SNAP documentation</title>
+    <title>Installation &#8212; RepLAB 0.6.1 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -29,7 +29,7 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Representations of the symmetric group \(S_3\)" href="S3.html" />
+    <link rel="next" title="Tutorial for mathematicians" href="S3.html" />
     <link rel="prev" title="Tutorials" href="index.html" />
   
    
@@ -45,12 +45,12 @@
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="S3.html" title="Representations of the symmetric group \(S_3\)"
+          <a href="S3.html" title="Tutorial for mathematicians"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Tutorials"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.1-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Tutorials</a> &#187;</li> 
       </ul>
     </div>
@@ -81,33 +81,18 @@
 <li class="toctree-l3"><a class="reference internal" href="#testing">Testing</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="S3.html">Representations of the symmetric group <span class="math notranslate nohighlight">\(S_3\)</span></a></li>
-<li class="toctree-l2"><a class="reference internal" href="singlet.html">The antisymmetric subspace of U(2)xU(2) and the singlet state</a></li>
-<li class="toctree-l2"><a class="reference internal" href="CHSH.html">Relabelings in the CHSH scenario</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart.html">Quick start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="S3.html">Tutorial for mathematicians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="singlet.html">Tutorial for quantum information people</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-to guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks and tutorials given</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference/API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development and Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
 </ul>
 
     
-  </div>
-</div>
-<div class="sidebar-block">
-  <div class="sidebar-wrapper">
-    <div id="main-search">
-      <form class="form-inline" action="../search.html" method="GET" role="form">
-        <div class="input-group">
-          <input name="q" type="text" class="form-control" placeholder="Search...">
-        </div>
-        <input type="hidden" name="check_keywords" value="yes" />
-        <input type="hidden" name="area" value="default" />
-      </form>
-    </div>
   </div>
 </div>
       
@@ -139,11 +124,9 @@ desired set of features to get started. Choose the one which suits you best.</p>
 <div class="section" id="option-1-download-the-latest-replab-release-and-use-our-easy-install-script">
 <h3>Option 1: Download the latest RepLAB release, and use our easy install script.<a class="headerlink" href="#option-1-download-the-latest-replab-release-and-use-our-easy-install-script" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><p>Download the latest release on
-<a class="reference external" href="https://www.github.com/replab/replab/releases">GitHub</a>, which
-includes the core code.</p></li>
-<li><p>Launch MATLAB/Octave, run the <code class="docutils literal notranslate"><span class="pre">replab_easyinstall</span></code> script in the
-root folder which will take care of downloading and installing
+<li><p>Download the <a class="reference external" href="https://github.com/replab/replab/archive/v0.6.1.zip">latest release ZIP</a>, see the <a class="reference external" href="https://www.github.com/replab/replab/releases">GitHub release page</a> for all releases.
+This ZIP file includes the core code, but not the external dependencies.</p></li>
+<li><p>Launch MATLAB/Octave, run the <code class="docutils literal notranslate"><span class="pre">replab_easyinstall</span></code> script in the root folder which will take care of downloading and installing
 dependencies, which are:</p></li>
 </ol>
 <ul class="simple">
@@ -174,6 +157,13 @@ submodules automatically.</p>
 library for large integers, the testing suite
 <a class="reference external" href="https://github.com/MOxUnit/MOxUnit">MOxUnit</a>, and the tools needed
 for semidefinite programming.</p>
+<p>To ignore changes that will happen when the SDPT3 submodule is compiled,
+(and thus untracked files are created), run the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">config</span> <span class="n">submodule</span><span class="o">.</span><span class="n">SDPT3</span><span class="o">.</span><span class="n">ignore</span> <span class="n">untracked</span>
+</pre></div>
+</div>
+<p>or add a <code class="docutils literal notranslate"><span class="pre">ignore</span> <span class="pre">=</span> <span class="pre">untracked</span></code> line to the <code class="docutils literal notranslate"><span class="pre">[submodule</span> <span class="pre">&quot;SDPT3&quot;]</span></code> section
+in <code class="docutils literal notranslate"><span class="pre">.git/config</span></code>.</p>
 </div>
 </div>
 </div>
@@ -183,6 +173,18 @@ for semidefinite programming.</p>
 Additional paths are also necessary to enable specific functionalities, as
 mentioned above, and a few variables mush be initialized. This can be done with</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">replab_init</span>
+</pre></div>
+</div>
+<p>which should lead to the following output</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">replab_init</span>
+<span class="n">Adding</span> <span class="n">RepLAB</span> <span class="n">to</span> <span class="n">the</span> <span class="n">path</span>
+<span class="n">Adding</span> <span class="n">RepLAB</span> <span class="n">package</span> <span class="n">to</span> <span class="n">the</span> <span class="n">path</span>
+<span class="n">Adding</span> <span class="n">VPI</span> <span class="n">to</span> <span class="n">the</span> <span class="n">path</span>
+<span class="n">Adding</span> <span class="n">MOxUnit</span> <span class="n">to</span> <span class="n">the</span> <span class="n">path</span>
+<span class="n">Adding</span> <span class="n">embedded</span> <span class="n">YALMIP</span> <span class="n">to</span> <span class="n">the</span> <span class="n">path</span>
+<span class="n">Adding</span> <span class="n">embedded</span> <span class="n">SDPT3</span> <span class="n">solver</span> <span class="n">to</span> <span class="n">the</span> <span class="n">path</span>
+<span class="n">Adding</span> <span class="n">MOcov</span> <span class="n">to</span> <span class="n">the</span> <span class="n">path</span>
+<span class="o">&gt;&gt;</span>
 </pre></div>
 </div>
 <p>This command checks in particular whether an instance of YALMIP is
@@ -222,7 +224,7 @@ companion packages for test and convex optimization).</p>
       </div>
     
       <div class="pull-right">
-        <a class="btn btn-default" href="S3.html" title="next chapter (use the right arrow)">Representations of the symmetric group <span class="math notranslate nohighlight">\(S_3\)</span></a>
+        <a class="btn btn-default" href="S3.html" title="next chapter (use the right arrow)">Tutorial for mathematicians</a>
       </div>
     </div>
     <div class="clearer"></div>
@@ -240,12 +242,12 @@ companion packages for test and convex optimization).</p>
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="S3.html" title="Representations of the symmetric group \(S_3\)"
+          <a href="S3.html" title="Tutorial for mathematicians"
              >next</a> |</li>
         <li class="right" >
           <a href="index.html" title="Tutorials"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.1-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Tutorials</a> &#187;</li> 
       </ul>
     </div>
@@ -256,7 +258,7 @@ companion packages for test and convex optimization).</p>
 </script>
 <script type="text/javascript" src="../_static/js/bootstrap.js"></script>
   <div class="footer">
-    &copy; Copyright 2018-2019, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+    &copy; Copyright 2018-2020, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
   </div>
   </body>
 </html>

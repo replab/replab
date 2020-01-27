@@ -1,5 +1,5 @@
-How-to guides
-=============
+How to
+======
 
 These guides present concrete recipes with step-by-step instructions that show how to obtain specific results with **RepLAB**.
 They assume some :doc:`familiarity </tutorials/index>` with **RepLAB**.

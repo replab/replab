@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Abstract group constructions &#8212; RepLAB 0.6.1-SNAP documentation</title>
+    <title>Abstract group constructions &#8212; RepLAB 0.6.1 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -50,8 +50,8 @@
         <li class="right" >
           <a href="permutations.html" title="Permutation groups"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.1-SNAP documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference/API</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li> 
       </ul>
     </div>
     <div class="container-wrapper">
@@ -71,10 +71,10 @@
     
       <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How-to guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks and tutorials given</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference/API</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="print.html">Pretty printing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base.html">Base object types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="laws.html">Laws</a></li>
@@ -90,23 +90,10 @@
 <li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development and Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
 </ul>
 
     
-  </div>
-</div>
-<div class="sidebar-block">
-  <div class="sidebar-wrapper">
-    <div id="main-search">
-      <form class="form-inline" action="../search.html" method="GET" role="form">
-        <div class="input-group">
-          <input name="q" type="text" class="form-control" placeholder="Search...">
-        </div>
-        <input type="hidden" name="check_keywords" value="yes" />
-        <input type="hidden" name="area" value="default" />
-      </form>
-    </div>
   </div>
 </div>
       
@@ -118,7 +105,7 @@
             <ol class="breadcrumb">
               <li><a href="../index.html">Docs</a></li>
               
-                <li><a href="index.html">Technical Reference/API</a></li>
+                <li><a href="index.html">Technical Reference</a></li>
               
               <li>Abstract group constructions</li>
             </ol>
@@ -156,229 +143,353 @@
 </div>
 <div class="section" id="directproduct-ofcompactgroups">
 <h2>directproduct.OfCompactGroups<a class="headerlink" href="#directproduct-ofcompactgroups" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="class">
 <dt id="+replab.+directproduct.OfCompactGroups">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">OfCompactGroups</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups" title="Permalink to this definition">¶</a></dt>
-<dd><p>Describes an external direct product of compact groups</p>
+<em class="property">class </em><code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">OfCompactGroups</code><span class="sig-paren">(</span><em class="sig-param">factors</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="groups.html#+replab.CompactGroup" title="+replab.CompactGroup"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.CompactGroup</span></code></a></p>
+<p>Describes an external direct product of compact groups</p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">OfCompactGroups</span></code> – Constructs a direct product of groups</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertEqv</span></code> – Compares two elements for equality</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertNotEqv</span></code> – Compares two elements for inequality</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">compose</span></code> – Composes two monoid/group elements</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeAll</span></code> – Composes a sequence of monoid elements</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeN</span></code> – Computes <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">x^n</span></code> by repeated squaring</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeWithInverse</span></code> – Returns the composition of an element with the inverse of another element</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code> – Returns the direct product of this group with itself a number of times</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code> – Returns the direct product of groups</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code> – Constructs a direct sum representation</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRepFun</span></code> – Constructs a direct sum representation from a function that maps factors to representations</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRepFunWithIndex</span></code> – Constructs a direct sum representation from a function that maps factors to representations</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code> – Standard MATLAB/Octave display method</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code> – Equality test</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eqv</span></code> – Tests domain elements for equality/equivalence</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factor</span></code> –</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factors</span></code> – Factor groups</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code> – Tiny single line description of the current object type</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code> – Returns the names of the fields that are not printed as a row vector</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identity</span></code> – Monoid identity element</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code> – Computes the inverse of an element</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code> – Returns true if x is the identity, false otherwise</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code> – Constructs a compact group from function handles</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code> – Returns the left conjugate of a group element</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code> – Multi-line description of the current object</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nFactors</span></code> –</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">requiredType</span></code> –</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code> – Samples an element from this domain</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sampleUniformly</span></code> – Samples from the Haar measure</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">semidirectProduct</span></code> – Describes an external semidirect product of groups</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code> – Single line text description of the current object</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code> – Constructs a tensor product representation</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRepFun</span></code> – Constructs a direct sum representation from a function that maps factors to representations</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRepFunWithIndex</span></code> – Constructs a direct sum representation from a function that maps factors to representations</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.OfCompactGroups" title="+replab.+directproduct.OfCompactGroups.OfCompactGroups"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">OfCompactGroups</span></code></a> – Constructs a direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.additionalFields" title="+replab.+directproduct.OfCompactGroups.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.assertEqv" title="+replab.+directproduct.OfCompactGroups.assertEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertEqv</span></code></a> – Compares two elements for equality</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.assertNotEqv" title="+replab.+directproduct.OfCompactGroups.assertNotEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertNotEqv</span></code></a> – Compares two elements for inequality</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.compose" title="+replab.+directproduct.OfCompactGroups.compose"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">compose</span></code></a> – Composes two monoid/group elements</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.composeAll" title="+replab.+directproduct.OfCompactGroups.composeAll"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeAll</span></code></a> – Composes a sequence of monoid elements</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.composeN" title="+replab.+directproduct.OfCompactGroups.composeN"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeN</span></code></a> – Computes <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">x^n</span></code> by repeated squaring</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.composeWithInverse" title="+replab.+directproduct.OfCompactGroups.composeWithInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeWithInverse</span></code></a> – Returns the composition of an element with the inverse of another element</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.directPower" title="+replab.+directproduct.OfCompactGroups.directPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code></a> – Returns the direct product of this group with itself a number of times</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.directProduct" title="+replab.+directproduct.OfCompactGroups.directProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code></a> – Returns the direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.directSumRep" title="+replab.+directproduct.OfCompactGroups.directSumRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code></a> – Constructs a direct sum representation</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.directSumRepFun" title="+replab.+directproduct.OfCompactGroups.directSumRepFun"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRepFun</span></code></a> – Constructs a direct sum representation from a function that maps factors to representations</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.directSumRepFunWithIndex" title="+replab.+directproduct.OfCompactGroups.directSumRepFunWithIndex"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRepFunWithIndex</span></code></a> – Constructs a direct sum representation from a function that maps factors to representations</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.disp" title="+replab.+directproduct.OfCompactGroups.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.eq" title="+replab.+directproduct.OfCompactGroups.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.eqv" title="+replab.+directproduct.OfCompactGroups.eqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eqv</span></code></a> – Tests domain elements for equality/equivalence</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.factor" title="+replab.+directproduct.OfCompactGroups.factor"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factor</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.factors" title="+replab.+directproduct.OfCompactGroups.factors"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factors</span></code></a> – Factor groups</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.headerStr" title="+replab.+directproduct.OfCompactGroups.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.hiddenFields" title="+replab.+directproduct.OfCompactGroups.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.identity" title="+replab.+directproduct.OfCompactGroups.identity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identity</span></code></a> – Monoid identity element</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.inverse" title="+replab.+directproduct.OfCompactGroups.inverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverse</span></code></a> – Computes the inverse of an element</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.isIdentity" title="+replab.+directproduct.OfCompactGroups.isIdentity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIdentity</span></code></a> – Returns true if x is the identity, false otherwise</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.lambda" title="+replab.+directproduct.OfCompactGroups.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a compact group from function handles</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.leftConjugate" title="+replab.+directproduct.OfCompactGroups.leftConjugate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugate</span></code></a> – Returns the left conjugate of a group element</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.longStr" title="+replab.+directproduct.OfCompactGroups.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.nFactors" title="+replab.+directproduct.OfCompactGroups.nFactors"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nFactors</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.requiredType" title="+replab.+directproduct.OfCompactGroups.requiredType"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">requiredType</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.sample" title="+replab.+directproduct.OfCompactGroups.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from this domain</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.sampleUniformly" title="+replab.+directproduct.OfCompactGroups.sampleUniformly"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sampleUniformly</span></code></a> – Samples from the Haar measure</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.semidirectProduct" title="+replab.+directproduct.OfCompactGroups.semidirectProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">semidirectProduct</span></code></a> – Describes an external semidirect product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.shortStr" title="+replab.+directproduct.OfCompactGroups.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.tensorRep" title="+replab.+directproduct.OfCompactGroups.tensorRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code></a> – Constructs a tensor product representation</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.tensorRepFun" title="+replab.+directproduct.OfCompactGroups.tensorRepFun"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRepFun</span></code></a> – Constructs a direct sum representation from a function that maps factors to representations</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.tensorRepFunWithIndex" title="+replab.+directproduct.OfCompactGroups.tensorRepFunWithIndex"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRepFunWithIndex</span></code></a> – Constructs a direct sum representation from a function that maps factors to representations</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.OfCompactGroups.trivialRep" title="+replab.+directproduct.OfCompactGroups.trivialRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code></a> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
 </ul>
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
 <dl class="method">
-<dt id="+replab.+directproduct.additionalFields">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.additionalFields">
+<code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.additionalFields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.assertEqv">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">assertEqv</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.assertEqv" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.assertEqv">
+<code class="sig-name descname">assertEqv</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.assertEqv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.assertEqv" title="+replab.Domain.assertEqv"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.assertEqv()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.assertNotEqv">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">assertNotEqv</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.assertNotEqv" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.assertNotEqv">
+<code class="sig-name descname">assertNotEqv</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.assertNotEqv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.assertNotEqv" title="+replab.Domain.assertNotEqv"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.assertNotEqv()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.compose">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">compose</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.compose" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.compose">
+<code class="sig-name descname">compose</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.compose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.compose" title="+replab.Monoid.compose"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.compose()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.composeAll">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">composeAll</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">elements</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.composeAll" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.composeAll">
+<code class="sig-name descname">composeAll</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">elements</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.composeAll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.composeAll" title="+replab.Monoid.composeAll"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.composeAll()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.composeN">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">composeN</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.composeN" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.composeN">
+<code class="sig-name descname">composeN</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.composeN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.composeN" title="+replab.Monoid.composeN"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.composeN()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.composeWithInverse">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">composeWithInverse</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.composeWithInverse" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.composeWithInverse">
+<code class="sig-name descname">composeWithInverse</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.composeWithInverse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.composeWithInverse" title="+replab.Group.composeWithInverse"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.composeWithInverse()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.directPower">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">directPower</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.directPower" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.directPower">
+<code class="sig-name descname">directPower</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.directPower" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directPower" title="+replab.CompactGroup.directPower"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directPower()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.directProduct">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">directProduct</code><span class="sig-paren">(</span><em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.directProduct" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.directProduct">
+<code class="sig-name descname">directProduct</code><span class="sig-paren">(</span><em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.directProduct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directProduct" title="+replab.CompactGroup.directProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directProduct()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.disp">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">disp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.disp" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.disp">
+<code class="sig-name descname">disp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.disp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.eq">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">eq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.eq" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.eq">
+<code class="sig-name descname">eq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.eq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.eq" title="+replab.Str.eq"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.eq()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.eqv">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">eqv</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">t</em>, <em class="sig-param">u</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.eqv" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.eqv">
+<code class="sig-name descname">eqv</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">t</em>, <em class="sig-param">u</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.eqv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.eqv" title="+replab.Domain.eqv"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.eqv()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.factor">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">factor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.factor" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.factor">
+<code class="sig-name descname">factor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.factor" title="Permalink to this definition">¶</a></dt>
 <dd><p>No documentation</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.headerStr">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.headerStr" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.headerStr">
+<code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.headerStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.headerStr()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.hiddenFields">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.hiddenFields">
+<code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.hiddenFields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="+replab.+directproduct.identity">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">identity</code><a class="headerlink" href="#+replab.+directproduct.identity" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.identity">
+<code class="sig-name descname">identity</code><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.identity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.identity" title="+replab.Monoid.identity"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Monoid.identity</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.inverse">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">inverse</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.inverse" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.inverse">
+<code class="sig-name descname">inverse</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.inverse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.inverse" title="+replab.Group.inverse"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.inverse()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.isIdentity">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">isIdentity</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.isIdentity" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.isIdentity">
+<code class="sig-name descname">isIdentity</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.isIdentity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Monoid.isIdentity" title="+replab.Monoid.isIdentity"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Monoid.isIdentity()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.lambda">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.lambda" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.lambda">
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.lambda" title="+replab.CompactGroup.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.lambda()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.leftConjugate">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">leftConjugate</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">by</em>, <em class="sig-param">on</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.leftConjugate" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.leftConjugate">
+<code class="sig-name descname">leftConjugate</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">by</em>, <em class="sig-param">on</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.leftConjugate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.Group.leftConjugate" title="+replab.Group.leftConjugate"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Group.leftConjugate()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.longStr">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.longStr" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.longStr">
+<code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.longStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.nFactors">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">nFactors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.nFactors" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.nFactors">
+<code class="sig-name descname">nFactors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.nFactors" title="Permalink to this definition">¶</a></dt>
 <dd><p>No documentation</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.requiredType">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">requiredType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.requiredType" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.requiredType">
+<code class="sig-name descname">requiredType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.requiredType" title="Permalink to this definition">¶</a></dt>
 <dd><p>No documentation</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.sample">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.sample" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.sample">
+<code class="sig-name descname">sample</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.sample" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Samplable.sample" title="+replab.Samplable.sample"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Samplable.sample()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.sampleUniformly">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">sampleUniformly</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.sampleUniformly" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.sampleUniformly">
+<code class="sig-name descname">sampleUniformly</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.sampleUniformly" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.sampleUniformly" title="+replab.CompactGroup.sampleUniformly"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.sampleUniformly()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.semidirectProduct">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">semidirectProduct</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">N</em>, <em class="sig-param">phi</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.semidirectProduct" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.semidirectProduct">
+<code class="sig-name descname">semidirectProduct</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">N</em>, <em class="sig-param">phi</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.semidirectProduct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.semidirectProduct" title="+replab.CompactGroup.semidirectProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.semidirectProduct()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.shortStr">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.shortStr" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.shortStr">
+<code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.shortStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.trivialRep">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">trivialRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.trivialRep" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.trivialRep">
+<code class="sig-name descname">trivialRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.trivialRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.trivialRep" title="+replab.CompactGroup.trivialRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.trivialRep()</span></code></a></p>
 </dd></dl>
 
 </div>
 <h3>Own members</h3><dl class="attribute">
-<dt id="+replab.+directproduct.factors">
-<code class="sig-prename descclassname">replab.directproduct.</code><code class="sig-name descname">factors</code><a class="headerlink" href="#+replab.+directproduct.factors" title="Permalink to this definition">¶</a></dt>
+<dt id="+replab.+directproduct.OfCompactGroups.factors">
+<code class="sig-name descname">factors</code><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.factors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Factor groups</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>factors{1,:} of subclass of <a class="reference internal" href="groups.html#+replab.CompactGroup" title="+replab.CompactGroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CompactGroup</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.OfCompactGroups.OfCompactGroups">
+<code class="sig-name descname">OfCompactGroups</code><span class="sig-paren">(</span><em class="sig-param">factors</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.OfCompactGroups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a direct product of groups</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>factors</strong> (<em>row cell array</em>) – Factor groups</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.OfCompactGroups.directSumRep">
+<code class="sig-name descname">directSumRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">factorReps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.directSumRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a direct sum representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>factorReps</strong> (<em>row cell array</em>) – Representations for each of the factor groups
+i.e. factorReps{i} is a representation of factor(i)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A direct sum representation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.OfCompactGroups.directSumRepFun">
+<code class="sig-name descname">directSumRepFun</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">fun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.directSumRepFun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a direct sum representation from a function that maps factors to representations</p>
+<p>Enables constructions such as <code class="docutils literal notranslate"><span class="pre">directProduct.sumRepFun(&#64;(x)</span> <span class="pre">x.definingRep)</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fun</strong> (<em>function_handle</em>) – A function valid for each factor group that maps the group to one of
+its representations</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A direct sum representation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>replab.Rep</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.OfCompactGroups.directSumRepFunWithIndex">
+<code class="sig-name descname">directSumRepFunWithIndex</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">fun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.directSumRepFunWithIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a direct sum representation from a function that maps factors to representations</p>
+<p>Enables constructions such as <code class="docutils literal notranslate"><span class="pre">directProduct.sumRepFunWithIndex(&#64;(x,</span> <span class="pre">i)</span> <span class="pre">x.definingRep)</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fun</strong> (<em>function_handle</em>) – A function valid for each factor group that maps the group and its index
+to one of its representations</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A direct sum representation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>replab.Rep</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.OfCompactGroups.tensorRep">
+<code class="sig-name descname">tensorRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">factorReps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.tensorRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a tensor product representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>factorReps</strong> (<em>row cell array</em>) – Representations for each of the factor groups
+i.e. factorReps{i} is a representation of factor(i)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tensor representation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>replab.Rep</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.OfCompactGroups.tensorRepFun">
+<code class="sig-name descname">tensorRepFun</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">fun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.tensorRepFun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a direct sum representation from a function that maps factors to representations</p>
+<p>Enables constructions such as <code class="docutils literal notranslate"><span class="pre">directProduct.tensorRepFun(&#64;(x)</span> <span class="pre">x.definingRep)</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fun</strong> (<em>function_handle</em>) – A function valid for each factor group that maps the group to one of
+its representations</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tensor representation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>replab.Rep</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.OfCompactGroups.tensorRepFunWithIndex">
+<code class="sig-name descname">tensorRepFunWithIndex</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">fun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfCompactGroups.tensorRepFunWithIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a direct sum representation from a function that maps factors to representations</p>
+<p>Enables constructions such as <code class="docutils literal notranslate"><span class="pre">directProduct.tensorRepFunWithIndex(&#64;(x,</span> <span class="pre">i)</span> <span class="pre">x.definingRep)</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fun</strong> (<em>function_handle</em>) – A function valid for each factor group that maps the group and its index
+to one of its representations</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tensor representation</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>replab.Rep</p>
 </dd>
 </dl>
 </dd></dl>
@@ -421,8 +532,8 @@
         <li class="right" >
           <a href="permutations.html" title="Permutation groups"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.1-SNAP documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference/API</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li> 
       </ul>
     </div>
 <script type="text/javascript">
@@ -432,7 +543,7 @@
 </script>
 <script type="text/javascript" src="../_static/js/bootstrap.js"></script>
   <div class="footer">
-    &copy; Copyright 2018-2019, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+    &copy; Copyright 2018-2020, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
   </div>
   </body>
 </html>
