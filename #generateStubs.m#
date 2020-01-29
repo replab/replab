@@ -1,7 +1,0 @@
-function generateStubs(pkg)
-% Generate the API autodoc stubs
-%
-% Args:
-%   pkg (`+replab.+infra.Package`): Package to enumerate elements in Sphinx documentation
-    
-end
