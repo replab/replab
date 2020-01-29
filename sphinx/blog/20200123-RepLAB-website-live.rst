@@ -24,7 +24,7 @@ With the recent work on the RepLAB infrastructure (see `+replab.+infra.CodeBase`
 
 .. figure:: GenerateSystem.gif
    :align: center
-   :figclass: align-center
+   :figclass: align-center responsive
 
    Document generation in RepLAB through the `root.replab_generate` command.
 
@@ -32,9 +32,8 @@ The same infrastructure is used to power our replacement for the MATLAB ``help``
 
 .. figure:: ../HelpSystem.gif
    :width: 483px
-   :height: 361px
    :align: center
-   :figclass: align-center
+   :figclass: align-center responsive
 
    Our integrated help system in RepLAB
 
