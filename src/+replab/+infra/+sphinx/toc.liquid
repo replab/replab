@@ -1,0 +1,29 @@
+{% for pkg in codeBase.allPackages.' %}
+{% if isempty(pkg.fullIdentifier) %}
+Package root\n
+------------\n
+\n
+{% else %}
+Package {{ pkg.fullIdentifier }}\n
+{{ repmat('-', 1, 8 + length(pkg.fullIdentifier)) }}\n
+\n
+{% end %}
+{% if ~isempty(pkg.ownClasses) %}
+.. rubric:: Classes\n
+\n
+\n
+{% for cl in pkg.ownClasses %}
+- `{{ cl.matlabDomainIdentifier }}` -- {{ cl.doc.firstLine }}\n
+{% end %}
+\n
+{% end %}
+{% if ~isempty(pkg.ownFunctions) %}
+.. rubric:: Functions\n
+\n
+\n
+{% for fn in pkg.ownFunctions %}
+- `{{ fn.matlabDomainIdentifier }}` -- {{ fn.doc.firstLine }}\n
+{% end %}
+\n
+{% end %}
+{% end %}

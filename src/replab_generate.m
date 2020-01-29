@@ -115,6 +115,8 @@ function replab_generate(what)
                 name = files(i).name;
                 copyfile(fullfile(rp, name), fullfile(sphinxSrcRoot, 'root', name));
             end
+            tocFile = fullfile(sphinxRoot, '_src', 'index.rst');
+            replab.infra.sphinx.writeTOC(tocFile, cb);
         end
     end
 

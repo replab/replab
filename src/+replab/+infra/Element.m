@@ -108,8 +108,16 @@ classdef Element < replab.Str
         function id = fullIdentifier(self)
         % Returns the full identifier corresponding to this object
         %
-        % For example, this could be 'replab.Group.compose'
+        % For example, this could be ``replab.Group.compose``
             id = strjoin(self.path, '.');
+        end
+
+        function id = identifierWithoutFirstPrefix(self)
+        % Returns the identifier corresponding to this object, stripping the first element
+        %
+        % For example, this could be ``Group.compose``
+            p = self.path;
+            id = strjoin(p(2:end), '.');
         end
 
         function id = matlabDomainIdentifier(self)

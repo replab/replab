@@ -69,7 +69,7 @@ classdef CodeBase < replab.Str
         % Returns all packages present in this code base
         %
         % Returns:
-        %   cell{:,1} of `.Package`: Packages
+        %   cell(*,1) of `.Package`: Packages
             pkgNames = fieldnames(self.packages);
             p = cellfun(@(name) self.packages.(name), pkgNames, 'uniform', 0);
         end
