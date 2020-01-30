@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Base object types &#8212; RepLAB 0.6.2 documentation</title>
+    <title>Base object types &#8212; RepLAB 0.6.4 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="print.html" title="Pretty printing"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.2.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.4.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -104,10 +104,13 @@
 <li class="toctree-l2"><a class="reference internal" href="laws.html">Laws</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Basic group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep_technical.html">Representations (support code)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutations.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="group_constructions.html">Abstract group constructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="infrastructure.html">Infrastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="infrastructure_technical.html">Infrastructure (support code)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list.html">List of classes and functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
@@ -428,7 +431,6 @@ passing the method implementations as function handles.</p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.DomainLaws.DomainLaws" title="+replab.DomainLaws.DomainLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">DomainLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.DomainLaws.T" title="+replab.DomainLaws.T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">T</span></code></a> – Domain under test</p></li>
 <li><p><a class="reference internal" href="#+replab.DomainLaws.addTestCases" title="+replab.DomainLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
 <li><p><a class="reference internal" href="#+replab.DomainLaws.additionalFields" title="+replab.DomainLaws.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
@@ -447,12 +449,6 @@ passing the method implementations as function handles.</p>
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.DomainLaws.DomainLaws">
-<code class="sig-name descname">DomainLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.DomainLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="+replab.DomainLaws.addTestCases">
 <code class="sig-name descname">addTestCases</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">testSuite</em>, <em class="sig-param">testName</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.DomainLaws.addTestCases" title="Permalink to this definition">¶</a></dt>
@@ -728,7 +724,6 @@ that <code class="docutils literal notranslate"><span class="pre">atFun</span></
 <li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.B" title="+replab.IndexedFamilyLaws.B"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">B</span></code></a> – Domain of element indices as type vpi</p></li>
 <li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.D" title="+replab.IndexedFamilyLaws.D"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">D</span></code></a> – Domain of element indices as type double (capped by 2^53 -1)</p></li>
 <li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.I" title="+replab.IndexedFamilyLaws.I"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">I</span></code></a> – <a class="reference internal" href="#+replab.IndexedFamily" title="+replab.IndexedFamily"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.IndexedFamily</span></code></a>: Indexed family to test</p></li>
-<li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.IndexedFamilyLaws" title="+replab.IndexedFamilyLaws.IndexedFamilyLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">IndexedFamilyLaws</span></code></a> – Constructs a laws instance</p></li>
 <li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.addTestCases" title="+replab.IndexedFamilyLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
 <li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.additionalFields" title="+replab.IndexedFamilyLaws.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.IndexedFamilyLaws.assert" title="+replab.IndexedFamilyLaws.assert"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assert</span></code></a> – Assert function with a verbose error message</p></li>
@@ -917,7 +912,7 @@ that <code class="docutils literal notranslate"><span class="pre">atFun</span></
         <li class="right" >
           <a href="print.html" title="Pretty printing"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li> 
       </ul>
     </div>

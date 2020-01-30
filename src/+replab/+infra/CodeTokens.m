@@ -58,7 +58,7 @@ classdef CodeTokens < replab.Str
               case 'f'
                 [pos data] = replab.infra.FunctionLikeData.parse(self, 1, []);
                 if ~isequal(self.sourceIdentifier, data.name)
-                    replab.infra.parseError(ct, pos, 'Function declaration name %s does not match filename %s.m', ...
+                    replab.infra.parseError(self, pos, 'Function declaration name %s does not match filename %s.m', ...
                                             data.name, self.sourceIdentifier);
                 end
             end

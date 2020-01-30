@@ -1,7 +1,7 @@
 classdef ClassElement < replab.infra.Element
 % Describes a class element, which can be either a property or a method, concrete or inherited
 %
-% Although it is not immediately evident, the class `.ClassElement` is abstract.
+% Although it is not immediately evident, the class `~+replab.+infra.ClassElement` is abstract.
 
     properties
         parentClass % `.Class`: Parent class

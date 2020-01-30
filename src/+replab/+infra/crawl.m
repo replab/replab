@@ -71,6 +71,10 @@ function c = crawl(rootFolder)
             end
             ind = ind + 1;
         end
+        [~, I] = sort(cellfun(@(f) f.name, ownFunctions, 'uniform', 0));
+        ownFunctions = ownFunctions(I);
+        [~, I] = sort(cellfun(@(f) f.name, ownClasses, 'uniform', 0));
+        ownClasses = ownClasses(I);
         packageData{1,end+1} = replab.infra.PackageData(packageNameParts, ownFunctions, ownClasses);
     end
     pb.finish;

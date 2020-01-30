@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Symmetric SDPs &#8212; RepLAB 0.6.2 documentation</title>
+    <title>Symmetric SDPs &#8212; RepLAB 0.6.4 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="index.html" title="How to"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">How to</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.2.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.4.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -402,7 +402,7 @@ Adding MOcov to the path
 <h3>Symmetric formulation<a class="headerlink" href="#Symmetric-formulation" title="Permalink to this headline">¶</a></h3>
 <p>Using <em>RepLAB</em>, we can solve this problem as follows.</p>
 <p>We start by defining a matrix which satisfies the desired symmetry</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
@@ -411,14 +411,6 @@ Adding MOcov to the path
 <span class="n">MSym</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">CommutantVar</span><span class="p">.</span><span class="n">fromPermutations</span><span class="p">({</span><span class="n">permutation</span><span class="p">},</span> <span class="s">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s">&#39;real&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-warning: -largeArrayDims and -compatibleArrayDims are accepted for compatibility, but ignored
-</pre></div></div>
 </div>
 <p>We can then perform the optimization with:</p>
 <div class="nbinput docutils container">
@@ -713,7 +705,7 @@ ans =
 |   ID|                    Constraint|   Coefficient range|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |   #1|   Element-wise inequality 1x1|              2 to 2|
-|   #2|         Matrix inequality 2x2|     3.1225e-16 to 2|
+|   #2|         Matrix inequality 2x2|     4.4409e-16 to 2|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 </pre></div></div>
 </div>
@@ -743,8 +735,8 @@ diagnostic =
   scalar structure containing the fields:
 
     yalmipversion = 20190425
-    yalmiptime =  0.12295
-    solvertime =  0.63283
+    yalmiptime =  0.13842
+    solvertime =  0.69898
     info = Successfully solved (SDPT3-4)
     problem = 0
 
@@ -937,7 +929,7 @@ multiplicities: [1, 1]
         <li class="right" >
           <a href="index.html" title="How to"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >How to</a> &#187;</li> 
       </ul>
     </div>

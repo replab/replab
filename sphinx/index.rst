@@ -22,18 +22,16 @@ It is compatible with both `MATLAB <https://www.mathworks.com/products/matlab.ht
 
 .. figure:: CompactGroups.gif
    :width: 483px
-   :height: 361px
    :align: center
-   :figclass: align-center
+   :figclass: align-center responsive
 
    Decomposition of the :math:`U \otimes U` representation of the unitary group of dimension 2.
 
 
 .. figure:: HelpSystem.gif
    :width: 483px
-   :height: 361px
    :align: center
-   :figclass: align-center
+   :figclass: align-center responsive
 
    Integrated help system in RepLAB
 

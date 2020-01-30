@@ -1,0 +1,16 @@
+.. module:: {{ pkg.matlabDomainIdentifier }}\n
+\n
+{% for cl in pkg.ownClasses %}
+{{ cl.identifierWithoutFirstPrefix }}\n
+{{ repmat('+', 1, length(cl.identifierWithoutFirstPrefix)) }}\n
+\n
+.. autoclass:: {{ cl.name }}\n
+\n
+{% end %}
+{% for fn in pkg.ownFunctions %}
+{{ fn.identifierWithoutFirstPrefix }}\n
+{{ repmat('+', 1, length(fn.identifierWithoutFirstPrefix)) }}\n
+\n
+.. autofunction:: {{ fn.name }}\n
+\n
+{% end %}

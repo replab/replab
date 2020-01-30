@@ -1,5 +1,5 @@
 function [el linkText] = resolveRef(ref, context, isExternal)
-% Resolves a Sphinx reference and returns the corresponding `.Element`
+% Resolves a Sphinx reference and returns the corresponding `~+replab.+infra.Element`
 %
 % We accept two possible prefixes.
 %

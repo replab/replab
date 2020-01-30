@@ -20,3 +20,8 @@
 .text-logo > a {
   color: #fff;
 }
+
+.responsive img {
+    max-width: 100%;
+    height: auto;
+}

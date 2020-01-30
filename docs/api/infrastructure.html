@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Infrastructure &#8212; RepLAB 0.6.2 documentation</title>
+    <title>Infrastructure &#8212; RepLAB 0.6.4 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -31,7 +31,7 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Miscellaneous functions/classes" href="misc.html" />
+    <link rel="next" title="Infrastructure (support code)" href="infrastructure_technical.html" />
     <link rel="prev" title="Abstract group constructions" href="group_constructions.html" />
   
   
@@ -59,12 +59,12 @@
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="misc.html" title="Miscellaneous functions/classes"
+          <a href="infrastructure_technical.html" title="Infrastructure (support code)"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="group_constructions.html" title="Abstract group constructions"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.2.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.4.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -97,6 +97,7 @@
 <li class="toctree-l2"><a class="reference internal" href="laws.html">Laws</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Basic group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep_technical.html">Representations (support code)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutations.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="group_constructions.html">Abstract group constructions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Infrastructure</a><ul>
@@ -105,11 +106,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#replab-release">replab_release</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#replab-runtests">replab_runtests</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#replab-version">replab_Version</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#infra-align">infra.align</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#infra-codebase">infra.CodeBase</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="infrastructure_technical.html">Infrastructure (support code)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list.html">List of classes and functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
@@ -300,7 +301,6 @@ release tag.</p></li>
 <li><p><a class="reference internal" href="#root.replab_Version.minor" title="root.replab_Version.minor"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">minor</span></code></a> – integer: Minor version index</p></li>
 <li><p><a class="reference internal" href="#root.replab_Version.patch" title="root.replab_Version.patch"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">patch</span></code></a> – integer: Patch version index</p></li>
 <li><p><a class="reference internal" href="#root.replab_Version.prompt" title="root.replab_Version.prompt"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">prompt</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#root.replab_Version.replab_Version" title="root.replab_Version.replab_Version"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab_Version</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#root.replab_Version.setTo" title="root.replab_Version.setTo"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">setTo</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#root.replab_Version.snapshot" title="root.replab_Version.snapshot"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">snapshot</span></code></a> – logical: Is the version a snapshot</p></li>
 <li><p><a class="reference internal" href="#root.replab_Version.tag" title="root.replab_Version.tag"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tag</span></code></a> –</p></li>
@@ -377,12 +377,6 @@ release tag.</p></li>
 </dd></dl>
 
 <dl class="method">
-<dt id="root.replab_Version.replab_Version">
-<code class="sig-name descname">replab_Version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#root.replab_Version.replab_Version" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="root.replab_Version.setTo">
 <code class="sig-name descname">setTo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#root.replab_Version.setTo" title="Permalink to this definition">¶</a></dt>
 <dd><p>No documentation</p>
@@ -446,254 +440,6 @@ release tag.</p></li>
 
 </dd></dl>
 
-<span class="target" id="module-+replab.+infra"></span></div>
-<div class="section" id="infra-align">
-<h2>infra.align<a class="headerlink" href="#infra-align" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="+replab.+infra.align">
-<code class="sig-prename descclassname">replab.infra.</code><code class="sig-name descname">align</code><span class="sig-paren">(</span><em class="sig-param">table</em>, <em class="sig-param">spec</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.align" title="Permalink to this definition">¶</a></dt>
-<dd><p>Renders a table using the given LaTeX-inspired specification</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>spec</strong> (<em>charstring</em>) – contains as many ‘l’, ‘c’, or ‘r’ to prescribe alignement as there are columns</p>
-</dd>
-</dl>
-<p>Compared to replab.str.align, this does not count the <code class="docutils literal notranslate"><span class="pre">&lt;a&gt;</span></code> tags in the length computation</p>
-</dd></dl>
-
-</div>
-<div class="section" id="infra-codebase">
-<h2>infra.CodeBase<a class="headerlink" href="#infra-codebase" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="+replab.+infra.CodeBase">
-<em class="property">class </em><code class="sig-prename descclassname">replab.infra.</code><code class="sig-name descname">CodeBase</code><span class="sig-paren">(</span><em class="sig-param">rootFolder</em>, <em class="sig-param">packageData</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="print.html#+replab.Str" title="+replab.Str"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Str</span></code></a></p>
-<p>Describes a code base</p>
-<p>Terminology:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">element</span></code>: Generic term for a subobject (class in a package, method in a class, etc)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">member</span></code>: Methods/properties of a class, seen across the inheritance tree</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">parent</span></code>, <code class="docutils literal notranslate"><span class="pre">children</span></code>: Package had subpackage children, with functions/classes as children, classes have methods/properties children</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">superclass</span></code>, <code class="docutils literal notranslate"><span class="pre">subclass</span></code>: Terminology used in inheritance hierarchies</p></li>
-</ul>
-<div class="collapsed admonition">
-<p class="admonition-title">Class members list</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.CodeBase" title="+replab.+infra.CodeBase.CodeBase"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CodeBase</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.additionalFields" title="+replab.+infra.CodeBase.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.allClasses" title="+replab.+infra.CodeBase.allClasses"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">allClasses</span></code></a> – Returns all classes present in this code base</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.allFunctions" title="+replab.+infra.CodeBase.allFunctions"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">allFunctions</span></code></a> – Returns all functions present in this code base</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.allPackages" title="+replab.+infra.CodeBase.allPackages"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">allPackages</span></code></a> – Returns all packages present in this code base</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.allSourceElements" title="+replab.+infra.CodeBase.allSourceElements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">allSourceElements</span></code></a> – Returns all source elements (functions, classes) in this code base</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.disp" title="+replab.+infra.CodeBase.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.eq" title="+replab.+infra.CodeBase.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.get" title="+replab.+infra.CodeBase.get"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">get</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.getIdentifier" title="+replab.+infra.CodeBase.getIdentifier"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">getIdentifier</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.headerStr" title="+replab.+infra.CodeBase.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.hiddenFields" title="+replab.+infra.CodeBase.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.longStr" title="+replab.+infra.CodeBase.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.package" title="+replab.+infra.CodeBase.package"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">package</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.packages" title="+replab.+infra.CodeBase.packages"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">packages</span></code></a> – struct-based hash map</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.root" title="+replab.+infra.CodeBase.root"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">root</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.rootFolder" title="+replab.+infra.CodeBase.rootFolder"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rootFolder</span></code></a> – charstring: Path to the root folder</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.shortStr" title="+replab.+infra.CodeBase.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.subclasses" title="+replab.+infra.CodeBase.subclasses"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subclasses</span></code></a> – Returns the direct subclasses of the given class</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.subclasses_" title="+replab.+infra.CodeBase.subclasses_"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subclasses_</span></code></a> – struct-based hash map: Maps class paths to a cell array of their subclasses</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.subpackages" title="+replab.+infra.CodeBase.subpackages"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subpackages</span></code></a> – Returns the direct subpackages of the given package</p></li>
-<li><p><a class="reference internal" href="#+replab.+infra.CodeBase.subpackages_" title="+replab.+infra.CodeBase.subpackages_"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subpackages_</span></code></a> – struct-based hash map: Maps package paths to a cell array of their subpackages</p></li>
-</ul>
-</div>
-<div class="collapsed admonition">
-<p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.CodeBase">
-<code class="sig-name descname">CodeBase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.CodeBase" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.additionalFields">
-<code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.additionalFields" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.disp">
-<code class="sig-name descname">disp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.disp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.eq">
-<code class="sig-name descname">eq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.eq" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.eq" title="+replab.Str.eq"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.eq()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.get">
-<code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.getIdentifier">
-<code class="sig-name descname">getIdentifier</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.getIdentifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.headerStr">
-<code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.headerStr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.headerStr()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.hiddenFields">
-<code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.hiddenFields" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.longStr">
-<code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.longStr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.package">
-<code class="sig-name descname">package</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.package" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.root">
-<code class="sig-name descname">root</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.root" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.shortStr">
-<code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.shortStr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
-</dd></dl>
-
-</div>
-<h3>Own members</h3><dl class="attribute">
-<dt id="+replab.+infra.CodeBase.packages">
-<code class="sig-name descname">packages</code><a class="headerlink" href="#+replab.+infra.CodeBase.packages" title="Permalink to this definition">¶</a></dt>
-<dd><p>struct-based hash map</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="+replab.+infra.CodeBase.rootFolder">
-<code class="sig-name descname">rootFolder</code><a class="headerlink" href="#+replab.+infra.CodeBase.rootFolder" title="Permalink to this definition">¶</a></dt>
-<dd><p>charstring: Path to the root folder</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="+replab.+infra.CodeBase.subclasses_">
-<code class="sig-name descname">subclasses_</code><a class="headerlink" href="#+replab.+infra.CodeBase.subclasses_" title="Permalink to this definition">¶</a></dt>
-<dd><p>struct-based hash map: Maps class paths to a cell array of their subclasses</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="+replab.+infra.CodeBase.subpackages_">
-<code class="sig-name descname">subpackages_</code><a class="headerlink" href="#+replab.+infra.CodeBase.subpackages_" title="Permalink to this definition">¶</a></dt>
-<dd><p>struct-based hash map: Maps package paths to a cell array of their subpackages</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.allClasses">
-<code class="sig-name descname">allClasses</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.allClasses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all classes present in this code base</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>All classes</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>cell{<a href="#id1"><span class="problematic" id="id2">*</span></a>,1} of <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Class</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.allFunctions">
-<code class="sig-name descname">allFunctions</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.allFunctions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all functions present in this code base</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>All functions</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>cell{<a href="#id3"><span class="problematic" id="id4">*</span></a>,1} of <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Function</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.allPackages">
-<code class="sig-name descname">allPackages</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.allPackages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all packages present in this code base</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>,1} of <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Package</span></code>: Packages</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>cell{</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.allSourceElements">
-<code class="sig-name descname">allSourceElements</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.allSourceElements" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all source elements (functions, classes) in this code base</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Source elements</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>cell{<a href="#id5"><span class="problematic" id="id6">*</span></a>,1} of <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SourceElement</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.subclasses">
-<code class="sig-name descname">subclasses</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">cls</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.subclasses" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the direct subclasses of the given class</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cls</strong> (<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Class</span></code>) – Class</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Subclasses of the given class</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>row cell vector of <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Class</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+infra.CodeBase.subpackages">
-<code class="sig-name descname">subpackages</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">package</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+infra.CodeBase.subpackages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the direct subpackages of the given package</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>package</strong> (<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Package</span></code>) – Package</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Subpackages of the given package</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>row cell vector of <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Package</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 </div>
 
@@ -711,7 +457,7 @@ release tag.</p></li>
       </div>
     
       <div class="pull-right">
-        <a class="btn btn-default" href="misc.html" title="next chapter (use the right arrow)">Miscellaneous functions/classes</a>
+        <a class="btn btn-default" href="infrastructure_technical.html" title="next chapter (use the right arrow)">Infrastructure (support code)</a>
       </div>
     </div>
     <div class="clearer"></div>
@@ -729,12 +475,12 @@ release tag.</p></li>
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="misc.html" title="Miscellaneous functions/classes"
+          <a href="infrastructure_technical.html" title="Infrastructure (support code)"
              >next</a> |</li>
         <li class="right" >
           <a href="group_constructions.html" title="Abstract group constructions"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li> 
       </ul>
     </div>

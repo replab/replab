@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Technical Reference &#8212; RepLAB 0.6.2 documentation</title>
+    <title>Technical Reference &#8212; RepLAB 0.6.4 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -32,7 +32,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Pretty printing" href="print.html" />
-    <link rel="prev" title="4. A taste of composition with RepLAB" href="../talks/QCS2019/Part4_TasteOfComposition.html" />
+    <link rel="prev" title="2. Finding an upper bound on CHSH, symmetrized version" href="../talks/Brussels2019/Tutorial2.html" />
   
   
    
@@ -62,9 +62,9 @@
           <a href="print.html" title="Pretty printing"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../talks/QCS2019/Part4_TasteOfComposition.html" title="4. A taste of composition with RepLAB"
+          <a href="../talks/Brussels2019/Tutorial2.html" title="2. Finding an upper bound on CHSH, symmetrized version"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.4 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="container-wrapper">
@@ -77,7 +77,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.2.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.4.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -96,10 +96,13 @@
 <li class="toctree-l2"><a class="reference internal" href="laws.html">Laws</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Basic group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep_technical.html">Representations (support code)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutations.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="group_constructions.html">Abstract group constructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="infrastructure.html">Infrastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="infrastructure_technical.html">Infrastructure (support code)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list.html">List of classes and functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
@@ -151,10 +154,13 @@ To get started, type <code class="docutils literal notranslate"><span class="pre
 <li class="toctree-l1"><a class="reference internal" href="laws.html">Laws</a></li>
 <li class="toctree-l1"><a class="reference internal" href="groups.html">Basic group structures</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rep_technical.html">Representations (support code)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="permutations.html">Permutation groups</a></li>
 <li class="toctree-l1"><a class="reference internal" href="group_constructions.html">Abstract group constructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="infrastructure.html">Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="infrastructure_technical.html">Infrastructure (support code)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="list.html">List of classes and functions</a></li>
 </ul>
 </div>
 </div>
@@ -169,7 +175,7 @@ To get started, type <code class="docutils literal notranslate"><span class="pre
   <div class="footer-relations">
     
       <div class="pull-left">
-        <a class="btn btn-default" href="../talks/QCS2019/Part4_TasteOfComposition.html" title="previous chapter (use the left arrow)">4. A taste of composition with RepLAB</a>
+        <a class="btn btn-default" href="../talks/Brussels2019/Tutorial2.html" title="previous chapter (use the left arrow)">2. Finding an upper bound on CHSH, symmetrized version</a>
       </div>
     
       <div class="pull-right">
@@ -194,9 +200,9 @@ To get started, type <code class="docutils literal notranslate"><span class="pre
           <a href="print.html" title="Pretty printing"
              >next</a> |</li>
         <li class="right" >
-          <a href="../talks/QCS2019/Part4_TasteOfComposition.html" title="4. A taste of composition with RepLAB"
+          <a href="../talks/Brussels2019/Tutorial2.html" title="2. Finding an upper bound on CHSH, symmetrized version"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.4 documentation</a> &#187;</li> 
       </ul>
     </div>
 <script type="text/javascript">

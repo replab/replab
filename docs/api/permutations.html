@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Permutation groups &#8212; RepLAB 0.6.2 documentation</title>
+    <title>Permutation groups &#8212; RepLAB 0.6.4 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -32,7 +32,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Abstract group constructions" href="group_constructions.html" />
-    <link rel="prev" title="Representations" href="rep.html" />
+    <link rel="prev" title="Representations (support code)" href="rep_technical.html" />
   
   
    
@@ -62,9 +62,9 @@
           <a href="group_constructions.html" title="Abstract group constructions"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="rep.html" title="Representations"
+          <a href="rep_technical.html" title="Representations (support code)"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.2.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.4.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -97,6 +97,7 @@
 <li class="toctree-l2"><a class="reference internal" href="laws.html">Laws</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Basic group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep_technical.html">Representations (support code)</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Permutation groups</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#permutationgroup">PermutationGroup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#permutationgrouplaws">PermutationGroupLaws</a></li>
@@ -112,7 +113,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="group_constructions.html">Abstract group constructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="infrastructure.html">Infrastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="infrastructure_technical.html">Infrastructure (support code)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list.html">List of classes and functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
@@ -716,7 +719,7 @@ and if <code class="docutils literal notranslate"><span class="pre">A</span></co
 <dd class="field-even"><p>A wreath product group</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.wreathproduct.Common</span></code></p>
+<dd class="field-odd"><p><a class="reference internal" href="group_constructions.html#+replab.+wreathproduct.Common" title="+replab.+wreathproduct.Common"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.wreathproduct.Common</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -733,15 +736,9 @@ and if <code class="docutils literal notranslate"><span class="pre">A</span></co
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.PermutationGroupLaws.DomainLaws" title="+replab.PermutationGroupLaws.DomainLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">DomainLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationGroupLaws.FiniteGroupLaws" title="+replab.PermutationGroupLaws.FiniteGroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroupLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationGroupLaws.GroupLaws" title="+replab.PermutationGroupLaws.GroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">GroupLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroupLaws.I" title="+replab.PermutationGroupLaws.I"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">I</span></code></a> – Index of generator</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationGroupLaws.MonoidLaws" title="+replab.PermutationGroupLaws.MonoidLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">MonoidLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroupLaws.N10" title="+replab.PermutationGroupLaws.N10"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">N10</span></code></a> – Integer between 1 and 10</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationGroupLaws.NiceFiniteGroupLaws" title="+replab.PermutationGroupLaws.NiceFiniteGroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">NiceFiniteGroupLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroupLaws.P" title="+replab.PermutationGroupLaws.P"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">P</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationGroupLaws.PermutationGroupLaws" title="+replab.PermutationGroupLaws.PermutationGroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">PermutationGroupLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroupLaws.T" title="+replab.PermutationGroupLaws.T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">T</span></code></a> – Domain under test</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroupLaws.addTestCases" title="+replab.PermutationGroupLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationGroupLaws.additionalFields" title="+replab.PermutationGroupLaws.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
@@ -780,34 +777,10 @@ and if <code class="docutils literal notranslate"><span class="pre">A</span></co
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.PermutationGroupLaws.DomainLaws">
-<code class="sig-name descname">DomainLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationGroupLaws.DomainLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.PermutationGroupLaws.FiniteGroupLaws">
-<code class="sig-name descname">FiniteGroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationGroupLaws.FiniteGroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.PermutationGroupLaws.GroupLaws">
-<code class="sig-name descname">GroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationGroupLaws.GroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="+replab.PermutationGroupLaws.I">
 <code class="sig-name descname">I</code><a class="headerlink" href="#+replab.PermutationGroupLaws.I" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroupLaws.I" title="+replab.FiniteGroupLaws.I"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.FiniteGroupLaws.I</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.PermutationGroupLaws.MonoidLaws">
-<code class="sig-name descname">MonoidLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationGroupLaws.MonoidLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -816,21 +789,9 @@ and if <code class="docutils literal notranslate"><span class="pre">A</span></co
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.MonoidLaws.N10" title="+replab.MonoidLaws.N10"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.MonoidLaws.N10</span></code></a></p>
 </dd></dl>
 
-<dl class="method">
-<dt id="+replab.PermutationGroupLaws.NiceFiniteGroupLaws">
-<code class="sig-name descname">NiceFiniteGroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationGroupLaws.NiceFiniteGroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="+replab.PermutationGroupLaws.P">
 <code class="sig-name descname">P</code><a class="headerlink" href="#+replab.PermutationGroupLaws.P" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.PermutationGroupLaws.PermutationGroupLaws">
-<code class="sig-name descname">PermutationGroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationGroupLaws.PermutationGroupLaws" title="Permalink to this definition">¶</a></dt>
 <dd><p>No documentation</p>
 </dd></dl>
 
@@ -1052,7 +1013,6 @@ and if <code class="docutils literal notranslate"><span class="pre">A</span></co
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.PermutationSubgroup.PermutationSubgroup" title="+replab.PermutationSubgroup.PermutationSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">PermutationSubgroup</span></code></a> – stuff derived from parent</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationSubgroup.additionalFields" title="+replab.PermutationSubgroup.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationSubgroup.assertEqv" title="+replab.PermutationSubgroup.assertEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertEqv</span></code></a> – Compares two elements for equality</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationSubgroup.assertNotEqv" title="+replab.PermutationSubgroup.assertNotEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertNotEqv</span></code></a> – Compares two elements for inequality</p></li>
@@ -1490,7 +1450,6 @@ and if <code class="docutils literal notranslate"><span class="pre">A</span></co
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Permutations.Permutations" title="+replab.Permutations.Permutations"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Permutations</span></code></a> – Constructs the symmetric over a given domain size</p></li>
 <li><p><a class="reference internal" href="#+replab.Permutations.additionalFields" title="+replab.Permutations.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.Permutations.alternatingSubgroup" title="+replab.Permutations.alternatingSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">alternatingSubgroup</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.Permutations.assertEqv" title="+replab.Permutations.assertEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertEqv</span></code></a> – Compares two elements for equality</p></li>
@@ -2126,16 +2085,9 @@ permutations, i.e. for <code class="docutils literal notranslate"><span class="p
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.PermutationsLaws.DomainLaws" title="+replab.PermutationsLaws.DomainLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">DomainLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationsLaws.FiniteGroupLaws" title="+replab.PermutationsLaws.FiniteGroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroupLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationsLaws.GroupLaws" title="+replab.PermutationsLaws.GroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">GroupLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationsLaws.I" title="+replab.PermutationsLaws.I"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">I</span></code></a> – Index of generator</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationsLaws.MonoidLaws" title="+replab.PermutationsLaws.MonoidLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">MonoidLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationsLaws.N10" title="+replab.PermutationsLaws.N10"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">N10</span></code></a> – Integer between 1 and 10</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationsLaws.NiceFiniteGroupLaws" title="+replab.PermutationsLaws.NiceFiniteGroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">NiceFiniteGroupLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationsLaws.P" title="+replab.PermutationsLaws.P"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">P</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationsLaws.PermutationGroupLaws" title="+replab.PermutationsLaws.PermutationGroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">PermutationGroupLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.PermutationsLaws.PermutationsLaws" title="+replab.PermutationsLaws.PermutationsLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">PermutationsLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationsLaws.T" title="+replab.PermutationsLaws.T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">T</span></code></a> – Domain under test</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationsLaws.addTestCases" title="+replab.PermutationsLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
 <li><p><a class="reference internal" href="#+replab.PermutationsLaws.additionalFields" title="+replab.PermutationsLaws.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
@@ -2175,34 +2127,10 @@ permutations, i.e. for <code class="docutils literal notranslate"><span class="p
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.PermutationsLaws.DomainLaws">
-<code class="sig-name descname">DomainLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationsLaws.DomainLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.PermutationsLaws.FiniteGroupLaws">
-<code class="sig-name descname">FiniteGroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationsLaws.FiniteGroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.PermutationsLaws.GroupLaws">
-<code class="sig-name descname">GroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationsLaws.GroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="+replab.PermutationsLaws.I">
 <code class="sig-name descname">I</code><a class="headerlink" href="#+replab.PermutationsLaws.I" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroupLaws.I" title="+replab.FiniteGroupLaws.I"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.FiniteGroupLaws.I</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.PermutationsLaws.MonoidLaws">
-<code class="sig-name descname">MonoidLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationsLaws.MonoidLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2211,27 +2139,9 @@ permutations, i.e. for <code class="docutils literal notranslate"><span class="p
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.MonoidLaws.N10" title="+replab.MonoidLaws.N10"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.MonoidLaws.N10</span></code></a></p>
 </dd></dl>
 
-<dl class="method">
-<dt id="+replab.PermutationsLaws.NiceFiniteGroupLaws">
-<code class="sig-name descname">NiceFiniteGroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationsLaws.NiceFiniteGroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="+replab.PermutationsLaws.P">
 <code class="sig-name descname">P</code><a class="headerlink" href="#+replab.PermutationsLaws.P" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.PermutationsLaws.PermutationGroupLaws">
-<code class="sig-name descname">PermutationGroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationsLaws.PermutationGroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.PermutationsLaws.PermutationsLaws">
-<code class="sig-name descname">PermutationsLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.PermutationsLaws.PermutationsLaws" title="Permalink to this definition">¶</a></dt>
 <dd><p>No documentation</p>
 </dd></dl>
 
@@ -2880,7 +2790,6 @@ rows and columns and flipping their signs</p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.+signed.PermutationSubgroup.PermutationSubgroup" title="+replab.+signed.PermutationSubgroup.PermutationSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">PermutationSubgroup</span></code></a> – stuff derived from parent</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationSubgroup.additionalFields" title="+replab.+signed.PermutationSubgroup.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationSubgroup.assertEqv" title="+replab.+signed.PermutationSubgroup.assertEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertEqv</span></code></a> – Compares two elements for equality</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationSubgroup.assertNotEqv" title="+replab.+signed.PermutationSubgroup.assertNotEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertNotEqv</span></code></a> – Compares two elements for inequality</p></li>
@@ -3283,7 +3192,6 @@ rows and columns and flipping their signs</p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.+signed.Permutations.Permutations" title="+replab.+signed.Permutations.Permutations"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Permutations</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.Permutations.additionalFields" title="+replab.+signed.Permutations.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.Permutations.assertEqv" title="+replab.+signed.Permutations.assertEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertEqv</span></code></a> – Compares two elements for equality</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.Permutations.assertNotEqv" title="+replab.+signed.Permutations.assertNotEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertNotEqv</span></code></a> – Compares two elements for inequality</p></li>
@@ -3349,12 +3257,6 @@ rows and columns and flipping their signs</p>
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.+signed.Permutations.Permutations">
-<code class="sig-name descname">Permutations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+signed.Permutations.Permutations" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="+replab.+signed.Permutations.additionalFields">
 <code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+signed.Permutations.additionalFields" title="Permalink to this definition">¶</a></dt>
@@ -3741,14 +3643,9 @@ where S = SignedPermutations(domainSize)</p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.+signed.PermutationsLaws.DomainLaws" title="+replab.+signed.PermutationsLaws.DomainLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">DomainLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.+signed.PermutationsLaws.FiniteGroupLaws" title="+replab.+signed.PermutationsLaws.FiniteGroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroupLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.+signed.PermutationsLaws.GroupLaws" title="+replab.+signed.PermutationsLaws.GroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">GroupLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationsLaws.I" title="+replab.+signed.PermutationsLaws.I"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">I</span></code></a> – Index of generator</p></li>
-<li><p><a class="reference internal" href="#+replab.+signed.PermutationsLaws.MonoidLaws" title="+replab.+signed.PermutationsLaws.MonoidLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">MonoidLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationsLaws.N10" title="+replab.+signed.PermutationsLaws.N10"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">N10</span></code></a> – Integer between 1 and 10</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationsLaws.P" title="+replab.+signed.PermutationsLaws.P"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">P</span></code></a> – Signed domain on which those signed permutations act</p></li>
-<li><p><a class="reference internal" href="#+replab.+signed.PermutationsLaws.PermutationsLaws" title="+replab.+signed.PermutationsLaws.PermutationsLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">PermutationsLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationsLaws.T" title="+replab.+signed.PermutationsLaws.T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">T</span></code></a> – Domain under test</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationsLaws.addTestCases" title="+replab.+signed.PermutationsLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
 <li><p><a class="reference internal" href="#+replab.+signed.PermutationsLaws.additionalFields" title="+replab.+signed.PermutationsLaws.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
@@ -3788,46 +3685,16 @@ where S = SignedPermutations(domainSize)</p>
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.+signed.PermutationsLaws.DomainLaws">
-<code class="sig-name descname">DomainLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+signed.PermutationsLaws.DomainLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+signed.PermutationsLaws.FiniteGroupLaws">
-<code class="sig-name descname">FiniteGroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+signed.PermutationsLaws.FiniteGroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+signed.PermutationsLaws.GroupLaws">
-<code class="sig-name descname">GroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+signed.PermutationsLaws.GroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="+replab.+signed.PermutationsLaws.I">
 <code class="sig-name descname">I</code><a class="headerlink" href="#+replab.+signed.PermutationsLaws.I" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.FiniteGroupLaws.I" title="+replab.FiniteGroupLaws.I"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.FiniteGroupLaws.I</span></code></a></p>
 </dd></dl>
 
-<dl class="method">
-<dt id="+replab.+signed.PermutationsLaws.MonoidLaws">
-<code class="sig-name descname">MonoidLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+signed.PermutationsLaws.MonoidLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="+replab.+signed.PermutationsLaws.N10">
 <code class="sig-name descname">N10</code><a class="headerlink" href="#+replab.+signed.PermutationsLaws.N10" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.MonoidLaws.N10" title="+replab.MonoidLaws.N10"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.MonoidLaws.N10</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+signed.PermutationsLaws.PermutationsLaws">
-<code class="sig-name descname">PermutationsLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+signed.PermutationsLaws.PermutationsLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -4067,7 +3934,7 @@ where S = SignedPermutations(domainSize)</p>
   <div class="footer-relations">
     
       <div class="pull-left">
-        <a class="btn btn-default" href="rep.html" title="previous chapter (use the left arrow)">Representations</a>
+        <a class="btn btn-default" href="rep_technical.html" title="previous chapter (use the left arrow)">Representations (support code)</a>
       </div>
     
       <div class="pull-right">
@@ -4092,9 +3959,9 @@ where S = SignedPermutations(domainSize)</p>
           <a href="group_constructions.html" title="Abstract group constructions"
              >next</a> |</li>
         <li class="right" >
-          <a href="rep.html" title="Representations"
+          <a href="rep_technical.html" title="Representations (support code)"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li> 
       </ul>
     </div>
