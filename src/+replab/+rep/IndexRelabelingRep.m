@@ -1,11 +1,12 @@
 classdef IndexRelabelingRep < replab.Rep
-    
+% Representation that permutes the indices of a tensor
+
     properties
-        localDimension; % dimension of each subsystem in the tensor space
+        localDimension % dimension of each subsystem in the tensor space
     end
-    
+
     methods
-        
+
         function self = IndexRelabelingRep(group, localDimension)
             assert(isa(group, 'replab.PermutationGroup'));
             n = group.domainSize;
@@ -15,7 +16,7 @@ classdef IndexRelabelingRep < replab.Rep
             self.localDimension = localDimension;
             self.field = 'R';
         end
-        
+
         function rho = image(self, g)
             n = self.group.domainSize;
             d = self.dimension;
@@ -24,7 +25,7 @@ classdef IndexRelabelingRep < replab.Rep
             I = I(:)';
             rho = full(sparse(I, 1:d, ones(1, d), d, d));
         end
-        
+
     end
 
 end

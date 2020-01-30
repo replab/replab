@@ -78,7 +78,7 @@ classdef CodeBase < replab.Str
         % Returns all source elements (functions, classes) in this code base
         %
         % Returns:
-        %   cell{*,1} of `.SourceElement`: Source elements
+        %   cell{*,1} of `+replab.+infra.SourceElement`: Source elements
             p = self.allPackages;
             e = {};
             for i = 1:length(p)
