@@ -45,6 +45,11 @@ shortStr
 
 .. module:: +replab.+str
 
+str.Normalized
+++++++++++++++
+
+.. autoclass:: Normalized
+
 str.align
 +++++++++
 
@@ -89,11 +94,6 @@ str.longStr
 +++++++++++
 
 .. autofunction:: longStr
-
-str.Normalized
-++++++++++++++
-
-.. autoclass:: Normalized
 
 str.pluralize
 +++++++++++++
