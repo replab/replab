@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>2. Finding an upper bound on CHSH, symmetrized version &#8212; RepLAB 0.6.3 documentation</title>
+    <title>2. Finding an upper bound on CHSH, symmetrized version &#8212; RepLAB 0.6.4 documentation</title>
     <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="Tutorial1.html" title="1. Introduction to representation for quantum information people"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Brussels visit October 2019</a> &#187;</li> 
       </ul>
@@ -79,7 +79,7 @@
   <a href="
     ../../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.3.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.4.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -451,7 +451,7 @@ it pstep dstep pinfeas dinfeas  gap      prim-obj      dual-obj    cputime
  rel. dual     &#34;        &#34;       &#34;      = 0.00e+00
  norm(X), norm(y), norm(Z) = 2.0e+00, 7.1e-01, 3.0e+00
  norm(A), norm(b), norm(C) = 3.8e+00, 5.0e+00, 3.2e+00
- Total CPU time (secs)  = 0.33
+ Total CPU time (secs)  = 0.31
  CPU time per iteration = 0.05
  termination code       =  0
  DIMACS: 8.9e-12  0.0e+00  1.4e-07  0.0e+00  1.0e-08  6.3e-08
@@ -579,14 +579,14 @@ inverseImages: 1 x 3 cell
 <div class="highlight"><pre>
 g =
 
-   1   3  -2  -5   4
+   1  -2   3  -5  -4
 
 ans =
 
    1   0   0   0   0
-   0   0  -1   0   0
-   0   1   0   0   0
-   0   0   0   0   1
+   0  -1   0   0   0
+   0   0   1   0   0
+   0   0   0   0  -1
    0   0   0  -1   0
 
 </pre></div></div>
@@ -672,26 +672,26 @@ niceBasis: replab.NiceBasis
 U =
 
    1.00000   0.00000   0.00000   0.00000   0.00000
-   0.00000   0.50000   0.50000   0.70711   0.00000
    0.00000  -0.50000   0.50000   0.00000  -0.70711
-   0.00000   0.70020  -0.09857  -0.42542  -0.56482
-   0.00000   0.09857   0.70020  -0.56482   0.42542
+   0.00000   0.50000   0.50000   0.70711   0.00000
+   0.00000  -0.55139   0.44269   0.07686   0.70292
+   0.00000  -0.44269  -0.55139   0.70292  -0.07686
 
 ans =
 
    1.00000   0.00000   0.00000   0.00000   0.00000
-   0.00000   1.00000   0.00000  -0.00000  -0.00000
-   0.00000   0.00000   1.00000   0.00000   0.00000
-   0.00000  -0.00000   0.00000   1.00000   0.00000
-   0.00000  -0.00000   0.00000   0.00000   1.00000
+   0.00000   1.00000   0.00000   0.00000  -0.00000
+   0.00000   0.00000   1.00000   0.00000  -0.00000
+   0.00000   0.00000   0.00000   1.00000   0.00000
+   0.00000  -0.00000  -0.00000   0.00000   1.00000
 
 ans =
 
    0.00000   0.00000   0.00000   0.00000   0.00000
    0.00000   1.41421   0.00000   0.00000   0.00000
-   0.00000   0.00000   1.41421   0.00000   0.00000
-   0.00000   0.00000   0.00000  -1.41421  -0.00000
-   0.00000   0.00000   0.00000   0.00000  -1.41421
+   0.00000   0.00000   1.41421  -0.00000  -0.00000
+   0.00000  -0.00000  -0.00000  -1.41421   0.00000
+   0.00000  -0.00000  -0.00000  -0.00000  -1.41421
 
 </pre></div></div>
 </div>
@@ -714,7 +714,8 @@ ans =
 <div class="highlight"><pre>
 
  num. of constraints =  1
- dim. of sdp    var  =  5,   num. of sdp  blk  =  1
+ dim. of sdp    var  =  5,   num. of sdp  blk  =  1  1th semidefinite block is actually diagonal
+
 *******************************************************************
    SDPT3: Infeasible path-following algorithms
 *******************************************************************
@@ -743,8 +744,8 @@ it pstep dstep pinfeas dinfeas  gap      prim-obj      dual-obj    cputime
  rel. dual     &#34;        &#34;       &#34;      = 0.00e+00
  norm(X), norm(y), norm(Z) = 2.0e+00, 7.1e-01, 3.0e+00
  norm(A), norm(b), norm(C) = 3.8e+00, 5.0e+00, 3.2e+00
- Total CPU time (secs)  = 0.17
- CPU time per iteration = 0.03
+ Total CPU time (secs)  = 0.13
+ CPU time per iteration = 0.02
  termination code       =  0
  DIMACS: 8.9e-12  0.0e+00  1.4e-07  0.0e+00  1.0e-08  6.3e-08
 -------------------------------------------------------------------
@@ -791,7 +792,7 @@ ans =  2.8284
         <li class="right" >
           <a href="Tutorial1.html" title="1. Introduction to representation for quantum information people"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" >Brussels visit October 2019</a> &#187;</li> 
       </ul>

@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Representations &#8212; RepLAB 0.6.3 documentation</title>
+    <title>Representations &#8212; RepLAB 0.6.4 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -31,7 +31,7 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Permutation groups" href="permutations.html" />
+    <link rel="next" title="Representations (support code)" href="rep_technical.html" />
     <link rel="prev" title="Basic group structures" href="groups.html" />
   
   
@@ -59,12 +59,12 @@
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="permutations.html" title="Permutation groups"
+          <a href="rep_technical.html" title="Representations (support code)"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="groups.html" title="Basic group structures"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.3.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.4.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -110,10 +110,13 @@
 <li class="toctree-l3"><a class="reference internal" href="#commutant">Commutant</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="rep_technical.html">Representations (support code)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutations.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="group_constructions.html">Abstract group constructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="infrastructure.html">Infrastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="infrastructure_technical.html">Infrastructure (support code)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list.html">List of classes and functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
@@ -776,7 +779,6 @@ irreducible with associated information</p></li>
 <li><p><a class="reference internal" href="#+replab.RepLaws.C" title="+replab.RepLaws.C"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">C</span></code></a> – commutant algebra</p></li>
 <li><p><a class="reference internal" href="#+replab.RepLaws.G" title="+replab.RepLaws.G"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">G</span></code></a> – group of which rep is a representation</p></li>
 <li><p><a class="reference internal" href="#+replab.RepLaws.M" title="+replab.RepLaws.M"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">M</span></code></a> – n x n matrices over R, or C</p></li>
-<li><p><a class="reference internal" href="#+replab.RepLaws.RepLaws" title="+replab.RepLaws.RepLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">RepLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.RepLaws.U" title="+replab.RepLaws.U"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">U</span></code></a> – Unitary/orthonormal matrices on R or C</p></li>
 <li><p><a class="reference internal" href="#+replab.RepLaws.addTestCases" title="+replab.RepLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
 <li><p><a class="reference internal" href="#+replab.RepLaws.additionalFields" title="+replab.RepLaws.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
@@ -797,12 +799,6 @@ irreducible with associated information</p></li>
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.RepLaws.RepLaws">
-<code class="sig-name descname">RepLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RepLaws.RepLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="+replab.RepLaws.addTestCases">
 <code class="sig-name descname">addTestCases</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">testSuite</em>, <em class="sig-param">testName</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.RepLaws.addTestCases" title="Permalink to this definition">¶</a></dt>
@@ -936,7 +932,6 @@ group transversals and their images (see <code class="xref mat mat-obj docutils 
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.RepByImages.RepByImages" title="+replab.RepByImages.RepByImages"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">RepByImages</span></code></a> – Constructs a representation from images of group generators and their inverses</p></li>
 <li><p><a class="reference internal" href="#+replab.RepByImages.additionalFields" title="+replab.RepByImages.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.RepByImages.blkdiag" title="+replab.RepByImages.blkdiag"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">blkdiag</span></code></a> – Direct sum of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.RepByImages.chain" title="+replab.RepByImages.chain"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">chain</span></code></a> –</p></li>
@@ -1268,7 +1263,6 @@ Optional if the representation is unitary</p></li>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.SubRep.SubRep" title="+replab.SubRep.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a> – Constructs a subrepresentation of a parent representation</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.U" title="+replab.SubRep.U"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">U</span></code></a> – double matrix, can be sparse: Unitary basis of dimension dChild x dParent</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.additionalFields" title="+replab.SubRep.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRep.blkdiag" title="+replab.SubRep.blkdiag"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">blkdiag</span></code></a> – Direct sum of representations</p></li>
@@ -1682,8 +1676,6 @@ performed recursively.</p>
 <li><p><a class="reference internal" href="#+replab.SubRepLaws.C" title="+replab.SubRepLaws.C"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">C</span></code></a> – commutant algebra</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRepLaws.G" title="+replab.SubRepLaws.G"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">G</span></code></a> – group of which rep is a representation</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRepLaws.M" title="+replab.SubRepLaws.M"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">M</span></code></a> – n x n matrices over R, or C</p></li>
-<li><p><a class="reference internal" href="#+replab.SubRepLaws.RepLaws" title="+replab.SubRepLaws.RepLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">RepLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.SubRepLaws.SubRepLaws" title="+replab.SubRepLaws.SubRepLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRepLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRepLaws.U" title="+replab.SubRepLaws.U"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">U</span></code></a> – Unitary/orthonormal matrices on R or C</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRepLaws.addTestCases" title="+replab.SubRepLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
 <li><p><a class="reference internal" href="#+replab.SubRepLaws.additionalFields" title="+replab.SubRepLaws.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
@@ -1724,18 +1716,6 @@ performed recursively.</p>
 <dt id="+replab.SubRepLaws.M">
 <code class="sig-name descname">M</code><a class="headerlink" href="#+replab.SubRepLaws.M" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.RepLaws.M" title="+replab.RepLaws.M"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.RepLaws.M</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.SubRepLaws.RepLaws">
-<code class="sig-name descname">RepLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubRepLaws.RepLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.SubRepLaws.SubRepLaws">
-<code class="sig-name descname">SubRepLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SubRepLaws.SubRepLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1880,8 +1860,6 @@ the particular basis choosen is not deterministic.</p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Isotypic.Isotypic" title="+replab.Isotypic.Isotypic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Isotypic</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.Isotypic.SubRep" title="+replab.Isotypic.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a> – Constructs a subrepresentation of a parent representation</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.U" title="+replab.Isotypic.U"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">U</span></code></a> – double matrix, can be sparse: Unitary basis of dimension dChild x dParent</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.additionalFields" title="+replab.Isotypic.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.blkdiag" title="+replab.Isotypic.blkdiag"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">blkdiag</span></code></a> – Direct sum of representations</p></li>
@@ -1906,7 +1884,7 @@ the particular basis choosen is not deterministic.</p>
 <li><p><a class="reference internal" href="#+replab.Isotypic.irrep" title="+replab.Isotypic.irrep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrep</span></code></a> – Returns the i-th copy of the irreducible representation</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.irrepDimension" title="+replab.Isotypic.irrepDimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrepDimension</span></code></a> – integer: Dimension of each irreducible representation in this component</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.irrepInfo" title="+replab.Isotypic.irrepInfo"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrepInfo</span></code></a> – replab.IrrepInfo or []: Irreducible status information</p></li>
-<li><p><a class="reference internal" href="#+replab.Isotypic.irreps" title="+replab.Isotypic.irreps"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irreps</span></code></a> – row cell array of <a class="reference internal" href="#+replab.Isotypic.SubRep" title="+replab.Isotypic.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a>: Equivalent irreducible subrepresentations in this isotypic component</p></li>
+<li><p><a class="reference internal" href="#+replab.Isotypic.irreps" title="+replab.Isotypic.irreps"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irreps</span></code></a> – row cell array of <a class="reference internal" href="#+replab.SubRep" title="+replab.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a>: Equivalent irreducible subrepresentations in this isotypic component</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.isKnownCanonicalIrreducible" title="+replab.Isotypic.isKnownCanonicalIrreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isKnownCanonicalIrreducible</span></code></a> – Returns whether this subrepresentation is known to be irreducible and in the canonical division algebra basis</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.isKnownIrreducible" title="+replab.Isotypic.isKnownIrreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isKnownIrreducible</span></code></a> – Returns whether this subrepresentation is known to be irreducible</p></li>
 <li><p><a class="reference internal" href="#+replab.Isotypic.isUnitary" title="+replab.Isotypic.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – {true, false, []}: Whether the representation is unitary</p></li>
@@ -1936,18 +1914,6 @@ the particular basis choosen is not deterministic.</p>
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.Isotypic.Isotypic">
-<code class="sig-name descname">Isotypic</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isotypic.Isotypic" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.Isotypic.SubRep">
-<code class="sig-name descname">SubRep</code><span class="sig-paren">(</span><em class="sig-param">parent</em>, <em class="sig-param">U</em>, <em class="sig-param">niceBasis</em>, <em class="sig-param">irrepInfo</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Isotypic.SubRep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.SubRep.SubRep" title="+replab.SubRep.SubRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.SubRep.SubRep()</span></code></a></p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="+replab.Isotypic.U">
 <code class="sig-name descname">U</code><a class="headerlink" href="#+replab.Isotypic.U" title="Permalink to this definition">¶</a></dt>
@@ -2228,7 +2194,7 @@ the particular basis choosen is not deterministic.</p>
 <dl class="attribute">
 <dt id="+replab.Isotypic.irreps">
 <code class="sig-name descname">irreps</code><a class="headerlink" href="#+replab.Isotypic.irreps" title="Permalink to this definition">¶</a></dt>
-<dd><p>row cell array of <a class="reference internal" href="#+replab.Isotypic.SubRep" title="+replab.Isotypic.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a>: Equivalent irreducible subrepresentations in this isotypic component</p>
+<dd><p>row cell array of <a class="reference internal" href="#+replab.SubRep" title="+replab.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a>: Equivalent irreducible subrepresentations in this isotypic component</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2263,7 +2229,6 @@ the particular basis choosen is not deterministic.</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#+replab.IsotypicLaws.C" title="+replab.IsotypicLaws.C"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">C</span></code></a> – replab.Commutant: Commutant algebra</p></li>
 <li><p><a class="reference internal" href="#+replab.IsotypicLaws.G" title="+replab.IsotypicLaws.G"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">G</span></code></a> – replab.CompactGroup: group of which iso is a representation decomposition</p></li>
-<li><p><a class="reference internal" href="#+replab.IsotypicLaws.IsotypicLaws" title="+replab.IsotypicLaws.IsotypicLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">IsotypicLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.IsotypicLaws.M1" title="+replab.IsotypicLaws.M1"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">M1</span></code></a> – replab.domain.Matrices: n x n matrices over R or C</p></li>
 <li><p><a class="reference internal" href="#+replab.IsotypicLaws.addTestCases" title="+replab.IsotypicLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
 <li><p><a class="reference internal" href="#+replab.IsotypicLaws.additionalFields" title="+replab.IsotypicLaws.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
@@ -2285,12 +2250,6 @@ the particular basis choosen is not deterministic.</p>
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.IsotypicLaws.IsotypicLaws">
-<code class="sig-name descname">IsotypicLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IsotypicLaws.IsotypicLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="+replab.IsotypicLaws.addTestCases">
 <code class="sig-name descname">addTestCases</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">testSuite</em>, <em class="sig-param">testName</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IsotypicLaws.addTestCases" title="Permalink to this definition">¶</a></dt>
@@ -2422,8 +2381,6 @@ Each isotypic component corresponds to a set of equivalent irreducible represent
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Irreducible.Irreducible" title="+replab.Irreducible.Irreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Irreducible</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.Irreducible.SubRep" title="+replab.Irreducible.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">SubRep</span></code></a> – Constructs a subrepresentation of a parent representation</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.U" title="+replab.Irreducible.U"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">U</span></code></a> – double matrix, can be sparse: Unitary basis of dimension dChild x dParent</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.additionalFields" title="+replab.Irreducible.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.Irreducible.asConjugateRep" title="+replab.Irreducible.asConjugateRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">asConjugateRep</span></code></a> – Returns the block-diagonal representation corresponding to the decomposition</p></li>
@@ -2478,18 +2435,6 @@ Each isotypic component corresponds to a set of equivalent irreducible represent
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.Irreducible.Irreducible">
-<code class="sig-name descname">Irreducible</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Irreducible.Irreducible" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.Irreducible.SubRep">
-<code class="sig-name descname">SubRep</code><span class="sig-paren">(</span><em class="sig-param">parent</em>, <em class="sig-param">U</em>, <em class="sig-param">niceBasis</em>, <em class="sig-param">irrepInfo</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Irreducible.SubRep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="#+replab.SubRep.SubRep" title="+replab.SubRep.SubRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.SubRep.SubRep()</span></code></a></p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="+replab.Irreducible.U">
 <code class="sig-name descname">U</code><a class="headerlink" href="#+replab.Irreducible.U" title="Permalink to this definition">¶</a></dt>
@@ -2849,7 +2794,6 @@ Default value is <code class="docutils literal notranslate"><span class="pre">1<
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.IrreducibleLaws.IrreducibleLaws" title="+replab.IrreducibleLaws.IrreducibleLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">IrreducibleLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.IrreducibleLaws.M" title="+replab.IrreducibleLaws.M"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">M</span></code></a> – d x d matrices of the real/complex relevant field</p></li>
 <li><p><a class="reference internal" href="#+replab.IrreducibleLaws.addTestCases" title="+replab.IrreducibleLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
 <li><p><a class="reference internal" href="#+replab.IrreducibleLaws.additionalFields" title="+replab.IrreducibleLaws.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
@@ -2870,12 +2814,6 @@ Default value is <code class="docutils literal notranslate"><span class="pre">1<
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.IrreducibleLaws.IrreducibleLaws">
-<code class="sig-name descname">IrreducibleLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IrreducibleLaws.IrreducibleLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="+replab.IrreducibleLaws.addTestCases">
 <code class="sig-name descname">addTestCases</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">testSuite</em>, <em class="sig-param">testName</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.IrreducibleLaws.addTestCases" title="Permalink to this definition">¶</a></dt>
@@ -2990,7 +2928,6 @@ J.-P. Serre, Linear Representations of Finite Groups (Springer, 1977).</p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Equivariant.Equivariant" title="+replab.Equivariant.Equivariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Equivariant</span></code></a> – Constructor; use <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.makeEquivariant</span></code> in user code</p></li>
 <li><p><a class="reference internal" href="#+replab.Equivariant.additionalFields" title="+replab.Equivariant.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.Equivariant.assertEqv" title="+replab.Equivariant.assertEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertEqv</span></code></a> – Compares two elements for equality</p></li>
 <li><p><a class="reference internal" href="#+replab.Equivariant.assertNotEqv" title="+replab.Equivariant.assertNotEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertNotEqv</span></code></a> – Compares two elements for inequality</p></li>
@@ -3177,7 +3114,6 @@ of matrices X such that rep.image(g) * X = X * rep.image(g)</p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.Commutant.Commutant" title="+replab.Commutant.Commutant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Commutant</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.Commutant.additionalFields" title="+replab.Commutant.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.Commutant.assertEqv" title="+replab.Commutant.assertEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertEqv</span></code></a> – Compares two elements for equality</p></li>
 <li><p><a class="reference internal" href="#+replab.Commutant.assertNotEqv" title="+replab.Commutant.assertNotEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertNotEqv</span></code></a> – Compares two elements for inequality</p></li>
@@ -3200,12 +3136,6 @@ of matrices X such that rep.image(g) * X = X * rep.image(g)</p>
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.Commutant.Commutant">
-<code class="sig-name descname">Commutant</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Commutant.Commutant" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="+replab.Commutant.additionalFields">
 <code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Commutant.additionalFields" title="Permalink to this definition">¶</a></dt>
@@ -3317,7 +3247,7 @@ of matrices X such that rep.image(g) * X = X * rep.image(g)</p>
 
 </dd></dl>
 
-</div>
+<span class="target" id="module-+replab.+equivariant"></span></div>
 </div>
 
   <div class="section">
@@ -3334,7 +3264,7 @@ of matrices X such that rep.image(g) * X = X * rep.image(g)</p>
       </div>
     
       <div class="pull-right">
-        <a class="btn btn-default" href="permutations.html" title="next chapter (use the right arrow)">Permutation groups</a>
+        <a class="btn btn-default" href="rep_technical.html" title="next chapter (use the right arrow)">Representations (support code)</a>
       </div>
     </div>
     <div class="clearer"></div>
@@ -3352,12 +3282,12 @@ of matrices X such that rep.image(g) * X = X * rep.image(g)</p>
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="permutations.html" title="Permutation groups"
+          <a href="rep_technical.html" title="Representations (support code)"
              >next</a> |</li>
         <li class="right" >
           <a href="groups.html" title="Basic group structures"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li> 
       </ul>
     </div>

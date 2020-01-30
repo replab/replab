@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>1. Introduction to representation for quantum information people &#8212; RepLAB 0.6.3 documentation</title>
+    <title>1. Introduction to representation for quantum information people &#8212; RepLAB 0.6.4 documentation</title>
     <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="index.html" title="Brussels visit October 2019"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Brussels visit October 2019</a> &#187;</li> 
       </ul>
@@ -79,7 +79,7 @@
   <a href="
     ../../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.3.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.4.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -517,10 +517,10 @@ Subrepresentation
    niceBasis: replab.NiceBasis
       parent: Orthogonal real representation of dimension 5
       U(1,:): [1, 1, 1, 1, 1]/sqrt(5)
-      U(2,:): [0, 0, 1, -1, 0]/sqrt(2)
-      U(3,:): [4, -1, -1, -1, -1]/sqrt(20)
-      U(4,:): [0, 3, -1, -1, -1]/sqrt(12)
-      U(5,:): [0, 0, -1, -1, 2]/sqrt(6)
+      U(2,:): [0, 3, -1, -1, -1]/sqrt(12)
+      U(3,:): [0, 0, -1, -1, 2]/sqrt(6)
+      U(4,:): [4, -1, -1, -1, -1]/sqrt(20)
+      U(5,:): [0, 0, 1, -1, 0]/sqrt(2)
 component(1): Isotypic component R(1)
 component(2): Isotypic component R(4)
 
@@ -568,24 +568,24 @@ irrepInfo: irreducible, real of real type
 isUnitary: true
 niceBasis: replab.NiceBasis
    parent: Orthogonal real representation of dimension 5
-   U(1,:): [0, 0, 1, -1, 0]/sqrt(2)
-   U(2,:): [4, -1, -1, -1, -1]/sqrt(20)
-   U(3,:): [0, 3, -1, -1, -1]/sqrt(12)
-   U(4,:): [0, 0, -1, -1, 2]/sqrt(6)
+   U(1,:): [0, 3, -1, -1, -1]/sqrt(12)
+   U(2,:): [0, 0, -1, -1, 2]/sqrt(6)
+   U(3,:): [4, -1, -1, -1, -1]/sqrt(20)
+   U(4,:): [0, 0, 1, -1, 0]/sqrt(2)
 
 ans =
 
-  -5.0000e-01   5.6568e-18   8.1650e-01   2.8868e-01
-   5.6568e-18  -2.5000e-01  -3.2275e-01   9.1287e-01
-   8.8981e-18   9.6825e-01  -8.3333e-02   2.3570e-01
-  -8.6603e-01  -5.7413e-18  -4.7140e-01  -1.6667e-01
+  -8.3333e-02   2.3570e-01   9.6825e-01   8.8981e-18
+  -4.7140e-01  -1.6667e-01  -5.7413e-18  -8.6603e-01
+  -3.2275e-01   9.1287e-01  -2.5000e-01   5.6568e-18
+   8.1650e-01   2.8868e-01   5.6568e-18  -5.0000e-01
 
 ans =
 
-   1.0000e+00   5.6568e-18   8.8981e-18  -2.4514e-17
-   5.6568e-18  -2.5000e-01   9.6825e-01  -5.7413e-18
-   8.8981e-18   9.6825e-01   2.5000e-01  -1.1097e-17
-  -2.4514e-17  -5.7413e-18  -1.1097e-17   1.0000e+00
+   2.5000e-01  -1.1097e-17   9.6825e-01   8.8981e-18
+  -1.1097e-17   1.0000e+00  -5.7413e-18  -2.4514e-17
+   9.6825e-01  -5.7413e-18  -2.5000e-01   5.6568e-18
+   8.8981e-18  -2.4514e-17   5.6568e-18   1.0000e+00
 
 </pre></div></div>
 </div>
@@ -617,17 +617,17 @@ ans =
 ans =
 
    1.00000   0.00000   0.00000   0.00000   0.00000
-   0.00000  -0.50000   0.00000   0.81650   0.28868
-   0.00000   0.00000  -0.25000  -0.32275   0.91287
-   0.00000   0.00000   0.96825  -0.08333   0.23570
-   0.00000  -0.86603   0.00000  -0.47140  -0.16667
+   0.00000  -0.08333   0.23570   0.96825   0.00000
+   0.00000  -0.47140  -0.16667   0.00000  -0.86603
+   0.00000  -0.32275   0.91287  -0.25000   0.00000
+   0.00000   0.81650   0.28868   0.00000  -0.50000
 
 ans =
 
    1.00000   0.00000   0.00000   0.00000   0.00000
-   0.00000   1.00000   0.00000   0.00000   0.00000
-   0.00000   0.00000  -0.25000   0.96825   0.00000
-   0.00000   0.00000   0.96825   0.25000   0.00000
+   0.00000   0.25000   0.00000   0.96825   0.00000
+   0.00000   0.00000   1.00000   0.00000   0.00000
+   0.00000   0.96825   0.00000  -0.25000   0.00000
    0.00000   0.00000   0.00000   0.00000   1.00000
 
 </pre></div></div>
@@ -847,8 +847,8 @@ Subrepresentation
       parent: Orthogonal real representation of dimension 4
       U(1,:): [1, 1, 1, 1]/2
       U(2,:): [1, 1, -1, -1]/2
-      U(3,:): [1, -1, 1, -1]/2
-      U(4,:): [1, -1, -1, 1]/2
+      U(3,:): [1, -1, -1, 1]/2
+      U(4,:): [1, -1, 1, -1]/2
 component(1): Isotypic component R(1)
 component(2): Isotypic component R(1)
 component(3): Isotypic component R(2)
@@ -887,8 +887,8 @@ irrepInfo: irreducible, real of real type
 isUnitary: true
 niceBasis: replab.NiceBasis
    parent: Orthogonal real representation of dimension 4
-   U(1,:): [1, -1, 1, -1]/2
-   U(2,:): [1, -1, -1, 1]/2
+   U(1,:): [1, -1, -1, 1]/2
+   U(2,:): [1, -1, 1, -1]/2
 
 </pre></div></div>
 </div>
@@ -946,7 +946,7 @@ complex numbers.</p>
         <li class="right" >
           <a href="index.html" title="Brussels visit October 2019"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.4 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" >Brussels visit October 2019</a> &#187;</li> 
       </ul>
