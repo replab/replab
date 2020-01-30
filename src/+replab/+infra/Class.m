@@ -1,9 +1,10 @@
 classdef Class < replab.infra.SourceElement
+% Describes a class in the code base
 
     properties
-        superclassIdentifiers
+        superclassIdentifiers % cell(1,*) of charstring: Identifiers of superclasses
         ownElementsStruct % struct: Elements of this class of type `.ClassElement`
-        propertyLines % integer(1,:): Line numbers of properties
+        propertyLines % integer(1,*): Line numbers of properties
     end
 
     properties (Access = protected)
@@ -31,11 +32,13 @@ classdef Class < replab.infra.SourceElement
             oe = struct;
             for i = 1:length(classData.ownMethods)
                 md = classData.ownMethods{i};
-                kind = 'method';
-                m = replab.infra.ConcreteClassElement(codeBase, package, self, md.name, md.declarationLineNumber, ...
-                                                      kind, md.declaration, md.attributes, ...
-                                                      md.docLines, md.docLineNumbers);
-                oe.(m.name) = m;
+                if ~isequal(md.name, classData.name)
+                    kind = 'method';
+                    m = replab.infra.ConcreteClassElement(codeBase, package, self, md.name, md.declarationLineNumber, ...
+                                                          kind, md.declaration, md.attributes, ...
+                                                          md.docLines, md.docLineNumbers);
+                    oe.(m.name) = m;
+                end
             end
             for i = 1:length(classData.ownProperties)
                 pd = classData.ownProperties{i};
