@@ -89,3 +89,5 @@ Commutant
 +++++++++
 
 .. autoclass:: Commutant
+
+.. module:: +replab.+equivariant

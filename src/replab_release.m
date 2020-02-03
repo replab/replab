@@ -142,7 +142,7 @@ function replab_release
     newDevelopVersion.updateVersionFile;
     status = system('git add -A');
     assert(status == 0, 'Git command failed');
-    status = system(sprintf('git commit -m "Version %s"', releaseVersion.toText));
+    status = system(sprintf('git commit -m "Version %s"', newDevelopVersion.toText));
     assert(status == 0, 'Git command failed');
 
     disp(' ');

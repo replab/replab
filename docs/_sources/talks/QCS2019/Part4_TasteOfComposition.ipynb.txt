@@ -19,7 +19,7 @@
      "output_type": "stream",
      "text": [
       "Adding RepLAB to the path\r\n",
-      "warning: function /home/denis/w/replab/src/help.m shadows a core library function\r\n",
+      "warning: function /home/denis/Projects/replab/src/help.m shadows a core library function\r\n",
       "Adding RepLAB package to the path\r\n",
       "Adding VPI to the path\r\n",
       "Adding MOxUnit to the path\r\n",
@@ -201,7 +201,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "error: 'Gparty' undefined near line 1 column 49\r\n"
+      "error: member `WreathProductGroup' in package `replab' does not exist\r\n"
      ]
     }
    ],
@@ -271,7 +271,7 @@
    ],
    "mimetype": "text/x-octave",
    "name": "octave",
-   "version": "4.2.2"
+   "version": "4.4.1"
   }
  },
  "nbformat": 4,

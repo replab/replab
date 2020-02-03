@@ -1,0 +1,536 @@
+Package root
+------------
+
+.. rubric:: Classes
+
+
+- `replab_Version` -- Describes and manipulates RepLAB version identifiers
+
+.. rubric:: Functions
+
+
+- `help` -- Displays help on a function/object/...
+- `replab_checkhelp` -- Checks the soundness of documentation comments
+- `replab_generate` -- Code generation function
+- `replab_release` -- replab_release Release the current develop branch contents as a stable release
+- `replab_runtests` -- Tests the library functionalities.
+
+Package replab
+--------------
+
+.. rubric:: Classes
+
+
+- `+replab.Action` -- A group action describing the action of a group on a set
+- `+replab.ActionLaws` -- 
+- `+replab.Commutant` -- Describes the algebra of n x n matrices that commute with a group representation
+- `+replab.CommutantFromEquivariant` -- Derives the commutant from the equivariant space
+- `+replab.CommutantVar` -- Sdpvar matrices subject to symmetry constraints.
+- `+replab.CompactGroup` -- A group equipped with a Haar measure
+- `+replab.ConjugateRep` -- Conjugated representation U * rep * U'
+- `+replab.Domain` -- Describes a set of elements with a common structure
+- `+replab.DomainLaws` -- Law checks for a generic Domain
+- `+replab.Equivariant` -- Describes a vector space of group-equivariant matrices
+- `+replab.FiniteGroup` -- Describes a group with a finite number of elements
+- `+replab.FiniteGroupDecomposition` -- Describes the decomposition of a finite group into a product of sets
+- `+replab.FiniteGroupLaws` -- Law checks for finite groups: the operations below are pretty expensive
+- `+replab.GeneralLinearGroup` -- Describes the group of square invertible real or complex matrices
+- `+replab.GeneralLinearGroupWithInverses` -- Describes the group of n x n invertible real or complex matrices, elements store inverses
+- `+replab.Group` -- Describes a group
+- `+replab.GroupLaws` -- Group axioms
+- `+replab.GroupMorphismLaws` -- 
+- `+replab.IndexedFamily` -- Describes an indexed family of elements
+- `+replab.IndexedFamilyLaws` -- Laws for indexed families
+- `+replab.Irreducible` -- Describes the irreducible decomposition of a representation
+- `+replab.IrreducibleCommutant` -- Algebra of matrices that commute with an irreducible decomposition
+- `+replab.IrreducibleLaws` -- 
+- `+replab.IrrepInfo` -- 
+- `+replab.Isotypic` -- Describes an isotypic component in the decomposition of a representation
+- `+replab.IsotypicCommutant` -- 
+- `+replab.IsotypicComplexCommutant` -- 
+- `+replab.IsotypicLaws` -- 
+- `+replab.IsotypicQuaternionCommutant` -- 
+- `+replab.IsotypicSimpleCommutant` -- 
+- `+replab.Laws` -- Describes the laws that an algebraic structure should obey
+- `+replab.Monoid` -- Describes a monoid
+- `+replab.MonoidLaws` -- Laws obeyed by a monoid
+- `+replab.NiceBasis` -- Represents a decomposition of a orthogonormal basis into an integer matrix with the same span and a correction factor
+- `+replab.NiceFiniteGroup` -- A nice finite group is a finite group equipped with an injective homomorphism into a permutation group
+- `+replab.NiceFiniteGroupLaws` -- Law checks for nice finite groups
+- `+replab.NiceFiniteSubgroup` -- A generic implementation of a subgroup of a nice finite group
+- `+replab.OrthogonalGroup` -- Describes the group of n x n orthonormal (real) matrices
+- `+replab.Parameters` -- 
+- `+replab.Partition` -- Represents an unordered partition of the set {1..n} into disjoint subsets
+- `+replab.PermutationGroup` -- A base class for all permutation groups
+- `+replab.PermutationGroupLaws` -- 
+- `+replab.PermutationSubgroup` -- Represents a subgroup of a permutation group
+- `+replab.Permutations` -- Describes permutations over n = "domainSize" elements, i.e. the symmetric group Sn
+- `+replab.PermutationsLaws` -- 
+- `+replab.RandomBag` -- Generator of random elements from generators of a group.
+- `+replab.Rep` -- Describes a finite dimensional representation of a compact group
+- `+replab.RepByImages` -- A finite dimensional representation of a finite group
+- `+replab.RepLaws` -- 
+- `+replab.Samplable` -- Describes a set of elements that can be sample
+- `+replab.SedumiData` -- A block-diagonalizing preprocessor for SDPs in SeDuMi format.
+- `+replab.Str` -- Base class that provides sane pretty printing for all RepLAB objects
+- `+replab.SubRep` -- Describes a subrepresentation of a unitary finite representation
+- `+replab.SubRepLaws` -- 
+- `+replab.SubRepNU` -- Describes a subrepresentation of a unitary finite representation
+- `+replab.SubRepNULaws` -- 
+- `+replab.UnitaryGroup` -- Describes the group of n x n unitary (complex) matrices
+
+.. rubric:: Functions
+
+
+- `+replab.O` -- Returns the group of d x d orthonormal matrices
+- `+replab.S` -- Returns the symmetric group acting on a certain domain size
+- `+replab.U` -- Returns the unitary group of dimension d
+- `+replab.dispatch` -- Supports multiple and flexible dispatch through a registry of functions
+- `+replab.dispatchDefaults` -- Register here the default functions used in dispatch for the core of RepLAB
+- `+replab.headerStr` -- Returns a tiny one-line description of the object type without inspecting its contents
+- `+replab.isNonZeroMatrix` -- Returns whether norm(A, 2) > tol
+- `+replab.iseye` -- Tests whether a given matrix is exactly the identity
+- `+replab.longStr` -- Returns a multiline description of the given object, that fits within the given width/height limit
+- `+replab.makeEquivariant` -- Returns the space of equivariant linear maps between two representations
+- `+replab.shortStr` -- Returns a one-line description of the given object, that fits within the given width maxColumns
+- `+replab.trileanAnd` -- Returns the 'and' of trilean values
+- `+replab.trileanOr` -- Returns the 'or' of trilean values
+
+Package replab.bsgs
+-------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+bsgs.Chain` -- A BSGS chain data structure for a permutation group
+- `+replab.+bsgs.RandomBag` -- Generator of random elements from generators of a permutation group.
+- `+replab.+bsgs.TrivialGroup` -- The trivial group containing the single element ``[]``
+
+Package replab.compat
+---------------------
+
+.. rubric:: Functions
+
+
+- `+replab.+compat.endsWith` -- Implementation of Matlab 2016b endsWith function
+- `+replab.+compat.fieldNamesValues` -- Get the public field names and values of a struct or an object, taking care of an Octave bug
+- `+replab.+compat.isOctave` -- Returns true if and only if the platform is GNU/Octave.
+- `+replab.+compat.methodList` -- Returns the list of methods for the given metaclass
+- `+replab.+compat.rmdirRec` -- Removes the folder with the given path including its contents without asking confirmation
+- `+replab.+compat.terminalSize` -- Retrieves the size of the current terminal window
+
+Package replab.directproduct
+----------------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+directproduct.OfCompactGroups` -- Describes an external direct product of compact groups
+- `+replab.+directproduct.OfFiniteGroups` -- Describes an external direct product of finite groups
+- `+replab.+directproduct.OfNiceFiniteGroups` -- A direct product of nice finite groups
+- `+replab.+directproduct.SumRep` -- Representation of a direct product using a direct sum of factor representations
+- `+replab.+directproduct.TensorRep` -- Representation of a direct product using a tensor product of factor representations
+
+.. rubric:: Functions
+
+
+- `+replab.+directproduct.commonClass` -- Returns the lowest denominator class type for the factor groups
+- `+replab.+directproduct.of` -- Creates a direct product group as specialized as possible
+
+Package replab.domain
+---------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+domain.ComplexTypeMatrices` -- Represents a vector space of real matrices that encode complex entries
+- `+replab.+domain.Matrices` -- Describes the vector space of nR x nC real/complex matrices
+- `+replab.+domain.QuaternionTypeMatrices` -- Represents a vector space of real matrices that encode quaternion entries
+- `+replab.+domain.SelfAdjointMatrices` -- Describes the vector space of n x n symmetric/Hermitian matrices
+- `+replab.+domain.VectorSpace` -- Base class for vector spaces that can be either real or complex
+- `+replab.+domain.Vectors` -- Describes the vector space of d-dimensional real/complex column vectors
+
+.. rubric:: Functions
+
+
+- `+replab.+domain.inexistent` -- 
+- `+replab.+domain.intAsDouble` -- 
+- `+replab.+domain.intAsDoubleMatrix` -- 
+- `+replab.+domain.signedIntAsDouble` -- 
+- `+replab.+domain.vpi` -- 
+
+Package replab.equivariant
+--------------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+equivariant.ForCompactGroup` -- 
+- `+replab.+equivariant.ForFiniteGroup` -- 
+- `+replab.+equivariant.ForRepByImages` -- 
+
+Package replab.graph
+--------------------
+
+.. rubric:: Functions
+
+
+- `+replab.+graph.adj2edge` -- List of graph edges
+- `+replab.+graph.burningAlgorithm` -- burning algorithm on a graph
+- `+replab.+graph.burningAlgorithmFast` -- Fast implementation of the burning algorithm
+- `+replab.+graph.connectedComponents` -- Identifies connected components of a graph
+- `+replab.+graph.edge2adj` -- adjacency matrix of the graph
+- `+replab.+graph.graphIsBipartite` -- Tests if a graph is bipartite
+
+Package replab.infra
+--------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+infra.Class` -- Describes a class in the code base
+- `+replab.+infra.ClassData` -- 
+- `+replab.+infra.ClassElement` -- Describes a class element, which can be either a property or a method, concrete or inherited
+- `+replab.+infra.CodeBase` -- Describes a code base
+- `+replab.+infra.CodeTokens` -- Stores the contents of a source code file
+- `+replab.+infra.ConcreteClassElement` -- An element of a class that has a declaration in its class
+- `+replab.+infra.Declarations` -- Describes all the declarations of a class element
+- `+replab.+infra.Doc` -- Contents of a documentation block comment
+- `+replab.+infra.Element` -- A code base element which can be retrieved from an identifier
+- `+replab.+infra.Function` -- Describes a MATLAB function
+- `+replab.+infra.FunctionLikeData` -- Describes the data recovered when parsing a MATLAB function or method
+- `+replab.+infra.InheritedClassElement` -- Describes an inherited class element, present by the virtue of a superclass
+- `+replab.+infra.Package` -- 
+- `+replab.+infra.PackageData` -- 
+- `+replab.+infra.PropertyData` -- Describes the data recovered when parsing a MATLAB class property
+- `+replab.+infra.SourceElement` -- 
+
+.. rubric:: Functions
+
+
+- `+replab.+infra.align` -- Renders a table using the given LaTeX-inspired specification
+- `+replab.+infra.crawl` -- Crawls the RepLAB source repository
+- `+replab.+infra.formatCodeContext` -- Formats a code fragment
+- `+replab.+infra.indent` -- indents lines
+- `+replab.+infra.isContinuation` -- Returns whether the given line has a continuation (``...``)
+- `+replab.+infra.mkCleanDir` -- Creates an empty directory, removing any previous directory
+- `+replab.+infra.parseAttributes` -- Parses property/method block attributes into a structure
+- `+replab.+infra.parseDocLines` -- Parses zero, one or more lines of comments and returns them with the leading % stripped
+- `+replab.+infra.parseError` -- Displays context information on the standard output and raises a parse error
+- `+replab.+infra.parseWarning` -- 
+- `+replab.+infra.quote` -- Prepares a string so that it can be written in source code
+- `+replab.+infra.resolveRef` -- Resolves a Sphinx reference and returns the corresponding `~+replab.+infra.Element`
+- `+replab.+infra.splitComment` -- Splits a line around the '%' character that denotes a comment, ignoring the '%' inside single quoted strings
+- `+replab.+infra.strong` -- Returns the text surrounded by strong HTML tags if the console output supports that
+- `+replab.+infra.uniformLeftTrim` -- Trims uniformly the left whitespace on the given lines
+
+Package replab.irreducible
+--------------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+irreducible.OnDemandSamples` -- 
+
+.. rubric:: Functions
+
+
+- `+replab.+irreducible.buildIsotypic` -- Builds an isotypic canonical component from equivalent subrepresentations
+- `+replab.+irreducible.computeRealType` -- Computes the real type of a real irreducible subrepresentation
+- `+replab.+irreducible.decomposition` -- Decomposes the given representation into an irreducible decomposition, identifying details
+- `+replab.+irreducible.decompositionUsingSplit` -- Generic method for representation decomposition
+- `+replab.+irreducible.enforceComplexEncoding` -- Finds change of basis that expresses the canonical basis of a complex division algebra
+- `+replab.+irreducible.enforceQuaternionEncoding` -- Finds change of basis expressing the canonical basis of a quaternion division algebra
+- `+replab.+irreducible.findCommonBasis` -- Finds the change of basis that relates two equivalent subrepresentations
+- `+replab.+irreducible.recoverReal` -- Replaces the basis U by a real basis if possible
+- `+replab.+irreducible.sortedEig` -- Returns the eigenvalues, sorted by magnitude
+- `+replab.+irreducible.split` -- Decomposes the given representation into subrepresentations
+- `+replab.+irreducible.splitPermutations` -- Splits a permutation representation
+- `+replab.+irreducible.splitUsingCommutant` -- splitUsingCommutant - Splits a representation into irreducible representations by using a commutant sample
+- `+replab.+irreducible.tell` -- Debug method to give some verbosity to the decomposition process
+
+Package replab.lambda
+---------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+lambda.Action` -- An implementation of an action defined by image functions
+- `+replab.+lambda.CompactGroup` -- An implementation of a compact group defined by image functions
+- `+replab.+lambda.Domain` -- An implementation of a domain defined by image functions
+- `+replab.+lambda.Group` -- An implementation of a group defined by image functions
+- `+replab.+lambda.IndexedFamily` -- An implementation of an indexed family defined by image functions
+- `+replab.+lambda.Monoid` -- An implementation of a monoid defined by image functions
+- `+replab.+lambda.Rep` -- An implementation of a representation defined by image functions
+- `+replab.+lambda.Samplable` -- A function_handle based implementation of `+replab.Samplable`
+
+Package replab.laws
+-------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+laws.Collection` -- 
+
+.. rubric:: Functions
+
+
+- `+replab.+laws.message` -- Formats a failed law check error message
+- `+replab.+laws.parseLawMethodName` -- Parses a law method name
+- `+replab.+laws.runNTimes` -- Runs the given law check a given number of times
+
+Package replab.lobster
+----------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+lobster.CallNode` -- 
+- `+replab.+lobster.Compiler` -- 
+- `+replab.+lobster.ElseNode` -- 
+- `+replab.+lobster.FRAGMENT_TYPE` -- 
+- `+replab.+lobster.ForNode` -- 
+- `+replab.+lobster.Fragment` -- 
+- `+replab.+lobster.IfNode` -- 
+- `+replab.+lobster.Node` -- 
+- `+replab.+lobster.Root` -- 
+- `+replab.+lobster.Template` -- 
+- `+replab.+lobster.TextNode` -- 
+- `+replab.+lobster.VarNode` -- 
+
+.. rubric:: Functions
+
+
+- `+replab.+lobster.dump_template_ast` -- Dumps a template AST
+- `+replab.+lobster.eval_with_context` -- Evaluates an expression in context (?)
+- `+replab.+lobster.print_node` -- 
+
+Package replab.perm
+-------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+perm.PermutationCellAction` -- 
+- `+replab.+perm.PermutationMatrixAction` -- Describes the action of permutations on square matrices by simultaneous permutations of rows and columns
+- `+replab.+perm.PermutationNaturalAction` -- Describes the natural action of permutations on their domain
+- `+replab.+perm.PermutationVectorAction` -- Describes the action of permutations on vectors by permuting the coefficients
+- `+replab.+perm.SignedPermutationMatrixAction` -- Describes the action of signed permutations on square matrices by simultaneous permutations of rows and columns and sign flips
+- `+replab.+perm.SignedPermutationNaturalAction` -- Describes the natural action of signed permutations on their domain
+- `+replab.+perm.SignedPermutationVectorAction` -- Describes the action of signed permutations on vectors by permuting the coefficients and flipping their signs
+
+Package replab.quantum
+----------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+quantum.GHZ` -- Symmetry group of the GHZ states
+- `+replab.+quantum.GHZBase` -- The GHZ abelian invariant group
+- `+replab.+quantum.GeneralizedPauli` -- Returns a definition of the generalized Pauli group
+
+.. rubric:: Functions
+
+
+- `+replab.+quantum.clifford_qubit` -- Returns the Clifford group on a single qubit and its natural representation
+- `+replab.+quantum.clifford_qudit` -- Returns the Clifford group on a single qudit and its natural representation
+
+Package replab.quaternion
+-------------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+quaternion.H` -- Barebones quaternion class, defining just enough for our purposes
+- `+replab.+quaternion.HermitianMatrices` -- Describes the vector space of n x n quaternion Hermitian matrices
+- `+replab.+quaternion.Matrices` -- Describes the vector space of nR x nC quaternion matrices
+- `+replab.+quaternion.Vectors` -- Describes the vector space of d x 1 quaternion vectors
+
+Package replab.rational
+-----------------------
+
+.. rubric:: Functions
+
+
+- `+replab.+rational.attemptRecoverRational` -- Attempts to recover a rational approximation of a double vector/matrix
+- `+replab.+rational.integerGramSchmidt` -- Performs the integer Gram-Schmidt orthogonalization procedure on the rows of an integer matrix
+- `+replab.+rational.integerRowSpan` -- Attempts integer basis recovery from the given unitary basis
+- `+replab.+rational.vecgcd` -- Returns the greatest common divisor of a vector of integers
+- `+replab.+rational.veclcm` -- Returns the least common multiple of a vector of integers
+
+Package replab.rep
+------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+rep.DirectSumRep` -- A direct sum of representations, such that images are diagonal by blocks
+- `+replab.+rep.IndexRelabelingRep` -- Representation that permutes the indices of a tensor
+- `+replab.+rep.TensorRep` -- A tensor product of representations
+- `+replab.+rep.TrivialRep` -- Describes d copies of the real or complex trivial representation of a group
+
+.. rubric:: Functions
+
+
+- `+replab.+rep.standardBasis` -- Returns an orthogonal integer basis of the Euclidean space that including the vector of all ones
+
+Package replab.semidirectproduct
+--------------------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+semidirectproduct.Laws` -- 
+- `+replab.+semidirectproduct.OfCompactGroups` -- Describes an external semidirect product of compact groups
+- `+replab.+semidirectproduct.OfFiniteGroups` -- Describes an external semidirect product of finite groups
+- `+replab.+semidirectproduct.OfNiceFiniteGroups` -- Describes an external semidirect product of nice finite groups
+
+.. rubric:: Functions
+
+
+- `+replab.+semidirectproduct.of` -- Semidirect product construction by selecting the most refined type
+
+Package replab.settings
+-----------------------
+
+.. rubric:: Functions
+
+
+- `+replab.+settings.consoleUseHTML` -- Returns whether the console output accepts a subset of the HTML language
+- `+replab.+settings.replabPath` -- Get/set the root RepLAB folder (i.e. the folder containing ``src`` and ``replab_init``)
+- `+replab.+settings.strMaxColumns` -- Get/set the maximal number of columns to display when pretty printing
+- `+replab.+settings.strMaxRows` -- Get/set the maximal number of rows to display when pretty printing
+- `+replab.+settings.systemHelpPath` -- Get/set the folder containing MATLAB/Octave ``help.m``
+
+Package replab.signed
+---------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+signed.PermutationGroup` -- A base class for all signed permutation groups
+- `+replab.+signed.PermutationSubgroup` -- Represents a subgroup of a signed permutation group
+- `+replab.+signed.Permutations` -- Describes the signed permutation group over {-n...-1, 1...n} where n = domainSize
+- `+replab.+signed.PermutationsLaws` -- Laws obeyed by signed permutations
+
+Package replab.str
+------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+str.Normalized` -- Represents a vector along with a normalization factor for pretty printing
+
+.. rubric:: Functions
+
+
+- `+replab.+str.align` -- Renders a table using the given LaTeX-inspired specification
+- `+replab.+str.brackets` -- Returns the pair ``{, }`` for cell arrays or ``[, ]`` for other objects
+- `+replab.+str.cellStr` -- Returns a string representation of an element in a vector/matrix/cell array
+- `+replab.+str.escape` -- Escapes special characters in strings, like '\n', '''', etc...
+- `+replab.+str.fieldsList` -- Returns a list of field names and values for the given object, returned as column vectors
+- `+replab.+str.headerStr` -- Returns a tiny string description containing just the class name and size (when relevant)
+- `+replab.+str.horzcatForce` -- Returns a 'horzcat' of multiple (nargin >= 0) arguments
+- `+replab.+str.longFit` -- Fits the string description given in 'lines' in the box of size maxRows x maxColumns
+- `+replab.+str.longStr` -- Returns a multiline description of the given object, that fits within the given width/height limit
+- `+replab.+str.pluralize` -- Returns a string description of a given number of given things
+- `+replab.+str.shortStr` -- Default implementation for `+replab.shortStr`
+- `+replab.+str.sizeStr` -- Pretty prints size information about an object
+- `+replab.+str.uniqueNames` -- Merges cell arrays of strings given as arguments (nargin >= 0)
+
+Package replab.sym
+------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+sym.GeneralLinearMatricesWithInverses` -- Describes the group of n x n invertible real or complex matrices
+
+.. rubric:: Functions
+
+
+- `+replab.+sym.specht` -- Returns an irrep of the symmetric group S(n) according to the Specht basis
+- `+replab.+sym.symIrrepImages` -- Return matrices for an irreducible representation of S(n)
+- `+replab.+sym.youngOrthogonal` -- Returns an irrep of S(n) according to the Young orthogonal basis
+- `+replab.+sym.youngSeminormal` -- Returns an irrep of S(n) according to the Young seminormal basis
+
+Package replab.wreathproduct
+----------------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+wreathproduct.Common` -- Methods common to all wreath product groups
+- `+replab.+wreathproduct.ImprimitiveRep` -- Imprimitive representation of a wreath product group
+- `+replab.+wreathproduct.OfCompactGroup` -- Wreath product of a permutation group acting on a compact group
+- `+replab.+wreathproduct.OfFiniteGroup` -- Wreath product of a permutation group acting on a finite group
+- `+replab.+wreathproduct.OfNiceFiniteGroup` -- Wreath product of a permutation group acting on a nice finite group
+- `+replab.+wreathproduct.PrimitiveRep` -- Primitive representation of a wreath product group
+
+.. rubric:: Functions
+
+
+- `+replab.+wreathproduct.of` -- Constructs a wreath product with the most refined type
+
+Package replab.infra.doctests
+-----------------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+infra.+doctests.DocTest` -- Describes an executable code sample
+- `+replab.+infra.+doctests.ParseState` -- Stores the contents and the parsing position (=state) of a doctest block
+
+.. rubric:: Functions
+
+
+- `+replab.+infra.+doctests.errFunElement` -- 
+- `+replab.+infra.+doctests.namedTestsInElement` -- Extracts all tests in a source element and its potential members
+- `+replab.+infra.+doctests.parseFlags` -- Parses the flags given in a ``doctest: XXX`` comment
+- `+replab.+infra.+doctests.parseTests` -- Finds and parses the doctests in documentation
+- `+replab.+infra.+doctests.testsInElement` -- Extracts all tests in a source element
+- `+replab.+infra.+doctests.writeElementDocTests` -- Write the doctests for the given source element (class or function)
+
+Package replab.infra.repl
+-------------------------
+
+.. rubric:: Classes
+
+
+- `+replab.+infra.+repl.ConsoleLine` -- Prints strings on the same console line
+- `+replab.+infra.+repl.ProgressBar` -- 
+
+.. rubric:: Functions
+
+
+- `+replab.+infra.+repl.formatHelp` -- Formats a documentation string for console output
+- `+replab.+infra.+repl.linkHelp` -- Returns a HTML link that runs a help command if the console supports HTML, or plain text as a fallback
+- `+replab.+infra.+repl.linkOpen` -- Returns a HTML link that opens a source file in the editor if the console supports HTML, or alternative text
+- `+replab.+infra.+repl.linkURL` -- Returns a HTML link that opens a source file in the editor if the console supports HTML, or alternative text
+- `+replab.+infra.+repl.processURLRef` -- Process a Sphinx URL reference and returns the appropriate console text
+- `+replab.+infra.+repl.seconds2human` -- Converts the given number of seconds into a human-readable string.
+- `+replab.+infra.+repl.templateHelp` -- Formats a documentation string for console output
+
+Package replab.infra.shm
+------------------------
+
+.. rubric:: Functions
+
+
+- `+replab.+infra.+shm.decode` -- 
+- `+replab.+infra.+shm.encode` -- 
+- `+replab.+infra.+shm.look_up` -- Looks up an element in a struct-encoded String Hash Map (SHM)
+- `+replab.+infra.+shm.merge2` -- Merges two hashmaps represented by two structs
+- `+replab.+infra.+shm.update` -- Updates the hash-map
+
+Package replab.infra.sphinx
+---------------------------
+
+.. rubric:: Functions
+
+
+- `+replab.+infra.+sphinx.dispStubs` -- Generate the API autodoc stubs
+- `+replab.+infra.+sphinx.findClassCommentEnd` -- 
+- `+replab.+infra.+sphinx.writeEnrichedSource` -- Writes the enriched source code for Sphinx documentation generation
+- `+replab.+infra.+sphinx.writeTOC` -- Writes the list of all functions and classes in a ReST file
+

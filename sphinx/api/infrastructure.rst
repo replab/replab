@@ -27,10 +27,3 @@ replab_Version
 ++++++++++++++
 
 .. autoclass:: replab_Version
-
-.. module:: +replab.+infra
-
-infra.align
-+++++++++++
-
-.. autofunction:: align

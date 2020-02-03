@@ -28,12 +28,13 @@ Install the following python packages:
 - guzzle_sphinx_theme
 - sphinx-collapse-admonitions
 - sphinxcontrib-fulltoc
+- ablog
 
 This can be done with the command
 
 ::
 
-   pip install sphinx sphinxcontrib-matlabdomain texext guzzle_sphinx_theme sphinx-collapse-admonitions sphinxcontrib-fulltoc
+   pip install sphinx sphinxcontrib-matlabdomain texext guzzle_sphinx_theme sphinx-collapse-admonitions sphinxcontrib-fulltoc ablog
 
 (add the option "--user" if not installing inside a virtual environment)
 

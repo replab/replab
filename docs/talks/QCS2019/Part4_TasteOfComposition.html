@@ -13,10 +13,12 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>4. A taste of composition with RepLAB &#8212; RepLAB 0.6.1 documentation</title>
+    <title>4. A taste of composition with RepLAB &#8212; RepLAB 0.6.5 documentation</title>
     <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
@@ -29,10 +31,22 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Technical Reference" href="../../api/index.html" />
+    <link rel="next" title="Brussels visit October 2019" href="../Brussels2019/index.html" />
     <link rel="prev" title="2. Constructing representations with RepLAB" href="Part2_Representations.html" />
   
+  
    
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -45,12 +59,12 @@
           <a href="../../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="../../api/index.html" title="Technical Reference"
+          <a href="../Brussels2019/index.html" title="Brussels visit October 2019"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="Part2_Representations.html" title="2. Constructing representations with RepLAB"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Quantum Causal Structures Oxford 2019</a> &#187;</li> 
       </ul>
@@ -61,12 +75,15 @@
         <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
       </div>
   <div id="left-column">
-    <div class="sphinxsidebar"><a href="
-    ../../index.html" class="text-logo">RepLAB</a>
-<div class="sidebar-block">
-  <div class="sidebar-wrapper">
-    <h2>Table Of Contents</h2>
-  </div>
+    <div class="sphinxsidebar"><div class="text-logo">
+  <a href="
+    ../../index.html">RepLAB</a>&nbsp;&nbsp;
+  <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.5.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
+  <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
+  <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
+</div><div class="sidebar-block">
   <div class="sidebar-toc">
     
     
@@ -85,15 +102,32 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../Brussels2019/index.html">Brussels visit October 2019</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../publications/index.html">Publications using RepLAB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/index.html">Technical Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development/Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../blog/index.html">Blog</a></li>
 </ul>
 
     
   </div>
 </div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2><a href="../../blog.html">Recent Blog Posts</a></h2>
+  </div>
+  <div class="sidebar-toc">
+    <ul>
+      
+      
+      <li class="toctree-l1"><a href="../../blog/20200123-RepLAB-website-live.html">26 January - The RepLAB documentation and the infrastructure behind it</a></li>
+      
+    </ul>
+  </div>
+</div>
+
       
     </div>
   </div>
@@ -331,7 +365,7 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
+warning: function /home/denis/Projects/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Adding VPI to the path
 Adding MOxUnit to the path
@@ -489,7 +523,7 @@ error: &#39;strategyRep&#39; undefined near line 1 column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;Gparty&#39; undefined near line 1 column 49
+error: member `WreathProductGroup&#39; in package `replab&#39; does not exist
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -529,6 +563,10 @@ error: &#39;probabilityScenarioRep&#39; undefined near line 1 column 1
 </div>
 </div>
 
+  <div class="section">
+  
+  
+  </div>
 
           </div>
             
@@ -539,7 +577,7 @@ error: &#39;probabilityScenarioRep&#39; undefined near line 1 column 1
       </div>
     
       <div class="pull-right">
-        <a class="btn btn-default" href="../../api/index.html" title="next chapter (use the right arrow)">Technical Reference</a>
+        <a class="btn btn-default" href="../Brussels2019/index.html" title="next chapter (use the right arrow)">Brussels visit October 2019</a>
       </div>
     </div>
     <div class="clearer"></div>
@@ -557,12 +595,12 @@ error: &#39;probabilityScenarioRep&#39; undefined near line 1 column 1
           <a href="../../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="../../api/index.html" title="Technical Reference"
+          <a href="../Brussels2019/index.html" title="Brussels visit October 2019"
              >next</a> |</li>
         <li class="right" >
           <a href="Part2_Representations.html" title="2. Constructing representations with RepLAB"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" >Quantum Causal Structures Oxford 2019</a> &#187;</li> 
       </ul>

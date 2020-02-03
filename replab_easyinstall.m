@@ -120,7 +120,7 @@ function exitCode = replab_easyinstall
             error('Unrecognized answer.');
         end
         try
-            if replab.compat.isOctave
+            if logical(exist('OCTAVE_VERSION', 'builtin')) % replab.compat.isOctave
                 [f, success] = urlwrite (url, zipPath);
                 assert(success, 'Download did not work');
             else

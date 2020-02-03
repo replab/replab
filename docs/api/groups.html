@@ -13,10 +13,12 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Basic group structures &#8212; RepLAB 0.6.1 documentation</title>
+    <title>Basic group structures &#8212; RepLAB 0.6.5 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
@@ -32,7 +34,19 @@
     <link rel="next" title="Representations" href="rep.html" />
     <link rel="prev" title="Laws" href="laws.html" />
   
+  
    
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -50,7 +64,7 @@
         <li class="right" >
           <a href="laws.html" title="Laws"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li> 
       </ul>
     </div>
@@ -60,12 +74,15 @@
         <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
       </div>
   <div id="left-column">
-    <div class="sphinxsidebar"><a href="
-    ../index.html" class="text-logo">RepLAB</a>
-<div class="sidebar-block">
-  <div class="sidebar-wrapper">
-    <h2>Table Of Contents</h2>
-  </div>
+    <div class="sphinxsidebar"><div class="text-logo">
+  <a href="
+    ../index.html">RepLAB</a>&nbsp;&nbsp;
+  <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.5.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
+  <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
+  <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
+</div><div class="sidebar-block">
   <div class="sidebar-toc">
     
     
@@ -74,6 +91,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications using RepLAB</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="print.html">Pretty printing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base.html">Base object types</a></li>
@@ -96,18 +114,36 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep_technical.html">Representations (support code)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutations.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="group_constructions.html">Abstract group constructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="infrastructure.html">Infrastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="infrastructure_technical.html">Infrastructure (support code)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list.html">List of classes and functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../blog/index.html">Blog</a></li>
 </ul>
 
     
   </div>
 </div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2><a href="../blog.html">Recent Blog Posts</a></h2>
+  </div>
+  <div class="sidebar-toc">
+    <ul>
+      
+      
+      <li class="toctree-l1"><a href="../blog/20200123-RepLAB-website-live.html">26 January - The RepLAB documentation and the infrastructure behind it</a></li>
+      
+    </ul>
+  </div>
+</div>
+
       
     </div>
   </div>
@@ -333,8 +369,6 @@ a <a class="reference internal" href="base.html#+replab.Domain.eqv" title="+repl
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.MonoidLaws.DomainLaws" title="+replab.MonoidLaws.DomainLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">DomainLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.MonoidLaws.MonoidLaws" title="+replab.MonoidLaws.MonoidLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">MonoidLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.MonoidLaws.N10" title="+replab.MonoidLaws.N10"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">N10</span></code></a> – Integer between 1 and 10</p></li>
 <li><p><a class="reference internal" href="#+replab.MonoidLaws.T" title="+replab.MonoidLaws.T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">T</span></code></a> – Domain under test</p></li>
 <li><p><a class="reference internal" href="#+replab.MonoidLaws.addTestCases" title="+replab.MonoidLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
@@ -359,18 +393,6 @@ a <a class="reference internal" href="base.html#+replab.Domain.eqv" title="+repl
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.MonoidLaws.DomainLaws">
-<code class="sig-name descname">DomainLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.MonoidLaws.DomainLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.MonoidLaws.MonoidLaws">
-<code class="sig-name descname">MonoidLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.MonoidLaws.MonoidLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="+replab.MonoidLaws.T">
 <code class="sig-name descname">T</code><a class="headerlink" href="#+replab.MonoidLaws.T" title="Permalink to this definition">¶</a></dt>
@@ -725,9 +747,6 @@ a <a class="reference internal" href="base.html#+replab.Domain.eqv" title="+repl
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.GroupLaws.DomainLaws" title="+replab.GroupLaws.DomainLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">DomainLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.GroupLaws.GroupLaws" title="+replab.GroupLaws.GroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">GroupLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.GroupLaws.MonoidLaws" title="+replab.GroupLaws.MonoidLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">MonoidLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.GroupLaws.N10" title="+replab.GroupLaws.N10"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">N10</span></code></a> – Integer between 1 and 10</p></li>
 <li><p><a class="reference internal" href="#+replab.GroupLaws.T" title="+replab.GroupLaws.T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">T</span></code></a> – Domain under test</p></li>
 <li><p><a class="reference internal" href="#+replab.GroupLaws.addTestCases" title="+replab.GroupLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
@@ -755,24 +774,6 @@ a <a class="reference internal" href="base.html#+replab.Domain.eqv" title="+repl
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.GroupLaws.DomainLaws">
-<code class="sig-name descname">DomainLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.GroupLaws.DomainLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.GroupLaws.GroupLaws">
-<code class="sig-name descname">GroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.GroupLaws.GroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.GroupLaws.MonoidLaws">
-<code class="sig-name descname">MonoidLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.GroupLaws.MonoidLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="+replab.GroupLaws.N10">
 <code class="sig-name descname">N10</code><a class="headerlink" href="#+replab.GroupLaws.N10" title="Permalink to this definition">¶</a></dt>
@@ -1598,11 +1599,7 @@ and results can vary between runs.</p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.FiniteGroupLaws.DomainLaws" title="+replab.FiniteGroupLaws.DomainLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">DomainLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.FiniteGroupLaws.FiniteGroupLaws" title="+replab.FiniteGroupLaws.FiniteGroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroupLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.FiniteGroupLaws.GroupLaws" title="+replab.FiniteGroupLaws.GroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">GroupLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroupLaws.I" title="+replab.FiniteGroupLaws.I"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">I</span></code></a> – Index of generator</p></li>
-<li><p><a class="reference internal" href="#+replab.FiniteGroupLaws.MonoidLaws" title="+replab.FiniteGroupLaws.MonoidLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">MonoidLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroupLaws.N10" title="+replab.FiniteGroupLaws.N10"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">N10</span></code></a> – Integer between 1 and 10</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroupLaws.T" title="+replab.FiniteGroupLaws.T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">T</span></code></a> – Domain under test</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroupLaws.addTestCases" title="+replab.FiniteGroupLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
@@ -1637,30 +1634,6 @@ and results can vary between runs.</p>
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.FiniteGroupLaws.DomainLaws">
-<code class="sig-name descname">DomainLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroupLaws.DomainLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.FiniteGroupLaws.FiniteGroupLaws">
-<code class="sig-name descname">FiniteGroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroupLaws.FiniteGroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.FiniteGroupLaws.GroupLaws">
-<code class="sig-name descname">GroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroupLaws.GroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.FiniteGroupLaws.MonoidLaws">
-<code class="sig-name descname">MonoidLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroupLaws.MonoidLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="+replab.FiniteGroupLaws.N10">
 <code class="sig-name descname">N10</code><a class="headerlink" href="#+replab.FiniteGroupLaws.N10" title="Permalink to this definition">¶</a></dt>
@@ -1864,7 +1837,6 @@ g = t1 t2 … tn, where ti is in Ti; thus, we have that length(T1)*length(T2)*�
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.FiniteGroupDecomposition.FiniteGroupDecomposition" title="+replab.FiniteGroupDecomposition.FiniteGroupDecomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroupDecomposition</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroupDecomposition.T" title="+replab.FiniteGroupDecomposition.T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">T</span></code></a> – row cell array of row cell arrays: Stores the sets Ti as {T1 T2 … Tn}</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroupDecomposition.additionalFields" title="+replab.FiniteGroupDecomposition.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroupDecomposition.disp" title="+replab.FiniteGroupDecomposition.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
@@ -1879,12 +1851,6 @@ g = t1 t2 … tn, where ti is in Ti; thus, we have that length(T1)*length(T2)*�
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.FiniteGroupDecomposition.FiniteGroupDecomposition">
-<code class="sig-name descname">FiniteGroupDecomposition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroupDecomposition.FiniteGroupDecomposition" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="+replab.FiniteGroupDecomposition.additionalFields">
 <code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroupDecomposition.additionalFields" title="Permalink to this definition">¶</a></dt>
@@ -2474,13 +2440,8 @@ homomorphism into a permutation group.</p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.NiceFiniteGroupLaws.DomainLaws" title="+replab.NiceFiniteGroupLaws.DomainLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">DomainLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.NiceFiniteGroupLaws.FiniteGroupLaws" title="+replab.NiceFiniteGroupLaws.FiniteGroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">FiniteGroupLaws</span></code></a> –</p></li>
-<li><p><a class="reference internal" href="#+replab.NiceFiniteGroupLaws.GroupLaws" title="+replab.NiceFiniteGroupLaws.GroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">GroupLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroupLaws.I" title="+replab.NiceFiniteGroupLaws.I"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">I</span></code></a> – Index of generator</p></li>
-<li><p><a class="reference internal" href="#+replab.NiceFiniteGroupLaws.MonoidLaws" title="+replab.NiceFiniteGroupLaws.MonoidLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">MonoidLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroupLaws.N10" title="+replab.NiceFiniteGroupLaws.N10"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">N10</span></code></a> – Integer between 1 and 10</p></li>
-<li><p><a class="reference internal" href="#+replab.NiceFiniteGroupLaws.NiceFiniteGroupLaws" title="+replab.NiceFiniteGroupLaws.NiceFiniteGroupLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">NiceFiniteGroupLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroupLaws.T" title="+replab.NiceFiniteGroupLaws.T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">T</span></code></a> – Domain under test</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroupLaws.addTestCases" title="+replab.NiceFiniteGroupLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroupLaws.additionalFields" title="+replab.NiceFiniteGroupLaws.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
@@ -2515,46 +2476,16 @@ homomorphism into a permutation group.</p>
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.NiceFiniteGroupLaws.DomainLaws">
-<code class="sig-name descname">DomainLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroupLaws.DomainLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.NiceFiniteGroupLaws.FiniteGroupLaws">
-<code class="sig-name descname">FiniteGroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroupLaws.FiniteGroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.NiceFiniteGroupLaws.GroupLaws">
-<code class="sig-name descname">GroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroupLaws.GroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="+replab.NiceFiniteGroupLaws.I">
 <code class="sig-name descname">I</code><a class="headerlink" href="#+replab.NiceFiniteGroupLaws.I" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.FiniteGroupLaws.I" title="+replab.FiniteGroupLaws.I"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.FiniteGroupLaws.I</span></code></a></p>
 </dd></dl>
 
-<dl class="method">
-<dt id="+replab.NiceFiniteGroupLaws.MonoidLaws">
-<code class="sig-name descname">MonoidLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroupLaws.MonoidLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="+replab.NiceFiniteGroupLaws.N10">
 <code class="sig-name descname">N10</code><a class="headerlink" href="#+replab.NiceFiniteGroupLaws.N10" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.MonoidLaws.N10" title="+replab.MonoidLaws.N10"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.MonoidLaws.N10</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.NiceFiniteGroupLaws.NiceFiniteGroupLaws">
-<code class="sig-name descname">NiceFiniteGroupLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroupLaws.NiceFiniteGroupLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2751,7 +2682,6 @@ homomorphism into a permutation group.</p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.NiceFiniteSubgroup" title="+replab.NiceFiniteSubgroup.NiceFiniteSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">NiceFiniteSubgroup</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.additionalFields" title="+replab.NiceFiniteSubgroup.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.assertEqv" title="+replab.NiceFiniteSubgroup.assertEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertEqv</span></code></a> – Compares two elements for equality</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.assertNotEqv" title="+replab.NiceFiniteSubgroup.assertNotEqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">assertNotEqv</span></code></a> – Compares two elements for inequality</p></li>
@@ -2803,12 +2733,6 @@ homomorphism into a permutation group.</p>
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.NiceFiniteSubgroup.NiceFiniteSubgroup">
-<code class="sig-name descname">NiceFiniteSubgroup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteSubgroup.NiceFiniteSubgroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="+replab.NiceFiniteSubgroup.additionalFields">
 <code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteSubgroup.additionalFields" title="Permalink to this definition">¶</a></dt>
@@ -3256,7 +3180,6 @@ compatible with the group composition as in</p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.ActionLaws.ActionLaws" title="+replab.ActionLaws.ActionLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ActionLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.ActionLaws.G" title="+replab.ActionLaws.G"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">G</span></code></a> – <a class="reference internal" href="#+replab.Group" title="+replab.Group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Group</span></code></a>: Group acting</p></li>
 <li><p><a class="reference internal" href="#+replab.ActionLaws.P" title="+replab.ActionLaws.P"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">P</span></code></a> – <a class="reference internal" href="base.html#+replab.Domain" title="+replab.Domain"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Domain</span></code></a>: Set acted upon</p></li>
 <li><p><a class="reference internal" href="#+replab.ActionLaws.action" title="+replab.ActionLaws.action"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">action</span></code></a> – <a class="reference internal" href="#+replab.Action" title="+replab.Action"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Action</span></code></a>: Action</p></li>
@@ -3281,12 +3204,6 @@ compatible with the group composition as in</p>
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.ActionLaws.ActionLaws">
-<code class="sig-name descname">ActionLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ActionLaws.ActionLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="+replab.ActionLaws.addTestCases">
 <code class="sig-name descname">addTestCases</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">testSuite</em>, <em class="sig-param">testName</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.ActionLaws.addTestCases" title="Permalink to this definition">¶</a></dt>
@@ -3420,7 +3337,6 @@ compatible with the group composition as in</p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.GroupMorphismLaws.GroupMorphismLaws" title="+replab.GroupMorphismLaws.GroupMorphismLaws"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">GroupMorphismLaws</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.GroupMorphismLaws.S" title="+replab.GroupMorphismLaws.S"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">S</span></code></a> – <a class="reference internal" href="#+replab.Group" title="+replab.Group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Group</span></code></a>: Source group</p></li>
 <li><p><a class="reference internal" href="#+replab.GroupMorphismLaws.T" title="+replab.GroupMorphismLaws.T"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">T</span></code></a> – <a class="reference internal" href="#+replab.Group" title="+replab.Group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Group</span></code></a>: Target group</p></li>
 <li><p><a class="reference internal" href="#+replab.GroupMorphismLaws.addTestCases" title="+replab.GroupMorphismLaws.addTestCases"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">addTestCases</span></code></a> – Adds law checks as test cases to the given test suite</p></li>
@@ -3443,12 +3359,6 @@ compatible with the group composition as in</p>
 </div>
 <div class="collapsed admonition">
 <p class="admonition-title">Inherited elements</p>
-<dl class="method">
-<dt id="+replab.GroupMorphismLaws.GroupMorphismLaws">
-<code class="sig-name descname">GroupMorphismLaws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.GroupMorphismLaws.GroupMorphismLaws" title="Permalink to this definition">¶</a></dt>
-<dd><p>No documentation</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="+replab.GroupMorphismLaws.addTestCases">
 <code class="sig-name descname">addTestCases</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">testSuite</em>, <em class="sig-param">testName</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.GroupMorphismLaws.addTestCases" title="Permalink to this definition">¶</a></dt>
@@ -3563,6 +3473,10 @@ compatible with the group composition as in</p>
 </div>
 </div>
 
+  <div class="section">
+  
+  
+  </div>
 
           </div>
             
@@ -3596,7 +3510,7 @@ compatible with the group composition as in</p>
         <li class="right" >
           <a href="laws.html" title="Laws"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li> 
       </ul>
     </div>

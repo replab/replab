@@ -16,7 +16,10 @@ An API Reference, as described in the table of contents below:
    laws
    groups
    rep
+   rep_technical
    permutations
    group_constructions
    infrastructure
+   infrastructure_technical
    misc
+   list

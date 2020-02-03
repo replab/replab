@@ -5,8 +5,7 @@ classdef CodeBase < replab.Str
 %
 % - ``element``: Generic term for a subobject (class in a package, method in a class, etc)
 % - ``member``: Methods/properties of a class, seen across the inheritance tree
-% - ``parent``, ``children``: Package had subpackage children,
-%                             with functions/classes as children, classes have methods/properties children
+% - ``parent``, ``children``: Package had subpackage children, with functions/classes as children, classes have methods/properties children
 % - ``superclass``, ``subclass``: Terminology used in inheritance hierarchies
 %
 %
@@ -70,7 +69,7 @@ classdef CodeBase < replab.Str
         % Returns all packages present in this code base
         %
         % Returns:
-        %   cell{:,1} of `.Package`: Packages
+        %   cell(*,1) of `.Package`: Packages
             pkgNames = fieldnames(self.packages);
             p = cellfun(@(name) self.packages.(name), pkgNames, 'uniform', 0);
         end
@@ -79,7 +78,7 @@ classdef CodeBase < replab.Str
         % Returns all source elements (functions, classes) in this code base
         %
         % Returns:
-        %   cell{:,1} of `.SourceElement`: Source elements
+        %   cell{*,1} of `+replab.+infra.SourceElement`: Source elements
             p = self.allPackages;
             e = {};
             for i = 1:length(p)
@@ -91,7 +90,7 @@ classdef CodeBase < replab.Str
         % Returns all functions present in this code base
         %
         % Returns:
-        %   cell{:,1} of `.Function`: All functions
+        %   cell{*,1} of `.Function`: All functions
             p = self.allPackages;
             f = {};
             for i = 1:length(p)
@@ -103,7 +102,7 @@ classdef CodeBase < replab.Str
         % Returns all classes present in this code base
         %
         % Returns:
-        %   cell{:,1} of `.Class`: All classes
+        %   cell{*,1} of `.Class`: All classes
             p = self.allPackages;
             c = {};
             for i = 1:length(p)
