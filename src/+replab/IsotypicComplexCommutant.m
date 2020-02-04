@@ -1,12 +1,12 @@
 classdef IsotypicComplexCommutant < replab.IsotypicCommutant
-    
+
     methods
-        
+
         function self = IsotypicComplexCommutant(isotypic)
             self = self@replab.IsotypicCommutant(isotypic);
             self.divisionAlgebraDimension = 2;
         end
-        
+
         function [A B] = block(self, X)
         % Returns the block of a matrix projected in the commutant algebra
         %
@@ -31,7 +31,7 @@ classdef IsotypicComplexCommutant < replab.IsotypicCommutant
             A = A/id;
             B = B/id;
         end
-        
+
         function [A B] = blockFromParent(self, X)
         % Changes the basis and projects a block on this isotypic component
         %
@@ -58,23 +58,24 @@ classdef IsotypicComplexCommutant < replab.IsotypicCommutant
             A = A/id;
             B = B/id;
         end
-        
+
         function X1 = projectAndReduceFromParent(self, X)
             [A B] = self.blockFromParent(X);
             X1 = kron(A, eye(2)) + kron(B, [0 -1; 1 0]);
         end
-        
+
         function X1 = projectAndReduce(self, X)
             [A B] = self.block(X);
             X1 = kron(A, eye(2)) + kron(B, [0 -1; 1 0]);
         end
-        
-        function X1 = project(self, X)
+
+        function [X1 err] = project(self, X)
             id = self.rep.irrepDimension;
             [A B] = self.block(X);
             X1 = kron(A, eye(id)) + kron(B, kron(eye(id/2), [0 -1; 1 0]));
+            err = NaN;
         end
-        
+
     end
-    
+
 end

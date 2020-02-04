@@ -6,7 +6,7 @@ classdef IrreducibleCommutant < replab.Equivariant
     methods
 
         function self = IrreducibleCommutant(irreducible)
-            self = self@replab.Commutant(irreducible, irreducible, 'commutant');
+            self = self@replab.Equivariant(irreducible, irreducible, 'commutant');
         end
 
         function X = projectAndReduceFromParent(self, X)
@@ -32,7 +32,7 @@ classdef IrreducibleCommutant < replab.Equivariant
             X = blkdiag(blocks{:});
         end
 
-        function X = project(self, X)
+        function [X err] = project(self, X)
             n = self.rep.nComponents;
             blocks = cell(1, n);
             shift = 0;
@@ -42,8 +42,9 @@ classdef IrreducibleCommutant < replab.Equivariant
                 r = shift + (1:d);
                 blocks{i} = iso.commutant.project(X(r, r));
                 shift = shift + iso.dimension;
-           end
+            end
             X = blkdiag(blocks{:});
+            err = NaN;
         end
 
     end

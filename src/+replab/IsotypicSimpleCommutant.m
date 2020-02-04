@@ -51,8 +51,9 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
             X1 = self.blockFromParent(X);
         end
 
-        function X1 = project(self, X)
+        function [X1 err] = project(self, X)
             X1 = kron(self.block(X), eye(self.rep.irrepDimension));
+            err = NaN;
         end
 
     end

@@ -1,4 +1,4 @@
-classdef IsotypicCommutant < replab.Commutant
+classdef IsotypicCommutant < replab.Equivariant
 
     properties
         divisionAlgebraDimension % integer: Size of a block in the division algebra encoding
@@ -7,7 +7,7 @@ classdef IsotypicCommutant < replab.Commutant
     methods
 
         function self = IsotypicCommutant(isotypic)
-            self = self@replab.Commutant(isotypic);
+            self = self@replab.Equivariant(isotypic, isotypic, 'commutant');
         end
 
         function s = reducedBlockSize(self)
