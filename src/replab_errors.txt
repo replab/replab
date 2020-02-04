@@ -1,3 +1,4 @@
 replab:resolveRefError Sphinx references (see `replab.infra.resolveRef`)
 replab:docTestParseError Doctest parsing (mostly in `replab.infra.doctests`)
 replab:inexistent Used to specify that the generation of a sample failed during property checks
+replab:equivariantConvergence Used to signal that convergence could not be achieved in equivariant fixed-point iteration

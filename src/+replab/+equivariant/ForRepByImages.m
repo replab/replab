@@ -32,17 +32,17 @@ classdef ForRepByImages < replab.Equivariant
 
     methods
 
-        function self = ForRepByImages(repR, repC)
+        function self = ForRepByImages(repR, repC, special)
             if ~isa(repR, 'replab.RepByImages')
                 error('replab:dispatch:tryNext', 'try next');
             end
             if ~isa(repC, 'replab.RepByImages')
                 error('replab:dispatch:tryNext', 'try next');
             end
-            self = self@replab.Equivariant(repR, repC);
+            self = self@replab.Equivariant(repR, repC, special);
         end
 
-        function X = project(self, X)
+        function [X err] = project(self, X)
             if isempty(self.decompositionR) || isempty(self.decompositionC)
                 self.computeImages;
             end
@@ -59,6 +59,7 @@ classdef ForRepByImages < replab.Equivariant
                 end
                 X = S/nEls;
             end
+            err = replab.equivariant.errorModel(X);
         end
 
     end

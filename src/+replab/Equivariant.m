@@ -1,55 +1,79 @@
 classdef Equivariant < replab.Domain
 % Describes a vector space of group-equivariant matrices
 %
-% Let repR and repC be two representations of the same group G.
+% Let ``repR`` and ``repC`` be two representations of the same group ``G``.
 %
-% This describes the set of matrices X such that repR.image(g) * X = X * repC.image(g)
+% This describes the set of matrices ``X`` such that ``repR.image(g) * X = X * repC.image(g)``
 %
 % See Proposition 4 of
 % J.-P. Serre, Linear Representations of Finite Groups (Springer, 1977).
+%
+% There are two special cases of equivariant spaces.
+%
+% - ``commutant`` equivariant spaces have ``repR == repC``,
+% - ``hermitian`` equivariant spaces have ``repR == repC.conjugate.dual``.
+%
+% When ``repR`` is unitary, the ``commutant`` and ``hermitian`` cases are identical.
 
     properties (SetAccess = protected)
-        field % {'R', 'C'}: field of the vector space real (R) or complex x(C)
-        nR % integer: row size
-        nC % integer: column size
-        group % replab.CompactGroup: group being represented
-        repR % replab.Rep: representation of row space
-        repC % replab.Rep: representation of column space
+        field % ({'R', 'C'}): Field of the vector space real (R) or complex x(C)
+        nR % (integer): Row size
+        nC % (integer): Column size
+        group % (`+replab.CompactGroup`): Group being represented
+        repR % (`+replab.Rep`): Representation of row space
+        repC % (`+replab.Rep`): Representation of column space
+        special % ({'hermitian', 'commutant', []}): Whether the equivariant space has special structure
     end
 
     properties (Access = protected)
-        parent % parent domain, real or complex matrices
+        parent % (`+replab.Domain`): Parent domain, real or complex matrices
     end
 
     methods
 
-
         %% Abstract
 
-        function b = isEquivariant(self, X)
-        % Returns whether the matrix X represents an equivariant linear map
-        %
-        % Args:
-        %   X: Candidate equivariant linear map
-        %
-        % Returns:
-        %   logical: Whether the given linear map is equivariant
-            b = self.parent.eqv(X, self.project(X));
-        end
-
-        function X1 = project(self, X)
-        % Projects any nR x nC matrix in the equivariant subspace
+        function [X1 err] = project(self, X)
+        % Projects any ``nR x nC`` matrix in the equivariant subspace
         %
         % Performs the integration
         %
         % `` X1 = int{g in G} dg rhoR.image(g) * X * rhoC.inverseImage(g) ``
+        %
+        % Args:
+        %   X (double(*,*)): Matrix to project
+        %
+        % Returns
+        % -------
+        % X1:
+        %   double(*,*): Projected matrix
+        % err:
+        %   double: Estimation of the numerical error, expressed as the distance of the returned ``X1`` to
+        %           the invariant subspace in Frobenius norm
             error('Abstract');
         end
 
-        function self = Equivariant(repR, repC)
+    end
+
+    methods
+
+        function [X err] = sampleWithError(self)
+        % Returns an approximate sample from this equivariant space along with estimated numerical error
+        %
+        % Returns
+        % -------
+        % X:
+        %   double(*,*): A sample from this equivariant space
+        % err:
+        %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
+        %           the invariant subspace in Frobenius norm
+            [X err] = self.project(self.parent.sample);
+        end
+
+        function self = Equivariant(repR, repC, special)
         % Constructor; use `+replab.makeEquivariant` in user code
         %
-        % It can eventually select an optimized implementation depending on the use case.
+        % That function selects an optimized implementation depending on the use case.
             self.repR = repR;
             self.nR = repR.dimension;
             self.repC = repC;
@@ -61,14 +85,26 @@ classdef Equivariant < replab.Domain
                    'Both representations must be defined on the same group');
             self.group = repR.group;
             self.parent = replab.domain.Matrices(self.field, self.nR, self.nC);
+            self.special = special;
         end
 
         %% Str methods
 
         function s = headerStr(self)
-            s = sprintf('%d x %d %s equivariant matrices', ...
-                        self.nR, self.nC, ...
-                        replab.str.field(self.field));
+            switch self.special
+              case 'hermitian'
+                s = sprintf('%d x %d %s invariant Hermitian matrices', ...
+                            self.nR, self.nC, ...
+                            replab.str.field(self.field));
+              case 'commutant'
+                s = sprintf('%d x %d %s commutant matrices', ...
+                            self.nR, self.nC, ...
+                            replab.str.field(self.field));
+              otherwise
+                s = sprintf('%d x %d %s equivariant matrices', ...
+                            self.nR, self.nC, ...
+                            replab.str.field(self.field));
+            end
         end
 
         %% Domain methods
@@ -78,7 +114,7 @@ classdef Equivariant < replab.Domain
         end
 
         function X = sample(self)
-            X = self.project(self.parent.sample);
+            X = self.sampleWithError;
         end
 
     end

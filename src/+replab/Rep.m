@@ -6,14 +6,15 @@ classdef Rep < replab.Str
 % For optimization purposes, actions can also be specialized.
 
     properties (SetAccess = protected)
-        group     % replab.CompactGroup: Group being represented
-        field     % {'R', 'C'}: Vector space defined on real (R) or complex (C) field
-        dimension % integer: Representation dimension
-        isUnitary % {true, false, []}: Whether the representation is unitary
+        group     % (`+replab.CompactGroup`): Group being represented
+        field     % ({'R', 'C'}): Vector space defined on real (R) or complex (C) field
+        dimension % (integer): Representation dimension
+        isUnitary % ({true, false, []}): Whether the representation is unitary
     end
 
     properties (Access = protected)
         commutant_ = [];
+        hermitianInvariant_ = [];
         decomposition_ = [];
     end
 
@@ -110,16 +111,32 @@ classdef Rep < replab.Str
         % This is the algebra of matrices that commute with the representation,
         % i.e. the vector space isomorphism to the equivariant space from this rep to this rep.
         %
-        % For any g in G, we have ``rho(g) * X = X * rho(g)``.
+        % For any ``g in G``, we have ``rho(g) * X = X * rho(g)``.
         %
         % The computation is cached.
         %
         % Returns:
-        %   replab.Commutant: The commutant algebra
+        %   `+replab.Commutant`: The commutant algebra
             if isempty(self.commutant_)
-                self.commutant_ = replab.CommutantFromEquivariant(self);
+                self.commutant_ = replab.makeEquivariant(self, self, 'commutant');
             end
             c = self.commutant_;
+        end
+
+        function h = hermitianInvariant(self)
+        % Returns the Hermitian invariant space of this representation
+        %
+        % This is the space of Hermitian matrices that are invariant under this representation
+        % i.e.
+        %
+        % for any g in G, we have ``X = rho(g) * X * rho(g^-1)'``
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The space of Hermitian invariant matrices
+            if isempty(self.hermitianInvariant_)
+                self.hermitianInvariant_ = replab.makeEquivariant(self, self.dual.conj, 'hermitian');
+            end
+            h = self.hermitianInvariant_;
         end
 
         %% Irreducible decomposition
@@ -162,7 +179,6 @@ classdef Rep < replab.Str
             end
             s = sprintf('%s representation of dimension %d', f, self.dimension);
         end
-
         %% Derived actions
 
         function M = matrixRowAction(self, g, M)
@@ -213,7 +229,7 @@ classdef Rep < replab.Str
         % Raises:
         %   An error if this representation is already complex.
             assert(self.overR, 'Representation should be real to start with');
-            complexRep = replab.Rep.lambda(self.group, 'C', self.dimension, self.isUnitary, @(g) self.image(g), @(g) self.inverseImage(g));
+            complexRep = replab.rep.simplify(replab.rep.ComplexifiedRep(self));
         end
 
         function rep = conj(self)
@@ -226,12 +242,8 @@ classdef Rep < replab.Str
         % If this representation is real, it is returned unchanged.
         %
         % Returns:
-        %   replab.Rep: The complex conjugate of this representation
-            if self.overR
-                rep = self;
-            else
-                rep = replab.Rep.lambda(self.group, 'C', self.dimension, self.isUnitary, @(g) conj(self.image(g)), @(g) conj(self.inverseImage(g)));
-            end
+        %   `+replab.Rep`: The complex conjugate of this representation
+            rep = replab.rep.simplify(replab.rep.DerivedRep(self, true, false, false));
         end
 
         function rep = dual(self)
@@ -243,14 +255,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   replab.Rep: The dual representation
-            if isequal(self.isUnitary, true)
-                % If this is unitary, less drama to simply return the conjugate
-                rep = self.conj;
-            else
-                imageFun = @(g) self.inverseImage(g).';
-                inverseImageFun = @(g) self.image(g).';
-                rep = replab.Rep.lambda(self.group, self.field, self.dimension, self.isUnitary, imageFun, inverseImageFun);
-            end
+            rep = replab.rep.simplify(replab.rep.DerivedRep(self, false, true, true));
         end
 
         function rep = blkdiag(varargin)

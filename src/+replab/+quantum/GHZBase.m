@@ -19,9 +19,9 @@ classdef GHZBase < replab.CompactGroup
         nParties % integer: Number of parties
         nLevels % integer: Number of levels for each party (i.e. qubit = 2)
     end
-    
+
     methods
-        
+
         function self = GHZBase(nParties, nLevels)
         % Constructs a GHZ base group
         %
@@ -32,7 +32,7 @@ classdef GHZBase < replab.CompactGroup
             self.nLevels = nLevels;
             self.identity = zeros(nParties, nLevels);
         end
-        
+
         function rho = toMatrix(self, g)
         % Returns the natural matrix action of a group element
         %
@@ -51,7 +51,7 @@ classdef GHZBase < replab.CompactGroup
                 rho = kron(rho, D);
             end
         end
-        
+
         function g = canonical(self, g)
         % Returns the canonical form of an element of the GHZ base group
         %
@@ -67,13 +67,13 @@ classdef GHZBase < replab.CompactGroup
                 s = (mod(sum(g(:, l)) + pi, 2*pi) - pi)/self.nParties;
                 g(:,l) = mod(g(:,l) + 2*pi - s, 2*pi);
             end
-            % canonical under party global phase (set first level = 1) 
+            % canonical under party global phase (set first level = 1)
             for p = 1:self.nParties
                 e = g(p,1);
                 g(:,l) = mod(g(:,l) + 2*pi - e, 2*pi);
             end
         end
-        
+
         function rep = definingRep(self)
         % Returns the natural representation of this group
         %
@@ -82,42 +82,42 @@ classdef GHZBase < replab.CompactGroup
             d = self.nLevels^self.nParties;
             rep = replab.Rep.lambda(self, 'C', d, true, @(g) self.toMatrix(g));
         end
-        
+
         function g = permuteParties(self, p, g)
             g(p, :) = g;
             g = self.canonical(g);
         end
-        
+
         function g = permuteLevels(self, p, g)
             g(:, p) = g;
             g = self.canonical(g);
         end
-        
+
         %% Domain methods
-        
+
         function b = eqv(self, x, y)
             diff = mod(2*pi + pi + x - y, 2*pi) - pi;
             b = ~replab.isNonZeroMatrix(diff, replab.Parameters.doubleEigTol);
         end
-        
+
         function g = sample(self)
             g = self.canonical(rand(self.nParties, self.nLevels));
         end
-        
+
         %% Monoid methods
-        
+
         function z = compose(self, x, y)
             z = self.canonical(x + y);
         end
-        
+
         %% Group methods
-        
+
         function xInv = inverse(self, x)
             xInv = self.canonical(2*pi - x);
         end
-        
+
         %% CompactGroup methods
-        
+
         function g = sampleUniformly(self)
             g = self.sample;
         end

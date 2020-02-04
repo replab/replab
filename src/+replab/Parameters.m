@@ -1,32 +1,12 @@
 classdef Parameters
-    
+
     methods (Static)
-        
-        function value = averagingSamples(newValue)
-            persistent AveragingSamples;
-            if nargin == 1
-                AveragingSamples = newValue;
-            elseif isempty(AveragingSamples)
-                AveragingSamples = 3;
-            end
-            value = AveragingSamples;
-        end
-        
-        function value = averagingIterations(newValue)
-            persistent AveragingIterations;
-            if nargin == 1
-                AveragingIterations = newValue;
-            elseif isempty(AveragingIterations)
-                AveragingIterations = 1000;
-            end
-            value = AveragingIterations;
-        end
 
         function value = randomizedSchreierSimsTries(newValue)
         % Gets/sets the number of sifted elements before the BSGS chain is declared complete
         %
         % This is the number of successive failed attempts to generate a new strong generator
-        % before deciding the chain is complete in the randomized Schreier-Sims algorithm; 
+        % before deciding the chain is complete in the randomized Schreier-Sims algorithm;
         % the probability of failure is then less than 1/2^value.
         %
         % Args:
@@ -42,7 +22,7 @@ classdef Parameters
             end
             value = RandomizedSchreierSimsTries;
         end
-        
+
         function value = bsgsFailureProbability(newValue)
             persistent BsgsFailureProbability;
             if nargin == 1
@@ -52,7 +32,7 @@ classdef Parameters
             end
             value = BsgsFailureProbability;
         end
-        
+
         function value = doubleEigTol(newValue)
             persistent DoubleEigTol;
             if nargin == 1
@@ -72,7 +52,7 @@ classdef Parameters
             end
             value = DoubleSdpTol;
         end
-        
+
     end
 
 end

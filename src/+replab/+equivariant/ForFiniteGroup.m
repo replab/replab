@@ -1,15 +1,15 @@
 classdef ForFiniteGroup < replab.Equivariant
-        
+
     methods
 
-        function self = ForFiniteGroup(repR, repC)
+        function self = ForFiniteGroup(repR, repC, special)
             if ~isa(repR.group, 'replab.FiniteGroup')
                 error('replab:dispatch:tryNext', 'try next');
             end
-            self = self@replab.Equivariant(repR, repC);
+            self = self@replab.Equivariant(repR, repC, special);
         end
-        
-        function X = project(self, X)
+
+        function [X err] = project(self, X)
             T = self.group.decomposition.T;
             for i = length(T):-1:1
                 S = X;
@@ -22,8 +22,9 @@ classdef ForFiniteGroup < replab.Equivariant
                 end
                 X = S/nEls;
             end
+            err = replab.equivariant.errorModel(X);
         end
-        
+
     end
-    
+
 end
