@@ -102,7 +102,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   replab.Equivariant: The equivariant vector space
-            e = replab.makeEquivariant(self, repC);
+            e = replab.makeEquivariant(self, repC, []);
         end
 
         function c = commutant(self)
