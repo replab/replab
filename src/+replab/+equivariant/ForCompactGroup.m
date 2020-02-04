@@ -3,6 +3,7 @@ classdef ForCompactGroup < replab.Equivariant
     methods
 
         function self = ForCompactGroup(repR, repC, special)
+            assert(ismember(exist('nlinfit'), [2 6]), 'Computations on compact groups require nonlinear curve fit.');
             self = self@replab.Equivariant(repR, repC, special);
         end
 
@@ -54,7 +55,7 @@ classdef ForCompactGroup < replab.Equivariant
                     errored = false;
                     try
                         [beta, R, J, CovB, MSE] = nlinfit(1:iter, log10(errs(1:iter)), modelfun, beta0);
-                    catch ME
+                    catch
                         errored = true;
                     end
                     warning(w);
