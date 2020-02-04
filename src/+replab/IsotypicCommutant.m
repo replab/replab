@@ -12,7 +12,7 @@ classdef IsotypicCommutant < replab.Equivariant
 
         function s = reducedBlockSize(self)
         % Returns the size of a commutant algebra element block, without repetition
-            s = self.rep.multiplicity * self.divisionAlgebraDimension;
+            s = self.repR.multiplicity * self.divisionAlgebraDimension;
         end
 
         function block = projectAndReduce(self, X)
@@ -36,7 +36,7 @@ classdef IsotypicCommutant < replab.Equivariant
         % Returns:
         %   double: The projected block of size `reducedBlockSize` corresponding
         %           to this isotypic component, having removed the redundancy due to the irrep dimension
-            U = self.rep.U;
+            U = self.repR.U;
             block = self.projectAndReduce(U*X*U');
         end
 

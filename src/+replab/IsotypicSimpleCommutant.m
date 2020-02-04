@@ -15,8 +15,8 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
         %
         % Returns:
         %   double: The projected block
-            m = self.rep.multiplicity;
-            id = self.rep.irrepDimension;
+            m = self.repR.multiplicity;
+            id = self.repR.irrepDimension;
             X1 = zeros(m, m);
             for i = 1:id
                 X1 = X1 + X(i:id:m*id, i:id:m*id);
@@ -32,9 +32,9 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
         %
         % Returns:
         %   double: Block corresponding to the isotypic component
-            m = self.rep.multiplicity;
-            id = self.rep.irrepDimension;
-            U = self.rep.U;
+            m = self.repR.multiplicity;
+            id = self.repR.irrepDimension;
+            U = self.repR.U;
             X1 = zeros(m, m);
             for i = 1:id
                 U1 = U(i:id:m*id, :);
@@ -52,7 +52,7 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
         end
 
         function [X1 err] = project(self, X)
-            X1 = kron(self.block(X), eye(self.rep.irrepDimension));
+            X1 = kron(self.block(X), eye(self.repR.irrepDimension));
             err = NaN;
         end
 

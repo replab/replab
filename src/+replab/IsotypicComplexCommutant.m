@@ -19,8 +19,8 @@ classdef IsotypicComplexCommutant < replab.IsotypicCommutant
         %    double: The real part of the projected block
         %   B:
         %    double: The imaginary part of the projected block
-            m = self.rep.multiplicity;
-            id = self.rep.irrepDimension;
+            m = self.repR.multiplicity;
+            id = self.repR.irrepDimension;
             A = zeros(m, m);
             B = zeros(m, m);
             for i = 1:2:id
@@ -44,9 +44,9 @@ classdef IsotypicComplexCommutant < replab.IsotypicCommutant
         %    double: The real part of the projected block
         %   B:
         %    double: The imaginary part of the projected block
-            m = self.rep.multiplicity;
-            id = self.rep.irrepDimension;
-            U = self.rep.U;
+            m = self.repR.multiplicity;
+            id = self.repR.irrepDimension;
+            U = self.repR.U;
             A = zeros(m, m);
             B = zeros(m, m);
             for i = 1:2:id
@@ -70,7 +70,7 @@ classdef IsotypicComplexCommutant < replab.IsotypicCommutant
         end
 
         function [X1 err] = project(self, X)
-            id = self.rep.irrepDimension;
+            id = self.repR.irrepDimension;
             [A B] = self.block(X);
             X1 = kron(A, eye(id)) + kron(B, kron(eye(id/2), [0 -1; 1 0]));
             err = NaN;
