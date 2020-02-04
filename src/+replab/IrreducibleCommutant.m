@@ -1,15 +1,14 @@
-classdef IrreducibleCommutant < replab.Commutant
+classdef IrreducibleCommutant < replab.Equivariant
 % Algebra of matrices that commute with an irreducible decomposition
 %
-% Note that the `rep` property must be of type `+replab.Irreducible`.
-% TODO: should we repeat a property block with the new documentation for ``self.rep``?
-    
+% Note that the ``rep`` property must be of type `+replab.Irreducible`.
+
     methods
-        
+
         function self = IrreducibleCommutant(irreducible)
-            self = self@replab.Commutant(irreducible);
+            self = self@replab.Commutant(irreducible, irreducible, 'commutant');
         end
-       
+
         function X = projectAndReduceFromParent(self, X)
             n = self.rep.nComponents;
             blocks = cell(1, n);
@@ -19,7 +18,7 @@ classdef IrreducibleCommutant < replab.Commutant
             end
             X = blkdiag(blocks{:});
         end
-        
+
         function X = projectAndReduce(self, X)
             n = self.rep.nComponents;
             blocks = cell(1, n);
@@ -32,7 +31,7 @@ classdef IrreducibleCommutant < replab.Commutant
             end
             X = blkdiag(blocks{:});
         end
-        
+
         function X = project(self, X)
             n = self.rep.nComponents;
             blocks = cell(1, n);
@@ -41,12 +40,12 @@ classdef IrreducibleCommutant < replab.Commutant
                 iso = self.rep.component(i);
                 d = iso.dimension;
                 r = shift + (1:d);
-                blocks{i} = iso.commutant.project(X(r, r)); 
+                blocks{i} = iso.commutant.project(X(r, r));
                 shift = shift + iso.dimension;
            end
             X = blkdiag(blocks{:});
         end
-        
+
     end
-    
+
 end

@@ -24,11 +24,9 @@ classdef ForCompactGroup < replab.Equivariant
 
             for iter = 1:maxIters
                 acc = zeros(self.repR.dimension, self.repC.dimension);
-                d = zeros(1, nSamplesPerIter);
                 for j = 1:nSamplesPerIter
                     g = self.group.sample;
                     S1 = self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X));
-                    d(j) = norm(X - S1, 'fro');
                     if useInverses
                         ginv = self.group.inverse(g);
                         S2 = self.repR.matrixRowAction(ginv, self.repC.matrixColAction(ginv, X));
@@ -38,11 +36,15 @@ classdef ForCompactGroup < replab.Equivariant
                     end
                 end
                 if useInverses
-                    X = acc/(2*nSamplesPerIter);
+                    X1 = acc/(2*nSamplesPerIter);
+                    d = norm(X1 - X, 'fro');
+                    X = X1;
                 else
-                    X = acc/nSamplesPerIter;
+                    X1 = acc/nSamplesPerIter;
+                    d = norm(X1 - X, 'fro');
+                    X = X1;
                 end
-                errs(1, iter) = mean(d) + 1e-100;
+                errs(1, iter) = d + 1e-100;
                 if iter > nWarmUpIters
                     logfloor0 = log10(min(errs));
                     slope0 = (log10(errs(1)) - log10(errs(nWarmUpIters)))/nWarmUpIters;
