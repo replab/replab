@@ -276,12 +276,12 @@ each property, and following them by a comment as in below:
 .. code:: matlab
 
     properties (SetAccess = protected)
-        group % `replab.Group`: Group being representation
-        field % 'R' for a representation on a real vector space, 'C' for a representation on a complex vector space
-        dimension % Representation dimension
+        group % (`replab.Group`): Group being representation
+        field % ({'R', 'C'}): 'R' for a representation on a real vector space, 'C' for a representation on a complex vector space
+        dimension % (integer): Representation dimension
     end
 
-Property types are specified before a semicolon, as in return types.
+Property types are specified before a semicolon, in parenthesis, as for arguments.
 
 Methods are documented as standalone functions. Do not include ``self``
 in the list of parameters. The constructor is documented separately as
