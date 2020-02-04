@@ -5,5 +5,5 @@ function err = errorModel(X)
 % only (signed) permutation representations are practical in RepLAB, so this
 % overestimates the error.
     geod = sqrt(size(X, 1) * size(X, 2));
-    err = norm(X, 'fro') * dav * 5e-16;
+    err = norm(X, 'fro') * geod * 5e-16;
 end
