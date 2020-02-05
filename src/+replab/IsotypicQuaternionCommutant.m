@@ -23,8 +23,8 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
         %    double: The 'j' part of the projected block
         %   D:
         %    double: The 'k' part of the projected block
-            m = self.rep.multiplicity;
-            id = self.rep.irrepDimension;
+            m = self.repR.multiplicity;
+            id = self.repR.irrepDimension;
             A = zeros(m, m);
             B = zeros(m, m);
             C = zeros(m, m);
@@ -61,9 +61,9 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
         %    double: The 'j' part of the projected block
         %   D:
         %    double: The 'k' part of the projected block
-            m = self.rep.multiplicity;
-            id = self.rep.irrepDimension;
-            U = self.rep.U;
+            m = self.repR.multiplicity;
+            id = self.repR.irrepDimension;
+            U = self.repR.U;
             A = zeros(m, m);
             B = zeros(m, m);
             C = zeros(m, m);
@@ -99,14 +99,15 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
             X1 = kron(A, eye(2)) + kron(B, self.basisB) + kron(C, self.basisC) + kron(D, self.basisD);
         end
 
-        function X1 = project(self, X)
-            id = self.rep.irrepDimension;
+        function [X1 err] = project(self, X)
+            id = self.repR.irrepDimension;
             [A B C D] = self.block(X);
             basisA = eye(id);
             basisB = kron(eye(id/4), self.basisB);
             basisC = kron(eye(id/4), self.basisC);
             basisD = kron(eye(id/4), self.basisD);
             X1 = kron(A, basisA) + kron(B, basisB) + kron(C, basisC) + kron(D, basisD);
+            err = NaN;
         end
 
     end

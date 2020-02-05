@@ -1,4 +1,4 @@
-# We pretend to be Java because we need GNU Octave which is not 
+# We pretend to be Java because we need GNU Octave which is not
 # available (as of January 2016)
 language: java
 
@@ -8,7 +8,7 @@ dist: bionic
 env:
   - COVERING=false;
   - COVERING=true;
-      
+
 ###############################################################################
 cache:
   # Downloading octave takes a while, so let's cache apt
@@ -24,7 +24,7 @@ cache:
 before_install:
   - sudo add-apt-repository universe
   - sudo apt update
-  - sudo apt install octave liboctave-dev
+  - sudo apt install octave liboctave-dev octave-optim
   - git submodule update --init
 
 ###############################################################################
@@ -62,4 +62,3 @@ after_success:
     if [ $COVERING == true ]; then
       bash <(curl -s https://codecov.io/bash);
     fi
-

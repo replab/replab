@@ -11,15 +11,15 @@ classdef Isotypic < replab.SubRep
 % the particular basis choosen is not deterministic.
 %
 % However the subspace spanned by an isotypic component as a whole is unique.
-    
+
     properties
         irreps % row cell array of `.SubRep`: Equivalent irreducible subrepresentations in this isotypic component
         multiplicity % integer: Number of equivalent irreducible representations in this isotypic component
         irrepDimension % integer: Dimension of each irreducible representation in this component
     end
-    
+
     methods
-        
+
         function self = Isotypic(parent, irreps)
             assert(length(irreps) >= 1, 'Isotypic component cannot be empty');
             assert(isa(parent, 'replab.Rep'));
@@ -37,24 +37,24 @@ classdef Isotypic < replab.SubRep
             self.multiplicity = length(irreps);
             self.irrepDimension = irreps{1}.dimension;
         end
-        
+
         function n = nIrreps(self)
         % Returns the number of irreps = the multiplicity
             n = self.multiplicity;
         end
-        
+
         function c = irrep(self, i)
         % Returns the i-th copy of the irreducible representation
             c = self.irreps{i};
         end
-        
+
         %% Str methods
-        
+
         function names = hiddenFields(self)
             names = hiddenFields@replab.SubRep(self);
             names{1, end+1} = 'irreps';
         end
-        
+
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.SubRep(self);
             for i = 1:self.nIrreps
@@ -62,7 +62,7 @@ classdef Isotypic < replab.SubRep
                 values{1, end+1} = self.irrep(i);
             end
         end
-        
+
         function s = headerStr(self)
             if isequal(self.irrep(1).field, 'C')
                 rt = 'C';
@@ -76,9 +76,9 @@ classdef Isotypic < replab.SubRep
                 s = sprintf('Isotypic component %s(%d)', rt, self.irrepDimension);
             end
         end
-        
+
         %% Rep methods
-        
+
         function rho = image(self, g)
             p = self.parent.image(g);
             U = self.irrep(1).U;
@@ -90,7 +90,7 @@ classdef Isotypic < replab.SubRep
             rho = rho / self.nIrreps;
             rho = kron(eye(self.nIrreps), rho);
         end
-        
+
         function c = commutant(self)
             if isempty(self.commutant_)
                 if self.overC
@@ -108,7 +108,7 @@ classdef Isotypic < replab.SubRep
             end
             c = self.commutant_;
         end
-        
+
     end
-    
+
 end
