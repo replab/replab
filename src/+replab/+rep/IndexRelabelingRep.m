@@ -15,6 +15,7 @@ classdef IndexRelabelingRep < replab.Rep
             self.isUnitary = true;
             self.localDimension = localDimension;
             self.field = 'R';
+            self.irrepInfo = [];
         end
 
         function rho = image(self, g)

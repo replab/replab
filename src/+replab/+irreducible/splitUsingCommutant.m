@@ -25,11 +25,8 @@ function sub = splitUsingCommutant(rep, samples, sub)
     replab.irreducible.tell('splitUsingCommutant dimension %d', sub.dimension);
     dSub = sub.dimension;
     tol = replab.Parameters.doubleEigTol;
-    if rep.overR
-        trivialIrrepInfo = replab.IrrepInfo('1', 'R', []);
-    else
-        trivialIrrepInfo = replab.IrrepInfo('1', [], []);
-    end
+    trivialIrrepInfo = replab.irreducible.TrivialInfo(rep.field);
+    nontrivialIrrepInfo = replab.irreducible.Info([], []);
     trivials = {};
     % extract trivial representations
     S = sub.U*samples.trivialSample(1)*sub.U';
@@ -102,9 +99,9 @@ function sub = splitUsingCommutant(rep, samples, sub)
             VIrrep = [];
         end
         if ~isempty(VIrrep)
-            nontrivials{i} = sub.subRepUnitaryByIntegerBasis(VIrrep, replab.IrrepInfo).collapseParent;
+            nontrivials{i} = sub.subRepUnitaryByIntegerBasis(VIrrep, nontrivialIrrepInfo).collapseParent;
         else
-            nontrivials{i} = sub.subRepUnitary(UIrrep, [], replab.IrrepInfo).collapseParent;
+            nontrivials{i} = sub.subRepUnitary(UIrrep, [], nontrivialIrrepInfo).collapseParent;
         end
     end
     sub = horzcat(trivials, nontrivials);

@@ -84,7 +84,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %   replab.Action: The natural action
             A = replab.perm.PermutationNaturalAction(self);
         end
-        
+
         function A = vectorAction(self)
         % Returns the action of permutations on column vectors
         %
@@ -104,7 +104,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %   replab.Action: The matrix action
             A = replab.perm.PermutationMatrixAction(self);
         end
-        
+
         function perm = indexRelabelingPermutation(self, g, indexRange)
         % Returns the permutation that acts by permuting tensor coefficients
         %
@@ -127,7 +127,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             perm = permute(reshape(1:prod(dims), dims), fliplr(n +  1 - g));
             perm = perm(:)';
         end
-        
+
         function phi = indexRelabelingMorphism(self, indexRange)
         % Returns the morphism the permutation action of this group on tensor coefficients
         %
@@ -151,7 +151,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         % Representation that permutes the indices of a tensor
         %
         % It acts on the tensor space R^ir x R^ir ... (domainSize times)
-        % where ir = indexRange, by permuting the indices. 
+        % where ir = indexRange, by permuting the indices.
         %
         % The representation returned is real.
         %
@@ -187,7 +187,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             niceBasis = replab.NiceBasis.fromIntegerBasis(V);
             if isa(self, 'replab.Permutations')
                 % special case for the symmetric group
-                irrepInfo = replab.IrrepInfo([], 'R', []);
+                irrepInfo = replab.irreducible.Info('R', []);
             else
                 irrepInfo = [];
             end

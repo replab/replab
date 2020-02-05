@@ -61,7 +61,7 @@ classdef GHZ < replab.semidirectproduct.OfCompactGroups
         %
         % Returns:
         %   replab.Rep: The unitary natural representation
-            rep = replab.Rep.lambda(self, 'C', self.N.definingRep.dimension, true, @(g) self.toMatrix(g));
+            rep = replab.Rep.lambda(self, 'C', self.N.definingRep.dimension, true, [], @(g) self.toMatrix(g), @(g) self.toMatrix(g)');
         end
 
     end

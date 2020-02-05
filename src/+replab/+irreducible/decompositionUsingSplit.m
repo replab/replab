@@ -15,7 +15,7 @@ function I = decompositionUsingSplit(rep)
     nontrivial = {};
     for i = 1:length(subs)
         sub = subs{i};
-        if isequal(sub.irrepInfo.label, '1') % is it trivial
+        if isa(sub.irrepInfo, 'replab.irreducible.TrivialInfo') % is it trivial
             trivial{1,end+1} = sub;
         else
             nontrivial{1,end+1} = sub;

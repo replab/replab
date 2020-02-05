@@ -14,6 +14,11 @@ classdef TrivialRep < replab.Rep
             self.dimension = dimension;
             self.isUnitary = true;
             self.identity = eye(self.dimension);
+            if self.dimension == 1
+                self.irrepInfo = replab.irreducible.TrivialInfo(self.field);
+            else
+                self.irrepInfo = [];
+            end
         end
 
         %% Rep methods

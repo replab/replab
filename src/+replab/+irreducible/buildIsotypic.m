@@ -14,20 +14,20 @@ function iso = buildIsotypic(rep, samples, sub)
 %   replab.Isotypic: The isotypic component
     first = sub{1};
     if rep.overR
-        % identifies the type of real representations and 
-        % make the division algebra basis canonical        
+        % identifies the type of real representations and
+        % make the division algebra basis canonical
         realType = replab.irreducible.computeRealType(rep, samples, first);
         switch realType
           case 'R'
-            ii = replab.IrrepInfo(first.irrepInfo.label, realType, []);
+            ii = replab.irreducible.Info(realType, []);
             first = rep.subRepUnitary(first.U, first.niceBasis, ii);
           case 'C'
             W = replab.irreducible.enforceComplexEncoding(rep, samples, first);
-            ii = replab.IrrepInfo(first.irrepInfo.label, realType, true);
+            ii = replab.irreducible.Info(realType, true);
             first = rep.subRepUnitary(W*first.U, [], ii);
           case 'H'
             W = replab.irreducible.enforceQuaternionEncoding(rep, samples, first);
-            ii = replab.IrrepInfo(first.irrepInfo.label, realType, true);
+            ii = replab.irreducible.Info(realType, true);
             first = rep.subRepUnitary(W*first.U, [], ii);
         end
     end

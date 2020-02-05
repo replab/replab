@@ -26,6 +26,7 @@ classdef ConjugateRep < replab.Rep
             self.dimension = parent.dimension;
             self.U = U;
             self.parent = parent;
+            self.irrepInfo = [];
         end
 
         function s = headerStr(self)

@@ -7,15 +7,11 @@ classdef SubRep < replab.Rep
     properties (SetAccess = protected)
         parent % replab.Rep: Parent representation
         U % double matrix, can be sparse: Unitary basis of dimension dChild x dParent
-        niceBasis % replab.NiceBasis: Nice decomposition of the basis
-        irrepInfo % replab.IrrepInfo or []: Irreducible status information
-                  %
-                  %                         This representation is known to be
-                  %                         irreducible when this field is non empty
+        niceBasis % (`.NiceBasis`): Nice decomposition of the basis
     end
-    
+
     methods
-        
+
         function self = SubRep(parent, U, niceBasis, irrepInfo)
         % Constructs a subrepresentation of a parent representation
         %
@@ -43,21 +39,21 @@ classdef SubRep < replab.Rep
             self.niceBasis = niceBasis;
             self.irrepInfo = irrepInfo;
         end
-        
+
         function b = isKnownIrreducible(self)
         % Returns whether this subrepresentation is known to be irreducible
         %
         % Returns:
-        %   logical: True if this subrepresentation is known to be irreducible, 
+        %   logical: True if this subrepresentation is known to be irreducible,
         %            false if it is reducible or status is unknown
             b = ~isempty(self.irrepInfo);
         end
-        
+
         function b = isKnownCanonicalIrreducible(self)
         % Returns whether this subrepresentation is known to be irreducible and in the canonical division algebra basis
         %
         % Returns:
-        %   logical: True if this subrepresentation is known to be irreducible and canonical, 
+        %   logical: True if this subrepresentation is known to be irreducible and canonical,
         %            false if it is reducible/not in the canonical basis, or status is unknown
             if isempty(self.irrepInfo)
                 b = false;
@@ -78,7 +74,7 @@ classdef SubRep < replab.Rep
                 return
             end
         end
-        
+
         function P = projector(self)
         % Returns the projector on this subrepresentation
         %
@@ -87,7 +83,7 @@ classdef SubRep < replab.Rep
         %                        expressed in the parent representation
             P = full(self.U'*self.U);
         end
-        
+
         function newSub = collapseParent(self)
         % Collapses the subrepresentation of a subrepresentation
         %
@@ -106,9 +102,9 @@ classdef SubRep < replab.Rep
             end
             newSub = replab.SubRep(self.parent.parent, newU, newNiceBasis, self.irrepInfo);
         end
-        
+
         %% Str methods
-        
+
         function s = headerStr(self)
             if self.isKnownIrreducible
                 if self.overR
@@ -140,7 +136,7 @@ classdef SubRep < replab.Rep
                 {'U'} ...
                 );
         end
-        
+
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Rep(self);
             if ~isempty(self.niceBasis) && self.niceBasis.isCorrectionDiagonal
@@ -155,21 +151,21 @@ classdef SubRep < replab.Rep
                 values{1, end+1} = self.U;
             end
         end
-        
+
         %% Rep methods
-        
+
         function rho = image(self, g)
             rho = full(self.U*self.parent.image(g)*self.U');
         end
-        
+
         function rho = inverseImage(self, g)
             rho = full(self.U*self.parent.inverseImage(g)*self.U');
         end
-        
+
     end
 
     methods (Static)
-        
+
         function subRep = directSum(subReps)
         % Computes the direct sum of subrepresentations of the same parent representation
         %
@@ -190,7 +186,7 @@ classdef SubRep < replab.Rep
             newNiceBasis = replab.NiceBasis.vertcat(nbs);
             subRep = replab.SubRep(subReps{1}.parent, newU, newNiceBasis);
         end
-        
+
     end
-    
+
 end

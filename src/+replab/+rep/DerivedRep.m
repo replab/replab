@@ -21,6 +21,7 @@ classdef DerivedRep < replab.Rep
             self.conjugate = conjugate;
             self.inverse = inverse;
             self.transpose = transpose;
+            self.irrepInfo = [];
         end
 
         function s = headerStr(self)

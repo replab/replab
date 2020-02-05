@@ -14,6 +14,7 @@ classdef ComplexifiedRep < replab.Rep
             self.field = 'C';
             self.dimension = parent.dimension;
             self.isUnitary = parent.isUnitary;
+            self.irrepInfo = [];
         end
 
         function s = headerStr(self)

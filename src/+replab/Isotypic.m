@@ -13,9 +13,9 @@ classdef Isotypic < replab.SubRep
 % However the subspace spanned by an isotypic component as a whole is unique.
 
     properties
-        irreps % row cell array of `.SubRep`: Equivalent irreducible subrepresentations in this isotypic component
-        multiplicity % integer: Number of equivalent irreducible representations in this isotypic component
-        irrepDimension % integer: Dimension of each irreducible representation in this component
+        irreps % (row cell array of `.SubRep`): Equivalent irreducible subrepresentations in this isotypic component
+        multiplicity % (integer): Number of equivalent irreducible representations in this isotypic component
+        irrepDimension % (integer): Dimension of each irreducible representation in this component
     end
 
     methods

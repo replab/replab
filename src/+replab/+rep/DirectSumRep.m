@@ -30,6 +30,7 @@ classdef DirectSumRep < replab.Rep
             self.blocks = blocks;
             self.group = blocks{1}.group;
             self.field = blocks{1}.field;
+            self.irrepInfo = [];
         end
 
         function n = nBlocks(self)

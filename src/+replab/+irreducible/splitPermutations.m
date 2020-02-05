@@ -23,11 +23,7 @@ function sub = splitPermutations(rep, samples, sub)
         end
     end
     replab.irreducible.tell('Running splitPermutations');
-    if rep.overR
-        trivialIrrepInfo = replab.IrrepInfo('1', 'R', []);
-    else
-        trivialIrrepInfo = replab.IrrepInfo('1', [], []);
-    end
+    trivialIrrepInfo = replab.irreducible.TrivialInfo(rep.field);
     P = replab.Partition.permutationsOrbits(G);
     sub = {};
     % For each block, extract the all-ones trivial representation, decompose the orthogonal component
