@@ -93,6 +93,8 @@ classdef ForCompactGroup < replab.Equivariant
                             if ~isempty(crossing)
                                 plot([crossing crossing], [log10(min(errs)) log10(max(errs))], 'r-');
                             end
+                            xlabel('Iteration #');
+                            ylabel('Log10 of approximation error');
                             drawnow
                         end
                     end
