@@ -120,7 +120,7 @@ classdef Rep < replab.Str
         % The computation is cached.
         %
         % Returns:
-        %   `+replab.Commutant`: The commutant algebra
+        %   `+replab.Equivariant`: The commutant algebra represented as an equivariant space
             if isempty(self.commutant_)
                 self.commutant_ = replab.makeEquivariant(self, self, 'commutant');
             end
@@ -392,8 +392,8 @@ classdef Rep < replab.Str
         %
         % Args:
         %   V (integer matrix, can be sparse): Integer basis vectors stored as row vectors
-        %   irrepInfo (replab.IrrepInfo or [], optional): When present, indicates that the subrepresentation is
-        %                                                 irreducible with associated information
+        %   irrepInfo (`+replab.irreducible.Info` or [], optional): When present, indicates that the subrepresentation is
+        %                                                           irreducible with associated information
         %
         % Returns:
         %   replab.SubRep: The subrepresentation
@@ -416,9 +416,8 @@ classdef Rep < replab.Str
         %
         % Args:
         %   U (double(*,*), can be sparse): Orthonormal basis vectors stored as row vectors
-        %   niceBasis (`replab.NiceBasis or [], optional): Optional integer basis with the same span as the basis vectors
-        %   irrepInfo (`replab.irreducible.Info` or [], optional): When present, indicates that the subrepresentation is
-        %                                                 irreducible with associated information
+        %   niceBasis (`+replab.NiceBasis` or [], optional): Optional integer basis with the same span as the basis vectors
+        %   irrepInfo (`+replab.irreducible.Info` or [], optional): When present, indicates that the subrepresentation is irreducible with associated information
         %
         % Returns:
         %   `+replab.SubRep`: The subrepresentation
