@@ -13,7 +13,7 @@ function test_quaternion_representations
     rep = W.primitiveRepFun(@(x) x.definingRep);
     X = randn(rep.dimension, rep.dimension);
     I = rep.decomposition;
-    X1 = I.asConjugateRep.commutant.project(X); 
+    X1 = I.asSimilarRep.commutant.project(X);
     X2 = I.commutant.project(X1);
     assert(norm(X1 - X2) < replab.Parameters.doubleEigTol);
 end
@@ -24,7 +24,7 @@ function test_complex_representations
     rep = C20.definingRep;
     X = randn(rep.dimension, rep.dimension);
     I = rep.decomposition;
-    X1 = I.asConjugateRep.commutant.project(X); 
+    X1 = I.asSimilarRep.commutant.project(X);
     X2 = I.commutant.project(X1);
     assert(norm(X1 - X2) < replab.Parameters.doubleEigTol);
 end

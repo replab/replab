@@ -432,22 +432,20 @@ classdef Rep < replab.Str
             sub = replab.SubRep(self, U, niceBasis, irrepInfo);
         end
 
-        function rep1 = leftConjugateUnitary(self, A)
-        % Returns the (left) conjugation of this representation
-        %
-        % A must be a unitary matrix, and this representation must be unitary.
+        function rep1 = similar(self, A, Ainv)
+        % Returns a similar representation under a change of basis
         %
         % It returns a representation ``rep1`` such that
         %
-        % ``rep1.image(g) = A * self.image(g) * inv(A)``
+        % ``rep1.image(g) = A * self.image(g) * Ainv``
         %
         % Args:
-        %   A (double matrix): Change of basis matrix
+        %   A (double(*,*)): Change of basis matrix
+        %   Ainv (double(*,*)): Inverse of the change of basis matrix
         %
         % Returns:
-        %   replab.ConjugateRep: The conjugated representation
-            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
-            rep1 = replab.ConjugateRep(A, self);
+        %   `+replab.SimilarRep`: The similar representation
+            rep1 = replab.SimilarRep(self, A, Ainv);
         end
 
     end

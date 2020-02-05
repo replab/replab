@@ -26,18 +26,18 @@ classdef Irreducible < replab.SubRep
             self.components = components;
         end
 
-        function r = asConjugateRep(self)
+        function r = asSimilarRep(self)
         % Returns the block-diagonal representation corresponding to the decomposition
         %
         % Up to the change of basis matrix `U`, it corresponds to the representation ``parent``.
-        % Indeed, we have ``self.asRep.image(g) = U * self.parent.image(g) * U'``.
+        % Indeed, we have ``self.image(g) = U * self.parent.image(g) * U'``.
         %
-        % The returned representation is a conjugate of the parent representation, so it does
-        % not look as clean as ``self.asRep``. For efficiency and numerical stability, use ``self.asRep``.
+        % The returned representation is the parent representation with an explicit change of basis, so it does
+        % not look as clean as ``self``. For efficiency and numerical stability, use ``self``.
         %
         % Returns:
-        %   replab.Rep: The block-diagonal representation as a left conjugate representation
-            r = self.parent.leftConjugateUnitary(self.U);
+        %   `+replab.Rep`: The block-diagonal representation as a representation similar to this rep. parent
+            r = self.parent.similar(self.U, self.U');
         end
 
         function n = nComponents(self)
