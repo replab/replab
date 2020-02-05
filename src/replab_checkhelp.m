@@ -33,8 +33,13 @@ function ok = replab_checkhelp
             le = lasterror;
             last = p.consoleLine.lineContent;
             p.consoleLine.update('');
-            replab.infra.doctests.errFunElement(el, el.startLineNumber);
-            fprintf('\n');
+            if isa(el, 'replab.infra.SourceElement')
+                replab.infra.doctests.errFunElement(el, el.startLineNumber);
+                fprintf('\n');
+            else
+                fprintf('Parse error in inherited element %s\n', el.fullIdentifier);
+                fprintf('\n');
+            end
             fprintf('Error identifier: %s\n', le.identifier);
             disp(le.message);
             fprintf('\n\n');
