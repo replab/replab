@@ -5,7 +5,8 @@ function sub = splitUsingCommutant(rep, samples, sub)
 %
 % Decomposes a possibly non-irreducible subrepresentation of ``rep`` into irreducible subrepresentations.
 % Does not group the irreducible subrepresentations into isotypic components, but identifies every instance of
-% the trivial representation by setting ``label`` to ``'1'`` in the subrepresentation `+replab.IrrepInfo`.
+% the trivial representation by setting ``irrepInfo`` to an instance of `+replab.+irreducible.TrivialInfo` in
+% the subrepresentation ``irrepInfo``.
 %
 % Args:
 %   rep (`+replab.Rep`): Parent representation to decompose
