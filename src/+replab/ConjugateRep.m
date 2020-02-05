@@ -3,14 +3,14 @@ classdef ConjugateRep < replab.Rep
 %
 % We use left action convention, which means that
 % image(g) = U * parent.image(g) * U'
-    
+
     properties (SetAccess = protected)
         U % unitary conjugation matrix
         parent % representation being conjugated
     end
-    
+
     methods
-                
+
         function self = ConjugateRep(U, parent)
             switch parent.field
               case 'R'
@@ -37,5 +37,5 @@ classdef ConjugateRep < replab.Rep
         end
 
     end
-    
+
 end

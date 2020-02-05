@@ -5,7 +5,7 @@ function test_suite = RepresentationsTest()
     catch
     end
     initTestSuite;
-    
+
     % test orbit decomposition
     G = replab.Permutations(4).subgroup({[2 1 3 4] [2 3 4 1]});
     rho = G.definingRep;
