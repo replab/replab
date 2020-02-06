@@ -25,3 +25,11 @@
     max-width: 100%;
     height: auto;
 }
+
+.math .mi {
+    color: #000;
+}
+
+.math .mo {
+    color: #000;
+}
