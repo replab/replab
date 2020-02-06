@@ -19,8 +19,10 @@
      "output_type": "stream",
      "text": [
       "Adding RepLAB to the path\r\n",
-      "warning: function /home/denis/Projects/replab/src/help.m shadows a core library function\r\n",
+      "warning: function /home/denis/w/replab/src/help.m shadows a core library function\r\n",
       "Adding RepLAB package to the path\r\n",
+      "Loading optim package for Octave...\r\n",
+      "OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = \"org.octave.OctClassLoader\"). To use archived non-system classes, this property must be not be set\r\n",
       "Adding VPI to the path\r\n",
       "Adding MOxUnit to the path\r\n",
       "Adding embedded YALMIP to the path\r\n",
@@ -53,7 +55,7 @@
      "text": [
       "error: octave_base_value::map_value(): wrong type argument 'scalar'\r\n",
       "error: 'X' undefined near line 1 column 10\r\n",
-      "ans =  NaN\r\n"
+      "ans = NaN\r\n"
      ]
     }
    ],
@@ -116,8 +118,8 @@
       " rel. dual     \"        \"       \"      = 0.00e+00\r\n",
       " norm(X), norm(y), norm(Z) = 2.0e+00, 7.1e-01, 3.0e+00\r\n",
       " norm(A), norm(b), norm(C) = 3.8e+00, 5.0e+00, 3.2e+00\r\n",
-      " Total CPU time (secs)  = 0.28  \r\n",
-      " CPU time per iteration = 0.05  \r\n",
+      " Total CPU time (secs)  = 0.19  \r\n",
+      " CPU time per iteration = 0.03  \r\n",
       " termination code       =  0\r\n",
       " DIMACS: 8.9e-12  0.0e+00  1.4e-07  0.0e+00  1.0e-08  6.3e-08\r\n",
       "-------------------------------------------------------------------\r\n",
@@ -257,6 +259,7 @@
       "        field: 'R'                              \r\n",
       "        group: replab.signed.PermutationSubgroup\r\n",
       "inverseImages: 1 x 3 cell                       \r\n",
+      "    irrepInfo: []                               \r\n",
       "    isUnitary: true                             \r\n",
       "    images{1}: 5 x 5 double                     \r\n",
       "    images{2}: 5 x 5 double                     \r\n",
@@ -280,15 +283,15 @@
      "text": [
       "g =\r\n",
       "\r\n",
-      "   1  -3   2   5  -4\r\n",
+      "   1  -3  -2  -4   5\r\n",
       "\r\n",
       "ans =\r\n",
       "\r\n",
       "   1   0   0   0   0\r\n",
-      "   0   0   1   0   0\r\n",
+      "   0   0  -1   0   0\r\n",
       "   0  -1   0   0   0\r\n",
-      "   0   0   0   0  -1\r\n",
-      "   0   0   0   1   0\r\n",
+      "   0   0   0  -1   0\r\n",
+      "   0   0   0   0   1\r\n",
       "\r\n"
      ]
     }
@@ -353,7 +356,7 @@
       "dimension: 1                                            \r\n",
       "    field: 'R'                                          \r\n",
       "    group: replab.signed.PermutationSubgroup            \r\n",
-      "irrepInfo: irreducible, '1', real of real type          \r\n",
+      "irrepInfo: replab.irreducible.TrivialInfo               \r\n",
       "isUnitary: true                                         \r\n",
       "niceBasis: replab.NiceBasis                             \r\n",
       "   parent: Orthogonal real representation of dimension 5\r\n",
@@ -385,26 +388,26 @@
       "U =\r\n",
       "\r\n",
       "   1.00000   0.00000   0.00000   0.00000   0.00000\r\n",
-      "   0.00000   0.22361  -0.67082   0.31623  -0.63246\r\n",
-      "   0.00000   0.67082   0.22361  -0.63246  -0.31623\r\n",
-      "   0.00000  -0.68219  -0.18605  -0.61394  -0.35082\r\n",
-      "   0.00000   0.18605  -0.68219  -0.35082   0.61394\r\n",
+      "   0.00000  -0.40628   0.57874  -0.12195   0.69651\r\n",
+      "   0.00000   0.57874   0.40628  -0.69651  -0.12195\r\n",
+      "   0.00000  -0.50000  -0.50000  -0.70711  -0.00000\r\n",
+      "   0.00000   0.50000  -0.50000  -0.00000   0.70711\r\n",
       "\r\n",
       "ans =\r\n",
       "\r\n",
       "   1.00000   0.00000   0.00000   0.00000   0.00000\r\n",
-      "   0.00000   1.00000  -0.00000   0.00000   0.00000\r\n",
-      "   0.00000  -0.00000   1.00000  -0.00000  -0.00000\r\n",
-      "   0.00000   0.00000  -0.00000   1.00000   0.00000\r\n",
+      "   0.00000   1.00000   0.00000  -0.00000   0.00000\r\n",
+      "   0.00000   0.00000   1.00000  -0.00000  -0.00000\r\n",
+      "   0.00000  -0.00000  -0.00000   1.00000   0.00000\r\n",
       "   0.00000   0.00000  -0.00000   0.00000   1.00000\r\n",
       "\r\n",
       "ans =\r\n",
       "\r\n",
       "   0.00000   0.00000   0.00000   0.00000   0.00000\r\n",
-      "   0.00000  -1.41421   0.00000  -0.00000   0.00000\r\n",
-      "   0.00000   0.00000  -1.41421  -0.00000   0.00000\r\n",
-      "   0.00000  -0.00000  -0.00000   1.41421   0.00000\r\n",
-      "   0.00000   0.00000   0.00000   0.00000   1.41421\r\n",
+      "   0.00000  -1.41421   0.00000   0.00000  -0.00000\r\n",
+      "   0.00000   0.00000  -1.41421  -0.00000  -0.00000\r\n",
+      "   0.00000   0.00000  -0.00000   1.41421   0.00000\r\n",
+      "   0.00000  -0.00000   0.00000  -0.00000   1.41421\r\n",
       "\r\n"
      ]
     }
@@ -433,7 +436,8 @@
      "text": [
       "\r\n",
       " num. of constraints =  1\r\n",
-      " dim. of sdp    var  =  5,   num. of sdp  blk  =  1\r\n",
+      " dim. of sdp    var  =  5,   num. of sdp  blk  =  1  1th semidefinite block is actually diagonal\r\n",
+      "\r\n",
       "*******************************************************************\r\n",
       "   SDPT3: Infeasible path-following algorithms\r\n",
       "*******************************************************************\r\n",
@@ -462,8 +466,8 @@
       " rel. dual     \"        \"       \"      = 0.00e+00\r\n",
       " norm(X), norm(y), norm(Z) = 2.0e+00, 7.1e-01, 3.0e+00\r\n",
       " norm(A), norm(b), norm(C) = 3.8e+00, 5.0e+00, 3.2e+00\r\n",
-      " Total CPU time (secs)  = 0.16  \r\n",
-      " CPU time per iteration = 0.03  \r\n",
+      " Total CPU time (secs)  = 0.08  \r\n",
+      " CPU time per iteration = 0.01  \r\n",
       " termination code       =  0\r\n",
       " DIMACS: 8.9e-12  0.0e+00  1.4e-07  0.0e+00  1.0e-08  6.3e-08\r\n",
       "-------------------------------------------------------------------\r\n",
@@ -510,7 +514,7 @@
    ],
    "mimetype": "text/x-octave",
    "name": "octave",
-   "version": "4.4.1"
+   "version": "4.2.2"
   }
  },
  "nbformat": 4,

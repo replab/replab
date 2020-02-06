@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>1. Introduction to representation for quantum information people &#8212; RepLAB 0.6.5 documentation</title>
+    <title>1. Introduction to representation for quantum information people &#8212; RepLAB 0.6.6 documentation</title>
     <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="index.html" title="Brussels visit October 2019"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Brussels visit October 2019</a> &#187;</li> 
       </ul>
@@ -79,7 +79,7 @@
   <a href="
     ../../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.5.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.6.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -375,8 +375,10 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/Projects/replab/src/help.m shadows a core library function
+warning: function /home/denis/w/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
+Loading optim package for Octave...
+OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = &#34;org.octave.OctClassLoader&#34;). To use archived non-system classes, this property must be not be set
 Adding VPI to the path
 Adding MOxUnit to the path
 Adding embedded YALMIP to the path
@@ -456,6 +458,7 @@ Orthogonal real representation of dimension 5
         field: &#39;R&#39;
         group: Permutations acting on 5 elements
 inverseImages: 1 x 2 cell
+    irrepInfo: []
     isUnitary: true
     images{1}: 5 x 5 double
     images{2}: 5 x 5 double
@@ -518,10 +521,10 @@ Subrepresentation
    niceBasis: replab.NiceBasis
       parent: Orthogonal real representation of dimension 5
       U(1,:): [1, 1, 1, 1, 1]/sqrt(5)
-      U(2,:): [4, -1, -1, -1, -1]/sqrt(20)
+      U(2,:): [0, 0, -1, -1, 2]/sqrt(6)
       U(3,:): [0, 3, -1, -1, -1]/sqrt(12)
       U(4,:): [0, 0, 1, -1, 0]/sqrt(2)
-      U(5,:): [0, 0, -1, -1, 2]/sqrt(6)
+      U(5,:): [4, -1, -1, -1, -1]/sqrt(20)
 component(1): Isotypic component R(1)
 component(2): Isotypic component R(4)
 
@@ -531,7 +534,7 @@ Real irreducible subrepresentation of real type
 dimension: 1
     field: &#39;R&#39;
     group: Permutations acting on 5 elements
-irrepInfo: irreducible, &#39;1&#39;, real of real type
+irrepInfo: replab.irreducible.TrivialInfo
 isUnitary: true
 niceBasis: replab.NiceBasis
    parent: Orthogonal real representation of dimension 5
@@ -565,28 +568,28 @@ Real irreducible subrepresentation of real type
 dimension: 4
     field: &#39;R&#39;
     group: Permutations acting on 5 elements
-irrepInfo: irreducible, real of real type
+irrepInfo: replab.irreducible.Info
 isUnitary: true
 niceBasis: replab.NiceBasis
    parent: Orthogonal real representation of dimension 5
-   U(1,:): [4, -1, -1, -1, -1]/sqrt(20)
+   U(1,:): [0, 0, -1, -1, 2]/sqrt(6)
    U(2,:): [0, 3, -1, -1, -1]/sqrt(12)
    U(3,:): [0, 0, 1, -1, 0]/sqrt(2)
-   U(4,:): [0, 0, -1, -1, 2]/sqrt(6)
+   U(4,:): [4, -1, -1, -1, -1]/sqrt(20)
 
 ans =
 
-  -2.5000e-01  -3.2275e-01   5.6568e-18   9.1287e-01
-   9.6825e-01  -8.3333e-02   8.8981e-18   2.3570e-01
-   5.6568e-18   8.1650e-01  -5.0000e-01   2.8868e-01
-  -5.7413e-18  -4.7140e-01  -8.6603e-01  -1.6667e-01
+  -0.16667  -0.47140  -0.86603   0.00000
+   0.23570  -0.08333   0.00000   0.96825
+   0.28868   0.81650  -0.50000   0.00000
+   0.91287  -0.32275   0.00000  -0.25000
 
 ans =
 
-  -2.5000e-01   9.6825e-01   5.6568e-18  -5.7413e-18
-   9.6825e-01   2.5000e-01   8.8981e-18  -1.1097e-17
-   5.6568e-18   8.8981e-18   1.0000e+00  -2.4514e-17
-  -5.7413e-18  -1.1097e-17  -2.4514e-17   1.0000e+00
+   1.00000   0.00000   0.00000   0.00000
+   0.00000   0.25000   0.00000   0.96825
+   0.00000   0.00000   1.00000   0.00000
+   0.00000   0.96825   0.00000  -0.25000
 
 </pre></div></div>
 </div>
@@ -618,18 +621,18 @@ ans =
 ans =
 
    1.00000   0.00000   0.00000   0.00000   0.00000
-   0.00000  -0.25000  -0.32275   0.00000   0.91287
-   0.00000   0.96825  -0.08333   0.00000   0.23570
-   0.00000   0.00000   0.81650  -0.50000   0.28868
-   0.00000   0.00000  -0.47140  -0.86603  -0.16667
+   0.00000  -0.16667  -0.47140  -0.86603   0.00000
+   0.00000   0.23570  -0.08333   0.00000   0.96825
+   0.00000   0.28868   0.81650  -0.50000   0.00000
+   0.00000   0.91287  -0.32275   0.00000  -0.25000
 
 ans =
 
    1.00000   0.00000   0.00000   0.00000   0.00000
-   0.00000  -0.25000   0.96825   0.00000   0.00000
-   0.00000   0.96825   0.25000   0.00000   0.00000
+   0.00000   1.00000   0.00000   0.00000   0.00000
+   0.00000   0.00000   0.25000   0.00000   0.96825
    0.00000   0.00000   0.00000   1.00000   0.00000
-   0.00000   0.00000   0.00000   0.00000   1.00000
+   0.00000   0.00000   0.96825   0.00000  -0.25000
 
 </pre></div></div>
 </div>
@@ -693,6 +696,7 @@ Orthogonal real representation of dimension 2
         field: &#39;R&#39;
         group: Permutations acting on 2 elements
 inverseImages: {[0, 1; 1, 0]}
+    irrepInfo: []
     isUnitary: true
     images{1}: [0, 1; 1, 0]
 
@@ -762,7 +766,7 @@ ans =
 <ul class="simple">
 <li><p>Permutation of inputs, which will permute coefficients of <span class="math notranslate nohighlight">\(\vec{P}\)</span> according to <span class="math notranslate nohighlight">\(g_1 = [3,4,1,2]\)</span>.</p></li>
 <li><p>Permutation of outputs of the first measurement, which will permute <span class="math notranslate nohighlight">\(\vec{P}\)</span> according to <span class="math notranslate nohighlight">\(g_2 = [2,1,3,4]\)</span>.</p></li>
-<li><p>The permutation of outputs of the second measurement is achieved by conjugating <span class="math notranslate nohighlight">\(g_2\)</span> by <span class="math notranslate nohighlight">\(g_1\)</span>, i.e. by <span class="math notranslate nohighlight">\(g_1 ~ g_2 ~ g_1\)</span>, so we do not need to provide that group generator explicitly.</p></li>
+<li><p>The permutation of outputs of the second measurement is achieved by conjugating <span class="math notranslate nohighlight">\(g_2\)</span> by <span class="math notranslate nohighlight">\(g_1\)</span>, i.e. by <span class="math notranslate nohighlight">\(g_1 ~ g_2 ~ g_1\)</span>, so we do not need to provide that group generator explicitly.</p></li>
 </ul>
 <p>We then construct the group <span class="math notranslate nohighlight">\(G=\left &lt;g_1, g_2 \right&gt;\)</span> and its defining representation, which we decompose into irreducible subrepresentations.</p>
 <div class="nbinput docutils container">
@@ -812,6 +816,7 @@ Orthogonal real representation of dimension 4
         field: &#39;R&#39;
         group: replab.PermutationSubgroup
 inverseImages: 1 x 2 cell
+    irrepInfo: []
     isUnitary: true
     images{1}: [0, 0, 1, 0; 0, 0, 0, 1; 1, 0, 0, 0; 0, 1, 0, 0]
     images{2}: [0, 1, 0, 0; 1, 0, 0, 0; 0, 0, 1, 0; 0, 0, 0, 1]
@@ -860,7 +865,7 @@ Real irreducible subrepresentation of real type
 dimension: 1
     field: &#39;R&#39;
     group: replab.PermutationSubgroup
-irrepInfo: irreducible, &#39;1&#39;, real of real type
+irrepInfo: replab.irreducible.TrivialInfo
 isUnitary: true
 niceBasis: replab.NiceBasis
    parent: Orthogonal real representation of dimension 4
@@ -872,7 +877,7 @@ Real irreducible subrepresentation of real type
 dimension: 1
     field: &#39;R&#39;
     group: replab.PermutationSubgroup
-irrepInfo: irreducible, real of real type
+irrepInfo: replab.irreducible.Info
 isUnitary: true
 niceBasis: replab.NiceBasis
    parent: Orthogonal real representation of dimension 4
@@ -884,7 +889,7 @@ Real irreducible subrepresentation of real type
 dimension: 2
     field: &#39;R&#39;
     group: replab.PermutationSubgroup
-irrepInfo: irreducible, real of real type
+irrepInfo: replab.irreducible.Info
 isUnitary: true
 niceBasis: replab.NiceBasis
    parent: Orthogonal real representation of dimension 4
@@ -947,7 +952,7 @@ complex numbers.</p>
         <li class="right" >
           <a href="index.html" title="Brussels visit October 2019"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" >Brussels visit October 2019</a> &#187;</li> 
       </ul>

@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Technical Reference &#8212; RepLAB 0.6.6 documentation</title>
+    <title>Error estimation in RepLAB &#8212; RepLAB 0.6.6 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -31,8 +31,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Pretty printing" href="print.html" />
-    <link rel="prev" title="Publications using RepLAB" href="../publications/index.html" />
+    <link rel="next" title="Relabelings in the CHSH scenario" href="CHSH.html" />
+    <link rel="prev" title="Topic guides" href="index.html" />
   
   
    
@@ -59,12 +59,13 @@
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="print.html" title="Pretty printing"
+          <a href="CHSH.html" title="Relabelings in the CHSH scenario"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../publications/index.html" title="Publications using RepLAB"
+          <a href="index.html" title="Topic guides"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Topic guides</a> &#187;</li> 
       </ul>
     </div>
     <div class="container-wrapper">
@@ -88,24 +89,18 @@
       <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications using RepLAB</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Technical Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="print.html">Pretty printing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="base.html">Base object types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="laws.html">Laws</a></li>
-<li class="toctree-l2"><a class="reference internal" href="groups.html">Basic group structures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rep_technical.html">Representations (support code)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="permutations.html">Permutation groups</a></li>
-<li class="toctree-l2"><a class="reference internal" href="group_constructions.html">Abstract group constructions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="infrastructure.html">Infrastructure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="infrastructure_technical.html">Infrastructure (support code)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="list.html">List of classes and functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Topic guides</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Error estimation in RepLAB</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#no-iterative-approximation-error">No iterative approximation error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#presence-of-approximation-error">Presence of approximation error</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="CHSH.html">Relabelings in the CHSH scenario</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications using RepLAB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../blog/index.html">Blog</a></li>
 </ul>
@@ -136,33 +131,25 @@
             <ol class="breadcrumb">
               <li><a href="../index.html">Docs</a></li>
               
-              <li>Technical Reference</li>
+                <li><a href="index.html">Topic guides</a></li>
+              
+              <li>Error estimation in RepLAB</li>
             </ol>
           </div>
           
           <div class="document clearer body">
             
-  <div class="section" id="technical-reference">
-<h1>Technical Reference<a class="headerlink" href="#technical-reference" title="Permalink to this headline">¶</a></h1>
-<p>Technical reference material is available in two forms.</p>
-<p>First, the <code class="docutils literal notranslate"><span class="pre">help</span></code> function in matlab has been overloaded to present a rich amount of information directly in the console.
-To get started, type <code class="docutils literal notranslate"><span class="pre">help</span> <span class="pre">replab</span></code> in matlab.</p>
-<p>An API Reference, as described in the table of contents below:</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="print.html">Pretty printing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="base.html">Base object types</a></li>
-<li class="toctree-l1"><a class="reference internal" href="laws.html">Laws</a></li>
-<li class="toctree-l1"><a class="reference internal" href="groups.html">Basic group structures</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rep.html">Representations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rep_technical.html">Representations (support code)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="permutations.html">Permutation groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="group_constructions.html">Abstract group constructions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="infrastructure.html">Infrastructure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="infrastructure_technical.html">Infrastructure (support code)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="list.html">List of classes and functions</a></li>
-</ul>
+  <div class="section" id="error-estimation-in-replab">
+<h1>Error estimation in RepLAB<a class="headerlink" href="#error-estimation-in-replab" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="no-iterative-approximation-error">
+<h2>No iterative approximation error<a class="headerlink" href="#no-iterative-approximation-error" title="Permalink to this headline">¶</a></h2>
+<p>For computations that are supposed to be exact (as those obtained from the decomposition of finite groups), we assume (for now) that the error on the coefficients is within <code class="docutils literal notranslate"><span class="pre">2*eps(coeff)</span></code>, where <code class="docutils literal notranslate"><span class="pre">eps</span></code> represents the distance to the neighboring floating point number.</p>
+<p>A rough estimate of the Frobenius error on a resulting matrix <code class="docutils literal notranslate"><span class="pre">X</span></code> with that error model is <code class="docutils literal notranslate"><span class="pre">norm(X,</span> <span class="pre">'fro')</span> <span class="pre">*</span> <span class="pre">sqrt(size(X,</span> <span class="pre">1)</span> <span class="pre">*</span> <span class="pre">size(X,</span> <span class="pre">2))</span> <span class="pre">*</span> <span class="pre">5e-16</span></code>.</p>
+</div>
+<div class="section" id="presence-of-approximation-error">
+<h2>Presence of approximation error<a class="headerlink" href="#presence-of-approximation-error" title="Permalink to this headline">¶</a></h2>
+<p>When using a fixed-point iteration to estimate projections, etc…, we fit an exponential function
+plus a noise floor, and return the error estimated from the noise floor of the fit.</p>
 </div>
 </div>
 
@@ -176,11 +163,11 @@ To get started, type <code class="docutils literal notranslate"><span class="pre
   <div class="footer-relations">
     
       <div class="pull-left">
-        <a class="btn btn-default" href="../publications/index.html" title="previous chapter (use the left arrow)">Publications using RepLAB</a>
+        <a class="btn btn-default" href="index.html" title="previous chapter (use the left arrow)">Topic guides</a>
       </div>
     
       <div class="pull-right">
-        <a class="btn btn-default" href="print.html" title="next chapter (use the right arrow)">Pretty printing</a>
+        <a class="btn btn-default" href="CHSH.html" title="next chapter (use the right arrow)">Relabelings in the CHSH scenario</a>
       </div>
     </div>
     <div class="clearer"></div>
@@ -198,12 +185,13 @@ To get started, type <code class="docutils literal notranslate"><span class="pre
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="print.html" title="Pretty printing"
+          <a href="CHSH.html" title="Relabelings in the CHSH scenario"
              >next</a> |</li>
         <li class="right" >
-          <a href="../publications/index.html" title="Publications using RepLAB"
+          <a href="index.html" title="Topic guides"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.6 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Topic guides</a> &#187;</li> 
       </ul>
     </div>
 <script type="text/javascript">

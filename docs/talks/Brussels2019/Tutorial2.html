@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>2. Finding an upper bound on CHSH, symmetrized version &#8212; RepLAB 0.6.5 documentation</title>
+    <title>2. Finding an upper bound on CHSH, symmetrized version &#8212; RepLAB 0.6.6 documentation</title>
     <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="Tutorial1.html" title="1. Introduction to representation for quantum information people"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Brussels visit October 2019</a> &#187;</li> 
       </ul>
@@ -79,7 +79,7 @@
   <a href="
     ../../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.5.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.6.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -360,8 +360,10 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/Projects/replab/src/help.m shadows a core library function
+warning: function /home/denis/w/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
+Loading optim package for Octave...
+OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = &#34;org.octave.OctClassLoader&#34;). To use archived non-system classes, this property must be not be set
 Adding VPI to the path
 Adding MOxUnit to the path
 Adding embedded YALMIP to the path
@@ -395,7 +397,7 @@ Adding MOcov to the path
 <div class="highlight"><pre>
 error: octave_base_value::map_value(): wrong type argument &#39;scalar&#39;
 error: &#39;X&#39; undefined near line 1 column 10
-ans =  NaN
+ans = NaN
 </pre></div></div>
 </div>
 <p>To help with symmetrization, we’ll use an equivalent form of the constraint X, and check the result.</p>
@@ -452,18 +454,18 @@ it pstep dstep pinfeas dinfeas  gap      prim-obj      dual-obj    cputime
  rel. dual     &#34;        &#34;       &#34;      = 0.00e+00
  norm(X), norm(y), norm(Z) = 2.0e+00, 7.1e-01, 3.0e+00
  norm(A), norm(b), norm(C) = 3.8e+00, 5.0e+00, 3.2e+00
- Total CPU time (secs)  = 0.28
- CPU time per iteration = 0.05
+ Total CPU time (secs)  = 0.19
+ CPU time per iteration = 0.03
  termination code       =  0
  DIMACS: 8.9e-12  0.0e+00  1.4e-07  0.0e+00  1.0e-08  6.3e-08
 -------------------------------------------------------------------
 ans =  2.8284
 </pre></div></div>
 </div>
-<p>Now, we want to find a change of basis that brings X into a block-diagonal form. This is easier to check on the basis matrices <code class="docutils literal notranslate"><span class="pre">C</span></code> and <code class="docutils literal notranslate"><span class="pre">A</span></code>, i.e. we want to find <code class="docutils literal notranslate"><span class="pre">U</span></code> such that <code class="docutils literal notranslate"><span class="pre">U*C*U'</span></code> and <code class="docutils literal notranslate"><span class="pre">U*A*U'</span></code> are block-diagonal. Let us use RepLAB for that. First, remark that the moment matrix is invariant under the following signed permutations:</p>
-<p>$:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vec{v}</span></code> = <span class="math">\left`( 1, A_0, A_1, B_0, B_1 :nbsphinx-math:</span>right`) <span class="math">\rightarrow  `:nbsphinx-math:</span>left`( 1, B_0, B_1, A_0, A_1 <span class="math">\right</span>) $</p>
-<p>$:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vec{v}</span></code> = <span class="math">\left`( 1, A_0, A_1, B_0, B_1 :nbsphinx-math:</span>right`) <span class="math">\rightarrow  `:nbsphinx-math:</span>left`( 1, -A_0, -A_1, -B_0, -B_1 <span class="math">\right</span>) $</p>
-<p>$:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vec{v}</span></code> = <span class="math">\left`( 1, A_0, A_1, B_0, B_1 :nbsphinx-math:</span>right`) <span class="math">\rightarrow  `:nbsphinx-math:</span>left`( 1, A_1, A_0, B_0, -B_1 <span class="math">\right</span>) $</p>
+<p>Now, we want to find a change of basis that brings X into a block-diagonal form. This is easier to check on the basis matrices <code class="docutils literal notranslate"><span class="pre">C</span></code> and <code class="docutils literal notranslate"><span class="pre">A</span></code>, i.e. we want to find <code class="docutils literal notranslate"><span class="pre">U</span></code> such that <code class="docutils literal notranslate"><span class="pre">U*C*U'</span></code> and <code class="docutils literal notranslate"><span class="pre">U*A*U'</span></code> are block-diagonal. Let us use RepLAB for that. First, remark that the moment matrix is invariant under the following signed permutations:</p>
+<p>$:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vec{v}</span></code> = <span class="math">\left`( 1, A\_0, A\_1, B\_0, B\_1 :nbsphinx-math:</span>right`) <span class="math">\rightarrow  `:nbsphinx-math:</span>left`( 1, B_0, B_1, A_0, A_1 <span class="math">\right</span>) $</p>
+<p>$:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vec{v}</span></code> = <span class="math">\left`( 1, A\_0, A\_1, B\_0, B\_1 :nbsphinx-math:</span>right`) <span class="math">\rightarrow  `:nbsphinx-math:</span>left`( 1, -A_0, -A_1, -B_0, -B_1 <span class="math">\right</span>) $</p>
+<p>$:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vec{v}</span></code> = <span class="math">\left`( 1, A\_0, A\_1, B\_0, B\_1 :nbsphinx-math:</span>right`) <span class="math">\rightarrow  `:nbsphinx-math:</span>left`( 1, A_1, A_0, B_0, -B_1 <span class="math">\right</span>) $</p>
 <p>We now show how to use RepLAB to find the change of basis for the symmetry group that includes only the first symmetry.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -556,6 +558,7 @@ Orthogonal real representation of dimension 5
         field: &#39;R&#39;
         group: replab.signed.PermutationSubgroup
 inverseImages: 1 x 3 cell
+    irrepInfo: []
     isUnitary: true
     images{1}: 5 x 5 double
     images{2}: 5 x 5 double
@@ -580,15 +583,15 @@ inverseImages: 1 x 3 cell
 <div class="highlight"><pre>
 g =
 
-   1  -3   2   5  -4
+   1  -3  -2  -4   5
 
 ans =
 
    1   0   0   0   0
-   0   0   1   0   0
+   0   0  -1   0   0
    0  -1   0   0   0
-   0   0   0   0  -1
-   0   0   0   1   0
+   0   0   0  -1   0
+   0   0   0   0   1
 
 </pre></div></div>
 </div>
@@ -645,7 +648,7 @@ Real irreducible subrepresentation of real type
 dimension: 1
     field: &#39;R&#39;
     group: replab.signed.PermutationSubgroup
-irrepInfo: irreducible, &#39;1&#39;, real of real type
+irrepInfo: replab.irreducible.TrivialInfo
 isUnitary: true
 niceBasis: replab.NiceBasis
    parent: Orthogonal real representation of dimension 5
@@ -673,26 +676,26 @@ niceBasis: replab.NiceBasis
 U =
 
    1.00000   0.00000   0.00000   0.00000   0.00000
-   0.00000   0.22361  -0.67082   0.31623  -0.63246
-   0.00000   0.67082   0.22361  -0.63246  -0.31623
-   0.00000  -0.68219  -0.18605  -0.61394  -0.35082
-   0.00000   0.18605  -0.68219  -0.35082   0.61394
+   0.00000  -0.40628   0.57874  -0.12195   0.69651
+   0.00000   0.57874   0.40628  -0.69651  -0.12195
+   0.00000  -0.50000  -0.50000  -0.70711  -0.00000
+   0.00000   0.50000  -0.50000  -0.00000   0.70711
 
 ans =
 
    1.00000   0.00000   0.00000   0.00000   0.00000
-   0.00000   1.00000  -0.00000   0.00000   0.00000
-   0.00000  -0.00000   1.00000  -0.00000  -0.00000
-   0.00000   0.00000  -0.00000   1.00000   0.00000
+   0.00000   1.00000   0.00000  -0.00000   0.00000
+   0.00000   0.00000   1.00000  -0.00000  -0.00000
+   0.00000  -0.00000  -0.00000   1.00000   0.00000
    0.00000   0.00000  -0.00000   0.00000   1.00000
 
 ans =
 
    0.00000   0.00000   0.00000   0.00000   0.00000
-   0.00000  -1.41421   0.00000  -0.00000   0.00000
-   0.00000   0.00000  -1.41421  -0.00000   0.00000
-   0.00000  -0.00000  -0.00000   1.41421   0.00000
-   0.00000   0.00000   0.00000   0.00000   1.41421
+   0.00000  -1.41421   0.00000   0.00000  -0.00000
+   0.00000   0.00000  -1.41421  -0.00000  -0.00000
+   0.00000   0.00000  -0.00000   1.41421   0.00000
+   0.00000  -0.00000   0.00000  -0.00000   1.41421
 
 </pre></div></div>
 </div>
@@ -715,7 +718,8 @@ ans =
 <div class="highlight"><pre>
 
  num. of constraints =  1
- dim. of sdp    var  =  5,   num. of sdp  blk  =  1
+ dim. of sdp    var  =  5,   num. of sdp  blk  =  1  1th semidefinite block is actually diagonal
+
 *******************************************************************
    SDPT3: Infeasible path-following algorithms
 *******************************************************************
@@ -744,15 +748,15 @@ it pstep dstep pinfeas dinfeas  gap      prim-obj      dual-obj    cputime
  rel. dual     &#34;        &#34;       &#34;      = 0.00e+00
  norm(X), norm(y), norm(Z) = 2.0e+00, 7.1e-01, 3.0e+00
  norm(A), norm(b), norm(C) = 3.8e+00, 5.0e+00, 3.2e+00
- Total CPU time (secs)  = 0.16
- CPU time per iteration = 0.03
+ Total CPU time (secs)  = 0.08
+ CPU time per iteration = 0.01
  termination code       =  0
  DIMACS: 8.9e-12  0.0e+00  1.4e-07  0.0e+00  1.0e-08  6.3e-08
 -------------------------------------------------------------------
 ans =  2.8284
 </pre></div></div>
 </div>
-<p>As an exercice, recover an algebraic basis from <code class="docutils literal notranslate"><span class="pre">U</span></code>, guess the form of the semidefinite program when fully block-diagonal (i.e. for the full group of CHSH symmetries). <strong>Remark that now the problem can be solved by hand to recover the</strong> <span class="math notranslate nohighlight">\(2\sqrt{2}\)</span> <strong>bound, as the SDP matrix is fully diagonal, and thus corresponds to linear inequalities.</strong></p>
+<p>As an exercice, recover an algebraic basis from <code class="docutils literal notranslate"><span class="pre">U</span></code>, guess the form of the semidefinite program when fully block-diagonal (i.e. for the full group of CHSH symmetries). <strong>Remark that now the problem can be solved by hand to recover the</strong> <span class="math notranslate nohighlight">\(2\sqrt{2}\)</span> <strong>bound, as the SDP matrix is fully diagonal, and thus corresponds to linear inequalities.</strong></p>
 </div>
 
   <div class="section">
@@ -792,7 +796,7 @@ ans =  2.8284
         <li class="right" >
           <a href="Tutorial1.html" title="1. Introduction to representation for quantum information people"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" >Brussels visit October 2019</a> &#187;</li> 
       </ul>

@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>API Documentation style guide &#8212; RepLAB 0.6.5 documentation</title>
+    <title>API Documentation style guide &#8212; RepLAB 0.6.6 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="organization.html" title="Code organization and release process"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Development/Community</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.5.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.6.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -377,13 +377,13 @@ constructor parameters.</p>
 <p>Class properties are documented by <em>not</em> adding a semicolon <code class="docutils literal notranslate"><span class="pre">;</span></code> to
 each property, and following them by a comment as in below:</p>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">properties</span> <span class="p">(</span><span class="n">SetAccess</span> <span class="p">=</span> <span class="n">protected</span><span class="p">)</span>
-    <span class="n">group</span> <span class="c">% `replab.Group`: Group being representation</span>
-    <span class="n">field</span> <span class="c">% &#39;R&#39; for a representation on a real vector space, &#39;C&#39; for a representation on a complex vector space</span>
-    <span class="n">dimension</span> <span class="c">% Representation dimension</span>
+    <span class="n">group</span> <span class="c">% (`replab.Group`): Group being representation</span>
+    <span class="n">field</span> <span class="c">% ({&#39;R&#39;, &#39;C&#39;}): &#39;R&#39; for a representation on a real vector space, &#39;C&#39; for a representation on a complex vector space</span>
+    <span class="n">dimension</span> <span class="c">% (integer): Representation dimension</span>
 <span class="k">end</span>
 </pre></div>
 </div>
-<p>Property types are specified before a semicolon, as in return types.</p>
+<p>Property types are specified before a semicolon, in parenthesis, as for arguments.</p>
 <p>Methods are documented as standalone functions. Do not include <code class="docutils literal notranslate"><span class="pre">self</span></code>
 in the list of parameters. The constructor is documented separately as
 any method.</p>
@@ -456,7 +456,7 @@ will be used in descriptions of subclasses in other packages.</p></li>
         <li class="right" >
           <a href="organization.html" title="Code organization and release process"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Development/Community</a> &#187;</li> 
       </ul>
     </div>

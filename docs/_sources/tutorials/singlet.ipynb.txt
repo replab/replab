@@ -33,8 +33,10 @@
      "output_type": "stream",
      "text": [
       "Adding RepLAB to the path\r\n",
-      "warning: function /home/denis/Projects/replab/src/help.m shadows a core library function\r\n",
+      "warning: function /home/denis/w/replab/src/help.m shadows a core library function\r\n",
       "Adding RepLAB package to the path\r\n",
+      "Loading optim package for Octave...\r\n",
+      "OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = \"org.octave.OctClassLoader\"). To use archived non-system classes, this property must be not be set\r\n",
       "Adding VPI to the path\r\n",
       "Adding MOxUnit to the path\r\n",
       "Adding embedded YALMIP to the path\r\n",
@@ -250,7 +252,7 @@
    ],
    "mimetype": "text/x-octave",
    "name": "octave",
-   "version": "4.4.1"
+   "version": "4.2.2"
   }
  },
  "nbformat": 4,

@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Tutorial for mathematicians &#8212; RepLAB 0.6.5 documentation</title>
+    <title>Tutorial for mathematicians &#8212; RepLAB 0.6.6 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="installation.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Tutorials</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.5.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.6.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -364,8 +364,10 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/Projects/replab/src/help.m shadows a core library function
+warning: function /home/denis/w/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
+Loading optim package for Octave...
+OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = &#34;org.octave.OctClassLoader&#34;). To use archived non-system classes, this property must be not be set
 Adding VPI to the path
 Adding MOxUnit to the path
 Adding embedded YALMIP to the path
@@ -549,8 +551,8 @@ ans =
 
 </pre></div></div>
 </div>
-<p>We see that the image of the product of elements is indeed the product of the images of the respective elements, i.e. the algebra of matrices acting on the representation images accurately reflects the group algebra.</p>
-<p>It can be checked, moreover, that the defining representation is faithful, i.e. each group element has its own distinct image. This needs not always be the case as in the following two examples.</p>
+<p>We see that the image of the product of elements is indeed the product of the images of the respective elements, i.e. the algebra of matrices acting on the representation images accurately reflects the group algebra.</p>
+<p>It can be checked, moreover, that the defining representation is faithful, i.e. each group element has its own distinct image. This needs not always be the case as in the following two examples.</p>
 </div>
 <div class="section" id="The-parity-representation-of-S_3">
 <h2>The parity representation of <span class="math notranslate nohighlight">\(S_3\)</span><a class="headerlink" href="#The-parity-representation-of-S_3" title="Permalink to this headline">¶</a></h2>
@@ -590,7 +592,7 @@ ans =
 </pre></div>
 </div>
 </div>
-<p>associating the each generator its parity (i.e. either <span class="math notranslate nohighlight">\(+1\)</span> or <span class="math notranslate nohighlight">\(-1\)</span>). Since the parity of [2 3 1] is 1 and the parity of [2 1 3] is -1, this is achieved by instantiating the class <em>RepByImage</em> as follows:</p>
+<p>associating the each generator its parity (i.e. either <span class="math notranslate nohighlight">\(+1\)</span> or <span class="math notranslate nohighlight">\(-1\)</span>). Since the parity of [2 3 1] is 1 and the parity of [2 1 3] is -1, this is achieved by instantiating the class <em>RepByImage</em> as follows:</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
@@ -822,15 +824,15 @@ U =
 <div class="highlight"><pre>
 ans =
 
-   1.0000e+00  -1.1097e-17  -1.7796e-17
-   1.6658e-17  -5.0000e-01   8.6603e-01
-  -1.7796e-17   8.6603e-01   5.0000e-01
+   1.00000   0.00000   0.00000
+   0.00000  -0.50000   0.86603
+   0.00000   0.86603   0.50000
 
 ans =
 
-   1.0000e+00  -1.1097e-17  -1.7796e-17
-  -1.1097e-17   1.0000e+00  -2.4514e-17
-   1.7796e-17   2.4514e-17  -1.0000e+00
+   1.00000   0.00000   0.00000
+   0.00000   1.00000   0.00000
+   0.00000   0.00000  -1.00000
 
 </pre></div></div>
 </div>
@@ -882,7 +884,7 @@ ans =
         <li class="right" >
           <a href="installation.html" title="Installation"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Tutorials</a> &#187;</li> 
       </ul>
     </div>

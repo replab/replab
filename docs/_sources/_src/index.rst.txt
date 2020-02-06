@@ -23,11 +23,8 @@ Package replab
 
 - `+replab.Action` -- A group action describing the action of a group on a set
 - `+replab.ActionLaws` -- 
-- `+replab.Commutant` -- Describes the algebra of n x n matrices that commute with a group representation
-- `+replab.CommutantFromEquivariant` -- Derives the commutant from the equivariant space
 - `+replab.CommutantVar` -- Sdpvar matrices subject to symmetry constraints.
 - `+replab.CompactGroup` -- A group equipped with a Haar measure
-- `+replab.ConjugateRep` -- Conjugated representation U * rep * U'
 - `+replab.Domain` -- Describes a set of elements with a common structure
 - `+replab.DomainLaws` -- Law checks for a generic Domain
 - `+replab.Equivariant` -- Describes a vector space of group-equivariant matrices
@@ -44,7 +41,6 @@ Package replab
 - `+replab.Irreducible` -- Describes the irreducible decomposition of a representation
 - `+replab.IrreducibleCommutant` -- Algebra of matrices that commute with an irreducible decomposition
 - `+replab.IrreducibleLaws` -- 
-- `+replab.IrrepInfo` -- 
 - `+replab.Isotypic` -- Describes an isotypic component in the decomposition of a representation
 - `+replab.IsotypicCommutant` -- 
 - `+replab.IsotypicComplexCommutant` -- 
@@ -72,6 +68,7 @@ Package replab
 - `+replab.RepLaws` -- 
 - `+replab.Samplable` -- Describes a set of elements that can be sample
 - `+replab.SedumiData` -- A block-diagonalizing preprocessor for SDPs in SeDuMi format.
+- `+replab.SimilarRep` -- Describes a representation similar to a given representation under a change of basis
 - `+replab.Str` -- Base class that provides sane pretty printing for all RepLAB objects
 - `+replab.SubRep` -- Describes a subrepresentation of a unitary finite representation
 - `+replab.SubRepLaws` -- 
@@ -169,6 +166,12 @@ Package replab.equivariant
 - `+replab.+equivariant.ForFiniteGroup` -- 
 - `+replab.+equivariant.ForRepByImages` -- 
 
+.. rubric:: Functions
+
+
+- `+replab.+equivariant.errorModel` -- Rough error model used for computations that have no approximation error
+- `+replab.+equivariant.plotConvergence` -- Whether to plot the convergence of equivariant samples
+
 Package replab.graph
 --------------------
 
@@ -230,7 +233,9 @@ Package replab.irreducible
 .. rubric:: Classes
 
 
+- `+replab.+irreducible.Info` -- 
 - `+replab.+irreducible.OnDemandSamples` -- 
+- `+replab.+irreducible.TrivialInfo` -- 
 
 .. rubric:: Functions
 
@@ -364,6 +369,8 @@ Package replab.rep
 .. rubric:: Classes
 
 
+- `+replab.+rep.ComplexifiedRep` -- Representation derived by complexfying a real representation
+- `+replab.+rep.DerivedRep` -- Representation derived by the means of complex conjugate, inverse and/or transpose
 - `+replab.+rep.DirectSumRep` -- A direct sum of representations, such that images are diagonal by blocks
 - `+replab.+rep.IndexRelabelingRep` -- Representation that permutes the indices of a tensor
 - `+replab.+rep.TensorRep` -- A tensor product of representations
@@ -372,6 +379,7 @@ Package replab.rep
 .. rubric:: Functions
 
 
+- `+replab.+rep.simplify` -- Returns a representation equivalent to the given one, but whose computation is simpler
 - `+replab.+rep.standardBasis` -- Returns an orthogonal integer basis of the Euclidean space that including the vector of all ones
 
 Package replab.semidirectproduct

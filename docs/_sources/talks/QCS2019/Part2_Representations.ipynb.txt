@@ -19,8 +19,10 @@
      "output_type": "stream",
      "text": [
       "Adding RepLAB to the path\r\n",
-      "warning: function /home/denis/Projects/replab/src/help.m shadows a core library function\r\n",
+      "warning: function /home/denis/w/replab/src/help.m shadows a core library function\r\n",
       "Adding RepLAB package to the path\r\n",
+      "Loading optim package for Octave...\r\n",
+      "OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = \"org.octave.OctClassLoader\"). To use archived non-system classes, this property must be not be set\r\n",
       "Adding VPI to the path\r\n",
       "Adding MOxUnit to the path\r\n",
       "Adding embedded YALMIP to the path\r\n",
@@ -50,7 +52,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "error: can't perform indexing operations for user-defined function type\r\n"
+      "error: 'piInput' undefined near line 1 column 32\r\n"
      ]
     }
    ],
@@ -172,6 +174,7 @@
       "        field: 'C'                                       \r\n",
       "        group: replab.PermutationSubgroup                \r\n",
       "inverseImages: 1 x 3 cell                                \r\n",
+      "    irrepInfo: []                                        \r\n",
       "    isUnitary: true                                      \r\n",
       "    images{1}: [0.70711+0.70711i, 0; 0, 0.70711+0.70711i]\r\n",
       "    images{2}: [0.70711, 0.70711; 0.70711, -0.70711]     \r\n",
@@ -214,6 +217,7 @@
       "dimension: 4                                            \r\n",
       "    field: 'C'                                          \r\n",
       "    group: replab.PermutationSubgroup                   \r\n",
+      "irrepInfo: []                                           \r\n",
       "isUnitary: true                                         \r\n",
       "factor(1): Unitary complex representation of dimension 2\r\n",
       "factor(2): Unitary complex representation of dimension 2\r\n",
@@ -244,7 +248,7 @@
       "   isUnitary: true                                         \r\n",
       "   niceBasis: replab.NiceBasis                             \r\n",
       "      parent: Unitary complex representation of dimension 4\r\n",
-      "      U(1,:): [0, -1, 1, 0]/sqrt(2)                        \r\n",
+      "      U(1,:): [0, 1, -1, 0]/sqrt(2)                        \r\n",
       "      U(2,:): [1, 0, 0, 0]                                 \r\n",
       "      U(3,:): [0, 0, 0, 1]                                 \r\n",
       "      U(4,:): [0, 1, 1, 0]/sqrt(2)                         \r\n",
@@ -322,9 +326,10 @@
       "dimension: 4                                            \r\n",
       "    field: 'C'                                          \r\n",
       "    group: replab.PermutationSubgroup                   \r\n",
+      "irrepInfo: []                                           \r\n",
       "isUnitary: true                                         \r\n",
       "factor(1): Unitary complex representation of dimension 2\r\n",
-      "factor(2): Unitary complex representation of dimension 2\r\n",
+      "factor(2): Conjugate derived representation             \r\n",
       "\r\n"
      ]
     }
@@ -342,23 +347,24 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "ans =\r\n",
-      "\r\n",
-      "Subrepresentation\r\n",
-      "   dimension: 4                                            \r\n",
-      "       field: 'C'                                          \r\n",
-      "       group: replab.PermutationSubgroup                   \r\n",
-      "   irrepInfo: []                                           \r\n",
-      "   isUnitary: true                                         \r\n",
-      "   niceBasis: replab.NiceBasis                             \r\n",
-      "      parent: Unitary complex representation of dimension 4\r\n",
-      "      U(1,:): [1, 0, 0, 1]/sqrt(2)                         \r\n",
-      "      U(2,:): [0, 0, 1, 0]                                 \r\n",
-      "      U(3,:): [0, 1, 0, 0]                                 \r\n",
-      "      U(4,:): [-1, 0, 0, 1]/sqrt(2)                        \r\n",
-      "component(1): Isotypic component C(1)                      \r\n",
-      "component(2): Isotypic component C(3)                      \r\n",
-      "\r\n"
+      "warning: image: some elements in list of return values are undefined\r\n",
+      "warning: image: some elements in list of return values are undefined\r\n",
+      "operator *: nonconformant arguments (op1 is 4x4, op2 is 0x0)\r\n",
+      "error: called from\r\n",
+      "    matrixColAction at line 225 column 15\r\n",
+      "    project at line 20 column 24\r\n",
+      "    sampleWithError at line 70 column 20\r\n",
+      "    sample at line 114 column 15\r\n",
+      "    trivialSample at line 38 column 45\r\n",
+      "    splitUsingCommutant at line 33 column 7\r\n",
+      "    dispatchDefaults>@<anonymous> at line 19 column 42\r\n",
+      "    dispatch at line 60 column 38\r\n",
+      "    split at line 20 column 9\r\n",
+      "    decompositionUsingSplit at line 11 column 10\r\n",
+      "    dispatchDefaults>@<anonymous> at line 14 column 28\r\n",
+      "    dispatch at line 60 column 38\r\n",
+      "    decomposition at line 17 column 7\r\n",
+      "    decomposition at line 160 column 21\r\n"
      ]
     }
    ],
@@ -375,7 +381,24 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "error: subsref: unknown method or property: copy\r\n"
+      "warning: image: some elements in list of return values are undefined\r\n",
+      "warning: image: some elements in list of return values are undefined\r\n",
+      "operator *: nonconformant arguments (op1 is 4x4, op2 is 0x0)\r\n",
+      "error: called from\r\n",
+      "    matrixColAction at line 225 column 15\r\n",
+      "    project at line 20 column 24\r\n",
+      "    sampleWithError at line 70 column 20\r\n",
+      "    sample at line 114 column 15\r\n",
+      "    trivialSample at line 38 column 45\r\n",
+      "    splitUsingCommutant at line 33 column 7\r\n",
+      "    dispatchDefaults>@<anonymous> at line 19 column 42\r\n",
+      "    dispatch at line 60 column 38\r\n",
+      "    split at line 20 column 9\r\n",
+      "    decompositionUsingSplit at line 11 column 10\r\n",
+      "    dispatchDefaults>@<anonymous> at line 14 column 28\r\n",
+      "    dispatch at line 60 column 38\r\n",
+      "    decomposition at line 17 column 7\r\n",
+      "    decomposition at line 160 column 21\r\n"
      ]
     }
    ],
@@ -392,7 +415,24 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "error: subsref: unknown method or property: copy\r\n"
+      "warning: image: some elements in list of return values are undefined\r\n",
+      "warning: image: some elements in list of return values are undefined\r\n",
+      "operator *: nonconformant arguments (op1 is 4x4, op2 is 0x0)\r\n",
+      "error: called from\r\n",
+      "    matrixColAction at line 225 column 15\r\n",
+      "    project at line 20 column 24\r\n",
+      "    sampleWithError at line 70 column 20\r\n",
+      "    sample at line 114 column 15\r\n",
+      "    trivialSample at line 38 column 45\r\n",
+      "    splitUsingCommutant at line 33 column 7\r\n",
+      "    dispatchDefaults>@<anonymous> at line 19 column 42\r\n",
+      "    dispatch at line 60 column 38\r\n",
+      "    split at line 20 column 9\r\n",
+      "    decompositionUsingSplit at line 11 column 10\r\n",
+      "    dispatchDefaults>@<anonymous> at line 14 column 28\r\n",
+      "    dispatch at line 60 column 38\r\n",
+      "    decomposition at line 17 column 7\r\n",
+      "    decomposition at line 160 column 21\r\n"
      ]
     }
    ],
@@ -425,7 +465,7 @@
    ],
    "mimetype": "text/x-octave",
    "name": "octave",
-   "version": "4.4.1"
+   "version": "4.2.2"
   }
  },
  "nbformat": 4,

@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Representations (support code) &#8212; RepLAB 0.6.5 documentation</title>
+    <title>Representations (support code) &#8212; RepLAB 0.6.6 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="rep.html" title="Representations"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.5.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.6.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -175,7 +175,7 @@
 <h2>equivariant.ForCompactGroup<a class="headerlink" href="#equivariant-forcompactgroup" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="+replab.+equivariant.ForCompactGroup">
-<em class="property">class </em><code class="sig-prename descclassname">replab.equivariant.</code><code class="sig-name descname">ForCompactGroup</code><span class="sig-paren">(</span><em class="sig-param">repR</em>, <em class="sig-param">repC</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForCompactGroup" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">replab.equivariant.</code><code class="sig-name descname">ForCompactGroup</code><span class="sig-paren">(</span><em class="sig-param">repR</em>, <em class="sig-param">repC</em>, <em class="sig-param">special</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForCompactGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="rep.html#+replab.Equivariant" title="+replab.Equivariant"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Equivariant</span></code></a></p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
@@ -186,20 +186,21 @@
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.disp" title="+replab.+equivariant.ForCompactGroup.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.eq" title="+replab.+equivariant.ForCompactGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.eqv" title="+replab.+equivariant.ForCompactGroup.eqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eqv</span></code></a> – Tests domain elements for equality/equivalence</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.field" title="+replab.+equivariant.ForCompactGroup.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – {‘R’, ‘C’}: field of the vector space real (R) or complex x(C)</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.group" title="+replab.+equivariant.ForCompactGroup.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – replab.CompactGroup: group being represented</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.field" title="+replab.+equivariant.ForCompactGroup.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – Field of the vector space real (R) or complex x(C)</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.group" title="+replab.+equivariant.ForCompactGroup.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – Group being represented</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.headerStr" title="+replab.+equivariant.ForCompactGroup.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.hiddenFields" title="+replab.+equivariant.ForCompactGroup.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.isEquivariant" title="+replab.+equivariant.ForCompactGroup.isEquivariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isEquivariant</span></code></a> – Returns whether the matrix X represents an equivariant linear map</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.lambda" title="+replab.+equivariant.ForCompactGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a domain from function handles</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.longStr" title="+replab.+equivariant.ForCompactGroup.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.nC" title="+replab.+equivariant.ForCompactGroup.nC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nC</span></code></a> – integer: column size</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.nR" title="+replab.+equivariant.ForCompactGroup.nR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nR</span></code></a> – integer: row size</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.project" title="+replab.+equivariant.ForCompactGroup.project"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">project</span></code></a> – Projects any nR x nC matrix in the equivariant subspace</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.repC" title="+replab.+equivariant.ForCompactGroup.repC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">repC</span></code></a> – replab.Rep: representation of column space</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.repR" title="+replab.+equivariant.ForCompactGroup.repR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">repR</span></code></a> – replab.Rep: representation of row space</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.nC" title="+replab.+equivariant.ForCompactGroup.nC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nC</span></code></a> – Column size</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.nR" title="+replab.+equivariant.ForCompactGroup.nR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nR</span></code></a> – Row size</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.project" title="+replab.+equivariant.ForCompactGroup.project"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">project</span></code></a> – Projects any <code class="docutils literal notranslate"><span class="pre">nR</span> <span class="pre">x</span> <span class="pre">nC</span></code> matrix in the equivariant subspace</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.repC" title="+replab.+equivariant.ForCompactGroup.repC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">repC</span></code></a> – Representation of column space</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.repR" title="+replab.+equivariant.ForCompactGroup.repR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">repR</span></code></a> – Representation of row space</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.sample" title="+replab.+equivariant.ForCompactGroup.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from this domain</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.sampleWithError" title="+replab.+equivariant.ForCompactGroup.sampleWithError"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sampleWithError</span></code></a> – Returns an approximate sample from this equivariant space along with estimated numerical error</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.shortStr" title="+replab.+equivariant.ForCompactGroup.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForCompactGroup.special" title="+replab.+equivariant.ForCompactGroup.special"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">special</span></code></a> – Whether the equivariant space has special structure</p></li>
 </ul>
 </div>
 <div class="collapsed admonition">
@@ -265,12 +266,6 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+equivariant.ForCompactGroup.isEquivariant">
-<code class="sig-name descname">isEquivariant</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForCompactGroup.isEquivariant" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Equivariant.isEquivariant" title="+replab.Equivariant.isEquivariant"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Equivariant.isEquivariant()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
 <dt id="+replab.+equivariant.ForCompactGroup.lambda">
 <code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForCompactGroup.lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.lambda" title="+replab.Domain.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.lambda()</span></code></a></p>
@@ -319,9 +314,21 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+equivariant.ForCompactGroup.sampleWithError">
+<code class="sig-name descname">sampleWithError</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForCompactGroup.sampleWithError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Equivariant.sampleWithError" title="+replab.Equivariant.sampleWithError"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Equivariant.sampleWithError()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+equivariant.ForCompactGroup.shortStr">
 <code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForCompactGroup.shortStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.+equivariant.ForCompactGroup.special">
+<code class="sig-name descname">special</code><a class="headerlink" href="#+replab.+equivariant.ForCompactGroup.special" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Equivariant.special" title="+replab.Equivariant.special"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Equivariant.special</span></code></a></p>
 </dd></dl>
 
 </div>
@@ -332,7 +339,7 @@
 <h2>equivariant.ForFiniteGroup<a class="headerlink" href="#equivariant-forfinitegroup" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="+replab.+equivariant.ForFiniteGroup">
-<em class="property">class </em><code class="sig-prename descclassname">replab.equivariant.</code><code class="sig-name descname">ForFiniteGroup</code><span class="sig-paren">(</span><em class="sig-param">repR</em>, <em class="sig-param">repC</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForFiniteGroup" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">replab.equivariant.</code><code class="sig-name descname">ForFiniteGroup</code><span class="sig-paren">(</span><em class="sig-param">repR</em>, <em class="sig-param">repC</em>, <em class="sig-param">special</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForFiniteGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="rep.html#+replab.Equivariant" title="+replab.Equivariant"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Equivariant</span></code></a></p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
@@ -343,20 +350,21 @@
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.disp" title="+replab.+equivariant.ForFiniteGroup.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.eq" title="+replab.+equivariant.ForFiniteGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.eqv" title="+replab.+equivariant.ForFiniteGroup.eqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eqv</span></code></a> – Tests domain elements for equality/equivalence</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.field" title="+replab.+equivariant.ForFiniteGroup.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – {‘R’, ‘C’}: field of the vector space real (R) or complex x(C)</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.group" title="+replab.+equivariant.ForFiniteGroup.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – replab.CompactGroup: group being represented</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.field" title="+replab.+equivariant.ForFiniteGroup.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – Field of the vector space real (R) or complex x(C)</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.group" title="+replab.+equivariant.ForFiniteGroup.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – Group being represented</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.headerStr" title="+replab.+equivariant.ForFiniteGroup.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.hiddenFields" title="+replab.+equivariant.ForFiniteGroup.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.isEquivariant" title="+replab.+equivariant.ForFiniteGroup.isEquivariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isEquivariant</span></code></a> – Returns whether the matrix X represents an equivariant linear map</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.lambda" title="+replab.+equivariant.ForFiniteGroup.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a domain from function handles</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.longStr" title="+replab.+equivariant.ForFiniteGroup.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.nC" title="+replab.+equivariant.ForFiniteGroup.nC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nC</span></code></a> – integer: column size</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.nR" title="+replab.+equivariant.ForFiniteGroup.nR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nR</span></code></a> – integer: row size</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.project" title="+replab.+equivariant.ForFiniteGroup.project"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">project</span></code></a> – Projects any nR x nC matrix in the equivariant subspace</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.repC" title="+replab.+equivariant.ForFiniteGroup.repC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">repC</span></code></a> – replab.Rep: representation of column space</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.repR" title="+replab.+equivariant.ForFiniteGroup.repR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">repR</span></code></a> – replab.Rep: representation of row space</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.nC" title="+replab.+equivariant.ForFiniteGroup.nC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nC</span></code></a> – Column size</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.nR" title="+replab.+equivariant.ForFiniteGroup.nR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nR</span></code></a> – Row size</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.project" title="+replab.+equivariant.ForFiniteGroup.project"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">project</span></code></a> – Projects any <code class="docutils literal notranslate"><span class="pre">nR</span> <span class="pre">x</span> <span class="pre">nC</span></code> matrix in the equivariant subspace</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.repC" title="+replab.+equivariant.ForFiniteGroup.repC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">repC</span></code></a> – Representation of column space</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.repR" title="+replab.+equivariant.ForFiniteGroup.repR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">repR</span></code></a> – Representation of row space</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.sample" title="+replab.+equivariant.ForFiniteGroup.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from this domain</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.sampleWithError" title="+replab.+equivariant.ForFiniteGroup.sampleWithError"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sampleWithError</span></code></a> – Returns an approximate sample from this equivariant space along with estimated numerical error</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.shortStr" title="+replab.+equivariant.ForFiniteGroup.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForFiniteGroup.special" title="+replab.+equivariant.ForFiniteGroup.special"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">special</span></code></a> – Whether the equivariant space has special structure</p></li>
 </ul>
 </div>
 <div class="collapsed admonition">
@@ -422,12 +430,6 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+equivariant.ForFiniteGroup.isEquivariant">
-<code class="sig-name descname">isEquivariant</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForFiniteGroup.isEquivariant" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Equivariant.isEquivariant" title="+replab.Equivariant.isEquivariant"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Equivariant.isEquivariant()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
 <dt id="+replab.+equivariant.ForFiniteGroup.lambda">
 <code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForFiniteGroup.lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.lambda" title="+replab.Domain.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.lambda()</span></code></a></p>
@@ -476,9 +478,21 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+equivariant.ForFiniteGroup.sampleWithError">
+<code class="sig-name descname">sampleWithError</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForFiniteGroup.sampleWithError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Equivariant.sampleWithError" title="+replab.Equivariant.sampleWithError"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Equivariant.sampleWithError()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+equivariant.ForFiniteGroup.shortStr">
 <code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForFiniteGroup.shortStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.+equivariant.ForFiniteGroup.special">
+<code class="sig-name descname">special</code><a class="headerlink" href="#+replab.+equivariant.ForFiniteGroup.special" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Equivariant.special" title="+replab.Equivariant.special"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Equivariant.special</span></code></a></p>
 </dd></dl>
 
 </div>
@@ -489,7 +503,7 @@
 <h2>equivariant.ForRepByImages<a class="headerlink" href="#equivariant-forrepbyimages" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="+replab.+equivariant.ForRepByImages">
-<em class="property">class </em><code class="sig-prename descclassname">replab.equivariant.</code><code class="sig-name descname">ForRepByImages</code><span class="sig-paren">(</span><em class="sig-param">repR</em>, <em class="sig-param">repC</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForRepByImages" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">replab.equivariant.</code><code class="sig-name descname">ForRepByImages</code><span class="sig-paren">(</span><em class="sig-param">repR</em>, <em class="sig-param">repC</em>, <em class="sig-param">special</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForRepByImages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="rep.html#+replab.Equivariant" title="+replab.Equivariant"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Equivariant</span></code></a></p>
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
@@ -500,20 +514,21 @@
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.disp" title="+replab.+equivariant.ForRepByImages.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.eq" title="+replab.+equivariant.ForRepByImages.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.eqv" title="+replab.+equivariant.ForRepByImages.eqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eqv</span></code></a> – Tests domain elements for equality/equivalence</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.field" title="+replab.+equivariant.ForRepByImages.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – {‘R’, ‘C’}: field of the vector space real (R) or complex x(C)</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.group" title="+replab.+equivariant.ForRepByImages.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – replab.CompactGroup: group being represented</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.field" title="+replab.+equivariant.ForRepByImages.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – Field of the vector space real (R) or complex x(C)</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.group" title="+replab.+equivariant.ForRepByImages.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – Group being represented</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.headerStr" title="+replab.+equivariant.ForRepByImages.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.hiddenFields" title="+replab.+equivariant.ForRepByImages.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.isEquivariant" title="+replab.+equivariant.ForRepByImages.isEquivariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isEquivariant</span></code></a> – Returns whether the matrix X represents an equivariant linear map</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.lambda" title="+replab.+equivariant.ForRepByImages.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Constructs a domain from function handles</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.longStr" title="+replab.+equivariant.ForRepByImages.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.nC" title="+replab.+equivariant.ForRepByImages.nC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nC</span></code></a> – integer: column size</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.nR" title="+replab.+equivariant.ForRepByImages.nR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nR</span></code></a> – integer: row size</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.project" title="+replab.+equivariant.ForRepByImages.project"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">project</span></code></a> – Projects any nR x nC matrix in the equivariant subspace</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.repC" title="+replab.+equivariant.ForRepByImages.repC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">repC</span></code></a> – replab.Rep: representation of column space</p></li>
-<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.repR" title="+replab.+equivariant.ForRepByImages.repR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">repR</span></code></a> – replab.Rep: representation of row space</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.nC" title="+replab.+equivariant.ForRepByImages.nC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nC</span></code></a> – Column size</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.nR" title="+replab.+equivariant.ForRepByImages.nR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nR</span></code></a> – Row size</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.project" title="+replab.+equivariant.ForRepByImages.project"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">project</span></code></a> – Projects any <code class="docutils literal notranslate"><span class="pre">nR</span> <span class="pre">x</span> <span class="pre">nC</span></code> matrix in the equivariant subspace</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.repC" title="+replab.+equivariant.ForRepByImages.repC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">repC</span></code></a> – Representation of column space</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.repR" title="+replab.+equivariant.ForRepByImages.repR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">repR</span></code></a> – Representation of row space</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.sample" title="+replab.+equivariant.ForRepByImages.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from this domain</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.sampleWithError" title="+replab.+equivariant.ForRepByImages.sampleWithError"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sampleWithError</span></code></a> – Returns an approximate sample from this equivariant space along with estimated numerical error</p></li>
 <li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.shortStr" title="+replab.+equivariant.ForRepByImages.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+equivariant.ForRepByImages.special" title="+replab.+equivariant.ForRepByImages.special"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">special</span></code></a> – Whether the equivariant space has special structure</p></li>
 </ul>
 </div>
 <div class="collapsed admonition">
@@ -579,12 +594,6 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+equivariant.ForRepByImages.isEquivariant">
-<code class="sig-name descname">isEquivariant</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">X</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForRepByImages.isEquivariant" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Equivariant.isEquivariant" title="+replab.Equivariant.isEquivariant"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Equivariant.isEquivariant()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
 <dt id="+replab.+equivariant.ForRepByImages.lambda">
 <code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForRepByImages.lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Domain.lambda" title="+replab.Domain.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Domain.lambda()</span></code></a></p>
@@ -633,9 +642,21 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+equivariant.ForRepByImages.sampleWithError">
+<code class="sig-name descname">sampleWithError</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForRepByImages.sampleWithError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Equivariant.sampleWithError" title="+replab.Equivariant.sampleWithError"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Equivariant.sampleWithError()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+equivariant.ForRepByImages.shortStr">
 <code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+equivariant.ForRepByImages.shortStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.+equivariant.ForRepByImages.special">
+<code class="sig-name descname">special</code><a class="headerlink" href="#+replab.+equivariant.ForRepByImages.special" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Equivariant.special" title="+replab.Equivariant.special"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Equivariant.special</span></code></a></p>
 </dd></dl>
 
 </div>
@@ -989,7 +1010,8 @@ irreducible representations are part of the same isotypic component.</p>
 <p><code class="docutils literal notranslate"><span class="pre">sub</span> <span class="pre">=</span> <span class="pre">replab.irreducible.splitUsingCommutant(rep,</span> <span class="pre">samples,</span> <span class="pre">sub)</span></code></p>
 <p>Decomposes a possibly non-irreducible subrepresentation of <code class="docutils literal notranslate"><span class="pre">rep</span></code> into irreducible subrepresentations.
 Does not group the irreducible subrepresentations into isotypic components, but identifies every instance of
-the trivial representation by setting <code class="docutils literal notranslate"><span class="pre">label</span></code> to <code class="docutils literal notranslate"><span class="pre">'1'</span></code> in the subrepresentation <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.IrrepInfo</span></code>.</p>
+the trivial representation by setting <code class="docutils literal notranslate"><span class="pre">irrepInfo</span></code> to an instance of <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.irreducible.TrivialInfo</span></code> in
+the subrepresentation <code class="docutils literal notranslate"><span class="pre">irrepInfo</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1041,23 +1063,24 @@ possible.</p>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.complexification" title="+replab.+rep.DirectSumRep.complexification"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">complexification</span></code></a> – Returns the complexification of a real representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.conj" title="+replab.+rep.DirectSumRep.conj"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conj</span></code></a> – Returns the complex conjugate representation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.decomposition" title="+replab.+rep.DirectSumRep.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns the irreducible decomposition of this representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.dimension" title="+replab.+rep.DirectSumRep.dimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dimension</span></code></a> – integer: Representation dimension</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.dimension" title="+replab.+rep.DirectSumRep.dimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dimension</span></code></a> – Representation dimension</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.directSum" title="+replab.+rep.DirectSumRep.directSum"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSum</span></code></a> – Computes the direct sum of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.directSumOfCopies" title="+replab.+rep.DirectSumRep.directSumOfCopies"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumOfCopies</span></code></a> – Returns a direct sum of copies of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.disp" title="+replab.+rep.DirectSumRep.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.dual" title="+replab.+rep.DirectSumRep.dual"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dual</span></code></a> – Returns the dual representation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.eq" title="+replab.+rep.DirectSumRep.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.equivariant" title="+replab.+rep.DirectSumRep.equivariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">equivariant</span></code></a> – Returns the space of equivariant linear maps from this rep to another rep</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.field" title="+replab.+rep.DirectSumRep.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – {‘R’, ‘C’}: Vector space defined on real (R) or complex (C) field</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.group" title="+replab.+rep.DirectSumRep.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – replab.CompactGroup: Group being represented</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.field" title="+replab.+rep.DirectSumRep.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – Vector space defined on real (R) or complex (C) field</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.group" title="+replab.+rep.DirectSumRep.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – Group being represented</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.headerStr" title="+replab.+rep.DirectSumRep.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.hermitianInvariant" title="+replab.+rep.DirectSumRep.hermitianInvariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hermitianInvariant</span></code></a> – Returns the Hermitian invariant space of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.hiddenFields" title="+replab.+rep.DirectSumRep.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.image" title="+replab.+rep.DirectSumRep.image"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">image</span></code></a> – Returns the image of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.inverseImage" title="+replab.+rep.DirectSumRep.inverseImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverseImage</span></code></a> – Returns the image of the inverse of a group element</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.isUnitary" title="+replab.+rep.DirectSumRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – {true, false, []}: Whether the representation is unitary</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.irrepInfo" title="+replab.+rep.DirectSumRep.irrepInfo"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrepInfo</span></code></a> – Irreducible status information</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.isUnitary" title="+replab.+rep.DirectSumRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether the representation is unitary</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.kron" title="+replab.+rep.DirectSumRep.kron"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">kron</span></code></a> – Tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.lambda" title="+replab.+rep.DirectSumRep.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Creates a non unitary representation from an image function</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.leftConjugateUnitary" title="+replab.+rep.DirectSumRep.leftConjugateUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugateUnitary</span></code></a> – Returns the (left) conjugation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.longStr" title="+replab.+rep.DirectSumRep.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.matrixColAction" title="+replab.+rep.DirectSumRep.matrixColAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixColAction</span></code></a> – Computes the matrix-representation product</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.matrixRowAction" title="+replab.+rep.DirectSumRep.matrixRowAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixRowAction</span></code></a> – Computes the representation-matrix product</p></li>
@@ -1066,6 +1089,7 @@ possible.</p>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.overR" title="+replab.+rep.DirectSumRep.overR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">overR</span></code></a> – Returns whether this representation is defined over the real field</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.sample" title="+replab.+rep.DirectSumRep.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from the group and returns its image under the representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.shortStr" title="+replab.+rep.DirectSumRep.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.similar" title="+replab.+rep.DirectSumRep.similar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">similar</span></code></a> – Returns a similar representation under a change of basis</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.subRep" title="+replab.+rep.DirectSumRep.subRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRep</span></code></a> – Returns a subrepresentation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.subRepUnitary" title="+replab.+rep.DirectSumRep.subRepUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitary</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.DirectSumRep.subRepUnitaryByIntegerBasis" title="+replab.+rep.DirectSumRep.subRepUnitaryByIntegerBasis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitaryByIntegerBasis</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
@@ -1174,6 +1198,12 @@ possible.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+rep.DirectSumRep.hermitianInvariant">
+<code class="sig-name descname">hermitianInvariant</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.DirectSumRep.hermitianInvariant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.hermitianInvariant" title="+replab.Rep.hermitianInvariant"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.hermitianInvariant()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+rep.DirectSumRep.hiddenFields">
 <code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.DirectSumRep.hiddenFields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
@@ -1192,6 +1222,12 @@ possible.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="+replab.+rep.DirectSumRep.irrepInfo">
+<code class="sig-name descname">irrepInfo</code><a class="headerlink" href="#+replab.+rep.DirectSumRep.irrepInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.irrepInfo" title="+replab.Rep.irrepInfo"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.irrepInfo</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="+replab.+rep.DirectSumRep.isUnitary">
 <code class="sig-name descname">isUnitary</code><a class="headerlink" href="#+replab.+rep.DirectSumRep.isUnitary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.isUnitary" title="+replab.Rep.isUnitary"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isUnitary</span></code></a></p>
@@ -1205,14 +1241,8 @@ possible.</p>
 
 <dl class="method">
 <dt id="+replab.+rep.DirectSumRep.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.DirectSumRep.lambda" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">irrepInfo</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.DirectSumRep.lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.lambda" title="+replab.Rep.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.lambda()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+rep.DirectSumRep.leftConjugateUnitary">
-<code class="sig-name descname">leftConjugateUnitary</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.DirectSumRep.leftConjugateUnitary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.leftConjugateUnitary" title="+replab.Rep.leftConjugateUnitary"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.leftConjugateUnitary()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1255,6 +1285,12 @@ possible.</p>
 <dt id="+replab.+rep.DirectSumRep.shortStr">
 <code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.DirectSumRep.shortStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+rep.DirectSumRep.similar">
+<code class="sig-name descname">similar</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em>, <em class="sig-param">Ainv</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.DirectSumRep.similar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.similar" title="+replab.Rep.similar"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.similar()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1368,23 +1404,24 @@ possible.</p>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.complexification" title="+replab.+rep.IndexRelabelingRep.complexification"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">complexification</span></code></a> – Returns the complexification of a real representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.conj" title="+replab.+rep.IndexRelabelingRep.conj"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conj</span></code></a> – Returns the complex conjugate representation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.decomposition" title="+replab.+rep.IndexRelabelingRep.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns the irreducible decomposition of this representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.dimension" title="+replab.+rep.IndexRelabelingRep.dimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dimension</span></code></a> – integer: Representation dimension</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.dimension" title="+replab.+rep.IndexRelabelingRep.dimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dimension</span></code></a> – Representation dimension</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.directSum" title="+replab.+rep.IndexRelabelingRep.directSum"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSum</span></code></a> – Computes the direct sum of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.directSumOfCopies" title="+replab.+rep.IndexRelabelingRep.directSumOfCopies"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumOfCopies</span></code></a> – Returns a direct sum of copies of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.disp" title="+replab.+rep.IndexRelabelingRep.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.dual" title="+replab.+rep.IndexRelabelingRep.dual"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dual</span></code></a> – Returns the dual representation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.eq" title="+replab.+rep.IndexRelabelingRep.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.equivariant" title="+replab.+rep.IndexRelabelingRep.equivariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">equivariant</span></code></a> – Returns the space of equivariant linear maps from this rep to another rep</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.field" title="+replab.+rep.IndexRelabelingRep.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – {‘R’, ‘C’}: Vector space defined on real (R) or complex (C) field</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.group" title="+replab.+rep.IndexRelabelingRep.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – replab.CompactGroup: Group being represented</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.field" title="+replab.+rep.IndexRelabelingRep.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – Vector space defined on real (R) or complex (C) field</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.group" title="+replab.+rep.IndexRelabelingRep.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – Group being represented</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.headerStr" title="+replab.+rep.IndexRelabelingRep.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.hermitianInvariant" title="+replab.+rep.IndexRelabelingRep.hermitianInvariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hermitianInvariant</span></code></a> – Returns the Hermitian invariant space of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.hiddenFields" title="+replab.+rep.IndexRelabelingRep.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.image" title="+replab.+rep.IndexRelabelingRep.image"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">image</span></code></a> – Returns the image of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.inverseImage" title="+replab.+rep.IndexRelabelingRep.inverseImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverseImage</span></code></a> – Returns the image of the inverse of a group element</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.isUnitary" title="+replab.+rep.IndexRelabelingRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – {true, false, []}: Whether the representation is unitary</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.irrepInfo" title="+replab.+rep.IndexRelabelingRep.irrepInfo"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrepInfo</span></code></a> – Irreducible status information</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.isUnitary" title="+replab.+rep.IndexRelabelingRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether the representation is unitary</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.kron" title="+replab.+rep.IndexRelabelingRep.kron"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">kron</span></code></a> – Tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.lambda" title="+replab.+rep.IndexRelabelingRep.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Creates a non unitary representation from an image function</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.leftConjugateUnitary" title="+replab.+rep.IndexRelabelingRep.leftConjugateUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugateUnitary</span></code></a> – Returns the (left) conjugation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.localDimension" title="+replab.+rep.IndexRelabelingRep.localDimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">localDimension</span></code></a> – dimension of each subsystem in the tensor space</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.longStr" title="+replab.+rep.IndexRelabelingRep.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.matrixColAction" title="+replab.+rep.IndexRelabelingRep.matrixColAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixColAction</span></code></a> – Computes the matrix-representation product</p></li>
@@ -1393,6 +1430,7 @@ possible.</p>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.overR" title="+replab.+rep.IndexRelabelingRep.overR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">overR</span></code></a> – Returns whether this representation is defined over the real field</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.sample" title="+replab.+rep.IndexRelabelingRep.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from the group and returns its image under the representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.shortStr" title="+replab.+rep.IndexRelabelingRep.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.similar" title="+replab.+rep.IndexRelabelingRep.similar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">similar</span></code></a> – Returns a similar representation under a change of basis</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.subRep" title="+replab.+rep.IndexRelabelingRep.subRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRep</span></code></a> – Returns a subrepresentation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.subRepUnitary" title="+replab.+rep.IndexRelabelingRep.subRepUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitary</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.IndexRelabelingRep.subRepUnitaryByIntegerBasis" title="+replab.+rep.IndexRelabelingRep.subRepUnitaryByIntegerBasis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitaryByIntegerBasis</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
@@ -1501,6 +1539,12 @@ possible.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+rep.IndexRelabelingRep.hermitianInvariant">
+<code class="sig-name descname">hermitianInvariant</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.IndexRelabelingRep.hermitianInvariant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.hermitianInvariant" title="+replab.Rep.hermitianInvariant"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.hermitianInvariant()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+rep.IndexRelabelingRep.hiddenFields">
 <code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.IndexRelabelingRep.hiddenFields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
@@ -1519,6 +1563,12 @@ possible.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="+replab.+rep.IndexRelabelingRep.irrepInfo">
+<code class="sig-name descname">irrepInfo</code><a class="headerlink" href="#+replab.+rep.IndexRelabelingRep.irrepInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.irrepInfo" title="+replab.Rep.irrepInfo"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.irrepInfo</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="+replab.+rep.IndexRelabelingRep.isUnitary">
 <code class="sig-name descname">isUnitary</code><a class="headerlink" href="#+replab.+rep.IndexRelabelingRep.isUnitary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.isUnitary" title="+replab.Rep.isUnitary"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isUnitary</span></code></a></p>
@@ -1532,14 +1582,8 @@ possible.</p>
 
 <dl class="method">
 <dt id="+replab.+rep.IndexRelabelingRep.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.IndexRelabelingRep.lambda" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">irrepInfo</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.IndexRelabelingRep.lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.lambda" title="+replab.Rep.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.lambda()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+rep.IndexRelabelingRep.leftConjugateUnitary">
-<code class="sig-name descname">leftConjugateUnitary</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.IndexRelabelingRep.leftConjugateUnitary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.leftConjugateUnitary" title="+replab.Rep.leftConjugateUnitary"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.leftConjugateUnitary()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1582,6 +1626,12 @@ possible.</p>
 <dt id="+replab.+rep.IndexRelabelingRep.shortStr">
 <code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.IndexRelabelingRep.shortStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+rep.IndexRelabelingRep.similar">
+<code class="sig-name descname">similar</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em>, <em class="sig-param">Ainv</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.IndexRelabelingRep.similar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.similar" title="+replab.Rep.similar"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.similar()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1653,7 +1703,7 @@ possible.</p>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.complexification" title="+replab.+rep.TensorRep.complexification"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">complexification</span></code></a> – Returns the complexification of a real representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.conj" title="+replab.+rep.TensorRep.conj"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conj</span></code></a> – Returns the complex conjugate representation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.decomposition" title="+replab.+rep.TensorRep.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns the irreducible decomposition of this representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.TensorRep.dimension" title="+replab.+rep.TensorRep.dimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dimension</span></code></a> – integer: Representation dimension</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TensorRep.dimension" title="+replab.+rep.TensorRep.dimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dimension</span></code></a> – Representation dimension</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.directSum" title="+replab.+rep.TensorRep.directSum"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSum</span></code></a> – Computes the direct sum of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.directSumOfCopies" title="+replab.+rep.TensorRep.directSumOfCopies"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumOfCopies</span></code></a> – Returns a direct sum of copies of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.disp" title="+replab.+rep.TensorRep.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
@@ -1662,16 +1712,17 @@ possible.</p>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.equivariant" title="+replab.+rep.TensorRep.equivariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">equivariant</span></code></a> – Returns the space of equivariant linear maps from this rep to another rep</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.factor" title="+replab.+rep.TensorRep.factor"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factor</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.factors" title="+replab.+rep.TensorRep.factors"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factors</span></code></a> – row cell array of replab.Rep: Factor representations</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.TensorRep.field" title="+replab.+rep.TensorRep.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – {‘R’, ‘C’}: Vector space defined on real (R) or complex (C) field</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.TensorRep.group" title="+replab.+rep.TensorRep.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – replab.CompactGroup: Group being represented</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TensorRep.field" title="+replab.+rep.TensorRep.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – Vector space defined on real (R) or complex (C) field</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TensorRep.group" title="+replab.+rep.TensorRep.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – Group being represented</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.headerStr" title="+replab.+rep.TensorRep.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TensorRep.hermitianInvariant" title="+replab.+rep.TensorRep.hermitianInvariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hermitianInvariant</span></code></a> – Returns the Hermitian invariant space of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.hiddenFields" title="+replab.+rep.TensorRep.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.image" title="+replab.+rep.TensorRep.image"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">image</span></code></a> – Returns the image of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.inverseImage" title="+replab.+rep.TensorRep.inverseImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverseImage</span></code></a> – Returns the image of the inverse of a group element</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.TensorRep.isUnitary" title="+replab.+rep.TensorRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – {true, false, []}: Whether the representation is unitary</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TensorRep.irrepInfo" title="+replab.+rep.TensorRep.irrepInfo"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrepInfo</span></code></a> – Irreducible status information</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TensorRep.isUnitary" title="+replab.+rep.TensorRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether the representation is unitary</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.kron" title="+replab.+rep.TensorRep.kron"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">kron</span></code></a> – Tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.lambda" title="+replab.+rep.TensorRep.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Creates a non unitary representation from an image function</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.TensorRep.leftConjugateUnitary" title="+replab.+rep.TensorRep.leftConjugateUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugateUnitary</span></code></a> – Returns the (left) conjugation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.longStr" title="+replab.+rep.TensorRep.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.matrixColAction" title="+replab.+rep.TensorRep.matrixColAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixColAction</span></code></a> – Computes the matrix-representation product</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.matrixRowAction" title="+replab.+rep.TensorRep.matrixRowAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixRowAction</span></code></a> – Computes the representation-matrix product</p></li>
@@ -1680,6 +1731,7 @@ possible.</p>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.overR" title="+replab.+rep.TensorRep.overR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">overR</span></code></a> – Returns whether this representation is defined over the real field</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.sample" title="+replab.+rep.TensorRep.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from the group and returns its image under the representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.shortStr" title="+replab.+rep.TensorRep.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TensorRep.similar" title="+replab.+rep.TensorRep.similar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">similar</span></code></a> – Returns a similar representation under a change of basis</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.subRep" title="+replab.+rep.TensorRep.subRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRep</span></code></a> – Returns a subrepresentation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.subRepUnitary" title="+replab.+rep.TensorRep.subRepUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitary</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TensorRep.subRepUnitaryByIntegerBasis" title="+replab.+rep.TensorRep.subRepUnitaryByIntegerBasis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitaryByIntegerBasis</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
@@ -1794,6 +1846,12 @@ possible.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+rep.TensorRep.hermitianInvariant">
+<code class="sig-name descname">hermitianInvariant</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TensorRep.hermitianInvariant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.hermitianInvariant" title="+replab.Rep.hermitianInvariant"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.hermitianInvariant()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+rep.TensorRep.hiddenFields">
 <code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TensorRep.hiddenFields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
@@ -1812,6 +1870,12 @@ possible.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="+replab.+rep.TensorRep.irrepInfo">
+<code class="sig-name descname">irrepInfo</code><a class="headerlink" href="#+replab.+rep.TensorRep.irrepInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.irrepInfo" title="+replab.Rep.irrepInfo"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.irrepInfo</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="+replab.+rep.TensorRep.isUnitary">
 <code class="sig-name descname">isUnitary</code><a class="headerlink" href="#+replab.+rep.TensorRep.isUnitary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.isUnitary" title="+replab.Rep.isUnitary"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isUnitary</span></code></a></p>
@@ -1825,14 +1889,8 @@ possible.</p>
 
 <dl class="method">
 <dt id="+replab.+rep.TensorRep.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TensorRep.lambda" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">irrepInfo</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TensorRep.lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.lambda" title="+replab.Rep.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.lambda()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+rep.TensorRep.leftConjugateUnitary">
-<code class="sig-name descname">leftConjugateUnitary</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TensorRep.leftConjugateUnitary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.leftConjugateUnitary" title="+replab.Rep.leftConjugateUnitary"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.leftConjugateUnitary()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1881,6 +1939,12 @@ possible.</p>
 <dt id="+replab.+rep.TensorRep.shortStr">
 <code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TensorRep.shortStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+rep.TensorRep.similar">
+<code class="sig-name descname">similar</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em>, <em class="sig-param">Ainv</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TensorRep.similar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.similar" title="+replab.Rep.similar"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.similar()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1963,24 +2027,25 @@ possible.</p>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.complexification" title="+replab.+rep.TrivialRep.complexification"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">complexification</span></code></a> – Returns the complexification of a real representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.conj" title="+replab.+rep.TrivialRep.conj"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conj</span></code></a> – Returns the complex conjugate representation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.decomposition" title="+replab.+rep.TrivialRep.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns the irreducible decomposition of this representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.dimension" title="+replab.+rep.TrivialRep.dimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dimension</span></code></a> – integer: Representation dimension</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.dimension" title="+replab.+rep.TrivialRep.dimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dimension</span></code></a> – Representation dimension</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.directSum" title="+replab.+rep.TrivialRep.directSum"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSum</span></code></a> – Computes the direct sum of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.directSumOfCopies" title="+replab.+rep.TrivialRep.directSumOfCopies"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumOfCopies</span></code></a> – Returns a direct sum of copies of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.disp" title="+replab.+rep.TrivialRep.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.dual" title="+replab.+rep.TrivialRep.dual"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dual</span></code></a> – Returns the dual representation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.eq" title="+replab.+rep.TrivialRep.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.equivariant" title="+replab.+rep.TrivialRep.equivariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">equivariant</span></code></a> – Returns the space of equivariant linear maps from this rep to another rep</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.field" title="+replab.+rep.TrivialRep.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – {‘R’, ‘C’}: Vector space defined on real (R) or complex (C) field</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.group" title="+replab.+rep.TrivialRep.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – replab.CompactGroup: Group being represented</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.field" title="+replab.+rep.TrivialRep.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – Vector space defined on real (R) or complex (C) field</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.group" title="+replab.+rep.TrivialRep.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – Group being represented</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.headerStr" title="+replab.+rep.TrivialRep.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.hermitianInvariant" title="+replab.+rep.TrivialRep.hermitianInvariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hermitianInvariant</span></code></a> – Returns the Hermitian invariant space of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.hiddenFields" title="+replab.+rep.TrivialRep.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.identity" title="+replab.+rep.TrivialRep.identity"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">identity</span></code></a> – Stored copy of the identity matrix</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.image" title="+replab.+rep.TrivialRep.image"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">image</span></code></a> – Returns the image of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.inverseImage" title="+replab.+rep.TrivialRep.inverseImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverseImage</span></code></a> – Returns the image of the inverse of a group element</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.isUnitary" title="+replab.+rep.TrivialRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – {true, false, []}: Whether the representation is unitary</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.irrepInfo" title="+replab.+rep.TrivialRep.irrepInfo"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrepInfo</span></code></a> – Irreducible status information</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.isUnitary" title="+replab.+rep.TrivialRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether the representation is unitary</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.kron" title="+replab.+rep.TrivialRep.kron"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">kron</span></code></a> – Tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.lambda" title="+replab.+rep.TrivialRep.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Creates a non unitary representation from an image function</p></li>
-<li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.leftConjugateUnitary" title="+replab.+rep.TrivialRep.leftConjugateUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">leftConjugateUnitary</span></code></a> – Returns the (left) conjugation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.longStr" title="+replab.+rep.TrivialRep.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.matrixColAction" title="+replab.+rep.TrivialRep.matrixColAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixColAction</span></code></a> – do nothing to M</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.matrixRowAction" title="+replab.+rep.TrivialRep.matrixRowAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixRowAction</span></code></a> – do nothing to M</p></li>
@@ -1988,6 +2053,7 @@ possible.</p>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.overR" title="+replab.+rep.TrivialRep.overR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">overR</span></code></a> – Returns whether this representation is defined over the real field</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.sample" title="+replab.+rep.TrivialRep.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from the group and returns its image under the representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.shortStr" title="+replab.+rep.TrivialRep.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.similar" title="+replab.+rep.TrivialRep.similar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">similar</span></code></a> – Returns a similar representation under a change of basis</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.subRep" title="+replab.+rep.TrivialRep.subRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRep</span></code></a> – Returns a subrepresentation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.subRepUnitary" title="+replab.+rep.TrivialRep.subRepUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitary</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+rep.TrivialRep.subRepUnitaryByIntegerBasis" title="+replab.+rep.TrivialRep.subRepUnitaryByIntegerBasis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitaryByIntegerBasis</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
@@ -2096,6 +2162,12 @@ possible.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+rep.TrivialRep.hermitianInvariant">
+<code class="sig-name descname">hermitianInvariant</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TrivialRep.hermitianInvariant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.hermitianInvariant" title="+replab.Rep.hermitianInvariant"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.hermitianInvariant()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+rep.TrivialRep.hiddenFields">
 <code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TrivialRep.hiddenFields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
@@ -2114,6 +2186,12 @@ possible.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="+replab.+rep.TrivialRep.irrepInfo">
+<code class="sig-name descname">irrepInfo</code><a class="headerlink" href="#+replab.+rep.TrivialRep.irrepInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.irrepInfo" title="+replab.Rep.irrepInfo"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.irrepInfo</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="+replab.+rep.TrivialRep.isUnitary">
 <code class="sig-name descname">isUnitary</code><a class="headerlink" href="#+replab.+rep.TrivialRep.isUnitary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.isUnitary" title="+replab.Rep.isUnitary"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isUnitary</span></code></a></p>
@@ -2127,14 +2205,8 @@ possible.</p>
 
 <dl class="method">
 <dt id="+replab.+rep.TrivialRep.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TrivialRep.lambda" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">irrepInfo</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TrivialRep.lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.lambda" title="+replab.Rep.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.lambda()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+rep.TrivialRep.leftConjugateUnitary">
-<code class="sig-name descname">leftConjugateUnitary</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TrivialRep.leftConjugateUnitary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.leftConjugateUnitary" title="+replab.Rep.leftConjugateUnitary"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.leftConjugateUnitary()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -2165,6 +2237,12 @@ possible.</p>
 <dt id="+replab.+rep.TrivialRep.shortStr">
 <code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TrivialRep.shortStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+rep.TrivialRep.similar">
+<code class="sig-name descname">similar</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em>, <em class="sig-param">Ainv</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+rep.TrivialRep.similar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.similar" title="+replab.Rep.similar"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.similar()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -2294,7 +2372,7 @@ possible.</p>
         <li class="right" >
           <a href="rep.html" title="Representations"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.5 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.6 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li> 
       </ul>
     </div>

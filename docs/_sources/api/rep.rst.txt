@@ -84,10 +84,3 @@ Equivariant
 +++++++++++
 
 .. autoclass:: Equivariant
-
-Commutant
-+++++++++
-
-.. autoclass:: Commutant
-
-.. module:: +replab.+equivariant
