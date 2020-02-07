@@ -48,7 +48,7 @@ function s = shortStr(obj, maxColumns)
         elements = arrayfun(@(i) replab.str.cellStr(obj, maxColumns, i), 1:length(obj), 'uniform', 0);
         s = [lp strjoin(elements, ', ') rp];
         if size(obj, 1) > 1
-            s = [s ''''];
+            s = [s '.'''];
         end
     elseif ismatrix(obj)
         [lp rp] = replab.str.brackets(obj);
