@@ -1,15 +1,32 @@
 classdef Rep < replab.Str
 % Describes a finite dimensional representation of a compact group
 %
-% Only the `.image_internal` method needs to be implemented in principle.
+% Notes:
+%   While we do not expect users to implement their own subclass of `~+replab.Rep`, to do
+%   so only the map from group elements to matrix images need to be implemented.
 %
-% For optimization purposes, actions can also be specialized.
+%   Internally RepLAB can use sparse matrices; however, we take care to not return sparse
+%   matrices in the user API, as doing so can lead to spurious breakages in user code
+%   (some MATLAB/Octave functions do not work with sparse arguments).
+%
+%   Thus, internally, the methods `.image_internal` and `.inverseImage_internal` are used,
+%   and the user facing methods `.image` and `.inverseImage` simply process the output of
+%   the internal methods by converting them, if necessary, to dense matrices
+%
+%   This class implements also row and column matrix actions, methods which can be overloaded
+%   for performance.
+
+    properties
+        isUnitary % ({true, false, []}): Whether this representation is unitary
+        isIrreducible % (true, false, []): Whether this representation is irreducible
+        frobeniusSchurIndicator % (integer or []): Value of the Frobenius-Schur indicator
+
+    end
 
     properties (SetAccess = protected)
         group     % (`+replab.CompactGroup`): Group being represented
         field     % ({'R', 'C'}): Vector space defined on real (R) or complex (C) field
         dimension % (integer): Representation dimension
-        isUnitary % ({true, false, []}): Whether the representation is unitary
         irrepInfo % (`+replab.irreducible.Info` or []): Irreducible status information
                   %
                   %                                     This representation is known to be
@@ -17,9 +34,9 @@ classdef Rep < replab.Str
     end
 
     properties (Access = protected)
-        commutant_ = [];
-        hermitianInvariant_ = [];
-        decomposition_ = [];
+        commutant_
+        hermitianInvariant_
+        decomposition_
     end
 
     methods % Abstract methods
@@ -49,7 +66,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   double(*,*): Image of the given element for this representation
-            rho = full(self.imageInternal(g));
+            rho = full(self.image_internal(g));
         end
 
         function rho = inverseImage_internal(self, g)
@@ -61,7 +78,7 @@ classdef Rep < replab.Str
         % Returns:
         %   double(*,*): Image of the inverse of the given element for this representation, may be sparse
             gInv = self.group.inverse(g);
-            rho = self.imageInternal(gInv);
+            rho = self.image_internal(gInv);
         end
 
         function rho = inverseImage(self, g)
@@ -72,7 +89,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   double(*,*): Image of the inverse of the given element for this representation
-            rho = full(self.inverseImageInternal(g));
+            rho = full(self.inverseImage_internal(g));
         end
 
         %% Sampling
@@ -224,7 +241,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   double(*,*): The matrix ``self.image(g) * M``
-            M = self.image(g) * M;
+            M = full(self.image_internal(g) * M);
         end
 
         function M = matrixColAction(self, g, M)
@@ -244,7 +261,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   double(*,*): The matrix ``M * self.inverseImage(g)``
-            M = M * self.inverseImage(g);
+            M = full(M * self.inverseImage_internal(g));
         end
 
         %% Derived representations

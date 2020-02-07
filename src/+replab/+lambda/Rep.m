@@ -19,12 +19,12 @@ classdef Rep < replab.Rep
             self.inverseImageFun = inverseImageFun;
         end
 
-        function rho = image(self, g)
+        function rho = image_internal(self, g)
             f = self.imageFun;
             rho = f(g);
         end
 
-        function rho = inverseImage(self, g)
+        function rho = inverseImage_internal(self, g)
             f = self.inverseImageFun;
             if isempty(f)
                 gInv = self.group.inverse(g);

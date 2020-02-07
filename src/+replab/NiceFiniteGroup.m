@@ -212,21 +212,17 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         %% Representation construction
 
-        function rho = repByImages(self, field, dimension, isUnitary, images, inverseImages)
+        function rho = repByImages(self, field, dimension, images, inverseImages)
         % Constructs a finite dimensional representation of this group from generator images
         %
         % Args:
         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
         %   dimension (integer): Representation dimension
-        %   isUnitary ({true, false, []}): Whether the representation is unitary (or ``[]`` for unknown)
         %   images (row cell array of matrices): Images of the group generators
         %   inverseImages (row cell array of matrices): Inverse images of the group generators
         % Returns:
         %   `+replab.Rep`: The constructed group representation
-            if nargin < 6
-                inverseImages = [];
-            end
-            rho = replab.RepByImages(self, field, dimension, isUnitary, images, inverseImages);
+            rho = replab.RepByImages(self, field, dimension, images, inverseImages);
         end
 
         function rho = permutationRep(self, dimension, permutations)

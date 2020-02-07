@@ -46,11 +46,11 @@ classdef DerivedRep < replab.Rep
 
         % Rep
 
-        function rho = image(self, g)
+        function img = image_internal(self, g)
             if self.inverse
-                img = self.parent.inverseImage(g);
+                img = self.parent.inverseImage_internal(g);
             else
-                img = self.parent.image(g);
+                img = self.parent.image_internal(g);
             end
             if self.conjugate
                 img = conj(img);
@@ -60,11 +60,11 @@ classdef DerivedRep < replab.Rep
             end
         end
 
-        function rho = inverseImage(self, g)
+        function img = inverseImage_internal(self, g)
             if self.inverse
-                img = self.parent.image(g);
+                img = self.parent.image_internal(g);
             else
-                img = self.parent.inverseImage(g);
+                img = self.parent.inverseImage_internal(g);
             end
             if self.conjugate
                 img = conj(img);
