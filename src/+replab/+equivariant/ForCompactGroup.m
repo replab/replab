@@ -69,7 +69,7 @@ classdef ForCompactGroup < replab.Equivariant
                         % compute error on fit parameters
                         delta = sqrt(diag(CovB)) * tinv(1-0.05/2, iter - 3);
                         crossing = [];
-                        if delta < maxNoiseFloorError/2
+                        if delta(1) < maxNoiseFloorError/2
                             % -slope*x + offset == logfloor
                             % x = - (logfloor - offset)/slope
                             crossing = round(-(logfloor - offset)/slope);
