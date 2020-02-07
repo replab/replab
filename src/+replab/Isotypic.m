@@ -13,7 +13,7 @@ classdef Isotypic < replab.SubRep
 % However the subspace spanned by an isotypic component as a whole is unique.
 
     properties
-        irreps % (row cell array of `.SubRep`): Equivalent irreducible subrepresentations in this isotypic component
+        irreps % (cell(1,*) of `.SubRep`): Equivalent irreducible subrepresentations in this isotypic component
         multiplicity % (integer): Number of equivalent irreducible representations in this isotypic component
         irrepDimension % (integer): Dimension of each irreducible representation in this component
     end
@@ -26,7 +26,7 @@ classdef Isotypic < replab.SubRep
             for i = 1:length(irreps)
                 ci = irreps{i};
                 assert(isa(ci, 'replab.SubRep'));
-                assert(ci.isKnownCanonicalIrreducible);
+                assert(ci.isKnownIrreducible);
             end
             Us = cellfun(@(sr) sr.U, irreps, 'uniform', 0);
             U = vertcat(Us{:});
@@ -46,6 +46,17 @@ classdef Isotypic < replab.SubRep
         function c = irrep(self, i)
         % Returns the i-th copy of the irreducible representation
             c = self.irreps{i};
+        end
+
+        function P = projector(self)
+        % Returns the projector on this isotypic component
+            P = full(self.U'*self.U);
+        end
+
+        function P = projectorOnIrrep(self, i)
+        % Returns the projector on the i-th irreducible representation in this component
+            Ui = self.irrep(i).U;
+            P = full(Ui'*Ui);
         end
 
         %% Str methods

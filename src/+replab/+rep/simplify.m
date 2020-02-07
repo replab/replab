@@ -2,6 +2,22 @@ function rep1 = simplify(rep)
 % Returns a representation equivalent to the given one, but whose computation is simpler
     newRep = [];
     switch class(rep)
+      case 'replab.SubRep'
+        parent = rep.parent;
+        switch class(parent)
+          case 'replab.SubRep'
+            % self W, parent V, parent.parent U
+            % self.F: V -> W
+            % self.H: W -> V
+            % self.parent.F: U -> V
+            % self.parent.H: V -> U
+            % newF: U -> W
+            % newH: W -> U
+            newH_internal = parent.H_internal * rep.H_internal;
+            newF_internal = rep.F_internal * parent.F_internal;
+            newRep = parent.parent.subRep(newH, newF);
+          otherwise
+        end
       case 'replab.rep.DerivedRep'
         parent = rep.parent;
         switch class(parent)

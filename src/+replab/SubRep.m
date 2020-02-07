@@ -1,43 +1,48 @@
 classdef SubRep < replab.Rep
-% Describes a subrepresentation of a unitary finite representation
+% Describes a subrepresentation of a finite representation
 %
-% The subrepresentation is given by the row vectors of the unitary matrix `U`, such that
-% ``self.image(g) = U * parent.image(g) * U'``.
+% The subrepresentation is described by the basis `H`.
 
     properties (SetAccess = protected)
-        parent % replab.Rep: Parent representation
-        U % double matrix, can be sparse: Unitary basis of dimension dChild x dParent
-        niceBasis % (`.NiceBasis`): Nice decomposition of the basis
+        parent % (`+replab.Rep`): Parent representation
+        H_internal % (double(*,*), may be sparse): Subrepresentation basis, dimension ``dParent x dChild``
+        F_internal % (double(*,*), may be sparse): Embedding map, dimension ``dParent x dChild``
     end
 
     methods
 
-        function self = SubRep(parent, U, niceBasis, irrepInfo)
+        function self = SubRep(parent, H_internal, F_internal, irrepInfo)
         % Constructs a subrepresentation of a parent representation
         %
         % Args:
-        %   parent (replab.Rep): Parent representation of which we construct a subrepresentation
-        %   U (double matrix, can be sparse): Basis matrix of dimension dThisChild x dParent
-        %   niceBasis (replab.NiceBasis or [], optional): Nice decomposition of the basis `U`
-        %   irrepInfo (rpelab.IrrepInfo or [], optional): Irreducible status information
-            if nargin < 4
-                irrepInfo = [];
-            end
-            if nargin < 3
-                niceBasis = [];
-            end
-            d = size(U, 1);
-            dParent = size(U, 2);
+        %   parent (`+replab.Rep`): Parent representation of which we construct a subrepresentation
+        %   H_internal (double(*,*), may be sparse): Subrepresentation basis, dimension ``dParent x dChild``
+        %   F_internal (double(*,*), may be sparse): Embedding map, dimension ``dParent x dChild``
+        %   irrepInfo (`+replab.IrrepInfo` or []): Irreducible status information
+            d = size(F_internal, 1);
+            dParent = size(F_internal, 2);
+            assert(size(H_internal, 1) == dParent);
+            assert(size(H_internal, 2) == d);
             assert(parent.dimension == dParent, 'Incorrect basis dimension');
-            assert(isequal(parent.isUnitary, true), 'We support only unitary representations');
+            isUnitary = replab.trileanAnd(parent.isUnitary, isequal(F_internal, H_internal'));
             self.group = parent.group;
             self.field = parent.field;
             self.dimension = d;
-            self.parent = parent;
-            self.isUnitary = true;
-            self.U = U;
-            self.niceBasis = niceBasis;
+            self.isUnitary = isUnitary;
             self.irrepInfo = irrepInfo;
+            self.parent = parent;
+            self.F_internal = F_internal;
+            self.H_internal = H_internal;
+        end
+
+        function H = basis(self)
+        % Returns the basis of this subrepresentation in the parent representation
+        %
+        % Always returns a dense matrix.
+        %
+        % Returns:
+        %   double(*,*): Subrepresentation basis
+            H = full(self.H_internal);
         end
 
         function b = isKnownIrreducible(self)
@@ -75,34 +80,6 @@ classdef SubRep < replab.Rep
             end
         end
 
-        function P = projector(self)
-        % Returns the projector on this subrepresentation
-        %
-        % Returns:
-        %   dense double matrix: The projector on this invariant subspace,
-        %                        expressed in the parent representation
-            P = full(self.U'*self.U);
-        end
-
-        function newSub = collapseParent(self)
-        % Collapses the subrepresentation of a subrepresentation
-        %
-        % Note that only one level of subrepresentation is removed, as the action is not
-        % performed recursively.
-        %
-        % Returns:
-        %   replab.SubRep: A subrepresentation with parent equal to ``self.parent.parent``, which
-        %                  has in fine the same basis as ``self``
-            assert(isa(self.parent, 'replab.SubRep'));
-            newU = self.U * self.parent.U;
-            if ~isempty(self.niceBasis) && ~isempty(self.parent.niceBasis)
-                newNiceBasis = self.niceBasis * self.parent.niceBasis;
-            else
-                newNiceBasis = [];
-            end
-            newSub = replab.SubRep(self.parent.parent, newU, newNiceBasis, self.irrepInfo);
-        end
-
         %% Str methods
 
         function s = headerStr(self)
@@ -133,58 +110,63 @@ classdef SubRep < replab.Rep
         function names = hiddenFields(self)
             names = replab.str.uniqueNames( ...
                 hiddenFields@replab.Rep(self), ...
-                {'U'} ...
+                {'F_internal' 'H_internal'} ...
                 );
         end
 
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Rep(self);
-            if ~isempty(self.niceBasis) && self.niceBasis.isCorrectionDiagonal
-                factors = self.niceBasis.normalizationFactors;
+            if self.dimension < 15
                 for i = 1:self.dimension
-                    v = replab.str.Normalized(self.niceBasis.V(i, :), factors{i});
-                    names{1, end+1} = sprintf('U(%d,:)', i);
-                    values{1, end+1} = v;
+                    names{1, end+1} = sprintf('basis.(:,%d)', i);
+                    values{1, end+1} = full(self.H_internal(:,i));
                 end
             else
-                names{1, end+1} = 'U';
-                values{1, end+1} = self.U;
+                names{1, end+1} = 'basis';
+                values{1, end+1} = self.basis;
             end
         end
 
         %% Rep methods
 
-        function rho = image(self, g)
-            rho = full(self.U*self.parent.image(g)*self.U');
+% $$$         function [A Ainv] = unitaryChangeOfBasis(self)
+% $$$ TODO recover this
+% $$$             if isequal(self.parent.isUnitary, true)
+% $$$                 X = self.F_internal * self.F_internal';
+% $$$                 A = chol(X, 'lower');
+% $$$                 U = inv(A) * self.F;
+% $$$                 newRep = self.parent.subRepUnitary(U);
+% $$$
+% $$$         end
+
+        function rho = image_internal(self, g)
+            rho = full(self.F_internal*self.parent.image_internal(g)*self.H_internal);
         end
 
-        function rho = inverseImage(self, g)
-            rho = full(self.U*self.parent.inverseImage(g)*self.U');
+        function rho = inverseImage_internal(self, g)
+            rho = full(self.F_internal*self.parent.inverseImage_internal(g)*self.H_internal);
         end
 
     end
 
     methods (Static)
 
-        function subRep = directSum(subReps)
+        function subRep = directSum(parent, subReps)
         % Computes the direct sum of subrepresentations of the same parent representation
         %
         % The subrepresentations must not overlap.
         %
         % Args:
-        %   subReps (cell(replab.SubRep)): A row cell array of subrepresentations of the same representation
+        %   parent (`+replab.Rep`): Parent representation
+        %   subReps (cell(1,*) of `+replab.SubRep`): A row cell array of subrepresentations of the parent representation
         %
         % Returns:
-        %   replab.SubRep: A block-diagonal subrepresentation composed of the given subrepresentations
-            n = length(subReps);
-            for i = 2:n
-                assert(subReps{i}.parent == subReps{1}.parent, 'Subrepresentations should have the same parent.');
-            end
-            Us = cellfun(@(sr) sr.U, subReps, 'uniform', 0);
-            newU = vertcat(Us{:});
-            nbs = cellfun(@(sr) sr.niceBasis, subReps, 'uniform', 0);
-            newNiceBasis = replab.NiceBasis.vertcat(nbs);
-            subRep = replab.SubRep(subReps{1}.parent, newU, newNiceBasis);
+        %   `+replab.SubRep`: A block-diagonal subrepresentation composed of the given subrepresentations
+            Hs = cellfun(@(sr) sr.H_internal, subReps, 'uniform', 0);
+            Fs = cellfun(@(sr) sr.F_internal, subReps, 'uniform', 0);
+            newH_internal = horzcat(Hs{:});
+            newF_internal = vertcat(Fs{:});
+            subRep = parent.subRep(newH_internal, newF_internal);
         end
 
     end

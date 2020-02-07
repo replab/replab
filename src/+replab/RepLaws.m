@@ -1,4 +1,5 @@
 classdef RepLaws < replab.Laws
+
     properties
         rep
         G % group of which rep is a representation

@@ -1,8 +1,8 @@
 function [intBasisOpt isOrtho] = integerRowSpan(basis)
 % Attempts integer basis recovery from the given unitary basis
 %
-% Tries to find a rational matrix that has the same row span as the given basis ``basis``. 
-% It uses the ``rat`` Matlab function that uses truncated continued fraction expansions. 
+% Tries to find a rational matrix that has the same row span as the given basis ``basis``.
+% It uses the ``rat`` Matlab function that uses truncated continued fraction expansions.
 % Additionally, the function attemps to perform Gram Schmidt orthogonalization over the integers
 % (but will skip that step if it would make the coefficients to grow too big).
 %

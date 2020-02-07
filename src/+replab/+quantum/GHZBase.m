@@ -80,7 +80,7 @@ classdef GHZBase < replab.CompactGroup
         % Returns:
         %   replab.Rep: The unitary natural representation
             d = self.nLevels^self.nParties;
-            rep = replab.Rep.lambda(self, 'C', d, true, @(g) self.toMatrix(g), @(g) self.toMatrix(g)');
+            rep = replab.Rep.lambda(self, 'C', d, true, [], @(g) self.toMatrix(g), @(g) self.toMatrix(g)');
         end
 
         function g = permuteParties(self, p, g)

@@ -1,7 +1,7 @@
 classdef Rep < replab.Str
 % Describes a finite dimensional representation of a compact group
 %
-% Only "image" needs to be implemented in principle.
+% Only the `.image_internal` method needs to be implemented in principle.
 %
 % For optimization purposes, actions can also be specialized.
 
@@ -24,14 +24,14 @@ classdef Rep < replab.Str
 
     methods % Abstract methods
 
-        function rho = image(self, g)
-        % Returns the image of a group element
+        function rho = image_internal(self, g)
+        % Returns the image of a group element, dense or sparse
         %
         % Args:
         %   g (element of `group`): Element being represented
         %
         % Returns:
-        %   double(*,*): Image of the given element for this representation
+        %   double(*,*): Image of the given element for this representation, may be sparse
             error('Abstract');
         end
 
@@ -41,6 +41,29 @@ classdef Rep < replab.Str
 
         %% Own methods
 
+        function rho = image(self, g)
+        % Returns the image of a group element
+        %
+        % Args:
+        %   g (element of `group`): Element being represented
+        %
+        % Returns:
+        %   double(*,*): Image of the given element for this representation
+            rho = full(self.imageInternal(g));
+        end
+
+        function rho = inverseImage_internal(self, g)
+        % Returns the image of the inverse of a group element
+        %
+        % Args:
+        %   g (element of `group`): Element of which the inverse is represented
+        %
+        % Returns:
+        %   double(*,*): Image of the inverse of the given element for this representation, may be sparse
+            gInv = self.group.inverse(g);
+            rho = self.imageInternal(gInv);
+        end
+
         function rho = inverseImage(self, g)
         % Returns the image of the inverse of a group element
         %
@@ -49,8 +72,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   double(*,*): Image of the inverse of the given element for this representation
-            gInv = self.group.inverse(g);
-            rho = self.image(gInv);
+            rho = full(self.inverseImageInternal(g));
         end
 
         %% Sampling
@@ -361,74 +383,41 @@ classdef Rep < replab.Str
             if isequal(self.isUnitary, true)
                 newRep = self;
             else
-                newRep = replab.Rep.lambda(self.group, self.field, self.dimension, true, [], ...
-                                           @(g) A*self.image(g)*Ainv, @(g) Ainv*self.inverseImage(g)*A);
+                newRep = self.similar(A, Ainv);
             end
         end
 
-        function sub = subRep(self, F, G)
+        function sub = subRep(self, basis, embedding)
         % Returns a subrepresentation of this representation
         %
-        % Let V be the vector space of this representation,
-        % and W an invariant subspace of V. Let ``F: V -> W``
-        % and ``G: W -> V`` be maps such that ``F G = id``,
-        % and ``G rho(g) F`` is the subrepresentation.
+        % The subrepresentation is defined by its basis in the parent representation; to compute
+        % images, an embedding map can be provided.
         %
+        % While the ``basis`` represents in essence a map from the subrepresentation to parent representation,
+        % the embedding map is a map from the parent representation to the subrepresentation.
+        %
+        % The embedding map is not uniquely defined, for example when the subrepresentation contains irreducible
+        % representations that have multiplicites outside the subrepresentation space.
+        %
+        % However, all variants of the embedding map provide identical results when computing images of the
+        % subrepresentation.
+        %
+        % If the embedding is not provided, one is obtained by a trick based on Maschke theorem.
         % Args:
-        %   F (double(*,*)): map V -> W
-        %   G (double(*,*)): map W -> V
+        %   basis (double(dParent,dChild)): Basis of the subrepresentation
+        %   embedding (double(dChild,dParent), optional): Map from the parent space to the subrepresentation
         % Returns:
-        %   replab.NUSubRep: Subrepresentation
-            sub = replab.SubRepNU(self, F, G);
-        end
-
-        function sub = subRepUnitaryByIntegerBasis(self, V, irrepInfo)
-        % Returns a unitary subrepresentation of this unitary representation
-        %
-        % The unitary change of basis matrix `U` is derived by row transformations
-        % of the integer matrix ``V``, such that both have the same row span.
-        %
-        % However, ``V`` is also used to provide a nice basis representation for display.
-        %
-        % Args:
-        %   V (integer matrix, can be sparse): Integer basis vectors stored as row vectors
-        %   irrepInfo (`+replab.irreducible.Info` or [], optional): When present, indicates that the subrepresentation is
-        %                                                           irreducible with associated information
-        %
-        % Returns:
-        %   replab.SubRep: The subrepresentation
-            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
+        %   `+replab.SubRep`: Subrepresentation
             if nargin < 3
-                irrepInfo = [];
+                dSub = size(basis, 2);
+                rest = null(basis.');
+                X = [basis rest];
+                Xinv = inv(X);
+                P = basis * Xinv(1:dSub, :);
+                P1 = self.commutant.project(P);
+                embedding = basis \ P1;
             end
-            niceBasis = replab.NiceBasis.fromIntegerBasis(V);
-            U = niceBasis.U;
-            sub = replab.SubRep(self, U, niceBasis, irrepInfo);
-        end
-
-        function sub = subRepUnitary(self, U, niceBasis, irrepInfo)
-        % Returns a unitary subrepresentation of this unitary representation
-        %
-        % It is described by the row basis vectors in U, such that
-        % `` sub.image(g) = U * self.image(g) * U' ``
-        %
-        % U has dimension ``dim(subRepresentation) x self.dimension``, and the row vectors are orthonormal.
-        %
-        % Args:
-        %   U (double(*,*), can be sparse): Orthonormal basis vectors stored as row vectors
-        %   niceBasis (`+replab.NiceBasis` or [], optional): Optional integer basis with the same span as the basis vectors
-        %   irrepInfo (`+replab.irreducible.Info` or [], optional): When present, indicates that the subrepresentation is irreducible with associated information
-        %
-        % Returns:
-        %   `+replab.SubRep`: The subrepresentation
-            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
-            if nargin < 4
-                irrepInfo = [];
-            end
-            if nargin < 3
-                niceBasis = [];
-            end
-            sub = replab.SubRep(self, U, niceBasis, irrepInfo);
+            sub = replab.SubRep(self, basis, embedding, []);
         end
 
         function rep1 = similar(self, A, Ainv)
@@ -466,7 +455,7 @@ classdef Rep < replab.Str
         % Computes the tensor product of representations
         %
         % Args:
-        %   reps (row cell array of `+replab.Rep`): Representation of the same group over the same field
+        %   reps (cell(1,*) of `+replab.Rep`): Representation of the same group over the same field
         %
         % Returns:
         %   `+replab.Rep`: Tensor product of the representations

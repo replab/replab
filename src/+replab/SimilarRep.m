@@ -6,13 +6,13 @@ classdef SimilarRep < replab.Rep
 
     properties (SetAccess = protected)
         parent % (`+replab.Rep`): Representation this is derived from
-        A % (double(*,*)): Change of basis matrix
-        Ainv % (double(*,*)): Inverse of change of basis matrix
+        A_internal % (double(*,*), may be sparse): Change of basis matrix
+        Ainv_internal % (double(*,*), may be sparse): Inverse of change of basis matrix
     end
 
     methods
 
-        function self = SimilarRep(parent, A, Ainv)
+        function self = SimilarRep(parent, A_internal, Ainv_internal)
             switch parent.field
               case 'R'
                 assert(isreal(A) && isreal(Ainv), 'A real Rep can only be conjugated by a real orthonormal matrix');
@@ -26,8 +26,8 @@ classdef SimilarRep < replab.Rep
             self.group = parent.group;
             self.field = parent.field;
             self.dimension = parent.dimension;
-            self.A = A;
-            self.Ainv = Ainv;
+            self.A_internal = A_internal;
+            self.Ainv_internal = Ainv_internal;
             self.parent = parent;
             self.irrepInfo = [];
         end
@@ -36,12 +36,20 @@ classdef SimilarRep < replab.Rep
             s = 'Similar representation';
         end
 
-        function rho = image(self, g)
-            rho = self.A * self.parent.image(g) * self.Ainv;
+        function rho = image_internal(self, g)
+            rho = self.A_internal * self.parent.image_internal(g) * self.Ainv_internal;
         end
 
-        function rho = inverseImage(self, g)
-            rho = self.A * self.parent.inverseImage(g) * self.Ainv;
+        function rho = inverseImage_internal(self, g)
+            rho = self.A_inverse * self.parent.inverseImage_internal(g) * self.Ainv_internal;
+        end
+
+        function mat = A(self)
+            mat = full(self.A_internal);
+        end
+
+        function mat = Ainv(self)
+            mat = full(self.Ainv_internal);
         end
 
     end
