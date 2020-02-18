@@ -15,3 +15,16 @@ and the image can be run using the command:
 
 
 The image is created using the ``root`` user, albeit giving full permissions to others inside the container; thus additional files can be created by the appropriate non-root user when running it.
+
+
+Update dependencies versions in the Docker file
+-----------------------------------------------
+
+The underlying Linux distribution is Ubuntu 18.04 LTS, so we can expect some stability from the packages managed by ``apt``. However, we pin the Python packages versions using `pip-tools <https://pythonspeed.com/articles/pipenv-docker/>`_.
+
+In the ``sphinx`` subdirectory, the file ``requirements.in`` lists the packages we require. Assuming the latest dependencies form a consistent environment able to compile the documentation, the ``requirements.txt`` file can be updated with the command:
+
+::
+   pip-compile requirements.in > requirements.txt
+
+run from the ``sphinx/`` directory.
