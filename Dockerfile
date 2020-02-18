@@ -9,9 +9,11 @@ RUN apt-get update && apt-get install -y -q python3-pip pandoc octave octave-opt
 
 # Install Python package
 
-RUN pip3 install -r sphinx/requirements.txt
+RUN mkdir /workspace && mkdir /workspace/replab && mkdir /workspace/replab/sphinx
 
-RUN mkdir /workspace && mkdir /workspace/replab
+COPY sphinx/requirements.txt /workspace/replab/sphinx
+
+RUN pip3 install -r /workspace/replab/sphinx/requirements.txt
 
 WORKDIR /workspace/replab
 VOLUME /workspace/replab
