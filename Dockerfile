@@ -5,7 +5,7 @@ FROM       ubuntu:18.04
 # docker run -it -v <your directory>:/documents/
 
 # Install base packages
-RUN apt-get update && apt-get install -y -q python3-pip pandoc octave octave-optim
+RUN apt-get update && apt-get install -y -q python3-pip pandoc octave octave-optim liboctave-dev
 
 # Install Python package
 
