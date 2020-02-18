@@ -63,6 +63,27 @@ function exitCode = replab_easyinstall
         return
     end
 
+    % Test if we have write permission in the parent folder
+    [status, attributes] = fileattrib([replabPath, '/..']);
+    if (~status) || (~(attributes.UserWrite || attributes.GroupWrite || attributes.OtherWrite))
+        % We cannot read or modify the parent directory
+        disp('The replab folder appears to be located inside a parent folder which');
+        disp('cannot be modified by the user. This is not a good idea.');
+        disp('Please move it to a folder with write permission enabled and try again.');
+        exitCode = 1;
+        return;
+    end
+
+    % Test if we have write permission in the external folder
+    [status, attributes] = fileattrib(externalPath);
+    if (~status) || (~(attributes.UserWrite || attributes.GroupWrite || attributes.OtherWrite))
+        % We cannot read or modify the external directory
+        disp('The replab folder doesn''t seem to be writeable by the current user.');
+        disp('Please fix this and try again');
+        exitCode = 1;
+        return;
+    end
+    
     % Test if we are in a Git repository
     gitPath = fullfile(replabPath, '.git');
     switch exist(gitPath)

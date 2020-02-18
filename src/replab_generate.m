@@ -32,6 +32,13 @@ function replab_generate(what)
         what = 'all';
     end
 
+    % Make sure we are in the correct path
+    initialPath = pwd;
+    [pathStr, name, extension] = fileparts(which(mfilename));
+    pathStr = strrep(pathStr, '\', '/');
+    cd(pathStr)
+    cd ..
+    
     logFun = @(str) disp(str);
     valid = {'clear' 'sphinx' 'sphinxbuild' 'sphinxsrc' 'sphinxjupyter' 'doctests' 'all'};
     validStr = strjoin(cellfun(@(x) sprintf('''%s''', x), valid, 'uniform', 0), ', ');
@@ -149,4 +156,6 @@ function replab_generate(what)
         end
     end
 
+    % return to the previous path
+    cd(initialPath);
 end
