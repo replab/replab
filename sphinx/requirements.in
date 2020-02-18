@@ -1,0 +1,10 @@
+sphinx
+sphinxcontrib-matlabdomain
+texext
+guzzle_sphinx_theme
+sphinx-collapse-admonitions
+sphinxcontrib-fulltoc
+ablog
+jupyter_client
+octave-kernel
+nbsphinx
