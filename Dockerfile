@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y -q python3-pip pandoc octave octave-opt
 
 # Install Python package
 
-RUN pip3 install sphinx sphinxcontrib-matlabdomain texext guzzle_sphinx_theme sphinx-collapse-admonitions sphinxcontrib-fulltoc ablog jupyter_client octave-kernel nbsphinx
+RUN pip3 install -r sphinx/requirements.txt
 
 RUN mkdir /workspace && mkdir /workspace/replab
 
