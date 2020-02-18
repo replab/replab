@@ -9,12 +9,15 @@ classdef ComplexifiedRep < replab.Rep
 
         function self = ComplexifiedRep(parent)
             assert(isequal(parent.field, 'R'));
+            % own properties
             self.parent = parent;
+            % from replab.Rep, immutable
             self.group = parent.group;
             self.field = 'C';
             self.dimension = parent.dimension;
+            % from replab.Rep, mutable
             self.isUnitary = parent.isUnitary;
-            self.irrepInfo = [];
+            self.isTrivial = parent.isTrivial;
         end
 
         function s = headerStr(self)

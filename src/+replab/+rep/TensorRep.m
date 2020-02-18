@@ -4,35 +4,30 @@ classdef TensorRep < replab.Rep
 % All factor representations must be defined on the same group
 
     properties
-        factors % row cell array of replab.Rep: Factor representations
+        factors % (cell(1,*) of `+replab.Rep`): Factor representations
     end
 
     methods
 
-        function self = TensorRep(factors)
+        function self = TensorRep(group, field, factors)
         % Constructs a tensor representation from a cell array of representations
         %
         % All the subrepresentations should be defined on the same group, and on the same field.
         %
         % Args:
-        %   blocks (row cell array of replab.Rep): Factor representations
-            assert(length(factors) >= 1);
-            d = 1;
-            for i = 1:length(factors)
-                assert(isa(factors{i}, 'replab.Rep'));
-                d = d * factors{i}.dimension;
-            end
-            self.dimension = d;
+        %   group (`+replab.CompactGroup`): Common group
+        %   field ({'R', 'C'}): Real or complex field
+        %   blocks (cell(1,*) of `+replab.Rep`): Factor representations
+            replab.rep.assertCompatibleFactors(group, field, factors);
+            % own properties
+            self.factors = factors;
+            % replab.Rep immutable
+            self.group = group;
+            self.field = field;
+            self.dimension = prod(cellfun(@(f) f.dimension, factors));
+            % replab.Rep mutable
             factorsAreUnitary = cellfun(@(x) x.isUnitary, factors, 'uniform', 0);
             self.isUnitary = replab.trileanAnd(factorsAreUnitary{:});
-            for i = 2:length(factors)
-                assert(factors{1}.group == factors{i}.group);
-                assert(isequal(factors{1}.field, factors{i}.field));
-            end
-            self.factors = factors;
-            self.group = factors{1}.group;
-            self.field = factors{1}.field;
-            self.irrepInfo = [];
         end
 
         function n = nFactors(self)
@@ -60,10 +55,25 @@ classdef TensorRep < replab.Rep
 
         % Rep
 
-        function rho = image(self, g)
-            rho = self.factors{1}.image(g);
-            for i = 2:self.nFactors
-                rho = kron(rho, self.factors{i}.image(g));
+        function rho = image_internal(self, g)
+            if isempty(self.factors)
+                rho = 1;
+            else
+                rho = self.factors{1}.image_internal(g);
+                for i = 2:self.nFactors
+                    rho = kron(rho, self.factors{i}.image_internal(g));
+                end
+            end
+        end
+
+        function rho = imageInverse_internal(self, g)
+            if isempty(self.factors)
+                rho = 1;
+            else
+                rho = self.factors{1}.imageInverse_internal(g);
+                for i = 2:self.nFactors
+                    rho = kron(rho, self.factors{i}.imageInverse_internal(g));
+                end
             end
         end
 

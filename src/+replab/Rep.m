@@ -1,6 +1,9 @@
 classdef Rep < replab.Str
 % Describes a finite dimensional representation of a compact group
 %
+% This class has mutable properties that correspond to information that can be computed and cached
+% after the `+replab.Rep` instance is constructed, for example `.isUnitary` or `.isTrivial`.
+%
 % Notes:
 %   While we do not expect users to implement their own subclass of `~+replab.Rep`, to do
 %   so only the map from group elements to matrix images need to be implemented.
@@ -18,19 +21,16 @@ classdef Rep < replab.Str
 
     properties
         isUnitary % ({true, false, []}): Whether this representation is unitary
+        isTrivial % ({true, false, []}): Whether this representation is trivial (not necessarily of dimension 1)
         isIrreducible % (true, false, []): Whether this representation is irreducible
-        frobeniusSchurIndicator % (integer or []): Value of the Frobenius-Schur indicator
-
+        frobeniusSchurIndicator % (double or []): Value of the Frobenius-Schur indicator
+        isDivisionAlgebraCanonical % ({true, false, []}): If the representation is real and irreducible, describes if its division algebra has canonical form
     end
 
     properties (SetAccess = protected)
         group     % (`+replab.CompactGroup`): Group being represented
         field     % ({'R', 'C'}): Vector space defined on real (R) or complex (C) field
         dimension % (integer): Representation dimension
-        irrepInfo % (`+replab.irreducible.Info` or []): Irreducible status information
-                  %
-                  %                                     This representation is known to be
-                  %                                     irreducible when this field is non empty
     end
 
     properties (Access = protected)

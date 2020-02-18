@@ -2,35 +2,30 @@ classdef DirectSumRep < replab.Rep
 % A direct sum of representations, such that images are diagonal by blocks
 
     properties
-        blocks % row cell array of replab.Rep: Contained subrepresentations
+        blocks % (cell(1,*) of `+replab.Rep`): Contained subrepresentations
     end
 
     methods
 
-        function self = DirectSumRep(blocks)
+        function self = DirectSumRep(group, field, blocks)
         % Constructs a direct sum from a cell array of representations
         %
         % All the subrepresentations should be defined on the same group, and on the same field.
         %
         % Args:
-        %   blocks (row cell array of replab.Rep): Subrepresentations
-            assert(length(blocks) >= 1);
-            d = 0;
-            for i = 1:length(blocks)
-                assert(isa(blocks{i}, 'replab.Rep'));
-                d = d + blocks{i}.dimension;
-            end
-            self.dimension = d;
+        %   group (`+replab.CompactGroup`): Common group
+        %   field ({'R', 'C'}): Real or complex field
+        %   blocks (cell(1,*) of `+replab.Rep`): Subrepresentations
+            replab.rep.assertCompatibleFactors(group, field, blocks);
+            % own properties
+            self.blocks = blocks;
+            % replab.Rep immutable
+            self.group = group;
+            self.field = field;
+            self.dimension = sum(cellfun(@(b) b.dimension, blocks));
+            % replab.Rep mutable
             blocksAreUnitary = cellfun(@(x) x.isUnitary, blocks, 'uniform', 0);
             self.isUnitary = replab.trileanAnd(blocksAreUnitary{:});
-            for i = 2:length(blocks)
-                assert(blocks{1}.group == blocks{i}.group);
-                assert(isequal(blocks{1}.field, blocks{i}.field));
-            end
-            self.blocks = blocks;
-            self.group = blocks{1}.group;
-            self.field = blocks{1}.field;
-            self.irrepInfo = [];
         end
 
         function n = nBlocks(self)
@@ -69,13 +64,13 @@ classdef DirectSumRep < replab.Rep
 
         %% Rep methods
 
-        function rho = image(self, g)
-            rhos = cellfun(@(rep) rep.image(g), self.blocks, 'uniform', 0);
+        function rho = image_internal(self, g)
+            rhos = cellfun(@(rep) rep.image_internal(g), self.blocks, 'uniform', 0);
             rho = blkdiag(rhos{:});
         end
 
         function rho = inverseImage(self, g)
-            rhos = cellfun(@(rep) rep.inverseImage(g), self.blocks, 'uniform', 0);
+            rhos = cellfun(@(rep) rep.inverseImage_internal(g), self.blocks, 'uniform', 0);
             rho = blkdiag(rhos{:});
         end
 

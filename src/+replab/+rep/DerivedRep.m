@@ -13,15 +13,19 @@ classdef DerivedRep < replab.Rep
         function self = DerivedRep(parent, conjugate, inverse, transpose)
             assert(inverse == transpose, ...
                    'Cannot use inverse & transpose independently, as our representations are left modules');
+            % own properties
             self.parent = parent;
-            self.group = parent.group;
-            self.field = parent.field;
-            self.dimension = parent.dimension;
-            self.isUnitary = parent.isUnitary;
             self.conjugate = conjugate;
             self.inverse = inverse;
             self.transpose = transpose;
-            self.irrepInfo = [];
+            % from replab.Rep, immutable
+            self.group = parent.group;
+            self.field = parent.field;
+            self.dimension = parent.dimension;
+            % from replab.Rep, mutable
+            self.isUnitary = parent.isUnitary;
+            self.isTrivial = parent.isTrivial;
+            self.isIrreducible = parent.isIrreducible;
         end
 
         function s = headerStr(self)

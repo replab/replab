@@ -1,38 +1,28 @@
 classdef TrivialRep < replab.Rep
 % Describes d copies of the real or complex trivial representation of a group
 
-    properties
-        identity % Stored copy of the identity matrix
-    end
-
     methods
 
         function self = TrivialRep(group, field, dimension)
             assert(isa(group, 'replab.CompactGroup'));
+            % replab.Rep, immutable
             self.group = group;
             self.field = field;
             self.dimension = dimension;
+            % replab.Rep, mutable
+            self.isIrreducible = (self.dimension == 1);
             self.isUnitary = true;
-            self.identity = eye(self.dimension);
-            if self.dimension == 1
-                self.irrepInfo = replab.irreducible.TrivialInfo(self.field);
-            else
-                self.irrepInfo = [];
-            end
+            self.isTrivial = true;
         end
 
         %% Rep methods
 
-        function rho = image(self, g)
-            rho = self.identity;
+        function rho = image_internal(self, g)
+            rho = speye(self.dimension);
         end
 
-        function rho = inverseImage(self, g)
-            rho = self.identity;
-        end
-
-        function rho = sample(self)
-            rho = self.identity;
+        function rho = inverseImage_internal(self, g)
+            rho = speye(self.dimension);
         end
 
         function M = matrixRowAction(self, g, M)
@@ -46,14 +36,6 @@ classdef TrivialRep < replab.Rep
         function complexRep = complexification(self)
             assert(self.overR, 'Representation should be real to start with');
             complexRep = replab.rep.TrivialRep(self.group, 'C', self.dimension);
-        end
-
-        function rep = conj(self)
-            rep = self;
-        end
-
-        function rep = dual(self)
-            rep = self;
         end
 
     end

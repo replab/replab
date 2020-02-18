@@ -21,6 +21,9 @@ function rep1 = simplify(rep)
       case 'replab.rep.DerivedRep'
         parent = rep.parent;
         switch class(parent)
+          case 'replab.rep.TrivialRep'
+            % dual and conjugate of trivial representation is trivial representation
+            newRep = parent;
           case 'replab.rep.DerivedRep'
             % collapse successive DerivedRep
             newRep = replab.rep.DerivedRep(parent.parent, ...
@@ -51,4 +54,6 @@ function rep1 = simplify(rep)
         % recurse
         rep1 = replab.rep.simplify(newRep);
     end
+end
+
 end
