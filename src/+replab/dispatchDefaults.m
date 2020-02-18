@@ -3,12 +3,12 @@ function dispatchDefaults
 
 % Equivariant construction
     replab.dispatch('register', 'replab.makeEquivariant', 'ForRepByImages', 10, ...
-                    @(repR, repC, special) replab.equivariant.ForRepByImages(repR, repC, special));
+                    @(repR, repC, special) replab.equivariant.ForRepByImages.make(repR, repC, special));
     replab.dispatch('register', 'replab.makeEquivariant', 'ForFiniteGroup', 5, ...
-                    @(repR, repC, special) replab.equivariant.ForFiniteGroup(repR, repC, special));
+                    @(repR, repC, special) replab.equivariant.ForFiniteGroup.make(repR, repC, special));
     % Default method, works for all compact groups
     replab.dispatch('register', 'replab.makeEquivariant', 'ForCompactGroup', 0, ...
-                    @(repR, repC, special) replab.equivariant.ForCompactGroup(repR, repC, special));
+                    @(repR, repC, special) replab.equivariant.ForCompactGroup.make(repR, repC, special));
 
     replab.dispatch('register', 'replab.irreducible.decomposition', 'UsingSplit', 0, ...
                     @(rep) replab.irreducible.decompositionUsingSplit(rep));

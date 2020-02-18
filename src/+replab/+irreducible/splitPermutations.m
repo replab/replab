@@ -2,12 +2,12 @@ function sub = splitPermutations(rep, samples, sub)
 % Splits a permutation representation
     replab.irreducible.tell('Attempting splitPermutations');
     if ~replab.iseye(sub.U)
-        replab.irreducible.tell('Not full rep');
-        error('replab:dispatch:tryNext', 'try next');
+        sub = replab.DispatchNext('Not full representation');
+        return
     end
     if ~isa(rep.group, 'replab.FiniteGroup')
-        replab.irreducible.tell('Not finite group');
-        error('replab:dispatch:tryNext', 'try next');
+        sub = replab.DispatchNext('Not finite group');
+        return
     end
     nG = rep.group.nGenerators;
     d = rep.dimension;
@@ -18,8 +18,8 @@ function sub = splitPermutations(rep, samples, sub)
         try
             G(i,:) = replab.Permutations.fromMatrix(rhog);
         catch ME
-            replab.irreducible.tell('Not permutation image');
-            error('replab:dispatch:tryNext', 'try next');
+            sub = replab.DispatchNext('Images are not all permutations');
+            return
         end
     end
     replab.irreducible.tell('Running splitPermutations');

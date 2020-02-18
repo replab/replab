@@ -9,7 +9,7 @@ classdef OnDemandSamples < replab.Str
     properties (Access = protected)
         trivial_ % replab.Equivariant: Equivariant space from rep to the trivial representation of size rep.dimension
     end
-    
+
     methods
 
         function self = OnDemandSamples(rep)
@@ -25,7 +25,7 @@ classdef OnDemandSamples < replab.Str
             end
             T = self.trivial_;
         end
-        
+
         function X = commutantSample(self, i)
             while length(self.commutantSamples) < i
                 self.commutantSamples{1, end+1} = self.rep.commutant.sample;
