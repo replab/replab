@@ -1,7 +1,7 @@
 function sub = splitPermutations(rep, samples, sub)
 % Splits a permutation representation
     replab.irreducible.tell('Attempting splitPermutations');
-    if ~replab.iseye(sub.U)
+    if ~replab.iseye(sub.H_internal)
         replab.irreducible.tell('Not full rep');
         error('replab:dispatch:tryNext', 'try next');
     end

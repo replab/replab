@@ -8,10 +8,10 @@ function I = decomposition(rep)
 % Note: see the default methods applied in `+replab.dispatchDefaults`
 %
 % Args:
-%   rep (replab.Rep): Representation to decompose
+%   rep (`+replab.Rep`): Representation to decompose
 %
 % Returns:
-%   replab.Irreducible: The irreducible decomposition
+%   `+replab.Irreducible`: The irreducible decomposition
     replab.irreducible.tell('dispatch decomposition')
     assert(isa(rep, 'replab.Rep'));
     I = replab.dispatch('call', 'replab.irreducible.decomposition', rep);

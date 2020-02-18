@@ -4,13 +4,12 @@ function sub = split(rep, samples, sub)
 % Note: see the default methods applied in `+replab.dispatchDefaults`
 %
 % Args:
-%   rep (replab.Rep): Unitary representation to decompose
-%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples
-%   sub (replab.SubRep): Subrepresentation of ``rep`` in which to extract irreducible subrepresentations
+%   rep (`+replab.Rep`): Representation to decompose, must be unitary
+%   samples (`+replab.irreducible.OnDemandSamples`): Lazy evaluation of various samples
+%   sub (`+replab.SubRep`): Subrepresentation of ``rep`` in which to extract irreducible subrepresentations
 %
 % Returns:
-%   row cell array of replab.SubRep: A cell array of irreducible subrepresentations
-%                                    with trivial representations identified with the label '1'
+%   cell(1,*) of `+replab.SubRep`: A cell array of irreducible subrepresentations with trivial representations identified
     assert(isa(rep, 'replab.Rep'));
     assert(isa(samples, 'replab.irreducible.OnDemandSamples'));
     assert(isa(sub, 'replab.SubRep'));

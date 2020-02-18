@@ -59,8 +59,7 @@ classdef UnitaryGroup < replab.CompactGroup
 
         function rep = definingRep(self)
         % Returns the natural representation of this unitary group
-            ii = replab.irreducible.Info([], []);
-            rep = replab.Rep.lambda(self, 'C', self.n, true, ii, @(u) u, @(u) u');
+            rep = replab.rep.DefiningRep(self);
         end
 
     end

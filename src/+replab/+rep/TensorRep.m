@@ -35,7 +35,7 @@ classdef TensorRep < replab.Rep
         %
         % Returns:
         %   integer: Number of factors
-            n = length(self.blocks);
+            n = length(self.factors);
         end
 
         function f = factor(self, i)
@@ -46,7 +46,7 @@ classdef TensorRep < replab.Rep
         %
         % Returns:
         %   `+replab.Rep`: Representation corresponding to the i-th factor
-            block = self.blocks{i};
+            f = self.factors{i};
         end
 
         % Str

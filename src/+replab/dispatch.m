@@ -21,16 +21,18 @@ function varargout = dispatch(cmd, name, varargin)
 %   varargin (optional): Additional arguments
 
     persistent registry;
+
     if isempty(registry)
         registry = struct;
         replab.dispatchDefaults;
     end
+
     switch cmd
       case 'register'
         assert(isa(name, 'char'));
         ident = strrep(name, '.', '_');
         description = varargin{1};
-        assert(isa(description, 'char'));        
+        assert(isa(description, 'char'));
         priority = varargin{2};
         assert(isa(priority, 'double'));
         handle = varargin{3};
@@ -67,4 +69,5 @@ function varargout = dispatch(cmd, name, varargin)
         end
         error('No registered implementation worked.')
     end
+
 end

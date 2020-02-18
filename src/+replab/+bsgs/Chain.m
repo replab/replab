@@ -1,72 +1,72 @@
 classdef Chain < replab.Str
 % A BSGS chain data structure for a permutation group
 %
-% The represented group acts on {1, ..., n}. We follow loosely the
-% notation in Handbook of CGT, Derek Holt.
+% The represented group acts on $\{1, ..., n\}$. We follow loosely the
+% notation in Handbook of Computational Group Theory, Derek Holt.
 %
 % The BSGS chain is stored as follows.
 %
-% We write B = [beta_1, beta_2 ... beta_k] where k is the length of the stabilizer chain.
-% We define the base order on 1...n as follows: the smallest elements in the order are given
-% by the base elements, such that beta_1 < beta_2 < ... < beta_k, followed by the domain elements
+% We write $B = [\beta_1, \beta_2 ... \beta_k]$ where $k$ is the length of the stabilizer chain.
+% We define the base order on $\{1, ..., n\}$`` as follows: the smallest elements in the order are given
+% by the base elements, such that $\beta_1 < \beta_2 < ... < \beta_k$, followed by the domain elements
 % not in the base, sorted in (the standard) increasing order.
-% We write G^i = {g \in G : g(beta_1) = beta_1, ..., g(beta_(i-1)) = beta_(i-1)}, so that
-% G^1 = G.
+% We write $G^i = \{ g \in G : g(\beta_1) = \beta_1, ..., g(\beta_{i-1}) = \beta_{i-1} \}$, so that
+% $G^1 = G$.
 % The (currently known) strong generators are stored as column vectors in a matrix S.
 %
-% We write the set S^i = S intersect G^i, and the subgroups H^i = <S^i>.
+% We write the set $S^i = S \cap G^i$, and the subgroups $H^i = <S^i>$.
 %
 % The order of strong generators as columns in the matrix is such that
-% S^i = S(:, Sind(i):end) where Sind is a double row vector of starting indices in S.
+% $S^i =$ ``S(:, Sind(i):end)`` where ``Sind`` is a double row vector of starting indices in ``S``.
 %
-% We define Delta^i = H^i(beta_i) = { h(beta_i) : h \in H^i }, and those orbits are stored
-% as a cell array Delta = { Delta^1, Delta^2, ... }; each Delta^i is a double row vector
+% We define $\Delta^i = H^i(\beta_i) = \{ h(\beta_i) : h \in H^i \}$, and those orbits are stored
+% as a cell array $\Delta = \{ \Delta^1, \Delta^2, ... \}$; each $\Delta^i$ is a double row vector
 % sorted according to the base order.
 %
-% We define the transversal elements u^i_b such that u^i_b(beta_i) = b, and the inverse transversal
-% elements uInv^i_(beta_i) = b.
+% We define the transversal elements $u^i_b$ such that $u^i_b(\beta_i) = b$, and the inverse transversal
+% elements $uInv^i_(\beta_i) = b$.
 %
 % The transversal elements for a particular node in the chain are stored as column vectors in a matrix,
-% with an order corresponding to the orbit Delta^i; those matrices are stored in the row cell array U.
+% with an order corresponding to the orbit $\Delta^i$; those matrices are stored in the row cell array ``U``.
 %
-% Transversal element inverses are stored as column vectors in a matrix, in a row cell array Uinv.
+% Transversal element inverses are stored as column vectors in a matrix, in a row cell array ``Uinv``.
 %
 % This class also stores the images of a group homomorphism. When no homomorphism computation is required,
 % we use the trivial group `+replab.+bsgs.TrivialGroup` as a placeholder.
 %
-% For that, images of the strong generators are stored in J, and the images of transversal
-% elements are stored in row cell arrays (containing row cell arrays of group elements) V and Vinv, with
-% conventions similar as U and Uinv.
+% For that, images of the strong generators are stored in ``J``, and the images of transversal
+% elements are stored in row cell arrays (containing row cell arrays of group elements)
+% ``V`` and ``Vinv``, with conventions similar as ``U`` and ``Uinv``.
 %
 % The following invariants are maintained by the code below.
 %
-% When the chain is immutable: the strong generating set must be a strong generating set for the G^i, not
-% the H^i, i.e. the BSGS construction is complete.
+% When the chain is immutable: the strong generating set must be a strong generating set for the $G^i$,
+% not only for the $H^i$, i.e. the BSGS construction is complete.
 %
 % When the chain is mutable:
 %
-% * The chain describes the orbits/transversals of H^i.
+% * The chain describes the orbits/transversals of $H^i$.
 %
 % In both cases:
 %
-% * The base B, base order bo, boinv, the data structures for orbits and transversals Delta, U, Uinv are consistent.
+% * The base ``B``, base order ``bo``, ``boinv``, the data structures for orbits and transversals ``Delta``, ``U``, ``Uinv`` are consistent.
 %
-% * The strong generating set is ordered, so that the starting indices Sind describe the sequence S^i
+% * The strong generating set is ordered, so that the starting indices ``Sind`` describe the sequence $S^i$
 %
-% * The above is consistent with the image data structures T, V, Vinv
+% * The above is consistent with the image data structures ``T``, ``V``, ``Vinv``
 
     properties (SetAccess = protected)
-        isMutable % whether the chain can be modified
-        n % domain size
-        B % row vector of base points (all between 1..n without duplicates)
-        bo % base order, i.e. for each domain element, gives its order
-        boinv % inverse permutation of bo, permutation that starts with B and then the remaining domain elements increasing
-        S % n x nS matrix of strong generators stored as columns vectors (nS = # of strong generators)
-        Sind % starting index of strong generators for each stabilizer subgroup, of length k+1 if k = length(B)
+        isMutable % (logical): Whether the chain can be modified
+        n % (integer): Domain size
+        B % (integer(1,*)): Row vector of base points (all between 1..n without duplicates)
+        bo % (integer(1,*)): Base order, i.e. for each domain element, gives its order
+        boinv % (integer(1,*)): Inverse permutation of ``bo``, permutation that starts with ``B`` and then the remaining domain elements increasing
+        S % (integer(n, nS)): Matrix of strong generators stored as columns vectors (nS = # of strong generators)
+        Sind % (integer(1, k+1)): Starting index of strong generators for each stabilizer subgroup, where k = length(B)
              %
-             % S^(k+1) corresponds to strong generators that are stabilized by all base points
-             % if no strong generators are present, use the default starting index 1
-        Delta % row cell array of orbits, each orbit is a row double vector with orbit elements sorted according to the base order
+             % $S^(k+1)$ corresponds to strong generators that are stabilized by all base points
+             % If no strong generators are present, use the default starting index 1
+        Delta % (cell(1,*) of intege(1,*)): Row cell array of orbits, each orbit is a row double vector with orbit elements sorted according to the base order
         U % row cell array of transversal elements stored as n x orbitSize matrices
         Uinv % row cell array of inverse transversal elements
         J % image group

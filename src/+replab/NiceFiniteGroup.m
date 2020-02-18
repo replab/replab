@@ -231,15 +231,16 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % The returned representation is real. Use ``rep.complexification`` to obtain a complex representation.
         %
         % Args:
-        %   dimension: Dimension of the representation
-        %   permutations (row cell array of permutations): Images of the generators as permutations of size ``dimension``
+        %   dimension (integer): Dimension of the representation
+        %   permutations (cell(1,*) of permutations): Images of the generators as permutations of size ``dimension``
         %
         % Returns:
         %   `+replab.Rep`: The constructed group representation
             S = replab.Permutations(dimension);
-            f = @(g) S.toMatrix(g);
+            f = @(g) S.toSparseMatrix(g);
             images = cellfun(f, permutations, 'uniform', 0);
-            rho = self.repByImages('R', dimension, true, images);
+            inverseImages = cellfun(@(i) i', images, 'uniform', 0);
+            rho = self.repByImages('R', dimension, images, inverseImages);
         end
 
         function rho = signedPermutationRep(self, dimension, signedPermutations)
@@ -253,9 +254,10 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   `+replab.Rep`: The constructed group representation
-            f = @(g) replab.signed.Permutations.toMatrix(g);
+            f = @(g) replab.signed.Permutations.toSparseMatrix(g);
             images = cellfun(f, signedPermutations, 'uniform', 0);
-            rho = self.repByImages('R', dimension, true, images);
+            inverseImages = cellfun(@(i) i', images, 'uniform', 0);
+            rho = self.repByImages('R', dimension, images, inverseImages);
         end
 
     end

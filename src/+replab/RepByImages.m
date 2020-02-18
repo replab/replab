@@ -9,45 +9,46 @@ classdef RepByImages < replab.Rep
 % https://www.gap-system.org/Manuals/doc/ref/chap40.html#X7FFD731684606BC6)
 
     properties (SetAccess = protected)
-        images_internal % Generator images
-        inverseImages_internal % Generator inverse images
+        images_internal % (cell(1,*) of double(*,*)): Generator images
+        inverseImages_internal % (cell(1,*) of double(*,*)): Inverses of generator images
     end
 
     properties (Access = protected)
-        chain_ % BSGS chain with images
+        chain_ % (`replab.bsgs.Chain`): BSGS chain with images
     end
 
     methods
 
         %% Own methods
 
-        function self = RepByImages(group, field, dimension, irrepInfo, images, inverseImages)
+        function self = RepByImages(group, field, dimension, images, inverseImages)
         % Constructs a representation from images of group generators and their inverses
         %
         % Args:
         %   group (`+replab.NiceFiniteGroup`): Finite group represented
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
         %   dimension (integer): Representation dimension
-        %   irrepInfo (`+replab.irreducible.Info`): Information about irreducibility
         %   images (cell(1,*) of double(*,*), may be sparse): Images of the generators of ``group`` in the same order
         %   inverseImages (cell(1,*) of double(*,8), may be sparse): Inverse images of the generators
             assert(isa(group, 'replab.NiceFiniteGroup'));
             assert(isa(images, 'cell') && isrow(inverseImages));
             assert(isa(inverseImages, 'cell') && isrow(inverseImages));
+            assert(length(images) == group.nGenerators);
             assert(length(inverseImages) == group.nGenerators);
             isUnitary = true;
-            for i = 1:self.group.nGenerators
+            for i = 1:group.nGenerators
                 isUnitary = isUnitary && isequal(images{i}, inverseImages{i}');
                 assert(isequal(size(images{i}), [dimension dimension]));
                 assert(isequal(size(inverseImages{i}), [dimension dimension]));
             end
+            % replab.Rep immutable
             self.group = group;
             self.field = field;
             self.dimension = dimension;
+            % replab.Rep mutable
             self.isUnitary = isUnitary;
-            self.irrepInfo = irrepInfo;
-            self.images = images;
-            self.inverseImages = inverseImages;
+            self.images_internal = images;
+            self.inverseImages_internal = inverseImages;
         end
 
         function c = chain(self)
@@ -65,7 +66,7 @@ classdef RepByImages < replab.Rep
                     for i = 1:nG
                         I(:,i) = self.group.niceMonomorphismImage(self.group.generator(i));
                     end
-                    self.chain_ = replab.bsgs.Chain.makeWithImages(n, I, J, self.images);
+                    self.chain_ = replab.bsgs.Chain.makeWithImages(n, I, J, self.images_internal);
                 else
                     J = replab.GeneralLinearGroupWithInverses(self.field, self.dimension);
                     niceId = self.group.niceMonomorphismImage(self.group.identity);
@@ -75,7 +76,7 @@ classdef RepByImages < replab.Rep
                     elements = cell(1, nG);
                     for i = 1:nG
                         I(:,i) = self.group.niceMonomorphismImage(self.group.generator(i));
-                        elements{i} = [self.images{i} self.inverseImages{i}];
+                        elements{i} = [self.images_internal{i} self.inverseImages_internal{i}];
                     end
                     C = replab.bsgs.Chain(n, J);
                     C.insertStrongGenerators(I, elements);
@@ -93,14 +94,14 @@ classdef RepByImages < replab.Rep
 
         function names = hiddenFields(self)
             names = hiddenFields@replab.Rep(self);
-            names{1, end+1} = 'images';
+            names{1, end+1} = 'images_internal';
         end
 
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Rep(self);
-            for i = 1:length(self.images)
-                names{1, end+1} = sprintf('images{%d}', i);
-                values{1, end+1} = self.images{i};
+            for i = 1:length(self.images_internal)
+                names{1, end+1} = sprintf('images_internal{%d}', i);
+                values{1, end+1} = self.images_internal{i};
             end
         end
 
@@ -127,10 +128,10 @@ classdef RepByImages < replab.Rep
             inverseImages = cell(1, nG);
             for i = 1:nG
                 g = rep.group.generator(i);
-                images{i} = rep.image(g);
-                inverseImages{i} = rep.inverseImage(g);
+                images{i} = rep.image_internal(g);
+                inverseImages{i} = rep.inverseImage_internal(g);
             end
-            rep1 = replab.RepByImages(rep.group, rep.field, rep.dimension, rep.irrepInfo, images, inverseImages);
+            rep1 = replab.RepByImages(rep.group, rep.field, rep.dimension, images, inverseImages);
         end
 
     end

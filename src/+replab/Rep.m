@@ -4,6 +4,9 @@ classdef Rep < replab.Str
 % This class has mutable properties that correspond to information that can be computed and cached
 % after the `+replab.Rep` instance is constructed, for example `.isUnitary` or `.isTrivial`.
 %
+% By convention, those properties are not passed to constructors of subclasses of `+replab.Rep`,
+% but are instead their default value (``[]`` signifying unknown) is overwritten after construction.
+%
 % Notes:
 %   While we do not expect users to implement their own subclass of `~+replab.Rep`, to do
 %   so only the map from group elements to matrix images need to be implemented.
@@ -307,15 +310,17 @@ classdef Rep < replab.Str
         function rep = blkdiag(varargin)
         % Direct sum of representations
         %
-        % See `+replab.Rep.directSum`
-            rep = replab.Rep.directSum(varargin);
+        % See `+replab.CompactGroup.directSumRep`
+            self = varargin{1};
+            rep = self.group.directSumRep(self.field, varargin);
         end
 
         function rep = kron(varargin)
         % Tensor product of representations
         %
-        % See `+replab.Rep.tensor`
-            rep = replab.Rep.tensor(varargin);
+        % See `+replab.CompactGroup.tensorRep`
+            self = varargin{1};
+            rep = self.group.tensorRep(self.field, varargin);
         end
 
         function rep = tensorPower(self, n)
@@ -327,7 +332,7 @@ classdef Rep < replab.Str
         % Returns:
         %   `+replab.Rep`: The tensor power representation
             reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
-            rep = replab.Rep.tensor(reps);
+            rep = self.group.tensorRep(self.field, reps);
         end
 
         function rep = directSumOfCopies(self, n)
@@ -339,7 +344,7 @@ classdef Rep < replab.Str
         % Returns:
         %   `+replab.Rep`: The direct sum representation
             reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
-            rep = replab.Rep.directSum(reps);
+            rep = self.group.directSum(self.field, reps);
         end
 
         %% Manipulation of representation space
@@ -456,28 +461,6 @@ classdef Rep < replab.Str
     end
 
     methods (Static)
-
-        function rep = directSum(reps)
-        % Computes the direct sum of representations
-        %
-        % Args:
-        %   reps (cell(1,*) of `+replab.Rep`): Representation of the same group over the same field
-        %
-        % Returns:
-        %   `+replab.Rep`: Direct sum of the representations
-            rep = replab.rep.DirectSumRep(reps);
-        end
-
-        function rep = tensor(reps)
-        % Computes the tensor product of representations
-        %
-        % Args:
-        %   reps (cell(1,*) of `+replab.Rep`): Representation of the same group over the same field
-        %
-        % Returns:
-        %   `+replab.Rep`: Tensor product of the representations
-            rep = replab.rep.TensorRep(reps);
-        end
 
         function rep = lambda(group, field, dimension, isUnitary, irrepInfo, imageFun, inverseImageFun)
         % Creates a non unitary representation from an image function
