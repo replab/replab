@@ -69,14 +69,10 @@ function varargout = dispatch(cmd, name, varargin)
         res = cell(1, n);
         for i = 1:length(s)
             h = s(i).handle;
-            try
-                [res{1:n}] = h(varargin{:});
-                if ~isa(res{1}, 'replab.DispatchNext')
-                    varargout = res(1:nargout);
-                    return
-                end
-            catch
-                % silent catch
+            [res{1:n}] = h(varargin{:});
+            if ~isa(res{1}, 'replab.DispatchNext')
+                varargout = res(1:nargout);
+                return
             end
         end
         error('No registered implementation worked.')
