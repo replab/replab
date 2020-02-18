@@ -31,11 +31,22 @@ classdef TensorRep < replab.Rep
         end
 
         function n = nFactors(self)
-            n = length(self.factors);
+        % Returns the number of factors in the tensor product
+        %
+        % Returns:
+        %   integer: Number of factors
+            n = length(self.blocks);
         end
 
-        function factor = factor(self, i)
-            factor = self.factors{i};
+        function f = factor(self, i)
+        % Returns a factor in the tensor product
+        %
+        % Args:
+        %   i (integer): Index of a factor
+        %
+        % Returns:
+        %   `+replab.Rep`: Representation corresponding to the i-th factor
+            block = self.blocks{i};
         end
 
         % Str
