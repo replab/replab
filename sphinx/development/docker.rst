@@ -21,12 +21,12 @@ The image is created using the ``root`` user, albeit giving full permissions to 
 The above command mounts the replab folder of the host machine into the container. Any change to this folder inside the container will thus be immediately reflected in the host filesystem.
 
 
-Update dependencies versions in the Docker file
------------------------------------------------
+Update python dependency versions in the Docker file
+----------------------------------------------------
 
-The underlying Linux distribution is Ubuntu 18.04 LTS, so we can expect some stability from the packages managed by ``apt``. However, we pin the Python packages versions using `pip-tools <https://pythonspeed.com/articles/pipenv-docker/>`_.
+The underlying Linux distribution is Ubuntu 18.04 LTS, so we can expect some stability from the packages managed by ``apt``. Concerning the Python packages, we pin their versions using `pip-tools <https://pythonspeed.com/articles/pipenv-docker/>`_.
 
-In the ``sphinx`` subdirectory, the file ``requirements.in`` lists the packages we require, while the file ``requirements.txt`` lists the python packages we require. Assuming that the latest dependencies form consistent python environment able to compile the documentation, the ``requirements.txt`` file can be updated with the command:
+For this, the ``sphinx`` subdirectory contains the file ``requirements.in`` which lists the python packages we require. Whenever the latest dependencies form consistent python environment able to compile the documentation, the ``requirements.txt`` file can be updated with the command:
 
 ::
 
