@@ -218,8 +218,8 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Args:
         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
         %   dimension (integer): Representation dimension
-        %   images (row cell array of matrices): Images of the group generators
-        %   inverseImages (row cell array of matrices): Inverse images of the group generators
+        %   images (cell(1,*) of double(*,*), may be sparse): Images of the group generators
+        %   inverseImages (cell(1,*) of double(*,*), may be sparse): Inverse images of the group generators
         % Returns:
         %   `+replab.Rep`: The constructed group representation
             rho = replab.RepByImages(self, field, dimension, images, inverseImages);

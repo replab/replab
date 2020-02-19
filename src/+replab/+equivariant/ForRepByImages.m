@@ -30,15 +30,25 @@ classdef ForRepByImages < replab.Equivariant
 
     end
 
+    methods (Static)
+
+        function e = make(repR, repC, special)
+            if ~isa(repR, 'replab.RepByImages')
+                e = replab.DispatchNext;
+                return
+            end
+            if ~isa(repC, 'replab.RepByImages')
+                e = replab.DispatchNext;
+                return
+            end
+            e = replab.equivariant.ForRepByImages(repR, repC, special);
+        end
+
+    end
+
     methods
 
         function self = ForRepByImages(repR, repC, special)
-            if ~isa(repR, 'replab.RepByImages')
-                error('replab:dispatch:tryNext', 'try next');
-            end
-            if ~isa(repC, 'replab.RepByImages')
-                error('replab:dispatch:tryNext', 'try next');
-            end
             self = self@replab.Equivariant(repR, repC, special);
         end
 

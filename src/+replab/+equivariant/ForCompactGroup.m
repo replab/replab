@@ -1,5 +1,13 @@
 classdef ForCompactGroup < replab.Equivariant
 
+    methods (Static)
+
+        function e = make(repR, repC, special)
+            e = replab.equivariant.ForCompactGroup(repR, repC, special);
+        end
+
+    end
+
     methods
 
         function self = ForCompactGroup(repR, repC, special)

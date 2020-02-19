@@ -1,36 +1,47 @@
 function varargout = dispatch(cmd, name, varargin)
 % Supports multiple and flexible dispatch through a registry of functions
 %
-% For the 'register' command, the next four arguments are 'name', ``description``,
-% ``priority`` and ``handle`` in that order. The argument ``name`` corresponds to the
-% name of the function implementing multiple dispatch; ``description`` is a short
-% description of the particular implementation of that funciton, while
-% ``priority`` is an integer with bigger numbers take higher priority, and
-% finally ``handle`` is a function handle implementing the function.
+% This function has an internal registry of implementations which can be enriched,
+% probed, used, depending on the passed command ``cmd`` argument.
 %
-% For the ``get`` command, no additional arguments are required and the whole
-% dispatch registry is returned.
+% - For the ``register`` command:
+%   The next four arguments are ``name``, ``description``, ``priority`` and ``handle``,
+%   in that order. The argument ``name`` corresponds to the name of the implemented function
+%   The argument ``description`` is a short description of the particular implementation of
+%   that funciton, while ``priority`` is an integer with bigger numbers take higher priority, and
+%   finally ``handle`` is a function handle implementing the function.
+%   The implemented function can return an instance of `+replab.DispatchNext` on call as the
+%   first output argument,
 %
-% For the 'call' command, the ``name`` argument is the function being dispatched,
-% followed by that function arguments.
+% - For the ``get`` command: no additional arguments are required, as the whole
+%   dispatch registry is returned.
+%
+% - For the 'call' command, the ``name`` argument is the function being dispatched,
+%   followed by that function arguments.
 %
 % Args:
 %   cmd ({'register', 'get', 'call'}): Action to take
-%   name (char, optional): Function name to act on, corresponds to the fully qualified function identifier
-%                          such as ``replab.makeEquivariant``
+%   name (charstring, optional): Function name to act on.
+%                                Corresponds to the fully qualified function identifier
+%                                such as ``replab.makeEquivariant``
 %   varargin (optional): Additional arguments
 
     persistent registry;
-
     if isempty(registry)
         registry = struct;
         replab.dispatchDefaults;
     end
 
+    if isequal(cmd, 'get')
+        varargout = {registry};
+        return
+    end
+
+    assert(isa(name, 'char'));
+    ident = strrep(name, '.', '_');
+
     switch cmd
       case 'register'
-        assert(isa(name, 'char'));
-        ident = strrep(name, '.', '_');
         description = varargin{1};
         assert(isa(description, 'char'));
         priority = varargin{2};
@@ -51,23 +62,19 @@ function varargout = dispatch(cmd, name, varargin)
             s = s(p);
             registry.(ident) = s;
         end
-      case 'get'
-        varargout = {registry};
       case 'call'
         ident = strrep(name, '.', '_');
         s = registry.(ident);
+        n = min(1, nargout);
+        res = cell(1, n);
         for i = 1:length(s)
             h = s(i).handle;
-            try
-                [varargout{1:nargout}] = h(varargin{:});
+            [res{1:n}] = h(varargin{:});
+            if ~isa(res{1}, 'replab.DispatchNext')
+                varargout = res(1:nargout);
                 return
-            catch ME
-                if ~strcmp(ME.identifier, 'replab:dispatch:tryNext')
-                    rethrow(ME)
-                end
             end
         end
         error('No registered implementation worked.')
     end
-
 end

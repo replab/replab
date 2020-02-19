@@ -91,14 +91,13 @@ classdef Equivariant < replab.Domain
         %% Str methods
 
         function s = headerStr(self)
-            switch self.special
-              case 'hermitian'
+            if isequal(self.special, 'hermitian')
                 s = sprintf('%d x %d invariant Hermitian matrices over %s', ...
                             self.nR, self.nC, self.field);
-              case 'commutant'
+            elseif isequal(self.special, 'commutant')
                 s = sprintf('%d x %d commutant matrices over %s', ...
                             self.nR, self.nC, self.field);
-              otherwise
+            else
                 s = sprintf('%d x %d equivariant matrices over %s', ...
                             self.nR, self.nC, self.field);
             end
