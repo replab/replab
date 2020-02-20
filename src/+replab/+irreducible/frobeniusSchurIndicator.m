@@ -1,4 +1,4 @@
-function fsi = frobeniusSchurIndicator(rep, samples)
+function fsi = frobeniusSchurIndicator(rep, commutantSamples)
 % Computes the Frobenius-Schur indicator of an irreducible subrepresentation
 %
 % An irreducible representation over a complex vector space always has Frobenius-Schur
@@ -9,7 +9,7 @@ function fsi = frobeniusSchurIndicator(rep, samples)
 % - if the indicator is $1$, the representation is of real-type and its complexification
 %   is also irreducible,
 % - if the indicator is $0$, the representation is complex-type,
-% - if the indicator is $-1$, teh representation is quaternion-type.
+% - if the indicator is $-1$, the representation is quaternion-type.
 %
 % Temporary restriction: the representation must be unitary.
 %
@@ -17,7 +17,7 @@ function fsi = frobeniusSchurIndicator(rep, samples)
 %
 % Args:
 %   rep (`+replab.Rep`): Irreducible real representation to identify the type of
-%   samples (`+replab.+irreducible.Samples`): Lazy evaluation of various samples for ``rep``
+%   commutantSamples (`+replab.+irreducible.Samples`): Samples for the commutant of ``rep``
 %
 % Returns:
 %
@@ -25,7 +25,7 @@ function fsi = frobeniusSchurIndicator(rep, samples)
     assert(isequal(rep.isIrreducible, true), 'Representation must be known to be irreducible');
     assert(rep == samples.rep);
     d = sub.dimension;
-    X = samples.commutantSampleForSubRep(2, sub); % can we reuse samples?
+    X = commutantSamples.value;
     Xsym = (X+X')/2;
     Xanti = (X-X')/2;
     C = Xsym + 1i * Xanti;
@@ -37,9 +37,9 @@ function fsi = frobeniusSchurIndicator(rep, samples)
       case 1
         t = 'R';
       case 2
-        X1 = sub.U*samples.commutantSample(2)*sub.U'; % can we reuse?
-        X2 = sub.U*samples.commutantSample(3)*sub.U';
-        X3 = sub.U*samples.commutantSample(4)*sub.U';
+        X1 = commutantSamples.value;
+        X2 = commutantSamples.next.value;
+        X3 = commutantSamples.next.next.value;
         H1 = (X1 + X1')/2;
         Hi = (X1 - X1')/2;
         Hj = (X2 - X2')/2;

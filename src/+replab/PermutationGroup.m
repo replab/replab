@@ -166,7 +166,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             rho = replab.rep.IndexRelabelingRep(self, indexRange);
         end
 
-        function rho = definingRep(self)
+        function rho = naturalRep(self)
         % Returns the natural permutation representation of this permutation group
         %
         % Returns:
@@ -177,21 +177,18 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         function rho = standardRep(self)
         % Returns the standard representation of this permutation group
         %
+        % It is an abuse of terminology as the "standard representation" is
+        % the faithful $n-1$ dimensional representation of the symmetric group
+        % acting on $n$ elements; but we can reuse that subrepresentation on
+        % subgroups of the symmetric group.
+        %
         % It corresponds to the representation orthogonal to the
         % trivial representation with basis [1, 1, ..., 1]'/sqrt(d)
         %
         % Returns:
-        %   replab.Rep: The (real) standard representation
-            V = replab.rep.standardBasis(self.domainSize);
-            V = V(2:end, :);
-            niceBasis = replab.NiceBasis.fromIntegerBasis(V);
-            if isa(self, 'replab.Permutations')
-                % special case for the symmetric group
-                irrepInfo = replab.irreducible.Info('R', []);
-            else
-                irrepInfo = [];
-            end
-            rho = self.definingRep.subRepUnitary(niceBasis.U, niceBasis, irrepInfo);
+        %   `+replab.Rep`: The (real) standard representation
+            [H_internal F_internal] = replab.sym.sageSpechtStandardBasis(self.domainSize);
+            rho = self.naturalRep.subRep(H_internal, F_internal);
         end
 
     end

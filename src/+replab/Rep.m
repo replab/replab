@@ -424,7 +424,7 @@ classdef Rep < replab.Str
         %
         % Example:
         %   >>> S3 = replab.Permutations(3);
-        %   >>> defRep = S3.definingRep.complexification;
+        %   >>> defRep = S3.naturalRep.complexification;
         %   >>> C = randn(3,3) + 1i * rand(3,3);
         %   >>> nonUnitaryRep = defRep.subRep(C, inv(C));
         %   >>> unitaryRep = nonUnitaryRep.unitarize;

@@ -2,13 +2,15 @@ function dispatchDefaults
 % Register here the default functions used in dispatch for the core of RepLAB
 
 % Equivariant construction
+    replab.dispatch('register', 'replab.makeEquivariant', 'makeSubCommutant', 15, ...
+                    @(repC, repR, special) replab.equivariant.makeSubCommutant(repC, repR, special));
     replab.dispatch('register', 'replab.makeEquivariant', 'ForRepByImages', 10, ...
-                    @(repR, repC, special) replab.equivariant.ForRepByImages.make(repR, repC, special));
+                    @(repC, repR, special) replab.equivariant.ForRepByImages.make(repC, repR, special));
     replab.dispatch('register', 'replab.makeEquivariant', 'ForFiniteGroup', 5, ...
-                    @(repR, repC, special) replab.equivariant.ForFiniteGroup.make(repR, repC, special));
+                    @(repC, repR, special) replab.equivariant.ForFiniteGroup.make(repC, repR, special));
     % Default method, works for all compact groups
     replab.dispatch('register', 'replab.makeEquivariant', 'ForCompactGroup', 0, ...
-                    @(repR, repC, special) replab.equivariant.ForCompactGroup.make(repR, repC, special));
+                    @(repC, repR, special) replab.equivariant.ForCompactGroup.make(repC, repR, special));
 
     replab.dispatch('register', 'replab.irreducible.decomposition', 'UsingSplit', 0, ...
                     @(rep) replab.irreducible.decompositionUsingSplit(rep));

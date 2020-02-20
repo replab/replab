@@ -16,14 +16,14 @@ classdef SubSamples < replab.Str
 
     methods (Access = protected)
 
-        function computeHead(self)
+        function computeValue(self)
             [parentX parentErr] = self.parent.head;
-            self.headSample_ = self.E.repR.F_internal * parentX * self.E.repC.H_internal;
-            self.headError_ = NaN;
+            self.sample_ = self.E.repR.F_internal * parentX * self.E.repC.H_internal;
+            self.error_ = NaN;
         end
 
-        function computeTail(self)
-            self.tail_ = replab.equivariant.SubSamples(self.E, self.parent.tail);
+        function computeNext(self)
+            self.next_ = replab.equivariant.SubSamples(self.E, self.parent.tail);
         end
 
     end

@@ -18,6 +18,7 @@ classdef ForSubReps < replab.Equivariant
             assert(isa(repR, 'replab.SubRep'));
             assert(repC.parent == parent.repC);
             assert(repR.parent == parent.repR);
+            self.parent = parent;
         end
 
         function [X1 err] = project(self, X)

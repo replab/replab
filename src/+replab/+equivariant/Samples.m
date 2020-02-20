@@ -6,21 +6,21 @@ classdef Samples < replab.Str
     end
 
     properties (Access = protected)
-        headSample_ % (double(*,*)): Sampled matrix
-        headError_ % (double): Estimated error
-        tail_ % (`+replab.+equivariant.Samples`): Next sample in chain
+        sample_ % (double(*,*)): Sampled matrix
+        error_ % (double): Estimated error
+        next_ % (`+replab.+equivariant.Samples`): Next samples in chain
     end
 
     methods (Access = protected)
 
-        function computeHead(self)
-            [headSample headError] = self.E.sampleWithError;
-            self.headSample_ = headSample;
-            self.headError_ = headError;
+        function computeValue(self)
+            [sample error] = self.E.sampleWithError;
+            self.sample_ = sample;
+            self.error_ = error;
         end
 
-        function computeTail(self)
-            self.tail_ = replab.equivariant.Samples(self.E);
+        function computeNext(self)
+            self.next_ = replab.equivariant.Samples(self.E);
         end
 
     end
@@ -32,21 +32,21 @@ classdef Samples < replab.Str
             self.E = E;
         end
 
-        function [X err] = head(self)
+        function [X err] = value(self)
         % Returns the current sample
-            if isequal(self.headSample_, [])
-                self.computeHead;
+            if isequal(self.sample_, [])
+                self.computeValue;
             end
-            X = self.headSample_;
-            err = self.headError_;
+            X = self.sample_;
+            err = self.error_;
         end
 
-        function s = tail(self)
+        function s = next(self)
         % Returns the next sample in chain
-            if isequal(self.tail_, [])
-                self.computeTail;
+            if isequal(self.next_, [])
+                self.computeNext;
             end
-            s = self.tail_;
+            s = self.next_;
         end
 
     end

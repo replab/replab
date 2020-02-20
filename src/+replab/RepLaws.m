@@ -37,6 +37,19 @@ classdef RepLaws < replab.Laws
             self.M.assertEqv(rho*c, c*rho);
         end
 
+        % $$$         function law_respects_division_algebra_G(self, g)
+% $$$             if isequal(self.rep.field, 'R') && self.rep.isKnownCanonicalIrreducible
+% $$$                 rho = self.rep.image(g);
+% $$$                 if isequal(self.rep.irrepInfo.divisionAlgebra, 'C')
+% $$$                     rho1 = replab.domain.ComplexTypeMatrices.project(rho);
+% $$$                     self.M.assertEqv(rho, rho1);
+% $$$                 elseif isequal(self.rep.irrepInfo.divisionAlgebra, 'H')
+% $$$                     rho1 = replab.domain.QuaternionTypeMatrices.project(rho);
+% $$$                     self.M.assertEqv(rho, rho1);
+% $$$                 end
+% $$$             end
+% $$$         end
+
     end
 
 end

@@ -26,7 +26,7 @@ classdef Equivariant < replab.Domain
     end
 
     properties (Access = protected)
-        parent % (`+replab.Domain`): Parent domain, real or complex matrices
+        domain % (`+replab.Domain`): Domain, real or complex matrices
     end
 
     methods
@@ -71,7 +71,7 @@ classdef Equivariant < replab.Domain
             assert(repR.group == repC.group, ...
                    'Both representations must be defined on the same group');
             self.group = repR.group;
-            self.parent = replab.domain.Matrices(self.field, self.nR, self.nC);
+            self.domain = replab.domain.Matrices(self.field, self.nR, self.nC);
             self.special = special;
         end
 
@@ -85,7 +85,21 @@ classdef Equivariant < replab.Domain
         % err:
         %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
         %           the invariant subspace in Frobenius norm
-            [X err] = self.project(self.parent.sample);
+            [X err] = self.project(self.domain.sample);
+        end
+
+        function E1 = subEquivariant(self, subC, subR, special)
+        % Constructs a invariant subspace of an equivariant space
+        %
+        % Args:
+        %   subC (`+replab.SubRep`): A subrepresentation of ``self.repC``
+        %   subR (`+replab.SubRep`): A subrepresentation of ``self.repR``
+        %   special (charstring): Whether the equivariant subspace has special structure
+            assert(isa(subC, 'replab.SubRep'));
+            assert(isa(subR, 'replab.SubRep'));
+            assert(subC.parent == self.repC);
+            assert(subR.parent == self.repR);
+            E1 = replab.equivariant.ForSubReps(subC, subR, special, self);
         end
 
         %% Str methods
@@ -106,7 +120,7 @@ classdef Equivariant < replab.Domain
         %% Domain methods
 
         function b = eqv(self, X, Y)
-            b = self.parent.eqv(X, Y);
+            b = self.domain.eqv(X, Y);
         end
 
         function X = sample(self)
