@@ -95,8 +95,6 @@ classdef Rep < replab.Str
             rho = full(self.inverseImage_internal(g));
         end
 
-        %% Sampling
-
         function [rho rhoInverse] = sample(self)
         % Samples an element from the group and returns its image under the representation
         %
@@ -135,7 +133,7 @@ classdef Rep < replab.Str
 
         %% Derived vector spaces/algebras
 
-        function e = equivariant(self, repC)
+        function e = equivariant(self, repR)
         % Returns the space of equivariant linear maps from this rep to another rep
         %
         % The equivariant vector space contains the matrices X such that
@@ -144,11 +142,11 @@ classdef Rep < replab.Str
         %
         %
         % Args:
-        %   repC (replab.Rep): Representation on the source/column space
+        %   repR (replab.Rep): Representation on the target/row space
         %
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
-            e = replab.makeEquivariant(self, repC, []);
+            e = replab.makeEquivariant(self, repR, []);
         end
 
         function c = commutant(self)
@@ -180,7 +178,7 @@ classdef Rep < replab.Str
         % Returns:
         %   `+replab.Equivariant`: The space of Hermitian invariant matrices
             if isempty(self.hermitianInvariant_)
-                self.hermitianInvariant_ = replab.makeEquivariant(self, self.dual.conj, 'hermitian');
+                self.hermitianInvariant_ = replab.makeEquivariant(self.dual.conj, self, 'hermitian');
             end
             h = self.hermitianInvariant_;
         end
@@ -208,23 +206,67 @@ classdef Rep < replab.Str
         %% Str methods
 
         function s = headerStr(self)
-            if self.isUnitary
-                switch self.field
-                  case 'R'
-                    f = 'Orthogonal real';
-                  case 'C'
-                    f = 'Unitary complex';
+            p = {};
+            if isequal(self.isUnitary, true)
+                if self.overR
+                    p{1,end+1} = 'orthogonal';
+                else
+                    p{1,end+1} = 'unitary';
                 end
-            else
-                switch self.field
-                  case 'R'
-                    f = 'Real';
-                  case 'C'
-                    f = 'Complex';
+            elseif isequal(self.isUnitary, false)
+                if self.overR
+                    p{1,end+1} = 'nonorthogonal';
+                else
+                    p{1,end+1} = 'nonunitary';
                 end
             end
-            s = sprintf('%s representation of dimension %d', f, self.dimension);
+            if isequal(self.isTrivial, true)
+                p{1,end+1} = 'trivial';
+            elseif isequal(self.isTrivial, false)
+                p{1,end+1} = 'nontrivial';
+            end
+            if isequal(self.isIrreducible, true)
+                p{1,end+1} = 'irreducible';
+            elseif isequal(self.isIrreducible, true)
+                p{1,end+1} = 'reducible';
+            end
+            if ~isequal(self.frobeniusSchurIndicator, []) && self.overR
+                switch self.frobeniusSchurIndicator
+                  case -1
+                    p{1,end+1} = 'real-type';
+                  case 0
+                    p{1,end+1} = 'complex-type';
+                  case 1
+                    p{1,end+1} = 'quaternion-type';
+                end
+            end
+            switch class(self)
+              case 'replab.SubRep'
+                p{1,end+1} = 'subrepresentation';
+              case 'replab.rep.DerivedRep'
+                p{1,end+1} = 'derived representation';
+                if self.conjugate
+                    p{1,end+1} = '(conjugate)';
+                end
+                if self.inverse
+                    p{1,end+1} = '(inverse)';
+                end
+                if self.transpose
+                    p{1,end+1} = '(transpose)';
+                end
+              case 'replab.rep.DirectSumRep'
+                p{1,end+1} = 'direct sum representation';
+              case 'replab.rep.TensorRep'
+                p{1,end+1} = 'tensor representation';
+              case 'replab.rep.ComplexifiedRep'
+                p{1,end+1} = 'complexified representation';
+              otherwise
+                p{1,end+1} = 'representation';
+            end
+            p{1} = replab.str.capitalize(p{1});
+            s = strjoin(p, ' ');
         end
+
         %% Derived actions
 
         function M = matrixRowAction(self, g, M)
@@ -439,7 +481,7 @@ classdef Rep < replab.Str
                 P1 = self.commutant.project(P);
                 embedding = basis \ P1;
             end
-            sub = replab.SubRep(self, basis, embedding, []);
+            sub = replab.SubRep(self, basis, embedding);
         end
 
         function rep1 = similar(self, A, Ainv)

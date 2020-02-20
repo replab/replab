@@ -15,6 +15,12 @@ classdef TrivialRep < replab.Rep
             self.isTrivial = true;
         end
 
+        %% Str
+
+        function s = headerStr(self)
+            s = self@replab.Rep.headerStr; % logic in parent class
+        end
+
         %% Rep methods
 
         function rho = image_internal(self, g)

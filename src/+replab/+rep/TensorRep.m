@@ -64,6 +64,10 @@ classdef TensorRep < replab.Rep
             end
         end
 
+        function s = headerStr(self)
+            s = self@replab.Rep.headerStr; % logic in parent class
+        end
+
         % Rep
 
         function rho = image_internal(self, g)

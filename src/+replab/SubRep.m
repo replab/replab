@@ -11,14 +11,13 @@ classdef SubRep < replab.Rep
 
     methods
 
-        function self = SubRep(parent, H_internal, F_internal, irrepInfo)
+        function self = SubRep(parent, H_internal, F_internal)
         % Constructs a subrepresentation of a parent representation
         %
         % Args:
         %   parent (`+replab.Rep`): Parent representation of which we construct a subrepresentation
         %   H_internal (double(*,*), may be sparse): Subrepresentation basis, dimension ``dParent x dChild``
-        %   F_internal (double(*,*), may be sparse): Embedding map, dimension ``dParent x dChild``
-        %   irrepInfo (`+replab.IrrepInfo` or []): Irreducible status information
+        %   F_internal (double(*,*), may be sparse): Embedding map, dimension ``dChild x dParent``
             d = size(F_internal, 1);
             dParent = size(F_internal, 2);
             assert(size(H_internal, 1) == dParent);
@@ -29,7 +28,6 @@ classdef SubRep < replab.Rep
             self.field = parent.field;
             self.dimension = d;
             self.isUnitary = isUnitary;
-            self.irrepInfo = irrepInfo;
             self.parent = parent;
             self.F_internal = F_internal;
             self.H_internal = H_internal;
@@ -41,71 +39,11 @@ classdef SubRep < replab.Rep
         % Always returns a dense matrix.
         %
         % Returns:
-        %   double(*,*): Subrepresentation basis
+        %   double(*,*): Subrepresentation basis given as column vectors
             H = full(self.H_internal);
         end
 
-        function b = isKnownIrreducible(self)
-        % Returns whether this subrepresentation is known to be irreducible
-        %
-        % Returns:
-        %   logical: True if this subrepresentation is known to be irreducible,
-        %            false if it is reducible or status is unknown
-            b = ~isempty(self.irrepInfo);
-        end
-
-        function b = isKnownCanonicalIrreducible(self)
-        % Returns whether this subrepresentation is known to be irreducible and in the canonical division algebra basis
-        %
-        % Returns:
-        %   logical: True if this subrepresentation is known to be irreducible and canonical,
-        %            false if it is reducible/not in the canonical basis, or status is unknown
-            if isempty(self.irrepInfo)
-                b = false;
-                return
-            end
-            if self.overR
-                if isempty(self.irrepInfo.divisionAlgebra)
-                    b = false;
-                    return
-                end
-                if isequal(self.irrepInfo.divisionAlgebra, 'R')
-                    b = true;
-                else
-                    b = isequal(self.irrepInfo.isDivisionAlgebraCanonical, true);
-                end
-            else
-                b = true;
-                return
-            end
-        end
-
         %% Str methods
-
-        function s = headerStr(self)
-            if self.isKnownIrreducible
-                if self.overR
-                    s = 'Real irreducible subrepresentation';
-                    if ~isempty(self.irrepInfo.divisionAlgebra)
-                        switch self.irrepInfo.divisionAlgebra
-                          case 'R'
-                            s = [s ' of real type'];
-                          case 'C'
-                            s = [s ' of complex type'];
-                          case 'H'
-                            s = [s ' of quaternionic type'];
-                        end
-                        if self.irrepInfo.isDivisionAlgebraCanonical
-                            s = [s ' in the canonical basis'];
-                        end
-                    end
-                else
-                    s = 'Complex irreducible subrepresentation';
-                end
-            else
-                s = 'Subrepresentation';
-            end
-        end
 
         function names = hiddenFields(self)
             names = replab.str.uniqueNames( ...

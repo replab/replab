@@ -2,17 +2,17 @@ classdef ForCompactGroup < replab.Equivariant
 
     methods (Static)
 
-        function e = make(repR, repC, special)
-            e = replab.equivariant.ForCompactGroup(repR, repC, special);
+        function e = make(repC, repR, special)
+            e = replab.equivariant.ForCompactGroup(repC, repR, special);
         end
 
     end
 
     methods
 
-        function self = ForCompactGroup(repR, repC, special)
+        function self = ForCompactGroup(repC, repR, special)
             assert(ismember(exist('nlinfit'), [2 6]), 'Computations on compact groups require nonlinear curve fit.');
-            self = self@replab.Equivariant(repR, repC, special);
+            self@replab.Equivariant(repC, repR, special);
         end
 
         function [X err] = project(self, X)

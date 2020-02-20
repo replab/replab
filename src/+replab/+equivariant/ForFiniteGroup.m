@@ -2,20 +2,20 @@ classdef ForFiniteGroup < replab.Equivariant
 
     methods (Static)
 
-        function e = make(repR, repC, special)
-            if ~isa(repR.group, 'replab.FiniteGroup')
+        function e = make(repC, repR, special)
+            if ~isa(repC.group, 'replab.FiniteGroup')
                 e = replab.DispatchNext;
                 return
             end
-            e = replab.equivariant.ForFiniteGroup(repR, repC, special);
+            e = replab.equivariant.ForFiniteGroup(repC, repR, special);
         end
 
     end
 
     methods
 
-        function self = ForFiniteGroup(repR, repC, special)
-            self = self@replab.Equivariant(repR, repC, special);
+        function self = ForFiniteGroup(repC, repR, special)
+            self@replab.Equivariant(repC, repR, special);
         end
 
         function [X err] = project(self, X)

@@ -29,23 +29,7 @@ classdef DerivedRep < replab.Rep
         end
 
         function s = headerStr(self)
-            els = {};
-            if self.conjugate
-                els{1,end+1} = 'conjugate';
-            end
-            if self.inverse
-                els{1,end+1} = 'inverse';
-            end
-            if self.transpose
-                els{1,end+1} = 'transpose';
-            end
-            if isempty(els)
-                els = 'Untransformed derived representation';
-            else
-                s = strjoin(els, ' ');
-                s(1) = upper(s(1));
-                s = [s ' derived representation'];
-            end
+            s = self@replab.Rep.headerStr; % logic in parent class
         end
 
         % Rep

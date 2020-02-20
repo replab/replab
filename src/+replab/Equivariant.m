@@ -1,7 +1,7 @@
 classdef Equivariant < replab.Domain
 % Describes a vector space of group-equivariant matrices
 %
-% Let ``repR`` and ``repC`` be two representations of the same group ``G``.
+% Let ``repC`` and ``repR`` be two representations of the same group ``G``.
 %
 % This describes the set of matrices ``X`` such that ``repR.image(g) * X = X * repC.image(g)``
 %
@@ -10,8 +10,8 @@ classdef Equivariant < replab.Domain
 %
 % There are two special cases of equivariant spaces.
 %
-% - ``commutant`` equivariant spaces have ``repR == repC``,
-% - ``hermitian`` equivariant spaces have ``repR == repC.conjugate.dual``.
+% - ``commutant`` equivariant spaces have ``repC == repR``,
+% - ``hermitian`` equivariant spaces have ``repC == repR.conjugate.dual``.
 %
 % When ``repR`` is unitary, the ``commutant`` and ``hermitian`` cases are identical.
 
@@ -49,7 +49,7 @@ classdef Equivariant < replab.Domain
         %   double(*,*): Projected matrix
         % err:
         %   double: Estimation of the numerical error, expressed as the distance of the returned ``X1`` to
-        %           the invariant subspace in Frobenius norm
+        %           the invariant subspace in Frobenius norm or ``NaN`` if no such estimation can be performed
             error('Abstract');
         end
 
@@ -57,20 +57,7 @@ classdef Equivariant < replab.Domain
 
     methods
 
-        function [X err] = sampleWithError(self)
-        % Returns an approximate sample from this equivariant space along with estimated numerical error
-        %
-        % Returns
-        % -------
-        % X:
-        %   double(*,*): A sample from this equivariant space
-        % err:
-        %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
-        %           the invariant subspace in Frobenius norm
-            [X err] = self.project(self.parent.sample);
-        end
-
-        function self = Equivariant(repR, repC, special)
+        function self = Equivariant(repC, repR, special)
         % Constructor; use `+replab.makeEquivariant` in user code
         %
         % That function selects an optimized implementation depending on the use case.
@@ -86,6 +73,19 @@ classdef Equivariant < replab.Domain
             self.group = repR.group;
             self.parent = replab.domain.Matrices(self.field, self.nR, self.nC);
             self.special = special;
+        end
+
+        function [X err] = sampleWithError(self)
+        % Returns an approximate sample from this equivariant space along with estimated numerical error
+        %
+        % Returns
+        % -------
+        % X:
+        %   double(*,*): A sample from this equivariant space
+        % err:
+        %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
+        %           the invariant subspace in Frobenius norm
+            [X err] = self.project(self.parent.sample);
         end
 
         %% Str methods
