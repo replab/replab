@@ -1,5 +1,5 @@
 function [allReps, epsilon] = babai_split(rep, rep_eps)
-% Runs the Babai-Friedl split algorithm
+% Runs the Babai-Friedl split algorithm on a representation
 %
 %   -- WORK IN PROGRESS --
 %
@@ -8,7 +8,7 @@ function [allReps, epsilon] = babai_split(rep, rep_eps)
 %
 % Args:
 %   rep (replab.Rep, replab.SubRep): Approximate representation to split
-%   rep_eps (double): Precision of the approximate representation rep
+%   rep_eps (double, optional): Precision of the approximate representation rep
 %
 % Returns:
 % --------
@@ -18,7 +18,7 @@ function [allReps, epsilon] = babai_split(rep, rep_eps)
 %     precision of the approximate decomposition
 %
 % Example:
-%   >>> [allReps, epsilon] = replab.irreducible.babai_split(replab.S(6).definingRep, eps_gen);
+%   >>> [allReps, epsilon] = replab.irreducible.babai_split(replab.S(6).definingRep, 1e-15);
 
 if nargin < 2
     rep_eps = 0;
@@ -48,6 +48,7 @@ elseif (alphaIdeal < 0)
 else
     alpha = alphaIdeal;
 end
+alpha = max(alpha, 1e-13); % Let's not ask for too much
 
 % define further parameters
 nbGen = length(rep.group.generators);
@@ -77,15 +78,11 @@ for k = 1:nbGen
     imageGen{k} = rep.image(gen);
 end
 
-% To keep track of the improvement
+% To keep track of the convergence to the centralizing algebra
 maxMaxNorms = zeros(1,10000);
 
 % The main loop
 for i = 1:10000
-    if verbose
-        disp(['Iteration number ', num2str(i)]);
-    end
-    
     % Compute the Dixon average
     for j = 1:nbH
         W = Hs{j};
@@ -104,14 +101,15 @@ for i = 1:10000
             maxNorm(j) = max(maxNorm(j), norm(Hs{j}*imageGen{k} - imageGen{k}*Hs{j}, 'fro'));
         end
     end
-    if verbose
-        disp(['Element of maxNorm are in the interval [', num2str(min(maxNorm)), ', ', num2str(max(maxNorm)), ']']);
+    if verbose && ((i == 1) || (mod(i,100) == 0))
+        disp(['Iteration ', num2str(i), ': the element of maxNorm are in the interval [', num2str(min(maxNorm)), ', ', num2str(max(maxNorm)), ']']);
     end
     centralizes = (maxNorm <= alpha);
     maxMaxNorms(i) = max(maxNorm);
     if sum(centralizes) == nbH
         if verbose
-            disp(['All H are centralized after ', num2str(i), ' steps. "stably irreducible"']);
+            disp(['All H are alpha-centralized after ', num2str(i), ' steps. "stably irreducible"']);
+            disp(' ');
         end
         allReps = {rep};
         return;
@@ -131,18 +129,19 @@ for i = 1:10000
             U2 = a(:,cut+1:end);
             
             if verbose
-                disp(['The space splits after ', num2str(i), ' steps. Overlaps:']);
+                disp(['The space splits after ', num2str(i), ' steps. Overlaps between the subspaces:']);
                 for k = 1:nbGen
                     U1'*imageGen{k}*U2
                 end
+                disp(' ');
             end
             
             rep1 = rep.subRepUnitary(U1');
             rep2 = rep.subRepUnitary(U2');
             
             % We further decompose
-            allReps1 = babai_algo(rep1);
-            allReps2 = babai_algo(rep2);
+            allReps1 = replab.irreducible.babai_split(rep1);
+            allReps2 = replab.irreducible.babai_split(rep2);
             allReps = cat(2, allReps1, allReps2);
             
             % bound the error
@@ -157,6 +156,9 @@ end
 if verbose
     % We did not converge, so we plot the convergence to see what happened
     plot(log10(maxMaxNorms))
+    xlabel('iteration');
+    title('degree of centralization for the worst hermitian matrix');
 end
 error('Not enough steps')
 
+end
