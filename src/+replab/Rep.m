@@ -2,7 +2,7 @@ classdef Rep < replab.Str
 % Describes a finite dimensional representation of a compact group
 %
 % This class has mutable properties that correspond to information that can be computed and cached
-% after the `+replab.Rep` instance is constructed, for example `.isUnitary` or `.isTrivial`.
+% after the `+replab.Rep` instance is constructed, for example `.isUnitary` or `.trivialDimension`.
 %
 % By convention, those properties are not passed to constructors of subclasses of `+replab.Rep`,
 % but are instead their default value (``[]`` signifying unknown) is overwritten after construction.
@@ -24,10 +24,10 @@ classdef Rep < replab.Str
 
     properties
         isUnitary % ({true, false, []}): Whether this representation is unitary
-        isTrivial % ({true, false, []}): Whether this representation is trivial (not necessarily of dimension 1)
+        trivialDimension % (integer or []): Dimension of the trivial subrepresentation in this representation
         isIrreducible % (true, false, []): Whether this representation is irreducible
         frobeniusSchurIndicator % (double or []): Value of the Frobenius-Schur indicator
-        isDivisionAlgebraCanonical % ({true, false, []}): If the representation is real and irreducible, describes if its division algebra has canonical form
+        isDivisionAlgebraCanonical % ({true, false, []}): If the representation is real and irreducible and the Frobenius-Schur indicator is not 1, describes if its division algebra has canonical form
     end
 
     properties (SetAccess = protected)
@@ -40,6 +40,7 @@ classdef Rep < replab.Str
         commutant_
         hermitianInvariant_
         decomposition_
+        trivialSpace_
     end
 
     methods % Abstract methods
@@ -146,7 +147,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
-            e = replab.makeEquivariant(self, repR, []);
+            e = replab.Equivariant.make(self, repR, []);
         end
 
         function c = commutant(self)
@@ -162,7 +163,7 @@ classdef Rep < replab.Str
         % Returns:
         %   `+replab.Equivariant`: The commutant algebra represented as an equivariant space
             if isempty(self.commutant_)
-                self.commutant_ = replab.makeEquivariant(self, self, 'commutant');
+                self.commutant_ = replab.Equivariant.make(self, self, 'commutant');
             end
             c = self.commutant_;
         end
@@ -178,9 +179,20 @@ classdef Rep < replab.Str
         % Returns:
         %   `+replab.Equivariant`: The space of Hermitian invariant matrices
             if isempty(self.hermitianInvariant_)
-                self.hermitianInvariant_ = replab.makeEquivariant(self.dual.conj, self, 'hermitian');
+                self.hermitianInvariant_ = replab.Equivariant.make(self.dual.conj, self, 'hermitian');
             end
             h = self.hermitianInvariant_;
+        end
+
+        function t = trivialSpace(self)
+        % Returns an equivariant space from a trivial representation to this representation
+        %
+        % The trivial representation has the same dimension as this representation
+            if isempty(self.trivialSpace_)
+                repC = self.group.trivialRep(self.field, self.dimension);
+                self.trivialSpace_ = replab.Equivariant.make(repC, self, 'trivial');
+            end
+            t = self.trivialSpace_;
         end
 
         %% Irreducible decomposition
@@ -220,9 +232,11 @@ classdef Rep < replab.Str
                     p{1,end+1} = 'nonunitary';
                 end
             end
-            if isequal(self.isTrivial, true)
+            if isequal(self.trivialDimension, self.dimension)
                 p{1,end+1} = 'trivial';
-            elseif isequal(self.isTrivial, false)
+            elseif isequal(self.trivialDimension, 0)
+                p{1,end+1} = 'fully nontrivial';
+            elseif ~isempty(self.trivialDimension)
                 p{1,end+1} = 'nontrivial';
             end
             if isequal(self.isIrreducible, true)
@@ -232,12 +246,14 @@ classdef Rep < replab.Str
             end
             if ~isequal(self.frobeniusSchurIndicator, []) && self.overR
                 switch self.frobeniusSchurIndicator
-                  case -1
+                  case 1
                     p{1,end+1} = 'real-type';
                   case 0
                     p{1,end+1} = 'complex-type';
-                  case 1
+                  case -1
                     p{1,end+1} = 'quaternion-type';
+                  otherwise
+                    % do nothing
                 end
             end
             switch class(self)
@@ -406,13 +422,12 @@ classdef Rep < replab.Str
                 A = eye(self.dimension);
                 Ainv = eye(self.dimension);
             else
-                E = self.dual.conj.equivariant(self);
-                X = E.project(eye(self.dimension));
+                X = self.hermitianInvariant.project(eye(self.dimension));
                 for i = 1:self.dimension
                     X(i,i) = real(X(i,i));
                 end
-                A = chol(X);
-                Ainv = inv(A);
+                Ainv = chol(X, 'lower');
+                A = inv(Ainv);
             end
         end
 
@@ -448,6 +463,7 @@ classdef Rep < replab.Str
                 newRep = self;
             else
                 newRep = self.similar(A, Ainv);
+                newRep.isUnitary = true;
             end
         end
 
@@ -467,7 +483,12 @@ classdef Rep < replab.Str
         %     First subrepresentation
         %   sub2: `replab.SubRep`
         %     Second subrepresentation
+            assert(size(basis1, 1) == self.dimension);
             d1 = size(basis1, 2);
+            if nargin > 2
+                assert(size(embedding1, 1) == d1);
+                assert(size(embedding1, 2) == self.dimension);
+            end
             rest = null(basis1.');
             if isequal(self.isUnitary, true)
                 if nargin < 3

@@ -5,32 +5,34 @@ classdef SubRep < replab.Rep
 
     properties (SetAccess = protected)
         parent % (`+replab.Rep`): Parent representation
-        H_internal % (double(*,*), may be sparse): Subrepresentation basis, dimension ``dParent x dChild``
-        F_internal % (double(*,*), may be sparse): Embedding map, dimension ``dParent x dChild``
+        B_internal % (double(*,*), may be sparse): Subrepresentation basis, dimension ``dParent x dChild``
+        E_internal % (double(*,*), may be sparse): Embedding map, dimension ``dParent x dChild``
     end
 
     methods
 
-        function self = SubRep(parent, H_internal, F_internal)
+        function self = SubRep(parent, B_internal, E_internal)
         % Constructs a subrepresentation of a parent representation
         %
         % Args:
         %   parent (`+replab.Rep`): Parent representation of which we construct a subrepresentation
-        %   H_internal (double(*,*), may be sparse): Subrepresentation basis, dimension ``dParent x dChild``
-        %   F_internal (double(*,*), may be sparse): Embedding map, dimension ``dChild x dParent``
-            d = size(F_internal, 1);
-            dParent = size(F_internal, 2);
-            assert(size(H_internal, 1) == dParent);
-            assert(size(H_internal, 2) == d);
+        %   B_internal (double(*,*), may be sparse): Subrepresentation basis, dimension ``dParent x dChild``
+        %   E_internal (double(*,*), may be sparse): Embedding map, dimension ``dChild x dParent``
+            d = size(E_internal, 1);
+            dParent = size(E_internal, 2);
+            assert(size(B_internal, 1) == dParent);
+            assert(size(B_internal, 2) == d);
+            assert(size(E_internal, 1) == d);
+            assert(size(E_internal, 2) == dParent);
             assert(parent.dimension == dParent, 'Incorrect basis dimension');
             self.group = parent.group;
             self.field = parent.field;
             self.dimension = d;
-            isUnitary = replab.trileanAnd(parent.isUnitary, isequal(F_internal, H_internal'));
+            isUnitary = replab.trileanAnd(parent.isUnitary, isequal(E_internal, B_internal'));
             self.isUnitary = isUnitary;
             self.parent = parent;
-            self.F_internal = F_internal;
-            self.H_internal = H_internal;
+            self.E_internal = E_internal;
+            self.B_internal = B_internal;
         end
 
         function H = basis(self)
@@ -40,7 +42,7 @@ classdef SubRep < replab.Rep
         %
         % Returns:
         %   double(*,*): Subrepresentation basis given as column vectors
-            H = full(self.H_internal);
+            H = full(self.B_internal);
         end
 
         %% Str methods
@@ -48,7 +50,7 @@ classdef SubRep < replab.Rep
         function names = hiddenFields(self)
             names = replab.str.uniqueNames( ...
                 hiddenFields@replab.Rep(self), ...
-                {'F_internal' 'H_internal'} ...
+                {'E_internal' 'B_internal'} ...
                 );
         end
 
@@ -57,7 +59,7 @@ classdef SubRep < replab.Rep
             if self.dimension < 15
                 for i = 1:self.dimension
                     names{1, end+1} = sprintf('basis.(:,%d)', i);
-                    values{1, end+1} = full(self.H_internal(:,i));
+                    values{1, end+1} = full(self.B_internal(:,i));
                 end
             else
                 names{1, end+1} = 'basis';
@@ -70,7 +72,7 @@ classdef SubRep < replab.Rep
 % $$$         function [A Ainv] = unitaryChangeOfBasis(self)
 % $$$ TODO recover this
 % $$$             if isequal(self.parent.isUnitary, true)
-% $$$                 X = self.F_internal * self.F_internal';
+% $$$                 X = self.E_internal * self.E_internal';
 % $$$                 A = chol(X, 'lower');
 % $$$                 U = inv(A) * self.F;
 % $$$                 newRep = self.parent.subRepUnitary(U);
@@ -78,11 +80,11 @@ classdef SubRep < replab.Rep
 % $$$         end
 
         function rho = image_internal(self, g)
-            rho = full(self.F_internal*self.parent.image_internal(g)*self.H_internal);
+            rho = full(self.E_internal*self.parent.image_internal(g)*self.B_internal);
         end
 
         function rho = inverseImage_internal(self, g)
-            rho = full(self.F_internal*self.parent.inverseImage_internal(g)*self.H_internal);
+            rho = full(self.E_internal*self.parent.inverseImage_internal(g)*self.B_internal);
         end
 
     end
@@ -100,11 +102,11 @@ classdef SubRep < replab.Rep
         %
         % Returns:
         %   `+replab.SubRep`: A block-diagonal subrepresentation composed of the given subrepresentations
-            Hs = cellfun(@(sr) sr.H_internal, subReps, 'uniform', 0);
-            Fs = cellfun(@(sr) sr.F_internal, subReps, 'uniform', 0);
-            newH_internal = horzcat(Hs{:});
-            newF_internal = vertcat(Fs{:});
-            subRep = parent.subRep(newH_internal, newF_internal);
+            Hs = cellfun(@(sr) sr.B_internal, subReps, 'uniform', 0);
+            Fs = cellfun(@(sr) sr.E_internal, subReps, 'uniform', 0);
+            newB_internal = horzcat(Hs{:});
+            newE_internal = vertcat(Fs{:});
+            subRep = parent.subRep(newB_internal, newE_internal);
         end
 
     end

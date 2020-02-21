@@ -12,13 +12,13 @@ classdef TrivialRep < replab.Rep
             % replab.Rep, mutable
             self.isIrreducible = (self.dimension == 1);
             self.isUnitary = true;
-            self.isTrivial = true;
+            self.trivialDimension = dimension;
         end
 
         %% Str
 
         function s = headerStr(self)
-            s = self@replab.Rep.headerStr; % logic in parent class
+            s = headerStr@replab.Rep(self); % logic in parent class
         end
 
         %% Rep methods

@@ -24,12 +24,12 @@ classdef DerivedRep < replab.Rep
             self.dimension = parent.dimension;
             % from replab.Rep, mutable
             self.isUnitary = parent.isUnitary;
-            self.isTrivial = parent.isTrivial;
+            self.trivialDimension = parent.trivialDimension;
             self.isIrreducible = parent.isIrreducible;
         end
 
         function s = headerStr(self)
-            s = self@replab.Rep.headerStr; % logic in parent class
+            s = headerStr@replab.Rep(self); % logic in parent class
         end
 
         % Rep

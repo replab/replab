@@ -1,4 +1,4 @@
-function fsi = frobeniusSchurIndicator(rep, commutantSamples)
+function fsi = frobeniusSchurIndicator(rep, context)
 % Computes the Frobenius-Schur indicator of an irreducible subrepresentation
 %
 % An irreducible representation over a complex vector space always has Frobenius-Schur
@@ -17,15 +17,15 @@ function fsi = frobeniusSchurIndicator(rep, commutantSamples)
 %
 % Args:
 %   rep (`+replab.Rep`): Irreducible real representation to identify the type of
-%   commutantSamples (`+replab.+irreducible.Samples`): Samples for the commutant of ``rep``
+%   context (`+replab.Context`): Sampling context
 %
 % Returns:
 %
 %   {-1, 0, 1}: Frobenius-Schur indicator
     assert(isequal(rep.isIrreducible, true), 'Representation must be known to be irreducible');
-    assert(rep == samples.rep);
-    d = sub.dimension;
-    X = commutantSamples.value;
+    assert(isa(context, 'replab.Context'));
+    d = rep.dimension;
+    X = rep.commutant.sampleInContext(context, 1);
     Xsym = (X+X')/2;
     Xanti = (X-X')/2;
     C = Xsym + 1i * Xanti;
@@ -35,11 +35,11 @@ function fsi = frobeniusSchurIndicator(rep, commutantSamples)
     tol = replab.Parameters.doubleEigTol;
     switch rank([v v1 v2], tol)
       case 1
-        t = 'R';
+        fsi = 1;
       case 2
-        X1 = commutantSamples.value;
-        X2 = commutantSamples.next.value;
-        X3 = commutantSamples.next.next.value;
+        X1 = rep.commutant.sampleInContext(context, 1);
+        X2 = rep.commutant.sampleInContext(context, 2);
+        X3 = rep.commutant.sampleInContext(context, 3);
         H1 = (X1 + X1')/2;
         Hi = (X1 - X1')/2;
         Hj = (X2 - X2')/2;
@@ -56,9 +56,9 @@ function fsi = frobeniusSchurIndicator(rep, commutantSamples)
              w.k w1.k w2.k w3.k w4.k];
         switch rank(W, tol)
           case 2
-            t = 'C';
+            fsi = 0;
           case 4
-            t = 'H';
+            fsi = -1;
           otherwise
             error('Problem when identifying C/H irrep type');
         end

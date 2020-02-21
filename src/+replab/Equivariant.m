@@ -12,6 +12,7 @@ classdef Equivariant < replab.Domain
 %
 % - ``commutant`` equivariant spaces have ``repC == repR``,
 % - ``hermitian`` equivariant spaces have ``repC == repR.conjugate.dual``.
+% - ``trivial`` equivariant spaces have ``repC == repR.group.trivialRep(field, repR.dimension)``
 %
 % When ``repR`` is unitary, the ``commutant`` and ``hermitian`` cases are identical.
 
@@ -22,7 +23,7 @@ classdef Equivariant < replab.Domain
         group % (`+replab.CompactGroup`): Group being represented
         repR % (`+replab.Rep`): Representation of row space
         repC % (`+replab.Rep`): Representation of column space
-        special % ({'hermitian', 'commutant', []}): Whether the equivariant space has special structure
+        special % ({'hermitian', 'commutant', 'trivial', []}): Whether the equivariant space has special structure
     end
 
     properties (Access = protected)
@@ -43,7 +44,7 @@ classdef Equivariant < replab.Domain
         % `` X1 = int{g in G} dg rhoR.image(g) * X * rhoC.inverseImage(g) ``
         %
         % Args:
-        %   X (double(*,*)): Matrix to project
+        %   X (double(*,*), may be sparse): Matrix to project
         %
         % Returns
         % -------
@@ -85,7 +86,7 @@ classdef Equivariant < replab.Domain
         % The samples are cached in a context.
         %
         % Args:
-        %   context (`+replab.+equivariant.Context`): Context in which samples are cached
+        %   context (`+replab.Context`): Context in which samples are cached
         %   i (double): 1-based index of the sample
         %
         % Returns
@@ -102,7 +103,7 @@ classdef Equivariant < replab.Domain
         % Clears the samples cached for the given context
         %
         % Args:
-        %   context (`+replab.+equivariant.Context`): Context to clear
+        %   context (`+replab.Context`): Context to clear
             self.cachedSamples_ = rmfield(self.cachedSamples_, context.id);
             self.cachedErrors_ = rmfield(self.cachedErrors_, context.id);
         end
@@ -113,7 +114,7 @@ classdef Equivariant < replab.Domain
         % The samples are cached in a context.
         %
         % Args:
-        %   context (`+replab.+equivariant.Context`): Context in which samples are cached
+        %   context (`+replab.Context`): Context in which samples are cached
         %   ind (double): 1-based index of the sample
         %
         % Returns
@@ -183,6 +184,29 @@ classdef Equivariant < replab.Domain
 
         function X = sample(self)
             X = self.sampleWithError;
+        end
+
+    end
+
+    methods (Static)
+
+        function E = make(repC, repR, special)
+        % Returns the space of equivariant linear maps between two representations
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``repC.image(g) * X = X * repR.image(g)``
+        %
+        % Note: default implementations are registered in `+replab.dispatchDefaults`
+        %
+        % Args:
+        %   repC (`+replab.Rep`): Representation on the source/column space
+        %   repR (`+replab.Rep`): Representation on the target/row space
+        %   special (charstring): Special structure see help on `+replab.Equivariant.special`
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The equivariant vector space
+            E = replab.dispatch('call', 'replab.Equivariant.make', repC, repR, special);
         end
 
     end

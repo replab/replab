@@ -16,7 +16,7 @@ classdef RepLaws < replab.Laws
             self.G = rep.group;
             self.C = rep.commutant;
             self.M = replab.domain.Matrices(rep.field, d, d);
-            if rep.isUnitary
+            if isequal(rep.isUnitary, true)
                 switch rep.field
                   case 'R'
                     self.U = replab.OrthogonalGroup(d);

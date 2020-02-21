@@ -16,8 +16,8 @@ classdef ForCompactGroup < replab.Equivariant
         end
 
         function [X err] = project(self, X)
+            X = full(X);
             hasNewFigure = false;
-
             % Parameters
             nSamplesPerIter = 3; % number of samples per iteration
             useInverses = true; % use inverses of samples as well

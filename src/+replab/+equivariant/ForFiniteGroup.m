@@ -19,6 +19,7 @@ classdef ForFiniteGroup < replab.Equivariant
         end
 
         function [X err] = project(self, X)
+            X = full(X);
             T = self.group.decomposition.T;
             for i = length(T):-1:1
                 S = X;

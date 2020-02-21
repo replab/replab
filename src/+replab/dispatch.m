@@ -85,7 +85,7 @@ function varargout = dispatch(cmd, name, varargin)
             [res{1:n}] = h(varargin{:});
             if ~isa(res{1}, 'replab.DispatchNext')
                 if replab.settings.verboseDispatch
-                    fprintf('%sSuccess\n', repmat(' ', 1, level));
+                    fprintf('%s Success\n', repmat(' ', 1, level));
                     level = level - 1;
                 end
                 varargout = res(1:nargout);
@@ -93,9 +93,9 @@ function varargout = dispatch(cmd, name, varargin)
             end
             if replab.settings.verboseDispatch
                 if isempty(res{1}.message)
-                    fprintf('%sFailed\n', repmat(' ', 1, level));
+                    fprintf('%s Failed\n', repmat(' ', 1, level));
                 else
-                    fprintf('%sFailed: %s\n', repmat(' ', 1, level), res{1}.message);
+                    fprintf('%s Failed: %s\n', repmat(' ', 1, level), res{1}.message);
                 end
             end
         end

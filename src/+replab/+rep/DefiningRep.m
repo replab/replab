@@ -10,7 +10,7 @@ classdef DefiningRep < replab.Rep
             assert(group.n >= 1);
             self.dimension = group.n;
             self.isUnitary = true;
-            self.isTrivial = false;
+            self.trivialDimension = 0;
             self.isIrreducible = true;
         end
 

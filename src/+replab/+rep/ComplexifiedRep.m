@@ -17,7 +17,7 @@ classdef ComplexifiedRep < replab.Rep
             self.dimension = parent.dimension;
             % from replab.Rep, mutable
             self.isUnitary = parent.isUnitary;
-            self.isTrivial = parent.isTrivial;
+            self.trivialDimension = parent.trivialDimension;
         end
 
         function s = headerStr(self)

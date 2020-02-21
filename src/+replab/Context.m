@@ -9,7 +9,6 @@ classdef Context < replab.Str
         instances_ % (cell(1,*) of `+replab.Equivariant`): Equivariant instances with cached samples
     end
 
-
     methods (Access = protected)
 
         function self = Context(id)
@@ -60,8 +59,8 @@ classdef Context < replab.Str
             if isempty(index)
                 index = 1;
             end
-            id = replab.equivariant.Context.indexToId(index);
-            c = replab.equivariant.Context(id);
+            id = replab.Context.indexToId(index);
+            c = replab.Context(id);
             index = index + 1;
         end
 

@@ -187,8 +187,8 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   `+replab.Rep`: The (real) standard representation
-            [H_internal F_internal] = replab.sym.sageSpechtStandardBasis(self.domainSize);
-            rho = self.naturalRep.subRep(H_internal, F_internal);
+            [B_internal E_internal] = replab.sym.sageSpechtStandardBasis(self.domainSize);
+            rho = self.naturalRep.subRep(B_internal, E_internal);
         end
 
     end

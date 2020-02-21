@@ -22,22 +22,22 @@ classdef ForSubReps < replab.Equivariant
         end
 
         function [X1 err] = project(self, X)
-            parentX = self.repR.H_internal * X * self.repC.F_internal;
-            parentX1 = self.parent.project(X);
-            X1 = full(self.repR.F_internal * parentX1 * self.repC.H_internal);
+            parentX = self.repR.B_internal * X * self.repC.E_internal;
+            parentX1 = self.parent.project(parentX);
+            X1 = full(self.repR.E_internal * parentX1 * self.repC.B_internal);
             err = NaN;
         end
 
         function [X err] = sampleWithError(self)
             [parentX parentErr] = self.parent.sampleWithError;
-            X = full(self.repR.F_internal * parentX * self.repC.H_internal);
-            err = parentErr; % TODO: include error of the basis
+            X = full(self.repR.E_internal * parentX * self.repC.B_internal);
+            err = NaN; % TODO: include error of the basis
         end
 
         function [X err] = sampleInContext(self, context, ind)
             [parentX parentErr] = self.parent.sampleInContext(context, ind);
-            X = full(self.repR.F_internal * parentX * self.repC.H_internal);
-            err = parentErr; % TODO: include error of the basis
+            X = full(self.repR.E_internal * parentX * self.repC.B_internal);
+            err = NaN; % TODO: include error of the basis
         end
 
     end
@@ -55,12 +55,23 @@ classdef ForSubReps < replab.Equivariant
                 e = parentRep.commutant.subEquivariant(repC, repR, special);
               case 'hermitian'
                 % parentR is the representation on which .hermitianInverse has been called
-                parentH = repR.hermitianInvariant;
+                parentH = repR.parent.hermitianInvariant;
                 parentR = parentH.repR;
                 parentC = parentH.repC;
                 assert(parentR == repR.parent);
-                repC1 = replab.SubRep(parentC, repR.F_internal.', repR.H_internal.');
+                repC1 = replab.SubRep(parentC, repR.E_internal.', repR.B_internal.');
                 e = parentH.subEquivariant(repC1, repR, special);
+              case 'trivial'
+                % repC is trivial, repR.parent is non trivial
+                assert(isa(repC, 'replab.rep.TrivialRep'));
+                d = repC.dimension;
+                assert(d == repR.dimension);
+                parentT = repR.parent.trivialSpace;
+                dParent = parentT.repC.dimension;
+                H = sparse(1:d, 1:d, ones(1, d), dParent, d);
+                F = B_internal';
+                repC1 = replab.SubRep(parentT.repC, H, F);
+                e = parentT.subEquivariant(repC1, repR, special);
             end
         end
 

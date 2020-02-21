@@ -63,7 +63,7 @@ classdef DirectSumRep < replab.Rep
         end
 
         function s = headerStr(self)
-            s = self@replab.Rep.headerStr; % logic in parent class
+            s = headerStr@replab.Rep(self); % logic in parent class
         end
 
         %% Rep methods

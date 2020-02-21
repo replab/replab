@@ -49,6 +49,7 @@ classdef ForRepByImages < replab.Equivariant
         end
 
         function [X err] = project(self, X)
+            X = full(X);
             if isempty(self.decompositionR) || isempty(self.decompositionC)
                 self.computeImages;
             end
