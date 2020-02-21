@@ -23,10 +23,10 @@ classdef SubRep < replab.Rep
             assert(size(H_internal, 1) == dParent);
             assert(size(H_internal, 2) == d);
             assert(parent.dimension == dParent, 'Incorrect basis dimension');
-            isUnitary = replab.trileanAnd(parent.isUnitary, isequal(F_internal, H_internal'));
             self.group = parent.group;
             self.field = parent.field;
             self.dimension = d;
+            isUnitary = replab.trileanAnd(parent.isUnitary, isequal(F_internal, H_internal'));
             self.isUnitary = isUnitary;
             self.parent = parent;
             self.F_internal = F_internal;

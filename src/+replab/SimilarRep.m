@@ -15,21 +15,20 @@ classdef SimilarRep < replab.Rep
         function self = SimilarRep(parent, A_internal, Ainv_internal)
             switch parent.field
               case 'R'
-                assert(isreal(A) && isreal(Ainv), 'A real Rep can only be conjugated by a real orthonormal matrix');
+                assert(isreal(A_internal) && isreal(Ainv_internal), 'A real Rep can only be conjugated by a real orthonormal matrix');
               case 'C'
-                assert(isa(A, 'double') && isa(Ainv, 'double'), 'A complex Rep can only be conjugated by a complex/real unitary matrix');
+                assert(isa(A_internal, 'double') && isa(Ainv_internal, 'double'), 'A complex Rep can only be conjugated by a complex/real unitary matrix');
               otherwise
             end
-            assert(size(A, 1) == parent.dimension);
-            assert(size(A, 2) == parent.dimension);
-            assert(isequal(size(A), size(Ainv)));
+            assert(size(A_internal, 1) == parent.dimension);
+            assert(size(A_internal, 2) == parent.dimension);
+            assert(isequal(size(A_internal), size(Ainv_internal)));
             self.group = parent.group;
             self.field = parent.field;
             self.dimension = parent.dimension;
             self.A_internal = A_internal;
             self.Ainv_internal = Ainv_internal;
             self.parent = parent;
-            self.irrepInfo = [];
         end
 
         function s = headerStr(self)
@@ -41,7 +40,7 @@ classdef SimilarRep < replab.Rep
         end
 
         function rho = inverseImage_internal(self, g)
-            rho = self.A_inverse * self.parent.inverseImage_internal(g) * self.Ainv_internal;
+            rho = self.A_internal * self.parent.inverseImage_internal(g) * self.Ainv_internal;
         end
 
         function mat = A(self)
