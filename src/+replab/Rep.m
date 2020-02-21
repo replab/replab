@@ -451,6 +451,47 @@ classdef Rep < replab.Str
             end
         end
 
+        function [sub1 sub2] = maschke(self, basis1, embedding1)
+        % Given a basis of a subrepresentation, returns two complementary subrepresentations
+        %
+        % Note that we optimize special cases when the representation and/or the basis is
+        % unitary
+        %
+        % Args:
+        %   basis1 (double(dParent,dSub1)): Basis of the first subrepresentation
+        %   embedding1 (double(dChild,dParent), optional): Map from the parent space to the subrepresentation
+        %
+        % Returns
+        % -------
+        %   sub1: `replab.SubRep`
+        %     First subrepresentation
+        %   sub2: `replab.SubRep`
+        %     Second subrepresentation
+            d1 = size(basis1, 2);
+            rest = null(basis1.');
+            if isequal(self.isUnitary, true)
+                if nargin < 3
+                    BB = basis1'*basis1;
+                    BB = (BB+BB')/2;
+                    embedding1 = BB \ basis1';
+                end
+                sub1 = replab.SubRep(self, basis1, embedding1);
+                % for the second subrepresentation, we take the orthogonal complement from 'null'
+                sub2 = replab.SubRep(self, rest, rest');
+            else
+                X = [basis1 rest];
+                Xinv = inv(X);
+                P = basis1 * Xinv(1:d1, :);
+                P1 = self.commutant.project(P);
+                embedding1 = basis1 \ P1;
+                P2 = eye(self.dimension) - P1;
+                basis2 = orth(P2);
+                embedding2 = basis2 \ P2;
+                sub1 = replab.SubRep(self, basis1, embedding1);
+                sub2 = replab.SubRep(self, basis2, embedding2);
+            end
+        end
+
         function sub = subRep(self, basis, embedding)
         % Returns a subrepresentation of this representation
         %
@@ -473,13 +514,18 @@ classdef Rep < replab.Str
         % Returns:
         %   `+replab.SubRep`: Subrepresentation
             if nargin < 3
-                dSub = size(basis, 2);
-                rest = null(basis.');
-                X = [basis rest];
-                Xinv = inv(X);
-                P = basis * Xinv(1:dSub, :);
-                P1 = self.commutant.project(P);
-                embedding = basis \ P1;
+                if isequal(self.isUnitary, true)
+                    % optimization for unitary parent representations
+                    embedding = (basis'*basis) \ basis';
+                else
+                    dSub = size(basis, 2);
+                    rest = null(basis.');
+                    X = [basis rest];
+                    Xinv = inv(X);
+                    P = basis * Xinv(1:dSub, :);
+                    P1 = self.commutant.project(P);
+                    embedding = basis \ P1;
+                end
             end
             sub = replab.SubRep(self, basis, embedding);
         end

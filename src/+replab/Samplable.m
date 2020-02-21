@@ -10,8 +10,10 @@ classdef Samplable < replab.Str
         %
         % This method does not make any guarantees about genericity, and is primarily used for law checks.
         %
-        % Returns:
-        %   element: Random domain element
+        % Returns
+        % -------
+        %   element: Domain element
+        %     Random domain element
             error('Abstract');
         end
 

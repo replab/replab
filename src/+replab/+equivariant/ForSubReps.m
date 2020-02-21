@@ -29,8 +29,39 @@ classdef ForSubReps < replab.Equivariant
         end
 
         function [X err] = sampleWithError(self)
-            parentX = self.parent.sampleWithError;
+            [parentX parentErr] = self.parent.sampleWithError;
             X = full(self.repR.F_internal * parentX * self.repC.H_internal);
+            err = parentErr; % TODO: include error of the basis
+        end
+
+        function [X err] = sampleInContext(self, context, ind)
+            [parentX parentErr] = self.parent.sampleInContext(context, ind);
+            X = full(self.repR.F_internal * parentX * self.repC.H_internal);
+            err = parentErr; % TODO: include error of the basis
+        end
+
+    end
+
+    methods (Static)
+
+        function e = make(repC, repR, special)
+            if ~isa(repR, 'replab.SubRep') || ~ismember(special, {'commutant', 'hermitian'})
+                e = replab.DispatchNext('Can only handle commutant or hermitian invariant spaces of subrepresentations.');
+                return
+            end
+            switch special
+              case 'commutant'
+                parentRep = repC.parent;
+                e = parentRep.commutant.subEquivariant(repC, repR, special);
+              case 'hermitian'
+                % parentR is the representation on which .hermitianInverse has been called
+                parentH = repR.hermitianInvariant;
+                parentR = parentH.repR;
+                parentC = parentH.repC;
+                assert(parentR == repR.parent);
+                repC1 = replab.SubRep(parentC, repR.F_internal.', repR.H_internal.');
+                e = parentH.subEquivariant(repC1, repR, special);
+            end
         end
 
     end
