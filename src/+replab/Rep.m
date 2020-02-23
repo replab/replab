@@ -562,6 +562,43 @@ classdef Rep < replab.Str
             sub = replab.SubRep(self, basis, embedding);
         end
 
+        function irreps = splitIntoIrreducibles(self, context)
+        % Decomposes fully the given representation into subrepresentations
+        %
+        % Returns a list of irreducible representations, where trivial subrepresentations
+        % have been identified
+        %
+        % If this representation is irreducible, it will set its `~+replab.Rep.isIrreducible`.
+        %
+        % Args:
+        %   context (`+replab.Context`, optional): Sampling context to use
+        %
+        % Returns:
+        %   cell(1,\*) of `+replab.SubRep`: irreducible subrepresentations
+            if nargin < 2
+                context = replab.Context.make;
+            end
+            d = self.dimension;
+            start = replab.rep.fullSubRep(self);
+            todo = {start};
+            irreps = cell(1, 0);
+            while ~isempty(todo)
+                h = todo{1};
+                if isequal(h.isIrreducible, true)
+                    % head of list is irreducible, remove it
+                    irreps{1,end+1} = h;
+                    todo = todo(2:end);
+                else
+                    res = replab.irreducible.split(h, context);
+                    res = cellfun(@(sub) replab.rep.collapseSubRepSubRep(sub), res, 'uniform', 0);
+                    todo = horzcat(todo(2:end), res);
+                end
+            end
+            if nargin < 2
+                context.close;
+            end
+        end
+
         function rep1 = similar(self, A, Ainv)
         % Returns a similar representation under a change of basis
         %

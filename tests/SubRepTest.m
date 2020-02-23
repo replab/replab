@@ -1,4 +1,4 @@
-function test_suite = SubRepNUTest()
+function test_suite = SubRepTest()
     disp(['Setting up tests in ', mfilename()]);
     try
         test_functions = localfunctions();
@@ -11,6 +11,6 @@ function test_suite = SubRepNUTest()
          -1  3
          -1 -3]/6;
     S3 = replab.S(3);
-    rep = S3.definingRep.subRep(F, G);
-    test_suite = replab.SubRepNULaws(rep).addTestCases(test_suite);
+    rep = S3.naturalRep.subRep(F, G);
+    test_suite = replab.SubRepLaws(rep).addTestCases(test_suite);
 end
