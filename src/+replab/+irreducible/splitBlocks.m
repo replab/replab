@@ -9,7 +9,7 @@ function sub = splitBlocks(rep, trivialSamples, hermitianInvariantSamples)
             di = rep.factor(i).dimension;
             B_internal = sparse(start:start+di-1, 1:di, ones(1,di), d, di);
             E_internal = B_internal';
-            sub{1, i} = replab.SubRep(rep, B_internal, E_internal);
+            sub{1, i} = rep.subRep(B_internal, E_internal);
             start = start + di;
         end
     elseif isa(rep.group, 'replab.rep.FiniteGroup') && ~rep.group.isTrivial
@@ -30,7 +30,7 @@ function sub = splitBlocks(rep, trivialSamples, hermitianInvariantSamples)
             di = length(b);
             B_internal = sparse(b, 1:di, ones(1, di), d, di);
             E_internal = B_internal';
-            sub{1, i} = replab.SubRep(rep, B_internal, E_internal);
+            sub{1, i} = rep.subRep(B_internal, E_internal);
         end
     else
         sub = replab.DispatchNext('Not a covered case');

@@ -23,6 +23,9 @@ classdef Rep < replab.Str
 %   for performance.
 
     properties
+        % see `+replab.+rep.fullSubRep` and `+replab.+rep.collapseSubRepSubRep`
+        % that copies those properties,
+
         isUnitary % ({true, false, []}): Whether this representation is unitary
         trivialDimension % (integer or []): Dimension of the trivial subrepresentation in this representation
         isIrreducible % (true, false, []): Whether this representation is irreducible
@@ -327,6 +330,14 @@ classdef Rep < replab.Str
 
         %% Derived representations
 
+        function rep1 = simplify(self)
+        % Returns a representation identical to this, but possibly with its composition simplified
+        %
+        % Returns:
+        %   `+replab.Rep`: A possibly simplified representation
+            rep1 = replab.rep.simplify(self);
+        end
+
         function complexRep = complexification(self)
         % Returns the complexification of a real representation
         %
@@ -336,7 +347,7 @@ classdef Rep < replab.Str
         % Raises:
         %   An error if this representation is already complex.
             assert(self.overR, 'Representation should be real to start with');
-            complexRep = replab.rep.simplify(replab.rep.ComplexifiedRep(self));
+            complexRep = replab.rep.ComplexifiedRep(self);
         end
 
         function rep = conj(self)
@@ -350,7 +361,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   `+replab.Rep`: The complex conjugate of this representation
-            rep = replab.rep.simplify(replab.rep.DerivedRep(self, true, false, false));
+            rep = replab.rep.DerivedRep(self, true, false, false);
         end
 
         function rep = dual(self)
@@ -362,7 +373,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   replab.Rep: The dual representation
-            rep = replab.rep.simplify(replab.rep.DerivedRep(self, false, true, true));
+            rep = replab.rep.DerivedRep(self, false, true, true);
         end
 
         function rep = blkdiag(varargin)

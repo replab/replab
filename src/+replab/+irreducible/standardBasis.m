@@ -1,11 +1,11 @@
 function U = standardBasis(d)
-% Returns an orthogonal integer basis of the Euclidean space that including the vector of all ones
+% Returns an orthonormal integer basis of the Euclidean space that including the vector of all ones
 %
 % Args:
 %   d (integer): Dimension
 %
 % Returns:
-%   integer matrix: Matrix whose first row is the vector of all ones,
+%   (double(\*,\*)): Matrix whose first row is the vector of all ones,
 %                   with all rows orthogonal to each other
     F = factor(d);
     U = 1;
@@ -19,4 +19,5 @@ function U = standardBasis(d)
         end
         U = kron(U, Ui);
     end
+    U = U./sqrt(diag(U*U'));
 end

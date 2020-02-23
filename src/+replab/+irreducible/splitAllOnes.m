@@ -15,14 +15,13 @@ function sub = splitAllOnes(rep, trivialSamples, hermitianInvariantSamples)
     end
     sub = cell(1, 2);
     U1 = ones(d, 1)/sqrt(d);
-    U2 = replab.rep.standardBasis(d);
-    U2 = U2./sqrt(diag(U2*U2'));
+    U2 = replab.irreducible.standardBasis(d);
     U2 = U2';
     U2 = U2(:,2:end);
-    sub1 = replab.SubRep(rep, U1, U1');
+    sub1 = rep.subRep(U1, U1');
     sub1.trivialDimension = 1;
     sub1.isIrreducible = true;
     sub1.frobeniusSchurIndicator = 1;
-    sub2 = replab.SubRep(rep, U2, U2');
+    sub2 = rep.subRep(U2, U2');
     sub = {sub1 sub2};
 end

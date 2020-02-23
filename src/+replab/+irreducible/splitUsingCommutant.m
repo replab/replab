@@ -33,15 +33,12 @@ function sub = splitUsingCommutant(rep, context)
     n = length(runs);
     if n == 1
         rep.isIrreducible = true;
-        sub = {rep};
-        return
-    else
-        sub = cell(1, n);
-        for i = 1:n
-            basis = Ainv * U1(:, runs{i});
-            embedding = U1(:, runs{i})' * A;
-            sub{1,i} = rep.subRep(basis, embedding);
-            sub{1,i}.isIrreducible = true;
-        end
+    end
+    sub = cell(1, n);
+    for i = 1:n
+        basis = Ainv * U1(:, runs{i});
+        embedding = U1(:, runs{i})' * A;
+        sub{1,i} = rep.subRep(basis, embedding);
+        sub{1,i}.isIrreducible = true;
     end
 end

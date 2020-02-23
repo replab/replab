@@ -7,8 +7,10 @@ function sub = splitTrivialComponent(rep, context)
     T = rep.trivialSpace.sampleInContext(context, 1);
     % TODO: replace error estimate
     if ~replab.isNonZeroMatrix(T, replab.Parameters.doubleEigTol)
+        s = replab.rep.fullSubRep(rep);
         rep.trivialDimension = 0;
-        sub = {rep};
+        s.trivialDimension = 0;
+        sub = {s};
         return
     end
     basis = orth(T);
