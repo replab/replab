@@ -1,13 +1,15 @@
-function W = findCommonBasis(rep, samples, sub1, sub2)
+function W = findCommonBasis(rep, sub1, sub2, context)
 % Finds the change of basis that relates two equivalent subrepresentations
 %
-% Args:
-%   rep (replab.Rep): Representation decomposed
-%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples for ``rep``
-%   sub1 (replab.SubRep): Irreducible subrepresentation of rep
-%   sub2 (replab.SubRep): Irreducible subrepresentation of rep equivalent to ``sub1``
+% We must have ``sub1.parent == rep`` and ``sub2.parent == rep``.
 %
-% Returns ``W`` such that ``W * sub2.image(g) * W' = sub1.image(g)``
+% Args:
+%   rep (`+replab.Rep`): Representation decomposed
+%   sub1 (replab.SubRep): Irreducible subrepresentation of rep
+%   sub2 (replab.SubRep): Irreducible subrepresentation of rep
+%
+% Returns:
+%   double(\*,\*): ``W`` such that ``W * sub2.image(g) * W' = sub1.image(g)``
     assert(isa(sub1, 'replab.SubRep'));
     assert(isa(sub2, 'replab.SubRep'));
     assert(sub1.parent == rep);

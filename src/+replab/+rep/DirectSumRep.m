@@ -56,9 +56,9 @@ classdef DirectSumRep < replab.Rep
 
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Rep(self);
-            for i = 1:self.nBlocks
+            for i = 1:self.nFactors
                 names{1, end+1} = sprintf('factor(%d)', i);
-                values{1, end+1} = self.block(i);
+                values{1, end+1} = self.factor(i);
             end
         end
 

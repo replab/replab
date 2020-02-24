@@ -41,8 +41,32 @@ classdef SubRep < replab.Rep
         % Always returns a dense matrix.
         %
         % Returns:
-        %   double(*,*): Subrepresentation basis given as column vectors
+        %   double(\*,\*): Subrepresentation basis given as column vectors
             H = full(self.B_internal);
+        end
+
+        function s = refine(self)
+        % Refines the numerical basis of this subrepresentation
+        %
+        % Returns:
+        %   double(\*,\*): Similar subrepresentation with basis precision attempted improvement
+            s = replab.rep.refine(self);
+        end
+
+        function [s better] = nice(self)
+        % Returns a representation similar to the current subrepresentation, with a nicer basis
+        %
+        % The "niceness" of the basis is implementation dependent. As of the first implementation
+        % of this feature, RepLAB tries to make the basis real, and then with small integer
+        % coefficients.
+        %
+        % The returned subrepresentation is not necessarily unitary.
+        %
+        % In the case no improvement could be made, the original subrepresentation is returned.
+        %
+        % Returns:
+        %   `+replab.SubRep`: A subrepresentation of ``self.parent``
+            s = replab.nice.niceSubRep(self);
         end
 
         %% Str methods

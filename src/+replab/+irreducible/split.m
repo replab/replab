@@ -22,6 +22,9 @@ function sub = split(rep, context)
     assert(isa(rep, 'replab.Rep'));
     assert(isa(context, 'replab.Context'));
     sub = replab.dispatch('call', 'replab.irreducible.split', rep, context);
+    if isa(sub, 'replab.DispatchNext')
+        return
+    end
     for i = 1:length(sub)
         assert(isa(sub{i}, 'replab.SubRep'));
         assert(sub{i}.parent == rep);

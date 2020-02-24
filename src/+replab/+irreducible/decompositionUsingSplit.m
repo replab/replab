@@ -3,26 +3,23 @@ function I = decompositionUsingSplit(rep)
 %
 % First it splits the representation into irreducibles, before recognizing which
 % irreducible representations are part of the same isotypic component.
-    replab.irreducible.tell('decompositionUsingSplit')
-    samples = replab.irreducible.OnDemandSamples(rep);
-    % obtain all irreps
-    replab.irreducible.tell('down')
-    mainSub = rep.subRepUnitaryByIntegerBasis(speye(rep.dimension));
-    subs = replab.irreducible.split(rep, samples, mainSub);
-    replab.irreducible.tell('up')
+    context = replab.Context.make;
+    subs = rep.splitIntoIrreducibles(context);
+    context.close;
     % sort by trivial / non trivial
     trivial = {};
     nontrivial = {};
     for i = 1:length(subs)
-        sub = subs{i};
-        if isa(sub.irrepInfo, 'replab.irreducible.TrivialInfo') % is it trivial
+        s = subs{i};
+        if s.trivialDimension == 1
             trivial{1,end+1} = sub;
         else
             nontrivial{1,end+1} = sub;
         end
     end
+    context = replab.Context.make;
     % regroup equivalent representations
-    C = samples.commutantSample(2);
+    C = rep.commutant.sampleInContext(context, 1);
     C = (C + C')/2;
     nNT = length(nontrivial);
     mask = logical(zeros(nNT, nNT));

@@ -1,4 +1,5 @@
 classdef SubRepLaws < replab.RepLaws
+% Laws for subrepresentations
 
     methods
 
@@ -8,6 +9,8 @@ classdef SubRepLaws < replab.RepLaws
 
         function law_basis_and_internal_embedding_(self)
             self.M.assertEqv(self.rep.E_internal * self.rep.B_internal, eye(self.rep.dimension));
+            P = self.rep.B_internal * self.rep.E_internal;
+            self.M.assertEqv(P*P, P);
         end
 
         function law_image_relation_with_parent_rep_GM(self, g, m)

@@ -9,13 +9,13 @@ function M = integerGramSchmidt(M)
 % Returns:
 %   double matrix or []: Result of the orthogonalization process
     maxabs = 60; % maximum coefficient size
-    M(1,:) = M(1,:)/replab.rational.vecgcd(M(1,:));
+    M(1,:) = M(1,:)/replab.nice.vecgcd(M(1,:));
     for i = 2:size(M, 1)
         Mi = M(i,:);
         for j = 1:i-1
             Mj = M(j,:);
             Mi = Mi*dot(Mj,Mj) - dot(Mj,Mi)*Mj;
-            g = replab.rational.vecgcd(Mi);
+            g = replab.nice.vecgcd(Mi);
             Mi = Mi/g;
             if max(abs(Mi)) > maxabs
                 M = [];

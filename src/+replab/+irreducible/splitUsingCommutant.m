@@ -11,7 +11,9 @@ function sub = splitUsingCommutant(rep, context)
     d = rep.dimension;
     knownUnitary = isequal(rep.isUnitary, true);
     if ~knownUnitary
-        [A Ainv] = rep.unitaryChangeOfBasis;
+        rep1 = rep.unitarize;
+        A = rep1.A_internal;
+        Ainv = rep1.Ainv_internal;
         % A: unitary space <- nonunitary space
         % Ainv: nonunitary space <- unitary space
     else
@@ -24,7 +26,7 @@ function sub = splitUsingCommutant(rep, context)
     C1 = A * rep.commutant.sampleInContext(context, 1) * Ainv;
     % the eigenspace decomposition is the basis of the numerical decomposition
     % V'*C*V = D
-    [U1 D] = replab.irreducible.sortedEig((C1 + C1')/2, 'ascend', false);
+    [U1 D] = replab.numerical.sortedEig((C1 + C1')/2, 'ascend', false);
     D = diag(D);
     D = D(:)';
     mask = bsxfun(@(x,y) abs(x-y)<tol, D, D');
@@ -33,6 +35,8 @@ function sub = splitUsingCommutant(rep, context)
     n = length(runs);
     if n == 1
         rep.isIrreducible = true;
+        sub = {replab.rep.fullSubRep(rep)};
+        return
     end
     sub = cell(1, n);
     for i = 1:n

@@ -40,10 +40,11 @@ classdef Rep < replab.Str
     end
 
     properties (Access = protected)
-        commutant_
-        hermitianInvariant_
-        decomposition_
-        trivialSpace_
+        unitarize_ % (`+replab.SimilarRep`): Cached unitary similar representation
+        commutant_ % (`+replab.Equivariant`): Cached commutant space
+        hermitianInvariant_ % (`+replab.Equivariant`): Cached Hermitian invariant space
+        decomposition_ % (`+replab.Irreducible`): Cached irreducible decomposition
+        trivialSpace_ % (`+replab.Equivariant`): Cached trivial space
     end
 
     methods % Abstract methods
@@ -418,31 +419,7 @@ classdef Rep < replab.Str
 
         %% Manipulation of representation space
 
-        function [A Ainv] = unitaryChangeOfBasis(self)
-        % Returns the change of basis to a unitary representation
-        %
-        % Returns ``A`` and ``Ainv`` so that ``A * self.image(g) * Ainv`` is unitary.
-        %
-        % Returns
-        % -------
-        %   A: double(*,*)
-        %     Change of basis matrix
-        %   Ainv: double(*,*)
-        %     Inverse of change of basis matrix
-            if isequal(self.isUnitary, true)
-                A = eye(self.dimension);
-                Ainv = eye(self.dimension);
-            else
-                X = self.hermitianInvariant.project(eye(self.dimension));
-                for i = 1:self.dimension
-                    X(i,i) = real(X(i,i));
-                end
-                Ainv = chol(X, 'lower');
-                A = inv(Ainv);
-            end
-        end
-
-        function [newRep A Ainv] = unitarize(self)
+        function res = unitarize(self)
         % Returns a unitary representation equivalent to this representation
         %
         % We have ``newRep.image(g) = A * self.image(g) * Ainv``.
@@ -461,21 +438,14 @@ classdef Rep < replab.Str
         %       1
         %
         %
-        % Returns
-        % -------
-        %   newRep: `+replab.Rep`
-        %     Unitary representation
-        %   A: double(*,*)
-        %     Change of basis matrix
-        %   Ainv: double(*,*)
-        %     Inverse of change of basis matrix
-            [A Ainv] = self.unitaryChangeOfBasis;
-            if isequal(self.isUnitary, true)
-                newRep = self;
-            else
-                newRep = self.similar(A, Ainv);
-                newRep.isUnitary = true;
+        % Returns:
+        %   `+replab.Rep`: Unitary similar representation
+            if isempty(self.unitarize_)
+                [A Ainv] = self.unitaryChangeOfBasis;
+                self.unitarize_ = self.similar(A, Ainv);
+                self.unitarize_.isUnitary = true;
             end
+            res = self.unitarize_;
         end
 
         function [sub1 sub2] = maschke(self, basis1, embedding1)
@@ -549,6 +519,9 @@ classdef Rep < replab.Str
                 if isequal(self.isUnitary, true)
                     % optimization for unitary parent representations
                     embedding = (basis'*basis) \ basis';
+                    % there is an optimization that cannot be made yet:
+                    % if basis'*basis is identity, then embedding = basis'
+                    % works
                 else
                     dSub = size(basis, 2);
                     rest = null(basis.');
@@ -613,6 +586,34 @@ classdef Rep < replab.Str
         % Returns:
         %   `+replab.SimilarRep`: The similar representation
             rep1 = replab.SimilarRep(self, A, Ainv);
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function [A Ainv] = unitaryChangeOfBasis(self)
+        % Returns the change of basis to a unitary representation
+        %
+        % Returns ``A`` and ``Ainv`` so that ``A * self.image(g) * Ainv`` is unitary.
+        %
+        % Returns
+        % -------
+        %   A: double(*,*)
+        %     Change of basis matrix
+        %   Ainv: double(*,*)
+        %     Inverse of change of basis matrix
+            if isequal(self.isUnitary, true)
+                A = eye(self.dimension);
+                Ainv = eye(self.dimension);
+            else
+                X = self.hermitianInvariant.project(eye(self.dimension));
+                for i = 1:self.dimension
+                    X(i,i) = real(X(i,i));
+                end
+                Ainv = chol(X, 'lower');
+                A = inv(Ainv);
+            end
         end
 
     end

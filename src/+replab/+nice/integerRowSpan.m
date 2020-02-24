@@ -1,5 +1,5 @@
 function [intBasisOpt isOrtho] = integerRowSpan(basis)
-% Attempts integer basis recovery from the given unitary basis
+% Attempts integer basis recovery from the given orthonormal basis
 %
 % Tries to find a rational matrix that has the same row span as the given basis ``basis``.
 % It uses the ``rat`` Matlab function that uses truncated continued fraction expansions.
@@ -45,12 +45,12 @@ function [intBasisOpt isOrtho] = integerRowSpan(basis)
     jb = jb(1:nRows);
     U = P(jb, :);
     assert(length(jb) == nRows);
-    [num den] = replab.rational.attemptRecoverRational(U);
+    [num den] = replab.nice.attemptRecoverRational(U);
     if isempty(num)
         intBasisOpt = [];
         isOrtho = [];
     else
-        afterGS = replab.rational.integerGramSchmidt(num);
+        afterGS = replab.nice.integerGramSchmidt(num);
         if isempty(afterGS)
             intBasisOpt = num;
             isOrtho = false;
