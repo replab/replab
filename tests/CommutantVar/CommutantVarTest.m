@@ -56,8 +56,47 @@ function test_fromSdpMatrix_SDP_CH
         obj1 = value(obj);
     end
     
-    % TODO: Symmetrize this SDP with a non-unitary representation of the
-    % CHSH group (Collins-Gisin notation is used here ;-)
+    
+    generators = {[1  4  7  2  5  8  3  6  9]
+                  [1 -2 -3 -4  5  6 -7  8  9]
+                  [1  3  2  4  6  5 -7 -9 -8]}';
+    G = replab.signed.Permutations(9).subgroup(generators);
+    
+    % We construct the images of the generators in the Collins-Gisin
+    % picture. NOTE: Here, each "line" corresponds to the image of one
+    % basis element. The order of the basis elements is as follows:
+    % 1, PA(0|0), PA(0|1), PB(0|0), P(00|00), P(00|10), PB(0|1), P(00|01), P(00|11)
+    % First, permutation of parties:
+    image1 = [1  0  0  0  0  0  0  0  0
+              0  0  0  1  0  0  0  0  0
+              0  0  0  0  0  0  1  0  0
+              0  1  0  0  0  0  0  0  0
+              0  0  0  0  1  0  0  0  0
+              0  0  0  0  0  0  0  1  0
+              0  0  1  0  0  0  0  0  0
+              0  0  0  0  0  1  0  0  0
+              0  0  0  0  0  0  0  0  1];
+	% Second, permutation of all outcomes:
+    image2 = [1  0  0  0  0  0  0  0  0
+              1 -1  0  0  0  0  0  0  0
+              1  0 -1  0  0  0  0  0  0
+              1  0  0 -1  0  0  0  0  0
+              1 -1  0 -1  1  0  0  0  0
+              1  0 -1 -1  0  1  0  0  0
+              1  0  0  0  0  0 -1  0  0
+              1 -1  0  0  0  0 -1  1  0
+              1  0 -1  0  0  0 -1  0  1];
+    % Third, permutation of Alice's settings and Bob's outcome for his
+    % second setting:
+    image3 = [1  0  0  0  0  0  0  0  0
+              0  0  1  0  0  0  0  0  0
+              0  1  0  0  0  0  0  0  0
+              0  0  0  1  0  0  0  0  0
+              0  0  0  0  0  1  0  0  0
+              0  0  0  0  1  0  0  0  0
+              1  0  0  0  0  0 -1  0  0
+              0  0  0  0  0  0  1  0 -1
+              0  0  0  0  0  0  1 -1  0];
 end
 
 function test_fromSdpMatrix_SDP_CHSH
