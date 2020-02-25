@@ -35,7 +35,7 @@ function sub = splitUsingCommutant(rep, context)
     n = length(runs);
     if n == 1
         rep.isIrreducible = true;
-        sub = {replab.rep.fullSubRep(rep)};
+        sub = {replab.SubRep.fullSubRep(rep)};
         return
     end
     sub = cell(1, n);

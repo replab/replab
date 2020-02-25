@@ -14,8 +14,8 @@ function W = findCommonBasis(rep, sub1, sub2, context)
     assert(isa(sub2, 'replab.SubRep'));
     assert(sub1.parent == rep);
     assert(sub2.parent == rep);
-    assert(sub1.isKnownIrreducible);
-    assert(sub2.isKnownIrreducible);
+    assert(isequal(sub1.isIrreducible, true));
+    assert(isequal(sub2.isIrreducible, true));
     d = sub1.dimension;
     assert(sub2.dimension == d);
     c = samples.commutantSample(2);

@@ -1,4 +1,4 @@
-function sub1 = refine(sub, context)
+function sub1 = refineSubRep(sub)
 % Implementation of `+replab.SubRep.refine`
     d = sub.dimension;
     P = full(sub.B_internal*sub.E_internal);
@@ -9,7 +9,6 @@ function sub1 = refine(sub, context)
         sub1 = sub.parent.subRep(basis, basis');
     else
         [U,S,V] = svd(P);
-        S
         V = V';
         %P = U*S*V
         embedding = S(1:d, 1:d) * V(1:d,:);

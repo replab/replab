@@ -4,25 +4,27 @@ classdef Irreducible < replab.SubRep
 % For the background, see Section 2.6 of Jean-Pierre Serre, Linear representations of finite groups
 %
 % The irreducible decomposition of ``parent`` contains isotypic components in the cell vector ``components``.
-% Each isotypic component corresponds to a set of equivalent irreducible representations expressed in the same basis.
+% Each isotypic component corresponds to a set of equivalent irreducible representations.
 
     properties
-        components % row cell array of replab.Isotypic: Isotypic components
+        components % (cell(1,\*) of `+replab.Isotypic`): Isotypic components
     end
 
     methods
 
         function self = Irreducible(parent, components)
-            assert(isequal(parent.isUnitary, true));
-            for i = 1:length(components)
+            n = length(components);
+            Bs = cell(1, n);
+            Es = cell(n, 1);
+            for i = 1:n
                 c = components{i};
                 assert(isa(c, 'replab.Isotypic'));
+                Bs{1,i} = c.B_internal;
+                Es{i,1} = c.E_internal;
             end
-            Us = cellfun(@(iso) iso.U, components, 'uniform', 0);
-            U = vertcat(Us{:});
-            nbs = cellfun(@(iso) iso.niceBasis, components, 'uniform', 0);
-            niceBasis = replab.NiceBasis.vertcat(nbs);
-            self = self@replab.SubRep(parent, U, niceBasis);
+            B_internal = [Bs{:}];
+            E_internal = vertcat(Es{:});
+            self = self@replab.SubRep(parent, B_internal, E_internal);
             self.components = components;
         end
 
@@ -55,7 +57,7 @@ classdef Irreducible < replab.SubRep
         %   i (logical): Index of the isotypic component
         %
         % Returns:
-        %   replab.Isotypic: The ``i``-th isotypic component
+        %   `+replab.Isotypic`: The ``i``-th isotypic component
             c = self.components{i};
         end
 
@@ -68,7 +70,7 @@ classdef Irreducible < replab.SubRep
         %                          Default value is ``1``.
         %
         % Returns:
-        %   replab.SubRep: An irreducible subrepresentation
+        %   `+replab.SubRep`: An irreducible subrepresentation
             if nargin < 3
                 j = 1;
             end
@@ -92,18 +94,20 @@ classdef Irreducible < replab.SubRep
 
         %% Rep methods
 
-        function rho = image(self, g)
-            blocks = cellfun(@(iso) iso.image(g), self.components, 'uniform', 0);
-            % Construct the blocks in the block diagonal image
-            rho = blkdiag(blocks{:});
-        end
-
-        function c = commutant(self)
-            if isempty(self.commutant_)
-                self.commutant_ = replab.IrreducibleCommutant(self);
-            end
-            c = self.commutant_;
-        end
+% $$$         function rho = image(self, g)
+% $$$             blocks = cellfun(@(iso) iso.image(g), self.components, 'uniform', 0);
+% $$$             % Construct the blocks in the block diagonal image
+% $$$             rho = blkdiag(blocks{:});
+% $$$         end
+% $$$
+% $$$         function c = commutant(self)
+% $$$             c = commutant@replab.SubRep(self);
+% $$$             return
+% $$$             if isempty(self.commutant_)
+% $$$                 self.commutant_ = replab.IrreducibleCommutant(self);
+% $$$             end
+% $$$             c = self.commutant_;
+% $$$         end
 
     end
 

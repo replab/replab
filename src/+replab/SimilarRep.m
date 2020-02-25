@@ -6,8 +6,8 @@ classdef SimilarRep < replab.Rep
 
     properties (SetAccess = protected)
         parent % (`+replab.Rep`): Representation this is derived from
-        A_internal % (double(*,*), may be sparse): Change of basis matrix
-        Ainv_internal % (double(*,*), may be sparse): Inverse of change of basis matrix
+        A_internal % (double(\*,\*), may be sparse): Change of basis matrix
+        Ainv_internal % (double(\*,\*), may be sparse): Inverse of change of basis matrix
     end
 
     methods
@@ -29,6 +29,14 @@ classdef SimilarRep < replab.Rep
             self.A_internal = A_internal;
             self.Ainv_internal = Ainv_internal;
             self.parent = parent;
+            % mutable Rep properties
+            if isequal(A_internal, Ainv_internal')
+                self.isUnitary = parent.isUnitary;
+            end
+            self.trivialDimension = parent.trivialDimension;
+            self.isIrreducible = parent.isIrreducible;
+            self.frobeniusSchurIndicator = parent.frobeniusSchurIndicator;
+            % isDivisionAlgebraCanonical depends on the choice of basis
         end
 
         function s = headerStr(self)
@@ -49,6 +57,23 @@ classdef SimilarRep < replab.Rep
 
         function mat = Ainv(self)
             mat = full(self.Ainv_internal);
+        end
+
+    end
+
+    methods (Static)
+
+        function res = identical(rep)
+        % Returns a `.SimilarRep` identical to the given representation
+        %
+        % Args:
+        %   rep (`.Rep`): Representation
+        %
+        % Returns:
+        %   `.SimilarRep`: Identical representation to ``rep``
+            d = rep.dimension;
+            res = replab.SimilarRep(rep, speye(d), speye(d));
+            res.isDivisionAlgebraCanonical = rep.isDivisionAlgebraCanonical;
         end
 
     end

@@ -50,7 +50,7 @@ classdef SubRep < replab.Rep
         %
         % Returns:
         %   double(\*,\*): Similar subrepresentation with basis precision attempted improvement
-            s = replab.rep.refine(self);
+            s = replab.rep.refineSubRep(self);
         end
 
         function [s better] = nice(self)
@@ -114,6 +114,23 @@ classdef SubRep < replab.Rep
     end
 
     methods (Static)
+
+        function sub = fullSubRep(parent)
+        % Creates a full subrepresentation of the given representation, with identity basis
+        %
+        % Args:
+        %   parent (`+replab.Rep`): Representaiton
+        %
+        % Returns:
+        %   `+replab.SubRep`: Subrepresentation identical to ``parent``
+            d = parent.dimension;
+            sub = parent.subRep(speye(d), speye(d));
+            assert(isequal(sub.isUnitary, parent.isUnitary));
+            sub.trivialDimension = parent.trivialDimension;
+            sub.isIrreducible = parent.isIrreducible;
+            sub.frobeniusSchurIndicator = parent.frobeniusSchurIndicator;
+            sub.isDivisionAlgebraCanonical = parent.isDivisionAlgebraCanonical;
+        end
 
         function subRep = directSum(parent, subReps)
         % Computes the direct sum of subrepresentations of the same parent representation

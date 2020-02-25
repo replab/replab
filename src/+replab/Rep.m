@@ -23,14 +23,14 @@ classdef Rep < replab.Str
 %   for performance.
 
     properties
-        % see `+replab.+rep.fullSubRep` and `+replab.+rep.collapseSubRepSubRep`
-        % that copies those properties,
+        % see `+replab.SubRep.fullSubRep`, `+replab.+rep.collapseSubRepSubRep`
+        % `+replab.SimilarRep.identical` that copies those properties
 
         isUnitary % ({true, false, []}): Whether this representation is unitary
         trivialDimension % (integer or []): Dimension of the trivial subrepresentation in this representation
         isIrreducible % (true, false, []): Whether this representation is irreducible
         frobeniusSchurIndicator % (double or []): Value of the Frobenius-Schur indicator
-        isDivisionAlgebraCanonical % ({true, false, []}): If the representation is real and irreducible and the Frobenius-Schur indicator is not 1, describes if its division algebra has canonical form
+        isDivisionAlgebraCanonical % ({true, false, []}): If the representation is real and irreducible and the Frobenius-Schur indicator is not 1, means that the images encode the complex or quaternion division algebras in the RepLAB canonical form
     end
 
     properties (SetAccess = protected)
@@ -53,10 +53,10 @@ classdef Rep < replab.Str
         % Returns the image of a group element, dense or sparse
         %
         % Args:
-        %   g (element of `group`): Element being represented
+        %   g (element of `.group`): Element being represented
         %
         % Returns:
-        %   double(*,*): Image of the given element for this representation, may be sparse
+        %   double(\*,\*): Image of the given element for this representation, may be sparse
             error('Abstract');
         end
 
@@ -70,10 +70,10 @@ classdef Rep < replab.Str
         % Returns the image of a group element
         %
         % Args:
-        %   g (element of `group`): Element being represented
+        %   g (element of `.group`): Element being represented
         %
         % Returns:
-        %   double(*,*): Image of the given element for this representation
+        %   double(\*,\*): Image of the given element for this representation
             rho = full(self.image_internal(g));
         end
 
@@ -81,10 +81,10 @@ classdef Rep < replab.Str
         % Returns the image of the inverse of a group element
         %
         % Args:
-        %   g (element of `group`): Element of which the inverse is represented
+        %   g (element of `.group`): Element of which the inverse is represented
         %
         % Returns:
-        %   double(*,*): Image of the inverse of the given element for this representation, may be sparse
+        %   double(\*,\*): Image of the inverse of the given element for this representation, may be sparse
             gInv = self.group.inverse(g);
             rho = self.image_internal(gInv);
         end
@@ -93,10 +93,10 @@ classdef Rep < replab.Str
         % Returns the image of the inverse of a group element
         %
         % Args:
-        %   g (element of `group`): Element of which the inverse is represented
+        %   g (element of `.group`): Element of which the inverse is represented
         %
         % Returns:
-        %   double(*,*): Image of the inverse of the given element for this representation
+        %   double(\*,\*): Image of the inverse of the given element for this representation
             rho = full(self.inverseImage_internal(g));
         end
 
@@ -107,9 +107,9 @@ classdef Rep < replab.Str
         %
         % Returns
         % -------
-        %   rho: double(*,*)
+        %   rho: double(\*,\*)
         %     Image of the random group element
-        %   rhoInverse: double(*,*)
+        %   rhoInverse: double(\*,\*)
         %     Inverse of image ``rho``
             g = self.group.sample;
             rho = self.image(g);
@@ -302,10 +302,10 @@ classdef Rep < replab.Str
         %
         % Args:
         %   g (`group` element): Group element acting
-        %   M (double(*,*)): Matrix acted upon
+        %   M (double(\*,\*)): Matrix acted upon
         %
         % Returns:
-        %   double(*,*): The matrix ``self.image(g) * M``
+        %   double(\*,\*): The matrix ``self.image(g) * M``
             M = full(self.image_internal(g) * M);
         end
 
@@ -422,8 +422,11 @@ classdef Rep < replab.Str
         function res = unitarize(self)
         % Returns a unitary representation equivalent to this representation
         %
-        % We have ``newRep.image(g) = A * self.image(g) * Ainv``.
+        % The returned representation is of type `.SimilarRep`, from which
+        % the change of basis matrix can be obtained.
         %
+        % If the representation is already unitary, the returned `.SimilarRep`
+        % has the identity matrix as a change of basis.
         %
         % Example:
         %   >>> S3 = replab.Permutations(3);
@@ -439,11 +442,15 @@ classdef Rep < replab.Str
         %
         %
         % Returns:
-        %   `+replab.Rep`: Unitary similar representation
+        %   `+replab.SimilarRep`: Unitary similar representation
             if isempty(self.unitarize_)
-                [A Ainv] = self.unitaryChangeOfBasis;
-                self.unitarize_ = self.similar(A, Ainv);
-                self.unitarize_.isUnitary = true;
+                if isequal(self.isUnitary, true)
+                    self.unitarize_ = replab.SimilarRep.identical(self);
+                else
+                    [A Ainv] = self.unitaryChangeOfBasis;
+                    self.unitarize_ = self.similar(A, Ainv);
+                    self.unitarize_.isUnitary = true;
+                end
             end
             res = self.unitarize_;
         end
@@ -552,7 +559,7 @@ classdef Rep < replab.Str
                 context = replab.Context.make;
             end
             d = self.dimension;
-            start = replab.rep.fullSubRep(self);
+            start = replab.SubRep.fullSubRep(self);
             todo = {start};
             irreps = cell(1, 0);
             while ~isempty(todo)

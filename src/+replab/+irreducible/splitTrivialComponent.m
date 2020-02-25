@@ -7,7 +7,7 @@ function sub = splitTrivialComponent(rep, context)
     T = rep.trivialSpace.sampleInContext(context, 1);
     % TODO: replace error estimate
     if ~replab.isNonZeroMatrix(T, replab.Parameters.doubleEigTol)
-        s = replab.rep.fullSubRep(rep);
+        s = replab.SubRep.fullSubRep(rep);
         rep.trivialDimension = 0;
         s.trivialDimension = 0;
         sub = {s};

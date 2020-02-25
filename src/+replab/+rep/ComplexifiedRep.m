@@ -24,12 +24,12 @@ classdef ComplexifiedRep < replab.Rep
             s = 'Complexification of representation';
         end
 
-        function M = image(self, g)
-            M = self.parent.image(g);
+        function M = image_internal(self, g)
+            M = self.parent.image_internal(g);
         end
 
-        function M = inverseImage(self, g)
-            M = self.parent.inverseImage(g);
+        function M = inverseImage_internal(self, g)
+            M = self.parent.inverseImage_internal(g);
         end
 
     end
