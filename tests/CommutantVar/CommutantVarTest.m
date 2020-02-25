@@ -31,6 +31,35 @@ function test_fromPermutations
     end
 end
 
+function test_fromSdpMatrix_SDP_CH
+    indexMatrix = [  1     2     3     6     7     8    11    12    13
+                     2     2     4     7     7     9    12    12    14
+                     3     4     3     8     9     8    13    14    13
+                     6     7     8     6     7     8    16    17    18
+                     7     7     9     7     7     9    17    17    19
+                     8     9     8     8     9     8    18    20    18
+                    11    12    13    16    17    18    11    12    13
+                    12    12    14    17    17    20    12    12    14
+                    13    14    13    18    19    18    13    14    13];
+
+    objective = [0 -1 0 -1 1 1 0 1 -1];
+
+	% We formulate the non-symmetrized SDP:
+    vars = [0; sdpvar(max(max(indexMatrix)),1)];
+    tmp = sparse(1:numel(indexMatrix), reshape(1+indexMatrix,1,numel(indexMatrix)), true);
+    sdpMatrix = reshape(tmp*vars, size(indexMatrix));
+    obj = objective*sdpMatrix(:,1);
+    if ReplabTestParameters.onlyFastTests
+        obj1 = (sqrt(2)-1)/2;
+    else
+        evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
+        obj1 = value(obj);
+    end
+    
+    % TODO: Symmetrize this SDP with a non-unitary representation of the
+    % CHSH group (Collins-Gisin notation is used here ;-)
+end
+
 function test_fromSdpMatrix_SDP_CHSH
     indexMatrix = [  1   2   3   6   7   8  11  12  13
                      2   1   4   7   6   9  12  11  14
