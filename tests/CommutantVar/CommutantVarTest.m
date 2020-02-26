@@ -31,6 +31,74 @@ function test_fromPermutations
     end
 end
 
+function test_fromSdpMatrix_SDP_CH
+    indexMatrix = [  1     2     3     6     7     8    11    12    13
+                     2     2     4     7     7     9    12    12    14
+                     3     4     3     8     9     8    13    14    13
+                     6     7     8     6     7     8    16    17    18
+                     7     7     9     7     7     9    17    17    19
+                     8     9     8     8     9     8    18    20    18
+                    11    12    13    16    17    18    11    12    13
+                    12    12    14    17    17    20    12    12    14
+                    13    14    13    18    19    18    13    14    13];
+
+    objective = [0 -1 0 -1 1 1 0 1 -1];
+
+	% We formulate the non-symmetrized SDP:
+    vars = [0; sdpvar(max(max(indexMatrix)),1)];
+    tmp = sparse(1:numel(indexMatrix), reshape(1+indexMatrix,1,numel(indexMatrix)), true);
+    sdpMatrix = reshape(tmp*vars, size(indexMatrix));
+    obj = objective*sdpMatrix(:,1);
+    if ReplabTestParameters.onlyFastTests
+        obj1 = (sqrt(2)-1)/2;
+    else
+        evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
+        obj1 = value(obj);
+    end
+    
+    
+    generators = {[1  4  7  2  5  8  3  6  9]
+                  [1 -2 -3 -4  5  6 -7  8  9]
+                  [1  3  2  4  6  5 -7 -9 -8]}';
+    G = replab.signed.Permutations(9).subgroup(generators);
+    
+    % We construct the images of the generators in the Collins-Gisin
+    % picture. NOTE: Here, each "line" corresponds to the image of one
+    % basis element. The order of the basis elements is as follows:
+    % 1, PA(0|0), PA(0|1), PB(0|0), P(00|00), P(00|10), PB(0|1), P(00|01), P(00|11)
+    % First, permutation of parties:
+    image1 = [1  0  0  0  0  0  0  0  0
+              0  0  0  1  0  0  0  0  0
+              0  0  0  0  0  0  1  0  0
+              0  1  0  0  0  0  0  0  0
+              0  0  0  0  1  0  0  0  0
+              0  0  0  0  0  0  0  1  0
+              0  0  1  0  0  0  0  0  0
+              0  0  0  0  0  1  0  0  0
+              0  0  0  0  0  0  0  0  1];
+	% Second, permutation of all outcomes:
+    image2 = [1  0  0  0  0  0  0  0  0
+              1 -1  0  0  0  0  0  0  0
+              1  0 -1  0  0  0  0  0  0
+              1  0  0 -1  0  0  0  0  0
+              1 -1  0 -1  1  0  0  0  0
+              1  0 -1 -1  0  1  0  0  0
+              1  0  0  0  0  0 -1  0  0
+              1 -1  0  0  0  0 -1  1  0
+              1  0 -1  0  0  0 -1  0  1];
+    % Third, permutation of Alice's settings and Bob's outcome for his
+    % second setting:
+    image3 = [1  0  0  0  0  0  0  0  0
+              0  0  1  0  0  0  0  0  0
+              0  1  0  0  0  0  0  0  0
+              0  0  0  1  0  0  0  0  0
+              0  0  0  0  0  1  0  0  0
+              0  0  0  0  1  0  0  0  0
+              1  0  0  0  0  0 -1  0  0
+              0  0  0  0  0  0  1  0 -1
+              0  0  0  0  0  0  1 -1  0];
+end
+
 function test_fromSdpMatrix_SDP_CHSH
     indexMatrix = [  1   2   3   6   7   8  11  12  13
                      2   1   4   7   6   9  12  11  14
