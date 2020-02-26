@@ -78,26 +78,22 @@ classdef ForCompactGroup < replab.Equivariant
                         logfloor = beta(1);
                         slope = beta(2);
                         offset = beta(3);
-                        % We also consider a worst-case linear
-                        % approximation (due to finite sampling size)
-                        offset2 = beta(3) + 3*std(R); 
                         % compute error on fit parameters
                         delta = sqrt(diag(CovB)) * tinv(1-0.05/2, iter - 3);
-                        crossing = [];
-                        crossingDelta = [];
                         % We compute the coefficient of determination to
                         % evaluate whether the fit is good enough, c.f.
                         % https://en.wikipedia.org/wiki/Coefficient_of_determination
                         y = log10(errs(1:iter));
-                        R = 1-sum(R.^2)/sum((y-mean(y)).^2);
+                        R2 = 1-sum(R.^2)/sum((y-mean(y)).^2);
                         if delta(1) < maxNoiseFloorError/2
                             % -slope*x + offset == logfloor
                             % x = - (logfloor - offset)/slope
                             crossing = round(-(logfloor - offset)/slope);
                             % We estimate the uncertainty on the crossing
-                            % point due to finite sampling
-                            crossingDelta = round(-(logfloor - (offset + std(R)))/slope)-crossing;
-                            if (replab.equivariant.plotConvergence && (mod(iter,10) == 1)) || (iter == maxIters)
+                            % point due to finite sampling by propagating
+                            % the fit errors
+                            crossingDelta = round(-(logfloor - offset - sum(delta([1 3])))/(slope - delta(2)))-crossing;
+                            if (replab.equivariant.plotConvergence && (mod(iter, 20) == 1)) || (iter == maxIters)
                                 if ~hasNewFigure
                                     figure
                                     hasNewFigure = true;
@@ -106,13 +102,14 @@ classdef ForCompactGroup < replab.Equivariant
                                 hold on
                                 plot(1:iter, log10(errs(1:iter)), 'x');
                                 plot(1:0.1:iter, modelfun(beta, 1:0.1:iter), '-');
-                                plot(1:0.1:iter, modelfunExp([slope, offset2], 1:0.1:iter), '-');
+                                plot(1:0.1:iter, modelfunExp([slope, offset + nbSigma*std(R)], 1:0.1:iter), '-');
                                 plot(crossing*[1 1], [log10(min(errs)) log10(max(errs))], 'r-');
                                 plot((crossing + nbSigma*crossingDelta)*[1 1], [log10(min(errs)) log10(max(errs))], 'b-');
-                                title(['R = ', num2str(R)]);
+                                title(['R2 = ', num2str(R2)]);
                                 xlabel('Iteration #');
                                 ylabel('Log10 of approximation error');
-                                drawnow
+                                drawnow;
+                                pause(0.01);
                             end
                             % To exit, we want to be sure we went far
                             % enough. For this:
@@ -120,7 +117,7 @@ classdef ForCompactGroup < replab.Equivariant
                             %  - the crossing point must be well defined
                             %    (i.e. the fit must be good enough: large R)
                             minIter = crossing + max(nCheckIters, nbSigma*crossingDelta);
-                            if (iter > minIter) && (R >= criticalR)
+                            if (iter > minIter) && (R2 >= criticalR)
                                 check = log10(errs((iter-nCheckIters):iter));
                                 if all(check < logfloor + noiseMargin)
                                     err = logfloor + noiseMargin;
