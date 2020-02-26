@@ -18,7 +18,7 @@ function W = findCommonBasis(rep, sub1, sub2, context)
     assert(isequal(sub2.isIrreducible, true));
     d = sub1.dimension;
     assert(sub2.dimension == d);
-    c = samples.commutantSample(2);
+    C = samples.commutantSample(2);
     W = sub1.U*c*sub2.U';
     % correct the normalization
     W = W * sqrt(d/real(trace(W*W')));

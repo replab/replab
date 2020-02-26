@@ -27,8 +27,8 @@ function iso = buildIsotypic(rep, sub)
         Bs{1,i} = sub{i}.B_internal;
     end
     Biso = [Bs{:}];
-    subiso = replab.subRep(Biso);
-    Fiso = subiso.F_internal;
+    subiso = rep.subRep(Biso);
+    Fiso = subiso.E_internal;
     sub1 = cell(1, m);
     for i = 1:m
         range = (i-1)*d+(1:d);

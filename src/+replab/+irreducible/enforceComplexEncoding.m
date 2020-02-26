@@ -1,22 +1,29 @@
-function W = enforceComplexEncoding(rep, samples, sub)
-% Finds change of basis that expresses the canonical basis of a complex division algebra
+function res = enforceComplexEncoding(rep, context)
+% Finds the similar representation that expresses the canonical basis of representation on a complex division algebra
+%
 %
 % See `+replab.+domain.ComplexTypeMatrices`
 %
 % Args:
-%   rep (replab.Rep): Real representation being decomposed
-%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples for ``rep``
-%   sub (row cell array of replab.SubRep): Irreducible complex-type real subrepresentation of ``rep``
+%   rep (`+replab.Rep`): Real representation with `rep.frobeniusSchurIndicator == 0`
+%   context (`+replab.Context`): Sampling context
 %
-% Returns
-% -------
-%   M: double matrix
-%     Matrix ``W`` such that ``W * rep.image(g) * W'`` is in the canonical basis
+% Returns:
+%   `+replab.SimilarRep`: Similar representation that has the proper encoding
     assert(isa(rep, 'replab.Rep'));
-    assert(rep == sub.parent);
-    assert(isequal(rep.field, 'R'));
+    assert(rep.overR);
+    assert(isequal(rep.frobeniusSchurIndicator, 0));
+    if isequal(rep.isDivisionAlgebraCanonical, true)
+        res = replab.SimilarRep.identical(rep);
+        return
+    end
+    if ~isequal(rep.isUnitary, true)
+        res = replab.irreducible.enforceComplexEncoding(rep.unitarize, context);
+        res = replab.rep.collapse(res);
+        return
+    end
     d = sub.dimension;
-    S = sub.U*samples.commutantSample(2)*sub.U';
+    S = rep.commutant.sampleInContext(context, 1);
     A = (S + S') + 1i * (S - S');
     v1 = replab.domain.Vectors('C', d).sample;
     v1 = v1/norm(v1);
@@ -52,5 +59,5 @@ function W = enforceComplexEncoding(rep, samples, sub)
             W = [W X];
         end
     end
-    W = W'; % returns adjoint because we piled up column vectors
+    res = rep.similarRep(W', W);
 end

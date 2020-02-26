@@ -23,13 +23,12 @@ classdef Rep < replab.Str
 %   for performance.
 
     properties
-        % see `+replab.SubRep.fullSubRep`, `+replab.+rep.collapseSubRepSubRep`
-        % `+replab.SimilarRep.identical` that copies those properties
+        % see `+replab.+rep.copyProperties`
 
         isUnitary % ({true, false, []}): Whether this representation is unitary
         trivialDimension % (integer or []): Dimension of the trivial subrepresentation in this representation
         isIrreducible % (true, false, []): Whether this representation is irreducible
-        frobeniusSchurIndicator % (double or []): Value of the Frobenius-Schur indicator
+        frobeniusSchurIndicator % (integer or []): Value of the non-approximated Frobenius-Schur indicator
         isDivisionAlgebraCanonical % ({true, false, []}): If the representation is real and irreducible and the Frobenius-Schur indicator is not 1, means that the images encode the complex or quaternion division algebras in the RepLAB canonical form
     end
 
@@ -448,7 +447,7 @@ classdef Rep < replab.Str
                     self.unitarize_ = replab.SimilarRep.identical(self);
                 else
                     [A Ainv] = self.unitaryChangeOfBasis;
-                    self.unitarize_ = self.similar(A, Ainv);
+                    self.unitarize_ = self.similarRep(A, Ainv);
                     self.unitarize_.isUnitary = true;
                 end
             end
@@ -564,14 +563,15 @@ classdef Rep < replab.Str
             irreps = cell(1, 0);
             while ~isempty(todo)
                 h = todo{1};
+                assert(isequal(h.isUnitary, true));
                 if isequal(h.isIrreducible, true)
                     % head of list is irreducible, remove it
                     irreps{1,end+1} = h;
                     todo = todo(2:end);
                 else
                     res = replab.irreducible.split(h, context);
-                    res = cellfun(@(sub) replab.rep.collapseSubRepSubRep(sub), res, 'uniform', 0);
-                    todo = horzcat(todo(2:end), res);
+                    res1 = cellfun(@(sub) replab.rep.collapse(sub), res, 'uniform', 0);
+                    todo = horzcat(todo(2:end), res1);
                 end
             end
             if nargin < 2
@@ -579,7 +579,7 @@ classdef Rep < replab.Str
             end
         end
 
-        function rep1 = similar(self, A, Ainv)
+        function rep1 = similarRep(self, A, Ainv)
         % Returns a similar representation under a change of basis
         %
         % It returns a representation ``rep1`` such that
@@ -627,22 +627,20 @@ classdef Rep < replab.Str
 
     methods (Static)
 
-        function rep = lambda(group, field, dimension, isUnitary, irrepInfo, imageFun, inverseImageFun)
+        function rep = lambda(group, field, dimension, imageFun, inverseImageFun)
         % Creates a non unitary representation from an image function
         %
         % Args:
         %   group (replab.Group): Group represented
         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
         %   dimension (integer): Representation dimension
-        %   isUnitary (logical or []): Whether the representation is unitary, or ``[]`` if unknown
-        %   irrepInfo (`+replab.+irreducible.Info` or []): Info about the irreducibility of this rep., or ``[]`` if unknown
         %   imageFun (function_handle): Function handle that returns an image matrix given a group element
         %   inverseImageFun (function_handle): Function handle that returns the inverse of the image
         %                                      matrix given a group element
         %
         % Returns:
         %   `+replab.Rep`: The constructed representation
-            rep = replab.lambda.Rep(group, field, dimension, isUnitary, irrepInfo, imageFun, inverseImageFun);
+            rep = replab.lambda.Rep(group, field, dimension, imageFun, inverseImageFun);
         end
 
     end

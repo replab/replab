@@ -73,7 +73,7 @@ classdef SimilarRep < replab.Rep
         %   `.SimilarRep`: Identical representation to ``rep``
             d = rep.dimension;
             res = replab.SimilarRep(rep, speye(d), speye(d));
-            res.isDivisionAlgebraCanonical = rep.isDivisionAlgebraCanonical;
+            replab.rep.copyProperties(rep, res);
         end
 
     end

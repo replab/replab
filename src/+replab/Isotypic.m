@@ -33,6 +33,7 @@ classdef Isotypic < replab.SubRep
             for i = 1:m
                 ci = irreps{i};
                 assert(isa(ci, 'replab.SubRep'));
+                assert(ci.parent == parent);
                 assert(isequal(ci.isIrreducible, true));
                 Bs{1,i} = ci.B_internal;
                 Es{i,1} = ci.E_internal;
@@ -86,6 +87,37 @@ classdef Isotypic < replab.SubRep
             Bi = self.irrep(i).B_internal;
             Ei = self.irrep(i).E_internal;
             P = full(Bi*Ei);
+        end
+
+        function iso = harmonize(self, context)
+        % Harmonizes the isotypic component
+            if isa(self, 'replab.HarmonizedIsotypic')
+                iso = self;
+            else
+                if isempty(context)
+                    c = replab.Context.make;
+                else
+                    c = context;
+                end
+                iso = replab.irreducible.harmonizeIsotypic(self, c);
+                if isempty(context)
+                    c.close;
+                end
+            end
+        end
+
+        function A = changeOfBasis(self, i, j, context)
+        % Returns change of basis matrices that relate two irreducible representations
+        %
+        % Args:
+        %   i (integer): Index of an irreducible representation
+        %   j (integer): Index of an irreducible representation
+        %   context (`+replab.Context`): Sampling context
+        % Returns:
+        %   double(\*,\*): ``A`` such that ``A * self.irrep(j).image(g) * inv(A) = self.irrep(i).image(g)``
+            C = self.parent.commutant.sampleInContext(context, 1);
+            A = full(self.irrep(i).E_internal * C * self.irrep(j).B_internal);
+            A = A * sqrt(self.irrepDimension/real(trace(A*A'))) * sign(A(1,1));
         end
 
         %% Str methods

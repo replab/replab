@@ -16,7 +16,11 @@ function sub = splitTrivialComponent(rep, context)
     basis = orth(T);
     assert(size(basis, 1) == rep.dimension);
     dT = size(basis, 2);
-    [sub1 sub2] = rep.maschke(basis);
+    if rep.isUnitary
+        [sub1 sub2] = rep.maschke(basis, basis');
+    else
+        [sub1 sub2] = rep.maschke(basis);
+    end
     sub2.trivialDimension = 0;
     sub = cell(1, dT+1);
     B = sub1.B_internal;

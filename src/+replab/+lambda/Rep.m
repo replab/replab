@@ -8,13 +8,11 @@ classdef Rep < replab.Rep
 
     methods
 
-        function self = Rep(group, field, dimension, isUnitary, irrepInfo, imageFun, inverseImageFun)
+        function self = Rep(group, field, dimension, imageFun, inverseImageFun)
             assert(isa(group, 'replab.Group'));
             self.group = group;
             self.field = field;
             self.dimension = dimension;
-            self.isUnitary = isUnitary;
-            self.irrepInfo = irrepInfo;
             self.imageFun = imageFun;
             self.inverseImageFun = inverseImageFun;
         end

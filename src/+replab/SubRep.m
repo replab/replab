@@ -1,12 +1,12 @@
 classdef SubRep < replab.Rep
 % Describes a subrepresentation of a finite representation
 %
-% The subrepresentation is described by the basis `H`.
+% The subrepresentation is described by the basis `basis`.
 
     properties (SetAccess = protected)
         parent % (`+replab.Rep`): Parent representation
-        B_internal % (double(*,*), may be sparse): Subrepresentation basis, dimension ``dParent x dChild``
-        E_internal % (double(*,*), may be sparse): Embedding map, dimension ``dParent x dChild``
+        B_internal % (double(\*,\*), may be sparse): Subrepresentation basis, dimension ``dParent x dChild``
+        E_internal % (double(\*,\*), may be sparse): Embedding map, dimension ``dParent x dChild``
     end
 
     methods
@@ -28,8 +28,9 @@ classdef SubRep < replab.Rep
             self.group = parent.group;
             self.field = parent.field;
             self.dimension = d;
-            isUnitary = replab.trileanAnd(parent.isUnitary, isequal(E_internal, B_internal'));
-            self.isUnitary = isUnitary;
+            if isequal(E_internal, B_internal') && isequal(parent.isUnitary, true)
+                self.isUnitary = true;
+            end
             self.parent = parent;
             self.E_internal = E_internal;
             self.B_internal = B_internal;

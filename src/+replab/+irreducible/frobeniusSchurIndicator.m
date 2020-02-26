@@ -1,4 +1,4 @@
-function fsi = frobeniusSchurIndicator(rep, context)
+function fsi = frobeniusSchurIndicator(irrep, context)
 % Computes the Frobenius-Schur indicator of an irreducible subrepresentation
 %
 % An irreducible representation over a complex vector space always has Frobenius-Schur
@@ -11,21 +11,23 @@ function fsi = frobeniusSchurIndicator(rep, context)
 % - if the indicator is $0$, the representation is complex-type,
 % - if the indicator is $-1$, the representation is quaternion-type.
 %
-% Temporary restriction: the representation must be unitary.
-%
-% Does not mutate the ``rep`` argument.
+% Does not mutate the ``irrep`` argument.
 %
 % Args:
-%   rep (`+replab.Rep`): Irreducible real representation to identify the type of
+%   irrep (`+replab.Rep`): Irreducible real representation to identify the type of
 %   context (`+replab.Context`): Sampling context
 %
 % Returns:
-%
 %   {-1, 0, 1}: Frobenius-Schur indicator
-    assert(isequal(rep.isIrreducible, true), 'Representation must be known to be irreducible');
+    assert(isequal(irrep.isIrreducible, true), 'Representation must be known to be irreducible');
     assert(isa(context, 'replab.Context'));
-    d = rep.dimension;
-    X = rep.commutant.sampleInContext(context, 1);
+    if ~isequal(irrep.isUnitary, true)
+        % TODO: can we do better than unitarizing? using the Hermitian invariant space?
+        fsi = replab.irreducible.frobeniusSchurIndicator(irrep.unitarize, context);
+        return
+    end
+    d = irrep.dimension;
+    X = irrep.commutant.sampleInContext(context, 1);
     Xsym = (X+X')/2;
     Xanti = (X-X')/2;
     C = Xsym + 1i * Xanti;
@@ -37,9 +39,9 @@ function fsi = frobeniusSchurIndicator(rep, context)
       case 1
         fsi = 1;
       case 2
-        X1 = rep.commutant.sampleInContext(context, 1);
-        X2 = rep.commutant.sampleInContext(context, 2);
-        X3 = rep.commutant.sampleInContext(context, 3);
+        X1 = irrep.commutant.sampleInContext(context, 1);
+        X2 = irrep.commutant.sampleInContext(context, 2);
+        X3 = irrep.commutant.sampleInContext(context, 3);
         H1 = (X1 + X1')/2;
         Hi = (X1 - X1')/2;
         Hj = (X2 - X2')/2;

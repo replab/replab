@@ -8,25 +8,22 @@ function sub = splitUsingCommutant(rep, context)
         sub = replab.DispatchNext('Need to have no trivial subrepresentation');
         return
     end
-    d = rep.dimension;
-    knownUnitary = isequal(rep.isUnitary, true);
-    if ~knownUnitary
-        rep1 = rep.unitarize;
-        A = rep1.A_internal;
-        Ainv = rep1.Ainv_internal;
-        % A: unitary space <- nonunitary space
-        % Ainv: nonunitary space <- unitary space
-    else
-        rep1 = rep;
-        A = speye(d);
-        Ainv = speye(d);
+    if ~isequal(rep.isUnitary, true)
+        sub1 = replab.irreducible.splitUsingCommutant(rep.unitarize);
+        if isa(sub1, 'replab.DispatchNext')
+            sub = sub1;
+            return
+        end
+        sub = cellfun(@(s) replab.rep.collapse(s), sub1, 'uniform', 0);
+        return
     end
+    d = rep.dimension;
     tol = replab.Parameters.doubleEigTol;
     % extract nontrivial representations by sampling the commutant
-    C1 = A * rep.commutant.sampleInContext(context, 1) * Ainv;
+    C = rep.commutant.sampleInContext(context, 1);
     % the eigenspace decomposition is the basis of the numerical decomposition
     % V'*C*V = D
-    [U1 D] = replab.numerical.sortedEig((C1 + C1')/2, 'ascend', false);
+    [U1 D] = replab.numerical.sortedEig((C + C')/2, 'ascend', false);
     D = diag(D);
     D = D(:)';
     mask = bsxfun(@(x,y) abs(x-y)<tol, D, D');
@@ -40,9 +37,8 @@ function sub = splitUsingCommutant(rep, context)
     end
     sub = cell(1, n);
     for i = 1:n
-        basis = Ainv * U1(:, runs{i});
-        embedding = U1(:, runs{i})' * A;
-        sub{1,i} = rep.subRep(basis, embedding);
+        basis = U1(:, runs{i});
+        sub{1,i} = rep.subRep(basis, basis');
         sub{1,i}.isIrreducible = true;
     end
 end

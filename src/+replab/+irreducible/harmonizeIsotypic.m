@@ -1,8 +1,16 @@
-function hi = harmonizeIsotypic(iso)
-    %%% WORK IN PROGRESS
+function hi = harmonizeIsotypic(iso, context)
+% Harmonizes an isotypic component
+    n = iso.nIrreps;
+    C = iso.parent.commutant.sampleInContext(context, 1);
 
-    first = sub{1};
+    irreps1 = cell(1, n);
+    irreps1{1} = iso.irrep(1);
+    for i = 2:n
+    end
+    sub1 = sub{1};
     if rep.overR
+        first1 = replab.irreducible.canonicalDivisionAlgebra(first, context);
+
         % identifies the type of real representations and
         % make the division algebra basis canonical
         realType = replab.irreducible.computeRealType(rep, samples, first);
