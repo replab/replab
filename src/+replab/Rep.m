@@ -210,10 +210,8 @@ classdef Rep < replab.Str
         %
         % Raises:
         %   An error is this representation is not unitary.
-            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
             if isempty(self.decomposition_)
-                dec = replab.irreducible.decomposition(self);
-                self.decomposition_ = dec;%.nice;
+                self.decomposition_ = replab.irreducible.decomposition(self);
             end
             I = self.decomposition_;
         end
@@ -563,7 +561,6 @@ classdef Rep < replab.Str
             irreps = cell(1, 0);
             while ~isempty(todo)
                 h = todo{1};
-                assert(isequal(h.isUnitary, true));
                 if isequal(h.isIrreducible, true)
                     % head of list is irreducible, remove it
                     irreps{1,end+1} = h;

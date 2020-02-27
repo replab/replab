@@ -2,10 +2,18 @@ function hi = harmonizeIsotypic(iso, context)
 % Harmonizes an isotypic component
     n = iso.nIrreps;
     C = iso.parent.commutant.sampleInContext(context, 1);
-
+    if iso.overR
+        irr1 = replab.irreducible.canonicalDivisionAlgebra(iso.irrep(1));
+        W = irr1.A_internal;
+        Winv = irr1.Ainv_internal
+    end
     irreps1 = cell(1, n);
-    irreps1{1} = iso.irrep(1);
+    irreps1{1} = replab.rep.collapse(irr1);
     for i = 2:n
+        A = iso.changeOfBasis(1, i, context);
+        Ainv = iso.changeOfBasis(i, 1, context);
+
+        irri = iso.irrep(i).
     end
     sub1 = sub{1};
     if rep.overR

@@ -23,9 +23,14 @@ function res = canonicalDivisionAlgebra(rep, context)
     % from then on, we assume unitarity
     switch rep.frobeniusSchurIndicator
       case -1
-
+        % quaternion
+        res = replab.irreducible.enforceQuaternionEncoding(rep);
       case 0
+        % complex
+        res = replab.irreducible.enforceComplexEncoding(rep);
       case 1
+        % real
+        res = replab.SimilarRep.identical(rep);
       otherwise
         error('Real irreducible representation should have FS indicator -1,0 or 1');
     end
