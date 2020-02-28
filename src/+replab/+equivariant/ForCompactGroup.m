@@ -71,58 +71,59 @@ classdef ForCompactGroup < replab.Equivariant
                         errored = true;
                     end
                     warning(w);
+                    
+                    % We evaluate the goodness of fit by computing the
+                    % coefficient of determination, c.f.
+                    % https://en.wikipedia.org/wiki/Coefficient_of_determination
+                    y = log10(errs(1:iter));
+                    R2 = 1-sum(R.^2)/sum((y-mean(y)).^2);
+                    % extract the fit parameters
+                    logfloor = beta(1);
+                    slope = beta(2);
+                    offset = beta(3);
+                    % compute error on fit parameters
+                    delta = sqrt(diag(CovB)) * tinv(1-0.05/2, iter - 3);
                     if errored || (rank(J) < 3)
                         % the rank is deficient, usually because the curve didn't flatten
                         % yet, and thus the noise floor cannot be estimated
-                    else
-                        logfloor = beta(1);
-                        slope = beta(2);
-                        offset = beta(3);
-                        % compute error on fit parameters
-                        delta = sqrt(diag(CovB)) * tinv(1-0.05/2, iter - 3);
-                        % We compute the coefficient of determination to
-                        % evaluate whether the fit is good enough, c.f.
-                        % https://en.wikipedia.org/wiki/Coefficient_of_determination
-                        y = log10(errs(1:iter));
-                        R2 = 1-sum(R.^2)/sum((y-mean(y)).^2);
-                        if delta(1) < maxNoiseFloorError/2
-                            % -slope*x + offset == logfloor
-                            % x = - (logfloor - offset)/slope
-                            crossing = round(-(logfloor - offset)/slope);
-                            % We estimate the uncertainty on the crossing
-                            % point due to finite sampling by propagating
-                            % the fit errors
-                            crossingDelta = round(-(logfloor - offset - sum(delta([1 3])))/(slope - delta(2)))-crossing;
-                            if (replab.equivariant.plotConvergence && (mod(iter, 20) == 1)) || (iter == maxIters)
-                                if ~hasNewFigure
-                                    figure
-                                    hasNewFigure = true;
-                                end
-                                clf
-                                hold on
-                                plot(1:iter, log10(errs(1:iter)), 'x');
-                                plot(1:0.1:iter, modelfun(beta, 1:0.1:iter), '-');
-                                plot(1:0.1:iter, modelfunExp([slope, offset + nbSigma*std(R)], 1:0.1:iter), '-');
-                                plot(crossing*[1 1], [log10(min(errs)) log10(max(errs))], 'r-');
-                                plot((crossing + nbSigma*crossingDelta)*[1 1], [log10(min(errs)) log10(max(errs))], 'b-');
-                                title(['R2 = ', num2str(R2)]);
-                                xlabel('Iteration #');
-                                ylabel('Log10 of approximation error');
-                                drawnow;
-                                pause(0.01);
+                    elseif ((delta(1) < maxNoiseFloorError/2) && (R2 >= criticalR)) || replab.equivariant.plotConvergence
+                        % Compute the crossing point
+                        % -slope*x + offset == logfloor
+                        % x = - (logfloor - offset)/slope
+                        crossing = round(-(logfloor - offset)/slope);
+                        % We estimate the uncertainty on the crossing
+                        % point due to finite sampling
+                        offset2 = offset + nbSigma*std(R);
+                        crossingDelta = round(-(logfloor - offset2)/slope)-crossing;
+                        if (replab.equivariant.plotConvergence && (mod(iter, 20) == 1)) || (iter == maxIters)
+                            if ~hasNewFigure
+                                figure
+                                hasNewFigure = true;
                             end
-                            % To exit, we want to be sure we went far
-                            % enough. For this:
-                            %  - we must be 'clearly' beyond the crossing point
-                            %  - the crossing point must be well defined
-                            %    (i.e. the fit must be good enough: large R)
-                            minIter = crossing + max(nCheckIters, nbSigma*crossingDelta);
-                            if (iter > minIter) && (R2 >= criticalR)
-                                check = log10(errs((iter-nCheckIters):iter));
-                                if all(check < logfloor + noiseMargin)
-                                    err = logfloor + noiseMargin;
-                                    return
-                                end
+                            clf
+                            hold on
+                            plot(1:iter, log10(errs(1:iter)), 'x');
+                            plot(1:0.1:iter, modelfun(beta, 1:0.1:iter), '-');
+                            plot(1:0.1:iter, modelfunExp([slope, offset2], 1:0.1:iter), '-');
+                            plot(crossing*[1 1], [log10(min(errs)) log10(max(errs))], 'r-');
+                            plot((crossing + crossingDelta)*[1 1], [log10(min(errs)) log10(max(errs))], 'b-');
+                            title(['R2 = ', num2str(R2)]);
+                            xlabel('Iteration #');
+                            ylabel('Log10 of approximation error');
+                            drawnow;
+                            pause(0.01);
+                        end
+                        % To exit, we want to be sure we went far
+                        % enough. For this:
+                        %  - we must be 'clearly' beyond the crossing point
+                        %  - the crossing point must be well defined
+                        %    (i.e. the fit must be good enough: large R)
+                        minIter = crossing + max(nCheckIters, crossingDelta);
+                        if (iter > minIter) && (R2 >= criticalR)
+                            check = log10(errs((iter-nCheckIters):iter));
+                            if all(check < logfloor + noiseMargin)
+                                err = logfloor + noiseMargin;
+                                return
                             end
                         end
                     end
