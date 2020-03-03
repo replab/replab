@@ -1,4 +1,4 @@
-function test_suite = MorphismsTest()
+function test_suite = GroupMorphismsLawsTest()
     disp(['Setting up tests in ', mfilename()]);
     try
         test_functions = localfunctions();
