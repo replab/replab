@@ -1,14 +1,10 @@
-function test_suite = CodeBaseTest()
+function tests = CodeBaseTest()
     disp(['Setting up tests in ', mfilename()]);
-    try
-        test_functions = localfunctions();
-    catch
-    end
-    initTestSuite;
+    tests = functiontests(localfunctions);
 end
 
-function test_crawl
-    path = fullfile(replab.settings.replabPath, 'tests/infra/sample');
+function test_crawl(param)
+    path = fullfile(replab.settings.replabPath, 'tests/replab/infra/sample');
     c = replab.infra.crawl(path);
     cl = c.get('testpkg').ownClasses;
     cl = cellfun(@(x) x.name, cl, 'uniform', 0);

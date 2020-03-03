@@ -146,7 +146,7 @@ classdef Rep < replab.Str
         %
         %
         % Args:
-        %   repR (replab.Rep): Representation on the target/row space
+        %   repR (`+replab.Rep`): Representation on the target/row space
         %
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
@@ -319,10 +319,10 @@ classdef Rep < replab.Str
         %
         % Args:
         %   g (`group` element): Group element acting
-        %   M (double(*,*)): Matrix acted upon
+        %   M (double(\*,\*)): Matrix acted upon
         %
         % Returns:
-        %   double(*,*): The matrix ``M * self.inverseImage(g)``
+        %   double(\*,\*): The matrix ``M * self.inverseImage(g)``
             M = full(M * self.inverseImage_internal(g));
         end
 
@@ -584,8 +584,8 @@ classdef Rep < replab.Str
         % ``rep1.image(g) = A * self.image(g) * Ainv``
         %
         % Args:
-        %   A (double(*,*)): Change of basis matrix
-        %   Ainv (double(*,*)): Inverse of the change of basis matrix
+        %   A (double(\*,\*)): Change of basis matrix
+        %   Ainv (double(\*,\*)): Inverse of the change of basis matrix
         %
         % Returns:
         %   `+replab.SimilarRep`: The similar representation
@@ -603,9 +603,9 @@ classdef Rep < replab.Str
         %
         % Returns
         % -------
-        %   A: double(*,*)
+        %   A: double(\*,\*)
         %     Change of basis matrix
-        %   Ainv: double(*,*)
+        %   Ainv: double(\*,\*)
         %     Inverse of change of basis matrix
             if isequal(self.isUnitary, true)
                 A = eye(self.dimension);

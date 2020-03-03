@@ -59,7 +59,7 @@ classdef ForSubReps < replab.Equivariant
                 parentR = parentH.repR;
                 parentC = parentH.repC;
                 assert(parentR == repR.parent);
-                repC1 = replab.SubRep(parentC, repR.E_internal.', repR.B_internal.');
+                repC1 = replab.SubRep(parentC, repR.E_internal', repR.B_internal');
                 e = parentH.subEquivariant(repC1, repR, special);
               case 'trivial'
                 % repC is trivial, repR.parent is non trivial

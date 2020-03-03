@@ -19,9 +19,18 @@ classdef IrreducibleLaws < replab.Laws
         end
 
         function isotypicLaws = laws_isotypic_components(self)
-            children = cellfun(@(x) replab.IsotypicLaws(x), self.irreducible.components, 'uniform', 0);
+            children = cell(1, self.irreducible.nComponents);
+            for i = 1:self.irreducible.nComponents
+                x = self.irreducible.component(i);
+                if isa(x, 'replab.HarmonizedIsotypic')
+                    children{1,i} = replab.HarmonizedIsotypicLaws(x);
+                else
+                    children{1,i} = replab.IsotypicLaws(x);
+                end
+            end
             isotypicLaws = replab.laws.Collection(children);
         end
 
     end
+
 end

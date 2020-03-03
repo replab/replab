@@ -94,12 +94,12 @@ classdef Irreducible < replab.SubRep
 
         %% Rep methods
 
-% $$$         function rho = image(self, g)
-% $$$             blocks = cellfun(@(iso) iso.image(g), self.components, 'uniform', 0);
-% $$$             % Construct the blocks in the block diagonal image
-% $$$             rho = blkdiag(blocks{:});
-% $$$         end
-% $$$
+        function rho = image_internal(self, g)
+            blocks = cellfun(@(iso) iso.image_internal(g), self.components, 'uniform', 0);
+            % Construct the blocks in the block diagonal image
+            rho = blkdiag(blocks{:});
+        end
+
 % $$$         function c = commutant(self)
 % $$$             c = commutant@replab.SubRep(self);
 % $$$             return
