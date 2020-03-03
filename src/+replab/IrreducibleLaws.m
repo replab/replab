@@ -13,11 +13,6 @@ classdef IrreducibleLaws < replab.Laws
             self.M = replab.domain.Matrices(irreducible.parent.field, d, d);
         end
 
-        function law_decomposes_entire_space_(self)
-            U = self.irreducible.U;
-            self.M.assertEqv(U' * U, eye(self.irreducible.parent.dimension));
-        end
-
         function isotypicLaws = laws_isotypic_components(self)
             children = cell(1, self.irreducible.nComponents);
             for i = 1:self.irreducible.nComponents
