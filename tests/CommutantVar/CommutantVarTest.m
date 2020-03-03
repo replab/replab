@@ -5,7 +5,7 @@ function test_suite = CommutantVarTest()
     catch
     end
     initTestSuite;
-    
+
     % We create just once two CommutantVar objects to be used by all
     % the tests of this class
     disp('Creating few simple CommutantVar objects');
@@ -55,13 +55,13 @@ function test_fromSdpMatrix_SDP_CH
         evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
         obj1 = value(obj);
     end
-    
-    
+
+
     generators = {[1  4  7  2  5  8  3  6  9]
                   [1 -2 -3 -4  5  6 -7  8  9]
                   [1  3  2  4  6  5 -7 -9 -8]}';
     G = replab.signed.Permutations(9).subgroup(generators);
-    
+
     % We construct the images of the generators in the Collins-Gisin
     % picture. NOTE: Here, each "line" corresponds to the image of one
     % basis element. The order of the basis elements is as follows:
@@ -115,7 +115,7 @@ function test_fromSdpMatrix_SDP_CHSH
     generators = {[1  4  7  2  5  8  3  6  9]
                   [1 -2 -3 -4  5  6 -7  8  9]
                   [1  3  2  4  6  5 -7 -9 -8]}';
-	
+
     % Check of the generators:
     isok = true;
     for i = 1:length(generators)
@@ -136,12 +136,12 @@ function test_fromSdpMatrix_SDP_CHSH
         evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
         obj1 = value(obj);
     end
-    
+
     % We formulate the symmetrized SDP:
     symSdpMatrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix,generators);
     evalc('solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj2 = value(obj);
-    
+
     % We compare the result:
     assert(abs(obj1 - obj2)/abs(obj1) < replab.Parameters.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
 end
@@ -150,7 +150,7 @@ function test_fromSdpMatrix_SDP_CHSH_FullProb
     if ReplabTestParameters.onlyFastTests
         return;
     end
-    
+
     indexMatrix = [  1    2    4    3    5   14   15   17   16   18   40   41   43   42   44   27   28   30   29   31   53   54   56   55   57
                      2    2    0    6    7   15   15    0   19   20   41   41    0   45   46   28   28    0   32   33   54   54    0   58   59
                      4    0    4    9   11   17    0   17   22   24   43    0   43   48   50   30    0   30   35   37   56    0   56   61   63
@@ -199,12 +199,12 @@ function test_fromSdpMatrix_SDP_CHSH_FullProb
     obj = objective*sdpMatrix(:,1);
     evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj1 = value(obj);
-    
+
     % We formulate the symmetrized SDP:
     symSdpMatrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, generators);
     evalc('solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj2 = value(obj);
-    
+
     % We compare the result:
     assert(abs(obj1 - obj2)/abs(obj1) < replab.Parameters.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
 end
@@ -213,7 +213,7 @@ function test_fromSdpMatrix_SDP_CGLMP3_FullProb
     if ReplabTestParameters.onlyFastTests
         return;
     end
-    
+
     indexMatrix = [   1    2    4    6    3    5    7   26   27   29   31   28   30   32   76   77   79   81   78   80   82  126  127  129  131  128  130  132   51   52   54   56   53   55   57  101  102  104  106  103  105  107  151  152  154  156  153  155  157
                       2    2    0    0    8    9   10   27   27    0    0   33   34   35   77   77    0    0   83   84   85  127  127    0    0  133  134  135   52   52    0    0   58   59   60  102  102    0    0  108  109  110  152  152    0    0  158  159  160
                       4    0    4    0   12   15   16   29    0   29    0   37   40   41   79    0   79    0   87   90   91  129    0  129    0  137  140  141   54    0   54    0   62   65   66  104    0  104    0  112  115  116  154    0  154    0  162  165  166
@@ -286,12 +286,12 @@ function test_fromSdpMatrix_SDP_CGLMP3_FullProb
     obj = objective*sdpMatrix(:,1);
     evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj1 = value(obj);
-    
+
     % We formulate the symmetrized SDP:
     symSdpMatrix = replab.CommutantVar.fromSdpMatrix(sdpMatrix, generators);
     evalc('solvesdp([symSdpMatrix >= 0, symSdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj2 = value(obj);
-    
+
     % We compare the result:
     assert(abs(obj1 - obj2)/abs(obj1) < replab.Parameters.doubleSdpTol, 'Symmetrized SDP doesn''t yield the same result as the non-symmetrized one');
 end
@@ -322,12 +322,12 @@ function test_fromSymSdpMatrix
         evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
         obj1 = value(obj);
     end
-    
+
     % We do a sanity check with one group
     blockSdpMatrix = replab.CommutantVar.fromSymSdpMatrix(sdpMatrix, generators);
     evalc('solvesdp([blockSdpMatrix >= 0, blockSdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj2 = value(obj);
-    
+
     % We compare the result:
     assert(abs(obj1 - obj2)/abs(obj1) < replab.Parameters.doubleSdpTol, 'Block-diagonalized SDP doesn''t yield the same result as the non-block-diagonalized one');
 end
@@ -358,13 +358,13 @@ function test_fromIndexMatrix
         evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
         obj1 = value(obj);
     end
-    
+
     % We do a sanity check with one group
     blockSdpMatrix = replab.CommutantVar.fromIndexMatrix(indexMatrix, generators, 'symmetric', 'real');
     obj = objective*blockSdpMatrix(:,1);
     evalc('solvesdp([blockSdpMatrix >= 0, blockSdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
     obj2 = value(obj);
-    
+
     % We compare the result:
     assert(abs(obj1 - obj2)/abs(obj1) < replab.Parameters.doubleSdpTol, 'Block-diagonalized SDP doesn''t yield the same result as the non-block-diagonalized one');
 end
@@ -399,7 +399,7 @@ function test_attributes
     assert(~isreal(matrix));
     assert(~issymmetric(matrix));
     assert(ishermitian(matrix));
-    
+
     matrix = replab.CommutantVar.fromIndexMatrix([1 1; 2 3], {[2 1]}, 'hermitian', 'complex');
     assert(isreal(matrix));
     assert(issymmetric(matrix));
