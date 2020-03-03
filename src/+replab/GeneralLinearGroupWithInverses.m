@@ -2,11 +2,11 @@ classdef GeneralLinearGroupWithInverses < replab.Group & replab.domain.VectorSpa
 % Describes the group of n x n invertible real or complex matrices, elements store inverses
 
     properties
-        n % integer: size of the matrices
+        n % (integer): Size of the square matrices
     end
 
     properties (Access = protected)
-        parent % replab.domain.Matrices: General, not necessarily invertible matrices
+        parent_ % (+replab.+domain.Matrices): General, not necessarily invertible matrices
     end
 
     methods
@@ -14,7 +14,7 @@ classdef GeneralLinearGroupWithInverses < replab.Group & replab.domain.VectorSpa
         function self = GeneralLinearGroupWithInverses(field, n)
             self.field = field;
             self.n = n;
-            self.parent = replab.domain.Matrices(field, n, n);
+            self.parent_ = replab.domain.Matrices(field, n, n);
             self.identity = [eye(n) eye(n)];
         end
 
@@ -27,11 +27,11 @@ classdef GeneralLinearGroupWithInverses < replab.Group & replab.domain.VectorSpa
         % Domain
 
         function b = eqv(self, X, Y)
-            b = self.parent.eqv(X(:,1:self.n), Y(:,1:self.n));
+            b = self.parent_.eqv(X(:,1:self.n), Y(:,1:self.n));
         end
 
         function X = sample(self)
-            X = self.parent.sample;
+            X = self.parent_.sample;
             X = [X inv(X)];
             % a generic gaussian matrix is almost always invertible
         end
