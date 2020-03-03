@@ -5,7 +5,7 @@ function test_suite = MorphismsTest()
     catch
     end
     initTestSuite;
-    
+
     S3 = replab.Permutations(3);
     S27 = replab.Permutations(27);
     phi = S3.indexRelabelingMorphism(3);

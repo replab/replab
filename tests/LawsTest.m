@@ -11,7 +11,7 @@ function test_suite = LawsTest()
     else
         allNs = [0 1 2 10];
     end
-    
+
     for n = allNs
         G = replab.Permutations(n);
         test_suite = replab.PermutationsLaws(G).addTestCases(test_suite);
