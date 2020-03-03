@@ -9,7 +9,7 @@ end
 
 function test_irreducible_commutant
     S20 = replab.S(20);
-    rep = S20.definingRep;
+    rep = S20.naturalRep;
     dec = rep.decomposition;
     assertEqual(dec.irrep(1,1).dimension, 1);
     C = dec.commutant;

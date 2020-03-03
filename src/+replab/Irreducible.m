@@ -39,7 +39,7 @@ classdef Irreducible < replab.SubRep
         %
         % Returns:
         %   `+replab.Rep`: The block-diagonal representation as a representation similar to this rep. parent
-            r = self.parent.similarRep(self.U, self.U');
+            r = self.parent.similarRep(self.B_internal, self.E_internal);
         end
 
         function n = nComponents(self)
@@ -100,14 +100,12 @@ classdef Irreducible < replab.SubRep
             rho = blkdiag(blocks{:});
         end
 
-% $$$         function c = commutant(self)
-% $$$             c = commutant@replab.SubRep(self);
-% $$$             return
-% $$$             if isempty(self.commutant_)
-% $$$                 self.commutant_ = replab.IrreducibleCommutant(self);
-% $$$             end
-% $$$             c = self.commutant_;
-% $$$         end
+        function c = commutant(self)
+            if isempty(self.commutant_)
+                self.commutant_ = replab.IrreducibleCommutant(self);
+            end
+            c = self.commutant_;
+        end
 
     end
 
