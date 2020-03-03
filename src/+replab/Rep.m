@@ -232,6 +232,12 @@ classdef Rep < replab.Str
                 else
                     p{1,end+1} = 'nonunitary';
                 end
+            else
+                if self.overR
+                    p{1,end+1} = 'real';
+                else
+                    p{1,end+1} = 'complex';
+                end
             end
             if isequal(self.trivialDimension, self.dimension)
                 p{1,end+1} = 'trivial';
@@ -277,6 +283,8 @@ classdef Rep < replab.Str
                 p{1,end+1} = 'tensor representation';
               case 'replab.rep.ComplexifiedRep'
                 p{1,end+1} = 'complexified representation';
+              case 'replab.RepByImages'
+                p{1,end+1} = 'representation by images';
               otherwise
                 p{1,end+1} = 'representation';
             end
