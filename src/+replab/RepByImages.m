@@ -9,12 +9,12 @@ classdef RepByImages < replab.Rep
 % https://www.gap-system.org/Manuals/doc/ref/chap40.html#X7FFD731684606BC6)
 
     properties (SetAccess = protected)
-        images_internal % (cell(1,*) of double(*,*)): Generator images
-        inverseImages_internal % (cell(1,*) of double(*,*)): Inverses of generator images
+        images_internal % (cell(1,\*) of double(\*,\*)): Generator images
+        inverseImages_internal % (cell(1,\*) of double(\*,\*)): Inverses of generator images
     end
 
     properties (Access = protected)
-        chain_ % (`replab.bsgs.Chain`): BSGS chain with images
+        chain_ % (`+replab.+bsgs.Chain`): BSGS chain with images
     end
 
     methods
@@ -28,16 +28,16 @@ classdef RepByImages < replab.Rep
         %   group (`+replab.NiceFiniteGroup`): Finite group represented
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
         %   dimension (integer): Representation dimension
-        %   images (cell(1,*) of double(*,*), may be sparse): Images of the generators of ``group`` in the same order
-        %   inverseImages (cell(1,*) of double(*,8), may be sparse): Inverse images of the generators
+        %   images (cell(1,\*) of double(\*,\*), may be sparse): Images of the generators of ``group`` in the same order
+        %   inverseImages (cell(1,\*) of double(\*,\*), may be sparse): Inverse images of the generators
             assert(isa(group, 'replab.NiceFiniteGroup'));
             assert(isa(images, 'cell') && isrow(inverseImages));
             assert(isa(inverseImages, 'cell') && isrow(inverseImages));
             assert(length(images) == group.nGenerators);
             assert(length(inverseImages) == group.nGenerators);
-            isUnitary = true;
+            knownUnitary = true;
             for i = 1:group.nGenerators
-                isUnitary = isUnitary && isequal(images{i}, inverseImages{i}');
+                knownUnitary = knownUnitary && isequal(images{i}, inverseImages{i}');
                 assert(isequal(size(images{i}), [dimension dimension]));
                 assert(isequal(size(inverseImages{i}), [dimension dimension]));
             end
@@ -46,7 +46,9 @@ classdef RepByImages < replab.Rep
             self.field = field;
             self.dimension = dimension;
             % replab.Rep mutable
-            self.isUnitary = isUnitary;
+            if knownUnitary
+                self.isUnitary = true;
+            end
             self.images_internal = images;
             self.inverseImages_internal = inverseImages;
         end

@@ -15,7 +15,7 @@ function rep = specht(partition)
     [SA, SB, ~, ~, ~, ~] = replab.sym.symIrrepImages(partition);
     d = size(SA, 1);
     if n == 1
-        rep = Sn.repByImages('R', d, {}, {});
+        rep = Sn.repByImages('R', d, cell(1, 0), cell(1, 0));
     elseif n == 2
         rep = Sn.repByImages('R', d, {SB}, {SB});
     else
