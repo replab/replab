@@ -11,14 +11,14 @@ classdef IsotypicComplexCommutant < replab.IsotypicCommutant
         % Returns the block of a matrix projected in the commutant algebra
         %
         % Args:
-        %   X (double): Matrix to project on this commutant algebra
+        %   X (double(\*,\*)): Matrix to project on this commutant algebra
         %
         % Returns
         % -------
         %   A:
-        %    double: The real part of the projected block
+        %    double(\*,\*): The real part of the projected block
         %   B:
-        %    double: The imaginary part of the projected block
+        %    double(\*,\*): The imaginary part of the projected block
             m = self.repR.multiplicity;
             id = self.repR.irrepDimension;
             A = zeros(m, m);
@@ -36,24 +36,24 @@ classdef IsotypicComplexCommutant < replab.IsotypicCommutant
         % Changes the basis and projects a block on this isotypic component
         %
         % Args:
-        %   X (double): Matrix to project on this commutant algebra in the basis of the original representation
+        %   X (double(\*,\*)): Matrix to project on this commutant algebra in the basis of the original representation
         %
         % Returns
         % -------
         %   A:
-        %    double: The real part of the projected block
+        %    double(\*,\*): The real part of the projected block
         %   B:
-        %    double: The imaginary part of the projected block
+        %    double(\*,\*): The imaginary part of the projected block
             m = self.repR.multiplicity;
             id = self.repR.irrepDimension;
-            U = self.repR.U;
+            Er = self.repR.E_internal;
+            Br = self.repR.B_internal;
             A = zeros(m, m);
             B = zeros(m, m);
             for i = 1:2:id
-                U1 = U(shift+(i:id:m*id), :);
-                U2 = U(shift+(i:id:m*id)+1, :);
-                A = A + U1*X*U1' + U2*X*U2';
-                B = B + U2*X*U1' - U1*X*U2';
+                range = shift+(i:id:m*id);
+                A = A + Er(range,:)*X*Br(:,range) + Er(range+1,:)*X*Br(:,range+1);
+                B = B + Er(range+1,:)*X*Br(:,range) - Er(range,:)*X*Br(:,range+1);
             end
             A = A/id;
             B = B/id;

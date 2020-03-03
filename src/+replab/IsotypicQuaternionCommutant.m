@@ -11,18 +11,18 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
         % Returns the block of a matrix projected in the commutant algebra
         %
         % Args:
-        %   X (double): Matrix to project on this commutant algebra
+        %   X (double(\*,\*)): Matrix to project on this commutant algebra
         %
         % Returns
         % -------
         %   A:
-        %    double: The real part of the projected block
+        %    double(\*,\*): The real part of the projected block
         %   B:
-        %    double: The 'i' part of the projected block
+        %    double(\*,\*): The 'i' part of the projected block
         %   C:
-        %    double: The 'j' part of the projected block
+        %    double(\*,\*): The 'j' part of the projected block
         %   D:
-        %    double: The 'k' part of the projected block
+        %    double(\*,\*): The 'k' part of the projected block
             m = self.repR.multiplicity;
             id = self.repR.irrepDimension;
             A = zeros(m, m);
@@ -49,21 +49,22 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
         % Changes the basis and projects a block on this isotypic component
         %
         % Args:
-        %   X (double): Matrix to project on this commutant algebra in the basis of the original representation
+        %   X (double(\*,\*)): Matrix to project on this commutant algebra in the basis of the original representation
         %
         % Returns
         % -------
         %   A:
-        %    double: The real part of the projected block
+        %    double(\*,\*): The real part of the projected block
         %   B:
-        %    double: The 'i' part of the projected block
+        %    double(\*,\*): The 'i' part of the projected block
         %   C:
-        %    double: The 'j' part of the projected block
+        %    double(\*,\*): The 'j' part of the projected block
         %   D:
-        %    double: The 'k' part of the projected block
+        %    double(\*,\*): The 'k' part of the projected block
             m = self.repR.multiplicity;
             id = self.repR.irrepDimension;
-            U = self.repR.U;
+            Er = self.repR.E_internal;
+            Br = self.repR.B_internal;
             A = zeros(m, m);
             B = zeros(m, m);
             C = zeros(m, m);
@@ -74,14 +75,11 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
             %   c -d  a  b
             %   d  c -b  a]
             for i = 1:4:id
-                U1 = U((i:id:m*id), :);
-                U2 = U((i:id:m*id)+1, :);
-                U3 = U((i:id:m*id)+2, :);
-                U4 = U((i:id:m*id)+3, :);
-                A = A + U1*X*U1' + U2*X*U2' + U3*X*U3' + U4*X*U4';
-                B = B + U2*X*U1' - U1*X*U2' - U4*X*U3' + U3*X*U4';
-                C = C + U3*X*U1' - U1*X*U3' - U2*X*U4' + U4*X*U2';
-                D = D + U4*X*U1' - U3*X*U2' + U2*X*U3' - U1*X*U4';
+                I = i:id:m*id;
+                A = A + Er(I  ,:)*X*Br(:, I  ) + Er(I+1,:)*X*Br(:, I+1) + Er(I+2,:)*X*Br(:, I+2) + Er(I+3,:)*X*Br(:, I+3);
+                B = B + Er(I+1,:)*X*Br(:, I  ) - Er(I  ,:)*X*Br(:, I+1) - Er(I+3,:)*X*Br(:, I+2) + Er(I+2,:)*X*Br(:, I+3);
+                C = C + Er(I+2,:)*X*Br(:, I  ) - Er(I  ,:)*X*Br(:, I+2) - Er(I+1,:)*X*Br(:, I+3) + Er(I+3,:)*X*Br(:, I+1);
+                D = D + Er(I+3,:)*X*Br(:, I  ) - Er(I+2,:)*X*Br(:, I+1) + Er(I+1,:)*X*Br(:, I+2) - Er(I  ,:)*X*Br(:, I+3);
             end
             A = A/id;
             B = B/id;

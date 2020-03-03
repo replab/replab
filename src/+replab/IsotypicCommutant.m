@@ -1,7 +1,7 @@
 classdef IsotypicCommutant < replab.Equivariant
 
     properties
-        divisionAlgebraDimension % integer: Size of a block in the division algebra encoding
+        divisionAlgebraDimension % (integer): Size of a block in the division algebra encoding
     end
 
     methods
@@ -19,11 +19,11 @@ classdef IsotypicCommutant < replab.Equivariant
         % Projects the given matrix in the commutant algebra and removes its inherent redundancy
         %
         % Args:
-        %   X (double): Matrix in the isotypic component space
+        %   X (double(\*,\*)): Matrix in the isotypic component space
         %
         % Returns:
-        %   double: The corresponding block of size `reducedBlockSize`,
-        %           removing the redundancy due to the irrep dimension
+        %   double(\*,\*): The corresponding block of size `reducedBlockSize`,
+        %                  removing the redundancy due to the irrep dimension
             error('Abstract');
         end
 
@@ -31,13 +31,14 @@ classdef IsotypicCommutant < replab.Equivariant
         % Projects the given matrix given in the parent representation space and removes its redundancy
         %
         % Args:
-        %   X (double): Matrix in the parent representation space
+        %   X (double(\*,\*)): Matrix in the parent representation space
         %
         % Returns:
-        %   double: The projected block of size `reducedBlockSize` corresponding
-        %           to this isotypic component, having removed the redundancy due to the irrep dimension
-            U = self.repR.U;
-            block = self.projectAndReduce(U*X*U');
+        %   double(\*,\*): The projected block of size `reducedBlockSize` corresponding
+        %                  to this isotypic component, having removed the redundancy due to the irrep dimension
+            E = self.repR.E_internal;
+            B = self.repR.B_internal;
+            block = self.projectAndReduce(E*X*B);
         end
 
     end
