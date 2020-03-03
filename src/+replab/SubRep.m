@@ -16,8 +16,8 @@ classdef SubRep < replab.Rep
         %
         % Args:
         %   parent (`+replab.Rep`): Parent representation of which we construct a subrepresentation
-        %   B_internal (double(*,*), may be sparse): Subrepresentation basis, dimension ``dParent x dChild``
-        %   E_internal (double(*,*), may be sparse): Embedding map, dimension ``dChild x dParent``
+        %   B_internal (double(\*,\*), may be sparse): Subrepresentation basis, dimension ``dParent x dChild``
+        %   E_internal (double(\*,\*), may be sparse): Embedding map, dimension ``dChild x dParent``
             d = size(E_internal, 1);
             dParent = size(E_internal, 2);
             assert(size(B_internal, 1) == dParent);

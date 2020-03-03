@@ -523,8 +523,8 @@ classdef Rep < replab.Str
         %
         % If the embedding is not provided, one is obtained by a trick based on Maschke theorem.
         % Args:
-        %   basis (double(dParent,dChild)): Basis of the subrepresentation
-        %   embedding (double(dChild,dParent), optional): Map from the parent space to the subrepresentation
+        %   basis (double(dParent,dChild), may be sparse): Basis of the subrepresentation
+        %   embedding (double(dChild,dParent), may be sparse, optional): Map from the parent space to the subrepresentation
         % Returns:
         %   `+replab.SubRep`: Subrepresentation
             if nargin < 3
