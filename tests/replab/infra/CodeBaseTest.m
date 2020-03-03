@@ -1,9 +1,13 @@
-function tests = CodeBaseTest()
+function test_suite = CodeBaseTest()
     disp(['Setting up tests in ', mfilename()]);
-    tests = functiontests(localfunctions);
+    try
+        test_functions = localfunctions();
+    catch
+    end
+    initTestSuite;
 end
 
-function test_crawl(param)
+function test_crawl
     path = fullfile(replab.settings.replabPath, 'tests/replab/infra/sample');
     c = replab.infra.crawl(path);
     cl = c.get('testpkg').ownClasses;

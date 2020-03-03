@@ -1,9 +1,13 @@
-function tests = enforceQuaternionEncodingTest()
+function test_suite = enforceQuaternionEncodingTest()
     disp(['Setting up tests in ', mfilename()]);
-    tests = functiontests(localfunctions);
+    try
+        test_functions = localfunctions();
+    catch
+    end
+    initTestSuite;
 end
 
-function testHasCorrectForm(param)
+function testHasCorrectForm
     Q = replab.signed.Permutations.quaternionGroup;
     S3 = replab.S(3);
     W = S3.wreathProduct(Q);
