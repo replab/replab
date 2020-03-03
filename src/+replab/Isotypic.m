@@ -112,12 +112,18 @@ classdef Isotypic < replab.SubRep
         % Args:
         %   i (integer): Index of an irreducible representation
         %   j (integer): Index of an irreducible representation
-        %   context (`+replab.Context`): Sampling context
+        %   context (`+replab.Context`, optional): Sampling context
         % Returns:
         %   double(\*,\*): ``A`` such that ``A * self.irrep(j).image(g) * inv(A) = self.irrep(i).image(g)``
+            if nargin < 4
+                context = replab.Context.make;
+            end
             C = self.parent.commutant.sampleInContext(context, 1);
             A = full(self.irrep(i).E_internal * C * self.irrep(j).B_internal);
             A = A * sqrt(self.irrepDimension/real(trace(A*A'))) * sign(A(1,1));
+            if nargin < 4
+                context.close;
+            end
         end
 
         %% Str methods

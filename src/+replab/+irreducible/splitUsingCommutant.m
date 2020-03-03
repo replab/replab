@@ -9,7 +9,7 @@ function sub = splitUsingCommutant(rep, context)
         return
     end
     if ~isequal(rep.isUnitary, true)
-        sub1 = replab.irreducible.splitUsingCommutant(rep.unitarize);
+        sub1 = replab.irreducible.splitUsingCommutant(rep.unitarize, context);
         if isa(sub1, 'replab.DispatchNext')
             sub = sub1;
             return
