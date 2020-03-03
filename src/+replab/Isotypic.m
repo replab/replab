@@ -68,7 +68,6 @@ classdef Isotypic < replab.SubRep
                 b = cellfun(@(s) isequal(s.B_internal, s.E_internal'), irreps);
                 if all(b)
                     % all bases are unitary, parent is unitary, we use orthogonality
-                    iso = replab.Isotypic(rep, sub);
                     Es = cell(m, 1);
                     for i = 1:m
                         Es{i,1} = irreps{i}.E_internal;
