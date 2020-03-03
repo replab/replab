@@ -107,6 +107,18 @@ classdef Irreducible < replab.SubRep
             c = self.commutant_;
         end
 
+        %% SubRep methods
+
+        function irr = nice(self)
+            components1 = cellfun(@(c) c.nice, self.components, 'uniform', 0);
+            irr = replab.Irreducible(self.parent, components1);
+        end
+
+        function irr = refine(self)
+            components1 = cellfun(@(c) c.refine, self.components, 'uniform', 0);
+            irr = replab.Irreducible(self.parent, components1);
+        end
+
     end
 
 end

@@ -22,14 +22,6 @@ function sub = splitTrivialComponent(rep, context)
         [sub1 sub2] = rep.maschke(basis);
     end
     sub2.trivialDimension = 0;
-    sub = cell(1, dT+1);
-    B = sub1.B_internal;
-    E = sub1.E_internal;
-    for i = 1:dT
-        sub{i} = rep.subRep(B(:,i), E(i,:));
-        sub{i}.isIrreducible = true;
-        sub{i}.trivialDimension = 1;
-        sub{i}.frobeniusSchurIndicator = 1;
-    end
-    sub{dT+1} = sub2;
+    trivial = replab.Isotypic.fromTrivialSubRep(rep, sub1);
+    sub = horzcat(trivial.irreps, {sub2});
 end

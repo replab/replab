@@ -19,16 +19,43 @@ classdef Isotypic < replab.SubRep
 
     methods (Static)
 
-        function iso = fromIrreps(parent, irreps)
-        % Builds an isotypic canonical component from equivalent subrepresentations
+        function iso = fromTrivialSubRep(parent, trivial)
+        % Builds an isotypic component from the (full) trivial subrepresentation
         %
         % Args:
         %   parent (`+replab.Rep`): Representation being decomposed
-        %   irreps (cell(1,\*) of `+replab.SubRep`): Equivalent irreducible subrepresentations of ``rep``
+        %   trivial (`+replab.SubRep`): Maximal trivial subrepresentation of ``parent``
+        %
+        % Returns:
+        %   `+replab.HarmonizedIsotypic`: The corresponding trivial isotypic component
+            dT = trivial.dimension;
+            irreps = cell(1, dT);
+            B = trivial.B_internal;
+            E = trivial.E_internal;
+            for i = 1:dT
+                irreps{i} = parent.subRep(B(:,i), E(i,:));
+                irreps{i}.isIrreducible = true;
+                irreps{i}.trivialDimension = 1;
+                irreps{i}.frobeniusSchurIndicator = 1;
+            end
+            iso = replab.HarmonizedIsotypic(parent, irreps, E);
+        end
+
+        function iso = fromIrreps(parent, irreps)
+        % Builds an isotypic component from equivalent subrepresentations
+        %
+        % Args:
+        %   parent (`+replab.Rep`): Representation being decomposed
+        %   irreps (cell(1,\*) of `+replab.SubRep`): Equivalent irreducible subrepresentations of ``parent``
         %
         % Returns:
         %   `+replab.Isotypic`: The corresponding isotypic component
             assert(length(irreps) >= 1, 'Isotypic component cannot be empty');
+            if length(irreps) == 1
+                % Single multiplicity? Embedding map is good to go!
+                iso = replab.Isotypic(parent, irreps, irreps{1}.E_internal);
+                return
+            end
             m = length(irreps);
             for i = 1:m
                 s = irreps{i};
@@ -252,6 +279,10 @@ classdef Isotypic < replab.SubRep
 
         function iso = refine(self)
             iso = replab.rep.refineIsotypic(self, replab.Context.make);
+        end
+
+        function iso = nice(self)
+            iso = replab.nice.niceIsotypic(self);
         end
 
     end
