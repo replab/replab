@@ -7,7 +7,7 @@ classdef Isotypic < replab.SubRep
 % true block diagonal matrices.
 %
 % An isotypic component regroups equivalent irreducible representations, however not necessarily
-% expressed in the same basis.
+% expressed in the same basis (that would be `.HarmonizedIsotypic`).
 % Note that if the multiplicity is not one, there is a degeneracy in the basis of the copies, and
 % the particular basis chosen is not deterministic.
 %
@@ -59,31 +59,49 @@ classdef Isotypic < replab.SubRep
 
         function m = multiplicity(self)
         % Number of equivalent irreducible representations in this isotypic component
+        %
+        % Returns:
+        %   integer: Multiplicity
             m = length(self.irreps);
         end
 
         function d = irrepDimension(self)
         % Dimension of every single irreducible representation in this component
+        %
+        % Returns:
+        %   integer: Irreducible representation dimension
             d = self.irrep(1).dimension;
         end
 
         function n = nIrreps(self)
         % Returns the number of irreps in this isotypic component, which is their multiplicity
+        %
+        % Returns:
+        %   integer: Number of irreducible representations
             n = length(self.irreps);
         end
 
         function c = irrep(self, i)
         % Returns the i-th copy of the irreducible representation
+        %
+        % Returns:
+        %   `.SubRep`: Irreducible subrepresentation of `.parent`
             c = self.irreps{i};
         end
 
         function P = projector(self)
         % Returns the projector on this isotypic component
+        %
+        % Returns:
+        %   double(\*,\*): Projector matrix on the isotypic component
             P = full(self.B_internal*self.E_internal);
         end
 
         function P = projectorOnIrrep(self, i)
         % Returns the projector on the i-th irreducible representation in this component
+        %
+        % Returns:
+        %   double(\*,\*): Projector matrix on the irreducible representation
             Bi = self.irrep(i).B_internal;
             Ei = self.irrep(i).E_internal;
             P = full(Bi*Ei);
@@ -91,6 +109,9 @@ classdef Isotypic < replab.SubRep
 
         function iso = harmonize(self, context)
         % Harmonizes the isotypic component
+        %
+        % Returns:
+        %   `.HarmonizedIsotypic`: Isotypic component with bases harmonized
             if isa(self, 'replab.HarmonizedIsotypic')
                 iso = self;
             else
@@ -120,6 +141,7 @@ classdef Isotypic < replab.SubRep
             end
             C = self.parent.commutant.sampleInContext(context, 1);
             A = full(self.irrep(i).E_internal * C * self.irrep(j).B_internal);
+            % TODO: is this choice of normalized sensical for nonunitary representations?
             A = A * sqrt(self.irrepDimension/real(trace(A*A'))) * sign(A(1,1));
             if nargin < 4
                 context.close;
@@ -155,9 +177,9 @@ classdef Isotypic < replab.SubRep
                     rt = '?';
                 else
                     switch fbsi
-                      case 0
-                        rt = 'R';
                       case 1
+                        rt = 'R';
+                      case 0
                         rt = 'C';
                       case -1
                         rt = 'H';

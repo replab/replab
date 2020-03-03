@@ -5,7 +5,7 @@ classdef HarmonizedIsotypic < replab.Isotypic
 
     methods
 
-        function self = HarmonizedIsotypic(parent, irreps, A_internal, Ainv_internal)
+        function self = HarmonizedIsotypic(parent, irreps)
             self = self@replab.Isotypic(parent, irreps);
         end
 

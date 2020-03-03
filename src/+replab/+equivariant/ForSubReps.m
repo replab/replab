@@ -45,7 +45,7 @@ classdef ForSubReps < replab.Equivariant
     methods (Static)
 
         function e = make(repC, repR, special)
-            if ~isa(repR, 'replab.SubRep') || ~ismember(special, {'commutant', 'hermitian'})
+            if ~isa(repR, 'replab.SubRep') || ~ismember(special, {'commutant', 'hermitian', 'trivial'})
                 e = replab.DispatchNext('Can only handle commutant or hermitian invariant spaces of subrepresentations.');
                 return
             end
@@ -69,7 +69,7 @@ classdef ForSubReps < replab.Equivariant
                 parentT = repR.parent.trivialSpace;
                 dParent = parentT.repC.dimension;
                 H = sparse(1:d, 1:d, ones(1, d), dParent, d);
-                F = B_internal';
+                F = H';
                 repC1 = replab.SubRep(parentT.repC, H, F);
                 e = parentT.subEquivariant(repC1, repR, special);
             end
