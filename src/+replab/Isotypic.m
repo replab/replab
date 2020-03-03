@@ -12,34 +12,83 @@ classdef Isotypic < replab.SubRep
 % the particular basis chosen is not deterministic.
 %
 % However the subspace spanned by an isotypic component as a whole is unique.
-%
-% We require that the embedding maps of the irreps do not overlap.
 
     properties (SetAccess = protected)
         irreps % (cell(1,\*) of `.SubRep`): Equivalent irreducible subrepresentations in this isotypic component
     end
 
+    methods (Static)
+
+        function iso = fromIrreps(parent, irreps)
+        % Builds an isotypic canonical component from equivalent subrepresentations
+        %
+        % Args:
+        %   parent (`+replab.Rep`): Representation being decomposed
+        %   irreps (cell(1,\*) of `+replab.SubRep`): Equivalent irreducible subrepresentations of ``rep``
+        %
+        % Returns:
+        %   `+replab.Isotypic`: The corresponding isotypic component
+            assert(length(irreps) >= 1, 'Isotypic component cannot be empty');
+            m = length(irreps);
+            for i = 1:m
+                s = irreps{i};
+                assert(isa(s, 'replab.SubRep'));
+                assert(s.parent == parent);
+                assert(isequal(s.isIrreducible, true));
+            end
+            d = irreps{1}.dimension;
+            if isequal(parent.isUnitary, true)
+                b = cellfun(@(s) isequal(s.B_internal, s.E_internal'), irreps);
+                if all(b)
+                    % all bases are unitary, parent is unitary, we use orthogonality
+                    iso = replab.Isotypic(rep, sub);
+                    Es = cell(m, 1);
+                    for i = 1:m
+                        Es{i,1} = irreps{i}.E_internal;
+                    end
+                    E_internal = vertcat(Es{:});
+                    iso = replab.Isotypic(parent, irreps, E_internal);
+                    return
+                end
+            end
+            Bs = cell(1, m);
+            for i = 1:m
+                Bs{1,i} = irreps{i}.B_internal;
+            end
+            Biso = [Bs{:}];
+            subiso = parent.subRep(Biso);
+            E_internal = subiso.E_internal;
+            iso = replab.Isotypic(parent, irreps, E_internal);
+        end
+
+    end
+
     methods
 
-        function self = Isotypic(parent, irreps)
-        % Constructor
+        function self = Isotypic(parent, irreps, E_internal)
+        % Constructs an isotypic component of a parent representation
         %
-        % Requirement: the embedding maps of the given irreps do not overlap
+        % The basis of the isotypic component comes from the concatenation of the bases of the irreps,
+        % while its embedding map is supplied as an argument.
+        %
+        % The static method `.fromIrreps` computes this embedding map if necessary.
+        %
+        % Args:
+        %   parent (`+replab.Rep`): Parent representation of which we construct a subrepresentation
+        %   irreps (cell(1,\*) of `+replab.SubRep`): Irreducible subrepresentations
+        %   E_internal (double(\*,\*), may be sparse): Embedding map of the isotypic component
             m = length(irreps);
             assert(m >= 1, 'Isotypic component cannot be empty');
             assert(isa(parent, 'replab.Rep'));
             Bs = cell(1, m);
-            Es = cell(m, 1);
             for i = 1:m
                 ci = irreps{i};
                 assert(isa(ci, 'replab.SubRep'));
                 assert(ci.parent == parent);
                 assert(isequal(ci.isIrreducible, true));
                 Bs{1,i} = ci.B_internal;
-                Es{i,1} = ci.E_internal;
             end
             B_internal = [Bs{:}];
-            E_internal = vertcat(Es{:});
             self = self@replab.SubRep(parent, B_internal, E_internal);
             self.irreps = irreps;
             % mutable Rep properties
@@ -102,8 +151,9 @@ classdef Isotypic < replab.SubRep
         %
         % Returns:
         %   double(\*,\*): Projector matrix on the irreducible representation
+            range = (i-1)*self.irrepDimension+(1:self.irrepDimension);
             Bi = self.irrep(i).B_internal;
-            Ei = self.irrep(i).E_internal;
+            Ei = self.E_internal(range,:);
             P = full(Bi*Ei);
         end
 

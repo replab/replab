@@ -38,7 +38,7 @@ function I = decompositionUsingSplit(rep)
     for i = 1:nNT
         iso = cc{i};
         subreps = nontrivial(cc{i});
-        NT{i} = replab.irreducible.harmonizeIsotypic(replab.irreducible.buildIsotypic(rep, subreps), context);
+        NT{i} = replab.irreducible.harmonizeIsotypic(replab.Isotypic.fromIrreps(rep, subreps), context);
     end
     % Sort by dimension first and then multiplicity
     dims = cellfun(@(iso) iso.irrepDimension, NT);
@@ -46,7 +46,7 @@ function I = decompositionUsingSplit(rep)
     [~, I] = sortrows([dims(:) muls(:)]);
     NT = NT(I);
     if length(trivial) > 0
-        trivialIsotypic = replab.irreducible.harmonizeIsotypic(replab.irreducible.buildIsotypic(rep, trivial), context);
+        trivialIsotypic = replab.irreducible.harmonizeIsotypic(replab.Isotypic.fromIrreps(rep, trivial), context);
         components = horzcat({trivialIsotypic}, NT);
     else
         components = NT;
