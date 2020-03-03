@@ -193,6 +193,9 @@ classdef Isotypic < replab.SubRep
             else
                 s = sprintf('%s %s(%d)', s, rt, self.irrepDimension);
             end
+            if isequal(self.trivialDimension, self.dimension)
+                s = [s ' (trivial)'];
+            end
         end
 
         %% SubRep methods
