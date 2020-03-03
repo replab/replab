@@ -1,4 +1,4 @@
-function test_suite = Bug14Test()
+function test_suite = Issue12Test()
     disp(['Setting up tests in ', mfilename()]);
     try
         test_functions = localfunctions();
@@ -9,9 +9,9 @@ function test_suite = Bug14Test()
     if ReplabTestParameters.onlyFastTests
         return;
     end
-    
-    B4 = replab.signed.Permutations(4);
-    group = B4.subgroup({[1 -3 2 4]});
-    I = group.definingRep.decomposition;
+
+    S9 = replab.S(9);
+    group = S9.subgroup({[7 4 1 9 5 2 6 8 3] [7 3 4 2 5 6 9 8 1]});
+    I = group.naturalRep.decomposition;
     test_suite = replab.IrreducibleLaws(I).addTestCases(test_suite);
 end

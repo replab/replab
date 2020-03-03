@@ -2,7 +2,7 @@ classdef HarmonizedIsotypicLaws < replab.IsotypicLaws
 
     methods
 
-        function self = HarmonizedIsotypic(iso)
+        function self = HarmonizedIsotypicLaws(iso)
             self@replab.IsotypicLaws(iso);
         end
 

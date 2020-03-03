@@ -30,10 +30,10 @@ function res = canonicalDivisionAlgebra(rep, context)
     switch rep.frobeniusSchurIndicator
       case -1
         % quaternion
-        res = replab.irreducible.enforceQuaternionEncoding(rep);
+        res = replab.irreducible.enforceQuaternionEncoding(rep, context);
       case 0
         % complex
-        res = replab.irreducible.enforceComplexEncoding(rep);
+        res = replab.irreducible.enforceComplexEncoding(rep, context);
       case 1
         % real
         res = replab.SimilarRep.identical(rep);

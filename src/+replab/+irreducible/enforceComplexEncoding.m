@@ -22,7 +22,7 @@ function res = enforceComplexEncoding(rep, context)
         res = replab.rep.collapse(res);
         return
     end
-    d = sub.dimension;
+    d = rep.dimension;
     S = rep.commutant.sampleInContext(context, 1);
     A = (S + S') + 1i * (S - S');
     v1 = replab.domain.Vectors('C', d).sample;
@@ -49,9 +49,9 @@ function res = enforceComplexEncoding(rep, context)
     tol = replab.Parameters.doubleEigTol;
     while size(W, 2) < d
         g = rep.group.sample;
-        x1 = sub.matrixRowAction(g, w1);
+        x1 = rep.matrixRowAction(g, w1);
         if norm(x1 - W * (W' * x1)) > tol
-            x2 = sub.matrixRowAction(g, w2);
+            x2 = rep.matrixRowAction(g, w2);
             X = [x1 x2];
             X = X - W*(W'*X);
             t = trace(X'*X)/2;
