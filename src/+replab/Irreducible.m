@@ -39,7 +39,7 @@ classdef Irreducible < replab.SubRep
         %
         % Returns:
         %   `+replab.Rep`: The block-diagonal representation as a representation similar to this rep. parent
-            r = self.parent.similarRep(self.B_internal, self.E_internal);
+            r = self.parent.similarRep(self.E_internal, self.B_internal);
         end
 
         function n = nComponents(self)
