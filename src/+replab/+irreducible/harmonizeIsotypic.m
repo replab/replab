@@ -19,7 +19,6 @@ function hi = harmonizeIsotypic(iso, context)
         return
     end
     n = iso.nIrreps;
-    C = iso.parent.commutant.sampleInContext(context, 1);
     if iso.overR
         irr1 = replab.irreducible.canonicalDivisionAlgebra(iso.irrep(1), context);
         W = irr1.A_internal;

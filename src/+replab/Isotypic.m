@@ -140,6 +140,18 @@ classdef Isotypic < replab.SubRep
             m = length(self.irreps);
         end
 
+        function r = irrepRange(self, i)
+        % Returns the coefficient range where the i-th irrep lies
+        %
+        % Args:
+        %   i (integer): Irreducible representation index
+        %
+        % Returns:
+        %   integer(1,\*): Range of the rows/columns block of the i-th irrep
+            id = self.irrepDimension;
+            r = (1:id)+id*(i-1);
+        end
+
         function d = irrepDimension(self)
         % Dimension of every single irreducible representation in this component
         %
@@ -222,6 +234,33 @@ classdef Isotypic < replab.SubRep
             if nargin < 4
                 context.close;
             end
+        end
+
+        function iso = changedIrrepsBases(self, A, Ainv)
+        % Returns the isotypic component with irrep bases changed
+        %
+        % The new isotypic component has ``iso.irrep(i) == self.irrep(i).similarRep(A{i}, Ainv{i})``
+        %
+        % Args:
+        %   i (integer): Representation index
+        end
+
+        function iso = changedIrrepBasis(self, i, A_internal, Ainv_internal)
+        % Returns the isotypic component with the i-th irrep basis changed
+        %
+        % The new isotypic component has ``iso.irrep(i) == self.irrep(i).similarRep(A_internal, Ainv_internal)``.
+        %
+        % Args:
+        %   i (integer): Representation index
+        %   A_internal (double(\*,\*), may be sparse): Change of basis matrix
+        %   Ainv_internal (double(\*,\*), may be sparse): Inverse change of basis matrix
+            irrepi = replab.rep.collapse(self.irreps{i}.similarRep(A_internal, Ainv_internal));
+            range = self.irrepRange(i);
+            E = self.E_internal;
+            E(range,:) = A_internal * E(range,:);
+            irreps = self.irreps;
+            irreps{i} = irrepi;
+            iso = replab.Isotypic(self.parent, irreps, E);
         end
 
         %% Str methods
