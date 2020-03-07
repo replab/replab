@@ -11,39 +11,39 @@ classdef HarmonizedIsotypic < replab.Isotypic
 
         %% Rep methods
 
-% $$$         function rho = image_internal(self, g)
-% $$$             p = self.parent.image_internal(g);
-% $$$             E = self.irrep(1).E_internal;
-% $$$             B = self.irrep(1).B_internal;
-% $$$             rho = E*p*B;
-% $$$             for i = 2:self.nIrreps
-% $$$                 E = self.irrep(i).E_internal;
-% $$$                 B = self.irrep(i).B_internal;
-% $$$                 rho = rho + E*p*B;
-% $$$             end
-% $$$             rho = rho / self.nIrreps;
-% $$$             rho = kron(eye(self.nIrreps), rho);
-% $$$         end
+        function rho = image_internal(self, g)
+            p = self.parent.image_internal(g);
+            E = self.irrep(1).E_internal;
+            B = self.irrep(1).B_internal;
+            rho = E*p*B;
+            for i = 2:self.nIrreps
+                E = self.irrep(i).E_internal;
+                B = self.irrep(i).B_internal;
+                rho = rho + E*p*B;
+            end
+            rho = rho / self.nIrreps;
+            rho = kron(eye(self.nIrreps), rho);
+        end
 
-% $$$         function c = commutant(self)
-% $$$             if isempty(self.commutant_)
-% $$$                 if self.overC
-% $$$                     self.commutant_ = replab.IsotypicSimpleCommutant(self);
-% $$$                 else
-% $$$                     switch self.irrep(1).frobeniusSchurIndicator
-% $$$                       case 1
-% $$$                         self.commutant_ = replab.IsotypicSimpleCommutant(self);
-% $$$                       case 0
-% $$$                         self.commutant_ = replab.IsotypicComplexCommutant(self);
-% $$$                       case -1
-% $$$                         self.commutant_ = replab.IsotypicQuaternionCommutant(self);
-% $$$                       otherwise
-% $$$                         error('Unknown indicator');
-% $$$                     end
-% $$$                 end
-% $$$             end
-% $$$             c = self.commutant_;
-% $$$         end
+        function c = commutant(self)
+            if isempty(self.commutant_)
+                if self.overC
+                    self.commutant_ = replab.IsotypicSimpleCommutant(self);
+                else
+                    switch self.irrep(1).frobeniusSchurIndicator
+                      case 1
+                        self.commutant_ = replab.IsotypicSimpleCommutant(self);
+                      case 0
+                        self.commutant_ = replab.IsotypicComplexCommutant(self);
+                      case -1
+                        self.commutant_ = replab.IsotypicQuaternionCommutant(self);
+                      otherwise
+                        error('Unknown indicator');
+                    end
+                end
+            end
+            c = self.commutant_;
+        end
 
         %% Isotypic methods
 

@@ -26,7 +26,7 @@ function test_complex_representations
     rep1 = rep.decomposition;
     rep2 = rep1.asSimilarRep;
     X = randn(d, d);
-    X1 = rep1.commutant.project(X)
+    X1 = rep1.commutant.project(X);
     X2 = rep2.commutant.project(X);
     assert(norm(X1 - X2) < replab.Parameters.doubleEigTol);
 end
