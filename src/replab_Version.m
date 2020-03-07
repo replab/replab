@@ -115,7 +115,7 @@ classdef replab_Version
 
         function v = fromVersionFile
         % Create a `replab_Version` object from the ``replab_version.txt`` text file
-            [path, ~, ~] = fileparts(which(mfilename));
+            [path, ~, ~] = fileparts([mfilename('fullpath') '.m']);
             filename = fullfile(path, '..', 'replab_version.txt');
             txt = fileread(filename);
             txt = strrep(txt, sprintf('\n'), '');
