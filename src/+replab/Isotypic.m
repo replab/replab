@@ -215,38 +215,68 @@ classdef Isotypic < replab.SubRep
             end
         end
 
-        function A = changeOfBasis(self, i, j, context)
+        function [A Ainv] = changeOfBasis(self, i, j, context)
         % Returns change of basis matrices that relate two irreducible representations
+        %
+        % ``A`` such that ``A * self.irrep(j).image(g) * Ainv = self.irrep(i).image(g)``
         %
         % Args:
         %   i (integer): Index of an irreducible representation
         %   j (integer): Index of an irreducible representation
         %   context (`+replab.Context`, optional): Sampling context
-        % Returns:
-        %   double(\*,\*): ``A`` such that ``A * self.irrep(j).image(g) * inv(A) = self.irrep(i).image(g)``
+        %
+        % Returns
+        % -------
+        %   A: double(\*,\*)
+        %     Change of basis matrix
+        %   Ainv: double(\*,\*)
+        %     Inverse of change of basis matrix
+            if i == j
+                A = eye(self.irrepDimension);
+                Ainv = A;
+                return
+            end
             if nargin < 4
                 context = replab.Context.make;
             end
             C = self.parent.commutant.sampleInContext(context, 1);
             A = full(self.irrep(i).E_internal * C * self.irrep(j).B_internal);
-            % TODO: is this choice of normalized sensical for nonunitary representations?
             A = A * sqrt(self.irrepDimension/real(trace(A*A'))) * sign(A(1,1));
+            if self.overC || isequal(self.irrep(1).frobeniusSchurIndicator, 1)
+                Ainv = full(self.irrep(j).E_internal * C * self.irrep(i).B_internal);
+                Ainv = Ainv/(trace(A*Ainv)/self.irrepDimension);
+            else
+                Ainv = inv(A);
+            end
             if nargin < 4
                 context.close;
             end
         end
 
-        function iso = changedIrrepsBases(self, A, Ainv)
+        function iso = changeEachIrrepBasis(self, A, Ainv)
         % Returns the isotypic component with irrep bases changed
         %
-        % The new isotypic component has ``iso.irrep(i) == self.irrep(i).similarRep(A{i}, Ainv{i})``
+        % Does not modify this isotypic component.
+        %
+        % The returned isotypic component has ``iso.irrep(i) == self.irrep(i).similarRep(A{i}, Ainv{i})``
         %
         % Args:
-        %   i (integer): Representation index
+        %   A (cell(1,\*) of double(\*,\8), may be sparse): Change of basis matrices
+        %   Ainv (cell(1,\*) of double(\*,\8), may be sparse): Inverse matrices
+            irreps = cell(1, self.multiplicity);
+            E = self.E_internal;
+            for i = 1:self.multiplicity
+                irreps{i} = replab.rep.collapse(self.irreps{i}.similarRep(A{i}, Ainv{i}));
+                range = self.irrepRange(i);
+                E(range, :) = A{i} * E(range, :);
+            end
+            iso = replab.Isotypic(self.parent, irreps, E);
         end
 
-        function iso = changedIrrepBasis(self, i, A_internal, Ainv_internal)
+        function iso = changeIrrepBasis(self, i, A_internal, Ainv_internal)
         % Returns the isotypic component with the i-th irrep basis changed
+        %
+        % Does not modify this isotypic component.
         %
         % The new isotypic component has ``iso.irrep(i) == self.irrep(i).similarRep(A_internal, Ainv_internal)``.
         %
