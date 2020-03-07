@@ -48,7 +48,7 @@ classdef CodeBase < replab.Str
         %   package (`.Package`): Package
         %
         % Returns:
-        %   cell(*,1) of `.Package`: Subpackages of the given package
+        %   cell(\*,1) of `.Package`: Subpackages of the given package
             if isempty(self.subpackages_)
                 s = struct;
                 pkgNames = fieldnames(self.packages);
@@ -69,7 +69,7 @@ classdef CodeBase < replab.Str
         % Returns all packages present in this code base
         %
         % Returns:
-        %   cell(*,1) of `.Package`: Packages
+        %   cell(\*,1) of `.Package`: Packages
             pkgNames = fieldnames(self.packages);
             p = cellfun(@(name) self.packages.(name), pkgNames, 'uniform', 0);
         end
@@ -78,7 +78,7 @@ classdef CodeBase < replab.Str
         % Returns all source elements (functions, classes) in this code base
         %
         % Returns:
-        %   cell(*,1) of `+replab.+infra.SourceElement`: Source elements
+        %   cell(\*,1) of `+replab.+infra.SourceElement`: Source elements
             p = self.allPackages;
             e = {};
             for i = 1:length(p)
@@ -90,7 +90,7 @@ classdef CodeBase < replab.Str
         % Returns all functions present in this code base
         %
         % Returns:
-        %   cell(*,1) of `.Function`: All functions
+        %   cell(\*,1) of `.Function`: All functions
             p = self.allPackages;
             f = {};
             for i = 1:length(p)
@@ -102,7 +102,7 @@ classdef CodeBase < replab.Str
         % Returns all classes present in this code base
         %
         % Returns:
-        %   cell(*,1) of `.Class`: All classes
+        %   cell(\*,1) of `.Class`: All classes
             p = self.allPackages;
             c = {};
             for i = 1:length(p)
@@ -117,7 +117,7 @@ classdef CodeBase < replab.Str
         %   cls (`.Class`): Class
         %
         % Returns:
-        %   row cell vector of `.Class`: Subclasses of the given class
+        %   cell(1,\*) of `.Class`: Subclasses of the given class
             if isempty(self.subclasses_)
                 s = struct;
                 classes = self.allClasses;

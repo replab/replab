@@ -44,10 +44,10 @@ function [subsets componentIndex start next] = connectedComponents(edges)
     if size(edges,2) ~= 2
         error('List of edges has wrong size');
     end
-    
+
     % We call the best available burning algorithm
     subsets = replab.dispatch('call', 'replab.graph.burningAlgorithm', edges);
-    
+
     % If required, we also compute the next outputs
     if nargout >= 2
         a = [subsets{:}];
@@ -60,18 +60,18 @@ function [subsets componentIndex start next] = connectedComponents(edges)
 
         componentIndex = sparse(1,a,b);
     end
-    
+
     if nargout >= 3
         start = zeros(1,length(subsets));
         for i = 1:length(subsets)
             start(i) = subsets{i}(1);
         end
     end
-    
+
     if nargout >= 4
         c = zeros(1,length(a)-length(subsets));
         d = zeros(size(c));
-        
+
         co = 0;
         for i = 1:length(subsets)
             for j = 1:length(subsets{i})-1
@@ -80,7 +80,7 @@ function [subsets componentIndex start next] = connectedComponents(edges)
                 d(co) = subsets{i}(j+1);
             end
         end
-        
+
         next = sparse(1,c,d,1,max(max(edges)));
     end
 end

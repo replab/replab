@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>1. Constructing groups with RepLAB &#8212; RepLAB 0.6.7 documentation</title>
+    <title>1. Constructing groups with RepLAB &#8212; RepLAB 0.6.8-SNAP documentation</title>
     <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="index.html" title="Quantum Causal Structures Oxford 2019"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Quantum Causal Structures Oxford 2019</a> &#187;</li> 
       </ul>
@@ -79,7 +79,7 @@
   <a href="
     ../../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.7.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.8-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -567,7 +567,7 @@ ans =
 <span></span><span class="n">sParties</span> <span class="p">=</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">];</span>
 <span class="n">sFlip</span> <span class="p">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mi">2</span> <span class="o">-</span><span class="mi">3</span> <span class="o">-</span><span class="mi">4</span><span class="p">];</span>
 <span class="n">sOther</span> <span class="p">=</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="o">-</span><span class="mi">4</span><span class="p">];</span>
-<span class="n">GCHSH</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">SignedPermutations</span><span class="p">(</span><span class="mi">4</span><span class="p">).</span><span class="n">subgroup</span><span class="p">({</span><span class="n">sParties</span> <span class="n">sFlip</span> <span class="n">sOther</span><span class="p">})</span>
+<span class="n">GCHSH</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">signed</span><span class="p">.</span><span class="n">Permutations</span><span class="p">(</span><span class="mi">4</span><span class="p">).</span><span class="n">subgroup</span><span class="p">({</span><span class="n">sParties</span> <span class="n">sFlip</span> <span class="n">sOther</span><span class="p">})</span>
 </pre></div>
 </div>
 </div>
@@ -576,7 +576,16 @@ ans =
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: member `SignedPermutations&#39; in package `replab&#39; does not exist
+GCHSH =
+
+replab.signed.PermutationSubgroup
+  domainSize: 4
+    identity: [1, 2, 3, 4]
+      parent: Signed permutations acting on {-4..-1 1..4}
+generator(1): [3, 4, 1, 2]
+generator(2): [-1, -2, -3, -4]
+generator(3): [2, 1, 3, -4]
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -593,7 +602,8 @@ error: member `SignedPermutations&#39; in package `replab&#39; does not exist
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;GCHSH&#39; undefined near line 1 column 1
+ans =
+    16
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -610,7 +620,26 @@ error: &#39;GCHSH&#39; undefined near line 1 column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;GCHSH&#39; undefined near line 1 column 1
+ans =
+
+Indexed family of 16 elements
+ 1 = [1, 2, 3, 4]
+ 2 = [-2, -1, -3, 4]
+ 3 = [1, -2, 4, 3]
+ 4 = [2, -1, -4, 3]
+ 5 = [3, 4, 1, 2]
+ 6 = [-4, -3, -1, 2]
+ 7 = [3, -4, 2, 1]
+ 8 = [4, -3, -2, 1]
+ 9 = [-3, 4, -2, -1]
+10 = [-4, 3, 2, -1]
+11 = [-3, -4, -1, -2]
+12 = [4, 3, 1, -2]
+13 = [-1, 2, -4, -3]
+14 = [-2, 1, 4, -3]
+15 = [-1, -2, -3, -4]
+16 = [2, 1, 3, -4]
+
 </pre></div></div>
 </div>
 </div>
@@ -624,7 +653,7 @@ error: &#39;GCHSH&#39; undefined near line 1 column 1
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
 <span></span><span class="n">Goutcomes</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 <span class="n">Gsettings</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="n">Gparty</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">WreathProductGroup</span><span class="p">(</span><span class="n">Gsettings</span><span class="p">,</span> <span class="n">Goutcomes</span><span class="p">)</span>
+<span class="n">Gparty</span> <span class="p">=</span> <span class="n">Gsettings</span><span class="p">.</span><span class="n">wreathProduct</span><span class="p">(</span><span class="n">Goutcomes</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -633,7 +662,20 @@ error: &#39;GCHSH&#39; undefined near line 1 column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: member `WreathProductGroup&#39; in package `replab&#39; does not exist
+Gparty =
+
+replab.wreathproduct.OfNiceFiniteGroup
+           A: Permutations acting on 2 elements
+           H: Permutations acting on 2 elements
+           N: replab.directproduct.OfNiceFiniteGroups
+    identity: {[1, 2], {[1, 2], [1, 2]}}
+           n: 2
+      parent: replab.wreathproduct.OfNiceFiniteGroup
+         phi: replab.perm.PermutationCellAction
+generator(1): {[2, 1], {[1, 2], [1, 2]}}
+generator(2): {[1, 2], {[2, 1], [1, 2]}}
+generator(3): {[1, 2], {[1, 2], [2, 1]}}
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -650,7 +692,18 @@ error: member `WreathProductGroup&#39; in package `replab&#39; does not exist
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;Gparty&#39; undefined near line 1 column 1
+ans =
+
+Indexed family of 8 elements
+1 = {[1, 2], {[1, 2], [1, 2]}}
+2 = {[1, 2], {[1, 2], [2, 1]}}
+3 = {[1, 2], {[2, 1], [1, 2]}}
+4 = {[1, 2], {[2, 1], [2, 1]}}
+5 = {[2, 1], {[1, 2], [1, 2]}}
+6 = {[2, 1], {[1, 2], [2, 1]}}
+7 = {[2, 1], {[2, 1], [1, 2]}}
+8 = {[2, 1], {[2, 1], [2, 1]}}
+
 </pre></div></div>
 </div>
 </div>
@@ -693,7 +746,7 @@ error: &#39;Gparty&#39; undefined near line 1 column 1
         <li class="right" >
           <a href="index.html" title="Quantum Causal Structures Oxford 2019"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" >Quantum Causal Structures Oxford 2019</a> &#187;</li> 
       </ul>

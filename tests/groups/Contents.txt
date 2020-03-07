@@ -1,0 +1,1 @@
+This folder contains permutation groups from the literature and exercise the BSGS algorithms in RepLAB.

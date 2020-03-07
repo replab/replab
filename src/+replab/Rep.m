@@ -1,37 +1,61 @@
 classdef Rep < replab.Str
 % Describes a finite dimensional representation of a compact group
 %
-% Only "image" needs to be implemented in principle.
+% This class has mutable properties that correspond to information that can be computed and cached
+% after the `+replab.Rep` instance is constructed, for example `.isUnitary` or `.trivialDimension`.
 %
-% For optimization purposes, actions can also be specialized.
+% By convention, those properties are not passed to constructors of subclasses of `+replab.Rep`,
+% but are instead their default value (``[]`` signifying unknown) is overwritten after construction.
+%
+% Notes:
+%   While we do not expect users to implement their own subclass of `~+replab.Rep`, to do
+%   so only the map from group elements to matrix images need to be implemented.
+%
+%   Internally RepLAB can use sparse matrices; however, we take care to not return sparse
+%   matrices in the user API, as doing so can lead to spurious breakages in user code
+%   (some MATLAB/Octave functions do not work with sparse arguments).
+%
+%   Thus, internally, the methods `.image_internal` and `.inverseImage_internal` are used,
+%   and the user facing methods `.image` and `.inverseImage` simply process the output of
+%   the internal methods by converting them, if necessary, to dense matrices
+%
+%   This class implements also row and column matrix actions, methods which can be overloaded
+%   for performance.
+
+    properties
+        % see `+replab.+rep.copyProperties`
+
+        isUnitary % ({true, false, []}): Whether this representation is unitary
+        trivialDimension % (integer or []): Dimension of the trivial subrepresentation in this representation
+        isIrreducible % (true, false, []): Whether this representation is irreducible
+        frobeniusSchurIndicator % (integer or []): Value of the non-approximated Frobenius-Schur indicator
+        isDivisionAlgebraCanonical % ({true, false, []}): If the representation is real and irreducible and the Frobenius-Schur indicator is not 1, means that the images encode the complex or quaternion division algebras in the RepLAB canonical form
+    end
 
     properties (SetAccess = protected)
         group     % (`+replab.CompactGroup`): Group being represented
         field     % ({'R', 'C'}): Vector space defined on real (R) or complex (C) field
         dimension % (integer): Representation dimension
-        isUnitary % ({true, false, []}): Whether the representation is unitary
-        irrepInfo % (`+replab.irreducible.Info` or []): Irreducible status information
-                  %
-                  %                                     This representation is known to be
-                  %                                     irreducible when this field is non empty
     end
 
     properties (Access = protected)
-        commutant_ = [];
-        hermitianInvariant_ = [];
-        decomposition_ = [];
+        unitarize_ % (`+replab.SimilarRep`): Cached unitary similar representation
+        commutant_ % (`+replab.Equivariant`): Cached commutant space
+        hermitianInvariant_ % (`+replab.Equivariant`): Cached Hermitian invariant space
+        decomposition_ % (`+replab.Irreducible`): Cached irreducible decomposition
+        trivialSpace_ % (`+replab.Equivariant`): Cached trivial space
     end
 
     methods % Abstract methods
 
-        function rho = image(self, g)
-        % Returns the image of a group element
+        function rho = image_internal(self, g)
+        % Returns the image of a group element, dense or sparse
         %
         % Args:
-        %   g (element of `group`): Element being represented
+        %   g (element of `.group`): Element being represented
         %
         % Returns:
-        %   double(*,*): Image of the given element for this representation
+        %   double(\*,\*): Image of the given element for this representation, may be sparse
             error('Abstract');
         end
 
@@ -41,19 +65,39 @@ classdef Rep < replab.Str
 
         %% Own methods
 
+        function rho = image(self, g)
+        % Returns the image of a group element
+        %
+        % Args:
+        %   g (element of `.group`): Element being represented
+        %
+        % Returns:
+        %   double(\*,\*): Image of the given element for this representation
+            rho = full(self.image_internal(g));
+        end
+
+        function rho = inverseImage_internal(self, g)
+        % Returns the image of the inverse of a group element
+        %
+        % Args:
+        %   g (element of `.group`): Element of which the inverse is represented
+        %
+        % Returns:
+        %   double(\*,\*): Image of the inverse of the given element for this representation, may be sparse
+            gInv = self.group.inverse(g);
+            rho = self.image_internal(gInv);
+        end
+
         function rho = inverseImage(self, g)
         % Returns the image of the inverse of a group element
         %
         % Args:
-        %   g (element of `group`): Element of which the inverse is represented
+        %   g (element of `.group`): Element of which the inverse is represented
         %
         % Returns:
-        %   double(*,*): Image of the inverse of the given element for this representation
-            gInv = self.group.inverse(g);
-            rho = self.image(gInv);
+        %   double(\*,\*): Image of the inverse of the given element for this representation
+            rho = full(self.inverseImage_internal(g));
         end
-
-        %% Sampling
 
         function [rho rhoInverse] = sample(self)
         % Samples an element from the group and returns its image under the representation
@@ -62,9 +106,9 @@ classdef Rep < replab.Str
         %
         % Returns
         % -------
-        %   rho: double(*,*)
+        %   rho: double(\*,\*)
         %     Image of the random group element
-        %   rhoInverse: double(*,*)
+        %   rhoInverse: double(\*,\*)
         %     Inverse of image ``rho``
             g = self.group.sample;
             rho = self.image(g);
@@ -93,7 +137,7 @@ classdef Rep < replab.Str
 
         %% Derived vector spaces/algebras
 
-        function e = equivariant(self, repC)
+        function e = equivariant(self, repR)
         % Returns the space of equivariant linear maps from this rep to another rep
         %
         % The equivariant vector space contains the matrices X such that
@@ -102,11 +146,11 @@ classdef Rep < replab.Str
         %
         %
         % Args:
-        %   repC (replab.Rep): Representation on the source/column space
+        %   repR (`+replab.Rep`): Representation on the target/row space
         %
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
-            e = replab.makeEquivariant(self, repC, []);
+            e = replab.Equivariant.make(self, repR, []);
         end
 
         function c = commutant(self)
@@ -122,7 +166,7 @@ classdef Rep < replab.Str
         % Returns:
         %   `+replab.Equivariant`: The commutant algebra represented as an equivariant space
             if isempty(self.commutant_)
-                self.commutant_ = replab.makeEquivariant(self, self, 'commutant');
+                self.commutant_ = replab.Equivariant.make(self, self, 'commutant');
             end
             c = self.commutant_;
         end
@@ -138,9 +182,20 @@ classdef Rep < replab.Str
         % Returns:
         %   `+replab.Equivariant`: The space of Hermitian invariant matrices
             if isempty(self.hermitianInvariant_)
-                self.hermitianInvariant_ = replab.makeEquivariant(self, self.dual.conj, 'hermitian');
+                self.hermitianInvariant_ = replab.Equivariant.make(self.dual.conj, self, 'hermitian');
             end
             h = self.hermitianInvariant_;
+        end
+
+        function t = trivialSpace(self)
+        % Returns an equivariant space from a trivial representation to this representation
+        %
+        % The trivial representation has the same dimension as this representation
+            if isempty(self.trivialSpace_)
+                repC = self.group.trivialRep(self.field, self.dimension);
+                self.trivialSpace_ = replab.Equivariant.make(repC, self, 'trivial');
+            end
+            t = self.trivialSpace_;
         end
 
         %% Irreducible decomposition
@@ -155,10 +210,8 @@ classdef Rep < replab.Str
         %
         % Raises:
         %   An error is this representation is not unitary.
-            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
             if isempty(self.decomposition_)
-                dec = replab.irreducible.decomposition(self);
-                self.decomposition_ = dec;%.nice;
+                self.decomposition_ = replab.irreducible.decomposition(self);
             end
             I = self.decomposition_;
         end
@@ -166,23 +219,79 @@ classdef Rep < replab.Str
         %% Str methods
 
         function s = headerStr(self)
-            if self.isUnitary
-                switch self.field
-                  case 'R'
-                    f = 'Orthogonal real';
-                  case 'C'
-                    f = 'Unitary complex';
+            p = {};
+            if isequal(self.isUnitary, true)
+                if self.overR
+                    p{1,end+1} = 'orthogonal';
+                else
+                    p{1,end+1} = 'unitary';
+                end
+            elseif isequal(self.isUnitary, false)
+                if self.overR
+                    p{1,end+1} = 'nonorthogonal';
+                else
+                    p{1,end+1} = 'nonunitary';
                 end
             else
-                switch self.field
-                  case 'R'
-                    f = 'Real';
-                  case 'C'
-                    f = 'Complex';
+                if self.overR
+                    p{1,end+1} = 'real';
+                else
+                    p{1,end+1} = 'complex';
                 end
             end
-            s = sprintf('%s representation of dimension %d', f, self.dimension);
+            if isequal(self.trivialDimension, self.dimension)
+                p{1,end+1} = 'trivial';
+            elseif isequal(self.trivialDimension, 0)
+                p{1,end+1} = 'fully nontrivial';
+            elseif ~isempty(self.trivialDimension)
+                p{1,end+1} = 'nontrivial';
+            end
+            if isequal(self.isIrreducible, true)
+                p{1,end+1} = 'irreducible';
+            elseif isequal(self.isIrreducible, true)
+                p{1,end+1} = 'reducible';
+            end
+            if ~isequal(self.frobeniusSchurIndicator, []) && self.overR
+                switch self.frobeniusSchurIndicator
+                  case 1
+                    p{1,end+1} = 'real-type';
+                  case 0
+                    p{1,end+1} = 'complex-type';
+                  case -1
+                    p{1,end+1} = 'quaternion-type';
+                  otherwise
+                    % do nothing
+                end
+            end
+            switch class(self)
+              case 'replab.SubRep'
+                p{1,end+1} = 'subrepresentation';
+              case 'replab.rep.DerivedRep'
+                p{1,end+1} = 'derived representation';
+                if self.conjugate
+                    p{1,end+1} = '(conjugate)';
+                end
+                if self.inverse
+                    p{1,end+1} = '(inverse)';
+                end
+                if self.transpose
+                    p{1,end+1} = '(transpose)';
+                end
+              case 'replab.rep.DirectSumRep'
+                p{1,end+1} = 'direct sum representation';
+              case 'replab.rep.TensorRep'
+                p{1,end+1} = 'tensor representation';
+              case 'replab.rep.ComplexifiedRep'
+                p{1,end+1} = 'complexified representation';
+              case 'replab.RepByImages'
+                p{1,end+1} = 'representation by images';
+              otherwise
+                p{1,end+1} = 'representation';
+            end
+            p{1} = replab.str.capitalize(p{1});
+            s = strjoin(p, ' ');
         end
+
         %% Derived actions
 
         function M = matrixRowAction(self, g, M)
@@ -198,11 +307,11 @@ classdef Rep < replab.Str
         %
         % Args:
         %   g (`group` element): Group element acting
-        %   M (double(*,*)): Matrix acted upon
+        %   M (double(\*,\*)): Matrix acted upon
         %
         % Returns:
-        %   double(*,*): The matrix ``self.image(g) * M``
-            M = self.image(g) * M;
+        %   double(\*,\*): The matrix ``self.image(g) * M``
+            M = full(self.image_internal(g) * M);
         end
 
         function M = matrixColAction(self, g, M)
@@ -218,14 +327,22 @@ classdef Rep < replab.Str
         %
         % Args:
         %   g (`group` element): Group element acting
-        %   M (double(*,*)): Matrix acted upon
+        %   M (double(\*,\*)): Matrix acted upon
         %
         % Returns:
-        %   double(*,*): The matrix ``M * self.inverseImage(g)``
-            M = M * self.inverseImage(g);
+        %   double(\*,\*): The matrix ``M * self.inverseImage(g)``
+            M = full(M * self.inverseImage_internal(g));
         end
 
         %% Derived representations
+
+        function rep1 = simplify(self)
+        % Returns a representation identical to this, but possibly with its composition simplified
+        %
+        % Returns:
+        %   `+replab.Rep`: A possibly simplified representation
+            rep1 = replab.rep.simplify(self);
+        end
 
         function complexRep = complexification(self)
         % Returns the complexification of a real representation
@@ -236,7 +353,7 @@ classdef Rep < replab.Str
         % Raises:
         %   An error if this representation is already complex.
             assert(self.overR, 'Representation should be real to start with');
-            complexRep = replab.rep.simplify(replab.rep.ComplexifiedRep(self));
+            complexRep = replab.rep.ComplexifiedRep(self);
         end
 
         function rep = conj(self)
@@ -250,7 +367,7 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   `+replab.Rep`: The complex conjugate of this representation
-            rep = replab.rep.simplify(replab.rep.DerivedRep(self, true, false, false));
+            rep = replab.rep.DerivedRep(self, true, false, false);
         end
 
         function rep = dual(self)
@@ -262,21 +379,23 @@ classdef Rep < replab.Str
         %
         % Returns:
         %   replab.Rep: The dual representation
-            rep = replab.rep.simplify(replab.rep.DerivedRep(self, false, true, true));
+            rep = replab.rep.DerivedRep(self, false, true, true);
         end
 
         function rep = blkdiag(varargin)
         % Direct sum of representations
         %
-        % See `+replab.Rep.directSum`
-            rep = replab.Rep.directSum(varargin);
+        % See `+replab.CompactGroup.directSumRep`
+            self = varargin{1};
+            rep = self.group.directSumRep(self.field, varargin);
         end
 
         function rep = kron(varargin)
         % Tensor product of representations
         %
-        % See `+replab.Rep.tensor`
-            rep = replab.Rep.tensor(varargin);
+        % See `+replab.CompactGroup.tensorRep`
+            self = varargin{1};
+            rep = self.group.tensorRep(self.field, varargin);
         end
 
         function rep = tensorPower(self, n)
@@ -288,7 +407,7 @@ classdef Rep < replab.Str
         % Returns:
         %   `+replab.Rep`: The tensor power representation
             reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
-            rep = replab.Rep.tensor(reps);
+            rep = self.group.tensorRep(self.field, reps);
         end
 
         function rep = directSumOfCopies(self, n)
@@ -300,45 +419,23 @@ classdef Rep < replab.Str
         % Returns:
         %   `+replab.Rep`: The direct sum representation
             reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
-            rep = replab.Rep.directSum(reps);
+            rep = self.group.directSum(self.field, reps);
         end
 
         %% Manipulation of representation space
 
-        function [A Ainv] = unitaryChangeOfBasis(self)
-        % Returns the change of basis to a unitary representation
-        %
-        % Returns ``A`` and ``Ainv`` so that ``A * self.image(g) * Ainv`` is unitary.
-        %
-        % Returns
-        % -------
-        %   A: double(*,*)
-        %     Change of basis matrix
-        %   Ainv: double(*,*)
-        %     Inverse of change of basis matrix
-            if isequal(self.isUnitary, true)
-                A = eye(self.dimension);
-                Ainv = eye(self.dimension);
-            else
-                E = self.dual.conj.equivariant(self);
-                X = E.project(eye(self.dimension));
-                for i = 1:self.dimension
-                    X(i,i) = real(X(i,i));
-                end
-                A = chol(X);
-                Ainv = inv(A);
-            end
-        end
-
-        function [newRep A Ainv] = unitarize(self)
+        function res = unitarize(self)
         % Returns a unitary representation equivalent to this representation
         %
-        % We have ``newRep.image(g) = A * self.image(g) * Ainv``.
+        % The returned representation is of type `.SimilarRep`, from which
+        % the change of basis matrix can be obtained.
         %
+        % If the representation is already unitary, the returned `.SimilarRep`
+        % has the identity matrix as a change of basis.
         %
         % Example:
         %   >>> S3 = replab.Permutations(3);
-        %   >>> defRep = S3.definingRep.complexification;
+        %   >>> defRep = S3.naturalRep.complexification;
         %   >>> C = randn(3,3) + 1i * rand(3,3);
         %   >>> nonUnitaryRep = defRep.subRep(C, inv(C));
         %   >>> unitaryRep = nonUnitaryRep.unitarize;
@@ -349,89 +446,145 @@ classdef Rep < replab.Str
         %       1
         %
         %
+        % Returns:
+        %   `+replab.SimilarRep`: Unitary similar representation
+            if isempty(self.unitarize_)
+                if isequal(self.isUnitary, true)
+                    self.unitarize_ = replab.SimilarRep.identical(self);
+                else
+                    [A Ainv] = self.unitaryChangeOfBasis;
+                    self.unitarize_ = self.similarRep(A, Ainv);
+                    self.unitarize_.isUnitary = true;
+                end
+            end
+            res = self.unitarize_;
+        end
+
+        function [sub1 sub2] = maschke(self, basis1, embedding1)
+        % Given a basis of a subrepresentation, returns two complementary subrepresentations
+        %
+        % Note that we optimize special cases when the representation and/or the basis is
+        % unitary
+        %
+        % Args:
+        %   basis1 (double(dParent,dSub1)): Basis of the first subrepresentation
+        %   embedding1 (double(dChild,dParent), optional): Map from the parent space to the subrepresentation
+        %
         % Returns
         % -------
-        %   newRep: `+replab.Rep`
-        %     Unitary representation
-        %   A: double(*,*)
-        %     Change of basis matrix
-        %   Ainv: double(*,*)
-        %     Inverse of change of basis matrix
-            [A Ainv] = self.unitaryChangeOfBasis;
+        %   sub1: `replab.SubRep`
+        %     First subrepresentation
+        %   sub2: `replab.SubRep`
+        %     Second subrepresentation
+            assert(size(basis1, 1) == self.dimension);
+            d1 = size(basis1, 2);
+            if nargin > 2
+                assert(size(embedding1, 1) == d1);
+                assert(size(embedding1, 2) == self.dimension);
+            end
+            rest = null(basis1.');
             if isequal(self.isUnitary, true)
-                newRep = self;
+                if nargin < 3
+                    BB = basis1'*basis1;
+                    BB = (BB+BB')/2;
+                    embedding1 = BB \ basis1';
+                end
+                sub1 = replab.SubRep(self, basis1, embedding1);
+                % for the second subrepresentation, we take the orthogonal complement from 'null'
+                sub2 = replab.SubRep(self, rest, rest');
             else
-                newRep = replab.Rep.lambda(self.group, self.field, self.dimension, true, [], ...
-                                           @(g) A*self.image(g)*Ainv, @(g) Ainv*self.inverseImage(g)*A);
+                X = [basis1 rest];
+                Xinv = inv(X);
+                P = basis1 * Xinv(1:d1, :);
+                P1 = self.commutant.project(P);
+                embedding1 = basis1 \ P1;
+                P2 = eye(self.dimension) - P1;
+                basis2 = orth(P2);
+                embedding2 = basis2 \ P2;
+                sub1 = replab.SubRep(self, basis1, embedding1);
+                sub2 = replab.SubRep(self, basis2, embedding2);
             end
         end
 
-        function sub = subRep(self, F, G)
+        function sub = subRep(self, basis, embedding)
         % Returns a subrepresentation of this representation
         %
-        % Let V be the vector space of this representation,
-        % and W an invariant subspace of V. Let ``F: V -> W``
-        % and ``G: W -> V`` be maps such that ``F G = id``,
-        % and ``G rho(g) F`` is the subrepresentation.
+        % The subrepresentation is defined by its basis in the parent representation; to compute
+        % images, an embedding map can be provided.
         %
+        % While the ``basis`` represents in essence a map from the subrepresentation to parent representation,
+        % the embedding map is a map from the parent representation to the subrepresentation.
+        %
+        % The embedding map is not uniquely defined, for example when the subrepresentation contains irreducible
+        % representations that have multiplicites outside the subrepresentation space.
+        %
+        % However, all variants of the embedding map provide identical results when computing images of the
+        % subrepresentation.
+        %
+        % If the embedding is not provided, one is obtained by a trick based on Maschke theorem.
         % Args:
-        %   F (double(*,*)): map V -> W
-        %   G (double(*,*)): map W -> V
+        %   basis (double(dParent,dChild), may be sparse): Basis of the subrepresentation
+        %   embedding (double(dChild,dParent), may be sparse, optional): Map from the parent space to the subrepresentation
         % Returns:
-        %   replab.NUSubRep: Subrepresentation
-            sub = replab.SubRepNU(self, F, G);
-        end
-
-        function sub = subRepUnitaryByIntegerBasis(self, V, irrepInfo)
-        % Returns a unitary subrepresentation of this unitary representation
-        %
-        % The unitary change of basis matrix `U` is derived by row transformations
-        % of the integer matrix ``V``, such that both have the same row span.
-        %
-        % However, ``V`` is also used to provide a nice basis representation for display.
-        %
-        % Args:
-        %   V (integer matrix, can be sparse): Integer basis vectors stored as row vectors
-        %   irrepInfo (`+replab.irreducible.Info` or [], optional): When present, indicates that the subrepresentation is
-        %                                                           irreducible with associated information
-        %
-        % Returns:
-        %   replab.SubRep: The subrepresentation
-            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
+        %   `+replab.SubRep`: Subrepresentation
             if nargin < 3
-                irrepInfo = [];
+                if isequal(self.isUnitary, true)
+                    % optimization for unitary parent representations
+                    embedding = (basis'*basis) \ basis';
+                    % there is an optimization that cannot be made yet:
+                    % if basis'*basis is identity, then embedding = basis'
+                    % works
+                else
+                    dSub = size(basis, 2);
+                    rest = null(basis.');
+                    X = [basis rest];
+                    Xinv = inv(X);
+                    P = basis * Xinv(1:dSub, :);
+                    P1 = self.commutant.project(P);
+                    embedding = basis \ P1;
+                end
             end
-            niceBasis = replab.NiceBasis.fromIntegerBasis(V);
-            U = niceBasis.U;
-            sub = replab.SubRep(self, U, niceBasis, irrepInfo);
+            sub = replab.SubRep(self, basis, embedding);
         end
 
-        function sub = subRepUnitary(self, U, niceBasis, irrepInfo)
-        % Returns a unitary subrepresentation of this unitary representation
+        function irreps = splitIntoIrreducibles(self, context)
+        % Decomposes fully the given representation into subrepresentations
         %
-        % It is described by the row basis vectors in U, such that
-        % `` sub.image(g) = U * self.image(g) * U' ``
+        % Returns a list of irreducible representations, where trivial subrepresentations
+        % have been identified
         %
-        % U has dimension ``dim(subRepresentation) x self.dimension``, and the row vectors are orthonormal.
+        % If this representation is irreducible, it will set its `~+replab.Rep.isIrreducible`.
         %
         % Args:
-        %   U (double(*,*), can be sparse): Orthonormal basis vectors stored as row vectors
-        %   niceBasis (`+replab.NiceBasis` or [], optional): Optional integer basis with the same span as the basis vectors
-        %   irrepInfo (`+replab.irreducible.Info` or [], optional): When present, indicates that the subrepresentation is irreducible with associated information
+        %   context (`+replab.Context`, optional): Sampling context to use
         %
         % Returns:
-        %   `+replab.SubRep`: The subrepresentation
-            assert(isequal(self.isUnitary, true), 'Representation must be unitary');
-            if nargin < 4
-                irrepInfo = [];
+        %   cell(1,\*) of `+replab.SubRep`: irreducible subrepresentations
+            if nargin < 2
+                context = replab.Context.make;
             end
-            if nargin < 3
-                niceBasis = [];
+            d = self.dimension;
+            start = replab.SubRep.fullSubRep(self);
+            todo = {start};
+            irreps = cell(1, 0);
+            while ~isempty(todo)
+                h = todo{1};
+                if isequal(h.isIrreducible, true)
+                    % head of list is irreducible, remove it
+                    irreps{1,end+1} = h;
+                    todo = todo(2:end);
+                else
+                    res = replab.irreducible.split(h, context);
+                    res1 = cellfun(@(sub) replab.rep.collapse(sub), res, 'uniform', 0);
+                    todo = horzcat(todo(2:end), res1);
+                end
             end
-            sub = replab.SubRep(self, U, niceBasis, irrepInfo);
+            if nargin < 2
+                context.close;
+            end
         end
 
-        function rep1 = similar(self, A, Ainv)
+        function rep1 = similarRep(self, A, Ainv)
         % Returns a similar representation under a change of basis
         %
         % It returns a representation ``rep1`` such that
@@ -439,8 +592,8 @@ classdef Rep < replab.Str
         % ``rep1.image(g) = A * self.image(g) * Ainv``
         %
         % Args:
-        %   A (double(*,*)): Change of basis matrix
-        %   Ainv (double(*,*)): Inverse of the change of basis matrix
+        %   A (double(\*,\*)): Change of basis matrix
+        %   Ainv (double(\*,\*)): Inverse of the change of basis matrix
         %
         % Returns:
         %   `+replab.SimilarRep`: The similar representation
@@ -449,46 +602,50 @@ classdef Rep < replab.Str
 
     end
 
+    methods (Access = protected)
+
+        function [A Ainv] = unitaryChangeOfBasis(self)
+        % Returns the change of basis to a unitary representation
+        %
+        % Returns ``A`` and ``Ainv`` so that ``A * self.image(g) * Ainv`` is unitary.
+        %
+        % Returns
+        % -------
+        %   A: double(\*,\*)
+        %     Change of basis matrix
+        %   Ainv: double(\*,\*)
+        %     Inverse of change of basis matrix
+            if isequal(self.isUnitary, true)
+                A = eye(self.dimension);
+                Ainv = eye(self.dimension);
+            else
+                X = self.hermitianInvariant.project(eye(self.dimension));
+                for i = 1:self.dimension
+                    X(i,i) = real(X(i,i));
+                end
+                Ainv = chol(X, 'lower');
+                A = inv(Ainv);
+            end
+        end
+
+    end
+
     methods (Static)
 
-        function rep = directSum(reps)
-        % Computes the direct sum of representations
-        %
-        % Args:
-        %   reps (cell(1,*) of `+replab.Rep`): Representation of the same group over the same field
-        %
-        % Returns:
-        %   `+replab.Rep`: Direct sum of the representations
-            rep = replab.rep.DirectSumRep(reps);
-        end
-
-        function rep = tensor(reps)
-        % Computes the tensor product of representations
-        %
-        % Args:
-        %   reps (row cell array of `+replab.Rep`): Representation of the same group over the same field
-        %
-        % Returns:
-        %   `+replab.Rep`: Tensor product of the representations
-            rep = replab.rep.TensorRep(reps);
-        end
-
-        function rep = lambda(group, field, dimension, isUnitary, irrepInfo, imageFun, inverseImageFun)
+        function rep = lambda(group, field, dimension, imageFun, inverseImageFun)
         % Creates a non unitary representation from an image function
         %
         % Args:
         %   group (replab.Group): Group represented
         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
         %   dimension (integer): Representation dimension
-        %   isUnitary (logical or []): Whether the representation is unitary, or ``[]`` if unknown
-        %   irrepInfo (`+replab.+irreducible.Info` or []): Info about the irreducibility of this rep., or ``[]`` if unknown
         %   imageFun (function_handle): Function handle that returns an image matrix given a group element
         %   inverseImageFun (function_handle): Function handle that returns the inverse of the image
         %                                      matrix given a group element
         %
         % Returns:
         %   `+replab.Rep`: The constructed representation
-            rep = replab.lambda.Rep(group, field, dimension, isUnitary, irrepInfo, imageFun, inverseImageFun);
+            rep = replab.lambda.Rep(group, field, dimension, imageFun, inverseImageFun);
         end
 
     end

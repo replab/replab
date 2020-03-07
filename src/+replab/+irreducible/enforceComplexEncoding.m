@@ -1,22 +1,29 @@
-function W = enforceComplexEncoding(rep, samples, sub)
-% Finds change of basis that expresses the canonical basis of a complex division algebra
+function res = enforceComplexEncoding(rep, context)
+% Finds the similar representation that expresses the canonical basis of representation on a complex division algebra
+%
 %
 % See `+replab.+domain.ComplexTypeMatrices`
 %
 % Args:
-%   rep (replab.Rep): Real representation being decomposed
-%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples for ``rep``
-%   sub (row cell array of replab.SubRep): Irreducible complex-type real subrepresentation of ``rep``
+%   rep (`+replab.Rep`): Real representation with `rep.frobeniusSchurIndicator == 0`
+%   context (`+replab.Context`): Sampling context
 %
-% Returns
-% -------
-%   M: double matrix
-%     Matrix ``W`` such that ``W * rep.image(g) * W'`` is in the canonical basis
+% Returns:
+%   `+replab.SimilarRep`: Similar representation that has the proper encoding
     assert(isa(rep, 'replab.Rep'));
-    assert(rep == sub.parent);
-    assert(isequal(rep.field, 'R'));
-    d = sub.dimension;
-    S = sub.U*samples.commutantSample(2)*sub.U';
+    assert(rep.overR);
+    assert(isequal(rep.frobeniusSchurIndicator, 0));
+    if isequal(rep.isDivisionAlgebraCanonical, true)
+        res = replab.SimilarRep.identical(rep);
+        return
+    end
+    if ~isequal(rep.isUnitary, true)
+        res = replab.irreducible.enforceComplexEncoding(rep.unitarize, context);
+        res = replab.rep.collapse(res);
+        return
+    end
+    d = rep.dimension;
+    S = rep.commutant.sampleInContext(context, 1);
     A = (S + S') + 1i * (S - S');
     v1 = replab.domain.Vectors('C', d).sample;
     v1 = v1/norm(v1);
@@ -42,9 +49,9 @@ function W = enforceComplexEncoding(rep, samples, sub)
     tol = replab.Parameters.doubleEigTol;
     while size(W, 2) < d
         g = rep.group.sample;
-        x1 = sub.matrixRowAction(g, w1);
+        x1 = rep.matrixRowAction(g, w1);
         if norm(x1 - W * (W' * x1)) > tol
-            x2 = sub.matrixRowAction(g, w2);
+            x2 = rep.matrixRowAction(g, w2);
             X = [x1 x2];
             X = X - W*(W'*X);
             t = trace(X'*X)/2;
@@ -52,5 +59,6 @@ function W = enforceComplexEncoding(rep, samples, sub)
             W = [W X];
         end
     end
-    W = W'; % returns adjoint because we piled up column vectors
+    res = rep.similarRep(W', W);
+    res.isDivisionAlgebraCanonical = true;
 end

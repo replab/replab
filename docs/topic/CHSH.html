@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Relabelings in the CHSH scenario &#8212; RepLAB 0.6.7 documentation</title>
+    <title>Relabelings in the CHSH scenario &#8212; RepLAB 0.6.8-SNAP documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="error_estimation.html" title="Error estimation in RepLAB"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Topic guides</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.7.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.8-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Topic guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="error_thresholds.html">Error thresholds in RepLAB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="error_estimation.html">Error estimation in RepLAB</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Relabelings in the CHSH scenario</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Relabelings-the-outputs">Relabelings the outputs</a></li>
@@ -381,7 +382,7 @@ Adding MOcov to the path
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
 <span></span><span class="n">outputGroup</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">outputRep</span> <span class="p">=</span> <span class="n">outputGroup</span><span class="p">.</span><span class="n">definingRep</span>
+<span class="n">outputRep</span> <span class="p">=</span> <span class="n">outputGroup</span><span class="p">.</span><span class="n">naturalRep</span>
 </pre></div>
 </div>
 </div>
@@ -400,14 +401,17 @@ generator(1): [2, 1]
 
 outputRep =
 
-Orthogonal real representation of dimension 2
-    dimension: 2
-        field: &#39;R&#39;
-        group: Permutations acting on 2 elements
-inverseImages: {[0, 1; 1, 0]}
-    irrepInfo: []
-    isUnitary: true
-    images{1}: [0, 1; 1, 0]
+Orthogonal representation by images
+                 dimension: 2
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: Permutations acting on 2 elements
+    inverseImages_internal: {[0, 1; 1, 0]}
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+        images_internal{1}: [0, 1; 1, 0]
 
 </pre></div></div>
 </div>
@@ -499,30 +503,23 @@ generator(3): {[1, 2], {[1, 2], [2, 1]}}
 <div class="highlight"><pre>
 dec =
 
-Subrepresentation
-   dimension: 16
-       field: &#39;R&#39;
-       group: replab.wreathproduct.OfNiceFiniteGroup
-   irrepInfo: []
-   isUnitary: true
-   niceBasis: replab.NiceBasis
-      parent: Orthogonal real representation of dimension 16
-      U(1,:): [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]/4
-      U(2,:): [2, 2, -2, -2, 2, 2, -2, -2, -2, -2, 2, 2, -2, -2, 2, 2]/8
-      U(3,:): [0, 0, -4, -4, 0, 0, -4, -4, 4, 4, 0, 0, 4, 4, 0, 0]/sqrt(128)
-      U(4,:): [4, 4, 0, 0, 4, 4, 0, 0, 0, 0, -4, -4, 0, 0, -4, -4]/sqrt(128)
-      U(5,:): [4, 0, 0, -4, 0, -4, 4, 0, 0, 4, -4, 0, -4, 0, 0, 4]/sqrt(128)
-      U(6,:): [0, 4, -4, 0, -4, 0, 0, 4, 4, 0, 0, -4, 0, -4, 4, 0]/sqrt(128)
-      U(7,:): [2, 2, -2, -2, -2, -2, 2, 2, -2, -2, 2, 2, 2, 2, -2, -2]/8
-      U(8,:): [2, -2, -2, 2, 2, -2, -2, 2, -2, 2, 2, -2, -2, 2, 2, -2]/8
-      U(9,:): [1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1]/4
-     U(10,:): [0, 0, -4, 4, 0, 0, 4, -4, 4, -4, 0, 0, -4, 4, 0, 0]/sqrt(128)
-     U(11,:): [4, -4, 0, 0, -4, 4, 0, 0, 0, 0, -4, 4, 0, 0, 4, -4]/sqrt(128)
-     U(12,:): [2, -2, -2, 2, -2, 2, 2, -2, -2, 2, 2, -2, 2, -2, -2, 2]/8
-     U(13,:): [0, -4, -4, 0, 4, 0, 0, 4, 4, 0, 0, 4, 0, -4, -4, 0]/sqrt(128)
-     U(14,:): [4, 0, 0, 4, 0, -4, -4, 0, 0, -4, -4, 0, 4, 0, 0, 4]/sqrt(128)
-     U(15,:): [2, -2, 2, -2, 2, -2, 2, -2, 2, -2, 2, -2, 2, -2, 2, -2]/8
-...
+Real representation
+                 dimension: 16
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.wreathproduct.OfNiceFiniteGroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: []
+                    parent: Orthogonal representation
+          trivialDimension: []
+                     basis: 16 x 16 double
+              component(1): Isotypic component (harmonized) R(1) (trivial)
+              component(2): Isotypic component (harmonized) R(1)
+              component(3): Isotypic component (harmonized) R(2)
+              component(4): Isotypic component (harmonized) R(4)
+              component(5): Isotypic component (harmonized) R(4)
+              component(6): Isotypic component (harmonized) R(4)
 
 </pre></div></div>
 </div>
@@ -593,7 +590,7 @@ ans =  6
         <li class="right" >
           <a href="error_estimation.html" title="Error estimation in RepLAB"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Topic guides</a> &#187;</li> 
       </ul>
     </div>

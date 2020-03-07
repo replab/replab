@@ -1,4 +1,5 @@
 classdef RepLaws < replab.Laws
+
     properties
         rep
         G % group of which rep is a representation
@@ -15,7 +16,7 @@ classdef RepLaws < replab.Laws
             self.G = rep.group;
             self.C = rep.commutant;
             self.M = replab.domain.Matrices(rep.field, d, d);
-            if rep.isUnitary
+            if isequal(rep.isUnitary, true)
                 switch rep.field
                   case 'R'
                     self.U = replab.OrthogonalGroup(d);
@@ -34,6 +35,22 @@ classdef RepLaws < replab.Laws
         function law_commutes_with_commutant_algebra_GC(self, g, c)
             rho = self.rep.image(g);
             self.M.assertEqv(rho*c, c*rho);
+        end
+
+        function law_respects_division_algebra_G(self, g)
+            if isequal(self.rep.field, 'R') && isequal(self.rep.isIrreducible, true) && ~isempty(self.rep.frobeniusSchurIndicator)
+                rho = self.rep.image(g);
+                switch self.rep.frobeniusSchurIndicator
+                  case 0
+                    rho1 = replab.domain.ComplexTypeMatrices.project(rho);
+                    self.M.assertEqv(rho, rho1);
+                  case -1
+                    rho1 = replab.domain.QuaternionTypeMatrices.project(rho);
+                    self.M.assertEqv(rho, rho1);
+                  case 1
+                    % do nothing
+                end
+            end
         end
 
     end

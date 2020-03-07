@@ -38,7 +38,7 @@ function replab_generate(what)
     pathStr = strrep(pathStr, '\', '/');
     cd(pathStr)
     cd ..
-    
+
     logFun = @(str) disp(str);
     valid = {'clear' 'sphinx' 'sphinxbuild' 'sphinxsrc' 'sphinxjupyter' 'doctests' 'all'};
     validStr = strjoin(cellfun(@(x) sprintf('''%s''', x), valid, 'uniform', 0), ', ');

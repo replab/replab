@@ -212,21 +212,17 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         %% Representation construction
 
-        function rho = repByImages(self, field, dimension, isUnitary, images, inverseImages)
+        function rho = repByImages(self, field, dimension, images, inverseImages)
         % Constructs a finite dimensional representation of this group from generator images
         %
         % Args:
         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
         %   dimension (integer): Representation dimension
-        %   isUnitary ({true, false, []}): Whether the representation is unitary (or ``[]`` for unknown)
-        %   images (row cell array of matrices): Images of the group generators
-        %   inverseImages (row cell array of matrices): Inverse images of the group generators
+        %   images (cell(1,*) of double(*,*), may be sparse): Images of the group generators
+        %   inverseImages (cell(1,*) of double(*,*), may be sparse): Inverse images of the group generators
         % Returns:
         %   `+replab.Rep`: The constructed group representation
-            if nargin < 6
-                inverseImages = [];
-            end
-            rho = replab.RepByImages(self, field, dimension, isUnitary, images, inverseImages);
+            rho = replab.RepByImages(self, field, dimension, images, inverseImages);
         end
 
         function rho = permutationRep(self, dimension, permutations)
@@ -235,15 +231,16 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % The returned representation is real. Use ``rep.complexification`` to obtain a complex representation.
         %
         % Args:
-        %   dimension: Dimension of the representation
-        %   permutations (row cell array of permutations): Images of the generators as permutations of size ``dimension``
+        %   dimension (integer): Dimension of the representation
+        %   permutations (cell(1,*) of permutations): Images of the generators as permutations of size ``dimension``
         %
         % Returns:
         %   `+replab.Rep`: The constructed group representation
             S = replab.Permutations(dimension);
-            f = @(g) S.toMatrix(g);
+            f = @(g) S.toSparseMatrix(g);
             images = cellfun(f, permutations, 'uniform', 0);
-            rho = self.repByImages('R', dimension, true, images);
+            inverseImages = cellfun(@(i) i', images, 'uniform', 0);
+            rho = self.repByImages('R', dimension, images, inverseImages);
         end
 
         function rho = signedPermutationRep(self, dimension, signedPermutations)
@@ -257,9 +254,10 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   `+replab.Rep`: The constructed group representation
-            f = @(g) replab.signed.Permutations.toMatrix(g);
+            f = @(g) replab.signed.Permutations.toSparseMatrix(g);
             images = cellfun(f, signedPermutations, 'uniform', 0);
-            rho = self.repByImages('R', dimension, true, images);
+            inverseImages = cellfun(@(i) i', images, 'uniform', 0);
+            rho = self.repByImages('R', dimension, images, inverseImages);
         end
 
     end

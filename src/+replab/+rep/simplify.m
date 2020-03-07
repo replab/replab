@@ -2,9 +2,21 @@ function rep1 = simplify(rep)
 % Returns a representation equivalent to the given one, but whose computation is simpler
     newRep = [];
     switch class(rep)
+      case 'replab.SubRep'
+        parent = rep.parent;
+        switch class(parent)
+          case 'replab.SubRep'
+            newB_internal = parent.B_internal * rep.B_internal;
+            newE_internal = rep.E_internal * parent.E_internal;
+            newRep = parent.parent.subRep(newB_internal, newE_internal);
+          otherwise
+        end
       case 'replab.rep.DerivedRep'
         parent = rep.parent;
         switch class(parent)
+          case 'replab.rep.TrivialRep'
+            % dual and conjugate of trivial representation is trivial representation
+            newRep = parent;
           case 'replab.rep.DerivedRep'
             % collapse successive DerivedRep
             newRep = replab.rep.DerivedRep(parent.parent, ...

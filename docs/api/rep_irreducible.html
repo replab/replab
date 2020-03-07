@@ -1,0 +1,498 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Representations (irreducible decomposition support code) &#8212; RepLAB 0.6.8-SNAP documentation</title>
+    <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script type="text/javascript" src="../_static/js/collapse_helper.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Permutation groups" href="permutations.html" />
+    <link rel="prev" title="Representations (support code)" href="rep_technical.html" />
+  
+  
+   
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="permutations.html" title="Permutation groups"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rep_technical.html" title="Representations (support code)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><div class="text-logo">
+  <a href="
+    ../index.html">RepLAB</a>&nbsp;&nbsp;
+  <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.8-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
+  <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
+  <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
+</div><div class="sidebar-block">
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications using RepLAB</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="print.html">Pretty printing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base.html">Base object types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="laws.html">Laws</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">Dispatch mechanism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groups.html">Basic group structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep_technical.html">Representations (support code)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Representations (irreducible decomposition support code)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-buildisotypic">irreducible.buildIsotypic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-canonicaldivisionalgebra">irreducible.canonicalDivisionAlgebra</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-decomposition">irreducible.decomposition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-decompositionusingsplit">irreducible.decompositionUsingSplit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-enforcecomplexencoding">irreducible.enforceComplexEncoding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-enforcequaternionencoding">irreducible.enforceQuaternionEncoding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-frobeniusschurindicator">irreducible.frobeniusSchurIndicator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-harmonizeisotypic">irreducible.harmonizeIsotypic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-split">irreducible.split</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-splitallones">irreducible.splitAllOnes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-splitblocks">irreducible.splitBlocks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-splittrivialcomponent">irreducible.splitTrivialComponent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-splittrivialgroup">irreducible.splitTrivialGroup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-splitusingcommutant">irreducible.splitUsingCommutant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#irreducible-standardbasis">irreducible.standardBasis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="permutations.html">Permutation groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_constructions.html">Abstract group constructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="infrastructure.html">Infrastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="infrastructure_technical.html">Infrastructure (support code)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="list.html">List of classes and functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../blog/index.html">Blog</a></li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2><a href="../blog.html">Recent Blog Posts</a></h2>
+  </div>
+  <div class="sidebar-toc">
+    <ul>
+      
+      
+      <li class="toctree-l1"><a href="../blog/20200123-RepLAB-website-live.html">26 January - The RepLAB documentation and the infrastructure behind it</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../index.html">Docs</a></li>
+              
+                <li><a href="index.html">Technical Reference</a></li>
+              
+              <li>Representations (irreducible decomposition support code)</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+            
+  <div class="section" id="module-+replab.+irreducible">
+<span id="representations-irreducible-decomposition-support-code"></span><h1>Representations (irreducible decomposition support code)<a class="headerlink" href="#module-+replab.+irreducible" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="irreducible-buildisotypic">
+<h2>irreducible.buildIsotypic<a class="headerlink" href="#irreducible-buildisotypic" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.buildIsotypic">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">buildIsotypic</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.buildIsotypic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="irreducible-canonicaldivisionalgebra">
+<h2>irreducible.canonicalDivisionAlgebra<a class="headerlink" href="#irreducible-canonicaldivisionalgebra" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.canonicalDivisionAlgebra">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">canonicalDivisionAlgebra</code><span class="sig-paren">(</span><em class="sig-param">rep</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.canonicalDivisionAlgebra" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the representation similar to the given irreducible representation with its division algebra in the RepLAB canonical form</p>
+<p>Mutates the argument to add the Frobenius-Schur indicator info.</p>
+<p>We return <code class="docutils literal notranslate"><span class="pre">res</span></code> such that <code class="docutils literal notranslate"><span class="pre">res.parent</span> <span class="pre">==</span> <span class="pre">rep</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">rep</span></code> is over the complex field, or the real representation type is “real”, then we return
+a similar representation with an identity change of basis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rep</strong> (<a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a>) – Irreducible representation to find the canonical form of</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Representation with division algebra in canonical form</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.SimilarRep</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="irreducible-decomposition">
+<h2>irreducible.decomposition<a class="headerlink" href="#irreducible-decomposition" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.decomposition">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">decomposition</code><span class="sig-paren">(</span><em class="sig-param">rep</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.decomposition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decomposes the given representation into an irreducible decomposition, identifying details</p>
+<p>Details include grouping copies (multiplicities) in isotypic components, identifying division
+algebras (for representations over the reals), and making sure that complex-type and quaternion-type
+real representations are expressed in a canonical basis for the division algebra encoding.</p>
+<p>Note: see the default methods applied in <a class="reference internal" href="dispatch.html#+replab.dispatchDefaults" title="+replab.dispatchDefaults"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.dispatchDefaults</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rep</strong> (<a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a>) – Representation to decompose</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The irreducible decomposition</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="rep.html#+replab.Irreducible" title="+replab.Irreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Irreducible</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="irreducible-decompositionusingsplit">
+<h2>irreducible.decompositionUsingSplit<a class="headerlink" href="#irreducible-decompositionusingsplit" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.decompositionUsingSplit">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">decompositionUsingSplit</code><span class="sig-paren">(</span><em class="sig-param">rep</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.decompositionUsingSplit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic method for representation decomposition</p>
+<p>First it splits the representation into irreducibles, before recognizing which
+irreducible representations are part of the same isotypic component.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="irreducible-enforcecomplexencoding">
+<h2>irreducible.enforceComplexEncoding<a class="headerlink" href="#irreducible-enforcecomplexencoding" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.enforceComplexEncoding">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">enforceComplexEncoding</code><span class="sig-paren">(</span><em class="sig-param">rep</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.enforceComplexEncoding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the similar representation that expresses the canonical basis of representation on a complex division algebra</p>
+<p>See <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.domain.ComplexTypeMatrices</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rep</strong> (<a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a>) – Real representation with <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rep.frobeniusSchurIndicator</span> <span class="pre">==</span> <span class="pre">0</span></code></p></li>
+<li><p><strong>context</strong> (<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Context</span></code>) – Sampling context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Similar representation that has the proper encoding</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.SimilarRep</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="irreducible-enforcequaternionencoding">
+<h2>irreducible.enforceQuaternionEncoding<a class="headerlink" href="#irreducible-enforcequaternionencoding" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.enforceQuaternionEncoding">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">enforceQuaternionEncoding</code><span class="sig-paren">(</span><em class="sig-param">rep</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.enforceQuaternionEncoding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the similar representation that expresses the canonical basis of representation on a quaternion division algebra</p>
+<p>See <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.domain.QuaternionTypeMatrices</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rep</strong> (<a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a>) – Real representation with <code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rep.frobeniusSchurIndicator</span> <span class="pre">==</span> <span class="pre">-1</span></code></p></li>
+<li><p><strong>context</strong> (<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Context</span></code>) – Sampling context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Similar representation that has the proper encoding</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.SimilarRep</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="irreducible-frobeniusschurindicator">
+<h2>irreducible.frobeniusSchurIndicator<a class="headerlink" href="#irreducible-frobeniusschurindicator" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.frobeniusSchurIndicator">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">frobeniusSchurIndicator</code><span class="sig-paren">(</span><em class="sig-param">irrep</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.frobeniusSchurIndicator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Frobenius-Schur indicator of an irreducible subrepresentation</p>
+<p>An irreducible representation over a complex vector space always has Frobenius-Schur
+indicator <span class="math notranslate nohighlight">\(1\)</span>.</p>
+<p>When the irreducible representation is over a real vector space, then:</p>
+<ul class="simple">
+<li><p>if the indicator is <span class="math notranslate nohighlight">\(1\)</span>, the representation is of real-type and its complexification
+is also irreducible,</p></li>
+<li><p>if the indicator is <span class="math notranslate nohighlight">\(0\)</span>, the representation is complex-type,</p></li>
+<li><p>if the indicator is <span class="math notranslate nohighlight">\(-1\)</span>, the representation is quaternion-type.</p></li>
+</ul>
+<p>Does not mutate the <code class="docutils literal notranslate"><span class="pre">irrep</span></code> argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>irrep</strong> (<a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a>) – Irreducible real representation to identify the type of</p></li>
+<li><p><strong>context</strong> (<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Context</span></code>) – Sampling context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Frobenius-Schur indicator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>{-1, 0, 1}</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="irreducible-harmonizeisotypic">
+<h2>irreducible.harmonizeIsotypic<a class="headerlink" href="#irreducible-harmonizeisotypic" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.harmonizeIsotypic">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">harmonizeIsotypic</code><span class="sig-paren">(</span><em class="sig-param">iso</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.harmonizeIsotypic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Harmonizes an isotypic component</p>
+<p>As part of the operation, we identify the division algebra type (if the representations are over R),
+put those division algebras in their canonical basis, and make the irreducible
+representations not only equivalent but identical.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iso</strong> (<a class="reference internal" href="rep.html#+replab.Isotypic" title="+replab.Isotypic"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Isotypic</span></code></a>) – Isotypic component, not necessarily harmonized</p></li>
+<li><p><strong>context</strong> (<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Context</span></code>) – Sampling context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The harmonized isotypic component</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.HarmonizedIsotypic</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="irreducible-split">
+<h2>irreducible.split<a class="headerlink" href="#irreducible-split" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.split">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">split</code><span class="sig-paren">(</span><em class="sig-param">rep</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decomposes the given representation into subrepresentations</p>
+<p>The returned list of subrepresentations contains instances of <a class="reference internal" href="rep.html#+replab.SubRep" title="+replab.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.SubRep</span></code></a>, whose
+<a class="reference internal" href="rep.html#+replab.SubRep.parent" title="+replab.SubRep.parent"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">parent</span></code></a> property must be equal to the given representation <code class="docutils literal notranslate"><span class="pre">rep</span></code>.</p>
+<p>If the returned list contains a single subrepresentation, it needs to have a trivial
+basis and embedding map equal to the identity matrix, and that subrepresentation needs
+to be more informative than the given representation by either having <a class="reference internal" href="rep.html#+replab.Rep.isIrreducible" title="+replab.Rep.isIrreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIrreducible</span></code></a>
+or <a class="reference internal" href="rep.html#+replab.Rep.trivialDimension" title="+replab.Rep.trivialDimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialDimension</span></code></a> filled up.</p>
+<p>If the return list contains more than one subrepresentation, no such restriction applies.</p>
+<p>See the default implementations of that method in <a class="reference internal" href="dispatch.html#+replab.dispatchDefaults" title="+replab.dispatchDefaults"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.dispatchDefaults</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rep</strong> (<a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a>) – Representation to decompose, must be not known to be irreducible</p></li>
+<li><p><strong>context</strong> (<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Context</span></code>) – A context in which to cache samples</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A cell array of subrepresentations</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>cell(1,*) of <a class="reference internal" href="rep.html#+replab.SubRep" title="+replab.SubRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.SubRep</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="irreducible-splitallones">
+<h2>irreducible.splitAllOnes<a class="headerlink" href="#irreducible-splitallones" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.splitAllOnes">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">splitAllOnes</code><span class="sig-paren">(</span><em class="sig-param">rep</em>, <em class="sig-param">trivialSamples</em>, <em class="sig-param">hermitianInvariantSamples</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.splitAllOnes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the vector of all ones is invariant</p>
+</dd></dl>
+
+</div>
+<div class="section" id="irreducible-splitblocks">
+<h2>irreducible.splitBlocks<a class="headerlink" href="#irreducible-splitblocks" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.splitBlocks">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">splitBlocks</code><span class="sig-paren">(</span><em class="sig-param">rep</em>, <em class="sig-param">trivialSamples</em>, <em class="sig-param">hermitianInvariantSamples</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.splitBlocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies an explicit block form if present, and split accordingly</p>
+</dd></dl>
+
+</div>
+<div class="section" id="irreducible-splittrivialcomponent">
+<h2>irreducible.splitTrivialComponent<a class="headerlink" href="#irreducible-splittrivialcomponent" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.splitTrivialComponent">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">splitTrivialComponent</code><span class="sig-paren">(</span><em class="sig-param">rep</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.splitTrivialComponent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splits the trivial component out of a representation</p>
+</dd></dl>
+
+</div>
+<div class="section" id="irreducible-splittrivialgroup">
+<h2>irreducible.splitTrivialGroup<a class="headerlink" href="#irreducible-splittrivialgroup" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.splitTrivialGroup">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">splitTrivialGroup</code><span class="sig-paren">(</span><em class="sig-param">rep</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.splitTrivialGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>If a representation is defined on the trivial group, it is trivial, split accordingly</p>
+</dd></dl>
+
+</div>
+<div class="section" id="irreducible-splitusingcommutant">
+<h2>irreducible.splitUsingCommutant<a class="headerlink" href="#irreducible-splitusingcommutant" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.splitUsingCommutant">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">splitUsingCommutant</code><span class="sig-paren">(</span><em class="sig-param">rep</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.splitUsingCommutant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splits a representation into irreducible representations by using a commutant sample</p>
+<p>Decomposes a possibly non-irreducible representation <code class="docutils literal notranslate"><span class="pre">rep</span></code> into irreducible subrepresentations.</p>
+<p>The trivial subrepresentation must already have been taken out.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="irreducible-standardbasis">
+<h2>irreducible.standardBasis<a class="headerlink" href="#irreducible-standardbasis" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.+irreducible.standardBasis">
+<code class="sig-prename descclassname">replab.irreducible.</code><code class="sig-name descname">standardBasis</code><span class="sig-paren">(</span><em class="sig-param">d</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+irreducible.standardBasis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an orthonormal integer basis of the Euclidean space that including the vector of all ones</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> (<em>integer</em>) – Dimension</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Matrix whose first row is the vector of all ones,</dt><dd><p>with all rows orthogonal to each other</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(double(*,*))</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+  <div class="section">
+  
+  
+  </div>
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="rep_technical.html" title="previous chapter (use the left arrow)">Representations (support code)</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="permutations.html" title="next chapter (use the right arrow)">Permutation groups</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="permutations.html" title="Permutation groups"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="rep_technical.html" title="Representations (support code)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2020, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>

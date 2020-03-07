@@ -25,6 +25,8 @@ Package replab
 - `+replab.ActionLaws` -- 
 - `+replab.CommutantVar` -- Sdpvar matrices subject to symmetry constraints.
 - `+replab.CompactGroup` -- A group equipped with a Haar measure
+- `+replab.Context` -- 
+- `+replab.DispatchNext` -- 
 - `+replab.Domain` -- Describes a set of elements with a common structure
 - `+replab.DomainLaws` -- Law checks for a generic Domain
 - `+replab.Equivariant` -- Describes a vector space of group-equivariant matrices
@@ -36,6 +38,8 @@ Package replab
 - `+replab.Group` -- Describes a group
 - `+replab.GroupLaws` -- Group axioms
 - `+replab.GroupMorphismLaws` -- 
+- `+replab.HarmonizedIsotypic` -- Describes an isotypic component in the decomposition of a representation
+- `+replab.HarmonizedIsotypicLaws` -- 
 - `+replab.IndexedFamily` -- Describes an indexed family of elements
 - `+replab.IndexedFamilyLaws` -- Laws for indexed families
 - `+replab.Irreducible` -- Describes the irreducible decomposition of a representation
@@ -50,7 +54,6 @@ Package replab
 - `+replab.Laws` -- Describes the laws that an algebraic structure should obey
 - `+replab.Monoid` -- Describes a monoid
 - `+replab.MonoidLaws` -- Laws obeyed by a monoid
-- `+replab.NiceBasis` -- Represents a decomposition of a orthogonormal basis into an integer matrix with the same span and a correction factor
 - `+replab.NiceFiniteGroup` -- A nice finite group is a finite group equipped with an injective homomorphism into a permutation group
 - `+replab.NiceFiniteGroupLaws` -- Law checks for nice finite groups
 - `+replab.NiceFiniteSubgroup` -- A generic implementation of a subgroup of a nice finite group
@@ -70,10 +73,8 @@ Package replab
 - `+replab.SedumiData` -- A block-diagonalizing preprocessor for SDPs in SeDuMi format.
 - `+replab.SimilarRep` -- Describes a representation similar to a given representation under a change of basis
 - `+replab.Str` -- Base class that provides sane pretty printing for all RepLAB objects
-- `+replab.SubRep` -- Describes a subrepresentation of a unitary finite representation
-- `+replab.SubRepLaws` -- 
-- `+replab.SubRepNU` -- Describes a subrepresentation of a unitary finite representation
-- `+replab.SubRepNULaws` -- 
+- `+replab.SubRep` -- Describes a subrepresentation of a finite representation
+- `+replab.SubRepLaws` -- Laws for subrepresentations
 - `+replab.UnitaryGroup` -- Describes the group of n x n unitary (complex) matrices
 
 .. rubric:: Functions
@@ -88,7 +89,6 @@ Package replab
 - `+replab.isNonZeroMatrix` -- Returns whether norm(A, 2) > tol
 - `+replab.iseye` -- Tests whether a given matrix is exactly the identity
 - `+replab.longStr` -- Returns a multiline description of the given object, that fits within the given width/height limit
-- `+replab.makeEquivariant` -- Returns the space of equivariant linear maps between two representations
 - `+replab.shortStr` -- Returns a one-line description of the given object, that fits within the given width maxColumns
 - `+replab.trileanAnd` -- Returns the 'and' of trilean values
 - `+replab.trileanOr` -- Returns the 'or' of trilean values
@@ -165,6 +165,7 @@ Package replab.equivariant
 - `+replab.+equivariant.ForCompactGroup` -- 
 - `+replab.+equivariant.ForFiniteGroup` -- 
 - `+replab.+equivariant.ForRepByImages` -- 
+- `+replab.+equivariant.ForSubReps` -- Describes a subspace of an equivariant space induced by subspaces of source/target representations
 
 .. rubric:: Functions
 
@@ -230,29 +231,23 @@ Package replab.infra
 Package replab.irreducible
 --------------------------
 
-.. rubric:: Classes
-
-
-- `+replab.+irreducible.Info` -- 
-- `+replab.+irreducible.OnDemandSamples` -- 
-- `+replab.+irreducible.TrivialInfo` -- 
-
 .. rubric:: Functions
 
 
-- `+replab.+irreducible.buildIsotypic` -- Builds an isotypic canonical component from equivalent subrepresentations
-- `+replab.+irreducible.computeRealType` -- Computes the real type of a real irreducible subrepresentation
+- `+replab.+irreducible.canonicalDivisionAlgebra` -- Computes the representation similar to the given irreducible representation with its division algebra in the RepLAB canonical form
 - `+replab.+irreducible.decomposition` -- Decomposes the given representation into an irreducible decomposition, identifying details
 - `+replab.+irreducible.decompositionUsingSplit` -- Generic method for representation decomposition
-- `+replab.+irreducible.enforceComplexEncoding` -- Finds change of basis that expresses the canonical basis of a complex division algebra
-- `+replab.+irreducible.enforceQuaternionEncoding` -- Finds change of basis expressing the canonical basis of a quaternion division algebra
-- `+replab.+irreducible.findCommonBasis` -- Finds the change of basis that relates two equivalent subrepresentations
-- `+replab.+irreducible.recoverReal` -- Replaces the basis U by a real basis if possible
-- `+replab.+irreducible.sortedEig` -- Returns the eigenvalues, sorted by magnitude
+- `+replab.+irreducible.enforceComplexEncoding` -- Finds the similar representation that expresses the canonical basis of representation on a complex division algebra
+- `+replab.+irreducible.enforceQuaternionEncoding` -- Finds the similar representation that expresses the canonical basis of representation on a quaternion division algebra
+- `+replab.+irreducible.frobeniusSchurIndicator` -- Computes the Frobenius-Schur indicator of an irreducible subrepresentation
+- `+replab.+irreducible.harmonizeIsotypic` -- Harmonizes an isotypic component
 - `+replab.+irreducible.split` -- Decomposes the given representation into subrepresentations
-- `+replab.+irreducible.splitPermutations` -- Splits a permutation representation
-- `+replab.+irreducible.splitUsingCommutant` -- splitUsingCommutant - Splits a representation into irreducible representations by using a commutant sample
-- `+replab.+irreducible.tell` -- Debug method to give some verbosity to the decomposition process
+- `+replab.+irreducible.splitAllOnes` -- Checks if the vector of all ones is invariant
+- `+replab.+irreducible.splitBlocks` -- Identifies an explicit block form if present, and split accordingly
+- `+replab.+irreducible.splitTrivialComponent` -- Splits the trivial component out of a representation
+- `+replab.+irreducible.splitTrivialGroup` -- If a representation is defined on the trivial group, it is trivial, split accordingly
+- `+replab.+irreducible.splitUsingCommutant` -- Splits a representation into irreducible representations by using a commutant sample
+- `+replab.+irreducible.standardBasis` -- Returns an orthonormal integer basis of the Euclidean space that including the vector of all ones
 
 Package replab.lambda
 ---------------------
@@ -310,6 +305,34 @@ Package replab.lobster
 - `+replab.+lobster.eval_with_context` -- Evaluates an expression in context (?)
 - `+replab.+lobster.print_node` -- 
 
+Package replab.nice
+-------------------
+
+.. rubric:: Functions
+
+
+- `+replab.+nice.attemptRecoverRational` -- Attempts to recover a rational approximation of a double vector/matrix
+- `+replab.+nice.integerGramSchmidt` -- Performs the integer Gram-Schmidt orthogonalization procedure on the rows of an integer matrix
+- `+replab.+nice.integerRowSpan` -- Attempts integer basis recovery from the given orthonormal basis
+- `+replab.+nice.niceIsotypic` -- Attempts to make the bases of an isotypic component nicer
+- `+replab.+nice.niceIsotypicOriginal` -- Does not do anything: fallback
+- `+replab.+nice.niceIsotypicSingleMultiplicity` -- Works on a trivial isotypic component
+- `+replab.+nice.niceIsotypicTrivial` -- Works on a trivial isotypic component
+- `+replab.+nice.niceSubRep` -- Attempts to make the basis of a subrepresentation nicer
+- `+replab.+nice.niceSubRepOriginal` -- Does not do anything: fallback
+- `+replab.+nice.niceSubRepRecoverInteger` -- Replaces the real basis of a subrepresentation by an integer basis if possible
+- `+replab.+nice.niceSubRepRecoverReal` -- Replaces the complex basis of a subrepresentation by a real basis if possible
+- `+replab.+nice.vecgcd` -- Returns the greatest common divisor of a vector of integers
+- `+replab.+nice.veclcm` -- Returns the least common multiple of a vector of integers
+
+Package replab.numerical
+------------------------
+
+.. rubric:: Functions
+
+
+- `+replab.+numerical.sortedEig` -- Returns the eigenvalues, sorted by magnitude
+
 Package replab.perm
 -------------------
 
@@ -351,18 +374,6 @@ Package replab.quaternion
 - `+replab.+quaternion.Matrices` -- Describes the vector space of nR x nC quaternion matrices
 - `+replab.+quaternion.Vectors` -- Describes the vector space of d x 1 quaternion vectors
 
-Package replab.rational
------------------------
-
-.. rubric:: Functions
-
-
-- `+replab.+rational.attemptRecoverRational` -- Attempts to recover a rational approximation of a double vector/matrix
-- `+replab.+rational.integerGramSchmidt` -- Performs the integer Gram-Schmidt orthogonalization procedure on the rows of an integer matrix
-- `+replab.+rational.integerRowSpan` -- Attempts integer basis recovery from the given unitary basis
-- `+replab.+rational.vecgcd` -- Returns the greatest common divisor of a vector of integers
-- `+replab.+rational.veclcm` -- Returns the least common multiple of a vector of integers
-
 Package replab.rep
 ------------------
 
@@ -370,6 +381,7 @@ Package replab.rep
 
 
 - `+replab.+rep.ComplexifiedRep` -- Representation derived by complexfying a real representation
+- `+replab.+rep.DefiningRep` -- Defining representation of a unitary group
 - `+replab.+rep.DerivedRep` -- Representation derived by the means of complex conjugate, inverse and/or transpose
 - `+replab.+rep.DirectSumRep` -- A direct sum of representations, such that images are diagonal by blocks
 - `+replab.+rep.IndexRelabelingRep` -- Representation that permutes the indices of a tensor
@@ -379,8 +391,12 @@ Package replab.rep
 .. rubric:: Functions
 
 
+- `+replab.+rep.assertCompatibleFactors` -- Checks that the given representations are compatible in a direct sum or tensor product
+- `+replab.+rep.collapse` -- Simplifies the last level of a hierarchy of representation
+- `+replab.+rep.copyProperties` -- Copies the mutable properties of a representation to another
+- `+replab.+rep.refineIsotypic` -- Implementation of `+replab.Isotypic.refine`
+- `+replab.+rep.refineSubRep` -- Implementation of `+replab.SubRep.refine`
 - `+replab.+rep.simplify` -- Returns a representation equivalent to the given one, but whose computation is simpler
-- `+replab.+rep.standardBasis` -- Returns an orthogonal integer basis of the Euclidean space that including the vector of all ones
 
 Package replab.semidirectproduct
 --------------------------------
@@ -409,6 +425,7 @@ Package replab.settings
 - `+replab.+settings.strMaxColumns` -- Get/set the maximal number of columns to display when pretty printing
 - `+replab.+settings.strMaxRows` -- Get/set the maximal number of rows to display when pretty printing
 - `+replab.+settings.systemHelpPath` -- Get/set the folder containing MATLAB/Octave ``help.m``
+- `+replab.+settings.verboseDispatch` -- Get/set whether the dispatch mechanism is verbose
 
 Package replab.signed
 ---------------------
@@ -434,6 +451,7 @@ Package replab.str
 
 - `+replab.+str.align` -- Renders a table using the given LaTeX-inspired specification
 - `+replab.+str.brackets` -- Returns the pair ``{, }`` for cell arrays or ``[, ]`` for other objects
+- `+replab.+str.capitalize` -- Converts the first character to an uppercase letter (if relevant) and lowercases all other characters
 - `+replab.+str.cellStr` -- Returns a string representation of an element in a vector/matrix/cell array
 - `+replab.+str.escape` -- Escapes special characters in strings, like '\n', '''', etc...
 - `+replab.+str.fieldsList` -- Returns a list of field names and values for the given object, returned as column vectors
@@ -449,18 +467,23 @@ Package replab.str
 Package replab.sym
 ------------------
 
-.. rubric:: Classes
-
-
-- `+replab.+sym.GeneralLinearMatricesWithInverses` -- Describes the group of n x n invertible real or complex matrices
-
 .. rubric:: Functions
 
 
+- `+replab.+sym.sageSpechtStandardBasis` -- Returns a basis for the standard representation embedded in the defining representation of S(d)
 - `+replab.+sym.specht` -- Returns an irrep of the symmetric group S(n) according to the Specht basis
 - `+replab.+sym.symIrrepImages` -- Return matrices for an irreducible representation of S(n)
 - `+replab.+sym.youngOrthogonal` -- Returns an irrep of S(n) according to the Young orthogonal basis
 - `+replab.+sym.youngSeminormal` -- Returns an irrep of S(n) according to the Young seminormal basis
+
+Package replab.util
+-------------------
+
+.. rubric:: Functions
+
+
+- `+replab.+util.areAllEqual` -- Returns whether all the elements in a vector are equal under isequal
+- `+replab.+util.fusionOptional` -- Merges optional values, checking for consistency
 
 Package replab.wreathproduct
 ----------------------------

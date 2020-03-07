@@ -1,4 +1,5 @@
 classdef SubRepLaws < replab.RepLaws
+% Laws for subrepresentations
 
     methods
 
@@ -6,36 +7,23 @@ classdef SubRepLaws < replab.RepLaws
             self = self@replab.RepLaws(rep);
         end
 
-        function law_basis_is_unitary_(self)
-            self.M.assertEqv(self.rep.U * self.rep.U', eye(self.rep.dimension));
+        function law_basis_and_internal_embedding_(self)
+            self.M.assertEqv(self.rep.E_internal * self.rep.B_internal, eye(self.rep.dimension));
+            P = self.rep.B_internal * self.rep.E_internal;
+            self.M.assertEqv(P*P, P);
         end
 
-        function law_relation_with_parent_rep_G(self, g)
+        function law_image_relation_with_parent_rep_GM(self, g, m)
+            m1 = full(self.rep.B_internal * self.rep.image(g) * m);
+            m2 = full(self.rep.parent.image(g) * self.rep.B_internal * m);
+            self.assert(~replab.isNonZeroMatrix(m1 - m2, replab.Parameters.doubleEigTol));
+        end
+
+         function law_relation_with_parent_rep_G(self, g)
             if ~isempty(self.rep.parent)
                 parentRho = self.rep.parent.image(g);
-                proj = self.rep.projector;
                 rho = self.rep.image(g);
-                self.assert(~replab.isNonZeroMatrix(proj*parentRho - parentRho*proj, replab.Parameters.doubleEigTol));
-                self.M.assertEqv(self.rep.U*parentRho*self.rep.U', rho);
-            end
-        end
-
-        function law_nice_basis_reproduces_basis_(self)
-            if ~isempty(self.rep.niceBasis)
-                self.assert(~replab.isNonZeroMatrix(self.rep.niceBasis.U - self.rep.U, replab.Parameters.doubleEigTol));
-            end
-        end
-
-        function law_respects_division_algebra_G(self, g)
-            if isequal(self.rep.field, 'R') && self.rep.isKnownCanonicalIrreducible
-                rho = self.rep.image(g);
-                if isequal(self.rep.irrepInfo.divisionAlgebra, 'C')
-                    rho1 = replab.domain.ComplexTypeMatrices.project(rho);
-                    self.M.assertEqv(rho, rho1);
-                elseif isequal(self.rep.irrepInfo.divisionAlgebra, 'H')
-                    rho1 = replab.domain.QuaternionTypeMatrices.project(rho);
-                    self.M.assertEqv(rho, rho1);
-                end
+                self.M.assertEqv(full(self.rep.E_internal*parentRho*self.rep.B_internal), rho);
             end
         end
 

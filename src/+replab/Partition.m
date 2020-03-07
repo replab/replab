@@ -116,15 +116,15 @@ classdef Partition < replab.Str
 % $$$             next1(mask) = pI(self.next(p(mask)));
 % $$$             P1 = replab.Partition(n1, blockIndex1, start1, next1);
 % $$$         end
-% $$$         
+% $$$
 % $$$         function P1 = permutationLeftAction(self, g)
 % $$$         % Permutes the indices of this permutation
 % $$$             gI(g) = 1:self.n;
 % $$$             blockIndex1 = self.blockIndex(gI);
-% $$$             
-% $$$             
+% $$$
+% $$$
 % $$$         end
-% $$$         
+% $$$
 % $$$         function [P1 perm] = subPartitionForIndices(self, indices)
 % $$$         % perm: indexIntoSubPartition -> indexIntoOriginalPartition
 % $$$             blocks = unique(blockIndex(indices));
@@ -137,10 +137,10 @@ classdef Partition < replab.Str
 % $$$             % blockIndices(p2) is sorted - p2: sorted -> ^blockIndices
 % $$$             pI1(p1) = 1:length(indices); %     ^indices -> sorted
 % $$$             pI2(p2) = 1:length(indices); %     ^blockIndices -> sorted
-% $$$             % 
-% $$$             
+% $$$             %
+% $$$
 % $$$         end
-        
+
     end
 
     methods (Static)

@@ -1,7 +1,7 @@
 classdef Equivariant < replab.Domain
 % Describes a vector space of group-equivariant matrices
 %
-% Let ``repR`` and ``repC`` be two representations of the same group ``G``.
+% Let ``repC`` and ``repR`` be two representations of the same group ``G``.
 %
 % This describes the set of matrices ``X`` such that ``repR.image(g) * X = X * repC.image(g)``
 %
@@ -10,8 +10,9 @@ classdef Equivariant < replab.Domain
 %
 % There are two special cases of equivariant spaces.
 %
-% - ``commutant`` equivariant spaces have ``repR == repC``,
-% - ``hermitian`` equivariant spaces have ``repR == repC.conjugate.dual``.
+% - ``commutant`` equivariant spaces have ``repC == repR``,
+% - ``hermitian`` equivariant spaces have ``repC == repR.conjugate.dual``.
+% - ``trivial`` equivariant spaces have ``repC == repR.group.trivialRep(field, repR.dimension)``
 %
 % When ``repR`` is unitary, the ``commutant`` and ``hermitian`` cases are identical.
 
@@ -22,11 +23,13 @@ classdef Equivariant < replab.Domain
         group % (`+replab.CompactGroup`): Group being represented
         repR % (`+replab.Rep`): Representation of row space
         repC % (`+replab.Rep`): Representation of column space
-        special % ({'hermitian', 'commutant', []}): Whether the equivariant space has special structure
+        special % ({'hermitian', 'commutant', 'trivial', []}): Whether the equivariant space has special structure
     end
 
     properties (Access = protected)
-        parent % (`+replab.Domain`): Parent domain, real or complex matrices
+        domain % (`+replab.Domain`): Domain, real or complex matrices
+        cachedSamples_ % (struct of cell(1,*) of domain elements): Samples
+        cachedErrors_ % (struct of double(1,*)): Error information
     end
 
     methods
@@ -41,7 +44,7 @@ classdef Equivariant < replab.Domain
         % `` X1 = int{g in G} dg rhoR.image(g) * X * rhoC.inverseImage(g) ``
         %
         % Args:
-        %   X (double(*,*)): Matrix to project
+        %   X (double(*,*), may be sparse): Matrix to project
         %
         % Returns
         % -------
@@ -49,7 +52,7 @@ classdef Equivariant < replab.Domain
         %   double(*,*): Projected matrix
         % err:
         %   double: Estimation of the numerical error, expressed as the distance of the returned ``X1`` to
-        %           the invariant subspace in Frobenius norm
+        %           the invariant subspace in Frobenius norm or ``NaN`` if no such estimation can be performed
             error('Abstract');
         end
 
@@ -57,20 +60,7 @@ classdef Equivariant < replab.Domain
 
     methods
 
-        function [X err] = sampleWithError(self)
-        % Returns an approximate sample from this equivariant space along with estimated numerical error
-        %
-        % Returns
-        % -------
-        % X:
-        %   double(*,*): A sample from this equivariant space
-        % err:
-        %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
-        %           the invariant subspace in Frobenius norm
-            [X err] = self.project(self.parent.sample);
-        end
-
-        function self = Equivariant(repR, repC, special)
+        function self = Equivariant(repC, repR, special)
         % Constructor; use `+replab.makeEquivariant` in user code
         %
         % That function selects an optimized implementation depending on the use case.
@@ -84,8 +74,91 @@ classdef Equivariant < replab.Domain
             assert(repR.group == repC.group, ...
                    'Both representations must be defined on the same group');
             self.group = repR.group;
-            self.parent = replab.domain.Matrices(self.field, self.nR, self.nC);
+            self.domain = replab.domain.Matrices(self.field, self.nR, self.nC);
             self.special = special;
+            self.cachedSamples_ = struct;
+            self.cachedErrors_ = struct;
+        end
+
+        function [X err] = sampleWithError(self)
+        % Returns an approximate sample from this equivariant space along with estimated numerical error
+        %
+        % The samples are cached in a context.
+        %
+        % Args:
+        %   context (`+replab.Context`): Context in which samples are cached
+        %   i (double): 1-based index of the sample
+        %
+        % Returns
+        % -------
+        % X:
+        %   double(*,*): A sample from this equivariant space
+        % err:
+        %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
+        %           the invariant subspace in Frobenius norm
+            [X err] = self.project(self.domain.sample);
+        end
+
+        function clearCache(self, context)
+        % Clears the samples cached for the given context
+        %
+        % Args:
+        %   context (`+replab.Context`): Context to clear
+            self.cachedSamples_ = rmfield(self.cachedSamples_, context.id);
+            self.cachedErrors_ = rmfield(self.cachedErrors_, context.id);
+        end
+
+        function [X err] = sampleInContext(self, context, ind)
+        % Returns an approximate sample from this equivariant space along with estimated numerical error
+        %
+        % The samples are cached in a context.
+        %
+        % Args:
+        %   context (`+replab.Context`): Context in which samples are cached
+        %   ind (double): 1-based index of the sample
+        %
+        % Returns
+        % -------
+        % X:
+        %   double(*,*): A sample from this equivariant space
+        % err:
+        %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
+        %           the invariant subspace in Frobenius norm
+            assert(~context.closed);
+            id = context.id;
+            if ~isfield(self.cachedSamples_, id)
+                context.register(self);
+                self.cachedSamples_.(id) = cell(1, 0);
+                self.cachedErrors_.(id) = zeros(1, 0);
+            end
+            n = length(self.cachedSamples_.(id));
+            samples = self.cachedSamples_.(id);
+            errors = self.cachedErrors_.(id);
+            if ind > n
+                for i = n+1:ind
+                    [X err] = self.sampleWithError;
+                    samples{1, i} = X;
+                    errors{1, i} = err;
+                end
+                self.cachedSamples_.(id) = samples;
+                self.cachedErrors_.(id) = errors;
+            end
+            X = samples{ind};
+            err = errors(ind);
+        end
+
+        function E1 = subEquivariant(self, subC, subR, special)
+        % Constructs a invariant subspace of an equivariant space
+        %
+        % Args:
+        %   subC (`+replab.SubRep`): A subrepresentation of ``self.repC``
+        %   subR (`+replab.SubRep`): A subrepresentation of ``self.repR``
+        %   special (charstring): Whether the equivariant subspace has special structure
+            assert(isa(subC, 'replab.SubRep'));
+            assert(isa(subR, 'replab.SubRep'));
+            assert(subC.parent == self.repC);
+            assert(subR.parent == self.repR);
+            E1 = replab.equivariant.ForSubReps(subC, subR, special, self);
         end
 
         %% Str methods
@@ -106,11 +179,34 @@ classdef Equivariant < replab.Domain
         %% Domain methods
 
         function b = eqv(self, X, Y)
-            b = self.parent.eqv(X, Y);
+            b = self.domain.eqv(X, Y);
         end
 
         function X = sample(self)
             X = self.sampleWithError;
+        end
+
+    end
+
+    methods (Static)
+
+        function E = make(repC, repR, special)
+        % Returns the space of equivariant linear maps between two representations
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``repC.image(g) * X = X * repR.image(g)``
+        %
+        % Note: default implementations are registered in `+replab.dispatchDefaults`
+        %
+        % Args:
+        %   repC (`+replab.Rep`): Representation on the source/column space
+        %   repR (`+replab.Rep`): Representation on the target/row space
+        %   special (charstring): Special structure see help on `+replab.Equivariant.special`
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The equivariant vector space
+            E = replab.dispatch('call', 'replab.Equivariant.make', repC, repR, special);
         end
 
     end

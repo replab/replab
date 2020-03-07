@@ -1,24 +1,30 @@
-function W = enforceQuaternionEncoding(rep, samples, sub)
-% Finds change of basis expressing the canonical basis of a quaternion division algebra
+function res = enforceQuaternionEncoding(rep, context)
+% Finds the similar representation that expresses the canonical basis of representation on a quaternion division algebra
 %
 % See `+replab.+domain.QuaternionTypeMatrices`
 %
 % Args:
-%   rep (replab.Rep): Real representation being decomposed
-%   samples (replab.irreducible.OnDemandSamples): Lazy evaluation of various samples for ``rep``
-%   sub (row cell array of replab.SubRep): Irreducible quaternion-type real subrepresentation of ``rep``
+%   rep (`+replab.Rep`): Real representation with `rep.frobeniusSchurIndicator == -1`
+%   context (`replab.Context`): Sampling context
 %
-% Returns
-% -------
-%   M: double matrix
-%     Matrix ``W`` such that ``W * rep.image(g) * W'`` is in the canonical basis
+% Returns:
+%   `+replab.SimilarRep`: Similar representation that has the proper encoding
     assert(isa(rep, 'replab.Rep'));
-    assert(rep == sub.parent);
-    assert(isequal(rep.field, 'R'));
-    d = sub.dimension;
-    S1 = sub.U*samples.commutantSample(2)*sub.U';
-    S2 = sub.U*samples.commutantSample(3)*sub.U';
-    S3 = sub.U*samples.commutantSample(4)*sub.U';
+    assert(rep.overR);
+    assert(isequal(rep.frobeniusSchurIndicator, -1));
+    if isequal(rep.isDivisionAlgebraCanonical, true)
+        res = replab.SimilarRep.identical(rep);
+        return
+    end
+    if ~isequal(rep.isUnitary, true)
+        res = replab.irreducible.enforceQuaternionEncoding(rep.unitarize, context);
+        res = replab.rep.collapse(res);
+        return
+    end
+    d = rep.dimension;
+    S1 = rep.commutant.sampleInContext(context, 1);
+    S2 = rep.commutant.sampleInContext(context, 2);
+    S3 = rep.commutant.sampleInContext(context, 3);
     A1 = S1 + S1';
     Ai = S1 - S1';
     Aj = S2 - S2';
@@ -66,11 +72,11 @@ function W = enforceQuaternionEncoding(rep, samples, sub)
     tol = replab.Parameters.doubleEigTol;
     while size(W, 2) < d
         g = rep.group.sample;
-        x1 = sub.matrixRowAction(g, w1);
+        x1 = rep.matrixRowAction(g, w1);
         if norm(x1 - W * (W' * x1)) > tol
-            x2 = sub.matrixRowAction(g, w2);
-            x3 = sub.matrixRowAction(g, w3);
-            x4 = sub.matrixRowAction(g, w4);
+            x2 = rep.matrixRowAction(g, w2);
+            x3 = rep.matrixRowAction(g, w3);
+            x4 = rep.matrixRowAction(g, w4);
             X = [x1 x2 x4 x3];
             X = X - W*(W'*X);
             t = trace(X'*X)/4;
@@ -80,5 +86,6 @@ function W = enforceQuaternionEncoding(rep, samples, sub)
             W = [W X];
         end
     end
-    W = W'; % returns adjoint because we piled up column vectors
+    res = rep.similarRep(W', W);
+    res.isDivisionAlgebraCanonical = true;
 end

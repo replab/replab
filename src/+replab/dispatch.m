@@ -8,7 +8,7 @@ function varargout = dispatch(cmd, name, varargin)
 %   The next four arguments are ``name``, ``description``, ``priority`` and ``handle``,
 %   in that order. The argument ``name`` corresponds to the name of the implemented function
 %   The argument ``description`` is a short description of the particular implementation of
-%   that funciton, while ``priority`` is an integer with bigger numbers take higher priority, and
+%   that function, while ``priority`` is an integer with bigger numbers take higher priority, and
 %   finally ``handle`` is a function handle implementing the function.
 %   The implemented function can return an instance of `+replab.DispatchNext` on call as the
 %   first output argument,
@@ -26,7 +26,13 @@ function varargout = dispatch(cmd, name, varargin)
 %                                such as ``replab.makeEquivariant``
 %   varargin (optional): Additional arguments
 
-    persistent registry;
+    persistent registry
+    persistent level
+
+    if isempty(level) || ~replab.settings.verboseDispatch
+        level = 0;
+    end
+
     if isempty(registry)
         registry = struct;
         replab.dispatchDefaults;
@@ -63,17 +69,38 @@ function varargout = dispatch(cmd, name, varargin)
             registry.(ident) = s;
         end
       case 'call'
+        if replab.settings.verboseDispatch
+            fprintf('%sDispatching %s\n', repmat(' ', 1, level), name);
+            level = level + 1;
+        end
         ident = strrep(name, '.', '_');
         s = registry.(ident);
         n = min(1, nargout);
         res = cell(1, n);
         for i = 1:length(s)
+            if replab.settings.verboseDispatch
+                fprintf('%sTrying %s\n', repmat(' ', 1, level), s(i).description);
+            end
             h = s(i).handle;
             [res{1:n}] = h(varargin{:});
             if ~isa(res{1}, 'replab.DispatchNext')
+                if replab.settings.verboseDispatch
+                    fprintf('%s Success\n', repmat(' ', 1, level));
+                    level = level - 1;
+                end
                 varargout = res(1:nargout);
                 return
             end
+            if replab.settings.verboseDispatch
+                if isempty(res{1}.message)
+                    fprintf('%s Failed\n', repmat(' ', 1, level));
+                else
+                    fprintf('%s Failed: %s\n', repmat(' ', 1, level), res{1}.message);
+                end
+            end
+        end
+        if replab.settings.verboseDispatch
+            level = level - 1;
         end
         error('No registered implementation worked.')
     end

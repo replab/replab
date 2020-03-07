@@ -15,5 +15,6 @@ Scientific articles:
 .. toctree::
    :maxdepth: 1
 
+   error_thresholds
    error_estimation
    CHSH

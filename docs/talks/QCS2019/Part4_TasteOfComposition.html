@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>4. A taste of composition with RepLAB &#8212; RepLAB 0.6.7 documentation</title>
+    <title>4. A taste of composition with RepLAB &#8212; RepLAB 0.6.8-SNAP documentation</title>
     <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="Part2_Representations.html" title="2. Constructing representations with RepLAB"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Quantum Causal Structures Oxford 2019</a> &#187;</li> 
       </ul>
@@ -79,7 +79,7 @@
   <a href="
     ../../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.7.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.8-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -387,7 +387,7 @@ Adding MOcov to the path
 <span></span><span class="n">m</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">k</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span>
 <span class="n">Goutcomes</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="n">k</span><span class="p">);</span>
 <span class="n">Gsettings</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="n">m</span><span class="p">);</span>
-<span class="n">Gparty</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">WreathProductGroup</span><span class="p">(</span><span class="n">Gsettings</span><span class="p">,</span> <span class="n">Goutcomes</span><span class="p">)</span>
+<span class="n">Gparty</span> <span class="p">=</span> <span class="n">Gsettings</span><span class="p">.</span><span class="n">wreathProduct</span><span class="p">(</span><span class="n">Goutcomes</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -396,7 +396,20 @@ Adding MOcov to the path
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: member `WreathProductGroup&#39; in package `replab&#39; does not exist
+Gparty =
+
+replab.wreathproduct.OfNiceFiniteGroup
+           A: Permutations acting on 2 elements
+           H: Permutations acting on 2 elements
+           N: replab.directproduct.OfNiceFiniteGroups
+    identity: {[1, 2], {[1, 2], [1, 2]}}
+           n: 2
+      parent: replab.wreathproduct.OfNiceFiniteGroup
+         phi: replab.perm.PermutationCellAction
+generator(1): {[2, 1], {[1, 2], [1, 2]}}
+generator(2): {[1, 2], {[2, 1], [1, 2]}}
+generator(3): {[1, 2], {[1, 2], [2, 1]}}
+
 </pre></div></div>
 </div>
 <p>We now define the two canonical representations of a wreath product group. For party relabeling groups, they correspond to conditional probability distributions and to deterministic strategies.</p>
@@ -405,7 +418,7 @@ error: member `WreathProductGroup&#39; in package `replab&#39; does not exist
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">probabilityRep</span> <span class="p">=</span> <span class="n">Gparty</span><span class="p">.</span><span class="n">imprimitiveRep</span><span class="p">(</span><span class="n">Goutcomes</span><span class="p">.</span><span class="n">definingRep</span><span class="p">)</span>
+<span></span><span class="n">probabilityRep</span> <span class="p">=</span> <span class="n">Gparty</span><span class="p">.</span><span class="n">imprimitiveRep</span><span class="p">(</span><span class="n">Goutcomes</span><span class="p">.</span><span class="n">naturalRep</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -414,7 +427,19 @@ error: member `WreathProductGroup&#39; in package `replab&#39; does not exist
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;Gparty&#39; undefined near line 1 column 18
+probabilityRep =
+
+Orthogonal representation
+                      Arep: Orthogonal representation by images
+                 dimension: 4
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.wreathproduct.OfNiceFiniteGroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -431,7 +456,19 @@ error: &#39;Gparty&#39; undefined near line 1 column 18
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;Gparty&#39; undefined near line 1 column 15
+strategyRep =
+
+Orthogonal representation
+                      Arep: Orthogonal representation by images
+                 dimension: 4
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.wreathproduct.OfNiceFiniteGroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+
 </pre></div></div>
 </div>
 <p>We can decompose those representations. For <span class="math notranslate nohighlight">\(m=k=2\)</span>, the probability representation has invariant vectors <code class="docutils literal notranslate"><span class="pre">[1,1,1,1]</span></code> (corresponding to overall normalization), <code class="docutils literal notranslate"><span class="pre">[1,1,-1,-1]</span></code> (corresponding to equal normalization accross settings), and an additional orthogonal space corresponding to the correlations.</p>
@@ -440,7 +477,7 @@ error: &#39;Gparty&#39; undefined near line 1 column 15
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">probabilityRep</span><span class="p">.</span><span class="n">decomposition</span>
+<span></span><span class="n">probabilityRep</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span>
 </pre></div>
 </div>
 </div>
@@ -449,7 +486,26 @@ error: &#39;Gparty&#39; undefined near line 1 column 15
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;probabilityRep&#39; undefined near line 1 column 1
+ans =
+
+Real representation
+                 dimension: 4
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.wreathproduct.OfNiceFiniteGroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: []
+                    parent: Orthogonal representation
+          trivialDimension: []
+               basis.(:,1): [1, 1, 1, 1].&#39;
+               basis.(:,2): [1, 1, -1, -1].&#39;
+               basis.(:,3): [-1, 1, -0, -0].&#39;
+               basis.(:,4): [0, -0, 1, -1].&#39;
+              component(1): Isotypic component (harmonized) R(1) (trivial)
+              component(2): Isotypic component ?(1)
+              component(3): Isotypic component ?(2)
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -457,7 +513,7 @@ error: &#39;probabilityRep&#39; undefined near line 1 column 1
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">probabilityRep</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">copy</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span></span><span class="n">probabilityRep</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -466,7 +522,20 @@ error: &#39;probabilityRep&#39; undefined near line 1 column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;probabilityRep&#39; undefined near line 1 column 1
+ans =
+
+Real trivial irreducible real-type subrepresentation
+                 dimension: 1
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: 1
+                     group: replab.wreathproduct.OfNiceFiniteGroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: []
+                    parent: Orthogonal representation
+          trivialDimension: 1
+               basis.(:,1): [1, 1, 1, 1].&#39;
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -474,7 +543,7 @@ error: &#39;probabilityRep&#39; undefined near line 1 column 1
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">probabilityRep</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">copy</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span></span><span class="n">probabilityRep</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -483,7 +552,20 @@ error: &#39;probabilityRep&#39; undefined near line 1 column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;probabilityRep&#39; undefined near line 1 column 1
+ans =
+
+Real irreducible subrepresentation
+                 dimension: 1
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.wreathproduct.OfNiceFiniteGroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: []
+                    parent: Orthogonal representation
+          trivialDimension: []
+               basis.(:,1): [1, 1, -1, -1].&#39;
+
 </pre></div></div>
 </div>
 <p>We could also examine the representation on deterministic strategies; this is left to the reader.</p>
@@ -492,7 +574,7 @@ error: &#39;probabilityRep&#39; undefined near line 1 column 1
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">strategyRep</span><span class="p">.</span><span class="n">decomposition</span>
+<span></span><span class="n">strategyRep</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span>
 </pre></div>
 </div>
 </div>
@@ -501,7 +583,26 @@ error: &#39;probabilityRep&#39; undefined near line 1 column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;strategyRep&#39; undefined near line 1 column 1
+ans =
+
+Real representation
+                 dimension: 4
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.wreathproduct.OfNiceFiniteGroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: []
+                    parent: Orthogonal representation
+          trivialDimension: []
+               basis.(:,1): [1, 1, 1, 1].&#39;
+               basis.(:,2): [1, -1, -1, 1].&#39;
+               basis.(:,3): [0, 1, -1, 0].&#39;
+               basis.(:,4): [1, 0, 0, -1].&#39;
+              component(1): Isotypic component (harmonized) R(1) (trivial)
+              component(2): Isotypic component ?(1)
+              component(3): Isotypic component ?(2)
+
 </pre></div></div>
 </div>
 </div>
@@ -516,7 +617,7 @@ error: &#39;strategyRep&#39; undefined near line 1 column 1
 <span></span><span class="n">n</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span>
 <span class="n">m</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">k</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span>
 <span class="n">Gparties</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-<span class="n">Gscenario</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">WreathProductGroup</span><span class="p">(</span><span class="n">Gparties</span><span class="p">,</span> <span class="n">Gparty</span><span class="p">)</span>
+<span class="n">Gscenario</span> <span class="p">=</span> <span class="n">Gparties</span><span class="p">.</span><span class="n">wreathProduct</span><span class="p">(</span><span class="n">Gparty</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -525,7 +626,24 @@ error: &#39;strategyRep&#39; undefined near line 1 column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;Gparty&#39; undefined near line 1 column 49
+Gscenario =
+
+replab.wreathproduct.OfNiceFiniteGroup
+           A: replab.wreathproduct.OfNiceFiniteGroup
+           H: Permutations acting on 2 elements
+           N: replab.directproduct.OfNiceFiniteGroups
+    identity: {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}
+           n: 2
+      parent: replab.wreathproduct.OfNiceFiniteGroup
+         phi: replab.perm.PermutationCellAction
+generator(1): {[2, 1], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}
+generator(2): {[1, 2], {{[2, 1], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}
+generator(3): {[1, 2], {{[1, 2], {[2, 1], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}
+generator(4): {[1, 2], {{[1, 2], {[1, 2], [2, 1]}}, {[1, 2], {[1, 2], [1, 2]}}}}
+generator(5): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[2, 1], {[1, 2], [1, 2]}}}}
+generator(6): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[2, 1], [1, 2]}}}}
+generator(7): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [2, 1]}}}}
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -542,7 +660,19 @@ error: &#39;Gparty&#39; undefined near line 1 column 49
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;Gscenario&#39; undefined near line 1 column 26
+probabilityScenarioRep =
+
+Orthogonal representation
+                      Arep: Orthogonal representation
+                 dimension: 16
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.wreathproduct.OfNiceFiniteGroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -559,8 +689,36 @@ error: &#39;Gscenario&#39; undefined near line 1 column 26
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;probabilityScenarioRep&#39; undefined near line 1 column 1
+ans =
+
+Real representation
+                 dimension: 16
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.wreathproduct.OfNiceFiniteGroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: []
+                    parent: Orthogonal representation
+          trivialDimension: []
+                     basis: 16 x 16 double
+              component(1): Isotypic component (harmonized) R(1) (trivial)
+              component(2): Isotypic component (harmonized) R(1)
+              component(3): Isotypic component (harmonized) R(2)
+              component(4): Isotypic component (harmonized) R(4)
+              component(5): Isotypic component (harmonized) R(4)
+              component(6): Isotypic component (harmonized) R(4)
+
 </pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -602,7 +760,7 @@ error: &#39;probabilityScenarioRep&#39; undefined near line 1 column 1
         <li class="right" >
           <a href="Part2_Representations.html" title="2. Constructing representations with RepLAB"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" >Quantum Causal Structures Oxford 2019</a> &#187;</li> 
       </ul>
