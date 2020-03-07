@@ -23,6 +23,7 @@ function hi = harmonizeIsotypic(iso, context)
         irr1 = replab.irreducible.canonicalDivisionAlgebra(iso.irrep(1), context);
         W = irr1.A_internal;
         Winv = irr1.Ainv_internal;
+        assert(isequal(irr1.isUnitary, true));
         iso1 = iso.changeIrrepBasis(1, W, Winv);
     else
         iso1 = iso;
@@ -36,5 +37,10 @@ function hi = harmonizeIsotypic(iso, context)
         Ainv_list{i} = Ainv;
     end
     iso2 = iso1.changeEachIrrepBasis(A_list, Ainv_list);
+    for i = 2:n
+        iso2.irreps{i}.isUnitary = iso2.irreps{1}.isUnitary;
+        iso2.irreps{i}.frobeniusSchurIndicator = iso2.irreps{1}.frobeniusSchurIndicator;
+        iso2.irreps{i}.isDivisionAlgebraCanonical = iso2.irreps{1}.isDivisionAlgebraCanonical;
+    end
     hi = replab.HarmonizedIsotypic(iso2.parent, iso2.irreps, iso2.E_internal);
 end

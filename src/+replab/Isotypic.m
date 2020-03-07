@@ -242,7 +242,9 @@ classdef Isotypic < replab.SubRep
             C = self.parent.commutant.sampleInContext(context, 1);
             A = full(self.irrep(i).E_internal * C * self.irrep(j).B_internal);
             A = A * sqrt(self.irrepDimension/real(trace(A*A'))) * sign(A(1,1));
-            if self.overC || isequal(self.irrep(1).frobeniusSchurIndicator, 1)
+            if isequal(self.irrep(i).isUnitary, true) && isequal(self.irrep(j).isUnitary, true)
+                Ainv = A';
+            elseif self.overC || isequal(self.irrep(1).frobeniusSchurIndicator, 1)
                 Ainv = full(self.irrep(j).E_internal * C * self.irrep(i).B_internal);
                 Ainv = Ainv/(trace(A*Ainv)/self.irrepDimension);
             else
