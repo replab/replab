@@ -10,5 +10,5 @@ function iso1 = niceIsotypicSingleMultiplicity(iso)
         iso1 = replab.DispatchNext('Recovery did not work');
         return
     end
-    iso1 = replab.Isotypic.fromIrreps(iso, {irrep1});
+    iso1 = replab.Isotypic.fromIrreps(iso.parent, {irrep1});
 end

@@ -346,7 +346,9 @@ classdef Isotypic < replab.SubRep
         %% SubRep methods
 
         function iso = refine(self)
-            iso = replab.rep.refineIsotypic(self, replab.Context.make);
+            ctx = replab.Context.make;
+            iso = replab.rep.refineIsotypic(self, ctx);
+            ctx.close;
         end
 
         function iso = nice(self)

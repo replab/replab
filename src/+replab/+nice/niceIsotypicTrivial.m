@@ -9,5 +9,5 @@ function iso1 = niceIsotypicTrivial(iso)
         iso1 = replab.DispatchNext('Recovery did not work');
         return
     end
-    iso1 = replab.Isotypic.fromTrivialSubRep(iso, sub1);
+    iso1 = replab.Isotypic.fromTrivialSubRep(iso.parent, sub1);
 end

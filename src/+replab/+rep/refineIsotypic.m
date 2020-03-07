@@ -43,5 +43,5 @@ function iso1 = refineIsotypic(iso, context)
         A_internal{i} = A;
         Ainv_internal{i} = A';
     end
-    iso1 = replab.Isotypic(iso.parent, irreps, A_internal, Ainv_internal);
+    iso1 = replab.Isotypic.fromIrreps(iso.parent, irreps);
 end
