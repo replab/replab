@@ -1,7 +1,0 @@
-In the middle of restoring support for canonical division algebras, i.e.
-
-replab.irreducible.canonicalDivisionAlgebra etc
-
-support for nonunitary through unitarization for now
-
-Then JDB CHSH Collins-Gisin example, then restoring tests and last functions
