@@ -50,7 +50,7 @@ classdef replab_Version
         end
 
         function updateVersionFile(self)
-            [path, ~, ~] = fileparts(which(mfilename));
+            [path, ~, ~] = fileparts([mfilename('fullpath') '.m']);
             filename = fullfile(path, '..', 'replab_version.txt');
             fid = fopen(filename, 'w');
             assert(fid ~= -1, 'Cannot open replab_version.txt');
