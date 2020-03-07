@@ -87,4 +87,5 @@ function res = enforceQuaternionEncoding(rep, context)
         end
     end
     res = rep.similarRep(W', W);
+    res.isDivisionAlgebraCanonical = true;
 end

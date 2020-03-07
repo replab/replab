@@ -60,4 +60,5 @@ function res = enforceComplexEncoding(rep, context)
         end
     end
     res = rep.similarRep(W', W);
+    res.isDivisionAlgebraCanonical = true;
 end
