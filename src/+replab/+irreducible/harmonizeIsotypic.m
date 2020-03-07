@@ -23,18 +23,18 @@ function hi = harmonizeIsotypic(iso, context)
         irr1 = replab.irreducible.canonicalDivisionAlgebra(iso.irrep(1), context);
         W = irr1.A_internal;
         Winv = irr1.Ainv_internal;
+        iso1 = iso.changeIrrepBasis(1, W, Winv);
+    else
+        iso1 = iso;
     end
-    irreps1 = cell(1, n);
-    irreps1{1} = replab.rep.collapse(irr1);
-    C = cell(1, n);
-    C{1} = irr1.A_internal;
-    for i = 2:n
-        A = iso.changeOfBasis(1, i, context);
-        Ainv = iso.changeOfBasis(i, 1, context);
-        C{i} = W*A;
-        irri = iso.irrep(i).similarRep(W*A, Ainv*Winv);
-        irreps1{i} = replab.rep.collapse(irri);
+    A_list = cell(1, n);
+    Ainv_list = cell(1, n);
+    for i = 1:n
+        [A Ainv] = iso1.changeOfBasis(1, i, context);
+        Ainv = inv(A);
+        A_list{i} = A;
+        Ainv_list{i} = Ainv;
     end
-    E_internal = blkdiag(C{:}) * iso.E_internal;
-    hi = replab.HarmonizedIsotypic(iso.parent, irreps1, E_internal);
+    iso2 = iso1.changeEachIrrepBasis(A_list, Ainv_list);
+    hi = replab.HarmonizedIsotypic(iso2.parent, iso2.irreps, iso2.E_internal);
 end
