@@ -74,10 +74,6 @@ classdef Class < replab.infra.SourceElement
 
         %% replab.infra.SourceElement
 
-        function str = name(self)
-            str = self.sourceIdentifier;
-        end
-
         function p = elementPath(self)
             p = {self.name};
         end

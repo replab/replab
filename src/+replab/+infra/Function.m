@@ -13,10 +13,6 @@ classdef Function < replab.infra.SourceElement
             self.declaration = functionData.declaration;
         end
 
-        function str = name(self)
-            str = self.sourceIdentifier;
-        end
-
         function p = elementPath(self)
             p = {self.name};
         end
