@@ -14,7 +14,7 @@
   <link rel="stylesheet" type="text/css" href="_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Index &#8212; RepLAB 0.6.7 documentation</title>
+    <title>Index &#8212; RepLAB 0.6.8-SNAP documentation</title>
     <link rel="stylesheet" href="_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/collapse_admonitions.css" />
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">RepLAB 0.6.7 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="container-wrapper">
@@ -58,7 +58,7 @@
   <a href="
     index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.7.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.8-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -248,8 +248,6 @@
         <li><a href="api/infrastructure_technical.html#+replab.+infra.SourceElement.additionalFields">(replab.infra.SourceElement method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.additionalFields">(replab.Irreducible method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.additionalFields">(replab.irreducible.OnDemandSamples method)</a>
 </li>
         <li><a href="api/rep.html#+replab.IrreducibleLaws.additionalFields">(replab.IrreducibleLaws method)</a>
 </li>
@@ -590,8 +588,24 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/base.html#+replab.IndexedFamilyLaws.B">B (replab.IndexedFamilyLaws attribute)</a>
 </li>
+      <li><a href="api/rep.html#+replab.Irreducible.B_internal">B_internal (replab.Irreducible attribute)</a>
+
+      <ul>
+        <li><a href="api/rep.html#+replab.Isotypic.B_internal">(replab.Isotypic attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.B_internal">(replab.SubRep attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.+repl.ProgressBar.barSize">barSize (replab.infra.repl.ProgressBar attribute)</a>
 </li>
+      <li><a href="api/rep.html#+replab.Irreducible.basis">basis() (replab.Irreducible method)</a>
+
+      <ul>
+        <li><a href="api/rep.html#+replab.Isotypic.basis">(replab.Isotypic method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.basis">(replab.SubRep method)</a>
+</li>
+      </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.Declarations.bestEffortArgumentString">bestEffortArgumentString() (replab.infra.Declarations method)</a>
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.Declarations.bestEffortDocFirstLine">bestEffortDocFirstLine() (replab.infra.Declarations method)</a>
@@ -631,26 +645,18 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/misc.html#+replab.Partition.block">block() (replab.Partition method)</a>
-
-      <ul>
-        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.block">(replab.rep.DirectSumRep method)</a>
 </li>
-      </ul></li>
       <li><a href="api/misc.html#+replab.Partition.blockIndex">blockIndex (replab.Partition attribute)</a>
 </li>
       <li><a href="api/misc.html#+replab.Partition.blocks">blocks (replab.Partition attribute)</a>
-
-      <ul>
-        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.blocks">(replab.rep.DirectSumRep attribute)</a>
 </li>
-      </ul></li>
       <li><a href="api/misc.html#+replab.Partition.blockSize">blockSize() (replab.Partition method)</a>
 </li>
       <li><a href="api/misc.html#+replab.Partition.blockSizes">blockSizes() (replab.Partition method)</a>
 </li>
       <li><a href="api/print.html#+replab.+str.brackets">brackets() (in module replab.str)</a>
 </li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.buildIsotypic">buildIsotypic() (in module replab.irreducible)</a>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.buildIsotypic">buildIsotypic() (in module replab.irreducible)</a>
 </li>
       <li><a href="api/infrastructure.html#root.replab_Version.bumpMajor">bumpMajor() (root.replab_Version method)</a>
 </li>
@@ -672,6 +678,12 @@
         <li><a href="api/rep.html#+replab.SubRepLaws.C">(replab.SubRepLaws attribute)</a>
 </li>
       </ul></li>
+      <li><a href="api/rep.html#+replab.Equivariant.cachedErrors_">cachedErrors_ (replab.Equivariant attribute)</a>
+</li>
+      <li><a href="api/rep.html#+replab.Equivariant.cachedSamples_">cachedSamples_ (replab.Equivariant attribute)</a>
+</li>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.canonicalDivisionAlgebra">canonicalDivisionAlgebra() (in module replab.irreducible)</a>
+</li>
       <li><a href="api/print.html#+replab.+str.cellStr">cellStr() (in module replab.str)</a>
 </li>
       <li><a href="api/group_constructions.html#+replab.+directproduct.OfNiceFiniteGroups.chain">chain() (replab.directproduct.OfNiceFiniteGroups method)</a>
@@ -706,6 +718,12 @@
         <li><a href="api/rep.html#+replab.RepByImages.chain_">(replab.RepByImages attribute)</a>
 </li>
       </ul></li>
+      <li><a href="api/rep.html#+replab.Isotypic.changeEachIrrepBasis">changeEachIrrepBasis() (replab.Isotypic method)</a>
+</li>
+      <li><a href="api/rep.html#+replab.Isotypic.changeIrrepBasis">changeIrrepBasis() (replab.Isotypic method)</a>
+</li>
+      <li><a href="api/rep.html#+replab.Isotypic.changeOfBasis">changeOfBasis() (replab.Isotypic method)</a>
+</li>
       <li><a href="api/groups.html#+replab.ActionLaws.check">check() (replab.ActionLaws method)</a>
 
       <ul>
@@ -792,6 +810,16 @@
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.Declarations.classElement">classElement (replab.infra.Declarations attribute)</a>
 </li>
+      <li><a href="api/rep.html#+replab.Equivariant.clearCache">clearCache() (replab.Equivariant method)</a>
+
+      <ul>
+        <li><a href="api/rep_technical.html#+replab.+equivariant.ForCompactGroup.clearCache">(replab.equivariant.ForCompactGroup method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+equivariant.ForFiniteGroup.clearCache">(replab.equivariant.ForFiniteGroup method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+equivariant.ForRepByImages.clearCache">(replab.equivariant.ForRepByImages method)</a>
+</li>
+      </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.CodeBase">CodeBase (class in replab.infra)</a>
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.Class.codeBase">codeBase (replab.infra.Class attribute)</a>
@@ -816,14 +844,6 @@
       </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.CodeTokens">CodeTokens (class in replab.infra)</a>
 </li>
-      <li><a href="api/rep.html#+replab.Irreducible.collapseParent">collapseParent() (replab.Irreducible method)</a>
-
-      <ul>
-        <li><a href="api/rep.html#+replab.Isotypic.collapseParent">(replab.Isotypic method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.SubRep.collapseParent">(replab.SubRep method)</a>
-</li>
-      </ul></li>
       <li><a href="api/laws.html#+replab.+laws.Collection">Collection (class in replab.laws)</a>
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.+doctests.DocTest.commands">commands (replab.infra.doctests.DocTest attribute)</a>
@@ -862,9 +882,7 @@
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.commutant">(replab.wreathproduct.PrimitiveRep method)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.commutantSample">commutantSample() (replab.irreducible.OnDemandSamples method)</a>
-</li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.commutantSamples">commutantSamples (replab.irreducible.OnDemandSamples attribute)</a>
+      <li><a href="api/rep.html#+replab.Rep.commutant_">commutant_ (replab.Rep attribute)</a>
 </li>
       <li><a href="api/groups.html#+replab.CompactGroup">CompactGroup (class in replab)</a>
 </li>
@@ -1076,8 +1094,6 @@
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfNiceFiniteGroup.composeWithInverse">(replab.wreathproduct.OfNiceFiniteGroup method)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.computeRealType">computeRealType() (in module replab.irreducible)</a>
-</li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.ConcreteClassElement">ConcreteClassElement (class in replab.infra)</a>
 </li>
       <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.conj">conj() (replab.directproduct.SumRep method)</a>
@@ -1194,7 +1210,7 @@
       </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.+shm.decode">decode() (in module replab.infra.shm)</a>
 </li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.decomposition">decomposition() (in module replab.irreducible)</a>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.decomposition">decomposition() (in module replab.irreducible)</a>
 
       <ul>
         <li><a href="api/group_constructions.html#+replab.+directproduct.OfFiniteGroups.decomposition">(replab.directproduct.OfFiniteGroups method)</a>
@@ -1255,27 +1271,17 @@
 </li>
       </ul></li>
       <li><a href="api/groups.html#+replab.FiniteGroup.decomposition_">decomposition_ (replab.FiniteGroup attribute)</a>
+
+      <ul>
+        <li><a href="api/rep.html#+replab.Rep.decomposition_">(replab.Rep attribute)</a>
 </li>
+      </ul></li>
       <li><a href="api/rep_technical.html#+replab.+equivariant.ForRepByImages.decompositionC">decompositionC (replab.equivariant.ForRepByImages attribute)</a>
 </li>
       <li><a href="api/rep_technical.html#+replab.+equivariant.ForRepByImages.decompositionR">decompositionR (replab.equivariant.ForRepByImages attribute)</a>
 </li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.decompositionUsingSplit">decompositionUsingSplit() (in module replab.irreducible)</a>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.decompositionUsingSplit">decompositionUsingSplit() (in module replab.irreducible)</a>
 </li>
-      <li><a href="api/permutations.html#+replab.PermutationGroup.definingRep">definingRep() (replab.PermutationGroup method)</a>
-
-      <ul>
-        <li><a href="api/permutations.html#+replab.Permutations.definingRep">(replab.Permutations method)</a>
-</li>
-        <li><a href="api/permutations.html#+replab.PermutationSubgroup.definingRep">(replab.PermutationSubgroup method)</a>
-</li>
-        <li><a href="api/permutations.html#+replab.+signed.PermutationGroup.definingRep">(replab.signed.PermutationGroup method)</a>
-</li>
-        <li><a href="api/permutations.html#+replab.+signed.Permutations.definingRep">(replab.signed.Permutations method)</a>
-</li>
-        <li><a href="api/permutations.html#+replab.+signed.PermutationSubgroup.definingRep">(replab.signed.PermutationSubgroup method)</a>
-</li>
-      </ul></li>
       <li><a href="api/permutations.html#+replab.Permutations.dihedralSubgroup">dihedralSubgroup() (replab.Permutations method)</a>
 </li>
       <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.dimension">dimension (replab.directproduct.SumRep attribute)</a>
@@ -1386,32 +1392,12 @@
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfNiceFiniteGroup.directProduct">(replab.wreathproduct.OfNiceFiniteGroup method)</a>
 </li>
       </ul></li>
-      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.directSum">directSum() (replab.directproduct.SumRep method)</a>
+      <li><a href="api/rep.html#+replab.Irreducible.directSum">directSum() (replab.Irreducible method)</a>
 
       <ul>
-        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.directSum">(replab.directproduct.TensorRep method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Irreducible.directSum">(replab.Irreducible method)</a>
-</li>
         <li><a href="api/rep.html#+replab.Isotypic.directSum">(replab.Isotypic method)</a>
 </li>
-        <li><a href="api/rep.html#+replab.Rep.directSum">(replab.Rep static method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.directSum">(replab.rep.DirectSumRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.directSum">(replab.rep.IndexRelabelingRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.directSum">(replab.rep.TensorRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.directSum">(replab.rep.TrivialRep method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.RepByImages.directSum">(replab.RepByImages method)</a>
-</li>
         <li><a href="api/rep.html#+replab.SubRep.directSum">(replab.SubRep static method)</a>
-</li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.directSum">(replab.wreathproduct.ImprimitiveRep method)</a>
-</li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.directSum">(replab.wreathproduct.PrimitiveRep method)</a>
 </li>
       </ul></li>
       <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.directSumOfCopies">directSumOfCopies() (replab.directproduct.SumRep method)</a>
@@ -1442,20 +1428,54 @@
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.directSumOfCopies">(replab.wreathproduct.PrimitiveRep method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep">DirectSumRep (class in replab.rep)</a>
 </li>
-      <li><a href="api/group_constructions.html#+replab.+directproduct.OfCompactGroups.directSumRep">directSumRep() (replab.directproduct.OfCompactGroups method)</a>
+      <li><a href="api/groups.html#+replab.CompactGroup.directSumRep">directSumRep() (replab.CompactGroup method)</a>
 
       <ul>
+        <li><a href="api/group_constructions.html#+replab.+directproduct.OfCompactGroups.directSumRep">(replab.directproduct.OfCompactGroups method)</a>
+</li>
         <li><a href="api/group_constructions.html#+replab.+directproduct.OfFiniteGroups.directSumRep">(replab.directproduct.OfFiniteGroups method)</a>
 </li>
         <li><a href="api/group_constructions.html#+replab.+directproduct.OfNiceFiniteGroups.directSumRep">(replab.directproduct.OfNiceFiniteGroups method)</a>
 </li>
+        <li><a href="api/groups.html#+replab.FiniteGroup.directSumRep">(replab.FiniteGroup method)</a>
+</li>
+        <li><a href="api/groups.html#+replab.NiceFiniteGroup.directSumRep">(replab.NiceFiniteGroup method)</a>
+</li>
+        <li><a href="api/groups.html#+replab.NiceFiniteSubgroup.directSumRep">(replab.NiceFiniteSubgroup method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.PermutationGroup.directSumRep">(replab.PermutationGroup method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.Permutations.directSumRep">(replab.Permutations method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.PermutationSubgroup.directSumRep">(replab.PermutationSubgroup method)</a>
+</li>
       </ul></li>
       <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.DirectSumRep">DirectSumRep() (replab.rep.DirectSumRep method)</a>
 </li>
+      <li><a href="api/group_constructions.html#+replab.+semidirectproduct.OfCompactGroups.directSumRep">directSumRep() (replab.semidirectproduct.OfCompactGroups method)</a>
+
+      <ul>
+        <li><a href="api/group_constructions.html#+replab.+semidirectproduct.OfFiniteGroups.directSumRep">(replab.semidirectproduct.OfFiniteGroups method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+semidirectproduct.OfNiceFiniteGroups.directSumRep">(replab.semidirectproduct.OfNiceFiniteGroups method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.+signed.PermutationGroup.directSumRep">(replab.signed.PermutationGroup method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.+signed.Permutations.directSumRep">(replab.signed.Permutations method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.+signed.PermutationSubgroup.directSumRep">(replab.signed.PermutationSubgroup method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfCompactGroup.directSumRep">(replab.wreathproduct.OfCompactGroup method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfFiniteGroup.directSumRep">(replab.wreathproduct.OfFiniteGroup method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfNiceFiniteGroup.directSumRep">(replab.wreathproduct.OfNiceFiniteGroup method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/group_constructions.html#+replab.+directproduct.OfCompactGroups.directSumRepFun">directSumRepFun() (replab.directproduct.OfCompactGroups method)</a>
 
       <ul>
@@ -1555,8 +1575,6 @@
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.disp">(replab.Irreducible method)</a>
 </li>
-        <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.disp">(replab.irreducible.OnDemandSamples method)</a>
-</li>
         <li><a href="api/rep.html#+replab.IrreducibleLaws.disp">(replab.IrreducibleLaws method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Isotypic.disp">(replab.Isotypic method)</a>
@@ -1642,6 +1660,10 @@
         <li><a href="api/infrastructure.html#root.replab_Version.disp">(root.replab_Version method)</a>
 </li>
       </ul></li>
+      <li><a href="api/dispatch.html#+replab.dispatch">dispatch() (in module replab)</a>
+</li>
+      <li><a href="api/dispatch.html#+replab.dispatchDefaults">dispatchDefaults() (in module replab)</a>
+</li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.+sphinx.dispStubs">dispStubs() (in module replab.infra.sphinx)</a>
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.Doc">Doc (class in replab.infra)</a>
@@ -1675,6 +1697,8 @@
       <li><a href="api/infrastructure_technical.html#+replab.+infra.+doctests.DocTest">DocTest (class in replab.infra.doctests)</a>
 </li>
       <li><a href="api/base.html#+replab.Domain">Domain (class in replab)</a>
+</li>
+      <li><a href="api/rep.html#+replab.Equivariant.domain">domain (replab.Equivariant attribute)</a>
 </li>
       <li><a href="api/base.html#+replab.DomainLaws">DomainLaws (class in replab)</a>
 </li>
@@ -1726,6 +1750,14 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/rep.html#+replab.Irreducible.E_internal">E_internal (replab.Irreducible attribute)</a>
+
+      <ul>
+        <li><a href="api/rep.html#+replab.Isotypic.E_internal">(replab.Isotypic attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.E_internal">(replab.SubRep attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.Element">Element (class in replab.infra)</a>
 </li>
       <li><a href="api/group_constructions.html#+replab.+directproduct.OfNiceFiniteGroups.elementOrder">elementOrder() (replab.directproduct.OfNiceFiniteGroups method)</a>
@@ -1806,9 +1838,9 @@
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.+shm.encode">encode() (in module replab.infra.shm)</a>
 </li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.enforceComplexEncoding">enforceComplexEncoding() (in module replab.irreducible)</a>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.enforceComplexEncoding">enforceComplexEncoding() (in module replab.irreducible)</a>
 </li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.enforceQuaternionEncoding">enforceQuaternionEncoding() (in module replab.irreducible)</a>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.enforceQuaternionEncoding">enforceQuaternionEncoding() (in module replab.irreducible)</a>
 </li>
       <li><a href="api/groups.html#+replab.Action.eq">eq() (replab.Action method)</a>
 
@@ -1892,8 +1924,6 @@
         <li><a href="api/infrastructure_technical.html#+replab.+infra.SourceElement.eq">(replab.infra.SourceElement method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.eq">(replab.Irreducible method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.eq">(replab.irreducible.OnDemandSamples method)</a>
 </li>
         <li><a href="api/rep.html#+replab.IrreducibleLaws.eq">(replab.IrreducibleLaws method)</a>
 </li>
@@ -2093,6 +2123,8 @@
 </li>
         <li><a href="api/group_constructions.html#+replab.+directproduct.OfNiceFiniteGroups.factor">(replab.directproduct.OfNiceFiniteGroups method)</a>
 </li>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.factor">(replab.rep.DirectSumRep method)</a>
+</li>
         <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.factor">(replab.rep.TensorRep method)</a>
 </li>
       </ul></li>
@@ -2108,6 +2140,8 @@
         <li><a href="api/group_constructions.html#+replab.+directproduct.OfFiniteGroups.factors">(replab.directproduct.OfFiniteGroups attribute)</a>
 </li>
         <li><a href="api/group_constructions.html#+replab.+directproduct.OfNiceFiniteGroups.factors">(replab.directproduct.OfNiceFiniteGroups attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.factors">(replab.rep.DirectSumRep attribute)</a>
 </li>
         <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.factors">(replab.rep.TensorRep attribute)</a>
 </li>
@@ -2162,10 +2196,6 @@
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.+sphinx.findClassCommentEnd">findClassCommentEnd() (in module replab.infra.sphinx)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.findCommonBasis">findCommonBasis() (in module replab.irreducible)</a>
-</li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.Declarations.findDocumentedElements">findDocumentedElements() (replab.infra.Declarations method)</a>
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.+repl.ProgressBar.finish">finish() (replab.infra.repl.ProgressBar method)</a>
@@ -2182,6 +2212,8 @@
 </li>
       <li><a href="api/rep_technical.html#+replab.+equivariant.ForCompactGroup">ForCompactGroup (class in replab.equivariant)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/rep_technical.html#+replab.+equivariant.ForFiniteGroup">ForFiniteGroup (class in replab.equivariant)</a>
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.formatCodeContext">formatCodeContext() (in module replab.infra)</a>
@@ -2190,6 +2222,36 @@
 </li>
       <li><a href="api/rep_technical.html#+replab.+equivariant.ForRepByImages">ForRepByImages (class in replab.equivariant)</a>
 </li>
+      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.frobeniusSchurIndicator">frobeniusSchurIndicator (replab.directproduct.SumRep attribute)</a>
+
+      <ul>
+        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.frobeniusSchurIndicator">(replab.directproduct.TensorRep attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Irreducible.frobeniusSchurIndicator">(replab.Irreducible attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Isotypic.frobeniusSchurIndicator">(replab.Isotypic attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Rep.frobeniusSchurIndicator">(replab.Rep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.frobeniusSchurIndicator">(replab.rep.DirectSumRep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.frobeniusSchurIndicator">(replab.rep.IndexRelabelingRep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.frobeniusSchurIndicator">(replab.rep.TensorRep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.frobeniusSchurIndicator">(replab.rep.TrivialRep attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.RepByImages.frobeniusSchurIndicator">(replab.RepByImages attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.frobeniusSchurIndicator">(replab.SubRep attribute)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.frobeniusSchurIndicator">(replab.wreathproduct.ImprimitiveRep attribute)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.frobeniusSchurIndicator">(replab.wreathproduct.PrimitiveRep attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.frobeniusSchurIndicator">frobeniusSchurIndicator() (in module replab.irreducible)</a>
+</li>
       <li><a href="api/misc.html#+replab.Partition.fromBlockIndices">fromBlockIndices() (replab.Partition method)</a>
 </li>
       <li><a href="api/permutations.html#+replab.Permutations.fromCycles">fromCycles() (replab.Permutations method)</a>
@@ -2197,6 +2259,8 @@
       <li><a href="api/infrastructure_technical.html#+replab.+infra.+doctests.ParseState.fromDocTestBlock">fromDocTestBlock() (replab.infra.doctests.ParseState static method)</a>
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.CodeTokens.fromFile">fromFile() (replab.infra.CodeTokens static method)</a>
+</li>
+      <li><a href="api/rep.html#+replab.Isotypic.fromIrreps">fromIrreps() (replab.Isotypic static method)</a>
 </li>
       <li><a href="api/permutations.html#+replab.Permutations.fromMatrix">fromMatrix() (replab.Permutations static method)</a>
 
@@ -2211,6 +2275,8 @@
       <li><a href="api/infrastructure_technical.html#+replab.+infra.CodeTokens.fromSource">fromSource() (replab.infra.CodeTokens static method)</a>
 </li>
       <li><a href="api/infrastructure.html#root.replab_Version.fromText">fromText() (root.replab_Version static method)</a>
+</li>
+      <li><a href="api/rep.html#+replab.Isotypic.fromTrivialSubRep">fromTrivialSubRep() (replab.Isotypic static method)</a>
 </li>
       <li><a href="api/infrastructure.html#root.replab_Version.fromVersionFile">fromVersionFile() (root.replab_Version static method)</a>
 </li>
@@ -2232,6 +2298,14 @@
         <li><a href="api/infrastructure_technical.html#+replab.+infra.Package.fullIdentifier">(replab.infra.Package method)</a>
 </li>
         <li><a href="api/infrastructure_technical.html#+replab.+infra.SourceElement.fullIdentifier">(replab.infra.SourceElement method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/rep.html#+replab.Irreducible.fullSubRep">fullSubRep() (replab.Irreducible method)</a>
+
+      <ul>
+        <li><a href="api/rep.html#+replab.Isotypic.fullSubRep">(replab.Isotypic method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.fullSubRep">(replab.SubRep static method)</a>
 </li>
       </ul></li>
       <li><a href="api/groups.html#+replab.GroupMorphismLaws.fun">fun (replab.GroupMorphismLaws attribute)</a>
@@ -2482,6 +2556,10 @@
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfNiceFiniteGroup.H">(replab.wreathproduct.OfNiceFiniteGroup attribute)</a>
 </li>
       </ul></li>
+      <li><a href="api/rep.html#+replab.Isotypic.harmonize">harmonize() (replab.Isotypic method)</a>
+</li>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.harmonizeIsotypic">harmonizeIsotypic() (in module replab.irreducible)</a>
+</li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.Declarations.hasDoc">hasDoc() (replab.infra.Declarations method)</a>
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.Doc.hasPropertyType">hasPropertyType() (replab.infra.Doc method)</a>
@@ -2572,8 +2650,6 @@
         <li><a href="api/infrastructure_technical.html#+replab.+infra.SourceElement.headerStr">(replab.infra.SourceElement method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.headerStr">(replab.Irreducible method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.headerStr">(replab.irreducible.OnDemandSamples method)</a>
 </li>
         <li><a href="api/rep.html#+replab.IrreducibleLaws.headerStr">(replab.IrreducibleLaws method)</a>
 </li>
@@ -2688,6 +2764,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/rep.html#+replab.Rep.hermitianInvariant_">hermitianInvariant_ (replab.Rep attribute)</a>
+</li>
       <li><a href="api/groups.html#+replab.Action.hiddenFields">hiddenFields() (replab.Action method)</a>
 
       <ul>
@@ -2770,8 +2848,6 @@
         <li><a href="api/infrastructure_technical.html#+replab.+infra.SourceElement.hiddenFields">(replab.infra.SourceElement method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.hiddenFields">(replab.Irreducible method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.hiddenFields">(replab.irreducible.OnDemandSamples method)</a>
 </li>
         <li><a href="api/rep.html#+replab.IrreducibleLaws.hiddenFields">(replab.IrreducibleLaws method)</a>
 </li>
@@ -2921,8 +2997,6 @@
 </li>
         <li><a href="api/permutations.html#+replab.PermutationSubgroup.identity">(replab.PermutationSubgroup attribute)</a>
 </li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.identity">(replab.rep.TrivialRep attribute)</a>
-</li>
         <li><a href="api/group_constructions.html#+replab.+semidirectproduct.OfCompactGroups.identity">(replab.semidirectproduct.OfCompactGroups attribute)</a>
 </li>
         <li><a href="api/group_constructions.html#+replab.+semidirectproduct.OfFiniteGroups.identity">(replab.semidirectproduct.OfFiniteGroups attribute)</a>
@@ -2970,7 +3044,41 @@
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.image">(replab.wreathproduct.PrimitiveRep method)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep.html#+replab.RepByImages.images">images (replab.RepByImages attribute)</a>
+      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.image_internal">image_internal() (replab.directproduct.SumRep method)</a>
+
+      <ul>
+        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.image_internal">(replab.directproduct.TensorRep method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Irreducible.image_internal">(replab.Irreducible method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Isotypic.image_internal">(replab.Isotypic method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Rep.image_internal">(replab.Rep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.image_internal">(replab.rep.DirectSumRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.image_internal">(replab.rep.IndexRelabelingRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.image_internal">(replab.rep.TensorRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.image_internal">(replab.rep.TrivialRep method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.RepByImages.image_internal">(replab.RepByImages method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.image_internal">(replab.SubRep method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.image_internal">(replab.wreathproduct.ImprimitiveRep method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.image_internal">(replab.wreathproduct.PrimitiveRep method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.imageInverse_internal">imageInverse_internal() (replab.rep.IndexRelabelingRep method)</a>
+
+      <ul>
+        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.imageInverse_internal">(replab.rep.TensorRep method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/rep.html#+replab.RepByImages.images_internal">images_internal (replab.RepByImages attribute)</a>
 </li>
       <li><a href="api/group_constructions.html#+replab.+wreathproduct.Common.imprimitivePermutation">imprimitivePermutation() (replab.wreathproduct.Common method)</a>
 
@@ -3104,8 +3212,6 @@
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfNiceFiniteGroup.inverse">(replab.wreathproduct.OfNiceFiniteGroup method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.inverseImage">inverseImage() (replab.directproduct.SumRep method)</a>
 
       <ul>
@@ -3134,7 +3240,37 @@
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.inverseImage">(replab.wreathproduct.PrimitiveRep method)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep.html#+replab.RepByImages.inverseImages">inverseImages (replab.RepByImages attribute)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.inverseImage_internal">inverseImage_internal() (replab.directproduct.SumRep method)</a>
+
+      <ul>
+        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.inverseImage_internal">(replab.directproduct.TensorRep method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Irreducible.inverseImage_internal">(replab.Irreducible method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Isotypic.inverseImage_internal">(replab.Isotypic method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Rep.inverseImage_internal">(replab.Rep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.inverseImage_internal">(replab.rep.DirectSumRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.inverseImage_internal">(replab.rep.IndexRelabelingRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.inverseImage_internal">(replab.rep.TensorRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.inverseImage_internal">(replab.rep.TrivialRep method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.RepByImages.inverseImage_internal">(replab.RepByImages method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.inverseImage_internal">(replab.SubRep method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.inverseImage_internal">(replab.wreathproduct.ImprimitiveRep method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.inverseImage_internal">(replab.wreathproduct.PrimitiveRep method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/rep.html#+replab.RepByImages.inverseImages_internal">inverseImages_internal (replab.RepByImages attribute)</a>
 </li>
       <li><a href="api/rep.html#+replab.Irreducible">Irreducible (class in replab)</a>
 </li>
@@ -3148,36 +3284,10 @@
         <li><a href="api/rep.html#+replab.Isotypic.irrep">(replab.Isotypic method)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep.html#+replab.Isotypic.irrepDimension">irrepDimension (replab.Isotypic attribute)</a>
+      <li><a href="api/rep.html#+replab.Isotypic.irrepDimension">irrepDimension() (replab.Isotypic method)</a>
 </li>
-      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.irrepInfo">irrepInfo (replab.directproduct.SumRep attribute)</a>
-
-      <ul>
-        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.irrepInfo">(replab.directproduct.TensorRep attribute)</a>
+      <li><a href="api/rep.html#+replab.Isotypic.irrepRange">irrepRange() (replab.Isotypic method)</a>
 </li>
-        <li><a href="api/rep.html#+replab.Irreducible.irrepInfo">(replab.Irreducible attribute)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Isotypic.irrepInfo">(replab.Isotypic attribute)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Rep.irrepInfo">(replab.Rep attribute)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.irrepInfo">(replab.rep.DirectSumRep attribute)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.irrepInfo">(replab.rep.IndexRelabelingRep attribute)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.irrepInfo">(replab.rep.TensorRep attribute)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.irrepInfo">(replab.rep.TrivialRep attribute)</a>
-</li>
-        <li><a href="api/rep.html#+replab.RepByImages.irrepInfo">(replab.RepByImages attribute)</a>
-</li>
-        <li><a href="api/rep.html#+replab.SubRep.irrepInfo">(replab.SubRep attribute)</a>
-</li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.irrepInfo">(replab.wreathproduct.ImprimitiveRep attribute)</a>
-</li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.irrepInfo">(replab.wreathproduct.PrimitiveRep attribute)</a>
-</li>
-      </ul></li>
       <li><a href="api/rep.html#+replab.Isotypic.irreps">irreps (replab.Isotypic attribute)</a>
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.ClassElement.isAccessible">isAccessible() (replab.infra.ClassElement method)</a>
@@ -3190,6 +3300,34 @@
       </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.isContinuation">isContinuation() (in module replab.infra)</a>
 </li>
+      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.isDivisionAlgebraCanonical">isDivisionAlgebraCanonical (replab.directproduct.SumRep attribute)</a>
+
+      <ul>
+        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.isDivisionAlgebraCanonical">(replab.directproduct.TensorRep attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Irreducible.isDivisionAlgebraCanonical">(replab.Irreducible attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Isotypic.isDivisionAlgebraCanonical">(replab.Isotypic attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Rep.isDivisionAlgebraCanonical">(replab.Rep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.isDivisionAlgebraCanonical">(replab.rep.DirectSumRep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.isDivisionAlgebraCanonical">(replab.rep.IndexRelabelingRep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.isDivisionAlgebraCanonical">(replab.rep.TensorRep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.isDivisionAlgebraCanonical">(replab.rep.TrivialRep attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.RepByImages.isDivisionAlgebraCanonical">(replab.RepByImages attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.isDivisionAlgebraCanonical">(replab.SubRep attribute)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.isDivisionAlgebraCanonical">(replab.wreathproduct.ImprimitiveRep attribute)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.isDivisionAlgebraCanonical">(replab.wreathproduct.PrimitiveRep attribute)</a>
+</li>
+      </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.Doc.isempty">isempty() (replab.infra.Doc method)</a>
 </li>
       <li><a href="api/groups.html#+replab.CompactGroup.isIdentity">isIdentity() (replab.CompactGroup method)</a>
@@ -3236,20 +3374,32 @@
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfNiceFiniteGroup.isIdentity">(replab.wreathproduct.OfNiceFiniteGroup method)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep.html#+replab.Irreducible.isKnownCanonicalIrreducible">isKnownCanonicalIrreducible() (replab.Irreducible method)</a>
+      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.isIrreducible">isIrreducible (replab.directproduct.SumRep attribute)</a>
 
       <ul>
-        <li><a href="api/rep.html#+replab.Isotypic.isKnownCanonicalIrreducible">(replab.Isotypic method)</a>
+        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.isIrreducible">(replab.directproduct.TensorRep attribute)</a>
 </li>
-        <li><a href="api/rep.html#+replab.SubRep.isKnownCanonicalIrreducible">(replab.SubRep method)</a>
+        <li><a href="api/rep.html#+replab.Irreducible.isIrreducible">(replab.Irreducible attribute)</a>
 </li>
-      </ul></li>
-      <li><a href="api/rep.html#+replab.Irreducible.isKnownIrreducible">isKnownIrreducible() (replab.Irreducible method)</a>
-
-      <ul>
-        <li><a href="api/rep.html#+replab.Isotypic.isKnownIrreducible">(replab.Isotypic method)</a>
+        <li><a href="api/rep.html#+replab.Isotypic.isIrreducible">(replab.Isotypic attribute)</a>
 </li>
-        <li><a href="api/rep.html#+replab.SubRep.isKnownIrreducible">(replab.SubRep method)</a>
+        <li><a href="api/rep.html#+replab.Rep.isIrreducible">(replab.Rep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.isIrreducible">(replab.rep.DirectSumRep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.isIrreducible">(replab.rep.IndexRelabelingRep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.isIrreducible">(replab.rep.TensorRep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.isIrreducible">(replab.rep.TrivialRep attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.RepByImages.isIrreducible">(replab.RepByImages attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.isIrreducible">(replab.SubRep attribute)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.isIrreducible">(replab.wreathproduct.ImprimitiveRep attribute)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.isIrreducible">(replab.wreathproduct.PrimitiveRep attribute)</a>
 </li>
       </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.ClassElement.isMethod">isMethod() (replab.infra.ClassElement method)</a>
@@ -3265,6 +3415,8 @@
       <li><a href="api/rep.html#+replab.IsotypicLaws.iso">iso (replab.IsotypicLaws attribute)</a>
 </li>
       <li><a href="api/rep.html#+replab.Isotypic">Isotypic (class in replab)</a>
+</li>
+      <li><a href="api/rep.html#+replab.Isotypic.Isotypic">Isotypic() (replab.Isotypic method)</a>
 </li>
       <li><a href="api/rep.html#+replab.IsotypicLaws">IsotypicLaws (class in replab)</a>
 </li>
@@ -3480,8 +3632,6 @@
 </li>
       <li><a href="api/rep.html#+replab.IsotypicLaws.law_all_irreps_equivalent_C">law_all_irreps_equivalent_C() (replab.IsotypicLaws method)</a>
 </li>
-      <li><a href="api/rep.html#+replab.IsotypicLaws.law_all_irreps_same_basis_G">law_all_irreps_same_basis_G() (replab.IsotypicLaws method)</a>
-</li>
       <li><a href="api/groups.html#+replab.FiniteGroupLaws.law_associativity_TTT">law_associativity_TTT() (replab.FiniteGroupLaws method)</a>
 
       <ul>
@@ -3504,7 +3654,7 @@
 </li>
       <li><a href="api/base.html#+replab.IndexedFamilyLaws.law_at_find_roundtrip_string_B">law_at_find_roundtrip_string_B() (replab.IndexedFamilyLaws method)</a>
 </li>
-      <li><a href="api/rep.html#+replab.SubRepLaws.law_basis_is_unitary_">law_basis_is_unitary_() (replab.SubRepLaws method)</a>
+      <li><a href="api/rep.html#+replab.SubRepLaws.law_basis_and_internal_embedding_">law_basis_and_internal_embedding_() (replab.SubRepLaws method)</a>
 </li>
       <li><a href="api/rep.html#+replab.RepLaws.law_commutes_with_commutant_algebra_GC">law_commutes_with_commutant_algebra_GC() (replab.RepLaws method)</a>
 
@@ -3588,8 +3738,6 @@
         <li><a href="api/permutations.html#+replab.PermutationsLaws.law_contains_T">(replab.PermutationsLaws method)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep.html#+replab.IrreducibleLaws.law_decomposes_entire_space_">law_decomposes_entire_space_() (replab.IrreducibleLaws method)</a>
-</li>
       <li><a href="api/groups.html#+replab.FiniteGroupLaws.law_decomposition_size_">law_decomposition_size_() (replab.FiniteGroupLaws method)</a>
 
       <ul>
@@ -3666,6 +3814,8 @@
 </li>
       <li><a href="api/groups.html#+replab.ActionLaws.law_identity_rightAction_P">law_identity_rightAction_P() (replab.ActionLaws method)</a>
 </li>
+      <li><a href="api/rep.html#+replab.SubRepLaws.law_image_relation_with_parent_rep_GM">law_image_relation_with_parent_rep_GM() (replab.SubRepLaws method)</a>
+</li>
       <li><a href="api/groups.html#+replab.FiniteGroupLaws.law_inverse_compatible_with_compose_TT">law_inverse_compatible_with_compose_TT() (replab.FiniteGroupLaws method)</a>
 
       <ul>
@@ -3712,8 +3862,6 @@
 </li>
       <li><a href="api/groups.html#+replab.ActionLaws.law_leftAction_rightAction_compatibility_GP">law_leftAction_rightAction_compatibility_GP() (replab.ActionLaws method)</a>
 </li>
-      <li><a href="api/rep.html#+replab.SubRepLaws.law_nice_basis_reproduces_basis_">law_nice_basis_reproduces_basis_() (replab.SubRepLaws method)</a>
-</li>
       <li><a href="api/permutations.html#+replab.PermutationGroupLaws.law_orbits_TP">law_orbits_TP() (replab.PermutationGroupLaws method)</a>
 
       <ul>
@@ -3746,8 +3894,12 @@
       </ul></li>
       <li><a href="api/rep.html#+replab.SubRepLaws.law_relation_with_parent_rep_G">law_relation_with_parent_rep_G() (replab.SubRepLaws method)</a>
 </li>
-      <li><a href="api/rep.html#+replab.SubRepLaws.law_respects_division_algebra_G">law_respects_division_algebra_G() (replab.SubRepLaws method)</a>
+      <li><a href="api/rep.html#+replab.RepLaws.law_respects_division_algebra_G">law_respects_division_algebra_G() (replab.RepLaws method)</a>
+
+      <ul>
+        <li><a href="api/rep.html#+replab.SubRepLaws.law_respects_division_algebra_G">(replab.SubRepLaws method)</a>
 </li>
+      </ul></li>
       <li><a href="api/groups.html#+replab.ActionLaws.law_rightAction_compose_PGG">law_rightAction_compose_PGG() (replab.ActionLaws method)</a>
 </li>
       <li><a href="api/base.html#+replab.IndexedFamilyLaws.law_sample_is_contained_I">law_sample_is_contained_I() (replab.IndexedFamilyLaws method)</a>
@@ -4059,8 +4211,6 @@
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.longStr">(replab.Irreducible method)</a>
 </li>
-        <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.longStr">(replab.irreducible.OnDemandSamples method)</a>
-</li>
         <li><a href="api/rep.html#+replab.IrreducibleLaws.longStr">(replab.IrreducibleLaws method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Isotypic.longStr">(replab.Isotypic method)</a>
@@ -4184,8 +4334,46 @@
 </li>
       <li><a href="api/infrastructure.html#root.replab_Version.major">major (root.replab_Version attribute)</a>
 </li>
+      <li><a href="api/rep.html#+replab.Equivariant.make">make() (replab.Equivariant static method)</a>
+
+      <ul>
+        <li><a href="api/rep_technical.html#+replab.+equivariant.ForCompactGroup.make">(replab.equivariant.ForCompactGroup method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+equivariant.ForFiniteGroup.make">(replab.equivariant.ForFiniteGroup method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+equivariant.ForRepByImages.make">(replab.equivariant.ForRepByImages method)</a>
+</li>
+      </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.+doctests.DocTest.mapLineNumbers">mapLineNumbers() (replab.infra.doctests.DocTest method)</a>
 </li>
+      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.maschke">maschke() (replab.directproduct.SumRep method)</a>
+
+      <ul>
+        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.maschke">(replab.directproduct.TensorRep method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Irreducible.maschke">(replab.Irreducible method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Isotypic.maschke">(replab.Isotypic method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Rep.maschke">(replab.Rep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.maschke">(replab.rep.DirectSumRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.maschke">(replab.rep.IndexRelabelingRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.maschke">(replab.rep.TensorRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.maschke">(replab.rep.TrivialRep method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.RepByImages.maschke">(replab.RepByImages method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.maschke">(replab.SubRep method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.maschke">(replab.wreathproduct.ImprimitiveRep method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.maschke">(replab.wreathproduct.PrimitiveRep method)</a>
+</li>
+      </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.Class.matlabDomainIdentifier">matlabDomainIdentifier() (replab.infra.Class method)</a>
 
       <ul>
@@ -4218,6 +4406,8 @@
         <li><a href="api/permutations.html#+replab.+signed.PermutationSubgroup.matrixAction">(replab.signed.PermutationSubgroup method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.matrixColAction">matrixColAction() (replab.directproduct.SumRep method)</a>
 
       <ul>
@@ -4246,8 +4436,6 @@
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.matrixColAction">(replab.wreathproduct.PrimitiveRep method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.matrixRowAction">matrixRowAction() (replab.directproduct.SumRep method)</a>
 
       <ul>
@@ -4288,7 +4476,7 @@
 </li>
       <li><a href="api/groups.html#+replab.MonoidLaws">MonoidLaws (class in replab)</a>
 </li>
-      <li><a href="api/rep.html#+replab.Isotypic.multiplicity">multiplicity (replab.Isotypic attribute)</a>
+      <li><a href="api/rep.html#+replab.Isotypic.multiplicity">multiplicity() (replab.Isotypic method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -4384,12 +4572,22 @@
         <li><a href="api/permutations.html#+replab.+signed.PermutationSubgroup.naturalAction">(replab.signed.PermutationSubgroup method)</a>
 </li>
       </ul></li>
-      <li><a href="api/misc.html#+replab.Partition.nBlocks">nBlocks() (replab.Partition method)</a>
+      <li><a href="api/permutations.html#+replab.PermutationGroup.naturalRep">naturalRep() (replab.PermutationGroup method)</a>
 
       <ul>
-        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.nBlocks">(replab.rep.DirectSumRep method)</a>
+        <li><a href="api/permutations.html#+replab.Permutations.naturalRep">(replab.Permutations method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.PermutationSubgroup.naturalRep">(replab.PermutationSubgroup method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.+signed.PermutationGroup.naturalRep">(replab.signed.PermutationGroup method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.+signed.Permutations.naturalRep">(replab.signed.Permutations method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.+signed.PermutationSubgroup.naturalRep">(replab.signed.PermutationSubgroup method)</a>
 </li>
       </ul></li>
+      <li><a href="api/misc.html#+replab.Partition.nBlocks">nBlocks() (replab.Partition method)</a>
+</li>
       <li><a href="api/rep.html#+replab.Equivariant.nC">nC (replab.Equivariant attribute)</a>
 
       <ul>
@@ -4414,6 +4612,8 @@
         <li><a href="api/group_constructions.html#+replab.+directproduct.OfFiniteGroups.nFactors">(replab.directproduct.OfFiniteGroups method)</a>
 </li>
         <li><a href="api/group_constructions.html#+replab.+directproduct.OfNiceFiniteGroups.nFactors">(replab.directproduct.OfNiceFiniteGroups method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.nFactors">(replab.rep.DirectSumRep method)</a>
 </li>
         <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.nFactors">(replab.rep.TensorRep method)</a>
 </li>
@@ -4452,12 +4652,12 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/rep.html#+replab.Irreducible.niceBasis">niceBasis (replab.Irreducible attribute)</a>
+      <li><a href="api/rep.html#+replab.Irreducible.nice">nice() (replab.Irreducible method)</a>
 
       <ul>
-        <li><a href="api/rep.html#+replab.Isotypic.niceBasis">(replab.Isotypic attribute)</a>
+        <li><a href="api/rep.html#+replab.Isotypic.nice">(replab.Isotypic method)</a>
 </li>
-        <li><a href="api/rep.html#+replab.SubRep.niceBasis">(replab.SubRep attribute)</a>
+        <li><a href="api/rep.html#+replab.SubRep.nice">(replab.SubRep method)</a>
 </li>
       </ul></li>
       <li><a href="api/groups.html#+replab.NiceFiniteGroup">NiceFiniteGroup (class in replab)</a>
@@ -4614,8 +4814,6 @@
         <li><a href="api/group_constructions.html#+replab.+semidirectproduct.OfNiceFiniteGroups">(class in replab.semidirectproduct)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples">OnDemandSamples (class in replab.irreducible)</a>
-</li>
       <li><a href="api/permutations.html#+replab.PermutationGroup.orbits">orbits() (replab.PermutationGroup method)</a>
 
       <ul>
@@ -4797,8 +4995,6 @@
       <li><a href="api/group_constructions.html#+replab.+directproduct.OfNiceFiniteGroups.parent">parent (replab.directproduct.OfNiceFiniteGroups attribute)</a>
 
       <ul>
-        <li><a href="api/rep.html#+replab.Equivariant.parent">(replab.Equivariant attribute)</a>
-</li>
         <li><a href="api/infrastructure_technical.html#+replab.+infra.Doc.parent">(replab.infra.Doc attribute)</a>
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.parent">(replab.Irreducible attribute)</a>
@@ -5082,14 +5278,10 @@
         <li><a href="api/rep_technical.html#+replab.+equivariant.ForRepByImages.project">(replab.equivariant.ForRepByImages method)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep.html#+replab.Irreducible.projector">projector() (replab.Irreducible method)</a>
-
-      <ul>
-        <li><a href="api/rep.html#+replab.Isotypic.projector">(replab.Isotypic method)</a>
+      <li><a href="api/rep.html#+replab.Isotypic.projector">projector() (replab.Isotypic method)</a>
 </li>
-        <li><a href="api/rep.html#+replab.SubRep.projector">(replab.SubRep method)</a>
+      <li><a href="api/rep.html#+replab.Isotypic.projectorOnIrrep">projectorOnIrrep() (replab.Isotypic method)</a>
 </li>
-      </ul></li>
       <li><a href="api/infrastructure.html#root.replab_Version.prompt">prompt() (root.replab_Version method)</a>
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.PropertyData">PropertyData (class in replab.infra)</a>
@@ -5162,8 +5354,14 @@
       </ul></li>
       <li><a href="api/groups.html#+replab.FiniteGroup.randomBag_">randomBag_ (replab.FiniteGroup attribute)</a>
 </li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.recoverReal">recoverReal() (in module replab.irreducible)</a>
+      <li><a href="api/rep.html#+replab.Irreducible.refine">refine() (replab.Irreducible method)</a>
+
+      <ul>
+        <li><a href="api/rep.html#+replab.Isotypic.refine">(replab.Isotypic method)</a>
 </li>
+        <li><a href="api/rep.html#+replab.SubRep.refine">(replab.SubRep method)</a>
+</li>
+      </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.Class.relativeFilenameParts">relativeFilenameParts() (replab.infra.Class method)</a>
 
       <ul>
@@ -5176,11 +5374,9 @@
       </ul></li>
       <li><a href="api/rep.html#+replab.Rep">Rep (class in replab)</a>
 </li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.rep">rep (replab.irreducible.OnDemandSamples attribute)</a>
+      <li><a href="api/rep.html#+replab.RepLaws.rep">rep (replab.RepLaws attribute)</a>
 
       <ul>
-        <li><a href="api/rep.html#+replab.RepLaws.rep">(replab.RepLaws attribute)</a>
-</li>
         <li><a href="api/rep.html#+replab.SubRepLaws.rep">(replab.SubRepLaws attribute)</a>
 </li>
       </ul></li>
@@ -5226,7 +5422,7 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/base.html#module-+replab">replab (module)</a>, <a href="api/group_constructions.html#module-+replab">[1]</a>, <a href="api/groups.html#module-+replab">[2]</a>, <a href="api/laws.html#module-+replab">[3]</a>, <a href="api/misc.html#module-+replab">[4]</a>, <a href="api/permutations.html#module-+replab">[5]</a>, <a href="api/print.html#module-+replab">[6]</a>, <a href="api/rep.html#module-+replab">[7]</a>, <a href="development/octave_bugs.html#module-+replab">[8]</a>, <a href="development/style.html#module-+replab">[9]</a>
+      <li><a href="api/base.html#module-+replab">replab (module)</a>, <a href="api/dispatch.html#module-+replab">[1]</a>, <a href="api/group_constructions.html#module-+replab">[2]</a>, <a href="api/groups.html#module-+replab">[3]</a>, <a href="api/laws.html#module-+replab">[4]</a>, <a href="api/misc.html#module-+replab">[5]</a>, <a href="api/permutations.html#module-+replab">[6]</a>, <a href="api/print.html#module-+replab">[7]</a>, <a href="api/rep.html#module-+replab">[8]</a>, <a href="development/octave_bugs.html#module-+replab">[9]</a>, <a href="development/style.html#module-+replab">[10]</a>
 </li>
       <li><a href="api/group_constructions.html#module-+replab.+directproduct">replab.directproduct (module)</a>
 </li>
@@ -5242,7 +5438,7 @@
 </li>
       <li><a href="api/infrastructure_technical.html#module-+replab.+infra.+sphinx">replab.infra.sphinx (module)</a>
 </li>
-      <li><a href="api/rep_technical.html#module-+replab.+irreducible">replab.irreducible (module)</a>
+      <li><a href="api/rep_irreducible.html#module-+replab.+irreducible">replab.irreducible (module)</a>
 </li>
       <li><a href="api/laws.html#module-+replab.+laws">replab.laws (module)</a>
 </li>
@@ -5406,6 +5602,16 @@
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfNiceFiniteGroup.sample">(replab.wreathproduct.OfNiceFiniteGroup method)</a>
 </li>
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.sample">(replab.wreathproduct.PrimitiveRep method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/rep.html#+replab.Equivariant.sampleInContext">sampleInContext() (replab.Equivariant method)</a>
+
+      <ul>
+        <li><a href="api/rep_technical.html#+replab.+equivariant.ForCompactGroup.sampleInContext">(replab.equivariant.ForCompactGroup method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+equivariant.ForFiniteGroup.sampleInContext">(replab.equivariant.ForFiniteGroup method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+equivariant.ForRepByImages.sampleInContext">(replab.equivariant.ForRepByImages method)</a>
 </li>
       </ul></li>
       <li><a href="api/groups.html#+replab.CompactGroup.sampleUniformly">sampleUniformly() (replab.CompactGroup method)</a>
@@ -5609,8 +5815,6 @@
 </li>
         <li><a href="api/rep.html#+replab.Irreducible.shortStr">(replab.Irreducible method)</a>
 </li>
-        <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.shortStr">(replab.irreducible.OnDemandSamples method)</a>
-</li>
         <li><a href="api/rep.html#+replab.IrreducibleLaws.shortStr">(replab.IrreducibleLaws method)</a>
 </li>
         <li><a href="api/rep.html#+replab.Isotypic.shortStr">(replab.Isotypic method)</a>
@@ -5720,32 +5924,60 @@
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfNiceFiniteGroup.signedPermutationRep">(replab.wreathproduct.OfNiceFiniteGroup method)</a>
 </li>
       </ul></li>
-      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.similar">similar() (replab.directproduct.SumRep method)</a>
+      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.similarRep">similarRep() (replab.directproduct.SumRep method)</a>
 
       <ul>
-        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.similar">(replab.directproduct.TensorRep method)</a>
+        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.similarRep">(replab.directproduct.TensorRep method)</a>
 </li>
-        <li><a href="api/rep.html#+replab.Irreducible.similar">(replab.Irreducible method)</a>
+        <li><a href="api/rep.html#+replab.Irreducible.similarRep">(replab.Irreducible method)</a>
 </li>
-        <li><a href="api/rep.html#+replab.Isotypic.similar">(replab.Isotypic method)</a>
+        <li><a href="api/rep.html#+replab.Isotypic.similarRep">(replab.Isotypic method)</a>
 </li>
-        <li><a href="api/rep.html#+replab.Rep.similar">(replab.Rep method)</a>
+        <li><a href="api/rep.html#+replab.Rep.similarRep">(replab.Rep method)</a>
 </li>
-        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.similar">(replab.rep.DirectSumRep method)</a>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.similarRep">(replab.rep.DirectSumRep method)</a>
 </li>
-        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.similar">(replab.rep.IndexRelabelingRep method)</a>
+        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.similarRep">(replab.rep.IndexRelabelingRep method)</a>
 </li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.similar">(replab.rep.TensorRep method)</a>
+        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.similarRep">(replab.rep.TensorRep method)</a>
 </li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.similar">(replab.rep.TrivialRep method)</a>
+        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.similarRep">(replab.rep.TrivialRep method)</a>
 </li>
-        <li><a href="api/rep.html#+replab.RepByImages.similar">(replab.RepByImages method)</a>
+        <li><a href="api/rep.html#+replab.RepByImages.similarRep">(replab.RepByImages method)</a>
 </li>
-        <li><a href="api/rep.html#+replab.SubRep.similar">(replab.SubRep method)</a>
+        <li><a href="api/rep.html#+replab.SubRep.similarRep">(replab.SubRep method)</a>
 </li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.similar">(replab.wreathproduct.ImprimitiveRep method)</a>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.similarRep">(replab.wreathproduct.ImprimitiveRep method)</a>
 </li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.similar">(replab.wreathproduct.PrimitiveRep method)</a>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.similarRep">(replab.wreathproduct.PrimitiveRep method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.simplify">simplify() (replab.directproduct.SumRep method)</a>
+
+      <ul>
+        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.simplify">(replab.directproduct.TensorRep method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Irreducible.simplify">(replab.Irreducible method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Isotypic.simplify">(replab.Isotypic method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Rep.simplify">(replab.Rep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.simplify">(replab.rep.DirectSumRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.simplify">(replab.rep.IndexRelabelingRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.simplify">(replab.rep.TensorRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.simplify">(replab.rep.TrivialRep method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.RepByImages.simplify">(replab.RepByImages method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.simplify">(replab.SubRep method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.simplify">(replab.wreathproduct.ImprimitiveRep method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.simplify">(replab.wreathproduct.PrimitiveRep method)</a>
 </li>
       </ul></li>
       <li><a href="api/base.html#+replab.IndexedFamily.size">size (replab.IndexedFamily attribute)</a>
@@ -5753,8 +5985,6 @@
       <li><a href="api/print.html#+replab.+str.sizeStr">sizeStr() (in module replab.str)</a>
 </li>
       <li><a href="api/infrastructure.html#root.replab_Version.snapshot">snapshot (root.replab_Version attribute)</a>
-</li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.sortedEig">sortedEig() (in module replab.irreducible)</a>
 </li>
       <li><a href="api/permutations.html#+replab.Permutations.sorting">sorting() (replab.Permutations static method)</a>
 </li>
@@ -5782,10 +6012,42 @@
         <li><a href="api/rep_technical.html#+replab.+equivariant.ForRepByImages.special">(replab.equivariant.ForRepByImages attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.split">split() (in module replab.irreducible)</a>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.split">split() (in module replab.irreducible)</a>
+</li>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.splitAllOnes">splitAllOnes() (in module replab.irreducible)</a>
+</li>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.splitBlocks">splitBlocks() (in module replab.irreducible)</a>
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.splitComment">splitComment() (in module replab.infra)</a>
 </li>
+      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.splitIntoIrreducibles">splitIntoIrreducibles() (replab.directproduct.SumRep method)</a>
+
+      <ul>
+        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.splitIntoIrreducibles">(replab.directproduct.TensorRep method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Irreducible.splitIntoIrreducibles">(replab.Irreducible method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Isotypic.splitIntoIrreducibles">(replab.Isotypic method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Rep.splitIntoIrreducibles">(replab.Rep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.splitIntoIrreducibles">(replab.rep.DirectSumRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.splitIntoIrreducibles">(replab.rep.IndexRelabelingRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.splitIntoIrreducibles">(replab.rep.TensorRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.splitIntoIrreducibles">(replab.rep.TrivialRep method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.RepByImages.splitIntoIrreducibles">(replab.RepByImages method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.splitIntoIrreducibles">(replab.SubRep method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.splitIntoIrreducibles">(replab.wreathproduct.ImprimitiveRep method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.splitIntoIrreducibles">(replab.wreathproduct.PrimitiveRep method)</a>
+</li>
+      </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.Class.splitPath">splitPath() (replab.infra.Class method)</a>
 
       <ul>
@@ -5804,12 +6066,18 @@
         <li><a href="api/infrastructure_technical.html#+replab.+infra.SourceElement.splitPath">(replab.infra.SourceElement method)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.splitPermutations">splitPermutations() (in module replab.irreducible)</a>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.splitTrivialComponent">splitTrivialComponent() (in module replab.irreducible)</a>
 </li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.splitUsingCommutant">splitUsingCommutant() (in module replab.irreducible)</a>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.splitTrivialGroup">splitTrivialGroup() (in module replab.irreducible)</a>
 </li>
-      <li><a href="api/rep_technical.html#+replab.+rep.standardBasis">standardBasis() (in module replab.rep)</a>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.splitUsingCommutant">splitUsingCommutant() (in module replab.irreducible)</a>
 </li>
+      <li><a href="api/rep_irreducible.html#+replab.+irreducible.standardBasis">standardBasis() (in module replab.irreducible)</a>
+
+      <ul>
+        <li><a href="api/rep_technical.html#+replab.+rep.standardBasis">(in module replab.rep)</a>
+</li>
+      </ul></li>
       <li><a href="api/permutations.html#+replab.PermutationGroup.standardRep">standardRep() (replab.PermutationGroup method)</a>
 
       <ul>
@@ -5842,6 +6110,16 @@
 </li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.CodeBase.subclasses_">subclasses_ (replab.infra.CodeBase attribute)</a>
 </li>
+      <li><a href="api/rep.html#+replab.Equivariant.subEquivariant">subEquivariant() (replab.Equivariant method)</a>
+
+      <ul>
+        <li><a href="api/rep_technical.html#+replab.+equivariant.ForCompactGroup.subEquivariant">(replab.equivariant.ForCompactGroup method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+equivariant.ForFiniteGroup.subEquivariant">(replab.equivariant.ForFiniteGroup method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+equivariant.ForRepByImages.subEquivariant">(replab.equivariant.ForRepByImages method)</a>
+</li>
+      </ul></li>
       <li><a href="api/group_constructions.html#+replab.+directproduct.OfNiceFiniteGroups.subgroup">subgroup() (replab.directproduct.OfNiceFiniteGroups method)</a>
 
       <ul>
@@ -5906,62 +6184,6 @@
       </ul></li>
       <li><a href="api/rep.html#+replab.SubRepLaws">SubRepLaws (class in replab)</a>
 </li>
-      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.subRepUnitary">subRepUnitary() (replab.directproduct.SumRep method)</a>
-
-      <ul>
-        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.subRepUnitary">(replab.directproduct.TensorRep method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Irreducible.subRepUnitary">(replab.Irreducible method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Isotypic.subRepUnitary">(replab.Isotypic method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Rep.subRepUnitary">(replab.Rep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.subRepUnitary">(replab.rep.DirectSumRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.subRepUnitary">(replab.rep.IndexRelabelingRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.subRepUnitary">(replab.rep.TensorRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.subRepUnitary">(replab.rep.TrivialRep method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.RepByImages.subRepUnitary">(replab.RepByImages method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.SubRep.subRepUnitary">(replab.SubRep method)</a>
-</li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.subRepUnitary">(replab.wreathproduct.ImprimitiveRep method)</a>
-</li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.subRepUnitary">(replab.wreathproduct.PrimitiveRep method)</a>
-</li>
-      </ul></li>
-      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.subRepUnitaryByIntegerBasis">subRepUnitaryByIntegerBasis() (replab.directproduct.SumRep method)</a>
-
-      <ul>
-        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.subRepUnitaryByIntegerBasis">(replab.directproduct.TensorRep method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Irreducible.subRepUnitaryByIntegerBasis">(replab.Irreducible method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Isotypic.subRepUnitaryByIntegerBasis">(replab.Isotypic method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Rep.subRepUnitaryByIntegerBasis">(replab.Rep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.subRepUnitaryByIntegerBasis">(replab.rep.DirectSumRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.subRepUnitaryByIntegerBasis">(replab.rep.IndexRelabelingRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.subRepUnitaryByIntegerBasis">(replab.rep.TensorRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.subRepUnitaryByIntegerBasis">(replab.rep.TrivialRep method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.RepByImages.subRepUnitaryByIntegerBasis">(replab.RepByImages method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.SubRep.subRepUnitaryByIntegerBasis">(replab.SubRep method)</a>
-</li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.subRepUnitaryByIntegerBasis">(replab.wreathproduct.ImprimitiveRep method)</a>
-</li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.subRepUnitaryByIntegerBasis">(replab.wreathproduct.PrimitiveRep method)</a>
-</li>
-      </ul></li>
       <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep">SumRep (class in replab.directproduct)</a>
 </li>
       <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.SumRep">SumRep() (replab.directproduct.SumRep method)</a>
@@ -6016,38 +6238,8 @@
         <li><a href="api/infrastructure_technical.html#+replab.+infra.+doctests.ParseState.take">(replab.infra.doctests.ParseState method)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.tell">tell() (in module replab.irreducible)</a>
-</li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.+repl.templateHelp">templateHelp() (in module replab.infra.repl)</a>
 </li>
-      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.tensor">tensor() (replab.directproduct.SumRep method)</a>
-
-      <ul>
-        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.tensor">(replab.directproduct.TensorRep method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Irreducible.tensor">(replab.Irreducible method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Isotypic.tensor">(replab.Isotypic method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Rep.tensor">(replab.Rep static method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.tensor">(replab.rep.DirectSumRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.tensor">(replab.rep.IndexRelabelingRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.tensor">(replab.rep.TensorRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.tensor">(replab.rep.TrivialRep method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.RepByImages.tensor">(replab.RepByImages method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.SubRep.tensor">(replab.SubRep method)</a>
-</li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.tensor">(replab.wreathproduct.ImprimitiveRep method)</a>
-</li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.tensor">(replab.wreathproduct.PrimitiveRep method)</a>
-</li>
-      </ul></li>
       <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.tensorPower">tensorPower() (replab.directproduct.SumRep method)</a>
 
       <ul>
@@ -6082,18 +6274,52 @@
         <li><a href="api/rep_technical.html#+replab.+rep.TensorRep">(class in replab.rep)</a>
 </li>
       </ul></li>
-      <li><a href="api/group_constructions.html#+replab.+directproduct.OfCompactGroups.tensorRep">tensorRep() (replab.directproduct.OfCompactGroups method)</a>
+      <li><a href="api/groups.html#+replab.CompactGroup.tensorRep">tensorRep() (replab.CompactGroup method)</a>
 
       <ul>
+        <li><a href="api/group_constructions.html#+replab.+directproduct.OfCompactGroups.tensorRep">(replab.directproduct.OfCompactGroups method)</a>
+</li>
         <li><a href="api/group_constructions.html#+replab.+directproduct.OfFiniteGroups.tensorRep">(replab.directproduct.OfFiniteGroups method)</a>
 </li>
         <li><a href="api/group_constructions.html#+replab.+directproduct.OfNiceFiniteGroups.tensorRep">(replab.directproduct.OfNiceFiniteGroups method)</a>
 </li>
       </ul></li>
       <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.TensorRep">TensorRep() (replab.directproduct.TensorRep method)</a>
+</li>
+      <li><a href="api/groups.html#+replab.FiniteGroup.tensorRep">tensorRep() (replab.FiniteGroup method)</a>
 
       <ul>
-        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.TensorRep">(replab.rep.TensorRep method)</a>
+        <li><a href="api/groups.html#+replab.NiceFiniteGroup.tensorRep">(replab.NiceFiniteGroup method)</a>
+</li>
+        <li><a href="api/groups.html#+replab.NiceFiniteSubgroup.tensorRep">(replab.NiceFiniteSubgroup method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.PermutationGroup.tensorRep">(replab.PermutationGroup method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.Permutations.tensorRep">(replab.Permutations method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.PermutationSubgroup.tensorRep">(replab.PermutationSubgroup method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.TensorRep">TensorRep() (replab.rep.TensorRep method)</a>
+</li>
+      <li><a href="api/group_constructions.html#+replab.+semidirectproduct.OfCompactGroups.tensorRep">tensorRep() (replab.semidirectproduct.OfCompactGroups method)</a>
+
+      <ul>
+        <li><a href="api/group_constructions.html#+replab.+semidirectproduct.OfFiniteGroups.tensorRep">(replab.semidirectproduct.OfFiniteGroups method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+semidirectproduct.OfNiceFiniteGroups.tensorRep">(replab.semidirectproduct.OfNiceFiniteGroups method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.+signed.PermutationGroup.tensorRep">(replab.signed.PermutationGroup method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.+signed.Permutations.tensorRep">(replab.signed.Permutations method)</a>
+</li>
+        <li><a href="api/permutations.html#+replab.+signed.PermutationSubgroup.tensorRep">(replab.signed.PermutationSubgroup method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfCompactGroup.tensorRep">(replab.wreathproduct.OfCompactGroup method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfFiniteGroup.tensorRep">(replab.wreathproduct.OfFiniteGroup method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfNiceFiniteGroup.tensorRep">(replab.wreathproduct.OfNiceFiniteGroup method)</a>
 </li>
       </ul></li>
       <li><a href="api/group_constructions.html#+replab.+directproduct.OfCompactGroups.tensorRepFun">tensorRepFun() (replab.directproduct.OfCompactGroups method)</a>
@@ -6104,8 +6330,6 @@
         <li><a href="api/group_constructions.html#+replab.+directproduct.OfNiceFiniteGroups.tensorRepFun">(replab.directproduct.OfNiceFiniteGroups method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/group_constructions.html#+replab.+directproduct.OfCompactGroups.tensorRepFunWithIndex">tensorRepFunWithIndex() (replab.directproduct.OfCompactGroups method)</a>
 
       <ul>
@@ -6126,6 +6350,8 @@
         <li><a href="api/permutations.html#+replab.+signed.Permutations.toMatrix">(replab.signed.Permutations static method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/permutations.html#+replab.+signed.Permutations.toPermutation">toPermutation() (replab.signed.Permutations static method)</a>
 </li>
       <li><a href="api/permutations.html#+replab.Permutations.toSparseMatrix">toSparseMatrix() (replab.Permutations static method)</a>
@@ -6139,13 +6365,35 @@
       <li><a href="api/permutations.html#+replab.Permutations.transposition">transposition() (replab.Permutations method)</a>
 </li>
       <li><a href="api/groups.html#+replab.FiniteGroupDecomposition.trivial">trivial() (replab.FiniteGroupDecomposition static method)</a>
+</li>
+      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.trivialDimension">trivialDimension (replab.directproduct.SumRep attribute)</a>
 
       <ul>
-        <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.trivial">(replab.irreducible.OnDemandSamples method)</a>
+        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.trivialDimension">(replab.directproduct.TensorRep attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Irreducible.trivialDimension">(replab.Irreducible attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Isotypic.trivialDimension">(replab.Isotypic attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Rep.trivialDimension">(replab.Rep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.trivialDimension">(replab.rep.DirectSumRep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.trivialDimension">(replab.rep.IndexRelabelingRep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.trivialDimension">(replab.rep.TensorRep attribute)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.trivialDimension">(replab.rep.TrivialRep attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.RepByImages.trivialDimension">(replab.RepByImages attribute)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.trivialDimension">(replab.SubRep attribute)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.trivialDimension">(replab.wreathproduct.ImprimitiveRep attribute)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.trivialDimension">(replab.wreathproduct.PrimitiveRep attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.trivial_">trivial_ (replab.irreducible.OnDemandSamples attribute)</a>
-</li>
       <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep">TrivialRep (class in replab.rep)</a>
 </li>
       <li><a href="api/groups.html#+replab.CompactGroup.trivialRep">trivialRep() (replab.CompactGroup method)</a>
@@ -6188,9 +6436,35 @@
         <li><a href="api/group_constructions.html#+replab.+wreathproduct.OfNiceFiniteGroup.trivialRep">(replab.wreathproduct.OfNiceFiniteGroup method)</a>
 </li>
       </ul></li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.trivialSample">trivialSample() (replab.irreducible.OnDemandSamples method)</a>
+      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.trivialSpace">trivialSpace() (replab.directproduct.SumRep method)</a>
+
+      <ul>
+        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.trivialSpace">(replab.directproduct.TensorRep method)</a>
 </li>
-      <li><a href="api/rep_technical.html#+replab.+irreducible.OnDemandSamples.trivialSamples">trivialSamples (replab.irreducible.OnDemandSamples attribute)</a>
+        <li><a href="api/rep.html#+replab.Irreducible.trivialSpace">(replab.Irreducible method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Isotypic.trivialSpace">(replab.Isotypic method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.Rep.trivialSpace">(replab.Rep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.trivialSpace">(replab.rep.DirectSumRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.trivialSpace">(replab.rep.IndexRelabelingRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.trivialSpace">(replab.rep.TensorRep method)</a>
+</li>
+        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.trivialSpace">(replab.rep.TrivialRep method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.RepByImages.trivialSpace">(replab.RepByImages method)</a>
+</li>
+        <li><a href="api/rep.html#+replab.SubRep.trivialSpace">(replab.SubRep method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.trivialSpace">(replab.wreathproduct.ImprimitiveRep method)</a>
+</li>
+        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.trivialSpace">(replab.wreathproduct.PrimitiveRep method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/rep.html#+replab.Rep.trivialSpace_">trivialSpace_ (replab.Rep attribute)</a>
 </li>
       <li><a href="api/group_constructions.html#+replab.+directproduct.OfNiceFiniteGroups.trivialSubgroup">trivialSubgroup() (replab.directproduct.OfNiceFiniteGroups method)</a>
 
@@ -6222,15 +6496,9 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/rep.html#+replab.Irreducible.U">U (replab.Irreducible attribute)</a>
+      <li><a href="api/rep.html#+replab.RepLaws.U">U (replab.RepLaws attribute)</a>
 
       <ul>
-        <li><a href="api/rep.html#+replab.Isotypic.U">(replab.Isotypic attribute)</a>
-</li>
-        <li><a href="api/rep.html#+replab.RepLaws.U">(replab.RepLaws attribute)</a>
-</li>
-        <li><a href="api/rep.html#+replab.SubRep.U">(replab.SubRep attribute)</a>
-</li>
         <li><a href="api/rep.html#+replab.SubRepLaws.U">(replab.SubRepLaws attribute)</a>
 </li>
       </ul></li>
@@ -6268,34 +6536,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/group_constructions.html#+replab.+directproduct.SumRep.unitaryChangeOfBasis">unitaryChangeOfBasis() (replab.directproduct.SumRep method)</a>
-
-      <ul>
-        <li><a href="api/group_constructions.html#+replab.+directproduct.TensorRep.unitaryChangeOfBasis">(replab.directproduct.TensorRep method)</a>
+      <li><a href="api/rep.html#+replab.Rep.unitarize_">unitarize_ (replab.Rep attribute)</a>
 </li>
-        <li><a href="api/rep.html#+replab.Irreducible.unitaryChangeOfBasis">(replab.Irreducible method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Isotypic.unitaryChangeOfBasis">(replab.Isotypic method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.Rep.unitaryChangeOfBasis">(replab.Rep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.DirectSumRep.unitaryChangeOfBasis">(replab.rep.DirectSumRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.IndexRelabelingRep.unitaryChangeOfBasis">(replab.rep.IndexRelabelingRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TensorRep.unitaryChangeOfBasis">(replab.rep.TensorRep method)</a>
-</li>
-        <li><a href="api/rep_technical.html#+replab.+rep.TrivialRep.unitaryChangeOfBasis">(replab.rep.TrivialRep method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.RepByImages.unitaryChangeOfBasis">(replab.RepByImages method)</a>
-</li>
-        <li><a href="api/rep.html#+replab.SubRep.unitaryChangeOfBasis">(replab.SubRep method)</a>
-</li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.ImprimitiveRep.unitaryChangeOfBasis">(replab.wreathproduct.ImprimitiveRep method)</a>
-</li>
-        <li><a href="api/group_constructions.html#+replab.+wreathproduct.PrimitiveRep.unitaryChangeOfBasis">(replab.wreathproduct.PrimitiveRep method)</a>
-</li>
-      </ul></li>
       <li><a href="api/infrastructure_technical.html#+replab.+infra.+shm.update">update() (in module replab.infra.shm)</a>
 
       <ul>
@@ -6367,7 +6609,7 @@
         <li class="right" >
           <a href="mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">RepLAB 0.6.7 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li> 
       </ul>
     </div>
 <script type="text/javascript">

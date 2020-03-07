@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Abstract group constructions &#8212; RepLAB 0.6.7 documentation</title>
+    <title>Abstract group constructions &#8212; RepLAB 0.6.8-SNAP documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="permutations.html" title="Permutation groups"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.7.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.8-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -96,9 +96,11 @@
 <li class="toctree-l2"><a class="reference internal" href="print.html">Pretty printing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base.html">Base object types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="laws.html">Laws</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">Dispatch mechanism</a></li>
 <li class="toctree-l2"><a class="reference internal" href="groups.html">Basic group structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rep_technical.html">Representations (support code)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep_irreducible.html">Representations (irreducible decomposition support code)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutations.html">Permutation groups</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Abstract group constructions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#directproduct-ofcompactgroups">directproduct.OfCompactGroups</a></li>
@@ -1206,7 +1208,7 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 
 <dl class="method">
 <dt id="+replab.+directproduct.OfNiceFiniteGroups.repByImages">
-<code class="sig-name descname">repByImages</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">images</em>, <em class="sig-param">inverseImages</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfNiceFiniteGroups.repByImages" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">repByImages</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">images</em>, <em class="sig-param">inverseImages</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.OfNiceFiniteGroups.repByImages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.NiceFiniteGroup.repByImages" title="+replab.NiceFiniteGroup.repByImages"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.NiceFiniteGroup.repByImages()</span></code></a></p>
 </dd></dl>
 
@@ -1303,7 +1305,6 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.conj" title="+replab.+directproduct.SumRep.conj"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conj</span></code></a> – Returns the complex conjugate representation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.decomposition" title="+replab.+directproduct.SumRep.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns the irreducible decomposition of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.dimension" title="+replab.+directproduct.SumRep.dimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dimension</span></code></a> – Representation dimension</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.directSum" title="+replab.+directproduct.SumRep.directSum"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSum</span></code></a> – Computes the direct sum of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.directSumOfCopies" title="+replab.+directproduct.SumRep.directSumOfCopies"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumOfCopies</span></code></a> – Returns a direct sum of copies of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.disp" title="+replab.+directproduct.SumRep.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.dual" title="+replab.+directproduct.SumRep.dual"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dual</span></code></a> – Returns the dual representation of this representation</p></li>
@@ -1311,31 +1312,36 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.equivariant" title="+replab.+directproduct.SumRep.equivariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">equivariant</span></code></a> – Returns the space of equivariant linear maps from this rep to another rep</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.factorReps" title="+replab.+directproduct.SumRep.factorReps"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorReps</span></code></a> – Representations of factors</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.field" title="+replab.+directproduct.SumRep.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – Vector space defined on real (R) or complex (C) field</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.frobeniusSchurIndicator" title="+replab.+directproduct.SumRep.frobeniusSchurIndicator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">frobeniusSchurIndicator</span></code></a> – Value of the non-approximated Frobenius-Schur indicator</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.group" title="+replab.+directproduct.SumRep.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – Group being represented</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.headerStr" title="+replab.+directproduct.SumRep.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.hermitianInvariant" title="+replab.+directproduct.SumRep.hermitianInvariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hermitianInvariant</span></code></a> – Returns the Hermitian invariant space of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.hiddenFields" title="+replab.+directproduct.SumRep.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.image" title="+replab.+directproduct.SumRep.image"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">image</span></code></a> – Returns the image of a group element</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.image_internal" title="+replab.+directproduct.SumRep.image_internal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">image_internal</span></code></a> – Returns the image of a group element, dense or sparse</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.inverseImage" title="+replab.+directproduct.SumRep.inverseImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverseImage</span></code></a> – Returns the image of the inverse of a group element</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.irrepInfo" title="+replab.+directproduct.SumRep.irrepInfo"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrepInfo</span></code></a> – Irreducible status information</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.isUnitary" title="+replab.+directproduct.SumRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether the representation is unitary</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.inverseImage_internal" title="+replab.+directproduct.SumRep.inverseImage_internal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverseImage_internal</span></code></a> – Returns the image of the inverse of a group element</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.isDivisionAlgebraCanonical" title="+replab.+directproduct.SumRep.isDivisionAlgebraCanonical"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isDivisionAlgebraCanonical</span></code></a> – If the representation is real and irreducible and the Frobenius-Schur indicator is not 1, means that the images encode the complex or quaternion division algebras in the RepLAB canonical form</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.isIrreducible" title="+replab.+directproduct.SumRep.isIrreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIrreducible</span></code></a> – Whether this representation is irreducible</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.isUnitary" title="+replab.+directproduct.SumRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether this representation is unitary</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.kron" title="+replab.+directproduct.SumRep.kron"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">kron</span></code></a> – Tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.lambda" title="+replab.+directproduct.SumRep.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Creates a non unitary representation from an image function</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.longStr" title="+replab.+directproduct.SumRep.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.maschke" title="+replab.+directproduct.SumRep.maschke"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">maschke</span></code></a> – Given a basis of a subrepresentation, returns two complementary subrepresentations</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.matrixColAction" title="+replab.+directproduct.SumRep.matrixColAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixColAction</span></code></a> – Computes the matrix-representation product</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.matrixRowAction" title="+replab.+directproduct.SumRep.matrixRowAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixRowAction</span></code></a> – Computes the representation-matrix product</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.overC" title="+replab.+directproduct.SumRep.overC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">overC</span></code></a> – Returns whether this representation is defined over the complex field</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.overR" title="+replab.+directproduct.SumRep.overR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">overR</span></code></a> – Returns whether this representation is defined over the real field</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.sample" title="+replab.+directproduct.SumRep.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from the group and returns its image under the representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.shortStr" title="+replab.+directproduct.SumRep.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.similar" title="+replab.+directproduct.SumRep.similar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">similar</span></code></a> – Returns a similar representation under a change of basis</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.similarRep" title="+replab.+directproduct.SumRep.similarRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">similarRep</span></code></a> – Returns a similar representation under a change of basis</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.simplify" title="+replab.+directproduct.SumRep.simplify"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">simplify</span></code></a> – Returns a representation identical to this, but possibly with its composition simplified</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.splitIntoIrreducibles" title="+replab.+directproduct.SumRep.splitIntoIrreducibles"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">splitIntoIrreducibles</span></code></a> – Decomposes fully the given representation into subrepresentations</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.subRep" title="+replab.+directproduct.SumRep.subRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRep</span></code></a> – Returns a subrepresentation of this representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.subRepUnitary" title="+replab.+directproduct.SumRep.subRepUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitary</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.subRepUnitaryByIntegerBasis" title="+replab.+directproduct.SumRep.subRepUnitaryByIntegerBasis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitaryByIntegerBasis</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.tensor" title="+replab.+directproduct.SumRep.tensor"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensor</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.tensorPower" title="+replab.+directproduct.SumRep.tensorPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorPower</span></code></a> – Returns a tensor power of this representation</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.trivialDimension" title="+replab.+directproduct.SumRep.trivialDimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialDimension</span></code></a> – Dimension of the trivial subrepresentation in this representation</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.trivialSpace" title="+replab.+directproduct.SumRep.trivialSpace"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialSpace</span></code></a> – Returns an equivariant space from a trivial representation to this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.unitarize" title="+replab.+directproduct.SumRep.unitarize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">unitarize</span></code></a> – Returns a unitary representation equivalent to this representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.SumRep.unitaryChangeOfBasis" title="+replab.+directproduct.SumRep.unitaryChangeOfBasis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">unitaryChangeOfBasis</span></code></a> – Returns the change of basis to a unitary representation</p></li>
 </ul>
 </div>
 <div class="collapsed admonition">
@@ -1383,12 +1389,6 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.SumRep.directSum">
-<code class="sig-name descname">directSum</code><span class="sig-paren">(</span><em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.directSum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.directSum" title="+replab.Rep.directSum"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.directSum()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
 <dt id="+replab.+directproduct.SumRep.directSumOfCopies">
 <code class="sig-name descname">directSumOfCopies</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.directSumOfCopies" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.directSumOfCopies" title="+replab.Rep.directSumOfCopies"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.directSumOfCopies()</span></code></a></p>
@@ -1414,7 +1414,7 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 
 <dl class="method">
 <dt id="+replab.+directproduct.SumRep.equivariant">
-<code class="sig-name descname">equivariant</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">repC</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.equivariant" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">equivariant</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">repR</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.equivariant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.equivariant" title="+replab.Rep.equivariant"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.equivariant()</span></code></a></p>
 </dd></dl>
 
@@ -1422,6 +1422,12 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 <dt id="+replab.+directproduct.SumRep.field">
 <code class="sig-name descname">field</code><a class="headerlink" href="#+replab.+directproduct.SumRep.field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.field" title="+replab.Rep.field"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.field</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.+directproduct.SumRep.frobeniusSchurIndicator">
+<code class="sig-name descname">frobeniusSchurIndicator</code><a class="headerlink" href="#+replab.+directproduct.SumRep.frobeniusSchurIndicator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.frobeniusSchurIndicator" title="+replab.Rep.frobeniusSchurIndicator"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.frobeniusSchurIndicator</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1455,15 +1461,33 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+directproduct.SumRep.image_internal">
+<code class="sig-name descname">image_internal</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">g</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.image_internal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.image_internal" title="+replab.Rep.image_internal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.image_internal()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+directproduct.SumRep.inverseImage">
 <code class="sig-name descname">inverseImage</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">g</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.inverseImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.inverseImage" title="+replab.Rep.inverseImage"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.inverseImage()</span></code></a></p>
 </dd></dl>
 
+<dl class="method">
+<dt id="+replab.+directproduct.SumRep.inverseImage_internal">
+<code class="sig-name descname">inverseImage_internal</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">g</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.inverseImage_internal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.inverseImage_internal" title="+replab.Rep.inverseImage_internal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.inverseImage_internal()</span></code></a></p>
+</dd></dl>
+
 <dl class="attribute">
-<dt id="+replab.+directproduct.SumRep.irrepInfo">
-<code class="sig-name descname">irrepInfo</code><a class="headerlink" href="#+replab.+directproduct.SumRep.irrepInfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.irrepInfo" title="+replab.Rep.irrepInfo"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.irrepInfo</span></code></a></p>
+<dt id="+replab.+directproduct.SumRep.isDivisionAlgebraCanonical">
+<code class="sig-name descname">isDivisionAlgebraCanonical</code><a class="headerlink" href="#+replab.+directproduct.SumRep.isDivisionAlgebraCanonical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.isDivisionAlgebraCanonical" title="+replab.Rep.isDivisionAlgebraCanonical"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isDivisionAlgebraCanonical</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.+directproduct.SumRep.isIrreducible">
+<code class="sig-name descname">isIrreducible</code><a class="headerlink" href="#+replab.+directproduct.SumRep.isIrreducible" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.isIrreducible" title="+replab.Rep.isIrreducible"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isIrreducible</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1480,7 +1504,7 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 
 <dl class="method">
 <dt id="+replab.+directproduct.SumRep.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">irrepInfo</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.lambda" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.lambda" title="+replab.Rep.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.lambda()</span></code></a></p>
 </dd></dl>
 
@@ -1488,6 +1512,12 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 <dt id="+replab.+directproduct.SumRep.longStr">
 <code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.longStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.SumRep.maschke">
+<code class="sig-name descname">maschke</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">basis1</em>, <em class="sig-param">embedding1</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.maschke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.maschke" title="+replab.Rep.maschke"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.maschke()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1527,33 +1557,27 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.SumRep.similar">
-<code class="sig-name descname">similar</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em>, <em class="sig-param">Ainv</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.similar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.similar" title="+replab.Rep.similar"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.similar()</span></code></a></p>
+<dt id="+replab.+directproduct.SumRep.similarRep">
+<code class="sig-name descname">similarRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em>, <em class="sig-param">Ainv</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.similarRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.similarRep" title="+replab.Rep.similarRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.similarRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.SumRep.simplify">
+<code class="sig-name descname">simplify</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.simplify" title="+replab.Rep.simplify"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.simplify()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.SumRep.splitIntoIrreducibles">
+<code class="sig-name descname">splitIntoIrreducibles</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.splitIntoIrreducibles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.splitIntoIrreducibles" title="+replab.Rep.splitIntoIrreducibles"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.splitIntoIrreducibles()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="+replab.+directproduct.SumRep.subRep">
-<code class="sig-name descname">subRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">F</em>, <em class="sig-param">G</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.subRep" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">subRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">basis</em>, <em class="sig-param">embedding</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.subRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.subRep" title="+replab.Rep.subRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.subRep()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+directproduct.SumRep.subRepUnitary">
-<code class="sig-name descname">subRepUnitary</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">U</em>, <em class="sig-param">niceBasis</em>, <em class="sig-param">irrepInfo</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.subRepUnitary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.subRepUnitary" title="+replab.Rep.subRepUnitary"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.subRepUnitary()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+directproduct.SumRep.subRepUnitaryByIntegerBasis">
-<code class="sig-name descname">subRepUnitaryByIntegerBasis</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">V</em>, <em class="sig-param">irrepInfo</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.subRepUnitaryByIntegerBasis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.subRepUnitaryByIntegerBasis" title="+replab.Rep.subRepUnitaryByIntegerBasis"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.subRepUnitaryByIntegerBasis()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+directproduct.SumRep.tensor">
-<code class="sig-name descname">tensor</code><span class="sig-paren">(</span><em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.tensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.tensor" title="+replab.Rep.tensor"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.tensor()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1562,16 +1586,22 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.tensorPower" title="+replab.Rep.tensorPower"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.tensorPower()</span></code></a></p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="+replab.+directproduct.SumRep.trivialDimension">
+<code class="sig-name descname">trivialDimension</code><a class="headerlink" href="#+replab.+directproduct.SumRep.trivialDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.trivialDimension" title="+replab.Rep.trivialDimension"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.trivialDimension</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.SumRep.trivialSpace">
+<code class="sig-name descname">trivialSpace</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.trivialSpace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.trivialSpace" title="+replab.Rep.trivialSpace"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.trivialSpace()</span></code></a></p>
+</dd></dl>
+
 <dl class="method">
 <dt id="+replab.+directproduct.SumRep.unitarize">
 <code class="sig-name descname">unitarize</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.unitarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.unitarize" title="+replab.Rep.unitarize"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.unitarize()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+directproduct.SumRep.unitaryChangeOfBasis">
-<code class="sig-name descname">unitaryChangeOfBasis</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.SumRep.unitaryChangeOfBasis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.unitaryChangeOfBasis" title="+replab.Rep.unitaryChangeOfBasis"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.unitaryChangeOfBasis()</span></code></a></p>
 </dd></dl>
 
 </div>
@@ -1613,7 +1643,6 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.conj" title="+replab.+directproduct.TensorRep.conj"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conj</span></code></a> – Returns the complex conjugate representation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.decomposition" title="+replab.+directproduct.TensorRep.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns the irreducible decomposition of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.dimension" title="+replab.+directproduct.TensorRep.dimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dimension</span></code></a> – Representation dimension</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.directSum" title="+replab.+directproduct.TensorRep.directSum"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSum</span></code></a> – Computes the direct sum of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.directSumOfCopies" title="+replab.+directproduct.TensorRep.directSumOfCopies"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumOfCopies</span></code></a> – Returns a direct sum of copies of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.disp" title="+replab.+directproduct.TensorRep.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.dual" title="+replab.+directproduct.TensorRep.dual"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dual</span></code></a> – Returns the dual representation of this representation</p></li>
@@ -1621,31 +1650,36 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.equivariant" title="+replab.+directproduct.TensorRep.equivariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">equivariant</span></code></a> – Returns the space of equivariant linear maps from this rep to another rep</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.factorReps" title="+replab.+directproduct.TensorRep.factorReps"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">factorReps</span></code></a> – Representations of factors</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.field" title="+replab.+directproduct.TensorRep.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – Vector space defined on real (R) or complex (C) field</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.frobeniusSchurIndicator" title="+replab.+directproduct.TensorRep.frobeniusSchurIndicator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">frobeniusSchurIndicator</span></code></a> – Value of the non-approximated Frobenius-Schur indicator</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.group" title="+replab.+directproduct.TensorRep.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – Group being represented</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.headerStr" title="+replab.+directproduct.TensorRep.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.hermitianInvariant" title="+replab.+directproduct.TensorRep.hermitianInvariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hermitianInvariant</span></code></a> – Returns the Hermitian invariant space of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.hiddenFields" title="+replab.+directproduct.TensorRep.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.image" title="+replab.+directproduct.TensorRep.image"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">image</span></code></a> – Returns the image of a group element</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.image_internal" title="+replab.+directproduct.TensorRep.image_internal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">image_internal</span></code></a> – Returns the image of a group element, dense or sparse</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.inverseImage" title="+replab.+directproduct.TensorRep.inverseImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverseImage</span></code></a> – Returns the image of the inverse of a group element</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.irrepInfo" title="+replab.+directproduct.TensorRep.irrepInfo"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrepInfo</span></code></a> – Irreducible status information</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.isUnitary" title="+replab.+directproduct.TensorRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether the representation is unitary</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.inverseImage_internal" title="+replab.+directproduct.TensorRep.inverseImage_internal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverseImage_internal</span></code></a> – Returns the image of the inverse of a group element</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.isDivisionAlgebraCanonical" title="+replab.+directproduct.TensorRep.isDivisionAlgebraCanonical"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isDivisionAlgebraCanonical</span></code></a> – If the representation is real and irreducible and the Frobenius-Schur indicator is not 1, means that the images encode the complex or quaternion division algebras in the RepLAB canonical form</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.isIrreducible" title="+replab.+directproduct.TensorRep.isIrreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIrreducible</span></code></a> – Whether this representation is irreducible</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.isUnitary" title="+replab.+directproduct.TensorRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether this representation is unitary</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.kron" title="+replab.+directproduct.TensorRep.kron"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">kron</span></code></a> – Tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.lambda" title="+replab.+directproduct.TensorRep.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Creates a non unitary representation from an image function</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.longStr" title="+replab.+directproduct.TensorRep.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.maschke" title="+replab.+directproduct.TensorRep.maschke"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">maschke</span></code></a> – Given a basis of a subrepresentation, returns two complementary subrepresentations</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.matrixColAction" title="+replab.+directproduct.TensorRep.matrixColAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixColAction</span></code></a> – Computes the matrix-representation product</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.matrixRowAction" title="+replab.+directproduct.TensorRep.matrixRowAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixRowAction</span></code></a> – Computes the representation-matrix product</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.overC" title="+replab.+directproduct.TensorRep.overC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">overC</span></code></a> – Returns whether this representation is defined over the complex field</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.overR" title="+replab.+directproduct.TensorRep.overR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">overR</span></code></a> – Returns whether this representation is defined over the real field</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.sample" title="+replab.+directproduct.TensorRep.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from the group and returns its image under the representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.shortStr" title="+replab.+directproduct.TensorRep.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.similar" title="+replab.+directproduct.TensorRep.similar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">similar</span></code></a> – Returns a similar representation under a change of basis</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.similarRep" title="+replab.+directproduct.TensorRep.similarRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">similarRep</span></code></a> – Returns a similar representation under a change of basis</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.simplify" title="+replab.+directproduct.TensorRep.simplify"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">simplify</span></code></a> – Returns a representation identical to this, but possibly with its composition simplified</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.splitIntoIrreducibles" title="+replab.+directproduct.TensorRep.splitIntoIrreducibles"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">splitIntoIrreducibles</span></code></a> – Decomposes fully the given representation into subrepresentations</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.subRep" title="+replab.+directproduct.TensorRep.subRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRep</span></code></a> – Returns a subrepresentation of this representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.subRepUnitary" title="+replab.+directproduct.TensorRep.subRepUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitary</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.subRepUnitaryByIntegerBasis" title="+replab.+directproduct.TensorRep.subRepUnitaryByIntegerBasis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitaryByIntegerBasis</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.tensor" title="+replab.+directproduct.TensorRep.tensor"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensor</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.tensorPower" title="+replab.+directproduct.TensorRep.tensorPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorPower</span></code></a> – Returns a tensor power of this representation</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.trivialDimension" title="+replab.+directproduct.TensorRep.trivialDimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialDimension</span></code></a> – Dimension of the trivial subrepresentation in this representation</p></li>
+<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.trivialSpace" title="+replab.+directproduct.TensorRep.trivialSpace"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialSpace</span></code></a> – Returns an equivariant space from a trivial representation to this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.unitarize" title="+replab.+directproduct.TensorRep.unitarize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">unitarize</span></code></a> – Returns a unitary representation equivalent to this representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+directproduct.TensorRep.unitaryChangeOfBasis" title="+replab.+directproduct.TensorRep.unitaryChangeOfBasis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">unitaryChangeOfBasis</span></code></a> – Returns the change of basis to a unitary representation</p></li>
 </ul>
 </div>
 <div class="collapsed admonition">
@@ -1693,12 +1727,6 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.TensorRep.directSum">
-<code class="sig-name descname">directSum</code><span class="sig-paren">(</span><em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.directSum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.directSum" title="+replab.Rep.directSum"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.directSum()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
 <dt id="+replab.+directproduct.TensorRep.directSumOfCopies">
 <code class="sig-name descname">directSumOfCopies</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.directSumOfCopies" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.directSumOfCopies" title="+replab.Rep.directSumOfCopies"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.directSumOfCopies()</span></code></a></p>
@@ -1724,7 +1752,7 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 
 <dl class="method">
 <dt id="+replab.+directproduct.TensorRep.equivariant">
-<code class="sig-name descname">equivariant</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">repC</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.equivariant" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">equivariant</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">repR</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.equivariant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.equivariant" title="+replab.Rep.equivariant"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.equivariant()</span></code></a></p>
 </dd></dl>
 
@@ -1732,6 +1760,12 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 <dt id="+replab.+directproduct.TensorRep.field">
 <code class="sig-name descname">field</code><a class="headerlink" href="#+replab.+directproduct.TensorRep.field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.field" title="+replab.Rep.field"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.field</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.+directproduct.TensorRep.frobeniusSchurIndicator">
+<code class="sig-name descname">frobeniusSchurIndicator</code><a class="headerlink" href="#+replab.+directproduct.TensorRep.frobeniusSchurIndicator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.frobeniusSchurIndicator" title="+replab.Rep.frobeniusSchurIndicator"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.frobeniusSchurIndicator</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1765,15 +1799,33 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+directproduct.TensorRep.image_internal">
+<code class="sig-name descname">image_internal</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">g</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.image_internal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.image_internal" title="+replab.Rep.image_internal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.image_internal()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+directproduct.TensorRep.inverseImage">
 <code class="sig-name descname">inverseImage</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">g</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.inverseImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.inverseImage" title="+replab.Rep.inverseImage"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.inverseImage()</span></code></a></p>
 </dd></dl>
 
+<dl class="method">
+<dt id="+replab.+directproduct.TensorRep.inverseImage_internal">
+<code class="sig-name descname">inverseImage_internal</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">g</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.inverseImage_internal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.inverseImage_internal" title="+replab.Rep.inverseImage_internal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.inverseImage_internal()</span></code></a></p>
+</dd></dl>
+
 <dl class="attribute">
-<dt id="+replab.+directproduct.TensorRep.irrepInfo">
-<code class="sig-name descname">irrepInfo</code><a class="headerlink" href="#+replab.+directproduct.TensorRep.irrepInfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.irrepInfo" title="+replab.Rep.irrepInfo"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.irrepInfo</span></code></a></p>
+<dt id="+replab.+directproduct.TensorRep.isDivisionAlgebraCanonical">
+<code class="sig-name descname">isDivisionAlgebraCanonical</code><a class="headerlink" href="#+replab.+directproduct.TensorRep.isDivisionAlgebraCanonical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.isDivisionAlgebraCanonical" title="+replab.Rep.isDivisionAlgebraCanonical"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isDivisionAlgebraCanonical</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.+directproduct.TensorRep.isIrreducible">
+<code class="sig-name descname">isIrreducible</code><a class="headerlink" href="#+replab.+directproduct.TensorRep.isIrreducible" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.isIrreducible" title="+replab.Rep.isIrreducible"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isIrreducible</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1790,7 +1842,7 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 
 <dl class="method">
 <dt id="+replab.+directproduct.TensorRep.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">irrepInfo</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.lambda" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.lambda" title="+replab.Rep.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.lambda()</span></code></a></p>
 </dd></dl>
 
@@ -1798,6 +1850,12 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 <dt id="+replab.+directproduct.TensorRep.longStr">
 <code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.longStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.TensorRep.maschke">
+<code class="sig-name descname">maschke</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">basis1</em>, <em class="sig-param">embedding1</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.maschke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.maschke" title="+replab.Rep.maschke"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.maschke()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1837,33 +1895,27 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+directproduct.TensorRep.similar">
-<code class="sig-name descname">similar</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em>, <em class="sig-param">Ainv</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.similar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.similar" title="+replab.Rep.similar"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.similar()</span></code></a></p>
+<dt id="+replab.+directproduct.TensorRep.similarRep">
+<code class="sig-name descname">similarRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em>, <em class="sig-param">Ainv</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.similarRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.similarRep" title="+replab.Rep.similarRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.similarRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.TensorRep.simplify">
+<code class="sig-name descname">simplify</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.simplify" title="+replab.Rep.simplify"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.simplify()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.TensorRep.splitIntoIrreducibles">
+<code class="sig-name descname">splitIntoIrreducibles</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.splitIntoIrreducibles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.splitIntoIrreducibles" title="+replab.Rep.splitIntoIrreducibles"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.splitIntoIrreducibles()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="+replab.+directproduct.TensorRep.subRep">
-<code class="sig-name descname">subRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">F</em>, <em class="sig-param">G</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.subRep" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">subRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">basis</em>, <em class="sig-param">embedding</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.subRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.subRep" title="+replab.Rep.subRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.subRep()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+directproduct.TensorRep.subRepUnitary">
-<code class="sig-name descname">subRepUnitary</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">U</em>, <em class="sig-param">niceBasis</em>, <em class="sig-param">irrepInfo</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.subRepUnitary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.subRepUnitary" title="+replab.Rep.subRepUnitary"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.subRepUnitary()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+directproduct.TensorRep.subRepUnitaryByIntegerBasis">
-<code class="sig-name descname">subRepUnitaryByIntegerBasis</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">V</em>, <em class="sig-param">irrepInfo</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.subRepUnitaryByIntegerBasis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.subRepUnitaryByIntegerBasis" title="+replab.Rep.subRepUnitaryByIntegerBasis"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.subRepUnitaryByIntegerBasis()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+directproduct.TensorRep.tensor">
-<code class="sig-name descname">tensor</code><span class="sig-paren">(</span><em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.tensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.tensor" title="+replab.Rep.tensor"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.tensor()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1872,16 +1924,22 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.tensorPower" title="+replab.Rep.tensorPower"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.tensorPower()</span></code></a></p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="+replab.+directproduct.TensorRep.trivialDimension">
+<code class="sig-name descname">trivialDimension</code><a class="headerlink" href="#+replab.+directproduct.TensorRep.trivialDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.trivialDimension" title="+replab.Rep.trivialDimension"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.trivialDimension</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+directproduct.TensorRep.trivialSpace">
+<code class="sig-name descname">trivialSpace</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.trivialSpace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.trivialSpace" title="+replab.Rep.trivialSpace"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.trivialSpace()</span></code></a></p>
+</dd></dl>
+
 <dl class="method">
 <dt id="+replab.+directproduct.TensorRep.unitarize">
 <code class="sig-name descname">unitarize</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.unitarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.unitarize" title="+replab.Rep.unitarize"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.unitarize()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+directproduct.TensorRep.unitaryChangeOfBasis">
-<code class="sig-name descname">unitaryChangeOfBasis</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+directproduct.TensorRep.unitaryChangeOfBasis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.unitaryChangeOfBasis" title="+replab.Rep.unitaryChangeOfBasis"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.unitaryChangeOfBasis()</span></code></a></p>
 </dd></dl>
 
 </div>
@@ -2089,6 +2147,7 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfCompactGroups.composeWithInverse" title="+replab.+semidirectproduct.OfCompactGroups.composeWithInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeWithInverse</span></code></a> – Returns the composition of an element with the inverse of another element</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfCompactGroups.directPower" title="+replab.+semidirectproduct.OfCompactGroups.directPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code></a> – Returns the direct product of this group with itself a number of times</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfCompactGroups.directProduct" title="+replab.+semidirectproduct.OfCompactGroups.directProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code></a> – Returns the direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfCompactGroups.directSumRep" title="+replab.+semidirectproduct.OfCompactGroups.directSumRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code></a> – Computes the direct sum of representations on this group</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfCompactGroups.disp" title="+replab.+semidirectproduct.OfCompactGroups.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfCompactGroups.eq" title="+replab.+semidirectproduct.OfCompactGroups.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfCompactGroups.eqv" title="+replab.+semidirectproduct.OfCompactGroups.eqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eqv</span></code></a> – Tests domain elements for equality/equivalence</p></li>
@@ -2106,6 +2165,7 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfCompactGroups.sampleUniformly" title="+replab.+semidirectproduct.OfCompactGroups.sampleUniformly"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sampleUniformly</span></code></a> – Samples from the Haar measure</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfCompactGroups.semidirectProduct" title="+replab.+semidirectproduct.OfCompactGroups.semidirectProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">semidirectProduct</span></code></a> – Describes an external semidirect product of groups</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfCompactGroups.shortStr" title="+replab.+semidirectproduct.OfCompactGroups.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfCompactGroups.tensorRep" title="+replab.+semidirectproduct.OfCompactGroups.tensorRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfCompactGroups.trivialRep" title="+replab.+semidirectproduct.OfCompactGroups.trivialRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code></a> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
 </ul>
 </div>
@@ -2157,6 +2217,12 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 <dt id="+replab.+semidirectproduct.OfCompactGroups.directProduct">
 <code class="sig-name descname">directProduct</code><span class="sig-paren">(</span><em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfCompactGroups.directProduct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directProduct" title="+replab.CompactGroup.directProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+semidirectproduct.OfCompactGroups.directSumRep">
+<code class="sig-name descname">directSumRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfCompactGroups.directSumRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directSumRep" title="+replab.CompactGroup.directSumRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directSumRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -2256,6 +2322,12 @@ more efficient variants, that do not require the BSGS chain construction.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+semidirectproduct.OfCompactGroups.tensorRep">
+<code class="sig-name descname">tensorRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfCompactGroups.tensorRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.tensorRep" title="+replab.CompactGroup.tensorRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.tensorRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+semidirectproduct.OfCompactGroups.trivialRep">
 <code class="sig-name descname">trivialRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfCompactGroups.trivialRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.trivialRep" title="+replab.CompactGroup.trivialRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.trivialRep()</span></code></a></p>
@@ -2318,6 +2390,7 @@ zn = phi_(yh^-1)(xn) yn</p>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfFiniteGroups.decomposition" title="+replab.+semidirectproduct.OfFiniteGroups.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns a decomposition of this group as a product of sets</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfFiniteGroups.directPower" title="+replab.+semidirectproduct.OfFiniteGroups.directPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code></a> – Returns the direct product of this group with itself a number of times</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfFiniteGroups.directProduct" title="+replab.+semidirectproduct.OfFiniteGroups.directProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code></a> – Returns the direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfFiniteGroups.directSumRep" title="+replab.+semidirectproduct.OfFiniteGroups.directSumRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code></a> – Computes the direct sum of representations on this group</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfFiniteGroups.disp" title="+replab.+semidirectproduct.OfFiniteGroups.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfFiniteGroups.elements" title="+replab.+semidirectproduct.OfFiniteGroups.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family of the group elements</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfFiniteGroups.eq" title="+replab.+semidirectproduct.OfFiniteGroups.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
@@ -2344,6 +2417,7 @@ zn = phi_(yh^-1)(xn) yn</p>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfFiniteGroups.sampleUniformly" title="+replab.+semidirectproduct.OfFiniteGroups.sampleUniformly"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sampleUniformly</span></code></a> – Samples from the Haar measure</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfFiniteGroups.semidirectProduct" title="+replab.+semidirectproduct.OfFiniteGroups.semidirectProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">semidirectProduct</span></code></a> – Describes an external semidirect product of groups</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfFiniteGroups.shortStr" title="+replab.+semidirectproduct.OfFiniteGroups.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfFiniteGroups.tensorRep" title="+replab.+semidirectproduct.OfFiniteGroups.tensorRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfFiniteGroups.trivialRep" title="+replab.+semidirectproduct.OfFiniteGroups.trivialRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code></a> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
 </ul>
 </div>
@@ -2419,6 +2493,12 @@ zn = phi_(yh^-1)(xn) yn</p>
 <dt id="+replab.+semidirectproduct.OfFiniteGroups.directProduct">
 <code class="sig-name descname">directProduct</code><span class="sig-paren">(</span><em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfFiniteGroups.directProduct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directProduct" title="+replab.CompactGroup.directProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+semidirectproduct.OfFiniteGroups.directSumRep">
+<code class="sig-name descname">directSumRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfFiniteGroups.directSumRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directSumRep" title="+replab.CompactGroup.directSumRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directSumRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -2578,6 +2658,12 @@ zn = phi_(yh^-1)(xn) yn</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+semidirectproduct.OfFiniteGroups.tensorRep">
+<code class="sig-name descname">tensorRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfFiniteGroups.tensorRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.tensorRep" title="+replab.CompactGroup.tensorRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.tensorRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+semidirectproduct.OfFiniteGroups.trivialRep">
 <code class="sig-name descname">trivialRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfFiniteGroups.trivialRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.trivialRep" title="+replab.CompactGroup.trivialRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.trivialRep()</span></code></a></p>
@@ -2611,6 +2697,7 @@ zn = phi_(yh^-1)(xn) yn</p>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.decomposition" title="+replab.+semidirectproduct.OfNiceFiniteGroups.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns a decomposition of this group as a product of sets</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.directPower" title="+replab.+semidirectproduct.OfNiceFiniteGroups.directPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code></a> – Returns the direct product of this group with itself a number of times</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.directProduct" title="+replab.+semidirectproduct.OfNiceFiniteGroups.directProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code></a> – Returns the direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.directSumRep" title="+replab.+semidirectproduct.OfNiceFiniteGroups.directSumRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code></a> – Computes the direct sum of representations on this group</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.disp" title="+replab.+semidirectproduct.OfNiceFiniteGroups.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.elementOrder" title="+replab.+semidirectproduct.OfNiceFiniteGroups.elementOrder"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementOrder</span></code></a> – Returns the order of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.elements" title="+replab.+semidirectproduct.OfNiceFiniteGroups.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family of the group elements</p></li>
@@ -2646,6 +2733,7 @@ zn = phi_(yh^-1)(xn) yn</p>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.shortStr" title="+replab.+semidirectproduct.OfNiceFiniteGroups.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.signedPermutationRep" title="+replab.+semidirectproduct.OfNiceFiniteGroups.signedPermutationRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">signedPermutationRep</span></code></a> – Returns a real signed permutation representation of this group</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.subgroup" title="+replab.+semidirectproduct.OfNiceFiniteGroups.subgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subgroup</span></code></a> – Constructs a subgroup of the current group from generators</p></li>
+<li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.tensorRep" title="+replab.+semidirectproduct.OfNiceFiniteGroups.tensorRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.trivialRep" title="+replab.+semidirectproduct.OfNiceFiniteGroups.trivialRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code></a> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
 <li><p><a class="reference internal" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.trivialSubgroup" title="+replab.+semidirectproduct.OfNiceFiniteGroups.trivialSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialSubgroup</span></code></a> – Returns the trivial subgroup of this group</p></li>
 </ul>
@@ -2734,6 +2822,12 @@ zn = phi_(yh^-1)(xn) yn</p>
 <dt id="+replab.+semidirectproduct.OfNiceFiniteGroups.directProduct">
 <code class="sig-name descname">directProduct</code><span class="sig-paren">(</span><em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.directProduct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directProduct" title="+replab.CompactGroup.directProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+semidirectproduct.OfNiceFiniteGroups.directSumRep">
+<code class="sig-name descname">directSumRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.directSumRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directSumRep" title="+replab.CompactGroup.directSumRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directSumRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -2900,7 +2994,7 @@ zn = phi_(yh^-1)(xn) yn</p>
 
 <dl class="method">
 <dt id="+replab.+semidirectproduct.OfNiceFiniteGroups.repByImages">
-<code class="sig-name descname">repByImages</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">images</em>, <em class="sig-param">inverseImages</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.repByImages" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">repByImages</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">images</em>, <em class="sig-param">inverseImages</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.repByImages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.NiceFiniteGroup.repByImages" title="+replab.NiceFiniteGroup.repByImages"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.NiceFiniteGroup.repByImages()</span></code></a></p>
 </dd></dl>
 
@@ -2944,6 +3038,12 @@ zn = phi_(yh^-1)(xn) yn</p>
 <dt id="+replab.+semidirectproduct.OfNiceFiniteGroups.subgroup">
 <code class="sig-name descname">subgroup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">generators</em>, <em class="sig-param">order</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.subgroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.NiceFiniteGroup.subgroup" title="+replab.NiceFiniteGroup.subgroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.NiceFiniteGroup.subgroup()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+semidirectproduct.OfNiceFiniteGroups.tensorRep">
+<code class="sig-name descname">tensorRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+semidirectproduct.OfNiceFiniteGroups.tensorRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.tensorRep" title="+replab.CompactGroup.tensorRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.tensorRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -3145,7 +3245,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.Arep" title="+replab.+wreathproduct.ImprimitiveRep.Arep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Arep</span></code></a> – replab.Rep: Representation of the group whose copies are acted upon</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.Arep" title="+replab.+wreathproduct.ImprimitiveRep.Arep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Arep</span></code></a> – Representation of the group whose copies are acted upon</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.additionalFields" title="+replab.+wreathproduct.ImprimitiveRep.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.blkdiag" title="+replab.+wreathproduct.ImprimitiveRep.blkdiag"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">blkdiag</span></code></a> – Direct sum of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.commutant" title="+replab.+wreathproduct.ImprimitiveRep.commutant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutant</span></code></a> – Returns the commutant of this representation</p></li>
@@ -3153,38 +3253,42 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.conj" title="+replab.+wreathproduct.ImprimitiveRep.conj"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conj</span></code></a> – Returns the complex conjugate representation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.decomposition" title="+replab.+wreathproduct.ImprimitiveRep.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns the irreducible decomposition of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.dimension" title="+replab.+wreathproduct.ImprimitiveRep.dimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dimension</span></code></a> – Representation dimension</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.directSum" title="+replab.+wreathproduct.ImprimitiveRep.directSum"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSum</span></code></a> – Computes the direct sum of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.directSumOfCopies" title="+replab.+wreathproduct.ImprimitiveRep.directSumOfCopies"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumOfCopies</span></code></a> – Returns a direct sum of copies of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.disp" title="+replab.+wreathproduct.ImprimitiveRep.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.dual" title="+replab.+wreathproduct.ImprimitiveRep.dual"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dual</span></code></a> – Returns the dual representation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.eq" title="+replab.+wreathproduct.ImprimitiveRep.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.equivariant" title="+replab.+wreathproduct.ImprimitiveRep.equivariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">equivariant</span></code></a> – Returns the space of equivariant linear maps from this rep to another rep</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.field" title="+replab.+wreathproduct.ImprimitiveRep.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – Vector space defined on real (R) or complex (C) field</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.frobeniusSchurIndicator" title="+replab.+wreathproduct.ImprimitiveRep.frobeniusSchurIndicator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">frobeniusSchurIndicator</span></code></a> – Value of the non-approximated Frobenius-Schur indicator</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.group" title="+replab.+wreathproduct.ImprimitiveRep.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – Group being represented</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.headerStr" title="+replab.+wreathproduct.ImprimitiveRep.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.hermitianInvariant" title="+replab.+wreathproduct.ImprimitiveRep.hermitianInvariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hermitianInvariant</span></code></a> – Returns the Hermitian invariant space of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.hiddenFields" title="+replab.+wreathproduct.ImprimitiveRep.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.image" title="+replab.+wreathproduct.ImprimitiveRep.image"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">image</span></code></a> – Returns the image of a group element</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.image_internal" title="+replab.+wreathproduct.ImprimitiveRep.image_internal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">image_internal</span></code></a> – Returns the image of a group element, dense or sparse</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.inverseImage" title="+replab.+wreathproduct.ImprimitiveRep.inverseImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverseImage</span></code></a> – Returns the image of the inverse of a group element</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.irrepInfo" title="+replab.+wreathproduct.ImprimitiveRep.irrepInfo"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrepInfo</span></code></a> – Irreducible status information</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.isUnitary" title="+replab.+wreathproduct.ImprimitiveRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether the representation is unitary</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.inverseImage_internal" title="+replab.+wreathproduct.ImprimitiveRep.inverseImage_internal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverseImage_internal</span></code></a> – Returns the image of the inverse of a group element</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.isDivisionAlgebraCanonical" title="+replab.+wreathproduct.ImprimitiveRep.isDivisionAlgebraCanonical"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isDivisionAlgebraCanonical</span></code></a> – If the representation is real and irreducible and the Frobenius-Schur indicator is not 1, means that the images encode the complex or quaternion division algebras in the RepLAB canonical form</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.isIrreducible" title="+replab.+wreathproduct.ImprimitiveRep.isIrreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIrreducible</span></code></a> – Whether this representation is irreducible</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.isUnitary" title="+replab.+wreathproduct.ImprimitiveRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether this representation is unitary</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.kron" title="+replab.+wreathproduct.ImprimitiveRep.kron"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">kron</span></code></a> – Tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.lambda" title="+replab.+wreathproduct.ImprimitiveRep.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Creates a non unitary representation from an image function</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.longStr" title="+replab.+wreathproduct.ImprimitiveRep.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.maschke" title="+replab.+wreathproduct.ImprimitiveRep.maschke"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">maschke</span></code></a> – Given a basis of a subrepresentation, returns two complementary subrepresentations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.matrixColAction" title="+replab.+wreathproduct.ImprimitiveRep.matrixColAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixColAction</span></code></a> – Computes the matrix-representation product</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.matrixRowAction" title="+replab.+wreathproduct.ImprimitiveRep.matrixRowAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixRowAction</span></code></a> – Computes the representation-matrix product</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.overC" title="+replab.+wreathproduct.ImprimitiveRep.overC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">overC</span></code></a> – Returns whether this representation is defined over the complex field</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.overR" title="+replab.+wreathproduct.ImprimitiveRep.overR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">overR</span></code></a> – Returns whether this representation is defined over the real field</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.sample" title="+replab.+wreathproduct.ImprimitiveRep.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from the group and returns its image under the representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.shortStr" title="+replab.+wreathproduct.ImprimitiveRep.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.similar" title="+replab.+wreathproduct.ImprimitiveRep.similar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">similar</span></code></a> – Returns a similar representation under a change of basis</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.similarRep" title="+replab.+wreathproduct.ImprimitiveRep.similarRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">similarRep</span></code></a> – Returns a similar representation under a change of basis</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.simplify" title="+replab.+wreathproduct.ImprimitiveRep.simplify"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">simplify</span></code></a> – Returns a representation identical to this, but possibly with its composition simplified</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.splitIntoIrreducibles" title="+replab.+wreathproduct.ImprimitiveRep.splitIntoIrreducibles"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">splitIntoIrreducibles</span></code></a> – Decomposes fully the given representation into subrepresentations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.subRep" title="+replab.+wreathproduct.ImprimitiveRep.subRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRep</span></code></a> – Returns a subrepresentation of this representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.subRepUnitary" title="+replab.+wreathproduct.ImprimitiveRep.subRepUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitary</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.subRepUnitaryByIntegerBasis" title="+replab.+wreathproduct.ImprimitiveRep.subRepUnitaryByIntegerBasis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitaryByIntegerBasis</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.tensor" title="+replab.+wreathproduct.ImprimitiveRep.tensor"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensor</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.tensorPower" title="+replab.+wreathproduct.ImprimitiveRep.tensorPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorPower</span></code></a> – Returns a tensor power of this representation</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.trivialDimension" title="+replab.+wreathproduct.ImprimitiveRep.trivialDimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialDimension</span></code></a> – Dimension of the trivial subrepresentation in this representation</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.trivialSpace" title="+replab.+wreathproduct.ImprimitiveRep.trivialSpace"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialSpace</span></code></a> – Returns an equivariant space from a trivial representation to this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.unitarize" title="+replab.+wreathproduct.ImprimitiveRep.unitarize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">unitarize</span></code></a> – Returns a unitary representation equivalent to this representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.ImprimitiveRep.unitaryChangeOfBasis" title="+replab.+wreathproduct.ImprimitiveRep.unitaryChangeOfBasis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">unitaryChangeOfBasis</span></code></a> – Returns the change of basis to a unitary representation</p></li>
 </ul>
 </div>
 <div class="collapsed admonition">
@@ -3232,12 +3336,6 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+wreathproduct.ImprimitiveRep.directSum">
-<code class="sig-name descname">directSum</code><span class="sig-paren">(</span><em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.directSum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.directSum" title="+replab.Rep.directSum"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.directSum()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
 <dt id="+replab.+wreathproduct.ImprimitiveRep.directSumOfCopies">
 <code class="sig-name descname">directSumOfCopies</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.directSumOfCopies" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.directSumOfCopies" title="+replab.Rep.directSumOfCopies"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.directSumOfCopies()</span></code></a></p>
@@ -3263,7 +3361,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 
 <dl class="method">
 <dt id="+replab.+wreathproduct.ImprimitiveRep.equivariant">
-<code class="sig-name descname">equivariant</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">repC</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.equivariant" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">equivariant</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">repR</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.equivariant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.equivariant" title="+replab.Rep.equivariant"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.equivariant()</span></code></a></p>
 </dd></dl>
 
@@ -3271,6 +3369,12 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <dt id="+replab.+wreathproduct.ImprimitiveRep.field">
 <code class="sig-name descname">field</code><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.field" title="+replab.Rep.field"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.field</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.+wreathproduct.ImprimitiveRep.frobeniusSchurIndicator">
+<code class="sig-name descname">frobeniusSchurIndicator</code><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.frobeniusSchurIndicator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.frobeniusSchurIndicator" title="+replab.Rep.frobeniusSchurIndicator"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.frobeniusSchurIndicator</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -3304,15 +3408,33 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+wreathproduct.ImprimitiveRep.image_internal">
+<code class="sig-name descname">image_internal</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">g</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.image_internal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.image_internal" title="+replab.Rep.image_internal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.image_internal()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+wreathproduct.ImprimitiveRep.inverseImage">
 <code class="sig-name descname">inverseImage</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">g</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.inverseImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.inverseImage" title="+replab.Rep.inverseImage"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.inverseImage()</span></code></a></p>
 </dd></dl>
 
+<dl class="method">
+<dt id="+replab.+wreathproduct.ImprimitiveRep.inverseImage_internal">
+<code class="sig-name descname">inverseImage_internal</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">g</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.inverseImage_internal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.inverseImage_internal" title="+replab.Rep.inverseImage_internal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.inverseImage_internal()</span></code></a></p>
+</dd></dl>
+
 <dl class="attribute">
-<dt id="+replab.+wreathproduct.ImprimitiveRep.irrepInfo">
-<code class="sig-name descname">irrepInfo</code><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.irrepInfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.irrepInfo" title="+replab.Rep.irrepInfo"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.irrepInfo</span></code></a></p>
+<dt id="+replab.+wreathproduct.ImprimitiveRep.isDivisionAlgebraCanonical">
+<code class="sig-name descname">isDivisionAlgebraCanonical</code><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.isDivisionAlgebraCanonical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.isDivisionAlgebraCanonical" title="+replab.Rep.isDivisionAlgebraCanonical"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isDivisionAlgebraCanonical</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.+wreathproduct.ImprimitiveRep.isIrreducible">
+<code class="sig-name descname">isIrreducible</code><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.isIrreducible" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.isIrreducible" title="+replab.Rep.isIrreducible"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isIrreducible</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -3329,7 +3451,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 
 <dl class="method">
 <dt id="+replab.+wreathproduct.ImprimitiveRep.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">irrepInfo</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.lambda" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.lambda" title="+replab.Rep.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.lambda()</span></code></a></p>
 </dd></dl>
 
@@ -3337,6 +3459,12 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <dt id="+replab.+wreathproduct.ImprimitiveRep.longStr">
 <code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.longStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+wreathproduct.ImprimitiveRep.maschke">
+<code class="sig-name descname">maschke</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">basis1</em>, <em class="sig-param">embedding1</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.maschke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.maschke" title="+replab.Rep.maschke"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.maschke()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -3376,33 +3504,27 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+wreathproduct.ImprimitiveRep.similar">
-<code class="sig-name descname">similar</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em>, <em class="sig-param">Ainv</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.similar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.similar" title="+replab.Rep.similar"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.similar()</span></code></a></p>
+<dt id="+replab.+wreathproduct.ImprimitiveRep.similarRep">
+<code class="sig-name descname">similarRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em>, <em class="sig-param">Ainv</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.similarRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.similarRep" title="+replab.Rep.similarRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.similarRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+wreathproduct.ImprimitiveRep.simplify">
+<code class="sig-name descname">simplify</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.simplify" title="+replab.Rep.simplify"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.simplify()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+wreathproduct.ImprimitiveRep.splitIntoIrreducibles">
+<code class="sig-name descname">splitIntoIrreducibles</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.splitIntoIrreducibles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.splitIntoIrreducibles" title="+replab.Rep.splitIntoIrreducibles"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.splitIntoIrreducibles()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="+replab.+wreathproduct.ImprimitiveRep.subRep">
-<code class="sig-name descname">subRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">F</em>, <em class="sig-param">G</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.subRep" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">subRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">basis</em>, <em class="sig-param">embedding</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.subRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.subRep" title="+replab.Rep.subRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.subRep()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+wreathproduct.ImprimitiveRep.subRepUnitary">
-<code class="sig-name descname">subRepUnitary</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">U</em>, <em class="sig-param">niceBasis</em>, <em class="sig-param">irrepInfo</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.subRepUnitary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.subRepUnitary" title="+replab.Rep.subRepUnitary"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.subRepUnitary()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+wreathproduct.ImprimitiveRep.subRepUnitaryByIntegerBasis">
-<code class="sig-name descname">subRepUnitaryByIntegerBasis</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">V</em>, <em class="sig-param">irrepInfo</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.subRepUnitaryByIntegerBasis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.subRepUnitaryByIntegerBasis" title="+replab.Rep.subRepUnitaryByIntegerBasis"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.subRepUnitaryByIntegerBasis()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+wreathproduct.ImprimitiveRep.tensor">
-<code class="sig-name descname">tensor</code><span class="sig-paren">(</span><em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.tensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.tensor" title="+replab.Rep.tensor"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.tensor()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -3411,23 +3533,34 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.tensorPower" title="+replab.Rep.tensorPower"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.tensorPower()</span></code></a></p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="+replab.+wreathproduct.ImprimitiveRep.trivialDimension">
+<code class="sig-name descname">trivialDimension</code><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.trivialDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.trivialDimension" title="+replab.Rep.trivialDimension"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.trivialDimension</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+wreathproduct.ImprimitiveRep.trivialSpace">
+<code class="sig-name descname">trivialSpace</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.trivialSpace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.trivialSpace" title="+replab.Rep.trivialSpace"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.trivialSpace()</span></code></a></p>
+</dd></dl>
+
 <dl class="method">
 <dt id="+replab.+wreathproduct.ImprimitiveRep.unitarize">
 <code class="sig-name descname">unitarize</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.unitarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.unitarize" title="+replab.Rep.unitarize"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.unitarize()</span></code></a></p>
 </dd></dl>
 
-<dl class="method">
-<dt id="+replab.+wreathproduct.ImprimitiveRep.unitaryChangeOfBasis">
-<code class="sig-name descname">unitaryChangeOfBasis</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.unitaryChangeOfBasis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.unitaryChangeOfBasis" title="+replab.Rep.unitaryChangeOfBasis"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.unitaryChangeOfBasis()</span></code></a></p>
-</dd></dl>
-
 </div>
 <h3>Own members</h3><dl class="attribute">
 <dt id="+replab.+wreathproduct.ImprimitiveRep.Arep">
 <code class="sig-name descname">Arep</code><a class="headerlink" href="#+replab.+wreathproduct.ImprimitiveRep.Arep" title="Permalink to this definition">¶</a></dt>
-<dd><p>replab.Rep: Representation of the group whose copies are acted upon</p>
+<dd><p>Representation of the group whose copies are acted upon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -3437,15 +3570,15 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>group</strong> (<em>replab.wreathproduct.Common</em>) – Wreath product group</p></li>
-<li><p><strong>Arep</strong> (<em>replab.Rep</em>) – Representation of the wreath product base factor</p></li>
+<li><p><strong>group</strong> (<a class="reference internal" href="#+replab.+wreathproduct.Common" title="+replab.+wreathproduct.Common"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.wreathproduct.Common</span></code></a>) – Wreath product group</p></li>
+<li><p><strong>Arep</strong> (<a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a>) – Representation of the wreath product base factor</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A wreath product group representation</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>replab.Rep</p>
+<dd class="field-odd"><p><a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3475,6 +3608,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfCompactGroup.composeWithInverse" title="+replab.+wreathproduct.OfCompactGroup.composeWithInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeWithInverse</span></code></a> – Returns the composition of an element with the inverse of another element</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfCompactGroup.directPower" title="+replab.+wreathproduct.OfCompactGroup.directPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code></a> – Returns the direct product of this group with itself a number of times</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfCompactGroup.directProduct" title="+replab.+wreathproduct.OfCompactGroup.directProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code></a> – Returns the direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.OfCompactGroup.directSumRep" title="+replab.+wreathproduct.OfCompactGroup.directSumRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code></a> – Computes the direct sum of representations on this group</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfCompactGroup.disp" title="+replab.+wreathproduct.OfCompactGroup.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfCompactGroup.eq" title="+replab.+wreathproduct.OfCompactGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfCompactGroup.eqv" title="+replab.+wreathproduct.OfCompactGroup.eqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eqv</span></code></a> – Tests domain elements for equality/equivalence</p></li>
@@ -3499,6 +3633,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfCompactGroup.sampleUniformly" title="+replab.+wreathproduct.OfCompactGroup.sampleUniformly"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sampleUniformly</span></code></a> – Samples from the Haar measure</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfCompactGroup.semidirectProduct" title="+replab.+wreathproduct.OfCompactGroup.semidirectProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">semidirectProduct</span></code></a> – Describes an external semidirect product of groups</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfCompactGroup.shortStr" title="+replab.+wreathproduct.OfCompactGroup.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.OfCompactGroup.tensorRep" title="+replab.+wreathproduct.OfCompactGroup.tensorRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfCompactGroup.trivialRep" title="+replab.+wreathproduct.OfCompactGroup.trivialRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code></a> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
 </ul>
 </div>
@@ -3574,6 +3709,12 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <dt id="+replab.+wreathproduct.OfCompactGroup.directProduct">
 <code class="sig-name descname">directProduct</code><span class="sig-paren">(</span><em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfCompactGroup.directProduct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directProduct" title="+replab.CompactGroup.directProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+wreathproduct.OfCompactGroup.directSumRep">
+<code class="sig-name descname">directSumRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfCompactGroup.directSumRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directSumRep" title="+replab.CompactGroup.directSumRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directSumRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -3721,6 +3862,12 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+wreathproduct.OfCompactGroup.tensorRep">
+<code class="sig-name descname">tensorRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfCompactGroup.tensorRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.tensorRep" title="+replab.CompactGroup.tensorRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.tensorRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+wreathproduct.OfCompactGroup.trivialRep">
 <code class="sig-name descname">trivialRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfCompactGroup.trivialRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.trivialRep" title="+replab.CompactGroup.trivialRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.trivialRep()</span></code></a></p>
@@ -3753,6 +3900,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfFiniteGroup.decomposition" title="+replab.+wreathproduct.OfFiniteGroup.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns a decomposition of this group as a product of sets</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfFiniteGroup.directPower" title="+replab.+wreathproduct.OfFiniteGroup.directPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code></a> – Returns the direct product of this group with itself a number of times</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfFiniteGroup.directProduct" title="+replab.+wreathproduct.OfFiniteGroup.directProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code></a> – Returns the direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.OfFiniteGroup.directSumRep" title="+replab.+wreathproduct.OfFiniteGroup.directSumRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code></a> – Computes the direct sum of representations on this group</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfFiniteGroup.disp" title="+replab.+wreathproduct.OfFiniteGroup.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfFiniteGroup.elements" title="+replab.+wreathproduct.OfFiniteGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family of the group elements</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfFiniteGroup.eq" title="+replab.+wreathproduct.OfFiniteGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
@@ -3786,6 +3934,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfFiniteGroup.sampleUniformly" title="+replab.+wreathproduct.OfFiniteGroup.sampleUniformly"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sampleUniformly</span></code></a> – Samples from the Haar measure</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfFiniteGroup.semidirectProduct" title="+replab.+wreathproduct.OfFiniteGroup.semidirectProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">semidirectProduct</span></code></a> – Describes an external semidirect product of groups</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfFiniteGroup.shortStr" title="+replab.+wreathproduct.OfFiniteGroup.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.OfFiniteGroup.tensorRep" title="+replab.+wreathproduct.OfFiniteGroup.tensorRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfFiniteGroup.trivialRep" title="+replab.+wreathproduct.OfFiniteGroup.trivialRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code></a> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
 </ul>
 </div>
@@ -3867,6 +4016,12 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <dt id="+replab.+wreathproduct.OfFiniteGroup.directProduct">
 <code class="sig-name descname">directProduct</code><span class="sig-paren">(</span><em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfFiniteGroup.directProduct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directProduct" title="+replab.CompactGroup.directProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+wreathproduct.OfFiniteGroup.directSumRep">
+<code class="sig-name descname">directSumRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfFiniteGroup.directSumRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directSumRep" title="+replab.CompactGroup.directSumRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directSumRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -4068,6 +4223,12 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+wreathproduct.OfFiniteGroup.tensorRep">
+<code class="sig-name descname">tensorRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfFiniteGroup.tensorRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.tensorRep" title="+replab.CompactGroup.tensorRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.tensorRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+wreathproduct.OfFiniteGroup.trivialRep">
 <code class="sig-name descname">trivialRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfFiniteGroup.trivialRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.trivialRep" title="+replab.CompactGroup.trivialRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.trivialRep()</span></code></a></p>
@@ -4102,6 +4263,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfNiceFiniteGroup.decomposition" title="+replab.+wreathproduct.OfNiceFiniteGroup.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns a decomposition of this group as a product of sets</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfNiceFiniteGroup.directPower" title="+replab.+wreathproduct.OfNiceFiniteGroup.directPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code></a> – Returns the direct product of this group with itself a number of times</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfNiceFiniteGroup.directProduct" title="+replab.+wreathproduct.OfNiceFiniteGroup.directProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code></a> – Returns the direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.OfNiceFiniteGroup.directSumRep" title="+replab.+wreathproduct.OfNiceFiniteGroup.directSumRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code></a> – Computes the direct sum of representations on this group</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfNiceFiniteGroup.disp" title="+replab.+wreathproduct.OfNiceFiniteGroup.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfNiceFiniteGroup.elementOrder" title="+replab.+wreathproduct.OfNiceFiniteGroup.elementOrder"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementOrder</span></code></a> – Returns the order of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfNiceFiniteGroup.elements" title="+replab.+wreathproduct.OfNiceFiniteGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family of the group elements</p></li>
@@ -4144,6 +4306,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfNiceFiniteGroup.shortStr" title="+replab.+wreathproduct.OfNiceFiniteGroup.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfNiceFiniteGroup.signedPermutationRep" title="+replab.+wreathproduct.OfNiceFiniteGroup.signedPermutationRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">signedPermutationRep</span></code></a> – Returns a real signed permutation representation of this group</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfNiceFiniteGroup.subgroup" title="+replab.+wreathproduct.OfNiceFiniteGroup.subgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subgroup</span></code></a> – Constructs a subgroup of the current group from generators</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.OfNiceFiniteGroup.tensorRep" title="+replab.+wreathproduct.OfNiceFiniteGroup.tensorRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfNiceFiniteGroup.trivialRep" title="+replab.+wreathproduct.OfNiceFiniteGroup.trivialRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code></a> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.OfNiceFiniteGroup.trivialSubgroup" title="+replab.+wreathproduct.OfNiceFiniteGroup.trivialSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialSubgroup</span></code></a> – Returns the trivial subgroup of this group</p></li>
 </ul>
@@ -4238,6 +4401,12 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <dt id="+replab.+wreathproduct.OfNiceFiniteGroup.directProduct">
 <code class="sig-name descname">directProduct</code><span class="sig-paren">(</span><em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfNiceFiniteGroup.directProduct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directProduct" title="+replab.CompactGroup.directProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+wreathproduct.OfNiceFiniteGroup.directSumRep">
+<code class="sig-name descname">directSumRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfNiceFiniteGroup.directSumRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.directSumRep" title="+replab.CompactGroup.directSumRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directSumRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -4446,7 +4615,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 
 <dl class="method">
 <dt id="+replab.+wreathproduct.OfNiceFiniteGroup.repByImages">
-<code class="sig-name descname">repByImages</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">images</em>, <em class="sig-param">inverseImages</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfNiceFiniteGroup.repByImages" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">repByImages</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">images</em>, <em class="sig-param">inverseImages</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfNiceFiniteGroup.repByImages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.NiceFiniteGroup.repByImages" title="+replab.NiceFiniteGroup.repByImages"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.NiceFiniteGroup.repByImages()</span></code></a></p>
 </dd></dl>
 
@@ -4493,6 +4662,12 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+wreathproduct.OfNiceFiniteGroup.tensorRep">
+<code class="sig-name descname">tensorRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfNiceFiniteGroup.tensorRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.tensorRep" title="+replab.CompactGroup.tensorRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.tensorRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+wreathproduct.OfNiceFiniteGroup.trivialRep">
 <code class="sig-name descname">trivialRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.OfNiceFiniteGroup.trivialRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="groups.html#+replab.CompactGroup.trivialRep" title="+replab.CompactGroup.trivialRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.trivialRep()</span></code></a></p>
@@ -4520,7 +4695,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <div class="collapsed admonition">
 <p class="admonition-title">Class members list</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.Arep" title="+replab.+wreathproduct.PrimitiveRep.Arep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Arep</span></code></a> – replab.Rep: Representation of the group whose copies are acted upon</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.Arep" title="+replab.+wreathproduct.PrimitiveRep.Arep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Arep</span></code></a> – Representation of the group whose copies are acted upon</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.additionalFields" title="+replab.+wreathproduct.PrimitiveRep.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.blkdiag" title="+replab.+wreathproduct.PrimitiveRep.blkdiag"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">blkdiag</span></code></a> – Direct sum of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.commutant" title="+replab.+wreathproduct.PrimitiveRep.commutant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">commutant</span></code></a> – Returns the commutant of this representation</p></li>
@@ -4528,38 +4703,42 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.conj" title="+replab.+wreathproduct.PrimitiveRep.conj"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">conj</span></code></a> – Returns the complex conjugate representation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.decomposition" title="+replab.+wreathproduct.PrimitiveRep.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns the irreducible decomposition of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.dimension" title="+replab.+wreathproduct.PrimitiveRep.dimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dimension</span></code></a> – Representation dimension</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.directSum" title="+replab.+wreathproduct.PrimitiveRep.directSum"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSum</span></code></a> – Computes the direct sum of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.directSumOfCopies" title="+replab.+wreathproduct.PrimitiveRep.directSumOfCopies"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumOfCopies</span></code></a> – Returns a direct sum of copies of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.disp" title="+replab.+wreathproduct.PrimitiveRep.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.dual" title="+replab.+wreathproduct.PrimitiveRep.dual"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dual</span></code></a> – Returns the dual representation of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.eq" title="+replab.+wreathproduct.PrimitiveRep.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.equivariant" title="+replab.+wreathproduct.PrimitiveRep.equivariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">equivariant</span></code></a> – Returns the space of equivariant linear maps from this rep to another rep</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.field" title="+replab.+wreathproduct.PrimitiveRep.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – Vector space defined on real (R) or complex (C) field</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.frobeniusSchurIndicator" title="+replab.+wreathproduct.PrimitiveRep.frobeniusSchurIndicator"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">frobeniusSchurIndicator</span></code></a> – Value of the non-approximated Frobenius-Schur indicator</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.group" title="+replab.+wreathproduct.PrimitiveRep.group"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">group</span></code></a> – Group being represented</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.headerStr" title="+replab.+wreathproduct.PrimitiveRep.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.hermitianInvariant" title="+replab.+wreathproduct.PrimitiveRep.hermitianInvariant"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hermitianInvariant</span></code></a> – Returns the Hermitian invariant space of this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.hiddenFields" title="+replab.+wreathproduct.PrimitiveRep.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.image" title="+replab.+wreathproduct.PrimitiveRep.image"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">image</span></code></a> – Returns the image of a group element</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.image_internal" title="+replab.+wreathproduct.PrimitiveRep.image_internal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">image_internal</span></code></a> – Returns the image of a group element, dense or sparse</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.inverseImage" title="+replab.+wreathproduct.PrimitiveRep.inverseImage"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverseImage</span></code></a> – Returns the image of the inverse of a group element</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.irrepInfo" title="+replab.+wreathproduct.PrimitiveRep.irrepInfo"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">irrepInfo</span></code></a> – Irreducible status information</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.isUnitary" title="+replab.+wreathproduct.PrimitiveRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether the representation is unitary</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.inverseImage_internal" title="+replab.+wreathproduct.PrimitiveRep.inverseImage_internal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">inverseImage_internal</span></code></a> – Returns the image of the inverse of a group element</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.isDivisionAlgebraCanonical" title="+replab.+wreathproduct.PrimitiveRep.isDivisionAlgebraCanonical"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isDivisionAlgebraCanonical</span></code></a> – If the representation is real and irreducible and the Frobenius-Schur indicator is not 1, means that the images encode the complex or quaternion division algebras in the RepLAB canonical form</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.isIrreducible" title="+replab.+wreathproduct.PrimitiveRep.isIrreducible"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isIrreducible</span></code></a> – Whether this representation is irreducible</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.isUnitary" title="+replab.+wreathproduct.PrimitiveRep.isUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isUnitary</span></code></a> – Whether this representation is unitary</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.kron" title="+replab.+wreathproduct.PrimitiveRep.kron"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">kron</span></code></a> – Tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.lambda" title="+replab.+wreathproduct.PrimitiveRep.lambda"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">lambda</span></code></a> – Creates a non unitary representation from an image function</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.longStr" title="+replab.+wreathproduct.PrimitiveRep.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.maschke" title="+replab.+wreathproduct.PrimitiveRep.maschke"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">maschke</span></code></a> – Given a basis of a subrepresentation, returns two complementary subrepresentations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.matrixColAction" title="+replab.+wreathproduct.PrimitiveRep.matrixColAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixColAction</span></code></a> – Computes the matrix-representation product</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.matrixRowAction" title="+replab.+wreathproduct.PrimitiveRep.matrixRowAction"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixRowAction</span></code></a> – Computes the representation-matrix product</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.overC" title="+replab.+wreathproduct.PrimitiveRep.overC"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">overC</span></code></a> – Returns whether this representation is defined over the complex field</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.overR" title="+replab.+wreathproduct.PrimitiveRep.overR"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">overR</span></code></a> – Returns whether this representation is defined over the real field</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.sample" title="+replab.+wreathproduct.PrimitiveRep.sample"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sample</span></code></a> – Samples an element from the group and returns its image under the representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.shortStr" title="+replab.+wreathproduct.PrimitiveRep.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.similar" title="+replab.+wreathproduct.PrimitiveRep.similar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">similar</span></code></a> – Returns a similar representation under a change of basis</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.similarRep" title="+replab.+wreathproduct.PrimitiveRep.similarRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">similarRep</span></code></a> – Returns a similar representation under a change of basis</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.simplify" title="+replab.+wreathproduct.PrimitiveRep.simplify"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">simplify</span></code></a> – Returns a representation identical to this, but possibly with its composition simplified</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.splitIntoIrreducibles" title="+replab.+wreathproduct.PrimitiveRep.splitIntoIrreducibles"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">splitIntoIrreducibles</span></code></a> – Decomposes fully the given representation into subrepresentations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.subRep" title="+replab.+wreathproduct.PrimitiveRep.subRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRep</span></code></a> – Returns a subrepresentation of this representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.subRepUnitary" title="+replab.+wreathproduct.PrimitiveRep.subRepUnitary"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitary</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.subRepUnitaryByIntegerBasis" title="+replab.+wreathproduct.PrimitiveRep.subRepUnitaryByIntegerBasis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subRepUnitaryByIntegerBasis</span></code></a> – Returns a unitary subrepresentation of this unitary representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.tensor" title="+replab.+wreathproduct.PrimitiveRep.tensor"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensor</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.tensorPower" title="+replab.+wreathproduct.PrimitiveRep.tensorPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorPower</span></code></a> – Returns a tensor power of this representation</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.trivialDimension" title="+replab.+wreathproduct.PrimitiveRep.trivialDimension"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialDimension</span></code></a> – Dimension of the trivial subrepresentation in this representation</p></li>
+<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.trivialSpace" title="+replab.+wreathproduct.PrimitiveRep.trivialSpace"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialSpace</span></code></a> – Returns an equivariant space from a trivial representation to this representation</p></li>
 <li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.unitarize" title="+replab.+wreathproduct.PrimitiveRep.unitarize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">unitarize</span></code></a> – Returns a unitary representation equivalent to this representation</p></li>
-<li><p><a class="reference internal" href="#+replab.+wreathproduct.PrimitiveRep.unitaryChangeOfBasis" title="+replab.+wreathproduct.PrimitiveRep.unitaryChangeOfBasis"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">unitaryChangeOfBasis</span></code></a> – Returns the change of basis to a unitary representation</p></li>
 </ul>
 </div>
 <div class="collapsed admonition">
@@ -4607,12 +4786,6 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+wreathproduct.PrimitiveRep.directSum">
-<code class="sig-name descname">directSum</code><span class="sig-paren">(</span><em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.directSum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.directSum" title="+replab.Rep.directSum"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.directSum()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
 <dt id="+replab.+wreathproduct.PrimitiveRep.directSumOfCopies">
 <code class="sig-name descname">directSumOfCopies</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.directSumOfCopies" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.directSumOfCopies" title="+replab.Rep.directSumOfCopies"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.directSumOfCopies()</span></code></a></p>
@@ -4638,7 +4811,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 
 <dl class="method">
 <dt id="+replab.+wreathproduct.PrimitiveRep.equivariant">
-<code class="sig-name descname">equivariant</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">repC</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.equivariant" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">equivariant</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">repR</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.equivariant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.equivariant" title="+replab.Rep.equivariant"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.equivariant()</span></code></a></p>
 </dd></dl>
 
@@ -4646,6 +4819,12 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <dt id="+replab.+wreathproduct.PrimitiveRep.field">
 <code class="sig-name descname">field</code><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.field" title="+replab.Rep.field"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.field</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.+wreathproduct.PrimitiveRep.frobeniusSchurIndicator">
+<code class="sig-name descname">frobeniusSchurIndicator</code><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.frobeniusSchurIndicator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.frobeniusSchurIndicator" title="+replab.Rep.frobeniusSchurIndicator"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.frobeniusSchurIndicator</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -4679,15 +4858,33 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.+wreathproduct.PrimitiveRep.image_internal">
+<code class="sig-name descname">image_internal</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">g</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.image_internal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.image_internal" title="+replab.Rep.image_internal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.image_internal()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.+wreathproduct.PrimitiveRep.inverseImage">
 <code class="sig-name descname">inverseImage</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">g</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.inverseImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.inverseImage" title="+replab.Rep.inverseImage"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.inverseImage()</span></code></a></p>
 </dd></dl>
 
+<dl class="method">
+<dt id="+replab.+wreathproduct.PrimitiveRep.inverseImage_internal">
+<code class="sig-name descname">inverseImage_internal</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">g</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.inverseImage_internal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.inverseImage_internal" title="+replab.Rep.inverseImage_internal"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.inverseImage_internal()</span></code></a></p>
+</dd></dl>
+
 <dl class="attribute">
-<dt id="+replab.+wreathproduct.PrimitiveRep.irrepInfo">
-<code class="sig-name descname">irrepInfo</code><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.irrepInfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.irrepInfo" title="+replab.Rep.irrepInfo"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.irrepInfo</span></code></a></p>
+<dt id="+replab.+wreathproduct.PrimitiveRep.isDivisionAlgebraCanonical">
+<code class="sig-name descname">isDivisionAlgebraCanonical</code><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.isDivisionAlgebraCanonical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.isDivisionAlgebraCanonical" title="+replab.Rep.isDivisionAlgebraCanonical"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isDivisionAlgebraCanonical</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.+wreathproduct.PrimitiveRep.isIrreducible">
+<code class="sig-name descname">isIrreducible</code><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.isIrreducible" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.isIrreducible" title="+replab.Rep.isIrreducible"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.isIrreducible</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -4704,7 +4901,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 
 <dl class="method">
 <dt id="+replab.+wreathproduct.PrimitiveRep.lambda">
-<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">irrepInfo</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.lambda" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">group</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">imageFun</em>, <em class="sig-param">inverseImageFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.lambda" title="+replab.Rep.lambda"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.lambda()</span></code></a></p>
 </dd></dl>
 
@@ -4712,6 +4909,12 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <dt id="+replab.+wreathproduct.PrimitiveRep.longStr">
 <code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.longStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+wreathproduct.PrimitiveRep.maschke">
+<code class="sig-name descname">maschke</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">basis1</em>, <em class="sig-param">embedding1</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.maschke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.maschke" title="+replab.Rep.maschke"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.maschke()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -4751,33 +4954,27 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 </dd></dl>
 
 <dl class="method">
-<dt id="+replab.+wreathproduct.PrimitiveRep.similar">
-<code class="sig-name descname">similar</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em>, <em class="sig-param">Ainv</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.similar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.similar" title="+replab.Rep.similar"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.similar()</span></code></a></p>
+<dt id="+replab.+wreathproduct.PrimitiveRep.similarRep">
+<code class="sig-name descname">similarRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">A</em>, <em class="sig-param">Ainv</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.similarRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.similarRep" title="+replab.Rep.similarRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.similarRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+wreathproduct.PrimitiveRep.simplify">
+<code class="sig-name descname">simplify</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.simplify" title="+replab.Rep.simplify"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.simplify()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+wreathproduct.PrimitiveRep.splitIntoIrreducibles">
+<code class="sig-name descname">splitIntoIrreducibles</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.splitIntoIrreducibles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.splitIntoIrreducibles" title="+replab.Rep.splitIntoIrreducibles"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.splitIntoIrreducibles()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="+replab.+wreathproduct.PrimitiveRep.subRep">
-<code class="sig-name descname">subRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">F</em>, <em class="sig-param">G</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.subRep" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">subRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">basis</em>, <em class="sig-param">embedding</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.subRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.subRep" title="+replab.Rep.subRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.subRep()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+wreathproduct.PrimitiveRep.subRepUnitary">
-<code class="sig-name descname">subRepUnitary</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">U</em>, <em class="sig-param">niceBasis</em>, <em class="sig-param">irrepInfo</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.subRepUnitary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.subRepUnitary" title="+replab.Rep.subRepUnitary"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.subRepUnitary()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+wreathproduct.PrimitiveRep.subRepUnitaryByIntegerBasis">
-<code class="sig-name descname">subRepUnitaryByIntegerBasis</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">V</em>, <em class="sig-param">irrepInfo</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.subRepUnitaryByIntegerBasis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.subRepUnitaryByIntegerBasis" title="+replab.Rep.subRepUnitaryByIntegerBasis"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.subRepUnitaryByIntegerBasis()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="+replab.+wreathproduct.PrimitiveRep.tensor">
-<code class="sig-name descname">tensor</code><span class="sig-paren">(</span><em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.tensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.tensor" title="+replab.Rep.tensor"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.tensor()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -4786,23 +4983,34 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.tensorPower" title="+replab.Rep.tensorPower"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.tensorPower()</span></code></a></p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="+replab.+wreathproduct.PrimitiveRep.trivialDimension">
+<code class="sig-name descname">trivialDimension</code><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.trivialDimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.trivialDimension" title="+replab.Rep.trivialDimension"><code class="xref mat mat-attr docutils literal notranslate"><span class="pre">replab.Rep.trivialDimension</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.+wreathproduct.PrimitiveRep.trivialSpace">
+<code class="sig-name descname">trivialSpace</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.trivialSpace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.trivialSpace" title="+replab.Rep.trivialSpace"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.trivialSpace()</span></code></a></p>
+</dd></dl>
+
 <dl class="method">
 <dt id="+replab.+wreathproduct.PrimitiveRep.unitarize">
 <code class="sig-name descname">unitarize</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.unitarize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.unitarize" title="+replab.Rep.unitarize"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.unitarize()</span></code></a></p>
 </dd></dl>
 
-<dl class="method">
-<dt id="+replab.+wreathproduct.PrimitiveRep.unitaryChangeOfBasis">
-<code class="sig-name descname">unitaryChangeOfBasis</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.unitaryChangeOfBasis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation in <a class="reference internal" href="rep.html#+replab.Rep.unitaryChangeOfBasis" title="+replab.Rep.unitaryChangeOfBasis"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Rep.unitaryChangeOfBasis()</span></code></a></p>
-</dd></dl>
-
 </div>
 <h3>Own members</h3><dl class="attribute">
 <dt id="+replab.+wreathproduct.PrimitiveRep.Arep">
 <code class="sig-name descname">Arep</code><a class="headerlink" href="#+replab.+wreathproduct.PrimitiveRep.Arep" title="Permalink to this definition">¶</a></dt>
-<dd><p>replab.Rep: Representation of the group whose copies are acted upon</p>
+<dd><p>Representation of the group whose copies are acted upon</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -4812,15 +5020,15 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>group</strong> (<em>replab.wreathproduct.Common</em>) – Wreath product group</p></li>
-<li><p><strong>Arep</strong> (<em>replab.Rep</em>) – Representation of the wreath product base factor</p></li>
+<li><p><strong>group</strong> (<a class="reference internal" href="#+replab.+wreathproduct.Common" title="+replab.+wreathproduct.Common"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.wreathproduct.Common</span></code></a>) – Wreath product group</p></li>
+<li><p><strong>Arep</strong> (<a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a>) – Representation of the wreath product base factor</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A wreath product group representation</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>replab.Rep</p>
+<dd class="field-odd"><p><a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4877,7 +5085,7 @@ when called on <a class="reference internal" href="#+replab.+wreathproduct.Commo
         <li class="right" >
           <a href="permutations.html" title="Permutation groups"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li> 
       </ul>
     </div>

@@ -116,7 +116,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "dec = U2TensorRep.decomposition;"
+    "dec = U2TensorRep.decomposition.nice;"
    ]
   },
   {
@@ -196,7 +196,7 @@
    "metadata": {},
    "source": [
     "These are the antisymmetric and symmetric subspaces respectively. The change of basis into the first component\n",
-    "identifies the antisymetric subspace, also known as the *Singlet state*:"
+    "identifies the antisymetric subspace, also known as the *singlet state*:"
    ]
   },
   {
@@ -208,16 +208,34 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "phiMinus =\r\n",
+      "singletBasis =\r\n",
       "\r\n",
-      "   0.00000   0.70711  -0.70711   0.00000\r\n",
+      "   0\r\n",
+      "   1\r\n",
+      "  -1\r\n",
+      "   0\r\n",
+      "\r\n",
+      "rest =\r\n",
+      "\r\n",
+      "   1   0   0\r\n",
+      "   0   0   1\r\n",
+      "   0   0   1\r\n",
+      "   0   1   0\r\n",
       "\r\n"
      ]
     }
    ],
    "source": [
-    "phiMinus = dec.component(1).U"
+    "singletBasis = dec.component(1).basis\n",
+    "rest = dec.component(2).basis"
    ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
   }
  ],
  "metadata": {

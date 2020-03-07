@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>2. Constructing representations with RepLAB &#8212; RepLAB 0.6.7 documentation</title>
+    <title>2. Constructing representations with RepLAB &#8212; RepLAB 0.6.8-SNAP documentation</title>
     <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="Part1_Groups.html" title="1. Constructing groups with RepLAB"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Quantum Causal Structures Oxford 2019</a> &#187;</li> 
       </ul>
@@ -79,7 +79,7 @@
   <a href="
     ../../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.7.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.6.8-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -390,7 +390,7 @@ Adding MOcov to the path
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
 <span></span><span class="n">piI</span> <span class="p">=</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">];</span>
 <span class="n">piO1</span> <span class="p">=</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">];</span>
-<span class="n">GAlice</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="mi">4</span><span class="p">).</span><span class="n">subgroup</span><span class="p">({</span><span class="n">piInput</span> <span class="n">piOutput1</span><span class="p">})</span>
+<span class="n">GAlice</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="mi">4</span><span class="p">).</span><span class="n">subgroup</span><span class="p">({</span><span class="n">piI</span> <span class="n">piO1</span><span class="p">})</span>
 </pre></div>
 </div>
 </div>
@@ -399,7 +399,15 @@ Adding MOcov to the path
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;piInput&#39; undefined near line 1 column 32
+GAlice =
+
+replab.PermutationSubgroup
+  domainSize: 4
+    identity: [1, 2, 3, 4]
+      parent: Permutations acting on 4 elements
+generator(1): [3, 4, 1, 2]
+generator(2): [2, 1, 3, 4]
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -409,7 +417,7 @@ error: &#39;piInput&#39; undefined near line 1 column 32
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
 <span></span><span class="n">rhoI</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span>
 <span class="n">rhoO1</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">];</span>
-<span class="n">rho</span> <span class="p">=</span> <span class="n">GAlice</span><span class="p">.</span><span class="n">rep</span><span class="p">(</span><span class="s">&#39;R&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">,{</span><span class="n">rhoI</span> <span class="n">rhoO1</span><span class="p">})</span>
+<span class="n">rho</span> <span class="p">=</span> <span class="n">GAlice</span><span class="p">.</span><span class="n">repByImages</span><span class="p">(</span><span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="n">rhoI</span> <span class="n">rhoO1</span><span class="p">},</span> <span class="p">{</span><span class="n">rhoI</span><span class="o">&#39;</span> <span class="n">rhoO1</span><span class="o">&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
 </div>
@@ -418,7 +426,21 @@ error: &#39;piInput&#39; undefined near line 1 column 32
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;GAlice&#39; undefined near line 1 column 7
+rho =
+
+Orthogonal representation by images
+                 dimension: 4
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+    inverseImages_internal: 1 x 2 cell
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+        images_internal{1}: [0, 0, 1, 0; 0, 0, 0, 1; 1, 0, 0, 0; 0, 1, 0, 0]
+        images_internal{2}: [0, 1, 0, 0; 1, 0, 0, 0; 0, 0, 1, 0; 0, 0, 0, 1]
+
 </pre></div></div>
 </div>
 <p>We now verify that <code class="docutils literal notranslate"><span class="pre">rho</span></code> is a legitimate representation.</p>
@@ -436,7 +458,11 @@ error: &#39;GAlice&#39; undefined near line 1 column 7
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;rho&#39; undefined near line 1 column 16
+Checking commutes with commutant algebra...
+Checking respects division algebra...
+Checking asGroupHomomorphism-&gt;composition...
+Checking asGroupHomomorphism-&gt;identity...
+Checking asGroupHomomorphism-&gt;inverse...
 </pre></div></div>
 </div>
 <p>We also define and verify the other representation <code class="docutils literal notranslate"><span class="pre">sigma</span></code>.</p>
@@ -447,7 +473,7 @@ error: &#39;rho&#39; undefined near line 1 column 16
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
 <span></span><span class="n">sigmaI</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">];</span>
 <span class="n">sigmaO1</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span>
-<span class="n">sigma</span> <span class="p">=</span> <span class="n">GAlice</span><span class="p">.</span><span class="n">rep</span><span class="p">(</span><span class="s">&#39;R&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">,{</span><span class="n">sigmaI</span> <span class="n">sigmaO1</span><span class="p">})</span>
+<span class="n">sigma</span> <span class="p">=</span> <span class="n">GAlice</span><span class="p">.</span><span class="n">repByImages</span><span class="p">(</span><span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="n">sigmaI</span> <span class="n">sigmaO1</span><span class="p">},</span> <span class="p">{</span><span class="n">sigmaI</span><span class="o">&#39;</span> <span class="n">sigmaO1</span><span class="o">&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
 </div>
@@ -456,13 +482,27 @@ error: &#39;rho&#39; undefined near line 1 column 16
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;GAlice&#39; undefined near line 1 column 9
+sigma =
+
+Orthogonal representation by images
+                 dimension: 4
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+    inverseImages_internal: 1 x 2 cell
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+        images_internal{1}: [1, 0, 0, 0; 0, 0, 1, 0; 0, 1, 0, 0; 0, 0, 0, 1]
+        images_internal{2}: [0, 0, 1, 0; 0, 0, 0, 1; 1, 0, 0, 0; 0, 1, 0, 0]
+
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="Combining-representations">
 <h2>Combining representations<a class="headerlink" href="#Combining-representations" title="Permalink to this headline">¶</a></h2>
-<p>We illustrate the examples of states invariant under <span class="math notranslate nohighlight">\(U(2)\)</span>. However, RepLAB does not support (yet) compact groups, only finite groups. Thus, we use the Clifford group as an approximation of <span class="math notranslate nohighlight">\(U(2)\)</span>. The approximation stays valid for tensor products of up to three copies of the basic representation, as the Clifford group is a 3-design for <span class="math notranslate nohighlight">\(U(2)\)</span>.</p>
+<p>We illustrate the examples of states invariant under <span class="math notranslate nohighlight">\(U(2)\)</span>. At the time of writing this tutorial, RepLAB did support compact groups, only finite groups; as of March 2020, the support of continuous groups is still experimental. Thus, we use the Clifford group as an approximation of <span class="math notranslate nohighlight">\(U(2)\)</span>. The approximation stays valid for tensor products of up to three copies of the basic representation, as the Clifford group is a 3-design for <span class="math notranslate nohighlight">\(U(2)\)</span>.</p>
 <p>The Clifford group is described using a permutation representation obtained with <a class="reference external" href="https://www.gap-system.org">GAP System</a> on 48 points.</p>
 <p>We first get the (abstract) Clifford group on a single qubit and its representation using 2x2 complex matrices:</p>
 <div class="nbinput docutils container">
@@ -470,7 +510,7 @@ error: &#39;GAlice&#39; undefined near line 1 column 9
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="p">[</span><span class="n">clifford</span> <span class="n">cliffordRep</span><span class="p">]</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">quantum</span><span class="p">.</span><span class="n">clifford_qubit</span>
+<span></span><span class="p">[</span><span class="n">clifford</span> <span class="n">cliffordRep</span><span class="p">]</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">quantum</span><span class="p">.</span><span class="n">clifford_qudit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -479,9 +519,6 @@ error: &#39;GAlice&#39; undefined near line 1 column 9
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-warning: Deprecated: use replab.quantum.clifford_qudit(2)
-warning: called from
-    clifford_qubit at line 6 column 5
 clifford =
 
 replab.PermutationSubgroup
@@ -494,16 +531,19 @@ generator(3): 1 x 48 double
 
 cliffordRep =
 
-Unitary complex representation of dimension 2
-    dimension: 2
-        field: &#39;C&#39;
-        group: replab.PermutationSubgroup
-inverseImages: 1 x 3 cell
-    irrepInfo: []
-    isUnitary: true
-    images{1}: [0.70711+0.70711i, 0; 0, 0.70711+0.70711i]
-    images{2}: [0.70711, 0.70711; 0.70711, -0.70711]
-    images{3}: [1, 0; 0, 0+1i]
+Unitary representation by images
+                 dimension: 2
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+    inverseImages_internal: 1 x 3 cell
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+        images_internal{1}: [0.70711+0.70711i, 0; 0, 0.70711+0.70711i]
+        images_internal{2}: [0.70711, 0.70711; 0.70711, -0.70711]
+        images_internal{3}: [1, 0; 0, 0+1i]
 
 </pre></div></div>
 </div>
@@ -527,14 +567,17 @@ inverseImages: 1 x 3 cell
 <div class="highlight"><pre>
 UxU =
 
-Unitary complex representation of dimension 4
-dimension: 4
-    field: &#39;C&#39;
-    group: replab.PermutationSubgroup
-irrepInfo: []
-isUnitary: true
-factor(1): Unitary complex representation of dimension 2
-factor(2): Unitary complex representation of dimension 2
+Unitary tensor representation
+                 dimension: 4
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+                 factor(1): Unitary representation by images
+                 factor(2): Unitary representation by images
 
 </pre></div></div>
 </div>
@@ -543,7 +586,7 @@ factor(2): Unitary complex representation of dimension 2
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">UxU</span><span class="p">.</span><span class="n">decomposition</span>
+<span></span><span class="n">UxU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span>
 </pre></div>
 </div>
 </div>
@@ -554,20 +597,22 @@ factor(2): Unitary complex representation of dimension 2
 <div class="highlight"><pre>
 ans =
 
-Subrepresentation
-   dimension: 4
-       field: &#39;C&#39;
-       group: replab.PermutationSubgroup
-   irrepInfo: []
-   isUnitary: true
-   niceBasis: replab.NiceBasis
-      parent: Unitary complex representation of dimension 4
-      U(1,:): [0, 1, -1, 0]/sqrt(2)
-      U(2,:): [0, 0, 0, 1]
-      U(3,:): [1, 0, 0, 0]
-      U(4,:): [0, 1, 1, 0]/sqrt(2)
-component(1): Isotypic component C(1)
-component(2): Isotypic component C(3)
+Complex representation
+                 dimension: 4
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: []
+                    parent: Unitary tensor representation
+          trivialDimension: []
+               basis.(:,1): [0, -1, 1, 0].&#39;
+               basis.(:,2): [1, 0, 0, 0].&#39;
+               basis.(:,3): [0, 0, 0, 1].&#39;
+               basis.(:,4): [0, 1, 1, 0].&#39;
+              component(1): Isotypic component C(1)
+              component(2): Isotypic component C(3)
 
 </pre></div></div>
 </div>
@@ -577,7 +622,7 @@ component(2): Isotypic component C(3)
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">UxU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">copy</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span></span><span class="n">UxU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -586,7 +631,20 @@ component(2): Isotypic component C(3)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: subsref: unknown method or property: copy
+ans =
+
+Complex irreducible subrepresentation
+                 dimension: 1
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: []
+                    parent: Unitary tensor representation
+          trivialDimension: []
+               basis.(:,1): [0, -1, 1, 0].&#39;
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -594,7 +652,7 @@ error: subsref: unknown method or property: copy
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">UxU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">copy</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span></span><span class="n">UxU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -603,7 +661,22 @@ error: subsref: unknown method or property: copy
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: subsref: unknown method or property: copy
+ans =
+
+Complex irreducible subrepresentation
+                 dimension: 3
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: []
+                    parent: Unitary tensor representation
+          trivialDimension: []
+               basis.(:,1): [0, 0, 0, 1].&#39;
+               basis.(:,2): [1, 0, 0, 0].&#39;
+               basis.(:,3): [0, 1, 1, 0].&#39;
+
 </pre></div></div>
 </div>
 </div>
@@ -626,14 +699,17 @@ error: subsref: unknown method or property: copy
 <div class="highlight"><pre>
 UxconjU =
 
-Unitary complex representation of dimension 4
-dimension: 4
-    field: &#39;C&#39;
-    group: replab.PermutationSubgroup
-irrepInfo: []
-isUnitary: true
-factor(1): Unitary complex representation of dimension 2
-factor(2): Conjugate derived representation
+Unitary tensor representation
+                 dimension: 4
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+                 factor(1): Unitary representation by images
+                 factor(2): Unitary derived representation (conjugate)
 
 </pre></div></div>
 </div>
@@ -642,7 +718,7 @@ factor(2): Conjugate derived representation
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">UxconjU</span><span class="p">.</span><span class="n">decomposition</span>
+<span></span><span class="n">UxconjU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span>
 </pre></div>
 </div>
 </div>
@@ -651,24 +727,25 @@ factor(2): Conjugate derived representation
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-warning: image: some elements in list of return values are undefined
-warning: image: some elements in list of return values are undefined
-operator *: nonconformant arguments (op1 is 4x4, op2 is 0x0)
-error: called from
-    matrixColAction at line 225 column 15
-    project at line 20 column 24
-    sampleWithError at line 70 column 20
-    sample at line 114 column 15
-    trivialSample at line 38 column 45
-    splitUsingCommutant at line 33 column 7
-    dispatchDefaults&gt;@&lt;anonymous&gt; at line 19 column 42
-    dispatch at line 60 column 38
-    split at line 20 column 9
-    decompositionUsingSplit at line 11 column 10
-    dispatchDefaults&gt;@&lt;anonymous&gt; at line 14 column 28
-    dispatch at line 60 column 38
-    decomposition at line 17 column 7
-    decomposition at line 160 column 21
+ans =
+
+Complex representation
+                 dimension: 4
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: []
+                    parent: Unitary tensor representation
+          trivialDimension: []
+               basis.(:,1): [1, -0, -0, 1].&#39;
+               basis.(:,2): [-0, 1, -0, -0].&#39;
+               basis.(:,3): [0, -0, 1, 0].&#39;
+               basis.(:,4): [-1, 0, 0, 1].&#39;
+              component(1): Isotypic component (harmonized) C(1) (trivial)
+              component(2): Isotypic component C(3)
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -676,7 +753,7 @@ error: called from
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">UxconjU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">copy</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span></span><span class="n">UxconjU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -685,24 +762,20 @@ error: called from
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-warning: image: some elements in list of return values are undefined
-warning: image: some elements in list of return values are undefined
-operator *: nonconformant arguments (op1 is 4x4, op2 is 0x0)
-error: called from
-    matrixColAction at line 225 column 15
-    project at line 20 column 24
-    sampleWithError at line 70 column 20
-    sample at line 114 column 15
-    trivialSample at line 38 column 45
-    splitUsingCommutant at line 33 column 7
-    dispatchDefaults&gt;@&lt;anonymous&gt; at line 19 column 42
-    dispatch at line 60 column 38
-    split at line 20 column 9
-    decompositionUsingSplit at line 11 column 10
-    dispatchDefaults&gt;@&lt;anonymous&gt; at line 14 column 28
-    dispatch at line 60 column 38
-    decomposition at line 17 column 7
-    decomposition at line 160 column 21
+ans =
+
+Complex trivial irreducible subrepresentation
+                 dimension: 1
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: 1
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: []
+                    parent: Unitary tensor representation
+          trivialDimension: 1
+               basis.(:,1): [1, -0, -0, 1].&#39;
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -710,7 +783,7 @@ error: called from
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">UxconjU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">copy</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span></span><span class="n">UxconjU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -719,24 +792,22 @@ error: called from
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-warning: image: some elements in list of return values are undefined
-warning: image: some elements in list of return values are undefined
-operator *: nonconformant arguments (op1 is 4x4, op2 is 0x0)
-error: called from
-    matrixColAction at line 225 column 15
-    project at line 20 column 24
-    sampleWithError at line 70 column 20
-    sample at line 114 column 15
-    trivialSample at line 38 column 45
-    splitUsingCommutant at line 33 column 7
-    dispatchDefaults&gt;@&lt;anonymous&gt; at line 19 column 42
-    dispatch at line 60 column 38
-    split at line 20 column 9
-    decompositionUsingSplit at line 11 column 10
-    dispatchDefaults&gt;@&lt;anonymous&gt; at line 14 column 28
-    dispatch at line 60 column 38
-    decomposition at line 17 column 7
-    decomposition at line 160 column 21
+ans =
+
+Complex fully nontrivial irreducible subrepresentation
+                 dimension: 3
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: []
+                    parent: Unitary tensor representation
+          trivialDimension: 0
+               basis.(:,1): [-0, 1, -0, -0].&#39;
+               basis.(:,2): [0, -0, 1, 0].&#39;
+               basis.(:,3): [1, 0, 0, -1].&#39;
+
 </pre></div></div>
 </div>
 </div>
@@ -780,7 +851,7 @@ error: called from
         <li class="right" >
           <a href="Part1_Groups.html" title="1. Constructing groups with RepLAB"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" >Quantum Causal Structures Oxford 2019</a> &#187;</li> 
       </ul>
