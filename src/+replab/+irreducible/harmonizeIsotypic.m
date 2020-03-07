@@ -38,9 +38,10 @@ function hi = harmonizeIsotypic(iso, context)
     end
     iso2 = iso1.changeEachIrrepBasis(A_list, Ainv_list);
     for i = 2:n
-        iso2.irreps{i}.isUnitary = iso2.irreps{1}.isUnitary;
-        iso2.irreps{i}.frobeniusSchurIndicator = iso2.irreps{1}.frobeniusSchurIndicator;
-        iso2.irreps{i}.isDivisionAlgebraCanonical = iso2.irreps{1}.isDivisionAlgebraCanonical;
+        irrepsi = iso2.irreps{i};
+        irrepsi.isUnitary = iso2.irreps{1}.isUnitary;
+        irrepsi.frobeniusSchurIndicator = iso2.irreps{1}.frobeniusSchurIndicator;
+        irrepsi.isDivisionAlgebraCanonical = iso2.irreps{1}.isDivisionAlgebraCanonical;
     end
     hi = replab.HarmonizedIsotypic(iso2.parent, iso2.irreps, iso2.E_internal);
 end
