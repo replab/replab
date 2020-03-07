@@ -1,0 +1,436 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# 4. A taste of composition with RepLAB\n",
+    "\n",
+    "This is part IV of the companion notebook to the RepLAB talk at the [Quantum Causal Structures](http://www.cs.ox.ac.uk/conferences/QCS2019/) workshop."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Adding RepLAB to the path\r\n",
+      "warning: function /home/denis/w/replab/src/help.m shadows a core library function\r\n",
+      "Adding RepLAB package to the path\r\n",
+      "Loading optim package for Octave...\r\n",
+      "Adding VPI to the path\r\n",
+      "Adding MOxUnit to the path\r\n",
+      "Adding embedded YALMIP to the path\r\n",
+      "Adding embedded SDPT3 solver to the path\r\n",
+      "Adding MOcov to the path\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "run ../../../replab_init.m % Init RepLAB library"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Party relabeling group\n",
+    "We consider a party with $m$ measurement settings with $k$ outcomes."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Gparty =\r\n",
+      "\r\n",
+      "replab.wreathproduct.OfNiceFiniteGroup\r\n",
+      "           A: Permutations acting on 2 elements      \r\n",
+      "           H: Permutations acting on 2 elements      \r\n",
+      "           N: replab.directproduct.OfNiceFiniteGroups\r\n",
+      "    identity: {[1, 2], {[1, 2], [1, 2]}}             \r\n",
+      "           n: 2                                      \r\n",
+      "      parent: replab.wreathproduct.OfNiceFiniteGroup \r\n",
+      "         phi: replab.perm.PermutationCellAction      \r\n",
+      "generator(1): {[2, 1], {[1, 2], [1, 2]}}             \r\n",
+      "generator(2): {[1, 2], {[2, 1], [1, 2]}}             \r\n",
+      "generator(3): {[1, 2], {[1, 2], [2, 1]}}             \r\n",
+      "\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "m = 2; k = 2;\n",
+    "Goutcomes = replab.S(k);\n",
+    "Gsettings = replab.S(m);\n",
+    "Gparty = Gsettings.wreathProduct(Goutcomes)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We now define the two canonical representations of a wreath product group. For party relabeling groups, they correspond to conditional probability distributions and to deterministic strategies."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "probabilityRep =\r\n",
+      "\r\n",
+      "Orthogonal representation\r\n",
+      "                      Arep: Orthogonal representation by images   \r\n",
+      "                 dimension: 4                                     \r\n",
+      "                     field: 'R'                                   \r\n",
+      "   frobeniusSchurIndicator: []                                    \r\n",
+      "                     group: replab.wreathproduct.OfNiceFiniteGroup\r\n",
+      "isDivisionAlgebraCanonical: []                                    \r\n",
+      "             isIrreducible: []                                    \r\n",
+      "                 isUnitary: true                                  \r\n",
+      "          trivialDimension: []                                    \r\n",
+      "\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "probabilityRep = Gparty.imprimitiveRep(Goutcomes.naturalRep)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "strategyRep =\r\n",
+      "\r\n",
+      "Orthogonal representation\r\n",
+      "                      Arep: Orthogonal representation by images   \r\n",
+      "                 dimension: 4                                     \r\n",
+      "                     field: 'R'                                   \r\n",
+      "   frobeniusSchurIndicator: []                                    \r\n",
+      "                     group: replab.wreathproduct.OfNiceFiniteGroup\r\n",
+      "isDivisionAlgebraCanonical: []                                    \r\n",
+      "             isIrreducible: []                                    \r\n",
+      "                 isUnitary: true                                  \r\n",
+      "          trivialDimension: []                                    \r\n",
+      "\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "strategyRep = Gparty.primitiveRep(Goutcomes.naturalRep)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We can decompose those representations. For $m=k=2$, the probability representation has invariant vectors `[1,1,1,1]` (corresponding to overall normalization), `[1,1,-1,-1]` (corresponding to equal normalization accross settings), and an additional orthogonal space corresponding to the correlations."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ans =\r\n",
+      "\r\n",
+      "Real representation\r\n",
+      "                 dimension: 4                                             \r\n",
+      "                     field: 'R'                                           \r\n",
+      "   frobeniusSchurIndicator: []                                            \r\n",
+      "                     group: replab.wreathproduct.OfNiceFiniteGroup        \r\n",
+      "isDivisionAlgebraCanonical: []                                            \r\n",
+      "             isIrreducible: []                                            \r\n",
+      "                 isUnitary: []                                            \r\n",
+      "                    parent: Orthogonal representation                     \r\n",
+      "          trivialDimension: []                                            \r\n",
+      "               basis.(:,1): [1, 1, 1, 1].'                                \r\n",
+      "               basis.(:,2): [1, 1, -1, -1].'                              \r\n",
+      "               basis.(:,3): [1, -1, 0, 0].'                               \r\n",
+      "               basis.(:,4): [0, 0, 1, -1].'                               \r\n",
+      "              component(1): Isotypic component (harmonized) R(1) (trivial)\r\n",
+      "              component(2): Isotypic component ?(1)                       \r\n",
+      "              component(3): Isotypic component ?(2)                       \r\n",
+      "\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "probabilityRep.decomposition.nice"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ans =\r\n",
+      "\r\n",
+      "Real trivial irreducible real-type subrepresentation\r\n",
+      "                 dimension: 1                                     \r\n",
+      "                     field: 'R'                                   \r\n",
+      "   frobeniusSchurIndicator: 1                                     \r\n",
+      "                     group: replab.wreathproduct.OfNiceFiniteGroup\r\n",
+      "isDivisionAlgebraCanonical: []                                    \r\n",
+      "             isIrreducible: true                                  \r\n",
+      "                 isUnitary: []                                    \r\n",
+      "                    parent: Orthogonal representation             \r\n",
+      "          trivialDimension: 1                                     \r\n",
+      "               basis.(:,1): [1, 1, 1, 1].'                        \r\n",
+      "\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "probabilityRep.decomposition.nice.component(1).irrep(1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ans =\r\n",
+      "\r\n",
+      "Real irreducible subrepresentation\r\n",
+      "                 dimension: 1                                     \r\n",
+      "                     field: 'R'                                   \r\n",
+      "   frobeniusSchurIndicator: []                                    \r\n",
+      "                     group: replab.wreathproduct.OfNiceFiniteGroup\r\n",
+      "isDivisionAlgebraCanonical: []                                    \r\n",
+      "             isIrreducible: true                                  \r\n",
+      "                 isUnitary: []                                    \r\n",
+      "                    parent: Orthogonal representation             \r\n",
+      "          trivialDimension: []                                    \r\n",
+      "               basis.(:,1): [1, 1, -1, -1].'                      \r\n",
+      "\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "probabilityRep.decomposition.nice.component(2).irrep(1)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We could also examine the representation on deterministic strategies; this is left to the reader."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ans =\r\n",
+      "\r\n",
+      "Real representation\r\n",
+      "                 dimension: 4                                             \r\n",
+      "                     field: 'R'                                           \r\n",
+      "   frobeniusSchurIndicator: []                                            \r\n",
+      "                     group: replab.wreathproduct.OfNiceFiniteGroup        \r\n",
+      "isDivisionAlgebraCanonical: []                                            \r\n",
+      "             isIrreducible: []                                            \r\n",
+      "                 isUnitary: []                                            \r\n",
+      "                    parent: Orthogonal representation                     \r\n",
+      "          trivialDimension: []                                            \r\n",
+      "               basis.(:,1): [1, 1, 1, 1].'                                \r\n",
+      "               basis.(:,2): [-1, 1, 1, -1].'                              \r\n",
+      "               basis.(:,3): [-0, 1, -1, -0].'                             \r\n",
+      "               basis.(:,4): [-1, -0, 0, 1].'                              \r\n",
+      "              component(1): Isotypic component (harmonized) R(1) (trivial)\r\n",
+      "              component(2): Isotypic component ?(1)                       \r\n",
+      "              component(3): Isotypic component ?(2)                       \r\n",
+      "\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "strategyRep.decomposition.nice"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Bell relabeling group\n",
+    "We now consider a scenario of $n$ parties with $m$ settings and $k$ outcomes (as before), and construct the representation on joint conditional probabilities. For $n=m=k=2$, we reproduce the results of [our paper](https://iopscience.iop.org/article/10.1088/1751-8121/aa6f78)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Gscenario =\r\n",
+      "\r\n",
+      "replab.wreathproduct.OfNiceFiniteGroup\r\n",
+      "           A: replab.wreathproduct.OfNiceFiniteGroup                            \r\n",
+      "           H: Permutations acting on 2 elements                                 \r\n",
+      "           N: replab.directproduct.OfNiceFiniteGroups                           \r\n",
+      "    identity: {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}\r\n",
+      "           n: 2                                                                 \r\n",
+      "      parent: replab.wreathproduct.OfNiceFiniteGroup                            \r\n",
+      "         phi: replab.perm.PermutationCellAction                                 \r\n",
+      "generator(1): {[2, 1], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}\r\n",
+      "generator(2): {[1, 2], {{[2, 1], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}\r\n",
+      "generator(3): {[1, 2], {{[1, 2], {[2, 1], [1, 2]}}, {[1, 2], {[1, 2], [1, 2]}}}}\r\n",
+      "generator(4): {[1, 2], {{[1, 2], {[1, 2], [2, 1]}}, {[1, 2], {[1, 2], [1, 2]}}}}\r\n",
+      "generator(5): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[2, 1], {[1, 2], [1, 2]}}}}\r\n",
+      "generator(6): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[2, 1], [1, 2]}}}}\r\n",
+      "generator(7): {[1, 2], {{[1, 2], {[1, 2], [1, 2]}}, {[1, 2], {[1, 2], [2, 1]}}}}\r\n",
+      "\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "n = 2;\n",
+    "m = 2; k = 2;\n",
+    "Gparties = replab.S(n);\n",
+    "Gscenario = Gparties.wreathProduct(Gparty)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "probabilityScenarioRep =\r\n",
+      "\r\n",
+      "Orthogonal representation\r\n",
+      "                      Arep: Orthogonal representation             \r\n",
+      "                 dimension: 16                                    \r\n",
+      "                     field: 'R'                                   \r\n",
+      "   frobeniusSchurIndicator: []                                    \r\n",
+      "                     group: replab.wreathproduct.OfNiceFiniteGroup\r\n",
+      "isDivisionAlgebraCanonical: []                                    \r\n",
+      "             isIrreducible: []                                    \r\n",
+      "                 isUnitary: true                                  \r\n",
+      "          trivialDimension: []                                    \r\n",
+      "\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "probabilityScenarioRep = Gscenario.primitiveRep(Gparty.imprimitiveRep(Gsettings.naturalRep))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ans =\r\n",
+      "\r\n",
+      "Real representation\r\n",
+      "                 dimension: 16                                            \r\n",
+      "                     field: 'R'                                           \r\n",
+      "   frobeniusSchurIndicator: []                                            \r\n",
+      "                     group: replab.wreathproduct.OfNiceFiniteGroup        \r\n",
+      "isDivisionAlgebraCanonical: []                                            \r\n",
+      "             isIrreducible: []                                            \r\n",
+      "                 isUnitary: []                                            \r\n",
+      "                    parent: Orthogonal representation                     \r\n",
+      "          trivialDimension: []                                            \r\n",
+      "                     basis: 16 x 16 double                                \r\n",
+      "              component(1): Isotypic component (harmonized) R(1) (trivial)\r\n",
+      "              component(2): Isotypic component (harmonized) R(1)          \r\n",
+      "              component(3): Isotypic component (harmonized) R(2)          \r\n",
+      "              component(4): Isotypic component (harmonized) R(4)          \r\n",
+      "              component(5): Isotypic component (harmonized) R(4)          \r\n",
+      "              component(6): Isotypic component (harmonized) R(4)          \r\n",
+      "\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "probabilityScenarioRep.decomposition"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Octave",
+   "language": "octave",
+   "name": "octave"
+  },
+  "language_info": {
+   "file_extension": ".m",
+   "help_links": [
+    {
+     "text": "GNU Octave",
+     "url": "https://www.gnu.org/software/octave/support.html"
+    },
+    {
+     "text": "Octave Kernel",
+     "url": "https://github.com/Calysto/octave_kernel"
+    },
+    {
+     "text": "MetaKernel Magics",
+     "url": "https://metakernel.readthedocs.io/en/latest/source/README.html"
+    }
+   ],
+   "mimetype": "text/x-octave",
+   "name": "octave",
+   "version": "4.4.1"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
