@@ -91,7 +91,7 @@ classdef Domain < replab.Samplable
         % Args:
         %   x (domain element): first element
         %   y (domain element): second element to compare
-        %   context (charstring): context
+        %   context (charstring, optional): context
             if ~self.eqv(x, y)
                 errorDesc = 'The values %s and %s are not equivalent';
                 errorId = 'assertEqual:nonEqual';
