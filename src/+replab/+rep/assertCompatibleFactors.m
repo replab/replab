@@ -6,7 +6,7 @@ function b = assertCompatibleFactors(group, field, factors)
 %   factors (cell(1,*) of `+replab.Rep`): Representations of the given group
     assert(isa(group, 'replab.CompactGroup'));
     assert(ismember(field, {'R' 'C'}));
-    assert(isrow(factors) && iscell(factors));
+    assert((isempty(factors) || isrow(factors)) && iscell(factors));
     n = length(factors);
     for i = 1:n
         assert(isa(factors{i}, 'replab.Rep'));

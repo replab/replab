@@ -31,8 +31,8 @@ classdef RepByImages < replab.Rep
         %   images (cell(1,\*) of double(\*,\*), may be sparse): Images of the generators of ``group`` in the same order
         %   inverseImages (cell(1,\*) of double(\*,\*), may be sparse): Inverse images of the generators
             assert(isa(group, 'replab.NiceFiniteGroup'));
-            assert(isa(images, 'cell') && isrow(inverseImages));
-            assert(isa(inverseImages, 'cell') && isrow(inverseImages));
+            assert(isa(images, 'cell') && (isempty(images) || isrow(images)));
+            assert(isa(inverseImages, 'cell') && (isempty(inverseImages) || isrow(inverseImages)));
             assert(length(images) == group.nGenerators);
             assert(length(inverseImages) == group.nGenerators);
             knownUnitary = true;
