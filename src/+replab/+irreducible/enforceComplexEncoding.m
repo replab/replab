@@ -5,7 +5,7 @@ function res = enforceComplexEncoding(rep, context)
 % See `+replab.+domain.ComplexTypeMatrices`
 %
 % Args:
-%   rep (`+replab.Rep`): Real representation with `rep.frobeniusSchurIndicator == 0`
+%   rep (`+replab.Rep`): Real representation with ``rep.frobeniusSchurIndicator == 0``
 %   context (`+replab.Context`): Sampling context
 %
 % Returns:

@@ -4,7 +4,7 @@ function res = enforceQuaternionEncoding(rep, context)
 % See `+replab.+domain.QuaternionTypeMatrices`
 %
 % Args:
-%   rep (`+replab.Rep`): Real representation with `rep.frobeniusSchurIndicator == -1`
+%   rep (`+replab.Rep`): Real representation with ``rep.frobeniusSchurIndicator == -1``
 %   context (`replab.Context`): Sampling context
 %
 % Returns:
