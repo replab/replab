@@ -13,21 +13,21 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>2. Constructing representations with RepLAB &#8212; RepLAB 0.7.0 documentation</title>
+    <title>2. Constructing representations with RepLAB &#8212; RepLAB 0.7.1-SNAP documentation</title>
     <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
-    <script src="../../_static/collapse_admonitions.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="../../_static/js/collapse_helper.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/collapse_helper.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="Part1_Groups.html" title="1. Constructing groups with RepLAB"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.7.1-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Quantum Causal Structures Oxford 2019</a> &#187;</li> 
       </ul>
@@ -79,7 +79,7 @@
   <a href="
     ../../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.7.0.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.7.1-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -217,9 +217,9 @@ div.nboutput.container div.prompt pre {
 /* all prompts */
 div.nbinput.container div.prompt,
 div.nboutput.container div.prompt {
-    min-width: 5.5ex;
-    padding-top: 0.3rem;
-    padding-right: 0.3rem;
+    min-width: 6ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
     text-align: right;
     flex: 0;
 }
@@ -243,6 +243,7 @@ div.nboutput.container div.prompt pre {
 /* input/output area */
 div.nbinput.container div.input_area,
 div.nboutput.container div.output_area {
+    padding: 0.4em;
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
@@ -316,27 +317,6 @@ div.nboutput.container div.output_area.stderr {
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
 
-
-div.nbinput.container div.input_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight].math,
-div.nboutput.container div.output_area.rendered_html,
-div.nboutput.container div.output_area > div.output_javascript,
-div.nboutput.container div.output_area:not(.rendered_html) > img{
-    padding: 0.3rem;
-}
-
-/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
-div.nbinput.container div.input_area > div[class^='highlight'],
-div.nboutput.container div.output_area > div[class^='highlight']{
-    overflow-y: hidden;
-}
-
-/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
-    display: none;
-}
-
 /* Some additional styling taken form the Jupyter notebook CSS */
 div.rendered_html table {
   border: none;
@@ -389,9 +369,10 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /workspace/replab/src/help.m shadows a core library function
+warning: function /home/denis/w/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Loading optim package for Octave...
+OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = &#34;org.octave.OctClassLoader&#34;). To use archived non-system classes, this property must be not be set
 Adding VPI to the path
 Adding MOxUnit to the path
 Adding embedded YALMIP to the path
@@ -626,9 +607,9 @@ isDivisionAlgebraCanonical: []
                  isUnitary: []
                     parent: Unitary tensor representation
           trivialDimension: []
-               basis.(:,1): [-0, -1, 1, -0].&#39;
-               basis.(:,2): [0, 0, 0, 1].&#39;
-               basis.(:,3): [1, 0, 0, 0].&#39;
+               basis.(:,1): [0, -1, 1, 0].&#39;
+               basis.(:,2): [1, -0, -0, -0].&#39;
+               basis.(:,3): [-0, 0, 0, 1].&#39;
                basis.(:,4): [0, 1, 1, 0].&#39;
               component(1): Isotypic component C(1)
               component(2): Isotypic component C(3)
@@ -662,7 +643,7 @@ isDivisionAlgebraCanonical: []
                  isUnitary: []
                     parent: Unitary tensor representation
           trivialDimension: []
-               basis.(:,1): [-0, -1, 1, -0].&#39;
+               basis.(:,1): [0, 1, -1, 0].&#39;
 
 </pre></div></div>
 </div>
@@ -692,8 +673,8 @@ isDivisionAlgebraCanonical: []
                  isUnitary: []
                     parent: Unitary tensor representation
           trivialDimension: []
-               basis.(:,1): [1, -0, -0, -0].&#39;
-               basis.(:,2): [-0, 0, 0, 1].&#39;
+               basis.(:,1): [1, 0, 0, 0].&#39;
+               basis.(:,2): [0, 0, 0, 1].&#39;
                basis.(:,3): [0, 1, 1, 0].&#39;
 
 </pre></div></div>
@@ -758,7 +739,7 @@ isDivisionAlgebraCanonical: []
                  isUnitary: []
                     parent: Unitary tensor representation
           trivialDimension: []
-               basis.(:,1): [1, -0, -0, 1].&#39;
+               basis.(:,1): [1, 0, 0, 1].&#39;
                basis.(:,2): [-0, 1, -0, -0].&#39;
                basis.(:,3): [0, -0, 1, 0].&#39;
                basis.(:,4): [-1, 0, 0, 1].&#39;
@@ -793,7 +774,7 @@ isDivisionAlgebraCanonical: []
                  isUnitary: []
                     parent: Unitary tensor representation
           trivialDimension: 1
-               basis.(:,1): [1, -0, -0, 1].&#39;
+               basis.(:,1): [1, 0, 0, 1].&#39;
 
 </pre></div></div>
 </div>
@@ -823,8 +804,8 @@ isDivisionAlgebraCanonical: []
                  isUnitary: []
                     parent: Unitary tensor representation
           trivialDimension: 0
-               basis.(:,1): [0, 1, 0, 0].&#39;
-               basis.(:,2): [0, 0, 1, 0].&#39;
+               basis.(:,1): [-0, 1, -0, -0].&#39;
+               basis.(:,2): [0, -0, 1, 0].&#39;
                basis.(:,3): [-1, 0, 0, 1].&#39;
 
 </pre></div></div>
@@ -870,7 +851,7 @@ isDivisionAlgebraCanonical: []
         <li class="right" >
           <a href="Part1_Groups.html" title="1. Constructing groups with RepLAB"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.7.1-SNAP documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" >Quantum Causal Structures Oxford 2019</a> &#187;</li> 
       </ul>
