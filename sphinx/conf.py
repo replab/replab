@@ -56,7 +56,7 @@ import jupytext
 nbsphinx_kernel_name = 'octave'
 
 nbsphinx_custom_formats = {
-    '.mm': lambda s: jupytext.reads(s, fmt='m:light'),
+    '.m': lambda s: jupytext.reads(s, fmt='m:light'),
 }
 
 html_sidebars = {
@@ -91,7 +91,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path .
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**.ipynb_checkpoints', '**_source.ipynb']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**.ipynb_checkpoints', '**_source.ipynb', '_src']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'

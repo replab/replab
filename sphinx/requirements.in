@@ -8,3 +8,4 @@ ablog
 jupyter_client
 octave-kernel
 nbsphinx
+jupytext
