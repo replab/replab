@@ -51,6 +51,14 @@ extensions = ['sphinx.ext.autodoc',   # for enumeration of objects stuff
               'texext.math_dollar',   # lightweight LaTeX filter
               'ablog']
 
+import jupytext
+
+nbsphinx_kernel_name = 'octave'
+
+nbsphinx_custom_formats = {
+    '.mm': lambda s: jupytext.reads(s, fmt='m:light'),
+}
+
 html_sidebars = {
     '**': ['logo-text.html', 'globaltoc.html', 'recentposts.html']
 }
