@@ -1,0 +1,413 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Miscellaneous functions/classes &#8212; RepLAB 0.7.1-SNAP documentation</title>
+    <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/collapse_helper.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="List of classes and functions" href="list.html" />
+    <link rel="prev" title="Infrastructure (support code)" href="infrastructure_technical.html" />
+  
+  
+   
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="list.html" title="List of classes and functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="infrastructure_technical.html" title="Infrastructure (support code)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><div class="text-logo">
+  <a href="
+    ../index.html">RepLAB</a>&nbsp;&nbsp;
+  <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.7.1-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
+  <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
+  <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
+</div><div class="sidebar-block">
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications using RepLAB</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="print.html">Pretty printing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base.html">Base object types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="laws.html">Laws</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">Dispatch mechanism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groups.html">Basic group structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep_technical.html">Representations (support code)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep_irreducible.html">Representations (irreducible decomposition support code)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permutations.html">Permutation groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_constructions.html">Abstract group constructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="infrastructure.html">Infrastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="infrastructure_technical.html">Infrastructure (support code)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Miscellaneous functions/classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#partition">Partition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#isnonzeromatrix">isNonZeroMatrix</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="list.html">List of classes and functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../blog/index.html">Blog</a></li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2><a href="../blog.html">Recent Blog Posts</a></h2>
+  </div>
+  <div class="sidebar-toc">
+    <ul>
+      
+      
+      <li class="toctree-l1"><a href="../blog/20200123-RepLAB-website-live.html">26 January - The RepLAB documentation and the infrastructure behind it</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../index.html">Docs</a></li>
+              
+                <li><a href="index.html">Technical Reference</a></li>
+              
+              <li>Miscellaneous functions/classes</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+            
+  <div class="section" id="module-+replab">
+<span id="miscellaneous-functions-classes"></span><h1>Miscellaneous functions/classes<a class="headerlink" href="#module-+replab" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.Partition" title="+replab.Partition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Partition</span></code></a>: describes an unordered partition of the integers <span class="math notranslate nohighlight">\(\{1,...,n\}\)</span>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">settings</span></code>: various global settings such as tolerances,</p></li>
+<li><p><a class="reference internal" href="#+replab.isNonZeroMatrix" title="+replab.isNonZeroMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isNonZeroMatrix</span></code></a>, tests whether a matrix is nonzero up to a given
+tolerance using the 2-norm (singular value), with accelerations
+provided by matrix norm inequalities and cheap norms.</p></li>
+</ul>
+<div class="section" id="partition">
+<h2>Partition<a class="headerlink" href="#partition" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="+replab.Partition">
+<em class="property">class </em><code class="sig-prename descclassname">replab.</code><code class="sig-name descname">Partition</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">blockIndex</em>, <em class="sig-param">start</em>, <em class="sig-param">next</em>, <em class="sig-param">blocks</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="print.html#+replab.Str" title="+replab.Str"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Str</span></code></a></p>
+<p>Represents an unordered partition of the set {1..n} into disjoint subsets</p>
+<div class="collapsed admonition">
+<p class="admonition-title">Class members list</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.Partition.additionalFields" title="+replab.Partition.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Returns the name/value pairs corresponding to additional fields to be printed</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.block" title="+replab.Partition.block"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">block</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.blockIndex" title="+replab.Partition.blockIndex"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">blockIndex</span></code></a> – integer row vector: Index of the block for each element</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.blockSize" title="+replab.Partition.blockSize"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">blockSize</span></code></a> – Returns the size of a partition block</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.blockSizes" title="+replab.Partition.blockSizes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">blockSizes</span></code></a> – Returns the sizes of all blocks</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.blocks" title="+replab.Partition.blocks"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">blocks</span></code></a> – cell array row vector of integer row vector: group elements by partition</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.connectedComponents" title="+replab.Partition.connectedComponents"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">connectedComponents</span></code></a> – Given an adjacency matrix adj, returns the sets of vertices corresponding to connected components</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.connectedComponentsFromEdges" title="+replab.Partition.connectedComponentsFromEdges"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">connectedComponentsFromEdges</span></code></a> – Given list of edges, returns the sets of vertices corresponding to connected components</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.disp" title="+replab.Partition.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.eq" title="+replab.Partition.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.fromBlockIndices" title="+replab.Partition.fromBlockIndices"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromBlockIndices</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.headerStr" title="+replab.Partition.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Tiny single line description of the current object type</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.hiddenFields" title="+replab.Partition.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Returns the names of the fields that are not printed as a row vector</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.longStr" title="+replab.Partition.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.n" title="+replab.Partition.n"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">n</span></code></a> – integer: Domain size</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.nBlocks" title="+replab.Partition.nBlocks"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nBlocks</span></code></a> –</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.next" title="+replab.Partition.next"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">next</span></code></a> – integer row vector: Next index in the same block, or 0 if at the end</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.permutationsOrbits" title="+replab.Partition.permutationsOrbits"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">permutationsOrbits</span></code></a> – Returns the partition of the domain 1…N into orbits</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.restrictedToBlocks" title="+replab.Partition.restrictedToBlocks"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">restrictedToBlocks</span></code></a> – Returns the partition containing only the given blocks</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.shortStr" title="+replab.Partition.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.Partition.start" title="+replab.Partition.start"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">start</span></code></a> – integer row vector: Starting index for each block</p></li>
+</ul>
+</div>
+<div class="collapsed admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="method">
+<dt id="+replab.Partition.additionalFields">
+<code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.additionalFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Partition.block">
+<code class="sig-name descname">block</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.block" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Partition.disp">
+<code class="sig-name descname">disp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Partition.eq">
+<code class="sig-name descname">eq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.eq" title="+replab.Str.eq"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.eq()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Partition.fromBlockIndices">
+<code class="sig-name descname">fromBlockIndices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.fromBlockIndices" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Partition.headerStr">
+<code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.headerStr" title="+replab.Str.headerStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.headerStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Partition.hiddenFields">
+<code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.hiddenFields()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Partition.longStr">
+<code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Partition.nBlocks">
+<code class="sig-name descname">nBlocks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.nBlocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Partition.shortStr">
+<code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="attribute">
+<dt id="+replab.Partition.blockIndex">
+<code class="sig-name descname">blockIndex</code><a class="headerlink" href="#+replab.Partition.blockIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>integer row vector: Index of the block for each element</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.Partition.blocks">
+<code class="sig-name descname">blocks</code><a class="headerlink" href="#+replab.Partition.blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>cell array row vector of integer row vector: group elements by partition</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.Partition.n">
+<code class="sig-name descname">n</code><a class="headerlink" href="#+replab.Partition.n" title="Permalink to this definition">¶</a></dt>
+<dd><p>integer: Domain size</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.Partition.next">
+<code class="sig-name descname">next</code><a class="headerlink" href="#+replab.Partition.next" title="Permalink to this definition">¶</a></dt>
+<dd><p>integer row vector: Next index in the same block, or 0 if at the end</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="+replab.Partition.start">
+<code class="sig-name descname">start</code><a class="headerlink" href="#+replab.Partition.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>integer row vector: Starting index for each block</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Partition.blockSize">
+<code class="sig-name descname">blockSize</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">i</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.blockSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the size of a partition block</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>i</strong> (<em>integer</em>) – Index of the block</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Size of the i-th block in this partition</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Partition.blockSizes">
+<code class="sig-name descname">blockSizes</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.blockSizes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the sizes of all blocks</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>block sizes</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(row integer vector)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="+replab.Partition.connectedComponents">
+<em class="property">static </em><code class="sig-name descname">connectedComponents</code><span class="sig-paren">(</span><em class="sig-param">adjacencyMatrix</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.connectedComponents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given an adjacency matrix adj, returns the sets of vertices corresponding to connected components</p>
+<p>For adj = [0 0 1; 0 0 0; 1 0 0], it returns the partition {[1 3] [2]}</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="+replab.Partition.connectedComponentsFromEdges">
+<em class="property">static </em><code class="sig-name descname">connectedComponentsFromEdges</code><span class="sig-paren">(</span><em class="sig-param">edges</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.connectedComponentsFromEdges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given list of edges, returns the sets of vertices corresponding to connected components</p>
+<p>For edges = [1 3] and n = 3, it returns the partition {[1 3] [2]}</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="+replab.Partition.permutationsOrbits">
+<em class="property">static </em><code class="sig-name descname">permutationsOrbits</code><span class="sig-paren">(</span><em class="sig-param">permutations</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.permutationsOrbits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the partition of the domain 1…N into orbits</p>
+<p>The permutations are a nG x domainSize double matrix</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.Partition.restrictedToBlocks">
+<code class="sig-name descname">restrictedToBlocks</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">selBlocks</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.Partition.restrictedToBlocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the partition containing only the given blocks</p>
+<p>The selected blocks are ordered</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="isnonzeromatrix">
+<h2>isNonZeroMatrix<a class="headerlink" href="#isnonzeromatrix" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="+replab.isNonZeroMatrix">
+<code class="sig-prename descclassname">replab.</code><code class="sig-name descname">isNonZeroMatrix</code><span class="sig-paren">(</span><em class="sig-param">A</em>, <em class="sig-param">tol</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.isNonZeroMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether norm(A, 2) &gt; tol</p>
+</dd></dl>
+
+</div>
+</div>
+
+  <div class="section">
+  
+  
+  </div>
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="infrastructure_technical.html" title="previous chapter (use the left arrow)">Infrastructure (support code)</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="list.html" title="next chapter (use the right arrow)">List of classes and functions</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="list.html" title="List of classes and functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="infrastructure_technical.html" title="Infrastructure (support code)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1-SNAP documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2020, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>
