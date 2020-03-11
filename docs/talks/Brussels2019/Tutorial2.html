@@ -19,15 +19,15 @@
     <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="../../_static/collapse_admonitions.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script type="text/javascript" src="../../_static/js/collapse_helper.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/collapse_helper.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -208,9 +208,9 @@ div.nboutput.container div.prompt pre {
 /* all prompts */
 div.nbinput.container div.prompt,
 div.nboutput.container div.prompt {
-    min-width: 6ex;
-    padding-top: 0.4em;
-    padding-right: 0.4em;
+    min-width: 5.5ex;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
     text-align: right;
     flex: 0;
 }
@@ -234,7 +234,6 @@ div.nboutput.container div.prompt pre {
 /* input/output area */
 div.nbinput.container div.input_area,
 div.nboutput.container div.output_area {
-    padding: 0.4em;
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
@@ -307,6 +306,27 @@ div.nboutput.container div.output_area.stderr {
 
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
 
 /* Some additional styling taken form the Jupyter notebook CSS */
 div.rendered_html table {
@@ -529,15 +549,15 @@ isDivisionAlgebraCanonical: []
 <div class="highlight"><pre>
 g =
 
-   1  -4   5  -3  -2
+   1   4  -5   3   2
 
 ans =
 
    1   0   0   0   0
-   0   0   0   0  -1
-   0   0   0  -1   0
-   0  -1   0   0   0
-   0   0   1   0   0
+   0   0   0   0   1
+   0   0   0   1   0
+   0   1   0   0   0
+   0   0  -1   0   0
 
 </pre></div></div>
 </div>
@@ -569,11 +589,11 @@ isDivisionAlgebraCanonical: []
                  isUnitary: true
                     parent: Orthogonal representation by images
           trivialDimension: []
-               basis.(:,1): [-1, -5.2533e-18, 0, 0, 0].&#39;
-               basis.(:,2): [0, -0.5, -0.5, 0.70711, 0].&#39;
-               basis.(:,3): [0, 0.5, -0.5, 7.0311e-18, -0.70711].&#39;
-               basis.(:,4): [0, 0.5, -0.5, -7.0311e-18, 0.70711].&#39;
-               basis.(:,5): [0, -0.5, -0.5, -0.70711, -1.4062e-17].&#39;
+               basis.(:,1): [1, -1.848e-18, 0, 3.1509e-19, -7.5366e-19].&#39;
+               basis.(:,2): [0, 0.12445, -0.69607, 0.40419, -0.5802].&#39;
+               basis.(:,3): [0, -0.69607, -0.12445, 0.5802, 0.40419].&#39;
+               basis.(:,4): [0, -0.67988, 0.19433, -0.34334, -0.61816].&#39;
+               basis.(:,5): [0, 0.19433, 0.67988, 0.61816, -0.34334].&#39;
               component(1): Isotypic component (harmonized) R(1) (trivial)
               component(2): Isotypic component (harmonized) R(2)
               component(3): Isotypic component (harmonized) R(2)
@@ -606,7 +626,7 @@ isDivisionAlgebraCanonical: []
                  isUnitary: true
                     parent: Orthogonal representation by images
           trivialDimension: 1
-               basis.(:,1): [-1, -5.2533e-18, 0, 0, 0].&#39;
+               basis.(:,1): [1, -1.848e-18, 0, 3.1509e-19, -7.5366e-19].&#39;
 
 </pre></div></div>
 </div>
@@ -629,26 +649,26 @@ isDivisionAlgebraCanonical: []
 <div class="highlight"><pre>
 U =
 
-  -1.00000   0.00000   0.00000   0.00000   0.00000
-  -0.00000  -0.50000   0.50000   0.50000  -0.50000
-   0.00000  -0.50000  -0.50000  -0.50000  -0.50000
-   0.00000   0.70711   0.00000  -0.00000  -0.70711
-   0.00000   0.00000  -0.70711   0.70711  -0.00000
+   1.00000   0.00000   0.00000   0.00000   0.00000
+  -0.00000   0.12445  -0.69607  -0.67988   0.19433
+   0.00000  -0.69607  -0.12445   0.19433   0.67988
+   0.00000   0.40419   0.58020  -0.34334   0.61816
+  -0.00000  -0.58020   0.40419  -0.61816  -0.34334
 
 ans =
 
-   1.00000   0.00000  -0.00000  -0.00000   0.00000
-   0.00000   1.00000   0.00000   0.00000   0.00000
-  -0.00000   0.00000   1.00000   0.00000  -0.00000
-  -0.00000   0.00000   0.00000   1.00000  -0.00000
-   0.00000   0.00000  -0.00000  -0.00000   1.00000
+   1.0000e+00   3.3463e-19   1.1645e-18   1.6141e-18   9.4412e-20
+   3.3463e-19   1.0000e+00   5.5511e-17  -2.2204e-16   1.1102e-16
+   1.1645e-18   5.5511e-17   1.0000e+00  -1.1102e-16   8.3267e-17
+   1.6141e-18  -2.2204e-16  -1.1102e-16   1.0000e+00  -1.3878e-16
+   9.4412e-20   1.1102e-16   8.3267e-17  -1.3878e-16   1.0000e+00
 
 ans =
 
-   0.00000  -0.00000   0.00000  -0.00000   0.00000
-  -0.00000  -1.41421  -0.00000   0.00000  -0.00000
-   0.00000  -0.00000  -1.41421   0.00000   0.00000
-  -0.00000   0.00000   0.00000   1.41421  -0.00000
+   0.00000  -0.00000  -0.00000   0.00000   0.00000
+  -0.00000  -1.41421  -0.00000  -0.00000   0.00000
+  -0.00000  -0.00000  -1.41421  -0.00000   0.00000
+   0.00000  -0.00000  -0.00000   1.41421  -0.00000
    0.00000  -0.00000   0.00000  -0.00000   1.41421
 
 </pre></div></div>
@@ -672,8 +692,7 @@ ans =
 <div class="highlight"><pre>
 
  num. of constraints =  1
- dim. of sdp    var  =  5,   num. of sdp  blk  =  1  1th semidefinite block is actually diagonal
-
+ dim. of sdp    var  =  5,   num. of sdp  blk  =  1
 *******************************************************************
    SDPT3: Infeasible path-following algorithms
 *******************************************************************
@@ -702,7 +721,7 @@ it pstep dstep pinfeas dinfeas  gap      prim-obj      dual-obj    cputime
  rel. dual     &#34;        &#34;       &#34;      = 0.00e+00
  norm(X), norm(y), norm(Z) = 2.0e+00, 7.1e-01, 3.0e+00
  norm(A), norm(b), norm(C) = 3.8e+00, 5.0e+00, 3.2e+00
- Total CPU time (secs)  = 0.10
+ Total CPU time (secs)  = 0.14
  CPU time per iteration = 0.02
  termination code       =  0
  DIMACS: 8.9e-12  0.0e+00  1.4e-07  0.0e+00  1.0e-08  6.3e-08
