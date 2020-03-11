@@ -13,21 +13,21 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Symmetric SDPs &#8212; RepLAB 0.6.8-SNAP documentation</title>
+    <title>Symmetric SDPs &#8212; RepLAB 0.7.0 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    <script type="text/javascript" src="../_static/collapse_admonitions.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script type="text/javascript" src="../_static/js/collapse_helper.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/collapse_helper.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="index.html" title="How to"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">How to</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.8-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.7.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -215,9 +215,9 @@ div.nboutput.container div.prompt pre {
 /* all prompts */
 div.nbinput.container div.prompt,
 div.nboutput.container div.prompt {
-    min-width: 6ex;
-    padding-top: 0.4em;
-    padding-right: 0.4em;
+    min-width: 5.5ex;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
     text-align: right;
     flex: 0;
 }
@@ -241,7 +241,6 @@ div.nboutput.container div.prompt pre {
 /* input/output area */
 div.nbinput.container div.input_area,
 div.nboutput.container div.output_area {
-    padding: 0.4em;
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
@@ -315,6 +314,27 @@ div.nboutput.container div.output_area.stderr {
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
 
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
 /* Some additional styling taken form the Jupyter notebook CSS */
 div.rendered_html table {
   border: none;
@@ -370,10 +390,9 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
+warning: function /workspace/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Loading optim package for Octave...
-OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = &#34;org.octave.OctClassLoader&#34;). To use archived non-system classes, this property must be not be set
 Adding VPI to the path
 Adding MOxUnit to the path
 Adding embedded YALMIP to the path
@@ -405,7 +424,7 @@ Adding MOcov to the path
 <h3>Symmetric formulation<a class="headerlink" href="#Symmetric-formulation" title="Permalink to this headline">¶</a></h3>
 <p>Using <em>RepLAB</em>, we can solve this problem as follows.</p>
 <p>We start by defining a matrix which satisfies the desired symmetry</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
@@ -414,6 +433,14 @@ Adding MOcov to the path
 <span class="n">MSym</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">CommutantVar</span><span class="p">.</span><span class="n">fromPermutations</span><span class="p">({</span><span class="n">permutation</span><span class="p">},</span> <span class="s">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s">&#39;real&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+warning: -largeArrayDims and -compatibleArrayDims are accepted for compatibility, but ignored
+</pre></div></div>
 </div>
 <p>We can then perform the optimization with:</p>
 <div class="nbinput docutils container">
@@ -432,11 +459,12 @@ Adding MOcov to the path
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
+panic: Segmentation fault -- stopping myself...
 MSymOpt =
 
-   0.33333  -0.16667  -0.16667
-  -0.16667   0.33333  -0.16667
-  -0.16667  -0.16667   0.33333
+   NaN   NaN   NaN
+   NaN   NaN   NaN
+   NaN   NaN   NaN
 
 </pre></div></div>
 </div>
@@ -708,7 +736,7 @@ ans =
 |   ID|                    Constraint|   Coefficient range|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |   #1|   Element-wise inequality 1x1|              2 to 2|
-|   #2|         Matrix inequality 2x2|     2.7756e-17 to 2|
+|   #2|         Matrix inequality 2x2|      7.494e-16 to 2|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 </pre></div></div>
 </div>
@@ -738,16 +766,16 @@ diagnostic =
   scalar structure containing the fields:
 
     yalmipversion = 20190425
-    yalmiptime =  0.10438
-    solvertime =  0.54853
-    info = Successfully solved (SDPT3-4)
-    problem = 0
+    yalmiptime = NaN
+    solvertime = NaN
+    info = Unknown problem in solver (Turn on &#39;debug&#39; in sdpsettings) (=: nonconformant arguments (op1 is 6x1, op2 is 0x1))
+    problem =  9
 
 MOpt =
 
-   0.33333  -0.16667  -0.16667
-  -0.16667   0.33333  -0.16667
-  -0.16667  -0.16667   0.33333
+   NaN   NaN   NaN
+   NaN   NaN   NaN
+   NaN   NaN   NaN
 
 </pre></div></div>
 </div>
@@ -798,7 +826,6 @@ MOpt =
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Linear matrix variable 3x3 (symmetric, real, 6 variables)
-Eigenvalues between [-2.2285e-09,0.5]
 Coeffiecient range: 1 to 1
 </pre></div></div>
 </div>
@@ -932,7 +959,7 @@ multiplicities: [1, 1]
         <li class="right" >
           <a href="index.html" title="How to"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.8-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >How to</a> &#187;</li> 
       </ul>
     </div>
