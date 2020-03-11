@@ -380,7 +380,7 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
+warning: function /workspace/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Loading optim package for Octave...
 Adding VPI to the path
@@ -420,14 +420,14 @@ Adding MOcov to the path
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-ans =  2.8284
+ans = NaN
 </pre></div></div>
 </div>
 <p>To help with symmetrization, we’ll use an equivalent form of the constraint X, and check the result.</p>
-<p>Now, we want to find a change of basis that brings X into a block-diagonal form. This is easier to check on the basis matrices <code class="docutils literal notranslate"><span class="pre">C</span></code> and <code class="docutils literal notranslate"><span class="pre">A</span></code>, i.e. we want to find <code class="docutils literal notranslate"><span class="pre">U</span></code> such that <code class="docutils literal notranslate"><span class="pre">U*C*U'</span></code> and <code class="docutils literal notranslate"><span class="pre">U*A*U'</span></code> are block-diagonal. Let us use RepLAB for that. First, remark that the moment matrix is invariant under the following signed permutations:</p>
-<p>$:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vec{v}</span></code> = <span class="math">\left`( 1, A_0, A_1, B_0, B_1 :nbsphinx-math:</span>right`) <span class="math">\rightarrow  `:nbsphinx-math:</span>left`( 1, B_0, B_1, A_0, A_1 <span class="math">\right</span>) $</p>
-<p>$:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vec{v}</span></code> = <span class="math">\left`( 1, A_0, A_1, B_0, B_1 :nbsphinx-math:</span>right`) <span class="math">\rightarrow  `:nbsphinx-math:</span>left`( 1, -A_0, -A_1, -B_0, -B_1 <span class="math">\right</span>) $</p>
-<p>$:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vec{v}</span></code> = <span class="math">\left`( 1, A_0, A_1, B_0, B_1 :nbsphinx-math:</span>right`) <span class="math">\rightarrow  `:nbsphinx-math:</span>left`( 1, A_1, A_0, B_0, -B_1 <span class="math">\right</span>) $</p>
+<p>Now, we want to find a change of basis that brings X into a block-diagonal form. This is easier to check on the basis matrices <code class="docutils literal notranslate"><span class="pre">C</span></code> and <code class="docutils literal notranslate"><span class="pre">A</span></code>, i.e. we want to find <code class="docutils literal notranslate"><span class="pre">U</span></code> such that <code class="docutils literal notranslate"><span class="pre">U*C*U'</span></code> and <code class="docutils literal notranslate"><span class="pre">U*A*U'</span></code> are block-diagonal. Let us use RepLAB for that. First, remark that the moment matrix is invariant under the following signed permutations:</p>
+<p>$:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vec{v}</span></code> = <span class="math">\left`( 1, A\_0, A\_1, B\_0, B\_1 :nbsphinx-math:</span>right`) <span class="math">\rightarrow  `:nbsphinx-math:</span>left`( 1, B_0, B_1, A_0, A_1 <span class="math">\right</span>) $</p>
+<p>$:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vec{v}</span></code> = <span class="math">\left`( 1, A\_0, A\_1, B\_0, B\_1 :nbsphinx-math:</span>right`) <span class="math">\rightarrow  `:nbsphinx-math:</span>left`( 1, -A_0, -A_1, -B_0, -B_1 <span class="math">\right</span>) $</p>
+<p>$:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><span class="pre">vec{v}</span></code> = <span class="math">\left`( 1, A\_0, A\_1, B\_0, B\_1 :nbsphinx-math:</span>right`) <span class="math">\rightarrow  `:nbsphinx-math:</span>left`( 1, A_1, A_0, B_0, -B_1 <span class="math">\right</span>) $</p>
 <p>We now show how to use RepLAB to find the change of basis for the symmetry group that includes only the first symmetry.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
@@ -548,15 +548,15 @@ isDivisionAlgebraCanonical: []
 <div class="highlight"><pre>
 g =
 
-   1  -4   5  -3  -2
+   1  -2   3  -5  -4
 
 ans =
 
    1   0   0   0   0
-   0   0   0   0  -1
-   0   0   0  -1   0
    0  -1   0   0   0
    0   0   1   0   0
+   0   0   0   0  -1
+   0   0   0  -1   0
 
 </pre></div></div>
 </div>
@@ -588,11 +588,11 @@ isDivisionAlgebraCanonical: []
                  isUnitary: true
                     parent: Orthogonal representation by images
           trivialDimension: []
-               basis.(:,1): [-1, 4.4485e-18, 0, -3.8583e-18, -5.1335e-21].&#39;
-               basis.(:,2): [0, 0.5, 0.5, -0.70711, 0].&#39;
-               basis.(:,3): [0, 0.5, -0.5, -2.9513e-17, -0.70711].&#39;
-               basis.(:,4): [0, 0.5, -0.5, -2.9513e-17, 0.70711].&#39;
-               basis.(:,5): [0, 0.5, 0.5, 0.70711, 0].&#39;
+               basis.(:,1): [1, -1.4207e-18, 0, 2.9938e-18, 4.0608e-19].&#39;
+               basis.(:,2): [0, -0.31163, 0.63474, 0.22847, -0.66918].&#39;
+               basis.(:,3): [0, 0.63474, 0.31163, 0.66918, 0.22847].&#39;
+               basis.(:,4): [0, -0.59206, 0.38661, 0.14528, 0.69202].&#39;
+               basis.(:,5): [0, -0.38661, -0.59206, 0.69202, -0.14528].&#39;
               component(1): Isotypic component (harmonized) R(1) (trivial)
               component(2): Isotypic component (harmonized) R(2)
               component(3): Isotypic component (harmonized) R(2)
@@ -625,7 +625,7 @@ isDivisionAlgebraCanonical: []
                  isUnitary: true
                     parent: Orthogonal representation by images
           trivialDimension: 1
-               basis.(:,1): [-1, 4.4485e-18, 0, -3.8583e-18, -5.1335e-21].&#39;
+               basis.(:,1): [1, -1.4207e-18, 0, 2.9938e-18, 4.0608e-19].&#39;
 
 </pre></div></div>
 </div>
@@ -648,27 +648,27 @@ isDivisionAlgebraCanonical: []
 <div class="highlight"><pre>
 U =
 
-  -1.00000   0.00000   0.00000   0.00000   0.00000
-   0.00000   0.50000   0.50000   0.50000   0.50000
-   0.00000   0.50000  -0.50000  -0.50000   0.50000
-  -0.00000  -0.70711  -0.00000  -0.00000   0.70711
-  -0.00000   0.00000  -0.70711   0.70711   0.00000
+   1.00000   0.00000   0.00000   0.00000   0.00000
+  -0.00000  -0.31163   0.63474  -0.59206  -0.38661
+   0.00000   0.63474   0.31163   0.38661  -0.59206
+   0.00000   0.22847   0.66918   0.14528   0.69202
+   0.00000  -0.66918   0.22847   0.69202  -0.14528
 
 ans =
 
-   1.0000e+00   4.9525e-18   2.2279e-18   2.2206e-18  -5.0400e-19
-   4.9525e-18   1.0000e+00  -9.0153e-17  -9.0153e-17  -1.2387e-16
-   2.2279e-18  -9.0153e-17   1.0000e+00   1.2117e-16   1.1791e-16
-   2.2206e-18  -9.0153e-17   1.2117e-16   1.0000e+00   1.1791e-16
-  -5.0400e-19  -1.2387e-16   1.1791e-16   1.1791e-16   1.0000e+00
+   1.0000e+00   8.5497e-19   1.1944e-18   1.5571e-18   2.5620e-18
+   8.5497e-19   1.0000e+00   3.7031e-18  -1.5730e-16  -1.2659e-16
+   1.1944e-18   3.7031e-18   1.0000e+00  -8.8895e-18   1.2365e-17
+   1.5571e-18  -1.5730e-16  -8.8895e-18   1.0000e+00  -8.6679e-18
+   2.5620e-18  -1.2659e-16   1.2365e-17  -8.6679e-18   1.0000e+00
 
 ans =
 
-  -0.00000  -0.00000  -0.00000   0.00000  -0.00000
-  -0.00000  -1.41421   0.00000  -0.00000   0.00000
-  -0.00000   0.00000  -1.41421  -0.00000  -0.00000
-   0.00000  -0.00000  -0.00000   1.41421   0.00000
-  -0.00000   0.00000  -0.00000   0.00000   1.41421
+  -9.6602e-36   1.2091e-18   1.6891e-18  -2.2020e-18  -3.6232e-18
+   1.2091e-18   1.4142e+00   5.0924e-17  -4.2516e-16  -3.7420e-16
+   1.6891e-18   4.3752e-17   1.4142e+00  -2.8723e-17   9.5131e-17
+  -2.2020e-18  -4.3356e-16  -1.3871e-16  -1.4142e+00   9.2615e-17
+  -3.6232e-18  -4.1594e-16   1.2396e-16  -1.3807e-17  -1.4142e+00
 
 </pre></div></div>
 </div>
@@ -689,47 +689,10 @@ ans =
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-
- num. of constraints =  1
- dim. of sdp    var  =  5,   num. of sdp  blk  =  1  1th semidefinite block is actually diagonal
-
-*******************************************************************
-   SDPT3: Infeasible path-following algorithms
-*******************************************************************
- version  predcorr  gam  expon  scale_data
-   HKM      1      0.000   1        0
-it pstep dstep pinfeas dinfeas  gap      prim-obj      dual-obj    cputime
--------------------------------------------------------------------
- 0|0.000|0.000|8.0e-01|6.2e+00|5.0e+02| 5.000000e+01  0.000000e+00| 0:0:00| chol  1  1
- 1|1.000|1.000|6.5e-08|6.9e-02|4.3e+01| 3.984640e+01  4.400004e-01| 0:0:00| chol  1  1
- 2|0.933|1.000|1.5e-07|6.9e-03|2.9e+00| 3.700414e+00  8.665599e-01| 0:0:00| chol  1  1
- 3|1.000|0.949|3.5e-08|1.0e-03|2.8e-01| 3.024905e+00  2.752468e+00| 0:0:00| chol  1  1
- 4|0.987|0.988|1.1e-08|8.0e-05|3.4e-03| 2.830875e+00  2.827762e+00| 0:0:00| chol  1  1
- 5|0.989|0.989|3.5e-10|7.7e-06|3.8e-05| 2.828454e+00  2.828448e+00| 0:0:00| chol  1  1
- 6|0.989|0.989|8.9e-12|8.5e-08|4.2e-07| 2.828427e+00  2.828427e+00| 0:0:00|
-  stop: max(relative gap, infeasibilities) &lt; 1.00e-07
--------------------------------------------------------------------
- number of iterations   =  6
- primal objective value =  2.82842742e+00
- dual   objective value =  2.82842735e+00
- gap := trace(XZ)       = 4.17e-07
- relative gap           = 6.26e-08
- actual relative gap    = 1.04e-08
- rel. primal infeas (scaled problem)   = 8.94e-12
- rel. dual     &#34;        &#34;       &#34;      = 8.49e-08
- rel. primal infeas (unscaled problem) = 0.00e+00
- rel. dual     &#34;        &#34;       &#34;      = 0.00e+00
- norm(X), norm(y), norm(Z) = 2.0e+00, 7.1e-01, 3.0e+00
- norm(A), norm(b), norm(C) = 3.8e+00, 5.0e+00, 3.2e+00
- Total CPU time (secs)  = 0.05
- CPU time per iteration = 0.01
- termination code       =  0
- DIMACS: 8.9e-12  0.0e+00  1.4e-07  0.0e+00  1.0e-08  6.3e-08
--------------------------------------------------------------------
-ans =  2.8284
+ans = NaN
 </pre></div></div>
 </div>
-<p>As an exercice, recover an algebraic basis from <code class="docutils literal notranslate"><span class="pre">U</span></code>, guess the form of the semidefinite program when fully block-diagonal (i.e. for the full group of CHSH symmetries). <strong>Remark that now the problem can be solved by hand to recover the</strong> <span class="math notranslate nohighlight">\(2\sqrt{2}\)</span> <strong>bound, as the SDP matrix is fully diagonal, and thus corresponds to linear inequalities.</strong></p>
+<p>As an exercice, recover an algebraic basis from <code class="docutils literal notranslate"><span class="pre">U</span></code>, guess the form of the semidefinite program when fully block-diagonal (i.e. for the full group of CHSH symmetries). <strong>Remark that now the problem can be solved by hand to recover the</strong> <span class="math notranslate nohighlight">\(2\sqrt{2}\)</span> <strong>bound, as the SDP matrix is fully diagonal, and thus corresponds to linear inequalities.</strong></p>
 </div>
 
   <div class="section">

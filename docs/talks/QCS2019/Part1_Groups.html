@@ -391,7 +391,7 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
+warning: function /workspace/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Loading optim package for Octave...
 Adding VPI to the path
@@ -496,7 +496,16 @@ ans =
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: can&#39;t perform indexing operations for user-defined function type
+GAlice =
+
+replab.PermutationSubgroup
+  domainSize: 4
+    identity: [1, 2, 3, 4]
+      parent: Permutations acting on 4 elements
+generator(1): [3, 4, 1, 2]
+generator(2): [2, 1, 3, 4]
+generator(3): [1, 2, 4, 3]
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -513,7 +522,8 @@ error: can&#39;t perform indexing operations for user-defined function type
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;GAlice&#39; undefined near line 1 column 1
+ans =
+    8
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -530,7 +540,18 @@ error: &#39;GAlice&#39; undefined near line 1 column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;GAlice&#39; undefined near line 1 column 1
+ans =
+
+Indexed family of 8 elements
+1 = [1, 2, 3, 4]
+2 = [1, 2, 4, 3]
+3 = [2, 1, 3, 4]
+4 = [2, 1, 4, 3]
+5 = [3, 4, 1, 2]
+6 = [3, 4, 2, 1]
+7 = [4, 3, 1, 2]
+8 = [4, 3, 2, 1]
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -548,8 +569,8 @@ error: &#39;GAlice&#39; undefined near line 1 column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: can&#39;t perform indexing operations for user-defined function type
-error: &#39;GAlice1&#39; undefined near line 1 column 1
+ans =
+    8
 </pre></div></div>
 </div>
 </div>

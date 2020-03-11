@@ -380,7 +380,7 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
+warning: function /workspace/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Loading optim package for Octave...
 Adding VPI to the path
@@ -427,7 +427,7 @@ Adding MOcov to the path
 </div>
 </div>
 <p>To identify the subspaces which are invariant under this group, we decompose the representation:</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
@@ -435,6 +435,29 @@ Adding MOcov to the path
 <span></span><span class="n">dec</span> <span class="p">=</span> <span class="n">U2TensorRep</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span><span class="p">;</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+error: horizontal dimensions mismatch (2x2 vs 1x1)
+error: called from
+    project at line 99 column 53
+    sampleWithError at line 99 column 20
+    sampleInContext at line 139 column 28
+    sampleInContext at line 38 column 32
+    splitTrivialComponent at line 7 column 7
+    dispatchDefaults&gt;@&lt;anonymous&gt; at line 40 column 29
+    dispatch at line 85 column 22
+    split at line 24 column 9
+    splitIntoIrreducibles at line 577 column 25
+    decompositionUsingSplit at line 7 column 10
+    dispatchDefaults&gt;@&lt;anonymous&gt; at line 31 column 28
+    dispatch at line 85 column 22
+    decomposition at line 16 column 9
+    decomposition at line 214 column 37
+</pre></div></div>
 </div>
 <p>The decomposition has</p>
 <div class="nbinput docutils container">
@@ -451,7 +474,7 @@ Adding MOcov to the path
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-ans =  2
+error: &#39;dec&#39; undefined near line 1 column 1
 </pre></div></div>
 </div>
 <p>components, of dimension</p>
@@ -469,7 +492,7 @@ ans =  2
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-ans =  1
+error: &#39;dec&#39; undefined near line 1 column 1
 </pre></div></div>
 </div>
 <p>and</p>
@@ -487,7 +510,7 @@ ans =  1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-ans =  3
+error: &#39;dec&#39; undefined near line 1 column 1
 </pre></div></div>
 </div>
 <p>These are the antisymmetric and symmetric subspaces respectively. The change of basis into the first component identifies the antisymetric subspace, also known as the <em>singlet state</em>:</p>
@@ -506,20 +529,8 @@ ans =  3
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-singletBasis =
-
-  -0
-   1
-  -1
-  -0
-
-rest =
-
-   0   1   0
-   0   0   1
-   0   0   1
-   1   0   0
-
+error: &#39;dec&#39; undefined near line 1 column 16
+error: &#39;dec&#39; undefined near line 1 column 8
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">

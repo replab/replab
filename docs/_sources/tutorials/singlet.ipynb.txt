@@ -33,7 +33,7 @@
      "output_type": "stream",
      "text": [
       "Adding RepLAB to the path\r\n",
-      "warning: function /home/denis/w/replab/src/help.m shadows a core library function\r\n",
+      "warning: function /workspace/replab/src/help.m shadows a core library function\r\n",
       "Adding RepLAB package to the path\r\n",
       "Loading optim package for Octave...\r\n",
       "Adding VPI to the path\r\n",
@@ -113,7 +113,30 @@
    "cell_type": "code",
    "execution_count": 5,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "error: horizontal dimensions mismatch (2x2 vs 1x1)\r\n",
+      "error: called from\r\n",
+      "    project at line 99 column 53\r\n",
+      "    sampleWithError at line 99 column 20\r\n",
+      "    sampleInContext at line 139 column 28\r\n",
+      "    sampleInContext at line 38 column 32\r\n",
+      "    splitTrivialComponent at line 7 column 7\r\n",
+      "    dispatchDefaults>@<anonymous> at line 40 column 29\r\n",
+      "    dispatch at line 85 column 22\r\n",
+      "    split at line 24 column 9\r\n",
+      "    splitIntoIrreducibles at line 577 column 25\r\n",
+      "    decompositionUsingSplit at line 7 column 10\r\n",
+      "    dispatchDefaults>@<anonymous> at line 31 column 28\r\n",
+      "    dispatch at line 85 column 22\r\n",
+      "    decomposition at line 16 column 9\r\n",
+      "    decomposition at line 214 column 37\r\n"
+     ]
+    }
+   ],
    "source": [
     "dec = U2TensorRep.decomposition.nice;"
    ]
@@ -134,7 +157,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "ans =  2\r\n"
+      "error: 'dec' undefined near line 1 column 1\r\n"
      ]
     }
    ],
@@ -158,7 +181,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "ans =  1\r\n"
+      "error: 'dec' undefined near line 1 column 1\r\n"
      ]
     }
    ],
@@ -182,7 +205,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "ans =  3\r\n"
+      "error: 'dec' undefined near line 1 column 1\r\n"
      ]
     }
    ],
@@ -207,20 +230,8 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "singletBasis =\r\n",
-      "\r\n",
-      "  -0\r\n",
-      "   1\r\n",
-      "  -1\r\n",
-      "  -0\r\n",
-      "\r\n",
-      "rest =\r\n",
-      "\r\n",
-      "   0   1   0\r\n",
-      "   0   0   1\r\n",
-      "   0   0   1\r\n",
-      "   1   0   0\r\n",
-      "\r\n"
+      "error: 'dec' undefined near line 1 column 16\r\n",
+      "error: 'dec' undefined near line 1 column 8\r\n"
      ]
     }
    ],
@@ -269,7 +280,7 @@
    ],
    "mimetype": "text/x-octave",
    "name": "octave",
-   "version": "4.4.1"
+   "version": "4.2.2"
   }
  },
  "nbformat": 4,

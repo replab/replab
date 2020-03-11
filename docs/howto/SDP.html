@@ -390,7 +390,7 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
+warning: function /workspace/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Loading optim package for Octave...
 Adding VPI to the path
@@ -419,12 +419,12 @@ Adding MOcov to the path
 </div>
 <div class="section" id="Formulating-a-symmetric-SDP">
 <h2>Formulating a symmetric SDP<a class="headerlink" href="#Formulating-a-symmetric-SDP" title="Permalink to this headline">¶</a></h2>
-<p>To illustrate the usage of <em>RepLAB</em> for symmetric SDPs, we consider a simple example involving a 3x3 matrix <span class="math notranslate nohighlight">\(M\)</span> with trace 1 that is symmetric under cyclic permutation of its indices, i.e. it satisfies <span class="math notranslate nohighlight">\(M([2\ 3\ 1], [2\ 3\ 1]) = M\)</span>. We ask what is the smallest value that the off-diagonal element <span class="math notranslate nohighlight">\(M(1,2)\)</span> can take if this matrix <span class="math notranslate nohighlight">\(M\)</span> has only positive eigenvalues.</p>
+<p>To illustrate the usage of <em>RepLAB</em> for symmetric SDPs, we consider a simple example involving a 3x3 matrix <span class="math notranslate nohighlight">\(M\)</span> with trace 1 that is symmetric under cyclic permutation of its indices, i.e. it satisfies <span class="math notranslate nohighlight">\(M([2\ 3\ 1], [2\ 3\ 1]) = M\)</span>. We ask what is the smallest value that the off-diagonal element <span class="math notranslate nohighlight">\(M(1,2)\)</span> can take if this matrix <span class="math notranslate nohighlight">\(M\)</span> has only positive eigenvalues.</p>
 <div class="section" id="Symmetric-formulation">
 <h3>Symmetric formulation<a class="headerlink" href="#Symmetric-formulation" title="Permalink to this headline">¶</a></h3>
 <p>Using <em>RepLAB</em>, we can solve this problem as follows.</p>
 <p>We start by defining a matrix which satisfies the desired symmetry</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
@@ -433,6 +433,14 @@ Adding MOcov to the path
 <span class="n">MSym</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">CommutantVar</span><span class="p">.</span><span class="n">fromPermutations</span><span class="p">({</span><span class="n">permutation</span><span class="p">},</span> <span class="s">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s">&#39;real&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+warning: -largeArrayDims and -compatibleArrayDims are accepted for compatibility, but ignored
+</pre></div></div>
 </div>
 <p>We can then perform the optimization with:</p>
 <div class="nbinput docutils container">
@@ -451,11 +459,12 @@ Adding MOcov to the path
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
+panic: Segmentation fault -- stopping myself...
 MSymOpt =
 
-   0.33333  -0.16667  -0.16667
-  -0.16667   0.33333  -0.16667
-  -0.16667  -0.16667   0.33333
+   NaN   NaN   NaN
+   NaN   NaN   NaN
+   NaN   NaN   NaN
 
 </pre></div></div>
 </div>
@@ -727,7 +736,7 @@ ans =
 |   ID|                    Constraint|   Coefficient range|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |   #1|   Element-wise inequality 1x1|              2 to 2|
-|   #2|         Matrix inequality 2x2|     1.3878e-16 to 2|
+|   #2|         Matrix inequality 2x2|      7.494e-16 to 2|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 </pre></div></div>
 </div>
@@ -757,16 +766,16 @@ diagnostic =
   scalar structure containing the fields:
 
     yalmipversion = 20190425
-    yalmiptime =  0.063449
-    solvertime =  0.34002
-    info = Successfully solved (SDPT3-4)
-    problem = 0
+    yalmiptime = NaN
+    solvertime = NaN
+    info = Unknown problem in solver (Turn on &#39;debug&#39; in sdpsettings) (=: nonconformant arguments (op1 is 6x1, op2 is 0x1))
+    problem =  9
 
 MOpt =
 
-   0.33333  -0.16667  -0.16667
-  -0.16667   0.33333  -0.16667
-  -0.16667  -0.16667   0.33333
+   NaN   NaN   NaN
+   NaN   NaN   NaN
+   NaN   NaN   NaN
 
 </pre></div></div>
 </div>
@@ -776,9 +785,9 @@ MOpt =
 <p>The symmetric formulation of the above problem involves fewer variables and simpler constraints, as summarized in the following table:</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 56%" />
-<col style="width: 15%" />
-<col style="width: 28%" />
+<col style="width: 51%" />
+<col style="width: 20%" />
+<col style="width: 29%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Formulation:</p></th>
@@ -817,7 +826,6 @@ MOpt =
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Linear matrix variable 3x3 (symmetric, real, 6 variables)
-Eigenvalues between [-2.2285e-09,0.5]
 Coeffiecient range: 1 to 1
 </pre></div></div>
 </div>

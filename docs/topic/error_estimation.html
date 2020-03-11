@@ -378,7 +378,7 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
+warning: function /workspace/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Loading optim package for Octave...
 Adding VPI to the path
@@ -400,7 +400,7 @@ Adding MOcov to the path
 <div class="section" id="For-representations-over-compact-groups">
 <h2>For representations over compact groups<a class="headerlink" href="#For-representations-over-compact-groups" title="Permalink to this headline">¶</a></h2>
 <p>We’ll explain our process on the representation <span class="math notranslate nohighlight">\(U \otimes U \otimes U\)</span> where <span class="math notranslate nohighlight">\(U\)</span> is the unitary group of dimension 3.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
@@ -409,14 +409,6 @@ Adding MOcov to the path
 <span class="n">rep</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">U</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="n">definingRep</span><span class="p">.</span><span class="n">tensorPower</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-error: can&#39;t perform indexing operations for user-defined function type
-</pre></div></div>
 </div>
 <p>To decompose that representation, we need to take generic samples from the commutant algebra. This is achieved by projecting a random matrix on the invariant subspace using an iterative algorithm. <span class="math notranslate nohighlight">\(X_0\)</span> is that random initial matrix, and then our iteration is:</p>
 <div class="math notranslate nohighlight">
@@ -433,7 +425,7 @@ becomes comparable to the noise floor <span class="math notranslate nohighlight"
 <p>Our convergence criteria is as follows:</p>
 <ul class="simple">
 <li><p>The fit must be nondegenerate; in particular, there are sufficiently many data points to estimate the noise floor (which cannot be estimated well until the floating point noise effects are observed).</p></li>
-<li><p>We check that the 5% confidence interval for the estimation of the noise floor value represents a deviation of less than an order of magnitude (i.e. a factor 10).</p></li>
+<li><p>We check that the 5% confidence interval for the estimation of the noise floor value represents a deviation of less than an order of magnitude (i.e. a factor 10).</p></li>
 <li><p>If the two conditions above are satisfied, we compute the crossing point <span class="math notranslate nohighlight">\(\xi\)</span>. We proceed with the next check if the current iteration <span class="math notranslate nohighlight">\(i \ge \xi + 10\)</span>.</p></li>
 <li><p>The final test for convergence is that the errors <span class="math notranslate nohighlight">\(\Delta_{i-10}, \ldots, \Delta_i\)</span> are all within a factor <span class="math notranslate nohighlight">\(10\)</span> of the estimated noise floor. We then return <span class="math notranslate nohighlight">\(10 \nu\)</span> as an error estimate.</p></li>
 </ul>
@@ -451,7 +443,11 @@ becomes comparable to the noise floor <span class="math notranslate nohighlight"
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;rep&#39; undefined near line 1 column 1
+error: horizontal dimensions mismatch (2x2 vs 1x1)
+error: called from
+    project at line 99 column 53
+    sampleWithError at line 99 column 20
+    sample at line 186 column 15
 </pre></div></div>
 </div>
 </div>

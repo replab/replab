@@ -389,7 +389,7 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
+warning: function /workspace/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Loading optim package for Octave...
 Adding VPI to the path
@@ -418,7 +418,15 @@ Adding MOcov to the path
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: can&#39;t perform indexing operations for user-defined function type
+GAlice =
+
+replab.PermutationSubgroup
+  domainSize: 4
+    identity: [1, 2, 3, 4]
+      parent: Permutations acting on 4 elements
+generator(1): [3, 4, 1, 2]
+generator(2): [2, 1, 3, 4]
+
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -437,7 +445,21 @@ error: can&#39;t perform indexing operations for user-defined function type
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;GAlice&#39; undefined near line 1 column 7
+rho =
+
+Orthogonal representation by images
+                 dimension: 4
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+    inverseImages_internal: 1 x 2 cell
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+        images_internal{1}: [0, 0, 1, 0; 0, 0, 0, 1; 1, 0, 0, 0; 0, 1, 0, 0]
+        images_internal{2}: [0, 1, 0, 0; 1, 0, 0, 0; 0, 0, 1, 0; 0, 0, 0, 1]
+
 </pre></div></div>
 </div>
 <p>We now verify that <code class="docutils literal notranslate"><span class="pre">rho</span></code> is a legitimate representation.</p>
@@ -455,7 +477,11 @@ error: &#39;GAlice&#39; undefined near line 1 column 7
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;rho&#39; undefined near line 1 column 16
+Checking commutes with commutant algebra...
+Checking respects division algebra...
+Checking asGroupHomomorphism-&gt;composition...
+Checking asGroupHomomorphism-&gt;identity...
+Checking asGroupHomomorphism-&gt;inverse...
 </pre></div></div>
 </div>
 <p>We also define and verify the other representation <code class="docutils literal notranslate"><span class="pre">sigma</span></code>.</p>
@@ -475,7 +501,21 @@ error: &#39;rho&#39; undefined near line 1 column 16
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;GAlice&#39; undefined near line 1 column 9
+sigma =
+
+Orthogonal representation by images
+                 dimension: 4
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+    inverseImages_internal: 1 x 2 cell
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+        images_internal{1}: [1, 0, 0, 0; 0, 0, 1, 0; 0, 1, 0, 0; 0, 0, 0, 1]
+        images_internal{2}: [0, 0, 1, 0; 0, 0, 0, 1; 1, 0, 0, 0; 0, 1, 0, 0]
+
 </pre></div></div>
 </div>
 </div>
@@ -587,8 +627,8 @@ isDivisionAlgebraCanonical: []
                     parent: Unitary tensor representation
           trivialDimension: []
                basis.(:,1): [-0, -1, 1, -0].&#39;
-               basis.(:,2): [-0, -0, -0, 1].&#39;
-               basis.(:,3): [1, 0, 0, -0].&#39;
+               basis.(:,2): [0, 0, 0, 1].&#39;
+               basis.(:,3): [1, 0, 0, 0].&#39;
                basis.(:,4): [0, 1, 1, 0].&#39;
               component(1): Isotypic component C(1)
               component(2): Isotypic component C(3)
@@ -622,7 +662,7 @@ isDivisionAlgebraCanonical: []
                  isUnitary: []
                     parent: Unitary tensor representation
           trivialDimension: []
-               basis.(:,1): [-0, 1, -1, -0].&#39;
+               basis.(:,1): [-0, -1, 1, -0].&#39;
 
 </pre></div></div>
 </div>
@@ -652,8 +692,8 @@ isDivisionAlgebraCanonical: []
                  isUnitary: []
                     parent: Unitary tensor representation
           trivialDimension: []
-               basis.(:,1): [1, 0, 0, 0].&#39;
-               basis.(:,2): [0, 0, 0, 1].&#39;
+               basis.(:,1): [1, -0, -0, -0].&#39;
+               basis.(:,2): [-0, 0, 0, 1].&#39;
                basis.(:,3): [0, 1, 1, 0].&#39;
 
 </pre></div></div>
@@ -718,9 +758,9 @@ isDivisionAlgebraCanonical: []
                  isUnitary: []
                     parent: Unitary tensor representation
           trivialDimension: []
-               basis.(:,1): [1, 0, 0, 1].&#39;
-               basis.(:,2): [0, 1, 0, 0].&#39;
-               basis.(:,3): [0, 0, 1, 0].&#39;
+               basis.(:,1): [1, -0, -0, 1].&#39;
+               basis.(:,2): [-0, 1, -0, -0].&#39;
+               basis.(:,3): [0, -0, 1, 0].&#39;
                basis.(:,4): [-1, 0, 0, 1].&#39;
               component(1): Isotypic component (harmonized) C(1) (trivial)
               component(2): Isotypic component C(3)
@@ -753,7 +793,7 @@ isDivisionAlgebraCanonical: []
                  isUnitary: []
                     parent: Unitary tensor representation
           trivialDimension: 1
-               basis.(:,1): [1, 0, 0, 1].&#39;
+               basis.(:,1): [1, -0, -0, 1].&#39;
 
 </pre></div></div>
 </div>
@@ -783,9 +823,9 @@ isDivisionAlgebraCanonical: []
                  isUnitary: []
                     parent: Unitary tensor representation
           trivialDimension: 0
-               basis.(:,1): [-0, -0, 1, -0].&#39;
-               basis.(:,2): [0, 1, -0, 0].&#39;
-               basis.(:,3): [1, 0, 0, -1].&#39;
+               basis.(:,1): [0, 1, 0, 0].&#39;
+               basis.(:,2): [0, 0, 1, 0].&#39;
+               basis.(:,3): [-1, 0, 0, 1].&#39;
 
 </pre></div></div>
 </div>
