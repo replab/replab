@@ -1,0 +1,888 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>2. Constructing representations with RepLAB &#8212; RepLAB 0.7.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/collapse_helper.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="4. A taste of composition with RepLAB" href="Part4_TasteOfComposition.html" />
+    <link rel="prev" title="1. Constructing groups with RepLAB" href="Part1_Groups.html" />
+  
+  
+   
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="Part4_TasteOfComposition.html" title="4. A taste of composition with RepLAB"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Part1_Groups.html" title="1. Constructing groups with RepLAB"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Quantum Causal Structures Oxford 2019</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><div class="text-logo">
+  <a href="
+    ../../index.html">RepLAB</a>&nbsp;&nbsp;
+  <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.7.0.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
+  <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
+  <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
+</div><div class="sidebar-block">
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howto/index.html">How to</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../topic/index.html">Topic guides</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Talks</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Quantum Causal Structures Oxford 2019</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="Part1_Groups.html">1. Constructing groups with RepLAB</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">2. Constructing representations with RepLAB</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Two-measurement-settings-with-two-outcomes">Two measurement settings with two outcomes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Combining-representations">Combining representations</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#The-singlet-and-two-qubit-Werner-states">The singlet and two qubit Werner states</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#Choi-of-depolarizing-channels-/-isotropic-states">Choi of depolarizing channels / isotropic states</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Part4_TasteOfComposition.html">4. A taste of composition with RepLAB</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Brussels2019/index.html">Brussels visit October 2019</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../publications/index.html">Publications using RepLAB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">Technical Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development/Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../blog/index.html">Blog</a></li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2><a href="../../blog.html">Recent Blog Posts</a></h2>
+  </div>
+  <div class="sidebar-toc">
+    <ul>
+      
+      
+      <li class="toctree-l1"><a href="../../blog/20200123-RepLAB-website-live.html">26 January - The RepLAB documentation and the infrastructure behind it</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../../index.html">Docs</a></li>
+              
+                <li><a href="../index.html">Talks</a></li>
+              
+                <li><a href="index.html">Quantum Causal Structures Oxford 2019</a></li>
+              
+              <li>2. Constructing representations with RepLAB</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    min-width: 5.5ex;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="2.-Constructing-representations-with-RepLAB">
+<h1>2. Constructing representations with RepLAB<a class="headerlink" href="#2.-Constructing-representations-with-RepLAB" title="Permalink to this headline">¶</a></h1>
+<p>This is part II of the companion notebook to the RepLAB talk at the <a class="reference external" href="http://www.cs.ox.ac.uk/conferences/QCS2019/">Quantum Causal Structures</a> workshop.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="nb">run</span> <span class="p">.</span><span class="o">./</span><span class="p">.</span><span class="o">./</span><span class="p">.</span><span class="o">./</span><span class="n">replab_init</span><span class="p">.</span><span class="n">m</span> <span class="c">% Init RepLAB library</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Adding RepLAB to the path
+warning: function /workspace/replab/src/help.m shadows a core library function
+Adding RepLAB package to the path
+Loading optim package for Octave...
+Adding VPI to the path
+Adding MOxUnit to the path
+Adding embedded YALMIP to the path
+Adding embedded SDPT3 solver to the path
+Adding MOcov to the path
+</pre></div></div>
+</div>
+<div class="section" id="Two-measurement-settings-with-two-outcomes">
+<h2>Two measurement settings with two outcomes<a class="headerlink" href="#Two-measurement-settings-with-two-outcomes" title="Permalink to this headline">¶</a></h2>
+<p>We come back to our example for conditional probability distributions for two measurements settings with two outcomes.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">piI</span> <span class="p">=</span> <span class="p">[</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">];</span>
+<span class="n">piO1</span> <span class="p">=</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">];</span>
+<span class="n">GAlice</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="mi">4</span><span class="p">).</span><span class="n">subgroup</span><span class="p">({</span><span class="n">piI</span> <span class="n">piO1</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+GAlice =
+
+replab.PermutationSubgroup
+  domainSize: 4
+    identity: [1, 2, 3, 4]
+      parent: Permutations acting on 4 elements
+generator(1): [3, 4, 1, 2]
+generator(2): [2, 1, 3, 4]
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">rhoI</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span>
+<span class="n">rhoO1</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">];</span>
+<span class="n">rho</span> <span class="p">=</span> <span class="n">GAlice</span><span class="p">.</span><span class="n">repByImages</span><span class="p">(</span><span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="n">rhoI</span> <span class="n">rhoO1</span><span class="p">},</span> <span class="p">{</span><span class="n">rhoI</span><span class="o">&#39;</span> <span class="n">rhoO1</span><span class="o">&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+rho =
+
+Orthogonal representation by images
+                 dimension: 4
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+    inverseImages_internal: 1 x 2 cell
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+        images_internal{1}: [0, 0, 1, 0; 0, 0, 0, 1; 1, 0, 0, 0; 0, 1, 0, 0]
+        images_internal{2}: [0, 1, 0, 0; 1, 0, 0, 0; 0, 0, 1, 0; 0, 0, 0, 1]
+
+</pre></div></div>
+</div>
+<p>We now verify that <code class="docutils literal notranslate"><span class="pre">rho</span></code> is a legitimate representation.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">replab</span><span class="p">.</span><span class="n">RepLaws</span><span class="p">(</span><span class="n">rho</span><span class="p">).</span><span class="n">check</span> <span class="c">% verify that this defines a proper representation</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Checking commutes with commutant algebra...
+Checking respects division algebra...
+Checking asGroupHomomorphism-&gt;composition...
+Checking asGroupHomomorphism-&gt;identity...
+Checking asGroupHomomorphism-&gt;inverse...
+</pre></div></div>
+</div>
+<p>We also define and verify the other representation <code class="docutils literal notranslate"><span class="pre">sigma</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">sigmaI</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">];</span>
+<span class="n">sigmaO1</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span>
+<span class="n">sigma</span> <span class="p">=</span> <span class="n">GAlice</span><span class="p">.</span><span class="n">repByImages</span><span class="p">(</span><span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="n">sigmaI</span> <span class="n">sigmaO1</span><span class="p">},</span> <span class="p">{</span><span class="n">sigmaI</span><span class="o">&#39;</span> <span class="n">sigmaO1</span><span class="o">&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+sigma =
+
+Orthogonal representation by images
+                 dimension: 4
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+    inverseImages_internal: 1 x 2 cell
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+        images_internal{1}: [1, 0, 0, 0; 0, 0, 1, 0; 0, 1, 0, 0; 0, 0, 0, 1]
+        images_internal{2}: [0, 0, 1, 0; 0, 0, 0, 1; 1, 0, 0, 0; 0, 1, 0, 0]
+
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Combining-representations">
+<h2>Combining representations<a class="headerlink" href="#Combining-representations" title="Permalink to this headline">¶</a></h2>
+<p>We illustrate the examples of states invariant under <span class="math notranslate nohighlight">\(U(2)\)</span>. At the time of writing this tutorial, RepLAB did support compact groups, only finite groups; as of March 2020, the support of continuous groups is still experimental. Thus, we use the Clifford group as an approximation of <span class="math notranslate nohighlight">\(U(2)\)</span>. The approximation stays valid for tensor products of up to three copies of the basic representation, as the Clifford group is a 3-design for <span class="math notranslate nohighlight">\(U(2)\)</span>.</p>
+<p>The Clifford group is described using a permutation representation obtained with <a class="reference external" href="https://www.gap-system.org">GAP System</a> on 48 points.</p>
+<p>We first get the (abstract) Clifford group on a single qubit and its representation using 2x2 complex matrices:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="p">[</span><span class="n">clifford</span> <span class="n">cliffordRep</span><span class="p">]</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">quantum</span><span class="p">.</span><span class="n">clifford_qudit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+clifford =
+
+replab.PermutationSubgroup
+  domainSize: 48
+    identity: 1 x 48 double
+      parent: Permutations acting on 48 elements
+generator(1): 1 x 48 double
+generator(2): 1 x 48 double
+generator(3): 1 x 48 double
+
+cliffordRep =
+
+Unitary representation by images
+                 dimension: 2
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+    inverseImages_internal: 1 x 3 cell
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+        images_internal{1}: [0.70711+0.70711i, 0; 0, 0.70711+0.70711i]
+        images_internal{2}: [0.70711, 0.70711; 0.70711, -0.70711]
+        images_internal{3}: [1, 0; 0, 0+1i]
+
+</pre></div></div>
+</div>
+<p>We now investigate tensor products of <code class="docutils literal notranslate"><span class="pre">cliffordRep</span></code>, as an approximation of <span class="math notranslate nohighlight">\(\rho \otimes \rho\)</span> and later <span class="math notranslate nohighlight">\(\rho \otimes \overline{\rho}\)</span>.</p>
+<div class="section" id="The-singlet-and-two-qubit-Werner-states">
+<h3>The singlet and two qubit Werner states<a class="headerlink" href="#The-singlet-and-two-qubit-Werner-states" title="Permalink to this headline">¶</a></h3>
+<p>We investigate qubit-qubit states invariant under <span class="math notranslate nohighlight">\(\rho \otimes \rho\)</span>, where <span class="math notranslate nohighlight">\(\rho\)</span> is the standard representation of <span class="math notranslate nohighlight">\(U(2)\)</span>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">UxU</span> <span class="p">=</span> <span class="nb">kron</span><span class="p">(</span><span class="n">cliffordRep</span><span class="p">,</span> <span class="n">cliffordRep</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+UxU =
+
+Unitary tensor representation
+                 dimension: 4
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+                 factor(1): Unitary representation by images
+                 factor(2): Unitary representation by images
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">UxU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+Complex representation
+                 dimension: 4
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: []
+                    parent: Unitary tensor representation
+          trivialDimension: []
+               basis.(:,1): [-0, -1, 1, -0].&#39;
+               basis.(:,2): [0, 0, 0, 1].&#39;
+               basis.(:,3): [1, 0, 0, 0].&#39;
+               basis.(:,4): [0, 1, 1, 0].&#39;
+              component(1): Isotypic component C(1)
+              component(2): Isotypic component C(3)
+
+</pre></div></div>
+</div>
+<p>Without surprise, we recover the singlet and triplet (dimensions 1 and 3). Let’s investigate.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">UxU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+Complex irreducible subrepresentation
+                 dimension: 1
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: []
+                    parent: Unitary tensor representation
+          trivialDimension: []
+               basis.(:,1): [-0, -1, 1, -0].&#39;
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">UxU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+Complex irreducible subrepresentation
+                 dimension: 3
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: []
+                    parent: Unitary tensor representation
+          trivialDimension: []
+               basis.(:,1): [1, -0, -0, -0].&#39;
+               basis.(:,2): [-0, 0, 0, 1].&#39;
+               basis.(:,3): [0, 1, 1, 0].&#39;
+
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Choi-of-depolarizing-channels-/-isotropic-states">
+<h3>Choi of depolarizing channels / isotropic states<a class="headerlink" href="#Choi-of-depolarizing-channels-/-isotropic-states" title="Permalink to this headline">¶</a></h3>
+<p>We investigate qubit-qubit states invariant under <span class="math notranslate nohighlight">\(\rho \otimes \overline{\rho}\)</span>, where <span class="math notranslate nohighlight">\(\rho\)</span> is the standard representation of <span class="math notranslate nohighlight">\(U(2)\)</span>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">UxconjU</span> <span class="p">=</span> <span class="nb">kron</span><span class="p">(</span><span class="n">cliffordRep</span><span class="p">,</span> <span class="nb">conj</span><span class="p">(</span><span class="n">cliffordRep</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+UxconjU =
+
+Unitary tensor representation
+                 dimension: 4
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+                 factor(1): Unitary representation by images
+                 factor(2): Unitary derived representation (conjugate)
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">UxconjU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+Complex representation
+                 dimension: 4
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: []
+                    parent: Unitary tensor representation
+          trivialDimension: []
+               basis.(:,1): [1, -0, -0, 1].&#39;
+               basis.(:,2): [-0, 1, -0, -0].&#39;
+               basis.(:,3): [0, -0, 1, 0].&#39;
+               basis.(:,4): [-1, 0, 0, 1].&#39;
+              component(1): Isotypic component (harmonized) C(1) (trivial)
+              component(2): Isotypic component C(3)
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">UxconjU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+Complex trivial irreducible subrepresentation
+                 dimension: 1
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: 1
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: []
+                    parent: Unitary tensor representation
+          trivialDimension: 1
+               basis.(:,1): [1, -0, -0, 1].&#39;
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="n">UxconjU</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span><span class="p">.</span><span class="n">component</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ans =
+
+Complex fully nontrivial irreducible subrepresentation
+                 dimension: 3
+                     field: &#39;C&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: []
+                    parent: Unitary tensor representation
+          trivialDimension: 0
+               basis.(:,1): [0, 1, 0, 0].&#39;
+               basis.(:,2): [0, 0, 1, 0].&#39;
+               basis.(:,3): [-1, 0, 0, 1].&#39;
+
+</pre></div></div>
+</div>
+</div>
+</div>
+</div>
+
+  <div class="section">
+  
+  
+  </div>
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="Part1_Groups.html" title="previous chapter (use the left arrow)">1. Constructing groups with RepLAB</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="Part4_TasteOfComposition.html" title="next chapter (use the right arrow)">4. A taste of composition with RepLAB</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="Part4_TasteOfComposition.html" title="4. A taste of composition with RepLAB"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Part1_Groups.html" title="1. Constructing groups with RepLAB"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="index.html" >Quantum Causal Structures Oxford 2019</a> &#187;</li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2020, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>
