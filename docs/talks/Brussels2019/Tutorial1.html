@@ -13,21 +13,21 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>1. Introduction to representation for quantum information people &#8212; RepLAB 0.6.7 documentation</title>
+    <title>1. Introduction to representation for quantum information people &#8212; RepLAB 0.7.0 documentation</title>
     <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="../../_static/language_data.js"></script>
-    <script type="text/javascript" src="../../_static/collapse_admonitions.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script type="text/javascript" src="../../_static/js/collapse_helper.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/collapse_helper.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="index.html" title="Brussels visit October 2019"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Brussels visit October 2019</a> &#187;</li> 
       </ul>
@@ -79,7 +79,7 @@
   <a href="
     ../../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.7.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.7.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -221,9 +221,9 @@ div.nboutput.container div.prompt pre {
 /* all prompts */
 div.nbinput.container div.prompt,
 div.nboutput.container div.prompt {
-    min-width: 6ex;
-    padding-top: 0.4em;
-    padding-right: 0.4em;
+    min-width: 5.5ex;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
     text-align: right;
     flex: 0;
 }
@@ -247,7 +247,6 @@ div.nboutput.container div.prompt pre {
 /* input/output area */
 div.nbinput.container div.input_area,
 div.nboutput.container div.output_area {
-    padding: 0.4em;
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
@@ -321,6 +320,27 @@ div.nboutput.container div.output_area.stderr {
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
 
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
 /* Some additional styling taken form the Jupyter notebook CSS */
 div.rendered_html table {
   border: none;
@@ -378,7 +398,6 @@ Adding RepLAB to the path
 warning: function /home/denis/w/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Loading optim package for Octave...
-OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = &#34;org.octave.OctClassLoader&#34;). To use archived non-system classes, this property must be not be set
 Adding VPI to the path
 Adding MOxUnit to the path
 Adding embedded YALMIP to the path
@@ -394,7 +413,7 @@ Adding MOcov to the path
 <p>We are interested in relabelings of these outcomes; those relabelings are represented by permutations. The group of all permutations of <span class="math notranslate nohighlight">\(k\)</span> elements is the symmetric group of degree <span class="math notranslate nohighlight">\(k\)</span>, written <span class="math notranslate nohighlight">\(S_k\)</span>.</p>
 <p>For the motivation, see our <a class="reference external" href="https://arxiv.org/abs/1610.01833">paper on the symmetries of nonlocality in the context of device-independence</a>. See also the <a class="reference external" href="https://en.wikipedia.org/wiki/Symmetric_group">description of the symmetric group on Wikipedia</a>.</p>
 <p>In particular, there are different ways of writing elements of a symmetric group. RepLAB chooses to write down the permutation as the image row vector. For <span class="math notranslate nohighlight">\(\pi \in S_5\)</span>, we write <span class="math notranslate nohighlight">\(\pi = [\pi(1), \pi(2), \pi(3), \pi(4), \pi(5)]\)</span> (using square brackets to distinguish this notation from the cycle notation), which corresponds to the <em>one-line notation</em> of <a class="reference external" href="https://en.wikipedia.org/wiki/Permutation#Notations">https://en.wikipedia.org/wiki/Permutation#Notations</a> .</p>
-<p>For the group axioms, Wikipedia has a <a class="reference external" href="https://en.wikipedia.org/wiki/Group_(mathematics)">compact discussion</a> . When composing permutations, one needs to decide, for <span class="math notranslate nohighlight">\(\pi, \sigma \in S_k\)</span>, how to compute the product <span class="math notranslate nohighlight">\(\pi \cdot \sigma\)</span>. We make the choice of having <span class="math notranslate nohighlight">\((\pi \cdot \sigma)(a) = \pi ( \sigma (a))\)</span>, which corresponds to a left action, i.e. <span class="math notranslate nohighlight">\(\sigma\)</span> is applied first. See <a class="reference external" href="https://en.wikipedia.org/wiki/Permutation#Composition_of_permutations">https://en.wikipedia.org/wiki/Permutation#Composition_of_permutations</a> for details.</p>
+<p>For the group axioms, Wikipedia has a <a class="reference external" href="https://en.wikipedia.org/wiki/Group_(mathematics)">compact discussion</a> . When composing permutations, one needs to decide, for <span class="math notranslate nohighlight">\(\pi, \sigma \in S_k\)</span>, how to compute the product <span class="math notranslate nohighlight">\(\pi \cdot \sigma\)</span>. We make the choice of having <span class="math notranslate nohighlight">\((\pi \cdot \sigma)(a) = \pi ( \sigma (a))\)</span>, which corresponds to a left action, i.e. <span class="math notranslate nohighlight">\(\sigma\)</span> is applied first. See <a class="reference external" href="https://en.wikipedia.org/wiki/Permutation#Composition_of_permutations">https://en.wikipedia.org/wiki/Permutation#Composition_of_permutations</a> for details.</p>
 <p>This choice of composition corresponds to standard notation used in physics; however computational group theory uses a right action convention, most of the time using the <em>exponent notation</em>. Those notation choices should not concern the RepLAB user, as we made sure that the software uses consistent notation.</p>
 <p>Below, we construct the symmetric group <span class="math notranslate nohighlight">\(S_5\)</span>. The object <code class="docutils literal notranslate"><span class="pre">S5</span></code> we construct knows how to compose permutations, when they are written using row vectors of integers in Matlab/Octave. The composition example is the one from <a class="reference external" href="https://en.wikipedia.org/wiki/Symmetric_group#Multiplication">Wikipedia</a>, and we check that we recover the same results.</p>
 <div class="nbinput docutils container">
@@ -440,7 +459,7 @@ P_:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><sp
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">rep5</span> <span class="p">=</span> <span class="n">S5</span><span class="p">.</span><span class="n">definingRep</span>
+<span></span><span class="n">rep5</span> <span class="p">=</span> <span class="n">S5</span><span class="p">.</span><span class="n">naturalRep</span>
 <span class="n">rep5</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
 <span class="n">rep5</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">*</span><span class="n">rep5</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">-</span> <span class="n">rep5</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">S5</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">))</span> <span class="c">% check the representation axiom</span>
 </pre></div>
@@ -453,15 +472,18 @@ P_:nbsphinx-math:<code class="xref mat mat-obj docutils literal notranslate"><sp
 <div class="highlight"><pre>
 rep5 =
 
-Orthogonal real representation of dimension 5
-    dimension: 5
-        field: &#39;R&#39;
-        group: Permutations acting on 5 elements
-inverseImages: 1 x 2 cell
-    irrepInfo: []
-    isUnitary: true
-    images{1}: 5 x 5 double
-    images{2}: 5 x 5 double
+Orthogonal representation by images
+                 dimension: 5
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: Permutations acting on 5 elements
+    inverseImages_internal: 1 x 2 cell
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+        images_internal{1}: 5 x 5 double
+        images_internal{2}: 5 x 5 double
 
 ans =
 
@@ -492,13 +514,87 @@ ans =
 <p>With the other assumptions we make, this means that the orthogonal complement to <span class="math notranslate nohighlight">\((1,1,1,1,1)^\top\)</span> is also an invariant subspace.</p>
 <p>By restricting a representation <span class="math notranslate nohighlight">\(\rho\)</span> to one of its invariant subspaces, one then defines a subrepresentation.</p>
 <p>A representation that has no invariant subspaces except <span class="math notranslate nohighlight">\(0\)</span> and the full space <span class="math notranslate nohighlight">\(V\)</span> is <em>irreducible</em>. The decomposition of a representation into irreducible representations can be obtained by recursively decomposing subrepresentations until the components are irreducible; obtaining that decomposition is pretty tricky, but luckily RepLAB automates that.</p>
-<p>We obtain this decomposition and consider the first irreducible subrepresentation: the vector of all ones. Note that RepLAB recovers a “nice” algebraic expression for the basis of that subspace; this happens in a few cases, most of the time that basis will be numerical/approximate to floating-point precision. We also check how the representation looks in that invariant subspace.</p>
+<p>We obtain this decomposition and consider the first irreducible subrepresentation: the vector of all ones. Note that RepLAB recovers a “nice” algebraic expression for the basis of that subspace if we apply the <code class="docutils literal notranslate"><span class="pre">nice</span></code> method on the decomposition; this works in a few cases, the rest of the time that basis will be numerical/approximate to floating-point precision. We also check how the representation looks in that invariant subspace.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">D5</span> <span class="p">=</span> <span class="n">rep5</span><span class="p">.</span><span class="n">decomposition</span>
+<span></span><span class="c">% The floating point approximate decomposition</span>
+<span class="n">D5</span> <span class="p">=</span> <span class="n">rep5</span><span class="p">.</span><span class="n">decomposition</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+D5 =
+
+Orthogonal representation
+                 dimension: 5
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: Permutations acting on 5 elements
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+                    parent: Orthogonal representation by images
+          trivialDimension: []
+               basis.(:,1): [0.44721, 0.44721, 0.44721, 0.44721, 0.44721].&#39;
+               basis.(:,2): [0.89443, -0.22361, -0.22361, -0.22361, -0.22361].&#39;
+               basis.(:,3): [0, 0.86603, -0.28868, -0.28868, -0.28868].&#39;
+               basis.(:,4): [0, 0, 0.8165, -0.40825, -0.40825].&#39;
+               basis.(:,5): [0, 0, 0, 0.70711, -0.70711].&#39;
+              component(1): Isotypic component (harmonized) R(1) (trivial)
+              component(2): Isotypic component (harmonized) R(4)
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="c">% Recovering nice coefficients for the basis</span>
+<span class="n">N5</span> <span class="p">=</span> <span class="n">D5</span><span class="p">.</span><span class="n">nice</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+N5 =
+
+Real representation
+                 dimension: 5
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: Permutations acting on 5 elements
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: []
+                    parent: Orthogonal representation by images
+          trivialDimension: []
+               basis.(:,1): [1, 1, 1, 1, 1].&#39;
+               basis.(:,2): [-1, 4, -1, -1, -1].&#39;
+               basis.(:,3): [-1, 0, 3, -1, -1].&#39;
+               basis.(:,4): [2, 0, 0, -1, -1].&#39;
+               basis.(:,5): [0, 0, 0, -1, 1].&#39;
+              component(1): Isotypic component (harmonized) R(1) (trivial)
+              component(2): Isotypic component ?(4)
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
+<span></span><span class="c">% Images in the subrepresentations</span>
 <span class="n">subrep5a</span> <span class="p">=</span> <span class="n">D5</span><span class="p">.</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c">% this is the first irreducible component</span>
 <span class="n">subrep5a</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">S5</span><span class="p">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 <span class="n">subrep5a</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">S5</span><span class="p">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
@@ -510,35 +606,19 @@ ans =
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-D5 =
-
-Subrepresentation
-   dimension: 5
-       field: &#39;R&#39;
-       group: Permutations acting on 5 elements
-   irrepInfo: []
-   isUnitary: true
-   niceBasis: replab.NiceBasis
-      parent: Orthogonal real representation of dimension 5
-      U(1,:): [1, 1, 1, 1, 1]/sqrt(5)
-      U(2,:): [4, -1, -1, -1, -1]/sqrt(20)
-      U(3,:): [0, 3, -1, -1, -1]/sqrt(12)
-      U(4,:): [0, 0, -1, -1, 2]/sqrt(6)
-      U(5,:): [0, 0, 1, -1, 0]/sqrt(2)
-component(1): Isotypic component R(1)
-component(2): Isotypic component R(4)
-
 subrep5a =
 
-Real irreducible subrepresentation of real type
-dimension: 1
-    field: &#39;R&#39;
-    group: Permutations acting on 5 elements
-irrepInfo: replab.irreducible.TrivialInfo
-isUnitary: true
-niceBasis: replab.NiceBasis
-   parent: Orthogonal real representation of dimension 5
-   U(1,:): [1, 1, 1, 1, 1]/sqrt(5)
+Orthogonal trivial irreducible real-type subrepresentation
+                 dimension: 1
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: 1
+                     group: Permutations acting on 5 elements
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: true
+                    parent: Orthogonal representation by images
+          trivialDimension: 1
+               basis.(:,1): [0.44721, 0.44721, 0.44721, 0.44721, 0.44721].&#39;
 
 ans =  1.00000
 ans =  1.00000
@@ -547,7 +627,7 @@ ans =  1.00000
 <p>We note that both generators of <span class="math notranslate nohighlight">\(S_5\)</span> look like the identity matrix of dimension <span class="math notranslate nohighlight">\(1\)</span> in that subrepresentation. Thus, any element of <span class="math notranslate nohighlight">\(S_5\)</span> corresponds to the identity matrix for that subrepresentation. Such a representation with an identity image is the <em>trivial representation</em>.</p>
 <p>We move now to the other subrepresentation.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
@@ -564,32 +644,34 @@ ans =  1.00000
 <div class="highlight"><pre>
 subrep5b =
 
-Real irreducible subrepresentation of real type
-dimension: 4
-    field: &#39;R&#39;
-    group: Permutations acting on 5 elements
-irrepInfo: replab.irreducible.Info
-isUnitary: true
-niceBasis: replab.NiceBasis
-   parent: Orthogonal real representation of dimension 5
-   U(1,:): [4, -1, -1, -1, -1]/sqrt(20)
-   U(2,:): [0, 3, -1, -1, -1]/sqrt(12)
-   U(3,:): [0, 0, -1, -1, 2]/sqrt(6)
-   U(4,:): [0, 0, 1, -1, 0]/sqrt(2)
+Orthogonal fully nontrivial irreducible real-type subrepresentation
+                 dimension: 4
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: 1
+                     group: Permutations acting on 5 elements
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: true
+                    parent: Orthogonal representation by images
+          trivialDimension: 0
+               basis.(:,1): [0.89443, -0.22361, -0.22361, -0.22361, -0.22361].&#39;
+               basis.(:,2): [0, 0.86603, -0.28868, -0.28868, -0.28868].&#39;
+               basis.(:,3): [0, 0, 0.8165, -0.40825, -0.40825].&#39;
+               basis.(:,4): [0, 0, 0, 0.70711, -0.70711].&#39;
 
 ans =
 
-  -0.25000  -0.32275   0.91287   0.00000
-   0.96825  -0.08333   0.23570   0.00000
-   0.00000  -0.47140  -0.16667  -0.86603
-   0.00000   0.81650   0.28868  -0.50000
+  -2.5000e-01  -3.2275e-01  -4.5644e-01  -7.9057e-01
+   9.6825e-01  -8.3333e-02  -1.1785e-01  -2.0412e-01
+   2.8707e-18   9.4281e-01  -1.6667e-01  -2.8868e-01
+   5.6568e-18   8.8981e-18   8.6603e-01  -5.0000e-01
 
 ans =
 
-  -0.25000   0.96825   0.00000   0.00000
-   0.96825   0.25000   0.00000   0.00000
-   0.00000   0.00000   1.00000   0.00000
-   0.00000   0.00000   0.00000   1.00000
+  -2.5000e-01   9.6825e-01   2.8707e-18   5.6568e-18
+   9.6825e-01   2.5000e-01   5.5486e-18   8.8981e-18
+   2.8707e-18   5.5486e-18   1.0000e+00  -2.4514e-17
+   5.6568e-18   8.8981e-18  -2.4514e-17   1.0000e+00
 
 </pre></div></div>
 </div>
@@ -602,14 +684,15 @@ ans =
 </div>
 <div class="section" id="The-original-representation-in-the-basis-that-exhibits-the-decomposition">
 <h3>The original representation in the basis that exhibits the decomposition<a class="headerlink" href="#The-original-representation-in-the-basis-that-exhibits-the-decomposition" title="Permalink to this headline">¶</a></h3>
-<p>The matrix <span class="math notranslate nohighlight">\(U\)</span> is the change of basis that block diagonalizes the representation. Here, we can show that <code class="docutils literal notranslate"><span class="pre">rep5</span></code> has a 1x1 and 4x4 block structure in the relevant basis.</p>
+<p>The matrix <span class="math notranslate nohighlight">\(B\)</span> is the change of basis that block diagonalizes the representation. Here, we can show that <code class="docutils literal notranslate"><span class="pre">rep5</span></code> has a 1x1 and 4x4 block structure in the relevant basis.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">D5</span><span class="p">.</span><span class="n">U</span> <span class="o">*</span> <span class="n">rep5</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">S5</span><span class="p">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">D5</span><span class="p">.</span><span class="n">U</span><span class="o">&#39;</span>
-<span class="n">D5</span><span class="p">.</span><span class="n">U</span> <span class="o">*</span> <span class="n">rep5</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">S5</span><span class="p">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">D5</span><span class="p">.</span><span class="n">U</span><span class="o">&#39;</span>
+<span></span><span class="n">B</span> <span class="p">=</span> <span class="n">D5</span><span class="p">.</span><span class="n">basis</span>
+<span class="nb">inv</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="o">*</span> <span class="n">rep5</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">S5</span><span class="p">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">B</span>
+<span class="nb">inv</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="o">*</span> <span class="n">rep5</span><span class="p">.</span><span class="nb">image</span><span class="p">(</span><span class="n">S5</span><span class="p">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">B</span>
 </pre></div>
 </div>
 </div>
@@ -618,21 +701,29 @@ ans =
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
+B =
+
+   0.44721   0.89443   0.00000   0.00000   0.00000
+   0.44721  -0.22361   0.86603   0.00000   0.00000
+   0.44721  -0.22361  -0.28868   0.81650   0.00000
+   0.44721  -0.22361  -0.28868  -0.40825   0.70711
+   0.44721  -0.22361  -0.28868  -0.40825  -0.70711
+
 ans =
 
-   1.00000   0.00000   0.00000   0.00000   0.00000
-   0.00000  -0.25000  -0.32275   0.91287   0.00000
-   0.00000   0.96825  -0.08333   0.23570   0.00000
-   0.00000   0.00000  -0.47140  -0.16667  -0.86603
-   0.00000   0.00000   0.81650   0.28868  -0.50000
+   1.0000e+00   2.5906e-16  -6.7453e-17   4.4677e-17  -2.7572e-17
+   6.7345e-18  -2.5000e-01  -3.2275e-01  -4.5644e-01  -7.9057e-01
+   4.9440e-17   9.6825e-01  -8.3333e-02  -1.1785e-01  -2.0412e-01
+  -1.1602e-17   5.8009e-18   9.4281e-01  -1.6667e-01  -2.8868e-01
+  -5.4531e-18   2.7265e-18   1.3192e-17   8.6603e-01  -5.0000e-01
 
 ans =
 
-   1.00000   0.00000   0.00000   0.00000   0.00000
-   0.00000  -0.25000   0.96825   0.00000   0.00000
-   0.00000   0.96825   0.25000   0.00000   0.00000
-   0.00000   0.00000   0.00000   1.00000   0.00000
-   0.00000   0.00000   0.00000   0.00000   1.00000
+   1.0000e+00   2.7148e-16  -2.3673e-17  -1.5928e-17   6.7191e-17
+   4.9432e-17  -2.5000e-01   9.6825e-01   7.9639e-18  -3.3596e-17
+   4.9440e-17   9.6825e-01   2.5000e-01  -5.3654e-17   1.3660e-17
+  -1.1602e-17   5.8009e-18   1.2548e-18   1.0000e+00   8.0034e-18
+  -5.4531e-18   2.7265e-18   1.3192e-17   2.0810e-17   1.0000e+00
 
 </pre></div></div>
 </div>
@@ -642,7 +733,7 @@ ans =
 <h2>Another example<a class="headerlink" href="#Another-example" title="Permalink to this headline">¶</a></h2>
 <p>To continue this discussion, we consider a measurement with two outcomes <span class="math notranslate nohighlight">\(a=1,2\)</span>. The symmetry group is now <span class="math notranslate nohighlight">\(S_2\)</span>, and has two elements: identity <span class="math notranslate nohighlight">\([1,2]\)</span> and flip <span class="math notranslate nohighlight">\([2,1]\)</span>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
@@ -674,11 +765,11 @@ Indexed family of 2 elements
 </div>
 <p>The defining representation has two images: the identity <span class="math notranslate nohighlight">\(\begin{pmatrix}1 &amp; 0\\0 &amp; 1\end{pmatrix}\)</span> and the flip <span class="math notranslate nohighlight">\(\begin{pmatrix}0 &amp; 1\\1 &amp; 0 \end{pmatrix}\)</span>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">rep2</span> <span class="p">=</span> <span class="n">S2</span><span class="p">.</span><span class="n">definingRep</span>
+<span></span><span class="n">rep2</span> <span class="p">=</span> <span class="n">S2</span><span class="p">.</span><span class="n">naturalRep</span>
 <span class="n">rep2</span><span class="p">.</span><span class="nb">image</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
 <span class="n">rep2</span><span class="p">.</span><span class="nb">image</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
@@ -691,18 +782,19 @@ Indexed family of 2 elements
 <div class="highlight"><pre>
 rep2 =
 
-Orthogonal real representation of dimension 2
-    dimension: 2
-        field: &#39;R&#39;
-        group: Permutations acting on 2 elements
-inverseImages: {[0, 1; 1, 0]}
-    irrepInfo: []
-    isUnitary: true
-    images{1}: [0, 1; 1, 0]
+Orthogonal representation by images
+                 dimension: 2
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: Permutations acting on 2 elements
+    inverseImages_internal: {[0, 1; 1, 0]}
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+        images_internal{1}: [0, 1; 1, 0]
 
 ans =
-
-Diagonal Matrix
 
    1   0
    0   1
@@ -716,13 +808,13 @@ ans =
 </div>
 <p>Now, one can check that the two subrepresentations correspond to vector spaces spanned by <span class="math notranslate nohighlight">\((1,1)^\top\)</span> and <span class="math notranslate nohighlight">\((1,-1)^\top\)</span> respectively.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
-<span></span><span class="n">D2</span> <span class="p">=</span> <span class="n">rep2</span><span class="p">.</span><span class="n">decomposition</span>
-<span class="nb">full</span><span class="p">(</span><span class="n">D2</span><span class="p">.</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">U</span><span class="p">)</span> <span class="c">% the change of basis matrix can be sparse, so we force dense matrix display</span>
-<span class="nb">full</span><span class="p">(</span><span class="n">D2</span><span class="p">.</span><span class="n">irrep</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">U</span><span class="p">)</span>
+<span></span><span class="n">D2</span> <span class="p">=</span> <span class="n">rep2</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span>
+<span class="n">D2</span><span class="p">.</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">basis</span>
+<span class="n">D2</span><span class="p">.</span><span class="n">irrep</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">basis</span>
 </pre></div>
 </div>
 </div>
@@ -733,26 +825,30 @@ ans =
 <div class="highlight"><pre>
 D2 =
 
-Subrepresentation
-   dimension: 2
-       field: &#39;R&#39;
-       group: Permutations acting on 2 elements
-   irrepInfo: []
-   isUnitary: true
-   niceBasis: replab.NiceBasis
-      parent: Orthogonal real representation of dimension 2
-      U(1,:): [1, 1]/sqrt(2)
-      U(2,:): [1, -1]/sqrt(2)
-component(1): Isotypic component R(1)
-component(2): Isotypic component R(1)
+Real representation
+                 dimension: 2
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: Permutations acting on 2 elements
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: []
+                    parent: Orthogonal representation by images
+          trivialDimension: []
+               basis.(:,1): [1, 1].&#39;
+               basis.(:,2): [1, -1].&#39;
+              component(1): Isotypic component (harmonized) R(1) (trivial)
+              component(2): Isotypic component ?(1)
 
 ans =
 
-   0.70711   0.70711
+   1
+   1
 
 ans =
 
-   0.70711  -0.70711
+   1
+  -1
 
 </pre></div></div>
 </div>
@@ -766,11 +862,11 @@ ans =
 <ul class="simple">
 <li><p>Permutation of inputs, which will permute coefficients of <span class="math notranslate nohighlight">\(\vec{P}\)</span> according to <span class="math notranslate nohighlight">\(g_1 = [3,4,1,2]\)</span>.</p></li>
 <li><p>Permutation of outputs of the first measurement, which will permute <span class="math notranslate nohighlight">\(\vec{P}\)</span> according to <span class="math notranslate nohighlight">\(g_2 = [2,1,3,4]\)</span>.</p></li>
-<li><p>The permutation of outputs of the second measurement is achieved by conjugating <span class="math notranslate nohighlight">\(g_2\)</span> by <span class="math notranslate nohighlight">\(g_1\)</span>, i.e. by <span class="math notranslate nohighlight">\(g_1 ~ g_2 ~ g_1\)</span>, so we do not need to provide that group generator explicitly.</p></li>
+<li><p>The permutation of outputs of the second measurement is achieved by conjugating <span class="math notranslate nohighlight">\(g_2\)</span> by <span class="math notranslate nohighlight">\(g_1\)</span>, i.e. by <span class="math notranslate nohighlight">\(g_1 ~ g_2 ~ g_1\)</span>, so we do not need to provide that group generator explicitly.</p></li>
 </ul>
 <p>We then construct the group <span class="math notranslate nohighlight">\(G=\left &lt;g_1, g_2 \right&gt;\)</span> and its defining representation, which we decompose into irreducible subrepresentations.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
@@ -779,7 +875,7 @@ ans =
 <span class="n">generators</span> <span class="p">=</span> <span class="p">{</span><span class="n">g1</span> <span class="n">g2</span><span class="p">};</span> <span class="c">% arrays of things in Matlab are cell arrays</span>
 <span class="n">G</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">Permutations</span><span class="p">(</span><span class="mi">4</span><span class="p">).</span><span class="n">subgroup</span><span class="p">(</span><span class="n">generators</span><span class="p">)</span> <span class="c">% construction as a subgroup of a generic parent group</span>
 <span class="n">G</span><span class="p">.</span><span class="n">elements</span>
-<span class="n">Grep</span> <span class="p">=</span> <span class="n">G</span><span class="p">.</span><span class="n">definingRep</span>
+<span class="n">Grep</span> <span class="p">=</span> <span class="n">G</span><span class="p">.</span><span class="n">naturalRep</span>
 </pre></div>
 </div>
 </div>
@@ -811,25 +907,28 @@ Indexed family of 8 elements
 
 Grep =
 
-Orthogonal real representation of dimension 4
-    dimension: 4
-        field: &#39;R&#39;
-        group: replab.PermutationSubgroup
-inverseImages: 1 x 2 cell
-    irrepInfo: []
-    isUnitary: true
-    images{1}: [0, 0, 1, 0; 0, 0, 0, 1; 1, 0, 0, 0; 0, 1, 0, 0]
-    images{2}: [0, 1, 0, 0; 1, 0, 0, 0; 0, 0, 1, 0; 0, 0, 0, 1]
+Orthogonal representation by images
+                 dimension: 4
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+    inverseImages_internal: 1 x 2 cell
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+        images_internal{1}: [0, 0, 1, 0; 0, 0, 0, 1; 1, 0, 0, 0; 0, 1, 0, 0]
+        images_internal{2}: [0, 1, 0, 0; 1, 0, 0, 0; 0, 0, 1, 0; 0, 0, 0, 1]
 
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
 <span></span><span class="c">% Let&#39;s decompose this representation into irreducible subrepresentations</span>
-<span class="n">Gdec</span> <span class="p">=</span> <span class="n">Grep</span><span class="p">.</span><span class="n">decomposition</span>
+<span class="n">Gdec</span> <span class="p">=</span> <span class="n">Grep</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span>
 <span class="n">I1</span> <span class="p">=</span> <span class="n">Gdec</span><span class="p">.</span><span class="n">irrep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">I2</span> <span class="p">=</span> <span class="n">Gdec</span><span class="p">.</span><span class="n">irrep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">I3</span> <span class="p">=</span> <span class="n">Gdec</span><span class="p">.</span><span class="n">irrep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -843,58 +942,66 @@ inverseImages: 1 x 2 cell
 <div class="highlight"><pre>
 Gdec =
 
-Subrepresentation
-   dimension: 4
-       field: &#39;R&#39;
-       group: replab.PermutationSubgroup
-   irrepInfo: []
-   isUnitary: true
-   niceBasis: replab.NiceBasis
-      parent: Orthogonal real representation of dimension 4
-      U(1,:): [1, 1, 1, 1]/2
-      U(2,:): [1, 1, -1, -1]/2
-      U(3,:): [1, -1, 1, -1]/2
-      U(4,:): [1, -1, -1, 1]/2
-component(1): Isotypic component R(1)
-component(2): Isotypic component R(1)
-component(3): Isotypic component R(2)
+Real representation
+                 dimension: 4
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: []
+                    parent: Orthogonal representation by images
+          trivialDimension: []
+               basis.(:,1): [1, 1, 1, 1].&#39;
+               basis.(:,2): [1, 1, -1, -1].&#39;
+               basis.(:,3): [1, -1, 0, 0].&#39;
+               basis.(:,4): [0, 0, 1, -1].&#39;
+              component(1): Isotypic component (harmonized) R(1) (trivial)
+              component(2): Isotypic component ?(1)
+              component(3): Isotypic component ?(2)
 
 I1 =
 
-Real irreducible subrepresentation of real type
-dimension: 1
-    field: &#39;R&#39;
-    group: replab.PermutationSubgroup
-irrepInfo: replab.irreducible.TrivialInfo
-isUnitary: true
-niceBasis: replab.NiceBasis
-   parent: Orthogonal real representation of dimension 4
-   U(1,:): [1, 1, 1, 1]/2
+Real trivial irreducible real-type subrepresentation
+                 dimension: 1
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: 1
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: []
+                    parent: Orthogonal representation by images
+          trivialDimension: 1
+               basis.(:,1): [1, 1, 1, 1].&#39;
 
 I2 =
 
-Real irreducible subrepresentation of real type
-dimension: 1
-    field: &#39;R&#39;
-    group: replab.PermutationSubgroup
-irrepInfo: replab.irreducible.Info
-isUnitary: true
-niceBasis: replab.NiceBasis
-   parent: Orthogonal real representation of dimension 4
-   U(1,:): [1, 1, -1, -1]/2
+Real irreducible subrepresentation
+                 dimension: 1
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: []
+                    parent: Orthogonal representation by images
+          trivialDimension: []
+               basis.(:,1): [1, 1, -1, -1].&#39;
 
 I3 =
 
-Real irreducible subrepresentation of real type
-dimension: 2
-    field: &#39;R&#39;
-    group: replab.PermutationSubgroup
-irrepInfo: replab.irreducible.Info
-isUnitary: true
-niceBasis: replab.NiceBasis
-   parent: Orthogonal real representation of dimension 4
-   U(1,:): [1, -1, 1, -1]/2
-   U(2,:): [1, -1, -1, 1]/2
+Real irreducible subrepresentation
+                 dimension: 2
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: replab.PermutationSubgroup
+isDivisionAlgebraCanonical: []
+             isIrreducible: true
+                 isUnitary: []
+                    parent: Orthogonal representation by images
+          trivialDimension: []
+               basis.(:,1): [1, -1, 0, 0].&#39;
+               basis.(:,2): [0, 0, 1, -1].&#39;
 
 </pre></div></div>
 </div>
@@ -952,7 +1059,7 @@ complex numbers.</p>
         <li class="right" >
           <a href="index.html" title="Brussels visit October 2019"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" >Brussels visit October 2019</a> &#187;</li> 
       </ul>

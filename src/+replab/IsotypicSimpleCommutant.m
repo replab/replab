@@ -11,10 +11,10 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
         % Returns the block of a matrix projected in the commutant algebra
         %
         % Args:
-        %   X (double): Matrix to project on this commutant algebra
+        %   X (double(\*,\*)): Matrix to project on this commutant algebra
         %
         % Returns:
-        %   double: The projected block
+        %   double(\*,\*): The projected block
             m = self.repR.multiplicity;
             id = self.repR.irrepDimension;
             X1 = zeros(m, m);
@@ -28,17 +28,18 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
         % Changes the basis and projects a block on this isotypic component
         %
         % Args:
-        %   X (double): Matrix to project on this commutant algebra in the basis of the original representation
+        %   X (double(\*,\*)): Matrix to project on this commutant algebra in the basis of the original representation
         %
         % Returns:
-        %   double: Block corresponding to the isotypic component
+        %   double(\*,\*): Block corresponding to the isotypic component
             m = self.repR.multiplicity;
             id = self.repR.irrepDimension;
-            U = self.repR.U;
+            E = self.repR.E_internal;
+            B = self.repR.B_internal;
             X1 = zeros(m, m);
             for i = 1:id
-                U1 = U(i:id:m*id, :);
-                X1 = X1 + U1*X*U1';
+                range = i:id:m*id;
+                X1 = X1 + E(range,:)*X*B(:,range);
             end
             X1 = X1/id;
         end

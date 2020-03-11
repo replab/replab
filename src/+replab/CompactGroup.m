@@ -99,6 +99,29 @@ classdef CompactGroup < replab.Group
             rep = replab.rep.TrivialRep(self, field, dimension);
         end
 
+        function rep = directSumRep(self, field, reps)
+        % Computes the direct sum of representations on this group
+        %
+        % Args:
+        %   field ({'R', 'C'}): Field
+        %   reps (cell(1,*) of `+replab.Rep`): Representation of this group over the given field
+        %
+        % Returns:
+        %   `+replab.Rep`: Direct sum of the representations
+            rep = replab.rep.DirectSumRep(self, field, reps);
+        end
+
+        function rep = tensorRep(self, field, reps)
+        % Computes the tensor product of representations
+        %
+        % Args:
+        %   reps (cell(1,*) of `+replab.Rep`): Representation of the same group over the same field
+        %
+        % Returns:
+        %   `+replab.Rep`: Tensor product of the representations
+            rep = replab.rep.TensorRep(self, field, reps);
+        end
+
     end
 
     methods (Static)

@@ -13,44 +13,32 @@ classdef DerivedRep < replab.Rep
         function self = DerivedRep(parent, conjugate, inverse, transpose)
             assert(inverse == transpose, ...
                    'Cannot use inverse & transpose independently, as our representations are left modules');
+            % own properties
             self.parent = parent;
-            self.group = parent.group;
-            self.field = parent.field;
-            self.dimension = parent.dimension;
-            self.isUnitary = parent.isUnitary;
             self.conjugate = conjugate;
             self.inverse = inverse;
             self.transpose = transpose;
-            self.irrepInfo = [];
+            % from replab.Rep, immutable
+            self.group = parent.group;
+            self.field = parent.field;
+            self.dimension = parent.dimension;
+            % from replab.Rep, mutable
+            self.isUnitary = parent.isUnitary;
+            self.trivialDimension = parent.trivialDimension;
+            self.isIrreducible = parent.isIrreducible;
         end
 
         function s = headerStr(self)
-            els = {};
-            if self.conjugate
-                els{1,end+1} = 'conjugate';
-            end
-            if self.inverse
-                els{1,end+1} = 'inverse';
-            end
-            if self.transpose
-                els{1,end+1} = 'transpose';
-            end
-            if isempty(els)
-                els = 'Untransformed derived representation';
-            else
-                s = strjoin(els, ' ');
-                s(1) = upper(s(1));
-                s = [s ' derived representation'];
-            end
+            s = headerStr@replab.Rep(self); % logic in parent class
         end
 
         % Rep
 
-        function rho = image(self, g)
+        function img = image_internal(self, g)
             if self.inverse
-                img = self.parent.inverseImage(g);
+                img = self.parent.inverseImage_internal(g);
             else
-                img = self.parent.image(g);
+                img = self.parent.image_internal(g);
             end
             if self.conjugate
                 img = conj(img);
@@ -60,11 +48,11 @@ classdef DerivedRep < replab.Rep
             end
         end
 
-        function rho = inverseImage(self, g)
+        function img = inverseImage_internal(self, g)
             if self.inverse
-                img = self.parent.image(g);
+                img = self.parent.image_internal(g);
             else
-                img = self.parent.inverseImage(g);
+                img = self.parent.inverseImage_internal(g);
             end
             if self.conjugate
                 img = conj(img);

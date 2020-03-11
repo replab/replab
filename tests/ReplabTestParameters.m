@@ -11,7 +11,7 @@ classdef ReplabTestParameters
 
         function value = withCoverage(newValue)
             % value = withCoverage([newValue])
-            % 
+            %
             % Sets/tells whether test coverage is active
             %
             % Args:
@@ -31,10 +31,10 @@ classdef ReplabTestParameters
             end
             value = coverage;
         end
-        
+
         function value = onlyFastTests(newValue)
             % value = onlyFastTests([newValue])
-            % 
+            %
             % Sets/tells whether only fast tests should be performed
             %
             % Args:
@@ -55,6 +55,6 @@ classdef ReplabTestParameters
             end
             value = fastOnly;
         end
-        
+
     end
 end

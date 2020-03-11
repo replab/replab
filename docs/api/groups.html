@@ -13,26 +13,26 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Basic group structures &#8212; RepLAB 0.6.7 documentation</title>
+    <title>Basic group structures &#8212; RepLAB 0.7.0 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    <script type="text/javascript" src="../_static/collapse_admonitions.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script type="text/javascript" src="../_static/js/collapse_helper.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/collapse_helper.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Representations" href="rep.html" />
-    <link rel="prev" title="Laws" href="laws.html" />
+    <link rel="prev" title="Dispatch mechanism" href="dispatch.html" />
   
   
    
@@ -62,9 +62,9 @@
           <a href="rep.html" title="Representations"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="laws.html" title="Laws"
+          <a href="dispatch.html" title="Dispatch mechanism"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.7.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.7.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -96,6 +96,7 @@
 <li class="toctree-l2"><a class="reference internal" href="print.html">Pretty printing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base.html">Base object types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="laws.html">Laws</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dispatch.html">Dispatch mechanism</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Basic group structures</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#monoid">Monoid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#monoidlaws">MonoidLaws</a></li>
@@ -115,6 +116,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rep_technical.html">Representations (support code)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep_irreducible.html">Representations (irreducible decomposition support code)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="permutations.html">Permutation groups</a></li>
 <li class="toctree-l2"><a class="reference internal" href="group_constructions.html">Abstract group constructions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="infrastructure.html">Infrastructure</a></li>
@@ -935,6 +937,7 @@ a <a class="reference internal" href="base.html#+replab.Domain.eqv" title="+repl
 <li><p><a class="reference internal" href="#+replab.CompactGroup.composeWithInverse" title="+replab.CompactGroup.composeWithInverse"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">composeWithInverse</span></code></a> – Returns the composition of an element with the inverse of another element</p></li>
 <li><p><a class="reference internal" href="#+replab.CompactGroup.directPower" title="+replab.CompactGroup.directPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code></a> – Returns the direct product of this group with itself a number of times</p></li>
 <li><p><a class="reference internal" href="#+replab.CompactGroup.directProduct" title="+replab.CompactGroup.directProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code></a> – Returns the direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.CompactGroup.directSumRep" title="+replab.CompactGroup.directSumRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code></a> – Computes the direct sum of representations on this group</p></li>
 <li><p><a class="reference internal" href="#+replab.CompactGroup.disp" title="+replab.CompactGroup.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.CompactGroup.eq" title="+replab.CompactGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
 <li><p><a class="reference internal" href="#+replab.CompactGroup.eqv" title="+replab.CompactGroup.eqv"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eqv</span></code></a> – Tests domain elements for equality/equivalence</p></li>
@@ -950,6 +953,7 @@ a <a class="reference internal" href="base.html#+replab.Domain.eqv" title="+repl
 <li><p><a class="reference internal" href="#+replab.CompactGroup.sampleUniformly" title="+replab.CompactGroup.sampleUniformly"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sampleUniformly</span></code></a> – Samples from the Haar measure</p></li>
 <li><p><a class="reference internal" href="#+replab.CompactGroup.semidirectProduct" title="+replab.CompactGroup.semidirectProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">semidirectProduct</span></code></a> – Describes an external semidirect product of groups</p></li>
 <li><p><a class="reference internal" href="#+replab.CompactGroup.shortStr" title="+replab.CompactGroup.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.CompactGroup.tensorRep" title="+replab.CompactGroup.tensorRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.CompactGroup.trivialRep" title="+replab.CompactGroup.trivialRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code></a> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
 </ul>
 </div>
@@ -1115,6 +1119,26 @@ is <a class="reference internal" href="#+replab.FiniteGroup" title="+replab.Fini
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="+replab.CompactGroup.directSumRep">
+<code class="sig-name descname">directSumRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CompactGroup.directSumRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the direct sum of representations on this group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>field</strong> (<em>{'R', 'C'}</em>) – Field</p></li>
+<li><p><strong>reps</strong> (cell(1,*) of <a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a>) – Representation of this group over the given field</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Direct sum of the representations</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="staticmethod">
 <dt id="+replab.CompactGroup.lambda">
 <em class="property">static </em><code class="sig-name descname">lambda</code><span class="sig-paren">(</span><em class="sig-param">header</em>, <em class="sig-param">eqvFun</em>, <em class="sig-param">sampleFun</em>, <em class="sig-param">composeFun</em>, <em class="sig-param">identity</em>, <em class="sig-param">inverseFun</em>, <em class="sig-param">sampleUniformlyFun</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CompactGroup.lambda" title="Permalink to this definition">¶</a></dt>
@@ -1186,6 +1210,23 @@ of the type of <code class="docutils literal notranslate"><span class="pre">self
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.CompactGroup.tensorRep">
+<code class="sig-name descname">tensorRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CompactGroup.tensorRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the tensor product of representations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>reps</strong> (cell(1,*) of <a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a>) – Representation of the same group over the same field</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tensor product of the representations</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Rep</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.CompactGroup.trivialRep">
 <code class="sig-name descname">trivialRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CompactGroup.trivialRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the trivial representation of this group on a finite dimensional vector space</p>
@@ -1238,6 +1279,7 @@ Default value 1</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.decomposition" title="+replab.FiniteGroup.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns a decomposition of this group as a product of sets</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.directPower" title="+replab.FiniteGroup.directPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code></a> – Returns the direct product of this group with itself a number of times</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.directProduct" title="+replab.FiniteGroup.directProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code></a> – Returns the direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteGroup.directSumRep" title="+replab.FiniteGroup.directSumRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code></a> – Computes the direct sum of representations on this group</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.disp" title="+replab.FiniteGroup.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.elements" title="+replab.FiniteGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family of the group elements</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.eq" title="+replab.FiniteGroup.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a> – Equality test</p></li>
@@ -1262,6 +1304,7 @@ Default value 1</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.sampleUniformly" title="+replab.FiniteGroup.sampleUniformly"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sampleUniformly</span></code></a> – Samples from the Haar measure</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.semidirectProduct" title="+replab.FiniteGroup.semidirectProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">semidirectProduct</span></code></a> – Describes an external semidirect product of groups</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.shortStr" title="+replab.FiniteGroup.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.FiniteGroup.tensorRep" title="+replab.FiniteGroup.tensorRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.FiniteGroup.trivialRep" title="+replab.FiniteGroup.trivialRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code></a> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
 </ul>
 </div>
@@ -1319,6 +1362,12 @@ Default value 1</p></li>
 <dt id="+replab.FiniteGroup.directProduct">
 <code class="sig-name descname">directProduct</code><span class="sig-paren">(</span><em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroup.directProduct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.CompactGroup.directProduct" title="+replab.CompactGroup.directProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.FiniteGroup.directSumRep">
+<code class="sig-name descname">directSumRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroup.directSumRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.CompactGroup.directSumRep" title="+replab.CompactGroup.directSumRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directSumRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1409,6 +1458,12 @@ Default value 1</p></li>
 <dt id="+replab.FiniteGroup.shortStr">
 <code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroup.shortStr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="print.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.FiniteGroup.tensorRep">
+<code class="sig-name descname">tensorRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.FiniteGroup.tensorRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.CompactGroup.tensorRep" title="+replab.CompactGroup.tensorRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.tensorRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -1960,6 +2015,7 @@ methods will end up recursing to the infinity.</p>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.decomposition" title="+replab.NiceFiniteGroup.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns a decomposition of this group as a product of sets</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.directPower" title="+replab.NiceFiniteGroup.directPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code></a> – Returns the direct product of this group with itself a number of times</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.directProduct" title="+replab.NiceFiniteGroup.directProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code></a> – Returns the direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.directSumRep" title="+replab.NiceFiniteGroup.directSumRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code></a> – Computes the direct sum of representations on this group</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.disp" title="+replab.NiceFiniteGroup.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.elementOrder" title="+replab.NiceFiniteGroup.elementOrder"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementOrder</span></code></a> – Returns the order of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.elements" title="+replab.NiceFiniteGroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family of the group elements</p></li>
@@ -1993,6 +2049,7 @@ methods will end up recursing to the infinity.</p>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.shortStr" title="+replab.NiceFiniteGroup.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.signedPermutationRep" title="+replab.NiceFiniteGroup.signedPermutationRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">signedPermutationRep</span></code></a> – Returns a real signed permutation representation of this group</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.subgroup" title="+replab.NiceFiniteGroup.subgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subgroup</span></code></a> – Constructs a subgroup of the current group from generators</p></li>
+<li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.tensorRep" title="+replab.NiceFiniteGroup.tensorRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.trivialRep" title="+replab.NiceFiniteGroup.trivialRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code></a> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteGroup.trivialSubgroup" title="+replab.NiceFiniteGroup.trivialSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialSubgroup</span></code></a> – Returns the trivial subgroup of this group</p></li>
 </ul>
@@ -2057,6 +2114,12 @@ methods will end up recursing to the infinity.</p>
 <dt id="+replab.NiceFiniteGroup.directProduct">
 <code class="sig-name descname">directProduct</code><span class="sig-paren">(</span><em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroup.directProduct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.CompactGroup.directProduct" title="+replab.CompactGroup.directProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.NiceFiniteGroup.directSumRep">
+<code class="sig-name descname">directSumRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroup.directSumRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.CompactGroup.directSumRep" title="+replab.CompactGroup.directSumRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directSumRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -2204,6 +2267,12 @@ methods will end up recursing to the infinity.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="+replab.NiceFiniteGroup.tensorRep">
+<code class="sig-name descname">tensorRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroup.tensorRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.CompactGroup.tensorRep" title="+replab.CompactGroup.tensorRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.tensorRep()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="+replab.NiceFiniteGroup.trivialRep">
 <code class="sig-name descname">trivialRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroup.trivialRep" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.CompactGroup.trivialRep" title="+replab.CompactGroup.trivialRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.trivialRep()</span></code></a></p>
@@ -2336,8 +2405,8 @@ homomorphism into a permutation group.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dimension</strong> – Dimension of the representation</p></li>
-<li><p><strong>permutations</strong> (<em>row cell array of permutations</em>) – Images of the generators as permutations of size <code class="docutils literal notranslate"><span class="pre">dimension</span></code></p></li>
+<li><p><strong>dimension</strong> (<em>integer</em>) – Dimension of the representation</p></li>
+<li><p><strong>permutations</strong> (<em>cell(1,*) of permutations</em>) – Images of the generators as permutations of size <code class="docutils literal notranslate"><span class="pre">dimension</span></code></p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2351,16 +2420,15 @@ homomorphism into a permutation group.</p>
 
 <dl class="method">
 <dt id="+replab.NiceFiniteGroup.repByImages">
-<code class="sig-name descname">repByImages</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">images</em>, <em class="sig-param">inverseImages</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroup.repByImages" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">repByImages</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">images</em>, <em class="sig-param">inverseImages</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteGroup.repByImages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a finite dimensional representation of this group from generator images</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>field</strong> (<em>{'R', 'C'}</em>) – Whether the representation is real (R) or complex (C)</p></li>
 <li><p><strong>dimension</strong> (<em>integer</em>) – Representation dimension</p></li>
-<li><p><strong>isUnitary</strong> (<em>{true, false, []}</em>) – Whether the representation is unitary (or <code class="docutils literal notranslate"><span class="pre">[]</span></code> for unknown)</p></li>
-<li><p><strong>images</strong> (<em>row cell array of matrices</em>) – Images of the group generators</p></li>
-<li><p><strong>inverseImages</strong> (<em>row cell array of matrices</em>) – Inverse images of the group generators</p></li>
+<li><p><strong>images</strong> (cell(1,*) of double(<em>,</em>), may be sparse) – Images of the group generators</p></li>
+<li><p><strong>inverseImages</strong> (cell(1,*) of double(<em>,</em>), may be sparse) – Inverse images of the group generators</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2694,6 +2762,7 @@ homomorphism into a permutation group.</p>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.decomposition" title="+replab.NiceFiniteSubgroup.decomposition"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">decomposition</span></code></a> – Returns a decomposition of this group as a product of sets</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.directPower" title="+replab.NiceFiniteSubgroup.directPower"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directPower</span></code></a> – Returns the direct product of this group with itself a number of times</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.directProduct" title="+replab.NiceFiniteSubgroup.directProduct"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directProduct</span></code></a> – Returns the direct product of groups</p></li>
+<li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.directSumRep" title="+replab.NiceFiniteSubgroup.directSumRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">directSumRep</span></code></a> – Computes the direct sum of representations on this group</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.disp" title="+replab.NiceFiniteSubgroup.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.elementOrder" title="+replab.NiceFiniteSubgroup.elementOrder"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elementOrder</span></code></a> – Returns the order of a group element</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.elements" title="+replab.NiceFiniteSubgroup.elements"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">elements</span></code></a> – Returns an indexed family of the group elements</p></li>
@@ -2727,6 +2796,7 @@ homomorphism into a permutation group.</p>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.shortStr" title="+replab.NiceFiniteSubgroup.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.signedPermutationRep" title="+replab.NiceFiniteSubgroup.signedPermutationRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">signedPermutationRep</span></code></a> – Returns a real signed permutation representation of this group</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.subgroup" title="+replab.NiceFiniteSubgroup.subgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subgroup</span></code></a> – Constructs a subgroup of the current group from generators</p></li>
+<li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.tensorRep" title="+replab.NiceFiniteSubgroup.tensorRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">tensorRep</span></code></a> – Computes the tensor product of representations</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.trivialRep" title="+replab.NiceFiniteSubgroup.trivialRep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialRep</span></code></a> – Returns the trivial representation of this group on a finite dimensional vector space</p></li>
 <li><p><a class="reference internal" href="#+replab.NiceFiniteSubgroup.trivialSubgroup" title="+replab.NiceFiniteSubgroup.trivialSubgroup"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trivialSubgroup</span></code></a> – Returns the trivial subgroup of this group</p></li>
 </ul>
@@ -2803,6 +2873,12 @@ homomorphism into a permutation group.</p>
 <dt id="+replab.NiceFiniteSubgroup.directProduct">
 <code class="sig-name descname">directProduct</code><span class="sig-paren">(</span><em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteSubgroup.directProduct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.CompactGroup.directProduct" title="+replab.CompactGroup.directProduct"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directProduct()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.NiceFiniteSubgroup.directSumRep">
+<code class="sig-name descname">directSumRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteSubgroup.directSumRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.CompactGroup.directSumRep" title="+replab.CompactGroup.directSumRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.directSumRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -2963,7 +3039,7 @@ homomorphism into a permutation group.</p>
 
 <dl class="method">
 <dt id="+replab.NiceFiniteSubgroup.repByImages">
-<code class="sig-name descname">repByImages</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">isUnitary</em>, <em class="sig-param">images</em>, <em class="sig-param">inverseImages</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteSubgroup.repByImages" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">repByImages</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">dimension</em>, <em class="sig-param">images</em>, <em class="sig-param">inverseImages</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteSubgroup.repByImages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.NiceFiniteGroup.repByImages" title="+replab.NiceFiniteGroup.repByImages"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.NiceFiniteGroup.repByImages()</span></code></a></p>
 </dd></dl>
 
@@ -3001,6 +3077,12 @@ homomorphism into a permutation group.</p>
 <dt id="+replab.NiceFiniteSubgroup.subgroup">
 <code class="sig-name descname">subgroup</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">generators</em>, <em class="sig-param">order</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteSubgroup.subgroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Documentation in <a class="reference internal" href="#+replab.NiceFiniteGroup.subgroup" title="+replab.NiceFiniteGroup.subgroup"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.NiceFiniteGroup.subgroup()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="+replab.NiceFiniteSubgroup.tensorRep">
+<code class="sig-name descname">tensorRep</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">field</em>, <em class="sig-param">reps</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.NiceFiniteSubgroup.tensorRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="#+replab.CompactGroup.tensorRep" title="+replab.CompactGroup.tensorRep"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.CompactGroup.tensorRep()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -3483,7 +3565,7 @@ compatible with the group composition as in</p>
   <div class="footer-relations">
     
       <div class="pull-left">
-        <a class="btn btn-default" href="laws.html" title="previous chapter (use the left arrow)">Laws</a>
+        <a class="btn btn-default" href="dispatch.html" title="previous chapter (use the left arrow)">Dispatch mechanism</a>
       </div>
     
       <div class="pull-right">
@@ -3508,9 +3590,9 @@ compatible with the group composition as in</p>
           <a href="rep.html" title="Representations"
              >next</a> |</li>
         <li class="right" >
-          <a href="laws.html" title="Laws"
+          <a href="dispatch.html" title="Dispatch mechanism"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li> 
       </ul>
     </div>

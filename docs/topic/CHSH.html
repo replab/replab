@@ -13,21 +13,21 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Relabelings in the CHSH scenario &#8212; RepLAB 0.6.7 documentation</title>
+    <title>Relabelings in the CHSH scenario &#8212; RepLAB 0.7.0 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    <script type="text/javascript" src="../_static/collapse_admonitions.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script type="text/javascript" src="../_static/js/collapse_helper.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/collapse_helper.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="error_estimation.html" title="Error estimation in RepLAB"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Topic guides</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.7.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.7.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Topic guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="error_thresholds.html">Error thresholds in RepLAB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="error_estimation.html">Error estimation in RepLAB</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Relabelings in the CHSH scenario</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Relabelings-the-outputs">Relabelings the outputs</a></li>
@@ -207,9 +208,9 @@ div.nboutput.container div.prompt pre {
 /* all prompts */
 div.nbinput.container div.prompt,
 div.nboutput.container div.prompt {
-    min-width: 6ex;
-    padding-top: 0.4em;
-    padding-right: 0.4em;
+    min-width: 5.5ex;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
     text-align: right;
     flex: 0;
 }
@@ -233,7 +234,6 @@ div.nboutput.container div.prompt pre {
 /* input/output area */
 div.nbinput.container div.input_area,
 div.nboutput.container div.output_area {
-    padding: 0.4em;
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
@@ -307,6 +307,27 @@ div.nboutput.container div.output_area.stderr {
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
 
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
 /* Some additional styling taken form the Jupyter notebook CSS */
 div.rendered_html table {
   border: none;
@@ -364,7 +385,6 @@ Adding RepLAB to the path
 warning: function /home/denis/w/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Loading optim package for Octave...
-OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = &#34;org.octave.OctClassLoader&#34;). To use archived non-system classes, this property must be not be set
 Adding VPI to the path
 Adding MOxUnit to the path
 Adding embedded YALMIP to the path
@@ -381,7 +401,7 @@ Adding MOcov to the path
 </div>
 <div class="input_area highlight-octave notranslate"><div class="highlight"><pre>
 <span></span><span class="n">outputGroup</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">S</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="n">outputRep</span> <span class="p">=</span> <span class="n">outputGroup</span><span class="p">.</span><span class="n">definingRep</span>
+<span class="n">outputRep</span> <span class="p">=</span> <span class="n">outputGroup</span><span class="p">.</span><span class="n">naturalRep</span>
 </pre></div>
 </div>
 </div>
@@ -400,14 +420,17 @@ generator(1): [2, 1]
 
 outputRep =
 
-Orthogonal real representation of dimension 2
-    dimension: 2
-        field: &#39;R&#39;
-        group: Permutations acting on 2 elements
-inverseImages: {[0, 1; 1, 0]}
-    irrepInfo: []
-    isUnitary: true
-    images{1}: [0, 1; 1, 0]
+Orthogonal representation by images
+                 dimension: 2
+                     field: &#39;R&#39;
+   frobeniusSchurIndicator: []
+                     group: Permutations acting on 2 elements
+    inverseImages_internal: {[0, 1; 1, 0]}
+isDivisionAlgebraCanonical: []
+             isIrreducible: []
+                 isUnitary: true
+          trivialDimension: []
+        images_internal{1}: [0, 1; 1, 0]
 
 </pre></div></div>
 </div>
@@ -430,24 +453,11 @@ inverseImages: {[0, 1; 1, 0]}
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-ioGroup =
-
-replab.wreathproduct.OfNiceFiniteGroup
-           A: Permutations acting on 2 elements
-           H: Permutations acting on 2 elements
-           N: replab.directproduct.OfNiceFiniteGroups
-    identity: {[1, 2], {[1, 2], [1, 2]}}
-           n: 2
-      parent: replab.wreathproduct.OfNiceFiniteGroup
-         phi: replab.perm.PermutationCellAction
-generator(1): {[2, 1], {[1, 2], [1, 2]}}
-generator(2): {[1, 2], {[2, 1], [1, 2]}}
-generator(3): {[1, 2], {[1, 2], [2, 1]}}
-
+error: can&#39;t perform indexing operations for user-defined function type
 </pre></div></div>
 </div>
 <p>The representation on the conditional probility <span class="math notranslate nohighlight">\(P(a|x)\)</span> is the imprimitive representation, given that we use the defining representation for the inner group</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
@@ -456,11 +466,19 @@ generator(3): {[1, 2], {[1, 2], [2, 1]}}
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+error: &#39;ioGroup&#39; undefined near line 1 column 9
+</pre></div></div>
+</div>
 </div>
 <div class="section" id="Adding-the-relabelings-of-parties">
 <h2>Adding the relabelings of parties<a class="headerlink" href="#Adding-the-relabelings-of-parties" title="Permalink to this headline">¶</a></h2>
 <p>The same story repeats for relabelings of parties: the scenario involves two homogeneous parties. We thus have two copies of the group relabeling inputs and/or outputs (one for Alice, one for Bob), and a copy of <span class="math notranslate nohighlight">\(S_2\)</span> that permutes the parties. This group desribing all possible relabellings in this scenario is thus given by:</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
@@ -469,8 +487,16 @@ generator(3): {[1, 2], {[1, 2], [2, 1]}}
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+error: &#39;ioGroup&#39; undefined near line 1 column 43
+</pre></div></div>
+</div>
 <p>The representation on the behavior <span class="math notranslate nohighlight">\(P(ab|xy)\)</span> is however a primitive representation, as <span class="math notranslate nohighlight">\(P(a|x; b|y)\)</span> ressembles a tensor. Inside each party, we use the imprimitive representation constructed before.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
@@ -478,6 +504,14 @@ generator(3): {[1, 2], {[1, 2], [2, 1]}}
 <span></span><span class="n">probRep</span> <span class="p">=</span> <span class="n">scenarioGroup</span><span class="p">.</span><span class="n">primitiveRep</span><span class="p">(</span><span class="n">ioRep</span><span class="p">);</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+error: &#39;scenarioGroup&#39; undefined near line 1 column 11
+</pre></div></div>
 </div>
 </div>
 <div class="section" id="Decomposition-of-the-full-probability-space">
@@ -497,33 +531,7 @@ generator(3): {[1, 2], {[1, 2], [2, 1]}}
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-dec =
-
-Subrepresentation
-   dimension: 16
-       field: &#39;R&#39;
-       group: replab.wreathproduct.OfNiceFiniteGroup
-   irrepInfo: []
-   isUnitary: true
-   niceBasis: replab.NiceBasis
-      parent: Orthogonal real representation of dimension 16
-      U(1,:): [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]/4
-      U(2,:): [2, 2, -2, -2, 2, 2, -2, -2, -2, -2, 2, 2, -2, -2, 2, 2]/8
-      U(3,:): [0, 0, -4, -4, 0, 0, -4, -4, 4, 4, 0, 0, 4, 4, 0, 0]/sqrt(128)
-      U(4,:): [4, 4, 0, 0, 4, 4, 0, 0, 0, 0, -4, -4, 0, 0, -4, -4]/sqrt(128)
-      U(5,:): [4, 0, 0, -4, 0, -4, 4, 0, 0, 4, -4, 0, -4, 0, 0, 4]/sqrt(128)
-      U(6,:): [0, 4, -4, 0, -4, 0, 0, 4, 4, 0, 0, -4, 0, -4, 4, 0]/sqrt(128)
-      U(7,:): [2, 2, -2, -2, -2, -2, 2, 2, -2, -2, 2, 2, 2, 2, -2, -2]/8
-      U(8,:): [2, -2, -2, 2, 2, -2, -2, 2, -2, 2, 2, -2, -2, 2, 2, -2]/8
-      U(9,:): [1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, 1, -1, 1]/4
-     U(10,:): [0, 0, -4, 4, 0, 0, 4, -4, 4, -4, 0, 0, -4, 4, 0, 0]/sqrt(128)
-     U(11,:): [4, -4, 0, 0, -4, 4, 0, 0, 0, 0, -4, 4, 0, 0, 4, -4]/sqrt(128)
-     U(12,:): [2, -2, -2, 2, -2, 2, 2, -2, -2, 2, 2, -2, 2, -2, -2, 2]/8
-     U(13,:): [0, -4, -4, 0, 4, 0, 0, 4, 4, 0, 0, 4, 0, -4, -4, 0]/sqrt(128)
-     U(14,:): [4, 0, 0, 4, 0, -4, -4, 0, 0, -4, -4, 0, 4, 0, 0, 4]/sqrt(128)
-     U(15,:): [2, -2, 2, -2, 2, -2, 2, -2, 2, -2, 2, -2, 2, -2, 2, -2]/8
-...
-
+error: &#39;probRep&#39; undefined near line 1 column 7
 </pre></div></div>
 </div>
 <p>There are 6 irreducible components</p>
@@ -541,7 +549,7 @@ Subrepresentation
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-ans =  6
+error: &#39;dec&#39; undefined near line 1 column 1
 </pre></div></div>
 </div>
 <p>These components correspond to the following physical elements ( see <a class="reference external" href="https://arxiv.org/abs/1610.01833">arXiv:1610.01833</a> ) for more details:</p>
@@ -593,7 +601,7 @@ ans =  6
         <li class="right" >
           <a href="error_estimation.html" title="Error estimation in RepLAB"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Topic guides</a> &#187;</li> 
       </ul>
     </div>

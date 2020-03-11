@@ -13,26 +13,26 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Error estimation in RepLAB &#8212; RepLAB 0.6.7 documentation</title>
+    <title>Error estimation in RepLAB &#8212; RepLAB 0.7.0 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    <script type="text/javascript" src="../_static/collapse_admonitions.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script type="text/javascript" src="../_static/js/collapse_helper.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/collapse_admonitions.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/collapse_helper.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Relabelings in the CHSH scenario" href="CHSH.html" />
-    <link rel="prev" title="Topic guides" href="index.html" />
+    <link rel="prev" title="Error thresholds in RepLAB" href="error_thresholds.html" />
   
   
    
@@ -62,9 +62,9 @@
           <a href="CHSH.html" title="Relabelings in the CHSH scenario"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Topic guides"
+          <a href="error_thresholds.html" title="Error thresholds in RepLAB"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Topic guides</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.6.7.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.7.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Topic guides</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="error_thresholds.html">Error thresholds in RepLAB</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Error estimation in RepLAB</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#For-representations-over-finite-groups">For representations over finite groups</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#For-representations-over-compact-groups">For representations over compact groups</a></li>
@@ -205,9 +206,9 @@ div.nboutput.container div.prompt pre {
 /* all prompts */
 div.nbinput.container div.prompt,
 div.nboutput.container div.prompt {
-    min-width: 6ex;
-    padding-top: 0.4em;
-    padding-right: 0.4em;
+    min-width: 5.5ex;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
     text-align: right;
     flex: 0;
 }
@@ -231,7 +232,6 @@ div.nboutput.container div.prompt pre {
 /* input/output area */
 div.nbinput.container div.input_area,
 div.nboutput.container div.output_area {
-    padding: 0.4em;
     -webkit-flex: 1;
     flex: 1;
     overflow: auto;
@@ -305,6 +305,27 @@ div.nboutput.container div.output_area.stderr {
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
 
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
 /* Some additional styling taken form the Jupyter notebook CSS */
 div.rendered_html table {
   border: none;
@@ -360,7 +381,6 @@ Adding RepLAB to the path
 warning: function /home/denis/w/replab/src/help.m shadows a core library function
 Adding RepLAB package to the path
 Loading optim package for Octave...
-OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = &#34;org.octave.OctClassLoader&#34;). To use archived non-system classes, this property must be not be set
 Adding VPI to the path
 Adding MOxUnit to the path
 Adding embedded YALMIP to the path
@@ -380,7 +400,7 @@ Adding MOcov to the path
 <div class="section" id="For-representations-over-compact-groups">
 <h2>For representations over compact groups<a class="headerlink" href="#For-representations-over-compact-groups" title="Permalink to this headline">¶</a></h2>
 <p>We’ll explain our process on the representation <span class="math notranslate nohighlight">\(U \otimes U \otimes U\)</span> where <span class="math notranslate nohighlight">\(U\)</span> is the unitary group of dimension 3.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
@@ -389,6 +409,14 @@ Adding MOcov to the path
 <span class="n">rep</span> <span class="p">=</span> <span class="n">replab</span><span class="p">.</span><span class="n">U</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="n">definingRep</span><span class="p">.</span><span class="n">tensorPower</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+error: can&#39;t perform indexing operations for user-defined function type
+</pre></div></div>
 </div>
 <p>To decompose that representation, we need to take generic samples from the commutant algebra. This is achieved by projecting a random matrix on the invariant subspace using an iterative algorithm. <span class="math notranslate nohighlight">\(X_0\)</span> is that random initial matrix, and then our iteration is:</p>
 <div class="math notranslate nohighlight">
@@ -405,7 +433,7 @@ becomes comparable to the noise floor <span class="math notranslate nohighlight"
 <p>Our convergence criteria is as follows:</p>
 <ul class="simple">
 <li><p>The fit must be nondegenerate; in particular, there are sufficiently many data points to estimate the noise floor (which cannot be estimated well until the floating point noise effects are observed).</p></li>
-<li><p>We check that the 5% confidence interval for the estimation of the noise floor value represents a deviation of less than an order of magnitude (i.e. a factor 10).</p></li>
+<li><p>We check that the 5% confidence interval for the estimation of the noise floor value represents a deviation of less than an order of magnitude (i.e. a factor 10).</p></li>
 <li><p>If the two conditions above are satisfied, we compute the crossing point <span class="math notranslate nohighlight">\(\xi\)</span>. We proceed with the next check if the current iteration <span class="math notranslate nohighlight">\(i \ge \xi + 10\)</span>.</p></li>
 <li><p>The final test for convergence is that the errors <span class="math notranslate nohighlight">\(\Delta_{i-10}, \ldots, \Delta_i\)</span> are all within a factor <span class="math notranslate nohighlight">\(10\)</span> of the estimated noise floor. We then return <span class="math notranslate nohighlight">\(10 \nu\)</span> as an error estimate.</p></li>
 </ul>
@@ -422,8 +450,9 @@ becomes comparable to the noise floor <span class="math notranslate nohighlight"
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/topic_error_estimation_7_0.png" src="../_images/topic_error_estimation_7_0.png" />
-</div>
+<div class="highlight"><pre>
+error: &#39;rep&#39; undefined near line 1 column 1
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -438,7 +467,7 @@ becomes comparable to the noise floor <span class="math notranslate nohighlight"
   <div class="footer-relations">
     
       <div class="pull-left">
-        <a class="btn btn-default" href="index.html" title="previous chapter (use the left arrow)">Topic guides</a>
+        <a class="btn btn-default" href="error_thresholds.html" title="previous chapter (use the left arrow)">Error thresholds in RepLAB</a>
       </div>
     
       <div class="pull-right">
@@ -463,9 +492,9 @@ becomes comparable to the noise floor <span class="math notranslate nohighlight"
           <a href="CHSH.html" title="Relabelings in the CHSH scenario"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Topic guides"
+          <a href="error_thresholds.html" title="Error thresholds in RepLAB"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.6.7 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Topic guides</a> &#187;</li> 
       </ul>
     </div>

@@ -100,8 +100,9 @@ classdef GeneralizedPauli < replab.FiniteGroup
             W = diag(omega(2)*ones(1, d));
             X = full(sparse([2:d 1], 1:d, ones(1, d)));
             Z = diag(omega);
-            rep = replab.Rep.lambda(self, 'C', d, true, [], ...
+            rep = replab.Rep.lambda(self, 'C', d, ...
                                     @(g) W^g(1)*X^g(2)*Z^g(3), @(g) (W^g(1)*X^g(2)*Z^g(3))');
+            rep.isUnitary = true;
         end
 
     end

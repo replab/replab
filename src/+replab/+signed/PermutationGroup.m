@@ -4,23 +4,23 @@ classdef PermutationGroup < replab.NiceFiniteGroup
     properties (SetAccess = protected)
         domainSize; % d when this group acts on {-d..-1, 1..d}
     end
-    
+
     methods
 
         %% Domain methods
-        
+
         function b = eqv(self, x, y)
             b = isequal(x, y);
         end
 
         %% Monoid methods
-        
+
         function z = compose(self, x, y)
             z = x(abs(y)).*sign(y);
         end
-        
+
         %% Group methods
-        
+
         function y = inverse(self, x)
             n = self.domainSize;
             y = zeros(1, n);
@@ -29,16 +29,16 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             invFlip = xAbs(x < 0);
             y(invFlip) = -y(invFlip);
         end
-        
+
         %% NiceFiniteGroup methods
-        
+
         function p1 = niceMonomorphismImage(self, p)
             p1 = replab.signed.Permutations.toPermutation(p);
         end
 
-        
+
         %% Methods specific to signed permutation groups
-        
+
         function G = permutationPart(self)
         % Returns the permutation part of the current group
         %
@@ -55,7 +55,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             end
             G = replab.Permutations(self.domainSize).subgroup(newGenerators);
         end
-        
+
         function p = elementPermutationPart(self, g)
         % Returns the permutation part of a signed permutation, by taking image absolute values
         %
@@ -68,7 +68,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %   permutation: The permutation part of ``g``
             p = abs(g);
         end
-        
+
         %% Actions
 
         function A = naturalAction(self)
@@ -77,7 +77,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         % Here, d is self.domainSize
             A = replab.perm.SignedPermutationNaturalAction(self);
         end
-        
+
         function A = vectorAction(self)
         % Returns the action of elements of this group on vectors
         %
@@ -92,14 +92,14 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         % rows and columns and flipping their signs
             A = replab.perm.SignedPermutationMatrixAction(self);
         end
-        
+
         %% Representation construction
-        
-        function rho = definingRep(self)
+
+        function rho = naturalRep(self)
         % Natural representation on R^d of signed permutations on integers -d..-1, 1..d
             rho = self.signedPermutationRep(self.domainSize, self.generators);
         end
-        
+
     end
-    
+
 end

@@ -7,50 +7,52 @@ classdef RepByImages < replab.Rep
 %
 % If the finite group is not a permutation group, a "nice monomorphism" in the sense of GAP is used, see:
 % https://www.gap-system.org/Manuals/doc/ref/chap40.html#X7FFD731684606BC6)
-    
+
     properties (SetAccess = protected)
-        images % Generator images
-        inverseImages % Generator inverse images
+        images_internal % (cell(1,\*) of double(\*,\*)): Generator images
+        inverseImages_internal % (cell(1,\*) of double(\*,\*)): Inverses of generator images
     end
-    
+
     properties (Access = protected)
-        chain_ % BSGS chain with images
+        chain_ % (`+replab.+bsgs.Chain`): BSGS chain with images
     end
-        
+
     methods
-                
+
         %% Own methods
-        
-        function self = RepByImages(group, field, dimension, isUnitary, images, inverseImages)
+
+        function self = RepByImages(group, field, dimension, images, inverseImages)
         % Constructs a representation from images of group generators and their inverses
         %
         % Args:
-        %   group (instance of `+replab.FiniteGroup`): Finite group represented
+        %   group (`+replab.NiceFiniteGroup`): Finite group represented
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
-        %   isUnitary ({true, false, []}): Whether the representation is unitary
-        %   images (row cell array of double matrices): Images of the generators of ``group`` in the same order
-        %   inverseImages (row cell array of double matrices, optional): Inverse images of the generators
-        %                                                                Optional if the representation is unitary
+        %   dimension (integer): Representation dimension
+        %   images (cell(1,\*) of double(\*,\*), may be sparse): Images of the generators of ``group`` in the same order
+        %   inverseImages (cell(1,\*) of double(\*,\*), may be sparse): Inverse images of the generators
             assert(isa(group, 'replab.NiceFiniteGroup'));
-            assert(isa(images, 'cell'));
-            if nargin < 6 || isequal(inverseImages, [])
-                assert(~isempty(isUnitary) && isUnitary, 'The representation must be unitary when inverse images are omitted');
-                inverseImages = cellfun(@(x) x', images, 'uniform', 0);
-            end
+            assert(isa(images, 'cell') && (isempty(images) || isrow(images)));
+            assert(isa(inverseImages, 'cell') && (isempty(inverseImages) || isrow(inverseImages)));
+            assert(length(images) == group.nGenerators);
             assert(length(inverseImages) == group.nGenerators);
-            assert(isa(inverseImages, 'cell'));
+            knownUnitary = true;
+            for i = 1:group.nGenerators
+                knownUnitary = knownUnitary && isequal(images{i}, inverseImages{i}');
+                assert(isequal(size(images{i}), [dimension dimension]));
+                assert(isequal(size(inverseImages{i}), [dimension dimension]));
+            end
+            % replab.Rep immutable
             self.group = group;
             self.field = field;
             self.dimension = dimension;
-            self.isUnitary = isUnitary;
-            self.images = images;
-            self.inverseImages = inverseImages;
-            for i = 1:self.group.nGenerators
-                assert(isequal(size(images{i}), [dimension dimension]));
-                assert(isequal(size(inverseImages{i}), [dimension dimension]));
-            end                
+            % replab.Rep mutable
+            if knownUnitary
+                self.isUnitary = true;
+            end
+            self.images_internal = images;
+            self.inverseImages_internal = inverseImages;
         end
-        
+
         function c = chain(self)
             if isempty(self.chain_)
                 if self.isUnitary
@@ -66,7 +68,7 @@ classdef RepByImages < replab.Rep
                     for i = 1:nG
                         I(:,i) = self.group.niceMonomorphismImage(self.group.generator(i));
                     end
-                    self.chain_ = replab.bsgs.Chain.makeWithImages(n, I, J, self.images);
+                    self.chain_ = replab.bsgs.Chain.makeWithImages(n, I, J, self.images_internal);
                 else
                     J = replab.GeneralLinearGroupWithInverses(self.field, self.dimension);
                     niceId = self.group.niceMonomorphismImage(self.group.identity);
@@ -76,7 +78,7 @@ classdef RepByImages < replab.Rep
                     elements = cell(1, nG);
                     for i = 1:nG
                         I(:,i) = self.group.niceMonomorphismImage(self.group.generator(i));
-                        elements{i} = [self.images{i} self.inverseImages{i}];
+                        elements{i} = [self.images_internal{i} self.inverseImages_internal{i}];
                     end
                     C = replab.bsgs.Chain(n, J);
                     C.insertStrongGenerators(I, elements);
@@ -89,38 +91,38 @@ classdef RepByImages < replab.Rep
             end
             c = self.chain_;
         end
-        
+
         %% Str methods
 
         function names = hiddenFields(self)
             names = hiddenFields@replab.Rep(self);
-            names{1, end+1} = 'images';
+            names{1, end+1} = 'images_internal';
         end
-        
+
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Rep(self);
-            for i = 1:length(self.images)
-                names{1, end+1} = sprintf('images{%d}', i);
-                values{1, end+1} = self.images{i};
+            for i = 1:length(self.images_internal)
+                names{1, end+1} = sprintf('images_internal{%d}', i);
+                values{1, end+1} = self.images_internal{i};
             end
         end
 
         %% Rep methods
-        
-        function rho = image(self, g)
+
+        function rho = image_internal(self, g)
             img = self.group.niceMonomorphismImage(g);
             rho = self.chain.image(img);
         end
-        
-        function rho = inverseImage(self, g)
+
+        function rho = inverseImage_internal(self, g)
             img = self.group.niceMonomorphismImage(g);
             rho = self.chain.inverseImage(img);
         end
-        
+
     end
 
     methods (Static)
-        
+
         function rep1 = fromRep(rep)
             assert(isa(rep.group, 'replab.NiceFiniteGroup'));
             nG = rep.group.nGenerators;
@@ -128,11 +130,11 @@ classdef RepByImages < replab.Rep
             inverseImages = cell(1, nG);
             for i = 1:nG
                 g = rep.group.generator(i);
-                images{i} = rep.image(g);
-                inverseImages{i} = rep.inverseImage(g);
+                images{i} = rep.image_internal(g);
+                inverseImages{i} = rep.inverseImage_internal(g);
             end
-            rep1 = replab.RepByImages(rep.group, rep.field, rep.dimension, rep.isUnitary, images, inverseImages);
+            rep1 = replab.RepByImages(rep.group, rep.field, rep.dimension, images, inverseImages);
         end
-        
+
     end
 end

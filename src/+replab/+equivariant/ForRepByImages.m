@@ -32,27 +32,24 @@ classdef ForRepByImages < replab.Equivariant
 
     methods (Static)
 
-        function e = make(repR, repC, special)
-            if ~isa(repR, 'replab.RepByImages')
+        function e = make(repC, repR, special)
+            if ~isa(repR, 'replab.RepByImages') || ~isa(repC, 'replab.RepByImages')
                 e = replab.DispatchNext;
                 return
             end
-            if ~isa(repC, 'replab.RepByImages')
-                e = replab.DispatchNext;
-                return
-            end
-            e = replab.equivariant.ForRepByImages(repR, repC, special);
+            e = replab.equivariant.ForRepByImages(repC, repR, special);
         end
 
     end
 
     methods
 
-        function self = ForRepByImages(repR, repC, special)
-            self = self@replab.Equivariant(repR, repC, special);
+        function self = ForRepByImages(repC, repR, special)
+            self@replab.Equivariant(repC, repR, special);
         end
 
         function [X err] = project(self, X)
+            X = full(X);
             if isempty(self.decompositionR) || isempty(self.decompositionC)
                 self.computeImages;
             end

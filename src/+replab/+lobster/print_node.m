@@ -1,7 +1,7 @@
 function print_node(node, indent)
     node_type = class(node);
     indent_str = repmat(' ', 1, indent);
-    
+
     if strcmp(node_type, 'replab.lobster.Root')
         fprintf('%s[Root]\n', indent_str);
     elseif strcmp(node_type, 'replab.lobster.TextNode')
@@ -20,7 +20,7 @@ function print_node(node, indent)
     else
         fprintf('%s[Unknown Node Type] <%s>\n', indent_str, class(node));
     end
-    
+
     for k = 1:length(node.children)
         replab.lobster.print_node(node.children{k}, indent+2);
     end

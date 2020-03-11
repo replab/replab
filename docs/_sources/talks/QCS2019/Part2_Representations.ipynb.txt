@@ -22,7 +22,6 @@
       "warning: function /home/denis/w/replab/src/help.m shadows a core library function\r\n",
       "Adding RepLAB package to the path\r\n",
       "Loading optim package for Octave...\r\n",
-      "OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = \"org.octave.OctClassLoader\"). To use archived non-system classes, this property must be not be set\r\n",
       "Adding VPI to the path\r\n",
       "Adding MOxUnit to the path\r\n",
       "Adding embedded YALMIP to the path\r\n",
@@ -52,14 +51,14 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "error: 'piInput' undefined near line 1 column 32\r\n"
+      "error: can't perform indexing operations for user-defined function type\r\n"
      ]
     }
    ],
    "source": [
     "piI = [3 4 1 2];\n",
     "piO1 = [2 1 3 4];\n",
-    "GAlice = replab.S(4).subgroup({piInput piOutput1})"
+    "GAlice = replab.S(4).subgroup({piI piO1})"
    ]
   },
   {
@@ -80,7 +79,7 @@
    "source": [
     "rhoI = [0 0 1 0; 0 0 0 1; 1 0 0 0; 0 1 0 0];\n",
     "rhoO1 = [0 1 0 0; 1 0 0 0; 0 0 1 0; 0 0 0 1];\n",
-    "rho = GAlice.rep('R',4,{rhoI rhoO1})"
+    "rho = GAlice.repByImages('R', 4, {rhoI rhoO1}, {rhoI' rhoO1'})"
    ]
   },
   {
@@ -130,7 +129,7 @@
    "source": [
     "sigmaI = [1 0 0 0; 0 0 1 0; 0 1 0 0; 0 0 0 1];\n",
     "sigmaO1 = [0 0 1 0; 0 0 0 1; 1 0 0 0; 0 1 0 0];\n",
-    "sigma = GAlice.rep('R',4,{sigmaI sigmaO1})"
+    "sigma = GAlice.repByImages('R', 4, {sigmaI sigmaO1}, {sigmaI' sigmaO1'})"
    ]
   },
   {
@@ -138,7 +137,7 @@
    "metadata": {},
    "source": [
     "## Combining representations\n",
-    "We illustrate the examples of states invariant under $U(2)$. However, RepLAB does not support (yet) compact groups, only finite groups. Thus, we use the Clifford group as an approximation of $U(2)$. The approximation stays valid for tensor products of up to three copies of the basic representation, as the Clifford group is a 3-design for $U(2)$.\n",
+    "We illustrate the examples of states invariant under $U(2)$. At the time of writing this tutorial, RepLAB did support compact groups, only finite groups; as of March 2020, the support of continuous groups is still experimental. Thus, we use the Clifford group as an approximation of $U(2)$. The approximation stays valid for tensor products of up to three copies of the basic representation, as the Clifford group is a 3-design for $U(2)$.\n",
     "\n",
     "The Clifford group is described using a permutation representation obtained with [GAP System](https://www.gap-system.org) on 48 points.\n",
     "\n",
@@ -154,9 +153,6 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "warning: Deprecated: use replab.quantum.clifford_qudit(2)\r\n",
-      "warning: called from\r\n",
-      "    clifford_qubit at line 6 column 5\r\n",
       "clifford =\r\n",
       "\r\n",
       "replab.PermutationSubgroup\r\n",
@@ -169,22 +165,25 @@
       "\r\n",
       "cliffordRep =\r\n",
       "\r\n",
-      "Unitary complex representation of dimension 2\r\n",
-      "    dimension: 2                                         \r\n",
-      "        field: 'C'                                       \r\n",
-      "        group: replab.PermutationSubgroup                \r\n",
-      "inverseImages: 1 x 3 cell                                \r\n",
-      "    irrepInfo: []                                        \r\n",
-      "    isUnitary: true                                      \r\n",
-      "    images{1}: [0.70711+0.70711i, 0; 0, 0.70711+0.70711i]\r\n",
-      "    images{2}: [0.70711, 0.70711; 0.70711, -0.70711]     \r\n",
-      "    images{3}: [1, 0; 0, 0+1i]                           \r\n",
+      "Unitary representation by images\r\n",
+      "                 dimension: 2                                         \r\n",
+      "                     field: 'C'                                       \r\n",
+      "   frobeniusSchurIndicator: []                                        \r\n",
+      "                     group: replab.PermutationSubgroup                \r\n",
+      "    inverseImages_internal: 1 x 3 cell                                \r\n",
+      "isDivisionAlgebraCanonical: []                                        \r\n",
+      "             isIrreducible: []                                        \r\n",
+      "                 isUnitary: true                                      \r\n",
+      "          trivialDimension: []                                        \r\n",
+      "        images_internal{1}: [0.70711+0.70711i, 0; 0, 0.70711+0.70711i]\r\n",
+      "        images_internal{2}: [0.70711, 0.70711; 0.70711, -0.70711]     \r\n",
+      "        images_internal{3}: [1, 0; 0, 0+1i]                           \r\n",
       "\r\n"
      ]
     }
    ],
    "source": [
-    "[clifford cliffordRep] = replab.quantum.clifford_qubit"
+    "[clifford cliffordRep] = replab.quantum.clifford_qudit(2)"
    ]
   },
   {
@@ -213,14 +212,17 @@
      "text": [
       "UxU =\r\n",
       "\r\n",
-      "Unitary complex representation of dimension 4\r\n",
-      "dimension: 4                                            \r\n",
-      "    field: 'C'                                          \r\n",
-      "    group: replab.PermutationSubgroup                   \r\n",
-      "irrepInfo: []                                           \r\n",
-      "isUnitary: true                                         \r\n",
-      "factor(1): Unitary complex representation of dimension 2\r\n",
-      "factor(2): Unitary complex representation of dimension 2\r\n",
+      "Unitary tensor representation\r\n",
+      "                 dimension: 4                               \r\n",
+      "                     field: 'C'                             \r\n",
+      "   frobeniusSchurIndicator: []                              \r\n",
+      "                     group: replab.PermutationSubgroup      \r\n",
+      "isDivisionAlgebraCanonical: []                              \r\n",
+      "             isIrreducible: []                              \r\n",
+      "                 isUnitary: true                            \r\n",
+      "          trivialDimension: []                              \r\n",
+      "                 factor(1): Unitary representation by images\r\n",
+      "                 factor(2): Unitary representation by images\r\n",
       "\r\n"
      ]
     }
@@ -240,26 +242,28 @@
      "text": [
       "ans =\r\n",
       "\r\n",
-      "Subrepresentation\r\n",
-      "   dimension: 4                                            \r\n",
-      "       field: 'C'                                          \r\n",
-      "       group: replab.PermutationSubgroup                   \r\n",
-      "   irrepInfo: []                                           \r\n",
-      "   isUnitary: true                                         \r\n",
-      "   niceBasis: replab.NiceBasis                             \r\n",
-      "      parent: Unitary complex representation of dimension 4\r\n",
-      "      U(1,:): [0, 1, -1, 0]/sqrt(2)                        \r\n",
-      "      U(2,:): [0, 0, 0, 1]                                 \r\n",
-      "      U(3,:): [1, 0, 0, 0]                                 \r\n",
-      "      U(4,:): [0, 1, 1, 0]/sqrt(2)                         \r\n",
-      "component(1): Isotypic component C(1)                      \r\n",
-      "component(2): Isotypic component C(3)                      \r\n",
+      "Complex representation\r\n",
+      "                 dimension: 4                            \r\n",
+      "                     field: 'C'                          \r\n",
+      "   frobeniusSchurIndicator: []                           \r\n",
+      "                     group: replab.PermutationSubgroup   \r\n",
+      "isDivisionAlgebraCanonical: []                           \r\n",
+      "             isIrreducible: []                           \r\n",
+      "                 isUnitary: []                           \r\n",
+      "                    parent: Unitary tensor representation\r\n",
+      "          trivialDimension: []                           \r\n",
+      "               basis.(:,1): [-0, -1, 1, -0].'            \r\n",
+      "               basis.(:,2): [-0, -0, -0, 1].'            \r\n",
+      "               basis.(:,3): [1, 0, 0, -0].'              \r\n",
+      "               basis.(:,4): [0, 1, 1, 0].'               \r\n",
+      "              component(1): Isotypic component C(1)      \r\n",
+      "              component(2): Isotypic component C(3)      \r\n",
       "\r\n"
      ]
     }
    ],
    "source": [
-    "UxU.decomposition"
+    "UxU.decomposition.nice"
    ]
   },
   {
@@ -278,12 +282,25 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "error: subsref: unknown method or property: copy\r\n"
+      "ans =\r\n",
+      "\r\n",
+      "Complex irreducible subrepresentation\r\n",
+      "                 dimension: 1                            \r\n",
+      "                     field: 'C'                          \r\n",
+      "   frobeniusSchurIndicator: []                           \r\n",
+      "                     group: replab.PermutationSubgroup   \r\n",
+      "isDivisionAlgebraCanonical: []                           \r\n",
+      "             isIrreducible: true                         \r\n",
+      "                 isUnitary: []                           \r\n",
+      "                    parent: Unitary tensor representation\r\n",
+      "          trivialDimension: []                           \r\n",
+      "               basis.(:,1): [-0, 1, -1, -0].'            \r\n",
+      "\r\n"
      ]
     }
    ],
    "source": [
-    "UxU.decomposition.component(1).copy(1)"
+    "UxU.decomposition.nice.component(1).irrep(1)"
    ]
   },
   {
@@ -295,12 +312,27 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "error: subsref: unknown method or property: copy\r\n"
+      "ans =\r\n",
+      "\r\n",
+      "Complex irreducible subrepresentation\r\n",
+      "                 dimension: 3                            \r\n",
+      "                     field: 'C'                          \r\n",
+      "   frobeniusSchurIndicator: []                           \r\n",
+      "                     group: replab.PermutationSubgroup   \r\n",
+      "isDivisionAlgebraCanonical: []                           \r\n",
+      "             isIrreducible: true                         \r\n",
+      "                 isUnitary: []                           \r\n",
+      "                    parent: Unitary tensor representation\r\n",
+      "          trivialDimension: []                           \r\n",
+      "               basis.(:,1): [1, 0, 0, 0].'               \r\n",
+      "               basis.(:,2): [0, 0, 0, 1].'               \r\n",
+      "               basis.(:,3): [0, 1, 1, 0].'               \r\n",
+      "\r\n"
      ]
     }
    ],
    "source": [
-    "UxU.decomposition.component(2).copy(1)"
+    "UxU.decomposition.nice.component(2).irrep(1)"
    ]
   },
   {
@@ -322,14 +354,17 @@
      "text": [
       "UxconjU =\r\n",
       "\r\n",
-      "Unitary complex representation of dimension 4\r\n",
-      "dimension: 4                                            \r\n",
-      "    field: 'C'                                          \r\n",
-      "    group: replab.PermutationSubgroup                   \r\n",
-      "irrepInfo: []                                           \r\n",
-      "isUnitary: true                                         \r\n",
-      "factor(1): Unitary complex representation of dimension 2\r\n",
-      "factor(2): Conjugate derived representation             \r\n",
+      "Unitary tensor representation\r\n",
+      "                 dimension: 4                                         \r\n",
+      "                     field: 'C'                                       \r\n",
+      "   frobeniusSchurIndicator: []                                        \r\n",
+      "                     group: replab.PermutationSubgroup                \r\n",
+      "isDivisionAlgebraCanonical: []                                        \r\n",
+      "             isIrreducible: []                                        \r\n",
+      "                 isUnitary: true                                      \r\n",
+      "          trivialDimension: []                                        \r\n",
+      "                 factor(1): Unitary representation by images          \r\n",
+      "                 factor(2): Unitary derived representation (conjugate)\r\n",
       "\r\n"
      ]
     }
@@ -347,29 +382,30 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "warning: image: some elements in list of return values are undefined\r\n",
-      "warning: image: some elements in list of return values are undefined\r\n",
-      "operator *: nonconformant arguments (op1 is 4x4, op2 is 0x0)\r\n",
-      "error: called from\r\n",
-      "    matrixColAction at line 225 column 15\r\n",
-      "    project at line 20 column 24\r\n",
-      "    sampleWithError at line 70 column 20\r\n",
-      "    sample at line 114 column 15\r\n",
-      "    trivialSample at line 38 column 45\r\n",
-      "    splitUsingCommutant at line 33 column 7\r\n",
-      "    dispatchDefaults>@<anonymous> at line 19 column 42\r\n",
-      "    dispatch at line 60 column 38\r\n",
-      "    split at line 20 column 9\r\n",
-      "    decompositionUsingSplit at line 11 column 10\r\n",
-      "    dispatchDefaults>@<anonymous> at line 14 column 28\r\n",
-      "    dispatch at line 60 column 38\r\n",
-      "    decomposition at line 17 column 7\r\n",
-      "    decomposition at line 160 column 21\r\n"
+      "ans =\r\n",
+      "\r\n",
+      "Complex representation\r\n",
+      "                 dimension: 4                                             \r\n",
+      "                     field: 'C'                                           \r\n",
+      "   frobeniusSchurIndicator: []                                            \r\n",
+      "                     group: replab.PermutationSubgroup                    \r\n",
+      "isDivisionAlgebraCanonical: []                                            \r\n",
+      "             isIrreducible: []                                            \r\n",
+      "                 isUnitary: []                                            \r\n",
+      "                    parent: Unitary tensor representation                 \r\n",
+      "          trivialDimension: []                                            \r\n",
+      "               basis.(:,1): [1, 0, 0, 1].'                                \r\n",
+      "               basis.(:,2): [0, 1, 0, 0].'                                \r\n",
+      "               basis.(:,3): [0, 0, 1, 0].'                                \r\n",
+      "               basis.(:,4): [-1, 0, 0, 1].'                               \r\n",
+      "              component(1): Isotypic component (harmonized) C(1) (trivial)\r\n",
+      "              component(2): Isotypic component C(3)                       \r\n",
+      "\r\n"
      ]
     }
    ],
    "source": [
-    "UxconjU.decomposition"
+    "UxconjU.decomposition.nice"
    ]
   },
   {
@@ -381,29 +417,25 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "warning: image: some elements in list of return values are undefined\r\n",
-      "warning: image: some elements in list of return values are undefined\r\n",
-      "operator *: nonconformant arguments (op1 is 4x4, op2 is 0x0)\r\n",
-      "error: called from\r\n",
-      "    matrixColAction at line 225 column 15\r\n",
-      "    project at line 20 column 24\r\n",
-      "    sampleWithError at line 70 column 20\r\n",
-      "    sample at line 114 column 15\r\n",
-      "    trivialSample at line 38 column 45\r\n",
-      "    splitUsingCommutant at line 33 column 7\r\n",
-      "    dispatchDefaults>@<anonymous> at line 19 column 42\r\n",
-      "    dispatch at line 60 column 38\r\n",
-      "    split at line 20 column 9\r\n",
-      "    decompositionUsingSplit at line 11 column 10\r\n",
-      "    dispatchDefaults>@<anonymous> at line 14 column 28\r\n",
-      "    dispatch at line 60 column 38\r\n",
-      "    decomposition at line 17 column 7\r\n",
-      "    decomposition at line 160 column 21\r\n"
+      "ans =\r\n",
+      "\r\n",
+      "Complex trivial irreducible subrepresentation\r\n",
+      "                 dimension: 1                            \r\n",
+      "                     field: 'C'                          \r\n",
+      "   frobeniusSchurIndicator: 1                            \r\n",
+      "                     group: replab.PermutationSubgroup   \r\n",
+      "isDivisionAlgebraCanonical: []                           \r\n",
+      "             isIrreducible: true                         \r\n",
+      "                 isUnitary: []                           \r\n",
+      "                    parent: Unitary tensor representation\r\n",
+      "          trivialDimension: 1                            \r\n",
+      "               basis.(:,1): [1, 0, 0, 1].'               \r\n",
+      "\r\n"
      ]
     }
    ],
    "source": [
-    "UxconjU.decomposition.component(1).copy(1)"
+    "UxconjU.decomposition.nice.component(1).irrep(1)"
    ]
   },
   {
@@ -415,29 +447,27 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "warning: image: some elements in list of return values are undefined\r\n",
-      "warning: image: some elements in list of return values are undefined\r\n",
-      "operator *: nonconformant arguments (op1 is 4x4, op2 is 0x0)\r\n",
-      "error: called from\r\n",
-      "    matrixColAction at line 225 column 15\r\n",
-      "    project at line 20 column 24\r\n",
-      "    sampleWithError at line 70 column 20\r\n",
-      "    sample at line 114 column 15\r\n",
-      "    trivialSample at line 38 column 45\r\n",
-      "    splitUsingCommutant at line 33 column 7\r\n",
-      "    dispatchDefaults>@<anonymous> at line 19 column 42\r\n",
-      "    dispatch at line 60 column 38\r\n",
-      "    split at line 20 column 9\r\n",
-      "    decompositionUsingSplit at line 11 column 10\r\n",
-      "    dispatchDefaults>@<anonymous> at line 14 column 28\r\n",
-      "    dispatch at line 60 column 38\r\n",
-      "    decomposition at line 17 column 7\r\n",
-      "    decomposition at line 160 column 21\r\n"
+      "ans =\r\n",
+      "\r\n",
+      "Complex fully nontrivial irreducible subrepresentation\r\n",
+      "                 dimension: 3                            \r\n",
+      "                     field: 'C'                          \r\n",
+      "   frobeniusSchurIndicator: []                           \r\n",
+      "                     group: replab.PermutationSubgroup   \r\n",
+      "isDivisionAlgebraCanonical: []                           \r\n",
+      "             isIrreducible: true                         \r\n",
+      "                 isUnitary: []                           \r\n",
+      "                    parent: Unitary tensor representation\r\n",
+      "          trivialDimension: 0                            \r\n",
+      "               basis.(:,1): [-0, -0, 1, -0].'            \r\n",
+      "               basis.(:,2): [0, 1, -0, 0].'              \r\n",
+      "               basis.(:,3): [1, 0, 0, -1].'              \r\n",
+      "\r\n"
      ]
     }
    ],
    "source": [
-    "UxconjU.decomposition.component(2).copy(1)"
+    "UxconjU.decomposition.nice.component(2).irrep(1)"
    ]
   }
  ],
@@ -465,7 +495,7 @@
    ],
    "mimetype": "text/x-octave",
    "name": "octave",
-   "version": "4.2.2"
+   "version": "4.4.1"
   }
  },
  "nbformat": 4,

@@ -26,7 +26,6 @@
       "warning: function /home/denis/w/replab/src/help.m shadows a core library function\r\n",
       "Adding RepLAB package to the path\r\n",
       "Loading optim package for Octave...\r\n",
-      "OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = \"org.octave.OctClassLoader\"). To use archived non-system classes, this property must be not be set\r\n",
       "Adding VPI to the path\r\n",
       "Adding MOxUnit to the path\r\n",
       "Adding embedded YALMIP to the path\r\n",
@@ -100,15 +99,7 @@
    "cell_type": "code",
    "execution_count": 2,
    "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "warning: -largeArrayDims and -compatibleArrayDims are accepted for compatibility, but ignored\r\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "permutation = [2 3 1];\n",
     "MSym = replab.CommutantVar.fromPermutations({permutation}, 'symmetric', 'real');"
@@ -500,7 +491,7 @@
       "|   ID|                    Constraint|   Coefficient range|\r\n",
       "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\r\n",
       "|   #1|   Element-wise inequality 1x1|              2 to 2|\r\n",
-      "|   #2|         Matrix inequality 2x2|     5.5511e-17 to 2|\r\n",
+      "|   #2|         Matrix inequality 2x2|     1.3878e-16 to 2|\r\n",
       "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\r\n"
      ]
     }
@@ -535,8 +526,8 @@
       "  scalar structure containing the fields:\r\n",
       "\r\n",
       "    yalmipversion = 20190425\r\n",
-      "    yalmiptime =  0.096199\r\n",
-      "    solvertime =  0.51717\r\n",
+      "    yalmiptime =  0.063449\r\n",
+      "    solvertime =  0.34002\r\n",
       "    info = Successfully solved (SDPT3-4)\r\n",
       "    problem = 0\r\n",
       "\r\n",
@@ -756,7 +747,7 @@
    ],
    "mimetype": "text/x-octave",
    "name": "octave",
-   "version": "4.2.2"
+   "version": "4.4.1"
   }
  },
  "nbformat": 4,

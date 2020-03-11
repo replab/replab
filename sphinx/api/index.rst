@@ -18,6 +18,7 @@ An API Reference, as described in the table of contents below:
    groups
    rep
    rep_technical
+   rep_irreducible
    permutations
    group_constructions
    infrastructure

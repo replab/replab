@@ -3,36 +3,32 @@ function I = decompositionUsingSplit(rep)
 %
 % First it splits the representation into irreducibles, before recognizing which
 % irreducible representations are part of the same isotypic component.
-    replab.irreducible.tell('decompositionUsingSplit')
-    samples = replab.irreducible.OnDemandSamples(rep);
-    % obtain all irreps
-    replab.irreducible.tell('down')
-    mainSub = rep.subRepUnitaryByIntegerBasis(speye(rep.dimension));
-    subs = replab.irreducible.split(rep, samples, mainSub);
-    replab.irreducible.tell('up')
+    context = replab.Context.make;
+    subs = rep.splitIntoIrreducibles(context);
+    context.close;
     % sort by trivial / non trivial
     trivial = {};
     nontrivial = {};
     for i = 1:length(subs)
-        sub = subs{i};
-        if isa(sub.irrepInfo, 'replab.irreducible.TrivialInfo') % is it trivial
-            trivial{1,end+1} = sub;
+        s = subs{i};
+        if s.trivialDimension == 1
+            trivial{1,end+1} = s;
         else
-            nontrivial{1,end+1} = sub;
+            nontrivial{1,end+1} = s;
         end
     end
+    context = replab.Context.make;
     % regroup equivalent representations
-    C = samples.commutantSample(2);
-    C = (C + C')/2;
+    C = rep.commutant.sampleInContext(context, 1);
     nNT = length(nontrivial);
     mask = logical(zeros(nNT, nNT));
     tol = replab.Parameters.doubleEigTol;
     for i = 1:nNT
         subI = nontrivial{i};
-        C2 = subI.U * C;
+        CI = subI.E_internal * C;
         for j = 1:nNT
             subJ = nontrivial{j};
-            mask(i,j) = replab.isNonZeroMatrix(C2 * subJ.U', tol);
+            mask(i,j) = replab.isNonZeroMatrix(CI * subJ.B_internal, tol);
         end
     end
     cc = replab.Partition.connectedComponents(mask).blocks;
@@ -42,14 +38,15 @@ function I = decompositionUsingSplit(rep)
     for i = 1:nNT
         iso = cc{i};
         subreps = nontrivial(cc{i});
-        NT{i} = replab.irreducible.buildIsotypic(rep, samples, subreps);
+        NT{i} = replab.irreducible.harmonizeIsotypic(replab.Isotypic.fromIrreps(rep, subreps), context);
     end
     % Sort by dimension first and then multiplicity
-    ranks = cellfun(@(iso) iso.irrepDimension*100000 + iso.multiplicity, NT);
-    [~, I] = sort(ranks);
+    dims = cellfun(@(iso) iso.irrepDimension, NT);
+    muls = cellfun(@(iso) iso.multiplicity, NT);
+    [~, I] = sortrows([dims(:) muls(:)]);
     NT = NT(I);
     if length(trivial) > 0
-        trivialIsotypic = replab.Isotypic(rep, trivial);
+        trivialIsotypic = replab.irreducible.harmonizeIsotypic(replab.Isotypic.fromIrreps(rep, trivial), context);
         components = horzcat({trivialIsotypic}, NT);
     else
         components = NT;

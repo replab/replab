@@ -22,7 +22,6 @@
       "warning: function /home/denis/w/replab/src/help.m shadows a core library function\r\n",
       "Adding RepLAB package to the path\r\n",
       "Loading optim package for Octave...\r\n",
-      "OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = \"org.octave.OctClassLoader\"). To use archived non-system classes, this property must be not be set\r\n",
       "Adding VPI to the path\r\n",
       "Adding MOxUnit to the path\r\n",
       "Adding embedded YALMIP to the path\r\n",
@@ -53,19 +52,23 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "error: octave_base_value::map_value(): wrong type argument 'scalar'\r\n",
-      "error: 'X' undefined near line 1 column 10\r\n",
-      "ans = NaN\r\n"
+      "ans =  2.8284\r\n"
      ]
     }
    ],
    "source": [
     "y = sdpvar; % y is actually y_A0B0, but we save space by identifying y with it\n",
-    "X = [ 1  0  0  0  0\n",
-    "      0  1  0  y  y\n",
-    "      0  0  1  y -y\n",
-    "      0  y  y  1  0\n",
-    "      0  y -y  0  1];\n",
+    "C = [ 1  0  0  0  0\n",
+    "      0  1  0  0  0\n",
+    "      0  0  1  0  0\n",
+    "      0  0  0  1  0\n",
+    "      0  0  0  0  1];\n",
+    "A = [ 0  0  0  0  0\n",
+    "      0  0  0  1  1\n",
+    "      0  0  0  1 -1\n",
+    "      0  1  1  0  0\n",
+    "      0  1 -1  0  0];\n",
+    "X = C + A*y;\n",
     "I_CHSH = 4*y; % it is <A0B0> + <A0B1> + <A1B0> - <A1B1>, and y_A1B1 = -y_A0B0.\n",
     "optimize(X >= 0, -I_CHSH, sdpsettings('verbose', 0)); % sign change to maximize, and we don't show solver out\n",
     "double(I_CHSH)"
@@ -76,67 +79,6 @@
    "metadata": {},
    "source": [
     "To help with symmetrization, we'll use an equivalent form of the constraint X, and check the result."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 3,
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "\r\n",
-      " num. of constraints =  1\r\n",
-      " dim. of sdp    var  =  5,   num. of sdp  blk  =  1\r\n",
-      "*******************************************************************\r\n",
-      "   SDPT3: Infeasible path-following algorithms\r\n",
-      "*******************************************************************\r\n",
-      " version  predcorr  gam  expon  scale_data\r\n",
-      "   HKM      1      0.000   1        0    \r\n",
-      "it pstep dstep pinfeas dinfeas  gap      prim-obj      dual-obj    cputime\r\n",
-      "-------------------------------------------------------------------\r\n",
-      " 0|0.000|0.000|8.0e-01|6.2e+00|5.0e+02| 5.000000e+01  0.000000e+00| 0:0:00| chol  1  1 \r\n",
-      " 1|1.000|1.000|6.5e-08|6.9e-02|4.3e+01| 3.984640e+01  4.400004e-01| 0:0:00| chol  1  1 \r\n",
-      " 2|0.933|1.000|1.5e-07|6.9e-03|2.9e+00| 3.700414e+00  8.665599e-01| 0:0:00| chol  1  1 \r\n",
-      " 3|1.000|0.949|3.5e-08|1.0e-03|2.8e-01| 3.024905e+00  2.752468e+00| 0:0:00| chol  1  1 \r\n",
-      " 4|0.987|0.988|1.1e-08|8.0e-05|3.4e-03| 2.830875e+00  2.827762e+00| 0:0:00| chol  1  1 \r\n",
-      " 5|0.989|0.989|3.5e-10|7.7e-06|3.8e-05| 2.828454e+00  2.828448e+00| 0:0:00| chol  1  1 \r\n",
-      " 6|0.989|0.989|8.9e-12|8.5e-08|4.2e-07| 2.828427e+00  2.828427e+00| 0:0:00|\r\n",
-      "  stop: max(relative gap, infeasibilities) < 1.00e-07\r\n",
-      "-------------------------------------------------------------------\r\n",
-      " number of iterations   =  6\r\n",
-      " primal objective value =  2.82842742e+00\r\n",
-      " dual   objective value =  2.82842735e+00\r\n",
-      " gap := trace(XZ)       = 4.17e-07\r\n",
-      " relative gap           = 6.26e-08\r\n",
-      " actual relative gap    = 1.04e-08\r\n",
-      " rel. primal infeas (scaled problem)   = 8.94e-12\r\n",
-      " rel. dual     \"        \"       \"      = 8.49e-08\r\n",
-      " rel. primal infeas (unscaled problem) = 0.00e+00\r\n",
-      " rel. dual     \"        \"       \"      = 0.00e+00\r\n",
-      " norm(X), norm(y), norm(Z) = 2.0e+00, 7.1e-01, 3.0e+00\r\n",
-      " norm(A), norm(b), norm(C) = 3.8e+00, 5.0e+00, 3.2e+00\r\n",
-      " Total CPU time (secs)  = 0.19  \r\n",
-      " CPU time per iteration = 0.03  \r\n",
-      " termination code       =  0\r\n",
-      " DIMACS: 8.9e-12  0.0e+00  1.4e-07  0.0e+00  1.0e-08  6.3e-08\r\n",
-      "-------------------------------------------------------------------\r\n",
-      "ans =  2.8284\r\n"
-     ]
-    }
-   ],
-   "source": [
-    "C = eye(5); % identity\n",
-    "A = [0  0  0  0  0\n",
-    "     0  0  0  1  1\n",
-    "     0  0  0  1 -1\n",
-    "     0  1  1  0  0\n",
-    "     0  1 -1  0  0];\n",
-    "X = C + A*y; % equivalent to the constraint above\n",
-    "optimize(X >= 0, -I_CHSH); % sign change to maximize\n",
-    "double(I_CHSH)"
    ]
   },
   {
@@ -157,7 +99,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 4,
+   "execution_count": 3,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -175,7 +117,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 4,
    "metadata": {},
    "outputs": [
     {
@@ -202,7 +144,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 6,
+   "execution_count": 5,
    "metadata": {},
    "outputs": [
     {
@@ -245,7 +187,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 7,
+   "execution_count": 6,
    "metadata": {},
    "outputs": [
     {
@@ -254,27 +196,30 @@
      "text": [
       "rep =\r\n",
       "\r\n",
-      "Orthogonal real representation of dimension 5\r\n",
-      "    dimension: 5                                \r\n",
-      "        field: 'R'                              \r\n",
-      "        group: replab.signed.PermutationSubgroup\r\n",
-      "inverseImages: 1 x 3 cell                       \r\n",
-      "    irrepInfo: []                               \r\n",
-      "    isUnitary: true                             \r\n",
-      "    images{1}: 5 x 5 double                     \r\n",
-      "    images{2}: 5 x 5 double                     \r\n",
-      "    images{3}: 5 x 5 double                     \r\n",
+      "Orthogonal representation by images\r\n",
+      "                 dimension: 5                                \r\n",
+      "                     field: 'R'                              \r\n",
+      "   frobeniusSchurIndicator: []                               \r\n",
+      "                     group: replab.signed.PermutationSubgroup\r\n",
+      "    inverseImages_internal: 1 x 3 cell                       \r\n",
+      "isDivisionAlgebraCanonical: []                               \r\n",
+      "             isIrreducible: []                               \r\n",
+      "                 isUnitary: true                             \r\n",
+      "          trivialDimension: []                               \r\n",
+      "        images_internal{1}: 5 x 5 double                     \r\n",
+      "        images_internal{2}: 5 x 5 double                     \r\n",
+      "        images_internal{3}: 5 x 5 double                     \r\n",
       "\r\n"
      ]
     }
    ],
    "source": [
-    "rep = G.definingRep"
+    "rep = G.naturalRep"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 8,
+   "execution_count": 7,
    "metadata": {},
    "outputs": [
     {
@@ -283,14 +228,14 @@
      "text": [
       "g =\r\n",
       "\r\n",
-      "   1   4   5   2   3\r\n",
+      "   1  -4   5  -3  -2\r\n",
       "\r\n",
       "ans =\r\n",
       "\r\n",
       "   1   0   0   0   0\r\n",
-      "   0   0   0   1   0\r\n",
-      "   0   0   0   0   1\r\n",
-      "   0   1   0   0   0\r\n",
+      "   0   0   0   0  -1\r\n",
+      "   0   0   0  -1   0\r\n",
+      "   0  -1   0   0   0\r\n",
       "   0   0   1   0   0\r\n",
       "\r\n"
      ]
@@ -312,7 +257,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 9,
+   "execution_count": 8,
    "metadata": {},
    "outputs": [
     {
@@ -321,18 +266,24 @@
      "text": [
       "ans =\r\n",
       "\r\n",
-      "Subrepresentation\r\n",
-      "   dimension: 5                                            \r\n",
-      "       field: 'R'                                          \r\n",
-      "       group: replab.signed.PermutationSubgroup            \r\n",
-      "   irrepInfo: []                                           \r\n",
-      "   isUnitary: true                                         \r\n",
-      "   niceBasis: []                                           \r\n",
-      "      parent: Orthogonal real representation of dimension 5\r\n",
-      "           U: 5 x 5 double                                 \r\n",
-      "component(1): Isotypic component R(1)                      \r\n",
-      "component(2): Isotypic component R(2)                      \r\n",
-      "component(3): Isotypic component R(2)                      \r\n",
+      "Orthogonal representation\r\n",
+      "                 dimension: 5                                              \r\n",
+      "                     field: 'R'                                            \r\n",
+      "   frobeniusSchurIndicator: []                                             \r\n",
+      "                     group: replab.signed.PermutationSubgroup              \r\n",
+      "isDivisionAlgebraCanonical: []                                             \r\n",
+      "             isIrreducible: []                                             \r\n",
+      "                 isUnitary: true                                           \r\n",
+      "                    parent: Orthogonal representation by images            \r\n",
+      "          trivialDimension: []                                             \r\n",
+      "               basis.(:,1): [-1, 4.4485e-18, 0, -3.8583e-18, -5.1335e-21].'\r\n",
+      "               basis.(:,2): [0, 0.5, 0.5, -0.70711, 0].'                   \r\n",
+      "               basis.(:,3): [0, 0.5, -0.5, -2.9513e-17, -0.70711].'        \r\n",
+      "               basis.(:,4): [0, 0.5, -0.5, -2.9513e-17, 0.70711].'         \r\n",
+      "               basis.(:,5): [0, 0.5, 0.5, 0.70711, 0].'                    \r\n",
+      "              component(1): Isotypic component (harmonized) R(1) (trivial) \r\n",
+      "              component(2): Isotypic component (harmonized) R(2)           \r\n",
+      "              component(3): Isotypic component (harmonized) R(2)           \r\n",
       "\r\n"
      ]
     }
@@ -343,7 +294,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 10,
+   "execution_count": 9,
    "metadata": {},
    "outputs": [
     {
@@ -352,15 +303,17 @@
      "text": [
       "ans =\r\n",
       "\r\n",
-      "Real irreducible subrepresentation of real type\r\n",
-      "dimension: 1                                            \r\n",
-      "    field: 'R'                                          \r\n",
-      "    group: replab.signed.PermutationSubgroup            \r\n",
-      "irrepInfo: replab.irreducible.TrivialInfo               \r\n",
-      "isUnitary: true                                         \r\n",
-      "niceBasis: replab.NiceBasis                             \r\n",
-      "   parent: Orthogonal real representation of dimension 5\r\n",
-      "   U(1,:): [1, 0, 0, 0, 0]                              \r\n",
+      "Orthogonal trivial irreducible real-type subrepresentation\r\n",
+      "                 dimension: 1                                              \r\n",
+      "                     field: 'R'                                            \r\n",
+      "   frobeniusSchurIndicator: 1                                              \r\n",
+      "                     group: replab.signed.PermutationSubgroup              \r\n",
+      "isDivisionAlgebraCanonical: []                                             \r\n",
+      "             isIrreducible: true                                           \r\n",
+      "                 isUnitary: true                                           \r\n",
+      "                    parent: Orthogonal representation by images            \r\n",
+      "          trivialDimension: 1                                              \r\n",
+      "               basis.(:,1): [-1, 4.4485e-18, 0, -3.8583e-18, -5.1335e-21].'\r\n",
       "\r\n"
      ]
     }
@@ -378,7 +331,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 11,
+   "execution_count": 10,
    "metadata": {},
    "outputs": [
     {
@@ -387,35 +340,35 @@
      "text": [
       "U =\r\n",
       "\r\n",
-      "   1.00000   0.00000   0.00000   0.00000   0.00000\r\n",
-      "   0.00000   0.50000  -0.50000   0.00000   0.70711\r\n",
-      "   0.00000  -0.50000  -0.50000  -0.70711   0.00000\r\n",
-      "   0.00000  -0.50000  -0.50000   0.70711   0.00000\r\n",
-      "   0.00000   0.50000  -0.50000   0.00000  -0.70711\r\n",
+      "  -1.00000   0.00000   0.00000   0.00000   0.00000\r\n",
+      "   0.00000   0.50000   0.50000   0.50000   0.50000\r\n",
+      "   0.00000   0.50000  -0.50000  -0.50000   0.50000\r\n",
+      "  -0.00000  -0.70711  -0.00000  -0.00000   0.70711\r\n",
+      "  -0.00000   0.00000  -0.70711   0.70711   0.00000\r\n",
       "\r\n",
       "ans =\r\n",
       "\r\n",
-      "   1.00000   0.00000   0.00000   0.00000   0.00000\r\n",
-      "   0.00000   1.00000  -0.00000   0.00000  -0.00000\r\n",
-      "   0.00000  -0.00000   1.00000   0.00000  -0.00000\r\n",
-      "   0.00000   0.00000   0.00000   1.00000   0.00000\r\n",
-      "   0.00000  -0.00000  -0.00000   0.00000   1.00000\r\n",
+      "   1.0000e+00   4.9525e-18   2.2279e-18   2.2206e-18  -5.0400e-19\r\n",
+      "   4.9525e-18   1.0000e+00  -9.0153e-17  -9.0153e-17  -1.2387e-16\r\n",
+      "   2.2279e-18  -9.0153e-17   1.0000e+00   1.2117e-16   1.1791e-16\r\n",
+      "   2.2206e-18  -9.0153e-17   1.2117e-16   1.0000e+00   1.1791e-16\r\n",
+      "  -5.0400e-19  -1.2387e-16   1.1791e-16   1.1791e-16   1.0000e+00\r\n",
       "\r\n",
       "ans =\r\n",
       "\r\n",
-      "   0.00000   0.00000   0.00000   0.00000   0.00000\r\n",
-      "   0.00000   1.41421  -0.00000   0.00000   0.00000\r\n",
-      "   0.00000  -0.00000   1.41421   0.00000   0.00000\r\n",
-      "   0.00000   0.00000   0.00000  -1.41421  -0.00000\r\n",
-      "   0.00000   0.00000   0.00000  -0.00000  -1.41421\r\n",
+      "  -0.00000  -0.00000  -0.00000   0.00000  -0.00000\r\n",
+      "  -0.00000  -1.41421   0.00000  -0.00000   0.00000\r\n",
+      "  -0.00000   0.00000  -1.41421  -0.00000  -0.00000\r\n",
+      "   0.00000  -0.00000  -0.00000   1.41421   0.00000\r\n",
+      "  -0.00000   0.00000  -0.00000   0.00000   1.41421\r\n",
       "\r\n"
      ]
     }
    ],
    "source": [
-    "U = full(rep.decomposition.U)\n",
-    "U*C*U'\n",
-    "U*A*U'"
+    "U = rep.decomposition.basis\n",
+    "U'*C*U\n",
+    "U'*A*U"
    ]
   },
   {
@@ -427,7 +380,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 12,
+   "execution_count": 11,
    "metadata": {},
    "outputs": [
     {
@@ -466,7 +419,7 @@
       " rel. dual     \"        \"       \"      = 0.00e+00\r\n",
       " norm(X), norm(y), norm(Z) = 2.0e+00, 7.1e-01, 3.0e+00\r\n",
       " norm(A), norm(b), norm(C) = 3.8e+00, 5.0e+00, 3.2e+00\r\n",
-      " Total CPU time (secs)  = 0.08  \r\n",
+      " Total CPU time (secs)  = 0.05  \r\n",
       " CPU time per iteration = 0.01  \r\n",
       " termination code       =  0\r\n",
       " DIMACS: 8.9e-12  0.0e+00  1.4e-07  0.0e+00  1.0e-08  6.3e-08\r\n",
@@ -476,7 +429,7 @@
     }
    ],
    "source": [
-    "X = (U*C*U') + (U*A*U')*y; % equivalent to the constraint above\n",
+    "X = (U'*C*U) + (U'*A*U)*y; % equivalent to the constraint above\n",
     "optimize(X >= 0, -I_CHSH); % sign change to maximize\n",
     "double(I_CHSH)"
    ]
@@ -514,7 +467,7 @@
    ],
    "mimetype": "text/x-octave",
    "name": "octave",
-   "version": "4.2.2"
+   "version": "4.4.1"
   }
  },
  "nbformat": 4,

@@ -15,7 +15,7 @@ classdef SedumiData
 % Without loss of generality, a finite group can be represented by permutations.
 % Then G is a (row) cell array containing the N generators of this permutation
 % group.
-    
+
 % rho is also a 1xnG cell array, with each element describing a
 % s x s double matrix, such that rho{i} is the image of the generator G{i}.
 %
@@ -23,8 +23,8 @@ classdef SedumiData
 
     properties
         At % double: Data matrix of size n x m
-           %       
-           %         Where n is the number of primal scalar variables, 
+           %
+           %         Where n is the number of primal scalar variables,
            %         and m the nubmer of primal constraints (Sedumi data)
         b % double: Constraint right hand side (Sedumi data)
         c % double: Primal objective (Sedumi data)
@@ -35,9 +35,9 @@ classdef SedumiData
         rho % cell array of generator images defining the representation
         rep % `.Rep`: group representation commuting with the SDP block
     end
-    
+
     methods
-        
+
         function self = SedumiData(At, b, c, K, G, rho)
             assert(~isempty(G), 'Can only process SDPs with symmetries, but no generators present');
             self.At = At;
@@ -60,12 +60,14 @@ classdef SedumiData
             group = replab.Permutations(ds).subgroup(G);
             % check for unitarity
             tol = 1e-12;
+            rhoInv = cell(1, length(G));
             for i = 1:length(rho)
-                assert(norm(rho{i}*rho{i}' - eye(self.s)) < tol);
+                rhoInv{i} = rho{i}';
+                assert(norm(rho{i}*rhoInv{i} - eye(self.s)) < tol);
             end
-            self.rep = group.repByImages('R', self.s, true, rho);
+            self.rep = group.repByImages('R', self.s, rho, rhoInv);
         end
-        
+
         function vec1 = project(self, vec)
             rep = self.rep;
             I = rep.decomposition;
@@ -81,14 +83,14 @@ classdef SedumiData
                           % apply Reynolds
                 C = I.component(r).commutant;
                 block = C.projectAndReduceFromParent(M);
-                % store block flattened 
+                % store block flattened
                 nels = prod(size(block));
                 vec1(shift+(1:nels)) = block(:);
                 shift = shift + nels;
             end
             assert(length(vec1) == nc1);
         end
-        
+
         function [At1 b1 c1 K1] = blockDiagonalize(self)
             rep = self.rep;
             I = rep.decomposition;
@@ -104,26 +106,26 @@ classdef SedumiData
             end
             K1 = struct('f', 0, 'l', 0, 'q', 0, 'r', 0, 's', s1);
         end
-        
+
         function data = blockDiagonalData(self)
             [At1 b1 c1 K1] = self.blockDiagonalize;
             data = struct('K', K1, 'At', At1, 'b', b1, 'c', c1);
         end
-        
+
         function saveBlockDiagonalizedMatFile(self, filename)
             newData = self.blockDiagonalData;
             save(filename, '-struct', 'newData');
         end
-        
+
         function [F h x] = toYalmip(self)
             [At1 b1 c1 K1] = self.blockDiagonalize;
             [F h x] = sedumi2yalmip(At1, b1, c1, K1);
         end
-        
+
     end
-    
+
     methods (Static)
-        
+
         function sedumiData = fromMatFile(filename)
             data = load(filename);
             if ~isfield(data, 'G') || ~isfield(data, 'rho')
@@ -142,7 +144,7 @@ classdef SedumiData
             end
             sedumiData = replab.SedumiData(At, data.b, data.c, data.K, data.G, data.rho);
         end
-        
+
     end
-    
+
 end

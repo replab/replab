@@ -211,7 +211,7 @@ classdef CommutantVar < replab.Str
 
             % Representation decomposition
             group = replab.signed.Permutations(n).subgroup(generators);
-            irrDecomp = group.definingRep.decomposition;
+            irrDecomp = group.naturalRep.decomposition;
             U = zeros(n, 0);
             dimensions1 = zeros(1,irrDecomp.nComponents);
             multiplicities = zeros(1,irrDecomp.nComponents);
@@ -220,10 +220,17 @@ classdef CommutantVar < replab.Str
                 component = irrDecomp.component(i);
                 dimensions1(i) = component.irrepDimension;
                 multiplicities(i) = component.multiplicity;
-                types(i) = component.irrep(1).irrepInfo.divisionAlgebra;
+                switch component.irrep(1).frobeniusSchurIndicator
+                  case -1
+                    types(i) = 'H';
+                  case 0
+                    types(i) = 'C';
+                  case 1
+                    types(i) = 'R';
+                end
                 for j = 1:component.multiplicity
                     copy = component.irrep(j);
-                    U = [U copy.U'];
+                    U = [U copy.B_internal];
                 end
             end
 
