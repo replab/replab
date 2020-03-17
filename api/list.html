@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>List of classes and functions &#8212; RepLAB 0.7.1-SNAP documentation</title>
+    <title>List of classes and functions &#8212; RepLAB 0.7.1 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="misc.html" title="Miscellaneous functions/classes"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.7.1-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.7.1.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -192,7 +192,7 @@
 <li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">help</span></code> – Displays help on a function/object/…</p></li>
 <li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab_checkhelp</span></code> – Checks the soundness of documentation comments</p></li>
 <li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab_generate</span></code> – Code generation function</p></li>
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab_release</span></code> – replab_release Release the current develop branch contents as a stable release</p></li>
+<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab_release</span></code> – Releases the current develop branch contents as a stable release</p></li>
 <li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab_runtests</span></code> – Tests the library functionalities.</p></li>
 </ul>
 </div>
@@ -285,11 +285,12 @@
 <h2>Package replab.compat<a class="headerlink" href="#package-replab-compat" title="Permalink to this headline">¶</a></h2>
 <p class="rubric">Functions</p>
 <ul class="simple">
-<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.compat.endsWith</span></code> – Implementation of Matlab 2016b endsWith function</p></li>
+<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.compat.endsWith</span></code> – Returns whether the given string ends with the given pattern</p></li>
 <li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.compat.fieldNamesValues</span></code> – Get the public field names and values of a struct or an object, taking care of an Octave bug</p></li>
 <li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.compat.isOctave</span></code> – Returns true if and only if the platform is GNU/Octave.</p></li>
 <li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.compat.methodList</span></code> – Returns the list of methods for the given metaclass</p></li>
 <li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.compat.rmdirRec</span></code> – Removes the folder with the given path including its contents without asking confirmation</p></li>
+<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.compat.startsWith</span></code> – Returns whether the given string starts with the given pattern</p></li>
 <li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.compat.terminalSize</span></code> – Retrieves the size of the current terminal window</p></li>
 </ul>
 </div>
@@ -371,6 +372,7 @@
 <li><p><a class="reference internal" href="infrastructure_technical.html#+replab.+infra.Element" title="+replab.+infra.Element"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.infra.Element</span></code></a> – A code base element which can be retrieved from an identifier</p></li>
 <li><p><a class="reference internal" href="infrastructure_technical.html#+replab.+infra.Function" title="+replab.+infra.Function"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.infra.Function</span></code></a> – Describes a MATLAB function</p></li>
 <li><p><a class="reference internal" href="infrastructure_technical.html#+replab.+infra.FunctionLikeData" title="+replab.+infra.FunctionLikeData"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.infra.FunctionLikeData</span></code></a> – Describes the data recovered when parsing a MATLAB function or method</p></li>
+<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.infra.Git</span></code> – Interface to call Git from MATLAB</p></li>
 <li><p><a class="reference internal" href="infrastructure_technical.html#+replab.+infra.InheritedClassElement" title="+replab.+infra.InheritedClassElement"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.infra.InheritedClassElement</span></code></a> – Describes an inherited class element, present by the virtue of a superclass</p></li>
 <li><p><a class="reference internal" href="infrastructure_technical.html#+replab.+infra.Package" title="+replab.+infra.Package"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.infra.Package</span></code></a> –</p></li>
 <li><p><a class="reference internal" href="infrastructure_technical.html#+replab.+infra.PackageData" title="+replab.+infra.PackageData"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.infra.PackageData</span></code></a> –</p></li>
@@ -380,6 +382,7 @@
 <p class="rubric">Functions</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="infrastructure_technical.html#+replab.+infra.align" title="+replab.+infra.align"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.infra.align</span></code></a> – Renders a table using the given LaTeX-inspired specification</p></li>
+<li><p><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.infra.cleanDir</span></code> – Removes all files/subfolders from the given folder, except for the given list of preserved files</p></li>
 <li><p><a class="reference internal" href="infrastructure_technical.html#+replab.+infra.crawl" title="+replab.+infra.crawl"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.infra.crawl</span></code></a> – Crawls the RepLAB source repository</p></li>
 <li><p><a class="reference internal" href="infrastructure_technical.html#+replab.+infra.formatCodeContext" title="+replab.+infra.formatCodeContext"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.infra.formatCodeContext</span></code></a> – Formats a code fragment</p></li>
 <li><p><a class="reference internal" href="infrastructure_technical.html#+replab.+infra.indent" title="+replab.+infra.indent"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.infra.indent</span></code></a> – indents lines</p></li>
@@ -742,7 +745,7 @@
         <li class="right" >
           <a href="misc.html" title="Miscellaneous functions/classes"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li> 
       </ul>
     </div>

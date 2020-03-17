@@ -56,16 +56,18 @@ rep = replab.U(3).definingRep.tensorPower(3);
 %
 % $$ f(i) = \nu + \alpha \exp (-\beta i ) $$
 %
-% to our estimates. Note that we perform the fitting by minimizing the square distance of $\log_{10} f(i)$ to $\log_{10} \Delta_i$, and that we implement a variant of $f(i)$ with the same expressiveness that performs numerically better. The value $\nu$ represents the nois floor due to floating point approximations. We can compute the crossing point $\xi = \frac{\ln \alpha - \ln \nu}{\beta}$, where the magnitude of the approximation error $\alpha \exp(-\beta i)$ becomes comparable to the noise floor $\nu$.
+% to our estimates. Note that we perform the fitting by minimizing the square distance of $\log_{10} f(i)$ to $\log_{10} \Delta_i$, and that we implement a variant of $f(i)$ with the same expressiveness that performs numerically better. The value $\nu$ represents the noise floor due to floating point approximations. We can compute the crossing point $\xi = \frac{\ln \alpha - \ln \nu}{\beta}$, where the magnitude of the approximation error $\alpha \exp(-\beta i)$ becomes comparable to the noise floor $\nu$.
 %
 % Our convergence criteria is as follows:
 %
-% - The fit must be nondegenerate; in particular, there are sufficiently many data points to estimate the noise floor (which cannot be estimated well until the floating point noise effects are observed).
+% - At least 20 iterations should be performed.
 %
-% - We check that the 5% confidence interval for the estimation of the noise floor value represents a deviation of less than an order of magnitude (i.e. a factor 10).
+% - The noise level should be estimated with sufficient accuracy: 3 standard deviations should be less with 1 order of magnitude.
 %
-% - If the two conditions above are satisfied, we compute the crossing point $\xi$. We proceed with the next check if the current iteration $i \ge \xi + 10$.
+% - We can make sense of the computed crossing point $\xi$. For this we require that 3 standard deviations of relative uncertainty on $\ln \nu$, $\beta$ and $\xi$ should be less than $1/10$.
 %
-% - The final test for convergence is that the errors $\Delta_{i-10}, \ldots, \Delta_i$ are all within a factor $10$ of the estimated noise floor. We then return $10 \nu$ as an error estimate.
+% - The crossing point was clearly exceeded. Concretely, we check that the number of iterations is at least $i \ge \max(\xi + 10, \xi_5)$, where $\xi_5=\frac{\ln \alpha - \ln \nu'}{\beta}$, $\ln\nu' = \ln\nu + 5\text{std}(\{R_i\}_i)$ and $R_i=\Delta_i-f(i)$ are the fit residuals.
+%
+% We then return $\\max(\\Delta_{i-10}, \\ldots, \\Delta_i)$ as an error estimate.
 
 rep.commutant.sample;

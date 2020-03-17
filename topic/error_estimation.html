@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Error estimation in RepLAB &#8212; RepLAB 0.7.1-SNAP documentation</title>
+    <title>Error estimation in RepLAB &#8212; RepLAB 0.7.1 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="error_thresholds.html" title="Error thresholds in RepLAB"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Topic guides</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.7.1-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.7.1.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -421,15 +421,16 @@ Adding MOcov to the path
 <p>where <span class="math notranslate nohighlight">\(|| \cdot ||_\text{FRO}\)</span> is the Frobenius norm, and fit the following function</p>
 <div class="math notranslate nohighlight">
 \[f(i) = \nu + \alpha \exp (-\beta i )\]</div>
-<p>to our estimates. Note that we perform the fitting by minimizing the square distance of <span class="math notranslate nohighlight">\(\log_{10} f(i)\)</span> to <span class="math notranslate nohighlight">\(\log_{10} \Delta_i\)</span>, and that we implement a variant of <span class="math notranslate nohighlight">\(f(i)\)</span> with the same expressiveness that performs numerically better. The value <span class="math notranslate nohighlight">\(\nu\)</span> represents the nois floor due to floating point approximations. We can compute the crossing point <span class="math notranslate nohighlight">\(\xi = \frac{\ln \alpha - \ln \nu}{\beta}\)</span>, where the magnitude of the approximation error <span class="math notranslate nohighlight">\(\alpha \exp(-\beta i)\)</span>
+<p>to our estimates. Note that we perform the fitting by minimizing the square distance of <span class="math notranslate nohighlight">\(\log_{10} f(i)\)</span> to <span class="math notranslate nohighlight">\(\log_{10} \Delta_i\)</span>, and that we implement a variant of <span class="math notranslate nohighlight">\(f(i)\)</span> with the same expressiveness that performs numerically better. The value <span class="math notranslate nohighlight">\(\nu\)</span> represents the noise floor due to floating point approximations. We can compute the crossing point <span class="math notranslate nohighlight">\(\xi = \frac{\ln \alpha - \ln \nu}{\beta}\)</span>, where the magnitude of the approximation error <span class="math notranslate nohighlight">\(\alpha \exp(-\beta i)\)</span>
 becomes comparable to the noise floor <span class="math notranslate nohighlight">\(\nu\)</span>.</p>
 <p>Our convergence criteria is as follows:</p>
 <ul class="simple">
-<li><p>The fit must be nondegenerate; in particular, there are sufficiently many data points to estimate the noise floor (which cannot be estimated well until the floating point noise effects are observed).</p></li>
-<li><p>We check that the 5% confidence interval for the estimation of the noise floor value represents a deviation of less than an order of magnitude (i.e. a factor 10).</p></li>
-<li><p>If the two conditions above are satisfied, we compute the crossing point <span class="math notranslate nohighlight">\(\xi\)</span>. We proceed with the next check if the current iteration <span class="math notranslate nohighlight">\(i \ge \xi + 10\)</span>.</p></li>
-<li><p>The final test for convergence is that the errors <span class="math notranslate nohighlight">\(\Delta_{i-10}, \ldots, \Delta_i\)</span> are all within a factor <span class="math notranslate nohighlight">\(10\)</span> of the estimated noise floor. We then return <span class="math notranslate nohighlight">\(10 \nu\)</span> as an error estimate.</p></li>
+<li><p>At least 20 iterations should be performed.</p></li>
+<li><p>The noise level should be estimated with sufficient accuracy: 3 standard deviations should be less with 1 order of magnitude.</p></li>
+<li><p>We can make sense of the computed crossing point <span class="math notranslate nohighlight">\(\xi\)</span>. For this we require that 3 standard deviations of relative uncertainty on <span class="math notranslate nohighlight">\(\ln \nu\)</span>, <span class="math notranslate nohighlight">\(\beta\)</span> and <span class="math notranslate nohighlight">\(\xi\)</span> should be less than <span class="math notranslate nohighlight">\(1/10\)</span>.</p></li>
+<li><p>The crossing point was clearly exceeded. Concretely, we check that the number of iterations is at least <span class="math notranslate nohighlight">\(i \ge \max(\xi + 10, \xi_5)\)</span>, where <span class="math notranslate nohighlight">\(\xi_5=\frac{\ln \alpha - \ln \nu'}{\beta}\)</span>, <span class="math notranslate nohighlight">\(\ln\nu' = \ln\nu + 5\text{std}(\{R_i\}_i)\)</span> and <span class="math notranslate nohighlight">\(R_i=\Delta_i-f(i)\)</span> are the fit residuals.</p></li>
 </ul>
+<p>We then return <span class="math notranslate nohighlight">\(\\max(\\Delta_{i-10}, \\ldots, \\Delta_i)\)</span> as an error estimate.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -491,7 +492,7 @@ error: called from
         <li class="right" >
           <a href="error_thresholds.html" title="Error thresholds in RepLAB"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Topic guides</a> &#187;</li> 
       </ul>
     </div>

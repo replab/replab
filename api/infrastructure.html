@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Infrastructure &#8212; RepLAB 0.7.1-SNAP documentation</title>
+    <title>Infrastructure &#8212; RepLAB 0.7.1 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="group_constructions.html" title="Abstract group constructions"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li> 
       </ul>
     </div>
@@ -78,7 +78,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.7.1-SNAP.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.7.1.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -190,9 +190,6 @@ property occurences for inherited members, shifts the documentation of propertie
 be explicit (to support multiline documentation and types).
 It also copies the source files at the root of the source folder in a <code class="docutils literal notranslate"><span class="pre">root</span></code> subdirectory
 so that the Sphinx Matlab domain has a “module” name for those.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sphinxjupyter</span></code> processes the Jupyter notebooks in the Sphinx directory. Care must be taken
-to not run the Matlab kernel inside Jupyter inside a running Matlab session. All our tutorials
-are run indeed by the octave kernel.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">sphinxbuild</span></code> runs the Sphinx documentation generation.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">sphinx</span></code> runs all the Sphinx generation steps.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">doctests</span></code> extracts the doctests from the source code and writes them to the doctests code folder.</p></li>
@@ -210,9 +207,11 @@ are run indeed by the octave kernel.</p></li>
 <dl class="function">
 <dt id="root.replab_release">
 <code class="sig-prename descclassname">root.</code><code class="sig-name descname">replab_release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#root.replab_release" title="Permalink to this definition">¶</a></dt>
-<dd><p>replab_release Release the current develop branch contents as a stable release</p>
+<dd><p>Releases the current develop branch contents as a stable release</p>
 <p>This runs the release process to send the current <code class="docutils literal notranslate"><span class="pre">develop</span></code>
 branch snapshot to the branch <code class="docutils literal notranslate"><span class="pre">master</span></code>, taking care of version numbers in the process.</p>
+<p>We also update the <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> branch with the documentation of the master branch, which
+we regenerate.</p>
 <p>This script works fully offline, interactions with the remote repository are done manually
 by the user.</p>
 <p>There are two types of version numbers in RepLAB:</p>
@@ -228,18 +227,33 @@ of it on <code class="docutils literal notranslate"><span class="pre">master</sp
 <p>The master branch has only strictly increasing, stable version numbers. The develop
 branch has snapshot version numbers, except during the release process when we “stabilize”
 the version number for one commit.</p>
-<p>The release process is as follows.</p>
+<p>We assume the following:</p>
+<ul class="simple">
+<li><p>A python virtual environment with Sphinx and the required modules is set up.</p></li>
+<li><p>The remote <code class="docutils literal notranslate"><span class="pre">origin</span></code> corresponds to the repository <a class="reference external" href="git&#64;github.com:replab/replab.git">git&#64;github.com:replab/replab.git</a></p></li>
+<li><p>The user has run <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span> <span class="pre">origin</span> <span class="pre">master</span> <span class="pre">develop</span> <span class="pre">gh-pages</span></code> to synchronize the
+remote content.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch is checked out in the main worktree, that is in the root RepLAB folder</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> branch is checkout out in a second <code class="docutils literal notranslate"><span class="pre">docs/</span></code> worktree
+You can create that worktree by running <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">worktree</span> <span class="pre">add</span> <span class="pre">docs</span> <span class="pre">gh-pages</span></code> in the root folder</p></li>
+<li><p>All of the branches <code class="docutils literal notranslate"><span class="pre">master</span></code>, <code class="docutils literal notranslate"><span class="pre">develop</span></code> and <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> have their local copy current with
+the <code class="docutils literal notranslate"><span class="pre">origin</span></code> remote.</p></li>
+</ul>
+<p>All the points above are checked by the release process, apart from whether the <code class="docutils literal notranslate"><span class="pre">origin</span></code> remote
+has been fetched, as this would require a connection to the remote.</p>
+<p>The release steps are as follows.</p>
 <ol class="arabic simple" start="0">
-<li><p>(Outside of the script) The user must run <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span> <span class="pre">origin</span> <span class="pre">master</span> <span class="pre">develop</span></code>.</p></li>
-<li><p>We verify that the repository does not have uncommited changes.</p></li>
-<li><p>We verify that both the <code class="docutils literal notranslate"><span class="pre">develop</span></code> and <code class="docutils literal notranslate"><span class="pre">master</span></code> branches are in sync with
-the <code class="docutils literal notranslate"><span class="pre">origin</span></code> remote. If not we abort.</p></li>
+<li><p>We ask the user to confirm they ran <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span> <span class="pre">origin</span> <span class="pre">develop</span> <span class="pre">master</span> <span class="pre">gh-pages</span></code>.</p></li>
+<li><p>We verify that all working trees do not have uncommited changes.</p></li>
+<li><p>We verify that the branches <code class="docutils literal notranslate"><span class="pre">develop</span></code>, <code class="docutils literal notranslate"><span class="pre">master</span></code> and <code class="docutils literal notranslate"><span class="pre">gh-pages</span></code> are in sync with
+the <code class="docutils literal notranslate"><span class="pre">origin</span></code> remote.</p></li>
 <li><p>We ask the user to confirm the version number of the stable release (by default,
 the develop <code class="docutils literal notranslate"><span class="pre">-SNAP</span></code> version with the <code class="docutils literal notranslate"><span class="pre">-SNAP</span></code> suffix removed), and the number
 of the next develop version (by default, the current version number with the
 minor release number incremented, and the <code class="docutils literal notranslate"><span class="pre">-SNAP</span></code> suffix added).</p></li>
-<li><p>We checkout the develop branch.</p></li>
-<li><p>We set the version number to the stable number.</p></li>
+<li><p>We set the version number to the stable number in the develop branch.</p></li>
+</ol>
+<ol class="arabic simple" start="6">
 <li><p>We run the <a class="reference internal" href="#root.replab_generate" title="root.replab_generate"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab_generate</span></code></a> script with the <code class="docutils literal notranslate"><span class="pre">sphinx</span></code> argument.</p></li>
 <li><p>We run the <a class="reference internal" href="#root.replab_runtests" title="root.replab_runtests"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab_runtests</span></code></a> script. We abort in case of errors.</p></li>
 <li><p>We run the <a class="reference internal" href="#root.replab_checkhelp" title="root.replab_checkhelp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab_checkhelp</span></code></a> script.</p></li>
@@ -483,7 +497,7 @@ release tag.</p></li>
         <li class="right" >
           <a href="group_constructions.html" title="Abstract group constructions"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1-SNAP documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.7.1 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li> 
       </ul>
     </div>
