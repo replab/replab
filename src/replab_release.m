@@ -80,6 +80,7 @@ function replab_release
 
     path = replab.settings.replabPath;
     gitDir = fullfile(path, '.git');
+    docsGitDir = fullfile(path, 'docs', '.git');
     mainWT = path;
     docsWT = fullfile(path, 'docs');
 
@@ -105,8 +106,8 @@ function replab_release
            'The main worktree has local unstaged changes. Verify you followed the installation instructions on the website.');
     assert(~replab.infra.Git.hasStagedUncommittedChanges(gitDir, mainWT), ...
            'The main worktree has staged but uncommitted changes. Verify you followed the installation instructions on the website.');
-    assert(~replab.infra.Git.hasUnstagedChanges(gitDir, docsWT), 'The docs/ worktree has local unstaged changes.');
-    assert(~replab.infra.Git.hasStagedUncommittedChanges(gitDir, mainWT), 'The docs/ worktree has staged but uncommitted changes.');
+    assert(~replab.infra.Git.hasUnstagedChanges(docsGitDir, docsWT), 'The docs/ worktree has local unstaged changes.');
+    assert(~replab.infra.Git.hasStagedUncommittedChanges(docsGitDir, docsWT), 'The docs/ worktree has staged but uncommitted changes.');
 
     disp(' ');
     disp('Step 2: Verifying that master and develop branches are in sync with remote origin.');
