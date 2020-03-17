@@ -140,7 +140,7 @@ classdef SubRep < replab.Rep
         %
         % Args:
         %   parent (`+replab.Rep`): Parent representation
-        %   subReps (cell(1,*) of `+replab.SubRep`): A row cell array of subrepresentations of the parent representation
+        %   subReps (cell(1,\*) of `+replab.SubRep`): A row cell array of subrepresentations of the parent representation
         %
         % Returns:
         %   `+replab.SubRep`: A block-diagonal subrepresentation composed of the given subrepresentations

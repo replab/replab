@@ -7,7 +7,7 @@ classdef ClassData < replab.Str
         docLineNumbers % row integer vector: Line numbers of the documentation comment
         ownMethods % row cell array of `+replab.+infra.FunctionLikeData`: Data about methods
         ownProperties % row cell array of `+replab.+infra.PropertyData`: Data about properties
-        propertyLines % integer(1,*): Line numbers of properties
+        propertyLines % integer(1,\*): Line numbers of properties
     end
 
     methods

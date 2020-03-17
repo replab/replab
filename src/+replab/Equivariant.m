@@ -28,8 +28,8 @@ classdef Equivariant < replab.Domain
 
     properties (Access = protected)
         domain % (`+replab.Domain`): Domain, real or complex matrices
-        cachedSamples_ % (struct of cell(1,*) of domain elements): Samples
-        cachedErrors_ % (struct of double(1,*)): Error information
+        cachedSamples_ % (struct of cell(1,\*) of domain elements): Samples
+        cachedErrors_ % (struct of double(1,\*)): Error information
     end
 
     methods
@@ -44,12 +44,12 @@ classdef Equivariant < replab.Domain
         % `` X1 = int{g in G} dg rhoR.image(g) * X * rhoC.inverseImage(g) ``
         %
         % Args:
-        %   X (double(*,*), may be sparse): Matrix to project
+        %   X (double(\*,\*), may be sparse): Matrix to project
         %
         % Returns
         % -------
         % X1:
-        %   double(*,*): Projected matrix
+        %   double(\*,\*): Projected matrix
         % err:
         %   double: Estimation of the numerical error, expressed as the distance of the returned ``X1`` to
         %           the invariant subspace in Frobenius norm or ``NaN`` if no such estimation can be performed
@@ -92,7 +92,7 @@ classdef Equivariant < replab.Domain
         % Returns
         % -------
         % X:
-        %   double(*,*): A sample from this equivariant space
+        %   double(\*,\*): A sample from this equivariant space
         % err:
         %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
         %           the invariant subspace in Frobenius norm
@@ -120,7 +120,7 @@ classdef Equivariant < replab.Domain
         % Returns
         % -------
         % X:
-        %   double(*,*): A sample from this equivariant space
+        %   double(\*,\*): A sample from this equivariant space
         % err:
         %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
         %           the invariant subspace in Frobenius norm

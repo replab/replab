@@ -58,15 +58,15 @@ classdef Chain < replab.Str
     properties (SetAccess = protected)
         isMutable % (logical): Whether the chain can be modified
         n % (integer): Domain size
-        B % (integer(1,*)): Row vector of base points (all between 1..n without duplicates)
-        bo % (integer(1,*)): Base order, i.e. for each domain element, gives its order
-        boinv % (integer(1,*)): Inverse permutation of ``bo``, permutation that starts with ``B`` and then the remaining domain elements increasing
+        B % (integer(1,\*)): Row vector of base points (all between 1..n without duplicates)
+        bo % (integer(1,\*)): Base order, i.e. for each domain element, gives its order
+        boinv % (integer(1,\*)): Inverse permutation of ``bo``, permutation that starts with ``B`` and then the remaining domain elements increasing
         S % (integer(n, nS)): Matrix of strong generators stored as columns vectors (nS = # of strong generators)
         Sind % (integer(1, k+1)): Starting index of strong generators for each stabilizer subgroup, where k = length(B)
              %
              % $S^(k+1)$ corresponds to strong generators that are stabilized by all base points
              % If no strong generators are present, use the default starting index 1
-        Delta % (cell(1,*) of intege(1,*)): Row cell array of orbits, each orbit is a row double vector with orbit elements sorted according to the base order
+        Delta % (cell(1,\*) of integer(1,\*)): Row cell array of orbits, each orbit is a row double vector with orbit elements sorted according to the base order
         U % row cell array of transversal elements stored as n x orbitSize matrices
         Uinv % row cell array of inverse transversal elements
         J % image group

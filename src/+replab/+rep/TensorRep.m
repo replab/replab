@@ -4,7 +4,7 @@ classdef TensorRep < replab.Rep
 % All factor representations must be defined on the same group
 
     properties
-        factors % (cell(1,*) of `+replab.Rep`): Factor representations
+        factors % (cell(1,\*) of `+replab.Rep`): Factor representations
     end
 
     methods
@@ -17,7 +17,7 @@ classdef TensorRep < replab.Rep
         % Args:
         %   group (`+replab.CompactGroup`): Common group
         %   field ({'R', 'C'}): Real or complex field
-        %   blocks (cell(1,*) of `+replab.Rep`): Factor representations
+        %   blocks (cell(1,\*) of `+replab.Rep`): Factor representations
             replab.rep.assertCompatibleFactors(group, field, factors);
             % own properties
             self.factors = factors;

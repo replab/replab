@@ -3,7 +3,7 @@ function b = assertCompatibleFactors(group, field, factors)
 %
 % Args:
 %   group (`+replab.CompactGroup`): Group on which the representations are defined
-%   factors (cell(1,*) of `+replab.Rep`): Representations of the given group
+%   factors (cell(1,\*) of `+replab.Rep`): Representations of the given group
     assert(isa(group, 'replab.CompactGroup'));
     assert(ismember(field, {'R' 'C'}));
     assert((isempty(factors) || isrow(factors)) && iscell(factors));

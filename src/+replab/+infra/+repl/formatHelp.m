@@ -18,6 +18,11 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
     for i = 1:length(lines)
         l = lines{i};
 
+        %% Process escaped Sphinx characters
+
+        l = strrep(l, '\*', '*');
+        l = strrep(l, '\\', '\');
+
         %% Process Sphinx references
         ref_re = ['(?<!`)'       '`'        '(?!`)'];
         %        no ` before    backtick    no ` after

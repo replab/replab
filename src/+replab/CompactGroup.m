@@ -104,7 +104,7 @@ classdef CompactGroup < replab.Group
         %
         % Args:
         %   field ({'R', 'C'}): Field
-        %   reps (cell(1,*) of `+replab.Rep`): Representation of this group over the given field
+        %   reps (cell(1,\*) of `+replab.Rep`): Representation of this group over the given field
         %
         % Returns:
         %   `+replab.Rep`: Direct sum of the representations
@@ -115,7 +115,7 @@ classdef CompactGroup < replab.Group
         % Computes the tensor product of representations
         %
         % Args:
-        %   reps (cell(1,*) of `+replab.Rep`): Representation of the same group over the same field
+        %   reps (cell(1,\*) of `+replab.Rep`): Representation of the same group over the same field
         %
         % Returns:
         %   `+replab.Rep`: Tensor product of the representations
