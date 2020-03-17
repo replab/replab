@@ -1,11 +1,13 @@
 classdef H < replab.Str
 % Barebones quaternion class, defining just enough for our purposes
+
     properties
-        r % double matrix: Real part
-        i % double matrix: Coeffient in the first quaternion unit
-        j % double matrix: Coeffient in the second quaternion unit
-        k % double matrix: Coeffient in the third quaternion unit
+        r % (double(\*,\*)): Real part
+        i % (double(\*,\*)): Coeffient in the first quaternion unit
+        j % (double(\*,\*)): Coeffient in the second quaternion unit
+        k % (double(\*,\*)): Coeffient in the third quaternion unit
     end
+
     methods
         function self = H(r, i, j, k)
         % Constructor from the expansion as a d=4 real vector space
@@ -14,7 +16,7 @@ classdef H < replab.Str
         % are replaced by zeros.
         %
         % Special case: if only one argument is given:
-        %   - if the argument is complex, 
+        %   - if the argument is complex,
         %     it fills the real and 'i' parts of the quaternion.
         %   - if the argument is a quaternion, the quaternion is copied
             if nargin < 4 || isempty(k)

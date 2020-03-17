@@ -33,25 +33,8 @@ classdef Str < handle
 %   >>> replab.shortStr(P)
 %     ans =
 %     'Permutations acting on 3 elements'
-    methods
 
-        function res = eq(self, rhs)
-        % Equality test
-        %
-        % Workaround bug of == not implemented for handles
-        %
-        % Args:
-        %   self (object): first object
-        %   rhs (object): second object to compare to
-        %
-        % Returns:
-        %   boolean: true iff self == rhs
-            if replab.compat.isOctave
-                res = true(size(self));
-            else
-                res = eq@handle(self, rhs);
-            end
-        end
+    methods
 
         function disp(self)
         % Standard MATLAB/Octave display method

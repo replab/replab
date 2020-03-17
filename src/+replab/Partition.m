@@ -1,5 +1,7 @@
 classdef Partition < replab.Str
 % Represents an unordered partition of the set {1..n} into disjoint subsets
+%
+% TODO: implement proper equality
 
     properties (SetAccess = protected)
         n % integer: Domain size

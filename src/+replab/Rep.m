@@ -1,4 +1,4 @@
-classdef Rep < replab.Str
+classdef Rep < replab.Obj
 % Describes a finite dimensional representation of a compact group
 %
 % This class has mutable properties that correspond to information that can be computed and cached

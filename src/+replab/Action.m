@@ -1,4 +1,4 @@
-classdef Action < replab.Str
+classdef Action < replab.Obj
 % A group action describing the action of a group on a set
 %
 % Elements of the group ``G`` act upon elements of type ``P``.
