@@ -3,7 +3,7 @@ classdef ProgressBar < handle
     properties
         n % integer: Total number of steps
         startTime % date vector: Time of the first step
-        times % double(1,:): Seconds elapsed at each step
+        times % double(1,\*): Seconds elapsed at each step
 
         barSize % integer: Size of the progress bar in characters
         consoleLine % `.ConsoleLine`: Console state

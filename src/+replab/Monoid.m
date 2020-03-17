@@ -32,7 +32,7 @@ classdef Monoid < replab.Domain
         % (shown here in multiplaticative notation)
         %
         % Args:
-        %   elements (cell(1,:) of element): Elements to compose
+        %   elements (cell(1,\*) of element): Elements to compose
             if length(elements) == 0
                 assert(isa(self, 'replab.Monoid'));
                 z = self.identity;
@@ -95,7 +95,7 @@ classdef Monoid < replab.Domain
         %   identity (element): Identity element of this monoid
         %
         % Returns:
-        %   replab.Monoid: The constructed monoid
+        %   `.Monoid`: The constructed monoid
             monoid = replab.lambda.Monoid(header, eqvFun, sampleFun, composeFun, identity);
         end
 
