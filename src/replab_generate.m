@@ -81,10 +81,12 @@ function replab_generate(what)
     end
 
     if isequal(what, 'sphinxbuild') || isequal(what, 'sphinx') || isequal(what, 'all')
+        replab.infra.cleanDir(fullfile(rp, 'docs'), {'.git'});
         replab.infra.mkCleanDir(rp, 'docs', logFun);
         if ~isequal(what, 'clear')
             disp('Running Sphinx');
             lastPath = pwd;
+            cd(rp);
             cmd = 'sphinx-build -b html sphinx docs';
             disp(['Running ' cmd]);
             system(cmd);

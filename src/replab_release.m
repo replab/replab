@@ -146,7 +146,6 @@ function replab_release
 
     disp(' ');
     disp('Step 7: Clean the docs worktree and run "replab_generate sphinx"');
-    replab.infra.cleanDir(docsWT, {'.git'}, @(x) disp(x));
     replab_generate('sphinx');
 
     disp(' ');
