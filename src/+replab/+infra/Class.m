@@ -2,9 +2,9 @@ classdef Class < replab.infra.SourceElement
 % Describes a class in the code base
 
     properties
-        superclassIdentifiers % cell(1,*) of charstring: Identifiers of superclasses
+        superclassIdentifiers % cell(1,\*) of charstring: Identifiers of superclasses
         ownElementsStruct % struct: Elements of this class of type `.ClassElement`
-        propertyLines % integer(1,*): Line numbers of properties
+        propertyLines % integer(1,\*): Line numbers of properties
     end
 
     properties (Access = protected)

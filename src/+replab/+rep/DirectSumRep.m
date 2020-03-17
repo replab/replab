@@ -2,7 +2,7 @@ classdef DirectSumRep < replab.Rep
 % A direct sum of representations, such that images are diagonal by blocks
 
     properties
-        factors % (cell(1,*) of `+replab.Rep`): Contained subrepresentations
+        factors % (cell(1,\*) of `+replab.Rep`): Contained subrepresentations
     end
 
     methods
@@ -15,7 +15,7 @@ classdef DirectSumRep < replab.Rep
         % Args:
         %   group (`+replab.CompactGroup`): Common group
         %   field ({'R', 'C'}): Real or complex field
-        %   blocks (cell(1,*) of `+replab.Rep`): Subrepresentations
+        %   blocks (cell(1,\*) of `+replab.Rep`): Subrepresentations
             replab.rep.assertCompatibleFactors(group, field, factors);
             % own properties
             self.factors = factors;

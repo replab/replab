@@ -6,7 +6,7 @@ classdef Context < replab.Str
     end
 
     properties (Access = protected)
-        instances_ % (cell(1,*) of `+replab.Equivariant`): Equivariant instances with cached samples
+        instances_ % (cell(1,\*) of `+replab.Equivariant`): Equivariant instances with cached samples
     end
 
     methods (Access = protected)
