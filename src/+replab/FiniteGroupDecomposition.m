@@ -1,4 +1,4 @@
-classdef FiniteGroupDecomposition < replab.Str
+classdef FiniteGroupDecomposition < replab.Obj
 % Describes the decomposition of a finite group into a product of sets
 %
 % We assume the existence of sets T1, T2, ..., Tn such that every group elements has a unique decomposition
@@ -10,18 +10,18 @@ classdef FiniteGroupDecomposition < replab.Str
         group % replab.FiniteGroup: Group decomposed
         T % row cell array of row cell arrays: Stores the sets Ti as {T1 T2 ... Tn}
     end
-    
+
     methods
-        
+
         function self = FiniteGroupDecomposition(group, T)
             self.group = group;
             self.T = T;
         end
-        
+
     end
-    
+
     methods (Static)
-        
+
         function D = trivial(group)
         % Constructs a group decomposition using a single set
         %
@@ -35,7 +35,7 @@ classdef FiniteGroupDecomposition < replab.Str
             T = T([idIndex setdiff(1:O, idIndex)]);
             D = replab.FiniteGroupDecomposition(group, {T});
         end
-        
+
     end
-    
+
 end

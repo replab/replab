@@ -1,15 +1,15 @@
-classdef RandomBag < replab.Str
+classdef RandomBag < replab.Obj
 % Generator of random elements from generators of a group.
-% 
+%
 % A random bag is a set of random group elements that always generates
 % the group; random elements are provided by multiplying elements of the
 % bag and returning one element of the product which is removed from the bag.
-% 
-% Straight-forward implementation of PRINITIALIZE and PRRANDOM of 
+%
+% Straight-forward implementation of PRINITIALIZE and PRRANDOM of
 % section 3.2.2, pp. 70-71 of Holt 2005 (Handbook of Computational Group Theory)
 %
 % Is generic in the group element type.
-    
+
     properties (SetAccess = protected)
         G % Group definition
         x0 % Last generated sample
@@ -17,12 +17,12 @@ classdef RandomBag < replab.Str
     end
 
     methods
-        
+
         function s = headerStr(self)
             msg = 'Random bag of %d elements, last drawn element: %s';
             s = sprintf(msg, length(self.x), replab.strOf(self.x0));
         end
-        
+
         function res = sample(self)
             r = length(self.x);
             s = randi(r);
@@ -48,7 +48,7 @@ classdef RandomBag < replab.Str
             end
             res = self.x0;
         end
-        
+
         function self = RandomBag(G, generators, r, n)
         % Constructs a random bag from generators
         %
@@ -92,7 +92,7 @@ classdef RandomBag < replab.Str
                 self.sample; % perform initial shuffles
             end
         end
-   
+
     end
-    
+
 end

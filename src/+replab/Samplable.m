@@ -1,4 +1,4 @@
-classdef Samplable < replab.Str
+classdef Samplable < replab.Obj
 % Describes a set of elements that can be sample
 %
 % Random elements are produced by the method `.sample`.
