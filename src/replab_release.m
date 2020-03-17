@@ -88,7 +88,7 @@ function replab_release
     if length(mainInd) ~= 1
         error('Cannot find main working tree %s in worktree list', mainWT);
     end
-    assert(isequal(wts(mainInd).branch, 'refs/head/feature/jupytext'), 'Main worktree should have the develop branch checked out');
+    assert(isequal(wts(mainInd).branch, 'refs/head/develop'), 'Main worktree should have the develop branch checked out');
     mainHead = wts(mainInd).head;
 
     docsInd = find(cellfun(@(x) isequal(x, docsWT), {wts.worktree}));
