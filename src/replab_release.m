@@ -141,7 +141,7 @@ function replab_release
     disp('Step 6: Set version number to stable release number, commit to the develop branch');
     releaseVersion.updateVersionFile;
     replab.infra.Git.addAll(gitDir, mainWT);
-    relpab.infra.Git.commit(gitDir, mainWT, sprintf('Version %s', releaseVersion.toText));
+    replab.infra.Git.commit(gitDir, mainWT, sprintf('Version %s', releaseVersion.toText));
 
     disp(' ');
     disp('Step 7: Clean the docs worktree and run "replab_generate sphinx"');

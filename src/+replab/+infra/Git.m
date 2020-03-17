@@ -60,7 +60,8 @@ classdef Git < handle
 
         function addAll(gitDir, worktree)
         % Runs ``git add -A``
-            cmdout = replab.infra.Git.executeAssertExitCodeZero('git --git-dir=$1 --work-tree=$2 add -A');
+            cmdout = replab.infra.Git.executeAssertExitCodeZero('git --git-dir=$1 --work-tree=$2 add -A', ...
+                                                              gitDir, worktree);
         end
 
         function commit(gitDir, worktree, message)
