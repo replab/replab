@@ -1,14 +1,11 @@
-function tf = endsWith(str, pattern)
-% Implementation of Matlab 2016b endsWith function
+function l = endsWith(str, pattern)
+% Returns whether the given string ends with the given pattern
 %
-% Does not support ``'IgnoreCase'``
-    if isa(str, 'cell')
-        tf = cellfun(@(x) replab.compat.endsWith(x, pattern), str);
-    else
-        if length(str) < length(pattern)
-            tf = false;
-        else
-            tf = isequal(str((length(str)-length(pattern)+1):end), pattern);
-        end
-    end
+% Args:
+%   str (charstring): String being tested
+%   pattern (charstring): Pattern to test
+%
+% Returns:
+%   logical: Whether ``str`` has sufficient length and it ends with ``pattern` as a substring
+    l = length(str) >= length(pattern) && isequal(str((length(str)-length(pattern)+1):end), pattern);
 end

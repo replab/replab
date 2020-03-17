@@ -15,10 +15,6 @@ function replab_generate(what)
 %   It also copies the source files at the root of the source folder in a ``root`` subdirectory
 %   so that the Sphinx Matlab domain has a "module" name for those.
 %
-% - ``sphinxjupyter`` processes the Jupyter notebooks in the Sphinx directory. Care must be taken
-%   to not run the Matlab kernel inside Jupyter inside a running Matlab session. All our tutorials
-%   are run indeed by the octave kernel.
-%
 % - ``sphinxbuild`` runs the Sphinx documentation generation.
 %
 % - ``sphinx`` runs all the Sphinx generation steps.
@@ -40,7 +36,7 @@ function replab_generate(what)
     cd ..
 
     logFun = @(str) disp(str);
-    valid = {'clear' 'sphinx' 'sphinxbuild' 'sphinxsrc' 'sphinxjupyter' 'doctests' 'all'};
+    valid = {'clear' 'sphinx' 'sphinxbuild' 'sphinxsrc' 'doctests' 'all'};
     validStr = strjoin(cellfun(@(x) sprintf('''%s''', x), valid, 'uniform', 0), ', ');
     assert(ismember(what, valid), 'Argument must be one of: %s', validStr);
 
@@ -49,49 +45,6 @@ function replab_generate(what)
 
     disp('Crawling code base');
     cb = replab.infra.crawl(srcRoot);
-
-    if isequal(what, 'sphinxjupyter') || isequal(what, 'sphinx') || isequal(what, 'all') || isequal(what, 'clear')
-        toExplore = {{'sphinx'}};
-        notebooks = {};
-        sourceSuffix = '_source.ipynb';
-        targetSuffix = '.ipynb';
-        while length(toExplore) > 0
-            subpath = toExplore{1};
-            toExplore = toExplore(2:end);
-            path = fullfile(rp, subpath{:});
-            children = dir(path);
-            for i = 1:length(children)
-                name = children(i).name;
-                if isequal(name, '.') || isequal(name, '..')
-                    % do nothing
-                elseif children(i).isdir
-                    % new folder
-                    toExplore{1,end+1} = horzcat(subpath, {name});
-                else
-                    if replab.compat.endsWith(name, sourceSuffix)
-                        notebooks{1,end+1} = strjoin(horzcat(subpath, {name}), filesep);
-                    end
-                end
-            end
-        end
-        lastPath = pwd;
-        for i = 1:length(notebooks)
-            source = notebooks{i};
-            [~, sourceName, sourceExt] = fileparts(source);
-            target = [sourceName sourceExt];
-            target = [target(1:end-length(sourceSuffix)) targetSuffix];
-            if isequal(what, 'clear')
-                if exist(target) == 2
-                    delete(target);
-                end
-            else
-                cmd = sprintf('jupyter nbconvert --to notebook --execute "%s" --output="%s"', source, target);
-                disp(['Running ' cmd]);
-                system(cmd);
-            end
-        end
-        cd(lastPath);
-    end
 
     if isequal(what, 'sphinxsrc') || isequal(what, 'sphinx') || isequal(what, 'all') || isequal(what, 'clear')
         % Generate Sphinx preprocessed source files

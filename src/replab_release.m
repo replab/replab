@@ -1,8 +1,11 @@
 function replab_release
-% replab_release Release the current develop branch contents as a stable release
+% Releases the current develop branch contents as a stable release
 %
 % This runs the release process to send the current ``develop``
 % branch snapshot to the branch ``master``, taking care of version numbers in the process.
+%
+% We also update the `gh-pages` branch with the documentation of the master branch, which
+% we regenerate.
 %
 % This script works fully offline, interactions with the remote repository are done manually
 % by the user.
@@ -21,23 +24,35 @@ function replab_release
 % branch has snapshot version numbers, except during the release process when we "stabilize"
 % the version number for one commit.
 %
-% The release process is as follows.
+% We assume the following:
 %
-% 0. (Outside of the script) The user must run ``git fetch origin master develop``.
+% * A python virtual environment with Sphinx and the required modules is set up.
+% * The remote ``origin`` corresponds to the repository `<git@github.com:replab/replab.git>`_
+% * The user has run ``git fetch origin master develop gh-pages`` to synchronize the
+%   remote content.
+% * The ``develop`` branch is checked out in the main worktree, that is in the root RepLAB folder
+% * The ``gh-pages`` branch is checkout out in a second ``docs/`` worktree
+% * All of the branches ``master``, ``develop`` and ``gh-pages`` have their local copy current with
+%   the ``origin`` remote.
 %
-% 1. We verify that the repository does not have uncommited changes.
+% All the points above are checked by the release process, apart from whether the ``origin`` remote
+% has been fetched, as this would require a connection to the remote.
 %
-% 2. We verify that both the ``develop`` and ``master`` branches are in sync with
-%    the ``origin`` remote. If not we abort.
+% The release steps are as follows.
+%
+% 0. We ask the user to confirm they ran ``git fetch origin develop master gh-pages``.
+%
+% 1. We verify that all working trees do not have uncommited changes.
+%
+% 2. We verify that the branches ``develop``, ``master`` and ``gh-pages`` are in sync with
+%    the ``origin`` remote.
 %
 % 3. We ask the user to confirm the version number of the stable release (by default,
 %    the develop ``-SNAP`` version with the ``-SNAP`` suffix removed), and the number
 %    of the next develop version (by default, the current version number with the
 %    minor release number incremented, and the ``-SNAP`` suffix added).
 %
-% 4. We checkout the develop branch.
-%
-% 5. We set the version number to the stable number.
+% 4. We set the version number to the stable number in the develop branch.
 %
 % 6. We run the `replab_generate` script with the ``sphinx`` argument.
 %
@@ -59,32 +74,51 @@ function replab_release
 %     In particular, it involves pushing both the master and develop branches, and the
 %     release tag.
 
-    assert(exist('replab_version.txt') == 2, 'The current directory must be the RepLAB root folder.');
-    [status, cmdout] = system('git rev-parse --abbrev-ref HEAD');
-    assert(isequal(strtrim(cmdout), 'develop'), 'The current repository must be on the develop branch to continue.');
-    assert(~isempty(getenv('VIRTUAL_ENV')), 'The Python virtual environment must be setup');
+    assert(~isempty(getenv('VIRTUAL_ENV')), 'The Python virtual environment must be set up');
 
-    input('Step 0: Press ENTER to confirm that you ran "git fetch origin develop master"');
+    input('Step 0: Press ENTER to confirm that you ran "git fetch origin develop master gh-pages"');
+
+    path = replab.settings.replabPath;
+    gitDir = fullfile(path, '.git');
+    mainWT = path;
+    docsWT = fullfile(path, 'docs');
+
+    wts = replab.infra.Git.listWorktrees(gitDir);
+    mainInd = find(cellfun(@(x) isequal(x, mainWT), {wts.worktree}));
+    if length(mainInd) ~= 1
+        error('Cannot find main working tree %s in worktree list', mainWT);
+    end
+    assert(isequal(wts(mainInd).branch, 'refs/head/feature/jupytext'), 'Main worktree should have the develop branch checked out');
+    mainHead = wts(mainInd).head;
+
+    docsInd = find(cellfun(@(x) isequal(x, docsWT), {wts.worktree}));
+    if length(docsInd) ~= 1
+        error('Cannot find main working tree %s in worktree list', docsWT);
+    end
+    assert(isequal(wts(docsInd).branch, 'refs/head/gh-pages'), 'Docs worktree should have the gh-pages branch checked out');
+    docsHead = wts(docsInd).head;
+
 
     disp(' ');
     disp('Step 1: Verifying that the current working tree and index are clean');
-    [status, cmdout] = system('git diff --exit-code');
-    assert(status == 0, 'The repository has local unstaged changes. Verify you followed the installation instructions on the website.');
-    [status, cmdout] = system('git diff --cached --exit-code');
-    assert(status == 0, 'The repository has staged but uncommitted changes. Verify you followed the installation instructions on the website.');
+    assert(~replab.infra.Git.hasUnstagedChanges(gitDir, mainWT), ...
+           'The main worktree has local unstaged changes. Verify you followed the installation instructions on the website.');
+    assert(~replab.infra.Git.hasStagedUncommittedChanges(gitDir, mainWT), ...
+           'The main worktree has staged but uncommitted changes. Verify you followed the installation instructions on the website.');
+    assert(~replab.infra.Git.hasUnstagedChanges(gitDir, docsWT), 'The docs/ worktree has local unstaged changes.');
+    assert(~replab.infra.Git.hasStagedUncommittedChanges(gitDir, mainWT), 'The docs/ worktree has staged but uncommitted changes.');
 
     disp(' ');
     disp('Step 2: Verifying that master and develop branches are in sync with remote origin.');
-    [status, masterRef] = system('git rev-parse master');
-    assert(status == 0, 'Git command failed');
-    [status, originMasterRef] = system('git rev-parse origin/master');
-    assert(status == 0, 'Git command failed');
-    [status, developRef] = system('git rev-parse develop');
-    assert(status == 0, 'Git command failed');
-    [status, originDevelopRef] = system('git rev-parse origin/develop');
-    assert(status == 0, 'Git command failed');
-    assert(isequal(masterRef, originMasterRef), 'Please synchronize master with origin/master.');
-    assert(isequal(developRef, originDevelopRef), 'Please synchronize develop with origin/develop.');
+    assert(isequal(replab.infra.Git.showExactRef(gitDir, 'refs/heads/master'), ...
+                   replab.infra.Git.showExactRef(gitDir, 'refs/remotes/origin/master')), ...
+           'Please synchronize master with origin/master');
+    assert(isequal(replab.infra.Git.showExactRef(gitDir, 'refs/heads/develop'), ...
+                   replab.infra.Git.showExactRef(gitDir, 'refs/remotes/origin/develop')), ...
+           'Please synchronize develop with origin/develop');
+    assert(isequal(replab.infra.Git.showExactRef(gitDir, 'refs/heads/gh-pages'), ...
+                   replab.infra.Git.showExactRef(gitDir, 'refs/remotes/origin/gh-pages')), ...
+           'Please synchronize gh-pages with origin/gh-pages');
 
     disp(' ');
     disp('Step 3: New version numbers');
@@ -95,58 +129,48 @@ function replab_release
     newDevelopVersion = releaseVersion.incrementedPatch.asSnapshot.prompt('Develop version').asSnapshot;
 
     disp(' ');
-    disp('Step 4: Checkout develop branch');
-    status = system('git checkout develop');
-    assert(status == 0, 'Git command failed');
-
-    disp(' ');
-    disp('Step 5: Set version number to stable release number');
-    releaseVersion.updateVersionFile;
-
-    disp(' ');
-    disp('Step 6: Run "replab_generate sphinx"');
-    replab_generate('sphinx');
-
-    disp(' ');
-    disp('Step 7: Run "replab_runtests"');
+    disp('Step 4: Run "replab_runtests"');
     assert(replab_runtests, 'Tests failed');
 
     disp(' ');
-    disp('Step 8: Run "replab_checkhelp"');
+    disp('Step 5: Run "replab_checkhelp"');
     assert(replab_checkhelp, 'Help check failed');
 
     disp(' ');
-    disp('Step 9: Commit the stable release on the develop branch');
-    status = system('git add -A');
-    assert(status == 0, 'Git command failed');
-    status = system(sprintf('git commit -m "Version %s"', releaseVersion.toText));
-    assert(status == 0, 'Git command failed');
+    disp('Step 6: Set version number to stable release number, commit to the develop branch');
+    releaseVersion.updateVersionFile;
+    replab.infra.Git.addAll(gitDir, mainWT);
+    relpab.infra.Git.commit(gitDir, mainWT, sprintf('Version %s', releaseVersion.toText));
 
     disp(' ');
-    disp('Step 10: Merge the stable release from the develop branch unto the master branch');
-    status = system('git checkout master');
-    assert(status == 0, 'Git command failed');
-    status = system('git merge develop');
-    assert(status == 0, 'Git command failed');
+    disp('Step 7: Clean the docs worktree and run "replab_generate sphinx"');
+    replab.infra.cleanDir(docsWT, {'.git'});
+    replab_generate('sphinx');
 
     disp(' ');
-    disp('Step 11: Tag the stable release');
+    disp('Step 8: Commit the generated docs to the gh-pages branch');
+    replab.infra.Git.addAll(gitDir, docsWT);
+    replab.infra.Git.commit(gitDir, docsWT, sprintf('Docs version %s', releaseVersion.toText));
+
+    disp(' ');
+    disp('Step 9: Merge the stable release from the develop branch unto the master branch');
+    replab.infra.Git.checkout(gitDir, mainWT, 'master')
+    replab.infra.Git.merge(gitDir, mainWT, 'develop')
+
+    disp(' ');
+    disp('Step 10: Tag the stable release');
+    replab.infra.Git.tag(gitDir, mainWT, releaseVersion.tag);
     status = system(sprintf('git tag %s', releaseVersion.tag));
-    assert(status == 0, 'Git command failed');
 
     disp(' ');
-    disp('Step 12: Checkout the develop branch, set the version number to the next snapshot, clear autogenerated code/doc');
-    status = system('git checkout develop');
-    assert(status == 0, 'Git command failed');
-    replab_generate('clear');
+    disp('Step 11: Checkout the develop branch, set the version number to the next snapshot');
+    replab.infra.Git.checkout(gitDir, mainWT, 'develop');
     newDevelopVersion.updateVersionFile;
-    status = system('git add -A');
-    assert(status == 0, 'Git command failed');
-    status = system(sprintf('git commit -m "Version %s"', newDevelopVersion.toText));
-    assert(status == 0, 'Git command failed');
+    replab.infra.Git.addAll(gitDir, mainWT);
+    replab.infra.Git.commit(gitDir, mainWT, sprintf('Version %s', newDevelopVersion.toText));
 
     disp(' ');
-    disp('Step 13: Code to copy/paste');
+    disp('Step 12: Code to copy/paste');
     disp(' ');
-    fprintf('git push origin develop master %s\n', releaseVersion.tag);
+    fprintf('git push origin gh-pages develop master %s\n', releaseVersion.tag);
 end
