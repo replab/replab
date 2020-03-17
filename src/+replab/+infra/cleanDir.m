@@ -25,7 +25,7 @@ function cleanDir(path, preserve, logFunction)
         childpath = fullfile(path, name);
         if isequal(name, '.') || isequal(name, '..') || ismember(name, preserve)
             % do nothing
-        elseif children(i).isdiro
+        elseif children(i).isdir
             logFunction(sprintf('Deleting subfolder %s\n', name));
             replab.compat.rmdirRec(childpath);
         else
