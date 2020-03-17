@@ -32,6 +32,7 @@ function replab_release
 %   remote content.
 % * The ``develop`` branch is checked out in the main worktree, that is in the root RepLAB folder
 % * The ``gh-pages`` branch is checkout out in a second ``docs/`` worktree
+%   You can create that worktree by running ``git worktree add docs gh-pages`` in the root folder
 % * All of the branches ``master``, ``develop`` and ``gh-pages`` have their local copy current with
 %   the ``origin`` remote.
 %
@@ -150,8 +151,8 @@ function replab_release
 
     disp(' ');
     disp('Step 8: Commit the generated docs to the gh-pages branch');
-    replab.infra.Git.addAll(gitDir, docsWT);
-    replab.infra.Git.commit(gitDir, docsWT, sprintf('Docs version %s', releaseVersion.toText));
+    replab.infra.Git.addAll(docsGitDir, docsWT);
+    replab.infra.Git.commit(docsGitDir, docsWT, sprintf('Docs version %s', releaseVersion.toText));
 
     disp(' ');
     disp('Step 9: Merge the stable release from the develop branch unto the master branch');
