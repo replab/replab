@@ -6,6 +6,6 @@ function l = startsWith(str, pattern)
 %   pattern (charstring): Pattern to test
 %
 % Returns:
-%   logical: Whether ``str`` has sufficient length and it starts with ``pattern` as a substring
+%   logical: Whether ``str`` has sufficient length and it starts with ``pattern`` as a substring
     l = length(str) >= length(pattern) && isequal(str(1:length(pattern)), pattern);
 end

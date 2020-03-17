@@ -6,6 +6,6 @@ function l = endsWith(str, pattern)
 %   pattern (charstring): Pattern to test
 %
 % Returns:
-%   logical: Whether ``str`` has sufficient length and it ends with ``pattern` as a substring
+%   logical: Whether ``str`` has sufficient length and it ends with ``pattern`` as a substring
     l = length(str) >= length(pattern) && isequal(str((length(str)-length(pattern)+1):end), pattern);
 end

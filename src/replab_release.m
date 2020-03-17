@@ -4,7 +4,7 @@ function replab_release
 % This runs the release process to send the current ``develop``
 % branch snapshot to the branch ``master``, taking care of version numbers in the process.
 %
-% We also update the `gh-pages` branch with the documentation of the master branch, which
+% We also update the ``gh`-pages` branch with the documentation of the master branch, which
 % we regenerate.
 %
 % This script works fully offline, interactions with the remote repository are done manually
