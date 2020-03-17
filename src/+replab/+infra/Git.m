@@ -127,7 +127,7 @@ classdef Git < handle
                 if replab.compat.startsWith(l, 'detached')
                     branches{1, end+1} = '';
                 elseif replab.compat.startsWith(l, 'branch ')
-                    branches{1, end+1} = l(7:end);
+                    branches{1, end+1} = l(8:end);
                 else
                     error('Cannot parse worktree output %s', cmdout);
                 end

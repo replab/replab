@@ -88,14 +88,14 @@ function replab_release
     if length(mainInd) ~= 1
         error('Cannot find main working tree %s in worktree list', mainWT);
     end
-    assert(isequal(wts(mainInd).branch, 'refs/head/develop'), 'Main worktree should have the develop branch checked out');
+    assert(isequal(wts(mainInd).branch, 'refs/heads/develop'), 'Main worktree should have the develop branch checked out');
     mainHead = wts(mainInd).head;
 
     docsInd = find(cellfun(@(x) isequal(x, docsWT), {wts.worktree}));
     if length(docsInd) ~= 1
         error('Cannot find main working tree %s in worktree list', docsWT);
     end
-    assert(isequal(wts(docsInd).branch, 'refs/head/gh-pages'), 'Docs worktree should have the gh-pages branch checked out');
+    assert(isequal(wts(docsInd).branch, 'refs/heads/gh-pages'), 'Docs worktree should have the gh-pages branch checked out');
     docsHead = wts(docsInd).head;
 
 
