@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>2. Finding an upper bound on CHSH, symmetrized version &#8212; RepLAB 0.7.1 documentation</title>
+    <title>2. Finding an upper bound on CHSH, symmetrized version &#8212; RepLAB 0.8.0 documentation</title>
     <link rel="stylesheet" href="../../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/collapse_admonitions.css" />
@@ -64,7 +64,7 @@
         <li class="right" >
           <a href="Tutorial1.html" title="1. Introduction to representation for quantum information people"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.7.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.8.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" accesskey="U">Brussels visit October 2019</a> &#187;</li> 
       </ul>
@@ -79,7 +79,7 @@
   <a href="
     ../../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.7.1.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.8.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -549,15 +549,15 @@ isDivisionAlgebraCanonical: []
 <div class="highlight"><pre>
 g =
 
-   1   2  -3   5   4
+   1   5  -4  -3   2
 
 ans =
 
    1   0   0   0   0
-   0   1   0   0   0
-   0   0  -1   0   0
    0   0   0   0   1
-   0   0   0   1   0
+   0   0   0  -1   0
+   0   0  -1   0   0
+   0   1   0   0   0
 
 </pre></div></div>
 </div>
@@ -589,11 +589,11 @@ isDivisionAlgebraCanonical: []
                  isUnitary: true
                     parent: Orthogonal representation by images
           trivialDimension: []
-               basis.(:,1): [-1, 0, 0, -4.4908e-18, 1.0479e-18].&#39;
-               basis.(:,2): [0, 0.5, 0.5, 0.70711, 0].&#39;
-               basis.(:,3): [0, -0.5, 0.5, 0, -0.70711].&#39;
-               basis.(:,4): [0, 0.5, 0.5, -0.70711, 0].&#39;
-               basis.(:,5): [0, -0.5, 0.5, 0, 0.70711].&#39;
+               basis.(:,1): [-1, 0, 0, 2.6966e-18, 3.8086e-18].&#39;
+               basis.(:,2): [0, 0.5, 0.5, -0.70711, 0].&#39;
+               basis.(:,3): [0, 0.5, -0.5, 0, -0.70711].&#39;
+               basis.(:,4): [0, 0.5, -0.5, 0, 0.70711].&#39;
+               basis.(:,5): [0, 0.5, 0.5, 0.70711, 0].&#39;
               component(1): Isotypic component (harmonized) R(1) (trivial)
               component(2): Isotypic component (harmonized) R(2)
               component(3): Isotypic component (harmonized) R(2)
@@ -626,7 +626,7 @@ isDivisionAlgebraCanonical: []
                  isUnitary: true
                     parent: Orthogonal representation by images
           trivialDimension: 1
-               basis.(:,1): [-1, 0, 0, -4.4908e-18, 1.0479e-18].&#39;
+               basis.(:,1): [-1, 0, 0, 2.6966e-18, 3.8086e-18].&#39;
 
 </pre></div></div>
 </div>
@@ -650,26 +650,26 @@ isDivisionAlgebraCanonical: []
 U =
 
   -1.00000   0.00000   0.00000   0.00000   0.00000
-   0.00000   0.50000  -0.50000   0.50000  -0.50000
    0.00000   0.50000   0.50000   0.50000   0.50000
-  -0.00000   0.70711   0.00000  -0.70711   0.00000
-   0.00000   0.00000  -0.70711   0.00000   0.70711
+   0.00000   0.50000  -0.50000  -0.50000   0.50000
+   0.00000  -0.70711   0.00000   0.00000   0.70711
+   0.00000   0.00000  -0.70711   0.70711   0.00000
 
 ans =
 
-   1.0000e+00  -3.1755e-18  -7.4100e-19   3.1755e-18   7.4100e-19
-  -3.1755e-18   1.0000e+00   1.1102e-16  -2.7756e-16   1.1102e-16
-  -7.4100e-19   1.1102e-16   1.0000e+00  -5.5511e-17   1.1102e-16
-   3.1755e-18  -2.7756e-16  -5.5511e-17   1.0000e+00  -5.5511e-17
-   7.4100e-19   1.1102e-16   1.1102e-16  -5.5511e-17   1.0000e+00
+   1.0000e+00  -1.9068e-18  -2.6931e-18   2.6931e-18   1.9068e-18
+  -1.9068e-18   1.0000e+00  -1.1102e-16  -1.1102e-16  -1.1102e-16
+  -2.6931e-18  -1.1102e-16   1.0000e+00   1.1102e-16   1.1102e-16
+   2.6931e-18  -1.1102e-16   1.1102e-16   1.0000e+00   1.1102e-16
+   1.9068e-18  -1.1102e-16   1.1102e-16   1.1102e-16   1.0000e+00
 
 ans =
 
-   0.00000  -0.00000  -0.00000  -0.00000  -0.00000
-  -0.00000   1.41421   0.00000  -0.00000  -0.00000
-  -0.00000   0.00000   1.41421  -0.00000   0.00000
-  -0.00000  -0.00000  -0.00000  -1.41421   0.00000
-  -0.00000  -0.00000   0.00000   0.00000  -1.41421
+   0.00000   0.00000   0.00000   0.00000   0.00000
+   0.00000  -1.41421   0.00000  -0.00000   0.00000
+   0.00000   0.00000  -1.41421   0.00000  -0.00000
+   0.00000  -0.00000   0.00000   1.41421   0.00000
+   0.00000   0.00000  -0.00000   0.00000   1.41421
 
 </pre></div></div>
 </div>
@@ -692,7 +692,8 @@ ans =
 <div class="highlight"><pre>
 
  num. of constraints =  1
- dim. of sdp    var  =  5,   num. of sdp  blk  =  1
+ dim. of sdp    var  =  5,   num. of sdp  blk  =  1  1th semidefinite block is actually diagonal
+
 *******************************************************************
    SDPT3: Infeasible path-following algorithms
 *******************************************************************
@@ -721,8 +722,8 @@ it pstep dstep pinfeas dinfeas  gap      prim-obj      dual-obj    cputime
  rel. dual     &#34;        &#34;       &#34;      = 0.00e+00
  norm(X), norm(y), norm(Z) = 2.0e+00, 7.1e-01, 3.0e+00
  norm(A), norm(b), norm(C) = 3.8e+00, 5.0e+00, 3.2e+00
- Total CPU time (secs)  = 0.14
- CPU time per iteration = 0.02
+ Total CPU time (secs)  = 0.08
+ CPU time per iteration = 0.01
  termination code       =  0
  DIMACS: 8.9e-12  0.0e+00  1.4e-07  0.0e+00  1.0e-08  6.3e-08
 -------------------------------------------------------------------
@@ -769,7 +770,7 @@ ans =  2.8284
         <li class="right" >
           <a href="Tutorial1.html" title="1. Introduction to representation for quantum information people"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.7.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">RepLAB 0.8.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Talks</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="index.html" >Brussels visit October 2019</a> &#187;</li> 
       </ul>
