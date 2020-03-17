@@ -2,6 +2,7 @@
 # Continuous Integration .gitignore files
 ##---------------------------------------------------
 sphinx/_src/
+docs/
 
 # Ignore SDPT3 compiled files changes
 external/SDPT3
