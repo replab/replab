@@ -13,7 +13,7 @@ function cleanDir(path, preserve, logFunction)
     end
     switch exist(path) % check that the base directory exists
       case 0
-        error('Folder ''%s'' does not exist', folderPath);
+        error('Folder ''%s'' does not exist', path);
       case 7
         % it's ok
       otherwise
