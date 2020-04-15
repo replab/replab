@@ -183,10 +183,10 @@ function [SA SB NA NB OA OB] = symIrrepImages(partition)
         OB = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 -1 0 0 0; 0 0 0 1 0 0; 0 0 0 0 -1 0; 0 0 0 0 0 -1];
         OA = [1/3 -ssqrt(2)/6 0 ssqrt(30)/6 0 0; ssqrt(2)/3 1/24 -ssqrt(3)/8 -ssqrt(15)/24 ssqrt(45)/8 0; ssqrt(6)/3 ssqrt(3)/24 1/8 -ssqrt(45)/24 -ssqrt(15)/8 0; 0 ssqrt(15)/8 -ssqrt(45)/24 1/8 -ssqrt(3)/24 ssqrt(6)/3; 0 ssqrt(45)/8 ssqrt(15)/24 ssqrt(3)/8 1/24 -ssqrt(2)/3; 0 0 ssqrt(30)/6 0 ssqrt(2)/6 1/3];
     end
-    SA = sym(SA);
-    SB = sym(SB);
-    NA = sym(NA);
-    NB = sym(NB);
-    OA = sym(OA);
-    OB = sym(OB);
+    SA = sym(SA, 'r');
+    SB = sym(SB, 'r');
+    NA = sym(NA, 'r');
+    NB = sym(NB, 'r');
+    OA = sym(OA, 'r');
+    OB = sym(OB, 'r');
 end
