@@ -24,7 +24,7 @@ cache:
 before_install:
   - sudo add-apt-repository universe
   - sudo apt update
-  - sudo apt install octave liboctave-dev octave-optim
+  - sudo apt install octave liboctave-dev octave-optim octave-symbolic
   - git submodule update --init
 
 ###############################################################################

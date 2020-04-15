@@ -162,6 +162,29 @@ function replab_init(verbose)
         replab.settings.replabPath(pathStr);
     end
 
+    %% Verifying that symbolic computation is available
+
+    switch exist('syms')
+      case 0
+        if isOctave
+            try
+                if verbose >= 1
+                    disp('Loading symbolic package for Octave...');
+                end
+                pkg load symbolic
+            catch
+                warning('Please install the symbolic package to enable exact .repByImages');
+            end
+        else
+            warning('Please install the Matlab Symbolic toolbox to enable exact .repByImages');
+        end
+      case 2
+        % all good, it's a .m file (recent Octave and Matlab)
+      case 6
+        % all good, it's a .p file (not seen)
+      otherwise
+        error('Strange result %d for exist(''syms'')', exist('syms'));
+    end
 
     %% Verifying that the nlinfit function is available
 

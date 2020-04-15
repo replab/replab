@@ -18,11 +18,11 @@ function [G rep] = clifford_qudit(d)
                33 12 14 35 37 16 18 39 41 43 21 23 44 45 25 27 34 47 29 ...
                48 30 32 46 36 38 40 42];
           G = S48.subgroup({w h s});
-          E8 = exp(1i*pi/4);
-          E4 = 1i;
+          E8 = exp(sym(1i)*sym('pi')/4);
+          E4 = sym(1i);
           W = [E8 0; 0 E8];
-          H = [1 1; 1 -1]/sqrt(2);
-          S = [1 0; 0 E4];
+          H = [1 1; 1 -1]/sqrt(sym(2));
+          S = [sym(1) 0; 0 E4];
           rep = G.repByImages('C', 2, {W H S}, {W' H' S'});
       case 3
         % Generators computed using the following in GAP 4
@@ -48,10 +48,10 @@ function [G rep] = clifford_qudit(d)
              27 63 48 47 108 67 51 106 88 59 57 103];
         S108 = replab.Permutations(108);
         G = S108.subgroup({h s});
-        omega = exp(2i*pi/3);
-        zeta = exp(2i*pi/9);
-        H = -1i/sqrt(3)*[1 1 1; 1 omega omega^2; 1 omega^2 omega];
-        S = zeta^8 * [1 0 0; 0 1 0; 0 0 omega];
+        omega = exp(sym(2i)*sym('pi')/3);
+        zeta = exp(sym(2i)*sym('pi')/9);
+        H = -[sym(1) 1 1; 1 omega omega^2; 1 omega^2 omega]*sym(1i)/sqrt(sym(3));
+        S = zeta^8 * [sym(1) 0 0; sym(0) 1 0; 0 0 omega];
         rep = G.repByImages('C', 3, {H S}, {H' S'});
       otherwise
         error(sprintf('Dimension d=%d is not supported, only d=2,3', d));

@@ -28,18 +28,24 @@ classdef RepByImages < replab.Rep
         %   group (`+replab.NiceFiniteGroup`): Finite group represented
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
         %   dimension (integer): Representation dimension
-        %   images (cell(1,\*) of double(\*,\*), may be sparse): Images of the generators of ``group`` in the same order
-        %   inverseImages (cell(1,\*) of double(\*,\*), may be sparse): Inverse images of the generators
+        %   images (cell(1,\*) of double(\*,\*), may be sparse or symbolic): Images of the generators of ``group`` in the same order
+        %   inverseImages (cell(1,\*) of double(\*,\*), may be sparse or symbolic): Inverse images of the generators
             assert(isa(group, 'replab.NiceFiniteGroup'));
             assert(isa(images, 'cell') && (isempty(images) || isrow(images)));
             assert(isa(inverseImages, 'cell') && (isempty(inverseImages) || isrow(inverseImages)));
             assert(length(images) == group.nGenerators);
             assert(length(inverseImages) == group.nGenerators);
             knownUnitary = true;
+            isInexact = false;
             for i = 1:group.nGenerators
                 knownUnitary = knownUnitary && isequal(images{i}, inverseImages{i}');
                 assert(isequal(size(images{i}), [dimension dimension]));
+                isInexact = isInexact || ~(isa(images{i}, 'sym') || isequal(images{i}, round(images{i})));
+                isInexact = isInexact || ~(isa(inverseImages{i}, 'sym') || isequal(inverseImages{i}, round(inverseImages{i})));
                 assert(isequal(size(inverseImages{i}), [dimension dimension]));
+            end
+            if isInexact
+                warning('replab:inexactImages', 'Floating point errors accumulate quickly for approximate images. Use symbolic arguments instead.');
             end
             % replab.Rep immutable
             self.group = group;
@@ -68,7 +74,7 @@ classdef RepByImages < replab.Rep
                     for i = 1:nG
                         I(:,i) = self.group.niceMonomorphismImage(self.group.generator(i));
                     end
-                    self.chain_ = replab.bsgs.Chain.makeWithImages(n, I, J, self.images_internal);
+                    self.chain_ = replab.bsgs.Chain.makeWithImages(n, I, J, self.images_internal, @(X) double(X));
                 else
                     J = replab.GeneralLinearGroupWithInverses(self.field, self.dimension);
                     niceId = self.group.niceMonomorphismImage(self.group.identity);
@@ -83,7 +89,7 @@ classdef RepByImages < replab.Rep
                     C = replab.bsgs.Chain(n, J);
                     C.insertStrongGenerators(I, elements);
                     C.randomizedSchreierSims;
-                    cut = @(X) X(:, 1:self.dimension);
+                    cut = @(X) double(X(:, 1:self.dimension));
                     C.mutableMapImages(replab.GeneralLinearGroup(self.field, self.dimension), cut);
                     C.makeImmutable;
                     self.chain_ = C;
@@ -112,11 +118,17 @@ classdef RepByImages < replab.Rep
         function rho = image_internal(self, g)
             img = self.group.niceMonomorphismImage(g);
             rho = self.chain.image(img);
+            if isa(rho, 'sym')
+                rho = double(rho);
+            end
         end
 
         function rho = inverseImage_internal(self, g)
             img = self.group.niceMonomorphismImage(g);
             rho = self.chain.inverseImage(img);
+            if isa(rho, 'sym')
+                rho = double(rho);
+            end
         end
 
     end

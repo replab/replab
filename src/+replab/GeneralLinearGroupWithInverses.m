@@ -45,6 +45,9 @@ classdef GeneralLinearGroupWithInverses < replab.Group & replab.domain.VectorSpa
             Yinv = Y(:,n+1:2*n);
             Y = Y(:,1:n);
             Z = [X*Y Yinv*Xinv];
+            if isa(Z, 'sym')
+                Z = simplify(Z);
+            end
         end
 
         function Xinv = inverse(self, X)

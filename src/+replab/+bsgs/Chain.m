@@ -903,10 +903,13 @@ classdef Chain < replab.Str
 
     methods (Static)
 
-        function C = makeWithImages(n, S, J, T, order)
+        function C = makeWithImages(n, S, J, T, finalizeImages)
             C = replab.bsgs.Chain(n, J);
             C.insertStrongGenerators(S, T);
             C.randomizedSchreierSims;
+            if nargin > 4
+                C.mutableMapImages(J, finalizeImages);
+            end
             C.makeImmutable;
         end
 
