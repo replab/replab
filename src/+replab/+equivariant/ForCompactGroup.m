@@ -30,13 +30,13 @@ classdef ForCompactGroup < replab.Equivariant
             nbSigmasCrossing = 5; % statistical confidence that the crossing point was overcome
             maxNoiseFloorAbsoluteError = 1; % maximum absolute error on the noise floor (in log10)
             noiseMargin = 1; % noise floor margin (in log10)
-            
+
             % we fit 10^logfloor + exp(-slope*x + offset)
             modelfun = @(b,x) log10(10^min(b(1),100)+10.^(-b(2)*x+b(3)));
             % For comparison purpose, we also model a purely exponential
             % fit
             modelfunExp = @(c,x) -c(1)*x+c(2);
-            
+
             errs = [];
             modelRelativeErrors = [];
             for iter = 1:maxIters
@@ -62,7 +62,7 @@ classdef ForCompactGroup < replab.Equivariant
                     X = X1;
                 end
                 errs(1, iter) = d + 1e-100;
-                
+
                 if iter > nWarmUpIters
                     y = log10(errs(1:iter));
                     logfloor0 = log10(min(errs));
@@ -73,11 +73,12 @@ classdef ForCompactGroup < replab.Equivariant
                     errored = false;
                     try
                         [beta, R, J, CovB, MSE] = nlinfit(1:iter, y, modelfun, beta0);
+                        beta = beta(:).';
                     catch
                         errored = true;
                     end
                     warning(w);
-                    
+
                     if errored || (rank(J) < 3)
                         % the rank is deficient, usually because the curve didn't flatten
                         % yet, and thus the noise floor cannot be estimated
@@ -87,7 +88,7 @@ classdef ForCompactGroup < replab.Equivariant
                         slope = beta(2);
                         offset = beta(3);
                         crossing = round(-(logfloor - offset)/slope);
-                        
+
                         % compute approximate uncertainty on these
                         % parameters due to finite sampling
                         delta = sqrt(diag(CovB)) * tinv(1-uncertaintiesConfidenceLevel, iter - 3);
@@ -104,11 +105,11 @@ classdef ForCompactGroup < replab.Equivariant
                         %  1. The noise floor level must be estimated
                         %     with sufficient accuracy
                         preciseNoiseFloor = delta(1) < maxNoiseFloorAbsoluteError/2;
-                        %  2. The last few errors must be close enough to 
+                        %  2. The last few errors must be close enough to
                         %     the logfloor
                         lastErrors = log10(errs((iter-nCheckIters):iter));
                         lastErrorsOk = all(lastErrors < logfloor + noiseMargin);
-                        %  3. The crossing point must be sufficiently well 
+                        %  3. The crossing point must be sufficiently well
                         %     defined
                         wellDefinedCrossingPoint = max(max(modelRelativeErrors((iter-nCheckIters):iter,:))) < maxParameterRelativeError;
                         %  4. We must be 'clearly' beyond the crossing
@@ -119,7 +120,7 @@ classdef ForCompactGroup < replab.Equivariant
                         minIterOk = (iter > minIter);
                         % All in all:
                         exitCondition = preciseNoiseFloor && lastErrorsOk && wellDefinedCrossingPoint && minIterOk;
-                        
+
                         % Before possibly exiting we eventually produce
                         % some plots
                         if (replab.equivariant.plotConvergence && ((mod(iter, 20) == 1)  || exitCondition)) || (iter == maxIters)
@@ -146,7 +147,7 @@ classdef ForCompactGroup < replab.Equivariant
                             drawnow;
                             pause(0.01);
                         end
-                        
+
                         if exitCondition
                             err = max(lastErrors);
                             return
