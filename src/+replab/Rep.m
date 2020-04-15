@@ -211,7 +211,15 @@ classdef Rep < replab.Obj
         % Raises:
         %   An error is this representation is not unitary.
             if isempty(self.decomposition_)
-                self.decomposition_ = replab.irreducible.decomposition(self);
+                dec = replab.irreducible.decomposition(self);
+                if dec.nComponents == 1 && dec.components{1}.multiplicity == 1
+                    assert(~isequal(self.isIrreducible, false));
+                    self.isIrreducible = true;
+                    if isequal(dec.basis, eye(self.dimension))
+                        replab.rep.copyProperties(dec, self);
+                    end
+                end
+                self.decomposition_ = dec;
             end
             I = self.decomposition_;
         end

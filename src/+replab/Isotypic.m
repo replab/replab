@@ -130,6 +130,12 @@ classdef Isotypic < replab.SubRep
             if replab.util.areAllEqual(isDAC)
                 self.isDivisionAlgebraCanonical = irreps{1}.isDivisionAlgebraCanonical;
             end
+            if m == 1
+                self.isIrreducible = true;
+                if isequal(self.basis, eye(self.dimension))
+                    replab.rep.copyProperties(irreps{1}, self);
+                end
+            end
         end
 
         function m = multiplicity(self)

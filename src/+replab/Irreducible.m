@@ -26,6 +26,12 @@ classdef Irreducible < replab.SubRep
             E_internal = vertcat(Es{:});
             self = self@replab.SubRep(parent, B_internal, E_internal);
             self.components = components;
+            if length(components) == 1 && components{1}.multiplicity == 1
+                self.isIrreducible = true;
+                if isequal(self.basis, eye(self.dimension))
+                    replab.rep.copyProperties(self.components{1}.irreps{1}, self);
+                end
+            end
         end
 
         function r = asSimilarRep(self)
