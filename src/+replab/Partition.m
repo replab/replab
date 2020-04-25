@@ -32,12 +32,15 @@ classdef Partition < replab.Str
                     s = [s '|'];
                 end
                 b = self.block(i);
-                for j = 1:length(b)
+                for j = 1:min(length(b), maxColumns)
                     if j > 1 && self.n > 9
                         s = sprintf('%s %d', s, b(j));
                     else
                         s = sprintf('%s%d', s, b(j));
                     end
+                end
+                if length(b) < maxColumns
+                    s = sprintf('%s...', s);
                 end
             end
         end
