@@ -27,7 +27,7 @@ classdef Partition < replab.Str
 
         function s = shortStr(self, maxColumns)
             s = '';
-            for i = 1:self.nBlocks
+            for i = 1:min(self.nBlocks, maxColumns)
                 if i > 1
                     s = [s '|'];
                 end
@@ -42,6 +42,9 @@ classdef Partition < replab.Str
                 if length(b) < maxColumns
                     s = sprintf('%s...', s);
                 end
+            end
+            if self.nBlocks < maxColumns
+                s = sprintf('%s...', s);
             end
         end
 
