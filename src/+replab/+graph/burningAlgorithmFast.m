@@ -44,8 +44,8 @@ function subsets = burningAlgorithmFast(edges)
                 if (exist(['burningAlgorithmFast_mex.', mexext], 'file') == 2) || (exist(['burningAlgorithmFast_mex.', mexext], 'file') == 3)
                     % If the program was already compiled, we check that the
                     % compilation is up to date
-                    if exist('burningAlgorithmFast_timestamp.mat', 'file')
-                        savedData = load('burningAlgorithmFast_timestamp.mat');
+                    if exist(['burningAlgorithmFast_timestamp_', mexext, '.mat'], 'file')
+                        savedData = load(['burningAlgorithmFast_timestamp_', mexext, '.mat']);
                         fileProperties = dir('burningAlgorithmFast_mex.cpp');
                         if isequal(savedData.timestamp, fileProperties.date)
                             needToCompile = false;
@@ -62,7 +62,7 @@ function subsets = burningAlgorithmFast(edges)
                     % compilation
                     fileProperties = dir('burningAlgorithmFast_mex.cpp');
                     timestamp = fileProperties.date;
-                    save('burningAlgorithmFast_timestamp.mat', 'timestamp')
+                    save(['burningAlgorithmFast_timestamp_', mexext, '.mat'], 'timestamp')
                 end
             catch
                 firstPartWorks = false;
