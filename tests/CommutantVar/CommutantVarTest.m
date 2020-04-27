@@ -302,6 +302,10 @@ function test_fromIndexMatrix
 end
 
 function test_attributes
+    if ReplabTestParameters.onlyFastTests
+        return;
+    end
+    
     matrix = replab.CommutantVar.fromPermutations({[2 3 1]}, 'full', 'real');
     assert(isreal(matrix));
     assert(~issymmetric(matrix));
