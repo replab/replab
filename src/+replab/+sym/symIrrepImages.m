@@ -79,9 +79,9 @@ function [SA SB NA NB OA OB] = symIrrepImages(partition)
         SB = [0 -1; -1 0];
         SA = [-1 1; -1 0];
         NB = [1 0; 0 -1];
-        NA = [-1/2 3/2; -1/2 -1/2];
+        NA = sym([-1 3; -1 -1])/2;
         OB = [1 0; 0 -1];
-        OA = [-1/2 ssqrt(3)/2; -ssqrt(3)/2 -1/2];
+        OA = sym([-1 ssqrt(3); -ssqrt(3) -1])/2;
 
     elseif isequal(partition,[1 1 1]) %sign
         SB = [-1];
@@ -105,25 +105,25 @@ function [SA SB NA NB OA OB] = symIrrepImages(partition)
         SB = [0 -1 0; -1 0 0; 0 0 1];
         SA = [-1 1 -1; -1 0 0; 0 -1 0];
         NB = [1 0 0; 0 1 0; 0 0 -1];
-        NA = [-1/3 4/3 0; -1/3 -1/6 3/2; -1/3 -1/6 -1/2];
+        NA = sym([-2 8 0; -2 -1 9; -2 -1 -3])/6;
         OB = [1 0 0; 0 1 0; 0 0 -1];
-        OA = [-1/3 2*ssqrt(2)/3 0; -ssqrt(2)/3 -1/6 ssqrt(3)/2; -ssqrt(6)/3 -ssqrt(3)/6 -1/2];
+        OA = sym([-2 4*ssqrt(2) 0; -2*ssqrt(2) -1 3*ssqrt(3); -2*ssqrt(6) -ssqrt(3) -3])/6;
 
     elseif isequal(partition,[2 1 1]) %product of standard & sign
         SB = [-1 0 0; 0 0 -1; 0 -1 0];
         SA = [1 -1 0; 1 0 -1; 1 0 0];
         NB = [1 0 0; 0 -1 0; 0 0 -1];
-        NA = [1/2 -1/2 2; 1/2 1/6 -2/3; 0 2/3 1/3];
+        NA = sym([3 -3 12; 3 1 -4; 0 4 2])/6;
         OB = [1 0 0; 0 -1 0; 0 0 -1];
-        OA = [1/2 -ssqrt(3)/6 ssqrt(6)/3; ssqrt(3)/2 1/6 -ssqrt(2)/3; 0 2*ssqrt(2)/3 1/3];
+        OA = sym([3 -ssqrt(3) 2*ssqrt(6); 3*ssqrt(3) 1 -2*ssqrt(2); 0 4*ssqrt(2) 2])/6;
 
     elseif isequal(partition,[2 2]) %2D irrep of S4
         SB = [1 0; 1 -1];
         SA = [-1 1; 0 1];
         NB = [1 0; 0 -1];
-        NA = [-1/2 -3/2; -1/2 1/2];
+        NA = sym([-1 -3; -1 1])/2;
         OB = [1 0; 0 -1];
-        OA = [-1/2 -ssqrt(3)/2; -ssqrt(3)/2 1/2];
+        OA = sym([-1 -ssqrt(3); -ssqrt(3) 1])/2;
 
     elseif isequal(partition,[1 1 1 1])%sign
         SB = [-1];
@@ -155,9 +155,9 @@ function [SA SB NA NB OA OB] = symIrrepImages(partition)
         SB = [0 -1 0 0; -1 0 0 0; 0 0 1 0; 0 0 0 1];
         SA = [-1 1 -1 1; -1 0 0 0; 0 -1 0 0; 0 0 -1 0];
         NB = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 -1];
-        NA = [-1/4 5/4 0 0; -1/4 -1/12 4/3 0; -1/4 -1/12 -1/6 3/2; -1/4 -1/12 -1/6 -1/2];
+        NA = sym([-3 15 0 0; -3 -1 16 0; -3 -1 -2 18; -3 -1 -2 -6])/12;
         OB = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 -1];
-        OA = [-1/4 ssqrt(15)/4 0 0; -ssqrt(15)/12 -1/12 2*ssqrt(2)/3 0; -ssqrt(30)/12 -ssqrt(2)/12 -1/6 ssqrt(3)/2; -ssqrt(90)/12 -ssqrt(6)/12 -ssqrt(3)/6 -1/2];
+        OA = sym([-3 3*ssqrt(15) 0 0; -ssqrt(15) -1 8*ssqrt(2) 0; -ssqrt(30) -ssqrt(2) -2 6*ssqrt(3); -ssqrt(90) -ssqrt(6) -2*ssqrt(3) -6])/12;
 
     elseif isequal(partition,[3 2]) %5D irrep
         SB = [1 0 0 0 0; 0 0 0 -1 0; -1 0 0 0 -1; 0 -1 0 0 0; -1 0 -1 0 0];
@@ -171,17 +171,17 @@ function [SA SB NA NB OA OB] = symIrrepImages(partition)
         SB = [0 0 -1 0 0; 0 0 0 -1 0; -1 0 0 0 0; 0 -1 0 0 0; 0 0 0 0 -1];
         SA = [1 -1 -1 1 0; 0 -1 -1 0 1; 1 -1 0 0 0; 0 -1 0 0 0; 1 -1 -1 0 0];
         NB = [1 0 0 0 0; 0 -1 0 0 0; 0 0 1 0 0; 0 0 0 -1 0; 0 0 0 0 1];
-        NA = [1/4 3/4 -3/4 -9/4 0; 1/4 -1/4 -3/4 3/4 0; 1/4 -1/4 1/4 -1/4 -2; 1/4 1/12 1/4 1/12 2/3; 0 1/3 0 1/3 -1/3];
+        NA = sym([3 9 -9 -27 0; 3 -3 -9 9 0; 3 -3 3 -3 -24; 3 1 3 1 8; 0 4 0 4 -4])/12;
         OB = [1 0 0 0 0; 0 -1 0 0 0; 0 0 1 0 0; 0 0 0 -1 0; 0 0 0 0 1];
-        OA = [1/4 ssqrt(3)/4 -ssqrt(3)/4 -3/4 0; ssqrt(3)/4 -1/4 -3/4 ssqrt(3)/4 0; ssqrt(3)/4 -1/4 1/4 -ssqrt(3)/12 -ssqrt(6)/3; 3/4 ssqrt(3)/12 ssqrt(3)/4 1/12 ssqrt(2)/3; 0 ssqrt(6)/3 0 ssqrt(2)/3 -1/3];
+        OA = sym([3 3*ssqrt(3) -3*ssqrt(3) -9 0; 3*ssqrt(3) -3 -9 3*ssqrt(3) 0; 3*ssqrt(3) -3 3 -ssqrt(3) -4*ssqrt(6); 9 ssqrt(3) 3*ssqrt(3) 1 4*ssqrt(2); 0 4*ssqrt(6) 0 4*ssqrt(2) -4])/12;
 
     elseif isequal(partition, [3 1 1]) %exterior square of standard rep
         SB = [-1 0 0 0 0 0; 0 0 0 -1 0 0; 0 0 0 0 -1 0; 0 -1 0 0 0 0; 0 0 -1 0 0 0; 0 0 0 0 0 1];
         SA = [1 -1 1 0 0 0; 1 0 0 -1 1 0; 0 1 0 -1 0 1; 1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 0 1 0 0];
         NB = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 -1 0 0 0; 0 0 0 1 0 0; 0 0 0 0 -1 0; 0 0 0 0 0 -1];
-        NA = [1/3 -1/3 0 5/3 0 0; 1/3 1/24 -3/8 -5/24 15/8 0; 1/3 1/24 1/8 -5/24 -5/8 0; 0 3/8 -3/8 1/8 -1/8 2; 0 3/8 1/8 1/8 1/24 -2/3; 0 0 1/2 0 1/6 1/3];
+        NA = sym([8 -8 0 40 0 0; 8 1 -9 -5 45 0; 8 1 3 -5 -15 0; 0 9 -9 3 -3 48; 0 9 3 3 1 -16; 0 0 12 0 4 8])/24;
         OB = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 -1 0 0 0; 0 0 0 1 0 0; 0 0 0 0 -1 0; 0 0 0 0 0 -1];
-        OA = [1/3 -ssqrt(2)/6 0 ssqrt(30)/6 0 0; ssqrt(2)/3 1/24 -ssqrt(3)/8 -ssqrt(15)/24 ssqrt(45)/8 0; ssqrt(6)/3 ssqrt(3)/24 1/8 -ssqrt(45)/24 -ssqrt(15)/8 0; 0 ssqrt(15)/8 -ssqrt(45)/24 1/8 -ssqrt(3)/24 ssqrt(6)/3; 0 ssqrt(45)/8 ssqrt(15)/24 ssqrt(3)/8 1/24 -ssqrt(2)/3; 0 0 ssqrt(30)/6 0 ssqrt(2)/6 1/3];
+        OA = sym([8 -4*ssqrt(2) 0 4*ssqrt(30) 0 0; 8*ssqrt(2) 1 -3*ssqrt(3) -ssqrt(15) 3*ssqrt(45) 0; 8*ssqrt(6) ssqrt(3) 3 -ssqrt(45) -3*ssqrt(15) 0; 0 3*ssqrt(15) -ssqrt(45) 3 -ssqrt(3) 8*ssqrt(6); 0 3*ssqrt(45) ssqrt(15) 3*ssqrt(3) 1 -8*ssqrt(2); 0 0 4*ssqrt(30) 0 4*ssqrt(2) 8])/24;
     end
     if ~isa(SA, 'sym')
         SA = sym(SA, 'r');
