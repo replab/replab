@@ -37,7 +37,7 @@ before_script:
     if [ $COVERING == true ]; then
       TEST_COMMAND="exit(~replab_runtests(1,1));";
     else
-      TEST_COMMAND="exit(~replab_runtests(0,0));";
+      TEST_COMMAND="exit(~replab_runtests(0,1));";
     fi
   - echo "TEST_COMMAND| $TEST_COMMAND";
   # Double-check we are still in the right directory
