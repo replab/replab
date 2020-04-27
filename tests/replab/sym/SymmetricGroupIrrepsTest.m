@@ -14,10 +14,12 @@ function test_suite = SymmetricGroupIrrepsTest()
 
     for i = 1:length(youngs)
         Y = youngs{i};
-        rep = replab.sym.specht(Y);
-        test_suite = replab.RepLaws(rep).addTestCases(test_suite);
-        rep = replab.sym.youngSeminormal(Y);
-        test_suite = replab.RepLaws(rep).addTestCases(test_suite);
+        if ~ReplabTestParameters.onlyFastTests
+            rep = replab.sym.specht(Y);
+            test_suite = replab.RepLaws(rep).addTestCases(test_suite);
+            rep = replab.sym.youngSeminormal(Y);
+            test_suite = replab.RepLaws(rep).addTestCases(test_suite);
+        end
         rep = replab.sym.youngOrthogonal(Y);
         test_suite = replab.RepLaws(rep).addTestCases(test_suite);
     end
