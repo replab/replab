@@ -18,5 +18,5 @@ function test_symbolic
     sigma = D16.repByImages('R', 2, {sigma_a sigma_x}, {sigma_a' sigma_x'});
     img1 = sigma.image(S8.compose(a, x)); % should be [1 1; 1 -1]/sqrt(2)
     img2 = [1 1; 1 -1]/s2;
-    assert(double(simplify(norm(img1-img2))) == 0);
+    assert(norm(double(img1) - double(img2)) == 0);
 end
