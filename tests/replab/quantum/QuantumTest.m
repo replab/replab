@@ -17,7 +17,9 @@ function test_suite = QuantumTest()
     [G rep] = replab.quantum.clifford_qudit(2);
     test_suite = replab.FiniteGroupLaws(G).addTestCases(test_suite);
     test_suite = replab.RepLaws(rep).addTestCases(test_suite);
-    [G rep] = replab.quantum.clifford_qudit(3);
-    test_suite = replab.FiniteGroupLaws(G).addTestCases(test_suite);
-    test_suite = replab.RepLaws(rep).addTestCases(test_suite);
+    
+%     % The following test is currently commented as of issue #247
+%     [G rep] = replab.quantum.clifford_qudit(3);
+%     test_suite = replab.FiniteGroupLaws(G).addTestCases(test_suite);
+%     test_suite = replab.RepLaws(rep).addTestCases(test_suite);
 end
