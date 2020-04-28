@@ -192,7 +192,13 @@ classdef CommutantVar < replab.Str
             assert(nargin <= 5, 'Not enough arguments.');
 
             assert(iscell(generators), 'Please specify generators in cell array.');
-            n = size(generators{1}, 2);
+            if isempty(generators)
+                assert(~isempty(sdpMatrix))
+                assert(size(sdpMatrix,1) == size(sdpMatrix,2))
+                n = size(sdpMatrix,1);
+            else
+                n = size(generators{1}, 2);
+            end
 
             if isempty(sdpMatrix)
                 assert(isempty(sdpMatrixIsSym), ['No sdpMatrix provided but sdpMatrixIsSym set to ', num2str(sdpMatrixIsSym)]);
