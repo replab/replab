@@ -1,11 +1,11 @@
 classdef RandomBag < replab.Str
 % Generator of random elements from generators of a permutation group.
-% 
+%
 % A random bag is a set of random group elements that always generates
 % the group; random elements are provided by multiplying elements of the
 % bag and returning one element of the product which is removed from the bag.
-% 
-% Straight-forward implementation of PRINITIALIZE and PRRANDOM of 
+%
+% Straight-forward implementation of PRINITIALIZE and PRRANDOM of
 % section 3.2.2, pp. 70-71 of Holt 2005 (Handbook of Computational Group Theory)
 %
 % This implementation differs from `+replab.RandomBag` by specializing for
@@ -14,7 +14,7 @@ classdef RandomBag < replab.Str
 %
 % When the group homomorphism support is not desired, the `+replab.+bsgs.TrivialGroup`
 % trivial group can be used as a placeholder.
-    
+
     properties (SetAccess = protected)
         n % domainSize
         x0 % Last generated sample
@@ -25,22 +25,22 @@ classdef RandomBag < replab.Str
     end
 
     methods
-        
+
         function s = headerStr(self)
             s = sprintf('Random bag of %d elements', length(self.x));
         end
-        
+
         function z = compose(self, x, y)
-        % Duplicates self.Permutations(n).compose to avoid reference loops 
+        % Duplicates self.Permutations(n).compose to avoid reference loops
             z = x(y);
         end
-        
+
         function xInv = inverse(self, x)
-        % Duplicates self.Permutations(n).inverse to avoid reference loops 
+        % Duplicates self.Permutations(n).inverse to avoid reference loops
             xInv = zeros(1, self.n);
             xInv(x) = 1:self.n;
         end
-        
+
         function [xres yres]  = sample(self)
             r = size(self.x, 2);
             s = randi(r);
@@ -74,7 +74,7 @@ classdef RandomBag < replab.Str
             xres = self.x0;
             yres = self.y0;
         end
-        
+
         function self = RandomBag(n, generators, r, m, J, images)
         % Constructs a random bag from the given permutations
         %
@@ -86,7 +86,7 @@ classdef RandomBag < replab.Str
         %   r (integer, optional): Number of elements in the bag
         %                          Must be >= nGens and >= 10
         %                          Default value is max(nGens, 10)
-        %   m (integer, optional): Number of shuffles done during initialization 
+        %   m (integer, optional): Number of shuffles done during initialization
         %                          Default value is 50
         %   J (replab.Group, optional): Group structure for images
         %   images (row cell array of elements of ``J``): Images of ``generators``
@@ -129,7 +129,7 @@ classdef RandomBag < replab.Str
                 self.sample; % perform initial shuffles
             end
         end
-        
+
     end
-    
+
 end
