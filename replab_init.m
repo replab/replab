@@ -1,8 +1,7 @@
 function replab_init(verbose)
-% replab_init([verbose])
+% Sets up the search path in order to enable all functionalities of the RepLAB library.
 %
-% Sets up the search path in order to enable all functionalities of the RepLAB library,
-% verifies that a SDP solver is available, installs and registers the bundled SDPT3 solver if needed,
+% Also verifies that a SDP solver is available, installs and registers the bundled SDPT3 solver if needed,
 % and initializes important variables.
 %
 % A few persistent variables in functions presentin  `replab.settings` are initialized by this script;
