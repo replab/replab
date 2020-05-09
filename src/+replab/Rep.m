@@ -265,7 +265,7 @@ classdef Rep < replab.Obj
                     p{1,end+1} = 'real-type';
                   case 0
                     p{1,end+1} = 'complex-type';
-                  case -1
+                  case -2
                     p{1,end+1} = 'quaternion-type';
                   otherwise
                     % do nothing
