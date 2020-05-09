@@ -19,5 +19,5 @@ function U = standardBasis(d)
         end
         U = kron(U, Ui);
     end
-    U = U./sqrt(diag(U*U'));
+    U = diag(1./sqrt(diag(U*U')))*U;
 end
