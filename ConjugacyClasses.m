@@ -1,4 +1,21 @@
 function classes = ConjugacyClasses(elements, generators, group)
+% generates the conjugacy classes all elements of a group
+% 
+% Orbit computation algorithm:
+% Butler, Gregory. “Orbits and Schreier Vectors.” FUNDAMENTAL ALGORITHMS FOR PERMUTATION GROUPS, 
+% by Gregory Butler, Springer-Verlag, 1991, pp. 57-59.
+% 
+% Args:
+%   elements (cell array): elements of the group
+%   generators (cell array): generating elements of the group
+%   group (replab Group object): group used for composition, equivalence,
+%                                   and identity
+%
+% Returns 
+%   classes (cell array or cell arrays): all conjugacy classes 
+%
+
+
 classes = {};
 i = 0;
 for d = 1:length(elements)
