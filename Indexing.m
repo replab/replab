@@ -4,7 +4,7 @@ function [inelements, table] = Indexing(index, table)
 inelements = 0;
 n = length(table);
 
-% deal with first 2? elements
+% deal with first 2 elements
 if n == 0
     table = [index];
     return
