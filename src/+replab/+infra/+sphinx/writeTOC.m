@@ -4,7 +4,7 @@ function writeTOC(filename, codeBase)
 % Args:
 %   filename (charstring): Filename to write
 %   codeBase (`+replab.+infra.CodeBase`): Code base to enumerate
-    tocFN = fullfile(replab.settings.replabPath, 'src', '+replab', '+infra', '+sphinx', 'toc.liquid');
+    tocFN = fullfile(replab.globals.replabPath, 'src', '+replab', '+infra', '+sphinx', 'toc.liquid');
     t = replab.lobster.Template.load(tocFN);
     content = t.render(struct('codeBase', codeBase));
     fid = fopen(filename, 'w');
