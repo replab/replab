@@ -135,68 +135,73 @@ function replab_init(verbose)
         allGood = true;
     end
 
-    function str = whichAll(item)
-    % Implementation of the which function for Octave compatibility
-    %
-    % Returns the same results as ``which(item, '-all')``.
-    %
-    % Assumes that ``item`` is implemented as a ``.m`` file.
-    %
-    % Note: this is a copy of replab.compat.whichAll
-    %
-    % Args:
-    %   item (charstring): MATLAB function to look for
-    %
-    % Returns:
-    %   cell(\*,1) of charstring: Paths to the code files
-        if isOctave
-            str = {};
-            paths = strsplit(path, pathsep);
-            for i = 1:length(paths)
-                candidate = fullfile(paths{i}, [item '.m']);
-                if exist(candidate) == 2
-                    str{end+1,1} = candidate;
-                end
-            end
-        else
-            str = which(item, '-all');
-        end
-    end
-
-    function ok = isLaterVersion(minimalVersion, currentVersion)
-    % isLaterVersion - checks if the current version is old enough
-    %
-    % ok = isLaterVersion(minimalVersion, currentVersion)
-    %
-    % Args:
-    %     minimalVersion (charstring) : threshold version
-    %     currentVersion (charstring) : actual version
-    %
-    % Returns:
-    %     logical: answer
-    %
-    % Example:
-    %     isLaterVersion('4.2.2', '04.3') % true
-    %     isLaterVersion('4.2.2', '4.2.2.01') % true
-
-        minimalVersion = [minimalVersion, '.'];
-        currentVersion = [currentVersion, '.'];
-
-        while (sum(minimalVersion == '.') >= 1) && (sum(currentVersion == '.') >= 1)
-            minPoint = find(minimalVersion == '.', 1);
-            currPoint = find(currentVersion == '.', 1);
-            if str2num(minimalVersion(1:minPoint-1)) < str2num(currentVersion(1:currPoint-1))
-                ok = true;
-                return;
-            elseif str2num(minimalVersion(1:minPoint-1)) > str2num(currentVersion(1:currPoint-1))
-                ok = false;
-                return;
-            end
-            minimalVersion = minimalVersion(minPoint+1:end);
-            currentVersion = currentVersion(currPoint+1:end);
-        end
-
-        ok = ~((sum(minimalVersion == '.') >= 1) && (sum(currentVersion == '.') < 1));
-    end
-
 end
+
+
+
+function str = whichAll(item, isOctave)
+% Implementation of the which function for Octave compatibility
+%
+% Returns the same results as ``which(item, '-all')``.
+%
+% Assumes that ``item`` is implemented as a ``.m`` file.
+%
+% Note: this is a copy of replab.compat.whichAll
+%
+% Args:
+%   item (charstring): MATLAB function to look for
+%   isOctave (bool): true if the platform is octave
+%
+% Returns:
+%   cell(\*,1) of charstring: Paths to the code files
+
+    if isOctave
+        str = {};
+        paths = strsplit(path, pathsep);
+        for i = 1:length(paths)
+            candidate = fullfile(paths{i}, [item '.m']);
+            if exist(candidate) == 2
+                str{end+1,1} = candidate;
+            end
+        end
+    else
+        str = which(item, '-all');
+    end
+end
+
+function ok = isLaterVersion(minimalVersion, currentVersion)
+% isLaterVersion - checks if the current version is old enough
+%
+% ok = isLaterVersion(minimalVersion, currentVersion)
+%
+% Args:
+%     minimalVersion (charstring) : threshold version
+%     currentVersion (charstring) : actual version
+%
+% Returns:
+%     logical: answer
+%
+% Example:
+%     isLaterVersion('4.2.2', '04.3') % true
+%     isLaterVersion('4.2.2', '4.2.2.01') % true
+
+    minimalVersion = [minimalVersion, '.'];
+    currentVersion = [currentVersion, '.'];
+
+    while (sum(minimalVersion == '.') >= 1) && (sum(currentVersion == '.') >= 1)
+        minPoint = find(minimalVersion == '.', 1);
+        currPoint = find(currentVersion == '.', 1);
+        if str2num(minimalVersion(1:minPoint-1)) < str2num(currentVersion(1:currPoint-1))
+            ok = true;
+            return;
+        elseif str2num(minimalVersion(1:minPoint-1)) > str2num(currentVersion(1:currPoint-1))
+            ok = false;
+            return;
+        end
+        minimalVersion = minimalVersion(minPoint+1:end);
+        currentVersion = currentVersion(currPoint+1:end);
+    end
+
+    ok = ~((sum(minimalVersion == '.') >= 1) && (sum(currentVersion == '.') < 1));
+end
+
