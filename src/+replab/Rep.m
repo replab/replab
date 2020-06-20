@@ -142,7 +142,7 @@ classdef Rep < replab.Obj
         %
         % The equivariant vector space contains the matrices X such that
         %
-        % ``self.image(g) * X = X * repC.image(g)``
+        % ``X * self.image(g) = repR.image(g) * X ``
         %
         %
         % Args:
