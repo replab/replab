@@ -64,6 +64,19 @@ classdef OfNiceFiniteGroups < replab.NiceFiniteGroup & replab.directproduct.OfFi
 
         %% NiceFiniteGroup methods
 
+        function res = sameParentAs(self, rhs)
+            res = isa(rhs, 'replab.directproduct.OfNiceFiniteGroups') && self.nFactors == rhs.nFactors;
+            if ~res
+                return
+            end
+            for i = 1:self.nFactors
+                res = res & self.factor(i).sameParentAs(rhs.factor(i));
+                if ~res
+                    return
+                end
+            end
+        end
+
         function p = niceMonomorphismImage(self, g)
             shift = 0;
             p = [];
