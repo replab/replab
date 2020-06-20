@@ -64,7 +64,7 @@ function replab_init(verbose)
 
     % Check if the current instance of RepLAB is already in the path, and
     % throw an error if another instance of RepLAB is already in the path)
-    alreadyInPath = isInPath('replab_init', '', basePath, isOctave, verbose);
+    alreadyInPath = isInPath('replab_init', '', basePath, verbose);
     if ~alreadyInPath
         addpath(basePath);
         if verbose >= 1
@@ -72,7 +72,7 @@ function replab_init(verbose)
         end
     end
 
-    srcAlreadyInPath = isInPath('replab_Version', 'src', basePath, isOctave, verbose);
+    srcAlreadyInPath = isInPath('replab_Version', 'src', basePath, verbose);
     if ~srcAlreadyInPath
         addpath(fullfile(basePath, 'src'));
         if (verbose == 1) && (alreadyInPath)
@@ -135,7 +135,7 @@ function replab_init(verbose)
 end
 
 
-function alreadyInPath = isInPath(functionName, subfolder, basePath, isOctave, verbose)
+function alreadyInPath = isInPath(functionName, subfolder, basePath, verbose)
 % Checks the presence of a RepLAB function in the path
 %
 % Throws an error if a function with the resired name is found in another
@@ -155,20 +155,18 @@ function alreadyInPath = isInPath(functionName, subfolder, basePath, isOctave, v
 %   logical: whether the path already contains the
 
     allPaths = strsplit(path, pathsep);
-    candidates = whichAll(functionName, isOctave);
+    candidates = findInstancesInPath(functionName);
     versionFilePath = strrep(fullfile(basePath, subfolder, [functionName, '.m']), '\', '/');
     alreadyInPath = false;
     for i = 1:length(candidates)
         candidate = strrep(candidates{i}, '\', '/');
         if isequal(candidate, versionFilePath)
-            if ismember(allPaths, fileparts(versionFilePath))
-                alreadyInPath = true;
-                if verbose >= 2
-                    if isempty(subfolder)
-                        disp('RepLAB is already in the path');
-                    else
-                        disp('RepLAB subfolder is already in the path');
-                    end
+            alreadyInPath = true;
+            if verbose >= 2
+                if isempty(subfolder)
+                    disp('RepLAB is already in the path');
+                else
+                    disp('RepLAB subfolder is already in the path');
                 end
             end
         else
@@ -179,33 +177,30 @@ function alreadyInPath = isInPath(functionName, subfolder, basePath, isOctave, v
     end
 end
 
-function str = whichAll(item, isOctave)
-% Implementation of the which function for Octave compatibility
+function str = findInstancesInPath(item)
+% Finds all implementations of a function/class in the current path
 %
-% Returns the same results as ``which(item, '-all')``.
+% Returns the same results as ``which(item, '-all')``, except it only considers
+% the current path if it is explicitly present .
 %
 % Assumes that ``item`` is implemented as a ``.m`` file.
 %
-% Note: this is a copy of replab.compat.whichAll
+% Note: this is a copy of replab.init.findInstancesInPath
 %
 % Args:
 %   item (charstring): MATLAB function to look for
-%   isOctave (logical): true if the platform is octave
 %
 % Returns:
 %   cell(\*,1) of charstring: Paths to the code files
-
-    if isOctave
-        str = {};
-        paths = strsplit(path, pathsep);
-        for i = 1:length(paths)
+    str = {};
+    paths = strsplit(path, pathsep);
+    for i = 1:length(paths)
+        if ~isequal(paths{i}, '.') % Octave has '.' in the path
             candidate = fullfile(paths{i}, [item '.m']);
             if exist(candidate) == 2
                 str{end+1,1} = candidate;
             end
         end
-    else
-        str = which(item, '-all');
     end
 end
 

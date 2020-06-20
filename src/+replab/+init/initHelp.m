@@ -7,7 +7,7 @@ function initHelp(verbose)
 % Args:
 %   verbose ({0, 1, 2}): Controls the display level
 
-    candidates = replab.compat.whichAll('help'); % Finds all candidates in the path for "help"
+    candidates = replab.init.findInstancesInPath('help'); % Finds all candidates in the path for "help"
     basePath = replab.globals.replabPath;
     enableHelpOverload = true;
     matlabEmacsHelpPath = [];
