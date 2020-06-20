@@ -106,6 +106,9 @@ function replab_init(verbose)
     %% Verifying that the nlinfit function is available
     replab.init.initNlinfit(verbose);
 
+    %% Verifying that the symbolic toolbox is available
+    replab.init.initSym(verbose);
+
     %% VPI
     VPIInPath = replab.init.initVPI(verbose);
 
