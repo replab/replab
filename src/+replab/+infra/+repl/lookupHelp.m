@@ -1,4 +1,5 @@
 function str = lookupHelp(helpFunctionName, fullMode, identifier, variableName)
+% Looks up the help contents for an object owned by RepLAB
 %
 % Args:
 %   helpFunctionName (charstring): Name of the original help function
@@ -68,5 +69,4 @@ function str = lookupHelp(helpFunctionName, fullMode, identifier, variableName)
         sourceLink = replab.infra.repl.linkOpen('See source', '', el.absoluteFilename, el.startLineNumber);
         str = [str char(10) char(10) sourceLink char(10)];
     end
-    str = [str char(10) char(10)];
 end
