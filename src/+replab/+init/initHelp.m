@@ -78,10 +78,14 @@ function initHelp(verbose)
         try
             addpath(fullfile(basePath, 'src', 'help_overload'));
         catch
-            warning(w.state, 'Octave:shadowed-function');
+            if replab.compat.isOctave
+                warning(w.state, 'Octave:shadowed-function');
+            end
             rethrow(lasterror);
         end
-        warning(w.state, 'Octave:shadowed-function');
+        if replab.compat.isOctave
+            warning(w.state, 'Octave:shadowed-function');
+        end
     else
         disp('To enable help functionality, copy the file src/help_overload/help.m to src/replab_help.m');
     end
