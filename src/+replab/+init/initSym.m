@@ -8,7 +8,7 @@ function res = initSym(verbose)
     res = false;
     switch exist('syms')
       case 0
-        if isOctave
+        if replab.compat.isOctave
             try
                 if verbose >= 1
                     disp('Loading symbolic package for Octave...');
