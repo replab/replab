@@ -1,5 +1,8 @@
 classdef replab_Version
 % Describes and manipulates RepLAB version identifiers
+%
+% This file is also used by ``replab_init`` to check whether the RepLAB source folder is already
+% in the path.
 
     properties
         major % integer: Major version index
