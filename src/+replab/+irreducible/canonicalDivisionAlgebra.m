@@ -28,7 +28,7 @@ function res = canonicalDivisionAlgebra(rep, context)
     end
     % from then on, we assume unitarity
     switch rep.frobeniusSchurIndicator
-      case -1
+      case -2
         % quaternion
         res = replab.irreducible.enforceQuaternionEncoding(rep, context);
       case 0

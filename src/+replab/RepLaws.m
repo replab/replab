@@ -44,11 +44,13 @@ classdef RepLaws < replab.Laws
                   case 0
                     rho1 = replab.domain.ComplexTypeMatrices.project(rho);
                     self.M.assertEqv(rho, rho1);
-                  case -1
+                  case -2
                     rho1 = replab.domain.QuaternionTypeMatrices.project(rho);
                     self.M.assertEqv(rho, rho1);
                   case 1
                     % do nothing
+                  otherwise
+                    error('Wrong Frobenius Schur indicator');
                 end
             end
         end

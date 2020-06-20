@@ -227,7 +227,7 @@ classdef CommutantVar < replab.Str
                 dimensions1(i) = component.irrepDimension;
                 multiplicities(i) = component.multiplicity;
                 switch component.irrep(1).frobeniusSchurIndicator
-                  case -1
+                  case -2
                     types(i) = 'H';
                   case 0
                     types(i) = 'C';
