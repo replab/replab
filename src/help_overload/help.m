@@ -31,10 +31,10 @@ function help(varargin)
     elseif nargin == 2
         if isequal(varargin{1}, '-f') || isequal(varargin{1}, '--full')
             fullMode = true;
-            arg = {varargin{2}};
+            arg = varargin{2};
         elseif isequal(varargin{2}, '-f') || isequal(varargin{2}, '--full')
             fullMode = true;
-            arg = {varargin{1}};
+            arg = varargin{1};
         end
     else
         error('Too many arguments');
