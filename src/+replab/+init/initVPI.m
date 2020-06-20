@@ -1,8 +1,12 @@
 function res = initVPI(verbose)
 % Adds the VPI library to the path if it is not yet present
 %
+% Args:
+%   verbose ({0, 1, 2}): Controls the display level
+%
 % Returns:
 %   logical: True if the library is available
+
     basePath = replab.globals.replabPath;
     res = false;
     try

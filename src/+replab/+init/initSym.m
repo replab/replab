@@ -3,8 +3,12 @@ function res = initSym(verbose)
 %
 % This loads the ``symbolic`` Octave package if necessary
 %
+% Args:
+%   verbose ({0, 1, 2}): Controls the display level
+%
 % Returns:
 %   logical: True if the Symbolic Toolbox is available
+
     res = false;
     switch exist('syms')
       case 0

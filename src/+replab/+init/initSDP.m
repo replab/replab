@@ -1,8 +1,12 @@
 function res = initSDP(verbose)
 % Makes sure a working SDP solver is in the path and working, otherwise tries to add SDPT3
 %
+% Args:
+%   verbose ({0, 1, 2}): Controls the display level
+%
 % Returns:
 %   logical: True if a decent SDP solver is available
+
     decentSDPSolverInPath = false;
     SDPT3InPath = false;
     basePath = replab.globals.replabPath;
@@ -34,6 +38,7 @@ function res = initSDP(verbose)
         end
     catch
     end
+    
     if ~decentSDPSolverInPath
         try
             [blk, Avec, C, b, X0, y0, Z0] = randsdp([2 2], [2 2], 2, 2);
@@ -88,5 +93,6 @@ function res = initSDP(verbose)
     elseif verbose >= 2
         disp('An SDP solver is already in the path');
     end
+    
     res = decentSDPSolverInPath || SDPT3InPath;
 end

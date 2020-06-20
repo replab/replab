@@ -1,8 +1,11 @@
-function res = initHelp(verbose)
+function initHelp(verbose)
 % Initializes the RepLAB help system
 %
 % In particular, it attemps to locate the original Matlab/Octave help function and preserve a handle of it;
 % if the help function is not already shadowed, it shadows it with the integrated RepLAB help system
+%
+% Args:
+%   verbose ({0, 1, 2}): Controls the display level
 
     candidates = replab.compat.whichAll('help'); % Finds all candidates in the path for "help"
     basePath = replab.globals.replabPath;

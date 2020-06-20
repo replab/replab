@@ -1,10 +1,11 @@
-function res = initNlinfit(verbose)
+function initNlinfit(verbose)
 % Verifies that the nlinfit optimization function is available
 %
 % This loads the ``optim`` Octave package if necessary
 %
-% Returns:
-%   logical: True if the nlinfit function is available
+% Args:
+%   verbose ({0, 1, 2}): Controls the display level
+
     switch exist('nlinfit')
       case 0
         if replab.compat.isOctave
