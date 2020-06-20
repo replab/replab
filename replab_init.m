@@ -120,6 +120,7 @@ function replab_init(verbose)
 
     %% SDPT3
     % Makes sure a working SDP solver is in the path and working, otherwise tries to add SDPT3
+    SDPSolverInPath = false;
     if YALMIPInPath
         SDPSolverInPath = replab.init.initSDP(verbose);
     elseif verbose >= 2
