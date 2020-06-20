@@ -18,7 +18,6 @@ function replab_init(verbose)
 % Example:
 %     >>> replab_init   % doctest: +SKIP
 %         Adding RepLAB to the path
-%         Adding RepLAB package to the path
 %         Adding VPI to the path
 %         Adding MOxUnit to the path
 %         Adding embedded YALMIP to the path
@@ -63,27 +62,25 @@ function replab_init(verbose)
     [basePath, name, extension] = fileparts(mfilename('fullpath'));
     basePath = strrep(basePath, '\', '/'); % we normalize to Unix style filesep, as it is compatible with all
 
-    % Check if another instance of RepLAB is already in the path
-    candidates = whichAll('replab_Version');
-    versionFilePath = strrep(fullfile(basePath, 'src', 'replab_Version.m'), '\', '/');
-    alreadyInPath = false;
-    for i = 1:length(candidates)
-        candidate = strrep(candidates{i}, '\', '/');
-        if isequal(candidate, versionFilePath)
-            alreadyInPath = true;
-            if verbose >= 2
-                disp('RepLAB is already in the path');
-            end
-        else
-            error(['Another instance of RepLAB in folder ' fileparts(fileparts(candidate)) ...
-                   'is already in the path' char(10) 'Use this one or remove it from the path.']);
-        end
-    end
-
+    % Check if the current instance of RepLAB is already in the path, and
+    % throw an error if another instance of RepLAB is already in the path)
+    alreadyInPath = isInPath('replab_init', '', basePath, isOctave, verbose);
     if ~alreadyInPath
-        addpath(fullfile(basePath, 'src'));
+        addpath(basePath);
         if verbose >= 1
             disp('Adding RepLAB to the path');
+        end
+    end
+    
+    srcAlreadyInPath = isInPath('replab_Version', 'src', basePath, isOctave, verbose);
+    if ~srcAlreadyInPath
+        addpath(fullfile(basePath, 'src'));
+        if (verbose == 1) && (alreadyInPath)
+            % At verbose level 1 we do not make a difference between the
+            % replab folder and subfolder, adding any one of them leads
+            disp('Adding RepLAB to the path');
+        elseif verbose >= 2
+            disp('Adding RepLAB src folder to the path');
         end
     end
 
@@ -138,6 +135,49 @@ function replab_init(verbose)
 end
 
 
+function alreadyInPath = isInPath(functionName, subfolder, basePath, isOctave, verbose)
+% Checks the presence of a RepLAB function in the path
+%
+% Throws an error if a function with the resired name is found in another
+% place than the current RepLAB library folder. This guarantees that no
+% other instance of RepLAB is also present in the path.
+%
+% Args:
+%   functionName (charstring): Name of the RepLAB function we are looking
+%                              for 
+%   subfolder (charstring): RepLAB subfolder in which the function should
+%                           be found
+%   basePath (charstring): base path of the current RepLAB library
+%   isOctave (bool): true if the platform is octave
+%   verbose ({0, 1, 2}): Controls the display level
+%
+% Returns:
+%   bool: whether the path already contains the
+
+    allPaths = regexp(path, ':', 'split');
+    candidates = whichAll(functionName, isOctave);
+    versionFilePath = strrep(fullfile(basePath, subfolder, [functionName, '.m']), '\', '/');
+    alreadyInPath = false;
+    for i = 1:length(candidates)
+        candidate = strrep(candidates{i}, '\', '/');
+        if isequal(candidate, versionFilePath)
+            if ismemberCell(allPaths, fileparts(versionFilePath))
+                alreadyInPath = true;
+                if verbose >= 2
+                    if isempty(subfolder)
+                        disp('RepLAB is already in the path');
+                    else
+                        disp('RepLAB subfolder is already in the path');
+                    end
+                end
+            end
+        else
+            error(['Another instance of RepLAB in folder ' fileparts(fileparts(candidate)) ...
+                   'is already in the path' char(10) ...
+                   'Use this one or remove it from the path.']);
+        end
+    end
+end
 
 function str = whichAll(item, isOctave)
 % Implementation of the which function for Octave compatibility
