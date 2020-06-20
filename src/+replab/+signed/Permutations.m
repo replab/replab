@@ -4,22 +4,25 @@ classdef Permutations < replab.signed.PermutationGroup
     methods
 
         function self = Permutations(domainSize)
-            self.identity = 1:domainSize;
-            self.domainSize = domainSize;
-            self.parent = self;
-            switch self.domainSize
+        % Constructs the group of all signed permutations over a given domain size
+        %
+        % Args:
+        %   domainSize (integer): Domain size, must be > 0
+            o = factorial(vpi(domainSize))*vpi(2)^domainSize;
+            switch domainSize
               case 0
-                self.generators = cell(1, 0);
+                generators = cell(1, 0);
               case 1
-                self.generators = {[-1]};
+                generators = {[-1]};
               case 2
-                self.generators = {[2 1] [-1 2]};
+                generators = {[2 1] [-1 2]};
               otherwise
-                shift = [2:self.domainSize 1];
-                trans = [2 1 3:self.domainSize];
-                flip = [-1 2:self.domainSize];
-                self.generators = {shift trans flip};
+                shift = [2:domainSize 1];
+                trans = [2 1 3:domainSize];
+                flip = [-1 2:domainSize];
+                generators = {shift trans flip};
             end
+            self = self@replab.signed.PermutationGroup(domainSize, generators, o, []);
         end
 
         %% Str methods
@@ -42,14 +45,6 @@ classdef Permutations < replab.signed.PermutationGroup
             assert(all(g ~= 0) && all(abs(g) <= self.domainSize), ...
                    'Signed permutation has out of range coefficients');
             b = true;
-        end
-
-
-        function G = subgroup(self, generators, order)
-            if nargin < 3
-                order = [];
-            end
-            G = replab.signed.PermutationSubgroup(self, generators, order);
         end
 
     end

@@ -2,15 +2,46 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 % A base class for all signed permutation groups
 
     properties (SetAccess = protected)
-        domainSize; % d when this group acts on {-d..-1, 1..d}
+        domainSize % d when this group acts on {-d..-1, 1..d}
     end
 
     methods
+
+        function self = PermutationGroup(domainSize, generators, order, parent)
+        % Constructs a signed permutation group
+        %
+        % Args:
+        %   domainSize (integer): Size of the domain
+        %   generators (cell(1,\*) of permutation): Group generators
+        %   order (vpi, optional): Order of the group
+        %   parent (`replab.signed.PermutationGroup`, optional): Parent of this group if known,
+        %                                                 or ``[]`` if this group is its own parent
+            self.domainSize = domainSize;
+            self.identity = 1:domainSize;
+            self.generators = generators;
+            if nargin > 2 && ~isempty(order)
+                self.order_ = order;
+            end
+            if nargin > 3
+                if isempty(parent)
+                    self.parent = self;
+                else
+                    self.parent = parent;
+                end
+            else
+                self.parent = replab.signed.Permutations(domainSize);
+            end
+        end
+
 
         %% Domain methods
 
         function b = eqv(self, x, y)
             b = isequal(x, y);
+        end
+
+        function h = hash(self, x)
+            h = replab.Domain.hashVector(x + self.domainSize);
         end
 
         %% Monoid methods
@@ -32,10 +63,28 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 
         %% NiceFiniteGroup methods
 
+        function res = sameParentAs(self, rhs)
+            res = isa(rhs, 'replab.signed.PermutationGroup') && (self.parent.domainSize == rhs.parent.domainSize);
+        end
+
         function p1 = niceMonomorphismImage(self, p)
             p1 = replab.signed.Permutations.toPermutation(p);
         end
 
+        function grp = subgroup(self, generators, order)
+        % Constructs a permutation subgroup from its generators
+        %
+        % Args:
+        %   generators (row cell array): List of generators given as a permutations in a row cell array
+        %   order (vpi, optional): Argument specifying the group order, if given can speed up computations
+        %
+        % Returns:
+        %   +replab.signed.PermutationGroup: The constructed signed permutation subgroup
+            if nargin < 3
+                order = [];
+            end
+            grp = replab.signed.PermutationGroup(self.domainSize, generators, order, self.parent);
+        end
 
         %% Methods specific to signed permutation groups
 

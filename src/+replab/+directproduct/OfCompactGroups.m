@@ -144,6 +144,14 @@ classdef OfCompactGroups < replab.CompactGroup
             end
         end
 
+        function h = hash(self, x)
+            hf = zeros(1, self.nFactors);
+            for i = 1:self.nFactors
+                hf(i) = self.factor(i).hash(x{i});
+            end
+            h = replab.Domain.hashVector(hf);
+        end
+
         function g = sample(self)
             g = cell(1, self.nFactors);
             for i = 1:self.nFactors

@@ -2,7 +2,7 @@ classdef OfNiceFiniteGroup < replab.NiceFiniteGroup & replab.semidirectproduct.O
 % Wreath product of a permutation group acting on a nice finite group
 
     methods
-        
+
         function self = OfNiceFiniteGroup(H, A)
             assert(isa(H, 'replab.PermutationGroup'));
             n = H.domainSize;
@@ -18,7 +18,7 @@ classdef OfNiceFiniteGroup < replab.NiceFiniteGroup & replab.semidirectproduct.O
         function t = requiredType(self)
             t = 'replab.NiceFiniteGroup';
         end
-        
+
         %% Domain methods
 
         function b = eqv(self, x, y)
@@ -41,7 +41,7 @@ classdef OfNiceFiniteGroup < replab.NiceFiniteGroup & replab.semidirectproduct.O
 
         function g = sampleUniformly(self)
             g = sampleUniformly@replab.semidirectproduct.OfCompactGroups(self); % force method selection
-        end        
+        end
 
         %% NiceFiniteGroup methods
 
@@ -49,6 +49,10 @@ classdef OfNiceFiniteGroup < replab.NiceFiniteGroup & replab.semidirectproduct.O
             p = self.imprimitivePermutation(w, @(a) self.A.niceMonomorphismImage(a));
         end
 
+        function res = sameParentAs(self, rhs)
+            res = isa(rhs, 'replab.wreathproduct.OfNiceFiniteGroup') && self.n == rhs.n && self.A.sameParentAs(rhs.A);
+        end
+
     end
-    
+
 end

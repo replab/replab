@@ -1,8 +1,8 @@
 classdef OfCompactGroup < replab.semidirectproduct.OfCompactGroups & replab.wreathproduct.Common
 % Wreath product of a permutation group acting on a compact group
-    
+
     methods
-        
+
         function self = OfCompactGroup(H, A)
             assert(isa(H, 'replab.PermutationGroup'));
             n = H.domainSize;
@@ -17,7 +17,7 @@ classdef OfCompactGroup < replab.semidirectproduct.OfCompactGroups & replab.wrea
         function t = requiredType(self)
             t = 'replab.CompactGroup';
         end
-        
+
     end
-    
+
 end

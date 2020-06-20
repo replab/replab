@@ -142,7 +142,7 @@ function help(varargin)
         stdout = 1;
         fullId = el.fullIdentifier;
         fwrite(stdout, replab.infra.repl.templateHelp(templateName, el, docEl, helpCurrent, {fullId}, {fullId}));
-        if hasToggle && replab.settings.consoleUseHTML
+        if hasToggle && replab.globals.consoleUseHTML
             if fullMode
                 link = replab.infra.repl.linkHelp(helpToggled, 'help mode', fullId);
                 disp(['   Toggle display to ', link]);
@@ -157,10 +157,10 @@ function help(varargin)
         end
         fprintf('\n\n');
 %        separationPattern = '   .  ';
-%        disp(repmat(separationPattern, 1, floor(replab.settings.strMaxColumns/length(separationPattern))));
+%        disp(repmat(separationPattern, 1, floor(replab.globals.strMaxColumns/length(separationPattern))));
 %        disp(' ');
     else
-        if isempty(replab.settings.systemHelpPath)
+        if isempty(replab.globals.systemHelpPath)
             try
                 % Some clear happened, we try to capture matlab's help
                 % again...
@@ -174,7 +174,7 @@ function help(varargin)
         currentPath = strrep(pwd, '\', '/');
 
         if ~replab.compat.isOctave
-            cd(replab.settings.systemHelpPath);
+            cd(replab.globals.systemHelpPath);
             message = [];
             try
                 help(varargin{:});
@@ -192,8 +192,8 @@ function help(varargin)
             replabHelpPath = fileparts(which('replab_init'));
             replabHelpPath = [strrep(replabHelpPath, '\', '/'), '/src'];
 
-            cd(replab.settings.systemHelpPath);
-            addpath(replab.settings.systemHelpPath);
+            cd(replab.globals.systemHelpPath);
+            addpath(replab.globals.systemHelpPath);
             message = [];
             try
                 help(varargin{:});

@@ -4,6 +4,12 @@ classdef NiceFiniteSubgroup < replab.NiceFiniteGroup
     methods
 
         function self = NiceFiniteSubgroup(parent, generators, order)
+        % Constructs a subgroup of a nice finite group
+        %
+        % Args:
+        %   parent (`replab.PermutationGroup`, optional): Parent of this group, must not be a `NiceFiniteSubgroup`
+        %   generators (cell(1,\*) of permutation): Group generators
+        %   order (vpi, optional): Order of the group
             self.parent = parent;
             self.identity = parent.identity;
             % own stuff
@@ -14,6 +20,37 @@ classdef NiceFiniteSubgroup < replab.NiceFiniteGroup
                 assert(~parent.isIdentity(generators{i}), 'Generator cannot be identity');
             end
             self.generators = generators;
+        end
+
+        function res = sameParentAs(self, rhs)
+            if isa(rhs, 'replab.NiceFiniteSubgroup')
+                res = self.parent.sameParentAs(rhs.parent);
+            else
+                res = self.parent.sameParentAs(rhs);
+            end
+        end
+
+        function p = niceMonomorphismImage(self, g)
+            p = self.parent.niceMonomorphismImage(g);
+        end
+
+
+        %% Domain methods
+
+        function b = eqv(self, x, y)
+            b = self.parent.eqv(x, y);
+        end
+
+        %% Monoid methods
+
+        function z = compose(self, x, y)
+            z = self.parent.compose(x, y);
+        end
+
+        %% Group methods
+
+        function xInv = inverse(self, x)
+            xInv = self.parent.inverse(x);
         end
 
     end

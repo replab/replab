@@ -40,7 +40,7 @@ function replab_generate(what)
     validStr = strjoin(cellfun(@(x) sprintf('''%s''', x), valid, 'uniform', 0), ', ');
     assert(ismember(what, valid), 'Argument must be one of: %s', validStr);
 
-    rp = replab.settings.replabPath;
+    rp = replab.globals.replabPath;
     srcRoot = fullfile(rp, 'src');
 
     disp('Crawling code base');
