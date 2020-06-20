@@ -11,25 +11,33 @@ function res = initHelp(verbose)
     originalHelpPath = [];
     replabHelpPath = [];
     unknownHelpPaths = {};
+    targetPatternMatlab = 'Copyright 1984-\d\d\d\d The MathWorks, Inc.';
+    targetPatternOctave = 'This file is part of Octave.';
+    targetPatternEmacs = 'EMACSCAP';
     for i = 1:length(candidates)
         candidate = strrep(candidates{i}, '\', '/');
-        if replab.compat.endsWith(candidate, 'toolbox/matlab/helptools/help.m') && isempty(originalHelpPath)
+        if (replab.compat.endsWith(candidate, 'toolbox/matlab/helptools/help.m') ...
+                || ~isempty(regexp(fileread(candidate), targetPatternMatlab))) ...
+                && isempty(originalHelpPath)
             if replab.compat.isOctave
                 warning('It looks like Matlab''s help function is in the path while using Octave');
                 enableHelpOverload = false;
             end
             originalHelpPath = candidate;
-        elseif replab.compat.endsWith(candidate, 'm/help/help.m') && isempty(originalHelpPath)
-        if ~replab.compat.isOctave
-            warning('It looks like Octave''s help function is in the path while using Matlab');
-            enableHelpOverload = false; % same
-        end
-        originalHelpPath = candidate;
+        elseif (replab.compat.endsWith(candidate, 'm/help/help.m') ...
+                || ~isempty(regexp(fileread(candidate), targetPatternOctave))) ...
+                && isempty(originalHelpPath)
+            if ~replab.compat.isOctave
+                warning('It looks like Octave''s help function is in the path while using Matlab');
+                enableHelpOverload = false; % same
+            end
+            originalHelpPath = candidate;
         elseif replab.compat.endsWith(candidate, 'toolbox/help.m') ...
-            && ~isempty(strfind(fileread(candidate), 'EMACSCAP'))  && isempty(matlabEmacsHelpPath)
-        matlabEmacsHelpPath = candidate;
-        elseif replab.compat.endsWith(candidate, 'src/help_overload/help.m') && isempty(replabHelpPath)
-        replabHelpPath = candidate;
+                && ~isempty(strfind(fileread(candidate), targetPatternEmacs)) ...
+                && isempty(matlabEmacsHelpPath)
+            matlabEmacsHelpPath = candidate;
+        elseif replab.compat.endsWith(candidate, '+replab/src/help_overload/help.m') && isempty(replabHelpPath)
+            replabHelpPath = candidate;
         else
             unknownHelpPaths{end+1} = candidate;
         end
