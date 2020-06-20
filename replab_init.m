@@ -65,16 +65,17 @@ function replab_init(verbose)
 
     % Check if another instance of RepLAB is already in the path
     candidates = whichAll('replab_Version');
-    versionFilePath = fullfile(basePath, 'src', 'replab_Version.m');
+    versionFilePath = strrep(fullfile(basePath, 'src', 'replab_Version.m'), '\', '/');
     alreadyInPath = false;
     for i = 1:length(candidates)
-        if candidates{i} == versionFilePath
+        candidate = strrep(candidates{i}, '\', '/');
+        if isequal(candidate, versionFilePath)
             alreadyInPath = true;
             if verbose >= 2
                 disp('RepLAB is already in the path');
             end
         else
-            error(['Another instance of RepLAB in folder ' fileparts(fileparts(candidates{i})) ...
+            error(['Another instance of RepLAB in folder ' fileparts(fileparts(candidate)) ...
                    'is already in the path' char(10) 'Use this one or remove it from the path.']);
         end
     end
@@ -97,8 +98,10 @@ function replab_init(verbose)
         % path already memorized
     end
 
+    % From now on, we can use stuff in the replab.init package
+
     %% Initializes the RepLAB help system
-    % res = replab.init.initHelp(verbose);
+    replab.init.initHelp(verbose);
 
     %% Verifying that the nlinfit function is available
     replab.init.initNlinfit(verbose);
@@ -134,6 +137,8 @@ function replab_init(verbose)
     % Returns the same results as ``which(item, '-all')``.
     %
     % Assumes that ``item`` is implemented as a ``.m`` file.
+    %
+    % Note: this is a copy of replab.compat.whichAll
     %
     % Args:
     %   item (charstring): MATLAB function to look for

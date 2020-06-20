@@ -1,5 +1,5 @@
-function value = systemHelpPath(newValue)
-% Get/set the folder containing MATLAB/Octave ``help.m``
+function value = defaultHelpFunction(newValue)
+% Get/set the function handle corresponding to the default help function (one input/output variant)
 %
 % If called without argument, returns the stored value.
 %
@@ -9,10 +9,10 @@ function value = systemHelpPath(newValue)
 % The stored value survives ``clear all`` as this function is locked.
 %
 % Args:
-%   newValue (charstring, optional): Sets the stored value
+%   newValue (function_handle, optional): Sets the stored value
 %
 % Returns:
-%   charstring: Path of the folder containing the original ``help.m`` without trailing file separator
+%   function_handle: Stored function handle
     mlock
     persistent storedValue
     if nargin == 1
