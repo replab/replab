@@ -37,7 +37,8 @@ function res = initHelp(verbose)
     myHelpPath = fullfile(replab.globals.replabPath, 'src', 'help', 'help.m');
 
     if ~isempty(replabHelpPath) && ~isequal(replabHelpPath, myHelpPath)
-        error('Another version of the RepLAB help overload already exists in the path.')
+        error('Another version %s of the RepLAB help overload %s already exists in the path.', ...
+              replabHelpPath, myHelpPath)
     end
     if ~isempty(unknownHelpPaths)
         warning('Several unidentified help functions present in path: %s', strjoin(unknownHelpPaths, pathsep))
