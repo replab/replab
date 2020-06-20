@@ -152,9 +152,9 @@ function alreadyInPath = isInPath(functionName, subfolder, basePath, isOctave, v
 %   verbose ({0, 1, 2}): Controls the display level
 %
 % Returns:
-%   bool: whether the path already contains the
+%   logical: whether the path already contains the
 
-    allPaths = regexp(path, ':', 'split');
+    allPaths = strsplit(path, pathsep, 'split');
     candidates = whichAll(functionName, isOctave);
     versionFilePath = strrep(fullfile(basePath, subfolder, [functionName, '.m']), '\', '/');
     alreadyInPath = false;
