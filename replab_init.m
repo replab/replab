@@ -71,7 +71,7 @@ function replab_init(verbose)
             disp('Adding RepLAB to the path');
         end
     end
-    
+
     srcAlreadyInPath = isInPath('replab_Version', 'src', basePath, isOctave, verbose);
     if ~srcAlreadyInPath
         addpath(fullfile(basePath, 'src'));
@@ -144,11 +144,11 @@ function alreadyInPath = isInPath(functionName, subfolder, basePath, isOctave, v
 %
 % Args:
 %   functionName (charstring): Name of the RepLAB function we are looking
-%                              for 
+%                              for
 %   subfolder (charstring): RepLAB subfolder in which the function should
 %                           be found
 %   basePath (charstring): base path of the current RepLAB library
-%   isOctave (bool): true if the platform is octave
+%   isOctave (logical): true if the platform is octave
 %   verbose ({0, 1, 2}): Controls the display level
 %
 % Returns:
@@ -190,7 +190,7 @@ function str = whichAll(item, isOctave)
 %
 % Args:
 %   item (charstring): MATLAB function to look for
-%   isOctave (bool): true if the platform is octave
+%   isOctave (logical): true if the platform is octave
 %
 % Returns:
 %   cell(\*,1) of charstring: Paths to the code files
@@ -244,4 +244,3 @@ function ok = isLaterVersion(minimalVersion, currentVersion)
 
     ok = ~((sum(minimalVersion == '.') >= 1) && (sum(currentVersion == '.') < 1));
 end
-
