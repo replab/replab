@@ -37,7 +37,7 @@ function replab_init(verbose)
     end
     if allGood
         if verbose >= 2
-            disp('Replab_init has already been successfully called.');
+            disp('replab_init has already been successfully called.');
         end
         return
     end
@@ -161,7 +161,7 @@ function alreadyInPath = isInPath(functionName, subfolder, basePath, isOctave, v
     for i = 1:length(candidates)
         candidate = strrep(candidates{i}, '\', '/');
         if isequal(candidate, versionFilePath)
-            if ismemberCell(allPaths, fileparts(versionFilePath))
+            if ismember(allPaths, fileparts(versionFilePath))
                 alreadyInPath = true;
                 if verbose >= 2
                     if isempty(subfolder)
