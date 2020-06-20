@@ -86,7 +86,7 @@ function result = replab_runtests(withCoverage, onlyFastTests)
         % Disable doc tests as they are not stable yet
         replab_generate('doctests');
     else
-        rp = replab.settings.replabPath;
+        rp = replab.globals.replabPath;
         testRoot = fullfile(rp, 'tests');
         doctestRoot = fullfile(rp, 'tests', 'doctest');
         replab.infra.mkCleanDir(testRoot, 'doctest');

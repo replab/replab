@@ -38,8 +38,8 @@ classdef Str < handle
 
         function disp(self)
         % Standard MATLAB/Octave display method
-            maxRows = replab.settings.strMaxRows;
-            maxColumns = replab.settings.strMaxColumns;
+            maxRows = replab.globals.strMaxRows;
+            maxColumns = replab.globals.strMaxColumns;
             lines = replab.longStr(self, maxRows, maxColumns);
             lines = replab.str.longFit(lines, maxRows, maxColumns);
             disp(strjoin(lines, '\n'));

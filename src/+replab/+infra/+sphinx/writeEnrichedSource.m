@@ -17,7 +17,7 @@ function writeEnrichedSource(docSrcPath, el)
             end
         end
         pos = replab.infra.sphinx.findClassCommentEnd(lines);
-        tocFN = fullfile(replab.settings.replabPath, 'src', '+replab', '+infra', '+sphinx', 'class.liquid');
+        tocFN = fullfile(replab.globals.replabPath, 'src', '+replab', '+infra', '+sphinx', 'class.liquid');
         t = replab.lobster.Template.load(tocFN);
         content = t.render(struct('cl', el));
         src = strjoin(horzcat(lines(1:pos-1), content, lines(pos:end)), char(10));
