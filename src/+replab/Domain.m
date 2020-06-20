@@ -78,6 +78,7 @@ classdef Domain < replab.Samplable
             else
                 mask = uint64(2^32-1);
                 h = uint64(0);
+                mask = uint64(2^32-1);
                 for i = 1:length(v)
                     h = h + uint64(v(i));
                     h = h + bitshift(h, 10);

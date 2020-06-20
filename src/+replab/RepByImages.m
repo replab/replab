@@ -9,8 +9,8 @@ classdef RepByImages < replab.Rep
 % https://www.gap-system.org/Manuals/doc/ref/chap40.html#X7FFD731684606BC6)
 
     properties (SetAccess = protected)
-        images_internal % (cell(1,\*) of double(\*,\*)): Generator images
-        inverseImages_internal % (cell(1,\*) of double(\*,\*)): Inverses of generator images
+        images_internal % (cell(1,\*) of double(\*,\*), may be sparse): Generator images
+        inverseImages_internal % (cell(1,\*) of double(\*,\*), may be sparse): Inverses of generator images
     end
 
     properties (Access = protected)
