@@ -14,16 +14,15 @@ classdef Permutations < replab.PermutationGroup
         %
         % Args:
         %   domainSize (integer): Domain size, must be > 0
-            self.identity = 1:domainSize;
-            self.domainSize = domainSize;
-            self.parent = self;
-            if self.domainSize < 2
-                self.generators = cell(1, 0);
-            elseif self.domainSize == 2
-                self.generators = {[2 1]};
+            o = factorial(vpi(domainSize));
+            if domainSize < 2
+                generators = cell(1, 0);
+            elseif domainSize == 2
+                generators = {[2 1]};
             else
-                self.generators = {[2:domainSize 1] [2 1 3:domainSize]};
+                generators = {[2:domainSize 1] [2 1 3:domainSize]};
             end
+            self = self@replab.PermutationGroup(domainSize, generators, o, []);
         end
 
         %% Str methods
@@ -44,23 +43,6 @@ classdef Permutations < replab.PermutationGroup
             assert(length(g) == self.domainSize, 'Permutation in wrong domain');
             assert(all(g > 0), 'Permutation should have positive coefficients');
             b = true;
-        end
-
-        %% NiceFiniteGroup methods
-
-        function grp = subgroup(self, generators, order)
-        % Constructs a permutation subgroup from its generators
-        %
-        % Args:
-        %   generators (row cell array): List of generators given as a permutations in a row cell array
-        %   order (vpi, optional): Argument specifying the group order, if given can speed up computations
-        %
-        % Returns:
-        %   +replab.PermutationSubgroup: The constructed permutation subgroup.
-            if nargin < 3
-                order = [];
-            end
-            grp = replab.PermutationSubgroup(self, generators, order);
         end
 
     end

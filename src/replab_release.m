@@ -79,7 +79,7 @@ function replab_release
 
     input('Step 0: Press ENTER to confirm that you ran "git fetch origin develop master gh-pages"');
 
-    path = replab.settings.replabPath;
+    path = replab.globals.replabPath;
     gitDir = fullfile(path, '.git');
     docsGitDir = fullfile(path, 'docs', '.git');
     mainWT = path;
