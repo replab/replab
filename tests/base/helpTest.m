@@ -5,12 +5,11 @@ function test_suite = helpTest()
     catch
     end
     initTestSuite;
-    
+
     % Note: here we mostly generate some code coverage
 end
 
 function test_help_external
-    replab_init
     assert(~isempty(evalc('help plot')));
 end
 
