@@ -17,3 +17,8 @@ function test_suite = PermutationsTest()
         test_suite = replab.PermutationsLaws(G).addTestCases(test_suite);
     end
 end
+
+function test_sign
+    sigma = [3 4 5 2 1];
+    assertEqual(replab.Permutations.sign(sigma), -1);
+end
