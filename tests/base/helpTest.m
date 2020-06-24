@@ -10,7 +10,9 @@ function test_suite = helpTest()
 end
 
 function test_help_external
-    assert(~isempty(evalc('help plot')));
+    if ~ReplabTestParameters.withCoverage
+        assert(~isempty(evalc('help plot')));
+    end
 end
 
 function test_help_package
