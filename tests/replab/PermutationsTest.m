@@ -16,6 +16,9 @@ function test_suite = PermutationsTest()
         G = replab.Permutations(n);
         test_suite = replab.PermutationsLaws(G).addTestCases(test_suite);
     end
+    S5 = replab.Permutations(5);
+    signRep = S5.signRep;
+    test_suite = replab.RepLaws(signRep).addTestCases(test_suite);
 end
 
 function test_sign

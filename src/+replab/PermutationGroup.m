@@ -232,12 +232,17 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         % subgroups of the symmetric group.
         %
         % It corresponds to the representation orthogonal to the
-        % trivial representation with basis [1, 1, ..., 1]'/sqrt(d)
+        % trivial representation with basis ``[1, 1, ..., 1]'/sqrt(d)``
         %
         % Returns:
         %   `+replab.Rep`: The (real) standard representation
             [B_internal E_internal] = replab.sym.sageSpechtStandardBasis(self.domainSize);
             rho = self.naturalRep.subRep(B_internal, E_internal);
+        end
+
+        function rho = signRep(self)
+        % Returns the sign representation of this permutation
+            rho = replab.RepByImages.fromImageFunction(self, 'R', 1, @(g) replab.PermutationGroup.sign(g));
         end
 
     end

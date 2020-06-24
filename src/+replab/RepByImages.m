@@ -148,5 +148,31 @@ classdef RepByImages < replab.Rep
             rep1 = replab.RepByImages(rep.group, rep.field, rep.dimension, images, inverseImages);
         end
 
+        function rep = fromImageFunction(group, field, dimension, imageFun)
+        % Constructs a RepByImages representation using a given morphism
+        %
+        % Args:
+        %  group (`+replab.NiceFiniteGroup`): Group of which to construct a representation
+        %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
+        %   dimension (integer): Dimension of the representation
+        %   imageFun (function_handle): Function that returns a matrix for any element of ``G``
+        %
+        % Returns:
+        %   `+replab.RepByImages`: The constructed representation
+            assert(isa(group, 'replab.NiceFiniteGroup'), 'The given group must be a NiceFiniteGroup');
+            nG = group.nGenerators;
+            images = cell(1, nG);
+            inverseImages = cell(1, nG);
+            for i = 1:nG
+                g = group.generator(i);
+                gInv = group.inverse(g);
+                images{i} = imageFun(g);
+                inverseImages{i} = imageFun(gInv);
+                assert(isequal(size(images{i}), [dimension dimension]));
+                assert(isequal(size(inverseImages{i}), [dimension dimension]));
+            end
+            rep = replab.RepByImages(group, field, dimension, images, inverseImages);
+        end
+
     end
 end
