@@ -29,7 +29,7 @@ function varargout = dispatch(cmd, name, varargin)
     persistent registry
     persistent level
 
-    if isempty(level) || ~replab.settings.verboseDispatch
+    if isempty(level) || ~replab.globals.verboseDispatch
         level = 0;
     end
 
@@ -69,7 +69,7 @@ function varargout = dispatch(cmd, name, varargin)
             registry.(ident) = s;
         end
       case 'call'
-        if replab.settings.verboseDispatch
+        if replab.globals.verboseDispatch
             fprintf('%sDispatching %s\n', repmat(' ', 1, level), name);
             level = level + 1;
         end
@@ -78,20 +78,20 @@ function varargout = dispatch(cmd, name, varargin)
         n = min(1, nargout);
         res = cell(1, n);
         for i = 1:length(s)
-            if replab.settings.verboseDispatch
+            if replab.globals.verboseDispatch
                 fprintf('%sTrying %s\n', repmat(' ', 1, level), s(i).description);
             end
             h = s(i).handle;
             [res{1:n}] = h(varargin{:});
             if ~isa(res{1}, 'replab.DispatchNext')
-                if replab.settings.verboseDispatch
+                if replab.globals.verboseDispatch
                     fprintf('%s Success\n', repmat(' ', 1, level));
                     level = level - 1;
                 end
                 varargout = res(1:nargout);
                 return
             end
-            if replab.settings.verboseDispatch
+            if replab.globals.verboseDispatch
                 if isempty(res{1}.message)
                     fprintf('%s Failed\n', repmat(' ', 1, level));
                 else
@@ -99,7 +99,7 @@ function varargout = dispatch(cmd, name, varargin)
                 end
             end
         end
-        if replab.settings.verboseDispatch
+        if replab.globals.verboseDispatch
             level = level - 1;
         end
         error('No registered implementation worked.')

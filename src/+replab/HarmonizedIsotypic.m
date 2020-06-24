@@ -35,7 +35,7 @@ classdef HarmonizedIsotypic < replab.Isotypic
                         self.commutant_ = replab.IsotypicSimpleCommutant(self);
                       case 0
                         self.commutant_ = replab.IsotypicComplexCommutant(self);
-                      case -1
+                      case -2
                         self.commutant_ = replab.IsotypicQuaternionCommutant(self);
                       otherwise
                         error('Unknown indicator');

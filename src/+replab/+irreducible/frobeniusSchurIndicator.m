@@ -60,7 +60,7 @@ function fsi = frobeniusSchurIndicator(irrep, context)
           case 2
             fsi = 0;
           case 4
-            fsi = -1;
+            fsi = -2;
           otherwise
             error('Problem when identifying C/H irrep type');
         end

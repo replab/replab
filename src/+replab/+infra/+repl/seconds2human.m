@@ -46,8 +46,7 @@ function string = seconds2human(secs, outputFormat)
 
     strEnding = ''; % replace by '.' to get old behavior
 
-    % default error
-    error(nargchk(1,2,nargin)); %#ok
+    assert(isscalar(secs) && isa(secs, 'double'));
 
     % define some intuitive variables
     Seconds   = round(1                 );

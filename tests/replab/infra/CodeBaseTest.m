@@ -8,7 +8,7 @@ function test_suite = CodeBaseTest()
 end
 
 function test_crawl
-    path = fullfile(replab.settings.replabPath, 'tests/replab/infra/sample');
+    path = fullfile(replab.globals.replabPath, 'tests/replab/infra/sample');
     c = replab.infra.crawl(path);
     cl = c.get('testpkg').ownClasses;
     cl = cellfun(@(x) x.name, cl, 'uniform', 0);

@@ -6,7 +6,7 @@ function ok = replab_checkhelp
     ok = true;
     help('--clear');
 
-    rp = replab.settings.replabPath;
+    rp = replab.globals.replabPath;
     srcRoot = fullfile(rp, 'src');
 
 

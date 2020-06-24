@@ -31,7 +31,7 @@ function c = crawl(rootFolder)
             name = children(i).name;
             if isequal(name, '.') || isequal(name, '..')
                 % do nothing
-            elseif children(i).isdir
+            elseif children(i).isdir && ~isequal(children(i).name, 'help_overload')
                 % folder
                 assert(name(1) == '+', 'We only support crawling subpackages');
                 newsubpath = horzcat(subpath, {name});

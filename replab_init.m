@@ -4,9 +4,10 @@ function replab_init(verbose)
 % Also verifies that a SDP solver is available, installs and registers the bundled SDPT3 solver if needed,
 % and initializes important variables.
 %
-% A few persistent variables in functions presentin  `replab.settings` are initialized by this script;
-% those persistent varibales are locked by `mlock` to avoid being cleared when ``clear all`` is used;
-% this concerns in particular `replab.settings.replabPath` and  `replab.settings.helpPath`.
+% A few persistent variables in functions present in `replab.globals` are initialized by this script;
+% those persistent variables are locked by `mlock` to avoid being cleared when ``clear all`` is used;
+% this concerns in particular `replab.globals.replabPath`, `replab.globals.defaultHelpFunction` and
+% `replab.globals.runsInMatlabEmacs`.
 %
 % Args:
 %     verbose ({0, 1, 2}, optional): Controls the display level
@@ -17,12 +18,12 @@ function replab_init(verbose)
 % Example:
 %     >>> replab_init   % doctest: +SKIP
 %         Adding RepLAB to the path
-%         Adding RepLAB package to the path
 %         Adding VPI to the path
 %         Adding MOxUnit to the path
 %         Adding embedded YALMIP to the path
 %         Adding MOcov to the path
 
+    persistent allGood % set to true if everything is already set up previously
 
     %% Parameter checking
     if nargin < 1
@@ -31,17 +32,15 @@ function replab_init(verbose)
 
 
     %% If everything was already set up previously we exit rapidly
-    persistent allGood
     if isempty(allGood)
         allGood = false;
     end
     if allGood
         if verbose >= 2
-            disp('Replab_init has already been successfully called.');
+            disp('replab_init has already been successfully called.');
         end
-        return;
+        return
     end
-
 
     %% Let us check the Matlab/Octave version
     isOctave = exist('OCTAVE_VERSION', 'builtin') ~= 0;
@@ -59,366 +58,151 @@ function replab_init(verbose)
         warning(['Current version of ', platform, ' is ', currentVersion, ' but the minimal supported version is ', minimalVersion, '.']);
     end
 
+    %% Adding the RepLAB source folder to the path
+    [basePath, name, extension] = fileparts(mfilename('fullpath'));
+    basePath = strrep(basePath, '\', '/'); % we normalize to Unix style filesep, as it is compatible with all
 
-    %% Action -- first capture the folder containg matlab's help.m
-    matlabHelpPath = fileparts(which('help'));
-    matlabHelpPath = strrep(matlabHelpPath, '\', '/');
-    if ~isempty(strfind(matlabHelpPath, 'replab'))
-        % matlab path should not contain string 'replab', we try to
-        % find the original matlab path
-
-        % first we identify the paths containing the string replab
-        allPaths = [':', path, ':'];
-        sep = strfind(allPaths, ':');
-        replabContainingPaths = {};
-        for i = 2:length(sep)
-            if ~isempty(strfind(allPaths(sep(i-1)+1:sep(i)-1), 'replab'))
-                replabContainingPaths{end+1} = allPaths(sep(i-1)+1:sep(i)-1);
-            end
-        end
-
-        currentPathStr = strrep(pwd, '\', '/');
-        try
-            % We remove them from the path
-            for i = 1:length(replabContainingPaths)
-                rmpath(replabContainingPaths{i});
-            end
-
-            % ... go to a neutral folder
-            cd('/');
-
-            % ... try again to find matlab's help
-            matlabHelpPath = fileparts(which('help'));
-            matlabHelpPath = strrep(matlabHelpPath, '\', '/');
-        catch
-            % In case an error occurs we want to be able to restore the path
-        end
-
-        % come back to the original directory
-        cd(currentPathStr);
-
-        % ... and add them back to the path
-        for i = length(replabContainingPaths):-1:1
-            addpath(replabContainingPaths{i});
-        end
-
-        if ~isempty(strfind(matlabHelpPath, 'replab'))
-            error('Please remove all occurences of replab in the path, go to a neutral folder, and run replab_addpath again.');
+    % Check if the current instance of RepLAB is already in the path, and
+    % throw an error if another instance of RepLAB is already in the path)
+    alreadyInPath = isInPath('replab_init', '', basePath, verbose);
+    if ~alreadyInPath
+        addpath(basePath);
+        if verbose >= 1
+            disp('Adding RepLAB to the path');
         end
     end
 
-
-    %% Adding RepLAB itself
-    [pathStr, name, extension] = fileparts(which(mfilename));
-    pathStr = strrep(pathStr, '\', '/');
-
-    % Check if another instance of RepLAB is already in the path
-    currentPathStr = strrep(pwd, '\', '/');
-    dirName = currentPathStr(find(currentPathStr=='/',1,'last')+1:end);
-    cd ..
-    AmIMyself = strrep(which('replab_init'), '\', '/');
-    cd(dirName);
-    if ~isempty(AmIMyself) && ~isequal(AmIMyself, [pathStr, '/', name, extension])
-        error(['Another instance of RepLAB in folder ', fileparts(AmIMyself), ' is already in the path.', char(10), ...
-            'Use this one or remove it from the path.']);
-    else
-        if isempty(AmIMyself)
-            addpath(pathStr);
-            if verbose >= 1
-                disp('Adding RepLAB to the path');
-            end
+    srcAlreadyInPath = isInPath('replab_Version', 'src', basePath, verbose);
+    if ~srcAlreadyInPath
+        addpath(fullfile(basePath, 'src'));
+        if (verbose == 1) && (alreadyInPath)
+            % At verbose level 1 we do not make a difference between the
+            % replab folder and subfolder, adding any one of them leads
+            disp('Adding RepLAB to the path');
         elseif verbose >= 2
-            disp('RepLAB is already in the path');
+            disp('Adding RepLAB src folder to the path');
         end
     end
 
-    % We also add the replab package path
-    packagePath = strrep(which('replab_version'), '\', '/');
-    packagePath = packagePath(1:find(packagePath=='/',1,'last')-1);
-    if ~isempty(packagePath) && ~isequal(packagePath, [pathStr, '/src'])
-        error(['Another RepLAB package in folder ', packagePath, ' is already in the path.', char(10), ...
-            'Use this one or remove it from the path.']);
-    else
-        if isempty(packagePath)
-            packagePath = [pathStr, '/src'];
-            addpath(packagePath);
-            if verbose >= 1
-                disp('Adding RepLAB package to the path');
-            end
-        elseif verbose >= 2
-            disp('RepLAB package is already in the path');
-        end
-    end
-
-
-    %% Memorizing matlab's help folder if not done before
-    if isempty(replab.settings.systemHelpPath)
-        replab.settings.systemHelpPath(matlabHelpPath);
-    end
 
     %% Memorizing RepLAB root folder if not done before
-    if isempty(replab.settings.replabPath)
-        replab.settings.replabPath(pathStr);
+    rgrp = replab.globals.replabPath;
+    if isempty(rgrp)
+        replab.globals.replabPath(basePath);
+    elseif ~isequal(rgrp, basePath)
+        error('Mismatch between memorized RepLAB path %s and current RepLAB path %s', rgrp, basePath);
+    else
+        % path already memorized
     end
 
-    %% Verifying that symbolic computation is available
+    % From now on, we can use stuff in the replab.init package
 
-    switch exist('syms')
-      case 0
-        if isOctave
-            try
-                if verbose >= 1
-                    disp('Loading symbolic package for Octave...');
-                end
-                pkg load symbolic
-            catch
-                warning('Please install the symbolic package to enable exact .repByImages');
-            end
-        else
-            warning('Please install the Matlab Symbolic toolbox to enable exact .repByImages');
-        end
-      case 2
-        % all good, it's a .m file (recent Octave and Matlab)
-      case 6
-        % all good, it's a .p file (not seen)
-      otherwise
-        error('Strange result %d for exist(''syms'')', exist('syms'));
-    end
+    %% Initializes the RepLAB help system
+    replab.init.initHelp(verbose);
 
     %% Verifying that the nlinfit function is available
+    replab.init.initNlinfit(verbose);
 
-    switch exist('nlinfit')
-      case 0
-        if isOctave
-            try
-                if verbose >= 1
-                    disp('Loading optim package for Octave...');
-                end
-                pkg load optim
-            catch
-                warning('Please install the optim package for Octave to enable compact groups algorithms.');
-            end
-        else
-            warning('Please install the Matlab statistics toolbox to enable continuous groups algorithms.');
-        end
-      case 2
-        % all good, it's a .m file (usually Octave)
-      case 6
-        % all good, it's a .p file (usually Matlab)
-      otherwise
-        error('Strange result %d for exist(''nlinfit'')', exist('nlinfit'));
-    end
+    %% Verifying that the symbolic toolbox is available
+    replab.init.initSym(verbose);
 
     %% VPI
-
-    % Making sure the VPI library is in the path and working
-    VPIInPath = false;
-    try
-        VPIInPath = isequal(num2str(vpi('1234567890098765432100123456789')), '    1234567890098765432100123456789');
-    catch
-    end
-    if ~VPIInPath
-        if exist([pathStr '/external/vpi/@vpi/vpi.m']) ~= 2
-            error(['The VPI library was not found in the folder ', pathStr, '/external/vpi']);
-        else
-            addpath([pathStr '/external/vpi']);
-            if verbose >= 1
-                disp('Adding VPI to the path');
-            end
-            VPIInPath = true;
-        end
-    elseif verbose >= 2
-        disp('VPI is already in the path');
-    end
+    VPIInPath = replab.init.initVPI(verbose);
 
     %% MOxUnit
-
-    % Making sure MOxUnit is in the path and working
-    MOxUnitInPath = false;
-    try
-        moxunit_set_path;
-        MOxUnitInPath = true;
-    catch
-    end
-    if ~MOxUnitInPath
-        if exist([pathStr '/external/MOxUnit/MOxUnit/moxunit_set_path.m']) ~= 2
-            warning(['The MOxUnit library was not found in the folder ', pathStr, '/external/MOxUnit', char(10), ...
-                'Did you run ''git submodule init'' and ''git submodule update''?', char(10), ...
-                'It will not be possible to run the tests.']);
-        else
-            addpath([pathStr '/external/MOxUnit/MOxUnit']);
-            moxunit_set_path;
-            if verbose >= 1
-                disp('Adding MOxUnit to the path');
-            end
-            MOxUnitInPath = true;
-        end
-    elseif verbose >= 2
-        disp('MOxUnit is already in the path');
-    end
+    MOxUnitInPath = replab.init.initMOxUnit(verbose);
 
     %% YALMIP
-
-    % Making sure YALMIP is in the path and working
-    YALMIPInPath = false;
-    try
-        yalmip('version');
-        YALMIPInPath = true;
-    catch
-    end
-    if ~YALMIPInPath
-        if exist([pathStr '/external/YALMIP/yalmiptest.m']) ~= 2
-            warning(['The YALMIP library was found neither in the path nor in the folder ', pathStr, '/external/YALMIP.', char(10), ...
-                'Some functionalities of the library might be disabled.']);
-        else
-            addpath([pathStr '/external/YALMIP']);
-            addpath([pathStr '/external/YALMIP/demos']);
-            addpath([pathStr '/external/YALMIP/extras']);
-            addpath([pathStr '/external/YALMIP/modules']);
-            addpath([pathStr '/external/YALMIP/modules/bilevel']);
-            addpath([pathStr '/external/YALMIP/modules/global']);
-            addpath([pathStr '/external/YALMIP/modules/moment']);
-            addpath([pathStr '/external/YALMIP/modules/parametric']);
-            addpath([pathStr '/external/YALMIP/modules/robust']);
-            addpath([pathStr '/external/YALMIP/modules/sos']);
-            addpath([pathStr '/external/YALMIP/operators']);
-            addpath([pathStr '/external/YALMIP/solvers']);
-            if verbose >= 1
-                disp('Adding embedded YALMIP to the path');
-            end
-            YALMIPInPath = true;
-        end
-    elseif verbose >= 2
-        disp('YALMIP is already in the path');
-    end
-
+    YALMIPInPath = replab.init.initYALMIP(verbose);
 
     %% SDPT3
-
-    % Making sure a woring SDP solver is in the path and working, otherwise
-    % tries to add SDPT3
-    decentSDPSolverInPath = false;
-    SDPT3InPath = false;
+    % Makes sure a working SDP solver is in the path and working, otherwise tries to add SDPT3
+    SDPSolverInPath = false;
     if YALMIPInPath
-        try
-            x = sdpvar(2);
-            F = [x >= 0, trace(x) == 1];
-            [interfacedata,recoverdata,solver,diagnostic] = compileinterfacedata(F, [], [], [], sdpsettings, 0, 0);
-            decentSDPSolverInPath = isempty(diagnostic);
-
-            % If LMILAB was identified as the best solver to solve the
-            % problem, this means that no good solver was found.
-            if ~isempty(strfind(upper(solver.tag), 'LMILAB'))
-                decentSDPSolverInPath = false;
-            end
-
-            % If a decent solver was found, we make sure it can actually
-            % solve an SDP (e.g. the license is valid ;-)
-            if decentSDPSolverInPath
-                sol = solvesdp(F, x(1,2), sdpsettings('verbose',0));
-                if isempty(sol) || ~isequal(sol.problem, 0)
-                    decentSDPSolverInPath = false;
-                    if verbose >= 2
-                        disp(['The solver ', solver.tag, ' was found, but it produced the following error when called']);
-                        disp('to solve and SDP:');
-                        disp(['    ', sol.info]);
-                        disp('Trying to use the embedded solver instead.');
-                    end
-                end
-            end
-        catch
-        end
-        if ~decentSDPSolverInPath
-            try
-                [blk, Avec, C, b, X0, y0, Z0] = randsdp([2 2], [2 2], 2, 2);
-                options.printlevel = 0;
-                sdpt3(blk, Avec, C, b, options);
-                SDPT3InPath = true;
-            catch
-            end
-            if ~SDPT3InPath
-                if exist([pathStr '/external/SDPT3/sdpt3.m']) ~= 2
-                    if verbose >= 2
-                        warning(['No suitable SDP solver found. In particular, the SDPT3 library was found', char(10), ...
-                            'neither in the path nor in the folder ', pathStr, '/external/SDPT3.', char(10), ...
-                            'Some functionalities of the library might be disabled.']);
-                    end
-                else
-                    addpath([pathStr '/external/SDPT3']);
-                    if verbose >= 1
-                        disp('Adding embedded SDPT3 solver to the path');
-                    end
-
-                    % Now we run install_sdpt3
-                    compilationSuccessfull = false;
-                    logSDPT3 = '';
-                    try
-                        logSDPT3 = evalc('install_sdpt3;');
-                        if ~isempty(regexp(logSDPT3, 'Looking for existing binaries\.\.\.incomplete set found\.'))
-                            logSDPT3 = evalc('install_sdpt3 -rebuild;');
-                        end
-                        compilationSuccessfull = true;
-                    catch
-                    end
-
-                    if compilationSuccessfull
-                        SDPT3InPath = true;
-                        if (verbose == 1) && ~isempty(regexp(logSDPT3, 'Looking for existing binaries\.\.\.none found; building\.\.\.'))
-                            disp('Compiled SDPT3 binaries');
-                        elseif verbose >= 2
-                            disp(logSDPT3);
-                        end
-                    else
-                        disp(logSDPT3);
-                        warning(['An error occured while trying to set up the SDPT3 solver. This can happen if no', char(10), ...
-                                 'compiler is available on the system. The functionalities of the library related', char(10), ...
-                                 'to Semi-definite programming will be disabled. To remedy this, you can install', char(10), ...
-                                 'an SDP solver listed in https://yalmip.github.io/allsolvers/ .']);
-                    end
-                end
-            elseif verbose >= 2
-                disp('SDPT3 is already in the path');
-            end
-        elseif verbose >= 2
-            disp('An SDP solver is already in the path');
-        end
+        SDPSolverInPath = replab.init.initSDP(verbose);
     elseif verbose >= 2
         warning('YALMIP not in path, not checking for an SDP solver')
     end
 
     %% MOcov
-
-    % Making sure MOcov is in the path and working
-    MOcovInPath = false;
-    try
-        mocov_get_absolute_path('.');
-        MOcovInPath = true;
-    catch
-    end
-    if ~MOcovInPath
-        if exist([pathStr '/external/MOcov/MOcov/mocov.m']) ~= 2
-            warning(['The MOcov library was not found in the folder ', pathStr, '/external/MOcov', char(10), ...
-                'Did you run ''git submodule init'' and ''git submodule update''?', char(10), ...
-                'It will not be possible to run tests with code coverage.']);
-        else
-            addpath([pathStr '/external/MOcov/MOcov']);
-            if verbose >= 1
-                disp('Adding MOcov to the path');
-            end
-            MOcovInPath = true;
-        end
-    elseif verbose >= 2
-        disp('MOcov is already in the path');
-    end
-
+    MOcovInPath = replab.init.initMOcov(verbose);
 
     %% If everything was successful, the next call will be quicker
-    if VPIInPath && MOxUnitInPath && YALMIPInPath && (decentSDPSolverInPath || SDPT3InPath) && MOcovInPath
+    if VPIInPath && MOxUnitInPath && YALMIPInPath && SDPSolverInPath && MOcovInPath
         allGood = true;
     end
 
 end
 
+
+function alreadyInPath = isInPath(functionName, subfolder, basePath, verbose)
+% Checks the presence of a RepLAB function in the path
+%
+% Throws an error if a function with the resired name is found in another
+% place than the current RepLAB library folder. This guarantees that no
+% other instance of RepLAB is also present in the path.
+%
+% Args:
+%   functionName (charstring): Name of the RepLAB function we are looking
+%                              for
+%   subfolder (charstring): RepLAB subfolder in which the function should
+%                           be found
+%   basePath (charstring): base path of the current RepLAB library
+%   isOctave (logical): true if the platform is octave
+%   verbose ({0, 1, 2}): Controls the display level
+%
+% Returns:
+%   logical: whether the path already contains the
+
+    allPaths = strsplit(path, pathsep);
+    candidates = findInstancesInPath(functionName);
+    versionFilePath = strrep(fullfile(basePath, subfolder, [functionName, '.m']), '\', '/');
+    alreadyInPath = false;
+    for i = 1:length(candidates)
+        candidate = strrep(candidates{i}, '\', '/');
+        if isequal(candidate, versionFilePath)
+            alreadyInPath = true;
+            if verbose >= 2
+                if isempty(subfolder)
+                    disp('RepLAB is already in the path');
+                else
+                    disp('RepLAB subfolder is already in the path');
+                end
+            end
+        else
+            error(['Another instance of RepLAB in folder ' fileparts(fileparts(candidate)) ...
+                   'is already in the path' char(10) ...
+                   'Use this one or remove it from the path.']);
+        end
+    end
+end
+
+function str = findInstancesInPath(item)
+% Finds all implementations of a function/class in the current path
+%
+% Returns the same results as ``which(item, '-all')``, except it only considers
+% the current path if it is explicitly present .
+%
+% Assumes that ``item`` is implemented as a ``.m`` file.
+%
+% Note: this is a copy of replab.init.findInstancesInPath
+%
+% Args:
+%   item (charstring): MATLAB function to look for
+%
+% Returns:
+%   cell(\*,1) of charstring: Paths to the code files
+    str = {};
+    paths = strsplit(path, pathsep);
+    for i = 1:length(paths)
+        if ~isequal(paths{i}, '.') % Octave has '.' in the path
+            candidate = fullfile(paths{i}, [item '.m']);
+            if exist(candidate) == 2
+                str{end+1,1} = candidate;
+            end
+        end
+    end
+end
 
 function ok = isLaterVersion(minimalVersion, currentVersion)
 % isLaterVersion - checks if the current version is old enough
@@ -426,11 +210,11 @@ function ok = isLaterVersion(minimalVersion, currentVersion)
 % ok = isLaterVersion(minimalVersion, currentVersion)
 %
 % Args:
-%     minimalVersion (string) : threshold version
-%     currentVersion (string) : actual version
+%     minimalVersion (charstring) : threshold version
+%     currentVersion (charstring) : actual version
 %
 % Returns:
-%     ok (boolean) : answer
+%     logical: answer
 %
 % Example:
 %     isLaterVersion('4.2.2', '04.3') % true

@@ -86,7 +86,7 @@ function result = replab_runtests(withCoverage, onlyFastTests)
         % Disable doc tests as they are not stable yet
         replab_generate('doctests');
     else
-        rp = replab.settings.replabPath;
+        rp = replab.globals.replabPath;
         testRoot = fullfile(rp, 'tests');
         doctestRoot = fullfile(rp, 'tests', 'doctest');
         replab.infra.mkCleanDir(testRoot, 'doctest');
@@ -97,7 +97,7 @@ function result = replab_runtests(withCoverage, onlyFastTests)
         % Here are the files patterns we don't want to include in the
         % coverage monitoring. These are checked by MOcov individually in
         % each subdirectory.
-        patternsToExclude = {'replab_*.m'};
+        patternsToExclude = {'replab_*.m', 'callOriginalHelp.m'};
 
         % We define the test command
         command = 'moxunit_runtests(''tests/codeCoverageHelperFunction.m'', ''-verbose'', ''-with_coverage'', ''-cover'', ''src'', ''-cover_json_file'', ''coverage.json'', ''-cover_xml_file'', ''coverage.xml'', ''-cover_html_dir'', ''coverage_html''';
