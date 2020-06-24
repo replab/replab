@@ -76,17 +76,19 @@ classdef Domain < replab.Samplable
             if any(isnan(v))
                 h = NaN;
             else
+                mask = uint64(2^32-1);
                 h = uint64(0);
+                mask = uint64(2^32-1);
                 for i = 1:length(v)
                     h = h + uint64(v(i));
                     h = h + bitshift(h, 10);
-                    h = bitand(h, uint64(0xFFFFFFFF));
+                    h = bitand(h, mask);
                     h = bitxor(h, bitshift(h, -6));
                 end
                 h = h + bitshift(h, 3);
                 h = bitxor(h, bitshift(h, -11));
                 h = h + bitshift(h, 15);
-                h = double(bitand(h, uint64(0xFFFFFFFF)));
+                h = double(bitand(h, mask));
             end
         end
 

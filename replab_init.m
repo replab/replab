@@ -4,9 +4,9 @@ function replab_init(verbose)
 % Also verifies that a SDP solver is available, installs and registers the bundled SDPT3 solver if needed,
 % and initializes important variables.
 %
-% A few persistent variables in functions presentin  `replab.settings` are initialized by this script;
-% those persistent varibales are locked by `mlock` to avoid being cleared when ``clear all`` is used;
-% this concerns in particular `replab.settings.replabPath` and  `replab.settings.helpPath`.
+% A few persistent variables in functions present in `replab.globals` are initialized by this script;
+% those persistent variables are locked by `mlock` to avoid being cleared when ``clear all`` is used;
+% this concerns in particular `replab.globals.replabPath` and  `replab.globals.systemHelpPath`.
 %
 % Args:
 %     verbose ({0, 1, 2}, optional): Controls the display level
@@ -152,13 +152,13 @@ function replab_init(verbose)
 
 
     %% Memorizing matlab's help folder if not done before
-    if isempty(replab.settings.systemHelpPath)
-        replab.settings.systemHelpPath(matlabHelpPath);
+    if isempty(replab.globals.systemHelpPath)
+        replab.globals.systemHelpPath(matlabHelpPath);
     end
 
     %% Memorizing RepLAB root folder if not done before
-    if isempty(replab.settings.replabPath)
-        replab.settings.replabPath(pathStr);
+    if isempty(replab.globals.replabPath)
+        replab.globals.replabPath(pathStr);
     end
 
     %% Verifying that symbolic computation is available

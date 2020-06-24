@@ -33,7 +33,7 @@ function test_parseTestsError
 end
 
 % $$$ function test_docTestLineNumbers
-% $$$     path = fullfile(replab.settings.replabPath, 'tests/infra/sample');
+% $$$     path = fullfile(replab.globals.replabPath, 'tests/infra/sample');
 % $$$     c = replab.infra.CodeBase.crawl(path);
 % $$$     cl = c.get('testpkg', 'DocSample');
 % $$$     m = cl.get('staticMethod');

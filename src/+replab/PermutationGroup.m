@@ -7,6 +7,32 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 
     methods
 
+        function self = PermutationGroup(domainSize, generators, order, parent)
+        % Constructs a permutation group
+        %
+        % Args:
+        %   domainSize (integer): Size of the domain
+        %   generators (cell(1,\*) of permutation): Group generators
+        %   order (vpi, optional): Order of the group
+        %   parent (`replab.PermutationGroup`, optional): Parent of this group if known,
+        %                                                 or ``[]`` if this group is its own parent
+            self.domainSize = domainSize;
+            self.identity = 1:domainSize;
+            self.generators = generators;
+            if nargin > 2 && ~isempty(order)
+                self.order_ = order;
+            end
+            if nargin > 3
+                if isempty(parent)
+                    self.parent = self;
+                else
+                    self.parent = parent;
+                end
+            else
+                self.parent = replab.S(domainSize);
+            end
+        end
+
         %% Domain methods
 
         function b = eqv(self, x, y)
@@ -33,8 +59,27 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 
         %% NiceFiniteGroup methods
 
+        function res = sameParentAs(self, rhs)
+            res = isa(rhs, 'replab.PermutationGroup') && (self.parent.domainSize == rhs.parent.domainSize);
+        end
+
         function p = niceMonomorphismImage(self, p)
             p = p;
+        end
+
+        function grp = subgroup(self, generators, order)
+        % Constructs a permutation subgroup from its generators
+        %
+        % Args:
+        %   generators (row cell array): List of generators given as a permutations in a row cell array
+        %   order (vpi, optional): Argument specifying the group order, if given can speed up computations
+        %
+        % Returns:
+        %   +replab.PermutationGroup: The constructed permutation subgroup
+            if nargin < 3
+                order = [];
+            end
+            grp = replab.PermutationGroup(self.domainSize, generators, order, self.parent);
         end
 
         %% Methods specific to permutation groups

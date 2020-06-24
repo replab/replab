@@ -4,14 +4,14 @@ function res = enforceQuaternionEncoding(rep, context)
 % See `+replab.+domain.QuaternionTypeMatrices`
 %
 % Args:
-%   rep (`+replab.Rep`): Real representation with ``rep.frobeniusSchurIndicator == -1``
+%   rep (`+replab.Rep`): Real representation with ``rep.frobeniusSchurIndicator == -2``
 %   context (`replab.Context`): Sampling context
 %
 % Returns:
 %   `+replab.SimilarRep`: Similar representation that has the proper encoding
     assert(isa(rep, 'replab.Rep'));
     assert(rep.overR);
-    assert(isequal(rep.frobeniusSchurIndicator, -1));
+    assert(isequal(rep.frobeniusSchurIndicator, -2));
     if isequal(rep.isDivisionAlgebraCanonical, true)
         res = replab.SimilarRep.identical(rep);
         return
