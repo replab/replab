@@ -241,15 +241,17 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         end
 
     end
-    
+
     methods(Static)
-        %% Sign
 
         function sign = sign(perm)
-            %Returns sign of a given permuatation
-
-            %perm (row vector): Vector representing a permutation (e.g. [3 2 1 4])
-            %sign (float): sign of the permutation
+        % Returns the sign of a given permutation
+        %
+        % Args:
+        %   perm (permutation): Vector representing a permutation (e.g. [3 2 1 4])
+        %
+        % Returns:
+        %   integer: Sign of the permutation
             x = perm;
             n = length(x);
             oddOrEven = 0; %Records whether the total permutation is odd or even
