@@ -9,8 +9,10 @@ function elt_arr = SimpleDimino_fast(generators, group, max_order)
 %   generators (cell array): generating elements of the group
 %   group (replab Group object): can be a permutation group, a direct
 %                                product group, or an integer matrix group
-%   max_order (double, optional): expected order of group 
-%
+%   max_order (double, optional): maximum number of elements allowed.
+%                                 Should be given for much smaller subgroups
+%                                 of permutation or direct product groups
+%                                 
 % Returns 
 %   elements (cell array): all group elements 
 %
