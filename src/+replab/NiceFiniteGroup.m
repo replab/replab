@@ -155,6 +155,14 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             grp = self.subgroup({}, vpi(1));
         end
 
+        function c = conjugacyClasses(self)
+        % Returns the conjugacy classes of this group
+        %
+        % Returns:
+        %   cell(1, \*) of `+replab.ConjugacyClass`: Array of conjugacy classes
+            c = replab.ConjugacyClass.computeAll(self);
+        end
+
         function o = elementOrder(self, g)
         % Returns the order of a group element
         %
@@ -198,18 +206,14 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             g = self.chain.image(p);
         end
 
-
         %% CompactGroup methods
 
         function g = sampleUniformly(self)
             [~, g] = self.chain.sampleUniformlyWithImage;
         end
 
-
         function b = contains(self, g)
         % Tests whether this group contains the given parent group element
-        %
-        % Abstract in `+replab.NiceFiniteSubgroup`
         %
         % Args:
         %   g (element of `parent`): Element to test membership of
