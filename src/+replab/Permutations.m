@@ -190,7 +190,20 @@ classdef Permutations < replab.PermutationGroup
                 grp = self.subgroup({g1 g2});
             end
         end
-
+        
+        %% Irreducible Representation Method
+        function rep = irrep(self, partition)
+        % Returns the irreducible representation of a 
+        % symmetric group corresponding a Young Diagram
+        %
+        % Args:
+        %   partition (integer(1,:)): The partition corresponding the
+        %   Young Diagram, with elements listed in decreasing order (e.g [3
+        %   3 1] represents the partition of 7 elements: 7 = 3+3+1
+        % Returns:
+        %   The corresponding irreducible representation
+             rep = replab.sym.SymmetricGroupIrrep(self, partition);
+         end
     end
 
     methods (Static)
@@ -316,6 +329,20 @@ classdef Permutations < replab.PermutationGroup
                 end
             end
         end
+        
+        
+        function dim = irrepDimension(partition)
+        % Returns the dimension of the irreducible representation of a 
+        % symmetric group corresponding a Young Diagram
+        %
+        % Args:
+        %   partition (integer(1,:)): The partition corresponding the
+        %   Young Diagram, with elements listed in decreasing order (e.g [5
+        %   3 1] represents the partition of 9 elements 9 = 5+3+1
+        % Returns:
+        %   The dimension of the corresponding irreducible representation.
+             dim = replab.sym.SymmetricGroupIrrep.dimension(partition);
+         end
 
     end
 
