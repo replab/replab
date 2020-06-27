@@ -65,10 +65,19 @@ M=[4 -1 0 -1 0 0 0 0 0; -1 4 -1 0 -1 0 0 0 0; 0 -1 4 0 0 -1 0 0 0;
 
 % # Symmetrization
 %
-% Up to this point, we have only made use of the well-known method of *Finite Differences* in constructing an eigenvalue problem for our $\Delta$-operator. In the following, instead of employing an iterative method to find solutions for the lattice function (as is often the case with other numerical studies), we will demonstrate how we can exploit the symmetries of our operator along with *RepLAB* to simplify the eigenvalue problem.
+% Up to this point, we have only made use of the well-known method of *finite differences* in constructing an eigenvalue problem for our $\Delta$-operator. In the following, instead of employing an iterative method to find solutions for the lattice function (as is often the case with other numerical studies), we will demonstrate how we can exploit the symmetries of our operator along with *RepLAB* to simplify the eigenvalue problem.
 %
-% At first, notice that the discretized cross operator has the symmetry of the dihedral group $D_4$, which is the group of the symmetries of the square; that is to say all the rotations and reflections that map the square to itself. Let the two generators of $D_4$ be the two reflections; one about a diagonal connecting the lattice points $3$ and $7$ and one about a vertical line joining the midpoints of two opposite sides (here, we will take the line that joins the points $2$ and $8$). Thereby, we can construct a representation of dimension $d=9$ of $D_4$ by regarding the 9 objects to be permuted as the lattice points inside the square region, while we transform the square under the action of $D_4$.
+% At first, notice that the discretized cross operator has the symmetry of the dihedral group $D_4$, which is the group of the symmetries of the square; that is to say all the rotations and reflections that map the square to itself. This should be evident, if one takes into account the general form of this [cross operator](https://en.wikipedia.org/wiki/Five-point_stencil).
+% 
+% Let the two generators of $D_4$ be the two reflections: 
+% 
+% * About the diagonal red line, which will be denoted by $\sigma$, and
+% * About a vertical grey line $\tau$ joining the midpoints of two opposite sides. 
 %
+% <center><img src="Square.png"/></center>
+%
+% Thereby, we can construct a representation of dimension $d=9$ of $D_4$ by regarding the 9 objects to be permuted as the lattice points inside the square region, while we transform the square under the action of $D_4$.
+
 % ## Constructing $D_4$ as a subgroup of $S_9$
 %
 % We can ask *RepLAB* to construct the dihedral group as a subgroup of $S_9$; all we have to do is to provide the generators of the subgroup that we wish to generate. Moreover, the reason why we are using the symmetric group $S_9$ in this example is because we are permuting 9 distinct elements. In *RepLAB* this construction can be achieved with the simple command:
@@ -89,7 +98,7 @@ DH = S9.subgroup({g1 g2})
 % This way we have created an instance of the dihedral group $D_4$ by associating to every single symmetry of the square a permutation of the 9 lattice points.
 
 % ## The complete reducibility of the natural representation of $D_4$
-
+%
 % We know proceed further and construct the *natural representation* of the dihedral group with the help of the method ``naturalRep`` of the class ``replab.PermutationGroup``, which provides a representation of a permutation group through permutation matrices.
 
 natRep = DH.naturalRep;
@@ -117,7 +126,7 @@ natDec.nComponents
 % \end{align*}
 %
 % Here $V_j$ consists of $c_j$ *invariant* subspaces $V^1_j, V^2_j, \dots V^{c_j}_j$, each of which has dimension $n_j$ and transforms under the irreducible representation $\vartheta_j$. We call the $(c_j n_j)$-dimensional subspaces $V_j$ of $V$ the __isotypic components__ of type $\vartheta_j$ for $\vartheta_{nat}$.
-
+%
 % To find the dimensions and the multiplicities of the irreps $\vartheta_j$ in *RepLAB* is an easy task; simply use the *.irrepDimension* and *.multiplicity* methods from the *replab.Isotypic* class. For instance,for  the 4th isotypic component we get: 
 
 Iso4 = natDec.component(4);
@@ -125,7 +134,7 @@ Iso4.irrepDimension
 Iso4.multiplicity
 
 % From that we conclude that the decomposed *natural representation*, when expressed as a direct sum, will have two copies of a 2-dimensional irreducible representation.
-
+%
 % As a result, if we continue in the same manner, we can construct the following table, where we present the isotypic components $V_j$ of the 9-dimensional representation along with the multiplicities $c_j$ and the dimensions $n_j$ of the corresponding irreducible subspaces $V^i_j$
 %
 % |                             | Multiplicity $c_j$| Dimension $n_j$ |
@@ -202,39 +211,57 @@ M_block_Iso4 = M_block([6 8 7 9],[6 8 7 9])
 % In other words, instead of solving the full eigenvalue problem for the sparse matrix $M$, we only have to take into account the $N$ blocks and solve a $c_j$-dimensional eigenvalue in each block. In this case, it can be checked that the characteristic polynomial of $M$ factors into a cubic and a quadratic equation.
 
 % ## Finding the eigenvalues and the eigenspaces
-
-% We are now ready to solve the eigenvalue problem for the block-diagonal matrix M and compute the eigenspaces that correspond to the eigenvalues $\lambda$. In order to be clear which eigenstate corresponds to which eigenvalue, we sort the eigenvalues returned from the *MATLAB/Octave* **eig** function from the lowest to the highest and then we rearrange the columns in this order. This way, it is apparent that the first eigenvalue is the upper left diagonal element of the $E_{new}$ matrix, whereas the associated eigenvector is the first column of the $V_{new}$ matrix, as exemplified below:
-
-[V,E] = eig(M_block); % Solve the eigenvalue problem
-E_new = diag(sort(diag(E), 'ascend')) % make diagonal matrix out of sorted diagonal values of input E
-[c,ind]=sort(diag(E),'ascend'); % store the indices of which columns the sorted eigenvalues come from
-V_new = V(:,ind) % arrange the columns in this order
-
-% What we get is a diagonal matrix $E_{new}$ that contains all the eigenvalues for the membrane's oscillation frequency, as well as a matrix $V_{new}$ that is constituted by the corresponding eigenvectors. Recall that the block diagonal matrix had already been expressed in terms of the basis thats manifests the invariance of the subspaces, before we evaluated its eigenvalues. Therefore, we can directly extract from the matrix $V_{new}$ the basis of the the eigenspaces $E_{\lambda}$ as a linear combination of the column vectors.
 %
+% We are now ready to solve the eigenvalue problem for the block-diagonal matrix $M$ and compute the eigenspaces that correspond to the eigenvalues $\lambda$. To that end, we will treat each block that corresponds to an isotypic component seperately, as we have already established in the previous section. 
+% 
+% The block that is associated with the first isotypic component $V_1$ can be obtained by:
+
+Block1 = M_block(1:3,1:3)
+
+% We can now apply the *MATLAB/Octave* **eig** function directly to this particular block and obtain then eigenvalues and eigenvectors for the first component in descending order:
+
+[U1,E1] = eig(Block1)
+
+% For the next isotypic components $V_2$ and $V_3$ the eigenvalue problem are rather trivial; in each component the eigenvalue is equal to 4, since the blocks are just scalars in these cases, whereas the eigenvector is the corresponding column vector in our basis, as we can easily verify: 
+
+Block2 = M_block(4,4)
+[U2,E2] = eig(Block2)
+
+Block3 = M_block(5,5)
+[U3,E3] = eig(Block3)
+
+% Similarly, the solutions of the eigenvalue problem for the last isotypic component $V_4$ can be computed using the block that we constructed earlier as follows: 
+
+Block4 = M_block_Iso4
+[U4,E4] = eig(Block4)
+
+% What we have so far is a diagonal matrix $E_i$ that contains all the eigenvalues for the membrane's oscillation frequency, as well as a matrix $U_i$ that is constituted by the corresponding eigenvectors in each particular isotypic component $V_i$. 
+%
+% Recall that the blocks had already been expressed in terms of the basis that manifests the invariance of the subspaces, namely the column vectors of our ``basis``. This means that the entries of the matrices $U_i$ are basically the coefficients in the linear combination with respect to the column basis vectors in each isotypic component. This fact will be proven useful in what follows, as it will enable us to find the eigenspaces $E_{\lambda}$ for each eigenvalue $\lambda$.  
+
 % ### Extracting the ground oscillation state
 % 
-% For example, we can compute the basis for the 1-dimensional eigenspace that corresponds to the __ground state__, that is the eigenstate with the lowest eigenvalue. According to the diagonal matrix $E_{new}$, the lowest eigenvalue is $\lambda_{GS} = 1.1716$ and the respective eigenvector can be read from the corresponding column of the matrix $V_{new}$. Moreover, if we let $x_1, x_2$ and $x_3$ be the symmetry adapted basis of the first isotypic component, then the basis vector of the eigenspace $E_{GS}$ will be given as a linear combination of the form $ax_1 + bx_2 + cx_3$, where the coefficients $a,b,c$ correspond to the non-zero elements of the first column of $V_{new}$.
+% For example, we can compute the basis for the 1D-eigenspace that corresponds to the __ground state__, that is the eigenstate with the lowest eigenvalue. According to the diagonal matrix $E_1$, the lowest eigenvalue is $\lambda_{GS} = 1.1716$ and the respective eigenvector can be read from the corresponding column of the matrix $U_1$. Moreover, if we let $x_1, x_2$ and $x_3$ be the symmetry adapted basis of the first isotypic component, then the basis vector of the eigenspace $E_{GS}$ will be given as a linear combination of the form $ax_1 + bx_2 + cx_3$, where the coefficients $a,b,c$ correspond to the non-zero elements of the third column of $U_1$. 
 %
 % Following the above, we can extract the ground state as demonstrated below:
 
 x1 = basis(:,1); x2 = basis(:,2); x3 = basis(:,3); % Define the basis vectors in the first isotypic component
-gs = V_new(1,1)*x1 + V_new(2,1)*x2 + V_new(3,1)*x3; % Extract the coefficients for the linear combination
+gs = U1(1,3)*x1 + U1(2,3)*x2 + U1(3,3)*x3; % Extract the coefficients for the linear combination
 GS_matrix = reshape(gs, [3 3])' % convert the column vector into a "lattice function"
 
 % This lattice function is the approximation to the ground oscillation of the membrane, since the numbers assigned to the nine points describe the displacements of the membrane at the corresponding positions.
-%
+
 % ### Extracting the highest oscillation state
 % 
-% In a completely analogous manner the lattice function for the oscillation with the highest eigenvalue can also be found. Since we have already sorted out the eigenvalues, we know that the eigenvector for this eigenspace is encoded in the last column of the matrix $V_{new}$, and it turns out that we can write the basis vector for this eigenstate as a linear combination of the basis of the first isotypic component:
+% In a completely analogous manner the lattice function for the oscillation with the highest eigenvalue can also be found. Since we have already sorted out the eigenvalues, we know that the eigenvector for this eigenspace is encoded in the first column of the matrix $U_1$, and it turns out that we can write the basis vector for this eigenstate as a linear combination of the basis of the first isotypic component as exemplified below
 
-hs = V_new(1,9)*x1 + V_new(2,9)*x2 + V_new(3,9)*x3;
+hs = U1(1,1)*x1 + U1(2,1)*x2 + U1(3,1)*x3;
 HS_matrix = reshape(hs,[3 3])'
 
-% Proceeding in a similar manner, we can get the basis for each of the eigenspaces $E_{\lambda}$ and express it with respect to the reordered basis vectors in the isotypic components of the natural representation. Remember that the coefficients for the linear expansion can in principle be always read off from the columns of the matrix ``V_new``.
+% Proceeding in a similar manner, we can get the basis for each of the eigenspaces $E_{\lambda}$ and express it with respect to the reordered basis vectors in the isotypic components of the natural representation. Remember that the coefficients for the linear expansion can in principle be always read off from the columns of a matrix $U_i$. 
 
 % ## Plotting the lattice functions for extreme cases
-
+%
 % As we now have the lattice functions for the ground and the highest oscillations, it is possible to construct some plots to further illustrate how the membrane is oscillating in these two extreme cases.
 
 [s,t] = meshgrid(1:3);
