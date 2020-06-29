@@ -126,7 +126,7 @@ classdef FiniteGroup < replab.CompactGroup
         % Returns:
         %   `.RandomBag`: The created random bag
             if isempty(self.randomBag_)
-                self.randomBag_ = replab.RandomBag(self, self.generators);
+                self.randomBag_ = replab.fg.RandomBag(self, self.generators);
             end
             R = self.randomBag_;
         end

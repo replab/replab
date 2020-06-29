@@ -23,6 +23,12 @@ classdef GroupLaws < replab.MonoidLaws
             self.assert(self.T.isIdentity(id2));
         end
 
+        function law_composeWithInverse_TT(self, x, y)
+        % Checks that the composition with inverse method is properly implemented
+            xyI = self.T.compose(x, self.T.inverse(y));
+            self.T.assertEqv(xyI, self.T.composeWithInverse(x, y));
+        end
+
         function law_inverse_compatible_with_compose_TT(self, x, y)
         % Checks that the inverse of a composition is the composition of swapped inverses
             xy = self.T.compose(x, y);

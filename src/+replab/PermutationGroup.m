@@ -5,17 +5,49 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         domainSize % integer: The integer ``d``, as this group acts on ``{1, ..., d}``
     end
 
+    properties (Access = protected)
+        chain_ % (+replab.+bsgs.Chain): Stabilizer chain describing this permutation group
+    end
+
+    methods (Access = protected)
+
+        function chain = computeChain(self)
+            for i = 1:self.nGenerators
+                assert(~self.isIdentity(self.generators{i}), 'Generators cannot contain the identity');
+            end
+            chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.order_);
+        end
+
+        function dec = computeDecomposition(self)
+            c = self.chain;
+            k = c.length;
+            T = cell(1, k);
+            for i = 1:k
+                Ui = c.U{i};
+                m = size(Ui, 2);
+                Ti = cell(1, m);
+                for j = 1:m
+                    Ti{j} = Ui(:,j)';
+                end
+                T{i} = Ti;
+            end
+            dec = replab.FiniteGroupDecomposition(self, T);
+        end
+
+    end
+
     methods
 
-        function self = PermutationGroup(domainSize, generators, order, parent)
+        function self = PermutationGroup(domainSize, generators, order, parent, chain)
         % Constructs a permutation group
         %
         % Args:
         %   domainSize (integer): Size of the domain
         %   generators (cell(1,\*) of permutation): Group generators
         %   order (vpi, optional): Order of the group
-        %   parent (`replab.PermutationGroup`, optional): Parent of this group if known,
+        %   parent (`+replab.PermutationGroup`, optional): Parent of this group if known,
         %                                                 or ``[]`` if this group is its own parent
+        %   chain (`+replab.+bsgs.Chain`): BSGS chain describing the group
             self.domainSize = domainSize;
             self.identity = 1:domainSize;
             self.generators = generators;
@@ -31,6 +63,22 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             else
                 self.parent = replab.S(domainSize);
             end
+            if nargin > 4 && ~isempty(chain)
+                self.chain_ = chain;
+            end
+            self.niceGroup_ = self;
+            self.niceInverseMonomorphism_ = replab.Morphism.lambda(self, self, @(x) x);
+        end
+
+        function c = chain(self)
+        % Returns the stabilizer chain corresponding to this permutation group
+        %
+        % Returns:
+        %   `+replab.+bsgs.Chain`: Stabilizer chain
+            if isempty(self.chain_)
+                self.chain_ = self.computeChain;
+            end
+            c = self.chain_;
         end
 
         %% Domain methods
@@ -52,10 +100,16 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %% Group methods
 
         function y = inverse(self, x)
-            n = self.domainSize;
+            n = length(x);
             y = zeros(1, n);
             y(x) = 1:n;
         end
+
+        function z = composeWithInverse(self, x, y)
+            z = zeros(1, length(x));
+            z(y) = x;
+        end
+
 
         %% NiceFiniteGroup methods
 

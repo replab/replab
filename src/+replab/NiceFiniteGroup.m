@@ -28,7 +28,8 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
 
     properties (Access = protected)
-        chain_ % `+replab.+bsgs.Chain`: BSGS chain describing this group
+        niceGroup_ % `+replab.+PermutationGroup`: Image of this group through the nice monomorphism
+        niceInverseMonomorphism_ % `+replab.mrp.PermMorphism`: Inverse of the nice monomorphism
     end
 
     methods
@@ -84,31 +85,27 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %% FiniteGroup methods
 
         function order = computeOrder(self)
-            order = self.chain.order;
+            order = self.niceGroup.chain.order;
         end
 
-        function chain = computeChain(self)
-            for i = 1:length(self.generators)
-                assert(~self.isIdentity(self.generators{i}), 'Generators cannot contain the identity');
-            end
+        function m = computeNiceInverseMonomorphism(self)
+            m = replab.mrp.PermMorphism.byImages(self.niceGroup, self, self.generators);
+        end
+
+        function g = computeNiceGroup(self)
             imgId = self.niceMonomorphismImage(self.identity);
             n = length(imgId);
-            nG = self.nGenerators;
-            S = zeros(n, nG);
-            for i = 1:nG
-                S(:,i) = self.niceMonomorphismImage(self.generator(i));
-            end
-            chain = replab.bsgs.Chain.makeWithImages(n, S, self, self.generators);
+            g = replab.PermutationGroup(n, self.niceGenerators, self.order_);
         end
 
         function E = computeElements(self)
-            E = replab.IndexedFamily.lambda(self.order, ...
-                                            @(ind) self.chain.imageFromIndex(ind), ...
-                                            @(el) self.chain.indexFromElement(self.niceMonomorphismImage(el)));
+            atFun = @(ind) self.niceMonomorphismPreimage(self.niceGroup.chain.elementFromIndex(ind));
+            findFun = @(el) self.niceGroup.chain.indexFromElement(self.niceMonomorphismImage(el));
+            E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
         end
 
         function dec = computeDecomposition(self)
-            dec = replab.FiniteGroupDecomposition(self, self.chain.imagesDecomposition);
+            dec = replab.FiniteGroupDecomposition(self, self.niceInverseMonomorphism.chain.imagesDecomposition);
         end
 
     end
@@ -172,18 +169,35 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             end
         end
 
-        function c = chain(self)
-        % Returns the BSGS chain corresponding to this group
+        %% Methods enabled by the BSGS algorithms
+
+        function c = niceGroup(self)
+        % Returns the image of this group as a permutation group through the nice monomorphismx
         %
         % Returns:
-        %   `+replab.+bsgs.Chain`: BSGS chain describing this group
-            if isempty(self.chain_)
-                self.chain_ = self.computeChain;
+        %   `+replab.PermutationGroup`: Permutation group
+            if isempty(self.niceGroup_)
+                self.niceGroup_ = self.computeNiceGroup;
             end
-            c = self.chain_;
+            c = self.niceGroup_;
         end
 
-        %% Methods enabled by the BSGS algorithms
+        function m = niceInverseMonomorphism(self)
+        % Returns the monomorphism from the permutation representation to the original group
+            if isempty(self.niceInverseMonomorphism_)
+                self.niceInverseMonomorphism_ = self.computeNiceInverseMonomorphism;
+            end
+            m = self.niceInverseMonomorphism_;
+        end
+
+        function ng = niceGenerators(self)
+        % Returns the image of the group generators under the nice monomorphism
+            ng = cellfun(@(g) self.niceMonomorphismImage(g), self.generators, 'uniform', 0);
+        end
+
+        function m = niceMonomorphism(self)
+            m = replab.Morphism.lambda(self, self.niceGroup, @(g) self.niceMonomorphismImage(g));
+        end
 
         function g = niceMonomorphismPreimage(self, p)
         % Returns the group element corresponding to a permutation
@@ -195,14 +209,14 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   g (element): Group element corresponding to the permutation
-            g = self.chain.image(p);
+            g = self.niceInverseMonomorphism.image(p);
         end
 
 
         %% CompactGroup methods
 
         function g = sampleUniformly(self)
-            [~, g] = self.chain.sampleUniformlyWithImage;
+            [~, g] = self.niceInverseMonomorphism.chain.sampleUniformly;
         end
 
 
@@ -216,7 +230,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   logical: True if this group contains ``g`` and false otherwise
-            b = self.chain.contains(self.niceMonomorphismImage(g));
+            b = self.niceGroup.chain.contains(self.niceMonomorphismImage(g));
         end
 
         %% Representation construction
