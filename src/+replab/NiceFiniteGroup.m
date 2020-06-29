@@ -28,7 +28,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
 
     properties (Access = protected)
-        chain_ % `+replab.+bsgs.Chain`: BSGS chain describing this group
+        chain_ % `+replab.+bsgs.ChainWithImages`: BSGS chain describing this group
     end
 
     methods
@@ -98,7 +98,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             for i = 1:nG
                 S(:,i) = self.niceMonomorphismImage(self.generator(i));
             end
-            chain = replab.bsgs.Chain.makeWithImages(n, S, self, self.generators);
+            chain = replab.bsgs.ChainWithImages.makeWithImages(n, S, self, self.generators);
         end
 
         function E = computeElements(self)
@@ -176,7 +176,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Returns the BSGS chain corresponding to this group
         %
         % Returns:
-        %   `+replab.+bsgs.Chain`: BSGS chain describing this group
+        %   `+replab.+bsgs.ChainWithImages`: BSGS chain describing this group
             if isempty(self.chain_)
                 self.chain_ = self.computeChain;
             end

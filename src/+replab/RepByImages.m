@@ -3,7 +3,7 @@ classdef RepByImages < replab.Rep
 %
 % It works by representing the finite group as a permutation group (if it is not already a permutation group),
 % then using a BSGS construction that stores the stabilizer chain with transversal elements both encoding the
-% group transversals and their images (see `+replab.+bsgs.Chain`).
+% group transversals and their images (see `+replab.+bsgs.ChainWithImages`).
 %
 % If the finite group is not a permutation group, a "nice monomorphism" in the sense of GAP is used, see:
 % https://www.gap-system.org/Manuals/doc/ref/chap40.html#X7FFD731684606BC6)
@@ -14,7 +14,7 @@ classdef RepByImages < replab.Rep
     end
 
     properties (Access = protected)
-        chain_ % (`+replab.+bsgs.Chain`): BSGS chain with images
+        chain_ % (`+replab.+bsgs.ChainWithImages`): BSGS chain with images
     end
 
     methods
@@ -74,7 +74,7 @@ classdef RepByImages < replab.Rep
                     for i = 1:nG
                         I(:,i) = self.group.niceMonomorphismImage(self.group.generator(i));
                     end
-                    self.chain_ = replab.bsgs.Chain.makeWithImages(n, I, J, self.images_internal, @(X) double(X));
+                    self.chain_ = replab.bsgs.ChainWithImages.makeWithImages(n, I, J, self.images_internal, @(X) double(X));
                 else
                     J = replab.GeneralLinearGroupWithInverses(self.field, self.dimension);
                     niceId = self.group.niceMonomorphismImage(self.group.identity);
@@ -86,7 +86,7 @@ classdef RepByImages < replab.Rep
                         I(:,i) = self.group.niceMonomorphismImage(self.group.generator(i));
                         elements{i} = [self.images_internal{i} self.inverseImages_internal{i}];
                     end
-                    C = replab.bsgs.Chain(n, J);
+                    C = replab.bsgs.ChainWithImages(n, J);
                     C.insertStrongGenerators(I, elements);
                     C.randomizedSchreierSims;
                     cut = @(X) double(X(:, 1:self.dimension));

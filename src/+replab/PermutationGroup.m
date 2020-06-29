@@ -52,10 +52,16 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %% Group methods
 
         function y = inverse(self, x)
-            n = self.domainSize;
+            n = length(x);
             y = zeros(1, n);
             y(x) = 1:n;
         end
+
+        function z = composeWithInverse(self, x, y)
+            z = zeros(1, length(x));
+            z(y) = x;
+        end
+
 
         %% NiceFiniteGroup methods
 
