@@ -7,7 +7,7 @@ classdef CompositionMorphism < replab.Morphism
 
     methods
 
-        function self = CompositionMorphism(first, second)
+        function self = CompositionMorphism(second, first)
             self.target = second.target;
             self.source = first.source;
         end

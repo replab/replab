@@ -56,11 +56,15 @@ classdef Chain < replab.Str
         isMutable % (logical): Whether the chain can be modified
         n % (integer): Domain size
         B % (integer(1,\*)): Row vector of base points (all between 1..n without duplicates)
+
         S % (integer(n, nS)): Matrix of strong generators stored as columns vectors (nS = # of strong generators)
         Sind % (integer(1, k+1)): Starting index of strong generators for each stabilizer subgroup, where k = length(B)
+             %
              %                    We have ``Sind(k+1) == nS + 1``.
+
         Delta % (cell(1,k) of integer(1,\*)): Each orbit is a row vector containing orbit elements
         iDelta % (integer(n,k)): For each orbit, maps a domain element to its position in Delta{i} or 0 if not present
+
         U % (cell(1,k) of integer(n,\*)): Transversal elements
         Uinv % (cell(1,k) of integer(n,\*)): Inverse transversal elements
     end
@@ -75,7 +79,7 @@ classdef Chain < replab.Str
         %                               The default value is `+replab.+bsgs.TrivialGroup`
         %
         % Returns:
-        %   `+replab.bsgs.Chain`: A constructed empty BSGS chain
+        %   `+replab.bsgs.Chain`: A constructed BSGS chain
             self.isMutable = true;
             self.n = n;
             if nargin == 8
@@ -97,11 +101,15 @@ classdef Chain < replab.Str
             end
         end
 
+        function b = base(self)
+            b = self.B;
+        end
+
         function c = baseChange(self, newBase)
             c = replab.bsgs.Chain.make(self.n, self.S, newBase, self.order);
         end
 
-        function pretty(self, i)
+        function show(self, i)
             if nargin < 2
                 table = cell(2, self.length+1);
                 table{1,1} = 'base: ';
@@ -351,17 +359,6 @@ classdef Chain < replab.Str
 
         %% Element indexing
 
-        function v = imageFromIndex(self, index)
-        % Return the image corresponding to an overall index
-        %
-        % Args:
-        %   index (vpi): Group element index
-        %
-        % Returns:
-        %   element of `J`: Image
-            v = self.imageFromIndices(self.indicesFromIndex(index));
-        end
-
         function el = elementFromIndex(self, index)
         % Return the element corresponding to an overall index
         %
@@ -471,7 +468,7 @@ classdef Chain < replab.Str
 
         %% Mutable methods
 
-        function insertInOrbit(self, i, b, u, uinv)
+        function insertInOrbit(self, i, b, u)
         % Inserts a new orbit element in an orbit
         %
         % Modifies the chain in place.
@@ -486,6 +483,9 @@ classdef Chain < replab.Str
             idx = length(self.Delta{i});
             self.iDelta(b, i) = idx;
             self.U{i} = [self.U{i} u(:)];
+            n = self.n;
+            uinv = zeros(1, n);
+            uinv(u) = 1:n;
             self.Uinv{i} = [self.Uinv{i} uinv(:)];
         end
 
@@ -495,7 +495,7 @@ classdef Chain < replab.Str
         % Iterates over current orbit elements and strong generators, and add new orbit points if necessary
         %
         % Args:
-        %   i (integer): Level of the orbit, 1 <= i <= self.length
+        %   i (integer): Level of the orbit, ``1 <= i <= self.length``
             assert(self.isMutable);
             n = self.n;
             toTest = self.Delta{i}; % we need to test all elements in the currently known orbit
@@ -513,9 +513,7 @@ classdef Chain < replab.Str
                     if self.iDelta(newb, i) == 0
                         % new orbit point discovered, add it
                         newu = s(self.u(i, b)); % new transversal compose(s, self.u(i, b))
-                        newuinv = zeros(1, n);
-                        newuinv(newu) = 1:n;
-                        self.insertInOrbit(i, newb, newu, newuinv);
+                        self.insertInOrbit(i, newb, newu);
                     end
                 end
                 toTest = unique(imgs(mask));
@@ -546,8 +544,7 @@ classdef Chain < replab.Str
         %
         % Args:
         %   i (integer): Smallest i such that the strong generator ``newS`` is part of S^(i)
-        %   newS (row permutation vector): New strong generator
-        %   newT (element of `J`): Image of the new strong generator
+        %   newS (permutation): New strong generator
             self.S = [self.S(:, 1:(self.Sind(i+1)-1)) newS(:) self.S(:, self.Sind(i+1):end)];
             self.Sind((i+1):end) = self.Sind((i+1):end) + 1;
             for j = 1:i
@@ -564,7 +561,7 @@ classdef Chain < replab.Str
         %   g (row permutation vector): Element to strip
         %
         % Returns:
-        %   true if a new strong generator has been found
+        %   logical: True if a new strong generator has been found
             n = self.n;
             [h j] = self.strip(g);
             newSG = false;
@@ -620,7 +617,7 @@ classdef Chain < replab.Str
 
     methods (Static)
 
-        function C = make(n, S, base, order)
+        function C = make(n, generators, base, order)
             if nargin < 3
                 base = [];
             end
@@ -631,8 +628,8 @@ classdef Chain < replab.Str
             for i = 1:length(base)
                 C.insertEndBasePoint(base(i));
             end
-            for i = 1:size(S, 2)
-                C.stripAndAddStrongGenerator(S(:,i));
+            for i = 1:length(generators)
+                C.stripAndAddStrongGenerator(generators{i});
             end
             C.randomizedSchreierSims(order);
             C.makeImmutable;

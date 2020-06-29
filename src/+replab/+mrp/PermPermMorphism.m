@@ -18,23 +18,25 @@ classdef PermPermMorphism < replab.Morphism
             n2 = self.target.domainSize;
             [h i] = self.chain.strip([s n1+1:n1+n2]);
             assert(i == self.chain.length + 1);
-            el = h(n1+1:n1+n2) - n1;
-            t(1:n2) = el;
+            tinv = h(n1+1:n1+n2) - n1;
+            t(tinv) = 1:n2;
         end
 
     end
 
     methods (Static)
 
-        function m = fromImages(source, images)
+        function m = byImages(source, images)
             nG = source.nGenerators;
             assert(nG > 1);
             n1 = source.domainSize;
             n2 = length(images{1});
-            S = zeros(n1+n2, nG);
+            S = cell(1, nG);
             for i = 1:nG
-                S(1:n1, i) = source.generator(i);
-                S(n1+1:n1+n2, i) = images{i} + n1;
+                s = zeros(1, n1+n2);
+                s(1:n1) = source.generator(i);
+                s(n1+1:n1+n2) = images{i} + n1;
+                S{i} = s;
             end
             chain = replab.bsgs.Chain.make(n1+n2, S, 1:n1);
             m = replab.mrp.PermPermMorphism(source, replab.S(n2), chain);
