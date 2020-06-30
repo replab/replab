@@ -37,7 +37,7 @@ classdef ForRepByImages < replab.Equivariant
                 e = replab.DispatchNext;
                 return
             end
-            e = replab.equivariant.ForRepByImages(repC, repR, special);
+            e = replab.equi.ForRepByImages(repC, repR, special);
         end
 
     end
@@ -66,7 +66,7 @@ classdef ForRepByImages < replab.Equivariant
                 end
                 X = S/nEls;
             end
-            err = replab.equivariant.errorModel(X);
+            err = replab.equi.errorModel(X);
         end
 
     end

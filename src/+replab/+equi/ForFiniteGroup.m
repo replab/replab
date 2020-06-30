@@ -7,7 +7,7 @@ classdef ForFiniteGroup < replab.Equivariant
                 e = replab.DispatchNext;
                 return
             end
-            e = replab.equivariant.ForFiniteGroup(repC, repR, special);
+            e = replab.equi.ForFiniteGroup(repC, repR, special);
         end
 
     end
@@ -32,7 +32,7 @@ classdef ForFiniteGroup < replab.Equivariant
                 end
                 X = S/nEls;
             end
-            err = replab.equivariant.errorModel(X);
+            err = replab.equi.errorModel(X);
         end
 
     end

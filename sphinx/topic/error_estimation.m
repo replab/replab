@@ -39,7 +39,7 @@ run ../../replab_init
 %
 % We’ll explain our process on the representation $U \otimes U \otimes U$ where $U$ is the unitary group of dimension 3.
 
-replab.equivariant.plotConvergence(true);
+replab.equi.plotConvergence(true);
 rep = replab.U(3).definingRep.tensorPower(3);
 
 % To decompose that representation, we need to take generic samples from the commutant algebra. This is achieved by projecting a random matrix on the invariant subspace using an iterative algorithm. $X_0$ is that random initial matrix, and then our iteration is:

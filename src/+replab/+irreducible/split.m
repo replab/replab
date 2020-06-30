@@ -21,6 +21,18 @@ function sub = split(rep, context)
 %   cell(1,\*) of `+replab.SubRep`: A cell array of subrepresentations
     assert(isa(rep, 'replab.Rep'));
     assert(isa(context, 'replab.Context'));
+    if ~replab.dispatch('exists', 'replab.irreducible.split')
+        replab.dispatch('register', 'replab.irreducible.split', 'splitTrivialGroup', 500, ...
+                        @(r, c) replab.irreducible.splitTrivialGroup(r, c));
+        replab.dispatch('register', 'replab.irreducible.split', 'splitBlocks', 400, ...
+                        @(r, c) replab.irreducible.splitBlocks(r, c));
+        replab.dispatch('register', 'replab.irreducible.split', 'splitAllOnes', 300, ...
+                        @(r, c) replab.irreducible.splitAllOnes(r, c));
+        replab.dispatch('register', 'replab.irreducible.split', 'splitTrivialComponent', 200, ...
+                        @(r, c) replab.irreducible.splitTrivialComponent(r, c));
+        replab.dispatch('register', 'replab.irreducible.split', 'splitUsingCommutant', 100, ...
+                        @(r, c) replab.irreducible.splitUsingCommutant(r, c));
+    end
     sub = replab.dispatch('call', 'replab.irreducible.split', rep, context);
     if isa(sub, 'replab.DispatchNext')
         return

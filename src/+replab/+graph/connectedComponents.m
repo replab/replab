@@ -46,6 +46,12 @@ function [subsets componentIndex start next] = connectedComponents(edges)
     end
 
     % We call the best available burning algorithm
+    if ~replab.dispatch('exists', 'replab.graph.burningAlgorithm')
+        replab.dispatch('register', 'replab.graph.burningAlgorithm', 'Fast', 500, ...
+                        @(edges) replab.graph.burningAlgorithmFast(edges));
+        replab.dispatch('register', 'replab.graph.burningAlgorithm', 'Fallback', 0, ...
+                        @(edges) replab.graph.burningAlgorithm(edges));
+    end
     subsets = replab.dispatch('call', 'replab.graph.burningAlgorithm', edges);
 
     % If required, we also compute the next outputs
