@@ -9,7 +9,7 @@ end
 
 function test_quaternion_representations
     S3 = replab.S(3);
-    W = S3.wreathProduct(replab.signed.Permutations.quaternionGroup);
+    W = S3.wreathProduct(replab.SignedPermutations.quaternionGroup);
     rep1 = W.primitiveRepFun(@(x) x.naturalRep);
     rep2 = rep1.decomposition;
     rep3 = rep2.asSimilarRep;

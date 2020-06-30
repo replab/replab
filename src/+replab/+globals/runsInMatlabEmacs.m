@@ -1,6 +1,7 @@
 function value = runsInMatlabEmacs(newValue)
 % Returns whether the MATLAB/Octave shell is running in the matlab-emacs mode
-    persistent storedValue
+    mlock
+    persistent storedValuea
     if nargin == 1
         storedValue = newValue;
     end

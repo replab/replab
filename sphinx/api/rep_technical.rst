@@ -1,20 +1,20 @@
 Representations (support code)
 ==============================
 
-.. module:: +replab.+equivariant
+.. module:: +replab.+equi
 
-equivariant.ForCompactGroup
-+++++++++++++++++++++++++++
+equi.ForCompactGroup
+++++++++++++++++++++
 
 .. autoclass:: ForCompactGroup
 
-equivariant.ForFiniteGroup
-++++++++++++++++++++++++++
+equi.ForFiniteGroup
++++++++++++++++++++
 
 .. autoclass:: ForFiniteGroup
 
-equivariant.ForRepByImages
-++++++++++++++++++++++++++
+equi.ForRepByImages
++++++++++++++++++++
 
 .. autoclass:: ForRepByImages
 

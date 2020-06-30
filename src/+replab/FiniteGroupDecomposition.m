@@ -7,8 +7,8 @@ classdef FiniteGroupDecomposition < replab.Obj
 % We require additionally that in each set Ti, Ti{1} is the group identity.
 %
     properties (SetAccess = protected)
-        group % replab.FiniteGroup: Group decomposed
-        T % row cell array of row cell arrays: Stores the sets Ti as {T1 T2 ... Tn}
+        group % (`+replab.FiniteGroup): Group decomposed
+        T % (cell(1,\*) of cell(1,\*) of group elements): Stores the sets Ti as {T1 T2 ... Tn}
     end
 
     methods

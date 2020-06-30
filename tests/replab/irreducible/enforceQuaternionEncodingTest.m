@@ -8,7 +8,7 @@ function test_suite = enforceQuaternionEncodingTest()
 end
 
 function testHasCorrectForm
-    Q = replab.signed.Permutations.quaternionGroup;
+    Q = replab.SignedPermutations.quaternionGroup;
     S3 = replab.S(3);
     W = S3.wreathProduct(Q);
     rep = W.primitiveRep(Q.naturalRep);

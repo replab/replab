@@ -34,7 +34,6 @@ classdef NiceFiniteSubgroup < replab.NiceFiniteGroup
             p = self.parent.niceMonomorphismImage(g);
         end
 
-
         %% Domain methods
 
         function b = eqv(self, x, y)
