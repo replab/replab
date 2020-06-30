@@ -136,7 +136,7 @@ classdef Rep < replab.Obj
 
         %% Derived vector spaces/algebras
 
-        function e = equivariant(self, repR)
+        function e = equivariantTo(self, repR)
         % Returns the space of equivariant linear maps from this rep to another rep
         %
         % The equivariant vector space contains the matrices X such that
