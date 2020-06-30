@@ -1,9 +1,9 @@
-classdef Permutations < replab.signed.PermutationGroup
+classdef SignedPermutations < replab.SignedPermutationGroup
 % Describes the signed permutation group over {-n...-1, 1...n} where n = domainSize
 
     methods
 
-        function self = Permutations(domainSize)
+        function self = SignedPermutations(domainSize)
         % Constructs the group of all signed permutations over a given domain size
         %
         % Args:
@@ -22,7 +22,7 @@ classdef Permutations < replab.signed.PermutationGroup
                 flip = [-1 2:domainSize];
                 generators = {shift trans flip};
             end
-            self = self@replab.signed.PermutationGroup(domainSize, generators, o, []);
+            self = self@replab.SignedPermutationGroup(domainSize, generators, o, []);
         end
 
         %% Str methods
@@ -151,7 +151,7 @@ classdef Permutations < replab.signed.PermutationGroup
         % S.toMatrix(S.compose(x, y)) =
         % S.toMatrix(x) * S.toMatrix(y)
         % where S = SignedPermutations(domainSize)
-            mat = full(replab.signed.Permutations.toSparseMatrix(signedPerm));
+            mat = full(replab.SignedPermutations.toSparseMatrix(signedPerm));
         end
 
         function b = isSignedPermutationMatrix(mat)
@@ -203,7 +203,7 @@ classdef Permutations < replab.signed.PermutationGroup
 
         function Q = quaternionGroup(self)
         % Returns a signed representation of the quaternion group
-            SS4 = replab.signed.Permutations(4);
+            SS4 = replab.SignedPermutations(4);
             g1 = [-1 -2 -3 -4];
             gi = [2 -1 4 -3];
             gj = [3 -4 -1 2];

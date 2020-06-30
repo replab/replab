@@ -1,4 +1,4 @@
-function test_suite = PermutationsTest()
+function test_suite = SignedPermutationsTest()
     disp(['Setting up tests in ', mfilename()]);
     try
         test_functions = localfunctions();
@@ -13,7 +13,7 @@ function test_suite = PermutationsTest()
     end
 
     for n = allNs
-        G = replab.signed.Permutations(n);
-        test_suite = replab.signed.PermutationsLaws(G).addTestCases(test_suite);
+        G = replab.SignedPermutations(n);
+        test_suite = replab.SignedPermutationsLaws(G).addTestCases(test_suite);
     end
 end

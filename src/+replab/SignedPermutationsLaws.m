@@ -1,4 +1,4 @@
-classdef PermutationsLaws < replab.FiniteGroupLaws
+classdef SignedPermutationsLaws < replab.FiniteGroupLaws
 % Laws obeyed by signed permutations
 
     properties
@@ -7,7 +7,7 @@ classdef PermutationsLaws < replab.FiniteGroupLaws
 
     methods
 
-        function self = PermutationsLaws(T)
+        function self = SignedPermutationsLaws(T)
             self@replab.FiniteGroupLaws(T);
             self.P = replab.domain.signedIntAsDouble(1, T.domainSize);
         end

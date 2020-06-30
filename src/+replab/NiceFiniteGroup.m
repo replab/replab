@@ -273,11 +273,11 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Args:
         %   dimension: Dimension of the representation
-        %   signedPermutations (row cell array of signed permutations): Images of the generators as signed permutations of size ``dimension``
+        %   signedPermutations (cell(1,\*) of signed permutations): Images of the generators as signed permutations of size ``dimension``
         %
         % Returns:
         %   `+replab.Rep`: The constructed group representation
-            f = @(g) replab.signed.Permutations.toSparseMatrix(g);
+            f = @(g) replab.SignedPermutations.toSparseMatrix(g);
             images = cellfun(f, signedPermutations, 'uniform', 0);
             inverseImages = cellfun(@(i) i', images, 'uniform', 0);
             rho = self.repByImages('R', dimension, images, inverseImages);

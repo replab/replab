@@ -12,16 +12,14 @@ In particular, the decomposition of :math:`\{1,...,n\}` into orbits, the
 natural action and representation of the group are all defined.
 
 * `.PermutationGroup`: provides the infrastructure for all permutation groups, with associated `.PermutationGroupLaws`,
-* `.PermutationSubgroup`: a subgroup of the symmetric group,
 * `.Permutations`: describes the symmetric group on a given domain, with associated `.PermutationsLaws`,
 * `.S`: Shortcut for `.Permutations`.
 
 As a closely related variant, we describe signed permutations. Signed permutations act on the domain
 :math:`\{-n,...,-1, 1,...,n\}`.
 
-*  `.signed.PermutationGroup`: provides an abstract base class for all signed permutation groups,
-*  `.signed.PermutationSubgroup`: a signed permutation subgroup,
-*  `.signed.Permutations`: describes the signed permutation group, with associated `signed.PermutationsLaws`.
+*  `.SignedPermutationGroup`: provides a base class for all signed permutation groups,
+*  `.SignedPermutations`: describes the signed permutation group, with associated `signed.PermutationsLaws`.
 
 
 PermutationGroup
@@ -34,10 +32,6 @@ PermutationGroupLaws
 
 .. autoclass:: PermutationGroupLaws
 
-PermutationSubgroup
-+++++++++++++++++++
-
-.. autoclass:: PermutationSubgroup
 
 Permutations
 ++++++++++++
@@ -54,24 +48,17 @@ PermutationsLaws
 
 .. autoclass:: PermutationsLaws
 
-.. module:: +replab.+signed
+SignedPermutationGroup
+++++++++++++++++++++++
 
-signed.PermutationGroup
-+++++++++++++++++++++++
+.. autoclass:: SignedPermutationGroup
 
-.. autoclass:: PermutationGroup
-
-signed.PermutationSubgroup
-++++++++++++++++++++++++++
-
-.. autoclass:: PermutationSubgroup
-
-signed.Permutations
+SignedPermutations
 +++++++++++++++++++
 
 .. autoclass:: Permutations
 
-signed.PermutationsLaws
+SignedPermutationsLaws
 +++++++++++++++++++++++
 
 .. autoclass:: PermutationsLaws

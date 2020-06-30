@@ -59,7 +59,7 @@ g3 = [1 3 2 4 -5]; % additional symmetry
 % We build the symmetry group from those generators, which are signed permutations on five elements. For the permutation of parties only, the order (=size) of the group is 2. When adding the other symmetries, the order of the group should be 16.
 
 nElements = 5;
-G = replab.signed.Permutations(nElements).subgroup({g1 g2 g3});
+G = replab.SignedPermutations(nElements).subgroup({g1 g2 g3});
 G.order
 
 % If necessary, we can also expand the group elements (use `G.elements.at(2)` to get the second element for example).
