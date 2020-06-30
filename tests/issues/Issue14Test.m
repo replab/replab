@@ -10,7 +10,7 @@ function test_suite = Issue14Test()
         return;
     end
 
-    B4 = replab.signed.Permutations(4);
+    B4 = replab.SignedPermutations(4);
     group = B4.subgroup({[1 -3 2 4]});
     I = group.naturalRep.decomposition;
     test_suite = replab.IrreducibleLaws(I).addTestCases(test_suite);

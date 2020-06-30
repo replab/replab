@@ -2,7 +2,7 @@ classdef SignedPermutationVectorAction < replab.Action
 % Describes the action of signed permutations on vectors by permuting the coefficients and flipping their signs
     methods
         function self = SignedPermutationVectorAction(G)
-            assert(isa(G, 'replab.signed.PermutationGroup'));
+            assert(isa(G, 'replab.SignedPermutationGroup'));
             d = G.domainSize;
             self.G = G;
             self.P = replab.domain.intAsDoubleMatrix(d, 1, 1, G.domainSize);
