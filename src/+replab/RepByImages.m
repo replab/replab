@@ -38,7 +38,7 @@ classdef RepByImages < replab.Rep
             knownUnitary = true;
             isInexact = false;
             for i = 1:group.nGenerators
-                knownUnitary = knownUnitary && isequal(images{i}, inverseImages{i}');
+                knownUnitary = knownUnitary && isequal(images{i}, ctranspose(inverseImages{i}));
                 assert(isequal(size(images{i}), [dimension dimension]));
                 isInexact = isInexact || ~(isa(images{i}, 'sym') || isequal(images{i}, round(images{i})));
                 isInexact = isInexact || ~(isa(inverseImages{i}, 'sym') || isequal(inverseImages{i}, round(inverseImages{i})));
