@@ -110,6 +110,11 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             z(y) = x;
         end
 
+        function z = leftConjugate(self, x, y)
+            z = zeros(1, length(x));
+            z(x) = x(y);
+        end
+
 
         %% NiceFiniteGroup methods
 
