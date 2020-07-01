@@ -99,8 +99,9 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         end
 
         function E = computeElements(self)
-            atFun = @(ind) self.niceMonomorphismPreimage(self.niceGroup.chain.elementFromIndex(ind));
-            findFun = @(el) self.niceGroup.chain.indexFromElement(self.niceMonomorphismImage(el));
+            basis = replab.util.MixedRadix(self.niceGroup.chain.orbitSizes, true, true);
+            atFun = @(ind) self.niceMonomorphismPreimage(self.niceGroup.chain.elementFromIndices(basis.sub2ind(ind)));
+            findFun = @(el) basis.ind2sub(self.niceGroup.chain.indicesFromElement(self.niceMonomorphismImage(el)));
             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
         end
 

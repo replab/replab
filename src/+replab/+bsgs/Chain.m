@@ -359,35 +359,11 @@ classdef Chain < replab.Str
 
         %% Element indexing
 
-        function el = elementFromIndex(self, index)
-        % Return the element corresponding to an overall index
-        %
-        % Args:
-        %   index (vpi): Element index
-        %
-        % Returns:
-        %   permutation: Chain element
-            el = self.elementFromIndices(self.indicesFromIndex(index));
-        end
-
-        function index = indexFromElement(self, element)
-        % Returns the index corresponding to a group element
-        %
-        % Args:
-        %   element (row permutation vector): A permutation element of this chain
-        %
-        % Returns:
-        %   vpi: Index of the given group element
-            index = self.indexFromIndices(self.indicesFromElement(element));
-        end
-
         function g = elementFromIndices(self, indices)
         % Computes the group element from transversal indices
         %
-        % See ``self.toIndices``
-        %
         % Args:
-        %   indices (row integer vector): Transversal indices
+        %   indices (integer(1, \*)): Transversal indices
         %
         % Returns:
         %   permutation: Chain element
@@ -403,13 +379,13 @@ classdef Chain < replab.Str
         % Computes the transversal indices decomposition for a group element
         %
         % The indices are such that
-        % g = self.u(1, indices(1)) * ... * self.u(k, indices(k))
+        % ``g = self.u(1, indices(1)) * ... * self.u(k, indices(k))``
         %
         % Args:
-        %   g (row permutation vector): A permutation group element
+        %   g (permutation): A permutation group element
         %
         % Returns:
-        %   (row integer vector): Transversal indices
+        %   integer(1,\*): Transversal indices
             k = self.length;
             h = g;
             indices = zeros(1, k);
@@ -427,43 +403,6 @@ classdef Chain < replab.Str
                 % we use a left action
                 h = uinv(h); % compose(uinv, h)
             end
-        end
-
-        function indices = indicesFromIndex(self, index)
-        % Return the indices vector corresponding to an overall index
-        %
-        % Args:
-        %   index (vpi): Element index
-        %
-        % Returns:
-        %   row integer vector: Transversal indices
-            L = self.length;
-            indices = zeros(1, L);
-            f = self.orbitSizes;
-            ind = index - 1;
-            for i = L:-1:1
-                r = mod(ind, f(i));
-                ind = (ind - r)/f(i);
-                indices(i) = double(r) + 1;
-            end
-        end
-
-        function index = indexFromIndices(self, indices)
-        % Returns the overall index corresponding to the given indices vector
-        %
-        % Args:
-        %   indices (integer(1,\*)): Transversal indices
-        %
-        % Returns:
-        %   vpi: Overall index
-            index = vpi(0);
-            L = self.length;
-            f = self.orbitSizes;
-            for i = 1:L
-                index = index * f(i);
-                index = index + vpi(indices(i) - 1);
-            end
-            index = index + vpi(1);
         end
 
         %% Mutable methods
