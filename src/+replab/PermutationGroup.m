@@ -136,6 +136,59 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             grp = replab.PermutationGroup(self.domainSize, generators, order, self.parent);
         end
 
+        function nc = normalClosure(self, rhs)
+            chain = replab.bsgs.Chain(self.domainSize);
+            generators = {};
+            toCheck = rhs.generators;
+            while ~isempty(toCheck)
+                rhsg = toCheck{end};
+                toCheck = toCheck(1:end-1);
+                for i = 1:self.nGenerators
+                    gi = self.generator(i);
+                    cm = self.leftConjugate(gi, rhsg);
+                    if chain.stripAndAddStrongGenerator(cm)
+                        generators{1, end+1} = cm;
+                        toCheck{1, end+1} = cm;
+                        chain.randomizedSchreierSims([]);
+                    end
+                end
+            end
+            nc = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
+        end
+
+        function sub = derivedSubgroup(self)
+            nG = self.nGenerators;
+            n = self.domainSize;
+            chain = replab.bsgs.Chain(n);
+            generators = {};
+            for i = 1:nG
+                gi = self.generator(i);
+                for j = 1:nG
+                    gj = self.generator(j);
+                    cm = self.composeWithInverse(self.compose(gi, gj), self.compose(gj, gi));
+                    if chain.stripAndAddStrongGenerator(cm)
+                        generators{1, end+1} = cm;
+                        chain.randomizedSchreierSims([]);
+                    end
+                end
+            end
+            % compute the normal closure
+            generators1 = {};
+            for i = 1:nG
+                gi = self.generator(i);
+                for j = 1:length(generators)
+                    gj = generators{j};
+                    cm = self.leftConjugate(gi, gj);
+                    if chain.stripAndAddStrongGenerator(cm)
+                        generators1{1, end+1} = cm;
+                        chain.randomizedSchreierSims([]);
+                    end
+                end
+            end
+            sub = replab.PermutationGroup(self.domainSize, horzcat(generators, generators1), chain.order, self.parent, chain);
+        end
+
+
         %% Methods specific to permutation groups
 
         function o = orbits(self)
