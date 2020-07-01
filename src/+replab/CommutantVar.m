@@ -483,7 +483,7 @@ classdef CommutantVar < replab.Str
                         if isequal(matrixType, 'symmetric')
                             shouldBeZero = self.blocks{i} - self.blocks{i}.';
                         elseif isequal(matrixType, 'hermitian')
-                            shouldBeZero = self.blocks{i} - self.blocks{i}';
+                            shouldBeZero = self.blocks{i} - ctranspose(self.blocks{i});
                         end
                         indices = [0 getvariables(shouldBeZero)];
                         tmp = 0;
@@ -495,7 +495,7 @@ classdef CommutantVar < replab.Str
                             if isequal(matrixType, 'symmetric')
                                 self.blocks{i} = (self.blocks{i} + self.blocks{i}.')/2;
                             elseif isequal(matrixType, 'hermitian')
-                                self.blocks{i} = (self.blocks{i} + self.blocks{i}')/2;
+                                self.blocks{i} = (self.blocks{i} + ctranspose(self.blocks{i}))/2;
                             end
                         end
                         if isequal(matrixType, 'symmetric')
@@ -1354,7 +1354,7 @@ classdef CommutantVar < replab.Str
                                 if isequal(self.matrixType, 'symmetric')
                                     varargout{1} = (varargout{1} + varargout{1}.')/2;
                                 elseif isequal(self.matrixType, 'hermitian')
-                                    varargout{1} = (varargout{1} + varargout{1}')/2;
+                                    varargout{1} = (varargout{1} + ctranspose(varargout{1}))/2;
                                 end
                             end
 
