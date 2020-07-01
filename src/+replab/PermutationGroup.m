@@ -113,7 +113,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 
         %% NiceFiniteGroup methods
 
-        function res = sameParentAs(self, rhs)
+        function res = hasSameParentAs(self, rhs)
             res = isa(rhs, 'replab.PermutationGroup') && (self.parent.domainSize == rhs.parent.domainSize);
         end
 

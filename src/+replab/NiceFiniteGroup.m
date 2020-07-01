@@ -36,7 +36,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         %% Abstract
 
-        function res = sameParentAs(self, rhs)
+        function res = hasSameParentAs(self, rhs)
         % Returns whether this group has a parent compatible with another group
         %
         % This method is used to test for group equality
@@ -114,10 +114,10 @@ classdef NiceFiniteGroup < replab.FiniteGroup
     methods
 
         function res = eq(self, rhs)
-            res = self.sameParentAs(rhs) && self.subgroupOf(rhs) && rhs.subgroupOf(self);
+            res = self.hasSameParentAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
         end
 
-        function res = subgroupOf(self, rhs)
+        function res = isSubgroupOf(self, rhs)
         % Returns whether this group is a subgroup of another group
         %
         % Args:
