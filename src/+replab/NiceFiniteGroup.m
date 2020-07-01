@@ -214,6 +214,11 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             sub = self.niceMonomorphismGroupPreimage(self.niceGroup.derivedSubgroup);
         end
 
+        function res = isCyclic(self)
+            assert(~isa(self, 'replab.PermutationGroup'));
+            res = self.niceGroup.isCyclic;
+        end
+
         function grp = trivialSubgroup(self)
         % Returns the trivial subgroup of this group
         %

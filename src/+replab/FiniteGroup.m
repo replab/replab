@@ -131,6 +131,22 @@ classdef FiniteGroup < replab.CompactGroup
             R = self.randomBag_;
         end
 
+        function res = isCommutative(self)
+        % Returns whether this group is commutative
+            for i = 1:self.nGenerators
+                gi = self.generator(i);
+                for j = 1:i-1
+                    gj = self.generator(j);
+                    if ~self.eqv(self.compose(gi, gj), self.compose(gj, gi))
+                        res = false;
+                        return
+                    end
+                end
+            end
+            res = true;
+            return
+        end
+
         %% Str methods
 
         function names = hiddenFields(self)
