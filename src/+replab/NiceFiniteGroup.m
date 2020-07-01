@@ -230,13 +230,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   integer: The order of ``g``, i.e. the smallest ``o`` such that ``g^o == identity``
-            p = self.niceMonomorphismImage(g);
-            orbits = replab.Partition.permutationsOrbits(p);
-            orders = unique(orbits.blockSizes);
-            o = 1;
-            for i = 1:length(orders)
-                o = lcm(o, orders(i));
-            end
+            o = self.niceGroup.elementOrder(self.niceMonomorphismImage(g));
         end
 
         %% Methods enabled by the BSGS algorithms

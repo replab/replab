@@ -136,6 +136,36 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             grp = replab.PermutationGroup(self.domainSize, generators, order, self.parent);
         end
 
+        function o = elementOrder(self, p)
+            orbits = replab.Partition.permutationsOrbits(p);
+            orders = unique(orbits.blockSizes);
+            o = 1;
+            for i = 1:length(orders)
+                o = lcm(o, orders(i));
+            end
+        end
+
+        function res = isCyclic(self)
+            if self.nGenerators <= 1
+                res = true;
+            elseif ~self.isCommutative
+                res = false;
+            else
+                pds = unique(factor(self.order));
+                assert(all(pds <= 2^53-1)); % to be sure, but unlikely (otherwise can a BSGS be computed?)
+                pds = double(pds);
+                for p = pds
+                    newGens = cellfun(@(g) self.composeN(g, p), self.generators, 'uniform', 0);
+                    newGens = newGens(~cellfun(@(g) self.isIdentity(g), newGens));
+                    if self.subgroup(newGens).order*p ~= self.order
+                        res = false;
+                        return
+                    end
+                end
+                res = true;
+            end
+        end
+
         function nc = normalClosure(self, rhs)
             chain = replab.bsgs.Chain(self.domainSize);
             generators = {};
