@@ -209,19 +209,21 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 end
             end
             % compute the normal closure
-            generators1 = {};
-            for i = 1:nG
-                gi = self.generator(i);
-                for j = 1:length(generators)
-                    gj = generators{j};
-                    cm = self.leftConjugate(gi, gj);
+            toCheck = generators;
+            while ~isempty(toCheck)
+                h = toCheck{end};
+                toCheck = toCheck(1:end-1);
+                for i = 1:nG
+                    gi = self.generator(i);
+                    cm = self.leftConjugate(gi, h);
                     if chain.stripAndAddStrongGenerator(cm)
-                        generators1{1, end+1} = cm;
+                        generators{1, end+1} = cm;
+                        toCheck{1, end+1} = cm;
                         chain.randomizedSchreierSims([]);
                     end
                 end
             end
-            sub = replab.PermutationGroup(self.domainSize, horzcat(generators, generators1), chain.order, self.parent, chain);
+            sub = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
         end
 
 
