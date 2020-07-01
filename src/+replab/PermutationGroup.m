@@ -112,6 +112,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 
         function z = leftConjugate(self, x, y)
             z = zeros(1, length(x));
+            % x y xInv
             z(x) = x(y);
         end
 
@@ -174,13 +175,13 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         function nc = normalClosure(self, rhs)
             chain = replab.bsgs.Chain(self.domainSize);
             generators = {};
-            toCheck = self.generators;
+            toCheck = rhs.generators;
             while ~isempty(toCheck)
-                test = toCheck{end};
+                rhsg = toCheck{end};
                 toCheck = toCheck(1:end-1);
-                for i = 1:rhs.nGenerators
-                    rhsi = rhs.generator(i);
-                    cm = self.leftConjugate(test, rhsi);
+                for i = 1:self.nGenerators
+                    gi = self.generator(i);
+                    cm = self.leftConjugate(gi, rhsg);
                     if chain.stripAndAddStrongGenerator(cm)
                         generators{1, end+1} = cm;
                         toCheck{1, end+1} = cm;
