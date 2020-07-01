@@ -105,6 +105,19 @@ classdef Chain < replab.Str
             b = self.B;
         end
 
+        function s = strongGeneratorsForLevel(self, l)
+        % Returns the strong generators that are present in H^l but not H^l+1
+            s = self.S(:,self.Sind(l):self.Sind(l+1)-1);
+        end
+
+        function replaceStrongGeneratorsForLevel(self, l, snew)
+            sold = self.strongGeneratorsForLevel(l);
+            Sind = self.Sind;
+            self.S = [self.S(:,1:self.Sind(l)-1) snew self.S(:,self.Sind(l+1):end)];
+            Sind(l+1:end) = Sind(l+1:end) + size(snew, 2) - size(sold, 2);
+            self.Sind = Sind;
+        end
+
         function c = baseChange(self, newBase)
             c = replab.bsgs.Chain.make(self.n, self.S, newBase, self.order);
         end
@@ -204,6 +217,11 @@ classdef Chain < replab.Str
         end
 
         %% Immutable functions
+
+        function s = orbitSize(self, l)
+        % Returns the size of the l-orbit orbit
+            s = length(self.Delta{l});
+        end
 
         function s = orbitSizes(self)
         % Returns the size of orbits for each level
