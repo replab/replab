@@ -29,6 +29,13 @@ classdef GroupLaws < replab.MonoidLaws
             self.T.assertEqv(xyI, self.T.composeWithInverse(x, y));
         end
 
+        function law_leftConjugate_TT(self, x, y);
+        % Checks that the left conjugate is correctly implemented
+            xyxI1 = self.T.compose(x, self.T.composeWithInverse(y, x));
+            xyxI2 = self.T.leftConjugate(x, y);
+            self.T.assertEqv(xyxI1, xyxI2);
+        end
+
         function law_inverse_compatible_with_compose_TT(self, x, y)
         % Checks that the inverse of a composition is the composition of swapped inverses
             xy = self.T.compose(x, y);
