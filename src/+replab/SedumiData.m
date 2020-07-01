@@ -62,7 +62,7 @@ classdef SedumiData
             tol = 1e-12;
             rhoInv = cell(1, length(G));
             for i = 1:length(rho)
-                rhoInv{i} = rho{i}';
+                rhoInv{i} = ctranspose(rho{i});
                 assert(norm(rho{i}*rhoInv{i} - eye(self.s)) < tol);
             end
             self.rep = group.repByImages('R', self.s, rho, rhoInv);
