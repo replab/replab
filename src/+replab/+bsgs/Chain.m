@@ -177,30 +177,30 @@ classdef Chain < replab.Str
             n = self.n;
             betai = self.B(i);
             % check strong generators
-            for j = Sind(i):Sind(i+1)-1
+            for j = self.Sind(i):self.Sind(i+1)-1
                 % strong generators particular to this step move beta_i
-                assert(S(betai, j) ~= betai);
+                assert(self.S(betai, j) ~= betai);
             end
-            for j = Sind(i+1):Sind(end)-1
+            for j = self.Sind(i+1):self.Sind(end)-1
                 % strong generators of stabilizer subgroups are stabilized
-                assert(S(betai, j) == betai);
+                assert(self.S(betai, j) == betai);
             end
-            iD = self.iDelta(:,i);
+            iD = self.iDelta(:,i)';
             D = self.Delta{i};
-            assert(isequal(sort(iD(iD ~= 0)), sort(D)));
+            assert(isequal(sort(find(iD ~= 0)), sort(D)));
             assert(isequal(iD(D), 1:length(D)));
             for j = 1:length(D)
                 b = D(j);
                 Ui = self.U{i};
-                ub1 = Ui(:,j);
+                ub1 = Ui(:,j)';
                 ub2 = self.u(i, b);
                 assert(isequal(ub1, ub2), 'inconsistent transversal retrieval');
-                assert(ub1(beta_i) == b, 'inconsistent transversal element');
+                assert(ub1(betai) == b, 'inconsistent transversal element');
                 Uinvi = self.Uinv{i};
-                ubinv1 = Uinvi(:,j);
+                ubinv1 = Uinvi(:,j)';
                 ubinv2 = self.uinv(i, b);
                 assert(isequal(ubinv1, ubinv2), 'inconsistent transversal retrieval');
-                assert(ubinv1(b) == beta_i, 'inconsistent transversal element');
+                assert(ubinv1(b) == betai, 'inconsistent transversal element');
                 for l = self.Sind(i):self.Sind(end)-1
                     imgD = self.S(D, l);
                     assert(all(ismember(imgD, D)) > 0, 'All images under strong generators should be present in the orbit');
