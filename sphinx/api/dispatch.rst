@@ -9,8 +9,3 @@ dispatch
 ++++++++
 
 .. autofunction:: dispatch
-
-dispatchDefaults
-++++++++++++++++
-
-.. autofunction:: dispatchDefaults

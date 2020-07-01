@@ -3,11 +3,6 @@ Representations (irreducible decomposition support code)
 
 .. module:: +replab.+irreducible
 
-irreducible.buildIsotypic
-+++++++++++++++++++++++++
-
-.. autofunction:: buildIsotypic
-
 irreducible.canonicalDivisionAlgebra
 ++++++++++++++++++++++++++++++++++++
 
