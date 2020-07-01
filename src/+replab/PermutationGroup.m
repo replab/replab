@@ -139,13 +139,13 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         function nc = normalClosure(self, rhs)
             chain = replab.bsgs.Chain(self.domainSize);
             generators = {};
-            toCheck = rhs.generators;
+            toCheck = self.generators;
             while ~isempty(toCheck)
-                rhsg = toCheck{end};
+                test = toCheck{end};
                 toCheck = toCheck(1:end-1);
-                for i = 1:self.nGenerators
-                    gi = self.generator(i);
-                    cm = self.leftConjugate(gi, rhsg);
+                for i = 1:rhs.nGenerators
+                    rhsi = rhs.generator(i);
+                    cm = self.leftConjugate(test, rhsi);
                     if chain.stripAndAddStrongGenerator(cm)
                         generators{1, end+1} = cm;
                         toCheck{1, end+1} = cm;
