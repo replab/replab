@@ -1,9 +1,9 @@
 classdef Morphism < replab.Str
-% Describes a morphism between nice finite groups
+% Describes a morphism between groups
 
     properties (SetAccess = protected)
-        source % (`.FiniteGroup`): Source group
-        target % (`.FiniteGroup`): Target group
+        source % (`.Group`): Source group
+        target % (`.Group`): Target group
     end
 
     methods
