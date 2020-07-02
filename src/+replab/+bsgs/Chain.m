@@ -392,12 +392,13 @@ classdef Chain < replab.Str
                 o = self.orbitSize(1);
                 i = 2;
                 while i <= self.length && log2(o) + log2(self.orbitSize(i)) < 53
-                    o = o * length(self.orbitSize(i));
+                    o = o * self.orbitSize(i);
                     i = i + 1;
                 end
                 o = vpi(o);
                 while i <= self.length
                     o = o * vpi(self.orbitSize(i));
+                    i = i + 1;
                 end
             end
         end
