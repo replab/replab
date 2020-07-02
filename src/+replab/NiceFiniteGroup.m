@@ -216,12 +216,28 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         function rt = leftTransversals(self, subgroup)
         % Computes a list of representatives for the set of right cosets of subgroup in this group
+        %
+        % The left cosets are, for ``i = 1,...,nCosets``, given by ``rt{i} * subgroup``.
+        %
+        % Args:
+        %   subgroup (`+replab.NiceFiniteGroup`): Subgroup of this group
+        %
+        % Returns:
+        %   cell(1, \*) of element: Transversal elements
             niceRt = self.niceGroup.leftTransversals(self.niceMonomorphismGroupImage(subgroup));
             rt = cellfun(@(p) self.niceMonomorphismPreimage(p), niceRt, 'uniform', 0);
         end
 
         function rt = rightTransversals(self, subgroup)
         % Computes a list of representatives for the set of right cosets of subgroup in this group
+        %
+        % The right cosets are, for ``i = 1,...,nCosets``, given by ``subgroup * rt{i}``.
+        %
+        % Args:
+        %   subgroup (`+replab.NiceFiniteGroup`): Subgroup of this group
+        %
+        % Returns:
+        %   cell(1, \*) of element: Transversal elements
             niceRt = self.niceGroup.rightTransversals(self.niceMonomorphismGroupImage(subgroup));
             rt = cellfun(@(p) self.niceMonomorphismPreimage(p), niceRt, 'uniform', 0);
         end

@@ -184,25 +184,6 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             end
         end
 
-% $$$ equivalent to the non recursive code below
-% $$$         function rt = printRightTransversals(self, subgroup, g, subchain, l)
-% $$$             if nargin == 2
-% $$$                 g = self.identity;
-% $$$                 subchain = subgroup.chain;
-% $$$                 l = 1;
-% $$$             end
-% $$$             if l == self.chain.length + 1
-% $$$                 g
-% $$$             else
-% $$$                 for b = self.chain.Delta{l}
-% $$$                     bg = g(b);
-% $$$                     orbit = subchain.orbitUnderG(1, bg);
-% $$$                     if bg == min(orbit)
-% $$$                         self.printRightTransversals(subgroup, g(self.chain.u(l, b)), subchain.stabilizer(bg), l + 1);
-% $$$                     end
-% $$$                 end
-% $$$             end
-% $$$         end
 
         function T = leftTransversals(self, subgroup)
             T = cellfun(@(g) self.inverse(g), self.rightTransversals(subgroup), 'uniform', 0);
@@ -210,6 +191,25 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 
         function T = rightTransversals(self, subgroup)
             T = {};
+            % equivalent to the non recursive code
+            %          function rt = printRightTransversals(self, subgroup, g, subchain, l)
+            %              if nargin == 2
+            %                  g = self.identity;
+            %                  subchain = subgroup.chain;
+            %                  l = 1;
+            %              end
+            %              if l == self.chain.length + 1
+            %                  g
+            %              else
+            %                  for b = self.chain.Delta{l}
+            %                      bg = g(b);
+            %                      orbit = subchain.orbitUnderG(1, bg);
+            %                      if bg == min(orbit)
+            %                          self.printRightTransversals(subgroup, g(self.chain.u(l, b)), subchain.stabilizer(bg), l + 1);
+            %                      end
+            %                  end
+            %              end
+            %          end
             n = self.domainSize;
             L = self.chain.length;
             stackG = zeros(n, L+1); % current group element
