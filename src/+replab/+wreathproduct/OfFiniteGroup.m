@@ -2,7 +2,7 @@ classdef OfFiniteGroup < replab.semidirectproduct.OfFiniteGroups & replab.wreath
 % Wreath product of a permutation group acting on a finite group
 
     methods
-        
+
         function self = OfFiniteGroup(H, A)
             assert(isa(H, 'replab.PermutationGroup'));
             n = H.domainSize;
@@ -17,7 +17,7 @@ classdef OfFiniteGroup < replab.semidirectproduct.OfFiniteGroups & replab.wreath
         function t = requiredType(self)
             t = 'replab.FiniteGroup';
         end
-        
+
     end
-    
+
 end
