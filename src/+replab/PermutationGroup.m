@@ -248,6 +248,85 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             end
         end
 
+        function c = centre(self)
+            c = self.centralizerGroup(self);
+        end
+
+        function res = union(self, other)
+            assert(self.hasSameParentAs(other));
+            res = self;
+            for i = 1:other.nGenerators
+                res = res.closure(other.generator(i));
+            end
+        end
+
+        function res = intersection(self, other)
+            assert(self.hasSameParentAs(other));
+            if self.order > other.order
+                res = other.intersection(self);
+            else
+                prop = @(g) other.contains(g);
+                c = replab.bsgs.subgroupSearch(self.chain, prop);
+                res = replab.PermutationGroup.fromChain(c);
+            end
+        end
+
+        function c = centralizerElement(self, other)
+            c = self.centralizerGroup(self.subgroup({other}));
+        end
+
+        function c = centralizerGroup(self, other)
+            c = replab.bsgs.Centralizer(self, other).subgroup;
+        end
+
+        function s = setwiseStabilizer(self, set)
+        % Returns the subgroup that stabilizes the given set as a set
+        %
+        % i.e. for this group ``G``, it returns ``H = {g \in G : g(set) = set}``
+        %
+        % Example:
+        %   >>> G = replab.S(4).subgroup({[3 1 2 4] [1 4 2 3]});
+        %   >>> H = G.setwiseStabilizer([1 2]);
+        %   >>> H == replab.S(4).subgroup({[2 1 4 3]})
+        %       1
+        % Args:
+        %   set (integer(1,\*)): The set to stabilize
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The subgroup that stabilizes the set
+            mask = false(1, self.domainSize);
+            mask(set) = true;
+            c = self.chain.mutableCopy;
+            c.baseChange(set);
+            tests = cell(1, length(set));
+            for i = 1:length(tests)
+                tests{i} = @(g) mask(g(set(i)));
+            end
+            prop = @(g) all(mask(g(set)));
+            subchain = replab.bsgs.subgroupSearch(c, prop, set, tests);
+            s = replab.PermutationGroup.fromChain(subchain, self.parent);
+        end
+
+        function res = closureGroup(self, G)
+            c = self.chain.mutableCopy;
+            for i = 1:G.nGenerators
+                if c.stripAndAddStrongGenerator(G.generator(i))
+                    c.randomizedSchreierSims([]);
+                end
+            end
+            c.makeImmutable;
+            res = replab.PermutationGroup.fromChain(c, self.parent);
+        end
+
+        function res = closureElement(self, g)
+            c = self.chain.mutableCopy;
+            if c.stripAndAddStrongGenerator(g)
+                c.randomizedSchreierSims([]);
+            end
+            c.makeImmutable;
+            res = replab.PermutationGroup.fromChain(c, self.parent);
+        end
+
         function nc = normalClosure(self, rhs)
             chain = replab.bsgs.Chain(self.domainSize);
             generators = {};

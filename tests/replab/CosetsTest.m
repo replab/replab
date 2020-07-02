@@ -8,12 +8,20 @@ function test_suite = CosetsTest()
 end
 
 function test_right_transversals
-    n = 8;
+    n = 5;
     Sn = replab.S(n);
     G = Sn.derivedSubgroup; % take the alternating group
     U = G;
     while U.order == G.order
-        U = G.subgroup({G.sample G.sample});
+        s1 = G.sample;
+        while G.isIdentity(s1)
+            s1 = G.sample;
+        end
+        s2 = G.sample;
+        while G.isIdentity(s2)
+            s2 = G.sample;
+        end
+        U = G.subgroup({s1 s2});
     end
     TT = G.rightTransversals(U);
     UU = U.elements.toCell;
@@ -28,12 +36,20 @@ function test_right_transversals
     assert(size(unique(els', 'rows'), 1) == G.order);
 end
 function test_left_transversals
-    n = 8;
+    n = 5;
     Sn = replab.S(n);
     G = Sn.derivedSubgroup; % take the alternating group
     U = G;
     while U.order == G.order
-        U = G.subgroup({G.sample G.sample});
+        s1 = G.sample;
+        while G.isIdentity(s1)
+            s1 = G.sample;
+        end
+        s2 = G.sample;
+        while G.isIdentity(s2)
+            s2 = G.sample;
+        end
+        U = G.subgroup({s1 s2});
     end
     TT = G.leftTransversals(U);
     UU = U.elements.toCell;

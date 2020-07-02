@@ -106,12 +106,17 @@ classdef Chain < replab.Str
         end
 
         function s = strongGeneratorsForLevel(self, l)
+        % Returns the strong generators for H^l
+            s = self.S(:,self.Sind(l):end);
+        end
+
+        function s = newStrongGeneratorsAtLevel(self, l)
         % Returns the strong generators that are present in H^l but not H^l+1
             s = self.S(:,self.Sind(l):self.Sind(l+1)-1);
         end
 
-        function replaceStrongGeneratorsForLevel(self, l, snew)
-            sold = self.strongGeneratorsForLevel(l);
+        function replaceNewStrongGeneratorsAtLevel(self, l, snew)
+            sold = self.newStrongGeneratorsAtLevel(l);
             Sind = self.Sind;
             self.S = [self.S(:,1:self.Sind(l)-1) snew self.S(:,self.Sind(l+1):end)];
             Sind(l+1:end) = Sind(l+1:end) + size(snew, 2) - size(sold, 2);
@@ -126,11 +131,16 @@ classdef Chain < replab.Str
             newBl = self.B(m);
             newBm = self.B(l);
             target = self.orbitSize(l)*self.orbitSize(m)/length(self.orbitUnderG(l, newBl));
-            oldSl = self.strongGeneratorsForLevel(l);
-            oldSm = self.strongGeneratorsForLevel(m);
-            stab = oldSl(newBl, :) == newBl; % the strong generators that stabilize the new beta_l
-            newSl = [oldSm oldSl(:, ~stab)];
-            newSm = oldSl(:, stab);
+            oldSl = self.newStrongGeneratorsAtLevel(l);
+            oldSm = self.newStrongGeneratorsAtLevel(m);
+            if ~isempty(oldSl)
+                stab = oldSl(newBl, :) == newBl; % the strong generators that stabilize the new beta_l
+                newSl = [oldSm oldSl(:, ~stab)];
+                newSm = oldSl(:, stab);
+            else
+                newSl = oldSm;
+                newSm = zeros(n, 0);
+            end
             oldUl = self.U{l};
             oldUm = self.U{m};
             self.U{l} = self.U{m};
@@ -144,8 +154,8 @@ classdef Chain < replab.Str
             self.Delta{m} = newBm;
             self.B(l) = newBl;
             self.B(m) = newBm;
-            self.replaceStrongGeneratorsForLevel(l, newSl);
-            self.replaceStrongGeneratorsForLevel(m, newSm);
+            self.replaceNewStrongGeneratorsAtLevel(l, newSl);
+            self.replaceNewStrongGeneratorsAtLevel(m, newSm);
             self.completeOrbit(l);
             self.completeOrbit(m);
             %self.check;
@@ -196,7 +206,7 @@ classdef Chain < replab.Str
             assert(self.isMutable);
             l = 1;
             B = self.B;
-            while g(B(l)) == l
+            while g(B(l)) == B(l)
                 l = l + 1;
             end
             n = self.n;
@@ -207,7 +217,8 @@ classdef Chain < replab.Str
                 S(:,i) = g(S(gInv,i));
             end
             self.S = S;
-            iDelta = self.iDelta*0;
+            iDelta = self.iDelta;
+            iDelta(:,l:end) = 0;
             for i = l:self.length
                 U = self.U{i};
                 Uinv = self.Uinv{i};
@@ -228,9 +239,11 @@ classdef Chain < replab.Str
         function baseChange(self, newBase)
             assert(self.isMutable);
             for i = 1:length(newBase)
+                %self.check;
                 newBeta = newBase(i);
                 if i > self.length
                     self.insertEndBasePoint(newBeta);
+                    %self.check;
                 elseif self.B(i) ~= newBeta
                     j = i;
                     while j <= self.length && self.iDelta(newBeta, j) == 0
@@ -238,17 +251,21 @@ classdef Chain < replab.Str
                     end
                     if j == self.length + 1
                         self.insertEndBasePoint(newBeta);
+                        %self.check;
                     end
                     g = self.u(j, newBeta);
                     if ~isequal(g, 1:self.n)
                         self.conjugate(g);
+                        %self.check;
                     end
                     assert(self.B(j) == newBeta);
                     for k = j-1:-1:i
                         self.baseSwap(k);
+                        %self.check;
                     end
                 end
             end
+            %self.check;
         end
 
         function show(self, i)
