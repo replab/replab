@@ -69,7 +69,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 parent = [];
             end
             if isempty(parent)
-                self.parent = replab.S(domainSize)
+                self.parent = replab.S(domainSize);
             elseif isequal(parent, 'self')
                 self.parent = self;
             else

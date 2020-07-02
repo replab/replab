@@ -26,20 +26,11 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
                 parent = [];
             end
             if isempty(parent)
-                self.parent = replab.S(domainSize)
+                self.parent = replab.SignedPermutations(domainSize);
             elseif isequal(parent, 'self')
                 self.parent = self;
             else
                 self.parent = parent;
-            end
-            if nargin > 3
-                if isempty(parent)
-                    self.parent = self;
-                else
-                    self.parent = parent;
-                end
-            else
-                self.parent = replab.SignedPermutations(domainSize);
             end
         end
 
