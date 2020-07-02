@@ -330,6 +330,28 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             b = self.niceGroup.chain.contains(self.niceMonomorphismImage(g));
         end
 
+        %% Morphism construction
+
+        function m = morphismByImages(self, target, generatorImages)
+        % Constructs a morphism to a group using images of generators
+        %
+        % Example:
+        %   >>> S4 = replab.S(4);
+        %   >>> m = S4.morphismByImages(replab.S(3), {[1 3 2] [3 2 1]});
+        %   >>> replab.MorphismLaws(m).check
+        %       Checking composition...
+        %       Checking identity...
+        %       Checking inverse...
+        %
+        % Args:
+        %   target (`.Group`): Target of the morphism, the morphism image is a subgroup of this
+        %   generatorImages (cell(1, \*) of target elements): Images of this group generators
+        %
+        % Returns:
+        %   `.Morphism`: The constructed morphism
+            m = replab.Morphism.byImages(self, target, generatorImages);
+        end
+
         %% Representation construction
 
         function rho = repByImages(self, field, dimension, images, inverseImages)
