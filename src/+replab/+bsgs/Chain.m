@@ -118,8 +118,138 @@ classdef Chain < replab.Str
             self.Sind = Sind;
         end
 
-        function c = baseChange(self, newBase)
-            c = replab.bsgs.Chain.make(self.n, self.S, newBase, self.order);
+        function baseSwap(self, l)
+        % Swaps the base points beta_l and beta_m, m = l + 1
+            assert(self.isMutable);
+            n = self.n;
+            m = l + 1;
+            newBl = self.B(m);
+            newBm = self.B(l);
+            target = self.orbitSize(l)*self.orbitSize(m)/length(self.orbitUnderG(l, newBl));
+            oldSl = self.strongGeneratorsForLevel(l);
+            oldSm = self.strongGeneratorsForLevel(m);
+            stab = oldSl(newBl, :) == newBl; % the strong generators that stabilize the new beta_l
+            newSl = [oldSm oldSl(:, ~stab)];
+            newSm = oldSl(:, stab);
+            oldUl = self.U{l};
+            oldUm = self.U{m};
+            self.U{l} = self.U{m};
+            self.Uinv{l} = self.Uinv{m};
+            self.U{m} = (1:n)';
+            self.Uinv{m} = (1:n)';
+            self.iDelta(:,l) = self.iDelta(:,m);
+            self.iDelta(:,m) = 0;
+            self.iDelta(newBm, m) = 1;
+            self.Delta{l} = self.Delta{m};
+            self.Delta{m} = newBm;
+            self.B(l) = newBl;
+            self.B(m) = newBm;
+            self.replaceStrongGeneratorsForLevel(l, newSl);
+            self.replaceStrongGeneratorsForLevel(m, newSm);
+            self.completeOrbit(l);
+            self.completeOrbit(m);
+            %self.check;
+            while self.orbitSize(m) < target
+                [self.orbitSize(l) * self.orbitSize(m) target]
+                ul = oldUl(:,randi(size(oldUl, 2)));
+                um = oldUm(:,randi(size(oldUm, 2)));
+                g = ul(um);
+                for i = l+2:self.length
+                    gi = self.randomTransversal(i);
+                    g = g(gi); % compose(g, gi)
+                end
+                a = self.uinv(l, g(newBl));
+                if self.iDelta(a(g(newBm)), m) == 0
+                    h = a(g); % a * g
+                    self.addStrongGenerator(m, h);
+                    self.completeOrbit(m);
+                end
+                %self.check;
+            end
+            %[length(self.Delta{l}) * length(self.Delta{m}) prodSizes]
+        end
+
+        function orbit = orbitUnderG(self, l, b)
+        % Returns the orbit of b under G^l
+            orbit = zeros(1, self.n);
+            orbit(b) = 1;
+            toCheck = b;
+            range = self.Sind(l):self.Sind(end)-1;
+            S = self.S;
+            while ~isempty(toCheck)
+                h = toCheck(end);
+                toCheck = toCheck(1:end-1);
+                for i = range
+                    o = S(h,i);
+                    if orbit(o) == 0
+                        orbit(o) = 1;
+                        toCheck(end+1) = o;
+                    end
+                end
+            end
+            orbit = find(orbit);
+        end
+
+        function conjugate(self, g)
+        % Conjugates the mutable chain by the element g
+        %
+        % Changes base points beta_l -> g(beta_l)
+            assert(self.isMutable);
+            l = 1;
+            B = self.B;
+            while g(B(l)) == l
+                l = l + 1;
+            end
+            n = self.n;
+            gInv = zeros(1, n);
+            gInv(g) = 1:n;
+            S = self.S;
+            for i = self.Sind(l):self.Sind(end)-1
+                S(:,i) = g(S(gInv,i));
+            end
+            self.S = S;
+            iDelta = self.iDelta*0;
+            for i = l:self.length
+                U = self.U{i};
+                Uinv = self.Uinv{i};
+                Delta = g(self.Delta{i});
+                for j = 1:size(U, 2)
+                    U(:,j) = g(U(gInv,j));
+                    Uinv(:,j) = g(Uinv(gInv,j));
+                end
+                iDelta(Delta,i) = 1:length(Delta);
+                self.U{i} = U;
+                self.Uinv{i} = Uinv;
+                self.Delta{i} = Delta;
+            end
+            self.iDelta = iDelta;
+            self.B = g(B);
+        end
+
+        function baseChange(self, newBase)
+            assert(self.isMutable);
+            for i = 1:length(newBase)
+                newBeta = newBase(i);
+                if i > self.length
+                    self.insertEndBasePoint(newBeta);
+                elseif self.B(i) ~= newBeta
+                    j = i;
+                    while j <= self.length && self.iDelta(newBeta, j) == 0
+                        j = j + 1;
+                    end
+                    if j == self.length + 1
+                        self.insertEndBasePoint(newBeta);
+                    end
+                    g = self.u(j, newBeta);
+                    if ~isequal(g, 1:self.n)
+                        self.conjugate(g);
+                    end
+                    assert(self.B(j) == newBeta);
+                    for k = j-1:-1:i
+                        self.baseSwap(k);
+                    end
+                end
+            end
         end
 
         function show(self, i)
@@ -153,7 +283,12 @@ classdef Chain < replab.Str
         end
 
         function c = stabilizer(self, b)
-            if self.B(1) == b
+            if self.length == 0
+                c = self.mutableCopy;
+                if ~self.isMutable
+                    c.makeImmutable;
+                end
+            elseif self.B(1) == b
                 newB = self.B(2:end);
                 newS = self.S(:, self.Sind(2):end);
                 newSind = self.Sind(2:end) - self.Sind(2) + 1;
@@ -162,13 +297,16 @@ classdef Chain < replab.Str
                 newU = self.U(2:end);
                 newUinv = self.Uinv(2:end);
                 c = replab.bsgs.Chain(self.n, newB, newS, newSind, newDelta, newiDelta, newU, newUinv);
-            else
-                if ismember(b, self.B)
-                    newBase = [b setdiff(self.B, b)];
-                else
-                    newBase = [b self.B];
+                if ~self.isMutable
+                    c.makeImmutable;
                 end
-                c = self.baseChange(newBase).stabilizer(b);
+            else
+                c = self.mutableCopy;
+                c.baseChange(b);
+                if ~self.isMutable
+                    c.makeImmutable;
+                end
+                c = c.stabilizer(b);
             end
         end
 
@@ -280,6 +418,11 @@ classdef Chain < replab.Str
         function nS = nStrongGenerators(self)
         % Returns the number of strong generators in this BSGS chain
             nS = self.Sind(end) - 1;
+        end
+
+        function s = strongGenerators(self)
+        % Returns all the strong generators in a row cell array
+            s = arrayfun(@(i) self.strongGenerator(i), 1:self.nStrongGenerators, 'uniform', 0);
         end
 
         function p = strongGenerator(self, i)
@@ -522,6 +665,15 @@ classdef Chain < replab.Str
         %   newS (permutation): New strong generator
             self.S = [self.S(:, 1:(self.Sind(i+1)-1)) newS(:) self.S(:, self.Sind(i+1):end)];
             self.Sind((i+1):end) = self.Sind((i+1):end) + 1;
+        end
+
+        function addStrongGeneratorAndRecomputeOrbits(self, i, newS)
+        % Adds a strong generator at a particular place in the BSGS chain and recomputes orbits
+        %
+        % Args:
+        %   i (integer): Smallest i such that the strong generator ``newS`` is part of S^(i)
+        %   newS (permutation): New strong generator
+            self.addStrongGenerator(i, newS);
             for j = 1:i
                 self.completeOrbit(j);
             end
@@ -556,13 +708,18 @@ classdef Chain < replab.Str
             end
             if newSG
                 % if we have a new strong generator, add it to the chain
-                self.addStrongGenerator(j, h);
+                self.addStrongGeneratorAndRecomputeOrbits(j, h);
             end
         end
 
         function makeImmutable(self)
             assert(self.isMutable);
             self.isMutable = false;
+        end
+
+        function c = mutableCopy(self)
+        % Creates a mutable copy of this chain
+            c = replab.bsgs.Chain(self.n, self.B, self.S, self.Sind, self.Delta, self.iDelta, self.U, self.Uinv);
         end
 
         function randomizedSchreierSims(self, order)
