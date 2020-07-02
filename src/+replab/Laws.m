@@ -113,6 +113,7 @@ classdef Laws < replab.Str
         % Returns:
         %   logical: True if all tests successful
             res = true;
+            [testNames testFuns] = self.getTestCases;
             for i = 1:length(testNames)
                 f = testFuns{i};
                 try
