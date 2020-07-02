@@ -260,6 +260,17 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             end
         end
 
+        function res = intersection(self, other)
+            assert(self.hasSameParentAs(other));
+            if self.order > other.order
+                res = other.intersection(self);
+            else
+                prop = @(g) other.contains(g);
+                c = replab.bsgs.subgroupSearch(self.chain, prop);
+                res = replab.PermutationGroup.fromChain(c);
+            end
+        end
+
         function c = centralizerElement(self, other)
         % Returns the centralizer of a group in this group
         %
