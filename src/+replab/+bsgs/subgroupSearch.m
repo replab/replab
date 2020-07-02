@@ -21,6 +21,15 @@ function res = subgroupSearch(group, prop, base, tests, init_subgroup)
 %                          generating set of this chain is guaranteed to be a strong generating set relative to the
 %                          base ``base``.
 %
+% Example:
+%   >>> n = 12;
+%   >>> Sn = replab.S(n);
+%   >>> isEven = @(g) replab.bsgs.permsign(g) == 1;
+%   >>> H = replab.PermutationGroup.fromChain(replab.bsgs.subgroupSearch(Sn.chain, isEven));
+%   >>> Sn.order/H.order
+%        2
+%
+%
 % Notes:
 %   This function is extremely lengthy and complicated and will require
 %   some careful attention. The implementation is described in
