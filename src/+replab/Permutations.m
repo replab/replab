@@ -22,7 +22,7 @@ classdef Permutations < replab.PermutationGroup
             else
                 generators = {[2:domainSize 1] [2 1 3:domainSize]};
             end
-            self = self@replab.PermutationGroup(domainSize, generators, o, []);
+            self = self@replab.PermutationGroup(domainSize, generators, o, 'self');
         end
 
         %% Str methods

@@ -46,7 +46,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %   generators (cell(1,\*) of permutation): Group generators
         %   order (vpi, optional): Order of the group
         %   parent (`+replab.PermutationGroup`, optional): Parent of this group if known,
-        %                                                 or ``[]`` if this group is its own parent
+        %                                                  or ``'self'`` if this group is its own parent
         %   chain (`+replab.+bsgs.Chain`): BSGS chain describing the group
             self.domainSize = domainSize;
             self.identity = 1:domainSize;
@@ -54,14 +54,15 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             if nargin > 2 && ~isempty(order)
                 self.order_ = order;
             end
-            if nargin > 3
-                if isempty(parent)
-                    self.parent = self;
-                else
-                    self.parent = parent;
-                end
+            if nargin < 4
+                parent = [];
+            end
+            if isempty(parent)
+                self.parent = replab.S(domainSize)
+            elseif isequal(parent, 'self')
+                self.parent = self;
             else
-                self.parent = replab.S(domainSize);
+                self.parent = parent;
             end
             if nargin > 4 && ~isempty(chain)
                 self.chain_ = chain;

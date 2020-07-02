@@ -14,13 +14,23 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
         %   domainSize (integer): Size of the domain
         %   generators (cell(1,\*) of permutation): Group generators
         %   order (vpi, optional): Order of the group
-        %   parent (`replab.SignedPermutationGroup`, optional): Parent of this group if known,
-        %                                                       or ``[]`` if this group is its own parent
+        %   parent (`+replab.SignedPermutationGroup`, optional): Parent of this group if known,
+        %                                                        or ``'self'`` if this group is its own parent
             self.domainSize = domainSize;
             self.identity = 1:domainSize;
             self.generators = generators;
             if nargin > 2 && ~isempty(order)
                 self.order_ = order;
+            end
+            if nargin < 4
+                parent = [];
+            end
+            if isempty(parent)
+                self.parent = replab.S(domainSize)
+            elseif isequal(parent, 'self')
+                self.parent = self;
+            else
+                self.parent = parent;
             end
             if nargin > 3
                 if isempty(parent)
