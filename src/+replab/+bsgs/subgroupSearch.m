@@ -1,7 +1,7 @@
 function res = subgroupSearch(group, prop, base, tests, init_subgroup)
 % Find the subgroup of all elements satisfying the property ``prop``
 %
-% Code lifted from Sympy 1.6
+% Code lifted from Sympy 1.6, PermutationGroup.subgroup_search
 %
 % Args:
 %   group (`+replab.+bsgs.Chain`): BSGS chain representing the group
@@ -99,10 +99,10 @@ function res = subgroupSearch(group, prop, base, tests, init_subgroup)
     while 1
         % apply all the tests
          while l < base_len && ...
+                 base_ordering(computed_words{l}(base(l))) < base_ordering(nu(l)) && ...
                  ismember(computed_words{l}(base(l)), orbit_reps{l}) && ...
                  tests{l}(computed_words{l})
              %base_ordering(mu(l)) < base_ordering(computed_words{l}(base(l))) && ...
-             %   base_ordering(computed_words{l}(base(l))) < base_ordering(nu(l)) && ...
             % change the (partial) base of K
             res.baseChange([res.B(1:l-1) computed_words{l}(base(l))]);
             orbits = orbits_(degree, res.strongGeneratorsForLevel(l+1));
@@ -116,7 +116,7 @@ function res = subgroupSearch(group, prop, base, tests, init_subgroup)
             % lines 14 and 15: update variables used in minimality tests
             new_mu = degree + 2; % IDX position of the 0 canary
             for i = 1:l
-                if res.iDelta(base(l), i)
+                if res.iDelta(base(l), i) ~= 0
                     candidate = computed_words{i}(base(i));
                     if base_ordering(candidate) > base_ordering(new_mu)
                         new_mu = candidate;
@@ -136,11 +136,11 @@ function res = subgroupSearch(group, prop, base, tests, init_subgroup)
         g = computed_words{l};
         temp_point = g(base(l));
         if l == base_len && ... % IDX
+              base_ordering(temp_point) < base_ordering(nu(l)) && ...
               ismember(temp_point, orbit_reps{l}) && ...
               tests{l}(computed_words{l}) && ...
               prop(g)
-            %base_ordering(mu(l)) < base_ordering(temp_point) && ...
-            % base_ordering(temp_point) < base_ordering(nu(l)) && ...
+            % base_ordering(mu(l)) < base_ordering(temp_point) && ...
             % line 18: add new strong generator for K
             % line 19-20: reset the base of K
             res.baseChange(base);

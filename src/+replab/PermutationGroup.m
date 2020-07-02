@@ -248,6 +248,43 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             end
         end
 
+        function c = centre(self)
+            c = self.centralizerGroup(self);
+        end
+
+        function c = centralizerElement(self, other)
+        % Returns the centralizer of a group in this group
+        %
+        % Example:
+        %   >>> G = replab.S(4);
+        %   >>> C = G.centralizerElement([2 3 1 4]);
+        %   >>> C == replab.S(4).subgroup({[2 3 1 4]})
+        %     1
+        %
+        % Args:
+        %   other (`+replab.PermutationGroup`): Permutation group with the same
+            c = self.centralizerGroup(self.subgroup({other}));
+        end
+
+        function c = centralizerGroup(self, other)
+        % Returns the centralizer of a group in this group
+        %
+        % Example:
+        %   >>> G = replab.S(4);
+        %   >>> C = G.centralizerGroup(G.subgroup({[2 3 1 4]}));
+        %   >>> C == replab.S(4).subgroup({[2 3 1 4]})
+        %     1
+        %
+        % Example:
+        %   >>> G = replab.S(4);
+        %   >>> C = G.centralizerGroup(G.subgroup({[2 3 1 4] [2 1 3 4]}));
+        %   >>> C == replab.S(4).trivialGroup
+        %     1
+        %
+        % Args:
+        %   other (`+replab.PermutationGroup`): Permutation group with the same
+            c = replab.bsgs.Centralizer(self, other).subgroup;
+        end
 
         function s = setwiseStabilizer(self, set)
         % Returns the subgroup that stabilizes the given set as a set
