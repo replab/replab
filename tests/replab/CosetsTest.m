@@ -8,7 +8,7 @@ function test_suite = CosetsTest()
 end
 
 function test_right_transversals
-    n = 8;
+    n = 5;
     Sn = replab.S(n);
     G = Sn.derivedSubgroup; % take the alternating group
     U = G;
@@ -28,7 +28,7 @@ function test_right_transversals
     assert(size(unique(els', 'rows'), 1) == G.order);
 end
 function test_left_transversals
-    n = 8;
+    n = 5;
     Sn = replab.S(n);
     G = Sn.derivedSubgroup; % take the alternating group
     U = G;
