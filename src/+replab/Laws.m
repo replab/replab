@@ -31,18 +31,8 @@ classdef Laws < replab.Str
 %    >>> inverseFun = @(x) arrayfun(@(i) find(x == i), 1:10);
 %    >>> S10 = replab.Group.lambda('Permutations of 1..10', eqvFun, sampleFun, composeFun, identity, inverseFun);
 %    >>> S10laws = replab.GroupLaws(S10);
-%    >>> S10laws.check
-%        Checking associativity...
-%        Checking composeAll...
-%        Checking composeN integers...
-%        Checking composeN positive...
-%        Checking composeN zero...
-%        Checking composeWithInverse...
-%        Checking eqv...
-%        Checking identity...
-%        Checking inverse...
-%        Checking inverse compatible with compose...
-%        Checking leftConjugate...
+%    >>> S10laws.checkSilent
+%        1
 
     methods
 
@@ -113,6 +103,22 @@ classdef Laws < replab.Str
                         testNames{end+1} = lawName;
                         testFuns{end+1} = testFun;
                     end
+                end
+            end
+        end
+
+        function res = checkSilent(self)
+        % Runs the randomized tests without usign MOxUnit, and returns whether all tests passed
+        %
+        % Returns:
+        %   logical: True if all tests successful
+            res = true;
+            for i = 1:length(testNames)
+                f = testFuns{i};
+                try
+                    f();
+                catch
+                    res = false;
                 end
             end
         end

@@ -338,10 +338,8 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Example:
         %   >>> S4 = replab.S(4);
         %   >>> m = S4.morphismByImages(replab.S(3), {[1 3 2] [3 2 1]});
-        %   >>> replab.MorphismLaws(m).check
-        %       Checking composition...
-        %       Checking identity...
-        %       Checking inverse...
+        %   >>> replab.MorphismLaws(m).checkSilent
+        %       1
         %
         % Args:
         %   target (`.Group`): Target of the morphism, the morphism image is a subgroup of this
