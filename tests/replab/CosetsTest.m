@@ -10,7 +10,7 @@ end
 function test_right_transversals
     n = 8;
     Sn = replab.S(n);
-    G = replab.S(n).derivedSubgroup; % take the alternating group
+    G = Sn.derivedSubgroup; % take the alternating group
     U = G;
     while U.order == G.order
         U = G.subgroup({G.sample G.sample});
@@ -30,7 +30,7 @@ end
 function test_left_transversals
     n = 8;
     Sn = replab.S(n);
-    G = replab.S(n).derivedSubgroup; % take the alternating group
+    G = Sn.derivedSubgroup; % take the alternating group
     U = G;
     while U.order == G.order
         U = G.subgroup({G.sample G.sample});
