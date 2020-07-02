@@ -77,7 +77,7 @@ function res = subgroupSearch(group, prop, base, tests, init_subgroup)
     orbits = orbits_(degree, res.strongGeneratorsForLevel(f));
     orbit_reps{f} = get_reps(orbits, base_ordering);
     % line 5: remove the base point from the representatives to avoid getting the identity element as a generator for K
-    orbit_reps{f} = setdiff(orbit_reps{f}, base(f))
+    orbit_reps{f} = setdiff(orbit_reps{f}, base(f));
     % line 6: more initializations
     c = zeros(1, base_len);
     u = repmat({identity}, 1, base_len);
@@ -87,7 +87,6 @@ function res = subgroupSearch(group, prop, base, tests, init_subgroup)
         [~, I] = sort(base_ordering(sorted_orbits{i}));
         sorted_orbits{i} = sorted_orbits{i}(I);
     end
-    sorted_orbits
     % line 7: initializations
     mu = zeros(1, base_len);
     nu = zeros(1, base_len);
@@ -102,8 +101,8 @@ function res = subgroupSearch(group, prop, base, tests, init_subgroup)
          while l < base_len && ...
                  ismember(computed_words{l}(base(l)), orbit_reps{l}) && ...
                  tests{l}(computed_words{l})
-             %                 base_ordering(mu(l)) < base_ordering(computed_words{l}(base(l))) && ...
-             %                 base_ordering(computed_words{l}(base(l))) < base_ordering(nu(l)) && ...
+             %base_ordering(mu(l)) < base_ordering(computed_words{l}(base(l))) && ...
+             %   base_ordering(computed_words{l}(base(l))) < base_ordering(nu(l)) && ...
             % change the (partial) base of K
             res.baseChange([res.B(1:l-1) computed_words{l}(base(l))]);
             orbits = orbits_(degree, res.strongGeneratorsForLevel(l+1));
@@ -140,9 +139,8 @@ function res = subgroupSearch(group, prop, base, tests, init_subgroup)
               ismember(temp_point, orbit_reps{l}) && ...
               tests{l}(computed_words{l}) && ...
               prop(g)
-            %              base_ordering(mu(l)) < base_ordering(temp_point) && ...
-            %              base_ordering(temp_point) < base_ordering(nu(l)) && ...
-                                % if l == base_len && ismember(temp_point, orbit_reps{l}) && tests{l}(computed_words{l}) && prop(g)
+            %base_ordering(mu(l)) < base_ordering(temp_point) && ...
+            % base_ordering(temp_point) < base_ordering(nu(l)) && ...
             % line 18: add new strong generator for K
             % line 19-20: reset the base of K
             res.baseChange(base);

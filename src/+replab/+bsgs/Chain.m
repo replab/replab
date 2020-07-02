@@ -265,7 +265,7 @@ classdef Chain < replab.Str
                     end
                 end
             end
-            self.check;
+            %self.check;
         end
 
         function show(self, i)

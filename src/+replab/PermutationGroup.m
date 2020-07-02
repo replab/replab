@@ -248,6 +248,35 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             end
         end
 
+
+        function s = setwiseStabilizer(self, set)
+        % Returns the subgroup that stabilizes the given set as a set
+        %
+        % i.e. for this group ``G``, it returns ``H = {g \in G : g(set) = set}``
+        %
+        % Example:
+        %   >>> G = replab.S(4).subgroup({[3 1 2 4] [1 4 2 3]});
+        %   >>> H = G.setwiseStabilizer([1 2]);
+        %   >>> H == replab.S(4).subgroup({[2 1 4 3]})
+        %       1
+        % Args:
+        %   set (integer(1,\*)): The set to stabilize
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The subgroup that stabilizes the set
+            mask = false(1, self.domainSize);
+            mask(set) = true;
+            c = self.chain.mutableCopy;
+            c.baseChange(set);
+            tests = cell(1, length(set));
+            for i = 1:length(tests)
+                tests{i} = @(g) mask(g(set(i)));
+            end
+            prop = @(g) all(mask(g(set)));
+            subchain = replab.bsgs.subgroupSearch(c, prop, set, tests);
+            s = replab.PermutationGroup.fromChain(subchain, self.parent);
+        end
+
         function nc = normalClosure(self, rhs)
             chain = replab.bsgs.Chain(self.domainSize);
             generators = {};
