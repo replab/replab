@@ -242,6 +242,53 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             rt = cellfun(@(p) self.niceMonomorphismPreimage(p), niceRt, 'uniform', 0);
         end
 
+        function sub = centralizerElement(self, g)
+        % Returns the centralizer of a group in this group
+        %
+        % Example:
+        %   >>> G = replab.S(4);
+        %   >>> C = G.centralizerElement([2 3 1 4]);
+        %   >>> C == replab.S(4).subgroup({[2 3 1 4]})
+        %     1
+        %
+        % Args:
+        %   g (group element): Element to compute the centralizer of
+            sub = self.niceMonomorphismGroupPreimage(self.niceGroup.centralizerElement(self.niceMonomorphismImage(g)));
+        end
+
+        function sub = centralizerGroup(self, G)
+        % Returns the centralizer of a group in this group
+        %
+        % Example:
+        %   >>> G = replab.S(4);
+        %   >>> C = G.centralizerGroup(G.subgroup({[2 3 1 4]}));
+        %   >>> C == replab.S(4).subgroup({[2 3 1 4]})
+        %     1
+        %
+        % Example:
+        %   >>> G = replab.S(4);
+        %   >>> C = G.centralizerGroup(G.subgroup({[2 3 1 4] [2 1 3 4]}));
+        %   >>> C == replab.S(4).trivialGroup
+        %     1
+        %
+        % Args:
+        %   G (`+replab.NiceFiniteGroup`): Permutation group with the same parent as this group
+            sub = self.niceMonomorphismGroupPreimage(self.niceGroup.centralizerGroup(self.niceMonomorphismGroupImage(G)));
+        end
+
+        function res = union(self, G)
+        % Computes the union of this group with another group
+            res = self.niceMonomorphismGroupPreimage(self.niceGroup.closure(self.niceMonomorphismGroupImage(G)));
+        end
+
+        function res = closure(self, g)
+            res = self.niceMonomorphismGroupPreimage(self.niceGroup.closure(self.niceMonomorphismImage(g)));
+        end
+
+        function sub = intersection(self, G)
+            res = self.niceMonomorphismGroupPreimage(self.niceGroup.intersection(self.niceMonomorphismGroupImage(G)));
+        end
+
         function res = isCyclic(self)
         % Returns whether this group is a cyclic group
             assert(~isa(self, 'replab.PermutationGroup'));
