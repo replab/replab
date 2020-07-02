@@ -321,7 +321,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Example:
         %    >>> G = replab.S(3).cyclicSubgroup;
         %    >>> H = replab.S(3).subgroup({[2 1 3]});
-        %    >>> C = G.closure(H)
+        %    >>> C = G.closure(H);
         %    >>> C == replab.S(3)
         %        1
         %
@@ -345,6 +345,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   `.NiceFiniteGroup`: The closure
+            assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
             res = self.niceMonomorphismGroupPreimage(self.niceGroup.closureElement(self.niceMonomorphismImage(g)));
         end
 
@@ -356,6 +357,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   `.NiceFiniteGroup`: The closure
+            assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
             res = self.niceMonomorphismGroupPreimage(self.niceGroup.closureGroup(self.niceMonomorphismImage(g)));
         end
 
