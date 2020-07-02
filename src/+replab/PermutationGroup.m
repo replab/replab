@@ -36,6 +36,17 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 
     end
 
+    methods (Static)
+
+        function pg = fromChain(chain, parent)
+            if nargin < 2
+                parent = [];
+            end
+            pg = replab.PermutationGroup(chain.n, chain.strongGenerators, chain.order, parent, chain);
+        end
+
+    end
+
     methods
 
         function self = PermutationGroup(domainSize, generators, order, parent, chain)
@@ -173,6 +184,70 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             end
         end
 
+% $$$ equivalent to the non recursive code below
+% $$$         function rt = printRightTransversals(self, subgroup, g, subchain, l)
+% $$$             if nargin == 2
+% $$$                 g = self.identity;
+% $$$                 subchain = subgroup.chain;
+% $$$                 l = 1;
+% $$$             end
+% $$$             if l == self.chain.length + 1
+% $$$                 g
+% $$$             else
+% $$$                 for b = self.chain.Delta{l}
+% $$$                     bg = g(b);
+% $$$                     orbit = subchain.orbitUnderG(1, bg);
+% $$$                     if bg == min(orbit)
+% $$$                         self.printRightTransversals(subgroup, g(self.chain.u(l, b)), subchain.stabilizer(bg), l + 1);
+% $$$                     end
+% $$$                 end
+% $$$             end
+% $$$         end
+
+        function T = leftTransversals(self, subgroup)
+            T = cellfun(@(g) self.inverse(g), self.rightTransversals(subgroup), 'uniform', 0);
+        end
+
+        function T = rightTransversals(self, subgroup)
+            T = {};
+            n = self.domainSize;
+            L = self.chain.length;
+            stackG = zeros(n, L+1); % current group element
+            stackG(:,1) = 1:n;
+            stackS = cell(1, L+1);
+            stackS{1} = subgroup.chain; % subgroup chain
+            stackB = cell(1, L+1);
+            stackB{1} = self.chain.Delta{1}; % remaining points in orbit to check
+            l = 1;
+            while l >= 1
+                g = stackG(:,l)';
+                B = stackB{l};
+                while 1
+                    B = stackB{l};
+                    if isempty(B)
+                        l = l - 1;
+                        break
+                    else
+                        b = B(end);
+                        stackB{l} = B(1:end-1);
+                        bg = g(b);
+                        orbit = stackS{l}.orbitUnderG(1, bg);
+                        if bg == min(orbit)
+                            if l == L
+                                T{1,end+1} = g(self.chain.u(l, b));
+                            else
+                                stackS{l+1} = stackS{l}.stabilizer(bg);
+                                stackG(:,l+1) = g(self.chain.u(l, b)); % compose transversal element
+                                stackB{l+1} = self.chain.Delta{l+1};
+                                l = l + 1;
+                                break
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
         function nc = normalClosure(self, rhs)
             chain = replab.bsgs.Chain(self.domainSize);
             generators = {};
@@ -243,6 +318,11 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 G(i, :) = self.generators{i};
             end
             o = replab.Partition.permutationsOrbits(G);
+        end
+
+        function sub = stabilizer(self, p)
+        % Returns the subgroup that stabilizes a given point
+            sub = replab.PermutationGroup.fromChain(self.chain.stabilizer(p), self.parent);
         end
 
         %% Group construction
