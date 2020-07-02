@@ -38,7 +38,7 @@ classdef RepByImages < replab.Rep
             knownUnitary = true;
             isInexact = false;
             for i = 1:group.nGenerators
-                knownUnitary = knownUnitary && isequal(images{i}, inverseImages{i}');
+                knownUnitary = knownUnitary && isequal(images{i}, ctranspose(inverseImages{i}));
                 assert(isequal(size(images{i}), [dimension dimension]));
                 isInexact = isInexact || ~(isa(images{i}, 'sym') || isequal(images{i}, round(images{i})));
                 isInexact = isInexact || ~(isa(inverseImages{i}, 'sym') || isequal(inverseImages{i}, round(inverseImages{i})));
@@ -138,6 +138,32 @@ classdef RepByImages < replab.Rep
                 inverseImages{i} = rep.inverseImage_internal(g);
             end
             rep1 = replab.RepByImages(rep.group, rep.field, rep.dimension, images, inverseImages);
+        end
+
+        function rep = fromImageFunction(group, field, dimension, imageFun)
+        % Constructs a RepByImages representation using a given morphism
+        %
+        % Args:
+        %  group (`+replab.NiceFiniteGroup`): Group of which to construct a representation
+        %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
+        %   dimension (integer): Dimension of the representation
+        %   imageFun (function_handle): Function that returns a matrix for any element of ``G``
+        %
+        % Returns:
+        %   `+replab.RepByImages`: The constructed representation
+            assert(isa(group, 'replab.NiceFiniteGroup'), 'The given group must be a NiceFiniteGroup');
+            nG = group.nGenerators;
+            images = cell(1, nG);
+            inverseImages = cell(1, nG);
+            for i = 1:nG
+                g = group.generator(i);
+                gInv = group.inverse(g);
+                images{i} = imageFun(g);
+                inverseImages{i} = imageFun(gInv);
+                assert(isequal(size(images{i}), [dimension dimension]));
+                assert(isequal(size(inverseImages{i}), [dimension dimension]));
+            end
+            rep = replab.RepByImages(group, field, dimension, images, inverseImages);
         end
 
     end

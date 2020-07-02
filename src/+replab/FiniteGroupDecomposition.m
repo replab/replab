@@ -1,14 +1,14 @@
 classdef FiniteGroupDecomposition < replab.Obj
 % Describes the decomposition of a finite group into a product of sets
 %
-% We assume the existence of sets T1, T2, ..., Tn such that every group elements has a unique decomposition
-% g = t1 t2 ... tn, where ti is in Ti; thus, we have that length(T1)*length(T2)*...*length(Tn) = group order
+% We assume the existence of sets ``T1, T2, ..., Tn`` such that every group elements has a unique decomposition
+% ``g = t1 t2 ... tn``, where ``ti`` is in ``Ti``; thus, we have that ``length(T1)*length(T2)*...*length(Tn) = group order``
 %
-% We require additionally that in each set Ti, Ti{1} is the group identity.
+% We require additionally that in each set ``Ti``, ``Ti{1}`` is the group identity.
 %
     properties (SetAccess = protected)
-        group % (`+replab.FiniteGroup): Group decomposed
-        T % (cell(1,\*) of cell(1,\*) of group elements): Stores the sets Ti as {T1 T2 ... Tn}
+        group % (`+replab.FiniteGroup`): Group decomposed
+        T % (cell(1,\*) of cell(1,\*) of group elements): Stores the sets Ti as ``{T1 T2 ... Tn}``
     end
 
     methods

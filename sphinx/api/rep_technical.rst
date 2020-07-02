@@ -39,8 +39,3 @@ rep.TrivialRep
 ++++++++++++++
 
 .. autoclass:: TrivialRep
-
-rep.standardBasis
-+++++++++++++++++
-
-.. autofunction:: standardBasis

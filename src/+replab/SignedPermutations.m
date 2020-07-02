@@ -22,7 +22,7 @@ classdef SignedPermutations < replab.SignedPermutationGroup
                 flip = [-1 2:domainSize];
                 generators = {shift trans flip};
             end
-            self = self@replab.SignedPermutationGroup(domainSize, generators, o, []);
+            self = self@replab.SignedPermutationGroup(domainSize, generators, o, 'self');
         end
 
         %% Str methods

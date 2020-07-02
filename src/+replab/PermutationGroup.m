@@ -36,6 +36,17 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 
     end
 
+    methods (Static)
+
+        function pg = fromChain(chain, parent)
+            if nargin < 2
+                parent = [];
+            end
+            pg = replab.PermutationGroup(chain.n, chain.strongGenerators, chain.order, parent, chain);
+        end
+
+    end
+
     methods
 
         function self = PermutationGroup(domainSize, generators, order, parent, chain)
@@ -46,7 +57,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %   generators (cell(1,\*) of permutation): Group generators
         %   order (vpi, optional): Order of the group
         %   parent (`+replab.PermutationGroup`, optional): Parent of this group if known,
-        %                                                 or ``[]`` if this group is its own parent
+        %                                                  or ``'self'`` if this group is its own parent
         %   chain (`+replab.+bsgs.Chain`): BSGS chain describing the group
             self.domainSize = domainSize;
             self.identity = 1:domainSize;
@@ -54,14 +65,15 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             if nargin > 2 && ~isempty(order)
                 self.order_ = order;
             end
-            if nargin > 3
-                if isempty(parent)
-                    self.parent = self;
-                else
-                    self.parent = parent;
-                end
-            else
+            if nargin < 4
+                parent = [];
+            end
+            if isempty(parent)
                 self.parent = replab.S(domainSize);
+            elseif isequal(parent, 'self')
+                self.parent = self;
+            else
+                self.parent = parent;
             end
             if nargin > 4 && ~isempty(chain)
                 self.chain_ = chain;
@@ -110,10 +122,16 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             z(y) = x;
         end
 
+        function z = leftConjugate(self, x, y)
+            z = zeros(1, length(x));
+            % x y xInv
+            z(x) = x(y);
+        end
+
 
         %% NiceFiniteGroup methods
 
-        function res = sameParentAs(self, rhs)
+        function res = hasSameParentAs(self, rhs)
             res = isa(rhs, 'replab.PermutationGroup') && (self.parent.domainSize == rhs.parent.domainSize);
         end
 
@@ -136,6 +154,241 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             grp = replab.PermutationGroup(self.domainSize, generators, order, self.parent);
         end
 
+        function o = elementOrder(self, p)
+            orbits = replab.Partition.permutationsOrbits(p);
+            orders = unique(orbits.blockSizes);
+            o = 1;
+            for i = 1:length(orders)
+                o = lcm(o, orders(i));
+            end
+        end
+
+        function res = isCyclic(self)
+            if self.nGenerators <= 1
+                res = true;
+            elseif ~self.isCommutative
+                res = false;
+            else
+                pds = unique(factor(self.order));
+                assert(all(pds <= 2^53-1)); % to be sure, but unlikely (otherwise can a BSGS be computed?)
+                pds = double(pds);
+                for p = pds
+                    newGens = cellfun(@(g) self.composeN(g, p), self.generators, 'uniform', 0);
+                    newGens = newGens(~cellfun(@(g) self.isIdentity(g), newGens));
+                    if self.subgroup(newGens).order*p ~= self.order
+                        res = false;
+                        return
+                    end
+                end
+                res = true;
+            end
+        end
+
+
+        function T = leftTransversals(self, subgroup)
+            T = cellfun(@(g) self.inverse(g), self.rightTransversals(subgroup), 'uniform', 0);
+        end
+
+        function T = rightTransversals(self, subgroup)
+            T = {};
+            % equivalent to the non recursive code
+            %          function rt = printRightTransversals(self, subgroup, g, subchain, l)
+            %              if nargin == 2
+            %                  g = self.identity;
+            %                  subchain = subgroup.chain;
+            %                  l = 1;
+            %              end
+            %              if l == self.chain.length + 1
+            %                  g
+            %              else
+            %                  for b = self.chain.Delta{l}
+            %                      bg = g(b);
+            %                      orbit = subchain.orbitUnderG(1, bg);
+            %                      if bg == min(orbit)
+            %                          self.printRightTransversals(subgroup, g(self.chain.u(l, b)), subchain.stabilizer(bg), l + 1);
+            %                      end
+            %                  end
+            %              end
+            %          end
+            n = self.domainSize;
+            L = self.chain.length;
+            stackG = zeros(n, L+1); % current group element
+            stackG(:,1) = 1:n;
+            stackS = cell(1, L+1);
+            stackS{1} = subgroup.chain; % subgroup chain
+            stackB = cell(1, L+1);
+            stackB{1} = self.chain.Delta{1}; % remaining points in orbit to check
+            l = 1;
+            while l >= 1
+                g = stackG(:,l)';
+                B = stackB{l};
+                while 1
+                    B = stackB{l};
+                    if isempty(B)
+                        l = l - 1;
+                        break
+                    else
+                        b = B(end);
+                        stackB{l} = B(1:end-1);
+                        bg = g(b);
+                        orbit = stackS{l}.orbitUnderG(1, bg);
+                        if bg == min(orbit)
+                            if l == L
+                                T{1,end+1} = g(self.chain.u(l, b));
+                            else
+                                stackS{l+1} = stackS{l}.stabilizer(bg);
+                                stackG(:,l+1) = g(self.chain.u(l, b)); % compose transversal element
+                                stackB{l+1} = self.chain.Delta{l+1};
+                                l = l + 1;
+                                break
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+        function c = centre(self)
+            c = self.centralizerGroup(self);
+        end
+
+        function res = union(self, other)
+            assert(self.hasSameParentAs(other));
+            res = self;
+            for i = 1:other.nGenerators
+                res = res.closure(other.generator(i));
+            end
+        end
+
+        function res = intersection(self, other)
+            assert(self.hasSameParentAs(other));
+            if self.order > other.order
+                res = other.intersection(self);
+            else
+                prop = @(g) other.contains(g);
+                c = replab.bsgs.subgroupSearch(self.chain, prop);
+                res = replab.PermutationGroup.fromChain(c);
+            end
+        end
+
+        function c = centralizerElement(self, other)
+            c = self.centralizerGroup(self.subgroup({other}));
+        end
+
+        function c = centralizerGroup(self, other)
+            c = replab.bsgs.Centralizer(self, other).subgroup;
+        end
+
+        function s = setwiseStabilizer(self, set)
+        % Returns the subgroup that stabilizes the given set as a set
+        %
+        % i.e. for this group ``G``, it returns ``H = {g \in G : g(set) = set}``
+        %
+        % Example:
+        %   >>> G = replab.S(4).subgroup({[3 1 2 4] [1 4 2 3]});
+        %   >>> H = G.setwiseStabilizer([1 2]);
+        %   >>> H == replab.S(4).subgroup({[2 1 4 3]})
+        %       1
+        %
+        % Example:
+        %   >>> G = replab.S(10).subgroup({[1,3,2,10,9,8,6,5,7,4], [1,4,3,2,5,6,7,8,9,10]});
+        %   >>> H = G.setwiseStabilizer([2 3]);
+        %   >>> H.order
+        %       10
+        %
+        % Args:
+        %   set (integer(1,\*)): The set to stabilize
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The subgroup that stabilizes the set
+            mask = false(1, self.domainSize);
+            mask(set) = true;
+            c = self.chain.mutableCopy;
+            c.baseChange(set);
+            tests = cell(1, length(set));
+            for i = 1:length(tests)
+                tests{i} = @(g) mask(g(set(i)));
+            end
+            prop = @(g) all(mask(g(set)));
+            subchain = replab.bsgs.subgroupSearch(c, prop, set, tests);
+            s = replab.PermutationGroup.fromChain(subchain, self.parent);
+        end
+
+        function res = closureGroup(self, G)
+            c = self.chain.mutableCopy;
+            for i = 1:G.nGenerators
+                if c.stripAndAddStrongGenerator(G.generator(i))
+                    c.randomizedSchreierSims([]);
+                end
+            end
+            c.makeImmutable;
+            res = replab.PermutationGroup.fromChain(c, self.parent);
+        end
+
+        function res = closureElement(self, g)
+            c = self.chain.mutableCopy;
+            if c.stripAndAddStrongGenerator(g)
+                c.randomizedSchreierSims([]);
+            end
+            c.makeImmutable;
+            res = replab.PermutationGroup.fromChain(c, self.parent);
+        end
+
+        function nc = normalClosure(self, rhs)
+            chain = replab.bsgs.Chain(self.domainSize);
+            generators = {};
+            toCheck = rhs.generators;
+            while ~isempty(toCheck)
+                rhsg = toCheck{end};
+                toCheck = toCheck(1:end-1);
+                for i = 1:self.nGenerators
+                    gi = self.generator(i);
+                    cm = self.leftConjugate(gi, rhsg);
+                    if chain.stripAndAddStrongGenerator(cm)
+                        generators{1, end+1} = cm;
+                        toCheck{1, end+1} = cm;
+                        chain.randomizedSchreierSims([]);
+                    end
+                end
+            end
+            nc = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
+        end
+
+        function sub = derivedSubgroup(self)
+            nG = self.nGenerators;
+            n = self.domainSize;
+            chain = replab.bsgs.Chain(n);
+            generators = {};
+            for i = 1:nG
+                gi = self.generator(i);
+                for j = 1:nG
+                    gj = self.generator(j);
+                    cm = self.composeWithInverse(self.compose(gi, gj), self.compose(gj, gi));
+                    if chain.stripAndAddStrongGenerator(cm)
+                        generators{1, end+1} = cm;
+                        chain.randomizedSchreierSims([]);
+                    end
+                end
+            end
+            % compute the normal closure
+            toCheck = generators;
+            while ~isempty(toCheck)
+                h = toCheck{end};
+                toCheck = toCheck(1:end-1);
+                for i = 1:nG
+                    gi = self.generator(i);
+                    cm = self.leftConjugate(gi, h);
+                    if chain.stripAndAddStrongGenerator(cm)
+                        generators{1, end+1} = cm;
+                        toCheck{1, end+1} = cm;
+                        chain.randomizedSchreierSims([]);
+                    end
+                end
+            end
+            sub = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
+        end
+
+
         %% Methods specific to permutation groups
 
         function o = orbits(self)
@@ -151,6 +404,11 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 G(i, :) = self.generators{i};
             end
             o = replab.Partition.permutationsOrbits(G);
+        end
+
+        function sub = stabilizer(self, p)
+        % Returns the subgroup that stabilizes a given point
+            sub = replab.PermutationGroup.fromChain(self.chain.stabilizer(p), self.parent);
         end
 
         %% Group construction
@@ -286,7 +544,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         % subgroups of the symmetric group.
         %
         % It corresponds to the representation orthogonal to the
-        % trivial representation with basis [1, 1, ..., 1]'/sqrt(d)
+        % trivial representation with basis ``[1, 1, ..., 1]'/sqrt(d)``
         %
         % Returns:
         %   `+replab.Rep`: The (real) standard representation
@@ -294,6 +552,44 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             rho = self.naturalRep.subRep(B_internal, E_internal);
         end
 
+        function rho = signRep(self)
+        % Returns the sign representation of this permutation
+            rho = replab.RepByImages.fromImageFunction(self, 'R', 1, @(g) replab.PermutationGroup.sign(g));
+        end
+
+    end
+
+    methods(Static)
+
+        function sign = sign(perm)
+        % Returns the sign of a given permutation
+        %
+        % Args:
+        %   perm (permutation): Vector representing a permutation (e.g. [3 2 1 4])
+        %
+        % Returns:
+        %   integer: Sign of the permutation
+            x = perm;
+            n = length(x);
+            oddOrEven = 0; %Records whether the total permutation is odd or even
+            for i = 1:n
+                if x(i) == 0 || x(i) == i %Skip over one cycles and numbers that have been cycled through
+                    continue
+                end
+                cycleSize = -1; %The first element in a cycle isn't counted
+                j = i;
+                while x(j) ~= 0
+                    pHold = x(j);
+                    x(j) = 0;
+                    j = pHold;
+                    cycleSize = cycleSize + 1;
+                end
+                if cycleSize > 0
+                    oddOrEven = oddOrEven + cycleSize; %At the end, this will match the parity (even/odd) of the permuation
+                end
+            end
+            sign = (-1)^mod(round(oddOrEven),2); %Sign of permutation
+            end
     end
 
 end

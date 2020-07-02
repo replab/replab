@@ -49,8 +49,8 @@ classdef OfNiceFiniteGroup < replab.NiceFiniteGroup & replab.semidirectproduct.O
             p = self.imprimitivePermutation(w, @(a) self.A.niceMonomorphismImage(a));
         end
 
-        function res = sameParentAs(self, rhs)
-            res = isa(rhs, 'replab.wreathproduct.OfNiceFiniteGroup') && self.n == rhs.n && self.A.sameParentAs(rhs.A);
+        function res = hasSameParentAs(self, rhs)
+            res = isa(rhs, 'replab.wreathproduct.OfNiceFiniteGroup') && self.n == rhs.n && self.A.hasSameParentAs(rhs.A);
         end
 
     end

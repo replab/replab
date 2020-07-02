@@ -9,11 +9,11 @@ classdef Common < handle
         A % replab.CompactGroup: factor of base group
         n % integer: Number of copies of the base group
     end
-    
+
     methods
-        
+
         %% Helpers to construct permutation actions
-        
+
         function p = imprimitivePermutation(self, w, phiA)
         % Returns the permutation corresponding to the canonical imprimitive action
         %
@@ -22,7 +22,7 @@ classdef Common < handle
         % Args:
         %   w (element): Wreath product group element to compute the image of
         %   phi (function_handle, optional): Morphism from elements of A to permutations
-        %                                    If omitted default to identity, valid only when 
+        %                                    If omitted default to identity, valid only when
         %                                    A is a permutation group
         %
         % Returns:
@@ -57,7 +57,7 @@ classdef Common < handle
         % Args:
         %   w (element): Wreath product group element to compute the image of
         %   phi (function_handle, optional): Morphism from elements of A to permutations
-        %                                    If omitted default to identity, valid only when 
+        %                                    If omitted default to identity, valid only when
         %                                    A is a permutation group
         %
         % Returns:
@@ -82,10 +82,10 @@ classdef Common < handle
             ip = permute(ip, fliplr(n + 1 - h));
             ip = ip(:)';
             p = replab.Permutations(prod(dims)).compose(ip, p);
-        end                
+        end
 
         %% Representation construction
-        
+
         function rep = imprimitiveRep(self, Arep)
         % Returns an imprimitive representation of this wreath product
         %
@@ -145,5 +145,5 @@ classdef Common < handle
         end
 
     end
-    
+
 end

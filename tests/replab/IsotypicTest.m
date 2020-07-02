@@ -5,9 +5,7 @@ function test_suite = IsotypicTest()
     catch
     end
     initTestSuite;
-end
 
-function test_changeOfBasis
     S3 = replab.S(3);
     rep = S3.naturalRep.tensorPower(2);
     rep1 = rep.decomposition;
@@ -26,9 +24,9 @@ function test_changeOfBasis
     d3.isIrreducible = true;
     iso1 = replab.Isotypic.fromIrreps(rep, {t1 t2});
     iso3 = replab.Isotypic.fromIrreps(rep, {d1 d2 d3});
-    replab.IsotypicLaws(iso1).check;
-    replab.SubRepLaws(s).check;
-    replab.IsotypicLaws(iso3).check;
+    test_suite = replab.IsotypicLaws(iso1).addTestCases(test_suite);
+    test_suite = replab.SubRepLaws(s).addTestCases(test_suite);
+    test_suite = replab.IsotypicLaws(iso3).addTestCases(test_suite);
     Miso = replab.domain.Matrices(iso3.field, iso3.dimension, iso3.dimension);
     M = replab.domain.Matrices(d1.field, d1.dimension, d1.dimension);
     for i = 1:3
