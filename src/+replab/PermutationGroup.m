@@ -314,6 +314,15 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             s = replab.PermutationGroup.fromChain(subchain, self.parent);
         end
 
+        function res = closure(self, g)
+            c = self.chain.mutableCopy;
+            if c.stripAndAddStrongGenerator(g)
+                c.randomizedSchreierSims([]);
+            end
+            c.makeImmutable;
+            res = replab.PermutationGroup.fromChain(c, self.parent);
+        end
+
         function nc = normalClosure(self, rhs)
             chain = replab.bsgs.Chain(self.domainSize);
             generators = {};
