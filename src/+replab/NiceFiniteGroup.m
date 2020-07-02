@@ -74,8 +74,8 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             n = length(self.niceMonomorphismImage(self.identity));
             % possible optimization: reuse the stabilizer chain in the inverse morphism of ``G``
             generators = cellfun(@(x) self.niceMonomorphismImage(x), G.generators, 'uniform', 0);
-            chain = replab.bsgs.Chain(n, generators);
-            P = replab.PermutationGroup(n, gens, chain.order, [], chain);
+            chain = replab.bsgs.Chain.make(n, generators);
+            P = replab.PermutationGroup(n, generators, chain.order, self.niceGroup.parent, chain);
         end
 
         function G = niceMonomorphismGroupPreimage(self, P)
@@ -214,7 +214,20 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             sub = self.niceMonomorphismGroupPreimage(self.niceGroup.derivedSubgroup);
         end
 
+        function rt = leftTransversals(self, subgroup)
+        % Computes a list of representatives for the set of right cosets of subgroup in this group
+            niceRt = self.niceGroup.leftTransversals(self.niceMonomorphismGroupImage(subgroup));
+            rt = cellfun(@(p) self.niceMonomorphismPreimage(p), niceRt, 'uniform', 0);
+        end
+
+        function rt = rightTransversals(self, subgroup)
+        % Computes a list of representatives for the set of right cosets of subgroup in this group
+            niceRt = self.niceGroup.rightTransversals(self.niceMonomorphismGroupImage(subgroup));
+            rt = cellfun(@(p) self.niceMonomorphismPreimage(p), niceRt, 'uniform', 0);
+        end
+
         function res = isCyclic(self)
+        % Returns whether this group is a cyclic group
             assert(~isa(self, 'replab.PermutationGroup'));
             res = self.niceGroup.isCyclic;
         end
