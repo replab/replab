@@ -150,7 +150,6 @@ classdef Chain < replab.Str
             self.completeOrbit(m);
             %self.check;
             while self.orbitSize(m) < target
-                [self.orbitSize(l) * self.orbitSize(m) target]
                 ul = oldUl(:,randi(size(oldUl, 2)));
                 um = oldUm(:,randi(size(oldUm, 2)));
                 g = ul(um);
