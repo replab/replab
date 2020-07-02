@@ -12,6 +12,12 @@ classdef Morphism < replab.Str
             error('Abstract');
         end
 
+        function r = toRep(self, targetRep)
+            imageFun = @(s) targetRep.image(self.image(s));
+            inverseImageFun = @(s) targetRep.inverseImage(self.image(s));
+            r = replab.Rep.lambda(source, targetRep.field, targetRep.dimension, imageFun, inverseImageFun);
+        end
+
     end
 
     methods (Static)
