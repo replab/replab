@@ -466,6 +466,37 @@ classdef Chain < replab.Str
             index = index + vpi(1);
         end
 
+        function gs = matrixFromElements(self)
+        % Returns a matrix with all elements from chain
+        %
+        % Returns:
+        %   gs double(\*,\*): matrix with each row an element
+            ord = double(self.order);
+            f = self.orbitSizes;
+            L = self.length;
+            index_lst = zeros(ord, L);
+            for index = 1:ord
+                indices = zeros(1, L);
+                ind = index - 1;
+                for i = L:-1:1
+                    r = mod(ind, f(i));
+                    ind = (ind - r)/f(i);
+                    indices(i) = double(r) + 1;
+                end
+                index_lst(index, :) = indices;
+            end
+            gs = repmat(1:self.n, ord, 1);
+            for i = 1:L
+                Ui = self.U{i};
+                for index = 1:ord
+                    gi = Ui(:, index_lst(index, i));
+                    g = gs(index, :);
+                    gs(index, :) = g(gi);
+                end
+            end
+        end
+        
+        
         %% Mutable methods
 
         function insertInOrbit(self, i, b, u)
