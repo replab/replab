@@ -24,7 +24,7 @@ function res = subgroupSearch(group, prop, base, tests, init_subgroup)
 % Example:
 %   >>> n = 12;
 %   >>> Sn = replab.S(n);
-%   >>> isEven = @(g) replab.bsgs.permsign(g) == 1;
+%   >>> isEven = @(g) Sn.sign(g) == 1;
 %   >>> H = replab.PermutationGroup.fromChain(replab.bsgs.subgroupSearch(Sn.chain, isEven));
 %   >>> Sn.order/H.order
 %        2
