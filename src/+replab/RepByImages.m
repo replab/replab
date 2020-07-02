@@ -3,7 +3,7 @@ classdef RepByImages < replab.Rep
 %
 % It works by representing the finite group as a permutation group (if it is not already a permutation group),
 % then using a BSGS construction that stores the stabilizer chain with transversal elements both encoding the
-% group transversals and their images (see `+replab.+bsgs.Chain`).
+% group transversals and their images (see `+replab.+bsgs.ChainWithImages`).
 %
 % If the finite group is not a permutation group, a "nice monomorphism" in the sense of GAP is used, see:
 % https://www.gap-system.org/Manuals/doc/ref/chap40.html#X7FFD731684606BC6)
@@ -14,7 +14,7 @@ classdef RepByImages < replab.Rep
     end
 
     properties (Access = protected)
-        chain_ % (`+replab.+bsgs.Chain`): BSGS chain with images
+        chain_ % (`+replab.+bsgs.ChainWithImages`): BSGS chain with images
     end
 
     methods
@@ -38,7 +38,7 @@ classdef RepByImages < replab.Rep
             knownUnitary = true;
             isInexact = false;
             for i = 1:group.nGenerators
-                knownUnitary = knownUnitary && isequal(images{i}, inverseImages{i}');
+                knownUnitary = knownUnitary && isequal(images{i}, ctranspose(inverseImages{i}));
                 assert(isequal(size(images{i}), [dimension dimension]));
                 isInexact = isInexact || ~(isa(images{i}, 'sym') || isequal(images{i}, round(images{i})));
                 isInexact = isInexact || ~(isa(inverseImages{i}, 'sym') || isequal(inverseImages{i}, round(inverseImages{i})));
@@ -61,38 +61,30 @@ classdef RepByImages < replab.Rep
 
         function c = chain(self)
             if isempty(self.chain_)
+                d = self.dimension;
+                n = self.group.niceGroup.domainSize;
+                order = self.group.order;
+                generators = self.group.niceGroup.generators;
                 if self.isUnitary
                     if self.overR
-                        J = replab.OrthogonalGroup(self.dimension);
+                        target = replab.OrthogonalGroup(d);
                     else
-                        J = replab.UnitaryGroup(self.dimension);
+                        target = replab.UnitaryGroup(d);
                     end
-                    niceId = self.group.niceMonomorphismImage(self.group.identity);
-                    n = length(niceId);
-                    nG = self.group.nGenerators;
-                    I = zeros(n, nG);
-                    for i = 1:nG
-                        I(:,i) = self.group.niceMonomorphismImage(self.group.generator(i));
-                    end
-                    self.chain_ = replab.bsgs.Chain.makeWithImages(n, I, J, self.images_internal, @(X) double(X));
+                    symToDouble = replab.Morphism.lambda(target, target, @(X) double(X)); % remove symbolic toolbox stuff
+                    self.chain_ = replab.bsgs.ChainWithImages.make(n, target, generators, self.images_internal, ...
+                                                                   symToDouble, [], order);
                 else
-                    J = replab.GeneralLinearGroupWithInverses(self.field, self.dimension);
-                    niceId = self.group.niceMonomorphismImage(self.group.identity);
-                    n = length(niceId);
+                    target1 = replab.GeneralLinearGroupWithInverses(self.field, self.dimension);
+                    target2 = replab.GeneralLinearGroup(self.field, self.dimension);
+                    cut = replab.Morphism.lambda(target1, target2, @(X) double(X(:, 1:self.dimension)));
                     nG = self.group.nGenerators;
-                    I = zeros(n, nG);
-                    elements = cell(1, nG);
+                    images = cell(1, nG);
                     for i = 1:nG
-                        I(:,i) = self.group.niceMonomorphismImage(self.group.generator(i));
-                        elements{i} = [self.images_internal{i} self.inverseImages_internal{i}];
+                        images{i} = [self.images_internal{i} self.inverseImages_internal{i}];
                     end
-                    C = replab.bsgs.Chain(n, J);
-                    C.insertStrongGenerators(I, elements);
-                    C.randomizedSchreierSims;
-                    cut = @(X) double(X(:, 1:self.dimension));
-                    C.mutableMapImages(replab.GeneralLinearGroup(self.field, self.dimension), cut);
-                    C.makeImmutable;
-                    self.chain_ = C;
+                    self.chain_ = replab.bsgs.ChainWithImages.make(n, target1, generators, images, cut, ...
+                                                                   [], order);
                 end
             end
             c = self.chain_;

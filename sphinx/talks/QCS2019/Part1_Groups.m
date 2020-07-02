@@ -57,7 +57,7 @@ GAlice1.order
 sParties = [3 4 1 2];
 sFlip = [-1 -2 -3 -4];
 sOther = [2 1 3 -4];
-GCHSH = replab.signed.Permutations(4).subgroup({sParties sFlip sOther})
+GCHSH = replab.SignedPermutations(4).subgroup({sParties sFlip sOther})
 
 GCHSH.order
 

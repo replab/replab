@@ -13,6 +13,10 @@ function irr = decomposition(rep)
 % Returns:
 %   `+replab.Irreducible`: The irreducible decomposition
     assert(isa(rep, 'replab.Rep'));
+    if ~replab.dispatch('exists', 'replab.irreducible.decomposition')
+        replab.dispatch('register', 'replab.irreducible.decomposition', 'usingSplit', 0, ...
+                        @(rep) replab.irreducible.decompositionUsingSplit(rep));
+    end
     irr = replab.dispatch('call', 'replab.irreducible.decomposition', rep);
     assert(isa(irr, 'replab.Irreducible'));
 end

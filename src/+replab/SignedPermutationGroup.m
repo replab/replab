@@ -1,4 +1,4 @@
-classdef PermutationGroup < replab.NiceFiniteGroup
+classdef SignedPermutationGroup < replab.NiceFiniteGroup
 % A base class for all signed permutation groups
 
     properties (SetAccess = protected)
@@ -7,29 +7,30 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 
     methods
 
-        function self = PermutationGroup(domainSize, generators, order, parent)
+        function self = SignedPermutationGroup(domainSize, generators, order, parent)
         % Constructs a signed permutation group
         %
         % Args:
         %   domainSize (integer): Size of the domain
         %   generators (cell(1,\*) of permutation): Group generators
         %   order (vpi, optional): Order of the group
-        %   parent (`replab.signed.PermutationGroup`, optional): Parent of this group if known,
-        %                                                 or ``[]`` if this group is its own parent
+        %   parent (`+replab.SignedPermutationGroup`, optional): Parent of this group if known,
+        %                                                        or ``'self'`` if this group is its own parent
             self.domainSize = domainSize;
             self.identity = 1:domainSize;
             self.generators = generators;
             if nargin > 2 && ~isempty(order)
                 self.order_ = order;
             end
-            if nargin > 3
-                if isempty(parent)
-                    self.parent = self;
-                else
-                    self.parent = parent;
-                end
+            if nargin < 4
+                parent = [];
+            end
+            if isempty(parent)
+                self.parent = replab.SignedPermutations(domainSize);
+            elseif isequal(parent, 'self')
+                self.parent = self;
             else
-                self.parent = replab.signed.Permutations(domainSize);
+                self.parent = parent;
             end
         end
 
@@ -63,12 +64,12 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 
         %% NiceFiniteGroup methods
 
-        function res = sameParentAs(self, rhs)
-            res = isa(rhs, 'replab.signed.PermutationGroup') && (self.parent.domainSize == rhs.parent.domainSize);
+        function res = hasSameParentAs(self, rhs)
+            res = isa(rhs, 'replab.SignedPermutationGroup') && (self.parent.domainSize == rhs.parent.domainSize);
         end
 
         function p1 = niceMonomorphismImage(self, p)
-            p1 = replab.signed.Permutations.toPermutation(p);
+            p1 = replab.SignedPermutations.toPermutation(p);
         end
 
         function grp = subgroup(self, generators, order)
@@ -79,11 +80,11 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %   order (vpi, optional): Argument specifying the group order, if given can speed up computations
         %
         % Returns:
-        %   +replab.signed.PermutationGroup: The constructed signed permutation subgroup
+        %   +replab.SignedPermutationGroup: The constructed signed permutation subgroup
             if nargin < 3
                 order = [];
             end
-            grp = replab.signed.PermutationGroup(self.domainSize, generators, order, self.parent);
+            grp = replab.SignedPermutationGroup(self.domainSize, generators, order, self.parent);
         end
 
         %% Methods specific to signed permutation groups

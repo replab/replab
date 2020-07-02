@@ -3,7 +3,7 @@ classdef ForCompactGroup < replab.Equivariant
     methods (Static)
 
         function e = make(repC, repR, special)
-            e = replab.equivariant.ForCompactGroup(repC, repR, special);
+            e = replab.equi.ForCompactGroup(repC, repR, special);
         end
 
     end
@@ -123,7 +123,7 @@ classdef ForCompactGroup < replab.Equivariant
 
                         % Before possibly exiting we eventually produce
                         % some plots
-                        if (replab.equivariant.plotConvergence && ((mod(iter, 20) == 1)  || exitCondition)) || (iter == maxIters)
+                        if (replab.equi.plotConvergence && ((mod(iter, 20) == 1)  || exitCondition)) || (iter == maxIters)
                             if ~hasNewFigure
                                 figure
                                 hasNewFigure = true;

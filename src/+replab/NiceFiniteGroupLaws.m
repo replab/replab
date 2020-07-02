@@ -14,13 +14,13 @@ classdef NiceFiniteGroupLaws < replab.FiniteGroupLaws
         % Checks element membership (trivial case)
             self.assert(self.T.contains(t));
         end
-% $$$         function law_cyclic_subgroup_order_T(self, t)
-% $$$             if self.T.isIdentity(t)
-% $$$                 sub = self.T.subgroup({});
-% $$$             else
-% $$$                 sub = self.T.subgroup({t});
-% $$$             end
-% $$$             self.assert(sub.order == self.T.elementOrder(t));
-% $$$         end
+        function law_cyclic_subgroup_order_T(self, t)
+            if self.T.isIdentity(t)
+                sub = self.T.subgroup({});
+            else
+                sub = self.T.subgroup({t});
+            end
+            self.assert(sub.order == self.T.elementOrder(t));
+        end
     end
 end

@@ -7,7 +7,7 @@ classdef SignedPermutationNaturalAction < replab.Action
 % The behavior is undefined for integers outside that range
     methods
         function self = SignedPermutationNaturalAction(G)
-            assert(isa(G, 'replab.signed.PermutationGroup'));
+            assert(isa(G, 'replab.SignedPermutationGroup'));
             self.G = G;
             self.P = replab.domain.signedIntAsDouble(1, G.domainSize);
         end
