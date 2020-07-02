@@ -252,6 +252,14 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             c = self.centralizerGroup(self);
         end
 
+        function res = union(self, other)
+            assert(self.hasSameParentAs(other));
+            res = self;
+            for i = 1:other.nGenerators
+                res = res.closure(other.generator(i));
+            end
+        end
+
         function c = centralizerElement(self, other)
         % Returns the centralizer of a group in this group
         %
