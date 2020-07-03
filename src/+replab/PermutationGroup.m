@@ -185,11 +185,11 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         end
 
 
-        function T = leftTransversals(self, subgroup)
-            T = cellfun(@(g) self.inverse(g), self.rightTransversals(subgroup), 'uniform', 0);
+        function T = leftTransversal(self, subgroup)
+            T = cellfun(@(g) self.inverse(g), self.rightTransversal(subgroup), 'uniform', 0);
         end
 
-        function T = rightTransversals(self, subgroup)
+        function T = rightTransversal(self, subgroup)
             T = {};
             % equivalent to the non recursive code
             %          function rt = printRightTransversals(self, subgroup, g, subchain, l)

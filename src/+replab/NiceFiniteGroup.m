@@ -214,7 +214,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             sub = self.niceMonomorphismGroupPreimage(self.niceGroup.derivedSubgroup);
         end
 
-        function rt = leftTransversals(self, subgroup)
+        function rt = leftTransversal(self, subgroup)
         % Computes a list of representatives for the set of right cosets of subgroup in this group
         %
         % The left cosets are, for ``i = 1,...,nCosets``, given by ``rt{i} * subgroup``.
@@ -225,11 +225,11 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Returns:
         %   cell(1, \*) of element: Transversal elements
             assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            niceRt = self.niceGroup.leftTransversals(self.niceMonomorphismGroupImage(subgroup));
+            niceRt = self.niceGroup.leftTransversal(self.niceMonomorphismGroupImage(subgroup));
             rt = cellfun(@(p) self.niceMonomorphismPreimage(p), niceRt, 'uniform', 0);
         end
 
-        function rt = rightTransversals(self, subgroup)
+        function rt = rightTransversal(self, subgroup)
         % Computes a list of representatives for the set of right cosets of subgroup in this group
         %
         % The right cosets are, for ``i = 1,...,nCosets``, given by ``subgroup * rt{i}``.
@@ -240,7 +240,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Returns:
         %   cell(1, \*) of element: Transversal elements
             assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            niceRt = self.niceGroup.rightTransversals(self.niceMonomorphismGroupImage(subgroup));
+            niceRt = self.niceGroup.rightTransversal(self.niceMonomorphismGroupImage(subgroup));
             rt = cellfun(@(p) self.niceMonomorphismPreimage(p), niceRt, 'uniform', 0);
         end
 
