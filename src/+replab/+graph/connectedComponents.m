@@ -1,4 +1,4 @@
-function [subsets componentIndex start next] = connectedComponents(edges)
+function [subsets componentIndex] = connectedComponents(edges)
 % Identifies connected components of a graph
 %
 % Performs the burning algorithm on the network described by the
@@ -16,12 +16,6 @@ function [subsets componentIndex start next] = connectedComponents(edges)
 %         connex components
 %     componentIndex: sparse horizontal vector
 %         the index of the component to which each vertex belongs
-%     start: full horizontal vector
-%         identifies a first element within each each component
-%     next: sparse horizontal vector
-%         returns for each vertex a next vertex belonging to the same
-%         connected component. Value is 0 for the last element of the set.
-%         Useful to iterateover all elements of a connected component.
 %
 % Example:
 %     >>> replab.graph.connectedComponents([1 2; 2 6; 3 4]); % a graph with 5 nodes labelled 1, 2, 3, 4, 6
@@ -36,8 +30,6 @@ function [subsets componentIndex start next] = connectedComponents(edges)
         % trivial case
         subsets = {};
         componentIndex = [];
-        start = [];
-        next = [];
         return;
     end
 
@@ -64,29 +56,7 @@ function [subsets componentIndex start next] = connectedComponents(edges)
             co = co + length(subsets{i});
         end
 
-        componentIndex = sparse(1,a,b);
+        componentIndex = full(sparse(1,a,b));
     end
 
-    if nargout >= 3
-        start = zeros(1,length(subsets));
-        for i = 1:length(subsets)
-            start(i) = subsets{i}(1);
-        end
-    end
-
-    if nargout >= 4
-        c = zeros(1,length(a)-length(subsets));
-        d = zeros(size(c));
-
-        co = 0;
-        for i = 1:length(subsets)
-            for j = 1:length(subsets{i})-1
-                co = co + 1;
-                c(co) = subsets{i}(j);
-                d(co) = subsets{i}(j+1);
-            end
-        end
-
-        next = sparse(1,c,d,1,max(max(edges)));
-    end
 end
