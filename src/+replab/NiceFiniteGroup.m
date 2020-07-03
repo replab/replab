@@ -383,7 +383,11 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         function res = isCyclic(self)
         % Returns whether this group is a cyclic group
             assert(~isa(self, 'replab.PermutationGroup'));
-            res = self.niceGroup.isCyclic;
+            if isprime(self.order)
+                res = true;
+            else
+                res = self.niceGroup.isCyclic;
+            end
         end
 
         function grp = trivialSubgroup(self)
