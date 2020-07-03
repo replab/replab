@@ -127,7 +127,7 @@ classdef Chain < replab.Str
         % Computes a matrix with all elements from the stabilizer chain
         %
         % Returns:
-        %   double(\*,\*): Matrix with each row an element
+        %   double(\*,\*): Matrix with each column an element
             gs = [1:self.n]';
             if self.length == 0 || max(self.orbitSizes) == 1 % tests if order == 1
                 return

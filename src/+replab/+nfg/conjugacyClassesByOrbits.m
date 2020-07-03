@@ -12,24 +12,23 @@ function classes = conjugacyClassesByOrbits(group)
 %
 % Returns:
 %   classImages (cell(1,\*) of double(\*,\*) arrays): All conjugacy classes, as matrices
-%                                                     with permutations in the class as rows
-
-    I = replab.nfg.niceMonomorphismImages(group);
-    ord = size(I, 1); % group order
-    ds = size(I, 2); % domain size for images
+%                                                     with permutations in the class as columns
+    I = group.chain.allElements3;
+    ds = size(I, 1); % domain size for images
+    ord = size(I, 2); % group order
     assert(ds < 65536, 'Domain size too big for naive enumeration');
     % we use a simple hash function that maps permutations to doubles
     % with a domain size < 2^16, that means that if h has values between -1023 and 1023,
     % the maximal value of the hash is 2^16*(2^16*2^10) = 2^36 which fits in a double
-    h = randi([-1023 1023], ds, 1)-1;
-    Ih = I * h;
+    h = randi([-1023 1023], 1, ds)-1;
+    Ih = h * I;
 
     nG = group.nGenerators;
-    gens = zeros(nG, ds);
-    gensInv = zeros(nG, ds);
+    gens = zeros(ds, nG);
+    gensInv = zeros(ds, nG);
     for i = 1:nG
-        gens(i,:) = group.niceMonomorphismImage(group.generator(i));
-        gensInv(i,:) = group.niceMonomorphismImage(group.generatorInverse(i));
+        gens(:,i) = group.niceMonomorphismImage(group.generator(i));
+        gensInv(:,i) = group.niceMonomorphismImage(group.generatorInverse(i));
     end
 
     conjcl = zeros(1, ord);
@@ -40,17 +39,17 @@ function classes = conjugacyClassesByOrbits(group)
             conjcl(i) = nConjCl;
             toCheck = [i];
             while ~isempty(toCheck)
-                g = I(toCheck(end), :);
+                g = I(:, toCheck(end));
                 toCheck = toCheck(1:end-1);
                 for j = 1:nG
-                    gen = gens(j,:);
-                    genInv = gensInv(j,:);
+                    gen = gens(:,j);
+                    genInv = gensInv(:,j);
                     cj = genInv(g(gen)); % faster compose(genInv, g, gen)
-                    f = find(Ih == cj*h);
+                    f = find(Ih == h*cj);
                     if length(f) > 1
                         disp('bing');
                         % several rows have the same hash, so we look for an exact match
-                        [~, loc] = ismember(cj, I(f,:), 'rows');
+                        [~, loc] = ismember(cj', I(f,:)', 'rows');
                         f = f(loc);
                     end
                     if conjcl(f) == 0
@@ -65,6 +64,6 @@ function classes = conjugacyClassesByOrbits(group)
     end
     classes = cell(1, nConjCl);
     for i = 1:nConjCl
-        classes{i} = I(conjcl == i, :);
+        classes{i} = I(:, conjcl == i);
     end
 end
