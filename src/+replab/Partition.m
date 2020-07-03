@@ -79,7 +79,7 @@ classdef Partition < replab.Str
         %
         % Returns:
         %   integer: Number of blocks
-            n = length(self.start);
+            n = length(self.blocks);
         end
 
         function B = block(self, i)
