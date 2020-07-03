@@ -169,8 +169,13 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             elseif ~self.isCommutative
                 res = false;
             else
-                pds = unique(factor(self.order));
-                assert(all(pds <= 2^53-1)); % to be sure, but unlikely (otherwise can a BSGS be computed?)
+                pds = factor(self.order);
+                if length(pds) == 1 % group of prime order is cyclic
+                    res = true;
+                    return
+                end
+                pds = unique(pds);
+                assert(all(pds <= 2^53-1)); % to be sure (otherwise can a BSGS have been computed?)
                 pds = double(pds);
                 for p = pds
                     newGens = cellfun(@(g) self.composeN(g, p), self.generators, 'uniform', 0);

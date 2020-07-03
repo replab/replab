@@ -47,9 +47,8 @@ function classes = conjugacyClassesByOrbits(group)
                     cj = genInv(g(gen)); % faster compose(genInv, g, gen)
                     f = find(Ih == h*cj);
                     if length(f) > 1
-                        disp('bing');
                         % several rows have the same hash, so we look for an exact match
-                        [~, loc] = ismember(cj', I(f,:)', 'rows');
+                        [~, loc] = ismember(cj', I(:,f)', 'rows');
                         f = f(loc);
                     end
                     if conjcl(f) == 0

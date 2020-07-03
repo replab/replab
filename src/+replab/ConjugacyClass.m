@@ -16,7 +16,7 @@ classdef ConjugacyClass < replab.Str
 
         function self = ConjugacyClass(group, elementImages)
             self.group = group;
-            self.representative = group.niceMonomorphismPreimage(elementImages(:,1));
+            self.representative = group.niceMonomorphismPreimage(elementImages(:,1)');
             self.elementImages = elementImages;
             self.size = size(self.elementImages, 2);
         end
@@ -26,7 +26,7 @@ classdef ConjugacyClass < replab.Str
     methods
 
         function e = elements(self)
-            e = arrayfun(@(i) self.group.niceMonomorphismPreimage(self.elementImages(:,i)), 1:self.size, 'uniform', 0);
+            e = arrayfun(@(i) self.group.niceMonomorphismPreimage(self.elementImages(:,i)'), 1:self.size, 'uniform', 0);
         end
 
     end
