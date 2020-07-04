@@ -410,9 +410,9 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             base = chain.base;
             tests = cell(1, length(base));
             for l = 1:length(base)
-                tests{l} = @(g, data) deal(isequal(v(base(1:l)), w(g(base(1:l)))), []);
+                tests{l} = @(g, data) deal(v(base(l)) == w(g(base(l))), []);
             end
-            gInv = replab.bsgs.backtrackSearch(chain, @(x) isequal(v, w(x)), tests, [], vStabilizer, wStabilizer);
+            gInv = replab.bsgs.backtrackSearch(chain, @(x) isequal(v, w(x)), tests, [], vStabilizer.chain, wStabilizer.chain);
             g = self.inverse(gInv);
         end
 
@@ -426,12 +426,12 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %   `.PermutationGroup`: The subgroup of this group leaving ``vector`` invariant
             vector = vector(:).';
             v = unique(vector);
-            c = arrayfun(@(x) sum(list == x), v);
+            c = arrayfun(@(x) sum(vector == x), v);
             [~, I] = sort(c);
             v = v(I);
             sub = self;
             for i = v
-                sub = sub.setwiseStabilizer(find(list == i));
+                sub = sub.setwiseStabilizer(find(vector == i));
             end
         end
 
