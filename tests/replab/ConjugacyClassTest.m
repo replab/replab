@@ -9,7 +9,9 @@ end
 
 function test_centralizer_order
     n = 8;
-    G = replab.nfg.randomSubgroup(replab.S(n).derivedSubgroup);
+    Sn = replab.S(n);
+    G = replab.nfg.randomSubgroup(Sn);
+    G = replab.nfg.randomSubgroup(G);
     C = G.conjugacyClasses;
     for i = 1:length(C)
         g = C{i}.representative;
