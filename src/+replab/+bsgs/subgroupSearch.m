@@ -63,42 +63,18 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
         tests = {};
         startData = [];
     end
-    % handle tests: if tests do not cover base fully, we complete by trivial tests
-    for i = length(tests)+1:group.length
-        tests{1,i} = @(g, indata) deal(true, []);
-    end
-    if any(group.orbitSizes == 1)
-        oldBase = group.B;
-        oldTests = tests;
-        group = group.mutableCopy;
-        group.removeRedundantBasePoints;
-        group.makeImmutable;
-        newBase = group.newBase;
-        start = find(oldBase == newBase(1));
-        for j = 1:start-1
-            [ok, startData] = oldTests{j}(identity, startData);
-            assert(ok == 1);
-        end
-        current = start;
-        for i = 1:length(newBase)
-            if i < length(newBase)
-                next = find(oldBase == newBase(i+1));
-            else
-                next = length(oldBase) + 1;
-            end
-            if current + 1 == next
-                tests{i} = oldTests{current};
-            else
-                tests{i} = @(g, inData) replab.bsgs.chainTests(tests(current:next-1), g, inData);
-            end
-        end
-    end
+    [group, tests, startData] = replab.bsgs.cleanUpBaseAndTests(group, tests, startData);
     base = group.base;
     baseLen = length(base);
+    if baseLen == 0
+        res = replab.bsgs.Chain(degree);
+        res.makeImmutable;
+        return
+    end
+    identity = 1:degree;
     testData = cell(1, baseLen);
     testData{1} = startData;
-    identity = 1:degree;
-    for i = 1:l
+    for i = 1:baseLen
         [ok, testData{i+1}] = tests{i}(identity, testData{i});
     end
     baseOrdering = [replab.bsgs.baseOrdering(degree, base) degree+1 0];
@@ -128,7 +104,7 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
     nu = zeros(1, baseLen);
     % this corresponds to the element smaller than all points
     mu(l) = degree + 2;
-    nu(l) = computeNu(degree, l, sortedOrbits, group.Delta, resBasicOrbits);
+    nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, resBasicOrbits);
     % initialized computed words
     g = repmat({identity}, 1, baseLen);
     greaterThan = @(x, y) baseOrdering(x) > baseOrdering(y);
@@ -141,7 +117,7 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
             if ~greaterThan(img, mu(l)) || ~lessThan(img, nu(l)) || ~minimalInOrbit{l}(img)
                 break
             end
-            [ok, testData{l+1}] = tests{l}(g, testData{l});
+            [ok, testData{l+1}] = tests{l}(g{l}, testData{l});
             if ~ok
                 break
             end
@@ -154,8 +130,8 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
             l = l + 1;
             sortedOrbits{l} = replab.bsgs.sortByOrdering(g{l-1}(group.Delta{l}), baseOrdering);
             % lines 14 and 15: update variables used in minimality tests
-            mu(l) = computeMu(degree, l, base, g, resBasicOrbits, baseOrdering);
-            nu(l) = computeNu(degree, l, sortedOrbits, group.Delta, resBasicOrbits);
+            mu(l) = replab.bsgs.computeMu(degree, l, base, g, resBasicOrbits, baseOrdering);
+            nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, resBasicOrbits);
             % line 16: determine the new transversal element
             c(l) = 1;
             idx = sortedOrbits{l}(c(l));
@@ -166,16 +142,19 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
         % lines 17: apply the tests to the group element found
         if l == baseLen
             img = g{l}(base(l));
-            if minimalInOrbit{l}(img) && greaterThan(img, mu(l)) && lessThan(img, nu(l)) && tests{l}(g{l}, testData{l}) && prop(g{l})
-                % line 18: add new strong generator for K
-                % line 19-20: reset the base of K
-                res.baseChange(base);
-                res.stripAndAddStrongGenerator(g{l});
-                resBasicOrbits = res.Delta;
-                % line 21: recalculate orbit representatives
-                minimalInOrbit{f} = replab.bsgs.minimalByBaseOrderingInOrbit(degree, res.strongGeneratorsForLevel(f), baseOrdering);
-                % line 22: reset the search depth
-                l = f;
+            if minimalInOrbit{l}(img) && greaterThan(img, mu(l)) && lessThan(img, nu(l))
+                [ok, ~] = tests{l}(g{l}, testData{l});
+                if ok && prop(g{l})
+                    % line 18: add new strong generator for K
+                    % line 19-20: reset the base of K
+                    res.baseChange(base);
+                    res.stripAndAddStrongGenerator(g{l});
+                    resBasicOrbits = res.Delta;
+                    % line 21: recalculate orbit representatives
+                    minimalInOrbit{f} = replab.bsgs.minimalByBaseOrderingInOrbit(degree, res.strongGeneratorsForLevel(f), baseOrdering);
+                    % line 22: reset the search depth
+                    l = f;
+                end
             end
         end
         % line 23: go up the tree until in the first branch not fully seached
@@ -196,7 +175,7 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
             minimalInOrbit{f} = replab.bsgs.minimalByBaseOrderingInOrbit(degree, res.strongGeneratorsForLevel(f), baseOrdering);
             % line 28: update variables used for minimality testing
             mu(l) = degree + 2; % = 0
-            nu(l) = computeNu(degree, l, sortedOrbits, group.Delta, resBasicOrbits);
+            nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, resBasicOrbits);
         end
         % line 29: set the next element from the current branch and update accordingly
         c(l) = c(l) + 1;
@@ -212,26 +191,5 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
         else
             g{l} = g{l-1}(ul);
         end
-    end
-end
-
-function mu = computeMu(degree, l, base, g, resBasicOrbits, baseOrdering)
-    mu = degree + 2; % place holder for element < all others in base ordering
-    for j = 1:l
-        if ismember(base(l), resBasicOrbits{j})
-            candidate = g{j}(base(j));
-            if baseOrdering(candidate) > mu
-                mu = candidate;
-            end
-        end
-    end
-end
-
-function nu = computeNu(degree, l, sortedOrbits, orbits, resBasicOrbits)
-    idx = length(orbits{l}) + 2 - length(resBasicOrbits{l});
-    if idx > length(sortedOrbits{l})
-        nu = degree + 1; % place holder for element > all others in base ordering
-    else
-        nu = sortedOrbits{l}(idx);
     end
 end

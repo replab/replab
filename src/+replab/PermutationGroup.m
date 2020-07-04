@@ -284,16 +284,153 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             c = replab.bsgs.Centralizer(self, other).subgroup;
         end
 
-        function sub = leaveInvariant(self, list)
-            v = unique(list);
+        function sub = unorderedPartitionStabilizer(self, partition)
+        % Computes the subgroup that leaves the given unordered partition invariant
+        %
+        % Example:
+        %    >>> G = replab.S(4).unorderedPartitionStabilizer(replab.Partition.fromBlockIndices([1 1 2 2]));
+        %    >>> G == replab.S(4).subgroup({[2 1 3 4] [3 4 1 2]})
+        %        1
+        %
+        % Args:
+        %   partition (`.Partition`): Unordered partition to leave invariant
+        %
+        % Returns:
+        %   `.PermutationGroup`: The subgroup that stabilizes the unordered partition
+            n = partition.n;
+            assert(n == self.domainSize);
+            % sort the blocks from the smallest to the biggest
+            blocks = partition.blocks;
+            [~, I] = sort(cellfun(@length, blocks));
+            blocks = blocks(I);
+            % initialize the variables that will be captured by the function handles
+            blockSizes = zeros(1, partition.n);
+            blockIndex = zeros(1, partition.n);
+            base = [];
+            tests = cell(1, n);
+            base = zeros(1, n);
+            k = 1;
+            for i = 1:length(blocks)
+                blockSizes(blocks{i}) = length(blocks{i});
+                blockIndex(blocks{i}) = i;
+            end
+            % create the tests
+            for i = 1:length(blocks)
+                block = blocks{i};
+                s = length(block);
+                b = block(1);
+                base(k) = b;
+                % the first element of a new block needs to be mapped to a block of the same size;
+                % we pass on the index of that block we are mapped to as data
+                tests{1,k} = @(g, data) deal(blockSizes(g(b)) == s, blockIndex(g(b)));
+                k = k + 1;
+                for j = 2:s
+                    b = block(j);
+                    base(k) = b;
+                    % for the subsequent points in the same block, we verify that we still
+                    % map to the same block
+                    tests{1,k} = @(g, data) deal(blockIndex(g(b)) == data, data);
+                    k = k + 1;
+                end
+            end
+            c = self.chain.mutableCopy;
+            c.baseChange(base);
+            isConstant = @(x) all(x == x(1));
+            prop = @(g) all(cellfun(@(b) isConstant(blockIndex(g(b))), blocks));
+            subchain = replab.bsgs.subgroupSearch(c, prop, tests, []);
+            sub = replab.PermutationGroup.fromChain(subchain, self.parent);
+        end
+
+        function sub = orderedPartitionStabilizer(self, partition)
+        % Computes the subgroup that leaves the given ordered partition invariant
+        %
+        % The subgroup maps every block of the partition to itself under permutation of the
+        % domain elements.
+        %
+        %
+        % Example:
+        %    >>> G = replab.S(4).orderedPartitionStabilizer(replab.Partition.fromBlockIndices([1 1 2 2]));
+        %    >>> G == replab.S(4).subgroup({[2 1 3 4] [1 2 4 3]})
+        %        1
+        %
+        % Args:
+        %   partition (`.Partition`): Ordered partition to leave invariant
+        %
+        % Returns:
+        %   `.PermutationGroup`: The subgroup that stabilizes the ordered partition
+            n = partition.n;
+            assert(n == self.domainSize);
+            blocks = partition.blocks;
+            % sort the blocks from the smallest to the biggest
+            [~, I] = sort(cellfun(@length, blocks));
+            blocks = blocks(I);
+            blockIndex = zeros(1, partition.n);
+            base = [];
+            tests = cell(1, n);
+            base = zeros(1, n);
+            k = 1;
+            for i = 1:length(blocks)
+                block = blocks{i};
+                blockIndex(block) = i;
+                for j = 1:length(block)
+                    b = block(j);
+                    base(k) = b;
+                    % the tests express that every block is mapped to itself
+                    tests{1,k} = @(g, data) deal(blockIndex(g(b)) == i, []);
+                    k = k + 1;
+                end
+            end
+            c = self.chain.mutableCopy;
+            c.baseChange(base);
+            prop = @(g) isequal(blockIndex(g), blockIndex);
+            subchain = replab.bsgs.subgroupSearch(c, prop, tests, []);
+            sub = replab.PermutationGroup.fromChain(subchain, self.parent);
+        end
+
+        function g = findPermutationTo(self, v, w, vStabilizer, wStabilizer)
+        % Finds the permutation that relates two vectors, if it exists
+        %
+        % It returns the ``g`` such that ``w == v(g)``.
+        %
+        % Args:
+        %   v (double(1,domainSize)): Row vector
+        %   w (double(1,domainSize)): Another row vector
+        %   vStabilizer (`.PermutationGroup`, optional): Vector stabilizer of ``v`` (or subgroup thereof)
+        %   wStabilizer (`.PermutationGroup`, optional): Vector stabilizer of ``w`` (or subgroup thereof)
+        %
+        % Returns:
+        %   permutation: The permutation ``g`` such that ``v == w(g)``
+            if nargin < 4 || isequal(vStabilizer, [])
+                vStabilizer = self.vectorStabilizer(v);
+            end
+            if nargin < 5 || isequal(wStabilizer, [])
+                wStabilizer = self.vectorStabilizer(w);
+            end
+            chain = self.chain.mutableCopy;
+            base = chain.base;
+            tests = cell(1, length(base));
+            for l = 1:length(base)
+                tests{l} = @(g, data) deal(isequal(v(base(1:l)), w(g(base(1:l)))), []);
+            end
+            gInv = replab.bsgs.backtrackSearch(chain, @(x) isequal(v, w(x)), tests, [], vStabilizer, wStabilizer);
+            g = self.inverse(gInv);
+        end
+
+        function sub = vectorStabilizer(self, vector)
+        % Returns the permutation subgroup that leaves a given vector invariant
+        %
+        % Args:
+        %   vector (double(1,domainSize)): Vector to stabilize under permutation
+        %
+        % Returns:
+        %   `.PermutationGroup`: The subgroup of this group leaving ``vector`` invariant
+            vector = vector(:).';
+            v = unique(vector);
             c = arrayfun(@(x) sum(list == x), v);
-            mask = c ~= 1;
-            v = v(mask);
-            c = c(mask);
             [~, I] = sort(c);
             v = v(I);
             sub = self;
-            for i = 1:v
+            for i = v
                 sub = sub.setwiseStabilizer(find(list == i));
             end
         end

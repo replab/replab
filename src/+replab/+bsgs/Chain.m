@@ -364,6 +364,11 @@ classdef Chain < replab.Str
                     end
                 end
             end
+            for i = self.length:-1:length(newBase)+1
+                if self.orbitSize(i) == 1
+                    self.removeRedundantBasePoint(i);
+                end
+            end
             %self.check;
         end
 
@@ -772,7 +777,7 @@ classdef Chain < replab.Str
 
         function removeRedundantBasePoints(self)
         % Removes all redundant base points from this chain
-            red = fliplr(sort(find(self.orbitSize == 1)));
+            red = fliplr(sort(find(self.orbitSizes == 1)));
             for l = red
                 self.removeRedundantBasePoint(l);
             end

@@ -1,9 +1,9 @@
-function res = backtrackSearch(group, prop, base, tests, rightSubgroup)
+function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, rightSubgroup)
 % Find an element in group that satisfies a property
 %
 % We accelerate the search by the following assumption: for any element ``g`` of ``group`` that
-% satisfies the property, then all elements of the coset ``g rightSubgroup``
-% also satisfy the property.
+% satisfies the property, then all elements of the coset ``leftSubgroup g rightSubgroup``
+% also satisfy the property. Note that one or two of these subgroups may be trivial.
 %
 % This implementation is based heavily on `+replab.+bsgs.subgroupSearch`.
 %
@@ -12,42 +12,42 @@ function res = backtrackSearch(group, prop, base, tests, rightSubgroup)
 %   prop (function_handle): The property to be used. Has to be callable on group elements
 %                           and return a logical value.
 %   base (integer(1,\*), optional): A (potentially partial) base for the group, used in conjonction with the tests
-%   tests (cell(1,\*) of function_handle, optional): A list of function handles. These are used to rule ou group elements
-%                                                    by partial base images, so that ``tests{l}(g)`` returns false if the
-%                                                    elements ``g`` is known not to satisfy ``prop`` on where ``g`` sends the
-%                                                    first ``l`` base points.
+%   tests (cell(1,\*) of function_handle, optional): A list of function handles, see description in `.subgroupSearch`
+%   startData (user-defined): Data to pass to the first test function
 %   leftSubgroup (`+replab.+bsgs.Chain`): BSGS chain representing the left subgroup in the equivalence assumption above
 %   rightSubgroup (`+replab.+bsgs.Chain`): BSGS chain representing the right subgroup in the equivalence assumption above
 %
 % Returns:
 %   permutation: An element satisfying the property if it exists
-%
     degree = group.n;
     % initialize basic properties
-    if nargin < 6
+    if nargin < 6 || isempty(rightSubgroup)
         rightSubgroup = replab.bsgs.Chain(degree);
     end
-    if nargin < 5
+    if nargin < 5 || isempty(leftSubgroup)
         leftSubgroup = replab.bsgs.Chain(degree);
     end
     if nargin < 4
         tests = {};
-        base = [];
-    end
-    if ~isempty(base)
-        % change the BSGS base to the base provided
-        group = group.mutableCopy;
-        group.baseChange(base);
-        group.makeImmutable;
-    end
-    % but the actual base may have additional points at the end
-    base = group.B;
-    baseLen = length(base);
-    % handle tests: if tests do not cover base fully, we complete by trivial tests
-    for i = length(tests)+1:baseLen
-        tests{1,i} = @(x) true;
+        startData = [];
     end
     identity = 1:degree;
+    [group, tests, startData] = replab.bsgs.cleanUpBaseAndTests(group, tests, startData);
+    base = group.base;
+    baseLen = length(base);
+    if baseLen == 0
+        if prop(identity)
+            res = identity;
+        else
+            res = [];
+        end
+        return
+    end
+    testData = cell(1, baseLen);
+    testData{1} = startData;
+    for i = 1:baseLen
+        [ok, testData{i+1}] = tests{i}(identity, testData{i});
+    end
     baseOrdering = [replab.bsgs.baseOrdering(degree, base) degree+1 0];
     % line 1-2: initialization
     % in the subgroup search algorithm, we construct a subgroup K by adding the new strong
@@ -61,8 +61,7 @@ function res = backtrackSearch(group, prop, base, tests, rightSubgroup)
     l = baseLen;
     % line 3: compute BSGS and related structure for K
     minimalInOrbit{f} = replab.bsgs.minimalByBaseOrderingInOrbit(degree, right.strongGeneratorsForLevel(f), baseOrdering);
-    % line 5: remove the base point from the representatives to avoid getting the identity element as a generator for K
-    minimalInOrbit{f}(base(f)) = false;
+    % line 5: DO NOT remove the base point from the representatives, we want to test the identity!
     % line 6: more initializations
     c = zeros(1, baseLen);
     u = repmat({identity}, 1, baseLen);
@@ -75,7 +74,7 @@ function res = backtrackSearch(group, prop, base, tests, rightSubgroup)
     nu = zeros(1, baseLen);
     % this corresponds to the element smaller than all points
     mu(l) = degree + 2;
-    nu(l) = computeNu(degree, l, sortedOrbits, group.Delta, left.Delta);
+    nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, left.Delta);
     % initialized computed words
     g = repmat({identity}, 1, baseLen);
     greaterThan = @(x, y) baseOrdering(x) > baseOrdering(y);
@@ -85,7 +84,11 @@ function res = backtrackSearch(group, prop, base, tests, rightSubgroup)
         while l < baseLen
             % line 10: apply all tests
             img = g{l}(base(l));
-            if ~greaterThan(img, mu(l)) || ~lessThan(img, nu(l)) || ~minimalInOrbit{l}(img) || ~tests{l}(g{l})
+            if ~greaterThan(img, mu(l)) || ~lessThan(img, nu(l)) || ~minimalInOrbit{l}(img)
+                break
+            end
+            [ok, testData{l+1}] = tests{l}(g{l}, testData{l});
+            if ~ok
                 break
             end
             % line 11: change the (partial) base
@@ -97,8 +100,8 @@ function res = backtrackSearch(group, prop, base, tests, rightSubgroup)
             l = l + 1;
             sortedOrbits{l} = replab.bsgs.sortByOrdering(g{l-1}(group.Delta{l}), baseOrdering);
             % lines 14 and 15: update variables used in minimality tests
-            mu(l) = computeMu(degree, l, base, g, left.Delta, baseOrdering);
-            nu(l) = computeNu(degree, l, sortedOrbits, group.Delta, left.Delta);
+            mu(l) = replab.bsgs.computeMu(degree, l, base, g, left.Delta, baseOrdering);
+            nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, left.Delta);
             % line 16: determine the new transversal element
             c(l) = 1;
             idx = sortedOrbits{l}(c(l));
@@ -109,9 +112,12 @@ function res = backtrackSearch(group, prop, base, tests, rightSubgroup)
         % lines 17: apply the tests to the group element found
         if l == baseLen
             img = g{l}(base(l));
-            if minimalInOrbit{l}(img) && greaterThan(img, mu(l)) && lessThan(img, nu(l)) && tests{l}(g{l}) && prop(g{l})
-                res = g{l};
-                return
+            if minimalInOrbit{l}(img) && greaterThan(img, mu(l)) && lessThan(img, nu(l))
+                [ok, ~] = tests{l}(g{l}, testData{l});
+                if ok && prop(g{l})
+                    res = g{l};
+                    return
+                end
                 % skip lines 18-22 as we are not modifying the left and right subgroups
             end
         end
@@ -133,7 +139,7 @@ function res = backtrackSearch(group, prop, base, tests, rightSubgroup)
             minimalInOrbit{f} = replab.bsgs.minimalByBaseOrderingInOrbit(degree, right.strongGeneratorsForLevel(f), baseOrdering);
             % line 28: update variables used for minimality testing
             mu(l) = degree + 2; % = 0
-            nu(l) = computeNu(degree, l, sortedOrbits, group.Delta, left.Delta);
+            nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, left.Delta);
         end
         % line 29: set the next element from the current branch and update accordingly
         c(l) = c(l) + 1;
@@ -149,26 +155,5 @@ function res = backtrackSearch(group, prop, base, tests, rightSubgroup)
         else
             g{l} = g{l-1}(ul);
         end
-    end
-end
-
-function mu = computeMu(degree, l, base, g, resBasicOrbits, baseOrdering)
-    mu = degree + 2; % place holder for element < all others in base ordering
-    for j = 1:l
-        if ismember(base(l), resBasicOrbits{j})
-            candidate = g{j}(base(j));
-            if baseOrdering(candidate) > mu
-                mu = candidate;
-            end
-        end
-    end
-end
-
-function nu = computeNu(degree, l, sortedOrbits, orbits, resBasicOrbits)
-    idx = length(orbits{l}) + 2 - length(resBasicOrbits{l});
-    if idx > length(sortedOrbits{l})
-        nu = degree + 1; % place holder for element > all others in base ordering
-    else
-        nu = sortedOrbits{l}(idx);
     end
 end
