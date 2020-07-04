@@ -326,10 +326,10 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             c.baseChange(set);
             tests = cell(1, length(set));
             for i = 1:length(tests)
-                tests{i} = @(g) mask(g(set(i)));
+                tests{i} = @(g, data) deal(mask(g(set(i))), []);
             end
             prop = @(g) all(mask(g(set)));
-            subchain = replab.bsgs.subgroupSearch(c, prop, set, tests);
+            subchain = replab.bsgs.subgroupSearch(c, prop, tests, []);
             s = replab.PermutationGroup.fromChain(subchain, self.parent);
         end
 
