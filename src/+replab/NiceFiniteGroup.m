@@ -377,7 +377,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Returns:
         %   `+replab.NiceFiniteGroup`: Subgroup representing the intersection
             assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            res = self.niceMonomorphismGroupPreimage(self.niceGroup.intersection(self.niceMonomorphismGroupImage(G)));
+            sub = self.niceMonomorphismGroupPreimage(self.niceGroup.intersection(self.niceMonomorphismGroupImage(G)));
         end
 
         function res = isCyclic(self)
