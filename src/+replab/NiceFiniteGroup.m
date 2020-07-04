@@ -214,7 +214,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             sub = self.niceMonomorphismGroupPreimage(self.niceGroup.derivedSubgroup);
         end
 
-        function rt = leftTransversals(self, subgroup)
+        function rt = leftTransversal(self, subgroup)
         % Computes a list of representatives for the set of right cosets of subgroup in this group
         %
         % The left cosets are, for ``i = 1,...,nCosets``, given by ``rt{i} * subgroup``.
@@ -225,11 +225,11 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Returns:
         %   cell(1, \*) of element: Transversal elements
             assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            niceRt = self.niceGroup.leftTransversals(self.niceMonomorphismGroupImage(subgroup));
+            niceRt = self.niceGroup.leftTransversal(self.niceMonomorphismGroupImage(subgroup));
             rt = cellfun(@(p) self.niceMonomorphismPreimage(p), niceRt, 'uniform', 0);
         end
 
-        function rt = rightTransversals(self, subgroup)
+        function rt = rightTransversal(self, subgroup)
         % Computes a list of representatives for the set of right cosets of subgroup in this group
         %
         % The right cosets are, for ``i = 1,...,nCosets``, given by ``subgroup * rt{i}``.
@@ -240,7 +240,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Returns:
         %   cell(1, \*) of element: Transversal elements
             assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            niceRt = self.niceGroup.rightTransversals(self.niceMonomorphismGroupImage(subgroup));
+            niceRt = self.niceGroup.rightTransversal(self.niceMonomorphismGroupImage(subgroup));
             rt = cellfun(@(p) self.niceMonomorphismPreimage(p), niceRt, 'uniform', 0);
         end
 
@@ -383,7 +383,11 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         function res = isCyclic(self)
         % Returns whether this group is a cyclic group
             assert(~isa(self, 'replab.PermutationGroup'));
-            res = self.niceGroup.isCyclic;
+            if isprime(self.order)
+                res = true;
+            else
+                res = self.niceGroup.isCyclic;
+            end
         end
 
         function grp = trivialSubgroup(self)
@@ -392,6 +396,14 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Returns:
         %   `+replab.NiceFiniteGroup`: The trivial subgroup
             grp = self.subgroup({}, vpi(1));
+        end
+
+        function c = conjugacyClasses(self)
+        % Returns the conjugacy classes of this group
+        %
+        % Returns:
+        %   cell(1, \*) of `+replab.ConjugacyClass`: Array of conjugacy classes
+            c = replab.ConjugacyClass.computeAll(self);
         end
 
         function o = elementOrder(self, g)
@@ -454,11 +466,8 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             [~, g] = self.niceInverseMonomorphism.chain.sampleUniformly;
         end
 
-
         function b = contains(self, g)
         % Tests whether this group contains the given parent group element
-        %
-        % Abstract in `+replab.NiceFiniteSubgroup`
         %
         % Args:
         %   g (element of `parent`): Element to test membership of

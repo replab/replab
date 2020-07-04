@@ -12,9 +12,9 @@ classdef RandomBag < replab.Str
 % permutation groups.
 
     properties (SetAccess = protected)
-        n % domainSize
-        x0 % Last generated sample
-        x % n x r matrix representing the contents of the bag
+        n % (integer): Size of the domain
+        x0 % (integer(n, 1)): Last generated sample
+        x % (integer(n, \*)): Matrix representing the contents of the bag
     end
 
     methods
@@ -41,23 +41,28 @@ classdef RandomBag < replab.Str
             while t == s
                 t = randi(r);
             end
-            if randi(2) == 2
-                if randi(2) == 2 % e = 1
-                    self.x(:,s) = self.compose(self.x(:,s)', self.x(:,t)');
+            xs = self.x(:, s);
+            xt = self.x(:, t);
+            type = randi(4);
+            if type <= 2
+                if type == 1
+                    xs = xs(xt); % xs = compose(xs, xt)
                 else
-                    self.x(:,s) = self.compose(self.x(:,s)', self.inverse(self.x(:,t)'));
+                    xs(xt) = xs; % xs = compose(xs, inverse(xt))
                 end
-                self.x0 = self.compose(self.x0, self.x(:,s)');
+                self.x0 = self.x0(xs); % x0 = compose(x0, xs)
             else
-                if randi(2) == 2 % e = 1
-                    self.x(:,s) = self.compose(self.x(:,t)', self.x(:,s)');
+                if type == 3
+                    xs = xt(xs); % xs = compose(xt, xs)
                 else
-                    tinv = self.inverse(self.x(:,t)');
-                    self.x(:,s) = self.compose(tinv, self.x(:,s)');
+                    % computes xs = compose(inverse(xt), xs);
+                    xt(xt) = xt; % invert xt
+                    xs = xt(xs); % compose
                 end
-                self.x0 = self.compose(self.x(:,s)', self.x0);
+                self.x0 = xs(self.x0); % x0 = compose(xs, x0)
             end
-            xres = self.x0;
+            self.x(:, s) = xs; % store new xs
+            xres = self.x0';
         end
 
         function self = RandomBag(n, generators, r, m)

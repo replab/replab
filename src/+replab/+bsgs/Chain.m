@@ -123,6 +123,105 @@ classdef Chain < replab.Str
             self.Sind = Sind;
         end
 
+        function gs = allElements3(self)
+        % Computes a matrix with all elements from the stabilizer chain
+        %
+        % Returns:
+        %   double(\*,\*): Matrix with each column an element
+            gs = [1:self.n]';
+            if self.length == 0 || max(self.orbitSizes) == 1 % tests if order == 1
+                return
+            else
+                i = self.length;
+                while i > 0 && self.orbitSize(i) == 1
+                    i = i - 1;
+                end
+                if i == 0
+                    return % gs is identity
+                end
+                gs = self.U{i};
+                i = i - 1;
+                while i > 0
+                    Ui = self.U{i};
+                    if size(Ui, 1) > 1
+                        newgs = gs;
+                        for j = 2:size(Ui,2)
+                            Uij = Ui(:,j);
+                            newgs = [newgs Uij(gs)];
+                        end
+                    end
+                    gs = newgs;
+                    i = i - 1;
+                end
+            end
+        end
+
+        function gs = allElements2(self)
+        % Computes a matrix with all elements from the stabilizer chain
+        %
+        % Returns:
+        %   double(\*,\*): Matrix with each row an element
+            gs = [1:self.n];
+            if self.length == 0 || max(self.orbitSizes) == 1 % tests if order == 1
+                return
+            else
+                i = self.length;
+                while i > 0 && self.orbitSize(i) == 1
+                    i = i - 1;
+                end
+                if i == 0
+                    return % gs is identity
+                end
+                gs = self.U{i}';
+                i = i - 1;
+                while i > 0
+                    Ui = self.U{i};
+                    if size(Ui, 1) > 1
+                        newgs = gs;
+                        for j = 2:size(Ui,2)
+                            Uij = Ui(:,j);
+                            newgs = [newgs; Uij(gs)];
+                        end
+                    end
+                    gs = newgs;
+                    i = i - 1;
+                end
+            end
+        end
+
+        function gs = allElements1(self)
+        % Computes a matrix with all elements from the stabilizer chain
+        %
+        % Returns:
+        %   double(\*,\*): Matrix with each row an element
+            ord = self.order;
+            assert(ord <= 2^53-1);
+            ord = double(self.order);
+            f = self.orbitSizes;
+            L = self.length;
+            index_lst = zeros(ord, L);
+            for index = 1:ord
+                indices = zeros(1, L);
+                ind = index - 1;
+                for i = L:-1:1
+                    r = mod(ind, f(i));
+                    ind = (ind - r)/f(i);
+                    indices(i) = double(r) + 1;
+                end
+                index_lst(index, :) = indices;
+            end
+            gs = repmat(1:self.n, ord, 1);
+            for i = 1:L
+                Ui = self.U{i};
+                for index = 1:ord
+                    gi = Ui(:, index_lst(index, i));
+                    g = gs(index, :);
+                    gs(index, :) = g(gi);
+                end
+            end
+        end
+
+
         function baseSwap(self, l)
         % Swaps the base points beta_l and beta_m, m = l + 1
             assert(self.isMutable);
@@ -263,6 +362,11 @@ classdef Chain < replab.Str
                         self.baseSwap(k);
                         %self.check;
                     end
+                end
+            end
+            for i = self.length:-1:length(newBase)+1
+                if self.orbitSize(i) == 1
+                    self.removeRedundantBasePoint(i);
                 end
             end
             %self.check;
@@ -652,6 +756,30 @@ classdef Chain < replab.Str
                     end
                 end
                 toTest = unique(imgs(mask));
+            end
+        end
+
+        function removeRedundantBasePoint(self, l)
+        % Removes the redundant base point at position ``l``
+        %
+        % Args:
+        %   l (integer): Level at which to remove the base point
+            assert(self.isMutable);
+            assert(self.orbitSize(l) == 1);
+            assert(self.Sind(l) == self.Sind(l+1));
+            self.U = horzcat(self.U(1:l-1), self.U(l+1:end));
+            self.Uinv = horzcat(self.Uinv(1:l-1), self.Uinv(l+1:end));
+            self.Sind = [self.Sind(1:l-1) self.Sind(l+1:end)];
+            self.B = [self.B(1:l-1) self.B(l+1:end)];
+            self.Delta = horzcat(self.Delta(1:l-1), self.Delta(l+1:end));
+            self.iDelta = [self.iDelta(:,1:l-1) self.iDelta(:,l+1:end)];
+        end
+
+        function removeRedundantBasePoints(self)
+        % Removes all redundant base points from this chain
+            red = fliplr(sort(find(self.orbitSizes == 1)));
+            for l = red
+                self.removeRedundantBasePoint(l);
             end
         end
 
