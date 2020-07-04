@@ -284,6 +284,20 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             c = replab.bsgs.Centralizer(self, other).subgroup;
         end
 
+        function sub = leaveInvariant(self, list)
+            v = unique(list);
+            c = arrayfun(@(x) sum(list == x), v);
+            mask = c ~= 1;
+            v = v(mask);
+            c = c(mask);
+            [~, I] = sort(c);
+            v = v(I);
+            sub = self;
+            for i = 1:v
+                sub = sub.setwiseStabilizer(find(list == i));
+            end
+        end
+
         function s = setwiseStabilizer(self, set)
         % Returns the subgroup that stabilizes the given set as a set
         %
