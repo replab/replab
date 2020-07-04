@@ -754,6 +754,30 @@ classdef Chain < replab.Str
             end
         end
 
+        function removeRedundantBasePoint(self, l)
+        % Removes the redundant base point at position ``l``
+        %
+        % Args:
+        %   l (integer): Level at which to remove the base point
+            assert(self.isMutable);
+            assert(self.orbitSize(l) == 1);
+            assert(self.Sind(l) == self.Sind(l+1));
+            self.U = horzcat(self.U(1:l-1), self.U(l+1:end));
+            self.Uinv = horzcat(self.Uinv(1:l-1), self.Uinv(l+1:end));
+            self.Sind = [self.Sind(1:l-1) self.Sind(l+1:end)];
+            self.B = [self.B(1:l-1) self.B(l+1:end)];
+            self.Delta = horzcat(self.Delta(1:l-1), self.Delta(l+1:end));
+            self.iDelta = [self.iDelta(:,1:l-1) self.iDelta(:,l+1:end)];
+        end
+
+        function removeRedundantBasePoints(self)
+        % Removes all redundant base points from this chain
+            red = fliplr(sort(find(self.orbitSize == 1)));
+            for l = red
+                self.removeRedundantBasePoint(l);
+            end
+        end
+
         function insertEndBasePoint(self, newBeta)
         % Adds a new basis point at the end of the BSGS chain
         %
