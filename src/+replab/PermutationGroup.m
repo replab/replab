@@ -160,12 +160,12 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             o = orders(1);
             i = 2;
             while i <= length(orders) && log2(o) + log2(orders(i)) < 53
-                o = o * orders(i);
+                o = lcm(o, orders(i));
                 i = i + 1;
             end
             o = vpi(o);
             while i <= length(orders)
-                o = o * vpi(orders(i));
+                o = lcm(o, vpi(orders(i)));
                 i = i + 1;
             end
         end
