@@ -131,6 +131,11 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         function res = isSubgroupOf(self, rhs)
         % Returns whether this group is a subgroup of another group
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> G = S3.subgroup({[2 1 3]});
+        %   >>> G.isSubgroupOf(S3)
+        %       1
         %
         % Args:
         %   rhs (`+replab.NiceFiniteGroup`): Other group with the same parent as this one
@@ -138,6 +143,43 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Returns:
         %   logical: True if this group is a subgroup of ``rhs``
             res = all(cellfun(@(g) rhs.contains(g), self.generators));
+        end
+
+        function res = isNormalSubgroupOf(self, rhs)
+        % Returns whether this group is a normal subgroup of another group
+        %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> A3 = S3.alternatingSubgroup;
+        %   >>> A3.isNormalSubgroupOf(S3)
+        %       1
+        %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> G = S3.subgroup({[2 1 3]});
+        %   >>> G.isNormalSubgroupOf(S3)
+        %       0
+        %
+        % Args:
+        %   rhs (`+replab.NiceFiniteGroup`): Other group with the same parent as this one
+        %
+        % Returns:
+        %   logical: True if this group is a normal subgroup of ``rhs``
+            if ~self.isSubgroupOf(rhs)
+                res = false;
+                return
+            end
+            for i = 1:self.nGenerators
+                subi = self.generator(i);
+                for j = 1:rhs.nGenerators
+                    rhsj = rhs.generator(j);
+                    if ~self.contains(self.leftConjugate(rhsj, subi))
+                        res = false;
+                        return
+                    end
+                end
+            end
+            res = true;
         end
 
         function sub = subgroup(self, generators, order)
