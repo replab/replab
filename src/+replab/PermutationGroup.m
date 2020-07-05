@@ -268,12 +268,11 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         function res = intersection(self, other)
             assert(self.hasSameParentAs(other));
             if self.order > other.order
-                res = other.intersection(self);
+                s = replab.bsgs.Intersection(other, self);
             else
-                prop = @(g) other.contains(g);
-                c = replab.bsgs.subgroupSearch(self.chain, prop);
-                res = replab.PermutationGroup.fromChain(c);
+                s = replab.bsgs.Intersection(self, other);
             end
+            res = replab.PermutationGroup.fromChain(s.subgroup, self.parent);
         end
 
         function c = centralizerElement(self, other)
