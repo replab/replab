@@ -157,9 +157,16 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         function o = elementOrder(self, p)
             orbits = replab.Partition.permutationsOrbits(p);
             orders = unique(orbits.blockSizes);
-            o = 1;
-            for i = 1:length(orders)
-                o = lcm(o, orders(i));
+            o = orders(1);
+            i = 2;
+            while i <= length(orders) && log2(o) + log2(orders(i)) < 53
+                o = o * orders(i);
+                i = i + 1;
+            end
+            o = vpi(o);
+            while i <= length(orders)
+                o = o * vpi(orders(i));
+                i = i + 1;
             end
         end
 

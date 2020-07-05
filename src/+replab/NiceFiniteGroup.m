@@ -455,8 +455,23 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %   g (element): Group element
         %
         % Returns:
-        %   integer: The order of ``g``, i.e. the smallest ``o`` such that ``g^o == identity``
+        %   vpi: The order of ``g``, i.e. the smallest ``o`` such that ``g^o == identity``
             o = self.niceGroup.elementOrder(self.niceMonomorphismImage(g));
+        end
+
+        function e = exponent(self)
+        % Returns the group exponent
+        %
+        % The group exponent is the smallest integer ``e`` such that ``g^e == identity`` for all ``g`` in ``G``.
+        %
+        % Returns:
+        %   vpi: The group exponent
+            eo = cellfun(@(c) self.elementOrder(c.representative), self.conjugacyClasses);
+            eo = unique(eo);
+            e = eo(1);
+            for i = 2:length(eo)
+                e = lcm(e, eo(i));
+            end
         end
 
         %% Methods enabled by the BSGS algorithms
