@@ -32,7 +32,7 @@ function [group1, tests1, startData1] = cleanUpBaseAndTests(group, tests, startD
             if current + 1 == next
                 tests1{i} = tests{current};
             else
-                tests1{i} = @(g, inData) replab.bsgs.chainTests(tests(current:next-1), g, inData);
+                tests1{i} = @(g, inData) replab.bsgs.concatTests(tests(current:next-1), g, inData);
             end
         end
     else
