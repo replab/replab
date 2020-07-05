@@ -149,7 +149,7 @@ classdef Rep < replab.Obj
         %
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
-            e = replab.Equivariant.make(self, repR, []);
+            e = replab.Equivariant.make(self, repR, '');
         end
 
         function c = commutant(self)
