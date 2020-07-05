@@ -176,7 +176,7 @@ classdef FiniteGroup < replab.CompactGroup
 
         %% Representations
 
-        function rep = leftRegularRep(self)
+        function rep = regularRep(self)
         % Returns the left regular representation of this group
         %
         % Warning:
