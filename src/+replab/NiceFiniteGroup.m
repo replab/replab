@@ -133,10 +133,10 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Returns whether this group is a subgroup of another group
         %
         % Args:
-        %   rhs (`+replab.NiceFiniteGroup`): Another nice finite group with the same parent
+        %   rhs (`+replab.NiceFiniteGroup`): Other group with the same parent as this one
         %
         % Returns:
-        %   logical: True if this group is a subgroup of ``res``
+        %   logical: True if this group is a subgroup of ``rhs``
             res = all(cellfun(@(g) rhs.contains(g), self.generators));
         end
 
