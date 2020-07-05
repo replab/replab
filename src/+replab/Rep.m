@@ -134,6 +134,37 @@ classdef Rep < replab.Obj
             b = isequal(self.field, 'C');
         end
 
+        %% Computed properties
+
+        function K = kernel(self)
+        % Returns the kernel of the given representation
+        %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> K = S3.signRep.kernel;
+        %   >>> K == S3.alternatingSubgroup
+        %       1
+        %
+        % Returns:
+        %   `+replab.NiceFiniteGroup`: The group ``K`` such that ``rho.image(k) == id`` for all ``k`` in ``K``
+            assert(isa(self.group, 'replab.NiceFiniteGroup'));
+            % TODO error estimation: take in account the uncertainty on computed images
+            C = self.group.conjugacyClasses;
+            % for a character, we have chi(g) == chi(id) only if rho(g) == eye(d)
+            % what is the maximal value of real(chi(g)) for chi(g) ~= chi(id)?
+            % write chi(g) = sum(lambda(g)) where lambda(g) = eig(chi(g))
+            % the worst case is when lambda(g)(2:d) = 1, and lambda(g)(1) is something else
+            % now lambda(g)(1) ~= 1; we know that lambda(g)(1) is a root of unity, and that
+            % lambda(g)(1)^group.exponent == 1
+            % thus, the maximum real part is when lambda(g)(1) == exp(2*pi/group.exponent)
+            % which has real part cos(2*pi/group.exponent)
+            maxNTChi = self.dimension-cos(2*pi/double(self.group.exponent)); % maximum value for nontrivial character
+            chi = cellfun(@(c) trace(self.image_internal(c.representative)), C);
+            mask = real(chi) > maxNTChi;
+            K = self.group.subgroup(cellfun(@(c) c.representative, C(mask), 'uniform', 0));
+            K = self.group.normalClosure(K);
+        end
+
         %% Derived vector spaces/algebras
 
         function e = equivariantTo(self, repR)
@@ -342,6 +373,15 @@ classdef Rep < replab.Obj
         end
 
         %% Derived representations
+
+
+        function rep1 = restrictedTo(self, subgroup)
+        % Returns the restricted representation to the given subgroup
+        %
+        % Args:
+        %   subgroup (`.CompactGroup`): Subgroup to restrict the representation to, must be a subgroup of `.group`
+            rep1 = replab.Rep.lambda(subgroup, self.field, self.dimension, @(g) self.image(g), @(g) self.inverseImage(g));
+        end
 
         function rep1 = simplify(self)
         % Returns a representation identical to this, but possibly with its composition simplified
