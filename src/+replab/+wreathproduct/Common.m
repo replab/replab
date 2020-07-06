@@ -46,7 +46,7 @@ classdef Common < handle
             ip = reshape(1:n*d, [d n]);
             ip = ip(:,h);
             ip = ip(:)';
-            p = replab.Permutations(d*n).compose(ip, basePerm);
+            p = replab.SymmetricGroup(d*n).compose(ip, basePerm);
         end
 
         function p = primitivePermutation(self, w, phiA)
@@ -73,7 +73,7 @@ classdef Common < handle
             dims = ones(1, n) * d;
             p = reshape(1:prod(dims), dims);
             subs = cell(1, n);
-            for i = 1:n
+            for i = 1:ng
                 subs{n+1-i} = phiA(base{i});
             end
             p = p(subs{:});
@@ -81,7 +81,7 @@ classdef Common < handle
             ip = reshape(1:prod(dims), dims);
             ip = permute(ip, fliplr(n + 1 - h));
             ip = ip(:)';
-            p = replab.Permutations(prod(dims)).compose(ip, p);
+            p = replab.SymmetricGroup(prod(dims)).compose(ip, p);
         end
 
         %% Representation construction

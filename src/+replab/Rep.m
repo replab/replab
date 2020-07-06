@@ -142,7 +142,7 @@ classdef Rep < replab.Obj
         % Example:
         %   >>> S3 = replab.S(3);
         %   >>> K = S3.signRep.kernel;
-        %   >>> K == S3.alternatingSubgroup
+        %   >>> K == replab.AlternatingGroup(3)
         %       1
         %
         % Returns:
@@ -481,7 +481,7 @@ classdef Rep < replab.Obj
         % has the identity matrix as a change of basis.
         %
         % Example:
-        %   >>> S3 = replab.Permutations(3);
+        %   >>> S3 = replab.SymmetricGroup(3);
         %   >>> defRep = S3.naturalRep.complexification;
         %   >>> C = randn(3,3) + 1i * rand(3,3);
         %   >>> nonUnitaryRep = defRep.subRep(C, inv(C));

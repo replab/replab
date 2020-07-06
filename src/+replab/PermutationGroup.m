@@ -155,6 +155,10 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         end
 
         function o = elementOrder(self, p)
+            if self.domainSize < 2
+                o = vpi(1);
+                return
+            end
             orbits = replab.Partition.permutationsOrbits(p);
             orders = unique(orbits.blockSizes);
             o = orders(1);
@@ -294,8 +298,9 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         % Computes the subgroup that leaves the given unordered partition invariant
         %
         % Example:
-        %    >>> G = replab.S(4).unorderedPartitionStabilizer(replab.Partition.fromBlockIndices([1 1 2 2]));
-        %    >>> G == replab.S(4).subgroup({[2 1 3 4] [3 4 1 2]})
+        %    >>> S4 = replab.S(4);
+        %    >>> G = S4.unorderedPartitionStabilizer(replab.Partition.fromVector([1 1 2 2]));
+        %    >>> G == S4.subgroup({[2 1 3 4] [3 4 1 2]})
         %        1
         %
         % Args:
@@ -355,8 +360,9 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %
         %
         % Example:
-        %    >>> G = replab.S(4).orderedPartitionStabilizer(replab.Partition.fromBlockIndices([1 1 2 2]));
-        %    >>> G == replab.S(4).subgroup({[2 1 3 4] [1 2 4 3]})
+        %    >>> S4 = replab.S(4);
+        %    >>> G = S4.orderedPartitionStabilizer(replab.Partition.fromVector([1 1 2 2]));
+        %    >>> G == S4.subgroup({[2 1 3 4] [1 2 4 3]})
         %        1
         %
         % Args:
@@ -716,42 +722,52 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 
         function rho = signRep(self)
         % Returns the sign representation of this permutation
-            rho = replab.RepByImages.fromImageFunction(self, 'R', 1, @(g) replab.PermutationGroup.sign(g));
+            rho = replab.RepByImages.fromImageFunction(self, 'R', 1, @(g) replab.Permutation.sign(g));
         end
 
     end
 
     methods(Static)
 
-        function sign = sign(perm)
-        % Returns the sign of a given permutation
+        function G = trivial(n)
+        % Constructs the trivial permutation group acting on ``n`` points
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.trivial(4);
+        %   >>> G.order
+        %     1
         %
         % Args:
-        %   perm (permutation): Vector representing a permutation (e.g. [3 2 1 4])
+        %   n (integer): Domain size
         %
         % Returns:
-        %   integer: Sign of the permutation
-            x = perm;
-            n = length(x);
-            oddOrEven = 0; %Records whether the total permutation is odd or even
-            for i = 1:n
-                if x(i) == 0 || x(i) == i %Skip over one cycles and numbers that have been cycled through
-                    continue
-                end
-                cycleSize = -1; %The first element in a cycle isn't counted
-                j = i;
-                while x(j) ~= 0
-                    pHold = x(j);
-                    x(j) = 0;
-                    j = pHold;
-                    cycleSize = cycleSize + 1;
-                end
-                if cycleSize > 0
-                    oddOrEven = oddOrEven + cycleSize; %At the end, this will match the parity (even/odd) of the permuation
-                end
-            end
-            sign = (-1)^mod(round(oddOrEven),2); %Sign of permutation
-            end
+        %   `+replab.PermutationGroup`: Trivial group
+            Sn = replab.S(n);
+            G = Sn.subgroup({});
+        end
+
+        function G = of(varargin)
+        % Constructs a nontrivial permutation group from the given generators
+        %
+        % If you do not know the number of generators in advance, and would like to handle the
+        % case of a trivial group, use ``Sn = replab.S(n); Sn.subgroup(generators)`` instead.
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.of([2 3 4 1], [4 3 2 1]);
+        %   >>> G.order
+        %     8
+        %
+        % Args:
+        %   varargin (cell(1,\*) of permutation): Group generators
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The permutation group given as the closure of the generators
+            assert(nargin > 0, 'Must be called with at least one generator');
+            n = length(varargin{1});
+            Sn = replab.S(n);
+            G = Sn.subgroup(varargin);
+        end
+
     end
 
 end

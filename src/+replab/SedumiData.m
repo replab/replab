@@ -57,7 +57,8 @@ classdef SedumiData
             % build permutation group
             assert(~isempty(G), 'Must be nontrivial permutation group');
             ds = length(G{1}); % group domain size
-            group = replab.Permutations(ds).subgroup(G);
+            Sds = replab.S(ds);
+            group = Sds.subgroup(G);
             % check for unitarity
             tol = 1e-12;
             rhoInv = cell(1, length(G));

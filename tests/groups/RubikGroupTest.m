@@ -13,7 +13,7 @@ function test_order
     if ReplabTestParameters.onlyFastTests
         return
     end
-    S48 = replab.Permutations(48);
+    S48 = replab.S(48);
     F = S48.fromCycles([38,17,43,8], [39,20,42,5], [40,22,41,3], [9,11,16,14], [10,13,15,12]);
     R = S48.fromCycles([40,25,48,16], [37,28,45,13], [35,30,43,11], [17,19,24,22], [18,21,23,20]);
     L = S48.fromCycles([33,9,41,32], [36,12,44,29], [38,14,46,27], [1,3,8,6], [2,5,7,4]);

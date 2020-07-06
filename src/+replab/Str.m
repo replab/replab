@@ -13,26 +13,26 @@ classdef Str < handle
 % Compare the two outputs:
 %
 % Example:
-%   >>> P = replab.Permutations(3)
+%   >>> P = replab.SymmetricGroup(3)
 %     P =
-%     Permutations acting on 3 elements
+%     Symmetric group acting on 3 elements
 %       domainSize: 3
 %         identity: [1, 2, 3]
-%           parent: Permutations acting on 3 elements
+%           parent: Symmetric group acting on 3 elements
 %     generator(1): [2, 3, 1]
 %     generator(2): [2, 1, 3]
 %   >>> replab.longStr(P)
 %     ans =
 %     6x1 cell array
-%     {'Permutations acting on 3 elements'              }
-%     {'  domainSize: 3                                '}
-%     {'    identity: [1, 2, 3]                        '}
-%     {'      parent: Permutations acting on 3 elements'}
-%     {'generator(1): [2, 3, 1]                        '}
-%     {'generator(2): [2, 1, 3]                        '}
+%     {'Symmetric group acting on 3 elements'              }
+%     {'  domainSize: 3                                   '}
+%     {'    identity: [1, 2, 3]                           '}
+%     {'      parent: Symmetric group acting on 3 elements'}
+%     {'generator(1): [2, 3, 1]                           '}
+%     {'generator(2): [2, 1, 3]                           '}
 %   >>> replab.shortStr(P)
 %     ans =
-%     'Permutations acting on 3 elements'
+%     'Symmetric group acting on 3 elements'
 
     methods
 

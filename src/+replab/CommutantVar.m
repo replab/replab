@@ -216,7 +216,7 @@ classdef CommutantVar < replab.Str
             self.field = field;
 
             % Representation decomposition
-            group = replab.SignedPermutations(n).subgroup(generators);
+            group = replab.SignedSymmetricGroup(n).subgroup(generators);
             irrDecomp = group.naturalRep.decomposition;
             U = zeros(n, 0);
             dimensions1 = zeros(1,irrDecomp.nComponents);
@@ -652,7 +652,7 @@ classdef CommutantVar < replab.Str
             for i = 1:length(generators)
                 generators2{i} = reshape(M(generators{i}, generators{i}), 1, d^2);
             end
-            group = replab.Permutations(d^2).subgroup(generators2);
+            group = replab.SymmetricGroup(d^2).subgroup(generators2);
 
             % Identify the orbits
             orbits = group.orbits.blockIndex;

@@ -18,6 +18,6 @@ function test_decomposition
     g2 = [g2,length(g2)+1:160];
     g3 = [g3,length(g3)+1:160];
     g4 = [g4,length(g4)+1:160];
-    G = replab.Permutations(160).subgroup({g1 g2 g3 g4});
+    G = replab.PermutationGroup.of(g1, g2, g3, g4);
     assert(G.order == 7680);
 end

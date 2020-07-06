@@ -11,7 +11,7 @@ function rep = specht(partition)
 % Returns:
 %   A `+replab.Rep` nonunitary irreducible representation
     n = sum(partition);
-    Sn = replab.Permutations(n);
+    Sn = replab.SymmetricGroup(n);
     [SA, SB, ~, ~, ~, ~] = replab.sym.symIrrepImages(partition);
     d = size(SA, 1);
     if n == 1

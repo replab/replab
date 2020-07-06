@@ -1,6 +1,6 @@
 classdef PermutationGroupLaws < replab.NiceFiniteGroupLaws
     properties (SetAccess = protected)
-        P
+        P % (`replab.Domain`): Domain on which those permutations act
     end
     methods
         function self = PermutationGroupLaws(T)
@@ -22,6 +22,11 @@ classdef PermutationGroupLaws < replab.NiceFiniteGroupLaws
             p1 = t(p);
             orbits = self.T.orbits;
             self.assert(self.T.orbits.blockIndex(p) == self.T.orbits.blockIndex(p1));
+        end
+        function law_toMatrix_fromMatrix_T(self, t)
+            M = replab.Permutation.toMatrix(t);
+            t1 = replab.Permutation.fromMatrix(M);
+            self.T.assertEqv(t, t1);
         end
     end
 end

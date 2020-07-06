@@ -13,15 +13,15 @@ function test_suite = PermutationsTest()
     end
 
     for n = allNs
-        G = replab.Permutations(n);
-        test_suite = replab.PermutationsLaws(G).addTestCases(test_suite);
+        G = replab.S(n);
+        test_suite = replab.PermutationGroupLaws(G).addTestCases(test_suite);
     end
-    S5 = replab.Permutations(5);
+    S5 = replab.S(5);
     signRep = S5.signRep;
     test_suite = replab.RepLaws(signRep).addTestCases(test_suite);
 end
 
 function test_sign
     sigma = [3 4 5 2 1];
-    assertEqual(replab.Permutations.sign(sigma), -1);
+    assertEqual(replab.Permutation.sign(sigma), -1);
 end

@@ -26,7 +26,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
                 parent = [];
             end
             if isempty(parent)
-                self.parent = replab.SignedPermutations(domainSize);
+                self.parent = replab.SignedSymmetricGroup(domainSize);
             elseif isequal(parent, 'self')
                 self.parent = self;
             else
@@ -69,7 +69,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
         end
 
         function p1 = niceMonomorphismImage(self, p)
-            p1 = replab.SignedPermutations.toPermutation(p);
+            p1 = replab.SignedPermutation.toPermutation(p);
         end
 
         function grp = subgroup(self, generators, order)
@@ -103,7 +103,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
                     newGenerators{1, end+1} = img;
                 end
             end
-            G = replab.Permutations(self.domainSize).subgroup(newGenerators);
+            G = replab.SymmetricGroup(self.domainSize).subgroup(newGenerators);
         end
 
         function p = elementPermutationPart(self, g)
@@ -148,6 +148,36 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
         function rho = naturalRep(self)
         % Natural representation on R^d of signed permutations on integers -d..-1, 1..d
             rho = self.signedPermutationRep(self.domainSize, self.generators);
+        end
+
+    end
+
+    methods (Static)
+
+        function G = trivial(n)
+        % Returns
+        end
+
+        function G = of(varargin)
+        % Constructs a nontrivial signed permutation group from the given generators
+        %
+        % If you do not know the number of generators in advance, and would like to handle the
+        % case of a trivial group, use ``H = replab.SignedSymmetricGroup(n); H.subgroup(generators)`` instead.
+        %
+        % Example:
+        %   >>> G = replab.SignedPermutationGroup.of([2 3 4 1], [4 3 2 1]);
+        %   >>> G.order == 8
+        %     1
+        %
+        % Args:
+        %   varargin (cell(1,\*) of permutation): Group generators
+        %
+        % Returns:
+        %   `+replab.SignedPermutationGroup`: The permutation group given as the closure of the generators
+            assert(nargin > 0, 'Must be called with at least one generator');
+            n = length(varargin{1});
+            Sn = replab.SignedSymmetricGroup(n);
+            G = Sn.subgroup(varargin);
         end
 
     end

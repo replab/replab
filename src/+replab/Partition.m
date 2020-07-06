@@ -48,24 +48,18 @@ classdef Partition < replab.Str
 
         function s = shortStr(self, maxColumns)
             s = '';
-            for i = 1:min(self.nBlocks, maxColumns)
+            for i = 1:self.nBlocks
                 if i > 1
                     s = [s '|'];
                 end
                 b = self.block(i);
-                for j = 1:min(length(b), maxColumns)
+                for j = 1:length(b)
                     if j > 1 && self.n > 9
                         s = sprintf('%s %d', s, b(j));
                     else
                         s = sprintf('%s%d', s, b(j));
                     end
                 end
-                if length(b) < maxColumns
-                    s = sprintf('%s...', s);
-                end
-            end
-            if self.nBlocks < maxColumns
-                s = sprintf('%s...', s);
             end
         end
 
@@ -140,19 +134,59 @@ classdef Partition < replab.Str
 
     methods (Static)
 
-        function P = fromBlockIndices(blockIndex)
-            n = length(blockIndex);
-            nBlocks = max(blockIndex);
-
-            % Construct the subsets
-            blocks = cell(1, nBlocks);
-            for i = 1:nBlocks
-                blocks{i} = find(blockIndex == i);
-                assert(length(blocks{i}) > 0, 'Blocks cannot be empty');
+        function P = fromBlocks(blocks)
+        % Constructs a partition from disjoint blocks
+        %
+        % Example:
+        %   >>> replab.Partition.fromBlocks({[1 2 5] [3 4]})
+        %     Partition '125|34'
+        %     blockIndex: [1, 1, 2, 2, 1]
+        %         blocks: {[1, 2, 5], [3, 4]}
+        %              n: 5
+        %
+        % Args:
+        %   blocks (cell(1,\*) of integer(1,\*)): Disjoint blocks
+        %
+        % Returns:
+        %   `+replab.Partition`: Constructed partition
+            blocks = cellfun(@(b) sort(b), blocks, 'uniform', 0);
+            numEl = cellfun(@(b) length(b), blocks);
+            minEl = cellfun(@(b) min(b), blocks);
+            maxEl = cellfun(@(b) max(b), blocks);
+            [~, I] = sort(minEl);
+            blocks = blocks(I);
+            n = sum(numEl);
+            assert(n == max(maxEl));
+            assert(1 == min(minEl));
+            blockIndex = zeros(1, n);
+            for i = 1:length(blocks)
+                blockIndex(blocks{i}) = i;
             end
-
-            % Construct the Partition object
             P = replab.Partition(blockIndex, blocks);
+        end
+
+        function P = fromVector(vec)
+        % Returns the partition that groups equal coefficients of a vector
+        %
+        % Example:
+        %   >>> replab.Partition.fromVector([0 0 1 1 0])
+        %     Partition '125|34'
+        %     blockIndex: [1, 1, 2, 2, 1]
+        %         blocks: {[1, 2, 5], [3, 4]}
+        %              n: 5
+        %
+        % Args:
+        %   vec (double(1,\*)): Vector to group the coefficients of
+        %
+        % Returns:
+        %   `.replab.Partition`: Partition of blocks with equal coefficients
+            assert(isvector(vec));
+            v = unique(vec);
+            blocks = {};
+            for i = 1:length(v)
+                blocks{1, end+1} = find(vec == v(i));
+            end
+            P = replab.Partition.fromBlocks(blocks);
         end
 
         function P = connectedComponentsFromEdges(edges, n)
@@ -207,22 +241,29 @@ classdef Partition < replab.Str
         end
 
         function P = permutationsOrbits(permutations)
-        % Returns the partition of the domain 1...N into orbits
+        % Returns the partition of the domain ``1...N`` into orbits
         %
-        % The permutations are a nG x domainSize double matrix
-            n = size(permutations, 2);
+        % Args:
+        %   permutations (integer(nG, d)): Permutations given as rows in a matrixx
+            d = size(permutations, 2);
             nG = size(permutations, 1);
-
-            % We list the edges of the graph
-            edges = cell(nG,1);
-            for i = 1:nG
-                edges{i} = [(1:n); permutations(i,:)].';
+            blockIndex = zeros(1, d);
+            nBlocks = 1;
+            i = 1;
+            while ~isempty(i)
+                toCheck = i;
+                blockIndex(toCheck) = nBlocks;
+                while ~isempty(toCheck)
+                    images = permutations(:, toCheck);
+                    images = images(:);
+                    toCheck = images(blockIndex(images) == 0);
+                    toCheck = toCheck(:).';
+                    blockIndex(toCheck) = nBlocks;
+                end
+                nBlocks = nBlocks + 1;
+                i = find(blockIndex(i+1:end) == 0, 1) + i;
             end
-            edges = unique(cat(1, edges{:}), 'rows');
-
-            % Call connected component method to construct the Partition
-            % object
-            P = replab.Partition.connectedComponentsFromEdges(edges, n);
+            P = replab.Partition.fromVector(blockIndex);
         end
 
     end
