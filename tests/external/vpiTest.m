@@ -11,7 +11,7 @@ function test_vpiLongNumbers
     if ReplabTestParameters.onlyFastTests
         return;
     end
-
-    replab.longStr(replab.Permutations(100).elements);
+    S100 = replab.S(100);
+    replab.longStr(S100.elements);
     % used to throw because num2str of @vpi split numbers into lines
 end

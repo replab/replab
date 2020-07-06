@@ -68,7 +68,7 @@ function varargout = dispatch(cmd, name, varargin)
             s(ind).priority = priority;
             s(ind).handle = handle;
             % sort in decreasing order
-            p = replab.Permutations.sorting([s.priority], @(x, y) x < y);
+            p = replab.Permutation.sorting([s.priority], @(x, y) x < y);
             s = s(p);
             registry.(ident) = s;
         end

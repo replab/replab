@@ -7,7 +7,9 @@ classdef ConjugacyClass < replab.Str
     end
 
     properties (Access = protected)
-        elementImages % (double(\*,\*)): Matrix where each column is a permutation representing the image
+        elementImages % (double(\*,\*)): Matrix containing images of the conjugacy class elements
+                      %
+                      %                  Each column is a permutation representing the image
                       %                  of an element of the conjugacy class through
                       %                  `+replab.NiceFiniteGroup.niceMonomorphismImage`
     end

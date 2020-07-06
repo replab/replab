@@ -9,7 +9,7 @@ end
 
 function test_quaternion_representations
     S3 = replab.S(3);
-    W = S3.wreathProduct(replab.SignedPermutations.quaternionGroup);
+    W = S3.wreathProduct(replab.QuaternionGroup);
     rep1 = W.primitiveRepFun(@(x) x.naturalRep);
     rep2 = rep1.decomposition;
     rep3 = rep2.asSimilarRep;
@@ -25,7 +25,7 @@ end
 function test_complex_representations
     d = 10;
     S = replab.S(d);
-    C = S.cyclicSubgroup;
+    C = replab.CyclicGroup(d);
     rep = C.naturalRep;
     rep1 = rep.decomposition;
     rep2 = rep1.asSimilarRep;

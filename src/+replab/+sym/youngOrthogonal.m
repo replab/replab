@@ -11,7 +11,7 @@ function rep = youngOrthogonal(partition)
 % Returns:
 %   A `+replab.Rep` orthonormal irreducible representation
     n = sum(partition);
-    Sn = replab.Permutations(n);
+    Sn = replab.SymmetricGroup(n);
     [~, ~, ~, ~, OA, OB] = replab.sym.symIrrepImages(partition);
     d = size(OA, 1);
     if n == 1

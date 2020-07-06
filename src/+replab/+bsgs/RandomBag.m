@@ -24,12 +24,12 @@ classdef RandomBag < replab.Str
         end
 
         function z = compose(self, x, y)
-        % Duplicates self.Permutations(n).compose to avoid reference loops
+        % Duplicates replab.PermutationGroup.compose to avoid reference loops
             z = x(y);
         end
 
         function xInv = inverse(self, x)
-        % Duplicates self.Permutations(n).inverse to avoid reference loops
+        % Duplicates replab.PermutationGroup.inverse to avoid reference loops
             xInv = zeros(1, self.n);
             xInv(x) = 1:self.n;
         end

@@ -13,7 +13,7 @@ function test_suite = SignedPermutationsTest()
     end
 
     for n = allNs
-        G = replab.SignedPermutations(n);
-        test_suite = replab.SignedPermutationsLaws(G).addTestCases(test_suite);
+        G = replab.SignedSymmetricGroup(n);
+        test_suite = replab.SignedPermutationGroupLaws(G).addTestCases(test_suite);
     end
 end
