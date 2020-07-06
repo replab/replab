@@ -257,7 +257,6 @@ classdef Chain < replab.Str
             self.replaceNewStrongGeneratorsAtLevel(m, newSm);
             self.completeOrbit(l);
             self.completeOrbit(m);
-            %self.check;
             while self.orbitSize(m) < target
                 ul = oldUl(:,randi(size(oldUl, 2)));
                 um = oldUm(:,randi(size(oldUm, 2)));
@@ -272,9 +271,7 @@ classdef Chain < replab.Str
                     self.addStrongGenerator(m, h);
                     self.completeOrbit(m);
                 end
-                %self.check;
             end
-            %[length(self.Delta{l}) * length(self.Delta{m}) prodSizes]
         end
 
         function orbit = orbitUnderG(self, l, b)
@@ -335,14 +332,25 @@ classdef Chain < replab.Str
             self.B = g(B);
         end
 
-        function baseChange(self, newBase)
+        function baseChange(self, newBase, removeRedundant)
+        % Changes in-place the base of this BSGS chain
+        %
+        % Assumes that the chain is mutable.
+        %
+        % Can remove the base points that are redundant, i.e. have orbit size 1.
+        %
+        % Args:
+        %   newBase (integer(1,\*)): New base to use
+        %   removeRedundant (logical, optional): Whether to remove redundant base points, default value false
             assert(self.isMutable);
-            for i = 1:length(newBase)
-                %self.check;
+            if nargin < 3 || isempty(removeRedundant)
+                removeRedundant = false;
+            end
+            i = 1;
+            while i <= length(newBase)
                 newBeta = newBase(i);
                 if i > self.length
                     self.insertEndBasePoint(newBeta);
-                    %self.check;
                 elseif self.B(i) ~= newBeta
                     j = i;
                     while j <= self.length && self.iDelta(newBeta, j) == 0
@@ -350,26 +358,30 @@ classdef Chain < replab.Str
                     end
                     if j == self.length + 1
                         self.insertEndBasePoint(newBeta);
-                        %self.check;
                     end
                     g = self.u(j, newBeta);
                     if ~isequal(g, 1:self.n)
                         self.conjugate(g);
-                        %self.check;
                     end
                     assert(self.B(j) == newBeta);
                     for k = j-1:-1:i
                         self.baseSwap(k);
-                        %self.check;
                     end
                 end
-            end
-            for i = self.length:-1:length(newBase)+1
-                if self.orbitSize(i) == 1
+                if removeRedundant && self.orbitSize(i) == 1
                     self.removeRedundantBasePoint(i);
+                    newBase = [newBase(1:i-1) newBase(i+1:end)];
+                else
+                    i = i + 1;
                 end
             end
-            %self.check;
+            while i <= self.length
+                if self.orbitSize(i) == 1
+                    self.removeRedundantBasePoint(i);
+                else
+                    i = i + 1;
+                end
+            end
         end
 
         function show(self, i)
