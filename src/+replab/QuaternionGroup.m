@@ -1,5 +1,7 @@
 function Q = QuaternionGroup
-% Returns the quaternion group as a signed permutation group acting on the basis elements ``1``, ``j`, ``k``, ``l``
+% Returns the quaternion group as a signed permutation groupq
+%
+% The quaternion group acts on the basis elements ``1``, ``j`, ``k``, ``l``.
 %
 % Returns:
 %   `+replab.SignedPermutationGroup`: The quaternion group

@@ -299,7 +299,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %
         % Example:
         %    >>> S4 = replab.S(4);
-        %    >>> G = S4.unorderedPartitionStabilizer(replab.Partition.fromBlockIndices([1 1 2 2]));
+        %    >>> G = S4.unorderedPartitionStabilizer(replab.Partition.fromVector([1 1 2 2]));
         %    >>> G == S4.subgroup({[2 1 3 4] [3 4 1 2]})
         %        1
         %
@@ -361,7 +361,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %
         % Example:
         %    >>> S4 = replab.S(4);
-        %    >>> G = S4.orderedPartitionStabilizer(replab.Partition.fromBlockIndices([1 1 2 2]));
+        %    >>> G = S4.orderedPartitionStabilizer(replab.Partition.fromVector([1 1 2 2]));
         %    >>> G == S4.subgroup({[2 1 3 4] [1 2 4 3]})
         %        1
         %
