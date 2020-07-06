@@ -135,6 +135,21 @@ classdef Partition < replab.Str
     methods (Static)
 
         function P = fromBlocks(blocks)
+        % Constructs a partition from disjoint blocks
+        %
+        % Example:
+        %   >>> replab.Partition.fromBlocks({[1 2 5] [3 4]})
+        %     Partition '125|34'
+        %     blockIndex: [1, 1, 2, 2, 1]
+        %         blocks: {[1, 2, 5], [3, 4]}
+        %              n: 5
+        %
+        % Args:
+        %   blocks (cell(1,\*) of integer(1,\*)): Disjoint blocks
+        %
+        % Returns:
+        %   `+replab.Partition`: Constructed partition
+            blocks = cellfun(@(b) sort(b), blocks, 'uniform', 0);
             numEl = cellfun(@(b) length(b), blocks);
             minEl = cellfun(@(b) min(b), blocks);
             maxEl = cellfun(@(b) max(b), blocks);
@@ -149,7 +164,6 @@ classdef Partition < replab.Str
             end
             P = replab.Partition(blockIndex, blocks);
         end
-
 
         function P = fromVector(vec)
         % Returns the partition that groups equal coefficients of a vector
