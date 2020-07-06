@@ -674,6 +674,9 @@ classdef Chain < replab.Str
         function g = elementFromIndices(self, indices)
         % Computes the group element from transversal indices
         %
+        % The order is base dependent; if the base elements are non-decreasing,
+        % then the elements are sorted lexicographically.
+        %
         % Args:
         %   indices (integer(1, \*)): Transversal indices
         %
@@ -681,8 +684,11 @@ classdef Chain < replab.Str
         %   permutation: Chain element
             g = 1:self.n;
             for i = 1:self.length
+                % sort the current orbit to maintain lexicographic ordering
+                orbit = self.Delta{i};
+                [~,I] = sort(g(orbit));
                 Ui = self.U{i};
-                gi = Ui(:,indices(i));
+                gi = Ui(:, I(indices(i)));
                 g = g(gi); % compose(g, gi)
             end
         end
@@ -690,8 +696,8 @@ classdef Chain < replab.Str
         function indices = indicesFromElement(self, g)
         % Computes the transversal indices decomposition for a group element
         %
-        % The indices are such that
-        % ``g = self.u(1, indices(1)) * ... * self.u(k, indices(k))``
+        % The order is base dependent; if the base elements are non-decreasing,
+        % then the elements are sorted lexicographically.
         %
         % Args:
         %   g (permutation): A permutation group element
@@ -699,21 +705,27 @@ classdef Chain < replab.Str
         % Returns:
         %   integer(1,\*): Transversal indices
             k = self.length;
-            h = g;
             indices = zeros(1, k);
+            g0 = g;
+            h = 1:self.n;
             for i = 1:k
-                b = h(self.B(i));
+                b = g(self.B(i));
+                orbit = self.Delta{i};
+                [~,I] = sort(h(orbit));
                 j = self.iDelta(b, i);
-                indices(i) = j;
                 if j == 0
                     indices = [];
                     return
                 end
+                indices(i) = find(I == j);
                 Uinvi = self.Uinv{i};
                 uinv = Uinvi(:, j)';
                 % note order is reversed compared to Holt, as
                 % we use a left action
-                h = uinv(h); % compose(uinv, h)
+                g = uinv(g); % compose(uinv, g)
+                Ui = self.U{i};
+                u = Ui(:, j)';
+                h = h(u);
             end
         end
 
