@@ -16,6 +16,12 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 assert(~self.isIdentity(self.generators{i}), 'Generators cannot contain the identity');
             end
             chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.order_);
+            base = chain.base;
+            if any(base(2:end) < base(1:end-1))
+                chain = chain.mutableCopy;
+                chain.baseChange(1:self.domainSize, true);
+                chain.makeImmutable;
+            end
         end
 
         function dec = computeDecomposition(self)
@@ -76,6 +82,12 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 self.parent = parent;
             end
             if nargin > 4 && ~isempty(chain)
+                base = chain.base;
+                if any(base(2:end) < base(1:end-1))
+                    chain = chain.mutableCopy;
+                    chain.baseChange(1:domainSize, true);
+                    chain.makeImmutable;
+                end
                 self.chain_ = chain;
             end
             self.niceGroup_ = self;
