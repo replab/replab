@@ -257,34 +257,22 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             sub = self.niceMonomorphismGroupPreimage(self.niceGroup.derivedSubgroup);
         end
 
-        function rt = leftTransversal(self, subgroup)
-        % Computes a list of representatives for the set of right cosets of subgroup in this group
-        %
-        % The left cosets are, for ``i = 1,...,nCosets``, given by ``rt{i} * subgroup``.
-        %
-        % Args:
-        %   subgroup (`+replab.NiceFiniteGroup`): Subgroup of this group
-        %
-        % Returns:
-        %   cell(1, \*) of element: Transversal elements
-            assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            niceRt = self.niceGroup.leftTransversal(self.niceMonomorphismGroupImage(subgroup));
-            rt = cellfun(@(p) self.niceMonomorphismPreimage(p), niceRt, 'uniform', 0);
+        function c = rightCosetsOf(self, subgroup)
+            assert(~isa(self, 'replab.PermutationGroup')); % handled in subclass
+            c = replab.nfg.RightCosets(self, subgroup);
         end
 
-        function rt = rightTransversal(self, subgroup)
-        % Computes a list of representatives for the set of right cosets of subgroup in this group
-        %
-        % The right cosets are, for ``i = 1,...,nCosets``, given by ``subgroup * rt{i}``.
-        %
-        % Args:
-        %   subgroup (`+replab.NiceFiniteGroup`): Subgroup of this group
-        %
-        % Returns:
-        %   cell(1, \*) of element: Transversal elements
-            assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            niceRt = self.niceGroup.rightTransversal(self.niceMonomorphismGroupImage(subgroup));
-            rt = cellfun(@(p) self.niceMonomorphismPreimage(p), niceRt, 'uniform', 0);
+        function c = mldivide(self, supergroup)
+            c = supergroup.rightCosetsOf(self);
+        end
+
+        function c = leftCosetsOf(self, subgroup)
+            assert(~isa(self, 'replab.PermutationGroup')); % handled in subclass
+            c = replab.nfg.LeftCosets(self, subgroup);
+        end
+
+        function c = mrdivide(self, subgroup)
+            c = self.leftCosetsOf(subgroup);
         end
 
         function sub = centralizer(self, rhs)

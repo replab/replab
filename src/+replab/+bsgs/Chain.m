@@ -102,20 +102,37 @@ classdef Chain < replab.Str
         end
 
         function b = base(self)
+        % Returns the base of this stabilizer chain
+        %
+        % Returns:
+        %   integer(1,\*): Base
             b = self.B;
         end
 
         function s = strongGeneratorsForLevel(self, l)
         % Returns the strong generators for H^l
+        %
+        % Returns:
+        %   integer(\*,\*): Generators as columns in a matrix
             s = self.S(:,self.Sind(l):end);
         end
 
         function s = newStrongGeneratorsAtLevel(self, l)
         % Returns the strong generators that are present in H^l but not H^l+1
+        %
+        % Returns:
+        %   integer(\*,\*): Generators as columns in a matrix
             s = self.S(:,self.Sind(l):self.Sind(l+1)-1);
         end
 
         function replaceNewStrongGeneratorsAtLevel(self, l, snew)
+        % Replaces the strong generators at a given level
+        %
+        % Updates the strong generators data structure accordingly
+        %
+        % Args:
+        %   l (integer): Level
+        %   snew (integer(\*,\*)): New generators given as columns in a matrix
             sold = self.newStrongGeneratorsAtLevel(l);
             Sind = self.Sind;
             self.S = [self.S(:,1:self.Sind(l)-1) snew self.S(:,self.Sind(l+1):end)];
@@ -123,8 +140,8 @@ classdef Chain < replab.Str
             self.Sind = Sind;
         end
 
-        function gs = allElements3(self)
-        % Computes a matrix with all elements from the stabilizer chain
+        function gs = allElements(self)
+        % Computes a matrix with its columns containing all elements from the stabilizer chain
         %
         % Returns:
         %   double(\*,\*): Matrix with each column an element
@@ -156,74 +173,10 @@ classdef Chain < replab.Str
             end
         end
 
-        function gs = allElements2(self)
-        % Computes a matrix with all elements from the stabilizer chain
-        %
-        % Returns:
-        %   double(\*,\*): Matrix with each row an element
-            gs = [1:self.n];
-            if self.length == 0 || max(self.orbitSizes) == 1 % tests if order == 1
-                return
-            else
-                i = self.length;
-                while i > 0 && self.orbitSize(i) == 1
-                    i = i - 1;
-                end
-                if i == 0
-                    return % gs is identity
-                end
-                gs = self.U{i}';
-                i = i - 1;
-                while i > 0
-                    Ui = self.U{i};
-                    if size(Ui, 1) > 1
-                        newgs = gs;
-                        for j = 2:size(Ui,2)
-                            Uij = Ui(:,j);
-                            newgs = [newgs; Uij(gs)];
-                        end
-                    end
-                    gs = newgs;
-                    i = i - 1;
-                end
-            end
-        end
-
-        function gs = allElements1(self)
-        % Computes a matrix with all elements from the stabilizer chain
-        %
-        % Returns:
-        %   double(\*,\*): Matrix with each row an element
-            ord = self.order;
-            assert(ord <= 2^53-1);
-            ord = double(self.order);
-            f = self.orbitSizes;
-            L = self.length;
-            index_lst = zeros(ord, L);
-            for index = 1:ord
-                indices = zeros(1, L);
-                ind = index - 1;
-                for i = L:-1:1
-                    r = mod(ind, f(i));
-                    ind = (ind - r)/f(i);
-                    indices(i) = double(r) + 1;
-                end
-                index_lst(index, :) = indices;
-            end
-            gs = repmat(1:self.n, ord, 1);
-            for i = 1:L
-                Ui = self.U{i};
-                for index = 1:ord
-                    gi = Ui(:, index_lst(index, i));
-                    g = gs(index, :);
-                    gs(index, :) = g(gi);
-                end
-            end
-        end
-
-
         function baseSwap(self, l)
-        % Swaps the base points beta_l and beta_m, m = l + 1
+        % Swaps base points beta_l and beta_m, with m = l + 1
+        %
+        % Modifies the stabilizer chain in place, so it must be mutable
             assert(self.isMutable);
             n = self.n;
             m = l + 1;
@@ -257,7 +210,7 @@ classdef Chain < replab.Str
             self.replaceNewStrongGeneratorsAtLevel(m, newSm);
             self.completeOrbit(l);
             self.completeOrbit(m);
-            %self.check;
+            % generate random elements and sift them through the incomplete level
             while self.orbitSize(m) < target
                 ul = oldUl(:,randi(size(oldUl, 2)));
                 um = oldUm(:,randi(size(oldUm, 2)));
@@ -272,13 +225,11 @@ classdef Chain < replab.Str
                     self.addStrongGenerator(m, h);
                     self.completeOrbit(m);
                 end
-                %self.check;
             end
-            %[length(self.Delta{l}) * length(self.Delta{m}) prodSizes]
         end
 
         function orbit = orbitUnderG(self, l, b)
-        % Returns the orbit of b under G^l
+        % Returns the orbit of the point b under G^l as a row integer vector
             orbit = zeros(1, self.n);
             orbit(b) = 1;
             toCheck = b;
@@ -299,9 +250,9 @@ classdef Chain < replab.Str
         end
 
         function conjugate(self, g)
-        % Conjugates the mutable chain by the element g
+        % Conjugates in place this mutable chain by the element g
         %
-        % Changes base points beta_l -> g(beta_l)
+        % Changes base points from ``beta_l`` to ``g(beta_l)``
             assert(self.isMutable);
             l = 1;
             B = self.B;
@@ -335,14 +286,25 @@ classdef Chain < replab.Str
             self.B = g(B);
         end
 
-        function baseChange(self, newBase)
+        function baseChange(self, newBase, removeRedundant)
+        % Changes in-place the base of this BSGS chain
+        %
+        % Assumes that the chain is mutable.
+        %
+        % Can remove the base points that are redundant, i.e. have orbit size 1.
+        %
+        % Args:
+        %   newBase (integer(1,\*)): New base to use
+        %   removeRedundant (logical, optional): Whether to remove redundant base points, default value false
             assert(self.isMutable);
-            for i = 1:length(newBase)
-                %self.check;
+            if nargin < 3 || isempty(removeRedundant)
+                removeRedundant = false;
+            end
+            i = 1;
+            while i <= length(newBase)
                 newBeta = newBase(i);
                 if i > self.length
                     self.insertEndBasePoint(newBeta);
-                    %self.check;
                 elseif self.B(i) ~= newBeta
                     j = i;
                     while j <= self.length && self.iDelta(newBeta, j) == 0
@@ -350,29 +312,38 @@ classdef Chain < replab.Str
                     end
                     if j == self.length + 1
                         self.insertEndBasePoint(newBeta);
-                        %self.check;
                     end
                     g = self.u(j, newBeta);
                     if ~isequal(g, 1:self.n)
                         self.conjugate(g);
-                        %self.check;
                     end
                     assert(self.B(j) == newBeta);
                     for k = j-1:-1:i
                         self.baseSwap(k);
-                        %self.check;
                     end
                 end
-            end
-            for i = self.length:-1:length(newBase)+1
-                if self.orbitSize(i) == 1
+                if removeRedundant && self.orbitSize(i) == 1
                     self.removeRedundantBasePoint(i);
+                    newBase = [newBase(1:i-1) newBase(i+1:end)];
+                else
+                    i = i + 1;
                 end
             end
-            %self.check;
+            while i <= self.length
+                if self.orbitSize(i) == 1
+                    self.removeRedundantBasePoint(i);
+                else
+                    i = i + 1;
+                end
+            end
         end
 
         function show(self, i)
+        % Pretty-prints this stabilizer chain
+        %
+        % Args:
+        %   i (integer, optional): If omitted, print general info about the chain.
+        %                          If present, pretty-prints the given level.
             if nargin < 2
                 table = cell(2, self.length+1);
                 table{1,1} = 'base: ';
@@ -402,7 +373,11 @@ classdef Chain < replab.Str
             end
         end
 
-        function c = stabilizer(self, b)
+        function [c orbit iOrbit U Uinv] = stabilizer(self, b)
+        % Returns the stabilizer chain that represents the group stabilizing the given point
+        %
+        % Optionally returns the orbit, index of orbit points, transversal for the original group
+        % when the first base point is ``b``
             if self.length == 0
                 c = self.mutableCopy;
                 if ~self.isMutable
@@ -416,6 +391,18 @@ classdef Chain < replab.Str
                 newiDelta = self.iDelta(:, 2:end);
                 newU = self.U(2:end);
                 newUinv = self.Uinv(2:end);
+                if nargout > 1
+                    orbit = self.Delta{1};
+                end
+                if nargout > 2
+                    iOrbit = self.iDelta(:,1);
+                end
+                if nargout > 3
+                    U = self.U{1};
+                end
+                if nargout > 4
+                    Uinv = self.Uinv{1};
+                end
                 c = replab.bsgs.Chain(self.n, newB, newS, newSind, newDelta, newiDelta, newU, newUinv);
                 if ~self.isMutable
                     c.makeImmutable;
@@ -426,7 +413,11 @@ classdef Chain < replab.Str
                 if ~self.isMutable
                     c.makeImmutable;
                 end
-                c = c.stabilizer(b);
+                if nargout == 1
+                    c = c.stabilizer(b);
+                else
+                    [c orbit iOrbit U Uinv] = c.stabilizer(b);
+                end
             end
         end
 
@@ -662,6 +653,9 @@ classdef Chain < replab.Str
         function g = elementFromIndices(self, indices)
         % Computes the group element from transversal indices
         %
+        % The order is base dependent; if the base elements are non-decreasing,
+        % then the elements are sorted lexicographically.
+        %
         % Args:
         %   indices (integer(1, \*)): Transversal indices
         %
@@ -669,8 +663,11 @@ classdef Chain < replab.Str
         %   permutation: Chain element
             g = 1:self.n;
             for i = 1:self.length
+                % sort the current orbit to maintain lexicographic ordering
+                orbit = self.Delta{i};
+                [~,I] = sort(g(orbit));
                 Ui = self.U{i};
-                gi = Ui(:,indices(i));
+                gi = Ui(:, I(indices(i)));
                 g = g(gi); % compose(g, gi)
             end
         end
@@ -678,8 +675,8 @@ classdef Chain < replab.Str
         function indices = indicesFromElement(self, g)
         % Computes the transversal indices decomposition for a group element
         %
-        % The indices are such that
-        % ``g = self.u(1, indices(1)) * ... * self.u(k, indices(k))``
+        % The order is base dependent; if the base elements are non-decreasing,
+        % then the elements are sorted lexicographically.
         %
         % Args:
         %   g (permutation): A permutation group element
@@ -687,21 +684,27 @@ classdef Chain < replab.Str
         % Returns:
         %   integer(1,\*): Transversal indices
             k = self.length;
-            h = g;
             indices = zeros(1, k);
+            g0 = g;
+            h = 1:self.n;
             for i = 1:k
-                b = h(self.B(i));
+                b = g(self.B(i));
+                orbit = self.Delta{i};
+                [~,I] = sort(h(orbit));
                 j = self.iDelta(b, i);
-                indices(i) = j;
                 if j == 0
                     indices = [];
                     return
                 end
+                indices(i) = find(I == j);
                 Uinvi = self.Uinv{i};
                 uinv = Uinvi(:, j)';
                 % note order is reversed compared to Holt, as
                 % we use a left action
-                h = uinv(h); % compose(uinv, h)
+                g = uinv(g); % compose(uinv, g)
+                Ui = self.U{i};
+                u = Ui(:, j)';
+                h = h(u);
             end
         end
 

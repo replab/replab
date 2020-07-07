@@ -60,7 +60,7 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
     f = baseLen;
     l = baseLen;
     % line 3: compute BSGS and related structure for K
-    minimalInOrbit{f} = replab.bsgs.minimalByBaseOrderingInOrbit(degree, right.strongGeneratorsForLevel(f), baseOrdering);
+    minimalMaskInOrbit{f} = replab.bsgs.minimalMaskInOrbit(degree, right.strongGeneratorsForLevel(f), baseOrdering);
     % line 5: DO NOT remove the base point from the representatives, we want to test the identity!
     % line 6: more initializations
     c = zeros(1, baseLen);
@@ -84,7 +84,7 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
         while l < baseLen
             % line 10: apply all tests
             img = g{l}(base(l));
-            if ~greaterThan(img, mu(l)) || ~lessThan(img, nu(l)) || ~minimalInOrbit{l}(img)
+            if ~greaterThan(img, mu(l)) || ~lessThan(img, nu(l)) || ~minimalMaskInOrbit{l}(img)
                 break
             end
             [ok, testData{l+1}] = tests{l}(g{l}, testData{l});
@@ -94,8 +94,7 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
             % line 11: change the (partial) base
             right.baseChange([right.B(1:l-1) img]);
             % line 12: calculate the minimal orbit representative mask
-            minimalInOrbit{l+1} = replab.bsgs.minimalByBaseOrderingInOrbit(...
-                degree, right.strongGeneratorsForLevel(l + 1), baseOrdering);
+            minimalMaskInOrbit{l+1} = replab.bsgs.minimalMaskInOrbit(degree, right.strongGeneratorsForLevel(l+1), baseOrdering);
             % line 13: recompute sorted orbits
             l = l + 1;
             sortedOrbits{l} = replab.bsgs.sortByOrdering(g{l-1}(group.Delta{l}), baseOrdering);
@@ -112,7 +111,7 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
         % lines 17: apply the tests to the group element found
         if l == baseLen
             img = g{l}(base(l));
-            if minimalInOrbit{l}(img) && greaterThan(img, mu(l)) && lessThan(img, nu(l))
+            if minimalMaskInOrbit{l}(img) && greaterThan(img, mu(l)) && lessThan(img, nu(l))
                 [ok, ~] = tests{l}(g{l}, testData{l});
                 if ok && prop(g{l})
                     res = g{l};
@@ -136,7 +135,7 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
             f = l;
             c(l) = 1;
             % line 27
-            minimalInOrbit{f} = replab.bsgs.minimalByBaseOrderingInOrbit(degree, right.strongGeneratorsForLevel(f), baseOrdering);
+            minimalMaskInOrbit{f} = replab.bsgs.minimalMaskInOrbit(degree, right.strongGeneratorsForLevel(f), baseOrdering);
             % line 28: update variables used for minimality testing
             mu(l) = degree + 2; % = 0
             nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, left.Delta);

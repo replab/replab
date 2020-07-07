@@ -16,6 +16,12 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 assert(~self.isIdentity(self.generators{i}), 'Generators cannot contain the identity');
             end
             chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.order_);
+            base = chain.base;
+            if any(base(2:end) < base(1:end-1))
+                chain = chain.mutableCopy;
+                chain.baseChange(1:self.domainSize, true);
+                chain.makeImmutable;
+            end
         end
 
         function dec = computeDecomposition(self)
@@ -76,6 +82,12 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 self.parent = parent;
             end
             if nargin > 4 && ~isempty(chain)
+                base = chain.base;
+                if any(base(2:end) < base(1:end-1))
+                    chain = chain.mutableCopy;
+                    chain.baseChange(1:domainSize, true);
+                    chain.makeImmutable;
+                end
                 self.chain_ = chain;
             end
             self.niceGroup_ = self;
@@ -91,6 +103,16 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 self.chain_ = self.computeChain;
             end
             c = self.chain_;
+        end
+
+        %% Str methods
+
+        function s = headerStr(self)
+            if ~isempty(self.order_)
+                s = sprintf('Permutation group acting on %d elements of order %s', self.domainSize, strip(num2str(self.order)));
+            else
+                s = sprintf('Permutation group acting on %d elements', self.domainSize, strip(num2str(self.order)));
+            end
         end
 
         %% Domain methods
@@ -554,6 +576,14 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 end
             end
             sub = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
+        end
+
+        function c = leftCosetsOf(self, subgroup)
+            c = replab.PermutationGroupLeftCosets(self, subgroup);
+        end
+
+        function c = rightCosetsOf(self, subgroup)
+            c = replab.PermutationGroupRightCosets(self, subgroup);
         end
 
 

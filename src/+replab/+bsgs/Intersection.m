@@ -1,4 +1,8 @@
 classdef Intersection
+% Computes the intersection of groups
+%
+% See Section 4.6.6 of
+% ``D. Holt et al, Handbook of Computational Group Theory (CRC Press, 2005).``
 
     properties
         base

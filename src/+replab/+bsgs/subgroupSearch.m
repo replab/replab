@@ -89,9 +89,9 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
                                 % line 4: orbit representatives for f-th basic stabilizer of K
                                 % instead of storing the orbit representatives and using ismember, we store
                                 % a logical mask which is true if the element is minimal
-    minimalInOrbit{f} = replab.bsgs.minimalByBaseOrderingInOrbit(degree, res.strongGeneratorsForLevel(f), baseOrdering);
+    minimalMaskInOrbit{f} = replab.bsgs.minimalMaskInOrbit(degree, res.strongGeneratorsForLevel(f), baseOrdering);
     % line 5: remove the base point from the representatives to avoid getting the identity element as a generator for K
-    minimalInOrbit{f}(base(f)) = false;
+    minimalMaskInOrbit{f}(base(f)) = false;
     % line 6: more initializations
     c = zeros(1, baseLen);
     u = repmat({identity}, 1, baseLen);
@@ -114,7 +114,7 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
         while l < baseLen
             % line 10: apply all tests
             img = g{l}(base(l));
-            if ~greaterThan(img, mu(l)) || ~lessThan(img, nu(l)) || ~minimalInOrbit{l}(img)
+            if ~greaterThan(img, mu(l)) || ~lessThan(img, nu(l)) || ~minimalMaskInOrbit{l}(img)
                 break
             end
             [ok, testData{l+1}] = tests{l}(g{l}, testData{l});
@@ -124,8 +124,7 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
             % line 11: change the (partial) base of K
             res.baseChange([res.B(1:l-1) img]);
             % line 12: calculate the minimal orbit representative mask
-            minimalInOrbit{l+1} = replab.bsgs.minimalByBaseOrderingInOrbit(...
-                degree, res.strongGeneratorsForLevel(l + 1), baseOrdering);
+            minimalMaskInOrbit{l+1} = replab.bsgs.minimalMaskInOrbit(degree, res.strongGeneratorsForLevel(l+1), baseOrdering);
             % line 13: recompute sorted orbits
             l = l + 1;
             sortedOrbits{l} = replab.bsgs.sortByOrdering(g{l-1}(group.Delta{l}), baseOrdering);
@@ -142,7 +141,7 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
         % lines 17: apply the tests to the group element found
         if l == baseLen
             img = g{l}(base(l));
-            if minimalInOrbit{l}(img) && greaterThan(img, mu(l)) && lessThan(img, nu(l))
+            if minimalMaskInOrbit{l}(img) && greaterThan(img, mu(l)) && lessThan(img, nu(l))
                 [ok, ~] = tests{l}(g{l}, testData{l});
                 if ok && prop(g{l})
                     % line 18: add new strong generator for K
@@ -151,7 +150,7 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
                     res.stripAndAddStrongGenerator(g{l});
                     resBasicOrbits = res.Delta;
                     % line 21: recalculate orbit representatives
-                    minimalInOrbit{f} = replab.bsgs.minimalByBaseOrderingInOrbit(degree, res.strongGeneratorsForLevel(f), baseOrdering);
+                    minimalMaskInOrbit{f} = replab.bsgs.minimalMaskInOrbit(degree, res.strongGeneratorsForLevel(f), baseOrdering);
                     % line 22: reset the search depth
                     l = f;
                 end
@@ -172,7 +171,7 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
             f = l;
             c(l) = 1;
             % line 27
-            minimalInOrbit{f} = replab.bsgs.minimalByBaseOrderingInOrbit(degree, res.strongGeneratorsForLevel(f), baseOrdering);
+            minimalMaskInOrbit{f} = replab.bsgs.minimalMaskInOrbit(degree, res.strongGeneratorsForLevel(f), baseOrdering);
             % line 28: update variables used for minimality testing
             mu(l) = degree + 2; % = 0
             nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, resBasicOrbits);
