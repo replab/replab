@@ -349,7 +349,7 @@ classdef Chain < replab.Str
             end
         end
 
-        function c = stabilizer(self, b)
+        function [c orbit iOrbit U Uinv] = stabilizer(self, b)
             if self.length == 0
                 c = self.mutableCopy;
                 if ~self.isMutable
@@ -363,6 +363,18 @@ classdef Chain < replab.Str
                 newiDelta = self.iDelta(:, 2:end);
                 newU = self.U(2:end);
                 newUinv = self.Uinv(2:end);
+                if nargout > 1
+                    orbit = self.Delta{1};
+                end
+                if nargout > 2
+                    iOrbit = self.iDelta(:,1);
+                end
+                if nargout > 3
+                    U = self.U{1};
+                end
+                if nargout > 4
+                    Uinv = self.Uinv{1};
+                end
                 c = replab.bsgs.Chain(self.n, newB, newS, newSind, newDelta, newiDelta, newU, newUinv);
                 if ~self.isMutable
                     c.makeImmutable;
@@ -373,7 +385,11 @@ classdef Chain < replab.Str
                 if ~self.isMutable
                     c.makeImmutable;
                 end
-                c = c.stabilizer(b);
+                if nargout == 1
+                    c = c.stabilizer(b);
+                else
+                    [c orbit iOrbit U Uinv] = c.stabilizer(b);
+                end
             end
         end
 
