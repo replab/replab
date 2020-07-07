@@ -13,7 +13,7 @@ function classes = conjugacyClassesByOrbits(group)
 % Returns:
 %   classImages (cell(1,\*) of double(\*,\*) arrays): All conjugacy classes, as matrices
 %                                                     with permutations in the class as columns
-    I = group.chain.allElements3;
+    I = group.chain.allElements;
     ds = size(I, 1); % domain size for images
     ord = size(I, 2); % group order
     assert(ds < 65536, 'Domain size too big for naive enumeration');
