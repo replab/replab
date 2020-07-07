@@ -28,7 +28,7 @@ classdef PermPermMorphism < replab.Morphism
 
         function m = byImages(source, images)
             nG = source.nGenerators;
-            assert(nG > 1);
+            assert(nG >= 1);
             n1 = source.domainSize;
             n2 = length(images{1});
             S = cell(1, nG);
