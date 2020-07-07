@@ -1,4 +1,5 @@
 classdef Centralizer
+% Computes the centralizer of an element
 
     properties
         group

@@ -102,20 +102,37 @@ classdef Chain < replab.Str
         end
 
         function b = base(self)
+        % Returns the base of this stabilizer chain
+        %
+        % Returns:
+        %   integer(1,\*): Base
             b = self.B;
         end
 
         function s = strongGeneratorsForLevel(self, l)
         % Returns the strong generators for H^l
+        %
+        % Returns:
+        %   integer(\*,\*): Generators as columns in a matrix
             s = self.S(:,self.Sind(l):end);
         end
 
         function s = newStrongGeneratorsAtLevel(self, l)
         % Returns the strong generators that are present in H^l but not H^l+1
+        %
+        % Returns:
+        %   integer(\*,\*): Generators as columns in a matrix
             s = self.S(:,self.Sind(l):self.Sind(l+1)-1);
         end
 
         function replaceNewStrongGeneratorsAtLevel(self, l, snew)
+        % Replaces the strong generators at a given level
+        %
+        % Updates the strong generators data structure accordingly
+        %
+        % Args:
+        %   l (integer): Level
+        %   snew (integer(\*,\*)): New generators given as columns in a matrix
             sold = self.newStrongGeneratorsAtLevel(l);
             Sind = self.Sind;
             self.S = [self.S(:,1:self.Sind(l)-1) snew self.S(:,self.Sind(l+1):end)];
@@ -157,7 +174,9 @@ classdef Chain < replab.Str
         end
 
         function baseSwap(self, l)
-        % Swaps the base points beta_l and beta_m, m = l + 1
+        % Swaps base points beta_l and beta_m, with m = l + 1
+        %
+        % Modifies the stabilizer chain in place, so it must be mutable
             assert(self.isMutable);
             n = self.n;
             m = l + 1;
@@ -210,7 +229,7 @@ classdef Chain < replab.Str
         end
 
         function orbit = orbitUnderG(self, l, b)
-        % Returns the orbit of b under G^l
+        % Returns the orbit of the point b under G^l as a row integer vector
             orbit = zeros(1, self.n);
             orbit(b) = 1;
             toCheck = b;
@@ -231,9 +250,9 @@ classdef Chain < replab.Str
         end
 
         function conjugate(self, g)
-        % Conjugates the mutable chain by the element g
+        % Conjugates in place this mutable chain by the element g
         %
-        % Changes base points beta_l -> g(beta_l)
+        % Changes base points from ``beta_l`` to ``g(beta_l)``
             assert(self.isMutable);
             l = 1;
             B = self.B;
@@ -320,6 +339,11 @@ classdef Chain < replab.Str
         end
 
         function show(self, i)
+        % Pretty-prints this stabilizer chain
+        %
+        % Args:
+        %   i (integer, optional): If omitted, print general info about the chain.
+        %                          If present, pretty-prints the given level.
             if nargin < 2
                 table = cell(2, self.length+1);
                 table{1,1} = 'base: ';
@@ -350,6 +374,10 @@ classdef Chain < replab.Str
         end
 
         function [c orbit iOrbit U Uinv] = stabilizer(self, b)
+        % Returns the stabilizer chain that represents the group stabilizing the given point
+        %
+        % Optionally returns the orbit, index of orbit points, transversal for the original group
+        % when the first base point is ``b``
             if self.length == 0
                 c = self.mutableCopy;
                 if ~self.isMutable

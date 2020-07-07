@@ -1,5 +1,7 @@
 function [group1, tests1, startData1] = cleanUpBaseAndTests(group, tests, startData)
 % Removes redundant base points from ``group`` and fixes the rest of the data if necessary
+%
+% ``tests`` and ``startData`` have to be interpreted in the context of `.subgroupSearch`
     for i = length(tests)+1:group.length
         % handle tests: if tests do not cover base fully, we complete by trivial tests
         tests{1,i} = @(g, indata) deal(true, []);
@@ -39,5 +41,14 @@ function [group1, tests1, startData1] = cleanUpBaseAndTests(group, tests, startD
         group1 = group;
         tests1 = tests;
         startData1 = startData;
+    end
+end
+
+function [ok, data] = concatTests(tests, g, data)
+    for i = 1:length(tests)
+        [ok, data] = tests{i}(g, data);
+        if ~ok
+            return
+        end
     end
 end

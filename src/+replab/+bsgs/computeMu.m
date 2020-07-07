@@ -1,4 +1,7 @@
 function mu = computeMu(degree, l, base, g, resBasicOrbits, baseOrdering)
+% Computes the ``mu`` bound in the backtracking tests
+%
+% See `.subgroupSearch`
     mu = degree + 2; % place holder for element < all others in base ordering
     for j = 1:l
         if ismember(base(l), resBasicOrbits{j})

@@ -10,10 +10,8 @@ classdef Samplable < replab.Obj
         %
         % This method does not make any guarantees about genericity, and is primarily used for law checks.
         %
-        % Returns
-        % -------
-        %   element: Set element
-        %     Random set element
+        % Returns:
+        %   set element: Random set element
             error('Abstract');
         end
 
