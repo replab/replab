@@ -16,5 +16,5 @@ function [pres x] = cyclicGroup(G)
     while G.elementOrder(x) ~= G.order
         x = G.sample;
     end
-    pres = replab.Presentation(1, {ones(1,n)})
+    pres = replab.Presentation(1, {ones(1,n)});
 end

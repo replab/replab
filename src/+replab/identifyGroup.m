@@ -3,6 +3,9 @@ function [name, pres, f, g] = identifyGroup(G)
 %
 % For now, we use the notation conventions on the wiki https://groupprops.subwiki.org/wiki/Main_Page
 %
+% Example:
+%    >>> replab.identifyGroup(replab.DihedralGroup(3))
+%      'Dihedral group of order 6 and degree 3'
 % Args:
 %   G (`+replab.NiceFiniteGroup`): The group to recognize
 %
