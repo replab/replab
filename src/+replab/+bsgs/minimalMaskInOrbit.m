@@ -1,7 +1,10 @@
-function mask = minimalByBaseOrderingInOrbit(degree, generators, baseOrdering)
+function mask = allMinimalInOrbit(degree, generators, baseOrdering)
     if size(generators, 2) == 0
         mask = true(1, degree);
     else
+        if nargin < 3
+            baseOrdering = 1:degree;
+        end
         % simpler code:
         % orbits = replab.Partition.permutationsOrbits(generators').blocks;
         % mask1 = false(1, degree);

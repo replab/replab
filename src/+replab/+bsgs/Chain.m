@@ -257,6 +257,7 @@ classdef Chain < replab.Str
             self.replaceNewStrongGeneratorsAtLevel(m, newSm);
             self.completeOrbit(l);
             self.completeOrbit(m);
+            % generate random elements and sift them through the incomplete level
             while self.orbitSize(m) < target
                 ul = oldUl(:,randi(size(oldUl, 2)));
                 um = oldUm(:,randi(size(oldUm, 2)));
