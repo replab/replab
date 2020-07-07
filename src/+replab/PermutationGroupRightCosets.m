@@ -1,4 +1,4 @@
-classdef PermutationGroupRightCosets < replab.Str
+classdef PermutationGroupRightCosets < replab.RightCosets
 % Enables computations with the right cosets of a permutation group
 %
 % The transversal elements are given by the minimal elements of the coset under lexicographic ordering;
@@ -6,13 +6,10 @@ classdef PermutationGroupRightCosets < replab.Str
 %
 % Thus, computations involving cosets are deterministic, and do not depend on the details of
 % the construction of the permutation group and subgroup.
+%
+% See `.RightCosets` for the basic information.
 
-    properties (SetAccess = protected)
-        group % (`.PermutationGroup`): Group
-        subgroup % (`.PermutationGroup`): Subgroup of `.group`
-    end
-
-    properties %(Access = protected)
+    properties (Access = protected)
         groupChain % (`+replab.+bsgs.Chain`): Stabilizer chain of `.group` with monotonically increasing base
         subgroupChain % (`+replab.+bsgs.Chain`): Stabilzier chain of `.subgroup` with monotonically increasing base
     end
@@ -36,7 +33,7 @@ classdef PermutationGroupRightCosets < replab.Str
             self.subgroupChain = subgroupChain;
         end
 
-        function t = findTransversalElement(self, g)
+        function t = canonicalRepresentative(self, g)
             group = self.groupChain;
             sub = self.subgroupChain.mutableCopy;
             n = group.n;
@@ -52,7 +49,43 @@ classdef PermutationGroupRightCosets < replab.Str
             end
         end
 
-        function T = transversalMatrix(self)
+
+        function T = transversal(self)
+            M = self.transversalAsMatrix;
+            N = size(M, 1);
+            T = cell(1, N);
+            for i = 1:N
+                T{i} = M(i, :);
+            end
+        end
+
+        function C = coset(self, g)
+            M = self.cosetAsMatrix(g);
+            N = size(M, 1);
+            C = arrayfun(@(i) M(i,:), 1:size(M,1), 'uniform', 0);
+        end
+
+        function C = cosetAsMatrix(self, g)
+        % Returns the given coset as a matrix, with elements in rows
+        %
+        % Args:
+        %   g (permutation): Coset representative
+        %
+        % Returns:
+        %   integer(\*,\*): Coset matrix
+            H = self.subgroupChain.allElements;
+            C = zeros(size(H));
+            for i = 1:size(H, 2)
+                C(:,i) = H(g,i);
+            end
+            C = sortrows(C');
+        end
+
+        function T = transversalAsMatrix(self)
+        % Returns the transversal as a matrix, with elements in rows
+        %
+        % Returns:
+        %   integer(\*,\*): Transversal matrix
             group = self.groupChain;
             subgroup = self.subgroupChain;
             n = group.n;

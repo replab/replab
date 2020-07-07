@@ -105,6 +105,16 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             c = self.chain_;
         end
 
+        %% Str methods
+
+        function s = headerStr(self)
+            if ~isempty(self.order_)
+                s = sprintf('Permutation group acting on %d elements of order %s', self.domainSize, strip(num2str(self.order)));
+            else
+                s = sprintf('Permutation group acting on %d elements', self.domainSize, strip(num2str(self.order)));
+            end
+        end
+
         %% Domain methods
 
         function b = eqv(self, x, y)
@@ -566,6 +576,14 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 end
             end
             sub = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
+        end
+
+        function c = leftCosetsOf(self, subgroup)
+            c = replab.PermutationGroupLeftCosets(self, subgroup);
+        end
+
+        function c = rightCosetsOf(self, subgroup)
+            c = replab.PermutationGroupRightCosets(self, subgroup);
         end
 
 
