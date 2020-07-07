@@ -1,4 +1,4 @@
-function mask = allMinimalInOrbit(degree, generators, baseOrdering)
+function mask = minimalMaskInOrbit(degree, generators, baseOrdering)
     if size(generators, 2) == 0
         mask = true(1, degree);
     else
