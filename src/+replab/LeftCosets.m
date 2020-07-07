@@ -1,5 +1,5 @@
 classdef LeftCosets < replab.Str
-% Describes the set left right cosets of a nice finite group
+% Describes the set of left right cosets of a nice finite group
 %
 % Let $H$ be a subgroup of a group $G$. Then the left cosets are the sets $g H = \{ g h : h \in H \}$.
 % The set of such left cosets is often written $G / H = \{ g H : g \in G \}$.

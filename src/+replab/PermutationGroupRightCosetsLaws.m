@@ -1,15 +1,14 @@
-classdef PermutationGroupRightCosetsLaws < replab.Laws
+classdef PermutationGroupRightCosetsLaws < replab.RightCosetsLaws
+% Laws for `.PermutationGroupRightCosets`
+%
+% Property types
+%
+% R is now a `.PermutationGroupRightCosets`, G and H are `.PermutationGroup`
 
-    properties (SetAccess = protected)
-        R % (`.PermutationGroupRightCosets`): Right cosets structure
-        G % (`.PermutationGroup`): Group
-        H % (`.PermutationGroup`): Subgroup
-    end
     methods
         function self = PermutationGroupRightCosetsLaws(R)
-            self.R = R;
-            self.G = R.group;
-            self.H = R.subgroup;
+            assert(isa(R, 'replab.PermutationGroupRightCosets'));
+            self@replab.RightCosetsLaws(R);
         end
     end
     methods
