@@ -1,4 +1,21 @@
 function [name, pres, f, g] = identifyGroup(G)
+% Attempts to identify the given group
+%
+% For now, we use the notation conventions on the wiki https://groupprops.subwiki.org/wiki/Main_Page
+%
+% Args:
+%   G (`+replab.NiceFiniteGroup`): The group to recognize
+%
+% Returns
+% -------
+%   name:
+%     charstring: A human-readable description of the group
+%   pres:
+%     `+replab.Presentation`: The standard presentation of the recognized group
+%   f:
+%     `+replab.Morphism`: An isomorphism from ``G`` to a group that obeys the presentation
+%   g:
+%     `+replab.Morphism`: Inverse of the isomorphism ``f``
 
     [pres x] = replab.id.cyclicGroup(G);
     if ~isempty(pres)
