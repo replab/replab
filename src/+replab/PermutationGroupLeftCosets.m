@@ -1,4 +1,13 @@
 classdef PermutationGroupLeftCosets < replab.LeftCosets
+% Enables computations with the left cosets of a permutation group
+%
+% The transversal elements are given by the minimal elements of the coset under lexicographic ordering;
+% the left cosets themselves are ordered by their transversal elements, in lexicographic ordering too.
+%
+% Thus, computations involving cosets are deterministic, and do not depend on the details of
+% the construction of the permutation group and subgroup.
+%
+% See `.LeftCosets` for the basic information.
 
     properties (Access = protected)
         inverse % (`.PermutationGroupRightCosets`): Right cosets
@@ -15,16 +24,24 @@ classdef PermutationGroupLeftCosets < replab.LeftCosets
         end
 
         function t = canonicalRepresentative(self, g)
-            t = self.group.inverse(self.inverse.findTransversalElement(self.group.inverse(g)));
-            % we have the left coset decomposition g = h t, where h \in subgroup and t is a transversal
-            % then g^-1 = t^-1 h^-1, and we ask for the right transversal element t^-1 corresponding to g^-1
+            sub = self.inverse.subgroupChain;
+            L = sub.length;
+            t = g;
+            for l = 1:L
+                orbit = sub.Delta{l};
+                [~, i] = min(g(orbit));
+                t = t(sub.u(l, orbit(i)));
+            end
         end
 
         function T = transversalAsMatrix(self)
             Tinv = self.inverse.transversalAsMatrix;
             T = zeros(size(Tinv));
+            n = self.group.domainSize;
+            g = zeros(1, n);
             for i = 1:size(Tinv, 1)
-                T(i,Tinv(i,:)) = 1:self.group.domainSize;
+                g(Tinv(i,:)) = 1:n; % invert
+                T(i,:) = self.canonicalRepresentative(g);
             end
         end
 
@@ -36,9 +53,9 @@ classdef PermutationGroupLeftCosets < replab.LeftCosets
         %
         % Returns:
         %   integer(\*,\*): Coset matrix
-            H = self.subgroupChain.allElements;
+            H = self.inverse.subgroupChain.allElements;
             C = g(H');
-            C = sortrows(C');
+            C = sortrows(C);
         end
 
         function T = transversal(self)

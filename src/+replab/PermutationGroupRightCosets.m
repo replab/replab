@@ -9,14 +9,15 @@ classdef PermutationGroupRightCosets < replab.RightCosets
 %
 % See `.RightCosets` for the basic information.
 
-    properties (Access = protected)
+    properties (SetAccess = protected)
         groupChain % (`+replab.+bsgs.Chain`): Stabilizer chain of `.group` with monotonically increasing base
-        subgroupChain % (`+replab.+bsgs.Chain`): Stabilzier chain of `.subgroup` with monotonically increasing base
+        subgroupChain % (`+replab.+bsgs.Chain`): Stabilizer chain of `.subgroup` with monotonically increasing base
     end
 
     methods
 
         function self = PermutationGroupRightCosets(group, subgroup)
+            assert(subgroup.isSubgroupOf(group), 'The given subgroup is not a subgroup.');
             self.group = group;
             self.subgroup = subgroup;
             groupChain = group.niceGroup.chain;
@@ -48,7 +49,6 @@ classdef PermutationGroupRightCosets < replab.RightCosets
                 t = uinv(t);
             end
         end
-
 
         function T = transversal(self)
             M = self.transversalAsMatrix;
