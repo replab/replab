@@ -177,22 +177,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         end
 
         function o = elementOrder(self, p)
-            if self.domainSize < 2
-                o = vpi(1);
-                return
-            end
-            orders = unique(replab.Permutation.cycleStructure(p));
-            o = orders(1);
-            i = 2;
-            while i <= length(orders) && log2(o) + log2(orders(i)) < 53
-                o = lcm(o, orders(i));
-                i = i + 1;
-            end
-            o = vpi(o);
-            while i <= length(orders)
-                o = lcm(o, vpi(orders(i)));
-                i = i + 1;
-            end
+            o = replab.Permutation.order(p);
         end
 
         function res = isCyclic(self)
