@@ -14,6 +14,10 @@ function [n r] = unfactorial(f)
 %     vpi or double: Remainder (of same type as ``f``)
     n = 1;
     m = 1;
+    if isa(f, 'vpi');
+        n = vpi(n);
+        m = vpi(m);
+    end
     while 1
         newM = (n + 1) * m;
         if newM > f
