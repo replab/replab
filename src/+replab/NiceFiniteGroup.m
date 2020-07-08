@@ -125,6 +125,10 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
     methods
 
+        function res = ne(self, rhs)
+            res = ~(self == rhs);
+        end
+
         function res = eq(self, rhs)
             res = self.hasSameParentAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
         end
