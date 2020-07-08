@@ -34,7 +34,8 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
         startData = [];
     end
     identity = 1:degree;
-    [group, tests, startData] = replab.bsgs.cleanUpBaseAndTests(group, tests, startData);
+    [group, groupedTests, startData] = replab.bsgs.cleanUpBaseAndTests(group, tests, startData);
+    tests = [];
     base = group.base;
     baseLen = length(base);
     if baseLen == 0
