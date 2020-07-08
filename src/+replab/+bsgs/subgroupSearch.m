@@ -63,7 +63,8 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
         tests = {};
         startData = [];
     end
-    [group, tests, startData] = replab.bsgs.cleanUpBaseAndTests(group, tests, startData);
+    [group, groupedTests, startData] = replab.bsgs.cleanUpBaseAndTests(group, tests, startData);
+    tests = [];
     base = group.base;
     baseLen = length(base);
     if baseLen == 0
@@ -75,7 +76,12 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
     testData = cell(1, baseLen);
     testData{1} = startData;
     for i = 1:baseLen
-        [ok, testData{i+1}] = tests{i}(identity, testData{i});
+        seq = groupedTests{i};
+        data = testData{i};
+        for j = 1:length(seq)
+            [ok, data] = seq{j}(identity, data);
+        end
+        testData{i+1} = data;
     end
     baseOrdering = [replab.bsgs.baseOrdering(degree, base) degree+1 0];
     % line 1: more initializations
@@ -117,7 +123,16 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
             if ~greaterThan(img, mu(l)) || ~lessThan(img, nu(l)) || ~minimalMaskInOrbit{l}(img)
                 break
             end
-            [ok, testData{l+1}] = tests{l}(g{l}, testData{l});
+            ok = true;
+            data = testData{l};
+            seq = groupedTests{l};
+            for j = 1:length(seq)
+                [ok, data] = seq{j}(g{l}, data);
+                if ~ok
+                    break
+                end
+            end
+            testData{l+1} = data;
             if ~ok
                 break
             end
@@ -142,7 +157,15 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
         if l == baseLen
             img = g{l}(base(l));
             if minimalMaskInOrbit{l}(img) && greaterThan(img, mu(l)) && lessThan(img, nu(l))
-                [ok, ~] = tests{l}(g{l}, testData{l});
+                ok = true;
+                data = testData{l};
+                seq = groupedTests{l};
+                for j = 1:length(seq)
+                    [ok, data] = seq{j}(g{l}, data);
+                    if ~ok
+                        break
+                    end
+                end
                 if ok && prop(g{l})
                     % line 18: add new strong generator for K
                     % line 19-20: reset the base of K

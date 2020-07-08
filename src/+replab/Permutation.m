@@ -6,6 +6,31 @@ classdef Permutation
 
     methods (Static)
 
+        function o = order(perm)
+        % Returns the order of the permutation
+        %
+        % Args:
+        %   perm (permutation): Permutation
+        %
+        % Returns:
+        %   integer: The order of ``perm``, i.e. the smallest ``o`` such that ``perm^o == identity``
+            if length(perm) < 2
+                o = 1;
+                return
+            end
+            orders = unique(replab.Permutation.cycleStructure(perm));
+            if isempty(orders)
+                o = 1;
+                return
+            end
+            o = orders(1);
+            i = 2;
+            for i = 2:length(orders)
+                assert(log2(o) + log2(orders(i)) < 53, 'Order of element too big to fit in a double');
+                o = lcm(o, orders(i));
+            end
+        end
+
         function c = cycleStructure(perm)
         % Returns the cycle structure of the given permutation
         %

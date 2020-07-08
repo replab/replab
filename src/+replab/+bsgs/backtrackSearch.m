@@ -27,6 +27,8 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
     if nargin < 5 || isempty(leftSubgroup)
         leftSubgroup = replab.bsgs.Chain(degree);
     end
+    leftSubgroupTrivial = (leftSubgroup.order == 1);
+    rightSubgroupTrivial = (rightSubgroup.order == 1);
     if nargin < 4
         tests = {};
         startData = [];
@@ -43,11 +45,8 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
         end
         return
     end
-    testData = cell(1, baseLen);
+    testData = cell(1, baseLen+1);
     testData{1} = startData;
-    for i = 1:baseLen
-        [ok, testData{i+1}] = tests{i}(identity, testData{i});
-    end
     baseOrdering = [replab.bsgs.baseOrdering(degree, base) degree+1 0];
     % line 1-2: initialization
     % in the subgroup search algorithm, we construct a subgroup K by adding the new strong
@@ -57,10 +56,17 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
     left.baseChange(base);
     right = rightSubgroup.mutableCopy;
     right.baseChange(base);
-    f = baseLen;
-    l = baseLen;
+    % Change from the subgroup search, we start at the first level
+    f = 1; %baseLen;
+    l = 1; %baseLen;
     % line 3: compute BSGS and related structure for K
-    minimalMaskInOrbit{f} = replab.bsgs.minimalMaskInOrbit(degree, right.strongGeneratorsForLevel(f), baseOrdering);
+    minimalMaskInOrbit = cell(1, baseLen);
+    if rightSubgroupTrivial
+        % ensures that this test always passes
+        minimalMaskInOrbit = repmat({true(1, degree)}, 1, baseLen);
+    else
+        minimalMaskInOrbit{f} = replab.bsgs.minimalMaskInOrbit(degree, right.strongGeneratorsForLevel(f), baseOrdering);
+    end
     % line 5: DO NOT remove the base point from the representatives, we want to test the identity!
     % line 6: more initializations
     c = zeros(1, baseLen);
@@ -72,9 +78,14 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
     % line 7: initializations
     mu = zeros(1, baseLen);
     nu = zeros(1, baseLen);
-    % this corresponds to the element smaller than all points
-    mu(l) = degree + 2;
-    nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, left.Delta);
+    if leftSubgroupTrivial
+        % ensures that those tests always pass
+        mu = repmat(degree + 2, 1, baseLen);
+        nu = repmat(degree + 1, 1, baseLen);
+    else
+        mu(l) = degree + 2; % this corresponds to the element smaller than all points
+        nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, left.Delta);
+    end
     % initialized computed words
     g = repmat({identity}, 1, baseLen);
     greaterThan = @(x, y) baseOrdering(x) > baseOrdering(y);
@@ -87,20 +98,33 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
             if ~greaterThan(img, mu(l)) || ~lessThan(img, nu(l)) || ~minimalMaskInOrbit{l}(img)
                 break
             end
-            [ok, testData{l+1}] = tests{l}(g{l}, testData{l});
+            ok = true;
+            data = testData{l};
+            seq = groupedTests{l};
+            for j = 1:length(seq)
+                [ok, data] = seq{j}(g{l}, data);
+                if ~ok
+                    break
+                end
+            end
+            testData{l+1} = data;
             if ~ok
                 break
             end
-            % line 11: change the (partial) base
-            right.baseChange([right.B(1:l-1) img]);
-            % line 12: calculate the minimal orbit representative mask
-            minimalMaskInOrbit{l+1} = replab.bsgs.minimalMaskInOrbit(degree, right.strongGeneratorsForLevel(l+1), baseOrdering);
+            if ~rightSubgroupTrivial
+                % line 11: change the (partial) base
+                right.baseChange([right.B(1:l-1) img]);
+                % line 12: calculate the minimal orbit representative mask
+                minimalMaskInOrbit{l+1} = replab.bsgs.minimalMaskInOrbit(degree, right.strongGeneratorsForLevel(l+1), baseOrdering);
+            end
             % line 13: recompute sorted orbits
             l = l + 1;
             sortedOrbits{l} = replab.bsgs.sortByOrdering(g{l-1}(group.Delta{l}), baseOrdering);
             % lines 14 and 15: update variables used in minimality tests
-            mu(l) = replab.bsgs.computeMu(degree, l, base, g, left.Delta, baseOrdering);
-            nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, left.Delta);
+            if ~leftSubgroupTrivial
+                mu(l) = replab.bsgs.computeMu(degree, l, base, g, left.Delta, baseOrdering);
+                nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, left.Delta);
+            end
             % line 16: determine the new transversal element
             c(l) = 1;
             idx = sortedOrbits{l}(c(l));
@@ -112,7 +136,15 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
         if l == baseLen
             img = g{l}(base(l));
             if minimalMaskInOrbit{l}(img) && greaterThan(img, mu(l)) && lessThan(img, nu(l))
-                [ok, ~] = tests{l}(g{l}, testData{l});
+                ok = true;
+                data = testData{l};
+                seq = groupedTests{l};
+                for j = 1:length(seq)
+                    [ok, data] = seq{j}(g{l}, data);
+                    if ~ok
+                        break
+                    end
+                end
                 if ok && prop(g{l})
                     res = g{l};
                     return
@@ -135,10 +167,14 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
             f = l;
             c(l) = 1;
             % line 27
-            minimalMaskInOrbit{f} = replab.bsgs.minimalMaskInOrbit(degree, right.strongGeneratorsForLevel(f), baseOrdering);
+            if ~rightSubgroupTrivial
+                minimalMaskInOrbit{f} = replab.bsgs.minimalMaskInOrbit(degree, right.strongGeneratorsForLevel(f), baseOrdering);
+            end
             % line 28: update variables used for minimality testing
-            mu(l) = degree + 2; % = 0
-            nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, left.Delta);
+            if ~leftSubgroupTrivial
+                mu(l) = degree + 2; % = 0
+                nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, left.Delta);
+            end
         end
         % line 29: set the next element from the current branch and update accordingly
         c(l) = c(l) + 1;
