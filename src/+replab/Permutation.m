@@ -6,6 +6,38 @@ classdef Permutation
 
     methods (Static)
 
+        function c = cycleStructure(perm)
+        % Returns the cycle structure of the given permutation
+        %
+        % Example:
+        %   >>> replab.Permutation.cycleStructure([2 1 4 3])
+        %       [2 2]
+        %
+        % Args:
+        %   perm (permutation): Permutation
+        %
+        % Returns:
+        %   integer(1,\*): Nonincreasing vector of integers containing the sizes of cycles (for sizes > 1)
+            x = perm;
+            n = length(x);
+            c = [];
+            for i = 1:n
+                if x(i) == 0 || x(i) == i % skip 1-cycles or visited points
+                    continue
+                end
+                cycleSize = 0;
+                j = i;
+                while x(j) ~= 0
+                    pHold = x(j);
+                    x(j) = 0;
+                    j = pHold;
+                    cycleSize = cycleSize + 1;
+                end
+                c = [c cycleSize];
+            end
+            c = fliplr(sort(c));
+        end
+
         function s = sign(perm)
         % Returns the sign of a given permutation
         %
