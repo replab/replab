@@ -47,10 +47,6 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
     end
     testData = cell(1, baseLen+1);
     testData{1} = startData;
-    for i = 1:baseLen
-        [ok, temp] = tests{i}(identity, testData{i});
-        testData{i+1} = temp;
-    end
     baseOrdering = [replab.bsgs.baseOrdering(degree, base) degree+1 0];
     % line 1-2: initialization
     % in the subgroup search algorithm, we construct a subgroup K by adding the new strong
@@ -60,8 +56,9 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
     left.baseChange(base);
     right = rightSubgroup.mutableCopy;
     right.baseChange(base);
-    f = baseLen;
-    l = baseLen;
+    % Change from the subgroup search, we start at the first level
+    f = 1; %baseLen;
+    l = 1; %baseLen;
     % line 3: compute BSGS and related structure for K
     minimalMaskInOrbit = cell(1, baseLen);
     if rightSubgroupTrivial
@@ -101,8 +98,16 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
             if ~greaterThan(img, mu(l)) || ~lessThan(img, nu(l)) || ~minimalMaskInOrbit{l}(img)
                 break
             end
-            [ok, temp] = tests{l}(g{l}, testData{l});
-            testData{l+1} = temp;
+            ok = true;
+            data = testData{l};
+            seq = groupedTests{l};
+            for j = 1:length(seq)
+                [ok, data] = seq{j}(g{l}, data);
+                if ~ok
+                    break
+                end
+            end
+            testData{l+1} = data;
             if ~ok
                 break
             end
@@ -131,7 +136,15 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
         if l == baseLen
             img = g{l}(base(l));
             if minimalMaskInOrbit{l}(img) && greaterThan(img, mu(l)) && lessThan(img, nu(l))
-                [ok, ~] = tests{l}(g{l}, testData{l});
+                ok = true;
+                data = testData{l};
+                seq = groupedTests{l};
+                for j = 1:length(seq)
+                    [ok, data] = seq{j}(g{l}, data);
+                    if ~ok
+                        break
+                    end
+                end
                 if ok && prop(g{l})
                     res = g{l};
                     return
