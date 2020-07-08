@@ -453,6 +453,24 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             o = self.niceGroup.elementOrder(self.niceMonomorphismImage(g));
         end
 
+        function res = isSimple(self)
+        % Returns whether this group is simple
+            if self.isTrivial
+                res = false;
+            end
+            C = self.conjugacyClasses;
+            for i = 1:length(C)
+                c = C{i}.representative;
+                if ~self.isIdentity(c)
+                    if self.normalClosure(self.subgroup({c})) ~= self
+                        res = false;
+                        return
+                    end
+                end
+            end
+            res = true; % all conjugacy classes generate the full group
+        end
+
         function e = exponent(self)
         % Returns the group exponent
         %
