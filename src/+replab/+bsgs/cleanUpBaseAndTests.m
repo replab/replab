@@ -36,6 +36,7 @@ function [group1, tests1, startData1] = cleanUpBaseAndTests(group, tests, startD
             else
                 tests1{i} = @(g, inData) concatTests(tests(current:next-1), g, inData);
             end
+            current = next;
         end
     else
         group1 = group;
