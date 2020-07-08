@@ -181,8 +181,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 o = vpi(1);
                 return
             end
-            orbits = replab.Partition.permutationsOrbits(p);
-            orders = unique(orbits.blockSizes);
+            orders = unique(replab.Permutation.cycleStructure(p));
             o = orders(1);
             i = 2;
             while i <= length(orders) && log2(o) + log2(orders(i)) < 53

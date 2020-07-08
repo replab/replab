@@ -35,6 +35,17 @@ classdef Partition < replab.Str
             end
         end
 
+        function l = ne(self, rhs)
+        % Checks if this partition differs to another partition
+        %
+        % Args:
+        %   rhs (`.Partition`): Another partition
+        %
+        % Returns:
+        %   logical: True is both partitions differ
+            l = ~(self == rhs);
+        end
+
         function l = eq(self, rhs)
         % Checks if this partition is equal to another partition
         %

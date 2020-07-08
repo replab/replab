@@ -125,6 +125,10 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
     methods
 
+        function res = ne(self, rhs)
+            res = ~(self == rhs);
+        end
+
         function res = eq(self, rhs)
             res = self.hasSameParentAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
         end
@@ -447,6 +451,24 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Returns:
         %   vpi: The order of ``g``, i.e. the smallest ``o`` such that ``g^o == identity``
             o = self.niceGroup.elementOrder(self.niceMonomorphismImage(g));
+        end
+
+        function res = isSimple(self)
+        % Returns whether this group is simple
+            if self.isTrivial
+                res = false;
+            end
+            C = self.conjugacyClasses;
+            for i = 1:length(C)
+                c = C{i}.representative;
+                if ~self.isIdentity(c)
+                    if self.normalClosure(self.subgroup({c})) ~= self
+                        res = false;
+                        return
+                    end
+                end
+            end
+            res = true; % all conjugacy classes generate the full group
         end
 
         function e = exponent(self)
