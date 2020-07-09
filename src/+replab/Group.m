@@ -40,6 +40,14 @@ classdef Group < replab.Monoid
 
         function z = commutator(self, x, y, startWithInverse)
         % Returns the commutator of two group elements
+        %
+        % Args:
+        %   x (element): First element
+        %   y (element): Second element
+        %   startWithInverse (logical): True if we compute ``x^-1 y^-1 x y``, false if we compute ``x y x^-1 y^-1``
+        %
+        % Returns:
+        %   element: Commutator
             xy = self.compose(x, y);
             yx = self.compose(y, x);
             if startWithInverse

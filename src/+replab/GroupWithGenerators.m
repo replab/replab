@@ -1,4 +1,10 @@
 classdef GroupWithGenerators < replab.Group
+% Describes a group with generators
+%
+% It is used as a common base class between `.FiniteGroup` (which is compact), and
+% `.FreeGroup` (which is not).
+%
+% The generators must never contain the identity.
 
     properties (SetAccess = protected)
         generators % row cell array of group elements: Group generators

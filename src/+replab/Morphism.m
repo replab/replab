@@ -19,6 +19,13 @@ classdef Morphism < replab.Str
         end
 
         function res = mtimes(self, rhs)
+        % Composition of morphisms using the ``*`` operator
+        %
+        % Args:
+        %   rhs (`.Morphism`): Morphism to apply first
+        %
+        % Returns:
+        %   `.Morphism`: The composition of the given morphism applied first, following by this morphism.
             res = replab.Morphism.compose(self, rhs);
         end
 
@@ -27,6 +34,13 @@ classdef Morphism < replab.Str
     methods (Static)
 
         function m = identity(group)
+        % Returns the identity morphism from a group to itself
+        %
+        % Args:
+        %   group (`.Group`): Group
+        %
+        % Returns:
+        %   `.Morphism`: The identity on the given group
             m = replab.Morphism.lambda(group, group, @(x) x);
         end
 

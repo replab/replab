@@ -14,16 +14,26 @@ classdef FPGroup < replab.GroupWithGenerators
         relators % (cell(1,\*) of integer(1,\*)): Relators
     end
 
-    methods (Static)
+    methods (Access = protected)
 
-        function id = newId
-            persistent lastId
-            if isempty(lastId)
-                lastId = 0;
+        function self = FPGroup(names, relatorLetters, id)
+            self.identity = replab.Word(self, []);
+            n = length(names);
+            self.groupId = id;
+            self.n = n;
+            self.generators = arrayfun(@(i) replab.Word(self, i), 1:n, 'uniform', 0);
+            self.relators = cellfun(@(l) replab.Word(self, l), relatorLetters, 'uniform', 0);
+            if nargin < 3 || isequal(names, [])
+                self.names = arrayfun(@(i) ['s' num2str(i)], 1:n, 'uniform', 0);
+            else
+                self.names = names;
             end
-            id = lastId + 1;
-            lastId = id;
         end
+
+    end
+
+
+    methods (Static) % Builders
 
         function [group, varargout] = parse(str)
         % Creates a finitely presented group from a description string
@@ -62,25 +72,7 @@ classdef FPGroup < replab.GroupWithGenerators
 
     end
 
-    methods (Access = protected)
-
-        function self = FPGroup(names, relatorLetters, id)
-            self.identity = replab.Word(self, []);
-            n = length(names);
-            self.groupId = id;
-            self.n = n;
-            self.generators = arrayfun(@(i) replab.Word(self, i), 1:n, 'uniform', 0);
-            self.relators = cellfun(@(l) replab.Word(self, l), relatorLetters, 'uniform', 0);
-            if nargin < 3 || isequal(names, [])
-                self.names = arrayfun(@(i) ['s' num2str(i)], 1:n, 'uniform', 0);
-            else
-                self.names = names;
-            end
-        end
-
-    end
-
-    methods % superclass implementations
+    methods % Superclass implementations
 
         function z = compose(self, x, y)
             z = x*y;
@@ -95,6 +87,12 @@ classdef FPGroup < replab.GroupWithGenerators
     methods
 
         function w = word(self, arg)
+        % Constructs a word either from a string or an integer vector of letters
+        %
+        % Example:
+        %   >>> [F x y] = replab.FreeGroup.of('x', 'y');
+        %   >>> F.word('x (x y)^2 / x')
+        %       x^2 y x y x^-1
             if ischar(arg)
                 P = replab.fp.Parser;
                 [ok, letters] = P.parseWord(arg, self.names);
@@ -108,25 +106,32 @@ classdef FPGroup < replab.GroupWithGenerators
             end
         end
 
-        function sub = mrdivide(self, rel)
-            if ~iscell(rel)
-                rel = {rel};
-            end
-            assert(all(cellfun(@(r) r.group.groupId == self.groupId, rel)));
-            relators = horzcat(self.relators, rel);
-            relatorLetters = cellfun(@(r) r.letters, relators, 'uniform', 0);
-            sub = replab.FiniteFPGroup(self.names, relatorLetters, replab.FPGroup.newId);
-        end
 
         function nR = nRelators(self)
+        % Returns the number of relators describing this group
+        %
+        % Returns:
+        %   integer: Number of relators
             nR = length(self.relators);
         end
 
         function r = relator(self, i)
+        % Returns the ``i``-th relator in the presentation of this group
+        %
+        % Args:
+        %   i (integer): Index of relator
+        % Returns:
+        %   `+replab.Word`: ``i``-th relator
             r = self.relators{i};
         end
 
         function s = stringPresentation(self)
+        % Returns a readable text presentation of this group
+        %
+        % It should be able to be parsed using `+replab.FPGroup.parse`.
+        %
+        % Returns:
+        %   charstring: Presentation as string
             gens = strjoin(cellfun(@(w) w.word2str, self.generators, 'uniform', 0), ', ');
             if self.nRelators == 0
                 s = ['< ' gens ' >'];
@@ -141,6 +146,17 @@ classdef FPGroup < replab.GroupWithGenerators
         end
 
         function l = imagesDefineMorphism(self, target, generatorImages)
+        % Checks whether the given images satisfy the relations of the presentation of this group
+        %
+        % If it returns true, it means those images describe a valid homomorphism from this `.FPGroup`
+        % to the given target group.
+        %
+        % Args:
+        %   target (`+replab.Group`): Target group
+        %   generatorImages (cell(1,\*) of elements of ``target``): Images of the generators of this group
+        %
+        % Returns:
+        %   logical: True if the images verify the presentation
             nR = length(self.relators);
             for i = 1:nR
                 r = self.relators{i};
@@ -159,4 +175,19 @@ classdef FPGroup < replab.GroupWithGenerators
 
     end
 
+    methods (Static)
+
+        function id = newId
+        % Static function that returns unique integers
+        %
+        % This is used to verify to which group words belong.
+            persistent lastId
+            if isempty(lastId)
+                lastId = 0;
+            end
+            id = lastId + 1;
+            lastId = id;
+        end
+
+    end
 end

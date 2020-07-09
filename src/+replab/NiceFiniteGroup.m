@@ -126,6 +126,10 @@ classdef NiceFiniteGroup < replab.FiniteGroup
     methods
 
         function R = recognize(self)
+        % Attempts to recognize this group in the current atlas
+        %
+        % Returns:
+        %   `+replab.AtlasResult` or []: A result in case of positive identification; or ``[]`` if unrecognized.
             A = replab.globals.atlas;
             R = A.recognize(self);
         end

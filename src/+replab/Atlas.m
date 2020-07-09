@@ -13,11 +13,16 @@ classdef Atlas < replab.Str
 
         function setAsDefault(self)
         % Sets this atlas as the default atlas
+        %
+        % Modifies the global variable `+replab.+globals.atlas`
             replab.globals.atlas(self);
         end
 
         function result = recognize(self, group)
-        % Attemps to identify the given group
+        % Attempts to identify the given group
+        %
+        % Returns:
+        %   `+replab.AtlasResult` or []: A result in case of positive identification; or ``[]`` if unrecognized.
             error('Abstract');
         end
 

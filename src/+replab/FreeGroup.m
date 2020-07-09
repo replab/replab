@@ -28,6 +28,25 @@ classdef FreeGroup < replab.FPGroup
             res = (isempty(x) && isempty(y)) || isequal(x, y);
         end
 
+        function sub = mrdivide(self, rel)
+        % Constructs the quotient of this group by relators
+        %
+        % RepLAB assumes that the group thus described is finite and has small order.
+        %
+        % Args:
+        %   rel (cell(1,\*) of `.Word`): Relators
+        %
+        % Returns:
+        %   `+replab.FiniteFPGroup`: The constructed finite group
+            if ~iscell(rel)
+                rel = {rel};
+            end
+            assert(all(cellfun(@(r) r.group.groupId == self.groupId, rel)));
+            relators = horzcat(self.relators, rel);
+            relatorLetters = cellfun(@(r) r.letters, relators, 'uniform', 0);
+            sub = replab.FiniteFPGroup(self.names, relatorLetters, replab.FPGroup.newId);
+        end
+
     end
 
 end

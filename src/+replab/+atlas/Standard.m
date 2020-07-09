@@ -1,4 +1,13 @@
 classdef Standard < replab.Atlas
+% A collection of descriptions of common groups, with presentations used in the mathematical literature
+%
+% Example:
+%   >>> D4 = replab.DihedralGroup(4);
+%   >>> D4.recognize.entry.name
+%       'Dihedral group of order 8'
+%   >>> S5 = replab.SymmetricGroup(5);
+%   >>> S5.recognize.entry.name
+%       'Symmetric group S(5) of degree 5'
 
     methods
 

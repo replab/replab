@@ -3,16 +3,19 @@ classdef FiniteFPGroup < replab.FPGroup & replab.NiceFiniteGroup
 
     methods
 
-        function res = eqv(self, x, y)
-            xyI = self.compose(x, self.inverse(y));
-            res = self.niceGroup.isIdentity(self.computeImage(self.niceGroup, xyI));
-        end
-
         function setPermutationImages(self, permutations)
+        % Sets the permutation realization of this group
+        %
+        % Enables to skip the Todd-Coxeter procedure when operating over the group.
             self.niceGroup_ = replab.PermutationGroup.of(permutations{:});
             for i = 1:length(self.relators)
                 assert(self.niceGroup.isIdentity(self.niceMonomorphismImage(self.relators{i})));
             end
+        end
+
+        function res = eqv(self, x, y)
+            xyI = self.compose(x, self.inverse(y));
+            res = self.niceGroup.isIdentity(self.computeImage(self.niceGroup, xyI));
         end
 
         function self = FiniteFPGroup(names, relatorLetters, id)
