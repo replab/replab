@@ -20,7 +20,7 @@ classdef Standard < replab.Atlas
             relators = {a^n, x^2, x*a/x*a};
             fpGroup = F / relators;
             fpGroup.setPermutationImages(prmGroup.generators);
-            E = replab.AtlasEntry(self, name, fpGroup, prmGroup);
+            E = replab.AtlasEntry(name, fpGroup, prmGroup);
         end
 
         function R = recognizeDihedral(self, G)
@@ -98,7 +98,7 @@ classdef Standard < replab.Atlas
                 imgT = [2 1 4 3 6 5];
                 outer{1,2} = prmGroup.morphismByImages(prmGroup, {imgS, imgT});
             end
-            E = replab.AtlasEntry(self, name, fpGroup, prmGroup, outer);
+            E = replab.AtlasEntry(name, fpGroup, prmGroup, outer);
         end
 
         function R = recognizeSymmetric(self, G)
@@ -135,6 +135,7 @@ classdef Standard < replab.Atlas
         end
 
         function E = cyclic(self, n)
+        % Constructs the cyclic group of order n
             assert(n >= 2);
             name = sprintf('Cyclic group C(%d) of order %d', n, n);
             % Permutation realization
@@ -146,7 +147,7 @@ classdef Standard < replab.Atlas
             relators = {x^n};
             fpGroup = F / relators;
             fpGroup.setPermutationImages(prmGroup.generators);
-            E = replab.AtlasEntry(self, name, fpGroup, prmGroup);
+            E = replab.AtlasEntry(name, fpGroup, prmGroup);
         end
 
         function R = recognizeCyclic(self, G)
@@ -183,7 +184,7 @@ classdef Standard < replab.Atlas
             if isEven
                 S = [2 1 4:n 3];
             else
-                sS= [1 2 4:n 3];
+                S= [1 2 4:n 3];
             end
             prmGroup = replab.PermutationGroup.of(S, T);
             % this is the presentation from page 2100 of
@@ -199,7 +200,40 @@ classdef Standard < replab.Atlas
             end
             fpGroup = F / relators;
             fpGroup.setPermutationImages(prmGroup.generators);
-            E = replab.AtlasEntry(self, name, fpGroup, prmGroup);
+            E = replab.AtlasEntry(name, fpGroup, prmGroup);
+        end
+
+        function R = recognizeAlternating(self, G)
+        % Recognizes the alternating group and returns the generators corresponding to the standard presentation
+            R = [];
+            [n r] = replab.atlas.unfactorial(G.order*2);
+            if r ~= 0
+                return
+            end
+            n = double(n);
+            C = G.conjugacyClasses;
+            entry = self.alternating(n);
+            for i = 1:length(C)
+                S = C{i};
+                s = S.representative;
+                if G.elementOrder(s) == n-2
+                    for j = 1:length(C)
+                        T = C{j};
+                        if G.elementOrder(T.representative) == 3
+                            U = T.elements;
+                            for k = 1:length(U)
+                                t = U{k};
+                                if entry.fpGroup.imagesDefineMorphism(G, {s t})
+                                    if G.subgroup({s, t}).order == G.order
+                                        R = replab.AtlasResult(G, entry, {s t});
+                                        return
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
         end
 
         function R = recognize(self, G)
@@ -212,6 +246,10 @@ classdef Standard < replab.Atlas
                 return
             end
             R = self.recognizeSymmetric(G);
+            if ~isempty(R)
+                return
+            end
+            R = self.recognizeAlternating(G);
             if ~isempty(R)
                 return
             end
