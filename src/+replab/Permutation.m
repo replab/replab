@@ -35,8 +35,8 @@ classdef Permutation
         % Returns the cycle structure of the given permutation
         %
         % Example:
-        %   >>> replab.Permutation.cycleStructure([2 1 4 3])
-        %       [2 2]
+        %   >>> isequal(replab.Permutation.cycleStructure([2 1 4 3]), [2 2])
+        %       1
         %
         % Args:
         %   perm (permutation): Permutation

@@ -4,6 +4,10 @@ function grp = AlternatingGroup(n)
         grp = replab.PermutationGroup.trivial(n);
     else
         t = [2 3 1 4:n];
+        if n == 3
+            grp = Sn.subgroup({t}, Sn.order/2);
+            return
+        end
         if mod(n, 2) == 0
             s = [2 1 4:n 3];
         else
