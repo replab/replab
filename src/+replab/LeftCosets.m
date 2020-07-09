@@ -51,6 +51,11 @@ classdef LeftCosets < replab.Str
             C = cellfun(@(t) self.coset(t), T, 'uniform', 0);
         end
 
+        function mu = action(self)
+        % Returns a morphism that describes the action of the group on cosets
+            error('Abstract');
+        end
+
     end
 
 end

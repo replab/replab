@@ -69,6 +69,26 @@ classdef PermutationGroupLeftCosets < replab.LeftCosets
             C = arrayfun(@(i) M(i,:), 1:size(M,1), 'uniform', 0);
         end
 
+        function mu = action(self)
+            nG = self.group.nGenerators;
+            T = self.transversalAsMatrix;
+            n = size(T, 1);
+            images = cell(1, nG);
+            for i = 1:nG
+                g = self.group.generator(i);
+                img = zeros(1, n);
+                for j = 1:n
+                    gt = self.canonicalRepresentative(g(T(j,:)));
+                    [ok, loc] = ismember(gt, T, 'rows');
+                    assert(ok);
+                    img(j) = loc;
+                end
+                images{i} = img;
+            end
+            Sn = replab.S(n);
+            mu = self.group.morphismByImages(Sn, images);
+        end
+
     end
 
 end

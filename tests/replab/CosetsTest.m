@@ -12,5 +12,11 @@ function test_suite = CosetsTest()
     rightCosets = C8\D8;
     test_suite = replab.PermutationGroupLeftCosetsLaws(leftCosets).addTestCases(test_suite);
     test_suite = replab.PermutationGroupRightCosetsLaws(rightCosets).addTestCases(test_suite);
-    initTestSuite;
+end
+
+function test_action
+    G = replab.S(4);
+    H = G.derivedSubgroup;
+    L = G/H;
+    L.action;
 end
