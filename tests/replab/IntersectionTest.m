@@ -18,3 +18,8 @@ function test_intersection_commutative
     I2 = G3.intersection(G1.intersection(G2));
     assert(I1 == I2);
 end
+
+function test_intersection_trivial
+    T = replab.S(3).trivialSubgroup;
+    T.intersection(replab.S(3));
+end

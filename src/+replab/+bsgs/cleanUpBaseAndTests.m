@@ -14,7 +14,7 @@ function [group1, groupedTests, startData1] = cleanUpBaseAndTests(group, tests, 
         group1.removeRedundantBasePoints;
         group1.makeImmutable;
         if all(group.orbitSizes == 1)
-            tests1 = {};
+            groupedTests = cell(1, 0);
             startData1 = [];
             return
         end
@@ -26,7 +26,6 @@ function [group1, groupedTests, startData1] = cleanUpBaseAndTests(group, tests, 
             [ok, startData1] = tests{j}(identity, startData1);
             assert(ok == 1);
         end
-        groupedTests = cell(1, 0);
         current = start;
         for i = 1:length(base1)
             if i < length(base1)
