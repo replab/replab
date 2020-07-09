@@ -16,7 +16,7 @@ classdef Standard < replab.Atlas
             % Presentation from the groupprops wiki
             % < x, a | a^n = x^2 = 1, x a x^-1 = a^-1 >
             [F x a] = replab.FreeGroup.of('x', 'a');
-            relators = {a^n, x^2, x*a/x/a};
+            relators = {a^n, x^2, x*a/x*a};
             fpGroup = F / relators;
             fpGroup.setPermutationImages(prmGroup.generators);
             E = replab.AtlasEntry(self, name, fpGroup, prmGroup);
