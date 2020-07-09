@@ -1,4 +1,10 @@
 classdef AtlasEntry < replab.Str
+% Describes the properties of a finite group
+%
+% It contains a human readable name of the group, a presentation and a realization as a permutation group.
+%
+% It can optionally contain information to enumerate all automorphism of the group, as to find all possible
+% sets of standard generators when recognizing a user-defined group.
 
     properties
         atlas % (`+replab.Atlas`): Atlas in which this group is present

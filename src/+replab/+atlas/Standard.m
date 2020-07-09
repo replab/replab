@@ -7,6 +7,7 @@ classdef Standard < replab.Atlas
         end
 
         function E = dihedral(self, n)
+        % Constructs the atlas entry corresponding to the dihedral group of order 2*n
             assert(n > 2);
             name = sprintf('Dihedral group of order %d', 2*n);
             % Permutation realization
@@ -74,6 +75,7 @@ classdef Standard < replab.Atlas
         end
 
         function E = symmetric(self, n)
+        % Constructs the atlas entry corresponding to the symmetric group of degree n
             assert(n > 2);
             name = sprintf('Symmetric group S(%d) of degree %d', n, n);
             % Permutation realization
@@ -100,6 +102,7 @@ classdef Standard < replab.Atlas
         end
 
         function R = recognizeSymmetric(self, G)
+        % Recognizes if the given group is the symmetric group and provides the generators according to the standard presentationx
             R = [];
             [n r] = replab.atlas.unfactorial(G.order);
             if r ~= 0
@@ -170,8 +173,9 @@ classdef Standard < replab.Atlas
             R = replab.AtlasResult(G, entry, {x});
         end
 
-        function E = alternating(G, n)
-            assert(n > 2);
+        function E = alternating(self, n)
+        % Constructs the alternating group of degree n
+            assert(n >= 4);
             name = sprintf('Alternating group A(%d) of degree %d', n, n);
             isEven = mod(n, 2) == 0;
             % Permutation realization
