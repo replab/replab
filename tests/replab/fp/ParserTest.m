@@ -15,7 +15,7 @@ function test_parse_words
     [ok w] = P.parseWord('a (x a)^2', names);
     assert(ok && isequal(w, [1 2 1 2 1]));
     [ok w] = P.parseWord('a a^-1', names);
-    assert(ok && isequal(w, [1 -1]));
+    assert(ok && isempty(w));
 end
 
 function test_parse_correct_presentations
