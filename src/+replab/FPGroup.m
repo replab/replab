@@ -33,7 +33,7 @@ classdef FPGroup < replab.GroupWithGenerators
         %   >>> isa(F, 'replab.FreeGroup')
         %       1
         %   >>> [G x] = replab.FiniteFPGroup.parse('< x | x^3 = 1 >');
-        %   >>> isa(F, 'replab.FiniteFPGroup')
+        %   >>> isa(G, 'replab.FiniteFPGroup')
         %       1
         %
         % Args:
