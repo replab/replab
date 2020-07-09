@@ -125,6 +125,15 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
     methods
 
+        function R = recognize(self)
+        % Attempts to recognize this group in the current atlas
+        %
+        % Returns:
+        %   `+replab.AtlasResult` or []: A result in case of positive identification; or ``[]`` if unrecognized.
+            A = replab.globals.atlas;
+            R = A.recognize(self);
+        end
+
         function res = ne(self, rhs)
             res = ~(self == rhs);
         end
@@ -202,6 +211,19 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             sub = replab.NiceFiniteSubgroup(self.parent, generators, order);
         end
 
+        function f = leftConjugateMorphism(self, by)
+        % Returns the morphism that corresponds to left conjugation by an element
+        %
+        % Args:
+        %   by (element of `parent`): Element to conjugate the group with
+        %
+        % Returns:
+        %   `+replab.Morphism`: Conjugation morphism
+            generatorImages = cellfun(@(g) self.parent.leftConjugate(by, g), self.generators, 'uniform', 0);
+            target = self.parent.subgroup(newGenerators, self.order);
+            f = self.morphismByImages(self, target, generatorImages);
+        end
+
         function conj = leftConjugateGroup(self, by)
         % Returns the left conjugate of the current group by the given element
         %
@@ -215,8 +237,8 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   `+replab.NiceFiniteGroup`: The conjugated group
-            newGenerators = cellfun(@(g) self.leftConjugate(by, g), self.generators, 'uniform', 0);
-            conj = self.subgroup(newGenerators, self.order);
+            newGenerators = cellfun(@(g) self.parent.leftConjugate(by, g), self.generators, 'uniform', 0);
+            conj = self.parent.subgroup(newGenerators, self.order);
         end
 
         function sub = normalClosure(self, H)
@@ -277,6 +299,14 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         function c = mrdivide(self, subgroup)
             c = self.leftCosetsOf(subgroup);
+        end
+
+        function sub = center(self)
+        % Returns the center of this group
+        %
+        % Returns:
+        %   `.NiceFiniteGroup`: The center
+            sub = self.centralizer(self);
         end
 
         function sub = centralizer(self, rhs)

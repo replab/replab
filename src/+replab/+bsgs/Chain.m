@@ -758,7 +758,13 @@ classdef Chain < replab.Str
                         self.insertInOrbit(i, newb, newu);
                     end
                 end
-                toTest = unique(imgs(mask));
+                toTest = imgs(mask);
+                toTest = toTest(:)';
+                if length(toTest) > 1
+                    toTest = sort(toTest);
+                    mask1 = [true, toTest(1:end-1) ~= toTest(2:end)];
+                    toTest = toTest(mask1);
+                end
             end
         end
 

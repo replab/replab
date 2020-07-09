@@ -20,6 +20,7 @@ function test_intersection_commutative
 end
 
 function test_intersection_trivial
-    T = replab.S(3).trivialSubgroup;
-    T.intersection(replab.S(3));
+    S3 = replab.S(3);
+    T = S3.trivialSubgroup;
+    T.intersection(S3);
 end

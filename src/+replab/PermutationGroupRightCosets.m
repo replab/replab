@@ -118,7 +118,7 @@ classdef PermutationGroupRightCosets < replab.RightCosets
                             stackS{l+1} = stackS{l}.stabilizer(bg);
                             gnext = g(group.u(l, b));
                             stackG(:,l+1) = gnext; % compose transversal element
-                            orbit = sort(group.Delta{l+1});
+                            orbit = sort(group.Delta{l+1}); % TODO: unnecessary sort
                             [~, I] = sort(gnext(orbit));
                             stackB{l+1} = orbit(I);
                             stackM{l+1} = replab.bsgs.minimalMaskInOrbit(n, stackS{l+1}.strongGeneratorsForLevel(1));
