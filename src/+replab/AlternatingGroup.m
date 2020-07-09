@@ -3,12 +3,12 @@ function grp = AlternatingGroup(n)
     if n <= 2
         grp = replab.PermutationGroup.trivial(n);
     else
-        c3 = [2 3 1 4:n];
+        t = [2 3 1 4:n];
         if mod(n, 2) == 0
-            s = [1 3:n 2];
+            s = [2 1 4:n 3];
         else
-            s = [2:n 1];
+            s = [1 2 4:n 3];
         end
-        grp = Sn.subgroup({c3 s}, Sn.order/2);
+        grp = Sn.subgroup({s t}, Sn.order/2);
     end
 end

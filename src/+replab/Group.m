@@ -38,6 +38,18 @@ classdef Group < replab.Monoid
             x = self.composeWithInverse(self.compose(by, on), by);
         end
 
+        function z = commutator(self, x, y, startWithInverse)
+        % Returns the commutator of two group elements
+            xy = self.compose(x, y);
+            yx = self.compose(y, x);
+            if startWithInverse
+                xIyI = self.inverse(yx);
+                z = self.compose(xIyI, xy);
+            else
+                z = self.composeWithInverse(xy, yx);
+            end
+        end
+
         function z = composeWithInverse(self, x, y)
         % Returns the composition of an element with the inverse of another element
         %

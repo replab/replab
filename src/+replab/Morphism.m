@@ -18,9 +18,17 @@ classdef Morphism < replab.Str
             r = replab.Rep.lambda(source, targetRep.field, targetRep.dimension, imageFun, inverseImageFun);
         end
 
+        function res = mtimes(self, rhs)
+            res = replab.Morphism.compose(self, rhs);
+        end
+
     end
 
     methods (Static)
+
+        function m = identity(group)
+            m = replab.Morphism.lambda(group, group, @(x) x);
+        end
 
         function m = lambda(source, target, imageFun)
             m = replab.mrp.LambdaMorphism(source, target, imageFun);

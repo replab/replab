@@ -1,0 +1,337 @@
+classdef Parser
+% Parses a group presentation, or a group element expressed as a product of generators
+%
+% The grammar is given by:
+%
+%   <presentation> ::= '<' <generator> (',' <generator>)* '|' <relators> '>'
+%   <relators> ::= (<equation> (',' <equation>)*)?
+%   <equation> ::= <nonEmptyWord> ('=' <nonEmptyWord>)*
+%   <word> ::= <nonEmptyWord>?
+%   <nonEmptyWord> ::= (<identity | <component>+)
+%   <component> ::= <part> <exponent>?
+%   <part> ::= <generator> | <subword> | <commutator>
+%   <subword> ::= '(' <nonEmptyWord> ')'
+%   <commutator> ::= '[' <nonEmptyWord> ',' <nonEmptyWord> ']'
+%   <generator> ::= corresponds to the regexp [A-Za-z][A-Za-z0-9_]*
+
+% The commutator $[x,y]$ can be defined in two ways:
+%
+% - $[x, y] = x y x^{-1} y^{-1}$, in which case set `commutatorStartsWithInverses` to false
+% - $[x, y] = x^{-1} y^{-1} x y$, in which case set `commutatorStartsWithInverses` to true
+%
+% Generator names can contain alphanumerical and punctuations characters, with the exception of
+% ``^()[,]`` which are reserved.
+%
+% Example:
+%   >>> W = replab.fp.Parser({'x' 'y'}, true);
+%   >>> [ok, word] = W.parse('[x,y]^2');
+%   >>> word
+%       [-1, -2, 1, 2, -1, -2, 1, 2]
+%
+% Note:
+%
+%   Before parsing, the word is split into tokens. The tokens structure is a matrix with
+%   two rows and as many columns as tokens. The value on the first row gives the token type,
+%   while the value on the second row given the token attached data.
+%
+%   We have the following types:
+%
+%   1. <exponent>, with the data giving the value of the exponent
+%   2. opening parenthesis '('
+%   3. closing parenthesis ')'
+%   4. opening bracket '['
+%   5. comma ','
+%   6. closing bracket ']'
+%   7. equality sign
+%   8. identity '1'
+%   9. generator, with the data giving the index of the generator
+%   10. end of word
+
+    properties
+        types % (struct): Constant values for token types
+        commutatorStartsWithInverses % (logical): If true, ``[x, y] = x^-1 y^-1 x y``, if false ``[x, y] = x y x^-1 y^-1``
+    end
+
+    methods
+
+        function self = Parser(commutatorStartsWithInverses)
+            if nargin < 1
+                commutatorStartsWithInverses = true;
+            end
+            self.commutatorStartsWithInverses = commutatorStartsWithInverses;
+            self.types = struct('EXPONENT', 1, 'OPEN_PAREN', 2, 'CLOSE_PAREN', 3, ...
+                                'OPEN_BRACKET', 4, 'COMMA', 5, 'CLOSE_BRACKET', 6, ...
+                                'EQUALITY', 7, 'IDENTITY', 8, 'GENERATOR', 9, 'END', 10);
+        end
+
+        function [nextPos, w] = component(self, tokens, pos)
+        % Parses a component, which is a part with an optional exponent
+            nextPos = 0; % default return values are for failure
+            w = [];
+            type = tokens(1, pos);
+            types = self.types;
+            if type == types.OPEN_PAREN % subword
+                pos = pos + 1;
+                [pos, base] = self.nonEmptyWord(tokens, pos);
+                if pos == 0 || tokens(1, pos) ~= types.CLOSE_PAREN
+                    return
+                end
+                pos = pos + 1;
+            elseif type == types.OPEN_BRACKET % commutator
+                pos = pos + 1;
+                [pos, lhs] = self.nonEmptyWord(tokens, pos);
+                if pos == 0 || tokens(1, pos) ~= types.COMMA
+                    return
+                end
+                pos = pos + 1;
+                [pos, rhs] = self.nonEmptyWord(tokens, pos);
+                if pos == 0 || tokens(1, pos) ~= types.CLOSE_BRACKET
+                    return
+                end
+                pos = pos + 1;
+                lr = [lhs rhs];
+                lIrI = fliplr(-[rhs lhs]);
+                if self.commutatorStartsWithInverses
+                    base = [lIrI lr];
+                else
+                    base = [lr lIrI];
+                end
+            elseif type == types.GENERATOR
+                base = tokens(2, pos);
+                pos = pos + 1;
+            else
+                return
+            end
+            if tokens(1, pos) == types.EXPONENT
+                e = tokens(2, pos);
+                pos = pos + 1;
+            else
+                e = 1;
+            end
+            w = base;
+            if e < 0
+                e = -e; % invert
+                w = fliplr(-w);
+            end
+            if e > 1
+                w = repmat(w, 1, e);
+            end
+            nextPos = pos;
+        end
+
+        function [pos, w] = nonEmptyWord(self, tokens, pos)
+        % Parses a word from tokens, which is a sequence of components
+            w = [];
+            types = self.types;
+            % try to parse '1'
+            if tokens(1, pos) == types.IDENTITY
+                pos = pos + 1;
+                return % w = []
+            end
+            % try to parse a non-empty sequence of components
+            [pos, w] = self.component(tokens, pos);
+            if pos == 0
+                return
+            end
+            while 1
+                [pos1, w1] = self.component(tokens, pos);
+                if pos1 == 0
+                    return
+                end
+                pos = pos1;
+                w = [w w1];
+            end
+        end
+
+        function [pos, w] = word(self, tokens, pos)
+            w = [];
+            [pos1, w1] = self.nonEmptyWord(tokens, pos);
+            if pos1 == 0
+                return % pos stays in place
+            else
+                pos = pos1;
+                w = w1;
+            end
+        end
+
+        function [pos, relators] = equation(self, tokens, pos)
+            r = [];
+            types = self.types;
+            [pos, lhs] = self.nonEmptyWord(tokens, pos);
+            if pos == 0
+                return
+            end
+            if tokens(1, pos) ~= types.EQUALITY
+                % this is already a relator, return
+                relators = {lhs};
+            end
+            elements = {lhs};
+            while tokens(1, pos) == types.EQUALITY
+                pos = pos + 1;
+                [pos, w] = self.nonEmptyWord(tokens, pos);
+                if pos == 0
+                    return
+                end
+                elements{1,end+1} = w;
+            end
+            rhs = -fliplr(elements{end});
+            relators = cellfun(@(l) [l rhs], elements(1:end-1), 'uniform', false);
+        end
+
+        function [pos, relators] = relations(self, tokens, pos)
+        % Parses a non-empty sequence of relations separated by commas
+        %
+        % Returns the relators
+            res = {};
+            types = self.types;
+            [pos r] = self.equation(tokens, pos);
+            if pos == 0
+                return
+            end
+            res = r;
+            while tokens(1, pos) == types.COMMA
+                pos = pos + 1;
+                [pos r] = self.equation(tokens, pos);
+                if pos == 0
+                    return
+                end
+                res = horzcat(res, r);
+            end
+            relators = res;
+        end
+
+        function [ok, word] = parseWord(self, str, names)
+            ok = false;
+            [res, tokens] = self.lex(str, names);
+            if ~res
+                return
+            end
+            types = self.types;
+            if isequal(tokens(1,:), [types.IDENTITY types.END])
+                word = [];
+                ok = true;
+            else
+                pos = 1;
+                [pos, w] = self.word(tokens, pos);
+                if pos == 0 || tokens(1, pos) ~= types.END
+                    return
+                end
+                word = w;
+                ok = true;
+            end
+        end
+
+        function [ok, names, relators] = parsePresentation(self, str)
+            ok = false;
+            names = [];
+            types = self.types;
+            relators = [];
+            str = strtrim(str);
+            if str(1) ~= '<' || str(end) ~= '>'
+                return
+            end
+            str = str(2:end-1); % cut the < >
+            parts = strsplit(str, '|');
+            nameStr = parts{1};
+            names = cellfun(@strtrim, strsplit(nameStr, ','), 'uniform', false);
+            if length(parts) < 2
+                relStr = '';
+            else
+                relStr = parts{2};
+            end
+            relStr = strtrim(relStr);
+            if isempty(relStr)
+                relators = {};
+            else
+                [ok, tokens] = self.lex(relStr, names);
+                if ~ok
+                    names = [];
+                    return
+                end
+                pos = 1;
+                [pos, relators] = self.relations(tokens, pos);
+                if pos == 0 || tokens(1, pos) ~= types.END
+                    names = [];
+                    relators = [];
+                    return
+                end
+            end
+            ok = true;
+        end
+
+        function [ok, T] = lex(self, str, names)
+
+            ok = false; % if we return midway, it's because of an invalid string, so set ok = false by default
+            T = zeros(2, 0);
+            n = length(str);
+
+            % whitespace mask
+            ws = [isstrprop(str, 'wspace') false];
+
+            spec = '^()[,]=1';
+
+            % valid characters in a generator name
+            gstart = isstrprop(str, 'alpha');
+            gnext = isstrprop(str, 'alphanum') | str == '_';
+            gstart = [gstart false]; % add a false value so that the find below always returns something
+            gnext = [gnext false];
+            % digits
+            dg = [isstrprop(str, 'digit') false];
+
+            i = 1;
+            while i <= n
+                % skip whitespace
+                i = find(~ws(i:end), 1) + i - 1;
+                if i > n
+                    break
+                end
+                type = find(spec == str(i), 1);
+                if isempty(type)
+                    if gstart(i) % is a generator
+                        j = find(~gnext(i+1:end), 1) + i; % find the end of the name block
+                        name = str(i:j-1);
+                        [res, ind] = ismember(name, names);
+                        if ~res
+                            return
+                        end
+                        token = [9; ind];
+                        T = [T token];
+                        i = j;
+                    else % is not a generator, so unrecognized
+                        return
+                    end
+                elseif type == 1 % power
+                    i = i + 1;
+                    i = find(~ws(i:end), 1) + i - 1; % skip whitespace
+                    if i > n
+                        return
+                    end
+                    if str(i) == '-'
+                        sign = -1;
+                        i = i + 1;
+                    else
+                        sign = 1;
+                    end
+                    if i > n || ~dg(i)
+                        return
+                    end
+                    j = find(~dg(i+1:end), 1) + i; % find the end of the integer
+                    e = str2num(str(i:j-1)) * sign;
+                    token = [type; e];
+                    T = [T token];
+                    i = j;
+                else
+                    token = [type; 0];
+                    T = [T token];
+                    i = i + 1;
+                end
+            end
+
+            token = [10; 0];
+            T = [T token];
+            ok = true;
+        end
+
+    end
+
+end
