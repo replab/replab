@@ -15,6 +15,20 @@ classdef AtlasResult < replab.Str
             self.standardGenerators = standardGenerators;
         end
 
+        function s = headerStr(self)
+            s = ['AtlasResult for: ' self.entry.name];
+        end
+
+        function [names values] = additionalFields(self)
+            [names values] = additionalFields@replab.Str(self);
+            names{1,end+1} = 'presentation';
+            values{1,end+1} = self.entry.fpGroup;
+        end
+
+        function f = presentation(self)
+            f = self.entry.fpGroup;
+        end
+
         function G = allStandardGenerators(self)
         % Returns all variants of standard generators as rows in a cell array
             prmGroup = self.entry.prmGroup;

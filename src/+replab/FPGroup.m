@@ -116,11 +116,18 @@ classdef FPGroup < replab.GroupWithGenerators
             r = self.relators{i};
         end
 
-        function show(self)
-            fprintf('Finitely presented group with generators: %s\n', strjoin(self.names, ','));
-            rels = strjoin(cellfun(@(r) r.word2str, self.relators, 'uniform', 0), ' = ');
-            rels = [rels ' = id'];
-            fprintf('%s\n', rels);
+        function s = stringPresentation(self)
+            gens = strjoin(cellfun(@(w) w.word2str, self.generators, 'uniform', 0), ', ');
+            if self.nRelators == 0
+                s = ['< ' gens ' >'];
+            else
+                rels = strjoin(cellfun(@(r) r.word2str, self.relators, 'uniform', 0), ' = ');
+                s = ['< ' gens ' | ' rels ' = 1 >'];
+            end
+        end
+
+        function s = headerStr(self)
+            s = self.stringPresentation;
         end
 
         function l = imagesDefineMorphism(self, target, generatorImages)

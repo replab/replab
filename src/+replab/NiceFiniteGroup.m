@@ -125,6 +125,11 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
     methods
 
+        function R = recognize(self)
+            A = replab.globals.atlas;
+            R = A.recognize(self);
+        end
+
         function res = ne(self, rhs)
             res = ~(self == rhs);
         end
