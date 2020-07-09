@@ -50,9 +50,9 @@ classdef Parser
 %   12. end of word
 
     properties
-        types % (struct): Constant values for token types
-        specialChars % (charstring): List of special character for the lexer
         commutatorStartsWithInverses % (logical): If true, ``[x, y] = x^-1 y^-1 x y``, if false ``[x, y] = x y x^-1 y^-1``
+        types % (struct): Constant values for token types
+        specialChars % (charstring): List of special characters for the lexer
     end
 
     methods
@@ -171,6 +171,7 @@ classdef Parser
         end
 
         function [pos, w] = word(self, tokens, pos)
+        % Parses a word
             w = [];
             [pos1, w1] = self.nonEmptyWord(tokens, pos);
             if pos1 == 0
@@ -182,6 +183,8 @@ classdef Parser
         end
 
         function [pos, relators] = equation(self, tokens, pos)
+        % Parses an equation and returns the relators as a cell array
+        %
             r = [];
             relators = [];
             types = self.types;
@@ -209,7 +212,7 @@ classdef Parser
         function [pos, relators] = relations(self, tokens, pos)
         % Parses a non-empty sequence of relations separated by commas
         %
-        % Returns the relators
+        % Returns the relators as a cell array
             res = {};
             relators = [];
             types = self.types;
@@ -230,6 +233,18 @@ classdef Parser
         end
 
         function [ok, word] = parseWord(self, str, names)
+        % Parses a string representing a word
+        %
+        % Args:
+        %   str (charstring): String to parse
+        %   names (cell(1,\*) of charstring): Generator names
+        %
+        % Returns
+        % -------
+        %   ok:
+        %     logical: Whether the parse was successful
+        %   word:
+        %     integer(1,\*): Letters composing the (reduced) word
             ok = false;
             word = [];
             [res, tokens] = self.lex(str, names);
@@ -243,10 +258,24 @@ classdef Parser
                 word = [];
                 return
             end
+            word = replab.Word.reduceLetters(word);
             ok = true;
         end
 
         function [ok, names, relators] = parsePresentation(self, str)
+        % Parses a string representing a group presentation
+        %
+        % Args:
+        %   str (charstring): String to parse
+        %
+        % Returns
+        % -------
+        %   ok:
+        %     logical: Whether the parse was successful
+        %   names:
+        %     cell(1,\*) of charstring: Names of the generators
+        %   relators:
+        %     cell(1,\*) of integer(1,\*): Relators given as vector of letters composing a (reduced) word
             ok = false;
             names = [];
             types = self.types;
@@ -290,7 +319,9 @@ classdef Parser
         end
 
         function [ok, T] = lex(self, str, names)
-
+        % Splits the given string into tokens
+        %
+        % See the class documentation string for `.Parser`
             ok = false; % if we return midway, it's because of an invalid string, so set ok = false by default
             T = zeros(2, 0);
             n = length(str);

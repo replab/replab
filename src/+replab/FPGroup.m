@@ -26,6 +26,21 @@ classdef FPGroup < replab.GroupWithGenerators
         end
 
         function [group, varargout] = parse(str)
+        % Creates a finitely presented group from a description string
+        %
+        % Example:
+        %   >>> [F a x] = replab.FPGroup.parse('<a, x>'); % free group on two elements
+        %   >>> isa(F, 'replab.FreeGroup')
+        %       1
+        %   >>> [G x] = replab.FiniteFPGroup.parse('< x | x^3 = 1 >');
+        %   >>> isa(F, 'replab.FiniteFPGroup')
+        %       1
+        %
+        % Args:
+        %   str (charstring): Single-line description string
+        %
+        % Returns:
+        %   `+replab.FPGroup`: The parsed finitely presented group
             if nargin < 2
                 permutations = [];
             end
