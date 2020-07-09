@@ -26,6 +26,7 @@ function [group1, groupedTests, startData1] = cleanUpBaseAndTests(group, tests, 
             [ok, startData1] = tests{j}(identity, startData1);
             assert(ok == 1);
         end
+        groupedTests = cell(1, 0);
         current = start;
         for i = 1:length(base1)
             if i < length(base1)
@@ -33,7 +34,7 @@ function [group1, groupedTests, startData1] = cleanUpBaseAndTests(group, tests, 
             else
                 next = length(base) + 1;
             end
-            groupedTests{i} = tests(current:next-1);
+            groupedTests{1,i} = tests(current:next-1);
             current = next;
         end
     else
