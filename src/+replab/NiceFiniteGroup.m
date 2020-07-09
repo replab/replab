@@ -382,7 +382,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Returns:
         %   `.NiceFiniteGroup`: The closure
             assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            res = self.niceMonomorphismGroupPreimage(self.niceGroup.closureElement(self.niceMonomorphismImage(g)));
+            res = self.parent.niceMonomorphismGroupPreimage(self.niceGroup.closureElement(self.niceMonomorphismImage(g)));
         end
 
         function res = closureGroup(self, G)
@@ -394,7 +394,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Returns:
         %   `.NiceFiniteGroup`: The closure
             assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            res = self.niceMonomorphismGroupPreimage(self.niceGroup.closureGroup(self.niceMonomorphismImage(g)));
+            res = self.parent.niceMonomorphismGroupPreimage(self.niceGroup.closureGroup(self.niceMonomorphismImage(g)));
         end
 
         function sub = intersection(self, G)
