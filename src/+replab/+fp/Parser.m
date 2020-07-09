@@ -3,7 +3,7 @@ classdef Parser
 %
 % The grammar is given by:
 %
-%   <presentation> ::= '<' <generator> (',' <generator>)* '|' <relators> '>'
+%   <presentation> ::= '<' <generator> (','? <generator>)* '|' <relators> '>'
 %   <relators> ::= (<equation> (',' <equation>)*)?
 %   <equation> ::= <nonEmptyWord> ('=' <nonEmptyWord>)*
 %   <word> ::= <nonEmptyWord>?
@@ -258,7 +258,7 @@ classdef Parser
             str = str(2:end-1); % cut the < >
             parts = strsplit(str, '|');
             nameStr = parts{1};
-            names = cellfun(@strtrim, strsplit(nameStr, ','), 'uniform', false);
+            names = cellfun(@strtrim, strsplit(strtrim(nameStr), {' ', ','}), 'uniform', false);
             if length(parts) < 2
                 relStr = '';
             else
@@ -281,6 +281,11 @@ classdef Parser
                     return
                 end
             end
+            % reduce the words
+            relators = cellfun(@(r) replab.Word.reduceLetters(r), relators, 'uniform', 0);
+            % remove empty relators
+            mask = cellfun(@(r) isempty(relators), relators);
+            relators = relators(~mask);
             ok = true;
         end
 

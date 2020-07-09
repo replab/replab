@@ -31,11 +31,6 @@ classdef FPGroup < replab.GroupWithGenerators
             end
             P = replab.fp.Parser;
             [ok, names, relators] = P.parsePresentation(str);
-            % reduce the words
-            relators = cellfun(@(r) replab.Word.reduceLetters(r), relators, 'uniform', 0);
-            % remove empty relators
-            mask = cellfun(@(r) isempty(relators), relators);
-            relators = relators(~mask);
             assert(ok, 'Error in given presentation string');
             id = replab.FPGroup.newId;
             if isempty(relators)
