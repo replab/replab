@@ -13,7 +13,12 @@ classdef LeftCosetsLaws < replab.Laws
         end
     end
     methods
-
+        function law_transversal_representatives_are_canonical_(self)
+            T = self.L.transversal;
+            for i = 1:length(T)
+                assertEqual(T{i}, self.L.canonicalRepresentative(T{i}));
+            end
+        end
         function law_canonical_representative_is_stable_G(self, g)
             r1 = self.L.canonicalRepresentative(g);
             r2 = self.L.canonicalRepresentative(r1);
