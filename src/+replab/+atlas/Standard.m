@@ -203,11 +203,11 @@ classdef Standard < replab.Atlas
             if ~isempty(R)
                 return
             end
-            R = self.recognizeSymmetric(G);
+            R = self.recognizeDihedral(G);
             if ~isempty(R)
                 return
             end
-            R = self.recognizeDihedral(G);
+            R = self.recognizeSymmetric(G);
             if ~isempty(R)
                 return
             end
