@@ -40,7 +40,7 @@ classdef Word < replab.Str
         %
         % Example:
         %   >>> [F x y] = replab.FreeGroup.of('x', 'y');
-        %   >>> w = x*y/x;
+        %   >>> w = x*y/x
         %     x y x^-1
         %   >>> s = w.word2str
         %     'x y x^-1'
