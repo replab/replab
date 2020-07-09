@@ -13,6 +13,11 @@ classdef RightCosetsLaws < replab.Laws
         end
     end
     methods
+        function law_canonical_representative_is_stable_G(self, g)
+            r1 = self.R.canonicalRepresentative(g);
+            r2 = self.R.canonicalRepresentative(r1);
+            assertEqual(r1, r2);
+        end
         function law_canonical_representatives_are_unique_HG(self, h, g)
             hg = self.G.compose(h, g);
             assertEqual(self.R.canonicalRepresentative(g), self.R.canonicalRepresentative(hg));
