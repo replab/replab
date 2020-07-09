@@ -39,7 +39,7 @@ function initHelp(verbose)
                 && ~isempty(strfind(fileread(candidate), targetPatternEmacs)) ...
                 && isempty(matlabEmacsHelpPath)
             matlabEmacsHelpPath = candidate;
-        elseif replab.compat.endsWith(candidate, '+replab/src/help_overload/help.m') && isempty(replabHelpPath)
+        elseif replab.compat.endsWith(candidate, 'replab/src/help_overload/help.m') && isempty(replabHelpPath)
             replabHelpPath = candidate;
         else
             unknownHelpPaths{end+1} = candidate;
