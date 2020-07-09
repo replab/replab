@@ -21,9 +21,9 @@ classdef LeftCosets < replab.LeftCosets
             T = cellfun(@(t) self.group.niceMonomorphismPreimage(t), self.nice.transversal, 'uniform', 0);
         end
 
-        function mu = actionOnCosets(self)
+        function mu = action(self)
             f = self.group.niceMonomorphism;
-            g = self.nice.actionOnCosets;
+            g = self.nice.action;
             mu = g * f; % compose the morphisms
         end
 
