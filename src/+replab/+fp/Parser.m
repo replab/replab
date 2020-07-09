@@ -7,9 +7,9 @@ classdef Parser
 %   <relators> ::= (<equation> (',' <equation>)*)?
 %   <equation> ::= <nonEmptyWord> ('=' <nonEmptyWord>)*
 %   <word> ::= <nonEmptyWord>?
-%   <nonEmptyWord> ::= (<identity | <component>+)
+%   <nonEmptyWord> ::= <component> ('*' <component> | '/' <component> | <component>)*
 %   <component> ::= <part> <exponent>?
-%   <part> ::= <generator> | <subword> | <commutator>
+%   <part> ::= <identity> | <generator> | <subword> | <commutator>
 %   <subword> ::= '(' <nonEmptyWord> ')'
 %   <commutator> ::= '[' <nonEmptyWord> ',' <nonEmptyWord> ']'
 %   <generator> ::= corresponds to the regexp [A-Za-z][A-Za-z0-9_]*
@@ -36,19 +36,22 @@ classdef Parser
 %
 %   We have the following types:
 %
-%   1. <exponent>, with the data giving the value of the exponent
-%   2. opening parenthesis '('
-%   3. closing parenthesis ')'
-%   4. opening bracket '['
-%   5. comma ','
-%   6. closing bracket ']'
-%   7. equality sign
-%   8. identity '1'
-%   9. generator, with the data giving the index of the generator
-%   10. end of word
+%   1. <exponent>, with the data giving the value of the exponent (EXPONENT)
+%   2. opening parenthesis '(' (OPEN_PAREN)
+%   3. closing parenthesis ')' (CLOSE_PAREN)
+%   4. opening bracket '[' (OPEN_BRACKET)
+%   5. comma ',' (COMMA)
+%   6. closing bracket ']' (CLOSE_BRACKET)
+%   7. equality sign (EQUALITY)
+%   8. identity '1' (IDENTITY)
+%   9. multiplication operator '*' (TIMES)
+%   10. division operator '/' (DIVIDE)
+%   11. generator, with the data giving the index of the generator
+%   12. end of word
 
     properties
         types % (struct): Constant values for token types
+        specialChars % (charstring): List of special character for the lexer
         commutatorStartsWithInverses % (logical): If true, ``[x, y] = x^-1 y^-1 x y``, if false ``[x, y] = x y x^-1 y^-1``
     end
 
@@ -59,20 +62,28 @@ classdef Parser
                 commutatorStartsWithInverses = true;
             end
             self.commutatorStartsWithInverses = commutatorStartsWithInverses;
+            self.specialChars = '^()[,]=1*/';
             self.types = struct('EXPONENT', 1, 'OPEN_PAREN', 2, 'CLOSE_PAREN', 3, ...
                                 'OPEN_BRACKET', 4, 'COMMA', 5, 'CLOSE_BRACKET', 6, ...
-                                'EQUALITY', 7, 'IDENTITY', 8, 'GENERATOR', 9, 'END', 10);
+                                'EQUALITY', 7, 'IDENTITY', 8, ...
+                                'TIMES', 9, 'DIVIDE', 10, 'GENERATOR', 11, 'END', 12);
         end
 
-        function [nextPos, w] = component(self, tokens, pos)
-        % Parses a component, which is a part with an optional exponent
-            nextPos = 0; % default return values are for failure
+        function [pos, w] = part(self, tokens, pos)
+        % Parses a part
             w = [];
+            % parse the part
             type = tokens(1, pos);
             types = self.types;
-            if type == types.OPEN_PAREN % subword
+            if type == types.IDENTITY % identity
                 pos = pos + 1;
-                [pos, base] = self.nonEmptyWord(tokens, pos);
+                % w = [] still empty
+            elseif type == types.GENERATOR % generator
+                w = tokens(2, pos);
+                pos = pos + 1;
+            elseif type == types.OPEN_PAREN % subword
+                pos = pos + 1;
+                [pos, w] = self.nonEmptyWord(tokens, pos);
                 if pos == 0 || tokens(1, pos) ~= types.CLOSE_PAREN
                     return
                 end
@@ -92,23 +103,28 @@ classdef Parser
                 lr = [lhs rhs];
                 lIrI = fliplr(-[rhs lhs]);
                 if self.commutatorStartsWithInverses
-                    base = [lIrI lr];
+                    w = [lIrI lr];
                 else
-                    base = [lr lIrI];
+                    w = [lr lIrI];
                 end
-            elseif type == types.GENERATOR
-                base = tokens(2, pos);
-                pos = pos + 1;
             else
+                pos = 0;
+            end
+        end
+
+        function [pos, w] = component(self, tokens, pos)
+        % Parses a component, which is a part with an optional exponent
+            [pos, w] = self.part(tokens, pos);
+            if pos == 0
                 return
             end
+            types = self.types;
             if tokens(1, pos) == types.EXPONENT
                 e = tokens(2, pos);
                 pos = pos + 1;
             else
                 e = 1;
             end
-            w = base;
             if e < 0
                 e = -e; % invert
                 w = fliplr(-w);
@@ -116,30 +132,41 @@ classdef Parser
             if e > 1
                 w = repmat(w, 1, e);
             end
-            nextPos = pos;
         end
 
         function [pos, w] = nonEmptyWord(self, tokens, pos)
         % Parses a word from tokens, which is a sequence of components
-            w = [];
-            types = self.types;
-            % try to parse '1'
-            if tokens(1, pos) == types.IDENTITY
-                pos = pos + 1;
-                return % w = []
-            end
-            % try to parse a non-empty sequence of components
             [pos, w] = self.component(tokens, pos);
             if pos == 0
                 return
             end
+            types = self.types;
             while 1
-                [pos1, w1] = self.component(tokens, pos);
-                if pos1 == 0
-                    return
+                if tokens(1, pos) == types.TIMES
+                    pos = pos + 1;
+                    [pos, next] = self.component(tokens, pos);
+                    if pos == 0 % times MUST be followed by component
+                        w = [];
+                        return
+                    end
+                    w = [w next];
+                elseif tokens(1, pos) == types.DIVIDE
+                    pos = pos + 1;
+                    [pos, next] = self.component(tokens, pos);
+                    if pos == 0 % divide MUST be followed by component
+                        w = [];
+                        return
+                    end
+                    w = [w -fliplr(next)];
+                else
+                    [nextPos, next] = self.component(tokens, pos);
+                    if nextPos == 0
+                        % success, we're at the end of our empty word
+                        return
+                    end
+                    pos = nextPos;
+                    w = [w next];
                 end
-                pos = pos1;
-                w = [w w1];
             end
         end
 
@@ -156,6 +183,7 @@ classdef Parser
 
         function [pos, relators] = equation(self, tokens, pos)
             r = [];
+            relators = [];
             types = self.types;
             [pos, lhs] = self.nonEmptyWord(tokens, pos);
             if pos == 0
@@ -183,6 +211,7 @@ classdef Parser
         %
         % Returns the relators
             res = {};
+            relators = [];
             types = self.types;
             [pos r] = self.equation(tokens, pos);
             if pos == 0
@@ -202,23 +231,19 @@ classdef Parser
 
         function [ok, word] = parseWord(self, str, names)
             ok = false;
+            word = [];
             [res, tokens] = self.lex(str, names);
             if ~res
                 return
             end
             types = self.types;
-            if isequal(tokens(1,:), [types.IDENTITY types.END])
+            pos = 1;
+            [pos, word] = self.word(tokens, pos);
+            if pos == 0 || tokens(1, pos) ~= types.END
                 word = [];
-                ok = true;
-            else
-                pos = 1;
-                [pos, w] = self.word(tokens, pos);
-                if pos == 0 || tokens(1, pos) ~= types.END
-                    return
-                end
-                word = w;
-                ok = true;
+                return
             end
+            ok = true;
         end
 
         function [ok, names, relators] = parsePresentation(self, str)
@@ -268,7 +293,8 @@ classdef Parser
             % whitespace mask
             ws = [isstrprop(str, 'wspace') false];
 
-            spec = '^()[,]=1';
+            types = self.types;
+            spec = self.specialChars;
 
             % valid characters in a generator name
             gstart = isstrprop(str, 'alpha');
@@ -294,7 +320,7 @@ classdef Parser
                         if ~res
                             return
                         end
-                        token = [9; ind];
+                        token = [types.GENERATOR; ind];
                         T = [T token];
                         i = j;
                     else % is not a generator, so unrecognized
@@ -326,8 +352,7 @@ classdef Parser
                     i = i + 1;
                 end
             end
-
-            token = [10; 0];
+            token = [types.END; 0];
             T = [T token];
             ok = true;
         end
