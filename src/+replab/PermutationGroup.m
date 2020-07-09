@@ -109,9 +109,9 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 
         function s = headerStr(self)
             if ~isempty(self.order_)
-                s = sprintf('Permutation group acting on %d elements of order %s', self.domainSize, strip(num2str(self.order)));
+                s = sprintf('Permutation group acting on %d elements of order %s', self.domainSize, strtrim(num2str(self.order)));
             else
-                s = sprintf('Permutation group acting on %d elements', self.domainSize, strip(num2str(self.order)));
+                s = sprintf('Permutation group acting on %d elements', self.domainSize);
             end
         end
 
