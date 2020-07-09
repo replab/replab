@@ -40,13 +40,11 @@ classdef Word < replab.Str
         %
         % Example:
         %   >>> [F x y] = replab.FreeGroup.of('x', 'y');
-        %   >>> w = x*y/x
-        %     w =
-        %       x y x^-1
-        %   >>> s = w.word2str
-        %     'x y x^-1'
-        %   >>> w1 = F.word(s)
-        %     x y x^-1
+        %   >>> w = x*y/x;
+        %   >>> s = w.word2str;
+        %   >>> w1 = F.word(s);
+        %   >>> w == w1
+        %       1
         %
         % Returns:
         %   charstring: String representing the word
