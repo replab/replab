@@ -13,6 +13,10 @@ classdef FiniteFPGroup < replab.FPGroup & replab.NiceFiniteGroup
             end
         end
 
+        function str = headerStr(self)
+            str = headerStr@replab.FPGroup(self);
+        end
+
         function res = eqv(self, x, y)
             xyI = self.compose(x, self.inverse(y));
             res = self.niceGroup.isIdentity(self.computeImage(self.niceGroup, xyI));

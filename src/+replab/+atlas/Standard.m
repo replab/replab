@@ -245,6 +245,14 @@ classdef Standard < replab.Atlas
             end
         end
 
+        function R = fastRecognize(self, G)
+            R = [];
+            ok = G.niceGroup.hasFastChain(1000);
+            if ok && G.niceGroup.order <= 1000
+                R = self.recognize(G);
+            end
+        end
+
         function R = recognize(self, G)
             R = self.recognizeCyclic(G);
             if ~isempty(R)

@@ -1073,6 +1073,19 @@ classdef Chain < replab.Str
 
     methods (Static)
 
+        function C = makeBoundedOrder(n, generators, maxOrder)
+            C = replab.bsgs.Chain(n);
+            for i = 1:length(generators)
+                C.stripAndAddStrongGenerator(generators{i});
+            end
+            C.deterministicSchreierSims(maxOrder);
+            if C.order <= maxOrder
+                C.makeImmutable;
+            else
+                C = [];
+            end
+        end
+
         function C = make(n, generators, base, order)
             if nargin < 3
                 base = [];

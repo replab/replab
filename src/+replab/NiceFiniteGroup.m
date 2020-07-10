@@ -142,6 +142,16 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             res = self.hasSameParentAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
         end
 
+        function str = headerStr(self)
+            A = replab.globals.atlas;
+            R = A.fastRecognize(self);
+            if ~isempty(R)
+                str = sprintf('%s: %s', strrep(class(self), 'replab.', ''), R.entry.name);
+            else
+                str = strrep(class(self), 'replab.');
+            end
+        end
+
         function res = isSubgroupOf(self, rhs)
         % Returns whether this group is a subgroup of another group
         %

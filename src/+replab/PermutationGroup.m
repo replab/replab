@@ -9,6 +9,23 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         chain_ % (+replab.+bsgs.Chain): Stabilizer chain describing this permutation group
     end
 
+    methods
+
+        function ok = hasFastChain(self, maxOrder)
+            ok = false;
+            if ~isempty(self.chain_)
+                ok = true;
+            else
+                chain = replab.bsgs.Chain.makeBoundedOrder(self.domainSize, self.generators, maxOrder);
+                if ~isempty(chain)
+                    self.chain_ = chain;
+                ok = true;
+                end
+            end
+        end
+
+    end
+
     methods (Access = protected)
 
         function chain = computeChain(self)
@@ -92,16 +109,6 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             end
             self.niceGroup_ = self;
             self.niceInverseMonomorphism_ = replab.Morphism.lambda(self, self, @(x) x);
-        end
-
-        %% Str methods
-
-        function s = headerStr(self)
-            if ~isempty(self.order_)
-                s = sprintf('Permutation group acting on %d elements of order %s', self.domainSize, strtrim(num2str(self.order)));
-            else
-                s = sprintf('Permutation group acting on %d elements', self.domainSize);
-            end
         end
 
         %% Domain methods
