@@ -35,20 +35,36 @@ classdef PermutationGroupRightCosets < replab.RightCosets
         end
 
         function t = canonicalRepresentative(self, g)
-            group = self.groupChain;
             sub = self.subgroupChain.mutableCopy;
-            n = group.n;
-            L = group.length;
-            t = g;
-            for l = 1:L
-                beta = group.B(l);
-                tbeta = t(beta);
-                b = replab.bsgs.minimalInOrbit(n, sub.strongGeneratorsForLevel(l), tbeta);
-                sub.baseChange([sub.B(1:l-1) b]);
-                uinv = sub.uinv(l, tbeta);
-                t = uinv(t);
+            n = self.group.domainSize;
+            % we build an element of the form h1 ... hn g
+            % we iterate over the sequence
+            % h1 g <- find h1
+            % h1 h2 g <- find h2
+            % (h1 h2) h3 g <- find h3
+            % ...
+            % At the i-th step, the subgroup chain fixes the points
+            % g(1) ... g(i-1), because these images are minimal under
+            % h1 ... h_{i-1}
+            % Then we compute the stabilizer and orbits of the subgroup chain
+            % with respect to g(i). The orbit gives the image of hi(g(i)) for
+            % possible transversal elements hi. We then pick the one that provides
+            % the minimal image ((h1 ... h_{i-1}) h1 g)(i)
+            h = 1:n; % subgroup element, = h1 h2 ... h{i-1}
+            for i = 1:n
+                beta = g(i);
+                % verifies if the stabilizer chain stabilizes beta already
+                if all(sub.S(beta,:) == beta)
+                    % do nothing
+                else
+                    [sub, orbit, ~, U, ~] = sub.stabilizer(beta);
+                    [~, ind] = min(h(orbit));
+                    h = h(U(:,ind)');
+                end
             end
+            t = h(g);
         end
+
 
         function T = transversal(self)
             M = self.transversalAsMatrix;

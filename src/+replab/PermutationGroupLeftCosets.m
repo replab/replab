@@ -25,13 +25,21 @@ classdef PermutationGroupLeftCosets < replab.LeftCosets
 
         function t = canonicalRepresentative(self, g)
             sub = self.inverse.subgroupChain;
+            % we are looking for an element of the form g h1 h2 ... hk
+            % so finding the representative is easy, we just look for the
+            % element hi so that ((g h1 h2 ... hi-1) hi)(i) is minimal
+            %
+            % at all times, h = h1 h2 ... h{i-1}
             L = sub.length;
-            t = g;
+            n = sub.n;
+            h = 1:n;
             for l = 1:L
                 orbit = sub.Delta{l};
-                [~, i] = min(g(orbit));
-                t = t(sub.u(l, orbit(i)));
+                [~, i] = min(g(h(orbit)));
+                Ul = sub.U{l};
+                h = h(Ul(:,i)');
             end
+            t = g(h);
         end
 
         function T = transversalAsMatrix(self)
