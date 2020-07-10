@@ -94,17 +94,6 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             self.niceInverseMonomorphism_ = replab.Morphism.lambda(self, self, @(x) x);
         end
 
-        function c = chain(self)
-        % Returns the stabilizer chain corresponding to this permutation group
-        %
-        % Returns:
-        %   `+replab.+bsgs.Chain`: Stabilizer chain
-            if isempty(self.chain_)
-                self.chain_ = self.computeChain;
-            end
-            c = self.chain_;
-        end
-
         %% Str methods
 
         function s = headerStr(self)
@@ -152,6 +141,17 @@ classdef PermutationGroup < replab.NiceFiniteGroup
 
 
         %% NiceFiniteGroup methods
+
+        function c = chain(self)
+        % Returns the stabilizer chain corresponding to this permutation group
+        %
+        % Returns:
+        %   `+replab.+bsgs.Chain`: Stabilizer chain
+            if isempty(self.chain_)
+                self.chain_ = self.computeChain;
+            end
+            c = self.chain_;
+        end
 
         function res = hasSameParentAs(self, rhs)
             res = isa(rhs, 'replab.PermutationGroup') && (self.parent.domainSize == rhs.parent.domainSize);
@@ -206,6 +206,88 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             end
         end
 
+        function res = closureGroup(self, G)
+            c = self.chain.mutableCopy;
+            for i = 1:G.nGenerators
+                if c.stripAndAddStrongGenerator(G.generator(i))
+                    c.randomizedSchreierSims([]);
+                end
+            end
+            c.makeImmutable;
+            res = replab.PermutationGroup.fromChain(c, self.parent);
+        end
+
+        function res = closureElement(self, g)
+            c = self.chain.mutableCopy;
+            if c.stripAndAddStrongGenerator(g)
+                c.randomizedSchreierSims([]);
+            end
+            c.makeImmutable;
+            res = replab.PermutationGroup.fromChain(c, self.parent);
+        end
+
+        function nc = normalClosure(self, rhs)
+            chain = replab.bsgs.Chain(self.domainSize);
+            generators = {};
+            toCheck = rhs.generators;
+            while ~isempty(toCheck)
+                rhsg = toCheck{end};
+                toCheck = toCheck(1:end-1);
+                for i = 1:self.nGenerators
+                    gi = self.generator(i);
+                    cm = self.leftConjugate(gi, rhsg);
+                    if chain.stripAndAddStrongGenerator(cm)
+                        generators{1, end+1} = cm;
+                        toCheck{1, end+1} = cm;
+                        chain.randomizedSchreierSims([]);
+                    end
+                end
+            end
+            nc = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
+        end
+
+        function sub = derivedSubgroup(self)
+            nG = self.nGenerators;
+            n = self.domainSize;
+            chain = replab.bsgs.Chain(n);
+            generators = {};
+            for i = 1:nG
+                gi = self.generator(i);
+                for j = 1:nG
+                    gj = self.generator(j);
+                    cm = self.composeWithInverse(self.compose(gi, gj), self.compose(gj, gi));
+                    if chain.stripAndAddStrongGenerator(cm)
+                        generators{1, end+1} = cm;
+                        chain.randomizedSchreierSims([]);
+                    end
+                end
+            end
+            % compute the normal closure
+            toCheck = generators;
+            while ~isempty(toCheck)
+                h = toCheck{end};
+                toCheck = toCheck(1:end-1);
+                for i = 1:nG
+                    gi = self.generator(i);
+                    cm = self.leftConjugate(gi, h);
+                    if chain.stripAndAddStrongGenerator(cm)
+                        generators{1, end+1} = cm;
+                        toCheck{1, end+1} = cm;
+                        chain.randomizedSchreierSims([]);
+                    end
+                end
+            end
+            sub = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
+        end
+
+        function c = leftCosetsOf(self, subgroup)
+            c = replab.PermutationGroupLeftCosets(self, subgroup);
+        end
+
+        function c = rightCosetsOf(self, subgroup)
+            c = replab.PermutationGroupRightCosets(self, subgroup);
+        end
+
         function c = centre(self)
             c = self.centralizerGroup(self);
         end
@@ -227,6 +309,10 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         function c = centralizerGroup(self, other)
             c = replab.bsgs.Centralizer(self, other).subgroup;
         end
+
+    end
+
+    methods % Methods specific to permutation groups
 
         function sub = unorderedPartitionStabilizer(self, partition)
         % Computes the subgroup that leaves the given unordered partition invariant
@@ -416,91 +502,6 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             s = replab.PermutationGroup.fromChain(subchain, self.parent);
         end
 
-        function res = closureGroup(self, G)
-            c = self.chain.mutableCopy;
-            for i = 1:G.nGenerators
-                if c.stripAndAddStrongGenerator(G.generator(i))
-                    c.randomizedSchreierSims([]);
-                end
-            end
-            c.makeImmutable;
-            res = replab.PermutationGroup.fromChain(c, self.parent);
-        end
-
-        function res = closureElement(self, g)
-            c = self.chain.mutableCopy;
-            if c.stripAndAddStrongGenerator(g)
-                c.randomizedSchreierSims([]);
-            end
-            c.makeImmutable;
-            res = replab.PermutationGroup.fromChain(c, self.parent);
-        end
-
-        function nc = normalClosure(self, rhs)
-            chain = replab.bsgs.Chain(self.domainSize);
-            generators = {};
-            toCheck = rhs.generators;
-            while ~isempty(toCheck)
-                rhsg = toCheck{end};
-                toCheck = toCheck(1:end-1);
-                for i = 1:self.nGenerators
-                    gi = self.generator(i);
-                    cm = self.leftConjugate(gi, rhsg);
-                    if chain.stripAndAddStrongGenerator(cm)
-                        generators{1, end+1} = cm;
-                        toCheck{1, end+1} = cm;
-                        chain.randomizedSchreierSims([]);
-                    end
-                end
-            end
-            nc = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
-        end
-
-        function sub = derivedSubgroup(self)
-            nG = self.nGenerators;
-            n = self.domainSize;
-            chain = replab.bsgs.Chain(n);
-            generators = {};
-            for i = 1:nG
-                gi = self.generator(i);
-                for j = 1:nG
-                    gj = self.generator(j);
-                    cm = self.composeWithInverse(self.compose(gi, gj), self.compose(gj, gi));
-                    if chain.stripAndAddStrongGenerator(cm)
-                        generators{1, end+1} = cm;
-                        chain.randomizedSchreierSims([]);
-                    end
-                end
-            end
-            % compute the normal closure
-            toCheck = generators;
-            while ~isempty(toCheck)
-                h = toCheck{end};
-                toCheck = toCheck(1:end-1);
-                for i = 1:nG
-                    gi = self.generator(i);
-                    cm = self.leftConjugate(gi, h);
-                    if chain.stripAndAddStrongGenerator(cm)
-                        generators{1, end+1} = cm;
-                        toCheck{1, end+1} = cm;
-                        chain.randomizedSchreierSims([]);
-                    end
-                end
-            end
-            sub = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
-        end
-
-        function c = leftCosetsOf(self, subgroup)
-            c = replab.PermutationGroupLeftCosets(self, subgroup);
-        end
-
-        function c = rightCosetsOf(self, subgroup)
-            c = replab.PermutationGroupRightCosets(self, subgroup);
-        end
-
-
-        %% Methods specific to permutation groups
-
         function o = orbits(self)
         % Returns the partition of the domain into orbits under this group
         %
@@ -520,8 +521,6 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         % Returns the subgroup that stabilizes a given point
             sub = replab.PermutationGroup.fromChain(self.chain.stabilizer(p), self.parent);
         end
-
-        %% Group construction
 
         function w = wreathProduct(self, A)
         % Returns the wreath product of a compact group by this permutation group
@@ -544,7 +543,9 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             w = replab.wreathproduct.of(self, A);
         end
 
-        %% Actions
+    end
+
+    methods % Actions
 
         function A = naturalAction(self)
         % Returns the natural action of elements of this group on its domain
@@ -616,7 +617,9 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             phi = @(g) self.indexRelabelingPermutation(g, indexRange);
         end
 
-        %% Representation construction
+    end
+
+    methods % Representations
 
         function rho = indexRelabelingRep(self, indexRange)
         % Representation that permutes the indices of a tensor
