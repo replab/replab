@@ -105,11 +105,11 @@ classdef SubRep < replab.Rep
 % $$$         end
 
         function rho = image_internal(self, g)
-            rho = full(self.E_internal*self.parent.image_internal(g)*self.B_internal);
+            rho = self.E_internal*self.parent.image_internal(g)*self.B_internal;
         end
 
         function rho = inverseImage_internal(self, g)
-            rho = full(self.E_internal*self.parent.inverseImage_internal(g)*self.B_internal);
+            rho = self.E_internal*self.parent.inverseImage_internal(g)*self.B_internal;
         end
 
     end
