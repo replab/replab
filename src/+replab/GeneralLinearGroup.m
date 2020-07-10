@@ -3,7 +3,8 @@ classdef GeneralLinearGroup < replab.Group & replab.domain.VectorSpace
 
     properties
         n % integer: size
-    end
+        sparse % (logical): Whether to preserve sparse matrices
+     end
 
     properties (Access = protected)
         parent % replab.domain.Matrices: General, not necessarily invertible matrices
@@ -11,11 +12,25 @@ classdef GeneralLinearGroup < replab.Group & replab.domain.VectorSpace
 
     methods
 
-        function self = GeneralLinearGroup(field, n)
+        function self = GeneralLinearGroup(field, n, sparse)
+        % Constructs the group of general linear matrices
+        %
+        % Args:
+        %   field ('R' or 'C'): Real or complex matrices
+        %   n (integer): Size of the square matrices
+        %   sparse (logical, optional): Whether to preserve sparse matrices, default value false
             self.field = field;
             self.n = n;
             self.parent = replab.domain.Matrices(field, n, n);
-            self.identity = eye(n);
+            if nargin < 3
+                sparse = false;
+            end
+            self.sparse = sparse;
+            if sparse
+                self.identity = [speye(n) speye(n)];
+            else
+                self.identity = [eye(n) eye(n)];
+            end
         end
 
         % Str
