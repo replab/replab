@@ -23,6 +23,14 @@ classdef PermutationGroupLaws < replab.NiceFiniteGroupLaws
             orbits = self.T.orbits;
             self.assert(self.T.orbits.blockIndex(p) == self.T.orbits.blockIndex(p1));
         end
+        function law_elements_are_ordered_(self)
+            E = self.T.elements.toCell;
+            M = zeros(length(E), self.T.domainSize);
+            for i = 1:length(E)
+                M(i,:) = E{i};
+            end
+            assertEqual(M, sortrows(M));
+        end
         function law_toMatrix_fromMatrix_T(self, t)
             M = replab.Permutation.toMatrix(t);
             t1 = replab.Permutation.fromMatrix(M);
