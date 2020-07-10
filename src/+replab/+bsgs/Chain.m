@@ -985,7 +985,7 @@ classdef Chain < replab.Str
             if isempty(order)
                 while c <= nTries
                     g = R.sample;
-                    if self.stripAndAddStrongGenerator(R.sample)
+                    if self.stripAndAddStrongGenerator(g)
                         c = 0;
                     else
                         c = c + 1;
