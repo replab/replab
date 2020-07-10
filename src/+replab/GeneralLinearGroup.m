@@ -27,9 +27,9 @@ classdef GeneralLinearGroup < replab.Group & replab.domain.VectorSpace
             end
             self.sparse = sparse;
             if sparse
-                self.identity = [speye(n) speye(n)];
+                self.identity = speye(n);
             else
-                self.identity = [eye(n) eye(n)];
+                self.identity = eye(n);
             end
         end
 
