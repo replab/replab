@@ -65,7 +65,7 @@ function help(varargin)
                 contents = replab.infra.repl.callOriginalHelp(arg, varName, varValue);
             end
         else
-            if replab.compat.startsWith(arg, 'replab') && ~isequal(arg, 'replab_init')
+            if replab.compat.startsWith(arg, 'replab') && ~isequal(arg, 'replab_init') && ~isequal(arg, 'replab_easyinstall')
                 contents = replab.infra.repl.lookupHelp(helpFunctionName, fullMode, arg);
             else
                 contents = replab.infra.repl.callOriginalHelp(arg);
