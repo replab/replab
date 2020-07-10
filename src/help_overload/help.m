@@ -70,7 +70,7 @@ function [contents, docTopic] = help(varargin)
                 [contents, docTopic] = replab.infra.repl.callOriginalHelp({varargin}, varName, varValue);
             end
         else
-            if replab.compat.startsWith(arg, 'replab')
+            if replab.compat.startsWith(arg, 'replab') && ~isequal(arg, 'replab_init')
                 % it is a RepLAB command
                 contents = replab.infra.repl.lookupHelp(helpFunctionName, fullMode, arg);
             else
