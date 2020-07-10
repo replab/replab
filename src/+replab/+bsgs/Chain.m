@@ -228,6 +228,7 @@ classdef Chain < replab.Str
             end
         end
 
+
         function orbit = orbitUnderG(self, l, b)
         % Returns the orbit of the point b under G^l as a row integer vector
             orbit = zeros(1, self.n);
@@ -953,7 +954,7 @@ classdef Chain < replab.Str
             else
                 % Check if h is the identity
                 gamma = find(h ~= 1:n, 1);
-                if length(gamma) > 0
+                if ~isempty(gamma)
                     % New strong generator h fixes all base points
                     % We have a new base point gamma
                     % and insert it at the end of the chain
@@ -975,6 +976,74 @@ classdef Chain < replab.Str
         function c = mutableCopy(self)
         % Creates a mutable copy of this chain
             c = replab.bsgs.Chain(self.n, self.B, self.S, self.Sind, self.Delta, self.iDelta, self.U, self.Uinv);
+        end
+
+        function inew = schreierSimsTest(self, i)
+        % Tests a level of the stabilizer chain for completeness of strong generators
+        %
+        % Adds the strong generators found to the chain
+        %
+        % Args:
+        %   i (integer): Level to test
+        %
+        % Returns:
+        %   integer: Either $i-1$ if the level is complete, or the new level to test
+            orbit = self.Delta{i};
+            iOrbit = self.iDelta;
+            U = self.U{i};
+            Uinv = self.Uinv{i};
+            Srange = self.Sind(i):self.Sind(end)-1;
+            n = self.n;
+            for o = 1:length(orbit)
+                betai = self.B(i);
+                b = orbit(o);
+                ub = U(:,o)';
+                for k = Srange
+                    x = self.S(:,k)';
+                    uxb_inv = Uinv(:,iOrbit(x(b),i))';
+                    toStrip = ub(x(uxb_inv));
+                    if any(toStrip ~= 1:n)
+                        y = true;
+                        [h j] = self.strip(toStrip);
+                        if j <= self.length
+                            % new strong generator h at level j
+                            y = false;
+                        else % j = self.length + 1
+                            gamma = find(h ~= 1:n, 1);
+                            if ~isempty(gamma)
+                                % h fixes
+                                y = false;
+                                self.insertEndBasePoint(gamma);
+                            end
+                        end
+                        if ~y
+                            self.addStrongGeneratorAndRecomputeOrbits(j, h);
+                            inew = j;
+                            return
+                        end
+                    end
+                end
+            end
+            inew = i - 1;
+        end
+
+        function deterministicSchreierSims(self, maxOrder)
+        % Runs the deterministic Schreier-Sims algorithm, with a bound on the maximum order
+        %
+        % If `self.order > maxOrder` after this function returns, the chain may be incomplete.
+        %
+        % Args:
+        %   maxOrder (integer or vpi or ``inf``): Order cutoff
+            if nargin < 2
+                maxOrder = inf;
+            end
+            i = self.length;
+            while i >= 1 && self.order <= maxOrder
+                i = self.schreierSimsTest(i);
+            end
+            if self.order <= maxOrder
+                self.check;
+            end
         end
 
         function randomizedSchreierSims(self, order)
@@ -1018,7 +1087,10 @@ classdef Chain < replab.Str
             for i = 1:length(generators)
                 C.stripAndAddStrongGenerator(generators{i});
             end
-            C.randomizedSchreierSims(order);
+            C.deterministicSchreierSims(1000);
+            if C.order > 1000
+                C.randomizedSchreierSims(order);
+            end
             C.makeImmutable;
         end
 
