@@ -3,6 +3,7 @@ classdef GeneralLinearGroupWithInverses < replab.Group & replab.domain.VectorSpa
 
     properties
         n % (integer): Size of the square matrices
+        sparse % (logical): Whether to preserve sparse matrices
     end
 
     properties (Access = protected)
@@ -11,11 +12,25 @@ classdef GeneralLinearGroupWithInverses < replab.Group & replab.domain.VectorSpa
 
     methods
 
-        function self = GeneralLinearGroupWithInverses(field, n)
+        function self = GeneralLinearGroupWithInverses(field, n, sparse)
+        % Constructs the group of general linear matrices, storing inverses
+        %
+        % Args:
+        %   field ('R' or 'C'): Real or complex matrices
+        %   n (integer): Size of the square matrices
+        %   sparse (logical, optional): Whether to preserve sparse matrices, default value false
             self.field = field;
             self.n = n;
             self.parent_ = replab.domain.Matrices(field, n, n);
-            self.identity = [eye(n) eye(n)];
+            if nargin < 3
+                sparse = false;
+            end
+            self.sparse = sparse;
+            if sparse
+                self.identity = [speye(n) speye(n)];
+            else
+                self.identity = [eye(n) eye(n)];
+            end
         end
 
         % Str

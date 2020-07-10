@@ -1100,9 +1100,9 @@ classdef CommutantVar < replab.Str
 
             if isempty(self.fullBlockMatrix_)
                 % We construct the matrix for the first time
-                M = sdpvar(1);
-                M(self.dim^2) = 0;
-                M = reshape(M, self.dim*[1 1]);
+                allX = [];
+                allY = [];
+                allV = [];
                 co = 0;
                 for i = 1:self.nComponents
                     d = self.dimensions1(i);
@@ -1115,9 +1115,15 @@ classdef CommutantVar < replab.Str
                         otherwise
                             error('Unknown type');
                     end
-                    M(co + (1:d*size(self.blocks{i},1)), co + (1:d*size(self.blocks{i},1))) = kron(self.blocks{i}, eye(d));
+                    xIndices = kron(ones(1,d*size(self.blocks{i},1)), co + (1:d*size(self.blocks{i},1))).';
+                    yIndices = kron(co + (1:d*size(self.blocks{i},1)), ones(1,d*size(self.blocks{i},1))).';
+                    values = reshape(kron(self.blocks{i}, eye(d)), (d*size(self.blocks{i},1))^2, 1);
+                    allX = [allX; xIndices];
+                    allY = [allY; yIndices];
+                    allV = [allV; values];
                     co = co + d*size(self.blocks{i},1);
                 end
+                M = sparse(allX, allY, allV);
                 self.fullBlockMatrix_ = M;
             else
                 M = self.fullBlockMatrix_;

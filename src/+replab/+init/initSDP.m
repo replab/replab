@@ -68,7 +68,7 @@ function res = initSDP(verbose)
                     if ~isempty(regexp(logSDPT3, 'Looking for existing binaries\.\.\.incomplete set found\.'))
                         logSDPT3 = evalc('install_sdpt3 -rebuild;');
                     end
-                    compilationSuccessfull = true;
+                    compilationSuccessfull = isempty(regexp(logSDPT3, 'SDPT3 was not successfully installed.'));
                 catch
                 end
 
