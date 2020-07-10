@@ -91,13 +91,13 @@ classdef Chain < replab.Str
                 self.U = U;
                 self.Uinv = Uinv;
             else
-                self.B = [];
-                self.S = [];
+                self.B = zeros(1, 0);
+                self.S = zeros(n, 0);
                 self.Sind = [1];
-                self.Delta = {};
+                self.Delta = cell(1, 0);
                 self.iDelta = zeros(n,0);
-                self.U = {};
-                self.Uinv = {};
+                self.U = cell(1, 0);
+                self.Uinv = cell(1, 0);
             end
         end
 
@@ -286,6 +286,48 @@ classdef Chain < replab.Str
             self.B = g(B);
         end
 
+        function res = stabilizes(self, l, beta)
+        % Tests whether H^l stabilizes beta
+        %
+        % Args:
+        %   l (integer): Level to test
+        %   beta (integer): Domain point to test
+            res = all(self.S(beta, self.Sind(l):end) == beta);
+        end
+
+        function ok = baseMatchesPrescribedBase(self, prescribedBase, removeRedundant)
+        % Tests whether the current base respect a prescribed base
+        %
+        % Args:
+        %   prescribedBase (integer(1,\*)): Prescribed base to test
+        %   removeRedundant (logical, optional): Whether to remove redundant base points, default value false
+        %
+        % Returns:
+        %   logical: Whether the base matches the prescription
+            ok = false; % by default, we return fail
+            i = 1; % i iterates over the prescribed base
+            l = 1; % l iterates over the current levels
+            while i <= length(prescribedBase)
+                if l > self.length
+                    if removeRedundant
+                        % ok, because the prescription is now for redundant points
+                        i = i + 1;
+                    else
+                        return % not ok, because we'd need those points
+                    end
+                elseif prescribedBase(i) == self.B(l)
+                    % good, we match
+                    i = i + 1;
+                    l = l + 1;
+                elseif self.stabilizes(l, prescribedBase(i)) && removeRedundant
+                    i = i + 1; % the point is redundant, ignore it
+                else
+                    return
+                end
+            end
+            ok = true;
+        end
+
         function baseChange(self, newBase, removeRedundant)
         % Changes in-place the base of this BSGS chain
         %
@@ -300,42 +342,77 @@ classdef Chain < replab.Str
             if nargin < 3 || isempty(removeRedundant)
                 removeRedundant = false;
             end
-            i = 1;
-            while i <= length(newBase)
+            i = 1; % i iterates over newBase
+            imax = length(newBase);
+            l = 1; % l iterates over the levels
+                   % when removeRedundant = false, i == l
+            while i <= imax
                 newBeta = newBase(i);
-                if i > self.length
-                    self.insertEndBasePoint(newBeta);
-                elseif self.B(i) ~= newBeta
-                    j = i;
-                    while j <= self.length && self.iDelta(newBeta, j) == 0
-                        j = j + 1;
+                if l == self.length + 1
+                    % we are at the end of the chain
+                    if ~removeRedundant
+                        % if we need redundant base points, insert it
+                        self.insertRedundantBasePoint(l, newBeta);
+                        l = l + 1;
+                    end % otherwise do nothing
+                    i = i + 1;
+                elseif self.B(l) == newBeta % we match!
+                    if removeRedundant && self.orbitSize(l) == 1
+                        % but we need to remove this redundant point
+                        self.removeRedundantBasePoint(l);
+                        % l stays in place, the chain has shifted
+                        i = i + 1; % and we go to the next newBase point
+                    else
+                        % we just move forwards
+                        i = i + 1;
+                        l = l + 1;
                     end
-                    if j == self.length + 1
+                elseif all(self.S(newBeta, self.Sind(l):end) == newBeta)
+                    % the new point is redundant
+                    if removeRedundant
+                        % skip this point in newBase
+                        i = i + 1;
+                    else
+                        % insert a redundant base point and move forwards
+                        self.insertRedundantBasePoint(l, newBeta);
+                        i = i + 1;
+                        l = l + 1;
+                    end
+                    % vvv for the cases below, the new base point is not already there
+                elseif self.orbitSize(l) == 1
+                    % the "wrong" level is redundant, we can eliminate it quickly
+                    self.removeRedundantBasePoint(l);
+                    % no need to move l, the chain has shifted
+                else % ok we need to do some work
+                    m = l;
+                    while m <= self.length && self.iDelta(newBeta, m) == 0
+                        m = m + 1;
+                    end
+                    if m == self.length + 1
                         self.insertEndBasePoint(newBeta);
                     end
-                    g = self.u(j, newBeta);
+                    g = self.u(m, newBeta);
                     if ~isequal(g, 1:self.n)
                         self.conjugate(g);
                     end
-                    assert(self.B(j) == newBeta);
-                    for k = j-1:-1:i
-                        self.baseSwap(k);
+                    assert(self.B(m) == newBeta);
+                    for j = m-1:-1:l
+                        self.baseSwap(j);
                     end
-                end
-                if removeRedundant && self.orbitSize(i) == 1
-                    self.removeRedundantBasePoint(i);
-                    newBase = [newBase(1:i-1) newBase(i+1:end)];
-                else
                     i = i + 1;
+                    l = l + 1;
                 end
             end
-            while i <= self.length
-                if self.orbitSize(i) == 1
-                    self.removeRedundantBasePoint(i);
+            % remove the redundant base points after the specified base
+            while l <= self.length
+                if self.orbitSize(l) == 1
+                    self.removeRedundantBasePoint(l);
                 else
-                    i = i + 1;
+                    l = l + 1;
                 end
             end
+            assert(self.baseMatchesPrescribedBase(newBase, removeRedundant));
+            self.check;
         end
 
         function show(self, i)
@@ -792,23 +869,40 @@ classdef Chain < replab.Str
             end
         end
 
+        function insertRedundantBasePoint(self, l, newBeta)
+        % Adds a new base point at the specified level
+        %
+        % We must have that $H^l$ stabilizes the new base point, and
+        % the range of $l$ can be $1, ..., k + 1$ where $k$ is the current base length.
+        %
+        % So to add a base point at the end of the chain, set $l = k + 1$.
+        %
+        % This modifies the chain in place.
+        %
+        % Args:
+        %   l (integer): Level at which to insert the new base point
+        %   newBeta (integer): New basis point not part of the current base
+            assert(self.isMutable, 'Chain needs to be mutable');
+            assert(~ismember(newBeta, self.B), 'Base point already exists');
+            assert(all(self.S(newBeta, self.Sind(l):end) == newBeta), 'Base point is not redundant');
+            n = self.n;
+            k = self.length; % previous chain length
+            self.B = [self.B(1:l-1) newBeta self.B(l:end)];
+            % We add the data structures for the new orbit/transversal
+            self.Delta = horzcat(self.Delta(1:l-1), {newBeta}, self.Delta(l:end));
+            self.iDelta = [self.iDelta(:,1:l-1) zeros(n, 1) self.iDelta(:,l:end)];
+            self.iDelta(newBeta, l) = 1;
+            self.U = horzcat(self.U(1:l-1), {[1:n]'}, self.U(l:end));
+            self.Uinv = horzcat(self.Uinv(1:l-1), {[1:n]'}, self.Uinv(l:end));
+            self.Sind = [self.Sind(1:l) self.Sind(l:end)];
+        end
+
         function insertEndBasePoint(self, newBeta)
         % Adds a new basis point at the end of the BSGS chain
         %
         % Args:
         %   newBeta (integer): New basis point not part of the current basis
-            assert(self.isMutable, 'Chain needs to be mutable');
-            assert(~ismember(newBeta, self.B), 'Base point already exists');
-            n = self.n;
-            k = self.length; % previous chain length
-            self.B = [self.B newBeta];
-            % We add the data structures for the new orbit/transversal
-            self.Delta = horzcat(self.Delta, newBeta);
-            self.iDelta = [self.iDelta zeros(n, 1)];
-            self.iDelta(newBeta, k+1) = 1;
-            self.U = horzcat(self.U, {[1:n]'});
-            self.Uinv = horzcat(self.Uinv, {[1:n]'});
-            self.Sind = [self.Sind self.Sind(end)];
+            self.insertRedundantBasePoint(self.length + 1, newBeta);
         end
 
         function addStrongGenerator(self, i, newS)
