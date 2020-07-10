@@ -829,7 +829,7 @@ classdef Chain < replab.Str
                 iDelta = self.iDelta(:, i);
                 mask = iDelta(imgs) == 0;
                 mask = reshape(mask, size(imgs)); % in case imgs is a vector, Matlab may change btw row/column vectors
-                [b_ind S_ind] = find(mask);
+                [b_ind, S_ind] = find(mask);
                 for j = 1:length(b_ind)
                     s = self.S(:, Srange(S_ind(j))); % strong generator
                     b = toTest(b_ind(j)); % orbit element
