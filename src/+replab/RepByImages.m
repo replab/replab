@@ -61,24 +61,31 @@ classdef RepByImages < replab.Rep
 
         function c = chain(self)
             if isempty(self.chain_)
+                nG = self.group.nGenerators;
+                useSparse = true;
+                for i = 1:nG
+                    if isa(self.images_internal{i}, 'sym') || isa(self.inverseImages_internal{i}, 'sym')
+                        useSparse = false;
+                        break
+                    end
+                end
                 d = self.dimension;
                 n = self.group.niceGroup.domainSize;
                 order = self.group.order;
                 generators = self.group.niceGroup.generators;
                 if self.isUnitary
                     if self.overR
-                        target = replab.OrthogonalGroup(d);
+                        target = replab.OrthogonalGroup(d, useSparse);
                     else
-                        target = replab.UnitaryGroup(d);
+                        target = replab.UnitaryGroup(d, useSparse);
                     end
                     symToDouble = replab.Morphism.lambda(target, target, @(X) double(X)); % remove symbolic toolbox stuff
                     self.chain_ = replab.bsgs.ChainWithImages.make(n, target, generators, self.images_internal, ...
                                                                    symToDouble, [], order);
                 else
-                    target1 = replab.GeneralLinearGroupWithInverses(self.field, self.dimension);
-                    target2 = replab.GeneralLinearGroup(self.field, self.dimension);
+                    target1 = replab.GeneralLinearGroupWithInverses(self.field, self.dimension, useSparse);
+                    target2 = replab.GeneralLinearGroup(self.field, self.dimension, useSparse);
                     cut = replab.Morphism.lambda(target1, target2, @(X) double(X(:, 1:self.dimension)));
-                    nG = self.group.nGenerators;
                     images = cell(1, nG);
                     for i = 1:nG
                         images{i} = [self.images_internal{i} self.inverseImages_internal{i}];

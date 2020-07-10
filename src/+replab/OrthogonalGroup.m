@@ -3,6 +3,7 @@ classdef OrthogonalGroup < replab.CompactGroup
 
     properties
         n % integer: Dimension of the orthogonal group
+        sparse % (logical): Whether to preserve sparse matrices
     end
 
     properties (Access = protected)
@@ -11,10 +12,17 @@ classdef OrthogonalGroup < replab.CompactGroup
 
     methods
 
-        function self = OrthogonalGroup(n)
+        function self = OrthogonalGroup(n, sparse)
             self.n = n;
             self.parent = replab.domain.Matrices('R', n, n);
-            self.identity = eye(n);
+            if nargin < 2
+                sparse = false;
+            end
+            if sparse
+                self.identity = speye(n);
+            else
+                self.identity = eye(n);
+            end
         end
 
         %% Str methods
