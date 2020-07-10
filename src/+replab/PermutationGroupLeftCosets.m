@@ -87,8 +87,9 @@ classdef PermutationGroupLeftCosets < replab.LeftCosets
                 img = zeros(1, n);
                 for j = 1:n
                     gt = self.canonicalRepresentative(g(T(j,:)));
-                    [ok, loc] = ismember(gt, T, 'rows');
-                    assert(ok);
+                    loc = replab.util.findRowInMatrix(gt, T);
+                    % [ok, loc] = ismember(gt, T, 'rows');
+                    assert(length(loc) == 1);
                     img(j) = loc;
                 end
                 images{i} = img;

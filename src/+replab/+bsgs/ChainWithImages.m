@@ -475,7 +475,7 @@ classdef ChainWithImages < replab.Str
         % Args:
         %   newBeta (integer): New basis point not part of the current basis
             assert(self.isMutable, 'Chain needs to be mutable');
-            assert(~ismember(newBeta, self.B), 'Base point already exists');
+            assert(all(self.B ~= newBeta), 'Base point already exists');
             n = self.n;
             k = self.length; % previous chain length
             self.B = [self.B newBeta];

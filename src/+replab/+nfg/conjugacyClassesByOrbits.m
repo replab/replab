@@ -48,7 +48,7 @@ function classes = conjugacyClassesByOrbits(group)
                     f = find(Ih == h*cj);
                     if length(f) > 1
                         % several rows have the same hash, so we look for an exact match
-                        [~, loc] = ismember(cj', I(:,f)', 'rows');
+                        loc = replab.util.findRowInMatrix(cj', I(:,f)');
                         f = f(loc);
                     end
                     if conjcl(f) == 0

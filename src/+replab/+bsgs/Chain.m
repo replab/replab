@@ -888,7 +888,7 @@ classdef Chain < replab.Str
         %   l (integer): Level at which to insert the new base point
         %   newBeta (integer): New basis point not part of the current base
             assert(self.isMutable, 'Chain needs to be mutable');
-            assert(~ismember(newBeta, self.B), 'Base point already exists');
+            assert(all(self.B ~= newBeta), 'Base point already exists');
             assert(all(self.S(newBeta, self.Sind(l):end) == newBeta), 'Base point is not redundant');
             n = self.n;
             k = self.length; % previous chain length
