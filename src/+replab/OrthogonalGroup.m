@@ -15,7 +15,7 @@ classdef OrthogonalGroup < replab.CompactGroup
         function self = OrthogonalGroup(n, sparse)
             self.n = n;
             self.parent = replab.domain.Matrices('R', n, n);
-            if n < 2
+            if nargin < 2
                 sparse = false;
             end
             if sparse

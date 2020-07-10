@@ -20,7 +20,7 @@ classdef UnitaryGroup < replab.CompactGroup
         %   sparse (logical, optional): Whether to preserve sparse matrices, default value false
             self.n = n;
             self.parent = replab.domain.Matrices('C', n, n);
-            if n < 2
+            if nargin < 2
                 sparse = false;
             end
             if sparse
