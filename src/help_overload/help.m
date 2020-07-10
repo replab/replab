@@ -1,4 +1,4 @@
-function help(varargin)
+function [contents, docTopic] = help(varargin)
 % Displays help on a function/object/...
 %
 % Args:
@@ -7,6 +7,14 @@ function help(varargin)
 %               package, ...
 %             - if two elements, with one of them being the string '-f'
 %               or '-full', provides full help on this element
+%
+% Returns
+% -------
+%   contents: charstring
+%     The help information in text format.
+%   docTopic: charstring
+%     Name of the associated reference page (for matlab internal functions
+%     only)
 %
 % Note:
 %   This function overloads matlab's 'help' function. Renaming this file
@@ -17,7 +25,8 @@ function help(varargin)
 %   in ``src/+replab/+infra``. Those templates support Sphinx-like reference
 %   syntax using backticks.
 
-    contents = {};
+    contents = '';
+    docTopic = '';
 
     if nargin == 1 && isequal(varargin{1}, '--clear')
         replab.globals.codeBase([]);
@@ -26,18 +35,14 @@ function help(varargin)
 
     % Are we in full mode or not?
     fullMode = false;
-    if nargin == 1
-        arg = varargin{1};
-    elseif nargin == 2
+    arg = varargin{1};
+    if nargin == 2
         if isequal(varargin{1}, '-f') || isequal(varargin{1}, '--full')
             fullMode = true;
             arg = varargin{2};
         elseif isequal(varargin{2}, '-f') || isequal(varargin{2}, '--full')
             fullMode = true;
-            arg = varargin{1};
         end
-    else
-        error('Too many arguments');
     end
 
     % extract own name
@@ -62,13 +67,14 @@ function help(varargin)
                 % it is a RepLAB object
                 contents = replab.infra.repl.lookupHelp(helpFunctionName, fullMode, strjoin({varType parts{2:end}}, '.'), varName);
             else
-                contents = replab.infra.repl.callOriginalHelp(arg, varName, varValue);
+                [contents, docTopic] = replab.infra.repl.callOriginalHelp({varargin}, varName, varValue);
             end
         else
             if replab.compat.startsWith(arg, 'replab')
+                % it is a RepLAB command
                 contents = replab.infra.repl.lookupHelp(helpFunctionName, fullMode, arg);
             else
-                contents = replab.infra.repl.callOriginalHelp(arg);
+                [contents, docTopic] = replab.infra.repl.callOriginalHelp({varargin});
             end
         end
     else
@@ -78,17 +84,21 @@ function help(varargin)
             contents = replab.infra.repl.lookupHelp(helpFunctionName, fullMode, type);
         else
             % Non RepLAB object, call original help function
-            contents = replab.infra.repl.callOriginalHelp(arg);
+            [contents, docTopic] = replab.infra.repl.callOriginalHelp({varargin});
         end
     end
-    if replab.globals.runsInMatlabEmacs
-        if ischar(arg)
-            replab.infra.repl.matlabEmacsHelpDisplay(arg, contents);
+    if nargout == 0
+        % display the help
+        if replab.globals.runsInMatlabEmacs
+            if ischar(arg)
+                replab.infra.repl.matlabEmacsHelpDisplay(arg, contents);
+            else
+                replab.infra.repl.matlabEmacsHelpDisplay('object', contents);
+            end
         else
-            replab.infra.repl.matlabEmacsHelpDisplay('object', contents);
+            stdout = 1;
+            fwrite(stdout, contents);
         end
-    else
-        stdout = 1;
-        fwrite(stdout, contents);
+        clear contents; % to avoid displaying twice if called from the command line
     end
 end
