@@ -67,16 +67,16 @@ classdef RepByImages < replab.Rep
                 generators = self.group.niceGroup.generators;
                 if self.isUnitary
                     if self.overR
-                        target = replab.OrthogonalGroup(d);
+                        target = replab.OrthogonalGroup(d, true);
                     else
-                        target = replab.UnitaryGroup(d);
+                        target = replab.UnitaryGroup(d, true);
                     end
                     symToDouble = replab.Morphism.lambda(target, target, @(X) double(X)); % remove symbolic toolbox stuff
                     self.chain_ = replab.bsgs.ChainWithImages.make(n, target, generators, self.images_internal, ...
                                                                    symToDouble, [], order);
                 else
-                    target1 = replab.GeneralLinearGroupWithInverses(self.field, self.dimension);
-                    target2 = replab.GeneralLinearGroup(self.field, self.dimension);
+                    target1 = replab.GeneralLinearGroupWithInverses(self.field, self.dimension, true);
+                    target2 = replab.GeneralLinearGroup(self.field, self.dimension, true);
                     cut = replab.Morphism.lambda(target1, target2, @(X) double(X(:, 1:self.dimension)));
                     nG = self.group.nGenerators;
                     images = cell(1, nG);

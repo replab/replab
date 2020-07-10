@@ -2,7 +2,8 @@ classdef UnitaryGroup < replab.CompactGroup
 % Describes the group of n x n unitary (complex) matrices
 
     properties
-        n % integer: Dimension of the unitary group
+        n % (integer): Dimension of the unitary group
+        sparse % (logical): Whether to preserve sparse matrices
     end
 
     properties (Access = protected)
@@ -11,10 +12,22 @@ classdef UnitaryGroup < replab.CompactGroup
 
     methods
 
-        function self = UnitaryGroup(n)
+        function self = UnitaryGroup(n, sparse)
+        % Constructs the unitary group
+        %
+        % Args:
+        %   n (integer): Size of the ``n x n`` matrices
+        %   sparse (logical, optional): Whether to preserve sparse matrices, default value false
             self.n = n;
             self.parent = replab.domain.Matrices('C', n, n);
-            self.identity = eye(n);
+            if n < 2
+                sparse = false;
+            end
+            if sparse
+                self.identity = speye(n);
+            else
+                self.identity = eye(n);
+            end
         end
 
         %% Str methods
