@@ -18,8 +18,18 @@ function [output, docTopic] = callOriginalHelp(coh_argument, coh_variableName, c
         % verify we don't overwrite our own local variables
         assert(~ismember(coh_variableName, {'coh_functionHandle' 'coh_argument' 'coh_variableName' 'coh_variableValue'}));
         eval([coh_variableName ' = coh_variableValue;'])
-        [output, docTopic] = coh_functionHandle(coh_argument{1}{:});
+        if replab.compat.isOctave
+            docTopic = '';
+            output = coh_functionHandle(coh_argument{1}{:});
+        else
+            [output, docTopic] = coh_functionHandle(coh_argument{1}{:});
+        end
     else
-        [output, docTopic] = coh_functionHandle(coh_argument{1}{:});
+        if replab.compat.isOctave
+            docTopic = '';
+            output = coh_functionHandle(coh_argument{1}{:});
+        else
+            [output, docTopic] = coh_functionHandle(coh_argument{1}{:});
+        end
     end
 end
