@@ -836,7 +836,9 @@ classdef Chain < replab.Str
                     newb = s(b);
                     if self.iDelta(newb, i) == 0
                         % new orbit point discovered, add it
-                        newu = s(self.u(i, b)); % new transversal compose(s, self.u(i, b))
+                        Ui = self.U{i};
+                        ind = self.iDelta(b, i);
+                        newu = s(Ui(:, ind)'); % new transversal compose(s, self.u(i, b))
                         self.insertInOrbit(i, newb, newu);
                     end
                 end
