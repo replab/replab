@@ -369,6 +369,11 @@ classdef Chain < replab.Str
                     end
                 elseif all(self.S(newBeta, self.Sind(l):end) == newBeta)
                     % the new point is redundant
+                    ind = find(self.B == newBeta);
+                    if ~isempty(ind)
+                        assert(self.orbitSize(ind) == 1); % consistency check
+                        self.removeRedundantBasePoint(ind);
+                    end
                     if removeRedundant
                         % skip this point in newBase
                         i = i + 1;
