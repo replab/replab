@@ -829,14 +829,16 @@ classdef Chain < replab.Str
                 iDelta = self.iDelta(:, i);
                 mask = iDelta(imgs) == 0;
                 mask = reshape(mask, size(imgs)); % in case imgs is a vector, Matlab may change btw row/column vectors
-                [b_ind S_ind] = find(mask);
+                [b_ind, S_ind] = find(mask);
                 for j = 1:length(b_ind)
                     s = self.S(:, Srange(S_ind(j))); % strong generator
                     b = toTest(b_ind(j)); % orbit element
                     newb = s(b);
                     if self.iDelta(newb, i) == 0
                         % new orbit point discovered, add it
-                        newu = s(self.u(i, b)); % new transversal compose(s, self.u(i, b))
+                        Ui = self.U{i};
+                        ind = self.iDelta(b, i);
+                        newu = s(Ui(:, ind)'); % new transversal compose(s, self.u(i, b))
                         self.insertInOrbit(i, newb, newu);
                     end
                 end
@@ -985,7 +987,7 @@ classdef Chain < replab.Str
             if isempty(order)
                 while c <= nTries
                     g = R.sample;
-                    if self.stripAndAddStrongGenerator(R.sample)
+                    if self.stripAndAddStrongGenerator(g)
                         c = 0;
                     else
                         c = c + 1;

@@ -18,7 +18,7 @@ classdef Parameters
             if nargin == 1
                 RandomizedSchreierSimsTries = newValue;
             elseif isempty(RandomizedSchreierSimsTries)
-                RandomizedSchreierSimsTries = 1000;
+                RandomizedSchreierSimsTries = 100;
             end
             value = RandomizedSchreierSimsTries;
         end
