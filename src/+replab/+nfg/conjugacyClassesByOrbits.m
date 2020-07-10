@@ -18,11 +18,19 @@ function classes = conjugacyClassesByOrbits(group)
     ord = size(I, 2); % group order
     assert(ds < 65536, 'Domain size too big for naive enumeration');
     % we use a simple hash function that maps permutations to doubles
-    % with a domain size < 2^16, that means that if h has values between -1023 and 1023,
-    % the maximal value of the hash is 2^16*(2^16*2^10) = 2^36 which fits in a double
-    h = randi([-1023 1023], 1, ds)-1;
+    % with a domain size < 2^16, that means that if h has values between -2^20+1 and 2^20-1,
+    % the maximal value of the hash is 2^16*(2^16*2^20) = 2^52 which fits in a double
+    h = randi([-2^20+1 2^20-1], 1, ds)-1;
     Ih = h * I;
 
+    % sorts the hash values and the matrix of group elements
+    % so that we can perform a binary search later
+    [~, ind] = sort(Ih);
+    I = I(:, ind);
+    Ih = Ih(:, ind);
+
+    % tests the existence of the binary search built-in
+    has_ismembc2 = exist('ismembc2') > 0;
     nG = group.nGenerators;
     gens = zeros(ds, nG);
     gensInv = zeros(ds, nG);
@@ -45,10 +53,26 @@ function classes = conjugacyClassesByOrbits(group)
                     gen = gens(:,j);
                     genInv = gensInv(:,j);
                     cj = genInv(g(gen)); % faster compose(genInv, g, gen)
-                    f = find(Ih == h*cj);
+                                         % f = ismembc2(h*cj, Ih);
+                    hval = h*cj;
+                    if has_ismembc2
+                        % perform binary search; this function returns the last element
+                        % which matches
+                        last = ismembc2(hval, Ih);
+                        % then we need to find if other elements before match as well
+                        before = last - 1;
+                        while before > 0 && Ih(before) == hval
+                            before = before - 1;
+                        end
+                        f = before+1:last;
+                    else
+                        % fallback on the default find
+                        f = find(Ih == h*cj);
+                    end
+
                     if length(f) > 1
                         % several rows have the same hash, so we look for an exact match
-                        [~, loc] = ismember(cj', I(:,f)', 'rows');
+                        loc = replab.util.findRowInMatrix(cj', I(:,f)');
                         f = f(loc);
                     end
                     if conjcl(f) == 0
