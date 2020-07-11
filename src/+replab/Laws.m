@@ -177,7 +177,7 @@ classdef Laws < replab.Str
 
     methods (Static)
 
-        function inexistent(msg)
+        function out = inexistent(msg)
             errorId = 'replab:inexistent';
             if replab.compat.isOctave
                 error(errorId, msg);
