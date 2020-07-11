@@ -128,17 +128,7 @@ classdef Rep < replab.Obj
 
         %% Computed properties
 
-        function K = kernel(self)
-        % Returns the kernel of the given representation
-        %
-        % Example:
-        %   >>> S3 = replab.S(3);
-        %   >>> K = S3.signRep.kernel;
-        %   >>> K == replab.AlternatingGroup(3)
-        %       1
-        %
-        % Returns:
-        %   `+replab.NiceFiniteGroup`: The group ``K`` such that ``rho.image(k) == id`` for all ``k`` in ``K``
+        function K = computeKernel(self)
             assert(isa(self.group, 'replab.NiceFiniteGroup'));
             % TODO error estimation: take in account the uncertainty on computed images
             C = self.group.conjugacyClasses;
@@ -155,6 +145,20 @@ classdef Rep < replab.Obj
             mask = real(chi) > maxNTChi;
             K = self.group.subgroup(cellfun(@(c) c.representative, C(mask), 'uniform', 0));
             K = self.group.normalClosure(K);
+        end
+
+        function K = kernel(self)
+        % Returns the kernel of the given representation
+        %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> K = S3.signRep.kernel;
+        %   >>> K == replab.AlternatingGroup(3)
+        %       1
+        %
+        % Returns:
+        %   `+replab.NiceFiniteGroup`: The group ``K`` such that ``rho.image(k) == id`` for all ``k`` in ``K``
+            K = self.cached('kernel', @() self.computeKernel);
         end
 
         %% Derived vector spaces/algebras
