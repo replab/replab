@@ -34,7 +34,23 @@ classdef Laws < replab.Str
 %    >>> S10laws.checkSilent
 %        1
 
+    properties
+        skipSlow = false % (logical): Whether to skip slow tests
+    end
+
     methods
+
+        function thisIsSlow(self)
+        % Throws a ``replab:skip`` if `.skipSlow` is true
+            if self.skipSlow
+                self.skip;
+            end
+        end
+
+        function self = skippingSlow(self)
+        % Sets the ``skipSlow`` property to true and returns the Laws instance
+            self.skipSlow = true;
+        end
 
         function assert(self, predicate, context)
         % Assert function with a verbose error message
@@ -176,6 +192,16 @@ classdef Laws < replab.Str
     end
 
     methods (Static)
+
+        function skip
+            errorId = 'replab:skip';
+            msg = 'Skipping slow test';
+            if replab.compat.isOctave
+                error(errorId, msg);
+            else
+                throwAsCaller(MException(errorId, '%s', msg));
+            end
+        end
 
         function out = inexistent(msg)
             errorId = 'replab:inexistent';
