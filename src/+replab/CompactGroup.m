@@ -3,13 +3,6 @@ classdef CompactGroup < replab.Group
 
     methods
 
-        %% Abstract
-
-        function g = sampleUniformly(self)
-        % Deprecated alias
-            g = self.sample;
-        end
-
         %% Group construction
 
         function prd = directProduct(varargin)

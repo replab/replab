@@ -66,11 +66,11 @@ G.order
 
 G.elements
 
-% Now, the representation we need is composed of signed permutation matrices; as we are considering a group of signed permutations, this is the group *natural representation*. Representations in RepLAB are described using the images of the generators. By calling `G.sampleUniformly`, we get random elements from the group, and by calling `rep.image(g)` we get the image of a group element.
+% Now, the representation we need is composed of signed permutation matrices; as we are considering a group of signed permutations, this is the group *natural representation*. Representations in RepLAB are described using the images of the generators. By calling `G.sample`, we get random elements from the group, and by calling `rep.image(g)` we get the image of a group element.
 
 rep = G.naturalRep
 
-g = G.sampleUniformly
+g = G.sample
 full(rep.image(g)) % we use full, as signed permutation representations return sparse matrices
 
 % Now, we decompose the representation into irreducible components. For that, we call `rep.decomposition`. In the answer I(m)xR(d), we express that the component has $m$ copies (multiplicity) of a `R`eal representation of dimension `d`. We then play with the indices of the component, and copy.
