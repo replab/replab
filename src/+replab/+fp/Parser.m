@@ -232,36 +232,6 @@ classdef Parser
             relators = res;
         end
 
-        function [ok, word] = parseWord(self, str, names)
-        % Parses a string representing a word
-        %
-        % Args:
-        %   str (charstring): String to parse
-        %   names (cell(1,\*) of charstring): Generator names
-        %
-        % Returns
-        % -------
-        %   ok:
-        %     logical: Whether the parse was successful
-        %   word:
-        %     integer(1,\*): Letters composing the (reduced) word
-            ok = false;
-            word = [];
-            [res, tokens] = self.lex(str, names);
-            if ~res
-                return
-            end
-            types = self.types;
-            pos = 1;
-            [pos, word] = self.word(tokens, pos);
-            if pos == 0 || tokens(1, pos) ~= types.END
-                word = [];
-                return
-            end
-            word = replab.Word.reduceLetters(word);
-            ok = true;
-        end
-
         function [ok, names, relators] = parsePresentation(self, str)
         % Parses a string representing a group presentation
         %
@@ -311,7 +281,7 @@ classdef Parser
                 end
             end
             % reduce the words
-            relators = cellfun(@(r) replab.Word.reduceLetters(r), relators, 'uniform', 0);
+            relators = cellfun(@(r) replab.fp.reduceLetters(r), relators, 'uniform', 0);
             % remove empty relators
             mask = cellfun(@(r) isempty(relators), relators);
             relators = relators(~mask);
