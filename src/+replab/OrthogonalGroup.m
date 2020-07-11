@@ -37,10 +37,6 @@ classdef OrthogonalGroup < replab.CompactGroup
             b = self.parent.eqv(X, Y);
         end
 
-        function X = sample(self)
-            X = self.sampleUniformly;
-        end
-
         %% Monoid methods
 
         function Z = compose(self, X, Y)
@@ -55,7 +51,7 @@ classdef OrthogonalGroup < replab.CompactGroup
 
         %% CompactGroup methods
 
-        function X = sampleUniformly(self)
+        function X = sample(self)
         % see http://home.lu.lv/~sd20008/papers/essays/Random%20unitary%20[paper].pdf
             X = self.parent.sample;
             [Q, R] = qr(X);

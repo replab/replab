@@ -106,8 +106,8 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             b = isequal(x, y);
         end
 
-        function h = hash(self, x)
-            h = replab.Domain.hashVector(x);
+        function s = sample(self)
+            s = self.chain.sample;
         end
 
         %% Monoid methods

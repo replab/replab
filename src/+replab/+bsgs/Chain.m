@@ -598,7 +598,7 @@ classdef Chain < replab.Str
             end
         end
 
-        function g = sampleUniformly(self)
+        function g = sample(self)
         % Samples an element uniformly from the group
         %
         % Returns:

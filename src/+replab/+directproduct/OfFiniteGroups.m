@@ -63,18 +63,6 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
             values = replab.str.horzcatForce(values1, values2);
         end
 
-        %% Domain methods
-
-        function g = sample(self)
-            g = sample@replab.directproduct.OfCompactGroups(self); % force method selection
-        end
-
-        %% CompactGroup methods
-
-        function g = sampleUniformly(self)
-            g = sampleUniformly@replab.directproduct.OfCompactGroups(self); % force method selection
-        end
-
         %% FiniteGroup methods
 
         function o = order(self)

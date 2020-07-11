@@ -10,7 +10,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.GroupWithGenerators
 % * A decomposition of the finite group in a product of sets
 
     properties (Access = protected)
-        randomBag_ % `.RandomBag`: Bag of elements used for random sampling
         decomposition_ % `.FiniteGroupDecomposition`: Cached decomposition of this group
     end
 
@@ -67,17 +66,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.GroupWithGenerators
 
         %% Own methods
 
-        function R = randomBag(self)
-        % Returns an instance of the product-replacement algorithm data structure
-        %
-        % Returns:
-        %   `.RandomBag`: The created random bag
-            if isempty(self.randomBag_)
-                self.randomBag_ = replab.fg.RandomBag(self, self.generators);
-            end
-            R = self.randomBag_;
-        end
-
         function res = isCommutative(self)
         % Returns whether this group is commutative
             for i = 1:self.nGenerators
@@ -107,18 +95,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.GroupWithGenerators
                 names{1, end+1} = sprintf('generator(%d)', i);
                 values{1, end+1} = self.generator(i);
             end
-        end
-
-        %% Domain methods
-
-        function g = sample(self)
-            g = self.randomBag.sample;
-        end
-
-        %% CompactGroup methods
-
-        function g = sampleUniformly(self)
-            g = self.elements.sample;
         end
 
         %% Representations

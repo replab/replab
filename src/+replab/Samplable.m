@@ -5,16 +5,6 @@ classdef Samplable < replab.Obj
 
     methods % ABSTRACT
 
-        function t = sample(self)
-        % Samples an element from this set
-        %
-        % This method does not make any guarantees about genericity, and is primarily used for law checks.
-        %
-        % Returns:
-        %   set element: Random set element
-            error('Abstract');
-        end
-
     end
 
     methods (Static)
