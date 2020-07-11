@@ -9,12 +9,16 @@ function test_suite = PermutationsTest()
     if ReplabTestParameters.onlyFastTests
         allNs = [10];
     else
-        allNs = [0 1 2 10];
+        allNs = [0 1 2 5 10];
     end
 
     for n = allNs
         G = replab.S(n);
-        test_suite = replab.PermutationGroupLaws(G).addTestCases(test_suite);
+        laws = replab.PermutationGroupLaws(G);
+        if n > 5
+            laws = laws.skippingSlow;
+        end
+        test_suite = laws.addTestCases(test_suite);
     end
     S5 = replab.S(5);
     signRep = S5.signRep;
