@@ -110,6 +110,10 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             h = replab.Domain.hashVector(x);
         end
 
+        function s = sample(self)
+            s = self.chain.sample;
+        end
+
         %% Monoid methods
 
         function z = compose(self, x, y)
