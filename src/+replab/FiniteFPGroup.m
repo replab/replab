@@ -7,7 +7,7 @@ classdef FiniteFPGroup < replab.FPGroup & replab.NiceFiniteGroup
         % Sets the permutation realization of this group
         %
         % Enables to skip the Todd-Coxeter procedure when operating over the group.
-            self.niceGroup_ = replab.PermutationGroup.of(permutations{:});
+            self.cache('niceGroup', replab.PermutationGroup.of(permutations{:}), 'ignore');
             for i = 1:length(self.relators)
                 assert(self.niceGroup.isIdentity(self.niceMonomorphismImage(self.relators{i})));
             end

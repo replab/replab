@@ -90,8 +90,8 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 end
                 self.chain_ = chain;
             end
-            self.niceGroup_ = self;
-            self.niceInverseMonomorphism_ = replab.Morphism.lambda(self, self, @(x) x);
+            self.cache('niceGroup', self);
+            self.cache('niceInverseMonomorphism', replab.Morphism.identity(self));
         end
 
         %% Str methods
