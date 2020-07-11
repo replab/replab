@@ -97,12 +97,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.GroupWithGenerators
             end
         end
 
-        %% Domain methods
-
-        function g = sample(self)
-            error('Abstract');
-        end
-
         %% Representations
 
         function rep = regularRep(self)

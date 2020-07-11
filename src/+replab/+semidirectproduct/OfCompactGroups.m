@@ -69,12 +69,6 @@ classdef OfCompactGroups < replab.CompactGroup
             z = {zh zn};
         end
 
-        %% CompactGroup methods
-
-        function g = sample(self)
-            g = {self.H.sample self.N.sample};
-        end
-
     end
 
 end

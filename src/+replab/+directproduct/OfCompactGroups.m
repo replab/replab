@@ -152,13 +152,6 @@ classdef OfCompactGroups < replab.CompactGroup
             h = replab.Domain.hashVector(hf);
         end
 
-        function g = sample(self)
-            g = cell(1, self.nFactors);
-            for i = 1:self.nFactors
-                g{i} = self.factor(i).sample;
-            end
-        end
-
         %% Monoid methods
 
         function z = compose(self, x, y)
