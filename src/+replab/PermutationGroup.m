@@ -5,17 +5,13 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         domainSize % integer: The integer ``d``, as this group acts on ``{1, ..., d}``
     end
 
-    properties (Access = protected)
-        chain_ % (+replab.+bsgs.Chain): Stabilizer chain describing this permutation group
-    end
-
-    methods (Access = protected)
+    methods % Property computation
 
         function chain = computeChain(self)
             for i = 1:self.nGenerators
                 assert(~self.isIdentity(self.generators{i}), 'Generators cannot contain the identity');
             end
-            chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.order_);
+            chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
             base = chain.base;
             if any(base(2:end) < base(1:end-1))
                 chain = chain.mutableCopy;
@@ -69,7 +65,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             self.identity = 1:domainSize;
             self.generators = generators;
             if nargin > 2 && ~isempty(order)
-                self.order_ = order;
+                self.cache('order', order, '==');
             end
             if nargin < 4
                 parent = [];
@@ -88,16 +84,16 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                     chain.baseChange(1:domainSize, true);
                     chain.makeImmutable;
                 end
-                self.chain_ = chain;
+                self.cache('chain', chain, 'ignore');
             end
-            self.niceGroup_ = self;
-            self.niceInverseMonomorphism_ = replab.Morphism.lambda(self, self, @(x) x);
+            self.cache('niceGroup', self);
+            self.cache('niceInverseMonomorphism', replab.Morphism.identity(self));
         end
 
         %% Str methods
 
         function s = headerStr(self)
-            if ~isempty(self.order_)
+            if isCached('order')
                 s = sprintf('Permutation group acting on %d elements of order %s', self.domainSize, strtrim(num2str(self.order)));
             else
                 s = sprintf('Permutation group acting on %d elements', self.domainSize);
@@ -147,10 +143,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   `+replab.+bsgs.Chain`: Stabilizer chain
-            if isempty(self.chain_)
-                self.chain_ = self.computeChain;
-            end
-            c = self.chain_;
+            c = self.cached('chain', @() self.computeChain);
         end
 
         function res = hasSameParentAs(self, rhs)

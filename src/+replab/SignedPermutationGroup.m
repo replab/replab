@@ -20,7 +20,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
             self.identity = 1:domainSize;
             self.generators = generators;
             if nargin > 2 && ~isempty(order)
-                self.order_ = order;
+                self.cache('order', order, '==');
             end
             if nargin < 4
                 parent = [];

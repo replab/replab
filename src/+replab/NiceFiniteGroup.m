@@ -26,12 +26,6 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         parent % `+replab.NiceFiniteGroup`: Parent nice finite group
     end
 
-
-    properties (Access = protected)
-        niceGroup_ % `+replab.PermutationGroup`: Image of this group through the nice monomorphism
-        niceInverseMonomorphism_ % `+replab.mrp.PermMorphism`: Inverse of the nice monomorphism
-    end
-
     methods
 
         %% Abstract
@@ -92,9 +86,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
     end
 
-    methods (Access = protected)
-
-        %% FiniteGroup methods
+    methods
 
         function order = computeOrder(self)
             order = self.niceGroup.chain.order;
@@ -107,7 +99,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         function g = computeNiceGroup(self)
             imgId = self.niceMonomorphismImage(self.identity);
             n = length(imgId);
-            g = replab.PermutationGroup(n, self.niceGenerators, self.order_);
+            g = replab.PermutationGroup(n, self.niceGenerators, self.cachedOrEmpty('order'));
         end
 
         function E = computeElements(self)
@@ -119,6 +111,42 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         function dec = computeDecomposition(self)
             dec = replab.FiniteGroupDecomposition(self, self.niceInverseMonomorphism.chain.imagesDecomposition);
+        end
+
+        function e = computeExponent(self)
+            eo = cellfun(@(c) self.elementOrder(c.representative), self.conjugacyClasses);
+            eo = unique(eo);
+            e = eo(1);
+            for i = 2:length(eo)
+                e = lcm(e, eo(i));
+            end
+        end
+
+        function c = niceGroup(self)
+        % Returns the image of this group as a permutation group through the nice monomorphismx
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: Permutation group
+            c = self.cached('niceGroup', @() self.computeNiceGroup);
+        end
+
+        function m = niceInverseMonomorphism(self)
+        % Returns the monomorphism from the permutation representation to the original group
+            m = self.cached('niceInverseMonomorphism', @() self.computeNiceInverseMonomorphism);
+        end
+
+    end
+
+    methods % Computed properties
+
+        function e = exponent(self)
+        % Returns the group exponent
+        %
+        % The group exponent is the smallest integer ``e`` such that ``g^e == identity`` for all ``g`` in ``G``.
+        %
+        % Returns:
+        %   vpi: The group exponent
+            e = self.cached('exponent', @() self.computeExponent);
         end
 
     end
@@ -501,41 +529,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             res = true; % all conjugacy classes generate the full group
         end
 
-        function e = exponent(self)
-        % Returns the group exponent
-        %
-        % The group exponent is the smallest integer ``e`` such that ``g^e == identity`` for all ``g`` in ``G``.
-        %
-        % Returns:
-        %   vpi: The group exponent
-            eo = cellfun(@(c) self.elementOrder(c.representative), self.conjugacyClasses);
-            eo = unique(eo);
-            e = eo(1);
-            for i = 2:length(eo)
-                e = lcm(e, eo(i));
-            end
-        end
-
         %% Methods enabled by the BSGS algorithms
-
-        function c = niceGroup(self)
-        % Returns the image of this group as a permutation group through the nice monomorphismx
-        %
-        % Returns:
-        %   `+replab.PermutationGroup`: Permutation group
-            if isempty(self.niceGroup_)
-                self.niceGroup_ = self.computeNiceGroup;
-            end
-            c = self.niceGroup_;
-        end
-
-        function m = niceInverseMonomorphism(self)
-        % Returns the monomorphism from the permutation representation to the original group
-            if isempty(self.niceInverseMonomorphism_)
-                self.niceInverseMonomorphism_ = self.computeNiceInverseMonomorphism;
-            end
-            m = self.niceInverseMonomorphism_;
-        end
 
         function ng = niceGenerators(self)
         % Returns the image of the group generators under the nice monomorphism
