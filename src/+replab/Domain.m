@@ -1,4 +1,4 @@
-classdef Domain < replab.Samplable
+classdef Domain < replab.Obj
 % Describes a set of elements with a common structure
 %
 % At the base of the hierarchy, `~replab.Domain` describes a set of elements
@@ -12,7 +12,19 @@ classdef Domain < replab.Samplable
 
 % Those elements can be compared (`~replab.Domain.eqv`), and random elements can be produced (`~replab.Domain.sample`).
 
-    methods % ABSTRACT
+    methods % Abstract
+
+        function t = sample(self)
+        % Samples an element from this set
+        %
+        % In general, this method does not make guarantees about genericity.
+        %
+        % For `.CompactGroup` however, this method must sample uniformly from the Haar measure.
+        %
+        % Returns:
+        %   set element: Random set element
+            error('Abstract');
+        end
 
         function b = eqv(self, t, u)
         % Tests domain elements for equality/equivalence
@@ -28,7 +40,7 @@ classdef Domain < replab.Samplable
 
     end
 
-    methods (Static)
+    methods (Static) % Domain construction
 
         function domain = lambda(header, eqvFun, sampleFun)
         % Constructs a domain from function handles

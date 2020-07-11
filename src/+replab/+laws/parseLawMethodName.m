@@ -13,7 +13,7 @@ function [lawName sets] = parseLawMethodName(laws, methodName)
 %   lawName:
 %     charstring: The law name, camel case being transformed to space separated words
 %   sets:
-%     cell{1,:} of `+replab.Samplable`: The domains corresponding to the type identifiers
+%     cell{1,:} of `+replab.Domain`: The domains corresponding to the type identifiers
     parts = strsplit(methodName, '_', 'CollapseDelimiters', 0);
     % we need at least the 'law' prefix, a 1-word law name, and a possibly empty type identifier string
     assert(length(parts) >= 3);
