@@ -4,7 +4,7 @@ function D = signedIntAsDouble(rangeMin, rangeMax)
     rangeMin = double(rangeMin);
     rangeMax = double(rangeMax);
     if rangeMax < rangeMin
-        sampleFun = @() replab.domain.inexistent('Cannot sample from empty range');
+        sampleFun = @() replab.Laws.inexistent('Cannot sample from empty range');
     else
         sampleFun = @() randi([rangeMin rangeMax])*(randi([0 1])*2-1);
     end

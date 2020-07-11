@@ -177,6 +177,16 @@ classdef Laws < replab.Str
 
     methods (Static)
 
+        function inexistent(msg)
+            errorId = 'replab:inexistent';
+            if replab.compat.isOctave
+                error(errorId, msg);
+            else
+                throwAsCaller(MException(errorId, '%s', msg));
+            end
+            out = [];
+        end
+
         function value = nRuns(newValue)
         % Sets/gets the default number of runs
         %

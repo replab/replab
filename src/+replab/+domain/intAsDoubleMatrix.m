@@ -2,7 +2,7 @@ function D = intAsDoubleMatrix(nRows, nCols, rangeMin, rangeMax)
     rangeMin = double(rangeMin);
     rangeMax = double(rangeMax);
     if rangeMax < rangeMin
-        sampleFun = @() replab.domain.inexistent('Cannot sample from empty range');
+        sampleFun = @() replab.Laws.inexistent('Cannot sample from empty range');
     else
         sampleFun = @() randi([rangeMin rangeMax], nRows, nCols);
     end
