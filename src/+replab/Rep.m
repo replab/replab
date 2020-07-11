@@ -41,7 +41,6 @@ classdef Rep < replab.Obj
         unitarize_ % (`+replab.SimilarRep`): Cached unitary similar representation
         commutant_ % (`+replab.Equivariant`): Cached commutant space
         hermitianInvariant_ % (`+replab.Equivariant`): Cached Hermitian invariant space
-        decomposition_ % (`+replab.Irreducible`): Cached irreducible decomposition
         trivialSpace_ % (`+replab.Equivariant`): Cached trivial space
     end
 
@@ -230,6 +229,17 @@ classdef Rep < replab.Obj
 
         %% Irreducible decomposition
 
+        function dec = computeDecomposition(self)
+            dec = replab.irreducible.decomposition(self);
+            if dec.nComponents == 1 && dec.components{1}.multiplicity == 1
+                assert(~isequal(self.isIrreducible, false));
+                self.isIrreducible = true;
+                if isequal(dec.basis, eye(self.dimension))
+                    replab.rep.copyProperties(dec, self);
+                end
+            end
+        end
+
         function I = decomposition(self)
         % Returns the irreducible decomposition of this representation
         %
@@ -240,18 +250,7 @@ classdef Rep < replab.Obj
         %
         % Raises:
         %   An error is this representation is not unitary.
-            if isempty(self.decomposition_)
-                dec = replab.irreducible.decomposition(self);
-                if dec.nComponents == 1 && dec.components{1}.multiplicity == 1
-                    assert(~isequal(self.isIrreducible, false));
-                    self.isIrreducible = true;
-                    if isequal(dec.basis, eye(self.dimension))
-                        replab.rep.copyProperties(dec, self);
-                    end
-                end
-                self.decomposition_ = dec;
-            end
-            I = self.decomposition_;
+            I = self.cached('decomposition');
         end
 
         %% Str methods

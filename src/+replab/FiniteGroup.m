@@ -11,7 +11,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.GroupWithGenerators
 
     properties (Access = protected)
         randomBag_ % `.RandomBag`: Bag of elements used for random sampling
-        elements_ % `.IndexedFamily`: Cached indexed family of group elements
         decomposition_ % `.FiniteGroupDecomposition`: Cached decomposition of this group
     end
 
@@ -51,10 +50,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.GroupWithGenerators
         %
         % Returns:
         %   `.IndexedFamily`: A space-efficient enumeration of the group elements
-            if isempty(self.elements_)
-                self.elements_ = self.computeElements;
-            end
-            E = self.elements_;
+            E = self.cached('elements');
         end
 
         function D = decomposition(self)
@@ -62,10 +58,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.GroupWithGenerators
         %
         % Returns:
         %   `.FiniteGroupDecomposition`: The group decomposition
-            if isempty(self.decomposition_)
-                self.decomposition_ = self.computeDecomposition;
-            end
-            D = self.decomposition_;
+            D = self.cached('decomposition');
         end
 
     end
