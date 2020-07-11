@@ -9,26 +9,26 @@ function runNTimes(nRuns, laws, methodName, sets)
     nArgs = length(sets);
     for i = 1:nRuns
         skipRun = false;
-        args = cell(1, nArgs);
-        for j = 1:nArgs
-            s = sets{j};
-            try
-                % We catch "inexistent" errors during generation
-                % and skip the test in that case
+        try
+            args = cell(1, nArgs);
+            for j = 1:nArgs
+                s = sets{j};
                 args{j} = s.sample;
-            catch
-                err = lasterror;
-                if ~isequal(err.identifier, 'replab:inexistent')
-                    rethrow(err);
-                else
-                    skipRun = true;
-                    fprintf('?');
-                end
             end
-        end
-        if ~skipRun
             % Run the test
             laws.(methodName)(args{:});
+        catch
+            err = lasterror;
+            switch err.identifier
+              case 'replab:inexistent'
+                fprintf('?');
+                return
+              case 'replab:skip'
+                fprintf('skipping slow test');
+                return
+              otherwise
+                    rethrow(err);
+            end
         end
     end
 end

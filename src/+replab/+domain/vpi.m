@@ -1,6 +1,6 @@
 function D = vpi(rangeMin, rangeMax)
     if rangeMax < rangeMin
-        sampleFun = @() replab.domain.inexistent('Cannot sample from empty range');
+        sampleFun = @() replab.Laws.inexistent('Cannot sample from empty range');
     elseif rangeMin == rangeMax
         sampleFun = @() rangeMin;
     else

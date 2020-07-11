@@ -1,25 +1,23 @@
 classdef FiniteGroupLaws < replab.GroupLaws
 % Law checks for finite groups: the operations below are pretty expensive
-    properties (SetAccess = protected)
-        I % Index of generator
-    end
 
     methods
 
         function self = FiniteGroupLaws(T)
             self@replab.GroupLaws(T);
-            self.I = replab.domain.intAsDouble(1, T.nGenerators);
         end
 
     end
 
     methods
 
-        function law_generatorInverse_I(self, i)
+        function law_generatorInverse_(self)
         % Checks generator inverses
-            t = self.T.inverse(self.T.generator(i));
-            t1 = self.T.generatorInverse(i);
-            self.T.assertEqv(t, t1);
+            for i = 1:self.T.nGenerators
+                t = self.T.inverse(self.T.generator(i));
+                t1 = self.T.generatorInverse(i);
+                self.T.assertEqv(t, t1);
+            end
         end
 
         function law_isTrivial_(self)
