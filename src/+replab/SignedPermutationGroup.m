@@ -41,10 +41,6 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
             b = isequal(x, y);
         end
 
-        function h = hash(self, x)
-            h = replab.Domain.hashVector(x + self.domainSize);
-        end
-
         %% Monoid methods
 
         function z = compose(self, x, y)
