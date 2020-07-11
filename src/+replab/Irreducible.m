@@ -106,11 +106,8 @@ classdef Irreducible < replab.SubRep
             rho = blkdiag(blocks{:});
         end
 
-        function c = commutant(self)
-            if isempty(self.commutant_)
-                self.commutant_ = replab.IrreducibleCommutant(self);
-            end
-            c = self.commutant_;
+        function c = computeCommutant(self)
+            c = replab.IrreducibleCommutant(self);
         end
 
         %% SubRep methods

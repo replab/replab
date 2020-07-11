@@ -25,24 +25,21 @@ classdef HarmonizedIsotypic < replab.Isotypic
             rho = kron(eye(self.nIrreps), rho);
         end
 
-        function c = commutant(self)
-            if isempty(self.commutant_)
-                if self.overC
-                    self.commutant_ = replab.IsotypicSimpleCommutant(self);
-                else
-                    switch self.irrep(1).frobeniusSchurIndicator
-                      case 1
-                        self.commutant_ = replab.IsotypicSimpleCommutant(self);
-                      case 0
-                        self.commutant_ = replab.IsotypicComplexCommutant(self);
-                      case -2
-                        self.commutant_ = replab.IsotypicQuaternionCommutant(self);
-                      otherwise
-                        error('Unknown indicator');
-                    end
+        function c = computeCommutant(self)
+            if self.overC
+                c = replab.IsotypicSimpleCommutant(self);
+            else
+                switch self.irrep(1).frobeniusSchurIndicator
+                  case 1
+                    c = replab.IsotypicSimpleCommutant(self);
+                  case 0
+                    c = replab.IsotypicComplexCommutant(self);
+                  case -2
+                    c = replab.IsotypicQuaternionCommutant(self);
+                  otherwise
+                    error('Unknown indicator');
                 end
             end
-            c = self.commutant_;
         end
 
         %% Isotypic methods

@@ -37,13 +37,6 @@ classdef Rep < replab.Obj
         dimension % (integer): Representation dimension
     end
 
-    properties (Access = protected)
-        unitarize_ % (`+replab.SimilarRep`): Cached unitary similar representation
-        commutant_ % (`+replab.Equivariant`): Cached commutant space
-        hermitianInvariant_ % (`+replab.Equivariant`): Cached Hermitian invariant space
-        trivialSpace_ % (`+replab.Equivariant`): Cached trivial space
-    end
-
     methods % Abstract methods
 
         function rho = image_internal(self, g)
@@ -182,6 +175,10 @@ classdef Rep < replab.Obj
             e = replab.Equivariant.make(self, repR, '');
         end
 
+        function c = computeCommutant(self)
+            c = replab.Equivariant.make(self, self, 'commutant');
+        end
+
         function c = commutant(self)
         % Returns the commutant of this representation
         %
@@ -194,10 +191,11 @@ classdef Rep < replab.Obj
         %
         % Returns:
         %   `+replab.Equivariant`: The commutant algebra represented as an equivariant space
-            if isempty(self.commutant_)
-                self.commutant_ = replab.Equivariant.make(self, self, 'commutant');
-            end
-            c = self.commutant_;
+            c = self.cached('commutant', @() self.computeCommutant);
+        end
+
+        function h = computeHermitianInvariant(self)
+            h = replab.Equivariant.make(self.dual.conj, self, 'hermitian');
         end
 
         function h = hermitianInvariant(self)
@@ -210,21 +208,19 @@ classdef Rep < replab.Obj
         %
         % Returns:
         %   `+replab.Equivariant`: The space of Hermitian invariant matrices
-            if isempty(self.hermitianInvariant_)
-                self.hermitianInvariant_ = replab.Equivariant.make(self.dual.conj, self, 'hermitian');
-            end
-            h = self.hermitianInvariant_;
+            h = self.cached('hermitianInvariant', @() self.computeHermitianInvariant);
+        end
+
+        function t = computeTrivialSpace(self)
+            tRep = self.group.trivialRep(self.field, self.dimension);
+            t = replab.Equivariant.make(tRep, self, 'trivial');
         end
 
         function t = trivialSpace(self)
         % Returns an equivariant space from a trivial representation to this representation
         %
         % The trivial representation has the same dimension as this representation
-            if isempty(self.trivialSpace_)
-                repC = self.group.trivialRep(self.field, self.dimension);
-                self.trivialSpace_ = replab.Equivariant.make(repC, self, 'trivial');
-            end
-            t = self.trivialSpace_;
+            t = self.cached('trivialSpace', @() self.computeTrivialSpace);
         end
 
         %% Irreducible decomposition
@@ -470,6 +466,16 @@ classdef Rep < replab.Obj
 
         %% Manipulation of representation space
 
+        function res = computeUnitarize(self)
+            if isequal(self.isUnitary, true)
+                res = replab.SimilarRep.identical(self);
+            else
+                [A Ainv] = self.unitaryChangeOfBasis;
+                res = self.similarRep(A, Ainv);
+                res.isUnitary = true;
+            end
+        end
+
         function res = unitarize(self)
         % Returns a unitary representation equivalent to this representation
         %
@@ -494,16 +500,7 @@ classdef Rep < replab.Obj
         %
         % Returns:
         %   `+replab.SimilarRep`: Unitary similar representation
-            if isempty(self.unitarize_)
-                if isequal(self.isUnitary, true)
-                    self.unitarize_ = replab.SimilarRep.identical(self);
-                else
-                    [A Ainv] = self.unitaryChangeOfBasis;
-                    self.unitarize_ = self.similarRep(A, Ainv);
-                    self.unitarize_.isUnitary = true;
-                end
-            end
-            res = self.unitarize_;
+            res = self.cached('unitarize', @() self.computeUnitarize);
         end
 
         function [sub1 sub2] = maschke(self, basis1, embedding1)
