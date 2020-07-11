@@ -92,9 +92,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
     end
 
-    methods (Access = protected)
-
-        %% FiniteGroup methods
+    methods
 
         function order = computeOrder(self)
             order = self.niceGroup.chain.order;
@@ -107,7 +105,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         function g = computeNiceGroup(self)
             imgId = self.niceMonomorphismImage(self.identity);
             n = length(imgId);
-            g = replab.PermutationGroup(n, self.niceGenerators, self.order_);
+            g = replab.PermutationGroup(n, self.niceGenerators, self.cachedOrEmpty('order'));
         end
 
         function E = computeElements(self)

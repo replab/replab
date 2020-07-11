@@ -33,7 +33,7 @@ classdef TrivialGroup < replab.FiniteGroup
 
     end
 
-    methods (Access = protected)
+    methods
 
         function o = computeOrder(self)
             o = vpi(1);

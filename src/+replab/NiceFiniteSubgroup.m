@@ -14,7 +14,7 @@ classdef NiceFiniteSubgroup < replab.NiceFiniteGroup
             self.identity = parent.identity;
             % own stuff
             if nargin > 2 && ~isempty(order)
-                self.order_ = order;
+                self.cache('order', order, '==');
             end
             for i = 1:length(generators)
                 assert(~parent.isIdentity(generators{i}), 'Generator cannot be identity');
