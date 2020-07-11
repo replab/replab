@@ -9,10 +9,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.GroupWithGenerators
 %
 % * A decomposition of the finite group in a product of sets
 
-    properties (Access = protected)
-        decomposition_ % `.FiniteGroupDecomposition`: Cached decomposition of this group
-    end
-
     methods % Abstract
 
         function o = computeOrder(self)
