@@ -8,7 +8,9 @@ classdef Samplable < replab.Obj
         function t = sample(self)
         % Samples an element from this set
         %
-        % This method does not make any guarantees about genericity, and is primarily used for law checks.
+        % In general, this method does not make guarantees about genericity.
+        %
+        % For `.CompactGroup` however, this method must sample uniformly from the Haar measure.
         %
         % Returns:
         %   set element: Random set element

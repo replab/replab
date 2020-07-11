@@ -1,8 +1,8 @@
 classdef OfNiceFiniteGroups < replab.NiceFiniteGroup & replab.semidirectproduct.OfFiniteGroups
 % Describes an external semidirect product of nice finite groups
-    
+
     methods
-        
+
         function self = OfNiceFiniteGroups(phi)
             self = self@replab.semidirectproduct.OfFiniteGroups(phi);
             self.parent = self;
@@ -32,8 +32,8 @@ classdef OfNiceFiniteGroups < replab.NiceFiniteGroup & replab.semidirectproduct.
 
         %% CompactGroup methods
 
-        function g = sampleUniformly(self)
-            g = sampleUniformly@replab.semidirectproduct.OfCompactGroups(self); % force method selection
+        function g = sample(self)
+            g = sample@replab.semidirectproduct.OfCompactGroups(self); % force method selection
         end
 
         %% NiceFiniteGroup methods

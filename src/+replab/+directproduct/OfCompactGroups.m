@@ -179,10 +179,10 @@ classdef OfCompactGroups < replab.CompactGroup
 
         %% CompactGroup methods
 
-        function g = sampleUniformly(self)
+        function g = sample(self)
             g = cell(1, self.nFactors);
             for i = 1:self.nFactors
-                g{i} = self.factor(i).sampleUniformly;
+                g{i} = self.factor(i).sample;
             end
         end
 

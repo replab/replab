@@ -127,7 +127,7 @@ classdef ChainWithImages < replab.Str
             end
         end
 
-        function [g v] = sampleUniformly(self)
+        function [g v] = sample(self)
         % Samples an element uniformly from the group along with its image
         %
         % Returns

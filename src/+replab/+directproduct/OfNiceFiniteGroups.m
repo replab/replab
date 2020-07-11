@@ -39,8 +39,8 @@ classdef OfNiceFiniteGroups < replab.NiceFiniteGroup & replab.directproduct.OfFi
 
         %% CompactGroup methods
 
-        function g = sampleUniformly(self)
-            g = sampleUniformly@replab.directproduct.OfCompactGroups(self);
+        function g = sample(self)
+            g = sample@replab.directproduct.OfCompactGroups(self);
             % force method selection
         end
 

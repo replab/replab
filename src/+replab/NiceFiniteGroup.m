@@ -555,8 +555,8 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         %% CompactGroup methods
 
-        function g = sampleUniformly(self)
-            [~, g] = self.niceInverseMonomorphism.chain.sampleUniformly;
+        function g = sample(self)
+            [~, g] = self.niceInverseMonomorphism.chain.sample;
         end
 
         function b = contains(self, g)

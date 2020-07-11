@@ -117,12 +117,6 @@ classdef GHZBase < replab.CompactGroup
             xInv = self.canonical(2*pi - x);
         end
 
-        %% CompactGroup methods
-
-        function g = sampleUniformly(self)
-            g = self.sample;
-        end
-
     end
 
 end
