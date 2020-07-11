@@ -250,7 +250,7 @@ classdef Rep < replab.Obj
         %
         % Raises:
         %   An error is this representation is not unitary.
-            I = self.cached('decomposition');
+            I = self.cached('decomposition', @() self.computeDecomposition);
         end
 
         %% Str methods

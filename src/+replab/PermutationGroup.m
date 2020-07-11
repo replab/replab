@@ -5,11 +5,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         domainSize % integer: The integer ``d``, as this group acts on ``{1, ..., d}``
     end
 
-    properties (Access = protected)
-        chain_ % (+replab.+bsgs.Chain): Stabilizer chain describing this permutation group
-    end
-
-    methods
+    methods % Property computation
 
         function chain = computeChain(self)
             for i = 1:self.nGenerators
@@ -88,7 +84,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                     chain.baseChange(1:domainSize, true);
                     chain.makeImmutable;
                 end
-                self.chain_ = chain;
+                self.cache('chain', chain, 'ignore');
             end
             self.cache('niceGroup', self);
             self.cache('niceInverseMonomorphism', replab.Morphism.identity(self));
@@ -147,10 +143,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   `+replab.+bsgs.Chain`: Stabilizer chain
-            if isempty(self.chain_)
-                self.chain_ = self.computeChain;
-            end
-            c = self.chain_;
+            c = self.cached('chain', @() self.computeChain);
         end
 
         function res = hasSameParentAs(self, rhs)

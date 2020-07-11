@@ -40,7 +40,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.GroupWithGenerators
         %
         % Returns:
         %   vpi: The group order
-            o = self.cached('order');
+            o = self.cached('order', @() self.computeOrder);
         end
 
         function E = elements(self)
@@ -50,7 +50,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.GroupWithGenerators
         %
         % Returns:
         %   `.IndexedFamily`: A space-efficient enumeration of the group elements
-            E = self.cached('elements');
+            E = self.cached('elements', @() self.computeElements);
         end
 
         function D = decomposition(self)
@@ -58,7 +58,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.GroupWithGenerators
         %
         % Returns:
         %   `.FiniteGroupDecomposition`: The group decomposition
-            D = self.cached('decomposition');
+            D = self.cached('decomposition', @() self.computeDecomposition);
         end
 
     end

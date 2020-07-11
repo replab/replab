@@ -91,16 +91,15 @@ classdef Obj < replab.Str
             end
         end
 
-        function res = cached(self, name)
+        function res = cached(self, name, fun)
         % Returns the cached property if it exists, computing it if necessary
         %
-        % If the property name is ``thing``, then the object must provide a method named
-        % ``computeThing``. That method will be called of the property has not been computed
-        % before. If the property has been computed before, it will return its value from the
-        % cache.
+        % If the property is not known, it will call the given function handle and
+        % cache the result.
         %
         % Args:
         %   name (charstring): Name of the property
+        %   fun (function_handle): Function that computes the property
         %
         % Returns:
         %   The property value
@@ -110,8 +109,7 @@ classdef Obj < replab.Str
             if isfield(self.cache_, name)
                 res = self.cache_.(name);
             else
-                methodName = ['compute' upper(name(1)) name(2:end)];
-                res = self.(methodName);
+                res = fun();
                 self.cache_.(name) = res;
             end
         end

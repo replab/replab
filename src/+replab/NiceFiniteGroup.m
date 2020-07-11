@@ -127,12 +127,12 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   `+replab.PermutationGroup`: Permutation group
-            c = self.cached('niceGroup');
+            c = self.cached('niceGroup', @() self.computeNiceGroup);
         end
 
         function m = niceInverseMonomorphism(self)
         % Returns the monomorphism from the permutation representation to the original group
-            m = self.cached('niceInverseMonomorphism');
+            m = self.cached('niceInverseMonomorphism', @() self.computeNiceInverseMonomorphism);
         end
 
     end
@@ -146,7 +146,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   vpi: The group exponent
-            e = self.cached('exponent');
+            e = self.cached('exponent', @() self.computeExponent);
         end
 
     end
