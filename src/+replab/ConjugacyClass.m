@@ -1,12 +1,13 @@
 classdef ConjugacyClass < replab.Str
 
     properties (SetAccess = protected)
-        group % (`+replab.NiceFiniteGroup`): Group containing this conjugacy class
+        group % (`+replab.FiniteGroup`): Group containing this conjugacy class
         representative % (group element): Representative element of the conjugacy class
         size % (integer): Size of the conjugacy class
     end
 
     properties (Access = protected)
+        morphism % (`.FiniteMorphism`): Morphism that maps permutations back to elements of the original group
         elementImages % (double(\*,\*)): Matrix containing images of the conjugacy class elements
                       %
                       %                  Each column is a permutation representing the image
@@ -16,9 +17,10 @@ classdef ConjugacyClass < replab.Str
 
     methods (Access = protected)
 
-        function self = ConjugacyClass(group, elementImages)
+        function self = ConjugacyClass(group, morphism, elementImages)
             self.group = group;
-            self.representative = group.niceMonomorphismPreimage(elementImages(:,1)');
+            self.representative = morphism.image(elementImages(:,1)');
+            self.morphism = morphism;
             self.elementImages = elementImages;
             self.size = size(self.elementImages, 2);
         end
@@ -28,7 +30,7 @@ classdef ConjugacyClass < replab.Str
     methods
 
         function e = elements(self)
-            e = arrayfun(@(i) self.group.niceMonomorphismPreimage(self.elementImages(:,i)'), 1:self.size, 'uniform', 0);
+            e = arrayfun(@(i) self.morphism.image(self.elementImages(:,i)'), 1:self.size, 'uniform', 0);
         end
 
     end

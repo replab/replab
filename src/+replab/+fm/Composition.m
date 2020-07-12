@@ -1,8 +1,8 @@
-classdef CompositionMorphism < replab.Morphism
+classdef Composition < replab.FiniteMorphism
 
     properties (SetAccess = protected)
-        first % (`+replab.Morphism`): First morphism
-        second % (`+replab.Morphism`): Second morphism
+        first % (`+replab.FiniteMorphism`): First morphism
+        second % (`+replab.FiniteMorphism`): Second morphism
     end
 
     methods

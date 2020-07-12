@@ -9,6 +9,18 @@ classdef Standard < replab.Atlas
 %   >>> S5.recognize.entry.name
 %       'Symmetric group S(5) of degree 5'
 
+    methods (Static)
+
+        function A = instance
+            persistent A_
+            if isempty(A_)
+                A_ = replab.atlas.Standard;
+            end
+            A = A_;
+        end
+
+    end
+
     methods
 
         function self = Standard

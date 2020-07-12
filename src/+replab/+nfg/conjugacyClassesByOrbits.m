@@ -1,14 +1,12 @@
 function classes = conjugacyClassesByOrbits(group)
 % Generates the conjugacy classes of a group
 %
-% Note that it returns the results through the group nice monomorphism
-%
 % Based on the orbit computation algorithm from:
 % Butler, Gregory. "Orbits and Schreier Vectors." FUNDAMENTAL ALGORITHMS FOR PERMUTATION GROUPS,
 % by Gregory Butler, Springer-Verlag, 1991, pp. 57-59.
 %
 % Args:
-%   group (`+replab.NiceFiniteGroup`): Nice finite group to compute the conjugacy classes of
+%   group (`+replab.PermutationGroup`): Permutation group to compute the conjugacy classes of
 %
 % Returns:
 %   classImages (cell(1,\*) of double(\*,\*) arrays): All conjugacy classes, as matrices
@@ -35,8 +33,8 @@ function classes = conjugacyClassesByOrbits(group)
     gens = zeros(ds, nG);
     gensInv = zeros(ds, nG);
     for i = 1:nG
-        gens(:,i) = group.niceMonomorphismImage(group.generator(i));
-        gensInv(:,i) = group.niceMonomorphismImage(group.generatorInverse(i));
+        gens(:,i) = group.generator(i);
+        gensInv(:,i) = group.generatorInverse(i);
     end
 
     conjcl = zeros(1, ord);

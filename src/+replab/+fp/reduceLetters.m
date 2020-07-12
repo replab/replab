@@ -12,7 +12,7 @@ function x = reduceLetters(x)
         x = zeros(1, 0);
         return
     end
-    i = find(x(1:end-1) == -x(2:end));
+    i = find(x(1:end-1) == -x(2:end), 1);
     if ~isempty(i)
         while i < length(x)
             if x(i) == -x(i+1)

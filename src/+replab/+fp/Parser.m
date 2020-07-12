@@ -232,7 +232,7 @@ classdef Parser
             relators = res;
         end
 
-        function [ok, names, relators] = parsePresentation(self, str)
+        function [ok, names, relatorLetters] = parsePresentation(self, str)
         % Parses a string representing a group presentation
         %
         % Args:
@@ -245,7 +245,7 @@ classdef Parser
         %   names:
         %     cell(1,\*) of charstring: Names of the generators
         %   relators:
-        %     cell(1,\*) of integer(1,\*): Relators given as vector of letters composing a (reduced) word
+        %     cell(1,\*) of integer(1,\*): Relators given as the letters composing words
             ok = false;
             names = [];
             types = self.types;
@@ -280,11 +280,6 @@ classdef Parser
                     return
                 end
             end
-            % reduce the words
-            relators = cellfun(@(r) replab.fp.reduceLetters(r), relators, 'uniform', 0);
-            % remove empty relators
-            mask = cellfun(@(r) isempty(relators), relators);
-            relators = relators(~mask);
             ok = true;
         end
 

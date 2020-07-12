@@ -1,55 +1,11 @@
-classdef PermutationGroup < replab.NiceFiniteGroup
+classdef PermutationGroup < replab.FiniteGroup
 % A base class for all permutation groups
 
     properties (SetAccess = protected)
         domainSize % integer: The integer ``d``, as this group acts on ``{1, ..., d}``
     end
 
-    methods % Property computation
-
-        function chain = computeChain(self)
-            for i = 1:self.nGenerators
-                assert(~self.isIdentity(self.generators{i}), 'Generators cannot contain the identity');
-            end
-            chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
-            base = chain.base;
-            if any(base(2:end) < base(1:end-1))
-                chain = chain.mutableCopy;
-                chain.baseChange(1:self.domainSize, true);
-                chain.makeImmutable;
-            end
-        end
-
-        function dec = computeDecomposition(self)
-            c = self.chain;
-            k = c.length;
-            T = cell(1, k);
-            for i = 1:k
-                Ui = c.U{i};
-                m = size(Ui, 2);
-                Ti = cell(1, m);
-                for j = 1:m
-                    Ti{j} = Ui(:,j)';
-                end
-                T{i} = Ti;
-            end
-            dec = replab.FiniteGroupDecomposition(self, T);
-        end
-
-    end
-
-    methods (Static)
-
-        function pg = fromChain(chain, parent)
-            if nargin < 2
-                parent = [];
-            end
-            pg = replab.PermutationGroup(chain.n, chain.strongGenerators, chain.order, parent, chain);
-        end
-
-    end
-
-    methods
+    methods % Constructor
 
         function self = PermutationGroup(domainSize, generators, order, parent, chain)
         % Constructs a permutation group
@@ -86,11 +42,50 @@ classdef PermutationGroup < replab.NiceFiniteGroup
                 end
                 self.cache('chain', chain, 'ignore');
             end
-            self.cache('niceGroup', self);
-            self.cache('niceInverseMonomorphism', replab.Morphism.identity(self));
         end
 
-        %% Str methods
+    end
+
+    methods (Static)
+
+        function pg = fromChain(chain, parent)
+            if nargin < 2
+                parent = [];
+            end
+            pg = replab.PermutationGroup(chain.n, chain.strongGenerators, chain.order, parent, chain);
+        end
+
+    end
+
+
+    methods % Group internal description
+
+        function c = chain(self)
+        % Returns the stabilizer chain corresponding to this permutation group
+        %
+        % Returns:
+        %   `+replab.+bsgs.Chain`: Stabilizer chain
+            c = self.cached('chain', @() self.computeChain);
+        end
+
+        function chain = computeChain(self)
+            for i = 1:self.nGenerators
+                assert(~self.isIdentity(self.generators{i}), 'Generators cannot contain the identity');
+            end
+            chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
+            base = chain.base;
+            if any(base(2:end) < base(1:end-1))
+                chain = chain.mutableCopy;
+                chain.baseChange(1:self.domainSize, true);
+                chain.makeImmutable;
+            end
+        end
+
+    end
+
+    methods % Implementations
+
+        % replab.Str
 
         function s = headerStr(self)
             if isCached('order')
@@ -100,7 +95,7 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             end
         end
 
-        %% Domain methods
+        % replab.Domain
 
         function b = eqv(self, x, y)
             b = isequal(x, y);
@@ -110,13 +105,13 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             s = self.chain.sample;
         end
 
-        %% Monoid methods
+        % replab.Monoid
 
         function z = compose(self, x, y)
             z = x(y);
         end
 
-        %% Group methods
+        % replab.Group
 
         function y = inverse(self, x)
             n = length(x);
@@ -135,45 +130,36 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             z(x) = x(y);
         end
 
+        % Group properties
 
-        %% NiceFiniteGroup methods
-
-        function c = chain(self)
-        % Returns the stabilizer chain corresponding to this permutation group
-        %
-        % Returns:
-        %   `+replab.+bsgs.Chain`: Stabilizer chain
-            c = self.cached('chain', @() self.computeChain);
+        function o = computeOrder(self)
+            o = self.chain.order;
         end
 
-        function res = hasSameParentAs(self, rhs)
-            res = isa(rhs, 'replab.PermutationGroup') && (self.parent.domainSize == rhs.parent.domainSize);
+        function E = computeElements(self)
+            basis = replab.util.MixedRadix(self.chain.orbitSizes, true, true);
+            atFun = @(ind) self.chain.elementFromIndices(basis.sub2ind(ind));
+            findFun = @(el) basis.ind2sub(self.chain.indicesFromElement(el));
+            E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
         end
 
-        function p = niceMonomorphismImage(self, p)
-            p = p;
-        end
-
-        function grp = subgroup(self, generators, order)
-        % Constructs a permutation subgroup from its generators
-        %
-        % Args:
-        %   generators (row cell array): List of generators given as a permutations in a row cell array
-        %   order (vpi, optional): Argument specifying the group order, if given can speed up computations
-        %
-        % Returns:
-        %   +replab.PermutationGroup: The constructed permutation subgroup
-            if nargin < 3
-                order = [];
+        function dec = computeDecomposition(self)
+            c = self.chain;
+            k = c.length;
+            T = cell(1, k);
+            for i = 1:k
+                Ui = c.U{i};
+                m = size(Ui, 2);
+                Ti = cell(1, m);
+                for j = 1:m
+                    Ti{j} = Ui(:,j)';
+                end
+                T{i} = Ti;
             end
-            grp = replab.PermutationGroup(self.domainSize, generators, order, self.parent);
+            dec = replab.FiniteGroupDecomposition(self, T);
         end
 
-        function o = elementOrder(self, p)
-            o = replab.Permutation.order(p);
-        end
-
-        function res = isCyclic(self)
+        function res = computeIsCyclic(self)
             if self.nGenerators <= 1
                 res = true;
             elseif ~self.isCommutative
@@ -199,21 +185,41 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             end
         end
 
-        function res = closureGroup(self, G)
-            c = self.chain.mutableCopy;
-            for i = 1:G.nGenerators
-                if c.stripAndAddStrongGenerator(G.generator(i))
-                    c.randomizedSchreierSims([]);
-                end
-            end
-            c.makeImmutable;
-            res = replab.PermutationGroup.fromChain(c, self.parent);
+% $$$         function C = computeConjugacyClasses(self)
+% $$$             classes = replab.nfg.conjugacyClassesByOrbits(self);
+% $$$             C = cellfun(@(c) replab.ConjugacyClass(self,
+
+        % Group elements
+
+        function b = contains(self, g)
+        % Tests whether this group contains the given parent group element
+        %
+        % Args:
+        %   g (element of `parent`): Element to test membership of
+        %
+        % Returns:
+        %   logical: True if this group contains ``g`` and false otherwise
+            b = self.chain.contains(g);
         end
 
-        function res = closureElement(self, g)
+        function o = elementOrder(self, p)
+            o = replab.Permutation.order(p);
+        end
+
+        % Construction of a subgroup of the parent group
+
+        function res = closure(self, rhs)
             c = self.chain.mutableCopy;
-            if c.stripAndAddStrongGenerator(g)
-                c.randomizedSchreierSims([]);
+            if isa(rhs, 'replab.PermutationGroup')
+                for i = 1:rhs.nGenerators
+                    if c.stripAndAddStrongGenerator(rhs.generator(i))
+                        c.randomizedSchreierSims([]);
+                    end
+                end
+            else
+                if c.stripAndAddStrongGenerator(rhs)
+                    c.randomizedSchreierSims([]);
+                end
             end
             c.makeImmutable;
             res = replab.PermutationGroup.fromChain(c, self.parent);
@@ -239,7 +245,24 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             nc = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
         end
 
-        function sub = derivedSubgroup(self)
+        % Subgroups
+
+        function grp = subgroupWithGenerators(self, generators, order)
+        % Constructs a permutation subgroup from its generators
+        %
+        % Args:
+        %   generators (cell array): List of generators given as a permutations in a row cell array
+        %   order (vpi or ``[]``, optional): Argument specifying the group order, if given speeds up computations
+        %
+        % Returns:
+        %   +replab.PermutationGroup: The constructed permutation subgroup
+            if nargin < 3
+                order = [];
+            end
+            grp = replab.PermutationGroup(self.domainSize, generators, order, self.parent);
+        end
+
+        function sub = computeDerivedSubgroup(self)
             nG = self.nGenerators;
             n = self.domainSize;
             chain = replab.bsgs.Chain(n);
@@ -273,16 +296,12 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             sub = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
         end
 
-        function c = leftCosetsOf(self, subgroup)
-            c = replab.PermutationGroupLeftCosets(self, subgroup);
-        end
-
-        function c = rightCosetsOf(self, subgroup)
-            c = replab.PermutationGroupRightCosets(self, subgroup);
-        end
-
-        function c = centre(self)
-            c = self.centralizerGroup(self);
+        function c = centralizer(self, other)
+            if ~isa(other, 'replab.PermutationGroup')
+                other = self.subgroup({other});
+            end
+            c = replab.bsgs.Centralizer(self, other).subgroup;
+            c = self.centralizerGroup(self.subgroup({other}));
         end
 
         function res = intersection(self, other)
@@ -295,13 +314,23 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             res = replab.PermutationGroup.fromChain(s.subgroup, self.parent);
         end
 
-        function c = centralizerElement(self, other)
-            c = self.centralizerGroup(self.subgroup({other}));
+        % Relations to other groups
+
+        function res = hasSameParentAs(self, rhs)
+            res = isa(rhs, 'replab.PermutationGroup') && (self.parent.domainSize == rhs.parent.domainSize);
         end
 
-        function c = centralizerGroup(self, other)
-            c = replab.bsgs.Centralizer(self, other).subgroup;
-        end
+
+
+
+
+% $$$         function c = leftCosetsOf(self, subgroup)
+% $$$             c = replab.PermutationGroupLeftCosets(self, subgroup);
+% $$$         end
+% $$$
+% $$$         function c = rightCosetsOf(self, subgroup)
+% $$$             c = replab.PermutationGroupRightCosets(self, subgroup);
+% $$$         end
 
     end
 
@@ -515,197 +544,218 @@ classdef PermutationGroup < replab.NiceFiniteGroup
             sub = replab.PermutationGroup.fromChain(self.chain.stabilizer(p), self.parent);
         end
 
-        function w = wreathProduct(self, A)
-        % Returns the wreath product of a compact group by this permutation group
-        %
-        % See https://en.wikipedia.org/wiki/Wreath_product
-        %
-        % Note that our notation is reversed compared to the Wikipedia page,
-        % the permutation group is on the left hand side, as our convention
-        % for semidirect product places the group acted upon on the right.
-        %
-        % Note that the return type depends on the argument type:
-        % if ``A`` is a `.FiniteGroup`, the result will be a finite group too,
-        % and if ``A`` is a `.NiceFiniteGroup`, the result will be of that type.
-        %
-        % Args:
-        %   A (`.CompactGroup`): The group whose copies are acted upon
-        %
-        % Returns:
-        %   `+replab.+wreathproduct.Common`: A wreath product group
-            w = replab.wreathproduct.of(self, A);
-        end
-
+% $$$         function w = wreathProduct(self, A)
+% $$$         % Returns the wreath product of a compact group by this permutation group
+% $$$         %
+% $$$         % See https://en.wikipedia.org/wiki/Wreath_product
+% $$$         %
+% $$$         % Note that our notation is reversed compared to the Wikipedia page,
+% $$$         % the permutation group is on the left hand side, as our convention
+% $$$         % for semidirect product places the group acted upon on the right.
+% $$$         %
+% $$$         % Note that the return type depends on the argument type:
+% $$$         % if ``A`` is a `.FiniteGroup`, the result will be a finite group too,
+% $$$         % and if ``A`` is a `.NiceFiniteGroup`, the result will be of that type.
+% $$$         %
+% $$$         % Args:
+% $$$         %   A (`.CompactGroup`): The group whose copies are acted upon
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `+replab.+wreathproduct.Common`: A wreath product group
+% $$$             w = replab.wreathproduct.of(self, A);
+% $$$         end
+% $$$
     end
 
-    methods % Actions
-
-        function A = naturalAction(self)
-        % Returns the natural action of elements of this group on its domain
-        %
-        % This group natural domain is the set of integers ``{1..domainSize}``
-        %
-        % Returns:
-        %   replab.Action: The natural action
-            A = replab.perm.PermutationNaturalAction(self);
-        end
-
-        function A = vectorAction(self)
-        % Returns the action of permutations on column vectors
-        %
-        % Acts on vectors of size `domainSize` by permuting their coefficients
-        %
-        % Returns:
-        %   replab.Action: The vector action
-            A = replab.perm.PermutationVectorAction(self);
-        end
-
-        function A = matrixAction(self)
-        % Returns the simultaneous action of permutations on both rows and columns of square matrices
-        %
-        % Acts on matrices of size ``self.domainSize x self.domainSize``
-        %
-        % Returns:
-        %   replab.Action: The matrix action
-            A = replab.perm.PermutationMatrixAction(self);
-        end
-
-        function perm = indexRelabelingPermutation(self, g, indexRange)
-        % Returns the permutation that acts by permuting tensor coefficients
-        %
-        % Let I = (i1, ..., id) be a sequence of indices, where d = self.domainSize
-        % and 1 <= i1,...,id <= indexRange
-        %
-        % We enumerate elements of I by first incrementing id, then i_(d-1), etc...
-        %
-        % We compute the permutation of domain size ``indexRange^domainSize`` that acts on the
-        % indices of I according to the argument ``g``.
-        %
-        % Args:
-        %   g (permutation): Permutation of subindices
-        %   indexRange (integer): Dimension of each subindex
-        %
-        % Returns:
-        %   permutation: The permutation on the enumeration of indices
-            n = self.domainSize;
-            dims = indexRange * ones(1, n);
-            perm = permute(reshape(1:prod(dims), dims), fliplr(n +  1 - g));
-            perm = perm(:)';
-        end
-
-        function phi = indexRelabelingMorphism(self, indexRange)
-        % Returns the morphism the permutation action of this group on tensor coefficients
-        %
-        % The tensor coefficients correspond to R^ir x R^ir ... (domainSize times)
-        % where ir = indexRange
-        %
-        % See also:
-        %   `+replab.PermutationGroup.indexRelabelingPermutation`
-        %
-        % Args:
-        %   indexRange (integer): Dimension of each subindex
-        %
-        % Returns:
-        %   function_handle: The permutation group homomorphism
-            phi = @(g) self.indexRelabelingPermutation(g, indexRange);
-        end
-
-    end
-
-    methods % Representations
-
-        function rho = indexRelabelingRep(self, indexRange)
-        % Representation that permutes the indices of a tensor
-        %
-        % It acts on the tensor space R^ir x R^ir ... (domainSize times)
-        % where ir = indexRange, by permuting the indices.
-        %
-        % The representation returned is real.
-        %
-        % See also:
-        %   `+replab.PermutationGroup.indexRelabelingPermutation`
-        %
-        % Args:
-        %   indexRange (integer): Dimension of the tensor components/range of the subindices
-        %
-        % Returns:
-        %   replab.Rep: The desired permutation representation
-            rho = replab.rep.IndexRelabelingRep(self, indexRange);
-        end
-
-        function rho = naturalRep(self)
-        % Returns the natural permutation representation of this permutation group
-        %
-        % Returns:
-        %   replab.Rep: The (real) natural permutation representation
-            rho = self.permutationRep(self.domainSize, self.generators);
-        end
-
-        function rho = standardRep(self)
-        % Returns the standard representation of this permutation group
-        %
-        % It is an abuse of terminology as the "standard representation" is
-        % the faithful $n-1$ dimensional representation of the symmetric group
-        % acting on $n$ elements; but we can reuse that subrepresentation on
-        % subgroups of the symmetric group.
-        %
-        % It corresponds to the representation orthogonal to the
-        % trivial representation with basis ``[1, 1, ..., 1]'/sqrt(d)``
-        %
-        % Returns:
-        %   `+replab.Rep`: The (real) standard representation
-            [B_internal E_internal] = replab.sym.sageSpechtStandardBasis(self.domainSize);
-            rho = self.naturalRep.subRep(B_internal, E_internal);
-        end
-
-        function rho = signRep(self)
-        % Returns the sign representation of this permutation
-            rho = replab.RepByImages.fromImageFunction(self, 'R', 1, @(g) replab.Permutation.sign(g));
-        end
-
-    end
-
-    methods(Static)
-
-        function G = trivial(n)
-        % Constructs the trivial permutation group acting on ``n`` points
-        %
-        % Example:
-        %   >>> G = replab.PermutationGroup.trivial(4);
-        %   >>> G.order
-        %     1
-        %
-        % Args:
-        %   n (integer): Domain size
-        %
-        % Returns:
-        %   `+replab.PermutationGroup`: Trivial group
-            Sn = replab.S(n);
-            G = Sn.subgroup({});
-        end
-
-        function G = of(varargin)
-        % Constructs a nontrivial permutation group from the given generators
-        %
-        % If you do not know the number of generators in advance, and would like to handle the
-        % case of a trivial group, use ``Sn = replab.S(n); Sn.subgroup(generators)`` instead.
-        %
-        % Example:
-        %   >>> G = replab.PermutationGroup.of([2 3 4 1], [4 3 2 1]);
-        %   >>> G.order
-        %     8
-        %
-        % Args:
-        %   varargin (cell(1,\*) of permutation): Group generators
-        %
-        % Returns:
-        %   `+replab.PermutationGroup`: The permutation group given as the closure of the generators
-            assert(nargin > 0, 'Must be called with at least one generator');
-            n = length(varargin{1});
-            Sn = replab.S(n);
-            G = Sn.subgroup(varargin);
-        end
-
-    end
+% $$$     methods % Actions
+% $$$
+% $$$         function A = naturalAction(self)
+% $$$         % Returns the natural action of elements of this group on its domain
+% $$$         %
+% $$$         % This group natural domain is the set of integers ``{1..domainSize}``
+% $$$         %
+% $$$         % Returns:
+% $$$         %   replab.Action: The natural action
+% $$$             A = replab.perm.PermutationNaturalAction(self);
+% $$$         end
+% $$$
+% $$$         function A = vectorAction(self)
+% $$$         % Returns the action of permutations on column vectors
+% $$$         %
+% $$$         % Acts on vectors of size `domainSize` by permuting their coefficients
+% $$$         %
+% $$$         % Returns:
+% $$$         %   replab.Action: The vector action
+% $$$             A = replab.perm.PermutationVectorAction(self);
+% $$$         end
+% $$$
+% $$$         function A = matrixAction(self)
+% $$$         % Returns the simultaneous action of permutations on both rows and columns of square matrices
+% $$$         %
+% $$$         % Acts on matrices of size ``self.domainSize x self.domainSize``
+% $$$         %
+% $$$         % Returns:
+% $$$         %   replab.Action: The matrix action
+% $$$             A = replab.perm.PermutationMatrixAction(self);
+% $$$         end
+% $$$
+% $$$         function perm = indexRelabelingPermutation(self, g, indexRange)
+% $$$         % Returns the permutation that acts by permuting tensor coefficients
+% $$$         %
+% $$$         % Let I = (i1, ..., id) be a sequence of indices, where d = self.domainSize
+% $$$         % and 1 <= i1,...,id <= indexRange
+% $$$         %
+% $$$         % We enumerate elements of I by first incrementing id, then i_(d-1), etc...
+% $$$         %
+% $$$         % We compute the permutation of domain size ``indexRange^domainSize`` that acts on the
+% $$$         % indices of I according to the argument ``g``.
+% $$$         %
+% $$$         % Args:
+% $$$         %   g (permutation): Permutation of subindices
+% $$$         %   indexRange (integer): Dimension of each subindex
+% $$$         %
+% $$$         % Returns:
+% $$$         %   permutation: The permutation on the enumeration of indices
+% $$$             n = self.domainSize;
+% $$$             dims = indexRange * ones(1, n);
+% $$$             perm = permute(reshape(1:prod(dims), dims), fliplr(n +  1 - g));
+% $$$             perm = perm(:)';
+% $$$         end
+% $$$
+% $$$         function phi = indexRelabelingMorphism(self, indexRange)
+% $$$         % Returns the morphism the permutation action of this group on tensor coefficients
+% $$$         %
+% $$$         % The tensor coefficients correspond to R^ir x R^ir ... (domainSize times)
+% $$$         % where ir = indexRange
+% $$$         %
+% $$$         % See also:
+% $$$         %   `+replab.PermutationGroup.indexRelabelingPermutation`
+% $$$         %
+% $$$         % Args:
+% $$$         %   indexRange (integer): Dimension of each subindex
+% $$$         %
+% $$$         % Returns:
+% $$$         %   function_handle: The permutation group homomorphism
+% $$$             phi = @(g) self.indexRelabelingPermutation(g, indexRange);
+% $$$         end
+% $$$
+% $$$     end
+% $$$
+% $$$     methods % Implementations
+% $$$
+% $$$         function rep = regularRep(self)
+% $$$             o = self.order;
+% $$$             assert(o < 1e6);
+% $$$             o = double(o);
+% $$$             perms = cell(1, self.nGenerators);
+% $$$             E = self.elements;
+% $$$             for i = 1:self.nGenerators
+% $$$                 g = self.generator(i);
+% $$$                 img = zeros(1, o);
+% $$$                 for j = 1:o
+% $$$                     img(j) = double(E.find(self.compose(g, E.at(j))));
+% $$$                 end
+% $$$                 perms{i} = img;
+% $$$             end
+% $$$             rep = self.permutationRep(o, perms);
+% $$$         end
+% $$$
+% $$$     end
+% $$$
+% $$$     methods % Representations
+% $$$
+% $$$         function rho = indexRelabelingRep(self, indexRange)
+% $$$         % Representation that permutes the indices of a tensor
+% $$$         %
+% $$$         % It acts on the tensor space R^ir x R^ir ... (domainSize times)
+% $$$         % where ir = indexRange, by permuting the indices.
+% $$$         %
+% $$$         % The representation returned is real.
+% $$$         %
+% $$$         % See also:
+% $$$         %   `+replab.PermutationGroup.indexRelabelingPermutation`
+% $$$         %
+% $$$         % Args:
+% $$$         %   indexRange (integer): Dimension of the tensor components/range of the subindices
+% $$$         %
+% $$$         % Returns:
+% $$$         %   replab.Rep: The desired permutation representation
+% $$$             rho = replab.rep.IndexRelabelingRep(self, indexRange);
+% $$$         end
+% $$$
+% $$$         function rho = naturalRep(self)
+% $$$         % Returns the natural permutation representation of this permutation group
+% $$$         %
+% $$$         % Returns:
+% $$$         %   replab.Rep: The (real) natural permutation representation
+% $$$             rho = self.permutationRep(self.domainSize, self.generators);
+% $$$         end
+% $$$
+% $$$         function rho = standardRep(self)
+% $$$         % Returns the standard representation of this permutation group
+% $$$         %
+% $$$         % It is an abuse of terminology as the "standard representation" is
+% $$$         % the faithful $n-1$ dimensional representation of the symmetric group
+% $$$         % acting on $n$ elements; but we can reuse that subrepresentation on
+% $$$         % subgroups of the symmetric group.
+% $$$         %
+% $$$         % It corresponds to the representation orthogonal to the
+% $$$         % trivial representation with basis ``[1, 1, ..., 1]'/sqrt(d)``
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `+replab.Rep`: The (real) standard representation
+% $$$             [B_internal E_internal] = replab.sym.sageSpechtStandardBasis(self.domainSize);
+% $$$             rho = self.naturalRep.subRep(B_internal, E_internal);
+% $$$         end
+% $$$
+% $$$         function rho = signRep(self)
+% $$$         % Returns the sign representation of this permutation
+% $$$             rho = replab.RepByImages.fromImageFunction(self, 'R', 1, @(g) replab.Permutation.sign(g));
+% $$$         end
+% $$$
+% $$$     end
+% $$$
+% $$$     methods(Static)
+% $$$
+% $$$         function G = trivial(n)
+% $$$         % Constructs the trivial permutation group acting on ``n`` points
+% $$$         %
+% $$$         % Example:
+% $$$         %   >>> G = replab.PermutationGroup.trivial(4);
+% $$$         %   >>> G.order
+% $$$         %     1
+% $$$         %
+% $$$         % Args:
+% $$$         %   n (integer): Domain size
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `+replab.PermutationGroup`: Trivial group
+% $$$             Sn = replab.S(n);
+% $$$             G = Sn.subgroup({});
+% $$$         end
+% $$$
+% $$$         function G = of(varargin)
+% $$$         % Constructs a nontrivial permutation group from the given generators
+% $$$         %
+% $$$         % If you do not know the number of generators in advance, and would like to handle the
+% $$$         % case of a trivial group, use ``Sn = replab.S(n); Sn.subgroup(generators)`` instead.
+% $$$         %
+% $$$         % Example:
+% $$$         %   >>> G = replab.PermutationGroup.of([2 3 4 1], [4 3 2 1]);
+% $$$         %   >>> G.order
+% $$$         %     8
+% $$$         %
+% $$$         % Args:
+% $$$         %   varargin (cell(1,\*) of permutation): Group generators
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `+replab.PermutationGroup`: The permutation group given as the closure of the generators
+% $$$             assert(nargin > 0, 'Must be called with at least one generator');
+% $$$             n = length(varargin{1});
+% $$$             Sn = replab.S(n);
+% $$$             G = Sn.subgroup(varargin);
+% $$$         end
+% $$$
+% $$$     end
 
 end

@@ -575,26 +575,8 @@ classdef Chain < replab.Str
         %   vpi: Size of the group stored in the chain
             if self.length == 0
                 o = vpi(1);
-                return
-            end
-            if exist('java.math.BigInteger')
-                o = java.math.BigInteger.valueOf(self.orbitSize(1));
-                for i = 2:self.length
-                    o = o.multiply(java.math.BigInteger.valueOf(self.orbitSize(i)));
-                end
-                o = vpi(char(o.toString));
             else
-                o = self.orbitSize(1);
-                i = 2;
-                while i <= self.length && log2(o) + log2(self.orbitSize(i)) < 53
-                    o = o * self.orbitSize(i);
-                    i = i + 1;
-                end
-                o = vpi(o);
-                while i <= self.length
-                    o = o * vpi(self.orbitSize(i));
-                    i = i + 1;
-                end
+                o = replab.util.multiplyIntegers(self.orbitSizes);
             end
         end
 

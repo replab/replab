@@ -7,7 +7,7 @@ classdef SymmetricGroup < replab.PermutationGroup
 %      ans =
 %      120
 
-    methods % Implementations of abstract methods
+    methods
 
         function self = SymmetricGroup(domainSize)
         % Constructs the symmetric over a given domain size
@@ -25,19 +25,23 @@ classdef SymmetricGroup < replab.PermutationGroup
             self = self@replab.PermutationGroup(domainSize, generators, o, 'self');
         end
 
-        %% Str methods
+    end
+
+    methods % Implementations
+
+        % replab.Str
 
         function s = headerStr(self)
             s = sprintf('Symmetric group acting on %d elements', self.domainSize);
         end
 
-        %% Domain methods
+        % replab.Domain
 
         function s = sample(self)
             s = randperm(self.domainSize); % overriden for efficiency
         end
 
-        %% FiniteGroup methods
+        % replab.FiniteGroup
 
         function b = contains(self, g)
             assert(length(g) == self.domainSize, 'Permutation in wrong domain');

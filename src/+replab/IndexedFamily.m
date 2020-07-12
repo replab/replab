@@ -10,7 +10,7 @@ classdef IndexedFamily < replab.Domain
         size % vpi: Number of elements contained in this enumerator
     end
 
-    methods % Abstract
+    methods
 
         function obj = at(self, ind)
         % Retrieves a element by position
@@ -39,6 +39,40 @@ classdef IndexedFamily < replab.Domain
         % Returns:
         %   vpi: 1-based index of the given element
             error('Abstract');
+        end
+
+        function C = toCell(self)
+        % Returns a row cell array containing all elements of this family
+        %
+        % Returns:
+        %   row cell array of elements: A cell array ``C`` such that C{i} = self.at(i)
+        %
+        % Raises:
+        %   An error if the enumerator is too big and the elements cannot fit in a cell array.
+            if self.size == 0
+                C = cell(1, 0);
+            else
+                n = self.size;
+                msg = 'Indexed family of size %s too big to enumerate in a matrix';
+                assert(n < intmax('int32'), msg, num2str(self.size));
+                n = double(n);
+                C = cell(1, n);
+                for i = 1:n
+                    C{i} = self.at(i);
+                end
+            end
+        end
+
+        function I = imap(self, isomorphism)
+        % Maps the elements of this indexed family through an isomorphism
+        %
+        % Assumes that the elements of this `.IndexedFamily` come from a finite group.
+        %
+        % Args:
+        %   isomorphism (`+replab.FiniteIsomorphism`): Isomorphism from the finite group in this IndexedFamily
+            atFun = @(ind) self.isomorphism.image(self.at(ind));
+            findFun = @(el) self.find(self.isomorphism.preimage(el));
+            I = replab.IndexedFamily.lambda(self.size, atFun, findFun);
         end
 
     end
@@ -98,32 +132,6 @@ classdef IndexedFamily < replab.Domain
 
         function obj = sample(self)
             obj = self.at(randint(self.size)); % use randint as it is the method equivalent to randi on @vpi
-        end
-
-    end
-
-    methods
-
-        function C = toCell(self)
-        % Returns a row cell array containing all elements of this family
-        %
-        % Returns:
-        %   row cell array of elements: A cell array ``C`` such that C{i} = self.at(i)
-        %
-        % Raises:
-        %   An error if the enumerator is too big and the elements cannot fit in a cell array.
-            if self.size == 0
-                C = cell(1, 0);
-            else
-                n = self.size;
-                msg = 'Indexed family of size %s too big to enumerate in a matrix';
-                assert(n < intmax('int32'), msg, num2str(self.size));
-                n = double(n);
-                C = cell(1, n);
-                for i = 1:n
-                    C{i} = self.at(i);
-                end
-            end
         end
 
     end

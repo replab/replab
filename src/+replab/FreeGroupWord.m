@@ -19,6 +19,7 @@ classdef FreeGroupWord < replab.Str
     methods (Access = protected) % Protected constructor
 
         function self = FreeGroupWord(group, reducedLetters)
+            assert(isequal(reducedLetters, replab.fp.reduceLetters(reducedLetters)));
             self.group = group;
             self.reducedLetters = reducedLetters;
         end
@@ -28,8 +29,24 @@ classdef FreeGroupWord < replab.Str
     methods (Static) % Word construction
 
         function word = parse(group, string)
+        % Constructs a word from a string
+        %
+        % Example:
+        %   >>> [F x y] = replab.FreeGroup.of('x', 'y');
+        %   >>> replab.FreeGroupWord.parse(F, 'x (x y)^2 / x')
+        %       x^2 y x y x^-1
+        %
+        % Args:
+        %   group (`.FreeGroup`): Free group in which to parse this word
+        %   str (charstring): String describing a word
+        %
+        % Returns:
+        %   `.FreeGroupWord`: The parsed word
+        %
+        % Raises:
+        %   An error if the string is malformed
             P = replab.fp.Parser;
-            [res, tokens] = P.lex(arg, self.names);
+            [res, tokens] = P.lex(string, group.generatorNames);
             assert(res, 'Unknown tokens in string');
             pos = 1;
             [pos, letters] = P.word(tokens, pos);
@@ -39,10 +56,38 @@ classdef FreeGroupWord < replab.Str
         end
 
         function word = make(group, letters)
-            word = replab.FreeGroupWord(group, replab.fp.reduceLetters(letters));
+        % Constructs a word from a sequence of letters
+        %
+        % The constructed word is reduced.
+        %
+        % Example:
+        %   >>> [F x y] = replab.FreeGroup.of('x', 'y');
+        %   >>> replab.FreeGroupWord.make(F, [1 2 -2 1])
+        %       x^2
+        %
+        % Args:
+        %   group (`.FreeGroup`): Free group in which to parse this word
+        %   letters (integer(1,\*)): Sequence of letters with indices in ``{-r,...,-1,1,...,r}`` where ``r`` is `.rank`
+        %
+        % Returns:
+        %   `.FreeGroupWord`: The reduced word
+            rl = replab.fp.reduceLetters(letters);
+            word = replab.FreeGroupWord(group, rl);
         end
 
         function word = empty(group)
+        % Constructs the empty word, i.e. the identity
+        %
+        % Example:
+        %   >>> [F x y] = replab.FreeGroup.of('x', 'y');
+        %   >>> replab.FreeGroupWord.empty(F).length
+        %       0
+        %
+        % Args:
+        %   group (`.FreeGroup`): Free group in which to parse this word
+        %
+        % Returns:
+        %   `.FreeGroupWord`: The empty word
             assert(isa(group, 'replab.FreeGroup'));
             word = replab.FreeGroupWord(group, zeros(1, 0));
         end
@@ -83,7 +128,7 @@ classdef FreeGroupWord < replab.Str
             if isempty(rhs.reducedLetters) % TODO: remove
                 assert(isequal(rhs.reducedLetters, zeros(1, 0)));
             end
-            l = (self.group.groupId ~= rhs.group.groupId) && isequal(self.reducedLetters, rhs.reducedLetters);
+            l = (self.group.id == rhs.group.id) && isequal(self.reducedLetters, rhs.reducedLetters);
         end
 
         function z = mtimes(self, rhs)
@@ -125,15 +170,23 @@ classdef FreeGroupWord < replab.Str
 
     methods % FreeGroupWord methods
 
+        function l = isEmpty(self)
+        % Returns whether this word is the empty word
+        %
+        % Returns:
+        %   logical: True if this word is empty
+            l = isempty(self.reducedLetters);
+        end
+
         function l = length(self)
         % Number of letters composing this word
         %
         % Returns:
         %   integer: Number of letters in this word
-            l = length(self.letters);
+            l = length(self.reducedLetters);
         end
 
-        function s = word2str(self)
+        function s = toString(self)
         % Returns a string representation of this word
         %
         % That string can be parsed back by `.FPGroup.parse`.
@@ -141,7 +194,7 @@ classdef FreeGroupWord < replab.Str
         % Example:
         %   >>> [F x y] = replab.FreeGroup.of('x', 'y');
         %   >>> w = x*y/x;
-        %   >>> s = w.word2str;
+        %   >>> s = w.toString;
         %   >>> w1 = F.word(s);
         %   >>> w == w1
         %       1
@@ -156,7 +209,7 @@ classdef FreeGroupWord < replab.Str
             sep = '';
             i = 1;
             word = self.reducedLetters;
-            names = self.group.names;
+            names = self.group.generatorNames;
             while i <= length(word)
                 e = sign(word(i)); % exponent
                 l = abs(word(i));
@@ -177,15 +230,15 @@ classdef FreeGroupWord < replab.Str
         end
 
         function s = headerStr(self)
-            s = self.word2str;
+            s = self.toString;
         end
 
         function s = shortStr(self, maxColumns)
-            s = self.word2str;
+            s = self.toString;
         end
 
         function s = longStr(self, maxRows, maxColumns)
-            s = {self.word2str};
+            s = {self.toString};
         end
 
         function g = computeImage(self, target, generatorImages)
