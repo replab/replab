@@ -113,7 +113,7 @@ classdef Standard < replab.Atlas
             end
             fpGroup = F / relators;
             fpGroup.setPermutationImages(prmGroup.generators);
-            outer = {replab.Morphism.identity(prmGroup)};
+            outer = {replab.FiniteMorphism.identity(prmGroup)};
             if n == 6
                 imgS = [6 1 5 4 3 2];
                 imgT = [2 1 4 3 6 5];

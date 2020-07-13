@@ -45,7 +45,7 @@ classdef FreeGroup < replab.Group
         % Creates a free group with the given generator names
         %
         % Example:
-        %   >>> [F, x, a] = replab.FreeGroup.of({'x', 'a'});
+        %   >>> [F, x, a] = replab.FreeGroup.of('x', 'a');
         %   >>> x * x
         %       x^2
         %
