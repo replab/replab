@@ -16,6 +16,6 @@ function test_centralizer_order
     for i = 1:length(C)
         g = C{i}.representative;
         ctr = G.centralizer(C{i}.representative);
-        assert(C{i}.size * ctr.order == G.order);
+        assert(C{i}.cardinality * ctr.order == G.order);
     end
 end

@@ -16,7 +16,7 @@ function test_backtrack
     s = G.sample;
     w = [];
     w(s) = v;
-    g = G.findPermutationTo(v, w);
+    g = G.findPermutationsTo(v, w).representative;
     assert(~isempty(g));
     assert(isequal(v(g), w));
 end
