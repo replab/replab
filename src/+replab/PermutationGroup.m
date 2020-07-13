@@ -175,12 +175,30 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function C = computeConjugacyClasses(self)
-            classes = replab.nfg.conjugacyClassesByOrbits(self);
-            n = length(classes);
-            C = cell(1, n);
-            for i = 1:n
-                cl = sortrows(classes{i}');
-                C{i} = replab.ConjugacyClass(self, cl(1,:));
+            if self.order < 5000
+                classes = replab.nfg.conjugacyClassesByOrbits(self);
+                n = length(classes);
+                C = cell(1, n);
+        for i = 1:n
+                    cl = sortrows(classes{i}');
+                    C{i} = replab.ConjugacyClass(self, cl(1,:));
+                end
+            else
+                C = {replab.ConjugacyClass(self, self.identity)};
+                remains = self.order - 1;
+                tries = 0;
+                while remains > 0
+                    tries = tries + 1;
+                    remains
+                    g = self.sample;
+                    if any(cellfun(@(c) ~c.contains(g), C))
+                        tries
+                        tries = 0;
+                        cl = replab.ConjugacyClass(self, g);
+                        C{1,end+1} = cl;
+                        remains = remains - cl.cardinality;
+                    end
+                end
             end
         end
 
@@ -359,7 +377,7 @@ classdef PermutationGroup < replab.FiniteGroup
                 sCentralizer = self.centralizer(s);
             end
             if nargin < 5 || isempty(tCentralizer)
-                tCentralizer = self.centralizer(t);
+                tCentralizer = [];
             end
             % Implementation note
             % t = b s b^-1
@@ -367,11 +385,42 @@ classdef PermutationGroup < replab.FiniteGroup
             % tc^-1 t tc = b sc s sc^-1 b^-1
             % t = tc b sc s sc^-1 b^-1 tc^-1
             % thus b -> tc b sc
-            leftSubgroup = tCentralizer.chain;
+            if isempty(tCentralizer)
+                leftSubgroup = [];
+            else
+                leftSubgroup = tCentralizer.chain;
+            end
             rightSubgroup = sCentralizer.chain;
             prop = @(b) all(self.compose(b, s) == self.compose(t, b));
-            % TODO: proper backtracking tests
-            b = replab.bsgs.backtrackSearch(self.chain, prop, [], [], leftSubgroup, rightSubgroup);
+
+            orbits = sCentralizer.orbits.blocks;
+            % remove singletons
+            orbits = orbits(cellfun(@(o) length(o) > 1, orbits));
+            [~, I] = sort(-cellfun(@length, orbits));
+            orbits = orbits(I); % largest orbits first
+
+            % now we have the blocks of size > 1
+            base = [orbits{:}];
+            L = length(base);
+            chain = self.chain.mutableCopy;
+            chain.baseChange(base);
+            chain.makeImmutable;
+
+            l = 1;
+            tests = cell(1, L);
+            for i = 1:length(orbits)
+                orbit = orbits{i}; % don't forget the image under s
+                % first element of an orbit stores the current element tested
+                tests{l} = @(g, data) deal(true, g);
+                l = l + 1;
+                for j = 2:length(orbit)
+                    b = orbit(j);
+                    assert(b == base(l));
+                    tests{l} = @(g, g0) deal(g0(b) == g(b), g0);
+                    l = l + 1;
+                end
+            end
+            b = replab.bsgs.backtrackSearch(self.chain, prop, tests, [], leftSubgroup, rightSubgroup);
             % note that we have
             % sCentralizer == tCentralizer.leftConjugateGroup(self.inverse(b))
             % tCentralizer == sCentralizer.leftConjugateGroup(b)

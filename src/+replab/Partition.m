@@ -255,7 +255,7 @@ classdef Partition < replab.Str
         % Returns the partition of the domain ``1...N`` into orbits
         %
         % Args:
-        %   permutations (integer(nG, d)): Permutations given as rows in a matrixx
+        %   permutations (integer(nG, d)): Permutations given as rows in a matrix
             d = size(permutations, 2);
             nG = size(permutations, 1);
             blockIndex = zeros(1, d);

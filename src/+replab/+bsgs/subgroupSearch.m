@@ -59,7 +59,7 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
     if nargin < 5
         initSubgroup = replab.bsgs.Chain(degree);
     end
-    if nargin < 4
+    if nargin < 4 || isempty(tests)
         tests = {};
         startData = [];
     end
