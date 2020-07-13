@@ -1,13 +1,10 @@
-classdef FiniteGroup < replab.CompactGroup
+classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % Describes a group with a finite number of elements
 %
-% Each finite group has a parent object, that describes the most general group embedding
-% elements of a particular type. For example, permutations of domain size ``n`` are embedded in the
-% symmetric group of degree ``n``.
+% Each finite group has a type, that describes the most general group embedding its elements. For example, permutations of domain size ``n`` are embedded in the symmetric group of degree ``n``.
 
     properties (SetAccess = protected)
-        parent % (`.FiniteGroup`): Parent group satisfying ``parent.parent = parent``
-        generators % (cell(1,\*) of `.parent` elements): Group generators
+        generators % (cell(1,\*) of `.type` elements): Group generators
     end
 
     methods % Implementations
@@ -17,7 +14,7 @@ classdef FiniteGroup < replab.CompactGroup
         end
 
         function res = eq(self, rhs)
-            res = self.hasSameParentAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
+            res = self.hasSameTypeAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
         end
 
         % Str
@@ -25,6 +22,7 @@ classdef FiniteGroup < replab.CompactGroup
         function names = hiddenFields(self)
             names = hiddenFields@replab.Group(self);
             names{1, end+1} = 'generators';
+            names{1, end+1} = 'representative';
         end
 
         function [names values] = additionalFields(self)
@@ -39,6 +37,10 @@ classdef FiniteGroup < replab.CompactGroup
 
     methods % Group properties
 
+        function s = size(self)
+            s = self.order;
+        end
+
         function o = order(self)
         % Returns the group order
         %
@@ -49,21 +51,6 @@ classdef FiniteGroup < replab.CompactGroup
 
         function o = computeOrder(self)
         % See `.order`
-            error('Abstract');
-        end
-
-        function E = elements(self)
-        % Returns an indexed family of the group elements
-        %
-        % The order of elements in the family is not guaranteed due to the use of nondeterministic algorithms.
-        %
-        % Returns:
-        %   `.IndexedFamily`: A space-efficient enumeration of the group elements
-            E = self.cached('elements', @() self.computeElements);
-        end
-
-        function E = computeElements(self)
-        % See `.elements`
             error('Abstract');
         end
 
@@ -215,10 +202,10 @@ classdef FiniteGroup < replab.CompactGroup
         end
 
         function b = contains(self, g)
-        % Tests whether this group contains the given parent group element
+        % Tests whether this group contains the given element
         %
         % Args:
-        %   g (element of `parent`): Element to test membership of
+        %   g (element of `.type`): Element to test membership of
         %
         % Returns:
         %   logical: True if this group contains ``g`` and false otherwise
@@ -238,7 +225,7 @@ classdef FiniteGroup < replab.CompactGroup
 
     end
 
-    methods % Construction of a subgroup of the parent group
+    methods % Construction of groups
 
         function conj = leftConjugateGroup(self, by)
         % Returns the left conjugate of the current group by the given element
@@ -246,15 +233,15 @@ classdef FiniteGroup < replab.CompactGroup
         % ``res = self.leftConjugateGroup(by)``
         %
         % In particular, it ensures that
-        % ``res.generator(i) = self.parent.leftConjugate(by, self.generator(i))``
+        % ``res.generator(i) = self.type.leftConjugate(by, self.generator(i))``
         %
         % Args:
-        %   by (element of `parent`): Element to conjugate the group with
+        %   by (element of `.type`): Element to conjugate the group with
         %
         % Returns:
         %   `+replab.FiniteGroup`: The conjugated group
-            newGenerators = cellfun(@(g) self.parent.leftConjugate(by, g), self.generators, 'uniform', 0);
-            conj = self.parent.subgroupWithGenerators(newGenerators, self.order);
+            newGenerators = cellfun(@(g) self.type.leftConjugate(by, g), self.generators, 'uniform', 0);
+            conj = self.type.subgroupWithGenerators(newGenerators, self.order);
         end
 
         function res = closure(self, obj)
@@ -417,30 +404,122 @@ classdef FiniteGroup < replab.CompactGroup
         %       1
         %
         % Args:
-        %   G (`+replab.NiceFiniteGroup`): Permutation group with the same parent as this group
+        %   G (`+replab.FiniteGroup`): Group with the same type as this group
         %
         % Returns:
-        %   `+replab.NiceFiniteGroup`: Subgroup representing the intersection
-            assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            sub = self.niceMonomorphismGroupPreimage(self.niceGroup.intersection(self.niceMonomorphismGroupImage(G)));
+        %   `+replab.FiniteGroup`: Subgroup representing the intersection
+            error('Abstract');
+        end
+
+    end
+
+    methods % Cosets
+
+        function c = normalCoset(self, normalSubgroup, element)
+        % Returns a normal coset
+        %
+        % Returns the set ``element * normalSubgroup == normalSubgroup * element``.
+        %
+        % Args:
+        %   normalSubgroup (`+replab.FiniteGroup`): Normal subgroup of this group
+        %   element (group element): Group element
+        %
+        % Returns:
+        %   `+replab.NormalCoset`: The constructed normal coset
+            error('Abstract');
+        end
+
+        function c = normalCosetsOf(self, subgroup)
+        % Returns the set of normal cosets of the given subgroup in this group
+        %
+        % Args:
+        %   subgroup (`+replab.FiniteGroup`): Normal subgroup of this group
+            error('Abstract');
+            assert(subgroup.isNormalSubgroupOf(self), 'The given subgroup must be normal in parent group');
+        end
+
+        function c = rightCoset(self, subgroup, element)
+        % Returns a right coset
+        %
+        % Returns the set ``subgroup * element``.
+        %
+        % Args:
+        %   subgroup (`+replab.FiniteGroup`): Subgroup of this group
+        %   element (group element): Group element
+        %
+        % Returns:
+        %   `+replab.RightCoset`: The constructed right coset
+            error('Abstract');
+        end
+
+        function c = rightCosetsOf(self, subgroup)
+        % Returns the set of right cosets of the given subgroup in this group
+        %
+        % Args:
+        %   subgroup (`+replab.FiniteGroup`): Subgroup of this group
+        %
+        % Returns:
+        %   `+replab.RightCosets`: Right cosets
+            error('Abstract');
+        end
+
+        function c = mldivide(self, supergroup)
+        % Shorthand for `.rightCosetsOf`
+            c = supergroup.rightCosetsOf(self);
+        end
+
+        function c = leftCoset(self, subgroup, element)
+        % Returns a left coset
+        %
+        % Returns the set ``element * subgroup``.
+        %
+        % Args:
+        %   subgroup (`+replab.FiniteGroup`): Subgroup of this group
+        %   element (group element): Group element
+        %
+        % Returns:
+        %   `+replab.LeftCoset`: The constructed right coset
+            error('Abstract');
+        end
+
+        function c = leftCosetsOf(self, subgroup)
+        % Returns the set of left cosets of the given subgroup in this group
+        %
+        % Args:
+        %   subgroup (`+replab.FiniteGroup`): Subgroup of this group
+        %
+        % Returns:
+        %   `+replab.LeftCosets`: Left cosets
+            error('Abstract');
+        end
+
+        function c = mrdivide(self, subgroup)
+        % Shorthand for `.leftCosetsOf`
+            c = self.leftCosetsOf(subgroup);
+        end
+
+        function c = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
+        % Returns the set of all elements that left conjugates an element to another element
+        %
+        % Let ``s`` and ``t`` be two elements of this group. This returns the set of all elements
+        % ``b`` such that ``t = b s b^-1`` or ``t = leftConjugate(b, s)``.
+        %
+        % When no such ``b`` exists, this returns ``[]``.
+        %
+        % Args:
+        %   s (group element): Source element
+        %   t (group element): Target element
+        %   sCentralizer (`+replab.FiniteGroup` or ``[]``, optional): Centralizer of ``s`` in this group
+        %   tCentralizer (`+replab.FiniteGroup` or ``[]``, optional): Centralizer of ``t`` in this group
+        %
+        % Returns:
+        %   `+replab.LeftCoset` or ``[]``: Set of all elements of this group that left conjugates ``s`` to ``t`` if it exists
+            error('Abstract');
         end
 
     end
 
     methods % Relations to other groups
-
-        function res = hasSameParentAs(self, rhs)
-        % Returns whether this group has a parent compatible with another group
-        %
-        % This method is used to test for group equality
-        %
-        % Args:
-        %   rhs (`+replab.NiceFiniteGroup`): Other nice finite group
-        %
-        % Returns:
-        %   logical: True if the groups have compatible parents
-            error('Abstract');
-        end
 
         function res = isSubgroupOf(self, rhs)
         % Returns whether this group is a subgroup of another group
@@ -452,7 +531,7 @@ classdef FiniteGroup < replab.CompactGroup
         %       1
         %
         % Args:
-        %   rhs (`+replab.FiniteGroup`): Other group with the same parent as this one
+        %   rhs (`+replab.FiniteGroup`): Other group with the same type as this one
         %
         % Returns:
         %   logical: True if this group is a subgroup of ``rhs``
@@ -475,7 +554,7 @@ classdef FiniteGroup < replab.CompactGroup
         %       0
         %
         % Args:
-        %   rhs (`+replab.FiniteGroup`): Other group with the same parent as this one
+        %   rhs (`+replab.FiniteGroup`): Other group with the same type as this one
         %
         % Returns:
         %   logical: True if this group is a normal subgroup of ``rhs``
@@ -497,28 +576,30 @@ classdef FiniteGroup < replab.CompactGroup
         end
 
     end
+
+    methods % Morphisms
+
+        function m = morphismByImages(self, target, generatorImages)
+        % Constructs a morphism to a group using images of generators
+        %
+        % Example:
+        %   >>> S4 = replab.S(4);
+        %   >>> m = S4.morphismByImages(replab.S(3), {[1 3 2] [3 2 1]});
+        %   >>> replab.FiniteMorphismLaws(m).checkSilent
+        %       1
+        %
+        % Args:
+        %   target (`.FiniteGroup`): Target of the morphism, the morphism image is a subgroup of this
+        %   generatorImages (cell(1, \*) of target elements): Images of this group generators
+        %
+        % Returns:
+        %   `.FiniteMorphism`: The constructed morphism
+            error('Abstract');
+        end
+
+    end
+
 % $$$
-% $$$     methods % Morphisms
-% $$$
-% $$$         function m = morphismByImages(self, target, generatorImages)
-% $$$         % Constructs a morphism to a group using images of generators
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> S4 = replab.S(4);
-% $$$         %   >>> m = S4.morphismByImages(replab.S(3), {[1 3 2] [3 2 1]});
-% $$$         %   >>> replab.FiniteMorphismLaws(m).checkSilent
-% $$$         %       1
-% $$$         %
-% $$$         % Args:
-% $$$         %   target (`.FiniteGroup`): Target of the morphism, the morphism image is a subgroup of this
-% $$$         %   generatorImages (cell(1, \*) of target elements): Images of this group generators
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.FiniteMorphism`: The constructed morphism
-% $$$             error('Abstract');
-% $$$         end
-% $$$
-% $$$     end
 % $$$
 % $$$     methods % Representations
 % $$$

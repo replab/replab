@@ -18,7 +18,7 @@ function classes = conjugacyClassesByOrbits(group)
     % we use a simple hash function that maps permutations to doubles
     % with a domain size < 2^16, that means that if h has values between -2^20+1 and 2^20-1,
     % the maximal value of the hash is 2^16*(2^16*2^20) = 2^52 which fits in a double
-    h = randi([-2^20+1 2^20-1], 1, ds)-1;
+    h = randi([-2^20+1 2^20-1], 1, ds);
     Ih = h * I;
 
     % sorts the hash values and the matrix of group elements
@@ -65,7 +65,7 @@ function classes = conjugacyClassesByOrbits(group)
                         f = before+1:last;
                     else
                         % fallback on the default find
-                        f = find(Ih == h*cj);
+                        f = find(Ih == hval);
                     end
 
                     if length(f) > 1

@@ -7,31 +7,32 @@ classdef PermutationGroup < replab.FiniteGroup
 
     methods % Constructor
 
-        function self = PermutationGroup(domainSize, generators, order, parent, chain)
+        function self = PermutationGroup(domainSize, generators, order, type, chain)
         % Constructs a permutation group
         %
         % Args:
         %   domainSize (integer): Size of the domain
         %   generators (cell(1,\*) of permutation): Group generators
         %   order (vpi, optional): Order of the group
-        %   parent (`+replab.PermutationGroup`, optional): Parent of this group if known,
-        %                                                  or ``'self'`` if this group is its own parent
+        %   type (`+replab.PermutationGroup`, optional): Type of this group if known,
+        %                                                or ``'self'`` if this group is its own type
         %   chain (`+replab.+bsgs.Chain`): BSGS chain describing the group
             self.domainSize = domainSize;
             self.identity = 1:domainSize;
+            self.representative = self.identity;
             self.generators = generators;
             if nargin > 2 && ~isempty(order)
                 self.cache('order', order, '==');
             end
             if nargin < 4
-                parent = [];
+                type = [];
             end
-            if isempty(parent)
-                self.parent = replab.S(domainSize);
-            elseif isequal(parent, 'self')
-                self.parent = self;
+            if isempty(type)
+                self.type = replab.S(domainSize);
+            elseif isequal(type, 'self')
+                self.type = self;
             else
-                self.parent = parent;
+                self.type = type;
             end
             if nargin > 4 && ~isempty(chain)
                 base = chain.base;
@@ -48,11 +49,11 @@ classdef PermutationGroup < replab.FiniteGroup
 
     methods (Static)
 
-        function pg = fromChain(chain, parent)
+        function pg = fromChain(chain, type)
             if nargin < 2
-                parent = [];
+                type = [];
             end
-            pg = replab.PermutationGroup(chain.n, chain.strongGenerators, chain.order, parent, chain);
+            pg = replab.PermutationGroup(chain.n, chain.strongGenerators, chain.order, type, chain);
         end
 
     end
@@ -60,8 +61,27 @@ classdef PermutationGroup < replab.FiniteGroup
 
     methods % Group internal description
 
+        function c = lexChain(self)
+        % Returns the stabilizer chain corresponding to this permutation group.
+        %
+        % It guarantees that the computed chain has its base in lexicographic order.
+        %
+        % Returns:
+        %   `+replab.+bsgs.Chain`: Stabilizer chain
+            c = self.cached('lexChain', @() self.computeLexChain);
+        end
+
+        function c = computeLexChain(self)
+            c = self.chain;
+            if ~c.hasSortedBase
+                c = c.mutableCopy;
+                c.baseChange(1:self.domainSize, true);
+                c.makeImmutable;
+            end
+        end
+
         function c = chain(self)
-        % Returns the stabilizer chain corresponding to this permutation group
+        % Returns the stabilizer chain corresponding to this permutation group.
         %
         % Returns:
         %   `+replab.+bsgs.Chain`: Stabilizer chain
@@ -74,11 +94,6 @@ classdef PermutationGroup < replab.FiniteGroup
             end
             chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
             base = chain.base;
-            if any(base(2:end) < base(1:end-1))
-                chain = chain.mutableCopy;
-                chain.baseChange(1:self.domainSize, true);
-                chain.makeImmutable;
-            end
         end
 
     end
@@ -192,10 +207,10 @@ classdef PermutationGroup < replab.FiniteGroup
         % Group elements
 
         function b = contains(self, g)
-        % Tests whether this group contains the given parent group element
+        % Tests whether this group contains the given element
         %
         % Args:
-        %   g (element of `parent`): Element to test membership of
+        %   g (element of `.type`): Element to test membership of
         %
         % Returns:
         %   logical: True if this group contains ``g`` and false otherwise
@@ -206,7 +221,7 @@ classdef PermutationGroup < replab.FiniteGroup
             o = replab.Permutation.order(p);
         end
 
-        % Construction of a subgroup of the parent group
+        % Construction of groups
 
         function res = closure(self, rhs)
             c = self.chain.mutableCopy;
@@ -222,7 +237,7 @@ classdef PermutationGroup < replab.FiniteGroup
                 end
             end
             c.makeImmutable;
-            res = replab.PermutationGroup.fromChain(c, self.parent);
+            res = replab.PermutationGroup.fromChain(c, self.type);
         end
 
         function nc = normalClosure(self, rhs)
@@ -242,7 +257,7 @@ classdef PermutationGroup < replab.FiniteGroup
                     end
                 end
             end
-            nc = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
+            nc = replab.PermutationGroup(self.domainSize, generators, chain.order, self.type, chain);
         end
 
         % Subgroups
@@ -259,7 +274,7 @@ classdef PermutationGroup < replab.FiniteGroup
             if nargin < 3
                 order = [];
             end
-            grp = replab.PermutationGroup(self.domainSize, generators, order, self.parent);
+            grp = replab.PermutationGroup(self.domainSize, generators, order, self.type);
         end
 
         function sub = computeDerivedSubgroup(self)
@@ -293,7 +308,7 @@ classdef PermutationGroup < replab.FiniteGroup
                     end
                 end
             end
-            sub = replab.PermutationGroup(self.domainSize, generators, chain.order, self.parent, chain);
+            sub = replab.PermutationGroup(self.domainSize, generators, chain.order, self.type, chain);
         end
 
         function c = centralizer(self, other)
@@ -301,36 +316,85 @@ classdef PermutationGroup < replab.FiniteGroup
                 other = self.subgroup({other});
             end
             c = replab.bsgs.Centralizer(self, other).subgroup;
-            c = self.centralizerGroup(self.subgroup({other}));
         end
 
         function res = intersection(self, other)
-            assert(self.hasSameParentAs(other));
+            assert(self.hasSameTypeAs(other));
             if self.order > other.order
                 s = replab.bsgs.Intersection(other, self);
             else
                 s = replab.bsgs.Intersection(self, other);
             end
-            res = replab.PermutationGroup.fromChain(s.subgroup, self.parent);
+            res = replab.PermutationGroup.fromChain(s.subgroup, self.type);
+        end
+
+        % Cosets
+
+        function c = normalCoset(self, normalSubgroup, element)
+            assert(normalSubgroup.isNormalSubgroupOf(self));
+            c = replab.NormalCoset.make(self, subgroup, element);
+        end
+
+        function c = normalCosetsOf(self, subgroup)
+            error('Abstract');
+        end
+
+        function c = rightCoset(self, subgroup, element)
+            c = replab.RightCoset.make(self, subgroup, element);
+        end
+
+        function c = rightCosetsOf(self, subgroup)
+            error('Abstract');
+        end
+
+        function c = leftCoset(self, subgroup, element)
+            c = replab.LeftCoset.make(self, subgroup, element);
+        end
+
+        function c = leftCosetsOf(self, subgroup)
+            error('Abstract');
+        end
+
+        function c = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
+            if nargin < 4 || isempty(sCentralizer)
+                sCentralizer = self.centralizer(s);
+            end
+            if nargin < 5 || isempty(tCentralizer)
+                tCentralizer = self.centralizer(t);
+            end
+            % Implementation note
+            % t = b s b^-1
+            % take tc^-1 in tCentralizer and sc in sCentralizer
+            % tc^-1 t tc = b sc s sc^-1 b^-1
+            % t = tc b sc s sc^-1 b^-1 tc^-1
+            % thus b -> tc b sc
+            leftSubgroup = tCentralizer.chain;
+            rightSubgroup = sCentralizer.chain;
+            prop = @(b) all(self.compose(b, s) == self.compose(t, b));
+            % TODO: proper backtracking tests
+            b = replab.bsgs.backtrackSearch(self.chain, prop, [], [], leftSubgroup, rightSubgroup);
+            if isempty(b)
+                c = [];
+            else
+                c = self.leftCoset(sCentralizer, b);
+            end
         end
 
         % Relations to other groups
 
-        function res = hasSameParentAs(self, rhs)
-            res = isa(rhs, 'replab.PermutationGroup') && (self.parent.domainSize == rhs.parent.domainSize);
+        function res = hasSameTypeAs(self, rhs)
+            res = isa(rhs, 'replab.PermutationGroup') && (self.type.domainSize == rhs.type.domainSize);
         end
 
+        % Morphisms
 
-
-
-
-% $$$         function c = leftCosetsOf(self, subgroup)
-% $$$             c = replab.PermutationGroupLeftCosets(self, subgroup);
-% $$$         end
-% $$$
-% $$$         function c = rightCosetsOf(self, subgroup)
-% $$$             c = replab.PermutationGroupRightCosets(self, subgroup);
-% $$$         end
+        function m = morphismByImages(self, target, images)
+            if isa(target, 'replab.FiniteGroup')
+                m = replab.fm.PermToPerm(self, target, images);
+            else
+                m = replab.fm.PermToFinite(self, target, images);
+            end
+        end
 
     end
 
@@ -391,7 +455,7 @@ classdef PermutationGroup < replab.FiniteGroup
             isConstant = @(x) all(x == x(1));
             prop = @(g) all(cellfun(@(b) isConstant(blockIndex(g(b))), blocks));
             subchain = replab.bsgs.subgroupSearch(c, prop, tests, []);
-            sub = replab.PermutationGroup.fromChain(subchain, self.parent);
+            sub = replab.PermutationGroup.fromChain(subchain, self.type);
         end
 
         function sub = orderedPartitionStabilizer(self, partition)
@@ -438,36 +502,39 @@ classdef PermutationGroup < replab.FiniteGroup
             c.baseChange(base);
             prop = @(g) isequal(blockIndex(g), blockIndex);
             subchain = replab.bsgs.subgroupSearch(c, prop, tests, []);
-            sub = replab.PermutationGroup.fromChain(subchain, self.parent);
+            sub = replab.PermutationGroup.fromChain(subchain, self.type);
         end
 
-        function g = findPermutationTo(self, v, w, vStabilizer, wStabilizer)
-        % Finds the permutation that relates two vectors, if it exists
+        function P = findPermutationsTo(self, s, t, sStabilizer, tStabilizer)
+        % Finds the permutations that send a vector to another vector
         %
-        % It returns the ``g`` such that ``w == v(g)``.
+        % We return the set of ``p`` such that ``t == s(inverse(p))`` or ``s == t(p)``.
+        %
+        % We use this notation as the left action of ``p`` on a list ``s`` is given by ``s(inverse(p))``.
         %
         % Args:
-        %   v (double(1,domainSize)): Row vector
-        %   w (double(1,domainSize)): Another row vector
-        %   vStabilizer (`.PermutationGroup`, optional): Vector stabilizer of ``v`` (or subgroup thereof)
-        %   wStabilizer (`.PermutationGroup`, optional): Vector stabilizer of ``w`` (or subgroup thereof)
+        %   s (double(1,\*)): Source vector
+        %   t (double(1,domainSize)): Target vector
+        %   sStabilizer (`.PermutationGroup` or ``[]``, optional): Stabilizer of ``s``
+        %   tStabilizer (`.PermutationGroup` or ``[]``, optional): Stabilizer of ``t``
         %
         % Returns:
-        %   permutation: The permutation ``g`` such that ``v == w(g)``
-            if nargin < 4 || isequal(vStabilizer, [])
-                vStabilizer = self.vectorStabilizer(v);
+        %   `+replab.LeftCoset`: The set of permutations ``p`` such that ``t == s(inverse(p))`` or ``s == t(p)``
+            if nargin < 4 || isequal(sStabilizer, [])
+                sStabilizer = self.vectorStabilizer(s);
             end
             if nargin < 5 || isequal(wStabilizer, [])
-                wStabilizer = self.vectorStabilizer(w);
+                tStabilizer = self.vectorStabilizer(t);
             end
             chain = self.chain.mutableCopy;
             base = chain.base;
             tests = cell(1, length(base));
             for l = 1:length(base)
-                tests{l} = @(g, data) deal(v(base(l)) == w(g(base(l))), []);
+                tests{l} = @(g, data) deal(s(base(l)) == t(g(base(l))), []);
             end
-            gInv = replab.bsgs.backtrackSearch(chain, @(x) isequal(v, w(x)), tests, [], vStabilizer.chain, wStabilizer.chain);
-            g = self.inverse(gInv);
+            prop = @(p) isequal(s, t(p));
+            p = replab.bsgs.backtrackSearch(chain, prop, tests, [], tStabilizer.chain, sStabilizer.chain);
+            P = self.leftCoset(sStabilizer, p);
         end
 
         function sub = vectorStabilizer(self, vector)
@@ -478,15 +545,18 @@ classdef PermutationGroup < replab.FiniteGroup
         %
         % Returns:
         %   `.PermutationGroup`: The subgroup of this group leaving ``vector`` invariant
-            vector = vector(:).';
-            v = unique(vector);
-            c = arrayfun(@(x) sum(vector == x), v);
-            [~, I] = sort(c);
-            v = v(I);
-            sub = self;
-            for i = v
-                sub = sub.setwiseStabilizer(find(vector == i));
-            end
+            partition = replab.Partition.fromVector(vector);
+            sub = self.orderedPartitionStabilizer(partition);
+            % TODO: remove this
+% $$$             vector = vector(:).';
+% $$$             v = unique(vector);
+% $$$             c = arrayfun(@(x) sum(vector == x), v);
+% $$$             [~, I] = sort(c);
+% $$$             v = v(I);
+% $$$             sub = self;
+% $$$             for i = v
+% $$$                 sub = sub.setwiseStabilizer(find(vector == i));
+% $$$             end
         end
 
         function s = setwiseStabilizer(self, set)
@@ -521,7 +591,7 @@ classdef PermutationGroup < replab.FiniteGroup
             end
             prop = @(g) all(mask(g(set)));
             subchain = replab.bsgs.subgroupSearch(c, prop, tests, []);
-            s = replab.PermutationGroup.fromChain(subchain, self.parent);
+            s = replab.PermutationGroup.fromChain(subchain, self.type);
         end
 
         function o = orbits(self)
@@ -541,7 +611,7 @@ classdef PermutationGroup < replab.FiniteGroup
 
         function sub = stabilizer(self, p)
         % Returns the subgroup that stabilizes a given point
-            sub = replab.PermutationGroup.fromChain(self.chain.stabilizer(p), self.parent);
+            sub = replab.PermutationGroup.fromChain(self.chain.stabilizer(p), self.type);
         end
 
 % $$$         function w = wreathProduct(self, A)

@@ -1,10 +1,5 @@
-classdef FiniteIsomorphism < replab.Morphism
+classdef FiniteIsomorphism < replab.FiniteMorphism
 % Describes an isomorphism between finite groups
-
-    properties (SetAccess = protected)
-        source % (`.FiniteGroup`): Source group
-        target % (`.FiniteGroup`): Target group
-    end
 
     methods
 
@@ -54,9 +49,6 @@ classdef FiniteIsomorphism < replab.Morphism
         % Returns:
         %   `.FiniteIsomorphism`: The identity automorphism on the given group
             m = replab.fm.Identity(group);
-        end
-
-        function m = toPermutationGroup(group, imageFun)
         end
 
     end

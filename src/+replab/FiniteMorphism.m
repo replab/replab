@@ -1,4 +1,4 @@
-classdef FiniteMorphism < replab.Str
+classdef FiniteMorphism < replab.Obj
 % Describes a morphism between finite groups
 
     properties (SetAccess = protected)

@@ -1,5 +1,5 @@
 classdef Centralizer
-% Computes the centralizer of an element
+% Computes the centralizer of a subgroup
 
     properties
         group
@@ -15,7 +15,7 @@ classdef Centralizer
 
         function s = subgroup(self)
             c = replab.bsgs.subgroupSearch(self.group.chain, @(g) self.prop(g));
-            s = replab.PermutationGroup.fromChain(c, self.group.parent);
+            s = replab.PermutationGroup.fromChain(c, self.group.type);
         end
 
         function b = prop(self, g)

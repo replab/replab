@@ -29,9 +29,7 @@ classdef IndexedFamily < replab.Domain
         function ind = find(self, obj)
         % Returns the index of a given element
         %
-        % If the element is not part of the family, the behavior is undefined.
-        % Best effort can be made to return ``[]``, but this is not guaranteed unless
-        % documented by specific `+replab.IndexedFamily` implementations
+        % If the element is not part of the family, this returns ``vpi(0)``.
         %
         % Args:
         %   obj: Element to retrieve
@@ -63,6 +61,10 @@ classdef IndexedFamily < replab.Domain
             end
         end
 
+        function I = imap2(self, f, g)
+
+        end
+
         function I = imap(self, isomorphism)
         % Maps the elements of this indexed family through an isomorphism
         %
@@ -70,6 +72,7 @@ classdef IndexedFamily < replab.Domain
         %
         % Args:
         %   isomorphism (`+replab.FiniteIsomorphism`): Isomorphism from the finite group in this IndexedFamily
+            I = replab.indf.MappedIndexedFamily(self, isomorphism);
             atFun = @(ind) self.isomorphism.image(self.at(ind));
             findFun = @(el) self.find(self.isomorphism.preimage(el));
             I = replab.IndexedFamily.lambda(self.size, atFun, findFun);

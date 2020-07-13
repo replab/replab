@@ -27,9 +27,13 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
     if nargin < 5 || isempty(leftSubgroup)
         leftSubgroup = replab.bsgs.Chain(degree);
     end
+    % we've got the two subgroups mixed up!
+    tmp = rightSubgroup;
+    rightSubgroup = leftSubgroup;
+    leftSubgroup = tmp;
     leftSubgroupTrivial = (leftSubgroup.order == 1);
     rightSubgroupTrivial = (rightSubgroup.order == 1);
-    if nargin < 4
+    if nargin < 4 || isempty(tests)
         tests = {};
         startData = [];
     end

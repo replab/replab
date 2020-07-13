@@ -101,6 +101,14 @@ classdef Chain < replab.Str
             end
         end
 
+        function l = hasSortedBase(self)
+        % Returns true if the points in this base are monotonically increasing
+        %
+        % Returns:
+        %   logical: True if ``base(l) < base(l+1)`` holds for all ``l``.
+            l = all(self.B(2:end) < self.B(1:end-1));
+        end
+
         function b = base(self)
         % Returns the base of this stabilizer chain
         %
@@ -231,8 +239,8 @@ classdef Chain < replab.Str
 
         function orbit = orbitUnderG(self, l, b)
         % Returns the orbit of the point b under G^l as a row integer vector
-            orbit = zeros(1, self.n);
-            orbit(b) = 1;
+            orbit = false(1, self.n);
+            orbit(b) = true;
             toCheck = b;
             range = self.Sind(l):self.Sind(end)-1;
             S = self.S;
@@ -241,8 +249,8 @@ classdef Chain < replab.Str
                 toCheck = toCheck(1:end-1);
                 for i = range
                     o = S(h,i);
-                    if orbit(o) == 0
-                        orbit(o) = 1;
+                    if ~orbit(o)
+                        orbit(o) = true;
                         toCheck(end+1) = o;
                     end
                 end
@@ -417,8 +425,8 @@ classdef Chain < replab.Str
                     l = l + 1;
                 end
             end
-            assert(self.baseMatchesPrescribedBase(newBase, removeRedundant));
-            self.check;
+            %assert(self.baseMatchesPrescribedBase(newBase, removeRedundant));
+            %self.check;
         end
 
         function show(self, i)
