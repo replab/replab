@@ -174,6 +174,16 @@ classdef PermutationGroup < replab.FiniteGroup
             dec = replab.FiniteGroupDecomposition(self, T);
         end
 
+        function C = computeConjugacyClasses(self)
+            classes = replab.nfg.conjugacyClassesByOrbits(self);
+            n = length(classes);
+            C = cell(1, n);
+            for i = 1:n
+                cl = sortrows(classes{i}');
+                C{i} = replab.ConjugacyClass(self, cl(1,:));
+            end
+        end
+
         function res = computeIsCyclic(self)
             if self.nGenerators <= 1
                 res = true;
@@ -199,10 +209,6 @@ classdef PermutationGroup < replab.FiniteGroup
                 res = true;
             end
         end
-
-% $$$         function C = computeConjugacyClasses(self)
-% $$$             classes = replab.nfg.conjugacyClassesByOrbits(self);
-% $$$             C = cellfun(@(c) replab.ConjugacyClass(self,
 
         % Group elements
 
@@ -348,6 +354,9 @@ classdef PermutationGroup < replab.FiniteGroup
             prop = @(b) all(self.compose(b, s) == self.compose(t, b));
             % TODO: proper backtracking tests
             b = replab.bsgs.backtrackSearch(self.chain, prop, [], [], leftSubgroup, rightSubgroup);
+            % note that we have
+            % sCentralizer == tCentralizer.leftConjugateGroup(self.inverse(b))
+            % tCentralizer == sCentralizer.leftConjugateGroup(b)
             if isempty(b)
                 c = [];
             else
@@ -589,102 +598,102 @@ classdef PermutationGroup < replab.FiniteGroup
             sub = replab.PermutationGroup.fromChain(self.chain.stabilizer(p), self.type);
         end
 
-% $$$         function w = wreathProduct(self, A)
-% $$$         % Returns the wreath product of a compact group by this permutation group
-% $$$         %
-% $$$         % See https://en.wikipedia.org/wiki/Wreath_product
-% $$$         %
-% $$$         % Note that our notation is reversed compared to the Wikipedia page,
-% $$$         % the permutation group is on the left hand side, as our convention
-% $$$         % for semidirect product places the group acted upon on the right.
-% $$$         %
-% $$$         % Note that the return type depends on the argument type:
-% $$$         % if ``A`` is a `.FiniteGroup`, the result will be a finite group too,
-% $$$         % and if ``A`` is a `.NiceFiniteGroup`, the result will be of that type.
-% $$$         %
-% $$$         % Args:
-% $$$         %   A (`.CompactGroup`): The group whose copies are acted upon
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.+wreathproduct.Common`: A wreath product group
-% $$$             w = replab.wreathproduct.of(self, A);
-% $$$         end
-% $$$
+        function w = wreathProduct(self, A)
+        % Returns the wreath product of a compact group by this permutation group
+        %
+        % See https://en.wikipedia.org/wiki/Wreath_product
+        %
+        % Note that our notation is reversed compared to the Wikipedia page,
+        % the permutation group is on the left hand side, as our convention
+        % for semidirect product places the group acted upon on the right.
+        %
+        % Note that the return type depends on the argument type:
+        % if ``A`` is a `.FiniteGroup`, the result will be a finite group too,
+        % and if ``A`` is a `.NiceFiniteGroup`, the result will be of that type.
+        %
+        % Args:
+        %   A (`.CompactGroup`): The group whose copies are acted upon
+        %
+        % Returns:
+        %   `+replab.+wreathproduct.Common`: A wreath product group
+            w = replab.wreathproduct.of(self, A);
+        end
+
     end
 
-% $$$     methods % Actions
-% $$$
-% $$$         function A = naturalAction(self)
-% $$$         % Returns the natural action of elements of this group on its domain
-% $$$         %
-% $$$         % This group natural domain is the set of integers ``{1..domainSize}``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   replab.Action: The natural action
-% $$$             A = replab.perm.PermutationNaturalAction(self);
-% $$$         end
-% $$$
-% $$$         function A = vectorAction(self)
-% $$$         % Returns the action of permutations on column vectors
-% $$$         %
-% $$$         % Acts on vectors of size `domainSize` by permuting their coefficients
-% $$$         %
-% $$$         % Returns:
-% $$$         %   replab.Action: The vector action
-% $$$             A = replab.perm.PermutationVectorAction(self);
-% $$$         end
-% $$$
-% $$$         function A = matrixAction(self)
-% $$$         % Returns the simultaneous action of permutations on both rows and columns of square matrices
-% $$$         %
-% $$$         % Acts on matrices of size ``self.domainSize x self.domainSize``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   replab.Action: The matrix action
-% $$$             A = replab.perm.PermutationMatrixAction(self);
-% $$$         end
-% $$$
-% $$$         function perm = indexRelabelingPermutation(self, g, indexRange)
-% $$$         % Returns the permutation that acts by permuting tensor coefficients
-% $$$         %
-% $$$         % Let I = (i1, ..., id) be a sequence of indices, where d = self.domainSize
-% $$$         % and 1 <= i1,...,id <= indexRange
-% $$$         %
-% $$$         % We enumerate elements of I by first incrementing id, then i_(d-1), etc...
-% $$$         %
-% $$$         % We compute the permutation of domain size ``indexRange^domainSize`` that acts on the
-% $$$         % indices of I according to the argument ``g``.
-% $$$         %
-% $$$         % Args:
-% $$$         %   g (permutation): Permutation of subindices
-% $$$         %   indexRange (integer): Dimension of each subindex
-% $$$         %
-% $$$         % Returns:
-% $$$         %   permutation: The permutation on the enumeration of indices
-% $$$             n = self.domainSize;
-% $$$             dims = indexRange * ones(1, n);
-% $$$             perm = permute(reshape(1:prod(dims), dims), fliplr(n +  1 - g));
-% $$$             perm = perm(:)';
-% $$$         end
-% $$$
-% $$$         function phi = indexRelabelingMorphism(self, indexRange)
-% $$$         % Returns the morphism the permutation action of this group on tensor coefficients
-% $$$         %
-% $$$         % The tensor coefficients correspond to R^ir x R^ir ... (domainSize times)
-% $$$         % where ir = indexRange
-% $$$         %
-% $$$         % See also:
-% $$$         %   `+replab.PermutationGroup.indexRelabelingPermutation`
-% $$$         %
-% $$$         % Args:
-% $$$         %   indexRange (integer): Dimension of each subindex
-% $$$         %
-% $$$         % Returns:
-% $$$         %   function_handle: The permutation group homomorphism
-% $$$             phi = @(g) self.indexRelabelingPermutation(g, indexRange);
-% $$$         end
-% $$$
-% $$$     end
+    methods % Actions
+
+        function A = naturalAction(self)
+        % Returns the natural action of elements of this group on its domain
+        %
+        % This group natural domain is the set of integers ``{1..domainSize}``
+        %
+        % Returns:
+        %   replab.Action: The natural action
+            A = replab.perm.PermutationNaturalAction(self);
+        end
+
+        function A = vectorAction(self)
+        % Returns the action of permutations on column vectors
+        %
+        % Acts on vectors of size `domainSize` by permuting their coefficients
+        %
+        % Returns:
+        %   replab.Action: The vector action
+            A = replab.perm.PermutationVectorAction(self);
+        end
+
+        function A = matrixAction(self)
+        % Returns the simultaneous action of permutations on both rows and columns of square matrices
+        %
+        % Acts on matrices of size ``self.domainSize x self.domainSize``
+        %
+        % Returns:
+        %   replab.Action: The matrix action
+            A = replab.perm.PermutationMatrixAction(self);
+        end
+
+        function perm = indexRelabelingPermutation(self, g, indexRange)
+        % Returns the permutation that acts by permuting tensor coefficients
+        %
+        % Let I = (i1, ..., id) be a sequence of indices, where d = self.domainSize
+        % and 1 <= i1,...,id <= indexRange
+        %
+        % We enumerate elements of I by first incrementing id, then i_(d-1), etc...
+        %
+        % We compute the permutation of domain size ``indexRange^domainSize`` that acts on the
+        % indices of I according to the argument ``g``.
+        %
+        % Args:
+        %   g (permutation): Permutation of subindices
+        %   indexRange (integer): Dimension of each subindex
+        %
+        % Returns:
+        %   permutation: The permutation on the enumeration of indices
+            n = self.domainSize;
+            dims = indexRange * ones(1, n);
+            perm = permute(reshape(1:prod(dims), dims), fliplr(n +  1 - g));
+            perm = perm(:)';
+        end
+
+        function phi = indexRelabelingMorphism(self, indexRange)
+        % Returns the morphism the permutation action of this group on tensor coefficients
+        %
+        % The tensor coefficients correspond to R^ir x R^ir ... (domainSize times)
+        % where ir = indexRange
+        %
+        % See also:
+        %   `+replab.PermutationGroup.indexRelabelingPermutation`
+        %
+        % Args:
+        %   indexRange (integer): Dimension of each subindex
+        %
+        % Returns:
+        %   function_handle: The permutation group homomorphism
+            phi = @(g) self.indexRelabelingPermutation(g, indexRange);
+        end
+
+    end
 % $$$
 % $$$     methods % Implementations
 % $$$
@@ -760,47 +769,47 @@ classdef PermutationGroup < replab.FiniteGroup
 % $$$
 % $$$     end
 % $$$
-% $$$     methods(Static)
-% $$$
-% $$$         function G = trivial(n)
-% $$$         % Constructs the trivial permutation group acting on ``n`` points
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> G = replab.PermutationGroup.trivial(4);
-% $$$         %   >>> G.order
-% $$$         %     1
-% $$$         %
-% $$$         % Args:
-% $$$         %   n (integer): Domain size
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.PermutationGroup`: Trivial group
-% $$$             Sn = replab.S(n);
-% $$$             G = Sn.subgroup({});
-% $$$         end
-% $$$
-% $$$         function G = of(varargin)
-% $$$         % Constructs a nontrivial permutation group from the given generators
-% $$$         %
-% $$$         % If you do not know the number of generators in advance, and would like to handle the
-% $$$         % case of a trivial group, use ``Sn = replab.S(n); Sn.subgroup(generators)`` instead.
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> G = replab.PermutationGroup.of([2 3 4 1], [4 3 2 1]);
-% $$$         %   >>> G.order
-% $$$         %     8
-% $$$         %
-% $$$         % Args:
-% $$$         %   varargin (cell(1,\*) of permutation): Group generators
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.PermutationGroup`: The permutation group given as the closure of the generators
-% $$$             assert(nargin > 0, 'Must be called with at least one generator');
-% $$$             n = length(varargin{1});
-% $$$             Sn = replab.S(n);
-% $$$             G = Sn.subgroup(varargin);
-% $$$         end
-% $$$
-% $$$     end
+    methods(Static)
+
+        function G = trivial(n)
+        % Constructs the trivial permutation group acting on ``n`` points
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.trivial(4);
+        %   >>> G.order
+        %     1
+        %
+        % Args:
+        %   n (integer): Domain size
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: Trivial group
+            Sn = replab.S(n);
+            G = Sn.subgroup({});
+        end
+
+        function G = of(varargin)
+        % Constructs a nontrivial permutation group from the given generators
+        %
+        % If you do not know the number of generators in advance, and would like to handle the
+        % case of a trivial group, use ``Sn = replab.S(n); Sn.subgroup(generators)`` instead.
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.of([2 3 4 1], [4 3 2 1]);
+        %   >>> G.order
+        %     8
+        %
+        % Args:
+        %   varargin (cell(1,\*) of permutation): Group generators
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The permutation group given as the closure of the generators
+            assert(nargin > 0, 'Must be called with at least one generator');
+            n = length(varargin{1});
+            Sn = replab.S(n);
+            G = Sn.subgroup(varargin);
+        end
+
+    end
 
 end

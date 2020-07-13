@@ -3,8 +3,11 @@ classdef FiniteSet < replab.Domain
 %
 % This is the base class for distinguished subsets of a `.FiniteGroup`, such as cosets or conjugacy classes.
 %
-% When non-empty, such sets have a distinguished `.representative` element; for permutation groups, this element
-% is chosen to be minimal under the lexicographic order.
+% When non-empty, such sets have a distinguished `.representative` element. For some finite sets, this element
+% is used to quickly build the entire structure on demand.
+%
+% Cosets of permutation groups have stronger guarantees: their representative is chosen to be minimal under
+% the lexicographic order.
 
     properties (SetAccess = protected)
         type % (`.FiniteSet`): Set of all elements of the same type as this set; satisfies ``type.type == type``

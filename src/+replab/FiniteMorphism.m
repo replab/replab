@@ -20,9 +20,9 @@ classdef FiniteMorphism < replab.Obj
             K = self.preimageGroup(self.target.trivialSubgroup);
         end
 
-        %function s = preimagesElement(self, t)
-        %    error('Abstract');
-        %end
+        function s = preimagesElement(self, t)
+            error('Abstract');
+        end
 
         function S = preimageGroup(self, T)
             error('Abstract');

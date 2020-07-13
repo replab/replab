@@ -1,13 +1,10 @@
 classdef NiceFiniteGroup < replab.FiniteGroup
 % A nice finite group is a finite group equipped with an injective homomorphism into a permutation group
 %
-% The class that subclasses `.NiceFiniteGroup` implements a method `.niceMonomorphismImage` that returns a
-% permutation row vector corresponding to a group element.
+% Any class that subclasses `.NiceFiniteGroup` must implements a method `.niceImage` that returns a permutation
+% corresponding to a group element.
 %
-% In turn, the `.NiceFiniteGroup` infrastructure will use that method to build a BSGS chain to describe
-% the structure of the finite group; this chain also provides a way to compute the preimage of a permutation.
-%
-% Thus, an isomorphism is established between the present `.NiceFiniteGroup` and a permutation group; as
+% Then, an isomorphism is established between the present `.NiceFiniteGroup` and a permutation group; as
 % permutation groups can be handled by efficient BSGS algorithms, the requested computations can be
 % translated back and forth between this group and a permutation group.
 %
@@ -15,99 +12,46 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 % the enumeration of elements using a `.IndexedFamily`, the construction of subgroups is all handled
 % by permutation group algorithms.
 %
-% The `.niceMonomorphismImage` method of this group should be valid for all elements of the parent as well;
-% then the `.contains` method will be valid for all elements of the parent group.
+% Note that the `.niceImage` method of this group should be valid for all elements of the parent as well,
+% and that groups having the same type (as verified by `.hasSameTypeAs`) should return the same images
+% under `.niceImage`.
 
-    properties (SetAccess = protected)
+    methods % Nice monomorphism support
 
-        niceGroup % (`+replab.PermutationGroup`): Permutation group isomorphic to this finite group
-        niceMorphism % (`+replab.FiniteIsomorphism`): Isomorphism from this group to `.niceGroup`
-
-    end
-
-
-    %% Abstract
-
-    methods
-
-        function p = niceMonomorphismImage(self, g)
-        % Returns a permutation representation of the given group element
-        %
-        % A nice monomorphism is the GAP System terminology for injective
-        % homomorphism into a permutation group.
+        function p = niceImage(self, g)
+        % Returns a permutation image of the given group element
         %
         % Args:
         %   g (element): Group element to represent as a permutation
         %
         % Returns:
-        %   permutation: Permutation representation of ``g``
+        %   permutation: Permutation image of ``g``
             error('Abstract');
         end
 
-        function P = niceMonomorphismGroupImage(self, G)
-        % Returns the image of a subgroup of this nice finite group through the nice monomorphism
-        %
-        % Args:
-        %   G (`+replab.NiceFiniteGroup`): Preimage group, must be a subgroup of this group
+        function G = niceGroup(self)
+        % Returns the permutation group isomorphic to this finite group
         %
         % Returns:
-        %   `+replab.PermutationGroup`: Image
-            n = length(self.niceMonomorphismImage(self.identity));
-            % possible optimization: reuse the stabilizer chain in the inverse morphism of ``G``
-            generators = cellfun(@(x) self.niceMonomorphismImage(x), G.generators, 'uniform', 0);
-            chain = replab.bsgs.Chain.make(n, generators);
-            P = replab.PermutationGroup(n, generators, chain.order, self.niceGroup.parent, chain);
+        %   `+replab.PermutationGroup`: The image of the isomorphism
+            G = self.cached('niceGroup', @() self.niceMorphism.image);
         end
 
-        function G = niceMonomorphismGroupPreimage(self, P)
-        % Returns the preimage of a permutation subgroup of the nice group of this group
-        %
-        % Args:
-        %   P (`+replab.PermutationGroup`): Image permutation group, must be a subgroup of `.niceGroup`
-        %
-        % Returns:
-        %   `+replab.NiceFiniteGroup`: Preimage which is a subgroup of this group
-            generators = cellfun(@(x) self.niceMonomorphismPreimage(x), P.generators, 'uniform', 0);
-            G = self.subgroup(generators);
-        end
-
-    end
-
-    methods (Access = protected)
-
-        function order = computeOrder(self)
-            order = self.niceGroup.chain.order;
-        end
-
-        function m = computeNiceInverseMonomorphism(self)
-            m = replab.mrp.PermMorphism.byImages(self.niceGroup, self, self.generators);
-        end
-
-        function g = computeNiceGroup(self)
-            imgId = self.niceMonomorphismImage(self.identity);
-            n = length(imgId);
-            g = replab.PermutationGroup(n, self.niceGenerators, self.cachedOrEmpty('order'));
-        end
-
-        function dec = computeDecomposition(self)
-            dec = replab.FiniteGroupDecomposition(self, self.niceInverseMonomorphism.chain.imagesDecomposition);
+        function f = niceMorphism(self)
+        % Returns the isomorphism from this group to `.niceGroup`
+            f = self.cached('niceMorphism', @() replab.nfg.NiceFiniteGroupIsomorphism(self));
         end
 
     end
 
     methods
 
-        function c = niceGroup(self)
-        % Returns the image of this group as a permutation group through the nice monomorphismx
-        %
-        % Returns:
-        %   `+replab.PermutationGroup`: Permutation group
-            c = self.cached('niceGroup', @() self.computeNiceGroup);
+        function order = computeOrder(self)
+            order = self.niceGroup.order;
         end
 
-        function m = niceInverseMonomorphism(self)
-        % Returns the monomorphism from the permutation representation to the original group
-            m = self.cached('niceInverseMonomorphism', @() self.computeNiceInverseMonomorphism);
+        function dec = computeDecomposition(self)
+        % TODO
         end
 
     end
@@ -172,24 +116,6 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %   `+replab.NiceFiniteGroup`: The derived subgroup
             assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
             sub = self.niceMonomorphismGroupPreimage(self.niceGroup.derivedSubgroup);
-        end
-
-        function c = rightCosetsOf(self, subgroup)
-            assert(~isa(self, 'replab.PermutationGroup')); % handled in subclass
-            c = replab.nfg.RightCosets(self, subgroup);
-        end
-
-        function c = mldivide(self, supergroup)
-            c = supergroup.rightCosetsOf(self);
-        end
-
-        function c = leftCosetsOf(self, subgroup)
-            assert(~isa(self, 'replab.PermutationGroup')); % handled in subclass
-            c = replab.nfg.LeftCosets(self, subgroup);
-        end
-
-        function c = mrdivide(self, subgroup)
-            c = self.leftCosetsOf(subgroup);
         end
 
         function sub = centralizer(self, rhs)

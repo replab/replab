@@ -7,9 +7,9 @@ classdef FiniteIsomorphism < replab.FiniteMorphism
             K = self.source.trivialSubgroup;
         end
 
-        %function S = preimagesElement(self, t)
-        %    S = {self.preimageElement(t)};
-        %end
+        function S = preimagesElement(self, t)
+            S = self.normalCoset(self.source, self.kernel, self.preimageElement(t));
+        end
 
         function T = imageGroup(self, S)
             images = cellfun(@(g) self.imageElement(g), S.generators, 'uniform', 0);

@@ -37,7 +37,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Group properties
 
-        function s = size(self)
+        function s = cardinality(self)
             s = self.order;
         end
 
@@ -67,36 +67,36 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-% $$$         function e = exponent(self)
-% $$$         % Returns the group exponent
-% $$$         %
-% $$$         % The group exponent is the smallest integer ``e`` such that ``g^e == identity`` for all ``g`` in ``G``.
-% $$$         %
-% $$$         % Returns:
-% $$$         %   vpi: The group exponent
-% $$$             e = self.cached('exponent', @() self.computeExponent);
-% $$$         end
-% $$$
-% $$$         function e = computeExponent(self)
-% $$$             eo = cellfun(@(c) self.elementOrder(c.representative), self.conjugacyClasses);
-% $$$             eo = unique(eo);
-% $$$             e = eo(1);
-% $$$             for i = 2:length(eo)
-% $$$                 e = lcm(e, eo(i));
-% $$$             end
-% $$$         end
+        function e = exponent(self)
+        % Returns the group exponent
+        %
+        % The group exponent is the smallest integer ``e`` such that ``g^e == identity`` for all ``g`` in ``G``.
+        %
+        % Returns:
+        %   vpi: The group exponent
+            e = self.cached('exponent', @() self.computeExponent);
+        end
 
-% $$$         function c = conjugacyClasses(self)
-% $$$         % Returns the conjugacy classes of this group
-% $$$         %
-% $$$         % Returns:
-% $$$         %   cell(1, \*) of `+replab.ConjugacyClass`: Array of conjugacy classes
-% $$$             c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
-% $$$         end
-% $$$
-% $$$         function c = computeConjugacyClasses(self)
-% $$$             error('Abstract');
-% $$$         end
+        function e = computeExponent(self)
+            eo = cellfun(@(c) self.elementOrder(c.representative), self.conjugacyClasses);
+            eo = unique(eo);
+            e = eo(1);
+            for i = 2:length(eo)
+                e = lcm(e, eo(i));
+            end
+        end
+
+        function c = conjugacyClasses(self)
+        % Returns the conjugacy classes of this group
+        %
+        % Returns:
+        %   cell(1, \*) of `+replab.ConjugacyClass`: Array of conjugacy classes
+            c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
+        end
+
+        function c = computeConjugacyClasses(self)
+            error('Abstract');
+        end
 
 % $$$         function R = recognize(self)
 % $$$         % Attempts to recognize this group in the standard atlas
@@ -498,7 +498,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             c = self.leftCosetsOf(subgroup);
         end
 
-        function c = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
+        function B = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
         % Returns the set of all elements that left conjugates an element to another element
         %
         % Let ``s`` and ``t`` be two elements of this group. This returns the set of all elements

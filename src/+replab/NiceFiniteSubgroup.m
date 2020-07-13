@@ -22,11 +22,11 @@ classdef NiceFiniteSubgroup < replab.NiceFiniteGroup
             self.generators = generators;
         end
 
-        function res = hasSameParentAs(self, rhs)
+        function res = hasSameTypeAs(self, rhs)
             if isa(rhs, 'replab.NiceFiniteSubgroup')
-                res = self.parent.hasSameParentAs(rhs.parent);
+                res = self.parent.hasSameTypeAs(rhs.parent);
             else
-                res = self.parent.hasSameParentAs(rhs);
+                res = self.parent.hasSameTypeAs(rhs);
             end
         end
 

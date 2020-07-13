@@ -56,7 +56,7 @@ classdef RightCosets < replab.CosetBase
         % Returns:
         %   cell(1, \*) of `.group` elements: Transversal
             M = replab.bsgs.Cosets.rightTransversalAsMatrix(self.groupChain, self.subgroupChain);
-            T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:self.size, 'uniform', 0);
+            T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:self.cardinality, 'uniform', 0);
         end
 
         function C = elements(self)

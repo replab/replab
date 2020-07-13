@@ -32,6 +32,10 @@ classdef NiceFiniteGroupIsomorphism < replab.FiniteIsomorphism
                                                  I.base, I.order);
         end
 
+        function T = imageGroup(self, S)
+            T = S.niceGroup;
+        end
+
         function t = imageElement(self, s)
             t = self.source.niceImage(s);
         end
