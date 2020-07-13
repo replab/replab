@@ -9,9 +9,9 @@ end
 
 function test_parse_words
     F = replab.FreeGroup.of('a', 'x');
-    assertEqual(F.parseWord('[a,x]').reducedLetters, [-1 -2 1 2]);
-    assertEqual(F.parseWord('a (x a)^2').reducedLetters, [1 2 1 2 1]);
-    assert(isempty(F.parseWord('a a^-1').reducedLetters));
+    assertEqual(F.parse('[a,x]').reducedLetters, [-1 -2 1 2]);
+    assertEqual(F.parse('a (x a)^2').reducedLetters, [1 2 1 2 1]);
+    assert(isempty(F.parse('a a^-1').reducedLetters));
 end
 
 function test_parse_correct_presentations

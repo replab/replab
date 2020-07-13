@@ -15,7 +15,7 @@ function test_symbolic
     s2 = sqrt(sym(2));
     sigma_a = [1 -1; 1 1]/s2;
     sigma_x = [1 0; 0 -1];
-    sigma = D16.repByImages('R', 2, {sigma_a sigma_x}, {sigma_a' sigma_x'});
+    sigma = D16.repByImages('R', 2, {sigma_a sigma_x});
     img1 = sigma.image(S8.compose(a, x)); % should be [1 1; 1 -1]/sqrt(2)
     img2 = [1 1; 1 -1]/s2;
     assert(norm(double(img1) - double(img2)) == 0);
@@ -25,7 +25,7 @@ function test_stays_sparse
     S3 = replab.PermutationGroup.of([2 3 1], [2 1 3]);
     M1 = sparse([0 0 1; 1 0 0; 0 1 0]);
     M2 = sparse([0 1 0; 1 0 0; 0 0 1]);
-    rep = S3.repByImages('R', 3, {M1 M2}, {M1' M2'});
+    rep = S3.repByImages('R', 3, {M1 M2});
     for i = 1:5
         I = rep.image_internal(S3.sample);
         assert(issparse(I));
