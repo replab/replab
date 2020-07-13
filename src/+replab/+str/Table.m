@@ -50,5 +50,3 @@ classdef Table < replab.Str
     end
 
 end
-
-end
