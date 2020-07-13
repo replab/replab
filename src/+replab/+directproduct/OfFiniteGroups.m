@@ -1,5 +1,12 @@
 classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGroups
-% Describes an external direct product of finite groups
+% External direct product of finite groups
+%
+% In particular, the permutation image of an element of a direct product group
+% is simply the concatenation of the permutation images of the factors (which
+% are nice finite groups themselves).
+%
+% We overload a bunch of methods to make sure we use the `+replab.+directproduct.OfFiniteGroups`
+% more efficient variants, that do not require the BSGS chain construction.
 
     methods (Access = protected)
 
@@ -30,7 +37,7 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
 
     methods
 
-        function self = OfFiniteGroups(factors)
+        function self = OfFiniteGroups(factors, type)
             self = self@replab.directproduct.OfCompactGroups(factors);
             % the generators of a direct product of finite groups is
             % the union of the generators of the factors, lifted into the
@@ -45,9 +52,25 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
                 end
             end
             self.generators = generators;
+            if nargin < 2 || isempty(type)
+                factorTypes = cellfun(@(f) f.type, factors, 'uniform', 0);
+                self.type = replab.directproduct.OfFiniteGroups(factorTypes, 'self');
+            elseif isequal(type, 'self')
+                self.type = self;
+            else
+                self.type = type;
+            end
         end
 
-        %% Str methods
+        function t = requiredType(self)
+            t = 'replab.FiniteGroup';
+        end
+
+    end
+
+    methods % Implementation
+
+        % Str
 
         function names = hiddenFields(self)
             names = replab.str.uniqueNames( ...
@@ -63,9 +86,24 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
             values = replab.str.horzcatForce(values1, values2);
         end
 
-        %% FiniteGroup methods
+        % FiniteSet
 
-        function o = order(self)
+        function res = hasSameTypeAs(self, rhs)
+            res = isa(rhs, 'replab.directproduct.OfFiniteGroups') && self.nFactors == rhs.nFactors;
+            if ~res
+                return
+            end
+            for i = 1:self.nFactors
+                res = res & self.factor(i).hasSameTypeAs(rhs.factor(i));
+                if ~res
+                    return
+                end
+            end
+        end
+
+        % FiniteGroup
+
+        function o = computeOrder(self)
             o = vpi(1);
             % The order of a direct product is the product of the
             % order of the factors
@@ -74,7 +112,7 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
             end
         end
 
-        function e = elements(self)
+        function e = computeElements(self)
             e = replab.IndexedFamily.lambda(self.order, ...
                                             @(ind) self.atFun(ind), ...
                                             @(g) self.findFun(g));
@@ -84,7 +122,7 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
             % which is the role of the `atFun` and `findFun` functions
         end
 
-        function gd = decomposition(self)
+        function gd = computeDecomposition(self)
             T = {};
             % The decomposition of a direct product into sets
             % is simply the concatenation of the sequence of sets
@@ -106,6 +144,21 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
                 T = horzcat(T, Ti);
             end
             gd = replab.FiniteGroupDecomposition(self, T);
+        end
+
+        % NiceFiniteGroup
+
+        function p = niceImage(self, g)
+            shift = 0;
+            p = [];
+            % concatenates the permutation images of the factors
+            for i = 1:self.nFactors
+                pf = self.factor(i).niceMonomorphismImage(g{i});
+                p = [p pf+shift];
+                shift = shift + length(pf);
+            end
+
+
         end
 
     end
