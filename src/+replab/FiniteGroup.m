@@ -98,19 +98,18 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-        % TODO
-% $$$         function R = recognize(self)
-% $$$         % Attempts to recognize this group in the standard atlas
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.AtlasResult` or []: A result in case the group is identified; or ``[]`` if unrecognized.
-% $$$             R = self.cached('recognize', @() self.computeRecognize);
-% $$$         end
-% $$$
-% $$$         function R = computeRecognize(self)
-% $$$             A = replab.atlas.Standard;
-% $$$             R = A.recognize(self);
-% $$$         end
+        function R = recognize(self)
+        % Attempts to recognize this group in the standard atlas
+        %
+        % Returns:
+        %   `+replab.AtlasResult` or []: A result in case the group is identified; or ``[]`` if unrecognized.
+            R = self.cached('recognize', @() self.computeRecognize);
+        end
+
+        function R = computeRecognize(self)
+            A = replab.atlas.Standard;
+            R = A.recognize(self);
+        end
 
         function b = isTrivial(self)
         % Tests whether this group is trivial

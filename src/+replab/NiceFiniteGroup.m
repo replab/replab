@@ -18,6 +18,24 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
     methods % Nice monomorphism support
 
+        function g = nicePreimage(self, p)
+        % Default implementation of chain
+            g = self.niceChain.image(p);
+        end
+
+        function c = niceChain(self)
+            c = self.cached('niceChain', @() self.computeNiceChain);
+        end
+
+        function c = computeNiceChain(self)
+            niceGens = cellfun(@(s) self.niceImage(s), self.generators, 'uniform', 0);
+            niceGroup = self.niceGroup;
+            % TODO: optimize ChainWithImages by using deterministic Schreier-Sims while comparing orbits
+            finImgs = [];
+            c = replab.bsgs.ChainWithImages.make(I.n, self, niceGens, self.generators, finImgs, ...
+                                                 niceGroup.chain.base, niceGroup.order);
+        end
+
         function p = niceImage(self, g)
         % Returns a permutation image of the given group element
         %
@@ -34,7 +52,6 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   `+replab.PermutationGroup`: The image of the isomorphism
-
             G = self.cached('niceGroup', @() self.computeNiceGroup);
         end
 

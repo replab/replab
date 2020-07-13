@@ -67,6 +67,10 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
             res = isa(rhs, 'replab.SignedPermutationGroup') && (self.type.domainSize == rhs.type.domainSize);
         end
 
+        function p1 = nicePreimage(self, p)
+            p1 = replab.SignedPermutation.fromPermutation(p);
+        end
+
         function p1 = niceImage(self, p)
             p1 = replab.SignedPermutation.toPermutation(p);
         end
