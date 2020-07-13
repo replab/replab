@@ -140,7 +140,9 @@ classdef NiceFiniteGroup < replab.FiniteGroup
                 tCentralizer = self.niceMorphism.imageGroup(tCentralizer);
             end
             B = self.niceGroup.findLeftConjugations(s, t, sCentralizer, tCentralizer);
-            B = self.niceMorphism.preimageSet(B); % TODO does not exist
+            subgroup = self.niceMorphism.preimageGroup(B.subgroup);
+            canRep = self.niceMorphism.preimageElement(B.representative);
+            B = replab.LeftCoset(self, subgroup, canRep);
         end
 
     end
