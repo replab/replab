@@ -7,15 +7,15 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
 
     methods
 
-        function self = SignedPermutationGroup(domainSize, generators, order, parent)
+        function self = SignedPermutationGroup(domainSize, generators, order, type)
         % Constructs a signed permutation group
         %
         % Args:
         %   domainSize (integer): Size of the domain
         %   generators (cell(1,\*) of permutation): Group generators
         %   order (vpi, optional): Order of the group
-        %   parent (`+replab.SignedPermutationGroup`, optional): Parent of this group if known,
-        %                                                        or ``'self'`` if this group is its own parent
+        %   type (`+replab.SignedPermutationGroup`, optional): Type of this group if known,
+        %                                                      or ``'self'`` if this group is its own type
             self.domainSize = domainSize;
             self.identity = 1:domainSize;
             self.generators = generators;
@@ -25,12 +25,12 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
             if nargin < 4
                 parent = [];
             end
-            if isempty(parent)
-                self.parent = replab.SignedSymmetricGroup(domainSize);
-            elseif isequal(parent, 'self')
-                self.parent = self;
+            if isempty(type)
+                self.type = replab.SignedSymmetricGroup(domainSize);
+            elseif isequal(type, 'self')
+                self.type = self;
             else
-                self.parent = parent;
+                self.type = parent;
             end
         end
 
@@ -64,7 +64,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
             res = isa(rhs, 'replab.SignedPermutationGroup') && (self.parent.domainSize == rhs.parent.domainSize);
         end
 
-        function p1 = niceMonomorphismImage(self, p)
+        function p1 = niceImage(self, p)
             p1 = replab.SignedPermutation.toPermutation(p);
         end
 
