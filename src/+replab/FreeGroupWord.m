@@ -195,7 +195,7 @@ classdef FreeGroupWord < replab.Str
         %   >>> [F x y] = replab.FreeGroup.of('x', 'y');
         %   >>> w = x*y/x;
         %   >>> s = w.toString;
-        %   >>> w1 = F.word(s);
+        %   >>> w1 = F.parse(s);
         %   >>> w == w1
         %       1
         %

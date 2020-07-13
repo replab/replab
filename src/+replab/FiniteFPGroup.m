@@ -73,7 +73,7 @@ classdef FiniteFPGroup < replab.NiceFiniteGroup
             mask = cellfun(@(r) r.isEmpty, relators);
             % remove empty relators
             relators = relators(~mask);
-            fpg = replab.FPGroup(F, relators);
+            fpg = replab.FiniteFPGroup(F, relators);
             if nargout > 1
                 for i = 1:length(fpg.nGenerators)
                     varargout{i} = fpg.generator(i);
