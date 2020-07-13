@@ -102,22 +102,24 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             o = self.niceGroup.elementOrder(self.niceImage(g));
         end
 
+        % Construction of groups
+
         function res1 = closure(self, obj)
             if isa(obj, 'replab.FiniteGroup')
-                res = self.niceGroup.closure(self.niceMorphism.imageGroup(obj));
+                res = self.niceGroup.closure(self.type.niceMorphism.imageGroup(obj));
             else
-                res = self.niceGroup.closure(self.niceImage(obj));
+                res = self.niceGroup.closure(self.type.niceImage(obj));
             end
-            res1 = self.niceMorphism.preimageGroup(res);
+            res1 = self.type.niceMorphism.preimageGroup(res);
         end
 
         function res1 = normalClosure(self, obj)
             if isa(obj, 'replab.FiniteGroup')
-                res = self.niceGroup.normalClosure(self.niceMorphism.imageGroup(obj));
+                res = self.niceGroup.normalClosure(self.type.niceMorphism.imageGroup(obj));
             else
                 res = self.niceGroup.normalClosure(self.niceImage(obj));
             end
-            res1 = self.niceMorphism.preimageGroup(res);
+            res1 = self.type.niceMorphism.preimageGroup(res);
         end
 
         % Subgroups

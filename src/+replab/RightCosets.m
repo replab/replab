@@ -16,7 +16,7 @@ classdef RightCosets < replab.CosetBase
         % Returns:
         %   integer: Number of right cosets
             s = self.group.order / self.subgroup.order;
-            assert(s < 2^53);
+            assert(s < 2^53 - 1);
             s = double(s);
         end
 
@@ -55,7 +55,7 @@ classdef RightCosets < replab.CosetBase
         %
         % Returns:
         %   cell(1, \*) of `.group` elements: Transversal
-            M = replab.bsgs.Cosets.rightTransversalAsMatrix(self.groupChain, self.subgroupChain);
+            M = replab.bsgs.Cosets.rightTransversalMatrix(self.groupChain, self.subgroupChain);
             T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:self.cardinality, 'uniform', 0);
         end
 
