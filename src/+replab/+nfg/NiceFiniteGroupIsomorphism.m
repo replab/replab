@@ -28,8 +28,8 @@ classdef NiceFiniteGroupIsomorphism < replab.FiniteIsomorphism
             n = self.target.domainSize;
             I = self.image;
             % TODO: optimize ChainWithImages by using deterministic Schreier-Sims while comparing orbits
-            c = replab.bsgs.ChainWithImages.make(n, self.source, imageGenerators, source.generators, [], ...
-                                                 I.base, I.order);
+            c = replab.bsgs.ChainWithImages.make(n, self.source, imageGenerators, self.source.generators, [], ...
+                                                 I.chain.base, I.order);
         end
 
         function T = imageGroup(self, S)
@@ -42,6 +42,11 @@ classdef NiceFiniteGroupIsomorphism < replab.FiniteIsomorphism
 
         function s = preimageElement(self, t)
             s = self.chain.image(t);
+        end
+
+        function S = preimageGroup(self, T)
+            gens = cellfun(@(t) self.chain.image(t), T.generators, 'uniform', 0);
+            S = self.source.niceSubgroup(gens, T.order, T);
         end
 
     end

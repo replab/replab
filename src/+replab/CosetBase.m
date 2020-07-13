@@ -22,7 +22,9 @@ classdef CosetBase < replab.Str
                 self.groupChain = group.lexChain;
                 self.subgroupChain = subgroup.lexChain;
             elseif isa(group, 'replab.NiceFiniteGroup')
-                error('TODO');
+                self.isomorphism = group.niceMorphism;
+                self.groupChain = group.niceGroup.chain;
+                self.subgroupChain = subgroup.niceGroup.chain;
             else
                 error('unsupported');
             end

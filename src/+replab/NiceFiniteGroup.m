@@ -34,7 +34,14 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         %
         % Returns:
         %   `+replab.PermutationGroup`: The image of the isomorphism
-            G = self.cached('niceGroup', @() self.niceMorphism.image);
+
+            G = self.cached('niceGroup', @() self.computeNiceGroup);
+        end
+
+        function G = computeNiceGroup(self)
+            gens = cellfun(@(g) self.niceImage(g), self.generators, 'uniform', 0);
+            ds = length(self.niceImage(self.identity));
+            G = replab.PermutationGroup(ds, gens, self.cachedOrEmpty('order'));
         end
 
         function f = niceMorphism(self)
@@ -104,7 +111,15 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % Subgroups
 
         function sub = subgroupWithGenerators(self, generators, order)
-            error('TODO');
+            if nargin < 3
+                order = [];
+            end
+            niceGroup = self.niceGroup.subgroupWithGenerators(cellfun(@(g) self.niceImage(g), generators, 'uniform', 0), order);
+            sub = self.niceSubgroup(generators, order, niceGroup);
+        end
+
+        function sub = niceSubgroup(self, generators, order, niceGroup)
+            error('Abstract');
         end
 
         function sub = computeDerivedSubgroup(self)
