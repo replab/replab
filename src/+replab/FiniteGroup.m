@@ -144,28 +144,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-% $$$
-% $$$         function res = isSimple(self)
-% $$$         % Returns whether this group is simple
-% $$$             res = self.cached('isSimple', @() self.computeIsSimple);
-% $$$         end
-% $$$
-% $$$         function res = computeIsSimple(self)
-% $$$             if self.isTrivial
-% $$$                 res = false;
-% $$$             end
-% $$$             C = self.conjugacyClasses;
-% $$$             for i = 1:length(C)
-% $$$                 c = C{i}.representative;
-% $$$                 if ~self.isIdentity(c)
-% $$$                     if self.normalClosure(self.subgroup({c})) ~= self
-% $$$                         res = false;
-% $$$                         return
-% $$$                     end
-% $$$                 end
-% $$$             end
-% $$$             res = true; % all conjugacy classes generate the full group
-% $$$         end
+        function res = isSimple(self)
+        % Returns whether this group is simple
+            res = self.cached('isSimple', @() self.computeIsSimple);
+        end
+
+        function res = computeIsSimple(self)
+            error('Abstract');
+        end
 
     end
 
@@ -263,7 +249,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-        function sub = normalClosure(self, obj)
+        function res = normalClosure(self, obj)
         % Computes the normal closure of an object in the closure of this group and this object
         %
         % Example:
@@ -578,6 +564,20 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
     end
 
     methods % Morphisms
+
+% $$$         % TODO
+% $$$         function f = leftConjugateMorphism(self, by)
+% $$$         % Returns the morphism that corresponds to left conjugation by an element
+% $$$         %
+% $$$         % Args:
+% $$$         %   by (element of `parent`): Element to conjugate the group with
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `+replab.Morphism`: Conjugation morphism
+% $$$             generatorImages = cellfun(@(g) self.parent.leftConjugate(by, g), self.generators, 'uniform', 0);
+% $$$             target = self.parent.subgroup(newGenerators, self.order);
+% $$$             f = self.morphismByImages(self, target, generatorImages);
+% $$$         end
 
         function m = morphismByImages(self, target, generatorImages)
         % Constructs a morphism to a group using images of generators

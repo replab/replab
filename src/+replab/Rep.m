@@ -126,10 +126,26 @@ classdef Rep < replab.Obj
             b = isequal(self.field, 'C');
         end
 
-        %% Computed properties
+    end
+
+    methods % Computed properties
+
+        function K = kernel(self)
+        % Returns the kernel of the given representation
+        %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> K = S3.signRep.kernel;
+        %   >>> K == replab.AlternatingGroup(3)
+        %       1
+        %
+        % Returns:
+        %   `+replab.FiniteGroup`: The group ``K`` such that ``rho.image(k) == id`` for all ``k`` in ``K``
+            K = self.cached('kernel', @() self.computeKernel);
+        end
 
         function K = computeKernel(self)
-            assert(isa(self.group, 'replab.NiceFiniteGroup'));
+            assert(isa(self.group, 'replab.FiniteGroup'));
             % TODO error estimation: take in account the uncertainty on computed images
             C = self.group.conjugacyClasses;
             % for a character, we have chi(g) == chi(id) only if rho(g) == eye(d)
@@ -147,21 +163,9 @@ classdef Rep < replab.Obj
             K = self.group.normalClosure(K);
         end
 
-        function K = kernel(self)
-        % Returns the kernel of the given representation
-        %
-        % Example:
-        %   >>> S3 = replab.S(3);
-        %   >>> K = S3.signRep.kernel;
-        %   >>> K == replab.AlternatingGroup(3)
-        %       1
-        %
-        % Returns:
-        %   `+replab.NiceFiniteGroup`: The group ``K`` such that ``rho.image(k) == id`` for all ``k`` in ``K``
-            K = self.cached('kernel', @() self.computeKernel);
-        end
+    end
 
-        %% Derived vector spaces/algebras
+    methods % Derived vector spaces/algebras
 
         function e = equivariantTo(self, repR)
         % Returns the space of equivariant linear maps from this rep to another rep
@@ -227,18 +231,9 @@ classdef Rep < replab.Obj
             t = self.cached('trivialSpace', @() self.computeTrivialSpace);
         end
 
-        %% Irreducible decomposition
+    end
 
-        function dec = computeDecomposition(self)
-            dec = replab.irreducible.decomposition(self);
-            if dec.nComponents == 1 && dec.components{1}.multiplicity == 1
-                assert(~isequal(self.isIrreducible, false));
-                self.isIrreducible = true;
-                if isequal(dec.basis, eye(self.dimension))
-                    replab.rep.copyProperties(dec, self);
-                end
-            end
-        end
+    methods % Irreducible decomposition
 
         function I = decomposition(self)
         % Returns the irreducible decomposition of this representation
@@ -253,7 +248,20 @@ classdef Rep < replab.Obj
             I = self.cached('decomposition', @() self.computeDecomposition);
         end
 
-        %% Str methods
+        function dec = computeDecomposition(self)
+            dec = replab.irreducible.decomposition(self);
+            if dec.nComponents == 1 && dec.components{1}.multiplicity == 1
+                assert(~isequal(self.isIrreducible, false));
+                self.isIrreducible = true;
+                if isequal(dec.basis, eye(self.dimension))
+                    replab.rep.copyProperties(dec, self);
+                end
+            end
+        end
+
+    end
+
+    methods % Implementations
 
         function s = headerStr(self)
             p = {};
@@ -329,7 +337,9 @@ classdef Rep < replab.Obj
             s = strjoin(p, ' ');
         end
 
-        %% Derived actions
+    end
+
+    methods % Derived actions
 
         function M = matrixRowAction(self, g, M)
         % Computes the representation-matrix product
@@ -371,8 +381,21 @@ classdef Rep < replab.Obj
             M = full(M * self.inverseImage_internal(g));
         end
 
-        %% Derived representations
+    end
 
+    methods % Derived representations
+
+        function rep1 = contramap(self, morphism)
+        % Returns the representation composed with the given morphism applied first
+        %
+        % Args:
+        %   morphism (`+replab.FiniteMorphism`): Morphism of finite groups such that ``morphism.target == self.group``
+        %
+        % Returns:
+        %   `+replab.Rep`: Representation on the finite group ``morphism.source``
+            assert(self.group == morphism.target);
+            rep1 = replab.Rep.lambda(morphism.source, self.field, self.dimension, @(g) rep.image_internal(morphism.image(g)), @(g) replab.inverseImage_internal(morphism.image(g)));
+        end
 
         function rep1 = restrictedTo(self, subgroup)
         % Returns the restricted representation to the given subgroup
@@ -679,20 +702,20 @@ classdef Rep < replab.Obj
 
     methods (Static)
 
-        function rep = lambda(group, field, dimension, imageFun, inverseImageFun)
+        function rep = lambda(group, field, dimension, image_internalFun, inverseImage_internalFun)
         % Creates a non unitary representation from an image function
         %
         % Args:
         %   group (replab.Group): Group represented
         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
         %   dimension (integer): Representation dimension
-        %   imageFun (function_handle): Function handle that returns an image matrix given a group element
-        %   inverseImageFun (function_handle): Function handle that returns the inverse of the image
-        %                                      matrix given a group element
+        %   image_internalFun (function_handle): Function handle that returns an image matrix given a group element
+        %   inverseImage_internalFun (function_handle): Function handle that returns the inverse of the image
+        %                                               matrix given a group element
         %
         % Returns:
         %   `+replab.Rep`: The constructed representation
-            rep = replab.lambda.Rep(group, field, dimension, imageFun, inverseImageFun);
+            rep = replab.lambda.Rep(group, field, dimension, image_internalFun, inverseImage_internalFun);
         end
 
     end

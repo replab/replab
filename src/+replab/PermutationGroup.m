@@ -210,6 +210,24 @@ classdef PermutationGroup < replab.FiniteGroup
             end
         end
 
+        function res = computeIsSimple(self)
+            if self.isTrivial
+                res = false;
+                return
+            end
+            C = self.conjugacyClasses;
+            for i = 1:length(C)
+                c = C{i}.representative;
+                if ~self.isIdentity(c)
+                    if self.normalClosure(self.subgroup({c})) ~= self
+                        res = false;
+                        return
+                    end
+                end
+            end
+            res = true; % all conjugacy classes generate the full group
+        end
+
         % Group elements
 
         function b = contains(self, g)
