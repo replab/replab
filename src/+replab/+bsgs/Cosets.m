@@ -11,13 +11,13 @@ classdef Cosets
         %
         % Returns:
         %   integer(\*,\*): Transversal matrix with permutations as columns
-            Tinv = replab.bsgs.rightTransversalMatrix(group, subgroup);
+            Tinv = replab.bsgs.Cosets.rightTransversalMatrix(group, subgroup);
             T = zeros(size(Tinv));
             n = group.n;
             g = zeros(1, n);
-            for i = 1:size(Tinv, 1)
-                g(T(:,i)) = 1:n; % invert
-                T(:,i) = replab.bsgs.leftRepresentative(subgroup, g);
+            for i = 1:size(Tinv, 2)
+                g(Tinv(:,i)) = 1:n; % invert
+                T(:,i) = replab.bsgs.Cosets.leftRepresentative(subgroup, g);
             end
         end
 
@@ -30,8 +30,6 @@ classdef Cosets
         %
         % Returns:
         %   integer(\*,\*): Transversal matrix with permutations as columns
-            group = self.groupChain;
-            subgroup = self.subgroupChain;
             n = group.n;
             L = group.length;
             stackG = zeros(n, L+1); % current group element

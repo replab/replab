@@ -7,24 +7,20 @@ classdef LeftCoset < replab.CosetBase & replab.FiniteSet
 %   This structure is implemented by referencing the permutation realizations of the group and subgroup through
 %   a nice isomorphism.
 
-    methods (Access = protected)
-
-        function self = LeftCoset(group, subgroup, representative)
-            self@replab.CosetBase(group, subgroup);
-            self.type = group.type;
-            self.representative = representative;
-        end
-
-    end
-
     methods
 
-        function s = size(self)
+        function self = LeftCoset(group, subgroup, canonicalRepresentative)
+            self@replab.CosetBase(group, subgroup);
+            self.type = group.type;
+            self.representative = canonicalRepresentative;
+        end
+
+        function s = cardinality(self)
         % Returns the size of this coset
         %
         % Returns:
         %   vpi: Coset size
-            s = self.group.order/self.subgroup.order;
+            s = self.subgroup.order;
         end
 
         function b = contains(self, el)
@@ -54,19 +50,6 @@ classdef LeftCoset < replab.CosetBase & replab.FiniteSet
             end
             matrix = sortrows(g(H'))';
             E = replab.indf.FiniteGroupIndexedFamily(matrix, self.isomorphism);
-        end
-
-    end
-
-    methods (Static)
-
-        function L = make(group, subgroup, element)
-            assert(isa(group, 'replab.PermutationGroup')); % TODO
-            L = replab.LeftCoset(group, subgroup, replab.bsgs.Cosets.leftRepresentative(subgroup.lexChain, element));
-        end
-
-        function L = fromRepresentative(group, subgroup, representative)
-            L = replab.LeftCoset(group, subgroup, representative);
         end
 
     end

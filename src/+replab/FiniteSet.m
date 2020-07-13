@@ -13,7 +13,7 @@ classdef FiniteSet < replab.Domain
 
     methods
 
-        function s = size(self)
+        function s = cardinality(self)
         % Returns the size of this set
         %
         % Returns:

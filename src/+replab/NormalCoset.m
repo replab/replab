@@ -3,18 +3,14 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
 %
 % It is a left and right coset at the same time.
 
-    methods (Access = protected)
-
-        function self = NormalCoset(group, subgroup, representative)
-            self@replab.LeftCoset(group, subgroup, representative);
-            self@replab.RightCoset(group, subgroup, representative);
-        end
-
-    end
-
     methods
 
-        function s = size(self)
+        function self = NormalCoset(group, subgroup, canonicalRepresentative)
+            self@replab.LeftCoset(group, subgroup, canonicalRepresentative);
+            self@replab.RightCoset(group, subgroup, canonicalRepresentative);
+        end
+
+        function s = cardinality(self)
         % Returns the size of this coset
         %
         % Returns:
@@ -39,19 +35,6 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
         % Returns:
         %   `+replab.IndexedFamily`: Elements
             E = computeElements@replab.LeftCoset(self);
-        end
-
-    end
-
-    methods (Static)
-
-        function L = make(group, subgroup, element)
-            assert(isa(group, 'replab.PermutationGroup')); % TODO
-            L = replab.NormalCoset(group, subgroup, replab.bsgs.Cosets.leftRepresentative(subgroup.lexChain, element));
-        end
-
-        function L = fromRepresentative(group, subgroup, representative)
-            L = replab.NormalCoset(group, subgroup, representative);
         end
 
     end

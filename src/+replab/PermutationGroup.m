@@ -330,31 +330,6 @@ classdef PermutationGroup < replab.FiniteGroup
 
         % Cosets
 
-        function c = normalCoset(self, normalSubgroup, element)
-            assert(normalSubgroup.isNormalSubgroupOf(self));
-            c = replab.NormalCoset.make(self, subgroup, element);
-        end
-
-        function c = normalCosetsOf(self, subgroup)
-            error('Abstract');
-        end
-
-        function c = rightCoset(self, subgroup, element)
-            c = replab.RightCoset.make(self, subgroup, element);
-        end
-
-        function c = rightCosetsOf(self, subgroup)
-            error('Abstract');
-        end
-
-        function c = leftCoset(self, subgroup, element)
-            c = replab.LeftCoset.make(self, subgroup, element);
-        end
-
-        function c = leftCosetsOf(self, subgroup)
-            error('Abstract');
-        end
-
         function c = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
             if nargin < 4 || isempty(sCentralizer)
                 sCentralizer = self.centralizer(s);

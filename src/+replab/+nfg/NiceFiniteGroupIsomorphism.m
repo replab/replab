@@ -1,16 +1,18 @@
-classdef IsoToPerm < replab.FiniteIsomorphism
-
-    properties
-        imageFun % (function_handle): Image function
-    end
+classdef NiceFiniteGroupIsomorphism < replab.FiniteIsomorphism
 
     methods
 
-        function self = IsoToPerm(source, imageFun)
+        function self = NiceFiniteGroupIsomorphism(source)
+        % Constructs the nice isomorphism from a nice finite group to its permutation group
+        %
+        % Args:
+        %   source (`+replab.NiceFiniteGroup`): Source of the isomorphism
+        %
+        % Returns:
+        %   `+replab.FiniteIsomorphism`: The constructed isomorphism
             self.source = source;
-            identity = imageFun(source.identity)
-            self.target = replab.SymmetricGroup(length(identity));
-            self.imageFun = imageFun;
+            domainSize = length(source.niceImage(source.identity));
+            self.target = replab.SymmetricGroup(domainSize);
         end
 
         function c = chain(self)
@@ -31,7 +33,7 @@ classdef IsoToPerm < replab.FiniteIsomorphism
         end
 
         function t = imageElement(self, s)
-            t = self.imageFun(s);
+            t = self.source.niceImage(s);
         end
 
         function s = preimageElement(self, t)

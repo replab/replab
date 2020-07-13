@@ -426,7 +426,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `+replab.NormalCoset`: The constructed normal coset
-            error('Abstract');
+            c = self.normalCosetsOf(subgroup).coset(element);
         end
 
         function c = normalCosetsOf(self, subgroup)
@@ -434,8 +434,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Args:
         %   subgroup (`+replab.FiniteGroup`): Normal subgroup of this group
-            error('Abstract');
             assert(subgroup.isNormalSubgroupOf(self), 'The given subgroup must be normal in parent group');
+            c = replab.NormalCosets(self, subgroup);
         end
 
         function c = rightCoset(self, subgroup, element)
@@ -449,7 +449,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `+replab.RightCoset`: The constructed right coset
-            error('Abstract');
+            c = self.rightCosetsOf(subgroup).coset(element);
         end
 
         function c = rightCosetsOf(self, subgroup)
@@ -460,7 +460,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `+replab.RightCosets`: Right cosets
-            error('Abstract');
+            c = replab.RightCosets(self, subgroup);
         end
 
         function c = mldivide(self, supergroup)
@@ -479,7 +479,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `+replab.LeftCoset`: The constructed right coset
-            error('Abstract');
+            c = self.leftCosetsOf(subgroup).coset(element);
         end
 
         function c = leftCosetsOf(self, subgroup)
@@ -490,7 +490,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `+replab.LeftCosets`: Left cosets
-            error('Abstract');
+            c = replab.LeftCosets(self, subgroup);
         end
 
         function c = mrdivide(self, subgroup)

@@ -1,60 +1,95 @@
-classdef LeftCosets < replab.Str
-% Describes the set of left right cosets of a nice finite group
+classdef LeftCosets < replab.CosetBase
+% Describes the set of left cosets of a finite group
 %
 % Let $H$ be a subgroup of a group $G$. Then the left cosets are the sets $g H = \{ g h : h \in H \}$.
 % The set of such left cosets is often written $G / H = \{ g H : g \in G \}$.
-%
-% RepLAB works with left cosets by translating the operations to the ones on the right cosets.
-
-    properties (SetAccess = protected)
-        group % (`.NiceFiniteGroup`): Group
-        subgroup % (`.NiceFiniteGroup`): Subgroup of `.group`
-    end
 
     methods
 
-        function t = canonicalRepresentative(self, g)
-        % Returns the coset representative corresponding to the given element
-        %
-        % It is thus guaranteed that if ``t = canonicalRepresentative(g)``, then $t^{-1} g = h \in H$, with
-        % the decomposition $g = t h$.
-        %
-        % Moreover ``R.canonicalRepresentative(g) == R.canonicalRepresentative(compose(g, h))`` for any $h \in H$.
-        %
-        % For permutation groups, the canonical representative returned is the one which is lexicographically
-        % minimal in its coset.
-        %
-        % Args:
-        %   g (element of `group`): Group element
+        function self = LeftCosets(group, subgroup)
+            self@replab.CosetBase(group, subgroup);
+        end
+
+        function s = cardinality(self)
+        % Returns the number of left cosets
         %
         % Returns:
-        %   t (element of `group`): Coset canonical representative
-            error('Abstract');
+        %   integer: Number of left cosets
+            s = self.group.order / self.subgroup.order;
+            assert(s <= 2^53 - 1);
+            s = double(s);
+        end
+
+        function C = coset(self, g)
+        % Returns the left coset containing the given element
+        %
+        % Args:
+        %   g (element of `.group`): Group element
+        %
+        % Returns:
+        %   `+replab.LeftCoset`: Left coset
+            C = replab.LeftCoset(self.group, self.subgroup, self.cosetRepresentative(g));
+        end
+
+        function t = cosetRepresentative(self, g)
+        % Returns the canonical coset representative corresponding to the given element
+        %
+        % If ``t = cosetRepresentative(g)``, then $t^{-1} g = h \in H$, with decomposition $g = t h$.
+        %
+        % Moreover ``L.cosetRepresentative(g) == L.cosetRepresentative(compose(g, h))`` for any $h \in H$.
+        %
+        % Finally, ``L.cosetRepresentative(g) == L.coset(g).representative``.
+        %
+        % Args:
+        %   g (element of `.group`): Group element
+        %
+        % Returns:
+        %   t (element of `.group`): Coset canonical representative
+            g = self.isomorphism.imageElement(g);
+            t = replab.bsgs.Cosets.leftRepresentative(self.subgroupChain, g);
+            t = self.isomorphism.preimageElement(t);
         end
 
         function T = transversal(self)
         % Returns all the canonical representatives of cosets
-            error('Abstract');
-        end
-
-        function C = coset(self, g)
-        % Returns all the elements in the coset containing the given element
-            C = cellfun(@(h) self.group.compose(g, h), self.subgroup.elements.toCell, 'uniform', 0);
-        end
-
-        function C = cosets(self)
-        % Returns the set of right cosets as a cell array
         %
         % Returns:
-        %   cell(1,\*) of cell(1,\*) of elements of `.group`: Set of right cosets
-            T = self.transversal;
-            C = cellfun(@(t) self.coset(t), T, 'uniform', 0);
+        %   cell(1, \*) of `.group` elements: Transversal
+            M = replab.bsgs.Cosets.leftTransversalAsMatrix(self.groupChain, self.subgroupChain);
+            T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:self.size, 'uniform', 0);
         end
 
-        function mu = action(self)
-        % Returns a morphism that describes the action of the group on cosets
-            error('Abstract');
+        function C = elements(self)
+        % Returns the set of left cosets as a cell array
+        %
+        % Returns:
+        %   cell(1,\*) of `+replab.LeftCoset`: Set of left cosets
+            T = self.transversal;
+            C = cellfun(@(t) replab.LeftCoset(self.group, self.subgroup, t), T, 'uniform', 0);
+            assert(isscalar(C{1}));
         end
+
+% $$$         function mu = leftAction(group, subgroup)
+% $$$         % Returns, as a morphism, the action of the given group of its left cosets
+% $$$             nG = group.nGenerators;
+% $$$             T = self.transversalAsMatrix;
+% $$$             n = size(T, 1);
+% $$$             images = cell(1, nG);
+% $$$             for i = 1:nG
+% $$$                 g = self.group.generator(i);
+% $$$                 img = zeros(1, n);
+% $$$                 for j = 1:n
+% $$$                     gt = self.canonicalRepresentative(g(T(j,:)));
+% $$$                     loc = replab.util.findRowInMatrix(gt, T);
+% $$$                     % [ok, loc] = ismember(gt, T, 'rows');
+% $$$                     assert(length(loc) == 1);
+% $$$                     img(j) = loc;
+% $$$                 end
+% $$$                 images{i} = img;
+% $$$             end
+% $$$             Sn = replab.S(n);
+% $$$             mu = self.group.morphismByImages(Sn, images);
+% $$$         end
 
     end
 

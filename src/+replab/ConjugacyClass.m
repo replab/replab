@@ -1,36 +1,49 @@
-classdef ConjugacyClass < replab.Str
+classdef ConjugacyClass < replab.FiniteSet
+% Describes a conjugacy class of a finite group
+%
+% A conjugacy class containing the representative $r \in G$ is the set $\{g r g^{-1} : g \in G \}$.
+%
+% The centralizer of $r$ in $G$ is the subgroup $C_{G}(r) = \{ g r g^{-1} == r : g \in G \}$.
+%
+% Thus, the left cosets $G/C_{G}(r) = \{ g C_{G}(r) : g \in G \}$ are in one to one correspondence with
+% the elements of the conjugacy class.
+
+    properties (SetAccess = protected) % TODO: Access = protected
+        isomorphism % (`+replab.FiniteIsomorphism`): Isomorphism to a permutation group
+    end
 
     properties (SetAccess = protected)
         group % (`+replab.FiniteGroup`): Group containing this conjugacy class
         representative % (group element): Representative element of the conjugacy class
-        size % (integer): Size of the conjugacy class
-    end
-
-    properties (Access = protected)
-        morphism % (`.FiniteMorphism`): Morphism that maps permutations back to elements of the original group
-        elementImages % (double(\*,\*)): Matrix containing images of the conjugacy class elements
-                      %
-                      %                  Each column is a permutation representing the image
-                      %                  of an element of the conjugacy class through
-                      %                  `+replab.NiceFiniteGroup.niceMonomorphismImage`
+        representativeCentralizer % (`+replab.FiniteGroup`): Centralizer of `.representative` in `.group`
     end
 
     methods (Access = protected)
 
-        function self = ConjugacyClass(group, morphism, elementImages)
+        function self = ConjugacyClass(group, representative, representativeCentralizer)
+            self.type = self.group.type;
             self.group = group;
-            self.representative = morphism.image(elementImages(:,1)');
-            self.morphism = morphism;
-            self.elementImages = elementImages;
-            self.size = size(self.elementImages, 2);
+            self.representative = representative;
+            self.representativeCentralizer = representativeCentralizer;
         end
 
     end
 
     methods
 
-        function e = elements(self)
-            e = arrayfun(@(i) self.morphism.image(self.elementImages(:,i)'), 1:self.size, 'uniform', 0);
+        function s = cardinality(self)
+            s = self.group.order / self.representativeCentralizer.order;
+        end
+
+        function b = contains(self, el)
+        % We want to solve ``el == x c r c^-1`` with ``r`` the representative
+        % and ``c`` an element of its centralizer
+
+            b = (self.elements.find(el) ~= 0);
+        end
+
+        function E = computeElements(self)
+            M = replab.bsgs.Cosets.rightTransversalMatrix(
         end
 
     end
