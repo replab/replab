@@ -175,7 +175,7 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function C = computeConjugacyClasses(self)
-            if self.order < 5000
+            if self.order < 5000 || true % TODO
                 classes = replab.nfg.conjugacyClassesByOrbits(self);
                 n = length(classes);
                 C = cell(1, n);
@@ -420,6 +420,7 @@ classdef PermutationGroup < replab.FiniteGroup
                     l = l + 1;
                 end
             end
+            tests = [];
             b = replab.bsgs.backtrackSearch(self.chain, prop, tests, [], leftSubgroup, rightSubgroup);
             % note that we have
             % sCentralizer == tCentralizer.leftConjugateGroup(self.inverse(b))
