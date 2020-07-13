@@ -18,7 +18,7 @@ classdef FiniteFPGroup < replab.NiceFiniteGroup
         %   >>> [F, a, x] = replab.FreeGroup.of('a', 'x');
         %   >>> replab.FiniteFPGroup(F, {a*a, x*x, a*x*inv(a)*inv(x)})
             assert(all(cellfun(@(r) r.group == freeGroup, relators)));
-            self.parent = self;
+            self.type = self;
             self.freeGroup = freeGroup;
             self.relators = relators;
             self.identity = replab.FiniteFPGroupElement(self, freeGroup.identity);
@@ -100,6 +100,42 @@ classdef FiniteFPGroup < replab.NiceFiniteGroup
             res = (self.order == fpg.order);
         end
 
+        % Str
+
+        function s = headerStr(self)
+            s = self.presentation;
+        end
+
+        % Domain
+
+        function res = eqv(self, x, y)
+            xI = self.niceImage(x)
+            yI = self.y.representative.computeImage(self.niceGroup, self.niceGroup.generators);
+            res = self.niceGroup.eqv(xI, yI);
+        end
+
+        % Monoid
+
+        function z = compose(self, x, y)
+            z = replab.FiniteFPGroupElement(self, x.representative * y.representative);
+        end
+
+        % Group
+
+        function z = inverse(self, x)
+            z = replab.FiniteFPGroupElement(self, inv(x.representative));
+        end
+
+        % NiceFiniteGroup
+
+        function p = niceImage(self, x)
+            p = x.representative.computeImage(self.niceGroup, self.niceGroup.generators);
+        end
+
+% $$$         function m = morphismByImages(self, target, generatorImages)
+% $$$             m = morphismByImages@replab.FPGroup(self, target, generatorImages);
+% $$$         end
+
     end
 
     methods
@@ -129,7 +165,7 @@ classdef FiniteFPGroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   charstring: Presentation as string
-            gens = strjoin(cellfun(@(w) w.toString, self.freeGroup.generators, 'uniform', 0), ', ');
+            gens = strjoin(cellfun(@(e) e.toString, self.freeGroup.generators, 'uniform', 0), ', ');
             rels = strjoin(cellfun(@(r) r.toString, self.relators, 'uniform', 0), ' = ');
             s = ['< ' gens ' | ' rels ' = 1 >'];
         end
@@ -140,27 +176,8 @@ classdef FiniteFPGroup < replab.NiceFiniteGroup
         % Enables to skip the Todd-Coxeter procedure when operating over the group.
             self.cache('niceGroup', replab.PermutationGroup.of(permutations{:}), 'ignore');
             for i = 1:length(self.relators)
-                assert(self.niceGroup.isIdentity(self.niceMonomorphismImage(self.relators{i})));
+                assert(self.niceGroup.isIdentity(self.niceImage(replab.FiniteFPGroupElement(self, self.relators{i}))));
             end
-        end
-
-        function res = eqv(self, x, y)
-            xyI = self.compose(x, self.inverse(y));
-            res = self.niceGroup.isIdentity(self.computeImage(self.niceGroup, xyI));
-        end
-
-
-        function p = niceMonomorphismImage(self, w)
-            p = w.computeImage(self.niceGroup, self.niceGroup.generators);
-        end
-
-% $$$         function m = morphismByImages(self, target, generatorImages)
-% $$$             m = morphismByImages@replab.FPGroup(self, target, generatorImages);
-% $$$         end
-
-
-        function s = headerStr(self)
-            s = self.presentation;
         end
 
 % $$$         function l = imagesDefineMorphism(self, target, generatorImages)
