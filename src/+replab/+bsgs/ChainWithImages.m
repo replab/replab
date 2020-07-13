@@ -400,7 +400,7 @@ classdef ChainWithImages < replab.Str
         %   mu (`+replab.Morphism`): Group homomorphism from the current `J` to ``newJ``
             assert(self.isMutable);
             k = self.length;
-            f = @(v) mu.image(v);
+            f = @(v) mu.imageElement(v);
             self.T = cellfun(f, self.T, 'uniform', 0);
             for i = 1:k
                 Vi = self.V{i};

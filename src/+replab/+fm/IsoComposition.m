@@ -1,4 +1,4 @@
-classdef IsoComposition < replab.fm.Composition & replab.FiniteIsomorphism
+classdef IsoComposition < replab.fm.FiniteComposition & replab.FiniteIsomorphism
 
     methods
 

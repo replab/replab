@@ -50,6 +50,8 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         function G = niceGroup(self)
         % Returns the permutation group isomorphic to this finite group
         %
+        % This is the image of `.niceMorphism`.
+        %
         % Returns:
         %   `+replab.PermutationGroup`: The image of the isomorphism
             G = self.cached('niceGroup', @() self.computeNiceGroup);
@@ -59,11 +61,6 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             gens = cellfun(@(g) self.niceImage(g), self.generators, 'uniform', 0);
             ds = length(self.niceImage(self.identity));
             G = replab.PermutationGroup(ds, gens, self.cachedOrEmpty('order'));
-        end
-
-        function f = niceMorphism(self)
-        % Returns the isomorphism from this group to `.niceGroup`
-            f = self.cached('niceMorphism', @() replab.nfg.NiceFiniteGroupIsomorphism(self));
         end
 
     end
@@ -91,6 +88,10 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         function order = computeOrder(self)
             order = self.niceGroup.order;
+        end
+
+        function m = computeNiceMorphism(self)
+            m = replab.nfg.NiceFiniteGroupIsomorphism(self);
         end
 
         function dec = computeDecomposition(self)

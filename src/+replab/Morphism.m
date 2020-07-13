@@ -1,4 +1,4 @@
-classdef Morphism < replab.Str
+classdef Morphism < replab.Obj
 % Describes a morphism between groups
 
     properties (SetAccess = protected)
@@ -8,74 +8,59 @@ classdef Morphism < replab.Str
 
     methods
 
-        function t = image(s)
+        function t = imageElement(self, s)
+        % Returns the image of the given source element
+        %
+        % Args:
+        %   s (element of `.source`): Element to compute the image of
+        %
+        % Returns:
+        %   element of `.target`: Image
             error('Abstract');
         end
 
-        function r = toRep(self, targetRep)
-            imageFun = @(s) targetRep.image(self.image(s));
-            inverseImageFun = @(s) targetRep.inverseImage(self.image(s));
-            r = replab.Rep.lambda(source, targetRep.field, targetRep.dimension, imageFun, inverseImageFun);
-        end
-
-        function res = mtimes(self, rhs)
-        % Composition of morphisms using the ``*`` operator
+        function res = compose(self, applyFirst)
+        % Composition of morphisms, the right hand side applied first
+        %
+        % Note: if both morphisms are finite morphisms, the resulting morphism is also a finite morphism.
+        % Note: if both morphisms are isomorphisms, the resulting morphism is also an isomorphism.
         %
         % Args:
-        %   rhs (`.Morphism`): Morphism to apply first
+        %   applyFirst (`.Morphism`): Morphism to apply first
         %
         % Returns:
-        %   `.Morphism`: The composition of the given morphism applied first, following by this morphism.
-            res = replab.Morphism.compose(self, rhs);
+        %   `.Morphism`: The composition of the given morphism applied first, followed by this morphism.
+            res = replab.fm.compose(self, applyFirst);
+        end
+
+        function res = andThen(self, applyLast)
+        % Composition of morphisms, the right hand side applied last
+        %
+        % Args:
+        %   applyLast (`.Morphism`): Morphism to apply last
+        %
+        % Returns:
+        %   `.Morphism`: The composition of this morphism applied first, followed by the given morphism
+            res = replab.fm.compose(applyLast, self);
+        end
+
+        function res = mtimes(self, applyFirst)
+        % Shorthand for `.compose`
+            res = self.compose(applyFirst);
         end
 
     end
 
     methods (Static)
 
-        function m = identity(group)
-        % Returns the identity morphism from a group to itself
+        function m = lambda(source, target, imageElementFun)
+        % Creates a morphism from an image function
         %
         % Args:
-        %   group (`.Group`): Group
-        %
-        % Returns:
-        %   `.Morphism`: The identity on the given group
-            m = replab.Morphism.lambda(group, group, @(x) x);
-        end
-
-        function m = lambda(source, target, imageFun)
-            m = replab.mrp.LambdaMorphism(source, target, imageFun);
-        end
-
-        function m = compose(second, first)
-            m = replab.mrp.CompositionMorphism(second, first);
-        end
-
-        function m = byImages(source, target, generatorImages)
-        % Constructs a morphism of a NiceFiniteGroup from images of its generators
-        %
-        % Args:
-        %   source (`.NiceFiniteGroup`): Source of the morphism
-        %   target (`.Group`): Target of the morphism
-        %   generatorImages (cell(1,\*) of target elements): Images of the generators of ``source``
-        %
-        % Returns:
-        %   `.Morphism`: The constructed morphism
-            if isa(source, 'replab.PermutationGroup')
-                if isa(target, 'replab.PermutationGroup')
-                    m = replab.mrp.PermPermMorphism.byImages(source, generatorImages);
-                    return
-                else
-                    m = replab.mrp.PermMorphism.byImages(source, target, generatorImages);
-                    return
-                end
-            elseif isa(source, 'replab.NiceFiniteGroup')
-                first = source.niceMonomorphism;
-                second = replab.Morphism.make(source.niceGroup, target, generatorImages);
-                m = replab.mrp.CompositionMorphism(second, first);
-            end
-            error('Unsupported');
+        %   source (`.Group`): Source group
+        %   target (`.Group`): Target group
+        %   imageElementFun (function_handle): Function computing images of elements
+            m = replab.fm.Lambda(source, target, imageElementFun);
         end
 
     end

@@ -54,6 +54,16 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
+        function f = niceMorphism(self)
+        % Returns the isomorphism from this group to `.niceGroup`
+            f = self.cached('niceMorphism', @() self.computeNiceMorphism);
+        end
+
+        function m = computeNiceMorphism(self)
+        % See `.niceMorphism`
+            error('Abstract');
+        end
+
         function D = decomposition(self)
         % Returns a decomposition of this group as a product of sets
         %
@@ -599,64 +609,60 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     end
 
-% $$$
-% $$$
-% $$$     methods % Representations
-% $$$
-% $$$         function rep = regularRep(self)
-% $$$         % Returns the left regular representation of this group
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.Rep`: The left regular representation as a real permutation representation
-% $$$             error('Abstract');
-% $$$         end
-% $$$
-% $$$         function rho = repByImages(self, field, dimension, images)
-% $$$         % Constructs a finite dimensional representation of this group from generator images
-% $$$         %
-% $$$         % Args:
-% $$$         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
-% $$$         %   dimension (integer): Representation dimension
-% $$$         %   images (cell(1,\*) of double(\*,\*), may be sparse): Images of the group generators
-% $$$         % Returns:
-% $$$         %   `+replab.Rep`: The constructed group representation
-% $$$             error('Abstract');
-% $$$         end
-% $$$
-% $$$         function rho = permutationRep(self, dimension, permutations)
-% $$$         % Constructs a permutation representation of this group
-% $$$         %
-% $$$         % The returned representation is real. Use `+replab.Rep.complexification` to obtain a complex representation.
-% $$$         %
-% $$$         % Args:
-% $$$         %   dimension (integer): Dimension of the representation
-% $$$         %   permutations (cell(1,\*) of permutations): Images of the generators as permutations of size ``dimension``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Rep`: The constructed group representation
-% $$$             f = @(g) replab.Permutation.toSparseMatrix(g);
-% $$$             images = cellfun(f, permutations, 'uniform', 0);
-% $$$             inverseImages = cellfun(@(i) i', images, 'uniform', 0);
-% $$$             rho = self.repByImages('R', dimension, images, inverseImages);
-% $$$         end
-% $$$
-% $$$         function rho = signedPermutationRep(self, dimension, signedPermutations)
-% $$$         % Returns a real signed permutation representation of this group
-% $$$         %
-% $$$         % The returned representation is real. Use ``rep.complexification`` to obtain a complex representation.
-% $$$         %
-% $$$         % Args:
-% $$$         %   dimension: Dimension of the representation
-% $$$         %   signedPermutations (cell(1,\*) of signed permutations): Images of the generators as signed permutations of size ``dimension``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Rep`: The constructed group representation
-% $$$             f = @(g) replab.SignedPermutation.toSparseMatrix(g);
-% $$$             images = cellfun(f, signedPermutations, 'uniform', 0);
-% $$$             rho = self.repByImages('R', dimension, images);
-% $$$         end
-% $$$
-% $$$     end
+    methods % Representations
 
-% TODO: coset stuff
+        function rep = regularRep(self)
+        % Returns the left regular representation of this group
+        %
+        % Returns:
+        %   `.Rep`: The left regular representation as a real permutation representation
+            error('Abstract');
+        end
+
+        function rho = repByImages(self, field, dimension, images)
+        % Constructs a finite dimensional representation of this group from generator images
+        %
+        % Args:
+        %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
+        %   dimension (integer): Representation dimension
+        %   images (cell(1,\*) of double(\*,\*), may be sparse): Images of the group generators
+        % Returns:
+        %   `+replab.Rep`: The constructed group representation
+            rho = replab.RepByImages(self, field, dimension, images);
+        end
+
+        function rho = permutationRep(self, dimension, permutations)
+        % Constructs a permutation representation of this group
+        %
+        % The returned representation is real. Use `+replab.Rep.complexification` to obtain a complex representation.
+        %
+        % Args:
+        %   dimension (integer): Dimension of the representation
+        %   permutations (cell(1,\*) of permutations): Images of the generators as permutations of size ``dimension``
+        %
+        % Returns:
+        %   `+replab.Rep`: The constructed group representation
+            f = @(g) replab.Permutation.toSparseMatrix(g);
+            images = cellfun(f, permutations, 'uniform', 0);
+            rho = self.repByImages('R', dimension, images);
+        end
+
+        function rho = signedPermutationRep(self, dimension, signedPermutations)
+        % Returns a real signed permutation representation of this group
+        %
+        % The returned representation is real. Use ``rep.complexification`` to obtain a complex representation.
+        %
+        % Args:
+        %   dimension: Dimension of the representation
+        %   signedPermutations (cell(1,\*) of signed permutations): Images of the generators as signed permutations of size ``dimension``
+        %
+        % Returns:
+        %   `+replab.Rep`: The constructed group representation
+            f = @(g) replab.SignedPermutation.toSparseMatrix(g);
+            images = cellfun(f, signedPermutations, 'uniform', 0);
+            rho = self.repByImages('R', dimension, images);
+        end
+
+    end
+
 end

@@ -12,9 +12,9 @@ function test_suite = QuantumTest()
     test_suite = replab.GroupLaws(G).addTestCases(test_suite);
     %test_suite = replab.RepLaws(G.definingRep).addTestCases(test_suite); % slow test with Octave
     if exist('syms') && ~replab.compat.isOctave
-        G = replab.quantum.GeneralizedPauli(3);
-        test_suite = replab.FiniteGroupLaws(G).addTestCases(test_suite);
-        test_suite = replab.RepLaws(G.definingRep).addTestCases(test_suite);
+        %        G = replab.quantum.GeneralizedPauli(3);
+        %test_suite = replab.FiniteGroupLaws(G).addTestCases(test_suite);
+        %test_suite = replab.RepLaws(G.definingRep).addTestCases(test_suite);
         [G rep] = replab.quantum.clifford_qudit(2);
         test_suite = replab.FiniteGroupLaws(G).addTestCases(test_suite);
         test_suite = replab.RepLaws(rep).addTestCases(test_suite);

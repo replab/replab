@@ -158,6 +158,10 @@ classdef PermutationGroup < replab.FiniteGroup
             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
         end
 
+        function m = computeNiceMorphism(self)
+            m = replab.FiniteIsomorphism.identity(self);
+        end
+
         function dec = computeDecomposition(self)
             c = self.chain;
             k = c.length;
@@ -446,6 +450,25 @@ classdef PermutationGroup < replab.FiniteGroup
             else
                 m = replab.fm.PermToFinite(self, target, images);
             end
+        end
+
+        % Representations
+
+        function rep = regularRep(self)
+            o = self.order;
+            assert(o < 1e6);
+            o = double(o);
+            perms = cell(1, self.nGenerators);
+            E = self.elements;
+            for i = 1:self.nGenerators
+                g = self.generator(i);
+                img = zeros(1, o);
+                for j = 1:o
+                    img(j) = double(E.find(self.compose(g, E.at(j))));
+                end
+                perms{i} = img;
+            end
+            rep = self.permutationRep(o, perms);
         end
 
     end
@@ -762,81 +785,60 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
     end
-% $$$
-% $$$     methods % Implementations
-% $$$
-% $$$         function rep = regularRep(self)
-% $$$             o = self.order;
-% $$$             assert(o < 1e6);
-% $$$             o = double(o);
-% $$$             perms = cell(1, self.nGenerators);
-% $$$             E = self.elements;
-% $$$             for i = 1:self.nGenerators
-% $$$                 g = self.generator(i);
-% $$$                 img = zeros(1, o);
-% $$$                 for j = 1:o
-% $$$                     img(j) = double(E.find(self.compose(g, E.at(j))));
-% $$$                 end
-% $$$                 perms{i} = img;
-% $$$             end
-% $$$             rep = self.permutationRep(o, perms);
-% $$$         end
-% $$$
-% $$$     end
-% $$$
-% $$$     methods % Representations
-% $$$
-% $$$         function rho = indexRelabelingRep(self, indexRange)
-% $$$         % Representation that permutes the indices of a tensor
-% $$$         %
-% $$$         % It acts on the tensor space R^ir x R^ir ... (domainSize times)
-% $$$         % where ir = indexRange, by permuting the indices.
-% $$$         %
-% $$$         % The representation returned is real.
-% $$$         %
-% $$$         % See also:
-% $$$         %   `+replab.PermutationGroup.indexRelabelingPermutation`
-% $$$         %
-% $$$         % Args:
-% $$$         %   indexRange (integer): Dimension of the tensor components/range of the subindices
-% $$$         %
-% $$$         % Returns:
-% $$$         %   replab.Rep: The desired permutation representation
-% $$$             rho = replab.rep.IndexRelabelingRep(self, indexRange);
-% $$$         end
-% $$$
-% $$$         function rho = naturalRep(self)
-% $$$         % Returns the natural permutation representation of this permutation group
-% $$$         %
-% $$$         % Returns:
-% $$$         %   replab.Rep: The (real) natural permutation representation
-% $$$             rho = self.permutationRep(self.domainSize, self.generators);
-% $$$         end
-% $$$
-% $$$         function rho = standardRep(self)
-% $$$         % Returns the standard representation of this permutation group
-% $$$         %
-% $$$         % It is an abuse of terminology as the "standard representation" is
-% $$$         % the faithful $n-1$ dimensional representation of the symmetric group
-% $$$         % acting on $n$ elements; but we can reuse that subrepresentation on
-% $$$         % subgroups of the symmetric group.
-% $$$         %
-% $$$         % It corresponds to the representation orthogonal to the
-% $$$         % trivial representation with basis ``[1, 1, ..., 1]'/sqrt(d)``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Rep`: The (real) standard representation
-% $$$             [B_internal E_internal] = replab.sym.sageSpechtStandardBasis(self.domainSize);
-% $$$             rho = self.naturalRep.subRep(B_internal, E_internal);
-% $$$         end
-% $$$
-% $$$         function rho = signRep(self)
-% $$$         % Returns the sign representation of this permutation
-% $$$             rho = replab.RepByImages.fromImageFunction(self, 'R', 1, @(g) replab.Permutation.sign(g));
-% $$$         end
-% $$$
-% $$$     end
-% $$$
+
+    methods % Representations
+
+        function rho = indexRelabelingRep(self, indexRange)
+        % Representation that permutes the indices of a tensor
+        %
+        % It acts on the tensor space R^ir x R^ir ... (domainSize times)
+        % where ir = indexRange, by permuting the indices.
+        %
+        % The representation returned is real.
+        %
+        % See also:
+        %   `+replab.PermutationGroup.indexRelabelingPermutation`
+        %
+        % Args:
+        %   indexRange (integer): Dimension of the tensor components/range of the subindices
+        %
+        % Returns:
+        %   replab.Rep: The desired permutation representation
+            rho = replab.rep.IndexRelabelingRep(self, indexRange);
+        end
+
+        function rho = naturalRep(self)
+        % Returns the natural permutation representation of this permutation group
+        %
+        % Returns:
+        %   replab.Rep: The (real) natural permutation representation
+            rho = self.permutationRep(self.domainSize, self.generators);
+        end
+
+        function rho = standardRep(self)
+        % Returns the standard representation of this permutation group
+        %
+        % It is an abuse of terminology as the "standard representation" is
+        % the faithful $n-1$ dimensional representation of the symmetric group
+        % acting on $n$ elements; but we can reuse that subrepresentation on
+        % subgroups of the symmetric group.
+        %
+        % It corresponds to the representation orthogonal to the
+        % trivial representation with basis ``[1, 1, ..., 1]'/sqrt(d)``
+        %
+        % Returns:
+        %   `+replab.Rep`: The (real) standard representation
+            [B_internal E_internal] = replab.sym.sageSpechtStandardBasis(self.domainSize);
+            rho = self.naturalRep.subRep(B_internal, E_internal);
+        end
+
+        function rho = signRep(self)
+        % Returns the sign representation of this permutation
+            rho = replab.RepByImages.fromImageFunction(self, 'R', 1, @(g) replab.Permutation.sign(g));
+        end
+
+    end
+
     methods(Static)
 
         function G = trivial(n)

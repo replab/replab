@@ -24,6 +24,11 @@ classdef NiceFiniteGroupIsomorphism < replab.FiniteIsomorphism
         end
 
         function c = computeChain(self)
+            niceGroup = self.source.niceGroup;
+            targetGenerators = cellfun(@(g) self.source.niceImage(g), self.source.generators, 'uniform', 0);
+            c = replab.bsgs.ChainWithImages.make(self.target.domainSize, self.source, ...
+                                                 targetGenerators, self.source.generators, [], ...
+                                                 niceGroup.chain.base, niceGroup.order);
         end
 
         function T = imageGroup(self, S)

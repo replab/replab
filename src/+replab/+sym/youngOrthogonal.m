@@ -15,13 +15,13 @@ function rep = youngOrthogonal(partition)
     [~, ~, ~, ~, OA, OB] = replab.sym.symIrrepImages(partition);
     d = size(OA, 1);
     if n == 1
-        rep = Sn.repByImages('R', d, cell(1, 0), cell(1, 0));
+        rep = Sn.repByImages('R', d, cell(1, 0));
         rep.isUnitary = true;
     elseif n == 2
-        rep = Sn.repByImages('R', d, {OB}, {OB'});
+        rep = Sn.repByImages('R', d, {OB});
         rep.isUnitary = true;
     else
-        rep = Sn.repByImages('R', d, {OA OB}, {OA' OB'});
+        rep = Sn.repByImages('R', d, {OA OB});
         rep.isUnitary = true;
     end
 end

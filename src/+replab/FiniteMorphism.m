@@ -1,10 +1,5 @@
-classdef FiniteMorphism < replab.Obj
+classdef FiniteMorphism < replab.Morphism
 % Describes a morphism between finite groups
-
-    properties (SetAccess = protected)
-        source % (`.FiniteGroup`): Source group
-        target % (`.FiniteGroup`): Target group
-    end
 
     methods
 
@@ -90,35 +85,6 @@ classdef FiniteMorphism < replab.Obj
         %   `.FiniteGroup`: Subgroup of `.target`
             images = cellfun(@(g) self.imageElement(g), S.generators, 'uniform', 0);
             T = self.target.subgroup(images);
-        end
-
-        function res = compose(self, applyFirst)
-        % Composition of morphisms, the right hand side applied first
-        %
-        % Note: if both morphisms are isomorphisms, the resulting morphism is also an isomorphism.
-        %
-        % Args:
-        %   applyFirst (`.FiniteMorphism`): Morphism to apply first
-        %
-        % Returns:
-        %   `.Morphism`: The composition of the given morphism applied first, followed by this morphism.
-            res = replab.fm.compose(self, applyFirst);
-        end
-
-        function res = andThen(self, applyLast)
-        % Composition of morphisms, the right hand side applied last
-        %
-        % Args:
-        %   applyLast (`.FiniteMorphism`): Morphism to apply last
-        %
-        % Returns:
-        %   `.FiniteMorphism`: The composition of this morphism applied first, followed by the given morphism
-            res = replab.fm.compose(applyLast, self);
-        end
-
-        function res = mtimes(self, applyFirst)
-        % Shorthand for `.compose`
-            res = self.compose(applyFirst);
         end
 
     end

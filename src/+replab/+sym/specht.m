@@ -15,15 +15,11 @@ function rep = specht(partition)
     [SA, SB, ~, ~, ~, ~] = replab.sym.symIrrepImages(partition);
     d = size(SA, 1);
     if n == 1
-        rep = Sn.repByImages('R', d, cell(1, 0), cell(1, 0));
+        rep = Sn.repByImages('R', d, cell(1, 0));
     elseif n == 2
-        rep = Sn.repByImages('R', d, {SB}, {SB});
+        rep = Sn.repByImages('R', d, {SB});
     else
-        SAinv = SA;
-        for i = 1:n-2
-            SAinv = SAinv * SA;
-        end
-        rep = Sn.repByImages('R', d, {SA SB}, {SAinv SB});
+        rep = Sn.repByImages('R', d, {SA SB});
     end
     rep.isUnitary = false;
     rep.isIrreducible = true;
