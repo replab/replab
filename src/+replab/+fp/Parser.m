@@ -244,12 +244,12 @@ classdef Parser
         %     logical: Whether the parse was successful
         %   names:
         %     cell(1,\*) of charstring: Names of the generators
-        %   relators:
+        %   relatorLetters:
         %     cell(1,\*) of integer(1,\*): Relators given as the letters composing words
             ok = false;
             names = [];
             types = self.types;
-            relators = [];
+            relatorLetters = [];
             str = strtrim(str);
             if str(1) ~= '<' || str(end) ~= '>'
                 return
@@ -265,7 +265,7 @@ classdef Parser
             end
             relStr = strtrim(relStr);
             if isempty(relStr)
-                relators = {};
+                relatorLetters = {};
             else
                 [ok, tokens] = self.lex(relStr, names);
                 if ~ok
@@ -273,7 +273,7 @@ classdef Parser
                     return
                 end
                 pos = 1;
-                [pos, relators] = self.relations(tokens, pos);
+                [pos, relatorLetters] = self.relations(tokens, pos);
                 if pos == 0 || tokens(1, pos) ~= types.END
                     names = [];
                     relators = [];

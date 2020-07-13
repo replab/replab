@@ -296,8 +296,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Example:
         %   >>> S5 = replab.S(5);
         %   >>> G = S5.subgroupWithGenerators({[2 3 4 5 1]});
-        %   >>> G.generators
-        %       TODO
+        %   >>> isequal(G.generators{1}, [2 3 4 5 1])
+        %       1
         %
         % Args:
         %   generators (cell(1,\*) of elements of this group): List of generators, does not contain the identity
@@ -313,9 +313,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Example:
         %   >>> S5 = replab.S(5);
-        %   >>> G = S5.subgroupWithGenerators({[1 2 3 4 5]});
-        %   >>> G.generators
-        %       TODO is empty
+        %   >>> G = S5.subgroup({[1 2 3 4 5]});
+        %   >>> isempty(G.generators)
+        %       1
         %
         % Args:
         %   elements (cell(1,\*) of elements of this group): List of elements
