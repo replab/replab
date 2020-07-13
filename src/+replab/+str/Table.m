@@ -17,9 +17,17 @@ classdef Table < replab.Str
 % >>> T = replab.str.Table(elements);
 % >>> T = T.withRowNames({'x1', 'x2', 'x3'}).withColumnNames(cols)
 
+% why not? https://www.mathworks.com/matlabcentral/fileexchange/24093-cprintf-display-formatted-colored-text-in-the-command-wind
     properties
+        rowSep % cell(1,nRows+1) of charstring: Row separators
+        colSep % cell(1,nCols+1) of charstring: Column separators
+               %
+               %                                This includes a separator on the left of the first column and
+               %                                on the right of the last column.
         colAlign % char(1,\*): Array of 'l' 'c' 'r'
-        omitRange % integer(1,\*): Range of columns that can be omitted if space is lacking, needs to be contiguous, can be empty
+        omitRange % integer(1,\*): Range of columns that can be omitted if space is lacking
+                  %
+                  %                This needs to be contiguous, and can be empty.
         elements % cell(\*,\*): Table contents
     end
 
@@ -31,7 +39,7 @@ classdef Table < replab.Str
                 % ...
             end
             if isfield(s, 'colAlign')
-                % ...x
+                % ...
             end
         end
 
@@ -39,14 +47,43 @@ classdef Table < replab.Str
         % display code
         end
 
-        function newTable = withRowNames(self, rowNames)
-        % Returns a new table with the added row names
+        function n = nColumns(self)
+        end
+        function n = nRows(self)
+        end
+        function setColSep(self, range, sep)
+        % Sets the column separators for the columns inside the range
+        %
+        % Convention: the column to the left of the table is 0.
+        %
+        % Example:
+        %   >>> T = replab.str.Table(elements);
+        %   >>> T.setColSep(0:T.nColumns, '  ');
+        % instead of replab.str.Table(elements, 'colSep', repmat({'  '}, 1, size(e
+
         end
 
-        function newTable = withColumnNames(self, colNames)
-        % Returns a new table with the added column names
+        function setRowSep(self, range, sep)
+        % same as setColSep
+
+        % interesting problem
+        %    |
+        % ---?--- what to put in the '?'
+        %    |
+        end
+
+
+
+        function addRowNames(self, rowNames)
+        % Adds row names to the current table
+        end
+
+        function adColumnNames(self, colNames)
+        % Adds column names to the current table
         end
 
     end
+
+end
 
 end
