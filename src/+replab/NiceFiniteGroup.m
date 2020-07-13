@@ -131,7 +131,10 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         end
 
         function sub = niceSubgroup(self, generators, order, niceGroup)
-            error('Abstract');
+            sub = replab.NiceFiniteSubgroup(self.type, generators, order);
+            if nargin > 3 && ~isempty(niceGroup)
+                sub.cache('niceGroup', niceGroup, '==');
+            end
         end
 
         function sub = computeDerivedSubgroup(self)

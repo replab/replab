@@ -109,9 +109,7 @@ classdef FiniteFPGroup < replab.NiceFiniteGroup
         % Domain
 
         function res = eqv(self, x, y)
-            xI = self.niceImage(x)
-            yI = self.y.representative.computeImage(self.niceGroup, self.niceGroup.generators);
-            res = self.niceGroup.eqv(xI, yI);
+            res = self.niceGroup.eqv(self.niceImage(x), self.niceImage(y));
         end
 
         % Monoid
