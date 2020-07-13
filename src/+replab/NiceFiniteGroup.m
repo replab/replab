@@ -78,7 +78,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         function dec = computeDecomposition(self)
             prmD = self.niceGroup.decomposition;
-            T1 = cellfun(@(T) cellfun(@(t) self.niceMorphism.preimageElement(t), 'uniform', 0), prmD.T, 'uniform', 0);
+            T1 = cellfun(@(T) cellfun(@(t) self.niceMorphism.preimageElement(t), T, 'uniform', 0), prmD.T, 'uniform', 0);
             dec = replab.FiniteGroupDecomposition(self, T1);
         end
 

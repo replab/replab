@@ -103,7 +103,7 @@ classdef PermutationGroup < replab.FiniteGroup
         % replab.Str
 
         function s = headerStr(self)
-            if self.isCached('order')
+            if self.inCache('order')
                 s = sprintf('Permutation group acting on %d elements of order %s', self.domainSize, strtrim(num2str(self.order)));
             else
                 s = sprintf('Permutation group acting on %d elements', self.domainSize);
