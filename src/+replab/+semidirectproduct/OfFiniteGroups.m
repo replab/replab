@@ -1,4 +1,4 @@
-classdef OfFiniteGroups < replab.semidirectproduct.OfCompactGroups & replab.FiniteGroup
+classdef OfFiniteGroups < replab.semidirectproduct.OfCompactGroups & replab.NiceFiniteGroup
 % Describes an external semidirect product of finite groups
 
     methods
@@ -15,25 +15,36 @@ classdef OfFiniteGroups < replab.semidirectproduct.OfCompactGroups & replab.Fini
                 generators{H.nGenerators + i} = {H.identity N.generator(i)};
             end
             self.generators = generators;
+            self.type = self;
         end
 
         function t = requiredType(self)
             t = 'replab.FiniteGroup';
         end
 
-        %% FiniteGroup methods
+    end
 
-        function o = order(self)
+    methods % Implementations
+
+        % Domain
+
+        function g = sample(self)
+            g = sample@replab.semidirectproduct.OfCompactGroups(self); % force method selection
+        end
+
+        % FiniteGroup
+
+        function o = computeOrder(self)
             o = self.H.order * self.N.order;
         end
 
-        function e = elements(self)
+        function e = computeElements(self)
             e = replab.IndexedFamily.lambda(self.order, ...
                                             @(ind) self.atFun(ind), ...
                                             @(g) self.findFun(g));
         end
 
-        function gd = decomposition(self)
+        function gd = computeDecomposition(self)
             TH = self.H.decomposition.T;
             TN = self.N.decomposition.T;
             idN = self.N.identity;

@@ -1,4 +1,4 @@
-function res = power(a, n, op)
+function res = repeatedSquaring(a, n, op)
 % Computes ``a^n`` by repeated squaring
 %
 % Args:

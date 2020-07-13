@@ -1,4 +1,4 @@
-classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGroups
+classdef OfFiniteGroups < replab.NiceFiniteGroup & replab.directproduct.OfCompactGroups
 % External direct product of finite groups
 %
 % In particular, the permutation image of an element of a direct product group
@@ -86,6 +86,13 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
             values = replab.str.horzcatForce(values1, values2);
         end
 
+        % Domain
+
+        function g = sample(self)
+            g = sample@replab.directproduct.OfCompactGroups(self);
+            % force method selection
+        end
+
         % FiniteSet
 
         function res = hasSameTypeAs(self, rhs)
@@ -153,12 +160,10 @@ classdef OfFiniteGroups < replab.FiniteGroup & replab.directproduct.OfCompactGro
             p = [];
             % concatenates the permutation images of the factors
             for i = 1:self.nFactors
-                pf = self.factor(i).niceMonomorphismImage(g{i});
+                pf = self.factor(i).niceMorphism.imageElement(g{i});
                 p = [p pf+shift];
                 shift = shift + length(pf);
             end
-
-
         end
 
     end

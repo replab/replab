@@ -18,7 +18,7 @@ classdef Str < handle
 %     Symmetric group acting on 3 elements
 %       domainSize: 3
 %         identity: [1, 2, 3]
-%           parent: Symmetric group acting on 3 elements
+%             type: Symmetric group acting on 3 elements
 %     generator(1): [2, 3, 1]
 %     generator(2): [2, 1, 3]
 %   >>> replab.longStr(P)
@@ -27,7 +27,7 @@ classdef Str < handle
 %     {'Symmetric group acting on 3 elements'              }
 %     {'  domainSize: 3                                   '}
 %     {'    identity: [1, 2, 3]                           '}
-%     {'      parent: Symmetric group acting on 3 elements'}
+%     {'        type: Symmetric group acting on 3 elements'}
 %     {'generator(1): [2, 3, 1]                           '}
 %     {'generator(2): [2, 1, 3]                           '}
 %   >>> replab.shortStr(P)

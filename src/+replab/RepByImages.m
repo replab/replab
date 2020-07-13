@@ -32,7 +32,7 @@ classdef RepByImages < replab.Rep
                 o = group.elementOrder(g);
                 img = images{i};
                 assert(isequal(size(img), [dimension dimension]));
-                inv_img = replab.util.power(img, o-1, @(x,y) x*y);
+                inv_img = replab.util.repeatedSquaring(img, o-1, @(x,y) x*y);
                 assert(all(all(img * inv_img == eye(dimension))), 'RepByImages can only be used with exact images. Use symbolic arguments.');
                 knownUnitary = knownUnitary && all(all(img == ctranspose(inv_img)));
                 images_internal{i} = img;

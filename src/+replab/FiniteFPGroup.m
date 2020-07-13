@@ -83,6 +83,73 @@ classdef FiniteFPGroup < replab.NiceFiniteGroup
 
     end
 
+    methods
+
+        function nR = nRelators(self)
+        % Returns the number of relators describing this group
+        %
+        % Returns:
+        %   integer: Number of relators
+            nR = length(self.relators);
+        end
+
+        function r = relator(self, i)
+        % Returns the ``i``-th relator in the presentation of this group
+        %
+        % Args:
+        %   i (integer): Index of relator
+        % Returns:
+        %   `+replab.FreeGroupWord`: ``i``-th relator
+            r = self.relators{i};
+        end
+
+        function s = presentation(self)
+        % Returns a readable text presentation of this group
+        %
+        % It can be parsed using `+replab.FiniteFPGroup.parsePresentation`.
+        %
+        % Returns:
+        %   charstring: Presentation as string
+            gens = strjoin(cellfun(@(e) e.toString, self.freeGroup.generators, 'uniform', 0), ', ');
+            rels = strjoin(cellfun(@(r) r.toString, self.relators, 'uniform', 0), ' = ');
+            s = ['< ' gens ' | ' rels ' = 1 >'];
+        end
+
+        function setPermutationImages(self, permutations)
+        % Sets the permutation realization of this group
+        %
+        % Enables to skip the Todd-Coxeter procedure when operating over the group.
+            self.cache('niceGroup', replab.PermutationGroup.of(permutations{:}), 'ignore');
+            for i = 1:length(self.relators)
+                assert(self.niceGroup.isIdentity(self.niceImage(replab.FiniteFPGroupElement(self, self.relators{i}))));
+            end
+        end
+
+        function l = imagesDefineMorphism(self, target, generatorImages)
+        % Checks whether the given images satisfy the relations of the presentation of this group
+        %
+        % If it returns true, it means those images describe a valid homomorphism from this `.FPGroup`
+        % to the given target group.
+        %
+        % Args:
+        %   target (`+replab.Group`): Target group
+        %   generatorImages (cell(1,\*) of elements of ``target``): Images of the generators of this group
+        %
+        % Returns:
+        %   logical: True if the images verify the presentation
+            nR = length(self.relators);
+            for i = 1:nR
+                r = self.relators{i};
+                if ~target.isIdentity(r.computeImage(target, generatorImages))
+                    l = false;
+                    return
+                end
+            end
+            l = true;
+        end
+
+    end
+
     methods % Implementations
 
         function res = ne(self, rhs)
@@ -130,82 +197,9 @@ classdef FiniteFPGroup < replab.NiceFiniteGroup
             p = x.representative.computeImage(self.niceGroup, self.niceGroup.generators);
         end
 
-% $$$         function m = morphismByImages(self, target, generatorImages)
-% $$$             m = morphismByImages@replab.FPGroup(self, target, generatorImages);
-% $$$         end
+        % TODO: optimize morphismByImages imageElement
 
     end
 
-    methods
-
-        function nR = nRelators(self)
-        % Returns the number of relators describing this group
-        %
-        % Returns:
-        %   integer: Number of relators
-            nR = length(self.relators);
-        end
-
-        function r = relator(self, i)
-        % Returns the ``i``-th relator in the presentation of this group
-        %
-        % Args:
-        %   i (integer): Index of relator
-        % Returns:
-        %   `+replab.FreeGroupWord`: ``i``-th relator
-            r = self.relators{i};
-        end
-
-        function s = presentation(self)
-        % Returns a readable text presentation of this group
-        %
-        % It can be parsed using `+replab.FiniteFPGroup.parsePresentation`.
-        %
-        % Returns:
-        %   charstring: Presentation as string
-            gens = strjoin(cellfun(@(e) e.toString, self.freeGroup.generators, 'uniform', 0), ', ');
-            rels = strjoin(cellfun(@(r) r.toString, self.relators, 'uniform', 0), ' = ');
-            s = ['< ' gens ' | ' rels ' = 1 >'];
-        end
-
-        function setPermutationImages(self, permutations)
-        % Sets the permutation realization of this group
-        %
-        % Enables to skip the Todd-Coxeter procedure when operating over the group.
-            self.cache('niceGroup', replab.PermutationGroup.of(permutations{:}), 'ignore');
-            for i = 1:length(self.relators)
-                assert(self.niceGroup.isIdentity(self.niceImage(replab.FiniteFPGroupElement(self, self.relators{i}))));
-            end
-        end
-
-% $$$         function l = imagesDefineMorphism(self, target, generatorImages)
-% $$$         % Checks whether the given images satisfy the relations of the presentation of this group
-% $$$         %
-% $$$         % If it returns true, it means those images describe a valid homomorphism from this `.FPGroup`
-% $$$         % to the given target group.
-% $$$         %
-% $$$         % Args:
-% $$$         %   target (`+replab.Group`): Target group
-% $$$         %   generatorImages (cell(1,\*) of elements of ``target``): Images of the generators of this group
-% $$$         %
-% $$$         % Returns:
-% $$$         %   logical: True if the images verify the presentation
-% $$$             nR = length(self.relators);
-% $$$             for i = 1:nR
-% $$$                 r = self.relators{i};
-% $$$                 if ~target.isIdentity(r.computeImage(target, generatorImages))
-% $$$                     l = false;
-% $$$                     return
-% $$$                 end
-% $$$             end
-% $$$             l = true;
-% $$$         end
-% $$$
-% $$$         function m = morphismByImages(self, target, generatorImages)
-% $$$             assert(self.imagesDefineMorphism(target, generatorImages));
-% $$$             m = replab.Morphism.lambda(self, target, @(w) w.computeImage(target, generatorImages));
-% $$$         end
-
-    end
 
 end
