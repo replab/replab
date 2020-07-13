@@ -25,15 +25,11 @@ classdef FiniteIsomorphism < replab.FiniteMorphism
         end
 
         function I = inverse(self)
-            I = replab.fm.Inverse(self);
+            I = self.cached('inverse', @() self.computeInverse);
         end
 
-        function res = compose(self, applyFirst)
-            if isa(applyFirst, 'replab.FiniteIsomorphism')
-                m = replab.fm.IsoComposition(self, applyFirst);
-            else
-                m = replab.fm.Composition(self, applyFirst);
-            end
+        function I = computeInverse(self)
+            I = replab.fm.Inverse(self);
         end
 
     end

@@ -1,23 +1,17 @@
-classdef IsoComposition < replab.FiniteIsomorphism
-
-    properties (SetAccess = protected)
-        first % (`+replab.FiniteIsomorphism`): First isomorphism
-        second % (`+replab.FiniteIsomorphism`): Second isomorphism
-    end
+classdef IsoComposition < replab.fm.Composition & replab.FiniteIsomorphism
 
     methods
 
         function self = IsoComposition(second, first)
-            self.target = second.target;
-            self.source = first.source;
+            self@replab.fm.Composition(second, first)
         end
 
-        function t = image(self, s)
-            t = self.second.image(self.first.image(s));
+        function s = preimageElement(t)
+            s = first.preimageElement(second.preimageElement(t));
         end
 
-        function s = preimage(self, t)
-            t = self.first.preimage(self.second.preimage(s));
+        function I = computeInverse(self)
+            I = replab.fm.compose(self.first.inverse, self.second.inverse);
         end
 
     end

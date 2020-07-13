@@ -172,6 +172,16 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             B = replab.LeftCoset(self, subgroup, canRep);
         end
 
+        % Relation to other groups
+
+        % Morphisms
+
+        function m = morphismByImages(self, target, images)
+            first = self.niceMorphism; % maps this to the perm group
+            second = self.niceGroup.morphismByImages(target, images); % from the perm group to the images
+            m = first.andThen(second);
+        end
+
     end
 
 end
