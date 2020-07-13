@@ -53,10 +53,22 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
     methods % Implementation
 
+        % Domain
+
         function g = sample(self)
             g = self.niceMorphism.preimageElement(self.niceGroup.sample);
             % TODO: optimize
         end
+
+        % FiniteSet
+
+        function E = computeElements(self)
+            atFun = @(ind) self.niceMorphism.preimageElement(self.niceGroup.elements.at(ind));
+            findFun = @(el) self.niceGroup.elements.find(self.niceImage(el));
+            E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
+        end
+
+        % FiniteGroup
 
         % Group properties
 
