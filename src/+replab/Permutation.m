@@ -31,6 +31,38 @@ classdef Permutation
             end
         end
 
+        function cycles = cycles(perm)
+        % Returns the cycles of the given permutation
+        %
+        % Example:
+        %   >>> isequal(replab.Permutation.cycleStructure([2 1 4 3]), [2 2])
+        %       1
+        %
+        % Args:
+        %   perm (permutation): Permutation
+        %
+        % Returns:
+        %   integer(1,\*): Nonincreasing vector of integers containing the sizes of cycles (for sizes > 1)
+            x = perm;
+            n = length(x);
+            cycles = {};
+            for i = 1:n
+                if x(i) == 0 || x(i) == i % skip 1-cycles or visited points
+                    x(i) = 0;
+                    continue
+                end
+                j = i;
+                cycle = [];
+                while x(j) ~= 0
+                    j1 = x(j);
+                    x(j) = 0;
+                    j = j1;
+                    cycle = [cycle j];
+                end
+                cycles{1,end+1} = cycle;
+            end
+        end
+
         function c = cycleStructure(perm)
         % Returns the cycle structure of the given permutation
         %
@@ -48,6 +80,7 @@ classdef Permutation
             c = [];
             for i = 1:n
                 if x(i) == 0 || x(i) == i % skip 1-cycles or visited points
+                    x(i) = 0;
                     continue
                 end
                 cycleSize = 0;
