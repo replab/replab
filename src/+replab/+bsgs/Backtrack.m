@@ -31,15 +31,29 @@ classdef Backtrack < replab.Str
 
     methods
 
+        function l = greaterThan(self, x, y)
+        % Point comparison using the base ordering
+            l = self.baseOrdering(x) > self.baseOrdering(y);
+        end
+
+        function l = lessThan(self, x, y)
+        % Point comparison using the base ordering
+            l = self.baseOrdering(x) < self.baseOrdering(y);
+        end
+
+        function t = sort(self, s)
+        % Sorts a sequence of points under the ordering
+            [~, ind] = sort(self.baseOrdering(s));
+            t = s(ind);
+        end
+
         function res = subgroup(self)
-            greaterThan = @(x, y) self.baseOrdering(x) > self.baseOrdering(y);
-            lessThan = @(x, y) self.baseOrdering(x) < self.baseOrdering(y);
             % line 8: main loop
             while 1
                 while self.l < self.baseLen
                     % line 10: apply all tests
                     img = self.g{self.l}(self.base(self.l));
-                    if ~greaterThan(img, self.mu(self.l)) || ~lessThan(img, self.nu(self.l)) || ~self.minimalMaskInOrbit{self.l}(img)
+                    if ~self.greaterThan(img, self.mu(self.l)) || ~self.lessThan(img, self.nu(self.l)) || ~self.minimalMaskInOrbit{self.l}(img)
                         break
                     end
                     ok = true;
@@ -61,11 +75,11 @@ classdef Backtrack < replab.Str
                         % line 12: calculate the minimal orbit representative mask
                         self.minimalMaskInOrbit{self.l+1} = replab.bsgs.minimalMaskInOrbit(self.degree, self.res.strongGeneratorsForLevel(self.l+1), self.baseOrdering);
                     else
-                        minimalMaskInOrbit{self.l+1} = true(1, self.degree);
+                        self.minimalMaskInOrbit{self.l+1} = true(1, self.degree);
                     end
                     % line 13: recompute sorted orbits
                     self.l = self.l + 1;
-                    self.sortedOrbits{self.l} = replab.bsgs.sortByOrdering(self.g{self.l-1}(self.group.Delta{self.l}), self.baseOrdering);
+                    self.sortedOrbits{self.l} = self.sort(self.g{self.l-1}(self.group.Delta{self.l}));
                     % lines 14 and 15: update variables used in minimality tests
                     self.computeMu(self.l);
                     self.computeNu(self.l);
@@ -79,7 +93,7 @@ classdef Backtrack < replab.Str
                 % lines 17: apply the tests to the group element found
                 if self.l == self.baseLen
                     img = self.g{self.l}(self.base(self.l));
-                    if self.minimalMaskInOrbit{self.l}(img) && greaterThan(img, self.mu(self.l)) && lessThan(img, self.nu(self.l))
+                    if self.minimalMaskInOrbit{self.l}(img) && self.greaterThan(img, self.mu(self.l)) && self.lessThan(img, self.nu(self.l))
                         ok = true;
                         data = self.testData{self.l};
                         seq = self.groupedTests{self.l};
@@ -210,7 +224,7 @@ classdef Backtrack < replab.Str
             self.c = zeros(1, self.baseLen);
             self.sortedOrbits = cell(1, self.baseLen); % = \Lambda
             for i = 1:self.baseLen
-                self.sortedOrbits{i} = replab.bsgs.sortByOrdering(self.group.Delta{i}, self.baseOrdering);
+                self.sortedOrbits{i} = self.sort(self.group.Delta{i});
             end
             % line 7: initializations
             self.mu = zeros(1, self.baseLen);
