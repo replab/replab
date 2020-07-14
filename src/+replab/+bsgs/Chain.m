@@ -843,6 +843,15 @@ classdef Chain < replab.Str
             end
         end
 
+        function removeRedundantBasePointsAtTheEnd(self)
+        % Removes the redundant base points at the end of the chain
+            range = find(self.Sind == self.Sind(end)); % find level at which there are no strong generators
+            range = fliplr(range(1:end-1));
+            for l = range
+                self.removeRedundantBasePoint(l);
+            end
+        end
+
         function removeRedundantBasePoint(self, l)
         % Removes the redundant base point at position ``l``
         %
