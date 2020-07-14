@@ -24,7 +24,6 @@ classdef Backtrack < replab.Str
         f
         l
         c
-        u
         mu
         nu
         minimalMaskInOrbit
@@ -94,7 +93,6 @@ classdef Backtrack < replab.Str
             self.minimalMaskInOrbit{self.f}(self.base(self.f)) = false;
             % line 6: more initializations
             self.c = zeros(1, self.baseLen);
-            self.u = repmat({identity}, 1, self.baseLen);
             self.sortedOrbits = cell(1, self.baseLen); % = \Lambda
             for i = 1:self.baseLen
                 self.sortedOrbits{i} = replab.bsgs.sortByOrdering(self.group.Delta{i}, self.baseOrdering);
@@ -104,7 +102,7 @@ classdef Backtrack < replab.Str
             self.nu = zeros(1, self.baseLen);
             % this corresponds to the element smaller than all points
             self.mu(self.l) = self.degree + 2;
-            self.nu(self.l) = self.computeNu(self.degree, self.l, self.sortedOrbits, self.group.Delta, self.resBasicOrbits);
+            self.computeNu(self.l);
             % initialized computed words
             self.g = repmat({identity}, 1, self.baseLen);
             greaterThan = @(x, y) self.baseOrdering(x) > self.baseOrdering(y);
@@ -142,8 +140,8 @@ classdef Backtrack < replab.Str
                     self.l = self.l + 1;
                     self.sortedOrbits{self.l} = replab.bsgs.sortByOrdering(self.g{self.l-1}(self.group.Delta{self.l}), self.baseOrdering);
                     % lines 14 and 15: update variables used in minimality tests
-                    self.mu(self.l) = self.computeMu(self.degree, self.l, self.base, self.g, self.resBasicOrbits, self.baseOrdering);
-                    self.nu(self.l) = self.computeNu(self.degree, self.l, self.sortedOrbits, self.group.Delta, self.resBasicOrbits);
+                    self.computeMu(self.l);
+                    self.computeNu(self.l);
                     % line 16: determine the new transversal element
                     self.c(self.l) = 1;
                     idx = self.sortedOrbits{self.l}(self.c(self.l));
@@ -205,7 +203,7 @@ classdef Backtrack < replab.Str
                     end
                     % line 28: update variables used for minimality testing
                     self.mu(self.l) = self.degree + 2; % = 0
-                    self.nu(self.l) = self.computeNu(self.degree, self.l, self.sortedOrbits, self.group.Delta, self.resBasicOrbits);
+                    self.computeNu(self.l);
                 end
                 % line 29: set the next element from the current branch and update accordingly
                 self.c(self.l) = self.c(self.l) + 1;
@@ -224,25 +222,26 @@ classdef Backtrack < replab.Str
             end
         end
 
-        function mu = computeMu(self, degree, l, base, g, resBasicOrbits, baseOrdering)
+        function computeMu(self, l)
         % Computes the ``mu`` bound in the backtracking tests
-            mu = degree + 2; % place holder for element < all others in base ordering
+            mu_l = self.degree + 2; % place holder for element < all others in base ordering
             for j = 1:l
-                if any(base(l) == resBasicOrbits{j})
-                    candidate = g{j}(base(j));
-                    if baseOrdering(candidate) > mu
-                        mu = candidate;
+                if any(self.base(l) == self.resBasicOrbits{j})
+                    candidate = self.g{j}(self.base(j));
+                    if self.baseOrdering(candidate) > mu_l
+                        mu_l = candidate;
                     end
                 end
             end
+            self.mu(l) = mu_l;
         end
 
-        function nu = computeNu(self, degree, l, sortedOrbits, orbits, resBasicOrbits)
-            idx = length(orbits{l}) + 2 - length(resBasicOrbits{l});
-            if idx > length(sortedOrbits{l})
-                nu = degree + 1; % place holder for element > all others in base ordering
+        function nu = computeNu(self, l);
+            idx = length(self.group.Delta{l}) + 2 - length(self.resBasicOrbits{l});
+            if idx > length(self.sortedOrbits{l})
+                self.nu(l) = self.degree + 1; % place holder for element > all others in base ordering
             else
-                nu = sortedOrbits{l}(idx);
+                self.nu(l) = self.sortedOrbits{l}(idx);
             end
         end
 
