@@ -15,45 +15,55 @@ classdef Centralizer
 
 
         function s = subgroup(self)
-            n = self.group.domainSize;
-            orbits = self.other.orbits.blocks;
-            % compute the size of the orbit of each point
-            orbitSizes = zeros(1, n);
-            for i = 1:length(orbits)
-                orbitSizes(orbits{i}) = length(orbits{i});
+            if self.group.isTrivial || self.other.isTrivial
+                s = self.group;
+                return
             end
-            % remove singletons
-            orbits = orbits(cellfun(@(o) length(o) > 1, orbits));
-            [~, I] = sort(-cellfun(@length, orbits));
-            orbits = orbits(I); % largest orbits first
-            % now we have the blocks of size > 1
-            base = [orbits{:}];
-            L = length(base);
-            chain = self.group.chain.mutableCopy;
-            chain.baseChange(base);
-            chain.makeImmutable;
-            l = 1;
-            tests = cell(1, L);
-            for i = 1:length(orbits)
+            degree = self.group.domainSize;
+            orbits = self.other.orbits.blocks;
+            numOrbits = length(orbits);
+            [~, ind] = sort(-cellfun(@length, orbits));
+            orbits = orbits(ind); % sort by decreasing length
+            longBase = zeros(1, 0);
+            orbitReps = zeros(1, numOrbits);
+            orbitRepsIndices = zeros(1, numOrbits);
+            orbitDescr = zeros(1, degree);
+            for i = 1:numOrbits
                 orbit = orbits{i};
-                b = orbit(1);
-                % first element of an orbit stores the current element tested
-                % tests{l} = @(g, data) deal(true, g);
-                tests{l} = @(g, data) deal(orbitSizes(b) == orbitSizes(g(b)), g(orbit));
-                l = l + 1;
-                for j = 2:length(orbit)
-                    b = orbit(j);
-                    assert(b == base(l));
-                    %tests{l} = @(g, g0) deal(g0(b) == g(b), g0);
-                    tests{l} = @(g, O) deal(true, O);
-                    l = l + 1;
+                orbitReps(i) = orbit(1);
+                orbitRepsIndices(i) = length(longBase) + 1;
+                orbitDescr(orbit) = i;
+                longBase = [longBase orbit];
+            end
+            chain = self.group.chain.mutableCopy;
+            chain.baseChange(longBase);
+            chain.removeRedundantBasePointsAtTheEnd;
+            base = chain.base;
+            L = length(base);
+            j = find(cellfun(@(orbit) any(orbit == base(end)), orbits), 1, 'last');
+            relOrbits = orbits(1:min(j+1, length(orbits)));
+            numRelOrbits = length(relOrbits);
+            otherOrbits = cell(1, numRelOrbits);
+            otherTransversals = cell(1, numRelOrbits);
+            for j = 1:numRelOrbits
+                rep = orbitReps(j);
+                [O T] = replab.bsgs.orbitTransversal(degree, self.other.generatorsAsMatrix', rep);
+                otherOrbits{j} = O;
+                otherTransversals{j} = T;
+            end
+            tests = cell(1, L);
+            for l = 1:L
+                if any(base(l) == orbitReps)
+                    tests{l} = @(g, data) deal(true, []);
+                else
+                    tests{l} = @(g, data) deal(replab.bsgs.Centralizer.test(g, base(l), orbitDescr, orbitReps, otherOrbits, otherTransversals), []);
                 end
             end
-            tests = {};
+
             startData = [];
             initSubgroup = [];
-            c = replab.bsgs.subgroupSearch(chain, @(g) self.prop(g), tests, startData, initSubgroup, true);
-            s = replab.PermutationGroup.fromChain(c, self.group.type);
+            bt = replab.bsgs.Backtrack(chain, @(g) self.prop(g), tests, startData, initSubgroup, true);
+            s = replab.PermutationGroup.fromChain(bt.subgroup, self.group.type);
         end
 
         function b = prop(self, g)
@@ -71,65 +81,17 @@ classdef Centralizer
 
     methods (Static)
 
-        function [chain base orbits allPoints orbitNumber orbitIndex] = orbits(originalChain, partition, largestFirst)
-        % Arranges the base of the given chain so that the given orbits are contiguous
-        %
-        % Redundant base points are eliminated; however, they are still accounted for in the returned values.
-        %
-        % To the base point ``base(l)`` we associated the points ``allPoints{l}``, for which ``allPoints{l}(1) == base(l)``,
-        % and ``allPoints{l}(2:end)`` correspond to the redundant base points after ``base(l)`` which have been eliminated.
-        %
-        % To ``allPoints{l}`` we associate ``orbitNumber{l}`` and ``orbitIndex{l}`` so that
-        % ``orbits{orbitNumber{l}{i}}(orbitIndex{l}{i}) == allPoints{l}(i)``.
-
-        % Args:
-        %   chain (`+replab.bsgs.Chain`): Chain
-        %   partition (`+replab.Partition`): Partition of the domain of the chain in orbits
-        %   largestFirst (logical, optional): Whether to put the largest orbits first, default true
-        %
-        % Returns
-        % -------
-        %
-        % chain:
-        %   `+replab.bsgs.Chain`: Chain with reordered basis
-        % base:
-        %   `integer(1,\*)`: Prescribed basis, is a partial basis for ``chain``
-        % orbits:
-        %   `cell(1,\*) of integer(1,\*)`: Orbits present in the base
-        % allPoints:
-        %   `cell(1,\*) of integer(1,\*)`: Base points including redundant one, see description above
-        % orbitNumber:
-        %   `cell(1,\*) of integer(1,\*)`: Orbit numbers corresponding to ``allPoints``
-        % orbitIndex:
-        %   `cell(1,\*) of integer(1,\*)`: Index in the corresponding orbits for ``allPoints``
-            if nargin < 3 || isempty(largestFirst)
-                largestFirst = true;
-            end
-            blocks = partition.blocks;
-            singletons = cellfun(@(block) length(block) == 1, blocks);
-            blocks = blocks(~singletons);
-            criterion = cellfun(@length, blocks);
-            if largestFirst
-                criterion = -criterion;
-            end
-            [~, ind] = sort(-cellfun(@length, criterion));
-            orbits = blocks(I); % largest orbits first
-            chain1 = chain.mutableCopy;
-            base = [];
-            allPoints = {};
-            orbitNumber = {};
-            orbitIndex = {};
-            for i = 1:length(blocks)
-                l = length(base) + 1;
-                block = blocks{i};
-                remred = true;
-                chain.baseChange([base block], remred);
-
-            end
-
-
+        function [ok, data] = test(g, beta, orbitDescr, orbitReps, otherOrbits, otherTransversals)
+            repOrbIndex = orbitDescr(beta);
+            rep = orbitReps(repOrbIndex);
+            im = g(beta);
+            imRep = g(rep);
+            trEl = otherTransversals{repOrbIndex}(:, find(otherOrbits{repOrbIndex} == beta))';
+            ok = (im == trEl(imRep));
         end
 
     end
+
+
 
 end

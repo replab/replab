@@ -179,11 +179,11 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function C = computeConjugacyClasses(self)
-            if self.order < 5000 || true % TODO
+            if self.order < 5000
                 classes = replab.nfg.conjugacyClassesByOrbits(self);
                 n = length(classes);
                 C = cell(1, n);
-        for i = 1:n
+                for i = 1:n
                     cl = sortrows(classes{i}');
                     C{i} = replab.ConjugacyClass(self, cl(1,:));
                 end
@@ -195,7 +195,7 @@ classdef PermutationGroup < replab.FiniteGroup
                     tries = tries + 1;
                     remains
                     g = self.sample;
-                    if any(cellfun(@(c) ~c.contains(g), C))
+                    if all(cellfun(@(c) ~c.contains(g), C))
                         tries
                         tries = 0;
                         cl = replab.ConjugacyClass(self, g);
@@ -381,51 +381,48 @@ classdef PermutationGroup < replab.FiniteGroup
                 sCentralizer = self.centralizer(s);
             end
             if nargin < 5 || isempty(tCentralizer)
-                tCentralizer = [];
+                tCentralizer = self.centralizer(t);
             end
             % Implementation note
-            % t = b s b^-1
+            % t = g s g^-1
             % take tc^-1 in tCentralizer and sc in sCentralizer
-            % tc^-1 t tc = b sc s sc^-1 b^-1
-            % t = tc b sc s sc^-1 b^-1 tc^-1
-            % thus b -> tc b sc
-            if isempty(tCentralizer)
-                leftSubgroup = [];
-            else
-                leftSubgroup = tCentralizer.chain;
-            end
+            % tc^-1 t tc = g sc s sc^-1 g^-1
+            % t = tc g sc s sc^-1 g^-1 tc^-1
+            % thus g -> tc g sc
+            leftSubgroup = tCentralizer.chain;
             rightSubgroup = sCentralizer.chain;
-            prop = @(b) all(self.compose(b, s) == self.compose(t, b));
+            prop = @(g) all(self.compose(g, s) == self.compose(t, g));
 
-            orbits = sCentralizer.orbits.blocks;
-            % remove singletons
-            orbits = orbits(cellfun(@(o) length(o) > 1, orbits));
-            [~, I] = sort(-cellfun(@length, orbits));
-            orbits = orbits(I); % largest orbits first
-
-            % now we have the blocks of size > 1
-            base = [orbits{:}];
-            L = length(base);
+            sOrbits = replab.bsgs.permutationOrbits(s);
+            [~, I] = sort(-cellfun(@length, sOrbits));
+            sOrbits = sOrbits(I); % largest orbits first
+            base = [sOrbits{:}];
             chain = self.chain.mutableCopy;
-            chain.baseChange(base);
+            chain.baseChange(base, true);
+            %chain.removeRedundantBasePointsAtTheEnd;
             chain.makeImmutable;
 
-            l = 1;
+            base = chain.base;
+            L = length(base);
             tests = cell(1, L);
-            for i = 1:length(orbits)
-                orbit = orbits{i}; % don't forget the image under s
-                % first element of an orbit stores the current element tested
-                tests{l} = @(g, data) deal(true, g);
-                l = l + 1;
-                for j = 2:length(orbit)
-                    b = orbit(j);
-                    assert(b == base(l));
-                    tests{l} = @(g, g0) deal(g0(b) == g(b), g0);
-                    l = l + 1;
+            beta = base(1);
+            tests{1} = @(g, data) deal(true, g);
+            for i = 2:L
+                if base(i) == s(base(i-1))
+                    % if beta == s(betaPrev)
+                    %  g(beta) == g(s(betaPrev))
+                    %  g(beta) == t(g(betaPrev))
+                    betaPrev = base(i-1);
+                    beta = base(i);
+                    tests{i} = @(g, data) deal(g(beta) == t(data(betaPrev)), g);
+                else
+                    betaPrev = base(i-1);
+                    beta = base(i);
+                    tests{i} = @(g, data) deal(true, g);
                 end
             end
-            tests = [];
-            b = replab.bsgs.backtrackSearch(self.chain, prop, tests, [], leftSubgroup, rightSubgroup);
+            b = replab.bsgs.backtrackSearch(self.chain, prop, tests, [], leftSubgroup, rightSubgroup)
+            b1 = replab.bsgs.backtrackSearch(self.chain, prop, tests, [], [], [])
             % note that we have
             % sCentralizer == tCentralizer.leftConjugateGroup(self.inverse(b))
             % tCentralizer == sCentralizer.leftConjugateGroup(b)
@@ -474,6 +471,17 @@ classdef PermutationGroup < replab.FiniteGroup
     end
 
     methods % Methods specific to permutation groups
+
+        function G = generatorsAsMatrix(self)
+        % Returns the generators of this group concatenated in a matrix
+        %
+        % Returns:
+        %   integer(\*,\*): Matrix whose rows are the group generators
+            G = zeros(self.nGenerators, self.domainSize);
+            for i = 1:self.nGenerators
+                G(i,:) = self.generator(i);
+            end
+        end
 
         function sub = unorderedPartitionStabilizer(self, partition)
         % Computes the subgroup that leaves the given unordered partition invariant
@@ -529,7 +537,8 @@ classdef PermutationGroup < replab.FiniteGroup
             c.baseChange(base);
             isConstant = @(x) all(x == x(1));
             prop = @(g) all(cellfun(@(b) isConstant(blockIndex(g(b))), blocks));
-            subchain = replab.bsgs.subgroupSearch(c, prop, tests, []);
+            subchain = replab.bsgs.Backtrack(c, prop, tests, []);
+            subchain = subchain.res;
             sub = replab.PermutationGroup.fromChain(subchain, self.type);
         end
 
@@ -576,7 +585,8 @@ classdef PermutationGroup < replab.FiniteGroup
             c = self.chain.mutableCopy;
             c.baseChange(base);
             prop = @(g) isequal(blockIndex(g), blockIndex);
-            subchain = replab.bsgs.subgroupSearch(c, prop, tests, []);
+            subchain = replab.bsgs.Backtrack(c, prop, tests, []);
+            subchain = subchain.res;
             sub = replab.PermutationGroup.fromChain(subchain, self.type);
         end
 
@@ -665,7 +675,8 @@ classdef PermutationGroup < replab.FiniteGroup
                 tests{i} = @(g, data) deal(mask(g(set(i))), []);
             end
             prop = @(g) all(mask(g(set)));
-            subchain = replab.bsgs.subgroupSearch(c, prop, tests, []);
+            subchain = replab.bsgs.Backtrack(c, prop, tests, []);
+            subchain = subchain.res;
             s = replab.PermutationGroup.fromChain(subchain, self.type);
         end
 
