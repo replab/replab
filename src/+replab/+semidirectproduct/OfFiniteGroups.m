@@ -32,6 +32,22 @@ classdef OfFiniteGroups < replab.semidirectproduct.OfCompactGroups & replab.Nice
             g = sample@replab.semidirectproduct.OfCompactGroups(self); % force method selection
         end
 
+        function b = eqv(self, x, y)
+            b = eqv@replab.semidirectproduct.OfCompactGroups(self, x, y);
+        end
+
+        % Monoid
+
+        function z = compose(self, x, y)
+            z = compose@replab.semidirectproduct.OfCompactGroups(self, x, y);
+        end
+
+        % Group
+
+        function xInv = inverse(self, x)
+            xInv = inverse@replab.semidirectproduct.OfCompactGroups(self, x);
+        end
+
         % FiniteGroup
 
         function o = computeOrder(self)

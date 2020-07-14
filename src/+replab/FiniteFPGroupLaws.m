@@ -1,9 +1,9 @@
-classdef FiniteFPGroupLaws < replab.NiceFiniteGroupLaws
+classdef FiniteFPGroupLaws < replab.FiniteGroupLaws
 
     methods
 
         function self = FiniteFPGroupLaws(T)
-            self@replab.NiceFiniteGroupLaws(T);
+            self@replab.FiniteGroupLaws(T);
         end
 
         function law_parse_presentation_roundtrip_(self)

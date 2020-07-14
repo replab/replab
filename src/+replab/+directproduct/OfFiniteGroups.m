@@ -93,6 +93,22 @@ classdef OfFiniteGroups < replab.NiceFiniteGroup & replab.directproduct.OfCompac
             % force method selection
         end
 
+        function b = eqv(self, x, y)
+            b = eqv@replab.directproduct.OfCompactGroups(self, x, y);
+        end
+
+        % Monoid
+
+        function z = compose(self, x, y)
+            z = compose@replab.directproduct.OfCompactGroups(self, x, y);
+        end
+
+        % Group
+
+        function xInv = inverse(self, x)
+            xInv = inverse@replab.directproduct.OfCompactGroups(self, x);
+        end
+
         % FiniteSet
 
         function res = hasSameTypeAs(self, rhs)
@@ -127,6 +143,8 @@ classdef OfFiniteGroups < replab.NiceFiniteGroup & replab.directproduct.OfCompac
             % enumerated by considering the direct product as a cartesian
             % product of sets, and decomposing the index a la ind2sub/sub2ind
             % which is the role of the `atFun` and `findFun` functions
+
+            % TODO: verify ordering
         end
 
         function gd = computeDecomposition(self)
