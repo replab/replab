@@ -67,6 +67,7 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup, slowC
         tests = {};
         startData = [];
     end
+    baseOrdering = [replab.bsgs.baseOrdering(degree, group.base) degree+1 0];
     [group, groupedTests, startData] = replab.bsgs.cleanUpBaseAndTests(group, tests, startData);
     tests = [];
     base = group.base;
@@ -87,7 +88,6 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup, slowC
         end
         testData{i+1} = data;
     end
-    baseOrdering = [replab.bsgs.baseOrdering(degree, base) degree+1 0];
     % line 1: more initializations
     res = initSubgroup.mutableCopy;
     f = baseLen;

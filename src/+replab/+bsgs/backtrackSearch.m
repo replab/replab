@@ -38,6 +38,7 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
         startData = [];
     end
     identity = 1:degree;
+    baseOrdering = [replab.bsgs.baseOrdering(degree, group.base) degree+1 0];
     [group, groupedTests, startData] = replab.bsgs.cleanUpBaseAndTests(group, tests, startData);
     tests = [];
     base = group.base;
@@ -52,7 +53,6 @@ function res = backtrackSearch(group, prop, tests, startData, leftSubgroup, righ
     end
     testData = cell(1, baseLen+1);
     testData{1} = startData;
-    baseOrdering = [replab.bsgs.baseOrdering(degree, base) degree+1 0];
     % line 1-2: initialization
     % in the subgroup search algorithm, we construct a subgroup K by adding the new strong
     % generators found, and the coset minimality tests were performed on K by using it both
