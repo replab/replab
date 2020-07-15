@@ -23,7 +23,17 @@ classdef Monoid < replab.Domain
 
     end
 
-    methods % Default implementations
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.MonoidLaws(self);
+        end
+
+    end
+
+    methods % Monoid operations
 
         function z = composeAll(self, elements)
         % Composes a sequence of monoid elements

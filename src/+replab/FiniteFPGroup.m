@@ -173,6 +173,12 @@ classdef FiniteFPGroup < replab.NiceFiniteGroup
             s = self.presentation;
         end
 
+        % Obj
+
+        function l = laws(self)
+            l = replab.FiniteFPGroupLaws(self);
+        end
+
         % Domain
 
         function res = eqv(self, x, y)

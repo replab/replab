@@ -61,28 +61,11 @@ classdef IndexedFamily < replab.Domain
             end
         end
 
-        function I = imap2(self, f, g)
-
-        end
-
-        function I = imap(self, isomorphism)
-        % Maps the elements of this indexed family through an isomorphism
-        %
-        % Assumes that the elements of this `.IndexedFamily` come from a finite group.
-        %
-        % Args:
-        %   isomorphism (`+replab.FiniteIsomorphism`): Isomorphism from the finite group in this IndexedFamily
-            I = replab.indf.MappedIndexedFamily(self, isomorphism);
-            atFun = @(ind) self.isomorphism.image(self.at(ind));
-            findFun = @(el) self.find(self.isomorphism.preimage(el));
-            I = replab.IndexedFamily.lambda(self.size, atFun, findFun);
-        end
-
     end
 
     methods % Implementations
 
-        % replab.Str
+        % Str
 
         function s = shortStr(self, maxColumns)
             s = sprintf('Indexed family of %s elements', replab.shortStr(self.size, maxColumns));
@@ -125,7 +108,13 @@ classdef IndexedFamily < replab.Domain
             lines = vertcat({self.shortStr(maxColumns)}, replab.str.align(table, 'rcl'));
         end
 
-        % replab.Domain
+        % Obj
+
+        function l = laws(self)
+            l = replab.IndexedFamilyLaws(self);
+        end
+
+        % Domain
 
         function res = eqv(self, x, y)
             indX = self.at(x);

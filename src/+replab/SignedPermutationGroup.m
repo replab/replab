@@ -38,6 +38,12 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
 
     methods % Implementations
 
+        % Obj
+
+        function l = laws(self)
+            l = replab.SignedPermutationGroupLaws(self);
+        end
+
         % Domain
 
         function b = eqv(self, x, y)

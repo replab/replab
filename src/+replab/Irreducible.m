@@ -83,7 +83,11 @@ classdef Irreducible < replab.SubRep
             r = self.component(i).irrep(j);
         end
 
-        %% Str methods
+    end
+
+    methods % Implementations
+
+        % Str
 
         function names = hiddenFields(self)
             names = hiddenFields@replab.SubRep(self);
@@ -98,7 +102,13 @@ classdef Irreducible < replab.SubRep
             end
         end
 
-        %% Rep methods
+        % Obj
+
+        function l = laws(self)
+            l = replab.IrreducibleLaws(self);
+        end
+
+        % Rep
 
         function rho = image_internal(self, g)
             blocks = cellfun(@(iso) iso.image_internal(g), self.components, 'uniform', 0);
@@ -110,7 +120,7 @@ classdef Irreducible < replab.SubRep
             c = replab.IrreducibleCommutant(self);
         end
 
-        %% SubRep methods
+        % SubRep
 
         function irr = nice(self)
             components1 = cellfun(@(c) c.nice, self.components, 'uniform', 0);
