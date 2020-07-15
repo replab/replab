@@ -37,7 +37,9 @@ classdef Rep < replab.Obj
         dimension % (integer): Representation dimension
     end
 
-    methods % Abstract methods
+    methods % Representation methods
+
+        % Abstract method
 
         function rho = image_internal(self, g)
         % Returns the image of a group element, dense or sparse
@@ -50,11 +52,7 @@ classdef Rep < replab.Obj
             error('Abstract');
         end
 
-    end
-
-    methods
-
-        %% Own methods
+        % Methods with default implementations
 
         function rho = image(self, g)
         % Returns the image of a group element
@@ -108,7 +106,7 @@ classdef Rep < replab.Obj
             end
         end
 
-        %% Properties
+        % Properties
 
         function b = overR(self)
         % Returns whether this representation is defined over the real field
@@ -263,6 +261,8 @@ classdef Rep < replab.Obj
 
     methods % Implementations
 
+        % Str
+
         function s = headerStr(self)
             p = {};
             if isequal(self.isUnitary, true)
@@ -335,6 +335,12 @@ classdef Rep < replab.Obj
             end
             p{1} = replab.str.capitalize(p{1});
             s = strjoin(p, ' ');
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.RepLaws(self);
         end
 
     end

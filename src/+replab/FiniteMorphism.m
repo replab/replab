@@ -1,6 +1,16 @@
 classdef FiniteMorphism < replab.Morphism
 % Describes a morphism between finite groups
 
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.FiniteMorphismLaws(self);
+        end
+
+    end
+
     methods
 
         function K = kernel(self)

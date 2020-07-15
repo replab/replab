@@ -9,7 +9,17 @@ classdef HarmonizedIsotypic < replab.Isotypic
             self = self@replab.Isotypic(parent, irreps, E_internal);
         end
 
-        %% Rep methods
+    end
+
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.HarmonizedIsotypicLaws(self);
+        end
+
+        % Rep
 
         function rho = image_internal(self, g)
             p = self.parent.image_internal(g);
@@ -42,7 +52,7 @@ classdef HarmonizedIsotypic < replab.Isotypic
             end
         end
 
-        %% Isotypic methods
+        % Isotypic
 
         function [A Ainv] = changeOfBasis(self, i, j, context)
             A = eye(self.irrepDimension);

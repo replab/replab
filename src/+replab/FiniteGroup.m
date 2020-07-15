@@ -33,6 +33,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
+        % Obj
+
+        function l = laws(self)
+            l = replab.FiniteGroupLaws(self);
+        end
+
     end
 
     methods % Group properties

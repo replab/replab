@@ -3,7 +3,19 @@ classdef Group < replab.Monoid
 %
 % A group is a `.Monoid` where each element has an inverse.
 
-    methods % Abstract methods
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.GroupLaws(self);
+        end
+
+    end
+
+    methods % Group methods
+
+        % Abstract methods
 
         function xInv = inverse(self, x)
         % Computes the inverse of an element
@@ -20,9 +32,7 @@ classdef Group < replab.Monoid
             error('Abstract');
         end
 
-    end
-
-    methods % Methods with default implementations
+        % Methods with default implementations
 
         function x = leftConjugate(self, by, on)
         % Returns the left conjugate of a group element

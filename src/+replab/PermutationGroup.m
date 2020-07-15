@@ -110,6 +110,12 @@ classdef PermutationGroup < replab.FiniteGroup
             end
         end
 
+        % replab.Obj
+
+        function l = laws(self)
+            l = replab.PermutationGroupLaws(self);
+        end
+
         % replab.Domain
 
         function b = eqv(self, x, y)

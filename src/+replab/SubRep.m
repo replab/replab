@@ -70,7 +70,11 @@ classdef SubRep < replab.Rep
             s = replab.nice.niceSubRep(self);
         end
 
-        %% Str methods
+    end
+
+    methods % Implementations
+
+        % Str
 
         function names = hiddenFields(self)
             names = replab.str.uniqueNames( ...
@@ -92,7 +96,13 @@ classdef SubRep < replab.Rep
             end
         end
 
-        %% Rep methods
+        % Obj
+
+        function l = laws(self)
+            l = replab.SubRepLaws(self);
+        end
+
+        % Rep
 
 % $$$         function [A Ainv] = unitaryChangeOfBasis(self)
 % $$$ TODO recover this

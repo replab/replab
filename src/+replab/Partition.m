@@ -22,7 +22,7 @@ classdef Partition < replab.Str
 
     methods
 
-        function check()
+        function check(self)
         % Verifies the sanity of this partition
             m = cellfun(@min, self.blocks); % blocks are ordered
             assert(all(m(2:end) - m(1:end-1)) > 0);

@@ -8,9 +8,19 @@ classdef Action < replab.Obj
         P % replab.Domain: Set acted upon
     end
 
-    methods
+    methods % Implementations
 
-        %% Abstract methods
+        % Obj
+
+        function l = laws(self)
+            l = replab.ActionLaws(self);
+        end
+
+    end
+
+    methods % Action methods
+
+        % Abstract method
 
         function p1 = leftAction(self, g, p)
         % Computes the left action of a group element on a set element
@@ -29,7 +39,7 @@ classdef Action < replab.Obj
             error('Abstract');
         end
 
-        %% Default implementations
+        % Default implementations
 
         function p1 = rightAction(self, p, g)
         % Computes the right action of a group element on a set element
