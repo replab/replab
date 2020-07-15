@@ -120,7 +120,7 @@ classdef Obj < replab.Str
         %
         % Returns:
         %   logical: true iff self ~= rhs
-            res = ~self.rq(rhs);
+            res = ~self.eq(rhs);
         end
 
         function res = eq(self, rhs)
