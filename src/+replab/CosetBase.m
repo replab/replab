@@ -17,17 +17,9 @@ classdef CosetBase < replab.Obj
             assert(group.hasSameTypeAs(subgroup));
             self.group = group;
             self.subgroup = subgroup;
-            if isa(group, 'replab.PermutationGroup')
-                self.isomorphism = replab.FiniteIsomorphism.identity(group);
-                self.groupChain = group.lexChain;
-                self.subgroupChain = subgroup.lexChain;
-            elseif isa(group, 'replab.NiceFiniteGroup')
-                self.isomorphism = group.niceMorphism;
-                self.groupChain = group.niceGroup.chain;
-                self.subgroupChain = subgroup.niceGroup.chain;
-            else
-                error('unsupported');
-            end
+            self.isomorphism = group.niceMorphism;
+            self.groupChain = self.isomorphism.imageGroup(group).lexChain;
+            self.subgroupChain = self.isomorphism.imageGroup(subgroup).lexChain;
         end
 
     end
