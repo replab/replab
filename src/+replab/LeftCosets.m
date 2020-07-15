@@ -69,27 +69,33 @@ classdef LeftCosets < replab.CosetBase
             assert(isscalar(C{1}));
         end
 
-% $$$         function mu = leftAction(group, subgroup)
-% $$$         % Returns, as a morphism, the action of the given group of its left cosets
-% $$$             nG = group.nGenerators;
-% $$$             T = self.transversalAsMatrix;
-% $$$             n = size(T, 1);
-% $$$             images = cell(1, nG);
-% $$$             for i = 1:nG
-% $$$                 g = self.group.generator(i);
-% $$$                 img = zeros(1, n);
-% $$$                 for j = 1:n
-% $$$                     gt = self.canonicalRepresentative(g(T(j,:)));
-% $$$                     loc = replab.util.findRowInMatrix(gt, T);
-% $$$                     % [ok, loc] = ismember(gt, T, 'rows');
-% $$$                     assert(length(loc) == 1);
-% $$$                     img(j) = loc;
-% $$$                 end
-% $$$                 images{i} = img;
-% $$$             end
-% $$$             Sn = replab.S(n);
-% $$$             mu = self.group.morphismByImages(Sn, images);
-% $$$         end
+        function mu = leftAction(self)
+            mu = self.cached('leftAction', @() self.computeLeftAction);
+        end
+
+        function mu = computeLeftAction(self)
+        % Returns, as a morphism, the action of the given group of its left cosets
+            nG = self.group.nGenerators;
+            ds = self.group.domainSize;
+            T = replab.bsgs.Cosets.leftTransversalAsMatrix(self.groupChain, self.subgroupChain);
+            S = replab.perm.Set(ds);
+            S.insert(T);
+            n = size(T, 2);
+            images = cell(1, nG);
+            for i = 1:nG
+                g = self.group.generator(i);
+                img = zeros(1, n);
+                for j = 1:n
+                    gt = self.cosetRepresentative(g(T(:,j)'));
+                    loc = S.find(gt');
+                    assert(length(loc) == 1);
+                    img(j) = loc;
+                end
+                images{i} = img;
+            end
+            Sn = replab.S(n);
+            mu = self.group.morphismByImages(Sn, images);
+        end
 
     end
 

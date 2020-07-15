@@ -1,4 +1,4 @@
-classdef CosetBase < replab.Str
+classdef CosetBase < replab.Obj
 
     properties (SetAccess = protected)
         isomorphism % (`+replab.FiniteIsomorphism`): Isomorphism to a permutation group
