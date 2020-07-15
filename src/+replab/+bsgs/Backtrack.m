@@ -48,6 +48,10 @@ classdef Backtrack < replab.Str
         end
 
         function res = subgroup(self)
+            if self.baseLen == 0
+                res = self.res;
+                return
+            end
             % line 8: main loop
             while 1
                 while self.l < self.baseLen
