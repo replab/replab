@@ -8,14 +8,10 @@ function test_suite = ParserTest()
 end
 
 function test_parse_words
-    P = replab.fp.Parser(true);
-    names = {'a' 'x'};
-    [ok w] = P.parseWord('[a,x]', names);
-    assert(ok && isequal(w, [-1 -2 1 2]));
-    [ok w] = P.parseWord('a (x a)^2', names);
-    assert(ok && isequal(w, [1 2 1 2 1]));
-    [ok w] = P.parseWord('a a^-1', names);
-    assert(ok && isempty(w));
+    F = replab.FreeGroup.of('a', 'x');
+    assertEqual(F.parse('[a,x]').reducedLetters, [-1 -2 1 2]);
+    assertEqual(F.parse('a (x a)^2').reducedLetters, [1 2 1 2 1]);
+    assert(isempty(F.parse('a a^-1').reducedLetters));
 end
 
 function test_parse_correct_presentations

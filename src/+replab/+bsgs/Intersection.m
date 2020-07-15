@@ -45,7 +45,8 @@ classdef Intersection
             for l = 1:k
                 tests{l} = @(g, indata) self.test(l, g, indata);
             end
-            s = replab.bsgs.subgroupSearch(self.lhs, prop, tests, identity);
+            s = replab.bsgs.Backtrack(self.lhs, prop, tests, identity);
+            s = s.res;
         end
 
     end

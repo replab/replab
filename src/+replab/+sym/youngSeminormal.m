@@ -15,17 +15,17 @@ function rep = youngSeminormal(partition)
     [~, ~, NA, NB, ~, ~] = replab.sym.symIrrepImages(partition);
     d = size(NA, 1);
     if n == 1
-        rep = Sn.repByImages('R', d, cell(1, 0), cell(1, 0));
+        rep = Sn.repByImages('R', d, cell(1, 0));
         rep.isUnitary = true;
     elseif n == 2
-        rep = Sn.repByImages('R', d, {NB}, {NB});
+        rep = Sn.repByImages('R', d, {NB});
         rep.isUnitary = false;
     else
         NAinv = NA;
         for i = 1:n-2
             NAinv = NAinv * NA;
         end
-        rep = Sn.repByImages('R', d, {NA NB}, {NAinv NB});
+        rep = Sn.repByImages('R', d, {NA NB});
         rep.isUnitary = false;
     end
 end

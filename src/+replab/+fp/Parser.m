@@ -232,37 +232,7 @@ classdef Parser
             relators = res;
         end
 
-        function [ok, word] = parseWord(self, str, names)
-        % Parses a string representing a word
-        %
-        % Args:
-        %   str (charstring): String to parse
-        %   names (cell(1,\*) of charstring): Generator names
-        %
-        % Returns
-        % -------
-        %   ok:
-        %     logical: Whether the parse was successful
-        %   word:
-        %     integer(1,\*): Letters composing the (reduced) word
-            ok = false;
-            word = [];
-            [res, tokens] = self.lex(str, names);
-            if ~res
-                return
-            end
-            types = self.types;
-            pos = 1;
-            [pos, word] = self.word(tokens, pos);
-            if pos == 0 || tokens(1, pos) ~= types.END
-                word = [];
-                return
-            end
-            word = replab.Word.reduceLetters(word);
-            ok = true;
-        end
-
-        function [ok, names, relators] = parsePresentation(self, str)
+        function [ok, names, relatorLetters] = parsePresentation(self, str)
         % Parses a string representing a group presentation
         %
         % Args:
@@ -274,12 +244,12 @@ classdef Parser
         %     logical: Whether the parse was successful
         %   names:
         %     cell(1,\*) of charstring: Names of the generators
-        %   relators:
-        %     cell(1,\*) of integer(1,\*): Relators given as vector of letters composing a (reduced) word
+        %   relatorLetters:
+        %     cell(1,\*) of integer(1,\*): Relators given as the letters composing words
             ok = false;
             names = [];
             types = self.types;
-            relators = [];
+            relatorLetters = [];
             str = strtrim(str);
             if str(1) ~= '<' || str(end) ~= '>'
                 return
@@ -295,7 +265,7 @@ classdef Parser
             end
             relStr = strtrim(relStr);
             if isempty(relStr)
-                relators = {};
+                relatorLetters = {};
             else
                 [ok, tokens] = self.lex(relStr, names);
                 if ~ok
@@ -303,18 +273,13 @@ classdef Parser
                     return
                 end
                 pos = 1;
-                [pos, relators] = self.relations(tokens, pos);
+                [pos, relatorLetters] = self.relations(tokens, pos);
                 if pos == 0 || tokens(1, pos) ~= types.END
                     names = [];
                     relators = [];
                     return
                 end
             end
-            % reduce the words
-            relators = cellfun(@(r) replab.Word.reduceLetters(r), relators, 'uniform', 0);
-            % remove empty relators
-            mask = cellfun(@(r) isempty(relators), relators);
-            relators = relators(~mask);
             ok = true;
         end
 

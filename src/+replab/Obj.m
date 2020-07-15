@@ -1,22 +1,9 @@
 classdef Obj < replab.Str
 % Base class that provides sane pretty printing and instance equality tests
 
-    methods (Static)
-
-        function id = newId
-            persistent lastId
-            if isempty(lastId)
-                lastId = uint64(0);
-            end
-            id = lastId + uint64(1);
-            lastId = id;
-        end
-
-    end
-
     properties (Access = protected)
         cache_ % (struct): Contains the computed properties of this object
-        id_ % (uint64): Unique object ID
+        id_ % (integer): Unique object ID
     end
 
     methods
@@ -115,14 +102,15 @@ classdef Obj < replab.Str
         end
 
         function i = id(self)
+        % Returns the unique ID of this object (deprecated)
             if isempty(self.id_)
-                self.id_ = replab.Obj.newId;
+                self.id_ = replab.globals.nextUniqueId;
             end
             i = self.id_;
         end
 
         function res = ne(self, rhs)
-        % Non-equality test
+        % Non-equality test (deprecated)
         %
         % Workaround bug of == not implemented for handles in Octave
         %
@@ -136,7 +124,7 @@ classdef Obj < replab.Str
         end
 
         function res = eq(self, rhs)
-        % Equality test
+        % Equality test (deprecated)
         %
         % Workaround bug of == not implemented for handles in Octave
         %

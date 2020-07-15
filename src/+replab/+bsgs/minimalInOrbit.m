@@ -4,6 +4,7 @@ function minInd = minimalInOrbit(degree, generators, b, ordering)
 % The comparison function ``x <bo y`` is given by ``x <bo y = ordering(x) < ordering(y)``.
 %
 % Args:
+%   degree (integer): Degree of the permutations
 %   generators (integer(\*,\*)): Group generators given as matrix columns
 %   b (integer): Point to compute the orbit of
 %   ordering (integer(1,\*), optional): Ordering, default value ``[1 2 ... n]``

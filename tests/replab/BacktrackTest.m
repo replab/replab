@@ -12,11 +12,10 @@ function test_backtrack
     for j = 1:3
         G = replab.nfg.randomSubgroup(G);
     end
-    v = randi(3, 1, n);
-    s = G.sample;
-    w = [];
-    w(s) = v;
-    g = G.findPermutationTo(v, w);
+    s = randi(3, 1, n);
+    g = G.sample;
+    t(g) = s;
+    g1 = G.findPermutationsTo(s, t).representative;
     assert(~isempty(g));
-    assert(isequal(v(g), w));
+    assert(isequal(t(g), s));
 end

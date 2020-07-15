@@ -2,8 +2,6 @@ function prd = of(factors)
 % Creates a direct product group as specialized as possible
     className = replab.directproduct.commonClass(factors);
     switch className
-      case 'replab.NiceFiniteGroup'
-        prd = replab.directproduct.OfNiceFiniteGroups(factors);
       case 'replab.FiniteGroup'
         prd = replab.directproduct.OfFiniteGroups(factors);
       case 'replab.CompactGroup'

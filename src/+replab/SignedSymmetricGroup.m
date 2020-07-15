@@ -54,51 +54,46 @@ classdef SignedSymmetricGroup < replab.SignedPermutationGroup
             o = factorial(vpi(self.domainSize)) * vpi(2)^self.domainSize;
         end
 
-        function E = computeElements(self)
-            E = replab.IndexedFamily.lambda(self.order, ...
-                                            @(ind) self.enumeratorAt(ind), ...
-                                            @(el) self.enumeratorFind(el));
-        end
-
-        function d = computeDecomposition(self)
-            G = self.subgroup(self.generators, self.order);
-            d = G.decomposition;
-        end
+% $$$         function E = computeElements(self)
+% $$$             E = replab.IndexedFamily.lambda(self.order, ...
+% $$$                                             @(ind) self.enumeratorAt(ind), ...
+% $$$                                             @(el) self.enumeratorFind(el));
+% $$$         end
 
     end
 
     methods
 
-        function ind = enumeratorFind(self, g)
-            n = self.domainSize;
-            ind0 = vpi(0);
-            els = [-n:-1 1:n];
-            for i = 1:n
-                ind0 = ind0 * 2*(n - i + 1);
-                ind0 = ind0 + (find(els == g(i)) - 1);
-                els = setdiff(els, [g(i) -g(i)]);
-            end
-            ind = ind0 + 1;
-        end
-
-        function g = enumeratorAt(self, ind)
-            n = self.domainSize;
-            ind0 = ind - 1; % make it 0-based
-            inds = zeros(1, n);
-            for i = 1:n
-                r = mod(ind0, 2*i);
-                ind0 = (ind0 - r)/(2*i);
-                inds(i) = double(r + 1);
-            end
-            inds = fliplr(inds);
-            els = [-n:-1 1:n];
-            g = zeros(1, n);
-            for i = 1:n
-                e = els(inds(i));
-                g(i) = e;
-                els = setdiff(els, [e -e]);
-            end
-        end
+% $$$         function ind = enumeratorFind(self, g)
+% $$$             n = self.domainSize;
+% $$$             ind0 = vpi(0);
+% $$$             els = [-n:-1 1:n];
+% $$$             for i = 1:n
+% $$$                 ind0 = ind0 * 2*(n - i + 1);
+% $$$                 ind0 = ind0 + (find(els == g(i)) - 1);
+% $$$                 els = setdiff(els, [g(i) -g(i)]);
+% $$$             end
+% $$$             ind = ind0 + 1;
+% $$$         end
+% $$$
+% $$$         function g = enumeratorAt(self, ind)
+% $$$             n = self.domainSize;
+% $$$             ind0 = ind - 1; % make it 0-based
+% $$$             inds = zeros(1, n);
+% $$$             for i = 1:n
+% $$$                 r = mod(ind0, 2*i);
+% $$$                 ind0 = (ind0 - r)/(2*i);
+% $$$                 inds(i) = double(r + 1);
+% $$$             end
+% $$$             inds = fliplr(inds);
+% $$$             els = [-n:-1 1:n];
+% $$$             g = zeros(1, n);
+% $$$             for i = 1:n
+% $$$                 e = els(inds(i));
+% $$$                 g(i) = e;
+% $$$                 els = setdiff(els, [e -e]);
+% $$$             end
+% $$$         end
 
     end
 

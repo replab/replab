@@ -12,10 +12,10 @@ function test_centralizer_order
     Sn = replab.S(n);
     G = replab.nfg.randomSubgroup(Sn);
     G = replab.nfg.randomSubgroup(G);
-    C = G.conjugacyClasses;
-    for i = 1:length(C)
-        g = C{i}.representative;
-        ctr = G.centralizer(C{i}.representative);
-        assert(C{i}.size * ctr.order == G.order);
+    classes = replab.nfg.conjugacyClassesByOrbits(G);
+    for i = 1:length(classes)
+        cc1 = classes{i};
+        cc2 = replab.ConjugacyClass(G, cc1(:,1)');
+        assert(size(cc1, 2) == cc2.cardinality);
     end
 end

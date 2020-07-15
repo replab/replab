@@ -1,4 +1,4 @@
-classdef CompositionMorphism < replab.Morphism
+classdef Composition < replab.Morphism
 
     properties (SetAccess = protected)
         first % (`+replab.Morphism`): First morphism
@@ -7,13 +7,15 @@ classdef CompositionMorphism < replab.Morphism
 
     methods
 
-        function self = CompositionMorphism(second, first)
+        function self = Composition(second, first)
             self.target = second.target;
             self.source = first.source;
+            self.first = first;
+            self.second = second;
         end
 
-        function t = image(self, s)
-            t = self.second.image(self.first.image(s));
+        function t = imageElement(self, s)
+            t = self.second.imageElement(self.first.imageElement(s));
         end
 
     end

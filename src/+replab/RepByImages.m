@@ -1,51 +1,42 @@
 classdef RepByImages < replab.Rep
 % A finite dimensional representation of a finite group
 %
-% It works by representing the finite group as a permutation group (if it is not already a permutation group),
-% then using a BSGS construction that stores the stabilizer chain with transversal elements both encoding the
+% The finite group must have an isomorphism to a permutation group, so that the images of that representation
+% can be reprseented using a BSGS construction that storing the stabilizer chain with transversal elements both encoding the
 % group transversals and their images (see `+replab.+bsgs.ChainWithImages`).
-%
-% If the finite group is not a permutation group, a "nice monomorphism" in the sense of GAP is used, see:
-% https://www.gap-system.org/Manuals/doc/ref/chap40.html#X7FFD731684606BC6)
 
     properties (SetAccess = protected)
         images_internal % (cell(1,\*) of double(\*,\*), may be sparse): Generator images
         inverseImages_internal % (cell(1,\*) of double(\*,\*), may be sparse): Inverses of generator images
     end
 
-    properties (Access = protected)
-        chain_ % (`+replab.+bsgs.ChainWithImages`): BSGS chain with images
-    end
-
     methods
 
-        %% Own methods
-
-        function self = RepByImages(group, field, dimension, images, inverseImages)
+        function self = RepByImages(group, field, dimension, images)
         % Constructs a representation from images of group generators and their inverses
         %
         % Args:
-        %   group (`+replab.NiceFiniteGroup`): Finite group represented
+        %   group (`+replab.FiniteGroup`): Finite group represented
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
         %   dimension (integer): Representation dimension
         %   images (cell(1,\*) of double(\*,\*), may be sparse or symbolic): Images of the generators of ``group`` in the same order
-        %   inverseImages (cell(1,\*) of double(\*,\*), may be sparse or symbolic): Inverse images of the generators
-            assert(isa(group, 'replab.NiceFiniteGroup'));
+            assert(isa(group, 'replab.FiniteGroup'));
             assert(isa(images, 'cell') && (isempty(images) || isrow(images)));
-            assert(isa(inverseImages, 'cell') && (isempty(inverseImages) || isrow(inverseImages)));
             assert(length(images) == group.nGenerators);
-            assert(length(inverseImages) == group.nGenerators);
             knownUnitary = true;
-            isInexact = false;
-            for i = 1:group.nGenerators
-                knownUnitary = knownUnitary && isequal(images{i}, ctranspose(inverseImages{i}));
-                assert(isequal(size(images{i}), [dimension dimension]));
-                isInexact = isInexact || ~(isa(images{i}, 'sym') || isequal(images{i}, round(images{i})));
-                isInexact = isInexact || ~(isa(inverseImages{i}, 'sym') || isequal(inverseImages{i}, round(inverseImages{i})));
-                assert(isequal(size(inverseImages{i}), [dimension dimension]));
-            end
-            if isInexact
-                warning('replab:inexactImages', 'Floating point errors accumulate quickly for approximate images. Use symbolic arguments instead.');
+            nG = group.nGenerators;
+            images_internal = cell(1, nG);
+            inverseImages_internal = cell(1, nG);
+            for i = 1:nG
+                g = group.generator(i);
+                o = group.elementOrder(g);
+                img = images{i};
+                assert(isequal(size(img), [dimension dimension]));
+                inv_img = replab.util.repeatedSquaring(img, o-1, @(x,y) x*y);
+                assert(all(all(img * inv_img == eye(dimension))), 'RepByImages can only be used with exact images. Use symbolic arguments.');
+                knownUnitary = knownUnitary && all(all(img == ctranspose(inv_img)));
+                images_internal{i} = img;
+                inverseImages_internal{i} = inv_img;
             end
             % replab.Rep immutable
             self.group = group;
@@ -55,49 +46,59 @@ classdef RepByImages < replab.Rep
             if knownUnitary
                 self.isUnitary = true;
             end
-            self.images_internal = images;
-            self.inverseImages_internal = inverseImages;
+            self.images_internal = images_internal;
+            self.inverseImages_internal = inverseImages_internal;
         end
 
         function c = chain(self)
-            if isempty(self.chain_)
-                nG = self.group.nGenerators;
-                useSparse = true;
-                for i = 1:nG
-                    if isa(self.images_internal{i}, 'sym') || isa(self.inverseImages_internal{i}, 'sym')
-                        useSparse = false;
-                        break
-                    end
-                end
-                d = self.dimension;
-                n = self.group.niceGroup.domainSize;
-                order = self.group.order;
-                generators = self.group.niceGroup.generators;
-                if self.isUnitary
-                    if self.overR
-                        target = replab.OrthogonalGroup(d, useSparse);
-                    else
-                        target = replab.UnitaryGroup(d, useSparse);
-                    end
-                    symToDouble = replab.Morphism.lambda(target, target, @(X) double(X)); % remove symbolic toolbox stuff
-                    self.chain_ = replab.bsgs.ChainWithImages.make(n, target, generators, self.images_internal, ...
-                                                                   symToDouble, [], order);
-                else
-                    target1 = replab.GeneralLinearGroupWithInverses(self.field, self.dimension, useSparse);
-                    target2 = replab.GeneralLinearGroup(self.field, self.dimension, useSparse);
-                    cut = replab.Morphism.lambda(target1, target2, @(X) double(X(:, 1:self.dimension)));
-                    images = cell(1, nG);
-                    for i = 1:nG
-                        images{i} = [self.images_internal{i} self.inverseImages_internal{i}];
-                    end
-                    self.chain_ = replab.bsgs.ChainWithImages.make(n, target1, generators, images, cut, ...
-                                                                   [], order);
-                end
-            end
-            c = self.chain_;
+        % Returns a BSGS chain that computes images of this representation
+        %
+        % The preimages are permutations.
+        %
+        % Returns:
+        %   `+replab.+bsgs.ChainWithImages`: The BSGS chain with matrix images
+            c = self.cached('chain', @() self.computeChain);
         end
 
-        %% Str methods
+        function res = computeChain(self)
+            nG = self.group.nGenerators;
+            d = self.dimension;
+            n = self.group.niceMorphism.target.domainSize;
+            iso = self.group.niceMorphism;
+            generators = cellfun(@(g) iso.imageElement(g), self.group.generators, 'uniform', 0);
+            order = self.group.order;
+            % if any of the images is symbolic, don't use sparse
+            useSparse = ~(any(cellfun(@(i) isa(i, 'sym'), [self.images_internal self.inverseImages_internal])));
+            if self.isUnitary
+                % for unitary/orthogonal representations, we don't need to compute inverses explicitly
+                if self.overR
+                    target = replab.OrthogonalGroup(d, useSparse);
+                else
+                    target = replab.UnitaryGroup(d, useSparse);
+                end
+                symToDouble = replab.Morphism.lambda(target, target, @(X) double(X)); % remove symbolic toolbox stuff
+                res = replab.bsgs.ChainWithImages.make(n, target, generators, self.images_internal, ...
+                                                       symToDouble, [], order);
+            else
+                % for nonunitary/nonorthogonal representations, we store the inverses alongside the matrix, and use a special
+                % group structure to perform computations
+                target1 = replab.GeneralLinearGroupWithInverses(self.field, self.dimension, useSparse);
+                target2 = replab.GeneralLinearGroup(self.field, self.dimension, useSparse);
+                cut = replab.Morphism.lambda(target1, target2, @(X) double(X(:, 1:self.dimension)));
+                images = cell(1, nG);
+                for i = 1:nG
+                    images{i} = [self.images_internal{i} self.inverseImages_internal{i}];
+                end
+                res = replab.bsgs.ChainWithImages.make(n, target1, generators, images, cut, ...
+                                                       [], order);
+            end
+        end
+
+    end
+
+    methods % Implementations
+
+        % Str
 
         function names = hiddenFields(self)
             names = hiddenFields@replab.Rep(self);
@@ -112,19 +113,21 @@ classdef RepByImages < replab.Rep
             end
         end
 
-        %% Rep methods
+        % Rep
 
         function rho = image_internal(self, g)
-            img = self.group.niceMonomorphismImage(g);
-            rho = self.chain.image(img);
+            perm = self.group.niceMorphism.imageElement(g);
+            rho = self.chain.image(perm);
+            assert(~isa(rho, 'sym')); % TODO remove
             if isa(rho, 'sym')
                 rho = double(rho);
             end
         end
 
         function rho = inverseImage_internal(self, g)
-            img = self.group.niceMonomorphismImage(g);
-            rho = self.chain.inverseImage(img);
+            perm = self.group.niceMorphism.imageElement(g);
+            rho = self.chain.inverseImage(perm);
+            assert(~isa(rho, 'sym')); % TODO remove
             if isa(rho, 'sym')
                 rho = double(rho);
             end
@@ -134,44 +137,31 @@ classdef RepByImages < replab.Rep
 
     methods (Static)
 
-        function rep1 = fromRep(rep)
+        function rep1 = fromExactRep(rep)
+        % Constructs a `.RepByImages` from an existing representation with exact images
             assert(isa(rep.group, 'replab.NiceFiniteGroup'));
             nG = rep.group.nGenerators;
-            images = cell(1, nG);
-            inverseImages = cell(1, nG);
-            for i = 1:nG
-                g = rep.group.generator(i);
-                images{i} = rep.image_internal(g);
-                inverseImages{i} = rep.inverseImage_internal(g);
-            end
-            rep1 = replab.RepByImages(rep.group, rep.field, rep.dimension, images, inverseImages);
+            images = arrayfun(@(i) rep.image_internal(rep.group.generator(i)), 1:nG, 'uniform', 0);
+            rep1 = replab.RepByImages(rep.group, rep.field, rep.dimension, images);
         end
 
         function rep = fromImageFunction(group, field, dimension, imageFun)
         % Constructs a RepByImages representation using a given morphism
         %
         % Args:
-        %  group (`+replab.NiceFiniteGroup`): Group of which to construct a representation
+        %   group (`+replab.FiniteGroup`): Group of which to construct a representation
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
         %   dimension (integer): Dimension of the representation
         %   imageFun (function_handle): Function that returns a matrix for any element of ``G``
         %
         % Returns:
         %   `+replab.RepByImages`: The constructed representation
-            assert(isa(group, 'replab.NiceFiniteGroup'), 'The given group must be a NiceFiniteGroup');
+            assert(isa(group, 'replab.FiniteGroup'), 'The given group must be a FiniteGroup');
             nG = group.nGenerators;
-            images = cell(1, nG);
-            inverseImages = cell(1, nG);
-            for i = 1:nG
-                g = group.generator(i);
-                gInv = group.inverse(g);
-                images{i} = imageFun(g);
-                inverseImages{i} = imageFun(gInv);
-                assert(isequal(size(images{i}), [dimension dimension]));
-                assert(isequal(size(inverseImages{i}), [dimension dimension]));
-            end
-            rep = replab.RepByImages(group, field, dimension, images, inverseImages);
+            images = arrayfun(@(i) imageFun(group.generator(i)), 1:nG, 'uniform', 0);
+            rep = replab.RepByImages(group, field, dimension, images);
         end
 
     end
+
 end

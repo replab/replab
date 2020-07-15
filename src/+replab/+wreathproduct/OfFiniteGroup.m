@@ -20,4 +20,40 @@ classdef OfFiniteGroup < replab.semidirectproduct.OfFiniteGroups & replab.wreath
 
     end
 
+    methods % Implementation
+
+        % Domain
+
+        function g = sample(self)
+            g = sample@replab.semidirectproduct.OfCompactGroups(self); % force method selection
+        end
+
+        function b = eqv(self, x, y)
+            b = eqv@replab.semidirectproduct.OfCompactGroups(self, x, y);
+        end
+
+        % Monoid
+
+        function z = compose(self, x, y)
+            z = compose@replab.semidirectproduct.OfCompactGroups(self, x, y);
+        end
+
+        % Group
+
+        function xInv = inverse(self, x)
+            xInv = inverse@replab.semidirectproduct.OfCompactGroups(self, x);
+        end
+
+        % NiceFiniteGroup
+
+        function p = niceImage(self, w)
+            p = self.imprimitivePermutation(w, @(a) self.A.niceMorphism.imageElement(a));
+        end
+
+        function res = hasSameTypeAs(self, rhs)
+            res = isa(rhs, 'replab.wreathproduct.OfFiniteGroup') && self.n == rhs.n && self.A.hasSameTypeAs(rhs.A);
+        end
+
+    end
+
 end

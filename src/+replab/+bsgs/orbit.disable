@@ -1,0 +1,14 @@
+function [points mask] = orbit(n, perms, points, mask)
+% Computes or updates the orbit
+    if nargin < 4
+        mask = false(1, n);
+        mask(points) = true;
+    end
+    toCheck = points;
+    ind = length(toCheck)
+    while ind > 0
+        h = toCheck(ind);
+        ind = ind - 1;
+        newPoints = perms(h,:);
+        newPoints = newPoints(~mask(newPoints));
+end

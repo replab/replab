@@ -1,43 +1,59 @@
-classdef ConjugacyClass < replab.Str
+classdef ConjugacyClass < replab.FiniteSet
+% Describes a conjugacy class of a finite group
+%
+% A conjugacy class containing the representative $r \in G$ is the set $\{g r g^{-1} : g \in G \}$.
+%
+% The centralizer of $r$ in $G$ is the subgroup $C_{G}(r) = \{ g r g^{-1} == r : g \in G \}$.
+%
+% Thus, the left cosets $G/C_{G}(r) = \{ g C_{G}(r) : g \in G \}$ are in one to one correspondence with
+% the elements of the conjugacy class.
+%
+% Contrary to the case of cosets, the `.representative` element is not chosen to be lexicographically
+% minimal.
 
     properties (SetAccess = protected)
-        group % (`+replab.NiceFiniteGroup`): Group containing this conjugacy class
-        representative % (group element): Representative element of the conjugacy class
-        size % (integer): Size of the conjugacy class
+        group % (`+replab.FiniteGroup`): Group containing this conjugacy class
+        representativeCentralizer % (`+replab.FiniteGroup`): Centralizer of `.representative` in `.group`
     end
 
-    properties (Access = protected)
-        elementImages % (double(\*,\*)): Matrix containing images of the conjugacy class elements
-                      %
-                      %                  Each column is a permutation representing the image
-                      %                  of an element of the conjugacy class through
-                      %                  `+replab.NiceFiniteGroup.niceMonomorphismImage`
-    end
+    methods
 
-    methods (Access = protected)
-
-        function self = ConjugacyClass(group, elementImages)
+        function self = ConjugacyClass(group, arbitraryRepresentative, representativeCentralizer)
+            self.type = group.type;
             self.group = group;
-            self.representative = group.niceMonomorphismPreimage(elementImages(:,1)');
-            self.elementImages = elementImages;
-            self.size = size(self.elementImages, 2);
+            self.representative = arbitraryRepresentative;
+            if nargin < 3 || isempty(representativeCentralizer)
+                representativeCentralizer = self.group.centralizer(arbitraryRepresentative);
+            end
+            self.representativeCentralizer = representativeCentralizer;
         end
 
     end
 
     methods
 
-        function e = elements(self)
-            e = arrayfun(@(i) self.group.niceMonomorphismPreimage(self.elementImages(:,i)'), 1:self.size, 'uniform', 0);
+        function s = cardinality(self)
+            s = self.group.order / self.representativeCentralizer.order;
         end
 
-    end
+        function b = contains(self, t)
+        % Returns whether the given element is part of this conjugacy class
+        %
+        % Args:
+        %   t (element of `.group`): Group element
+        %
+        % Returns:
+        %   logical: True if ``t`` is a member of this conjugacy classx
+            s = self.representative;
+            sCentralizer = self.representativeCentralizer;
+            % We want to solve ``t == b s b^-1`` with ``s`` the representative
+            B = self.group.findLeftConjugations(s, t, sCentralizer);
+            b = ~isempty(B);
+        end
 
-    methods (Static)
-
-        function c = computeAll(group)
-            classes = replab.nfg.conjugacyClassesByOrbits(group);
-            c = cellfun(@(cl) replab.ConjugacyClass(group, cl), classes, 'uniform', 0);
+        function E = computeElements(self)
+            T = self.group.leftCosetsOf(self.representativeCentralizer).transversal;
+            E = cellfun(@(t) self.group.leftConjugate(t, self.representative), T, 'uniform', 0);
         end
 
     end

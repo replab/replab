@@ -7,15 +7,15 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
 
     methods
 
-        function self = SignedPermutationGroup(domainSize, generators, order, parent)
+        function self = SignedPermutationGroup(domainSize, generators, order, type)
         % Constructs a signed permutation group
         %
         % Args:
         %   domainSize (integer): Size of the domain
         %   generators (cell(1,\*) of permutation): Group generators
         %   order (vpi, optional): Order of the group
-        %   parent (`+replab.SignedPermutationGroup`, optional): Parent of this group if known,
-        %                                                        or ``'self'`` if this group is its own parent
+        %   type (`+replab.SignedPermutationGroup`, optional): Type of this group if known,
+        %                                                      or ``'self'`` if this group is its own type
             self.domainSize = domainSize;
             self.identity = 1:domainSize;
             self.generators = generators;
@@ -23,31 +23,34 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
                 self.cache('order', order, '==');
             end
             if nargin < 4
-                parent = [];
+                type = [];
             end
-            if isempty(parent)
-                self.parent = replab.SignedSymmetricGroup(domainSize);
-            elseif isequal(parent, 'self')
-                self.parent = self;
+            if isempty(type)
+                self.type = replab.SignedSymmetricGroup(domainSize);
+            elseif isequal(type, 'self')
+                self.type = self;
             else
-                self.parent = parent;
+                self.type = type;
             end
         end
 
+    end
 
-        %% Domain methods
+    methods % Implementations
+
+        % Domain
 
         function b = eqv(self, x, y)
             b = isequal(x, y);
         end
 
-        %% Monoid methods
+        % Monoid
 
         function z = compose(self, x, y)
             z = x(abs(y)).*sign(y);
         end
 
-        %% Group methods
+        % Group
 
         function y = inverse(self, x)
             n = self.domainSize;
@@ -58,29 +61,40 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
             y(invFlip) = -y(invFlip);
         end
 
-        %% NiceFiniteGroup methods
+        % NiceFiniteGroup methods
 
-        function res = hasSameParentAs(self, rhs)
-            res = isa(rhs, 'replab.SignedPermutationGroup') && (self.parent.domainSize == rhs.parent.domainSize);
+        function res = hasSameTypeAs(self, rhs)
+            res = isa(rhs, 'replab.SignedPermutationGroup') && (self.type.domainSize == rhs.type.domainSize);
         end
 
-        function p1 = niceMonomorphismImage(self, p)
+        function p1 = nicePreimage(self, p)
+            p1 = replab.SignedPermutation.fromPermutation(p);
+        end
+
+        function p1 = niceImage(self, p)
             p1 = replab.SignedPermutation.toPermutation(p);
         end
 
-        function grp = subgroup(self, generators, order)
+        function grp = niceSubgroup(self, generators, order, niceGroup)
         % Constructs a permutation subgroup from its generators
         %
         % Args:
         %   generators (row cell array): List of generators given as a permutations in a row cell array
         %   order (vpi, optional): Argument specifying the group order, if given can speed up computations
+        %   niceGroup (`+replab.PermutationGroup`, optional): Image of this subgroup under the nice morphism
         %
         % Returns:
         %   +replab.SignedPermutationGroup: The constructed signed permutation subgroup
+            if nargin < 4
+                niceGroup = [];
+            end
             if nargin < 3
                 order = [];
             end
-            grp = replab.SignedPermutationGroup(self.domainSize, generators, order, self.parent);
+            grp = replab.SignedPermutationGroup(self.domainSize, generators, order, self.type);
+            if ~isempty(niceGroup)
+                grp.cache('niceGroup', niceGroup, '==');
+            end
         end
 
         %% Methods specific to signed permutation groups

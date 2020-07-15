@@ -1,4 +1,4 @@
-function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
+function res = subgroupSearch(group, prop, tests, startData, initSubgroup, slowCosetTest)
 % Find the subgroup of all elements satisfying the property ``prop``
 %
 % See also a similar implementation in Sympy 1.6, PermutationGroup.subgroup_search
@@ -34,6 +34,7 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
 %   startData (user-defined): Data to pass to the first test function
 %   initSubgroup (`+replab.+bsgs.Chain`): BSGS chain representing a subgroup, if a subgroup of the sought group is
 %                                         known in advance, it can be passed to the function as this parameter.
+%   slowCosetTest (logical, optional): Whether to perform the expensive coset tests involving base changes, default ``true``
 %
 % Returns:
 %   `+replab.+bsgs.Chain`: The BSGS chain representing the subgroup of all elements satisfying ``prop``. The strong
@@ -56,13 +57,17 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
 %   of the pseudocode.
     degree = group.n;
     % initialize basic properties
-    if nargin < 5
+    if nargin < 6 || isempty(slowCosetTest)
+        slowCosetTest = true;
+    end
+    if nargin < 5 || isempty(initSubgroup)
         initSubgroup = replab.bsgs.Chain(degree);
     end
-    if nargin < 4
+    if nargin < 4 || isempty(tests)
         tests = {};
         startData = [];
     end
+    baseOrdering = [replab.bsgs.baseOrdering(degree, group.base) degree+1 0];
     [group, groupedTests, startData] = replab.bsgs.cleanUpBaseAndTests(group, tests, startData);
     tests = [];
     base = group.base;
@@ -83,7 +88,6 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
         end
         testData{i+1} = data;
     end
-    baseOrdering = [replab.bsgs.baseOrdering(degree, base) degree+1 0];
     % line 1: more initializations
     res = initSubgroup.mutableCopy;
     f = baseLen;
@@ -136,10 +140,14 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
             if ~ok
                 break
             end
-            % line 11: change the (partial) base of K
-            res.baseChange([res.B(1:l-1) img]);
-            % line 12: calculate the minimal orbit representative mask
-            minimalMaskInOrbit{l+1} = replab.bsgs.minimalMaskInOrbit(degree, res.strongGeneratorsForLevel(l+1), baseOrdering);
+            if slowCosetTest
+                % line 11: change the (partial) base of K
+                res.baseChange([res.B(1:l-1) img]);
+                % line 12: calculate the minimal orbit representative mask
+                minimalMaskInOrbit{l+1} = replab.bsgs.minimalMaskInOrbit(degree, res.strongGeneratorsForLevel(l+1), baseOrdering);
+            else
+                minimalMaskInOrbit{l+1} = true(1, degree);
+            end
             % line 13: recompute sorted orbits
             l = l + 1;
             sortedOrbits{l} = replab.bsgs.sortByOrdering(g{l-1}(group.Delta{l}), baseOrdering);
@@ -168,12 +176,18 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
                 end
                 if ok && prop(g{l})
                     % line 18: add new strong generator for K
-                    % line 19-20: reset the base of K
-                    res.baseChange(base);
+                    if slowCosetTest
+                        % line 19-20: reset the base of K
+                        res.baseChange(base);
+                    end
                     res.stripAndAddStrongGenerator(g{l});
                     resBasicOrbits = res.Delta;
-                    % line 21: recalculate orbit representatives
-                    minimalMaskInOrbit{f} = replab.bsgs.minimalMaskInOrbit(degree, res.strongGeneratorsForLevel(f), baseOrdering);
+                    if slowCosetTest
+                        % line 21: recalculate orbit representatives
+                        minimalMaskInOrbit{f} = replab.bsgs.minimalMaskInOrbit(degree, res.strongGeneratorsForLevel(f), baseOrdering);
+                    else
+                        minimalMaskInOrbit{f} = true(1, degree);
+                    end
                     % line 22: reset the search depth
                     l = f;
                 end
@@ -193,8 +207,12 @@ function res = subgroupSearch(group, prop, tests, startData, initSubgroup)
             % line 26
             f = l;
             c(l) = 1;
-            % line 27
-            minimalMaskInOrbit{f} = replab.bsgs.minimalMaskInOrbit(degree, res.strongGeneratorsForLevel(f), baseOrdering);
+            if slowCosetTest
+                % line 27
+                minimalMaskInOrbit{f} = replab.bsgs.minimalMaskInOrbit(degree, res.strongGeneratorsForLevel(f), baseOrdering);
+            else
+                minimalMaskInOrbit{f} = true(1, degree);
+            end
             % line 28: update variables used for minimality testing
             mu(l) = degree + 2; % = 0
             nu(l) = replab.bsgs.computeNu(degree, l, sortedOrbits, group.Delta, resBasicOrbits);

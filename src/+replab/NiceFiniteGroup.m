@@ -1,13 +1,10 @@
 classdef NiceFiniteGroup < replab.FiniteGroup
 % A nice finite group is a finite group equipped with an injective homomorphism into a permutation group
 %
-% The class that subclasses `.NiceFiniteGroup` implements a method `.niceMonomorphismImage` that returns a
-% permutation row vector corresponding to a group element.
+% Any class that subclasses `.NiceFiniteGroup` must implements a method `.niceImage` that returns a permutation
+% corresponding to a group element.
 %
-% In turn, the `.NiceFiniteGroup` infrastructure will use that method to build a BSGS chain to describe
-% the structure of the finite group; this chain also provides a way to compute the preimage of a permutation.
-%
-% Thus, an isomorphism is established between the present `.NiceFiniteGroup` and a permutation group; as
+% Then, an isomorphism is established between the present `.NiceFiniteGroup` and a permutation group; as
 % permutation groups can be handled by efficient BSGS algorithms, the requested computations can be
 % translated back and forth between this group and a permutation group.
 %
@@ -15,628 +12,197 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 % the enumeration of elements using a `.IndexedFamily`, the construction of subgroups is all handled
 % by permutation group algorithms.
 %
-% Each nice finite group has a parent object, that describes the most general group embedding
-% elements of a particular type. For example, permutations of domain size ``n`` are embedded in the
-% symmetric group of degree ``n`` (for such groups, their nice monomorphism is the identity).
-%
-% The `.niceMonomorphismImage` method of this group should be valid for all elements of the parent as well;
-% then the `.contains` method will be valid for all elements of the parent group.
+% Note that the `.niceImage` method of this group should be valid for all elements of the parent as well,
+% and that groups having the same type (as verified by `.hasSameTypeAs`) should return the same images
+% under `.niceImage`.
 
-    properties (SetAccess = protected)
-        parent % `+replab.NiceFiniteGroup`: Parent nice finite group
-    end
+    methods % Nice monomorphism support
 
-    methods
-
-        %% Abstract
-
-        function res = hasSameParentAs(self, rhs)
-        % Returns whether this group has a parent compatible with another group
-        %
-        % This method is used to test for group equality
-        %
-        % Args:
-        %   rhs (`+replab.NiceFiniteGroup`): Other nice finite group
-        %
-        % Returns:
-        %   logical: True if the groups have compatible parents
-            error('Abstract');
+        function g = nicePreimage(self, p)
+        % Default implementation of chain
+            g = self.niceChain.image(p);
         end
 
-        function p = niceMonomorphismImage(self, g)
-        % Returns a permutation representation of the given group element
-        %
-        % A nice monomorphism is the GAP System terminology for injective
-        % homomorphism into a permutation group.
+        function c = niceChain(self)
+            c = self.cached('niceChain', @() self.computeNiceChain);
+        end
+
+        function c = computeNiceChain(self)
+            niceGens = cellfun(@(s) self.niceImage(s), self.generators, 'uniform', 0);
+            niceGroup = self.niceGroup;
+            % TODO: optimize ChainWithImages by using deterministic Schreier-Sims while comparing orbits
+            finImgs = [];
+            c = replab.bsgs.ChainWithImages.make(I.n, self, niceGens, self.generators, finImgs, ...
+                                                 niceGroup.chain.base, niceGroup.order);
+        end
+
+        function p = niceImage(self, g)
+        % Returns a permutation image of the given group element
         %
         % Args:
         %   g (element): Group element to represent as a permutation
         %
         % Returns:
-        %   permutation: Permutation representation of ``g``
+        %   permutation: Permutation image of ``g``
             error('Abstract');
         end
 
-        function P = niceMonomorphismGroupImage(self, G)
-        % Returns the image of a subgroup of this nice finite group through the nice monomorphism
+        function G = niceGroup(self)
+        % Returns the permutation group isomorphic to this finite group
         %
-        % Args:
-        %   G (`+replab.NiceFiniteGroup`): Preimage group, must be a subgroup of this group
+        % This is the image of `.niceMorphism`.
         %
         % Returns:
-        %   `+replab.PermutationGroup`: Image
-            n = length(self.niceMonomorphismImage(self.identity));
-            % possible optimization: reuse the stabilizer chain in the inverse morphism of ``G``
-            generators = cellfun(@(x) self.niceMonomorphismImage(x), G.generators, 'uniform', 0);
-            chain = replab.bsgs.Chain.make(n, generators);
-            P = replab.PermutationGroup(n, generators, chain.order, self.niceGroup.parent, chain);
+        %   `+replab.PermutationGroup`: The image of the isomorphism
+            G = self.cached('niceGroup', @() self.computeNiceGroup);
         end
 
-        function G = niceMonomorphismGroupPreimage(self, P)
-        % Returns the preimage of a permutation subgroup of the nice group of this group
-        %
-        % Args:
-        %   P (`+replab.PermutationGroup`): Image permutation group, must be a subgroup of `.niceGroup`
-        %
-        % Returns:
-        %   `+replab.NiceFiniteGroup`: Preimage which is a subgroup of this group
-            generators = cellfun(@(x) self.niceMonomorphismPreimage(x), P.generators, 'uniform', 0);
-            G = self.subgroup(generators);
+        function G = computeNiceGroup(self)
+            gens = cellfun(@(g) self.niceImage(g), self.generators, 'uniform', 0);
+            ds = length(self.niceImage(self.identity));
+            G = replab.PermutationGroup(ds, gens, self.cachedOrEmpty('order'));
         end
 
     end
 
-    methods
+    methods % Implementation
 
-        function order = computeOrder(self)
-            order = self.niceGroup.chain.order;
+        % Domain
+
+        function g = sample(self)
+            g = self.niceMorphism.preimageElement(self.niceGroup.sample);
+            % TODO: optimize
         end
 
-        function m = computeNiceInverseMonomorphism(self)
-            m = replab.mrp.PermMorphism.byImages(self.niceGroup, self, self.generators);
-        end
-
-        function g = computeNiceGroup(self)
-            imgId = self.niceMonomorphismImage(self.identity);
-            n = length(imgId);
-            g = replab.PermutationGroup(n, self.niceGenerators, self.cachedOrEmpty('order'));
-        end
+        % FiniteSet
 
         function E = computeElements(self)
-            basis = replab.util.MixedRadix(self.niceGroup.chain.orbitSizes, true, true);
-            atFun = @(ind) self.niceMonomorphismPreimage(self.niceGroup.chain.elementFromIndices(basis.sub2ind(ind)));
-            findFun = @(el) basis.ind2sub(self.niceGroup.chain.indicesFromElement(self.niceMonomorphismImage(el)));
+            atFun = @(ind) self.niceMorphism.preimageElement(self.niceGroup.elements.at(ind));
+            findFun = @(el) self.niceGroup.elements.find(self.niceImage(el));
             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
         end
 
+        % FiniteGroup
+
+        % Group properties
+
+        function order = computeOrder(self)
+            order = self.niceGroup.order;
+        end
+
+        function m = computeNiceMorphism(self)
+            m = replab.nfg.NiceFiniteGroupIsomorphism(self);
+        end
+
         function dec = computeDecomposition(self)
-            dec = replab.FiniteGroupDecomposition(self, self.niceInverseMonomorphism.chain.imagesDecomposition);
+            prmD = self.niceGroup.decomposition;
+            T1 = cellfun(@(T) cellfun(@(t) self.niceMorphism.preimageElement(t), T, 'uniform', 0), prmD.T, 'uniform', 0);
+            dec = replab.FiniteGroupDecomposition(self, T1);
         end
 
-        function e = computeExponent(self)
-            eo = cellfun(@(c) self.elementOrder(c.representative), self.conjugacyClasses);
-            eo = unique(eo);
-            e = eo(1);
-            for i = 2:length(eo)
-                e = lcm(e, eo(i));
-            end
+        function C = computeConjugacyClasses(self)
+            C = cellfun(@(cl) replab.ConjugacyClass(self, self.niceMorphism.preimageElement(cl.representative), ...
+                                                    self.niceMorphism.preimageGroup(cl.representativeCentralizer)), ...
+                        self.niceGroup.conjugacyClasses, 'uniform', 0);
         end
 
-        function c = niceGroup(self)
-        % Returns the image of this group as a permutation group through the nice monomorphismx
-        %
-        % Returns:
-        %   `+replab.PermutationGroup`: Permutation group
-            c = self.cached('niceGroup', @() self.computeNiceGroup);
+        function res = computeIsCyclic(self)
+            res = self.niceGroup.isCyclic;
         end
 
-        function m = niceInverseMonomorphism(self)
-        % Returns the monomorphism from the permutation representation to the original group
-            m = self.cached('niceInverseMonomorphism', @() self.computeNiceInverseMonomorphism);
-        end
+        % Group elements
 
-    end
-
-    methods % Computed properties
-
-        function e = exponent(self)
-        % Returns the group exponent
-        %
-        % The group exponent is the smallest integer ``e`` such that ``g^e == identity`` for all ``g`` in ``G``.
-        %
-        % Returns:
-        %   vpi: The group exponent
-            e = self.cached('exponent', @() self.computeExponent);
-        end
-
-    end
-
-    methods
-
-        function R = recognize(self)
-        % Attempts to recognize this group in the current atlas
-        %
-        % Returns:
-        %   `+replab.AtlasResult` or []: A result in case of positive identification; or ``[]`` if unrecognized.
-            A = replab.globals.atlas;
-            R = A.recognize(self);
-        end
-
-        function res = ne(self, rhs)
-            res = ~(self == rhs);
-        end
-
-        function res = eq(self, rhs)
-            res = self.hasSameParentAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
-        end
-
-        function res = isSubgroupOf(self, rhs)
-        % Returns whether this group is a subgroup of another group
-        %
-        % Example:
-        %   >>> S3 = replab.S(3);
-        %   >>> G = S3.subgroup({[2 1 3]});
-        %   >>> G.isSubgroupOf(S3)
-        %       1
-        %
-        % Args:
-        %   rhs (`+replab.NiceFiniteGroup`): Other group with the same parent as this one
-        %
-        % Returns:
-        %   logical: True if this group is a subgroup of ``rhs``
-            res = all(cellfun(@(g) rhs.contains(g), self.generators));
-        end
-
-        function res = isNormalSubgroupOf(self, rhs)
-        % Returns whether this group is a normal subgroup of another group
-        %
-        % Example:
-        %   >>> S3 = replab.S(3);
-        %   >>> A3 = replab.AlternatingGroup(3);
-        %   >>> A3.isNormalSubgroupOf(S3)
-        %       1
-        %
-        % Example:
-        %   >>> S3 = replab.S(3);
-        %   >>> G = S3.subgroup({[2 1 3]});
-        %   >>> G.isNormalSubgroupOf(S3)
-        %       0
-        %
-        % Args:
-        %   rhs (`+replab.NiceFiniteGroup`): Other group with the same parent as this one
-        %
-        % Returns:
-        %   logical: True if this group is a normal subgroup of ``rhs``
-            if ~self.isSubgroupOf(rhs)
-                res = false;
-                return
-            end
-            for i = 1:self.nGenerators
-                subi = self.generator(i);
-                for j = 1:rhs.nGenerators
-                    rhsj = rhs.generator(j);
-                    if ~self.contains(self.leftConjugate(rhsj, subi))
-                        res = false;
-                        return
-                    end
-                end
-            end
-            res = true;
-        end
-
-        function sub = subgroup(self, generators, order)
-        % Constructs a subgroup of the current group from generators
-        %
-        % Args:
-        %   generators (row cell array of elements of this group): List of generators
-        %   order (vpi, optional): Subgroup order
-        %
-        % Returns:
-        %   `+replab.NiceFiniteGroup`: The subgroup generated by `.generators`
-            if nargin < 3
-                order = [];
-            end
-            sub = replab.NiceFiniteSubgroup(self.parent, generators, order);
-        end
-
-        function f = leftConjugateMorphism(self, by)
-        % Returns the morphism that corresponds to left conjugation by an element
-        %
-        % Args:
-        %   by (element of `parent`): Element to conjugate the group with
-        %
-        % Returns:
-        %   `+replab.Morphism`: Conjugation morphism
-            generatorImages = cellfun(@(g) self.parent.leftConjugate(by, g), self.generators, 'uniform', 0);
-            target = self.parent.subgroup(newGenerators, self.order);
-            f = self.morphismByImages(self, target, generatorImages);
-        end
-
-        function conj = leftConjugateGroup(self, by)
-        % Returns the left conjugate of the current group by the given element
-        %
-        % ``res = self.leftConjugateGroup(by)``
-        %
-        % In particular, it ensures that
-        % ``res.generator(i) = self.parent.leftConjugate(by, self.generator(i))``
-        %
-        % Args:
-        %   by (element of `parent`): Element to conjugate the group with
-        %
-        % Returns:
-        %   `+replab.NiceFiniteGroup`: The conjugated group
-            newGenerators = cellfun(@(g) self.parent.leftConjugate(by, g), self.generators, 'uniform', 0);
-            conj = self.parent.subgroup(newGenerators, self.order);
-        end
-
-        function sub = normalClosure(self, H)
-        % Computes the normal closure of a group H in the closure of this group and H
-        %
-        % Example:
-        %   >>> S5 = replab.S(5);
-        %   >>> S4 = S5.subgroup({[2 3 4 1 5] [2 1 3 4 5]});
-        %   >>> nc = S4.normalClosure(S5.subgroup({[1 2 4 5 3]}));
-        %   >>> nc == S5.subgroup({[1 2 4 5 3] [5 2 3 1 4] [2 5 3 4 1]})
-        %       1
-        %
-        % Example:
-        %   >>> S4 = replab.S(4);
-        %   >>> nc = S4.normalClosure(S4.subgroup({[2 3 1 4]}));
-        %   >>> nc == S4.subgroup({[2 3 1 4] [1 3 4 2]});
-        %       1
-        %
-        % Args:
-        %   rhs (`+replab.NiceFiniteGroup`): A permutation group acting on the same domain as this group
-        %
-        % Returns:
-        %   `+replab.NiceFiniteGroup`: The normal closure of ``rhs`` in this group
-            assert(~isa(self, 'replab.PermutationGroup'));
-            assert(self.hasSameParentAs(H));
-            sub = self.parent.niceMonomorphismGroupPreimage(self.niceGroup.normalClosure(H.niceGroup));
-        end
-
-        function sub = derivedSubgroup(self)
-        % Computes the derived subgroup of this group
-        %
-        % Example:
-        %   >>> S4 = replab.SymmetricGroup(4);
-        %   >>> S4.order
-        %       24
-        %   >>> D = S4.derivedSubgroup;
-        %   >>> D == replab.AlternatingGroup(4)
-        %       1
-        % Returns:
-        %   `+replab.NiceFiniteGroup`: The derived subgroup
-            assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            sub = self.niceMonomorphismGroupPreimage(self.niceGroup.derivedSubgroup);
-        end
-
-        function c = rightCosetsOf(self, subgroup)
-            assert(~isa(self, 'replab.PermutationGroup')); % handled in subclass
-            c = replab.nfg.RightCosets(self, subgroup);
-        end
-
-        function c = mldivide(self, supergroup)
-            c = supergroup.rightCosetsOf(self);
-        end
-
-        function c = leftCosetsOf(self, subgroup)
-            assert(~isa(self, 'replab.PermutationGroup')); % handled in subclass
-            c = replab.nfg.LeftCosets(self, subgroup);
-        end
-
-        function c = mrdivide(self, subgroup)
-            c = self.leftCosetsOf(subgroup);
-        end
-
-        function sub = center(self)
-        % Returns the center of this group
-        %
-        % Returns:
-        %   `.NiceFiniteGroup`: The center
-            sub = self.centralizer(self);
-        end
-
-        function sub = centralizer(self, rhs)
-        % Returns the centralizer of the given element in this group
-        %
-        % Example:
-        %   >>> G = replab.S(4);
-        %   >>> C = G.centralizer([2 3 1 4]);
-        %   >>> C == replab.S(4).subgroup({[2 3 1 4]})
-        %     1
-        %
-        % Example:
-        %   >>> G = replab.S(4);
-        %   >>> C = G.centralizer(G.subgroup({[2 3 1 4]}));
-        %   >>> C == replab.S(4).subgroup({[2 3 1 4]})
-        %     1
-        %
-        % Args:
-        %   rhs (`.NiceFiniteGroup` or group element): Element to compute the centralizer of
-        %
-        % Returns:
-        %   `.NiceFiniteGroup`: The centralizer
-        %
-        % See `.centralizerElement` and `.centralizerGroup` which it calls.
-            if isa(rhs, 'replab.NiceFiniteGroup')
-                sub = self.centralizerGroup(rhs);
-            else
-                sub = self.centralizerElement(rhs);
-            end
-        end
-
-        function sub = centralizerElement(self, g)
-        % Returns the centralizer of a group in this group
-        %
-        % Example:
-        %   >>> G = replab.S(4);
-        %   >>> C = G.centralizerElement([2 3 1 4]);
-        %   >>> C == replab.S(4).subgroup({[2 3 1 4]})
-        %     1
-        %
-        % Args:
-        %   g (group element): Element to compute the centralizer of
-        %
-        % Returns:
-        %   `.NiceFiniteGroup`: The centralizer
-            assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            sub = self.niceMonomorphismGroupPreimage(self.niceGroup.centralizerElement(self.niceMonomorphismImage(g)));
-        end
-
-        function sub = centralizerGroup(self, G)
-        % Returns the centralizer of a group in this group
-        %
-        % Example:
-        %   >>> G = replab.S(4);
-        %   >>> C = G.centralizerGroup(G.subgroup({[2 3 1 4]}));
-        %   >>> C == replab.S(4).subgroup({[2 3 1 4]})
-        %     1
-        %
-        % Example:
-        %   >>> G = replab.S(4);
-        %   >>> C = G.centralizerGroup(G.subgroup({[2 3 1 4] [2 1 3 4]}));
-        %   >>> C == replab.S(4).trivialGroup
-        %     1
-        %
-        % Args:
-        %   G (`.NiceFiniteGroup`): Permutation group with the same parent as this group
-        %
-        % Returns:
-        %   `.NiceFiniteGroup`: The centralizer
-            assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            sub = self.niceMonomorphismGroupPreimage(self.niceGroup.centralizerGroup(self.niceMonomorphismGroupImage(G)));
-        end
-
-        function res = closure(self, obj)
-        % Computes the group generated by the elements of this group and another given element
-        %
-        % Example:
-        %    >>> G = replab.CyclicGroup(3);
-        %    >>> S3 = replab.S(3);
-        %    >>> H = S3.subgroup({[2 1 3]});
-        %    >>> C = G.closure(H);
-        %    >>> C == S3
-        %        1
-        %
-        % Args:
-        %   rhs (`.NiceFiniteGroup` or group element): Element(s) to add
-        %
-        % Returns:
-        %   `.NiceFiniteGroup`: The closure
-            if isa(obj, 'replab.NiceFiniteGroup')
-                res = self.closureGroup(obj);
-            else
-                res = self.closureElement(obj);
-            end
-        end
-
-        function res = closureElement(self, g)
-        % Computes the group generated by the elements of this group and another given element
-        %
-        % Args:
-        %   g (element of `.parent`): Element to add
-        %
-        % Returns:
-        %   `.NiceFiniteGroup`: The closure
-            assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            res = self.parent.niceMonomorphismGroupPreimage(self.niceGroup.closureElement(self.niceMonomorphismImage(g)));
-        end
-
-        function res = closureGroup(self, G)
-        % Computes the group generated by the elements of this group and another given element
-        %
-        % Args:
-        %   G (`.NiceFiniteGroup` with same parent): Elements to add
-        %
-        % Returns:
-        %   `.NiceFiniteGroup`: The closure
-            assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            res = self.parent.niceMonomorphismGroupPreimage(self.niceGroup.closureGroup(self.niceMonomorphismImage(g)));
-        end
-
-        function sub = intersection(self, G)
-        % Computes the intersection of two groups
-        %
-        % Example:
-        %   >>> D12 = replab.S(6).subgroup({[1 6 5 4 3 2], [2 1 6 5 4 3]});
-        %   >>> G = replab.S(6).subgroup({[2 1 3 4 5 6], [2 3 4 5 1 6]});
-        %   >>> I = D12.intersection(G);
-        %   >>> I == replab.S(6).subgroup({[5 4 3 2 1 6]})
-        %       1
-        %
-        % Args:
-        %   G (`+replab.NiceFiniteGroup`): Permutation group with the same parent as this group
-        %
-        % Returns:
-        %   `+replab.NiceFiniteGroup`: Subgroup representing the intersection
-            assert(~isa(self, 'replab.PermutationGroup')); % is handled in subclass
-            sub = self.niceMonomorphismGroupPreimage(self.niceGroup.intersection(self.niceMonomorphismGroupImage(G)));
-        end
-
-        function res = isCyclic(self)
-        % Returns whether this group is a cyclic group
-            assert(~isa(self, 'replab.PermutationGroup'));
-            if isprime(self.order)
-                res = true;
-            else
-                res = self.niceGroup.isCyclic;
-            end
-        end
-
-        function grp = trivialSubgroup(self)
-        % Returns the trivial subgroup of this group
-        %
-        % Returns:
-        %   `+replab.NiceFiniteGroup`: The trivial subgroup
-            grp = self.subgroup({}, vpi(1));
-        end
-
-        function c = conjugacyClasses(self)
-        % Returns the conjugacy classes of this group
-        %
-        % Returns:
-        %   cell(1, \*) of `+replab.ConjugacyClass`: Array of conjugacy classes
-            c = replab.ConjugacyClass.computeAll(self);
+        function b = contains(self, g)
+            b = self.niceGroup.contains(self.niceImage(g));
         end
 
         function o = elementOrder(self, g)
-        % Returns the order of a group element
-        %
-        % Args:
-        %   g (element): Group element
-        %
-        % Returns:
-        %   vpi: The order of ``g``, i.e. the smallest ``o`` such that ``g^o == identity``
-            o = self.niceGroup.elementOrder(self.niceMonomorphismImage(g));
+            o = self.niceGroup.elementOrder(self.niceImage(g));
         end
 
-        function res = isSimple(self)
-        % Returns whether this group is simple
-            if self.isTrivial
-                res = false;
+        % Construction of groups
+
+        function res1 = closure(self, obj)
+            if isa(obj, 'replab.FiniteGroup')
+                res = self.niceGroup.closure(self.type.niceMorphism.imageGroup(obj));
+            else
+                res = self.niceGroup.closure(self.type.niceImage(obj));
             end
-            C = self.conjugacyClasses;
-            for i = 1:length(C)
-                c = C{i}.representative;
-                if ~self.isIdentity(c)
-                    if self.normalClosure(self.subgroup({c})) ~= self
-                        res = false;
-                        return
-                    end
-                end
+            res1 = self.type.niceMorphism.preimageGroup(res);
+        end
+
+        function res1 = normalClosure(self, obj)
+            if isa(obj, 'replab.FiniteGroup')
+                res = self.niceGroup.normalClosure(self.type.niceMorphism.imageGroup(obj));
+            else
+                res = self.niceGroup.normalClosure(self.niceImage(obj));
             end
-            res = true; % all conjugacy classes generate the full group
+            res1 = self.type.niceMorphism.preimageGroup(res);
         end
 
-        %% Methods enabled by the BSGS algorithms
+        % Subgroups
 
-        function ng = niceGenerators(self)
-        % Returns the image of the group generators under the nice monomorphism
-            ng = cellfun(@(g) self.niceMonomorphismImage(g), self.generators, 'uniform', 0);
+        function sub = subgroupWithGenerators(self, generators, order)
+            if nargin < 3
+                order = [];
+            end
+            niceGroup = self.niceGroup.subgroupWithGenerators(cellfun(@(g) self.niceImage(g), generators, 'uniform', 0), order);
+            sub = self.niceSubgroup(generators, order, niceGroup);
         end
 
-        function m = niceMonomorphism(self)
-            m = replab.Morphism.lambda(self, self.niceGroup, @(g) self.niceMonomorphismImage(g));
+        function sub = niceSubgroup(self, generators, order, niceGroup)
+            sub = replab.NiceFiniteSubgroup(self.type, generators, order);
+            if nargin > 3 && ~isempty(niceGroup)
+                sub.cache('niceGroup', niceGroup, '==');
+            end
         end
 
-        function g = niceMonomorphismPreimage(self, p)
-        % Returns the group element corresponding to a permutation
-        %
-        % See also `.niceMonomorphismImage`
-        %
-        % Args:
-        %   p (permutation): Permutation representation
-        %
-        % Returns:
-        %   g (element): Group element corresponding to the permutation
-            g = self.niceInverseMonomorphism.image(p);
+        function sub = computeDerivedSubgroup(self)
+            sub = self.niceMorphism.preimageGroup(self.niceGroup.derivedSubgroup);
         end
 
-        %% CompactGroup methods
-
-        function g = sample(self)
-            [~, g] = self.niceInverseMonomorphism.chain.sample;
+        function sub1 = centralizer(self, obj)
+            if isa(obj, 'replab.FiniteGroup')
+                sub = self.niceGroup.centralizer(self.niceMorphism.imageGroup(obj));
+            else
+                sub = self.niceGroup.centralizer(self.niceImage(obj));
+            end
+            sub1 = self.niceMorphism.preimageGroup(sub);
         end
 
-        function b = contains(self, g)
-        % Tests whether this group contains the given parent group element
-        %
-        % Args:
-        %   g (element of `parent`): Element to test membership of
-        %
-        % Returns:
-        %   logical: True if this group contains ``g`` and false otherwise
-            b = self.niceGroup.chain.contains(self.niceMonomorphismImage(g));
+        function sub1 = intersection(self, rhs)
+            sub1 = self.niceMorphism.preimageGroup(self.niceGroup.intersection(self.niceMorphism.imageGroup(rhs)));
         end
 
-        %% Morphism construction
+        % Cosets
 
-        function m = morphismByImages(self, target, generatorImages)
-        % Constructs a morphism to a group using images of generators
-        %
-        % Example:
-        %   >>> S4 = replab.S(4);
-        %   >>> m = S4.morphismByImages(replab.S(3), {[1 3 2] [3 2 1]});
-        %   >>> replab.MorphismLaws(m).checkSilent
-        %       1
-        %
-        % Args:
-        %   target (`.Group`): Target of the morphism, the morphism image is a subgroup of this
-        %   generatorImages (cell(1, \*) of target elements): Images of this group generators
-        %
-        % Returns:
-        %   `.Morphism`: The constructed morphism
-            m = replab.Morphism.byImages(self, target, generatorImages);
+        function B = findLeftConjugations(self, s, t, sCentralizer, tCentralizer)
+            s = self.niceImage(s);
+            t = self.niceImage(t);
+            if nargin < 4 || isempty(sCentralizer)
+                sCentralizer = [];
+            else
+                sCentralizer = self.niceMorphism.imageGroup(sCentralizer);
+            end
+            if nargin < 5 || isempty(tCentralizer)
+                tCentralizer = [];
+            else
+                tCentralizer = self.niceMorphism.imageGroup(tCentralizer);
+            end
+            B = self.niceGroup.findLeftConjugations(s, t, sCentralizer, tCentralizer);
+            subgroup = self.niceMorphism.preimageGroup(B.subgroup);
+            canRep = self.niceMorphism.preimageElement(B.representative);
+            B = replab.LeftCoset(self, subgroup, canRep);
         end
 
-        %% Representation construction
+        % Relation to other groups
 
-        function rho = repByImages(self, field, dimension, images, inverseImages)
-        % Constructs a finite dimensional representation of this group from generator images
-        %
-        % Args:
-        %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
-        %   dimension (integer): Representation dimension
-        %   images (cell(1,\*) of double(\*,\*), may be sparse): Images of the group generators
-        %   inverseImages (cell(1,\*) of double(\*,\*), may be sparse): Inverse images of the group generators
-        % Returns:
-        %   `+replab.Rep`: The constructed group representation
-            rho = replab.RepByImages(self, field, dimension, images, inverseImages);
-        end
+        % Morphisms
 
-        function rho = permutationRep(self, dimension, permutations)
-        % Constructs a permutation representation of this group
-        %
-        % The returned representation is real. Use `+replab.Rep.complexification` to obtain a complex representation.
-        %
-        % Args:
-        %   dimension (integer): Dimension of the representation
-        %   permutations (cell(1,\*) of permutations): Images of the generators as permutations of size ``dimension``
-        %
-        % Returns:
-        %   `+replab.Rep`: The constructed group representation
-            f = @(g) replab.Permutation.toSparseMatrix(g);
-            images = cellfun(f, permutations, 'uniform', 0);
-            inverseImages = cellfun(@(i) i', images, 'uniform', 0);
-            rho = self.repByImages('R', dimension, images, inverseImages);
-        end
-
-        function rho = signedPermutationRep(self, dimension, signedPermutations)
-        % Returns a real signed permutation representation of this group
-        %
-        % The returned representation is real. Use ``rep.complexification`` to obtain a complex representation.
-        %
-        % Args:
-        %   dimension: Dimension of the representation
-        %   signedPermutations (cell(1,\*) of signed permutations): Images of the generators as signed permutations of size ``dimension``
-        %
-        % Returns:
-        %   `+replab.Rep`: The constructed group representation
-            f = @(g) replab.SignedPermutation.toSparseMatrix(g);
-            images = cellfun(f, signedPermutations, 'uniform', 0);
-            inverseImages = cellfun(@(i) i', images, 'uniform', 0);
-            rho = self.repByImages('R', dimension, images, inverseImages);
+        function m = morphismByImages(self, target, images)
+            first = self.niceMorphism; % maps this to the perm group
+            second = self.niceGroup.morphismByImages(target, images); % from the perm group to the images
+            m = first.andThen(second);
         end
 
     end

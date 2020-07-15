@@ -9,6 +9,18 @@ classdef Standard < replab.Atlas
 %   >>> S5.recognize.entry.name
 %       'Symmetric group S(5) of degree 5'
 
+    methods (Static)
+
+        function A = instance
+            persistent A_
+            if isempty(A_)
+                A_ = replab.atlas.Standard;
+            end
+            A = A_;
+        end
+
+    end
+
     methods
 
         function self = Standard
@@ -101,7 +113,7 @@ classdef Standard < replab.Atlas
             end
             fpGroup = F / relators;
             fpGroup.setPermutationImages(prmGroup.generators);
-            outer = {replab.Morphism.identity(prmGroup)};
+            outer = {replab.FiniteIsomorphism.identity(prmGroup)};
             if n == 6
                 imgS = [6 1 5 4 3 2];
                 imgT = [2 1 4 3 6 5];
