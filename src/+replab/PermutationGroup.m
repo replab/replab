@@ -538,7 +538,7 @@ classdef PermutationGroup < replab.FiniteGroup
             isConstant = @(x) all(x == x(1));
             prop = @(g) all(cellfun(@(b) isConstant(blockIndex(g(b))), blocks));
             subchain = replab.bsgs.Backtrack(c, prop, tests, []);
-            subchain = subchain.res;
+            subchain = subchain.subgroup;
             sub = replab.PermutationGroup.fromChain(subchain, self.type);
         end
 
@@ -586,7 +586,7 @@ classdef PermutationGroup < replab.FiniteGroup
             c.baseChange(base);
             prop = @(g) isequal(blockIndex(g), blockIndex);
             subchain = replab.bsgs.Backtrack(c, prop, tests, []);
-            subchain = subchain.res;
+            subchain = subchain.subgroup;
             sub = replab.PermutationGroup.fromChain(subchain, self.type);
         end
 
@@ -676,7 +676,7 @@ classdef PermutationGroup < replab.FiniteGroup
             end
             prop = @(g) all(mask(g(set)));
             subchain = replab.bsgs.Backtrack(c, prop, tests, []);
-            subchain = subchain.res;
+            subchain = subchain.subgroup;
             s = replab.PermutationGroup.fromChain(subchain, self.type);
         end
 
