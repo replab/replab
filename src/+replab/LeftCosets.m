@@ -1,4 +1,4 @@
-classdef LeftCosets < replab.CosetBase
+classdef LeftCosets < replab.CosetsBase
 % Describes the set of left cosets of a finite group
 %
 % Let $H$ be a subgroup of a group $G$. Then the left cosets are the sets $g H = \{ g h : h \in H \}$.
@@ -17,7 +17,7 @@ classdef LeftCosets < replab.CosetBase
     methods
 
         function self = LeftCosets(group, subgroup)
-            self@replab.CosetBase(group, subgroup);
+            self@replab.CosetsBase(group, subgroup);
         end
 
         function s = cardinality(self)
@@ -38,7 +38,7 @@ classdef LeftCosets < replab.CosetBase
         %
         % Returns:
         %   `+replab.LeftCoset`: Left coset
-            C = replab.LeftCoset(self.group, self.subgroup, self.cosetRepresentative(g));
+            C = replab.LeftCoset(self.subgroup, self.cosetRepresentative(g));
         end
 
         function t = cosetRepresentative(self, g)
@@ -65,6 +65,11 @@ classdef LeftCosets < replab.CosetBase
         %
         % Returns:
         %   cell(1, \*) of `.group` elements: Transversal
+            T = self.cached('transversal', @() self.computeTransversal);
+        end
+
+        function T = computeTransversal(self)
+        % See `.transversal`
             M = replab.bsgs.Cosets.leftTransversalAsMatrix(self.groupChain, self.subgroupChain);
             T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:self.cardinality, 'uniform', 0);
         end
@@ -75,7 +80,7 @@ classdef LeftCosets < replab.CosetBase
         % Returns:
         %   cell(1,\*) of `+replab.LeftCoset`: Set of left cosets
             T = self.transversal;
-            C = cellfun(@(t) replab.LeftCoset(self.group, self.subgroup, t), T, 'uniform', 0);
+            C = cellfun(@(t) replab.LeftCoset(self.subgroup, t), T, 'uniform', 0);
             assert(isscalar(C{1}));
         end
 

@@ -36,6 +36,10 @@ classdef NormalCosets < replab.LeftCosets & replab.RightCosets
             T = transversal@replab.RightCosets(self);
         end
 
+        function T = computeTransversal(self)
+            T = computeTransversal@replab.RightCosets(self);
+        end
+
         function C = elements(self)
         % Returns the set of normal cosets as a cell array
         %

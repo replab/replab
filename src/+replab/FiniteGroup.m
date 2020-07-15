@@ -417,18 +417,38 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Cosets
 
-        function c = normalCoset(self, normalSubgroup, element)
-        % Returns a normal coset
+        function l = isNormalizedBy(self, element)
+        % Returns whether a given element normalizes this group
         %
-        % Returns the set ``element * normalSubgroup == normalSubgroup * element``.
+        % This is true when ``element * group * element^-1 == group``.
         %
         % Args:
-        %   normalSubgroup (`+replab.FiniteGroup`): Normal subgroup of this group
+        %   element (group element): Group element
+        %
+        % Returns:
+        %   logical: True if the element normalizes this group
+            l = false;
+            for i = 1:self.nGenerators
+                g = self.generator(i);
+                if ~self.contains(self.leftConjugate(element, g))
+                    return
+                end
+            end
+            l = true;
+        end
+
+        function c = normalCoset(self, element)
+        % Returns a normal coset
+        %
+        % Returns the set ``element * self == self * element``.
+        %
+        % Args:
         %   element (group element): Group element
         %
         % Returns:
         %   `+replab.NormalCoset`: The constructed normal coset
-            c = self.normalCosetsOf(subgroup).coset(element);
+            assert(self.isNormalizedBy(element), 'The given element does not define a normal coset');
+            c = replab.NormalCoset.make(self, element);
         end
 
         function c = normalCosetsOf(self, subgroup)
@@ -440,18 +460,36 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             c = replab.NormalCosets(self, subgroup);
         end
 
-        function c = rightCoset(self, subgroup, element)
+        function c = rightCoset(self, element)
         % Returns a right coset
         %
-        % Returns the set ``subgroup * element``.
+        % Returns the set ``self * element``.
         %
         % Args:
-        %   subgroup (`+replab.FiniteGroup`): Subgroup of this group
         %   element (group element): Group element
         %
         % Returns:
         %   `+replab.RightCoset`: The constructed right coset
-            c = self.rightCosetsOf(subgroup).coset(element);
+            c = replab.RightCoset.make(self, element);
+        end
+
+        function c = mtimes(lhs, rhs)
+        % Shorthand for `.leftCoset` and `.rightCoset`
+        %
+        % Always constructs the most general type of coset
+            if isa(lhs, 'replab.FiniteGroup')
+                if lhs.isNormalizedBy(rhs)
+                    c = lhs.normalCoset(rhs);
+                else
+                    c = lhs.rightCoset(rhs);
+                end
+            else
+                if rhs.isNormalizedBy(lhs)
+                    c = rhs.normalCoset(lhs);
+                else
+                    c = rhs.leftCoset(lhs);
+                end
+            end
         end
 
         function c = rightCosetsOf(self, subgroup)
@@ -470,18 +508,17 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             c = supergroup.rightCosetsOf(self);
         end
 
-        function c = leftCoset(self, subgroup, element)
+        function c = leftCoset(self, element)
         % Returns a left coset
         %
-        % Returns the set ``element * subgroup``.
+        % Returns the set ``element * self``.
         %
         % Args:
-        %   subgroup (`+replab.FiniteGroup`): Subgroup of this group
         %   element (group element): Group element
         %
         % Returns:
         %   `+replab.LeftCoset`: The constructed right coset
-            c = self.leftCosetsOf(subgroup).coset(element);
+            c = replab.LeftCoset.make(self, element);
         end
 
         function c = leftCosetsOf(self, subgroup)

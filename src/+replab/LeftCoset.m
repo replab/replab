@@ -1,26 +1,44 @@
-classdef LeftCoset < replab.CosetBase & replab.FiniteSet
+classdef LeftCoset < replab.CosetBase
 % Describes a left coset of a finite group
 %
-% Let $g \in G$ be the coset representative and $H \le G$ the subgroup. The left coset is $\{ g h : h \in H\}$.
+% Let $g \in G$ be a coset representative and $H \le G$ a group. The left coset is $g H = \{ g h : h \in H\}$.
 %
 % Note:
-%   This structure is implemented by referencing the permutation realizations of the group and subgroup through
-%   a nice isomorphism.
+%   This structure is implemented by referencing the permutation realizations of the group through a nice isomorphism.
 
     methods
 
-        function self = LeftCoset(group, subgroup, canonicalRepresentative)
-            self@replab.CosetBase(group, subgroup);
-            self.type = group.type;
+        function self = LeftCoset(group, canonicalRepresentative)
+            self.group = group;
             self.representative = canonicalRepresentative;
+            self.isomorphism = group.niceMorphism;
+            self.groupChain = self.isomorphism.image.lexChain;
+            self.type = group.type;
         end
+
+    end
+
+    methods (Static)
+
+        function l = make(group, element)
+            iso = group.niceMorphism;
+            chain = iso.image.lexChain;
+            permRep = replab.bsgs.Cosets.leftRepresentative(iso.image.lexChain, element);
+            l = replab.LeftCoset(group, iso.preimageElement(permRep));
+        end
+
+    end
+
+    methods % Implementations
+
+        % FiniteSet
 
         function s = cardinality(self)
         % Returns the size of this coset
         %
         % Returns:
         %   vpi: Coset size
-            s = self.subgroup.order;
+            s = self.group.order;
         end
 
         function b = contains(self, el)
@@ -34,7 +52,7 @@ classdef LeftCoset < replab.CosetBase & replab.FiniteSet
             if ~isempty(self.isomorphism)
                 el = self.isomorphism.imageElement(el);
             end
-            el = replab.bsgs.Cosets.leftRepresentative(self.subgroupChain, el);
+            el = replab.bsgs.Cosets.leftRepresentative(self.groupChain, el);
             b = isequal(self.representative, el);
         end
 
@@ -43,7 +61,7 @@ classdef LeftCoset < replab.CosetBase & replab.FiniteSet
         %
         % Returns:
         %   `+replab.IndexedFamily`: Elements
-            H = self.subgroupChain.allElements;
+            H = self.groupChain.allElements;
             g = self.representative;
             if ~isempty(self.isomorphism)
                 g = self.isomorphism.imageElement(g);
