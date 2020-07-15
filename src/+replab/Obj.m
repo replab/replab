@@ -6,7 +6,26 @@ classdef Obj < replab.Str
         id_ % (integer): Unique object ID
     end
 
-    methods
+    methods % Laws
+
+        function check(self)
+        % Checks the consistency of this object
+        %
+        % The default implementation checks the declared laws.
+            self.laws.check;
+        end
+
+        function l = laws(self)
+        % Returns the laws that this object obeys
+        %
+        % Returns:
+        %   `+replab.Laws`: The `.Laws` instance that is relevant for this object.
+            l = replab.Laws; % Empty instance by default
+        end
+
+    end
+
+    methods % Property cache
 
         function l = inCache(self, name)
         % Returns whether the value of the given property has already been computed
@@ -100,6 +119,10 @@ classdef Obj < replab.Str
                 self.cache_.(name) = res;
             end
         end
+
+    end
+
+    methods % Unique ID
 
         function i = id(self)
         % Returns the unique ID of this object (deprecated)
