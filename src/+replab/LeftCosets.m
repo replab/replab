@@ -4,6 +4,16 @@ classdef LeftCosets < replab.CosetBase
 % Let $H$ be a subgroup of a group $G$. Then the left cosets are the sets $g H = \{ g h : h \in H \}$.
 % The set of such left cosets is often written $G / H = \{ g H : g \in G \}$.
 
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.LeftCosetsLaws(self);
+        end
+
+    end
+
     methods
 
         function self = LeftCosets(group, subgroup)

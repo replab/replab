@@ -40,6 +40,16 @@ classdef Domain < replab.Obj
 
     end
 
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.DomainLaws(self);
+        end
+
+    end
+
     methods (Static) % Domain construction
 
         function domain = lambda(header, eqvFun, sampleFun)

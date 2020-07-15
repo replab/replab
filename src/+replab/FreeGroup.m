@@ -72,6 +72,8 @@ classdef FreeGroup < replab.Group
             res = self.groupId ~= rhs.groupId;
         end
 
+        % Str
+
         function s = headerStr(self)
             s = ['Free group < ' strjoin(self.generatorNames, ', ') ' >'];
         end
@@ -83,13 +85,25 @@ classdef FreeGroup < replab.Group
             x = replab.FreeGroupWord.make(self, letters);
         end
 
+        % Obj
+
+        function l = laws(self)
+            l = replab.FreeGroupLaws(self);
+        end
+
+        % Domain
+
         function res = eqv(self, x, y)
             res = (x == y);
         end
 
+        % Monoid
+
         function z = compose(self, x, y)
             z = x*y;
         end
+
+        % Group
 
         function z = inverse(self, x)
             z = inv(x);

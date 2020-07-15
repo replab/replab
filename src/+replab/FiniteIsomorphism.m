@@ -1,6 +1,16 @@
 classdef FiniteIsomorphism < replab.FiniteMorphism
 % Describes an isomorphism between finite groups
 
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.FiniteIsomorphismLaws(self);
+        end
+
+    end
+
     methods
 
         function K = computeKernel(self)

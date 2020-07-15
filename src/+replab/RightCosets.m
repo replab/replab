@@ -4,6 +4,16 @@ classdef RightCosets < replab.CosetBase
 % Let $H$ be a subgroup of a group $G$. Then the right cosets are the sets $H g = \{ h g : h \in H \}$.
 % The set of such right cosets is often written $H \\ G = \{ H g : g \in G \}$.
 
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.RightCosetsLaws(self);
+        end
+
+    end
+
     methods
 
         function self = RightCosets(group, subgroup)

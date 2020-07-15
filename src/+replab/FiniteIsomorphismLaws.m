@@ -16,7 +16,13 @@ classdef FiniteIsomorphismLaws < replab.FiniteMorphismLaws
 
     end
 
-    methods % Laws
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.FiniteIsomorphismLaws(self);
+        end
 
     end
 

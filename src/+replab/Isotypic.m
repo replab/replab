@@ -301,7 +301,11 @@ classdef Isotypic < replab.SubRep
             iso = replab.Isotypic(self.parent, irreps, E);
         end
 
-        %% Str methods
+    end
+
+    methods % Implementations
+
+        % Str
 
         function names = hiddenFields(self)
             names = hiddenFields@replab.SubRep(self);
@@ -351,7 +355,13 @@ classdef Isotypic < replab.SubRep
             end
         end
 
-        %% SubRep methods
+        % Obj
+
+        function l = laws(self)
+            l = replab.IsotypicLaws(self);
+        end
+
+        % SubRep
 
         function iso = refine(self)
             ctx = replab.Context.make;
