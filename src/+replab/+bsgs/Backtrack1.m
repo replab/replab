@@ -105,7 +105,6 @@ classdef Backtrack1 < replab.Str
         end
 
         function res = subgroup(self)
-            disp('start');
             self.test0(0, 1:self.degree, 1:self.degree);
             self.search2(1);
             self.KinBase0.makeImmutable;

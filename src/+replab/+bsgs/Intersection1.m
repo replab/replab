@@ -3,45 +3,53 @@ classdef Intersection1 < replab.bsgs.Backtrack1
 %
 % See Section 4.6.6 of
 % ``D. Holt et al, Handbook of Computational Group Theory (CRC Press, 2005).``
+%
+% `.base` is a base for both `.group` and `.other`
+%
+% `.group` is a BSGS chain for the first group given
+% `.other` is a BSGS chain for the second group
+%
+% We use the partial base image test on p. 113 of
+% ``G. Butler, Fundamental Algorithms for Permutation Groups. vol. 559 (Springer Berlin Heidelberg, 1991).``
+% and in Holt, pp. 124-125
 
     properties
-        other
-        data
+        rhs
+        prevRhsInv % stores the inverses of ``h`` in Holt pp. 124-125
     end
 
     methods
 
-        function self = Intersection1(group, other, knownSubgroup, debug)
+        function self = Intersection1(lhs, rhs, knownSubgroup, debug)
             if nargin < 4 || isempty(debug)
                 debug = false;
             end
             if nargin < 3 || isempty(knownSubgroup)
-                knownSubgroup = group.trivialSubgroup;
+                knownSubgroup = lhs.trivialSubgroup;
             end
-            base = unique([group.lexChain.base other.lexChain.base]);
-            self@replab.bsgs.Backtrack1(group.lexChain, base, knownSubgroup.lexChain, debug);
-            self.data = cell(1, length(base)+1);
-            self.data{1} = 1:group.domainSize;
-            c = other.lexChain.mutableCopy;
+            base = unique([lhs.lexChain.base rhs.lexChain.base]);
+            self@replab.bsgs.Backtrack1(lhs.lexChain, base, knownSubgroup.lexChain, debug);
+            self.prevRhsInv = cell(1, length(base)+1);
+            self.prevRhsInv{1} = rhs.identity;
+            c = rhs.lexChain.mutableCopy;
             c.baseChange(base);
             c.makeImmutable;
-            self.other = c;
+            self.rhs = c;
         end
 
         function ok = test(self, l, prev, ul)
-            fprintf('%d ', l);
-            prevRhsInv = self.data{l};
-            b2 = prevRhsInv(prev(ul(self.base(l))));
-            i = self.other.iDelta(b2, l);
+            pri = self.prevRhsInv{l};
+            b2 = pri(prev(ul(self.base(l))));
+            i = self.rhs.iDelta(b2, l);
             ok = (i ~= 0);
             if ok
-                uinv = self.other.Uinv{l}(:,i);
-                self.data{l+1} = uinv(prevRhsInv);
+                uinv = self.rhs.Uinv{l}(:,i);
+                self.prevRhsInv{l+1} = uinv(pri);
             end
         end
 
         function ok = prop(self, g)
-            ok = self.other.contains(g);
+            ok = self.rhs.contains(g);
         end
 
     end
