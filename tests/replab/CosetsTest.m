@@ -16,7 +16,7 @@ end
 
 function test_action
     G = replab.S(8);
-    H = replab.nfg.randomSubgroup(G);
+    H = G.randomProperSubgroup;
     L = G/H;
     L.leftAction.laws.check;
 end
