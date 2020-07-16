@@ -55,13 +55,13 @@ classdef DoubleCosets < replab.Obj
                 i = toCheck(end);
                 toCheck = toCheck(1:end-1);
                 rep = S.at(i)';
-                for j = 1:selfprmgrp.nGenerators
+                for j = 1:self.Hprmgrp.nGenerators
                     h = self.Hprmgrp.generator(j);
                     elP = h(rep);
                     repP = replab.bsgs.Cosets.leftRepresentative(self.Kprmgrp.lexChain, elP);
                     ind = S.find(repP');
                     if ind == 0
-                        if self.lexCompare(repP, minP) < 0
+                        if replab.DoubleCoset.lexCompare(repP, minP) < 0
                             minP = repP;
                         end
                         ind = S.insert(repP');
@@ -83,8 +83,8 @@ classdef DoubleCosets < replab.Obj
         function T = computeTransversal(self)
         % See `.transversal`
             M = self.leftCosets.transversalAsMatrix;
-            grpAction = self.leftCosets.leftAction.image;
-            orbits = grpAction.orbits.blocks;
+            HActionOnLeftCosets = self.leftCosets.leftAction.imageGroup(self.H);
+            orbits = HActionOnLeftCosets.orbits.blocks;
             Tperms = zeros(0, self.Hprmgrp.domainSize);
             for i = 1:length(orbits)
                 orbit = orbits{i};

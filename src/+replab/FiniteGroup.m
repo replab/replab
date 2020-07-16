@@ -452,10 +452,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `+replab.DoubleCosets`: The set of double cosets
-            if nargin < 4 || isempty(parent)
-                parent = [];
-            end
-            c = replab.DoubleCosets(H, K);
+            c = replab.DoubleCosets(self, H, K);
         end
 
         function c = doubleCoset(self, element, K, parent)

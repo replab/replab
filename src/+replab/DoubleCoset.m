@@ -9,8 +9,8 @@ classdef DoubleCoset < replab.FiniteSet
         isomorphism % (`+replab.FiniteIsomorphism`): Isomorphism to a permutation group
         H % (`.FiniteGroup`): Subgroup of `.group`
         K % (`.FiniteGroup`): Subgroup of `.group`
-        Hchain % (`+replab.+bsgs.Chain`): Subgroup chain with base in lexicographic order
-        Kchain % (`+replab.+bsgs.Chain`): Subgroup chain with base in lexicographic order
+        Hprmgrp % (`.PermutationGroup`): Realization of `.H` as a permutation group
+        Kprmgrp % (`.PermutationGroup`): Realization of `.K` as a permutation group
     end
 
     methods
@@ -24,8 +24,65 @@ classdef DoubleCoset < replab.FiniteSet
             self.H = H;
             self.K = K;
             self.representative = canonicalRepresentative;
-            self.Hchain = parent.niceMorphism.imageGroup(H).lexChain;
-            self.Kchain = parent.niceMorphism.imageGroup(K).lexChain;
+            self.Hprmgrp = parent.niceMorphism.imageGroup(H);
+            self.Kprmgrp = parent.niceMorphism.imageGroup(K);
+        end
+
+        function s = size(self)
+        % Returns the size of this double coset
+        %
+        % Returns:
+        %   vpi: Coset size
+
+        % From Wikipedia: |H x K| = |H| |K| / |K \intersection x^-1 H x|
+            Hconj = self.H.leftConjugateGroup(self.parent.inverse(self.representative));
+            inter = self.K.intersection(Hconj);
+            s = self.H.order * self.K.order / inter.order;
+        end
+
+        function b = contains(self, el)
+        % Returns if this double coset contains the given element
+        %
+        % Args:
+        %   el (element of `.type`): Element to check
+        %
+        % Returns:
+        %   logical: True if this coset contains the element
+            if ~self.parent.contains(el)
+                b = false;
+                return
+            end
+            dc = replab.DoubleCoset(self.H, el, self.K, self.parent);
+            b = self.parent.eqv(self.representative, dc.representative);
+        end
+
+        function E = computeElements(self)
+        % Returns an indexed family of the elements of this double coset
+        %
+        % Returns:
+        %   `+replab.IndexedFamily`: Elements
+            S = replab.perm.Set(self.Hprmgrp.domainSize);
+            Kmat = self.Kprmgrp.chain.allElements;
+            g = self.representative';
+            S.insert(g(Kmat));
+            toCheck = 1;
+            while ~isempty(toCheck)
+                cur = S.at(toCheck(end))';
+                toCheck = toCheck(1:end-1);
+                for j = 1:self.Hprmgrp.nGenerators
+                    h = self.Hprmgrp.generator(j);
+                    newEl = h(cur);
+                    if S.find(newEl') == 0
+                        newEl = newEl';
+                        sz = S.size;
+                        inds = S.insert(newEl(Kmat));
+                        assert(all(inds > sz));
+                        toCheck = [toCheck sz+1];
+                    end
+                end
+            end
+            S.sort;
+            E = replab.indf.FiniteGroupIndexedFamily(S.matrix, self.isomorphism);
         end
 
     end
