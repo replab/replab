@@ -59,8 +59,16 @@ classdef LeftCosets < replab.Cosets
 
         function T = computeTransversal(self)
         % See `.transversal`
-            M = replab.bsgs.Cosets.leftTransversalAsMatrix(self.groupChain, self.subgroupChain);
+            M = self.transversalAsMatrix;
             T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:double(self.size), 'uniform', 0);
+        end
+
+        function M = transversalAsMatrix(self)
+            M = self.cached('transversalAsMatrix', @() self.computeTransversalAsMatrix);
+        end
+
+        function M = computeTransversalAsMatrix(self)
+            M = replab.bsgs.Cosets.leftTransversalAsMatrix(self.groupChain, self.subgroupChain);
         end
 
         function C = elements(self)
@@ -81,7 +89,7 @@ classdef LeftCosets < replab.Cosets
         % Returns, as a morphism, the action of the given group of its left cosets
             nG = self.group.nGenerators;
             ds = self.group.domainSize;
-            T = replab.bsgs.Cosets.leftTransversalAsMatrix(self.groupChain, self.subgroupChain);
+            T = self.transversalAsMatrix;
             S = replab.perm.Set(ds);
             S.insert(T);
             n = size(T, 2);

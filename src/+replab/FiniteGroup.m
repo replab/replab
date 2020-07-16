@@ -443,6 +443,39 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
+        function c = doubleCosets(self, H, K)
+        % Returns the set of double cosets in this group by the given groups
+        %
+        % Args:
+        %   H (`+replab.FiniteGroup`): First subgroup
+        %   K (`+replab.FiniteGroup`): Second subgroup
+        %
+        % Returns:
+        %   `+replab.DoubleCosets`: The set of double cosets
+            if nargin < 4 || isempty(parent)
+                parent = [];
+            end
+            c = replab.DoubleCosets(H, K);
+        end
+
+        function c = doubleCoset(self, element, K, parent)
+        % Returns a double coset
+        %
+        % Returns the set ``self * element * K``.
+        %
+        % Args:
+        %   element (group element): Group element
+        %   K (`.FiniteGroup`): Finite group
+        %   parent (`.FiniteGroup`, optional): Group containing all of ``self``, ``element`` and ``K``
+        %
+        % Returns:
+        %   `+replab.DoubleCoset`: The constructed double coset
+            if nargin < 4 || isempty(parent)
+                parent = [];
+            end
+            c = replab.DoubleCoset.make(self, element, K, parent);
+        end
+
         function c = normalCoset(self, element, parent)
         % Returns a normal coset
         %
@@ -466,6 +499,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Args:
         %   subgroup (`+replab.FiniteGroup`): Normal subgroup of this group
+        %
+        % Returns:
+        %   `.NormalCosets`: The set of normal cosets
             assert(subgroup.isNormalSubgroupOf(self), 'The given subgroup must be normal in parent group');
             c = replab.NormalCosets(self, subgroup);
         end

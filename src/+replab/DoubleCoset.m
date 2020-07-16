@@ -50,34 +50,8 @@ classdef DoubleCoset < replab.FiniteSet
             if nargin < 4 || isempty(parent)
                 parent = H.closure(K).closure(element);
             end
-            Hprmgrp = parent.niceMorphism.imageGroup(H);
-            Kprmgrp = parent.niceMorphism.imageGroup(K);
-            S = replab.perm.Set(Hprmgrp.domainSize);
-            elP = parent.niceMorphism.imageElement(element);
-            repP = replab.bsgs.Cosets.leftRepresentative(Kprmgrp.lexChain, elP);
-            minP = repP;
-            S.insert(repP');
-            toCheck = 1;
-            % compute the orbit of the left cosets ``element K``
-            while ~isempty(toCheck)
-                i = toCheck(end);
-                toCheck = toCheck(1:end-1);
-                rep = S.at(i)';
-                for j = 1:Hprmgrp.nGenerators
-                    h = Hprmgrp.generator(j);
-                    elP = h(rep);
-                    repP = replab.bsgs.Cosets.leftRepresentative(Kprmgrp.lexChain, elP);
-                    ind = S.find(repP');
-                    if ind == 0
-                        if self.lexCompare(repP, minP) < 0
-                            minP = repP;
-                        end
-                        ind = S.insert(repP');
-                        toCheck = [toCheck ind];
-                    end
-                end
-            end
-            d = replab.DoubleCoset(H, parent.niceMorphism.preimageElement(minP), K, parent);
+            canRep = parent.doubleCosets(H, K).cosetRepresentative(element);
+            d = replab.DoubleCoset(H, canRep, K, parent);
         end
 
     end

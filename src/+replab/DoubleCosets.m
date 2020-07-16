@@ -6,12 +6,11 @@ classdef DoubleCosets < replab.Obj
 
     properties (SetAccess = protected)
         isomorphism % (`+replab.FiniteIsomorphism`): Isomorphism to a permutation group
-        groupChain % (`+replab.+bsgs.Chain`): Group chain with base in lexicographic order
         group % (`.FiniteGroup`): Group
         H % (`.FiniteGroup`): Subgroup of `.group`
         K % (`.FiniteGroup`): Subgroup of `.group`
-        Hchain % (`+replab.+bsgs.Chain`): Subgroup chain with base in lexicographic order
-        Kchain % (`+replab.+bsgs.Chain`): Subgroup chain with base in lexicographic order
+        Hprmgrp % (`.PermutationGroup`): Realization of `.H` as a permutation group
+        Kprmgrp % (`.PermutationGroup`): Realization of `.K` as a permutation group
         leftCosets % (`+replab.LeftCosets`): Left cosets G / K
     end
 
@@ -20,14 +19,89 @@ classdef DoubleCosets < replab.Obj
         function self = DoubleCosets(group, H, K)
             assert(group.hasSameTypeAs(H));
             assert(group.hasSameTypeAs(K));
+            self.isomorphism = group.niceMorphism;
             self.group = group;
             self.H = H;
             self.K = K;
-            self.isomorphism = group.niceMorphism;
-            self.groupChain = self.isomorphism.imageGroup(group).lexChain;
-            self.Hchain = self.isomorphism.imageGroup(H).lexChain;
-            self.Kchain = self.isomorphism.imageGroup(K).lexChain;
+            self.Hprmgrp = group.niceMorphism.imageGroup(H);
+            self.Kprmgrp = group.niceMorphism.imageGroup(K);
             self.leftCosets = group / K;
+        end
+
+        function s = size(self)
+        % Returns the number of double cosets
+        %
+        % Returns:
+        %   integer: Number of double cosets
+            s = length(self.transversal);
+        end
+
+        function t = cosetRepresentative(self, g)
+        % Returns the canonical coset representative corresponding to the given element
+        %
+        % Args:
+        %   g (element of `.group`): Group element
+        %
+        % Returns:
+        %   t (element of `.group`): Double coset canonical representative
+            S = replab.perm.Set(self.Hprmgrp.domainSize);
+            elP = self.isomorphism.imageElement(g);
+            repP = replab.bsgs.Cosets.leftRepresentative(self.Kprmgrp.lexChain, elP);
+            minP = repP;
+            S.insert(repP');
+            toCheck = 1;
+            % compute the orbit of the left cosets ``element K``
+            while ~isempty(toCheck)
+                i = toCheck(end);
+                toCheck = toCheck(1:end-1);
+                rep = S.at(i)';
+                for j = 1:selfprmgrp.nGenerators
+                    h = self.Hprmgrp.generator(j);
+                    elP = h(rep);
+                    repP = replab.bsgs.Cosets.leftRepresentative(self.Kprmgrp.lexChain, elP);
+                    ind = S.find(repP');
+                    if ind == 0
+                        if self.lexCompare(repP, minP) < 0
+                            minP = repP;
+                        end
+                        ind = S.insert(repP');
+                        toCheck = [toCheck ind];
+                    end
+                end
+            end
+            t = self.isomorphism.preimageElement(minP);
+        end
+
+        function T = transversal(self)
+        % Returns all the canonical representatives of cosets
+        %
+        % Returns:
+        %   cell(1, \*) of `.group` elements: Transversal
+            T = self.cached('transversal', @() self.computeTransversal);
+        end
+
+        function T = computeTransversal(self)
+        % See `.transversal`
+            M = self.leftCosets.transversalAsMatrix;
+            grpAction = self.leftCosets.leftAction.image;
+            orbits = grpAction.orbits.blocks;
+            Tperms = zeros(0, self.Hprmgrp.domainSize);
+            for i = 1:length(orbits)
+                orbit = orbits{i};
+                sorted = sortrows(M(:,orbit)');
+                Tperms(end+1, :) = sorted(1,:);
+            end
+            Tperms = sortrows(Tperms);
+            T = arrayfun(@(i) self.isomorphism.preimageElement(Tperms(i,:)), 1:size(Tperms, 1), 'uniform', 0);
+        end
+
+        function C = elements(self)
+        % Returns the set of double cosets as a cell array
+        %
+        % Returns:
+        %   cell(1,\*) of `+replab.DoubleCoset`: Set of double cosets
+            T = self.transversal;
+            C = cellfun(@(t) replab.DoubleCoset(self.H, t, self.K, self.group), T, 'uniform', 0);
         end
 
     end
