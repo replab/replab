@@ -1,4 +1,4 @@
-classdef CosetBase < replab.FiniteSet
+classdef Coset < replab.FiniteSet
 
     properties (SetAccess = protected)
         group % (`.FiniteGroup`): Group

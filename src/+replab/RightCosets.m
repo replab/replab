@@ -1,4 +1,4 @@
-classdef RightCosets < replab.CosetsBase
+classdef RightCosets < replab.Cosets
 % Describes the set of right cosets of a nice finite group
 %
 % Let $H$ be a subgroup of a group $G$. Then the right cosets are the sets $H g = \{ h g : h \in H \}$.
@@ -17,7 +17,7 @@ classdef RightCosets < replab.CosetsBase
     methods
 
         function self = RightCosets(group, subgroup)
-            self@replab.CosetBase(group, subgroup);
+            self@replab.Cosets(group, subgroup);
         end
 
         function d = mrdivide(self, subgroup1)

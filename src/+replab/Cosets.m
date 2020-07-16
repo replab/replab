@@ -1,4 +1,4 @@
-classdef CosetsBase < replab.Obj
+classdef Cosets < replab.Obj
 
     properties (SetAccess = protected)
         group % (`.FiniteGroup`): Group
@@ -10,7 +10,7 @@ classdef CosetsBase < replab.Obj
 
     methods
 
-        function self = CosetsBase(group, subgroup)
+        function self = Cosets(group, subgroup)
             assert(group.hasSameTypeAs(subgroup));
             self.group = group;
             self.subgroup = subgroup;

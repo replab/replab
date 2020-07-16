@@ -1,4 +1,4 @@
-classdef LeftCoset < replab.CosetBase
+classdef LeftCoset < replab.Coset
 % Describes a left coset of a finite group
 %
 % Let $g \in G$ be a coset representative and $H \le G$ a group. The left coset is $g H = \{ g h : h \in H\}$.

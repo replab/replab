@@ -1,4 +1,4 @@
-classdef LeftCosets < replab.CosetsBase
+classdef LeftCosets < replab.Cosets
 % Describes the set of left cosets of a finite group
 %
 % Let $H$ be a subgroup of a group $G$. Then the left cosets are the sets $g H = \{ g h : h \in H \}$.
@@ -17,7 +17,7 @@ classdef LeftCosets < replab.CosetsBase
     methods
 
         function self = LeftCosets(group, subgroup)
-            self@replab.CosetsBase(group, subgroup);
+            self@replab.Cosets(group, subgroup);
         end
 
         function s = cardinality(self)

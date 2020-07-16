@@ -418,23 +418,29 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
     methods % Cosets
 
         function l = isNormalizedBy(self, element)
-        % Returns whether a given element normalizes this group
+        % Returns whether a given element/group normalizes this group
         %
         % This is true when ``element * group * element^-1 == group``.
         %
+        % The same definition when ``element`` is a group; then we ask that all this group elements satisfy that property.
+        %
         % Args:
-        %   element (group element): Group element
+        %   element (group element or `.FiniteGroup`): Group element or group
         %
         % Returns:
-        %   logical: True if the element normalizes this group
-            l = false;
-            for i = 1:self.nGenerators
-                g = self.generator(i);
-                if ~self.contains(self.leftConjugate(element, g))
-                    return
+        %   logical: True if the given element/group normalizes this group
+            if isa(element, 'replab.FiniteGroup')
+                l = all(cellfun(@(g) self.isNormalizedBy(g), element.generators));
+            else
+                l = false;
+                for i = 1:self.nGenerators
+                    g = self.generator(i);
+                    if ~self.contains(self.leftConjugate(element, g))
+                        return
+                    end
                 end
+                l = true;
             end
-            l = true;
         end
 
         function c = normalCoset(self, element)
@@ -471,25 +477,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   `+replab.RightCoset`: The constructed right coset
             c = replab.RightCoset.make(self, element);
-        end
-
-        function c = mtimes(lhs, rhs)
-        % Shorthand for `.leftCoset` and `.rightCoset`
-        %
-        % Always constructs the most general type of coset
-            if isa(lhs, 'replab.FiniteGroup')
-                if lhs.isNormalizedBy(rhs)
-                    c = lhs.normalCoset(rhs);
-                else
-                    c = lhs.rightCoset(rhs);
-                end
-            else
-                if rhs.isNormalizedBy(lhs)
-                    c = rhs.normalCoset(lhs);
-                else
-                    c = rhs.leftCoset(lhs);
-                end
-            end
         end
 
         function c = rightCosetsOf(self, subgroup)

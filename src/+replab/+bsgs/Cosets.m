@@ -108,7 +108,7 @@ classdef Cosets
         % Returns:
         %   permutation: The coset representative
             sub = subgroup.mutableCopy;
-            n = subgroup.domainSize;
+            n = subgroup.n;
             % we build an element of the form h1 ... hn g
             % we iterate over the sequence
             % h1 g <- find h1

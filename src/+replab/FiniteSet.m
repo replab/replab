@@ -69,4 +69,74 @@ classdef FiniteSet < replab.Domain
 
     end
 
+    methods % Implementations
+
+        function res = mtimes(lhs, rhs)
+            if isa(lhs, 'replab.FiniteSet')
+                type = lhs.type;
+            else
+                assert(isa(rhs, 'replab.FiniteSet'));
+                type = rhs.type;
+            end
+            res = replab.FiniteSet.multiply(type, lhs, rhs);
+        end
+
+    end
+
+    methods (Static)
+
+        function t = shortType(obj)
+            if isa(obj, 'replab.FiniteGroup')
+                t = 'G';
+            elseif isa(obj, 'replab.ConjugacyClass')
+                t = 'C';
+            elseif isa(obj, 'replab.DoubleCoset')
+                t = 'D';
+            elseif isa(obj, 'replab.NormalCoset')
+                t = 'N';
+            elseif isa(obj, 'replab.LeftCoset')
+                t = 'L';
+            elseif isa(obj, 'replab.RightCoset')
+                t = 'R';
+            elseif isa(obj, 'replab.FiniteSet')
+                t = 'S';
+            else
+                t = 'E';
+            end
+        end
+
+        function checkNormalizes(lhs, rhs)
+            assert(lhs.isNormalizedBy(rhs) || rhs.isNormalizedBy(lhs), 'This product requires a normalization condition');
+        end
+
+        function res = multiply(type, lhs, rhs)
+            switch [replab.FiniteSet.shortType(lhs) replab.FiniteSet.shortType(rhs)]
+              case 'NG'
+                res = replab.DoubleCoset.make(lhs.group, lhs.representative, rhs);
+              case 'GN'
+                res = replab.DoubleCoset.make(lhs, rhs.representative, rhs.group);
+              case 'GL'
+                res = replab.DoubleCoset.make(lhs, rhs.representative, rhs.group);
+              case 'RG'
+                res = replab.DoubleCoset.make(lhs.group, lhs.representative, rhs);
+              case 'GE'
+                res = lhs.rightCoset(rhs);
+              case 'EG'
+                res = rhs.leftCoset(lhs);
+              case 'NE'
+                res = lhs.group.rightCoset(type.compose(lhs.representative, rhs));
+              case 'EN'
+                res = rhs.group.leftCoset(type.compose(lhs, rhs.representative));
+              case 'RE'
+                res = lhs.group.rightCoset(type.compose(lhs.representative, rhs));
+              case 'EL'
+                res = rhs.group.leftCoset(type.compose(lhs, rhs.representative));
+              otherwise
+                error('Invalid product');
+                % other cases are invalid
+            end
+        end
+
+    end
+
 end
