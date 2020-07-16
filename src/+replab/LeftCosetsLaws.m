@@ -16,21 +16,26 @@ classdef LeftCosetsLaws < replab.Laws
         function law_transversal_representatives_are_canonical_(self)
             T = self.L.transversal;
             for i = 1:length(T)
-                assertEqual(T{i}, self.L.canonicalRepresentative(T{i}));
+                assertEqual(T{i}, self.L.cosetRepresentative(T{i}));
             end
         end
-        function law_canonical_representative_is_stable_G(self, g)
-            r1 = self.L.canonicalRepresentative(g);
-            r2 = self.L.canonicalRepresentative(r1);
+        function law_coset_representative_is_stable_G(self, g)
+            r1 = self.L.cosetRepresentative(g);
+            r2 = self.L.cosetRepresentative(r1);
             assertEqual(r1, r2);
         end
 
-        function law_canonical_representatives_are_unique_GH(self, g, h)
+        function law_coset_representatives_are_unique_GH(self, g, h)
             gh = self.G.compose(g, h);
-            assertEqual(self.L.canonicalRepresentative(g), self.L.canonicalRepresentative(gh));
+            assertEqual(self.L.cosetRepresentative(g), self.L.cosetRepresentative(gh));
         end
         function law_transversal_size_(self)
             assertEqual(length(self.L.transversal), double(self.G.order/self.H.order));
         end
+        function morphismLaws = laws_leftAction(self)
+            morphismLaws = replab.FiniteMorphismLaws(self.L.leftAction);
+        end
+
     end
+
 end

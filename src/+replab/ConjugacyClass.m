@@ -32,7 +32,7 @@ classdef ConjugacyClass < replab.FiniteSet
 
     methods
 
-        function s = cardinality(self)
+        function s = size(self)
             s = self.group.order / self.representativeCentralizer.order;
         end
 

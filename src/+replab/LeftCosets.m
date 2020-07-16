@@ -1,4 +1,4 @@
-classdef LeftCosets < replab.CosetBase
+classdef LeftCosets < replab.Cosets
 % Describes the set of left cosets of a finite group
 %
 % Let $H$ be a subgroup of a group $G$. Then the left cosets are the sets $g H = \{ g h : h \in H \}$.
@@ -17,10 +17,10 @@ classdef LeftCosets < replab.CosetBase
     methods
 
         function self = LeftCosets(group, subgroup)
-            self@replab.CosetBase(group, subgroup);
+            self@replab.Cosets(group, subgroup);
         end
 
-        function s = cardinality(self)
+        function s = size(self)
         % Returns the number of left cosets
         %
         % Returns:
@@ -28,17 +28,6 @@ classdef LeftCosets < replab.CosetBase
             s = self.group.order / self.subgroup.order;
             assert(s <= 2^53 - 1);
             s = double(s);
-        end
-
-        function C = coset(self, g)
-        % Returns the left coset containing the given element
-        %
-        % Args:
-        %   g (element of `.group`): Group element
-        %
-        % Returns:
-        %   `+replab.LeftCoset`: Left coset
-            C = replab.LeftCoset(self.group, self.subgroup, self.cosetRepresentative(g));
         end
 
         function t = cosetRepresentative(self, g)
@@ -65,8 +54,21 @@ classdef LeftCosets < replab.CosetBase
         %
         % Returns:
         %   cell(1, \*) of `.group` elements: Transversal
+            T = self.cached('transversal', @() self.computeTransversal);
+        end
+
+        function T = computeTransversal(self)
+        % See `.transversal`
+            M = self.transversalAsMatrix;
+            T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:double(self.size), 'uniform', 0);
+        end
+
+        function M = transversalAsMatrix(self)
+            M = self.cached('transversalAsMatrix', @() self.computeTransversalAsMatrix);
+        end
+
+        function M = computeTransversalAsMatrix(self)
             M = replab.bsgs.Cosets.leftTransversalAsMatrix(self.groupChain, self.subgroupChain);
-            T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:self.cardinality, 'uniform', 0);
         end
 
         function C = elements(self)
@@ -75,31 +77,37 @@ classdef LeftCosets < replab.CosetBase
         % Returns:
         %   cell(1,\*) of `+replab.LeftCoset`: Set of left cosets
             T = self.transversal;
-            C = cellfun(@(t) replab.LeftCoset(self.group, self.subgroup, t), T, 'uniform', 0);
+            C = cellfun(@(t) replab.LeftCoset(self.subgroup, t, self.group), T, 'uniform', 0);
             assert(isscalar(C{1}));
         end
 
-% $$$         function mu = leftAction(group, subgroup)
-% $$$         % Returns, as a morphism, the action of the given group of its left cosets
-% $$$             nG = group.nGenerators;
-% $$$             T = self.transversalAsMatrix;
-% $$$             n = size(T, 1);
-% $$$             images = cell(1, nG);
-% $$$             for i = 1:nG
-% $$$                 g = self.group.generator(i);
-% $$$                 img = zeros(1, n);
-% $$$                 for j = 1:n
-% $$$                     gt = self.canonicalRepresentative(g(T(j,:)));
-% $$$                     loc = replab.util.findRowInMatrix(gt, T);
-% $$$                     % [ok, loc] = ismember(gt, T, 'rows');
-% $$$                     assert(length(loc) == 1);
-% $$$                     img(j) = loc;
-% $$$                 end
-% $$$                 images{i} = img;
-% $$$             end
-% $$$             Sn = replab.S(n);
-% $$$             mu = self.group.morphismByImages(Sn, images);
-% $$$         end
+        function mu = leftAction(self)
+            mu = self.cached('leftAction', @() self.computeLeftAction);
+        end
+
+        function mu = computeLeftAction(self)
+        % Returns, as a morphism, the action of the given group of its left cosets
+            nG = self.group.nGenerators;
+            ds = self.group.domainSize;
+            T = self.transversalAsMatrix;
+            S = replab.perm.Set(ds);
+            S.insert(T);
+            n = size(T, 2);
+            images = cell(1, nG);
+            for i = 1:nG
+                g = self.group.generator(i);
+                img = zeros(1, n);
+                for j = 1:n
+                    gt = self.cosetRepresentative(g(T(:,j)'));
+                    loc = S.find(gt');
+                    assert(length(loc) == 1);
+                    img(j) = loc;
+                end
+                images{i} = img;
+            end
+            Sn = replab.S(n);
+            mu = self.group.morphismByImages(Sn, images);
+        end
 
     end
 

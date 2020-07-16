@@ -24,10 +24,11 @@ classdef FiniteGroupIndexedFamily < replab.IndexedFamily
             ps.insert(matrix);
             self.permSet = ps;
             self.isomorphism = isomorphism;
+            self.size = vpi(size(matrix, 2));
         end
 
         function obj = at(self, ind)
-            obj = self.permSet.at(ind)';
+            obj = self.permSet.at(double(ind))';
             if ~isempty(self.isomorphism)
                 obj = self.isomorphism.preimageElement(obj);
             end
@@ -37,7 +38,7 @@ classdef FiniteGroupIndexedFamily < replab.IndexedFamily
             if ~isempty(self.isomorphism)
                 obj = self.isomorphism.imageElement(obj);
             end
-            ind = self.permSet.find(obj');
+            ind = vpi(self.permSet.find(obj'));
         end
 
         function C = toCell(self)

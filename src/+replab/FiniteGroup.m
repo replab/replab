@@ -43,7 +43,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Group properties
 
-        function s = cardinality(self)
+        function s = size(self)
             s = self.order;
         end
 
@@ -417,18 +417,78 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Cosets
 
-        function c = normalCoset(self, normalSubgroup, element)
-        % Returns a normal coset
+        function l = isNormalizedBy(self, element)
+        % Returns whether a given element/group normalizes this group
         %
-        % Returns the set ``element * normalSubgroup == normalSubgroup * element``.
+        % This is true when ``element * group * element^-1 == group``.
+        %
+        % The same definition when ``element`` is a group; then we ask that all this group elements satisfy that property.
         %
         % Args:
-        %   normalSubgroup (`+replab.FiniteGroup`): Normal subgroup of this group
+        %   element (group element or `.FiniteGroup`): Group element or group
+        %
+        % Returns:
+        %   logical: True if the given element/group normalizes this group
+            if isa(element, 'replab.FiniteGroup')
+                l = all(cellfun(@(g) self.isNormalizedBy(g), element.generators));
+            else
+                l = false;
+                for i = 1:self.nGenerators
+                    g = self.generator(i);
+                    if ~self.contains(self.type.leftConjugate(element, g))
+                        return
+                    end
+                end
+                l = true;
+            end
+        end
+
+        function c = doubleCosets(self, H, K)
+        % Returns the set of double cosets in this group by the given groups
+        %
+        % Args:
+        %   H (`+replab.FiniteGroup`): First subgroup
+        %   K (`+replab.FiniteGroup`): Second subgroup
+        %
+        % Returns:
+        %   `+replab.DoubleCosets`: The set of double cosets
+            c = replab.DoubleCosets(self, H, K);
+        end
+
+        function c = doubleCoset(self, element, K, parent)
+        % Returns a double coset
+        %
+        % Returns the set ``self * element * K``.
+        %
+        % Args:
         %   element (group element): Group element
+        %   K (`.FiniteGroup`): Finite group
+        %   parent (`.FiniteGroup`, optional): Group containing all of ``self``, ``element`` and ``K``
+        %
+        % Returns:
+        %   `+replab.DoubleCoset`: The constructed double coset
+            if nargin < 4 || isempty(parent)
+                parent = [];
+            end
+            c = replab.DoubleCoset.make(self, element, K, parent);
+        end
+
+        function c = normalCoset(self, element, parent)
+        % Returns a normal coset
+        %
+        % Returns the set ``element * self == self * element``.
+        %
+        % Args:
+        %   element (group element): Group element
+        %   parent (`.FiniteGroup`, optional): Group containing both ``self`` and ``element``
         %
         % Returns:
         %   `+replab.NormalCoset`: The constructed normal coset
-            c = self.normalCosetsOf(subgroup).coset(element);
+            assert(self.isNormalizedBy(element), 'The given element does not define a normal coset');
+            if nargin < 3 || isempty(parent)
+                parent = [];
+            end
+            c = replab.NormalCoset.make(self, element, parent);
         end
 
         function c = normalCosetsOf(self, subgroup)
@@ -436,22 +496,28 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Args:
         %   subgroup (`+replab.FiniteGroup`): Normal subgroup of this group
+        %
+        % Returns:
+        %   `.NormalCosets`: The set of normal cosets
             assert(subgroup.isNormalSubgroupOf(self), 'The given subgroup must be normal in parent group');
             c = replab.NormalCosets(self, subgroup);
         end
 
-        function c = rightCoset(self, subgroup, element)
+        function c = rightCoset(self, element, parent)
         % Returns a right coset
         %
-        % Returns the set ``subgroup * element``.
+        % Returns the set ``self * element``.
         %
         % Args:
-        %   subgroup (`+replab.FiniteGroup`): Subgroup of this group
         %   element (group element): Group element
+        %   parent (`.FiniteGroup`, optional): Group containing both ``self`` and ``element``
         %
         % Returns:
         %   `+replab.RightCoset`: The constructed right coset
-            c = self.rightCosetsOf(subgroup).coset(element);
+            if nargin < 3 || isempty(parent)
+                parent = [];
+            end
+            c = replab.RightCoset.make(self, element, parent);
         end
 
         function c = rightCosetsOf(self, subgroup)
@@ -470,18 +536,21 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             c = supergroup.rightCosetsOf(self);
         end
 
-        function c = leftCoset(self, subgroup, element)
+        function c = leftCoset(self, element, parent)
         % Returns a left coset
         %
-        % Returns the set ``element * subgroup``.
+        % Returns the set ``element * self``.
         %
         % Args:
-        %   subgroup (`+replab.FiniteGroup`): Subgroup of this group
         %   element (group element): Group element
+        %   parent (`.FiniteGroup`, optional): Group containing both ``self`` and ``element``
         %
         % Returns:
         %   `+replab.LeftCoset`: The constructed right coset
-            c = self.leftCosetsOf(subgroup).coset(element);
+            if nargin < 3 || isempty(parent)
+                parent = [];
+            end
+            c = replab.LeftCoset.make(self, element, parent);
         end
 
         function c = leftCosetsOf(self, subgroup)
@@ -568,7 +637,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 subi = self.generator(i);
                 for j = 1:rhs.nGenerators
                     rhsj = rhs.generator(j);
-                    if ~self.contains(self.leftConjugate(rhsj, subi))
+                    if ~self.contains(self.type.leftConjugate(rhsj, subi))
                         res = false;
                         return
                     end

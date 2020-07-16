@@ -1,4 +1,4 @@
-classdef RightCosets < replab.CosetBase
+classdef RightCosets < replab.Cosets
 % Describes the set of right cosets of a nice finite group
 %
 % Let $H$ be a subgroup of a group $G$. Then the right cosets are the sets $H g = \{ h g : h \in H \}$.
@@ -17,10 +17,18 @@ classdef RightCosets < replab.CosetBase
     methods
 
         function self = RightCosets(group, subgroup)
-            self@replab.CosetBase(group, subgroup);
+            self@replab.Cosets(group, subgroup);
         end
 
-        function s = cardinality(self)
+        function d = mrdivide(self, subgroup1)
+            d = self.leftCosetsBy(subgroup1);
+        end
+
+        function d = leftCosetsBy(self, subgroup1)
+            d = replab.DoubleCosets(self.group, self.subgroup, subgroup1);
+        end
+
+        function s = size(self)
         % Returns the number of right cosets
         %
         % Returns:
@@ -28,17 +36,6 @@ classdef RightCosets < replab.CosetBase
             s = self.group.order / self.subgroup.order;
             assert(s < 2^53 - 1);
             s = double(s);
-        end
-
-        function C = coset(self, g)
-        % Returns the right coset containing the given element
-        %
-        % Args:
-        %   g (element of `.group`): Group element
-        %
-        % Returns:
-        %   `+replab.RightCoset`: Right coset
-            C = replab.RightCoset(self.group, self.subgroup, self.cosetRepresentative(g));
         end
 
         function t = cosetRepresentative(self, g)
@@ -65,8 +62,12 @@ classdef RightCosets < replab.CosetBase
         %
         % Returns:
         %   cell(1, \*) of `.group` elements: Transversal
+            T = self.cached('transversal', @() self.computeTransversal);
+        end
+
+        function T = computeTransversal(self)
             M = replab.bsgs.Cosets.rightTransversalMatrix(self.groupChain, self.subgroupChain);
-            T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:self.cardinality, 'uniform', 0);
+            T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:double(self.size), 'uniform', 0);
         end
 
         function C = elements(self)
@@ -74,7 +75,7 @@ classdef RightCosets < replab.CosetBase
         %
         % Returns:
         %   cell(1,\*) of `+replab.RightCoset`: Set of right cosets
-            C = cellfun(@(t) replab.RightCoset(self.group, self.subgroup, t), self.transversal, 'uniform', 0);
+            C = cellfun(@(t) replab.RightCoset(self.subgroup, t, self.group), self.transversal, 'uniform', 0);
         end
 
     end

@@ -60,7 +60,7 @@ classdef Cosets
                             stackS{l+1} = stackS{l}.stabilizer(bg);
                             gnext = g(group.u(l, b));
                             stackG(:,l+1) = gnext; % compose transversal element
-                            orbit = sort(group.Delta{l+1}); % TODO: unnecessary sort
+                            orbit = group.Delta{l+1};
                             [~, I] = sort(gnext(orbit));
                             stackB{l+1} = orbit(I);
                             stackM{l+1} = replab.bsgs.minimalMaskInOrbit(n, stackS{l+1}.strongGeneratorsForLevel(1));
@@ -108,7 +108,7 @@ classdef Cosets
         % Returns:
         %   permutation: The coset representative
             sub = subgroup.mutableCopy;
-            n = subgroup.domainSize;
+            n = subgroup.n;
             % we build an element of the form h1 ... hn g
             % we iterate over the sequence
             % h1 g <- find h1

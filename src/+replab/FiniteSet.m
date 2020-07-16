@@ -10,13 +10,13 @@ classdef FiniteSet < replab.Domain
 % the lexicographic order.
 
     properties (SetAccess = protected)
-        type % (`.FiniteSet`): Set of all elements of the same type as this set; satisfies ``type.type == type``
+        type % (`.FiniteGroup`): Set of all elements of the same type as this set; satisfies ``type.type == type``
         representative % (element of `.type`): Distinguished member of this set; if the set is empty, this value is arbitrary
     end
 
     methods
 
-        function s = cardinality(self)
+        function s = size(self)
         % Returns the size of this set
         %
         % Returns:
@@ -27,7 +27,7 @@ classdef FiniteSet < replab.Domain
         function b = contains(self, el)
         % Tests whether this set contains the given element
         %
-        % The element must be part of the `.type` set.
+        % The element must be part of ``self.parent.type``.
         %
         % Args:
         %   el (element of `.type`): Element to test for membership
@@ -64,7 +64,71 @@ classdef FiniteSet < replab.Domain
         %
         % Returns:
         %   logical: True if the groups have compatible types
-            res = self.type.hasSameTypeAs(rhs.type); % we delegate to the types themselves
+            res = self.parent.type.hasSameTypeAs(rhs.parent.type); % we delegate to the types themselves
+        end
+
+    end
+
+    methods % Implementations
+
+        function res = mtimes(lhs, rhs)
+            res = replab.FiniteSet.multiply(lhs, rhs);
+        end
+
+    end
+
+    methods (Static)
+
+        function t = shortType(obj)
+            if isa(obj, 'replab.FiniteGroup')
+                t = 'G';
+            elseif isa(obj, 'replab.ConjugacyClass')
+                t = 'C';
+            elseif isa(obj, 'replab.DoubleCoset')
+                t = 'D';
+            elseif isa(obj, 'replab.NormalCoset')
+                t = 'N';
+            elseif isa(obj, 'replab.LeftCoset')
+                t = 'L';
+            elseif isa(obj, 'replab.RightCoset')
+                t = 'R';
+            elseif isa(obj, 'replab.FiniteSet')
+                t = 'S';
+            else
+                t = 'E';
+            end
+        end
+
+        function checkNormalizes(lhs, rhs)
+            assert(lhs.isNormalizedBy(rhs) || rhs.isNormalizedBy(lhs), 'This product requires a normalization condition');
+        end
+
+        function res = multiply(lhs, rhs)
+            switch [replab.FiniteSet.shortType(lhs) replab.FiniteSet.shortType(rhs)]
+              case 'NG'
+                res = replab.DoubleCoset.make(lhs.group, lhs.representative, rhs);
+              case 'GN'
+                res = replab.DoubleCoset.make(lhs, rhs.representative, rhs.group);
+              case 'GL'
+                res = replab.DoubleCoset.make(lhs, rhs.representative, rhs.group);
+              case 'RG'
+                res = replab.DoubleCoset.make(lhs.group, lhs.representative, rhs);
+              case 'GE'
+                res = lhs.rightCoset(rhs);
+              case 'EG'
+                res = rhs.leftCoset(lhs);
+              case 'NE'
+                res = lhs.group.rightCoset(lhs.group.type.compose(lhs.representative, rhs));
+              case 'EN'
+                res = rhs.group.leftCoset(rhs.group.type.compose(lhs, rhs.representative));
+              case 'RE'
+                res = lhs.group.rightCoset(lhs.group.type.compose(lhs.representative, rhs));
+              case 'EL'
+                res = rhs.group.leftCoset(rhs.group.type.compose(lhs, rhs.representative));
+              otherwise
+                error('Invalid product');
+                % other cases are invalid
+            end
         end
 
     end

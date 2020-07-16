@@ -1,26 +1,51 @@
-classdef RightCoset < replab.FiniteSet & replab.CosetBase
+classdef RightCoset < replab.Coset
 % Describes a right coset of a finite group
 %
-% Let $g \in G$ be the coset representative and $H \le G$ the subgroup. The right coset is $\{ h g : h \in H\}$.
+% Let $g \in G$ be a coset representative and $H \le G$ a group. The right coset is $H g = \{ h g : h \in H\}$.
 %
 % Note:
-%   This structure is implemented by referencing the permutation realizations of the group and subgroup through
-%   a nice isomorphism.
+%   This structure is implemented by referencing the permutation realizations of the group through a nice isomorphism.
 
     methods
 
-        function self = RightCoset(group, subgroup, canonicalRepresentative)
-            self@replab.CosetBase(group, subgroup);
-            self.type = group.type;
+        function self = RightCoset(group, canonicalRepresentative, parent)
+            self.type = parent.type;
+            self.parent = parent;
+            self.isomorphism = parent.niceMorphism;
+            self.group = group;
             self.representative = canonicalRepresentative;
+            self.groupChain = parent.niceMorphism.imageGroup(group).lexChain;
         end
 
-        function s = cardinality(self)
+    end
+
+    methods (Static)
+
+        function r = make(group, element, parent)
+            if nargin < 3 || isempty(parent)
+                parent = group.closure(element);
+            end
+            if group.isNormalizedBy(element)
+                r = replab.NormalCoset(group, element, parent);
+                return
+            end
+            chain = parent.niceMorphism.imageGroup(group).lexChain;
+            permRep = replab.bsgs.Cosets.rightRepresentative(chain, parent.niceMorphism.imageElement(element));
+            r = replab.RightCoset(group, parent.niceMorphism.preimageElement(permRep), parent);
+        end
+
+    end
+
+    methods % Implementations
+
+        % FiniteSet
+
+        function s = size(self)
         % Returns the size of this coset
         %
         % Returns:
         %   vpi: Coset size
-            s = self.subgroup.order;
+            s = self.group.order;
         end
 
         function b = contains(self, el)
@@ -34,7 +59,7 @@ classdef RightCoset < replab.FiniteSet & replab.CosetBase
             if ~isempty(self.isomorphism)
                 el = self.isomorphism.imageElement(el);
             end
-            el = replab.bsgs.Cosets.rightRepresentative(self.subgroupChain, el);
+            el = replab.bsgs.Cosets.rightRepresentative(self.groupChain, el);
             b = isequal(self.representative, el);
         end
 
@@ -43,7 +68,7 @@ classdef RightCoset < replab.FiniteSet & replab.CosetBase
         %
         % Returns:
         %   `+replab.IndexedFamily`: Elements
-            H = self.subgroupChain.allElements;
+            H = self.groupChain.allElements;
             g = self.representative;
             if ~isempty(self.isomorphism)
                 g = self.isomorphism.imageElement(g);
