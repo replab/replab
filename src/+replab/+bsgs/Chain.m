@@ -464,6 +464,27 @@ classdef Chain < replab.Str
             end
         end
 
+        function c = chainFromLevel(self, l)
+        % Returns the chain starting at the given level
+        %
+        % Args:
+        %   l (integer): Level in this chain at which to start the returned chain
+        %
+        % Returns:
+        %   `.Chain`: The cut chain
+            newB = self.B(l:end);
+            newS = self.S(:, self.Sind(l):end);
+            newSind = self.Sind(l:end) - self.Sind(l) + 1;
+            newDelta = self.Delta(l:end);
+            newiDelta = self.iDelta(:, l:end);
+            newU = self.U(l:end);
+            newUinv = self.Uinv(l:end);
+            c = replab.bsgs.Chain(self.n, newB, newS, newSind, newDelta, newiDelta, newU, newUinv);
+            if ~self.isMutable
+                c.makeImmutable;
+            end
+        end
+
         function [c orbit iOrbit U Uinv] = stabilizer(self, b)
         % Returns the stabilizer chain that represents the group stabilizing the given point
         %
