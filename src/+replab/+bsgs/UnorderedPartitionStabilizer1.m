@@ -6,7 +6,7 @@ classdef UnorderedPartitionStabilizer1 < replab.bsgs.Backtrack1
         sourceBlockIndex % (integer(1,domainSize)): Block index for each point, non-decreasing along the base
         targetBlockIndex % (integer(1,nBlocks)): Target block index for each source block; is initialized when entering the source block
         blocks % (cell(1,nBlocks) of integer(1,\*)): Blocks of the partition, non-decreasing along the base
-        blockSize % (integer(1,nBlocks)): Block size
+        blockSize % (integer(1,domainSize)): Block size for each point in the domain
     end
 
     methods
@@ -22,12 +22,16 @@ classdef UnorderedPartitionStabilizer1 < replab.bsgs.Backtrack1
             assert(n == group.domainSize);
             % sort the blocks from the smallest to the biggest
             blocks = partition.blocks;
+            lengths = cellfun(@length, blocks);
+            mask = lengths > 1; % filter singleton blocks
+            blocks = blocks(mask);
+            lengths = lengths(mask);
             [~, I] = sort(cellfun(@length, blocks));
             blocks = blocks(I);
             sourceBlockIndex = zeros(1, n);
             base = zeros(1, 0);
             nB = length(blocks);
-            blockSize = zeros(1, nB);
+            blockSize = zeros(1, n);
             for i = 1:nB
                 block = blocks{i};
                 blockSize(block) = length(block);

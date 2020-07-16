@@ -563,7 +563,7 @@ classdef PermutationGroup < replab.FiniteGroup
             subchain = replab.bsgs.Backtrack(c, prop, tests, []);
             subchain = subchain.subgroup;
             sub = replab.PermutationGroup.fromChain(subchain, self.type);
-            sub1 = replab.bsgs.UnorderedPartitionStabilizer1(self, partition, [], true).subgroup;
+            sub1 = replab.bsgs.UnorderedPartitionStabilizer1(self, partition, [], true).subgroup; % DEBUG
             assert(sub == sub1);
         end
 
@@ -613,6 +613,9 @@ classdef PermutationGroup < replab.FiniteGroup
             subchain = replab.bsgs.Backtrack(c, prop, tests, []);
             subchain = subchain.subgroup;
             sub = replab.PermutationGroup.fromChain(subchain, self.type);
+            s = replab.bsgs.OrderedPartitionStabilizer1(self, partition, [], true); % DEBUG
+            sub1 = s.subgroup;
+            assert(sub == sub1);
         end
 
         function P = findPermutationsTo(self, s, t, sStabilizer, tStabilizer)
@@ -669,40 +672,28 @@ classdef PermutationGroup < replab.FiniteGroup
 % $$$             end
         end
 
-        function s = setwiseStabilizer(self, set)
-        % Returns the subgroup that stabilizes the given set as a set
+        function s = pointwiseStabilizer(self, set)
+        % Returns the subgroup that stabilizes the given set pointwise
         %
-        % i.e. for this group ``G``, it returns ``H = {g \in G : g(set) = set}``
+        % i.e. for this group ``G``, it returns ``H = {g \in G : g(i) = i, i \in set}``.
         %
         % Example:
-        %   >>> G = replab.S(4).subgroup({[3 1 2 4] [1 4 2 3]});
-        %   >>> H = G.setwiseStabilizer([1 2]);
-        %   >>> H == replab.S(4).subgroup({[2 1 4 3]})
+        %   >>> S4 = replab.S(4);
+        %   >>> G = S4.pointwiseStabilizer([1 2]);
+        %   >>> G.order == 2
         %       1
         %
-        % Example:
-        %   >>> G = replab.S(10).subgroup({[1,3,2,10,9,8,6,5,7,4], [1,4,3,2,5,6,7,8,9,10]});
-        %   >>> H = G.setwiseStabilizer([2 3]);
-        %   >>> H.order
-        %       10
-        %
         % Args:
-        %   set (integer(1,\*)): The set to stabilize
+        %   set (integer(1,\*)): The set to stabilize pointwise
         %
         % Returns:
-        %   `+replab.PermutationGroup`: The subgroup that stabilizes the set
-            mask = false(1, self.domainSize);
-            mask(set) = true;
+        %   `+replab.PermutationGroup`: The subgroup that stabilizes the set pointwise
             c = self.chain.mutableCopy;
-            c.baseChange(set);
-            tests = cell(1, length(set));
-            for i = 1:length(tests)
-                tests{i} = @(g, data) deal(mask(g(set(i))), []);
-            end
-            prop = @(g) all(mask(g(set)));
-            subchain = replab.bsgs.Backtrack(c, prop, tests, []);
-            subchain = subchain.subgroup;
-            s = replab.PermutationGroup.fromChain(subchain, self.type);
+            c.baseChange(set, true);
+            l = find(~ismember(c.base, set), 1); % find the first base point that is not in set
+            c = c.chainFromLevel(l);
+            c.makeImmutable;
+            s = replab.PermutationGroup.fromChain(c, self.type);
         end
 
         function o = orbits(self)
@@ -876,6 +867,33 @@ classdef PermutationGroup < replab.FiniteGroup
     end
 
     methods(Static)
+
+        function G = permutingGivenPoints(n, points)
+        % Constructs the group that permutes the given points
+        %
+        % Essentially constructs the symmetric group of order ``|points|``.
+        %
+        % Args:
+        %   n (integer): Domain size of the created group
+        %   points (integer(1,\*)): Set of points being permuted
+        %
+        % Returns:
+        %   `.PermutationGroup`: The permutation group
+            switch length(points)
+              case {0, 1}
+                G = replab.PermutationGroup.trivial(n);
+              case 2
+                gen = 1:n;
+                gen(points) = fliplr(points);
+                G = replab.PermutationGroup.of(gen);
+              otherwise
+                gen1 = 1:n;
+                gen2 = 1:n;
+                gen1(points(1:2)) = gen1([points(2) points(1)]);
+                gen2(points) = gen2([points(2:end) points(1)]);
+                G = replab.PermutationGroup.of(gen1, gen2);
+            end
+        end
 
         function G = trivial(n)
         % Constructs the trivial permutation group acting on ``n`` points
