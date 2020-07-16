@@ -336,6 +336,42 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             sub = self.subgroupWithGenerators(elements(~mask), order);
         end
 
+        function sub = randomProperSubgroup(self, nSteps)
+        % Constructs a random proper subgroup of this group
+        %
+        % Args:
+        %   nSteps (integer, optional): How many steps of reduction to perform, default 1
+        %
+        % Returns:
+        %   `.FiniteGroup`
+            if nargin < 2 || isempty(nSteps)
+                nSteps = 1;
+            end
+            sub = self;
+            for i = 1:nSteps
+                if isprime(sub.order)
+                    if i == 1
+                        error('This cyclic group of prime order has no proper subgroup');
+                    else
+                        return
+                    end
+                end
+                candidate = sub;
+                while candidate.order == sub.order
+                    s1 = sub.sample;
+                    while sub.isIdentity(s1)
+                        s1 = sub.sample;
+                    end
+                    s2 = sub.sample;
+                    while sub.isIdentity(s2)
+                        s2 = sub.sample;
+                    end
+                    candidate = sub.subgroup({s1 s2});
+                end
+                sub = candidate;
+            end
+        end
+
         function sub = trivialSubgroup(self)
         % Returns the trivial subgroup of this group
         %
