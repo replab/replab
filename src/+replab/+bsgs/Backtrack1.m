@@ -70,9 +70,15 @@ classdef Backtrack1 < replab.Obj
             numRed0 = zeros(1, length(base0) + 1);
             i = 1;
             for i0 = 1:length(base0)
+                if i > length(base)
+                    break
+                end
                 while base(i) ~= base0(i0)
                     numRed0(i0) = numRed0(i0) + 1;
                     i = i + 1;
+                    if i > length(base)
+                        break
+                    end
                 end
                 i = i + 1;
             end
@@ -262,8 +268,11 @@ classdef Backtrack1 < replab.Obj
         % Same as `.test` except it performs the test on the reduced base `.base0`
         %
         % ... should be called for ``l0 == 0`` as well
-
             l = sum(self.numRed0(1:l0)) + l0; % index in the original base
+            if l > length(self.base)
+                ok = true;
+                return
+            end
             assert(l0 == 0 || self.base(l) == self.base0(l0));
             ok = true;
             if l0 >= 1

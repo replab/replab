@@ -661,15 +661,54 @@ classdef PermutationGroup < replab.FiniteGroup
             partition = replab.Partition.fromVector(vector);
             sub = self.orderedPartitionStabilizer(partition);
             % TODO: remove this
-% $$$             vector = vector(:).';
-% $$$             v = unique(vector);
-% $$$             c = arrayfun(@(x) sum(vector == x), v);
-% $$$             [~, I] = sort(c);
-% $$$             v = v(I);
-% $$$             sub = self;
-% $$$             for i = v
-% $$$                 sub = sub.setwiseStabilizer(find(vector == i));
-% $$$             end
+        % $$$             vector = vector(:).';
+        % $$$             v = unique(vector);
+        % $$$             c = arrayfun(@(x) sum(vector == x), v);
+        % $$$             [~, I] = sort(c);
+        % $$$             v = v(I);
+        % $$$             sub = self;
+        % $$$             for i = v
+        % $$$                 sub = sub.setwiseStabilizer(find(vector == i));
+        % $$$             end
+        end
+
+        function s = setwiseStabilizer(self, set)
+        % Returns the subgroup that stabilizes the given set as a set
+        %
+        % i.e. for this group ``G``, it returns ``H = {g \in G : g(set) = set}``
+        %
+        % Example:
+        %   >>> G = replab.S(4).subgroup({[3 1 2 4] [1 4 2 3]});
+        %   >>> H = G.setwiseStabilizer([1 2]);
+        %   >>> H == replab.S(4).subgroup({[2 1 4 3]})
+        %       1
+        %
+        % Example:
+        %   >>> G = replab.S(10).subgroup({[1,3,2,10,9,8,6,5,7,4], [1,4,3,2,5,6,7,8,9,10]});
+        %   >>> H = G.setwiseStabilizer([2 3]);
+        %   >>> H.order
+        %       10
+        %
+        % Args:
+        %   set (integer(1,\*)): The set to stabilize
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The subgroup that stabilizes the set
+            mask = false(1, self.domainSize);
+            mask(set) = true;
+            c = self.chain.mutableCopy;
+            c.baseChange(set);
+            tests = cell(1, length(set));
+            for i = 1:length(tests)
+                tests{i} = @(g, data) deal(mask(g(set(i))), []);
+            end
+            prop = @(g) all(mask(g(set)));
+            subchain = replab.bsgs.Backtrack(c, prop, tests, []);
+            subchain = subchain.subgroup;
+            s = replab.PermutationGroup.fromChain(subchain, self.type);
+            s1 = replab.bsgs.SetwiseStabilizer1(self, set, [], true); % DEBUG
+            s2 = s1.subgroup;
+            assert(s == s2);
         end
 
         function s = pointwiseStabilizer(self, set)
