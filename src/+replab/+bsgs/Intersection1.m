@@ -10,11 +10,14 @@ classdef Intersection1 < replab.bsgs.Backtrack1
 
     methods
 
-        function self = Intersection1(group, other, debug)
-            if nargin < 3
+        function self = Intersection1(group, other, knownSubgroup, debug)
+            if nargin < 4 || isempty(debug)
                 debug = false;
             end
-            self@replab.bsgs.Backtrack1(group.lexChain, group.lexChain.base, []);
+            if nargin < 3 || isempty(knownSubgroup)
+                knownSubgroup = group.trivialSubgroup;
+            end
+            self@replab.bsgs.Backtrack1(group.lexChain, group.lexChain.base, knownSubgroup.lexChain, debug);
             c = other.lexChain.mutableCopy;
             c.baseChange(group.lexChain.base);
             c.makeImmutable;

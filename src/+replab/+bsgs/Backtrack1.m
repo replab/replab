@@ -5,14 +5,14 @@ classdef Backtrack1 < replab.Str
         degree % (integer): Permutation group degree
         group % (`.Chain`): Group to search in
         knownSubgroup % (`.Chain`): Known subgroup of the searched for subgroup
-        baseOrdering % (integer(1,domainSize+2)): Base ordering including two guard elements
 
         base % (integer(1,\*)): Prescribed base
         debug % (logical): Whether to do extra checks
 
         group0 % (`.Chain`): Stabilizer chain of `.group` following `.base` with redundant points removed
         base0 % (integer(1,\*)): Prescribed base with redundant points removed
-        numRed0 % (integer(1,\*)): Number of redundant points in the original base following each base point of base0
+        baseOrdering0 % (integer(1,domainSize+2)): Base ordering including two guard elements
+        numRed0 % (integer(1,\*)): Number of redundant points in the original base preceding each base point of base0; number at the end is the number of points *after* the last nonredundant point
 
         KinBase0 % (`.Chain`): Current mutable BSGS chain for the subgroup in base `.base0`
 
@@ -33,11 +33,6 @@ classdef Backtrack1 < replab.Str
                 debug = false;
             end
             self.knownSubgroup = knownSubgroup;
-            rest = sort(setdiff(1:degree, base));
-            baseOrdering = zeros(1, degree);
-            baseOrdering(base) = 1:length(base);
-            baseOrdering(rest) = length(base) + (1:length(rest));
-            self.baseOrdering = [baseOrdering degree+1 0];
             self.base = base;
             group0 = group.mutableCopy;
             group0.baseChange(base, true);
@@ -45,23 +40,24 @@ classdef Backtrack1 < replab.Str
             self.group0 = group0;
             base0 = group0.base;
             self.base0 = base0;
+            rest = sort(setdiff(1:degree, base0));
+            baseOrdering0 = zeros(1, degree);
+            baseOrdering0(base0) = 1:length(base0);
+            baseOrdering0(rest) = length(base0) + (1:length(rest));
+            self.baseOrdering0 = [baseOrdering0 degree+1 0];
             if group0.length == 0
                 return
             end
-            baseStart = 1;
-            while base(baseStart) ~= base0(1)
-                baseStart = baseStart + 1;
-            end
-            i = baseStart;
-            numRed0 = zeros(1, length(base0));
-            for i0 = 1:length(base0)-1
-                i = i + 1;
-                while base(i) ~= base0(i0+1)
+            numRed0 = zeros(1, length(base0) + 1);
+            i = 1;
+            for i0 = 1:length(base0)
+                while base(i) ~= base0(i0)
                     numRed0(i0) = numRed0(i0) + 1;
                     i = i + 1;
                 end
+                i = i + 1;
             end
-            numRed0(end) = length(base) - i;
+            numRed0(end) = length(base) - i + 1;
             self.numRed0 = numRed0;
             self.KinBase0 = [];
             if debug
@@ -78,65 +74,96 @@ classdef Backtrack1 < replab.Str
                 self.debug = false;
                 self.debugSet = [];
             end
+            % verify ordering of groups DEBUG
+            ch = group0;
+            while ch.length > 1
+                ch1 = ch.stabilizer(ch.B(1));
+                el1 = self.sortPermutations(ch1.allElements);
+                el = self.sortPermutations(ch.allElements);
+                assert(isequal(el(:,1:size(el1,2)), el1));
+                ch = ch1;
+            end
+            % END DEBUG
+        end
+
+        function c = comparePermutations(self, lhs, rhs)
+            diff = self.baseOrdering0(lhs(self.base0)) - self.baseOrdering0(rhs(self.base0))
+            ind = find(diff == 0, 1);
+            if isempty(ind)
+                c = 0;
+            else
+                c = sign(diff(ind));
+            end
+        end
+
+        function matrix = sortPermutations(self, matrix)
+            baseImages = matrix(self.base0, :);
+            sz = size(baseImages);
+            baseImages = reshape(self.baseOrdering0(baseImages), sz); % in case vectors are funny
+            [~, ind] = sortrows(baseImages');
+            matrix = matrix(:, ind);
         end
 
         function res = subgroup(self)
-            self.search(1);
+            self.search1(1);
             self.KinBase0.makeImmutable;
             res = replab.PermutationGroup.fromChain(self.KinBase0);
             self.KinBase0 = [];
         end
 
-        function search(self, s)
+        function search1(self, s)
         % Search ``G^s`` for the subgroup K of elements satisfying the property
         %
         % Args:
         %   s (integer): Level to search
-            if s == length(self.base0 + 1)
+            if s == length(self.base0) + 1
                 c = self.knownSubgroup.mutableCopy;
                 c.baseChange(self.base0);
                 assert(isequal(c.base, self.base0), 'Known subgroup is not a subgroup');
                 self.KinBase0 = c;
             else
-                self.search(s + 1);
+                self.search1(s + 1);
                 identity = 1:self.degree;
-                orbit = self.sort(self.group0.Delta{s});
-                %assert(isequal(self.KinBase0.base, self.base0));
-                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.KinBase0.S, self.baseOrdering);
+                % note: compared to Butler, page 101, Algorithm 1, we need to remove the base point itself
+                % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
+                orbit = self.sort(self.group0.Delta{s}(2:end));
+                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.KinBase0.S, self.baseOrdering0);
                 for gamma_s = orbit
                     cond1 = mask(gamma_s);
-                    cond2 = replab.bsgs.minimalInOrbit(self.degree, self.KinBase0.S, gamma_s, self.baseOrdering) == gamma_s;
+                    cond2 = replab.bsgs.minimalInOrbit(self.degree, self.KinBase0.S, gamma_s, self.baseOrdering0) == gamma_s;
                     assert(cond1 == cond2);
                     if mask(gamma_s)
-                        found = self.generate(s, s+1, self.group0.u(s, gamma_s));
+                        u = self.group0.u(s, gamma_s);
+                        found = self.generate1(s, s+1, self.group0.u(s, gamma_s));
                         if found
-                            mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.KinBase0.S, self.baseOrdering);
+                            mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.KinBase0.S, self.baseOrdering0);
+                            assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its K-orbit
                         end
                     end
                 end
             end
         end
 
-        function found = generate(self, s, i, prevG)
+        function found = generate1(self, s, i, prevG)
         % Generate the elements of ``G^s``
         %
         % Those elements have base image ``[gamma(1) ... gamma(i-1)] = [prevG(base0(1)) ... prevG(base0(i-1))]``
         % and they may have the required property.
         % If one is found then we extend ``K``, the subgroup of ``G^(s)`` of elements with property ``P`` that have
         % already been found, and return to search.
-            if i == length(self.base0 + 1)
+            if i == length(self.base0) + 1
                 found = self.prop(prevG);
                 if found
                     self.KinBase0.stripAndAddStrongGenerator(prevG);
-                    order = self.KinBase0.order;
                     self.KinBase0.randomizedSchreierSims([]);
-                    assert(self.KinBase0.order == order);
                 end
             else
-                orbit = self.group0.Delta{i};
-                for b = orbit
+                orbit_g = self.sort(prevG(self.group0.Delta{i}));
+                for gamma_i = orbit_g
+                    b = find(prevG == gamma_i);
                     u = self.group0.u(i, b);
-                    found = self.generate(s, i + 1, prevG(u));
+                    assert(prevG(u(self.base0(i))) == gamma_i);
+                    found = self.generate1(s, i + 1, prevG(u));
                     if found
                         return
                     end
@@ -144,19 +171,131 @@ classdef Backtrack1 < replab.Str
             end
         end
 
+        function search2(self, s)
+        % Search ``G^s`` for the subgroup K of elements satisfying the property
+        %
+        % Args:
+        %   s (integer): Level to search
+            if s == length(self.base0) + 1
+                c = self.knownSubgroup.mutableCopy;
+                c.baseChange(self.base0);
+                assert(isequal(c.base, self.base0), 'Known subgroup is not a subgroup');
+                self.KinBase0 = c;
+            else
+                self.search1(s + 1);
+                identity = 1:self.degree;
+                % note: compared to Butler, page 101, Algorithm 1, we need to remove the base point itself
+                % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
+                orbit = self.sort(self.group0.Delta{s}(2:end));
+                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.KinBase0.S, self.baseOrdering0);
+                for gamma_s = orbit
+                    cond1 = mask(gamma_s);
+                    cond2 = replab.bsgs.minimalInOrbit(self.degree, self.KinBase0.S, gamma_s, self.baseOrdering0) == gamma_s;
+                    assert(cond1 == cond2);
+                    if mask(gamma_s)
+                        u = self.group0.u(s, gamma_s);
+                        found = self.generate1(s, s+1, self.group0.u(s, gamma_s));
+                        if found
+                            mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.KinBase0.S, self.baseOrdering0);
+                            assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its K-orbit
+                        end
+                    end
+                end
+            end
+        end
+
+        function found = generate2(self, s, i, prevG)
+        % Generate the elements of ``G^s``
+        %
+        % Those elements have base image ``[gamma(1) ... gamma(i-1)] = [prevG(base0(1)) ... prevG(base0(i-1))]``
+        % and they may have the required property.
+        % If one is found then we extend ``K``, the subgroup of ``G^(s)`` of elements with property ``P`` that have
+        % already been found, and return to search.
+            if i == length(self.base0) + 1
+                found = self.prop(prevG);
+                if found
+                    self.KinBase0.stripAndAddStrongGenerator(prevG);
+                    self.KinBase0.randomizedSchreierSims([]);
+                end
+            else
+                orbit_g = self.sort(prevG(self.group0.Delta{i}));
+                for gamma_i = orbit_g
+                    b = find(prevG == gamma_i);
+                    u = self.group0.u(i, b);
+                    assert(prevG(u(self.base0(i))) == gamma_i);
+                    found = self.generate1(s, i + 1, prevG(u));
+                    if found
+                        return
+                    end
+                end
+            end
+        end
+
+        function ok = test0(self, l0, gPrev, ul)
+        % Tests if base images are possible at a given level
+        %
+        % Same as `.test` except it performs the test on the reduced base `.base0`
+        %
+        % ... should be called for ``l0 == 0`` as well
+
+            l = sum(self.numRed0(1:l0)) + l0; % index in the original base
+            assert(l0 == 0 || self.base(l) == self.base0(l0));
+            ok = true;
+            if l0 >= 1
+                ok = self.test(l, gPrev, ul);
+            else
+                ok = true;
+            end
+            nR = self.numRed0(l0);
+            if ~ok || nR == 0
+                return
+            end
+            g = gPrev(ul);
+            u = 1:length(u); % identity
+            for i = 1:self.numRed0(l0)
+                ok = self.test(l + 1, g, u);
+                if ~ok
+                    return
+                end
+            end
+        end
+
+
+        function ok = test(self, l, gPrev, ul)
+        % Tests if base images are possible at a given level
+        %
+        % Note that the element ``g`` in Holt is given by ``g = compose(gPrev, ul)``.
+        %
+        % This tests if there is any element in the searched set that has the partial base image
+        % ``[g(base(1)) ... g(base(l))]``. False negatives are possible, but not false positives.
+        %
+        % Note that those tests are performed in the context of the original base `.base`, and thus
+        % ``l`` has to be understood in that context. The code transparently handles the removed base
+        % points by calling the tests according to the original conventionx.
+        %
+        % Args:
+        %   l (integer): Level of the test
+        %   gPrev (permutation): Partial product ``u1 ... u{l-1}``
+        %   ul (permutation): Current transversal element
+        %
+        % Returns:
+        %   logical: False if there no element in the searched set that has the current partial base image
+            error('Abstract');
+        end
+
         function l = greaterThan(self, x, y)
         % Point comparison using the base ordering
-            l = self.baseOrdering(x) > self.baseOrdering(y);
+            l = self.baseOrdering0(x) > self.baseOrdering0(y);
         end
 
         function l = lessThan(self, x, y)
         % Point comparison using the base ordering
-            l = self.baseOrdering(x) < self.baseOrdering(y);
+            l = self.baseOrdering0(x) < self.baseOrdering0(y);
         end
 
         function t = sort(self, s)
         % Sorts a sequence of points under the ordering
-            [~, ind] = sort(self.baseOrdering(s));
+            [~, ind] = sort(self.baseOrdering0(s));
             t = s(ind);
         end
 
@@ -165,24 +304,8 @@ classdef Backtrack1 < replab.Str
             error('Abstract');
         end
 
-        function ok = test(self, l, prev, ul)
-        % Tests if base images are possible at a given level
-        %
-        % Note that the element ``g`` in Holt is given by ``g = compose(prev, ul)``.
-        %
-        % This tests if there is any element in the searched set that has the partial base image
-        % ``[g(base(1)) ... g(base(l))]``. False negatives are possible, but not false positives.
-
-        % Args:
-        %   l (integer): Level of the test
-        %   prev (permutation): Partial product ``u1 ... u{l-1}``
-        %   ul (permutation): Current transversal element
-        %
-        % Returns:
-        %   logical: False if there no element in the searched set that has the current partial base image
-            error('Abstract');
-        end
-
     end
+
+end
 
 end
