@@ -563,6 +563,8 @@ classdef PermutationGroup < replab.FiniteGroup
             subchain = replab.bsgs.Backtrack(c, prop, tests, []);
             subchain = subchain.subgroup;
             sub = replab.PermutationGroup.fromChain(subchain, self.type);
+            sub1 = replab.bsgs.UnorderedPartitionStabilizer1(self, partition, [], true).subgroup;
+            assert(sub == sub1);
         end
 
         function sub = orderedPartitionStabilizer(self, partition)

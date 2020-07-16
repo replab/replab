@@ -1,4 +1,4 @@
-classdef Backtrack1 < replab.Str
+classdef Backtrack1 < replab.Obj
 
     properties
 
@@ -16,10 +16,27 @@ classdef Backtrack1 < replab.Str
 
         KinBase0 % (`.Chain`): Current mutable BSGS chain for the subgroup in base `.base0`
 
-        debugSet % (`+replab.+perm.Set`): Set of searched elements, used for debugging
     end
 
     methods
+
+        function s = resultSet(self)
+        % Computes explicitly the result set
+        %
+        % Returns:
+        %   `+replab.+perm.Set`: Set of searched elements, used for debugging
+            s = self.cached('resultSet', @() self.computeResultSet);
+        end
+
+        function s = computeResultSet(self)
+            s = replab.perm.Set(self.degree);
+            E = self.group0.allElements;
+            for i = 1:size(E, 2)
+                if self.prop(E(:,i)')
+                    s.insert(E(:,i));
+                end
+            end
+        end
 
         function self = Backtrack1(group, base, knownSubgroup, debug)
             degree = group.n;
@@ -29,8 +46,10 @@ classdef Backtrack1 < replab.Str
                 knownSubgroup = replab.bsgs.Chain(degree);
                 knownSubgroup.makeImmutable;
             end
-            if nargin < 4
-                debug = false;
+            if nargin < 4 || isempty(debug)
+                self.debug = false;
+            else
+                self.debug = debug;
             end
             self.knownSubgroup = knownSubgroup;
             self.base = base;
@@ -60,20 +79,6 @@ classdef Backtrack1 < replab.Str
             numRed0(end) = length(base) - i + 1;
             self.numRed0 = numRed0;
             self.KinBase0 = [];
-            if debug
-                self.debug = true;
-                debugSet = replab.perm.Set(degree);
-                E = group0.allElements;
-                for i = 1:size(E, 2)
-                    if self.prop(E(:,i)')
-                        debugSet.insert(E(:,i)');
-                    end
-                end
-                self.debugSet = debugSet;
-            else
-                self.debug = false;
-                self.debugSet = [];
-            end
             % verify ordering of groups DEBUG
             ch = group0;
             while ch.length > 1
@@ -240,6 +245,17 @@ classdef Backtrack1 < replab.Str
             end
         end
 
+        function verifyPartialBaseUnsatisfied(self, l, gPrev, ul)
+            pb = self.base(1:l);
+            gamma = gPrev(ul(pb));
+            matrix = self.resultSet.matrix;
+            for i = 1:l
+                mask = matrix(self.base(i), :) == gamma(i);
+                matrix = matrix(:, mask);
+            end
+            assert(isempty(matrix));
+        end
+
         function ok = test0(self, l0, gPrev, ul)
         % Tests if base images are possible at a given level
         %
@@ -255,20 +271,24 @@ classdef Backtrack1 < replab.Str
             else
                 ok = true;
             end
-            nR = self.numRed0(l0+1);
-            if ~ok || nR == 0
-                return
+            if ~ok && self.debug
+                self.verifyPartialBaseUnsatisfied(l, gPrev, ul);
             end
-            g = gPrev(ul);
-            u = 1:length(ul); % identity
-            for i = 1:nR
-                ok = self.test(l + i, g, u);
-                if ~ok
-                    return
+            nR = self.numRed0(l0+1);
+            if nR > 0 && ok
+                g = gPrev(ul);
+                u = 1:length(ul); % identity
+                for i = 1:nR
+                    ok = self.test(l + i, g, u);
+                    if ~ok
+                        if self.debug
+                            self.verifyPartialBaseUnsatisfied(l + i, g, u);
+                        end
+                        break
+                    end
                 end
             end
         end
-
 
         function ok = test(self, l, gPrev, ul)
         % Tests if base images are possible at a given level
