@@ -31,6 +31,7 @@ function mask = minimalMaskInOrbit(degree, generators, baseOrdering)
                     done(toCheck) = true;
                     [minVal1, minInd1] = min(baseOrdering(toCheck));
                     if minVal1 < minVal
+                        minVal = minVal1;
                         minInd = toCheck(minInd1);
                     end
                 end
