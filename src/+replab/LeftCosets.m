@@ -20,7 +20,7 @@ classdef LeftCosets < replab.Cosets
             self@replab.Cosets(group, subgroup);
         end
 
-        function s = cardinality(self)
+        function s = size(self)
         % Returns the number of left cosets
         %
         % Returns:
@@ -28,17 +28,6 @@ classdef LeftCosets < replab.Cosets
             s = self.group.order / self.subgroup.order;
             assert(s <= 2^53 - 1);
             s = double(s);
-        end
-
-        function C = coset(self, g)
-        % Returns the left coset containing the given element
-        %
-        % Args:
-        %   g (element of `.group`): Group element
-        %
-        % Returns:
-        %   `+replab.LeftCoset`: Left coset
-            C = replab.LeftCoset(self.subgroup, self.cosetRepresentative(g));
         end
 
         function t = cosetRepresentative(self, g)
@@ -71,7 +60,7 @@ classdef LeftCosets < replab.Cosets
         function T = computeTransversal(self)
         % See `.transversal`
             M = replab.bsgs.Cosets.leftTransversalAsMatrix(self.groupChain, self.subgroupChain);
-            T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:self.cardinality, 'uniform', 0);
+            T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:double(self.size), 'uniform', 0);
         end
 
         function C = elements(self)
@@ -80,7 +69,7 @@ classdef LeftCosets < replab.Cosets
         % Returns:
         %   cell(1,\*) of `+replab.LeftCoset`: Set of left cosets
             T = self.transversal;
-            C = cellfun(@(t) replab.LeftCoset(self.subgroup, t), T, 'uniform', 0);
+            C = cellfun(@(t) replab.LeftCoset(self.subgroup, t, self.group), T, 'uniform', 0);
             assert(isscalar(C{1}));
         end
 

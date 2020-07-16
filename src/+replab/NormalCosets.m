@@ -13,19 +13,8 @@ classdef NormalCosets < replab.LeftCosets & replab.RightCosets
             self@replab.RightCosets(group, subgroup);
         end
 
-        function s = cardinality(self)
+        function s = size(self)
             s = size@replab.LeftCosets(self);
-        end
-
-        function C = coset(self, g)
-        % Returns the normal coset containing the given element
-        %
-        % Args:
-        %   g (element of `.group`): Group element
-        %
-        % Returns:
-        %   `+replab.NormalCoset`: Normal coset
-            C = replab.NormalCoset(self.group, self.subgroup, self.cosetRepresentative(g));
         end
 
         function t = cosetRepresentative(self, g)
@@ -45,7 +34,7 @@ classdef NormalCosets < replab.LeftCosets & replab.RightCosets
         %
         % Returns:
         %   cell(1,\*) of `+replab.NormalCoset`: Set of normal cosets
-            C = cellfun(@(t) replab.NormalCoset(self.group, self.subgroup, t), self.transversal, 'uniform', 0);
+            C = cellfun(@(t) replab.NormalCoset(self.subgroup, t, self.group), self.transversal, 'uniform', 0);
         end
 
     end

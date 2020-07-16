@@ -16,6 +16,6 @@ function test_centralizer_order
     for i = 1:length(classes)
         cc1 = classes{i};
         cc2 = replab.ConjugacyClass(G, cc1(:,1)');
-        assert(size(cc1, 2) == cc2.cardinality);
+        assert(size(cc1, 2) == cc2.size);
     end
 end

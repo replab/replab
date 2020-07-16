@@ -43,7 +43,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Group properties
 
-        function s = cardinality(self)
+        function s = size(self)
             s = self.order;
         end
 
@@ -435,7 +435,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 l = false;
                 for i = 1:self.nGenerators
                     g = self.generator(i);
-                    if ~self.contains(self.leftConjugate(element, g))
+                    if ~self.contains(self.type.leftConjugate(element, g))
                         return
                     end
                 end
@@ -592,7 +592,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 subi = self.generator(i);
                 for j = 1:rhs.nGenerators
                     rhsj = rhs.generator(j);
-                    if ~self.contains(self.leftConjugate(rhsj, subi))
+                    if ~self.contains(self.type.leftConjugate(rhsj, subi))
                         res = false;
                         return
                     end

@@ -206,7 +206,7 @@ classdef PermutationGroup < replab.FiniteGroup
                         tries = 0;
                         cl = replab.ConjugacyClass(self, g);
                         C{1,end+1} = cl;
-                        remains = remains - cl.cardinality;
+                        remains = remains - cl.size;
                     end
                 end
             end
@@ -276,14 +276,31 @@ classdef PermutationGroup < replab.FiniteGroup
         % Construction of groups
 
         function res = closure(self, rhs)
-            c = self.chain.mutableCopy;
             if isa(rhs, 'replab.PermutationGroup')
+                % if one group contains the other
+                if self.isSubgroupOf(rhs)
+                    res = rhs;
+                    return
+                end
+                if rhs.isSubgroupOf(self)
+                    res = self;
+                    return
+                end
+                % otherwise do the computation
+                c = self.chain.mutableCopy;
                 for i = 1:rhs.nGenerators
                     if c.stripAndAddStrongGenerator(rhs.generator(i))
                         c.randomizedSchreierSims([]);
                     end
                 end
             else
+                % if the group already contains the element
+                if self.contains(rhs)
+                    res = self;
+                    return
+                end
+                % otherwise do the computation
+                c = self.chain.mutableCopy;
                 if c.stripAndAddStrongGenerator(rhs)
                     c.randomizedSchreierSims([]);
                 end

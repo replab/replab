@@ -10,13 +10,13 @@ classdef FiniteSet < replab.Domain
 % the lexicographic order.
 
     properties (SetAccess = protected)
-        type % (`.FiniteSet`): Set of all elements of the same type as this set; satisfies ``type.type == type``
+        type % (`.FiniteGroup`): Set of all elements of the same type as this set; satisfies ``type.type == type``
         representative % (element of `.type`): Distinguished member of this set; if the set is empty, this value is arbitrary
     end
 
     methods
 
-        function s = cardinality(self)
+        function s = size(self)
         % Returns the size of this set
         %
         % Returns:
@@ -27,7 +27,7 @@ classdef FiniteSet < replab.Domain
         function b = contains(self, el)
         % Tests whether this set contains the given element
         %
-        % The element must be part of the `.type` set.
+        % The element must be part of ``self.parent.type``.
         %
         % Args:
         %   el (element of `.type`): Element to test for membership
@@ -64,7 +64,7 @@ classdef FiniteSet < replab.Domain
         %
         % Returns:
         %   logical: True if the groups have compatible types
-            res = self.type.hasSameTypeAs(rhs.type); % we delegate to the types themselves
+            res = self.parent.type.hasSameTypeAs(rhs.parent.type); % we delegate to the types themselves
         end
 
     end
@@ -72,13 +72,7 @@ classdef FiniteSet < replab.Domain
     methods % Implementations
 
         function res = mtimes(lhs, rhs)
-            if isa(lhs, 'replab.FiniteSet')
-                type = lhs.type;
-            else
-                assert(isa(rhs, 'replab.FiniteSet'));
-                type = rhs.type;
-            end
-            res = replab.FiniteSet.multiply(type, lhs, rhs);
+            res = replab.FiniteSet.multiply(lhs, rhs);
         end
 
     end
@@ -109,7 +103,7 @@ classdef FiniteSet < replab.Domain
             assert(lhs.isNormalizedBy(rhs) || rhs.isNormalizedBy(lhs), 'This product requires a normalization condition');
         end
 
-        function res = multiply(type, lhs, rhs)
+        function res = multiply(lhs, rhs)
             switch [replab.FiniteSet.shortType(lhs) replab.FiniteSet.shortType(rhs)]
               case 'NG'
                 res = replab.DoubleCoset.make(lhs.group, lhs.representative, rhs);
@@ -124,13 +118,13 @@ classdef FiniteSet < replab.Domain
               case 'EG'
                 res = rhs.leftCoset(lhs);
               case 'NE'
-                res = lhs.group.rightCoset(type.compose(lhs.representative, rhs));
+                res = lhs.group.rightCoset(lhs.group.type.compose(lhs.representative, rhs));
               case 'EN'
-                res = rhs.group.leftCoset(type.compose(lhs, rhs.representative));
+                res = rhs.group.leftCoset(rhs.group.type.compose(lhs, rhs.representative));
               case 'RE'
-                res = lhs.group.rightCoset(type.compose(lhs.representative, rhs));
+                res = lhs.group.rightCoset(lhs.group.type.compose(lhs.representative, rhs));
               case 'EL'
-                res = rhs.group.leftCoset(type.compose(lhs, rhs.representative));
+                res = rhs.group.leftCoset(rhs.group.type.compose(lhs, rhs.representative));
               otherwise
                 error('Invalid product');
                 % other cases are invalid

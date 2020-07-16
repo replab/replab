@@ -8,23 +8,30 @@ classdef LeftCoset < replab.Coset
 
     methods
 
-        function self = LeftCoset(group, canonicalRepresentative)
+        function self = LeftCoset(group, canonicalRepresentative, parent)
+            self.type = parent.type;
+            self.parent = parent;
+            self.isomorphism = parent.niceMorphism;
             self.group = group;
             self.representative = canonicalRepresentative;
-            self.isomorphism = group.niceMorphism;
-            self.groupChain = self.isomorphism.image.lexChain;
-            self.type = group.type;
+            self.groupChain = parent.niceMorphism.imageGroup(group).lexChain;
         end
 
     end
 
     methods (Static)
 
-        function l = make(group, element)
-            iso = group.niceMorphism;
-            chain = iso.image.lexChain;
-            permRep = replab.bsgs.Cosets.leftRepresentative(iso.image.lexChain, element);
-            l = replab.LeftCoset(group, iso.preimageElement(permRep));
+        function l = make(group, element, parent)
+            if nargin < 3 || isempty(parent)
+                parent = group.closure(element);
+            end
+            if group.isNormalizedBy(element)
+                l = replab.NormalCoset(group, element, parent);
+                return
+            end
+            chain = parent.niceMorphism.imageGroup(group).lexChain;
+            permRep = replab.bsgs.Cosets.leftRepresentative(chain, parent.niceMorphism.imageElement(element));
+            l = replab.LeftCoset(group, parent.niceMorphism.preimageElement(permRep), parent);
         end
 
     end
@@ -33,7 +40,7 @@ classdef LeftCoset < replab.Coset
 
         % FiniteSet
 
-        function s = cardinality(self)
+        function s = size(self)
         % Returns the size of this coset
         %
         % Returns:

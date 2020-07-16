@@ -5,33 +5,35 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
 
     methods
 
-        function self = NormalCoset(group, canonicalRepresentative)
-            self@replab.LeftCoset(group, canonicalRepresentative);
-            self@replab.RightCoset(group, canonicalRepresentative);
+        function self = NormalCoset(group, canonicalRepresentative, parent)
+            self@replab.LeftCoset(group, canonicalRepresentative, parent);
+            self@replab.RightCoset(group, canonicalRepresentative, parent);
         end
 
     end
 
     methods (Static)
 
-        function c = make(group, element)
-            iso = group.niceMorphism;
-            chain = iso.image.lexChain;
+        function c = make(group, element, parent)
+            if nargin < 3 || isempty(parent)
+                parent = group.closure(element);
+            end
+            chain = parent.niceMorphism.imageGroup(group).lexChain;
+            permRep = replab.bsgs.Cosets.leftRepresentative(chain, parent.niceMorphism.imageElement(element));
             % left representative is faster
-            permRep = replab.bsgs.Cosets.leftRepresentative(iso.image.lexChain, element);
-            c = replab.NormalCoset(group, iso.preimageElement(permRep));
+            c = replab.NormalCoset(group, parent.niceMorphism.preimageElement(permRep), parent);
         end
 
     end
 
     methods
 
-        function s = cardinality(self)
+        function s = size(self)
         % Returns the size of this coset
         %
         % Returns:
         %   vpi: Coset size
-            s = cardinality@replab.LeftCoset(self);
+            s = size@replab.LeftCoset(self);
         end
 
         function b = contains(self, el)

@@ -124,8 +124,24 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         function res1 = closure(self, obj)
             if isa(obj, 'replab.FiniteGroup')
+                % if one group contains the other
+                if self.isSubgroupOf(obj)
+                    res1 = obj;
+                    return
+                end
+                if obj.isSubgroup(self)
+                    res1 = self;
+                    return
+                end
+                % otherwise do the computation
                 res = self.niceGroup.closure(self.type.niceMorphism.imageGroup(obj));
             else
+                % if the group already contains the element
+                if self.contains(obj)
+                    res1 = self;
+                    return
+                end
+                % otherwise do the computation
                 res = self.niceGroup.closure(self.type.niceImage(obj));
             end
             res1 = self.type.niceMorphism.preimageGroup(res);
