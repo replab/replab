@@ -105,7 +105,9 @@ classdef Backtrack1 < replab.Str
         end
 
         function res = subgroup(self)
-            self.search1(1);
+            disp('start');
+            self.test0(0, 1:self.degree, 1:self.degree);
+            self.search2(1);
             self.KinBase0.makeImmutable;
             res = replab.PermutationGroup.fromChain(self.KinBase0);
             self.KinBase0 = [];
@@ -182,8 +184,10 @@ classdef Backtrack1 < replab.Str
                 assert(isequal(c.base, self.base0), 'Known subgroup is not a subgroup');
                 self.KinBase0 = c;
             else
-                self.search1(s + 1);
                 identity = 1:self.degree;
+                ok = self.test0(s, identity, identity);
+                assert(ok); % for now, when looking for a subgroup
+                self.search2(s + 1);
                 % note: compared to Butler, page 101, Algorithm 1, we need to remove the base point itself
                 % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
                 orbit = self.sort(self.group0.Delta{s}(2:end));
@@ -194,10 +198,13 @@ classdef Backtrack1 < replab.Str
                     assert(cond1 == cond2);
                     if mask(gamma_s)
                         u = self.group0.u(s, gamma_s);
-                        found = self.generate1(s, s+1, self.group0.u(s, gamma_s));
-                        if found
-                            mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.KinBase0.S, self.baseOrdering0);
-                            assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its K-orbit
+                        ok = self.test0(s, identity, u);
+                        if ok
+                            found = self.generate2(s, s+1, self.group0.u(s, gamma_s));
+                            if found
+                                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.KinBase0.S, self.baseOrdering0);
+                                assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its K-orbit
+                            end
                         end
                     end
                 end
@@ -222,12 +229,15 @@ classdef Backtrack1 < replab.Str
                 for gamma_i = orbit_g
                     b = find(prevG == gamma_i);
                     u = self.group0.u(i, b);
-                    assert(prevG(u(self.base0(i))) == gamma_i);
-                    found = self.generate1(s, i + 1, prevG(u));
-                    if found
-                        return
+                    if self.test0(i, prevG, u)
+                        assert(prevG(u(self.base0(i))) == gamma_i);
+                        found = self.generate2(s, i + 1, prevG(u));
+                        if found
+                            return
+                        end
                     end
                 end
+                found = false;
             end
         end
 
@@ -246,14 +256,14 @@ classdef Backtrack1 < replab.Str
             else
                 ok = true;
             end
-            nR = self.numRed0(l0);
+            nR = self.numRed0(l0+1);
             if ~ok || nR == 0
                 return
             end
             g = gPrev(ul);
-            u = 1:length(u); % identity
-            for i = 1:self.numRed0(l0)
-                ok = self.test(l + 1, g, u);
+            u = 1:length(ul); % identity
+            for i = 1:nR
+                ok = self.test(l + i, g, u);
                 if ~ok
                     return
                 end
@@ -305,7 +315,5 @@ classdef Backtrack1 < replab.Str
         end
 
     end
-
-end
 
 end
