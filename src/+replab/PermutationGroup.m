@@ -452,7 +452,7 @@ classdef PermutationGroup < replab.FiniteGroup
             if isempty(b)
                 c = [];
             else
-                c = self.leftCoset(sCentralizer, b);
+                c = sCentralizer.leftCoset(b, self);
             end
         end
 
@@ -642,7 +642,7 @@ classdef PermutationGroup < replab.FiniteGroup
             end
             prop = @(p) isequal(s, t(p));
             p = replab.bsgs.backtrackSearch(chain, prop, tests, [], tStabilizer.chain, sStabilizer.chain);
-            P = self.leftCoset(sStabilizer, p);
+            P = sStabilizer.leftCoset(p, self);
         end
 
         function sub = vectorStabilizer(self, vector)

@@ -443,18 +443,22 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-        function c = normalCoset(self, element)
+        function c = normalCoset(self, element, parent)
         % Returns a normal coset
         %
         % Returns the set ``element * self == self * element``.
         %
         % Args:
         %   element (group element): Group element
+        %   parent (`.FiniteGroup`, optional): Group containing both ``self`` and ``element``
         %
         % Returns:
         %   `+replab.NormalCoset`: The constructed normal coset
             assert(self.isNormalizedBy(element), 'The given element does not define a normal coset');
-            c = replab.NormalCoset.make(self, element);
+            if nargin < 3 || isempty(parent)
+                parent = [];
+            end
+            c = replab.NormalCoset.make(self, element, parent);
         end
 
         function c = normalCosetsOf(self, subgroup)
@@ -466,17 +470,21 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             c = replab.NormalCosets(self, subgroup);
         end
 
-        function c = rightCoset(self, element)
+        function c = rightCoset(self, element, parent)
         % Returns a right coset
         %
         % Returns the set ``self * element``.
         %
         % Args:
         %   element (group element): Group element
+        %   parent (`.FiniteGroup`, optional): Group containing both ``self`` and ``element``
         %
         % Returns:
         %   `+replab.RightCoset`: The constructed right coset
-            c = replab.RightCoset.make(self, element);
+            if nargin < 3 || isempty(parent)
+                parent = [];
+            end
+            c = replab.RightCoset.make(self, element, parent);
         end
 
         function c = rightCosetsOf(self, subgroup)
@@ -495,17 +503,21 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             c = supergroup.rightCosetsOf(self);
         end
 
-        function c = leftCoset(self, element)
+        function c = leftCoset(self, element, parent)
         % Returns a left coset
         %
         % Returns the set ``element * self``.
         %
         % Args:
         %   element (group element): Group element
+        %   parent (`.FiniteGroup`, optional): Group containing both ``self`` and ``element``
         %
         % Returns:
         %   `+replab.LeftCoset`: The constructed right coset
-            c = replab.LeftCoset.make(self, element);
+            if nargin < 3 || isempty(parent)
+                parent = [];
+            end
+            c = replab.LeftCoset.make(self, element, parent);
         end
 
         function c = leftCosetsOf(self, subgroup)
