@@ -2,97 +2,159 @@ classdef Backtrack1 < replab.Obj
 % Performs backtracking search among the group elements
 %
 % It attempts to reduce the search by considering only minimal elements in
-% the double coset ``H g K``
+% the double coset ``H g K`` of a group ``G``.
+
     properties
 
         degree % (integer): Permutation group degree
-        group % (`.Chain`): Group to search in
-        knownSubgroup % (`.Chain`): Known subgroup of the searched for subgroup
+        G % (`.PermutationGroup`): Group to search in
+        H % (`.PermutationGroup`): Right cosets group
+        K % (`.PermutationGroup`): Left cosets group
 
         partialBase % (integer(1,\*)): Prescribed base
-        base % (integer(1,\*)): Actual base
-        orbitSizes % (integer(1,\*)): Orbit sizes in the prescribed base
-        debug % (logical): Whether to do extra checks
+        base % (integer(1,\*)): Actual base, starts with `.partialBase`
+        orbitSizes % (integer(1,\*)): Orbit sizes corresponding to `.base`
 
-        group0 % (`.Chain`): Stabilizer chain of `.group` following `.base` with redundant points removed
+        Gchain0 % (`.Chain`): Stabilizer chain of `.group` following `.base` with redundant points removed
         base0 % (integer(1,\*)): Prescribed base with redundant points removed
         baseOrdering0 % (integer(1,domainSize+2)): Base ordering including two guard elements
         numRed0 % (integer(1,\*)): Number of redundant points in the original base preceding each base point of base0; number at the end is the number of points *after* the last nonredundant point
 
-        HinBase0 % (`.Chain`): Current mutable BSGS chain for the subgroup in base `.base0`
+        HchainInBase0 % (`.Chain`): Current mutable BSGS chain for the subgroup in base `.base0`
+
+        debug % (logical): Whether to do extra checks
 
     end
 
-    methods
+    methods (Static)
 
-        function self = Backtrack1(group, partialBase, knownSubgroup, debug)
-            degree = group.n;
-            self.degree = degree;
-            self.group = group;
-            if nargin < 3 || isempty(knownSubgroup)
-                knownSubgroup = replab.bsgs.Chain(degree);
-                knownSubgroup.makeImmutable;
-            end
-            if nargin < 4 || isempty(debug)
-                self.debug = false;
-            else
-                self.debug = debug;
-            end
-            self.knownSubgroup = knownSubgroup;
-            group0 = group.mutableCopy;
-            group0.baseChange(partialBase, true);
-            group0.makeImmutable;
-            base = group0.base;
-            self.base = base;
-            self.group0 = group0;
-            base0 = group0.base;
-            self.base0 = base0;
-            rest = sort(setdiff(1:degree, base0));
-            baseOrdering0 = zeros(1, degree);
-            baseOrdering0(base0) = 1:length(base0);
-            baseOrdering0(rest) = length(base0) + (1:length(rest));
-            self.baseOrdering0 = [baseOrdering0 degree+1 0];
-            if group0.length == 0
-                return
-            end
-            numRed0 = zeros(1, length(base0) + 1);
+        function [numRed0 orbitSizes] = manageRedundantPoints(base, base0, orbitSizes0)
+        % Extract properties about a full base, from the data about a base with redundant points removed
+        %
+        % Args:
+        %   base (integer(1,k)): Full base
+        %   base0 (integer(1,k0)): Subset of ``base`` with redundant points removed
+        %   orbitSizes0 (integer(1,k0)): Orbit sizes corresponding to base0
+        %
+        % Returns
+        % -------
+        %   numRed0:
+        %     integer(1,k0+1): Number of redundant points preceding each base point, position ``k0+1`` counts the final redundant points
+        %   orbitSizes:
+        %     integer(1,k): Orbit sizes corresponding to ``base``
+            k0 = length(base0);
+            k = length(base);
+            numRed0 = zeros(1, k0 + 1);
             i = 1;
-            orbitSizes = zeros(1, length(base));
-            for i0 = 1:length(base0)
-                if i > length(base)
+            orbitSizes = zeros(1, k);
+            for i0 = 1:k0
+                if i > k
                     break
                 end
                 while base(i) ~= base0(i0)
                     orbitSizes(i) = 1;
                     numRed0(i0) = numRed0(i0) + 1;
                     i = i + 1;
-                    if i > length(base)
+                    if i > k
                         break
                     end
                 end
-                orbitSizes(i) = group0.orbitSize(i0);
+                orbitSizes(i) = orbitSizes(i0);
                 i = i + 1;
             end
-            while i <= length(base)
+            while i <= k
                 numRed0(end) = numRed0(end) + 1;
                 orbitSizes(i) = 1;
                 i = i + 1;
             end
-            verified = group.mutableCopy;
-            verified.baseChange(base, false);
-            assert(isequal(orbitSizes, verified.orbitSizes));
-            self.numRed0 = numRed0;
-            self.HinBase0 = [];
-            % verify ordering of groups DEBUG
-            ch = group0;
-            while ch.length > 1
-                ch1 = ch.stabilizer(ch.B(1));
-                el1 = self.sortPermutations(ch1.allElements);
-                el = self.sortPermutations(ch.allElements);
-                assert(isequal(el(:,1:size(el1,2)), el1));
-                ch = ch1;
+        end
+
+        function bo = computeBaseOrdering(degree, base)
+        % Returns a base ordering from a degree and given base
+            rest = sort(setdiff(1:degree, base));
+            bo = zeros(1, degree);
+            bo(base) = 1:length(base);
+            bo(rest) = length(base) + (1:length(rest));
+        end
+
+        function b = baseHasLexOrder(base)
+        % Returns true if the base points are increasing
+            b = all(base(2:end) > base(1:end-1));
+        end
+
+        function c = groupChainInBase(group, base, removeRedundant, immutable)
+        % Get a stabilizer chain for the given group in the given base
+        %
+        % Args:
+        %   group (`+replab.PermutationGroup`): Permutation group to get the stabilizer chain from
+        %   base (integer(1,\*)): Prescribed base
+        %   removeRedundant (logical): Whether to remove all redundant base points
+        %   immutable (logical): Whether to return an immutable chain or a fresh mutable copy
+
+            if replab.bsgs.Backtrack1.baseHasLexOrder(base)
+                c = group.lexChain.mutableCopy;
+            else
+                c = group.chain.mutableCopy;
             end
-            % END DEBUG
+            c.baseChange(base, removeRedundant);
+            if immutable
+                c.makeImmutable;
+            end
+        end
+
+    end
+
+
+    methods
+
+        function self = Backtrack1(G, partialBase, H, K, debug)
+
+            if nargin < 3 || isempty(H)
+                H = G.trivialSubgroup;
+            end
+            if nargin < 4 || isempty(K)
+                K = G.trivialSubgroup;
+            end
+            if nargin < 5 || isempty(debug)
+                debug = false;
+            else
+                debug = debug;
+            end
+
+            degree = G.domainSize;
+
+            % First block of properties
+            self.degree = degree;
+            self.G = G;
+            self.H = H;
+            self.K = K;
+
+            % compute reduced base and reconstruct properties of the prescribed base
+            Gchain0 = replab.bsgs.Backtrack1.groupChainInBase(G, partialBase, true, true);
+            base0 = Gchain0.base;
+            if isempty(partialBase)
+                base = base0;
+            else
+                firstNot = find(~ismember([base0 0], partialBase), 1);
+                base = [partialBase base0(firstNot:end)];
+            end
+            assert(length(unique(base)) == length(base));
+            assert(all(ismember(base0, base)));
+            [numRed0 orbitSizes] = replab.bsgs.Backtrack1.manageRedundantPoints(base, base0, Gchain0.orbitSizes);
+
+            % Second block of properties
+
+            self.partialBase = partialBase;
+            self.base = base;
+            self.orbitSizes = orbitSizes;
+            self.Gchain0 = Gchain0;
+            self.base0 = base0;
+            self.baseOrdering0 = [replab.bsgs.Backtrack1.computeBaseOrdering(degree, base0) degree+1 0];
+            self.numRed0 = numRed0;
+
+            self.HchainInBase0 = [];
+
+            self.debug = debug;
         end
 
         function s = resultSet(self)
@@ -105,7 +167,7 @@ classdef Backtrack1 < replab.Obj
 
         function s = computeResultSet(self)
             s = replab.perm.Set(self.degree);
-            E = self.group0.allElements;
+            E = self.Gchain0.allElements;
             for i = 1:size(E, 2)
                 if self.prop(E(:,i)')
                     s.insert(E(:,i));
@@ -132,105 +194,45 @@ classdef Backtrack1 < replab.Obj
         end
 
         function res = subgroup(self)
-            self.test0(0, 1:self.degree, 1:self.degree);
-            self.search2(1);
-            self.HinBase0.makeImmutable;
-            res = replab.PermutationGroup.fromChain(self.HinBase0);
-            self.HinBase0 = [];
-        end
-
-        function search1(self, s)
-        % Search ``G^s`` for the subgroup of elements satisfying the property
-        %
-        % Args:
-        %   s (integer): Level to search
-            if s == length(self.base0) + 1
-                c = self.knownSubgroup.mutableCopy;
-                c.baseChange(self.base0);
-                assert(isequal(c.base, self.base0), 'Known subgroup is not a subgroup');
-                self.HinBase0 = c;
-            else
-                self.search1(s + 1);
-                identity = 1:self.degree;
-                % note: compared to Butler, page 101, Algorithm 1, we need to remove the base point itself
-                % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
-                orbit = self.sort(self.group0.Delta{s}(2:end));
-                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
-                for gamma_s = orbit
-                    cond1 = mask(gamma_s);
-                    cond2 = replab.bsgs.minimalInOrbit(self.degree, self.HinBase0.S, gamma_s, self.baseOrdering0) == gamma_s;
-                    assert(cond1 == cond2);
-                    if mask(gamma_s)
-                        u = self.group0.u(s, gamma_s);
-                        found = self.generate1(s, s+1, self.group0.u(s, gamma_s));
-                        if found
-                            mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
-                            assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its H-orbit
-                        end
-                    end
-                end
-            end
-        end
-
-        function found = generate1(self, s, i, prevG)
-        % Generate the elements of ``G^s``
-        %
-        % Those elements have base image ``[gamma(1) ... gamma(i-1)] = [prevG(base0(1)) ... prevG(base0(i-1))]``
-        % and they may have the required property.
-        % If one is found then we extend the subgroup of ``G^(s)`` of elements with property ``P`` that have
-        % already been found, and return to search.
-            if i == length(self.base0) + 1
-                found = self.prop(prevG);
-                if found
-                    self.HinBase0.stripAndAddStrongGenerator(prevG);
-                    self.HinBase0.randomizedSchreierSims([]);
-                end
-            else
-                orbit_g = self.sort(prevG(self.group0.Delta{i}));
-                for gamma_i = orbit_g
-                    b = find(prevG == gamma_i);
-                    u = self.group0.u(i, b);
-                    assert(prevG(u(self.base0(i))) == gamma_i);
-                    found = self.generate1(s, i + 1, prevG(u));
-                    if found
-                        return
-                    end
-                end
-            end
+            self.search2(0);
+            self.HchainInBase0.makeImmutable;
+            res = replab.PermutationGroup.fromChain(self.HchainInBase0);
+            self.HchainInBase0 = [];
         end
 
         function search2(self, s)
         % Search ``G^s`` for the subgroup of elements satisfying the property
         %
+        % The call should start at level ``s = 0`` so the tests for the first redundant prescribed base points
+        % can run.
+        %
         % Args:
         %   s (integer): Level to search
-            if s == length(self.base0) + 1
-                c = self.knownSubgroup.mutableCopy;
-                c.baseChange(self.base0);
-                assert(isequal(c.base, self.base0), 'Known subgroup is not a subgroup');
-                self.HinBase0 = c;
+            identity = 1:self.degree;
+            if s == 0
+                self.test0(0, identity, identity);
+                self.search2(s + 1);
+            elseif s == length(self.base0) + 1
+                self.HchainInBase0 = replab.bsgs.Backtrack1.groupChainInBase(self.H, self.base0, false, false);
+                assert(isequal(self.HchainInBase0.base, self.base0), 'Known subgroup is not a subgroup');
             else
-                identity = 1:self.degree;
                 ok = self.test0(s, identity, identity);
                 assert(ok); % for now, when looking for a subgroup
                 self.search2(s + 1);
                 % note: compared to Butler, page 101, Algorithm 1, we need to remove the base point itself
                 % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
-                orbit = self.sort(self.group0.Delta{s}(2:end));
-                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
+                orbit = self.sort(self.Gchain0.Delta{s}(2:end));
+                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HchainInBase0.S, self.baseOrdering0);
                 for gamma_s = orbit
-                    cond1 = mask(gamma_s);
-                    cond2 = replab.bsgs.minimalInOrbit(self.degree, self.HinBase0.S, gamma_s, self.baseOrdering0) == gamma_s;
-                    assert(cond1 == cond2);
                     if mask(gamma_s)
-                        u = self.group0.u(s, gamma_s);
+                        u = self.Gchain0.u(s, gamma_s);
                         ok = self.test0(s, identity, u);
                         if ok
-                            found = self.generate2(s+1, self.group0.u(s, gamma_s));
+                            found = self.generate2(s+1, self.Gchain0.u(s, gamma_s));
                             if ~isempty(found)
-                                self.HinBase0.stripAndAddStrongGenerator(found);
-                                self.HinBase0.randomizedSchreierSims([]);
-                                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
+                                self.HchainInBase0.stripAndAddStrongGenerator(found);
+                                self.HchainInBase0.randomizedSchreierSims([]);
+                                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HchainInBase0.S, self.baseOrdering0);
                                 assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its H-orbit
                             end
                         end
@@ -260,10 +262,10 @@ classdef Backtrack1 < replab.Obj
                     found = [];
                 end
             else
-                orbit_g = self.sort(prevG(self.group0.Delta{i}));
+                orbit_g = self.sort(prevG(self.Gchain0.Delta{i}));
                 for gamma_i = orbit_g
                     b = find(prevG == gamma_i);
-                    u = self.group0.u(i, b);
+                    u = self.Gchain0.u(i, b);
                     if self.test0(i, prevG, u)
                         assert(prevG(u(self.base0(i))) == gamma_i);
                         found = self.generate2(i + 1, prevG(u));
@@ -275,80 +277,6 @@ classdef Backtrack1 < replab.Obj
                 found = [];
             end
         end
-
-        function search3(self, s)
-        % Search ``G^s`` for the subgroup of elements satisfying the property
-        %
-        % Args:
-        %   s (integer): Level to search
-            if s == length(self.base0) + 1
-                c = self.knownSubgroup.mutableCopy;
-                c.baseChange(self.base0);
-                assert(isequal(c.base, self.base0), 'Known subgroup is not a subgroup');
-                self.HinBase0 = c;
-            else
-                identity = 1:self.degree;
-                ok = self.test0(s, identity, identity);
-                assert(ok); % for now, when looking for a subgroup
-                self.search3(s + 1);
-                % note: compared to Butler, page 101, Algorithm 1, we need to remove the base point itself
-                % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
-                orbit = self.sort(self.group0.Delta{s}(2:end));
-                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
-                for gamma_s = orbit
-                    if mask(gamma_s)
-                        u = self.group0.u(s, gamma_s);
-                        ok = self.test0(s, identity, u);
-                        if ok
-                            found = self.generate3(s+1, self.group0.u(s, gamma_s));
-                            if ~isempty(found)
-                                self.HinBase0.stripAndAddStrongGenerator(found);
-                                self.HinBase0.randomizedSchreierSims([]);
-                                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
-                            end
-                        end
-                    end
-                end
-            end
-        end
-
-        function found = generate3(self, i, prevG)
-        % Generate the elements of ``G^s``
-        %
-        % Those elements have base image ``[gamma(1) ... gamma(i-1)] = [prevG(base0(1)) ... prevG(base0(i-1))]``
-        % and they may have the required property.
-        % If one is found then we extend the subgroup of ``G^(s)`` of elements with property ``P`` that have
-        % already been found, and return to search.
-        %
-        % Args:
-        %   i (integer): Level to search
-        %   prevG (permutation): Product ``u_1 ... u_{i-1}``
-        %
-        % Returns:
-        %   permutation or ``[]``: Element satisfying `.prop` if found, otherwise ``[]``
-            if i == length(self.base0) + 1
-                if self.prop(prevG);
-                    found = prevG;
-                else
-                    found = [];
-                end
-            else
-                orbit_g = self.sort(prevG(self.group0.Delta{i}));
-                for gamma_i = orbit_g
-                    b = find(prevG == gamma_i);
-                    u = self.group0.u(i, b);
-                    if self.test0(i, prevG, u)
-                        assert(prevG(u(self.base0(i))) == gamma_i);
-                        found = self.generate2(i + 1, prevG(u));
-                        if ~isempty(found)
-                            return
-                        end
-                    end
-                end
-                found = [];
-            end
-        end
-
 
         function verifyPartialBaseUnsatisfied(self, l, gPrev, ul)
             pb = self.base(1:l);
@@ -443,3 +371,65 @@ classdef Backtrack1 < replab.Obj
     end
 
 end
+
+
+% $$$         function search1(self, s)
+% $$$         % Search ``G^s`` for the subgroup of elements satisfying the property
+% $$$         %
+% $$$         % Args:
+% $$$         %   s (integer): Level to search
+% $$$             if s == length(self.base0) + 1
+% $$$                 c = self.knownSubgroup.mutableCopy;
+% $$$                 c.baseChange(self.base0);
+% $$$                 assert(isequal(c.base, self.base0), 'Known subgroup is not a subgroup');
+% $$$                 self.HinBase0 = c;
+% $$$             else
+% $$$                 self.search1(s + 1);
+% $$$                 identity = 1:self.degree;
+% $$$                 % note: compared to Butler, page 101, Algorithm 1, we need to remove the base point itself
+% $$$                 % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
+% $$$                 orbit = self.sort(self.group0.Delta{s}(2:end));
+% $$$                 mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
+% $$$                 for gamma_s = orbit
+% $$$                     cond1 = mask(gamma_s);
+% $$$                     cond2 = replab.bsgs.minimalInOrbit(self.degree, self.HinBase0.S, gamma_s, self.baseOrdering0) == gamma_s;
+% $$$                     assert(cond1 == cond2);
+% $$$                     if mask(gamma_s)
+% $$$                         u = self.group0.u(s, gamma_s);
+% $$$                         found = self.generate1(s, s+1, self.group0.u(s, gamma_s));
+% $$$                         if found
+% $$$                             mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
+% $$$                             assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its H-orbit
+% $$$                         end
+% $$$                     end
+% $$$                 end
+% $$$             end
+% $$$         end
+% $$$
+% $$$         function found = generate1(self, s, i, prevG)
+% $$$         % Generate the elements of ``G^s``
+% $$$         %
+% $$$         % Those elements have base image ``[gamma(1) ... gamma(i-1)] = [prevG(base0(1)) ... prevG(base0(i-1))]``
+% $$$         % and they may have the required property.
+% $$$         % If one is found then we extend the subgroup of ``G^(s)`` of elements with property ``P`` that have
+% $$$         % already been found, and return to search.
+% $$$             if i == length(self.base0) + 1
+% $$$                 found = self.prop(prevG);
+% $$$                 if found
+% $$$                     self.HinBase0.stripAndAddStrongGenerator(prevG);
+% $$$                     self.HinBase0.randomizedSchreierSims([]);
+% $$$                 end
+% $$$             else
+% $$$                 orbit_g = self.sort(prevG(self.group0.Delta{i}));
+% $$$                 for gamma_i = orbit_g
+% $$$                     b = find(prevG == gamma_i);
+% $$$                     u = self.group0.u(i, b);
+% $$$                     assert(prevG(u(self.base0(i))) == gamma_i);
+% $$$                     found = self.generate1(s, i + 1, prevG(u));
+% $$$                     if found
+% $$$                         return
+% $$$                     end
+% $$$                 end
+% $$$             end
+% $$$         end
+% $$$

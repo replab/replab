@@ -13,10 +13,11 @@ classdef OrderedPartitionStabilizer1 < replab.bsgs.Backtrack1
                 debug = false;
             end
             if nargin < 3 || isempty(knownSubgroup)
-                knownSubgroup = group.trivialSubgroup;
+                knownSubgroup = [];
             end
             n = partition.n;
             assert(n == group.domainSize);
+
             % sort the blocks from the smallest to the biggest
             blocks = partition.blocks;
             lengths = cellfun(@length, blocks);
@@ -26,7 +27,8 @@ classdef OrderedPartitionStabilizer1 < replab.bsgs.Backtrack1
             [~, I] = sort(cellfun(@length, blocks));
             blocks = blocks(I);
             base = [blocks{:}];
-            self@replab.bsgs.Backtrack1(group.chain, base, knownSubgroup.chain, debug);
+
+            self@replab.bsgs.Backtrack1(group, base, knownSubgroup, debug);
             self.partition = partition;
             self.blockIndex = partition.blockIndex;
         end

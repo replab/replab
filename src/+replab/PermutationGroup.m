@@ -62,9 +62,9 @@ classdef PermutationGroup < replab.FiniteGroup
     methods % Group internal description
 
         function c = lexChain(self)
-        % Returns the stabilizer chain corresponding to this permutation group.
+        % Returns the reduced stabilizer chain corresponding to this permutation group in lexicographic order
         %
-        % It guarantees that the computed chain has its base in lexicographic order.
+        % No base points are redundant.
         %
         % Returns:
         %   `+replab.+bsgs.Chain`: Stabilizer chain

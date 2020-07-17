@@ -13,11 +13,11 @@ classdef SetwiseStabilizer1 < replab.bsgs.Backtrack1
                 debug = false;
             end
             if nargin < 3 || isempty(knownSubgroup)
-                knownSubgroup = group.trivialSubgroup;
+                knownSubgroup = [];
             end
             mask = false(1, group.domainSize);
             mask(set) = true;
-            self@replab.bsgs.Backtrack1(group.chain, set, knownSubgroup.chain, debug);
+            self@replab.bsgs.Backtrack1(group, set, knownSubgroup, debug);
             self.set = set;
             self.mask = mask;
         end
