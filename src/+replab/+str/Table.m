@@ -1,5 +1,4 @@
 classdef Table < replab.Str
-%
 % Displays tables nicely in MATLAB and Octave
 %
 %   >>> replab.str.Table([1,20;300,2])
@@ -34,7 +33,6 @@ classdef Table < replab.Str
     methods
 
         function self = Table(elements, varargin)
-        % 
         % Args:
         %   elements (cell(nRows, nColumns) or double(nRows, nColumns)): body of table
         %   varargin: list of 'name', value pairs to set table parameters
@@ -119,9 +117,19 @@ classdef Table < replab.Str
         function disp(self)
             disp(self.format(replab.globals.strMaxRows, replab.globals.strMaxColumns))
         end
+        
+        function s = headerStr(self)
+            dim = size(self.elements);
+            if self.colName
+                dim(1) = dim(1) - 1;
+            end
+            if self.rowName
+                dim(2) = dim(2) - 1;
+            end
+            s = sprintf([num2str(dim(1)), ' x ', num2str(dim(2)), ' Table']);
+        end
 
         function tbstr = format(self, maxRows, maxColumns)
-        %
         % Formatting for the table display
         % Convention: - adds column separators and then row separators if given
         %             - if the table is wider than the display, omits first the columns
@@ -262,21 +270,18 @@ classdef Table < replab.Str
         end
         
         function n = nColumns(self)
-        % 
         % number of columns (including row names)
             dim = size(self.elements);
             n = dim(2);
         end
         
         function n = nRows(self)
-        %
         % number of rows (including column names)
             dim = size(self.elements);
             n = dim(1);
         end
         
         function setColSep(self, range, sep)
-        %
         % Sets the column separators for the columns inside the range
         %
         % Convention: the column to the left of the table is 0.
@@ -304,7 +309,6 @@ classdef Table < replab.Str
         end
 
         function setRowSep(self, range, sep)
-        % 
         % Sets the row separators for the rows inside the range
         %
         % Convention: the row at the top of the table is 0.
@@ -332,7 +336,6 @@ classdef Table < replab.Str
         end
         
         function setAlign(self, range, aligns)
-        %
         % Set the alignment of each column in range
         % 'l' for left, 'c' for centre, and 'r' for right
         %
@@ -351,7 +354,6 @@ classdef Table < replab.Str
         end
         
         function setOmitRange(self, omitRange)
-        %
         % Set columns that can be omitted if there is not enough space
         % 
         % Example: 
@@ -364,7 +366,6 @@ classdef Table < replab.Str
         end
 
         function addRow(self, row, loc, sep)
-        %
         % Adds row to the table
         %
         % Convention: loc = 0 means add a row above the table and 
@@ -401,7 +402,7 @@ classdef Table < replab.Str
         end
         
         function addColumn(self, column, loc, sep, align)
-        % adds row to the table
+        % adds column to the table
         %
         % Convention: loc = 0 means add a column to left of the table and 
         %             loc = T.nColumns adds a column to right of the table
@@ -439,7 +440,6 @@ classdef Table < replab.Str
         end
 
         function addColumnNames(self, colNames)
-        %
         % Adds row names to the current table
         % Convention: should not include an entry above row names
             if self.colName
@@ -455,7 +455,6 @@ classdef Table < replab.Str
         end
 
         function addRowNames(self, rowNames)
-        %
         % Adds column names to the current table
         % Convention: should not include an entry before column names
             if self.rowName
@@ -473,24 +472,30 @@ classdef Table < replab.Str
         end
         
         function names = getColumnNames(self)
-        % 
-        % Returns:
+        %  Returns:
         %   names (cell(1, nColumns-1)): column names if present or else
         %                                empty array
             if self.colName
-                names = self.elements(1, 2:end);
+                if self.rowName
+                    names = self.elements(1, 2:end);
+                else
+                    names = self.elements(1, 1:end);
+                end
             else
                 names = {};
             end
         end
         
         function names = getRowNames(self)
-        % 
-        % Returns:
+        %  Returns:
         %   names (cell(1, nRows-1)): row names if present or else
         %                                empty array
             if self.rowName
-                names = self.elements(2:end, 1)';
+                if self.rowName
+                    names = self.elements(2:end, 1)';
+                else
+                    names = self.elements(1:end, 1)';
+                end
             else
                 names = {};
             end
@@ -502,7 +507,6 @@ classdef Table < replab.Str
     methods (Static)
         
         function chararray = convertToChars(elements)
-            %
             % converts all of elements to characters
             %
             % Args:
@@ -532,7 +536,6 @@ classdef Table < replab.Str
         end
         
         function [ellipsisLocs, hiddenRange] = addEllipses(omitRange)
-            %
             % puts ellipsis in the first of a range of omitted columns
             diff = omitRange(2:end) - omitRange(1:end-1);
             f = find(diff ~= 1);

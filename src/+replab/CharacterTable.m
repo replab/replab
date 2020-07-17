@@ -1,32 +1,39 @@
 classdef CharacterTable < replab.Obj
 % Describes the character table of a group
+%
+% Example:
+%   >>> s3ct = replab.CharacterTable.forGenericGroup(replab.S(3));
+%   >>> disp(s3ct.table)
+%            [1, 3, 2]  [2, 3, 1]  [1, 2, 3]  
+%       X.1      1          1          1      
+%       X.2      0         -1          2      
+%       X.3     -1          1          1      
 
     properties (SetAccess = protected)
-        group % replab.Group: group represented by character table
-        irreps % cell of replab.Rep: irreducible representation
-        classes % cell of replab.ConjugacyClass: conjugacy classes
-        chars % matrix(nirreps,nclasses): matrix of characters
-        table % replab.str.Table: table object for display purposes
+        group % (`+replab.Group`): group represented by character table
+        irreps % (cell(1, nclasses) of `+replab.Rep`): irreducible representations
+        classes % (cell(1, nclasses) of `+replab.ConjugacyClass`): conjugacy classes
+        chars % (double(nclasses, nclasses)): matrix of characters
+        table % (`+replab.str.Table`): table object for display purposes
     end
     
     methods
 
-        function self = CharacterTable(group)
+        function self = CharacterTable(group, irreps, classes, chars)
+        %  Assigns properties and generates Table with given properties
             self.group = group;
-            % if we have Sn, use Andrew's function
-%             if isa(group, 'replab.SymmetricGroup')
-%                 [classes, irreps, chars] = ...
-%             end
-            [classes, irreps, chars] = self.generateTable;
-            self.classes = classes;
             self.irreps = irreps;
-            self.chars = round(chars); % add precise character method later
+            self.classes = classes;
+            self.chars = chars;
+            
+            % make Table object of character table
             colnames = cellfun(@(v) v.representative, self.classes, 'UniformOutput', false);
             nirreps = length(self.irreps);
             rownames = cellfun(@(n)['X.', num2str(n)], num2cell(1:nirreps), 'UniformOutput', false);
             self.table = replab.str.Table(self.chars);
             self.table.addRowNames(rownames);
             self.table.addColumnNames(colnames);
+
         end
 
         function s = headerStr(self)
@@ -37,11 +44,99 @@ classdef CharacterTable < replab.Obj
             s = sprintf(['Character table for ', group_str]);
         end
         
-        function [classes, irreps, chars] = generateTable(self)
-            ord = double(self.group.order);
-            decomp = self.group.naturalRep.decomposition.nice;
+        function useBorders(self, logical)
+        %  Turn on and off borders on the table
+        %
+        % Args:
+        %   logical (logical): whether borders are on (true) or off (false)
+            if logical
+                self.table.setColSep(0, '| ')
+                self.table.setColSep(self.table.nColumns, ' |')
+                self.table.setColSep(1:self.table.nColumns-1, ' | ')
+                self.table.setRowSep(0:self.table.nRows, '-')
+            else
+                self.table.setColSep(0:self.table.nColumns, '  ')
+                self.table.setRowSep(0:self.table.nRows, '')
+            end
+        end
+        
+        function setIrrepLabels(self, labels)
+        % Set the labels for the irreducible representation in the table
+        %
+        % Args:
+        %   labels ({cell(1,nirreps), 'default'): cell array of character string labels
+        %                                         or 'default' to use default labels
+            if iscell(labels)
+                if length(labels) == length(self.table.getRowNames)
+                    self.table.addRowNames(labels)
+                end
+            elseif isequal(labels, 'default')
+                nirreps = length(self.irreps);
+                rownames = cellfun(@(n)['X.', num2str(n)], num2cell(1:nirreps), 'UniformOutput', false);
+                self.table.addRowNames(rownames)
+            end
+        end
+        
+        function setClassLabels(self, labels)
+        % Set the labels for the conjugacy classes in the table
+        %
+        % Args:
+        %   labels (cell(1,nclasses)): cell array of character string labels
+            if iscell(labels)
+                if length(labels) == length(self.table.getColumnNames)
+                    self.table.addColumnNames(labels)
+                end
+            elseif isequal(labels, 'default')
+                colnames = cellfun(@(v) v.representative, self.classes, 'UniformOutput', false);
+                self.table.addColumnNames(colnames)
+            end
+        end
+        
+        function table = pointGroupTable(self)
+        % Returns a table with labels in chemistry notation
+            table = self.table;
+            irrepLabels = table.getRowNames;
+            for i = 1:length(irrepLabels)
+                sym = self.mulliken(self.irreps{i});
+                irrepLabels{i} = sym;
+            end
+            table.addRowNames(irrepLabels)
+        end
+        
+        function sizes = classSizes(self)
+            sizes = cellfun(@(c) c.size, self.classes);
+        end
+        
+    end
+    
+    methods (Static)
+        
+        function sym = mulliken(rep)
+        % Returns the Mulliken symbol of a representation
+        % Requires knowledge of the principal axis to fully determine
+            if rep.dimension == 1
+                sym = 'A/B';
+            else
+                sym = 'E';
+            end
+        end
+        
+        function table = forGenericGroup(group)
+        % Generates character table for a generic group
+        % Characters are currently rounded because they are not precise
+        % This algorithm is not fast
+        %
+        % Args:
+        %    group (`+replab.Group`): group with decomposition and
+        %                               conjugacy classes
+        % 
+        % Returns:
+        %    table (`+replab.CharacterTable`): character table of group
+        %
+            ord = double(group.order);
+            decomp = group.naturalRep.decomposition.nice;
             irreps = decomp.components;
-            classes = self.group.conjugacyClasses;
+            classes = group.conjugacyClasses;
             k = length(classes);
             ccreps = cell(1, length(classes));
             cclens = cell(1, length(classes));
@@ -84,29 +179,9 @@ classdef CharacterTable < replab.Obj
                     end
                 end
             end
+            chars = round(chars);
+            table = replab.CharacterTable(group, irreps, classes, chars);
         end
-
-        
-        function sym = mulliken(rep)
-            % returns the mulliken symbol of a representation
-        end
-        
-        function setIrrepLabels(self, labels)
-        % set the labels for the irreducible representation in the table
-        %
-        % Args:
-        %   labels (cell(1,nirreps)): cell array of character string labels
-            self.table.addRowNames(labels)
-        end
-        
-        function setClassLabels(self, labels)
-        % set the labels for the conjugacy classes in the table
-        %
-        % Args:
-        %   labels (cell(1,nclasses)): cell array of character string labels
-            self.table.addColumnNames(labels)
-        end
-        
         
     end
 end
