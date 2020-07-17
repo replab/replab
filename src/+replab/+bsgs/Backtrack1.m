@@ -6,7 +6,9 @@ classdef Backtrack1 < replab.Obj
         group % (`.Chain`): Group to search in
         knownSubgroup % (`.Chain`): Known subgroup of the searched for subgroup
 
-        base % (integer(1,\*)): Prescribed base
+        partialBase % (integer(1,\*)): Prescribed base
+        base % (integer(1,\*)): Actual base
+        orbitSizes % (integer(1,\*)): Orbit sizes in the prescribed base
         debug % (logical): Whether to do extra checks
 
         group0 % (`.Chain`): Stabilizer chain of `.group` following `.base` with redundant points removed
@@ -19,6 +21,76 @@ classdef Backtrack1 < replab.Obj
     end
 
     methods
+
+        function self = Backtrack1(group, partialBase, knownSubgroup, debug)
+            degree = group.n;
+            self.degree = degree;
+            self.group = group;
+            if nargin < 3 || isempty(knownSubgroup)
+                knownSubgroup = replab.bsgs.Chain(degree);
+                knownSubgroup.makeImmutable;
+            end
+            if nargin < 4 || isempty(debug)
+                self.debug = false;
+            else
+                self.debug = debug;
+            end
+            self.knownSubgroup = knownSubgroup;
+            group0 = group.mutableCopy;
+            group0.baseChange(partialBase, true);
+            group0.makeImmutable;
+            base = group0.base;
+            self.base = base;
+            self.group0 = group0;
+            base0 = group0.base;
+            self.base0 = base0;
+            rest = sort(setdiff(1:degree, base0));
+            baseOrdering0 = zeros(1, degree);
+            baseOrdering0(base0) = 1:length(base0);
+            baseOrdering0(rest) = length(base0) + (1:length(rest));
+            self.baseOrdering0 = [baseOrdering0 degree+1 0];
+            if group0.length == 0
+                return
+            end
+            numRed0 = zeros(1, length(base0) + 1);
+            i = 1;
+            orbitSizes = zeros(1, length(base));
+            for i0 = 1:length(base0)
+                if i > length(base)
+                    break
+                end
+                while base(i) ~= base0(i0)
+                    orbitSizes(i) = 1;
+                    numRed0(i0) = numRed0(i0) + 1;
+                    i = i + 1;
+                    if i > length(base)
+                        break
+                    end
+                end
+                orbitSizes(i) = group0.orbitSize(i0);
+                i = i + 1;
+            end
+            while i <= length(base)
+                numRed0(end) = numRed0(end) + 1;
+                orbitSizes(i) = 1;
+                i = i + 1;
+            end
+            verified = group.mutableCopy;
+            verified.baseChange(base, false);
+            assert(isequal(orbitSizes, verified.orbitSizes));
+            self.numRed0 = numRed0;
+            self.KinBase0 = [];
+            % verify ordering of groups DEBUG
+            ch = group0;
+            while ch.length > 1
+                ch1 = ch.stabilizer(ch.B(1));
+                el1 = self.sortPermutations(ch1.allElements);
+                el = self.sortPermutations(ch.allElements);
+                assert(isequal(el(:,1:size(el1,2)), el1));
+                ch = ch1;
+            end
+            % END DEBUG
+        end
 
         function s = resultSet(self)
         % Computes explicitly the result set
@@ -36,65 +108,6 @@ classdef Backtrack1 < replab.Obj
                     s.insert(E(:,i));
                 end
             end
-        end
-
-        function self = Backtrack1(group, base, knownSubgroup, debug)
-            degree = group.n;
-            self.degree = degree;
-            self.group = group;
-            if nargin < 3 || isempty(knownSubgroup)
-                knownSubgroup = replab.bsgs.Chain(degree);
-                knownSubgroup.makeImmutable;
-            end
-            if nargin < 4 || isempty(debug)
-                self.debug = false;
-            else
-                self.debug = debug;
-            end
-            self.knownSubgroup = knownSubgroup;
-            self.base = base;
-            group0 = group.mutableCopy;
-            group0.baseChange(base, true);
-            group0.makeImmutable;
-            self.group0 = group0;
-            base0 = group0.base;
-            self.base0 = base0;
-            rest = sort(setdiff(1:degree, base0));
-            baseOrdering0 = zeros(1, degree);
-            baseOrdering0(base0) = 1:length(base0);
-            baseOrdering0(rest) = length(base0) + (1:length(rest));
-            self.baseOrdering0 = [baseOrdering0 degree+1 0];
-            if group0.length == 0
-                return
-            end
-            numRed0 = zeros(1, length(base0) + 1);
-            i = 1;
-            for i0 = 1:length(base0)
-                if i > length(base)
-                    break
-                end
-                while base(i) ~= base0(i0)
-                    numRed0(i0) = numRed0(i0) + 1;
-                    i = i + 1;
-                    if i > length(base)
-                        break
-                    end
-                end
-                i = i + 1;
-            end
-            numRed0(end) = length(base) - i + 1;
-            self.numRed0 = numRed0;
-            self.KinBase0 = [];
-            % verify ordering of groups DEBUG
-            ch = group0;
-            while ch.length > 1
-                ch1 = ch.stabilizer(ch.B(1));
-                el1 = self.sortPermutations(ch1.allElements);
-                el = self.sortPermutations(ch.allElements);
-                assert(isequal(el(:,1:size(el1,2)), el1));
-                ch = ch1;
-            end
-            % END DEBUG
         end
 
         function c = comparePermutations(self, lhs, rhs)
@@ -278,7 +291,7 @@ classdef Backtrack1 < replab.Obj
         %
         % ... should be called for ``l0 == 0`` as well
             l = sum(self.numRed0(1:l0)) + l0; % index in the original base
-            if l > length(self.base)
+            if l > length(self.partialBase)
                 ok = true;
                 return
             end
