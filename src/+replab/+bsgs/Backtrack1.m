@@ -1,5 +1,8 @@
 classdef Backtrack1 < replab.Obj
-
+% Performs backtracking search among the group elements
+%
+% It attempts to reduce the search by considering only minimal elements in
+% the double coset ``H g K``
     properties
 
         degree % (integer): Permutation group degree
@@ -16,7 +19,7 @@ classdef Backtrack1 < replab.Obj
         baseOrdering0 % (integer(1,domainSize+2)): Base ordering including two guard elements
         numRed0 % (integer(1,\*)): Number of redundant points in the original base preceding each base point of base0; number at the end is the number of points *after* the last nonredundant point
 
-        KinBase0 % (`.Chain`): Current mutable BSGS chain for the subgroup in base `.base0`
+        HinBase0 % (`.Chain`): Current mutable BSGS chain for the subgroup in base `.base0`
 
     end
 
@@ -79,7 +82,7 @@ classdef Backtrack1 < replab.Obj
             verified.baseChange(base, false);
             assert(isequal(orbitSizes, verified.orbitSizes));
             self.numRed0 = numRed0;
-            self.KinBase0 = [];
+            self.HinBase0 = [];
             % verify ordering of groups DEBUG
             ch = group0;
             while ch.length > 1
@@ -131,13 +134,13 @@ classdef Backtrack1 < replab.Obj
         function res = subgroup(self)
             self.test0(0, 1:self.degree, 1:self.degree);
             self.search2(1);
-            self.KinBase0.makeImmutable;
-            res = replab.PermutationGroup.fromChain(self.KinBase0);
-            self.KinBase0 = [];
+            self.HinBase0.makeImmutable;
+            res = replab.PermutationGroup.fromChain(self.HinBase0);
+            self.HinBase0 = [];
         end
 
         function search1(self, s)
-        % Search ``G^s`` for the subgroup K of elements satisfying the property
+        % Search ``G^s`` for the subgroup of elements satisfying the property
         %
         % Args:
         %   s (integer): Level to search
@@ -145,24 +148,24 @@ classdef Backtrack1 < replab.Obj
                 c = self.knownSubgroup.mutableCopy;
                 c.baseChange(self.base0);
                 assert(isequal(c.base, self.base0), 'Known subgroup is not a subgroup');
-                self.KinBase0 = c;
+                self.HinBase0 = c;
             else
                 self.search1(s + 1);
                 identity = 1:self.degree;
                 % note: compared to Butler, page 101, Algorithm 1, we need to remove the base point itself
                 % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
                 orbit = self.sort(self.group0.Delta{s}(2:end));
-                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.KinBase0.S, self.baseOrdering0);
+                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
                 for gamma_s = orbit
                     cond1 = mask(gamma_s);
-                    cond2 = replab.bsgs.minimalInOrbit(self.degree, self.KinBase0.S, gamma_s, self.baseOrdering0) == gamma_s;
+                    cond2 = replab.bsgs.minimalInOrbit(self.degree, self.HinBase0.S, gamma_s, self.baseOrdering0) == gamma_s;
                     assert(cond1 == cond2);
                     if mask(gamma_s)
                         u = self.group0.u(s, gamma_s);
                         found = self.generate1(s, s+1, self.group0.u(s, gamma_s));
                         if found
-                            mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.KinBase0.S, self.baseOrdering0);
-                            assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its K-orbit
+                            mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
+                            assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its H-orbit
                         end
                     end
                 end
@@ -174,13 +177,13 @@ classdef Backtrack1 < replab.Obj
         %
         % Those elements have base image ``[gamma(1) ... gamma(i-1)] = [prevG(base0(1)) ... prevG(base0(i-1))]``
         % and they may have the required property.
-        % If one is found then we extend ``K``, the subgroup of ``G^(s)`` of elements with property ``P`` that have
+        % If one is found then we extend the subgroup of ``G^(s)`` of elements with property ``P`` that have
         % already been found, and return to search.
             if i == length(self.base0) + 1
                 found = self.prop(prevG);
                 if found
-                    self.KinBase0.stripAndAddStrongGenerator(prevG);
-                    self.KinBase0.randomizedSchreierSims([]);
+                    self.HinBase0.stripAndAddStrongGenerator(prevG);
+                    self.HinBase0.randomizedSchreierSims([]);
                 end
             else
                 orbit_g = self.sort(prevG(self.group0.Delta{i}));
@@ -197,7 +200,7 @@ classdef Backtrack1 < replab.Obj
         end
 
         function search2(self, s)
-        % Search ``G^s`` for the subgroup K of elements satisfying the property
+        % Search ``G^s`` for the subgroup of elements satisfying the property
         %
         % Args:
         %   s (integer): Level to search
@@ -205,7 +208,7 @@ classdef Backtrack1 < replab.Obj
                 c = self.knownSubgroup.mutableCopy;
                 c.baseChange(self.base0);
                 assert(isequal(c.base, self.base0), 'Known subgroup is not a subgroup');
-                self.KinBase0 = c;
+                self.HinBase0 = c;
             else
                 identity = 1:self.degree;
                 ok = self.test0(s, identity, identity);
@@ -214,10 +217,10 @@ classdef Backtrack1 < replab.Obj
                 % note: compared to Butler, page 101, Algorithm 1, we need to remove the base point itself
                 % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
                 orbit = self.sort(self.group0.Delta{s}(2:end));
-                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.KinBase0.S, self.baseOrdering0);
+                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
                 for gamma_s = orbit
                     cond1 = mask(gamma_s);
-                    cond2 = replab.bsgs.minimalInOrbit(self.degree, self.KinBase0.S, gamma_s, self.baseOrdering0) == gamma_s;
+                    cond2 = replab.bsgs.minimalInOrbit(self.degree, self.HinBase0.S, gamma_s, self.baseOrdering0) == gamma_s;
                     assert(cond1 == cond2);
                     if mask(gamma_s)
                         u = self.group0.u(s, gamma_s);
@@ -225,10 +228,10 @@ classdef Backtrack1 < replab.Obj
                         if ok
                             found = self.generate2(s+1, self.group0.u(s, gamma_s));
                             if ~isempty(found)
-                                self.KinBase0.stripAndAddStrongGenerator(found);
-                                self.KinBase0.randomizedSchreierSims([]);
-                                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.KinBase0.S, self.baseOrdering0);
-                                assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its K-orbit
+                                self.HinBase0.stripAndAddStrongGenerator(found);
+                                self.HinBase0.randomizedSchreierSims([]);
+                                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
+                                assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its H-orbit
                             end
                         end
                     end
@@ -241,7 +244,7 @@ classdef Backtrack1 < replab.Obj
         %
         % Those elements have base image ``[gamma(1) ... gamma(i-1)] = [prevG(base0(1)) ... prevG(base0(i-1))]``
         % and they may have the required property.
-        % If one is found then we extend ``K``, the subgroup of ``G^(s)`` of elements with property ``P`` that have
+        % If one is found then we extend the subgroup of ``G^(s)`` of elements with property ``P`` that have
         % already been found, and return to search.
         %
         % Args:
