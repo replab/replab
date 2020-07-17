@@ -22,6 +22,8 @@ classdef Backtrack1 < replab.Obj
 
         HchainInBase0 % (`.Chain`): Current mutable BSGS chain for `.H` in base `.base0`
         KchainInBase0 % (`.Chain`): Current mutable BSHS chain for `.K` in base `.base0`
+        subChain0 % (`.Chain`): Mutable chain of the subgroup being constructed in the base `.base0`, only used when searching for subgroups
+
         debug % (logical): Whether to do extra checks
 
     end
@@ -115,15 +117,19 @@ classdef Backtrack1 < replab.Obj
         end
 
         function res = find(self)
-            self.HchainInBase0 = replab.bsgs.Backtrack1.groupChainInBase(self.H, self.base0, false, false);
+            self.subChain0 = [];
+            self.HchainInBase0 = replab.bsgs.Backtrack1.groupChainInBase(self.H, self.base0, false, true);
+            self.KchainInBase0 = replab.bsgs.Backtrack1.groupChainInBase(self.K, self.base0, false, true);
             res = self.generate2(0, self.G.identity, self.HchainInBase0);
         end
 
         function res = subgroup(self)
             self.search2(0);
-            self.HchainInBase0.makeImmutable;
-            res = replab.PermutationGroup.fromChain(self.HchainInBase0);
+            self.subChain0.makeImmutable;
+            res = replab.PermutationGroup.fromChain(self.subChain0);
+            self.subChain0 = [];
             self.HchainInBase0 = [];
+            self.KchainInBase0 = [];
         end
 
         function search2(self, s)
@@ -139,8 +145,11 @@ classdef Backtrack1 < replab.Obj
                 self.test0(0, identity, identity);
                 self.search2(s + 1);
             elseif s == length(self.base0) + 1
-                self.HchainInBase0 = replab.bsgs.Backtrack1.groupChainInBase(self.H, self.base0, false, false);
-                assert(isequal(self.HchainInBase0.base, self.base0), 'Known subgroup is not a subgroup');
+                knownSubgroup = self.H.closure(self.K);
+                self.subChain0 = replab.bsgs.Backtrack1.groupChainInBase(knownSubgroup, self.base0, false, false);
+                assert(isequal(self.subChain0.base, self.base0), 'Known subgroup is not a subgroup');
+                self.HchainInBase0 = self.subChain0;
+                self.KchainInBase0 = self.subChain0;
             else
                 ok = self.test0(s, identity, identity);
                 assert(ok); % for now, when looking for a subgroup
@@ -149,22 +158,30 @@ classdef Backtrack1 < replab.Obj
                 % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
                 orbit = self.sort(self.Gchain0.Delta{s}(2:end));
                 mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HchainInBase0.S, self.baseOrdering0);
-                for gamma_s = orbit
-                    if mask(gamma_s)
+                mu = self.computeMu(s, identity);
+                ind = min(self.computeNu(s)-1, length(orbit));
+                for gamma_s = orbit(1:ind)
+                    if mask(gamma_s) && self.greaterThan(gamma_s, mu)
                         u = self.Gchain0.u(s, gamma_s);
                         ok = self.test0(s, identity, u);
                         if ok
                             found = self.generate2(s+1, self.Gchain0.u(s, gamma_s), self.HchainInBase0.stabilizer(gamma_s));
                             if ~isempty(found)
-                                self.HchainInBase0.stripAndAddStrongGenerator(found);
-                                self.HchainInBase0.randomizedSchreierSims([]);
+                                if self.debug
+                                    assert(self.resultSet.find(found(:)) > 0);
+                                end
+                                self.subChain0.stripAndAddStrongGenerator(found);
+                                self.subChain0.randomizedSchreierSims([]);
+                                self.HchainInBase0 = self.subChain0;
+                                self.KchainInBase0 = self.subChain0;
                                 mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HchainInBase0.S, self.baseOrdering0);
-                                assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its H-orbit
+                                assert(~mask(gamma_s)); % verifies that the point is no longer minimal in its H-orbit
                             end
                         end
                     end
                 end
             end
+
         end
 
         function found = generate2(self, i, prevG, Hstab)
@@ -195,12 +212,13 @@ classdef Backtrack1 < replab.Obj
             else
                 orbit_g = self.sort(prevG(self.Gchain0.Delta{i}));
                 mask = replab.bsgs.minimalMaskInOrbit(self.degree, Hstab.S, self.baseOrdering0);
-                for gamma_i = orbit_g
-                    if mask(gamma_i)
+                mu = self.computeMu(i, prevG);
+                ind = min(self.computeNu(i)-1, length(orbit_g));
+                for gamma_i = orbit_g(1:ind)
+                    if mask(gamma_i) && self.greaterThan(gamma_i, mu)
                         b = find(prevG == gamma_i);
                         u = self.Gchain0.u(i, b);
                         if self.test0(i, prevG, u)
-                            assert(prevG(u(self.base0(i))) == gamma_i);
                             found = self.generate2(i + 1, prevG(u), Hstab.stabilizer(gamma_i));
                             if ~isempty(found)
                                 return
@@ -209,6 +227,28 @@ classdef Backtrack1 < replab.Obj
                     end
                 end
                 found = [];
+            end
+        end
+
+        function mu = computeMu(self, l, g)
+            mu = self.degree + 2;
+            beta = self.base0(l);
+            for j = 1:l-1
+                if any(self.KchainInBase0.Delta{j} == beta)
+                    candidate = g(self.base0(j));
+                    if self.greaterThan(candidate, mu)
+                        mu = candidate;
+                    end
+                end
+            end
+        end
+
+        function nu = computeNu(self, l)
+            idx = length(self.Gchain0.Delta{l}) + 2 - length(self.KchainInBase0.Delta{l});
+            if idx > length(self.Gchain0.Delta{l})
+                nu = self.degree + 1;
+            else
+                nu = idx;
             end
         end
 
@@ -381,65 +421,3 @@ classdef Backtrack1 < replab.Obj
 
     end
 end
-
-
-% $$$         function search1(self, s)
-% $$$         % Search ``G^s`` for the subgroup of elements satisfying the property
-% $$$         %
-% $$$         % Args:
-% $$$         %   s (integer): Level to search
-% $$$             if s == length(self.base0) + 1
-% $$$                 c = self.knownSubgroup.mutableCopy;
-% $$$                 c.baseChange(self.base0);
-% $$$                 assert(isequal(c.base, self.base0), 'Known subgroup is not a subgroup');
-% $$$                 self.HinBase0 = c;
-% $$$             else
-% $$$                 self.search1(s + 1);
-% $$$                 identity = 1:self.degree;
-% $$$                 % note: compared to Butler, page 101, Algorithm 1, we need to remove the base point itself
-% $$$                 % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
-% $$$                 orbit = self.sort(self.group0.Delta{s}(2:end));
-% $$$                 mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
-% $$$                 for gamma_s = orbit
-% $$$                     cond1 = mask(gamma_s);
-% $$$                     cond2 = replab.bsgs.minimalInOrbit(self.degree, self.HinBase0.S, gamma_s, self.baseOrdering0) == gamma_s;
-% $$$                     assert(cond1 == cond2);
-% $$$                     if mask(gamma_s)
-% $$$                         u = self.group0.u(s, gamma_s);
-% $$$                         found = self.generate1(s, s+1, self.group0.u(s, gamma_s));
-% $$$                         if found
-% $$$                             mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
-% $$$                             assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its H-orbit
-% $$$                         end
-% $$$                     end
-% $$$                 end
-% $$$             end
-% $$$         end
-% $$$
-% $$$         function found = generate1(self, s, i, prevG)
-% $$$         % Generate the elements of ``G^s``
-% $$$         %
-% $$$         % Those elements have base image ``[gamma(1) ... gamma(i-1)] = [prevG(base0(1)) ... prevG(base0(i-1))]``
-% $$$         % and they may have the required property.
-% $$$         % If one is found then we extend the subgroup of ``G^(s)`` of elements with property ``P`` that have
-% $$$         % already been found, and return to search.
-% $$$             if i == length(self.base0) + 1
-% $$$                 found = self.prop(prevG);
-% $$$                 if found
-% $$$                     self.HinBase0.stripAndAddStrongGenerator(prevG);
-% $$$                     self.HinBase0.randomizedSchreierSims([]);
-% $$$                 end
-% $$$             else
-% $$$                 orbit_g = self.sort(prevG(self.group0.Delta{i}));
-% $$$                 for gamma_i = orbit_g
-% $$$                     b = find(prevG == gamma_i);
-% $$$                     u = self.group0.u(i, b);
-% $$$                     assert(prevG(u(self.base0(i))) == gamma_i);
-% $$$                     found = self.generate1(s, i + 1, prevG(u));
-% $$$                     if found
-% $$$                         return
-% $$$                     end
-% $$$                 end
-% $$$             end
-% $$$         end
-% $$$

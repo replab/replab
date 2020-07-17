@@ -40,7 +40,7 @@ classdef UnorderedPartitionStabilizer1 < replab.bsgs.Backtrack1
                 base = [base block];
             end
 
-            self@replab.bsgs.Backtrack1(group, base, knownSubgroup, debug);
+            self@replab.bsgs.Backtrack1(group, base, knownSubgroup, knownSubgroup, debug);
 
             self.blocks = blocks;
             self.partition = partition;

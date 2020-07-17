@@ -31,14 +31,14 @@ function mask = minimalMaskInOrbit(degree, generators, baseOrdering)
             mask(minInd) = true;
             i = find(~done, 1);
         end
-        % simpler code: DEBUG
-        orbits = replab.Partition.permutationsOrbits(generators').blocks;
-        mask1 = false(1, degree);
-        for i = 1:length(orbits)
-            orbit = orbits{i};
-            [~, ind] = min(baseOrdering(orbit));
-            mask1(orbit(ind)) = true;
-        end
-        assert(isequal(mask, mask1));
+        % simpler code
+        % orbits = replab.Partition.permutationsOrbits(generators').blocks;
+        % mask1 = false(1, degree);
+        % for i = 1:length(orbits)
+        %     orbit = orbits{i};
+        %     [~, ind] = min(baseOrdering(orbit));
+        %     mask1(orbit(ind)) = true;
+        % end
+        % assert(isequal(mask, mask1));
     end
 end

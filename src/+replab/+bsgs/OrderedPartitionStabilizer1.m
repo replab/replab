@@ -28,7 +28,7 @@ classdef OrderedPartitionStabilizer1 < replab.bsgs.Backtrack1
             blocks = blocks(I);
             base = [blocks{:}];
 
-            self@replab.bsgs.Backtrack1(group, base, knownSubgroup, debug);
+            self@replab.bsgs.Backtrack1(group, base, knownSubgroup, knownSubgroup, debug);
             self.partition = partition;
             self.blockIndex = partition.blockIndex;
         end

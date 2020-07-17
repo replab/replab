@@ -17,7 +17,7 @@ classdef SetwiseStabilizer1 < replab.bsgs.Backtrack1
             end
             mask = false(1, group.domainSize);
             mask(set) = true;
-            self@replab.bsgs.Backtrack1(group, set, knownSubgroup, debug);
+            self@replab.bsgs.Backtrack1(group, set, knownSubgroup, knownSubgroup, debug);
             self.set = set;
             self.mask = mask;
         end
