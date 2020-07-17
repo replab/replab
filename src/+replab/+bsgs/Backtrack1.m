@@ -210,8 +210,10 @@ classdef Backtrack1 < replab.Obj
                         u = self.group0.u(s, gamma_s);
                         ok = self.test0(s, identity, u);
                         if ok
-                            found = self.generate2(s, s+1, self.group0.u(s, gamma_s));
-                            if found
+                            found = self.generate2(s+1, self.group0.u(s, gamma_s));
+                            if ~isempty(found)
+                                self.KinBase0.stripAndAddStrongGenerator(found);
+                                self.KinBase0.randomizedSchreierSims([]);
                                 mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.KinBase0.S, self.baseOrdering0);
                                 assert(~mask(gamma_s)); % DEBUG asserts the point is no longer minimal in its K-orbit
                             end
@@ -221,18 +223,25 @@ classdef Backtrack1 < replab.Obj
             end
         end
 
-        function found = generate2(self, s, i, prevG)
+        function found = generate2(self, i, prevG)
         % Generate the elements of ``G^s``
         %
         % Those elements have base image ``[gamma(1) ... gamma(i-1)] = [prevG(base0(1)) ... prevG(base0(i-1))]``
         % and they may have the required property.
         % If one is found then we extend ``K``, the subgroup of ``G^(s)`` of elements with property ``P`` that have
         % already been found, and return to search.
+        %
+        % Args:
+        %   i (integer): Level to search
+        %   prevG (permutation): Product ``u_1 ... u_{i-1}``
+        %
+        % Returns:
+        %   permutation or ``[]``: Element satisfying `.prop` if found, otherwise ``[]``
             if i == length(self.base0) + 1
-                found = self.prop(prevG);
-                if found
-                    self.KinBase0.stripAndAddStrongGenerator(prevG);
-                    self.KinBase0.randomizedSchreierSims([]);
+                if self.prop(prevG);
+                    found = prevG;
+                else
+                    found = [];
                 end
             else
                 orbit_g = self.sort(prevG(self.group0.Delta{i}));
@@ -241,13 +250,13 @@ classdef Backtrack1 < replab.Obj
                     u = self.group0.u(i, b);
                     if self.test0(i, prevG, u)
                         assert(prevG(u(self.base0(i))) == gamma_i);
-                        found = self.generate2(s, i + 1, prevG(u));
-                        if found
+                        found = self.generate2(i + 1, prevG(u));
+                        if ~isempty(found)
                             return
                         end
                     end
                 end
-                found = false;
+                found = [];
             end
         end
 
@@ -273,7 +282,6 @@ classdef Backtrack1 < replab.Obj
                 ok = true;
                 return
             end
-            assert(l0 == 0 || self.base(l) == self.base0(l0));
             ok = true;
             if l0 >= 1
                 ok = self.test(l, gPrev, ul);
