@@ -25,10 +25,10 @@ classdef Intersection1 < replab.bsgs.Backtrack1
                 debug = false;
             end
             if nargin < 3 || isempty(knownSubgroup)
-                knownSubgroup = lhs.trivialSubgroup;
+                knownSubgroup = [];
             end
             base = unique([lhs.lexChain.base rhs.lexChain.base]);
-            self@replab.bsgs.Backtrack1(lhs.lexChain, base, knownSubgroup.lexChain, debug);
+            self@replab.bsgs.Backtrack1(lhs, base, knownSubgroup, knownSubgroup, debug);
             self.prevRhsInv = cell(1, length(base)+1);
             self.prevRhsInv{1} = rhs.identity;
             c = rhs.lexChain.mutableCopy;

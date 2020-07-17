@@ -20,89 +20,11 @@ classdef Backtrack1 < replab.Obj
         baseOrdering0 % (integer(1,domainSize+2)): Base ordering including two guard elements
         numRed0 % (integer(1,\*)): Number of redundant points in the original base preceding each base point of base0; number at the end is the number of points *after* the last nonredundant point
 
-        HchainInBase0 % (`.Chain`): Current mutable BSGS chain for the subgroup in base `.base0`
-
+        HchainInBase0 % (`.Chain`): Current mutable BSGS chain for `.H` in base `.base0`
+        KchainInBase0 % (`.Chain`): Current mutable BSHS chain for `.K` in base `.base0`
         debug % (logical): Whether to do extra checks
 
     end
-
-    methods (Static)
-
-        function [numRed0 orbitSizes] = manageRedundantPoints(base, base0, orbitSizes0)
-        % Extract properties about a full base, from the data about a base with redundant points removed
-        %
-        % Args:
-        %   base (integer(1,k)): Full base
-        %   base0 (integer(1,k0)): Subset of ``base`` with redundant points removed
-        %   orbitSizes0 (integer(1,k0)): Orbit sizes corresponding to base0
-        %
-        % Returns
-        % -------
-        %   numRed0:
-        %     integer(1,k0+1): Number of redundant points preceding each base point, position ``k0+1`` counts the final redundant points
-        %   orbitSizes:
-        %     integer(1,k): Orbit sizes corresponding to ``base``
-            k0 = length(base0);
-            k = length(base);
-            numRed0 = zeros(1, k0 + 1);
-            i = 1;
-            orbitSizes = zeros(1, k);
-            for i0 = 1:k0
-                if i > k
-                    break
-                end
-                while base(i) ~= base0(i0)
-                    orbitSizes(i) = 1;
-                    numRed0(i0) = numRed0(i0) + 1;
-                    i = i + 1;
-                    if i > k
-                        break
-                    end
-                end
-                orbitSizes(i) = orbitSizes(i0);
-                i = i + 1;
-            end
-            while i <= k
-                numRed0(end) = numRed0(end) + 1;
-                orbitSizes(i) = 1;
-                i = i + 1;
-            end
-        end
-
-        function bo = computeBaseOrdering(degree, base)
-        % Returns a base ordering from a degree and given base
-            rest = sort(setdiff(1:degree, base));
-            bo = zeros(1, degree);
-            bo(base) = 1:length(base);
-            bo(rest) = length(base) + (1:length(rest));
-        end
-
-        function b = baseHasLexOrder(base)
-        % Returns true if the base points are increasing
-            b = all(base(2:end) > base(1:end-1));
-        end
-
-        function c = groupChainInBase(group, base, removeRedundant, immutable)
-        % Get a stabilizer chain for the given group in the given base
-        %
-        % Args:
-        %   group (`+replab.PermutationGroup`): Permutation group to get the stabilizer chain from
-        %   base (integer(1,\*)): Prescribed base
-        %   removeRedundant (logical): Whether to remove all redundant base points
-        %   immutable (logical): Whether to return an immutable chain or a fresh mutable copy
-            if replab.bsgs.Backtrack1.baseHasLexOrder(base)
-                c = group.lexChain.mutableCopy;
-            else
-                c = group.chain.mutableCopy;
-            end
-            c.baseChange(base, removeRedundant);
-            if immutable
-                c.makeImmutable;
-            end
-        end
-
-    end
-
 
     methods
 
@@ -193,7 +115,8 @@ classdef Backtrack1 < replab.Obj
         end
 
         function res = find(self)
-            res = self.generate2(0, self.G.identity);
+            self.HchainInBase0 = replab.bsgs.Backtrack1.groupChainInBase(self.H, self.base0, false, false);
+            res = self.generate2(0, self.G.identity, self.HchainInBase0);
         end
 
         function res = subgroup(self)
@@ -231,7 +154,7 @@ classdef Backtrack1 < replab.Obj
                         u = self.Gchain0.u(s, gamma_s);
                         ok = self.test0(s, identity, u);
                         if ok
-                            found = self.generate2(s+1, self.Gchain0.u(s, gamma_s));
+                            found = self.generate2(s+1, self.Gchain0.u(s, gamma_s), self.HchainInBase0.stabilizer(gamma_s));
                             if ~isempty(found)
                                 self.HchainInBase0.stripAndAddStrongGenerator(found);
                                 self.HchainInBase0.randomizedSchreierSims([]);
@@ -244,7 +167,7 @@ classdef Backtrack1 < replab.Obj
             end
         end
 
-        function found = generate2(self, i, prevG)
+        function found = generate2(self, i, prevG, Hstab)
         % Generate the elements of ``G^s``
         %
         % Those elements have base image ``[gamma(1) ... gamma(i-1)] = [prevG(base0(1)) ... prevG(base0(i-1))]``
@@ -255,13 +178,14 @@ classdef Backtrack1 < replab.Obj
         % Args:
         %   i (integer): Level to search
         %   prevG (permutation): Product ``u_1 ... u_{i-1}``
+        %   Hstab (`.Chain`): Chain for `.H` with ``gamma(1) ... gamma(i-1)`` stabilized
         %
         % Returns:
         %   permutation or ``[]``: Element satisfying `.prop` if found, otherwise ``[]``
             if i == 0
                 identity = 1:self.degree;
                 self.test0(0, identity, identity);
-                found = self.generate2(i + 1, identity);
+                found = self.generate2(i + 1, identity, Hstab);
             elseif i == length(self.base0) + 1
                 if self.prop(prevG);
                     found = prevG;
@@ -270,14 +194,17 @@ classdef Backtrack1 < replab.Obj
                 end
             else
                 orbit_g = self.sort(prevG(self.Gchain0.Delta{i}));
+                mask = replab.bsgs.minimalMaskInOrbit(self.degree, Hstab.S, self.baseOrdering0);
                 for gamma_i = orbit_g
-                    b = find(prevG == gamma_i);
-                    u = self.Gchain0.u(i, b);
-                    if self.test0(i, prevG, u)
-                        assert(prevG(u(self.base0(i))) == gamma_i);
-                        found = self.generate2(i + 1, prevG(u));
-                        if ~isempty(found)
-                            return
+                    if mask(gamma_i)
+                        b = find(prevG == gamma_i);
+                        u = self.Gchain0.u(i, b);
+                        if self.test0(i, prevG, u)
+                            assert(prevG(u(self.base0(i))) == gamma_i);
+                            found = self.generate2(i + 1, prevG(u), Hstab.stabilizer(gamma_i));
+                            if ~isempty(found)
+                                return
+                            end
                         end
                     end
                 end
@@ -302,7 +229,7 @@ classdef Backtrack1 < replab.Obj
         % Same as `.test` except it performs the test on the reduced base `.base0`
         %
         % ... should be called for ``l0 == 0`` as well
-            l = sum(self.numRed0(1:l0)) + l0; % index in the original base
+                l = sum(self.numRed0(1:l0)) + l0; % index in the original base
             if l > length(self.partialBase)
                 ok = true;
                 return
@@ -377,6 +304,82 @@ classdef Backtrack1 < replab.Obj
 
     end
 
+    methods (Static)
+
+        function [numRed0 orbitSizes] = manageRedundantPoints(base, base0, orbitSizes0)
+        % Extract properties about a full base, from the data about a base with redundant points removed
+        %
+        % Args:
+        %   base (integer(1,k)): Full base
+        %   base0 (integer(1,k0)): Subset of ``base`` with redundant points removed
+        %   orbitSizes0 (integer(1,k0)): Orbit sizes corresponding to base0
+        %
+        % Returns
+        % -------
+        %   numRed0:
+        %     integer(1,k0+1): Number of redundant points preceding each base point, position ``k0+1`` counts the final redundant points
+        %   orbitSizes:
+        %     integer(1,k): Orbit sizes corresponding to ``base``
+            k0 = length(base0);
+            k = length(base);
+            numRed0 = zeros(1, k0 + 1);
+            i = 1;
+            orbitSizes = zeros(1, k);
+            for i0 = 1:k0
+                if i > k
+                    break
+                end
+                while base(i) ~= base0(i0)
+                    orbitSizes(i) = 1;
+                    numRed0(i0) = numRed0(i0) + 1;
+                    i = i + 1;
+                    if i > k
+                        break
+                    end
+                end
+                orbitSizes(i) = orbitSizes(i0);
+                i = i + 1;
+            end
+            while i <= k
+                numRed0(end) = numRed0(end) + 1;
+                orbitSizes(i) = 1;
+                i = i + 1;
+            end
+        end
+
+        function bo = computeBaseOrdering(degree, base)
+        % Returns a base ordering from a degree and given base
+            rest = sort(setdiff(1:degree, base));
+            bo = zeros(1, degree);
+            bo(base) = 1:length(base);
+            bo(rest) = length(base) + (1:length(rest));
+        end
+
+        function b = baseHasLexOrder(base)
+        % Returns true if the base points are increasing
+            b = all(base(2:end) > base(1:end-1));
+        end
+
+        function c = groupChainInBase(group, base, removeRedundant, immutable)
+        % Get a stabilizer chain for the given group in the given base
+        %
+        % Args:
+        %   group (`+replab.PermutationGroup`): Permutation group to get the stabilizer chain from
+        %   base (integer(1,\*)): Prescribed base
+        %   removeRedundant (logical): Whether to remove all redundant base points
+        %   immutable (logical): Whether to return an immutable chain or a fresh mutable copy
+            if replab.bsgs.Backtrack1.baseHasLexOrder(base)
+                c = group.lexChain.mutableCopy;
+            else
+                c = group.chain.mutableCopy;
+            end
+            c.baseChange(base, removeRedundant);
+            if immutable
+                c.makeImmutable;
+            end
+        end
+
+    end
 end
 
 
