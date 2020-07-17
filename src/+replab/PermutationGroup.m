@@ -385,6 +385,8 @@ classdef PermutationGroup < replab.FiniteGroup
                 other = self.subgroup({other});
             end
             c = replab.bsgs.Centralizer(self, other).subgroup;
+            c1 = replab.bsgs.Centralizer1(self, other).subgroup; % DEBUG
+            assert(c == c1);
         end
 
         function res = intersection(self, other)
