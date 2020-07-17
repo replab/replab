@@ -132,7 +132,7 @@ classdef Backtrack < replab.Obj
             self.KchainInBase0 = [];
         end
 
-        function search2(self, s)
+        function search(self, s)
         % Search ``G^s`` for the subgroup of elements satisfying the property
         %
         % The call should start at level ``s = 0`` so the tests for the first redundant prescribed base points

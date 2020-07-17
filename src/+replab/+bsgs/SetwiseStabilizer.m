@@ -1,4 +1,4 @@
-classdef SetwiseStabilizer < replab.bsgs.Backtrack1
+classdef SetwiseStabilizer < replab.bsgs.Backtrack
 % Computes the unordered partition stabilizer of a group
 
     properties

@@ -1,4 +1,4 @@
-classdef LeftConjugation < replab.bsgs.Backtrack1
+classdef LeftConjugation < replab.bsgs.Backtrack
 % Computes a permutation that conjugates a permutation to another permutation
 %
 % ``t = g s g^-1``

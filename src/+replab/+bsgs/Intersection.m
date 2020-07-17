@@ -1,4 +1,4 @@
-classdef Intersection < replab.bsgs.Backtrack1
+classdef Intersection < replab.bsgs.Backtrack
 % Computes the intersection of groups
 %
 % See Section 4.6.6 of
