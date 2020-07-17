@@ -649,7 +649,9 @@ classdef PermutationGroup < replab.FiniteGroup
             end
             prop = @(p) isequal(s, t(p));
             p = replab.bsgs.backtrackSearch(chain, prop, tests, [], tStabilizer.chain, sStabilizer.chain);
-            P = sStabilizer.leftCoset(p, self);
+            p1 = replab.bsgs.PermutationTo1(self, s, t, sStabilizer, tStabilizer, true).find;
+            P = sStabilizer.leftCoset(p, self); % DEBUG
+            assert(P.contains(p1));
         end
 
         function sub = vectorStabilizer(self, vector)

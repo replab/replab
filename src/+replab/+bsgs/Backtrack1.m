@@ -90,7 +90,6 @@ classdef Backtrack1 < replab.Obj
         %   base (integer(1,\*)): Prescribed base
         %   removeRedundant (logical): Whether to remove all redundant base points
         %   immutable (logical): Whether to return an immutable chain or a fresh mutable copy
-
             if replab.bsgs.Backtrack1.baseHasLexOrder(base)
                 c = group.lexChain.mutableCopy;
             else
@@ -193,6 +192,10 @@ classdef Backtrack1 < replab.Obj
             matrix = matrix(:, ind);
         end
 
+        function res = find(self)
+            res = self.generate2(0, self.G.identity);
+        end
+
         function res = subgroup(self)
             self.search2(0);
             self.HchainInBase0.makeImmutable;
@@ -255,7 +258,11 @@ classdef Backtrack1 < replab.Obj
         %
         % Returns:
         %   permutation or ``[]``: Element satisfying `.prop` if found, otherwise ``[]``
-            if i == length(self.base0) + 1
+            if i == 0
+                identity = 1:self.degree;
+                self.test0(0, identity, identity);
+                found = self.generate2(i + 1, identity);
+            elseif i == length(self.base0) + 1
                 if self.prop(prevG);
                     found = prevG;
                 else

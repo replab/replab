@@ -7,31 +7,25 @@ classdef PermutationTo1 < replab.bsgs.Backtrack1
     properties
         partition % (`+replab.Partition`): Partition to stabilize
         blockIndex % (integer(1,domainSize)): Block index for each point, non-decreasing along the base
+        s % (double(1,domainSize)): Source vector
+        t % (double(1,domainSize)): Target vector
     end
 
     methods
 
-        function self = OrderedPartitionStabilizer1(group, partition, knownSubgroup, debug)
-            if nargin < 4 || isempty(debug)
+        function self = PermutationTo1(group, s, t, sStabilizer, tStabilizer, debug)
+            if nargin < 6 || isempty(debug)
                 debug = false;
             end
-            if nargin < 3 || isempty(knownSubgroup)
-                knownSubgroup = group.trivialSubgroup;
+            if nargin < 5 || isempty(tStabilizer)
+                tStabilizer = group.vectorStabilizer(t);
             end
-            n = partition.n;
-            assert(n == group.domainSize);
-            % sort the blocks from the smallest to the biggest
-            blocks = partition.blocks;
-            lengths = cellfun(@length, blocks);
-            mask = lengths > 1; % filter singleton blocks
-            blocks = blocks(mask);
-            lengths = lengths(mask);
-            [~, I] = sort(cellfun(@length, blocks));
-            blocks = blocks(I);
-            base = [blocks{:}];
-            self@replab.bsgs.Backtrack1(group.chain, base, knownSubgroup.chain, debug);
-            self.partition = partition;
-            self.blockIndex = partition.blockIndex;
+            if nargin < 4 || isempty(sStabilizer)
+                sStabilizer = group.vectorStabilizer(s);
+            end
+            self@replab.bsgs.Backtrack1(group, [], tStabilizer, sStabilizer, debug);
+            self.s = s;
+            self.t = t;
         end
 
 
@@ -39,13 +33,13 @@ classdef PermutationTo1 < replab.bsgs.Backtrack1
         % Verifies that blocks are mapped to blocks consistently
             beta = self.base(l);
             b = prev(ul(beta));
-            ok = self.blockIndex(beta) == self.blockIndex(b);
+            ok = s(beta) == t(b);
         end
 
 
         function ok = prop(self, g)
         % Verifies the image of every block is a block of the same partition
-            ok = all(self.blockIndex == self.blockIndex(g));
+            ok = all(self.s == self.t(g));
         end
 
     end
