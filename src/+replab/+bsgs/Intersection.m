@@ -1,4 +1,4 @@
-classdef Intersection1 < replab.bsgs.Backtrack1
+classdef Intersection < replab.bsgs.Backtrack1
 % Computes the intersection of groups
 %
 % See Section 4.6.6 of
@@ -20,7 +20,7 @@ classdef Intersection1 < replab.bsgs.Backtrack1
 
     methods
 
-        function self = Intersection1(lhs, rhs, knownSubgroup, debug)
+        function self = Intersection(lhs, rhs, knownSubgroup, debug)
             if nargin < 4 || isempty(debug)
                 debug = false;
             end
@@ -28,7 +28,7 @@ classdef Intersection1 < replab.bsgs.Backtrack1
                 knownSubgroup = [];
             end
             base = unique([lhs.lexChain.base rhs.lexChain.base]);
-            self@replab.bsgs.Backtrack1(lhs, base, knownSubgroup, knownSubgroup, debug);
+            self@replab.bsgs.Backtrack(lhs, base, knownSubgroup, knownSubgroup, debug);
             self.prevRhsInv = cell(1, length(base)+1);
             self.prevRhsInv{1} = rhs.identity;
             c = rhs.lexChain.mutableCopy;

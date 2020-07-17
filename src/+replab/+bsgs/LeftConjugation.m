@@ -1,4 +1,4 @@
-classdef LeftConjugation1 < replab.bsgs.Backtrack1
+classdef LeftConjugation < replab.bsgs.Backtrack1
 % Computes a permutation that conjugates a permutation to another permutation
 %
 % ``t = g s g^-1``
@@ -14,7 +14,7 @@ classdef LeftConjugation1 < replab.bsgs.Backtrack1
 
     methods
 
-        function self = LeftConjugation1(group, s, t, sCentralizer, tCentralizer, debug)
+        function self = LeftConjugation(group, s, t, sCentralizer, tCentralizer, debug)
             if nargin < 6 || isempty(debug)
                 debug = false;
             end
@@ -31,7 +31,7 @@ classdef LeftConjugation1 < replab.bsgs.Backtrack1
             [~, I] = sort(-cellfun(@length, sOrbits));
             sOrbits = sOrbits(I); % largest orbits first
             prescribedBase = [sOrbits{:}];
-            self@replab.bsgs.Backtrack1(group, prescribedBase, tCentralizer, sCentralizer, debug);
+            self@replab.bsgs.Backtrack(group, prescribedBase, tCentralizer, sCentralizer, debug);
             self.s = s;
             self.t = t;
         end

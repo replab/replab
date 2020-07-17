@@ -1,4 +1,4 @@
-classdef OrderedPartitionStabilizer1 < replab.bsgs.Backtrack1
+classdef OrderedPartitionStabilizer < replab.bsgs.Backtrack1
 % Computes the unordered partition stabilizer of a group
 
     properties
@@ -8,7 +8,7 @@ classdef OrderedPartitionStabilizer1 < replab.bsgs.Backtrack1
 
     methods
 
-        function self = OrderedPartitionStabilizer1(group, partition, knownSubgroup, debug)
+        function self = OrderedPartitionStabilizer(group, partition, knownSubgroup, debug)
             if nargin < 4 || isempty(debug)
                 debug = false;
             end
@@ -28,7 +28,7 @@ classdef OrderedPartitionStabilizer1 < replab.bsgs.Backtrack1
             blocks = blocks(I);
             base = [blocks{:}];
 
-            self@replab.bsgs.Backtrack1(group, base, knownSubgroup, knownSubgroup, debug);
+            self@replab.bsgs.Backtrack(group, base, knownSubgroup, knownSubgroup, debug);
             self.partition = partition;
             self.blockIndex = partition.blockIndex;
         end

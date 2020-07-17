@@ -1,4 +1,4 @@
-classdef Backtrack1 < replab.Obj
+classdef Backtrack < replab.Obj
 % Performs backtracking search among the group elements
 %
 % It attempts to reduce the search by considering only minimal elements in
@@ -30,7 +30,7 @@ classdef Backtrack1 < replab.Obj
 
     methods
 
-        function self = Backtrack1(G, partialBase, H, K, debug)
+        function self = Backtrack(G, partialBase, H, K, debug)
 
             if nargin < 3 || isempty(H)
                 H = G.trivialSubgroup;
@@ -53,7 +53,7 @@ classdef Backtrack1 < replab.Obj
             self.K = K;
 
             % compute reduced base and reconstruct properties of the prescribed base
-            Gchain0 = replab.bsgs.Backtrack1.groupChainInBase(G, partialBase, true, true);
+            Gchain0 = replab.bsgs.Backtrack.groupChainInBase(G, partialBase, true, true);
             base0 = Gchain0.base;
             if isempty(partialBase)
                 base = base0;
@@ -63,7 +63,7 @@ classdef Backtrack1 < replab.Obj
             end
             assert(length(unique(base)) == length(base));
             assert(all(ismember(base0, base)));
-            [numRed0 orbitSizes] = replab.bsgs.Backtrack1.manageRedundantPoints(base, base0, Gchain0.orbitSizes);
+            [numRed0 orbitSizes] = replab.bsgs.Backtrack.manageRedundantPoints(base, base0, Gchain0.orbitSizes);
 
             % Second block of properties
 
@@ -72,7 +72,7 @@ classdef Backtrack1 < replab.Obj
             self.orbitSizes = orbitSizes;
             self.Gchain0 = Gchain0;
             self.base0 = base0;
-            self.baseOrdering0 = [replab.bsgs.Backtrack1.computeBaseOrdering(degree, base0) degree+1 0];
+            self.baseOrdering0 = [replab.bsgs.Backtrack.computeBaseOrdering(degree, base0) degree+1 0];
             self.numRed0 = numRed0;
 
             self.HchainInBase0 = [];
@@ -118,13 +118,13 @@ classdef Backtrack1 < replab.Obj
 
         function res = find(self)
             self.subChain0 = [];
-            self.HchainInBase0 = replab.bsgs.Backtrack1.groupChainInBase(self.H, self.base0, false, true);
-            self.KchainInBase0 = replab.bsgs.Backtrack1.groupChainInBase(self.K, self.base0, false, true);
+            self.HchainInBase0 = replab.bsgs.Backtrack.groupChainInBase(self.H, self.base0, false, true);
+            self.KchainInBase0 = replab.bsgs.Backtrack.groupChainInBase(self.K, self.base0, false, true);
             res = self.generate2(0, self.G.identity, self.HchainInBase0);
         end
 
         function res = subgroup(self)
-            self.search2(0);
+            self.search(0);
             self.subChain0.makeImmutable;
             res = replab.PermutationGroup.fromChain(self.subChain0);
             self.subChain0 = [];
@@ -143,17 +143,17 @@ classdef Backtrack1 < replab.Obj
             identity = 1:self.degree;
             if s == 0
                 self.test0(0, identity, identity);
-                self.search2(s + 1);
+                self.search(s + 1);
             elseif s == length(self.base0) + 1
                 knownSubgroup = self.H.closure(self.K);
-                self.subChain0 = replab.bsgs.Backtrack1.groupChainInBase(knownSubgroup, self.base0, false, false);
+                self.subChain0 = replab.bsgs.Backtrack.groupChainInBase(knownSubgroup, self.base0, false, false);
                 assert(isequal(self.subChain0.base, self.base0), 'Known subgroup is not a subgroup');
                 self.HchainInBase0 = self.subChain0;
                 self.KchainInBase0 = self.subChain0;
             else
                 ok = self.test0(s, identity, identity);
                 assert(ok); % for now, when looking for a subgroup
-                self.search2(s + 1);
+                self.search(s + 1);
                 % note: compared to Butler, page 101, Algorithm 1, we need to remove the base point itself
                 % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
                 orbit = self.sort(self.Gchain0.Delta{s}(2:end));
@@ -165,7 +165,7 @@ classdef Backtrack1 < replab.Obj
                         u = self.Gchain0.u(s, gamma_s);
                         ok = self.test0(s, identity, u);
                         if ok
-                            found = self.generate2(s+1, self.Gchain0.u(s, gamma_s), self.HchainInBase0.stabilizer(gamma_s));
+                            found = self.generate(s+1, self.Gchain0.u(s, gamma_s), self.HchainInBase0.stabilizer(gamma_s));
                             if ~isempty(found)
                                 if self.debug
                                     assert(self.resultSet.find(found(:)) > 0);
@@ -184,7 +184,7 @@ classdef Backtrack1 < replab.Obj
 
         end
 
-        function found = generate2(self, i, prevG, Hstab)
+        function found = generate(self, i, prevG, Hstab)
         % Generate the elements of ``G^s``
         %
         % Those elements have base image ``[gamma(1) ... gamma(i-1)] = [prevG(base0(1)) ... prevG(base0(i-1))]``
@@ -202,7 +202,7 @@ classdef Backtrack1 < replab.Obj
             if i == 0
                 identity = 1:self.degree;
                 self.test0(0, identity, identity);
-                found = self.generate2(i + 1, identity, Hstab);
+                found = self.generate(i + 1, identity, Hstab);
             elseif i == length(self.base0) + 1
                 if self.prop(prevG);
                     found = prevG;
@@ -219,7 +219,7 @@ classdef Backtrack1 < replab.Obj
                         b = find(prevG == gamma_i);
                         u = self.Gchain0.u(i, b);
                         if self.test0(i, prevG, u)
-                            found = self.generate2(i + 1, prevG(u), Hstab.stabilizer(gamma_i));
+                            found = self.generate(i + 1, prevG(u), Hstab.stabilizer(gamma_i));
                             if ~isempty(found)
                                 return
                             end
@@ -408,7 +408,7 @@ classdef Backtrack1 < replab.Obj
         %   base (integer(1,\*)): Prescribed base
         %   removeRedundant (logical): Whether to remove all redundant base points
         %   immutable (logical): Whether to return an immutable chain or a fresh mutable copy
-            if replab.bsgs.Backtrack1.baseHasLexOrder(base)
+            if replab.bsgs.Backtrack.baseHasLexOrder(base)
                 c = group.lexChain.mutableCopy;
             else
                 c = group.chain.mutableCopy;

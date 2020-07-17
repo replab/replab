@@ -383,15 +383,15 @@ classdef PermutationGroup < replab.FiniteGroup
             if ~isa(other, 'replab.PermutationGroup')
                 other = self.subgroup({other});
             end
-            c = replab.bsgs.Centralizer1(self, other).subgroup;
+            c = replab.bsgs.Centralizer(self, other).subgroup;
         end
 
         function res = intersection(self, other)
             assert(self.hasSameTypeAs(other));
             if self.order > other.order
-                res = replab.bsgs.Intersection1(other, self).subgroup;
+                res = replab.bsgs.Intersection(other, self).subgroup;
             else
-                res = replab.bsgs.Intersection1(self, other).subgroup;
+                res = replab.bsgs.Intersection(self, other).subgroup;
             end
         end
 
@@ -404,7 +404,7 @@ classdef PermutationGroup < replab.FiniteGroup
             if nargin < 5 || isempty(tCentralizer)
                 tCentralizer = [];
             end
-            b = replab.bsgs.LeftConjugation1(self, s, t, sCentralizer, tCentralizer).find;
+            b = replab.bsgs.LeftConjugation(self, s, t, sCentralizer, tCentralizer).find;
             % note that we have
             % sCentralizer == tCentralizer.leftConjugateGroup(self.inverse(b))
             % tCentralizer == sCentralizer.leftConjugateGroup(b)
@@ -479,7 +479,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %
         % Returns:
         %   `.PermutationGroup`: The subgroup that stabilizes the unordered partition
-            sub = replab.bsgs.UnorderedPartitionStabilizer1(self, partition).subgroup;
+            sub = replab.bsgs.UnorderedPartitionStabilizer(self, partition).subgroup;
         end
 
         function sub = orderedPartitionStabilizer(self, partition)
@@ -500,7 +500,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %
         % Returns:
         %   `.PermutationGroup`: The subgroup that stabilizes the ordered partition
-            sub = replab.bsgs.OrderedPartitionStabilizer1(self, partition).subgroup;
+            sub = replab.bsgs.OrderedPartitionStabilizer(self, partition).subgroup;
         end
 
         function P = findPermutationsTo(self, s, t, sStabilizer, tStabilizer)
@@ -524,7 +524,7 @@ classdef PermutationGroup < replab.FiniteGroup
             if nargin < 5 || isequal(tStabilizer, [])
                 tStabilizer = self.vectorStabilizer(t);
             end
-            p = replab.bsgs.PermutationTo1(self, s, t, sStabilizer, tStabilizer).find;
+            p = replab.bsgs.PermutationTo(self, s, t, sStabilizer, tStabilizer).find;
             if ~isempty(p)
                 P = sStabilizer.leftCoset(p, self);
             else
@@ -566,7 +566,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %
         % Returns:
         %   `+replab.PermutationGroup`: The subgroup that stabilizes the set
-            s = replab.bsgs.SetwiseStabilizer1(self, set).subgroup;
+            s = replab.bsgs.SetwiseStabilizer(self, set).subgroup;
         end
 
         function s = pointwiseStabilizer(self, set)

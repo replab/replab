@@ -1,4 +1,4 @@
-classdef Centralizer1 < replab.bsgs.Backtrack1
+classdef Centralizer < replab.bsgs.Backtrack
 % Computes the centralizer of a subgroup
 
     properties
@@ -14,7 +14,7 @@ classdef Centralizer1 < replab.bsgs.Backtrack1
 
     methods
 
-        function self = Centralizer1(group, other, knownSubgroup, debug)
+        function self = Centralizer(group, other, knownSubgroup, debug)
             if nargin < 4 || isempty(debug)
                 debug = false;
             end
@@ -37,7 +37,7 @@ classdef Centralizer1 < replab.bsgs.Backtrack1
                 orbitDescr(orbit) = i;
                 longBase = [longBase orbit];
             end
-            self@replab.bsgs.Backtrack1(group, longBase, knownSubgroup, knownSubgroup, debug);
+            self@replab.bsgs.Backtrack(group, longBase, knownSubgroup, knownSubgroup, debug);
             base = self.base;
             cutAfter = find(self.orbitSizes ~= 1, 1, 'last');
             if ~isempty(cutAfter)

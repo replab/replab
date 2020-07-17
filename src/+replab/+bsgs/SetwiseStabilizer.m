@@ -1,4 +1,4 @@
-classdef SetwiseStabilizer1 < replab.bsgs.Backtrack1
+classdef SetwiseStabilizer < replab.bsgs.Backtrack1
 % Computes the unordered partition stabilizer of a group
 
     properties
@@ -8,7 +8,7 @@ classdef SetwiseStabilizer1 < replab.bsgs.Backtrack1
 
     methods
 
-        function self = SetwiseStabilizer1(group, set, knownSubgroup, debug)
+        function self = SetwiseStabilizer(group, set, knownSubgroup, debug)
             if nargin < 4 || isempty(debug)
                 debug = false;
             end
@@ -17,7 +17,7 @@ classdef SetwiseStabilizer1 < replab.bsgs.Backtrack1
             end
             mask = false(1, group.domainSize);
             mask(set) = true;
-            self@replab.bsgs.Backtrack1(group, set, knownSubgroup, knownSubgroup, debug);
+            self@replab.bsgs.Backtrack(group, set, knownSubgroup, knownSubgroup, debug);
             self.set = set;
             self.mask = mask;
         end
