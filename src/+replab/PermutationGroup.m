@@ -621,7 +621,7 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function P = findPermutationsTo(self, s, t, sStabilizer, tStabilizer)
-        % Finds the permutations that send a vector to another vector
+        % Finds the permutations that sends a vector to another vector
         %
         % We return the set of ``p`` such that ``t == s(inverse(p))`` or ``s == t(p)``.
         %

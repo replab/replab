@@ -276,6 +276,80 @@ classdef Backtrack1 < replab.Obj
             end
         end
 
+        function search3(self, s)
+        % Search ``G^s`` for the subgroup of elements satisfying the property
+        %
+        % Args:
+        %   s (integer): Level to search
+            if s == length(self.base0) + 1
+                c = self.knownSubgroup.mutableCopy;
+                c.baseChange(self.base0);
+                assert(isequal(c.base, self.base0), 'Known subgroup is not a subgroup');
+                self.HinBase0 = c;
+            else
+                identity = 1:self.degree;
+                ok = self.test0(s, identity, identity);
+                assert(ok); % for now, when looking for a subgroup
+                self.search3(s + 1);
+                % note: compared to Butler, page 101, Algorithm 1, we need to remove the base point itself
+                % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
+                orbit = self.sort(self.group0.Delta{s}(2:end));
+                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
+                for gamma_s = orbit
+                    if mask(gamma_s)
+                        u = self.group0.u(s, gamma_s);
+                        ok = self.test0(s, identity, u);
+                        if ok
+                            found = self.generate3(s+1, self.group0.u(s, gamma_s));
+                            if ~isempty(found)
+                                self.HinBase0.stripAndAddStrongGenerator(found);
+                                self.HinBase0.randomizedSchreierSims([]);
+                                mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HinBase0.S, self.baseOrdering0);
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+        function found = generate3(self, i, prevG)
+        % Generate the elements of ``G^s``
+        %
+        % Those elements have base image ``[gamma(1) ... gamma(i-1)] = [prevG(base0(1)) ... prevG(base0(i-1))]``
+        % and they may have the required property.
+        % If one is found then we extend the subgroup of ``G^(s)`` of elements with property ``P`` that have
+        % already been found, and return to search.
+        %
+        % Args:
+        %   i (integer): Level to search
+        %   prevG (permutation): Product ``u_1 ... u_{i-1}``
+        %
+        % Returns:
+        %   permutation or ``[]``: Element satisfying `.prop` if found, otherwise ``[]``
+            if i == length(self.base0) + 1
+                if self.prop(prevG);
+                    found = prevG;
+                else
+                    found = [];
+                end
+            else
+                orbit_g = self.sort(prevG(self.group0.Delta{i}));
+                for gamma_i = orbit_g
+                    b = find(prevG == gamma_i);
+                    u = self.group0.u(i, b);
+                    if self.test0(i, prevG, u)
+                        assert(prevG(u(self.base0(i))) == gamma_i);
+                        found = self.generate2(i + 1, prevG(u));
+                        if ~isempty(found)
+                            return
+                        end
+                    end
+                end
+                found = [];
+            end
+        end
+
+
         function verifyPartialBaseUnsatisfied(self, l, gPrev, ul)
             pb = self.base(1:l);
             gamma = gPrev(ul(pb));
