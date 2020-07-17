@@ -406,48 +406,43 @@ classdef PermutationGroup < replab.FiniteGroup
                 sCentralizer = self.centralizer(s);
             end
             if nargin < 5 || isempty(tCentralizer)
-                tCentralizer = self.centralizer(t);
+                tCentralizer = [];
             end
-            % Implementation note
-            % t = g s g^-1
-            % take tc^-1 in tCentralizer and sc in sCentralizer
-            % tc^-1 t tc = g sc s sc^-1 g^-1
-            % t = tc g sc s sc^-1 g^-1 tc^-1
-            % thus g -> tc g sc
-            leftSubgroup = tCentralizer.chain;
-            rightSubgroup = sCentralizer.chain;
-            prop = @(g) all(self.compose(g, s) == self.compose(t, g));
-
-            sOrbits = replab.bsgs.permutationOrbits(s);
-            [~, I] = sort(-cellfun(@length, sOrbits));
-            sOrbits = sOrbits(I); % largest orbits first
-            base = [sOrbits{:}];
-            chain = self.chain.mutableCopy;
-            chain.baseChange(base, true);
-            %chain.removeRedundantBasePointsAtTheEnd;
-            chain.makeImmutable;
-
-            base = chain.base;
-            L = length(base);
-            tests = cell(1, L);
-            beta = base(1);
-            tests{1} = @(g, data) deal(true, g);
-            for i = 2:L
-                if base(i) == s(base(i-1))
-                    % if beta == s(betaPrev)
-                    %  g(beta) == g(s(betaPrev))
-                    %  g(beta) == t(g(betaPrev))
-                    betaPrev = base(i-1);
-                    beta = base(i);
-                    tests{i} = @(g, data) deal(g(beta) == t(data(betaPrev)), g);
-                else
-                    betaPrev = base(i-1);
-                    beta = base(i);
-                    tests{i} = @(g, data) deal(true, g);
-                end
-            end
-            b = replab.bsgs.backtrackSearch(self.chain, prop, tests, [], leftSubgroup, rightSubgroup)
-            b1 = replab.bsgs.backtrackSearch(self.chain, prop, tests, [], [], [])
+% $$$             leftSubgroup = tCentralizer.chain;
+% $$$             rightSubgroup = sCentralizer.chain;
+% $$$             prop = @(g) all(self.compose(g, s) == self.compose(t, g));
+% $$$
+% $$$             sOrbits = replab.bsgs.permutationOrbits(s);
+% $$$             [~, I] = sort(-cellfun(@length, sOrbits));
+% $$$             sOrbits = sOrbits(I); % largest orbits first
+% $$$             base = [sOrbits{:}];
+% $$$             chain = self.chain.mutableCopy;
+% $$$             chain.baseChange(base, true);
+% $$$             %chain.removeRedundantBasePointsAtTheEnd;
+% $$$             chain.makeImmutable;
+% $$$
+% $$$             base = chain.base;
+% $$$             L = length(base);
+% $$$             tests = cell(1, L);
+% $$$             beta = base(1);
+% $$$             tests{1} = @(g, data) deal(true, g);
+% $$$             for i = 2:L
+% $$$                 if base(i) == s(base(i-1))
+% $$$                     % if beta == s(betaPrev)
+% $$$                     %  g(beta) == g(s(betaPrev))
+% $$$                     %  g(beta) == t(g(betaPrev))
+% $$$                     betaPrev = base(i-1);
+% $$$                     beta = base(i);
+% $$$                     tests{i} = @(g, data) deal(g(beta) == t(data(betaPrev)), g);
+% $$$                 else
+% $$$                     betaPrev = base(i-1);
+% $$$                     beta = base(i);
+% $$$                     tests{i} = @(g, data) deal(true, g);
+% $$$                 end
+% $$$             end
+            %b = replab.bsgs.backtrackSearch(self.chain, prop, tests, [], leftSubgroup, rightSubgroup)
+            %b1 = replab.bsgs.backtrackSearch(self.chain, prop, tests, [], [], [])
+            b = replab.bsgs.LeftConjugation1(self, s, t, sCentralizer, tCentralizer).find;
             % note that we have
             % sCentralizer == tCentralizer.leftConjugateGroup(self.inverse(b))
             % tCentralizer == sCentralizer.leftConjugateGroup(b)

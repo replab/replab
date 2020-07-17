@@ -5,8 +5,6 @@ classdef PermutationTo1 < replab.bsgs.Backtrack1
 %
 
     properties
-        partition % (`+replab.Partition`): Partition to stabilize
-        blockIndex % (integer(1,domainSize)): Block index for each point, non-decreasing along the base
         s % (double(1,domainSize)): Source vector
         t % (double(1,domainSize)): Target vector
     end

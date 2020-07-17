@@ -8,6 +8,8 @@ classdef Centralizer1 < replab.bsgs.Backtrack1
         orbitReps
         otherOrbits
         otherTransversals
+
+        cutAfter
     end
 
     methods
@@ -35,12 +37,13 @@ classdef Centralizer1 < replab.bsgs.Backtrack1
                 orbitDescr(orbit) = i;
                 longBase = [longBase orbit];
             end
-            self@replab.bsgs.Backtrack1(group.chain, longBase, knownSubgroup.chain, debug);
+            self@replab.bsgs.Backtrack1(group, longBase, knownSubgroup, knownSubgroup, debug);
             base = self.base;
             cutAfter = find(self.orbitSizes ~= 1, 1, 'last');
             if ~isempty(cutAfter)
                 base = base(1:cutAfter);
             end
+            self.cutAfter = cutAfter;
             L = length(base);
             j = find(cellfun(@(orbit) any(orbit == base(end)), orbits), 1, 'last');
             relOrbits = orbits(1:min(j+1, length(orbits)));
@@ -72,6 +75,10 @@ classdef Centralizer1 < replab.bsgs.Backtrack1
         end
 
         function ok = test(self, l, gPrev, ul)
+            if l > self.cutAfter
+                ok = true;
+                return
+            end
             beta = self.base(l);
             if any(self.orbitReps == self.base(l))
                 g = gPrev(ul);
