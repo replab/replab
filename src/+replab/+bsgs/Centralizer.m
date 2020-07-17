@@ -1,5 +1,9 @@
 classdef Centralizer < replab.bsgs.Backtrack
 % Computes the centralizer of a subgroup
+%
+% See page 111 of
+%
+% G. Butler, Fundamental Algorithms for Permutation Groups. vol. 559 (Springer Berlin Heidelberg, 1991).
 
     properties
         other % `+replab.PermutationGroup`: Subgroup to centralize

@@ -1,4 +1,4 @@
-classdef PermutationTo < replab.bsgs.Backtrack1
+classdef PermutationTo < replab.bsgs.Backtrack
 % Computes the permutation that sends a vector to another vector
 %
 % We return the set of ``p`` such that ``t == s(inverse(p))`` or ``s == t(p)``.

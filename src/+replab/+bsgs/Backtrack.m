@@ -1,8 +1,50 @@
 classdef Backtrack < replab.Obj
 % Performs backtracking search among the group elements
 %
-% It attempts to reduce the search by considering only minimal elements in
-% the double coset ``H g K`` of a group ``G``.
+% It is a base class used for different but related tasks:
+%
+% - the computation of a subgroup of a group, whose elements satisfy a property,
+% - the search of an element of a group satisfying a property.
+%
+% It attempts to reduce the search by considering only minimal elements in the double coset ``H g K`` of a group ``G``.
+%
+% We also use a object-oriented interface, instead of passing function handles for property and base image tests.
+%
+% In the subgroup search case, note that we assume that the elements that satisfy ``prop`` form a group. The current
+% subgroup found is stored in a stabilizer chain `.subChain0`, and copies of it are made in `.HchainInBase0` and
+% `.KchainInBase0`. Those chains are updated whenever a new subgroup generator is found.
+% It is assumed that the user-given groups `.H` and `.K` are subgroups of the group we search for.
+% Thus at the start of the search, `.subChain0` is initialized to the stabilizer chain of the closure of `.H` and `.K`.
+%
+% In the (coset) backtrack search case, `.subChain0` is not used, and `.HchainInBase0`, `.KchainInBase0` are initialized
+% to the stabilizer chains of given groups `.H` and `.K`; and it is assumed that for any element ``g`` satisfying the property,
+% then ``h g k`` also satisfies the property for any ``h`` in `.H` and ``k`` in `.K`.
+%
+% The property being tested should be implemented in `.prop`.
+%
+% The user can specify partial image tests. Those image tests are conducted relative to the user given partial base
+% `.partialBase`. Note that the actual base starting with `.partialBase` may be longer; and that the code actually
+% operates on a stabilizer chain whose redundant base points have been removed.
+%
+% However, the partial image tests are called as if the stabilizer chain started with `.partialBase`. Notably,
+% `.partialBase`, `.base` and `.orbitSizes` correspond to the base with possible redundancy.
+%
+% Three references will be helpful in making sense of the code below:
+%
+% D. Holt, B. Eick, E. O’Brien, Handbook of Computational Group Theory. (CRC Press, 2005).
+%
+% which presents the most complete pruning criteria we know. An implementation following closely the pseudo-code
+% in the book is available in Sympy 1.6, ``PermutationGroup.subgroup_search``; however, Sympy does not implement
+% backtracking coset search.
+%
+% Our implementation follows more closely the overall structure given in
+%
+% G. Butler, Fundamental Algorithms for Permutation Groups. vol. 559 (Springer Berlin Heidelberg, 1991).
+%
+% which is more versatile, as their ``generate`` procedure directly provides search in double cosets.
+%
+% A `.debug` parameter can be set, which computes by brute enumeration the set of elements satisfying the property,
+% which are then used to validate the partial base image tests.
 
     properties
 
@@ -120,7 +162,7 @@ classdef Backtrack < replab.Obj
             self.subChain0 = [];
             self.HchainInBase0 = replab.bsgs.Backtrack.groupChainInBase(self.H, self.base0, false, true);
             self.KchainInBase0 = replab.bsgs.Backtrack.groupChainInBase(self.K, self.base0, false, true);
-            res = self.generate2(0, self.G.identity, self.HchainInBase0);
+            res = self.generate(0, self.G.identity, self.HchainInBase0);
         end
 
         function res = subgroup(self)
@@ -308,8 +350,8 @@ classdef Backtrack < replab.Obj
         % ``[g(base(1)) ... g(base(l))]``. False negatives are possible, but not false positives.
         %
         % Note that those tests are performed in the context of the original base `.base`, and thus
-        % ``l`` has to be understood in that context. The code transparently handles the removed base
-        % points by calling the tests according to the original conventionx.
+        % ``l`` has to be understood in that context. The rest of the code transparently handles the removed base
+        % points by calling this method according to the original convention.
         %
         % Args:
         %   l (integer): Level of the test
@@ -318,7 +360,7 @@ classdef Backtrack < replab.Obj
         %
         % Returns:
         %   logical: False if there no element in the searched set that has the current partial base image
-            error('Abstract');
+            ok = true; % default implementation
         end
 
         function l = greaterThan(self, x, y)
@@ -420,4 +462,5 @@ classdef Backtrack < replab.Obj
         end
 
     end
+
 end
