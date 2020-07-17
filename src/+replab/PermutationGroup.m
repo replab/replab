@@ -185,7 +185,7 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function C = computeConjugacyClasses(self)
-            if self.order < 10000
+            if self.order < 100000
                 classes = replab.nfg.conjugacyClassesByOrbits(self);
                 n = length(classes);
                 C = cell(1, n);
