@@ -185,7 +185,7 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function C = computeConjugacyClasses(self)
-            if self.order < 5000
+            if self.order < 10000
                 classes = replab.nfg.conjugacyClassesByOrbits(self);
                 n = length(classes);
                 C = cell(1, n);
@@ -198,11 +198,10 @@ classdef PermutationGroup < replab.FiniteGroup
                 remains = self.order - 1;
                 tries = 0;
                 while remains > 0
-                    tries = tries + 1;
                     remains
+                    tries = tries + 1;
                     g = self.sample;
                     if all(cellfun(@(c) ~c.contains(g), C))
-                        tries
                         tries = 0;
                         cl = replab.ConjugacyClass(self, g);
                         C{1,end+1} = cl;
@@ -384,8 +383,7 @@ classdef PermutationGroup < replab.FiniteGroup
             if ~isa(other, 'replab.PermutationGroup')
                 other = self.subgroup({other});
             end
-            c1 = replab.bsgs.Centralizer1(self, other).subgroup;
-            assert(c == c1);
+            c = replab.bsgs.Centralizer1(self, other).subgroup;
         end
 
         function res = intersection(self, other)

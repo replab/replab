@@ -19,7 +19,7 @@ classdef LeftConjugation1 < replab.bsgs.Backtrack1
                 debug = false;
             end
             if nargin < 5 || isempty(tCentralizer)
-                tCentralizer = group.centralizer(t);
+                tCentralizer = [];
             end
             if nargin < 4 || isempty(sCentralizer)
                 sCentralizer = group.centralizer(s);
