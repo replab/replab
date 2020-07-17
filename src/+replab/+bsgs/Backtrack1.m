@@ -159,7 +159,7 @@ classdef Backtrack1 < replab.Obj
                 orbit = self.sort(self.Gchain0.Delta{s}(2:end));
                 mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HchainInBase0.S, self.baseOrdering0);
                 mu = self.computeMu(s, identity);
-                ind = min(self.computeNu(s)-1, length(orbit));
+                ind = min(self.computeNu(s)+1-1, length(orbit)); % +1 because we removed the first point
                 for gamma_s = orbit(1:ind)
                     if mask(gamma_s) && self.greaterThan(gamma_s, mu)
                         u = self.Gchain0.u(s, gamma_s);

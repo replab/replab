@@ -389,9 +389,9 @@ classdef PermutationGroup < replab.FiniteGroup
         function res = intersection(self, other)
             assert(self.hasSameTypeAs(other));
             if self.order > other.order
-                s = replab.bsgs.Intersection1(other, self).subgroup;
+                res = replab.bsgs.Intersection1(other, self).subgroup;
             else
-                s = replab.bsgs.Intersection1(self, other).subgroup;
+                res = replab.bsgs.Intersection1(self, other).subgroup;
             end
         end
 
@@ -566,7 +566,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %
         % Returns:
         %   `+replab.PermutationGroup`: The subgroup that stabilizes the set
-            s = replab.bsgs.SetwiseStabilizer1(self, set);
+            s = replab.bsgs.SetwiseStabilizer1(self, set).subgroup;
         end
 
         function s = pointwiseStabilizer(self, set)
