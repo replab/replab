@@ -337,6 +337,20 @@ classdef Chain < replab.Str
             ok = true;
         end
 
+        function changeBasePointAt(self, l, newBeta)
+        % Changes a base point at a given position in the chain
+        %
+        % Preserves the base before the given level, modifies the chain in place.
+        % Does not remove redundant base points.
+        %
+        % Args:
+        %   l (integer): Level at which to set the base point
+        %   newBeta (integer): New base point to set
+        %   removeRedundant (logical): Whether to remove redundant base points
+            assert(all(self.B(1:l-1) ~= newBeta));
+            self.baseChange([self.B(1:l-1) newBeta]);
+        end
+
         function baseChange(self, newBase, removeRedundant)
         % Changes in-place the base of this BSGS chain
         %

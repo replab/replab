@@ -164,7 +164,7 @@ classdef Backtrack < replab.Obj
             self.subChain0 = [];
             self.HchainInBase0 = replab.bsgs.Backtrack.groupChainInBase(self.H, self.base0, false, true);
             self.KchainInBase0 = replab.bsgs.Backtrack.groupChainInBase(self.K, self.base0, false, true);
-            res = self.generate(0, self.G.identity, self.HchainInBase0);
+            res = self.generate(0, self.G.identity, self.HchainInBase0, 1);
         end
 
         function res = subgroup(self)
@@ -209,10 +209,24 @@ classdef Backtrack < replab.Obj
                 ind = min(self.computeNu(s)+1-1, length(orbit)); % +1 because we removed the first point
                 for gamma_s = orbit(1:ind)
                     if mask(gamma_s) && self.greaterThan(gamma_s, mu)
-                        u = self.Gchain0.u(s, gamma_s);
+                        % this performs u = self.Gchain0.u(s, gamma_s)
+                        ind = self.Gchain0.iDelta(gamma_s, s);
+                        u = self.Gchain0.U{s}(:, ind)';
+
                         ok = self.test0(s, identity, u);
                         if ok
-                            found = self.generate(s+1, self.Gchain0.u(s, gamma_s), self.HchainInBase0.stabilizer(gamma_s));
+                            Hstab = self.HchainInBase0.chainFromLevel(s, false);
+                            if Hstab.stabilizes(1, gamma_s)
+                                HstabLevel = 1;
+                            else
+                                Hstab.changeBasePointAt(1, gamma_s);
+                                HstabLevel = 2;
+                            end
+                            os = Hstab.orbitSizes;
+                            if all(os(HstabLevel:end) == 1)
+                                Hstab = [];
+                            end
+                            found = self.generate(s+1, self.Gchain0.u(s, gamma_s), Hstab, HstabLevel);
                             if ~isempty(found)
                                 if self.debug
                                     assert(self.resultSet.find(found(:)) > 0);
@@ -231,7 +245,7 @@ classdef Backtrack < replab.Obj
 
         end
 
-        function found = generate(self, i, prevG, Hstab)
+        function found = generate(self, i, prevG, Hstab, HstabLevel)
         % Generate the elements of ``G^s``
         %
         % Those elements have base image ``[gamma(1) ... gamma(i-1)] = [prevG(base0(1)) ... prevG(base0(i-1))]``
@@ -243,7 +257,7 @@ classdef Backtrack < replab.Obj
         %   i (integer): Level to search
         %   prevG (permutation): Product ``u_1 ... u_{i-1}``
         %   Hstab (`.Chain` or ``[]``): Chain for `.H` with ``gamma(1) ... gamma(i-1)`` stabilized
-        %                               Set to ``[]`` when the subgroup is trivial.
+        %   HstabLevel (integer): Level at which to start consider ``Hstab``
         %
         % Returns:
         %   permutation or ``[]``: Element satisfying `.prop` if found, otherwise ``[]``
@@ -271,16 +285,27 @@ classdef Backtrack < replab.Obj
                 for gamma_i = orbit_g(1:ind)
                     if mask(gamma_i) && self.baseOrdering0(gamma_i) > self.baseOrdering0(mu)
                         b = find(prevG == gamma_i);
-                        u = self.Gchain0.u(i, b);
+                        ind = self.Gchain0.iDelta(b, i);
+                        u = self.Gchain0.U{i}(:, ind)';
                         if self.test0(i, prevG, u)
-                            Hstab1 = Hstab;
-                            if ~isempty(Hstab1)
-                                Hstab1 = Hstab1.stabilizer(gamma_i, true);
-                                if all(Hstab1.orbitSizes == 1)
+                            if isempty(Hstab)
+                                Hstab1 = Hstab;
+                                % do nothing
+                                HstabLevel1 = 0;
+                            elseif Hstab.stabilizes(HstabLevel, gamma_i)
+                                Hstab1 = Hstab;
+                                HstabLevel1 = HstabLevel;
+                            else
+                                Hstab.changeBasePointAt(HstabLevel, gamma_i);
+                                HstabLevel1 = HstabLevel + 1;
+                                os = Hstab.orbitSizes;
+                                if all(os(HstabLevel1:end) == 1)
                                     Hstab1 = [];
+                                else
+                                    Hstab1 = Hstab;
                                 end
                             end
-                            found = self.generate(i + 1, prevG(u), Hstab1);
+                            found = self.generate(i + 1, prevG(u), Hstab1, HstabLevel1);
                             if ~isempty(found)
                                 return
                             end
