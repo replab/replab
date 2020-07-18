@@ -588,8 +588,8 @@ classdef PermutationGroup < replab.FiniteGroup
             c = self.chain.mutableCopy;
             c.baseChange(set, true);
             l = find(~ismember(c.base, set), 1); % find the first base point that is not in set
-            c = c.chainFromLevel(l);
-            c.makeImmutable;
+            immutable = true;
+            c = c.chainFromLevel(l, immutable);
             s = replab.PermutationGroup.fromChain(c, self.type);
         end
 

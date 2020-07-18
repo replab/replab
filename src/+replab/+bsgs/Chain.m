@@ -464,8 +464,10 @@ classdef Chain < replab.Str
             end
         end
 
-        function c = chainFromLevel(self, l)
+        function c = chainFromLevel(self, l, immutable)
         % Returns the chain starting at the given level
+        %
+        % Always returns a fresh copy, even if ``l == 1``.
         %
         % Args:
         %   l (integer): Level in this chain at which to start the returned chain
@@ -480,7 +482,7 @@ classdef Chain < replab.Str
             newU = self.U(l:end);
             newUinv = self.Uinv(l:end);
             c = replab.bsgs.Chain(self.n, newB, newS, newSind, newDelta, newiDelta, newU, newUinv);
-            if ~self.isMutable
+            if immutable
                 c.makeImmutable;
             end
         end

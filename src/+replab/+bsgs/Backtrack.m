@@ -59,6 +59,7 @@ classdef Backtrack < replab.Obj
 
         Gchain0 % (`.Chain`): Stabilizer chain of `.group` following `.base` with redundant points removed
         base0 % (integer(1,\*)): Prescribed base with redundant points removed
+        baseLen0 % (integer): Equal to ``length(base0)``
         baseOrdering0 % (integer(1,domainSize+2)): Base ordering including two guard elements
         numRed0 % (integer(1,\*)): Number of redundant points in the original base preceding each base point of base0; number at the end is the number of points *after* the last nonredundant point
 
@@ -114,6 +115,7 @@ classdef Backtrack < replab.Obj
             self.orbitSizes = orbitSizes;
             self.Gchain0 = Gchain0;
             self.base0 = base0;
+            self.baseLen0 = length(base0);
             self.baseOrdering0 = [replab.bsgs.Backtrack.computeBaseOrdering(degree, base0) degree+1 0];
             self.numRed0 = numRed0;
 
@@ -186,7 +188,7 @@ classdef Backtrack < replab.Obj
             if s == 0
                 self.test0(0, identity, identity);
                 self.search(s + 1);
-            elseif s == length(self.base0) + 1
+            elseif s == self.baseLen0 + 1
                 knownSubgroup = self.H.closure(self.K);
                 self.subChain0 = replab.bsgs.Backtrack.groupChainInBase(knownSubgroup, self.base0, false, false);
                 assert(isequal(self.subChain0.base, self.base0), 'Known subgroup is not a subgroup');
@@ -246,7 +248,7 @@ classdef Backtrack < replab.Obj
                 identity = 1:self.degree;
                 self.test0(0, identity, identity);
                 found = self.generate(i + 1, identity, Hstab);
-            elseif i == length(self.base0) + 1
+            elseif i == self.baseLen0 + 1
                 if self.prop(prevG);
                     found = prevG;
                 else
@@ -258,7 +260,7 @@ classdef Backtrack < replab.Obj
                 mu = self.computeMu(i, prevG);
                 ind = min(self.computeNu(i)-1, length(orbit_g));
                 for gamma_i = orbit_g(1:ind)
-                    if mask(gamma_i) && self.greaterThan(gamma_i, mu)
+                    if mask(gamma_i) && self.baseOrdering0(gamma_i) > self.baseOrdering0(mu)
                         b = find(prevG == gamma_i);
                         u = self.Gchain0.u(i, b);
                         if self.test0(i, prevG, u)
