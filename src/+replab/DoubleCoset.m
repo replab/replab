@@ -28,6 +28,18 @@ classdef DoubleCoset < replab.FiniteSet
             self.Kprmgrp = parent.niceMorphism.imageGroup(K);
         end
 
+    end
+
+    methods % Implementations
+
+        % Domain
+
+        function s = sample(self)
+            s = self.type.compose(self.H.sample, self.type.compose(self.representative, self.K.sample));
+        end
+
+        % FiniteSet
+
         function s = size(self)
         % Returns the size of this double coset
         %

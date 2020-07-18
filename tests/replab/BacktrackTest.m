@@ -9,9 +9,7 @@ end
 function test_backtrack
     n = 10;
     G = replab.S(n);
-    for j = 1:3
-        G = replab.nfg.randomSubgroup(G);
-    end
+    G = G.randomProperSubgroup(3);
     s = randi(3, 1, n);
     g = G.sample;
     t(g) = s;

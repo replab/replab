@@ -28,30 +28,19 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
 
     methods
 
+        function s = sample(self)
+            s = sample@replab.LeftCoset(self);
+        end
+
         function s = size(self)
-        % Returns the size of this coset
-        %
-        % Returns:
-        %   vpi: Coset size
             s = size@replab.LeftCoset(self);
         end
 
         function b = contains(self, el)
-        % Returns if this coset contains the given element
-        %
-        % Args:
-        %   el (element of `.type`): Element to check
-        %
-        % Returns:
-        %   logical: True if this coset contains the element
             b = contains@replab.LeftCoset(self, el);
         end
 
         function E = computeElements(self)
-        % Returns an indexed family of the elements of this coset
-        %
-        % Returns:
-        %   `+replab.IndexedFamily`: Elements
             E = computeElements@replab.LeftCoset(self);
         end
 

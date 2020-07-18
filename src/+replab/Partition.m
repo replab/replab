@@ -141,6 +141,19 @@ classdef Partition < replab.Str
             P1 = replab.Partition(blockIndex1, blocks1);
         end
 
+        function S = singletons(self)
+        % Returns a set of all points that are singletons of this partition
+        %
+        % The singletons are the blocks of size 1.
+        %
+        % Returns:
+        %   integer(1,\*): Set of points
+            blocks = self.blocks;
+            lengths = cellfun(@length, blocks);
+            blocks = blocks(lengths == 1);
+            S = [blocks{:}];
+        end
+
     end
 
     methods (Static)

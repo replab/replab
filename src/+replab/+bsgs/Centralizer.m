@@ -1,26 +1,32 @@
-classdef Centralizer
+classdef Centralizer < replab.bsgs.Backtrack
 % Computes the centralizer of a subgroup
+%
+% See page 111 of
+%
+% G. Butler, Fundamental Algorithms for Permutation Groups. vol. 559 (Springer Berlin Heidelberg, 1991).
 
     properties
-        group % `+replab.PermutationGroup`: Group
         other % `+replab.PermutationGroup`: Subgroup to centralize
+
+        orbitDescr
+        orbitReps
+        otherOrbits
+        otherTransversals
+
+        cutAfter
     end
 
     methods
 
-        function self = Centralizer(group, other)
-            self.group = group;
-            self.other = other;
-        end
-
-
-        function s = subgroup(self)
-            if self.group.isTrivial || self.other.isTrivial
-                s = self.group;
-                return
+        function self = Centralizer(group, other, knownSubgroup, debug)
+            if nargin < 4 || isempty(debug)
+                debug = false;
             end
-            degree = self.group.domainSize;
-            orbits = self.other.orbits.blocks;
+            if nargin < 3 || isempty(knownSubgroup)
+                knownSubgroup = group.trivialSubgroup;
+            end
+            degree = group.domainSize;
+            orbits = other.orbits.blocks;
             numOrbits = length(orbits);
             [~, ind] = sort(-cellfun(@length, orbits));
             orbits = orbits(ind); % sort by decreasing length
@@ -35,10 +41,13 @@ classdef Centralizer
                 orbitDescr(orbit) = i;
                 longBase = [longBase orbit];
             end
-            chain = self.group.chain.mutableCopy;
-            chain.baseChange(longBase);
-            chain.removeRedundantBasePointsAtTheEnd;
-            base = chain.base;
+            self@replab.bsgs.Backtrack(group, longBase, knownSubgroup, knownSubgroup, debug);
+            base = self.base;
+            cutAfter = find(self.orbitSizes ~= 1, 1, 'last');
+            if ~isempty(cutAfter)
+                base = base(1:cutAfter);
+            end
+            self.cutAfter = cutAfter;
             L = length(base);
             j = find(cellfun(@(orbit) any(orbit == base(end)), orbits), 1, 'last');
             relOrbits = orbits(1:min(j+1, length(orbits)));
@@ -47,23 +56,15 @@ classdef Centralizer
             otherTransversals = cell(1, numRelOrbits);
             for j = 1:numRelOrbits
                 rep = orbitReps(j);
-                [O T] = replab.bsgs.orbitTransversal(degree, self.other.generatorsAsMatrix', rep);
+                [O T] = replab.bsgs.orbitTransversal(degree, other.generatorsAsMatrix', rep);
                 otherOrbits{j} = O;
                 otherTransversals{j} = T;
             end
-            tests = cell(1, L);
-            for l = 1:L
-                if any(base(l) == orbitReps)
-                    tests{l} = @(g, data) deal(true, []);
-                else
-                    tests{l} = @(g, data) deal(replab.bsgs.Centralizer.test(g, base(l), orbitDescr, orbitReps, otherOrbits, otherTransversals), []);
-                end
-            end
-
-            startData = [];
-            initSubgroup = [];
-            bt = replab.bsgs.Backtrack(chain, @(g) self.prop(g), tests, startData, initSubgroup, true);
-            s = replab.PermutationGroup.fromChain(bt.subgroup, self.group.type);
+            self.other = other;
+            self.orbitDescr = orbitDescr;
+            self.orbitReps = orbitReps;
+            self.otherOrbits = otherOrbits;
+            self.otherTransversals = otherTransversals;
         end
 
         function b = prop(self, g)
@@ -77,21 +78,25 @@ classdef Centralizer
             b = true;
         end
 
-    end
-
-    methods (Static)
-
-        function [ok, data] = test(g, beta, orbitDescr, orbitReps, otherOrbits, otherTransversals)
-            repOrbIndex = orbitDescr(beta);
-            rep = orbitReps(repOrbIndex);
-            im = g(beta);
-            imRep = g(rep);
-            trEl = otherTransversals{repOrbIndex}(:, find(otherOrbits{repOrbIndex} == beta))';
-            ok = (im == trEl(imRep));
+        function ok = test(self, l, gPrev, ul)
+            if l > self.cutAfter
+                ok = true;
+                return
+            end
+            beta = self.base(l);
+            if any(self.orbitReps == self.base(l))
+                g = gPrev(ul);
+                repOrbIndex = self.orbitDescr(beta);
+                rep = self.orbitReps(repOrbIndex);
+                im = gPrev(ul(beta));
+                imRep = gPrev(ul(rep));
+                trEl = self.otherTransversals{repOrbIndex}(:, find(self.otherOrbits{repOrbIndex} == beta))';
+                ok = (im == trEl(imRep));
+            else
+                ok = true;
+            end
         end
 
     end
-
-
 
 end

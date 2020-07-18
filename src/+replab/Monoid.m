@@ -43,6 +43,9 @@ classdef Monoid < replab.Domain
         %
         % Args:
         %   elements (cell(1,\*) of element): Elements to compose
+        %
+        % Returns:
+        %   element: Composition of the given elements
             if length(elements) == 0
                 assert(isa(self, 'replab.Monoid'));
                 z = self.identity;
@@ -55,11 +58,14 @@ classdef Monoid < replab.Domain
         end
 
         function y = composeN(self, x, n)
-        % Computes ``y = x^n`` by repeated squaring
+        % Computes the power of a given element by repeated squaring
         %
-        % When "self" is a
-        % - `.Monoid`, we need n >= 0
-        % - `.Group`, ``n`` is an arbitrary integer
+        % Args:
+        %   x (element): Monoid/group element
+        %   n (integer): Power; if this is not a group, we need ``n >= 0``
+        %
+        % Returns:
+        %   element: The element ``x^n``
             if n < 0
                 assert(isa(self, 'replab.Group'));
                 y = self.composeN(self.inverse(x), -n);
@@ -86,8 +92,26 @@ classdef Monoid < replab.Domain
         end
 
         function b = isIdentity(self, x)
-        % Returns true if x is the identity, false otherwise
+        % Tests if the given element is the identity
+        %
+        % Args:
+        %   x (element): Monoid/Group element
+        %
+        % Returns:
+        %   logical: True if ``x`` is the identity, false otherwise
             b = self.eqv(x, self.identity);
+        end
+
+        function b = areCommuting(self, x, y)
+        % Returns whether the two given elements commute
+        %
+        % Args:
+        %   x (element): Monoid/Group element
+        %   y (element): Monoid/Group element
+        %
+        % Returns:
+        %   logical: True if ``x y = y x``, false otherwise
+            b = self.eqv(self.compose(x, y), self.compose(y, x));
         end
 
     end

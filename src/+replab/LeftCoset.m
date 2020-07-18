@@ -38,6 +38,12 @@ classdef LeftCoset < replab.Coset
 
     methods % Implementations
 
+        % Domain
+
+        function s = sample(self)
+            s = self.type.compose(self.representative, self.group.sample);
+        end
+
         % FiniteSet
 
         function s = size(self)
