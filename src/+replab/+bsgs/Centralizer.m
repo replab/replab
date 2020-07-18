@@ -11,6 +11,7 @@ classdef Centralizer < replab.bsgs.Backtrack
         orbitDescr
         orbitReps
         otherOrbits
+        otherIOrbits
         otherTransversals
 
         cutAfter
@@ -53,10 +54,12 @@ classdef Centralizer < replab.bsgs.Backtrack
             relOrbits = orbits(1:min(j+1, length(orbits)));
             numRelOrbits = length(relOrbits);
             otherOrbits = cell(1, numRelOrbits);
+            otherIOrbits = zeros(degree, numRelOrbits);
             otherTransversals = cell(1, numRelOrbits);
             for j = 1:numRelOrbits
                 rep = orbitReps(j);
                 [O T] = replab.bsgs.orbitTransversal(degree, other.generatorsAsMatrix', rep);
+                otherIOrbits(O,j) = 1:length(O);
                 otherOrbits{j} = O;
                 otherTransversals{j} = T;
             end
@@ -64,6 +67,7 @@ classdef Centralizer < replab.bsgs.Backtrack
             self.orbitDescr = orbitDescr;
             self.orbitReps = orbitReps;
             self.otherOrbits = otherOrbits;
+            self.otherIOrbits = otherIOrbits;
             self.otherTransversals = otherTransversals;
         end
 
@@ -84,14 +88,15 @@ classdef Centralizer < replab.bsgs.Backtrack
                 return
             end
             beta = self.base(l);
-            if any(self.orbitReps == self.base(l))
-                g = gPrev(ul);
+            if all(self.orbitReps ~= self.base(l))
+                % note that g = gPrev(ul);
                 repOrbIndex = self.orbitDescr(beta);
                 rep = self.orbitReps(repOrbIndex);
                 im = gPrev(ul(beta));
                 imRep = gPrev(ul(rep));
-                trEl = self.otherTransversals{repOrbIndex}(:, find(self.otherOrbits{repOrbIndex} == beta))';
-                ok = (im == trEl(imRep));
+                %trEl = self.otherTransversals{repOrbIndex}(:, self.otherIOrbits(beta, repOrbIndex))';
+                %ok = (im == trEl(imRep));
+                ok = im == self.otherTransversals{repOrbIndex}(imRep, self.otherIOrbits(beta, repOrbIndex))';
             else
                 ok = true;
             end
