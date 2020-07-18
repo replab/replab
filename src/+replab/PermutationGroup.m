@@ -194,18 +194,37 @@ classdef PermutationGroup < replab.FiniteGroup
                     C{i} = replab.ConjugacyClass(self, cl(1,:));
                 end
             else
-                C = {replab.ConjugacyClass(self, self.identity)};
-                remains = self.order - 1;
-                tries = 0;
+                toTry = {self.identity};
+                C = {};
+                remains = self.order;
                 while remains > 0
-                    remains
-                    tries = tries + 1;
-                    g = self.sample;
-                    if all(cellfun(@(c) ~c.contains(g), C))
-                        tries = 0;
+                    % remains
+                    if isempty(toTry)
+                        g = self.sample;
+                    else
+                        g = toTry{end};
+                        toTry = toTry(1:end-1);
+                    end
+                    newClass = true;
+                    for i = 1:length(C)
+                        c = C{i};
+                        if isequal(replab.Permutation.cycleStructure(c.representative), replab.Permutation.cycleStructure(g))
+                            if c.contains(g)
+                                newClass = false;
+                                break
+                            end
+                        end
+                    end
+                    if newClass
                         cl = replab.ConjugacyClass(self, g);
                         C{1,end+1} = cl;
                         remains = remains - cl.size;
+                        el = g;
+                        % TODO: optimize as soon as we're back to this conjugacy class
+                        for i = 2:self.elementOrder(g)-1
+                            el = g(el);
+                            toTry{1,end+1} = el;
+                        end
                     end
                 end
             end
