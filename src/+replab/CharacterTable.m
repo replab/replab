@@ -4,10 +4,10 @@ classdef CharacterTable < replab.Obj
 % Example:
 %   >>> s3ct = replab.CharacterTable.forGenericGroup(replab.S(3));
 %   >>> disp(s3ct.table)
-%            [1, 3, 2]  [2, 3, 1]  [1, 2, 3]  
-%       X.1      1          1          1      
-%       X.2      0         -1          2      
-%       X.3     -1          1          1      
+%            [1, 3, 2]  [2, 3, 1]  [1, 2, 3]
+%       X.1      1          1          1
+%       X.2      0         -1          2
+%       X.3     -1          1          1
 
     properties (SetAccess = protected)
         group % (`+replab.Group`): group represented by character table
@@ -16,7 +16,7 @@ classdef CharacterTable < replab.Obj
         chars % (double(nclasses, nclasses)): matrix of characters
         table % (`+replab.str.Table`): table object for display purposes
     end
-    
+
     methods
 
         function self = CharacterTable(group, irreps, classes, chars)
@@ -25,7 +25,7 @@ classdef CharacterTable < replab.Obj
             self.irreps = irreps;
             self.classes = classes;
             self.chars = chars;
-            
+
             % make Table object of character table
             colnames = cellfun(@(v) v.representative, self.classes, 'UniformOutput', false);
             nirreps = length(self.irreps);
@@ -43,7 +43,7 @@ classdef CharacterTable < replab.Obj
             end
             s = sprintf(['Character table for ', group_str]);
         end
-        
+
         function useBorders(self, logical)
         %  Turn on and off borders on the table
         %
@@ -59,7 +59,7 @@ classdef CharacterTable < replab.Obj
                 self.table.setRowSep(0:self.table.nRows, '')
             end
         end
-        
+
         function setIrrepLabels(self, labels)
         % Set the labels for the irreducible representation in the table
         %
@@ -76,7 +76,7 @@ classdef CharacterTable < replab.Obj
                 self.table.addRowNames(rownames)
             end
         end
-        
+
         function setClassLabels(self, labels)
         % Set the labels for the conjugacy classes in the table
         %
@@ -91,7 +91,7 @@ classdef CharacterTable < replab.Obj
                 self.table.addColumnNames(colnames)
             end
         end
-        
+
         function table = pointGroupTable(self)
         % Returns a table with labels in chemistry notation
             table = self.table;
@@ -102,17 +102,18 @@ classdef CharacterTable < replab.Obj
             end
             table.addRowNames(irrepLabels)
         end
-        
+
         function sizes = classSizes(self)
             sizes = cellfun(@(c) c.size, self.classes);
         end
-        
+
     end
-    
+
     methods (Static)
-        
+
         function sym = mulliken(rep)
         % Returns the Mulliken symbol of a representation
+        %
         % Requires knowledge of the principal axis to fully determine
             if rep.dimension == 1
                 sym = 'A/B';
@@ -120,29 +121,43 @@ classdef CharacterTable < replab.Obj
                 sym = 'E';
             end
         end
-        
-        function table = forGenericGroup(group)
-        % Generates character table for a generic group
-        % Characters are currently rounded because they are not precise
-        % This algorithm is not fast
+
+        function table = forPermutationGroup(group)
+        % Generates character table for a permutation group
+        %
+        % This currently assumes that the characters are integers, and the algorithm is slow.
         %
         % Args:
-        %    group (`+replab.Group`): group with decomposition and
-        %                               conjugacy classes
-        % 
-        % Returns:
-        %    table (`+replab.CharacterTable`): character table of group
+        %    group (`+replab.PermutationGroup`): Permutation group
         %
+        % Returns:
+        %    table (`+replab.CharacterTable`): Character table of group
+            assert(isa(group, 'replab.PermutationGroup'));
             ord = double(group.order);
             decomp = group.naturalRep.decomposition.nice;
             irreps = decomp.components;
             classes = group.conjugacyClasses;
             k = length(classes);
+            for i = 1:k
+                % verify that g^n is conjugate to g for all g \in G and n \in Z with n and (g) coprime
+                % https://math.stackexchange.com/questions/2792741/classification-of-groups-with-integer-valued-characters
+                cl = classes{i};
+                g = cl.representative;
+                eo = group.elementOrder(g);
+                for j = 2:eo-1
+                    if gcd(j, eo) == 1
+                        if ~cl.contains(group.composeN(g, j))
+                            error('Group does not have integer characters');
+                        end
+                    end
+                end
+            end
+            disp('test passed')
             ccreps = cell(1, length(classes));
             cclens = cell(1, length(classes));
             for i = 1:k
                 ccreps{i} = classes{i}.representative;
-                cclens{i} = classes{i}.size;
+                cclens{i} = double(classes{i}.size);
             end
             nirreps = length(irreps);
             chars = cell(nirreps, k);
@@ -182,6 +197,6 @@ classdef CharacterTable < replab.Obj
             chars = round(chars);
             table = replab.CharacterTable(group, irreps, classes, chars);
         end
-        
+
     end
 end
