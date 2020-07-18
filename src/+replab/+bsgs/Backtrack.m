@@ -201,7 +201,9 @@ classdef Backtrack < replab.Obj
                 % note: compared to Butler, page 101, Algorithm 1, we need to remove the base point itself
                 % there is no use in having the transversal u_s fixing the current base point u_s(base0(s)) = base0(s)
                 orbit = self.Gchain0.Delta{s};
-                orbit = self.sorted(orbit(2:end));
+                orbit = orbit(2:end);
+                [~, ind] = sort(self.baseOrdering0(orbit));
+                orbit = orbit(ind);
                 mask = replab.bsgs.minimalMaskInOrbit(self.degree, self.HchainInBase0.S, self.baseOrdering0);
                 mu = self.computeMu(s, identity);
                 ind = min(self.computeNu(s)+1-1, length(orbit)); % +1 because we removed the first point
@@ -256,7 +258,9 @@ classdef Backtrack < replab.Obj
                     found = [];
                 end
             else
-                orbit_g = self.sorted(prevG(self.Gchain0.Delta{i}));
+                orbit_g = prevG(self.Gchain0.Delta{i});
+                [~, ind] = sort(self.baseOrdering0(orbit_g));
+                orbit_g = orbit_g(ind);
                 if isempty(Hstab)
                     mask = true(1, self.degree);
                 else
@@ -386,14 +390,6 @@ classdef Backtrack < replab.Obj
         function l = lessThan(self, x, y)
         % Point comparison using the base ordering
             l = self.baseOrdering0(x) < self.baseOrdering0(y);
-        end
-
-        function t = sorted(self, points)
-        % Sorts a sequence of points under the ordering
-            bo = self.baseOrdering0;
-            order = bo(points);
-            [~, ind] = sort(order);
-            t = s(ind);
         end
 
         function ok = prop(self, g)
