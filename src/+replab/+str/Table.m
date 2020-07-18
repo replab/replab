@@ -2,11 +2,11 @@ classdef Table < replab.Str
 % Displays tables nicely in MATLAB and Octave
 %
 %   >>> replab.str.Table([1,20;300,2])
-%         1   20  
-%        300   2  
+%         1   20
+%        300   2
 %   >>> replab.str.Table({'hello', 'world'; 'world', 'hi'})
-%         hello  world  
-%         world   hi   
+%         hello  world
+%         world   hi
 
 
     properties
@@ -28,8 +28,8 @@ classdef Table < replab.Str
         colName % (logical): Whether table has column names
     end
 
-    
-    
+
+
     methods
 
         function self = Table(elements, varargin)
@@ -48,13 +48,13 @@ classdef Table < replab.Str
         %                 'colName', {'one', 'two'}, 'rowName', {1, 'second'}, ...
         %                 'omitRange', [1], 'rowSep', '-')
         %       ------------------------
-        %        |        | one | two | 
+        %        |        | one | two |
         %       ------------------------
-        %        |      1 | 11  |  2  | 
+        %        |      1 | 11  |  2  |
         %       ------------------------
-        %        | second | 100 |  4  | 
+        %        | second | 100 |  4  |
         %       ------------------------
-        %           
+        %
             if ~iscell(elements) && ismatrix(elements)
                 elements = num2cell(elements);
             elseif ~iscell(elements)
@@ -62,14 +62,14 @@ classdef Table < replab.Str
             end
             dim = size(elements);
             self.elements = self.convertToChars(elements);
-            
+
             elmtLens = max(cellfun(@length, self.elements), [], 1);
             sepLens = repmat(2, 1, self.nColumns + 1); % this is default
             self.columnLengths = [elmtLens, 0] + sepLens;
-            
+
             self.colName = false;
             self.rowName = false;
-            
+
             % use variables if given and otherwise default settings
             s = struct(varargin{:});
             % variables with default settings
@@ -87,7 +87,7 @@ classdef Table < replab.Str
             else
                 self.setColSep(0:self.nColumns, '  ');
             end
-            
+
             % optional variables to set
             if isfield(s, 'colName')
                 self.addColumnNames(cellfun(@(x) s(x).colName, num2cell(1:dim(2)), ...
@@ -104,20 +104,20 @@ classdef Table < replab.Str
                 if isfield(s, 'colSep')
                     self.setColSep(0, s(1).colSep)
                 end
-            end  
+            end
             if isfield(s, 'omitRange')
                 self.setOmitRange(s(1).omitRange);
             end
             if isfield(s, 'rowSep')
                 self.setRowSep(0:self.nRows, s(1).rowSep);
             end
-            
+
         end
-        
+
         function disp(self)
             disp(self.format(replab.globals.strMaxRows, replab.globals.strMaxColumns))
         end
-        
+
         function s = headerStr(self)
             dim = size(self.elements);
             if self.colName
@@ -140,7 +140,7 @@ classdef Table < replab.Str
         %
             dim = size(self.elements);
             char_arr = self.elements;
-            
+
             % omit columns if table will be wider than maxColumns
             omitSymbol = ' ...';
             lens = self.columnLengths;
@@ -166,7 +166,7 @@ classdef Table < replab.Str
                 if len > maxColumns
                     colToOmit = dim(2) - 1;
                     len = len - lens(colToOmit) + length(omitSymbol);
-                    while len > maxColumns 
+                    while len > maxColumns
                         colToOmit = colToOmit - 1;
                         len = len - lens(colToOmit);
                     end
@@ -177,8 +177,8 @@ classdef Table < replab.Str
                     colseps(colToOmit:dim(2)-2) = [];
                     spec(colToOmit:dim(2)-2) = [];
                 end
-            end 
-            
+            end
+
             % omit rows if number of rows is bigger than maxRows
             if ~isempty(self.rowSep)
                 rowseps = self.rowSep;
@@ -205,8 +205,8 @@ classdef Table < replab.Str
                     omitRows = true;
                 end
             end
-            
-            % add padding to the characters to make all elements same length 
+
+            % add padding to the characters to make all elements same length
             dim = size(char_arr);
             elmt_lens = max(cellfun(@length, char_arr), [], 1);
             for i = 1:dim(1)
@@ -228,10 +228,10 @@ classdef Table < replab.Str
                         sized_elmt = [colseps{j}, repmat(' ', 1, padding), elmt];
                     end
                     char_arr{i, j} = sized_elmt;
-                    
+
                 end
             end
-            
+
             if ~isempty(colseps{end})
                 char_arr(:, end+1) = mat2cell(repmat(colseps{end}, dim(1), 1), ones(1, dim(1)));
             end
@@ -268,19 +268,19 @@ classdef Table < replab.Str
             end
             tbstr = strjoin(tbarray, '\n');
         end
-        
+
         function n = nColumns(self)
         % number of columns (including row names)
             dim = size(self.elements);
             n = dim(2);
         end
-        
+
         function n = nRows(self)
         % number of rows (including column names)
             dim = size(self.elements);
             n = dim(1);
         end
-        
+
         function setColSep(self, range, sep)
         % Sets the column separators for the columns inside the range
         %
@@ -290,7 +290,7 @@ classdef Table < replab.Str
         %   >>> T = replab.str.Table({'one', 'two'});
         %   >>> T.setColSep(0:T.nColumns, ' | ');
         %   >>> T
-        %        | one | two | 
+        %        | one | two |
         %
             if isempty(self.colSep)
                 self.colSep = mat2cell(repmat('  ', self.nColumns+1, 1), ones(self.nColumns+1,1))';
@@ -318,11 +318,11 @@ classdef Table < replab.Str
         %   >>> T.setRowSep(0:T.nRows, '-');
         %   >>> T
         %       -------
-        %         one  
+        %         one
         %       -------
-        %         two  
+        %         two
         %       -------
-        % 
+        %
             if isempty(self.rowSep)
                 self.rowSep = cell(1, self.nRows + 1);
             end
@@ -334,7 +334,7 @@ classdef Table < replab.Str
                 self.rowSep(range+1) = mat2cell(repmat(sep, length(range), 1), ones(length(range),1));
             end
         end
-        
+
         function setAlign(self, range, aligns)
         % Set the alignment of each column in range
         % 'l' for left, 'c' for centre, and 'r' for right
@@ -343,8 +343,8 @@ classdef Table < replab.Str
         %   >>> T = replab.str.Table({'one','two'; 'three','four'});
         %   >>> T.setAlign(1:T.nColumns, 'lr')
         %   >>> T
-        %         one     two  
-        %         three  four  
+        %         one     two
+        %         three  four
             % disregard characters after the range of the columns
             range(range > self.nColumns) = [];
             if length(aligns) > length(range)
@@ -352,39 +352,39 @@ classdef Table < replab.Str
             end
             self.colAlign(range) = aligns;
         end
-        
+
         function setOmitRange(self, omitRange)
         % Set columns that can be omitted if there is not enough space
-        % 
-        % Example: 
+        %
+        % Example:
         %   >>> T = replab.str.Table({1:6,1:6,1:6,1:6,1:6,1:6;1,2,3,4,5,6});
         %   >>> T.setOmitRange([2:4])
         %   >>> disp(T.format(5, 75))
-        %         [1, 2, 3, 4, 5, 6] ...  [1, 2, 3, 4, 5, 6]  [1, 2, 3, 4, 5, 6]  
-        %                  1                       5                   6         
+        %         [1, 2, 3, 4, 5, 6] ...  [1, 2, 3, 4, 5, 6]  [1, 2, 3, 4, 5, 6]
+        %                  1                       5                   6
             self.omitRange = sort(omitRange);
         end
 
         function addRow(self, row, loc, sep)
         % Adds row to the table
         %
-        % Convention: loc = 0 means add a row above the table and 
+        % Convention: loc = 0 means add a row above the table and
         %             loc = nRows adds a row below the table
         %
         % Args:
         %   row (cell(1,nRows)): row to add to table
         %   loc (integer): location in table to add row
         %   sep (optional character array): row separator above new row
-        % 
+        %
         % Example:
         %   >>> T = replab.str.Table([1,2,3]);
         %   >>> T.addRow({'one', 'two', 'three'}, T.nRows, '-')
         %   >>> T
-        %          1    2     3  
+        %          1    2     3
         %       -------------------
-        %         one  two  three 
+        %         one  two  three
             dim = size(self.elements);
-            array = cell(dim(1) + 1, dim(2)); 
+            array = cell(dim(1) + 1, dim(2));
             array(loc + 1, :) = self.convertToChars(row);
             array(loc + 2:end, :) = self.elements(loc + 1:end, :);
             array(1:loc, :) = self.elements(1:loc, :);
@@ -400,25 +400,25 @@ classdef Table < replab.Str
             sepLens = cellfun(@length, self.colSep);
             self.columnLengths = [elmtLens, 0] + sepLens;
         end
-        
+
         function addColumn(self, column, loc, sep, align)
         % adds column to the table
         %
-        % Convention: loc = 0 means add a column to left of the table and 
+        % Convention: loc = 0 means add a column to left of the table and
         %             loc = T.nColumns adds a column to right of the table
         %
         % Args:
         %   column (cell(1,nColumns)): column to add to table
         %   loc (integer): location in table to add column
         %   sep (optional character array): column separator to left of new row
-        % 
+        %
         % Example:
         %   >>> T = replab.str.Table([1;2;3]);
         %   >>> T.addColumn({'one', 'two', 'three'}, T.nColumns, ': ', 'l')
         %   >>> T
-        %         1: one    
-        %         2: two    
-        %         3: three  
+        %         1: one
+        %         2: two
+        %         3: three
             if ~exist('sep', 'var')
                 sep = '  ';
             end
@@ -426,7 +426,7 @@ classdef Table < replab.Str
                 align = 'c';
             end
             dim = size(self.elements);
-            array = cell(dim(1), dim(2) + 1); 
+            array = cell(dim(1), dim(2) + 1);
             colchar = self.convertToChars(column);
             array(:, loc + 1) = colchar;
             array(:, loc + 2:end) = self.elements(:, loc + 1:end);
@@ -470,7 +470,7 @@ classdef Table < replab.Str
             end
             self.rowName = true;
         end
-        
+
         function names = getColumnNames(self)
         %  Returns:
         %   names (cell(1, nColumns-1)): column names if present or else
@@ -485,7 +485,7 @@ classdef Table < replab.Str
                 names = {};
             end
         end
-        
+
         function names = getRowNames(self)
         %  Returns:
         %   names (cell(1, nRows-1)): row names if present or else
@@ -503,9 +503,9 @@ classdef Table < replab.Str
 
 
     end
-    
+
     methods (Static)
-        
+
         function chararray = convertToChars(elements)
             % converts all of elements to characters
             %
@@ -514,7 +514,7 @@ classdef Table < replab.Str
             %
             % Returns:
             %    chararray (cell array of strings)
-            
+
             if ~iscell(elements) && ismatrix(elements)
                 elements = num2cell(elements);
             end
@@ -534,7 +534,7 @@ classdef Table < replab.Str
                 end
             end
         end
-        
+
         function [ellipsisLocs, hiddenRange] = addEllipses(omitRange)
             % puts ellipsis in the first of a range of omitted columns
             diff = omitRange(2:end) - omitRange(1:end-1);
@@ -543,8 +543,8 @@ classdef Table < replab.Str
             omitRange([1,f + 1]) = [];
             hiddenRange = omitRange;
         end
-       
-        
+
+
     end
 
 end
