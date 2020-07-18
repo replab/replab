@@ -390,7 +390,8 @@ classdef Backtrack < replab.Obj
 
         function t = sorted(self, s)
         % Sorts a sequence of points under the ordering
-            [~, ind] = sort(self.baseOrdering0(s));
+            bo = self.baseOrdering0;
+            [~, ind] = sort(bo(s));
             t = s(ind);
         end
 
