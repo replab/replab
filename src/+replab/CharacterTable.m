@@ -152,7 +152,6 @@ classdef CharacterTable < replab.Obj
                     end
                 end
             end
-            disp('test passed')
             ccreps = cell(1, length(classes));
             cclens = cell(1, length(classes));
             for i = 1:k
