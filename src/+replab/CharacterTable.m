@@ -2,7 +2,7 @@ classdef CharacterTable < replab.Obj
 % Describes the character table of a group
 %
 % Example:
-%   >>> s3ct = replab.CharacterTable.forGenericGroup(replab.S(3));
+%   >>> s3ct = replab.CharacterTable.forPermutationGroup(replab.S(3));
 %   >>> disp(s3ct.table)
 %            [1, 3, 2]  [2, 3, 1]  [1, 2, 3]
 %       X.1      1          1          1
