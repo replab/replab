@@ -8,8 +8,13 @@ function test_suite = IntersectionTest()
 end
 
 function test_resultUnderConjugation
-    n = 10;
-    d = 8;
+    if ReplabTestParameters.onlyFastTests
+        n = 1;
+        d = 3;
+    else
+        n = 10;
+        d = 8;
+    end
     S = replab.S(d);
     for i = 1:n
         G = S.randomProperSubgroup(2);

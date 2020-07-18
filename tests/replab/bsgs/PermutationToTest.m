@@ -8,8 +8,13 @@ function test_suite = PermutationToTest()
 end
 
 function test_findPermutationsTo
-    n = 10;
-    d = 10;
+    if ReplabTestParameters.onlyFastTests
+        n = 1;
+        d = 3;
+    else
+        n = 10;
+        d = 8;
+    end
     for i = 1:n
         S = replab.S(d);
         G = S.randomProperSubgroup(2);
