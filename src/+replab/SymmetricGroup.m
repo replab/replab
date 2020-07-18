@@ -14,7 +14,7 @@ classdef SymmetricGroup < replab.PermutationGroup
         %
         % Args:
         %   domainSize (integer): Domain size, must be > 0
-            o = factorial(vpi(domainSize));
+            o = replab.util.multiplyIntegers(1:domainSize);
             if domainSize < 2
                 generators = cell(1, 0);
             elseif domainSize == 2
