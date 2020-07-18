@@ -487,11 +487,14 @@ classdef Chain < replab.Str
             end
         end
 
-        function [c orbit iOrbit U Uinv] = stabilizer(self, b)
+        function [c orbit iOrbit U Uinv] = stabilizer(self, b, removeRedundantIfChangingBase)
         % Returns the stabilizer chain that represents the group stabilizing the given point
         %
         % Optionally returns the orbit, index of orbit points, transversal for the original group
         % when the first base point is ``b``
+            if nargin < 3
+                removeRedundantIfChangingBase = false;
+            end
             if self.length == 0
                 c = self.mutableCopy;
                 if ~self.isMutable
@@ -523,7 +526,7 @@ classdef Chain < replab.Str
                 end
             else
                 c = self.mutableCopy;
-                c.baseChange(b);
+                c.baseChange(b, removeRedundantIfChangingBase);
                 if ~self.isMutable
                     c.makeImmutable;
                 end

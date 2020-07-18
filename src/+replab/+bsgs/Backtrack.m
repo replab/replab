@@ -240,7 +240,8 @@ classdef Backtrack < replab.Obj
         % Args:
         %   i (integer): Level to search
         %   prevG (permutation): Product ``u_1 ... u_{i-1}``
-        %   Hstab (`.Chain`): Chain for `.H` with ``gamma(1) ... gamma(i-1)`` stabilized
+        %   Hstab (`.Chain` or ``[]``): Chain for `.H` with ``gamma(1) ... gamma(i-1)`` stabilized
+        %                               Set to ``[]`` when the subgroup is trivial.
         %
         % Returns:
         %   permutation or ``[]``: Element satisfying `.prop` if found, otherwise ``[]``
@@ -256,7 +257,11 @@ classdef Backtrack < replab.Obj
                 end
             else
                 orbit_g = self.sorted(prevG(self.Gchain0.Delta{i}));
-                mask = replab.bsgs.minimalMaskInOrbit(self.degree, Hstab.S, self.baseOrdering0);
+                if isempty(Hstab)
+                    mask = true(1, self.degree);
+                else
+                    mask = replab.bsgs.minimalMaskInOrbit(self.degree, Hstab.S, self.baseOrdering0);
+                end
                 mu = self.computeMu(i, prevG);
                 ind = min(self.computeNu(i)-1, length(orbit_g));
                 for gamma_i = orbit_g(1:ind)
@@ -264,7 +269,14 @@ classdef Backtrack < replab.Obj
                         b = find(prevG == gamma_i);
                         u = self.Gchain0.u(i, b);
                         if self.test0(i, prevG, u)
-                            found = self.generate(i + 1, prevG(u), Hstab.stabilizer(gamma_i));
+                            Hstab1 = Hstab;
+                            if ~isempty(Hstab1)
+                                Hstab1 = Hstab1.stabilizer(gamma_i, true);
+                                if all(Hstab1.orbitSizes == 1)
+                                    Hstab1 = [];
+                                end
+                            end
+                            found = self.generate(i + 1, prevG(u), Hstab1);
                             if ~isempty(found)
                                 return
                             end
