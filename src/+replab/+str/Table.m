@@ -290,6 +290,7 @@ classdef Table < replab.Str
         %   >>> T = replab.str.Table({'one', 'two'});
         %   >>> T.setColSep(0:T.nColumns, ' | ');
         %   >>> T
+        %       T =
         %        | one | two |
         %
             if isempty(self.colSep)
@@ -317,6 +318,7 @@ classdef Table < replab.Str
         %   >>> T = replab.str.Table({'one'; 'two'});
         %   >>> T.setRowSep(0:T.nRows, '-');
         %   >>> T
+        %      T =
         %       -------
         %         one
         %       -------
@@ -343,6 +345,7 @@ classdef Table < replab.Str
         %   >>> T = replab.str.Table({'one','two'; 'three','four'});
         %   >>> T.setAlign(1:T.nColumns, 'lr')
         %   >>> T
+        %       T =
         %         one     two
         %         three  four
             % disregard characters after the range of the columns
@@ -380,6 +383,7 @@ classdef Table < replab.Str
         %   >>> T = replab.str.Table([1,2,3]);
         %   >>> T.addRow({'one', 'two', 'three'}, T.nRows, '-')
         %   >>> T
+        %       T =
         %          1    2     3
         %       -------------------
         %         one  two  three
@@ -416,6 +420,7 @@ classdef Table < replab.Str
         %   >>> T = replab.str.Table([1;2;3]);
         %   >>> T.addColumn({'one', 'two', 'three'}, T.nColumns, ': ', 'l')
         %   >>> T
+        %       T =
         %         1: one
         %         2: two
         %         3: three
@@ -441,6 +446,7 @@ classdef Table < replab.Str
 
         function addColumnNames(self, colNames)
         % Adds row names to the current table
+        %
         % Convention: should not include an entry above row names
             if self.colName
                 self.elements = self.elements(2:end,:);
@@ -456,6 +462,7 @@ classdef Table < replab.Str
 
         function addRowNames(self, rowNames)
         % Adds column names to the current table
+        %
         % Convention: should not include an entry before column names
             if self.rowName
                 self.elements = self.elements(:, 2:end);
@@ -472,9 +479,10 @@ classdef Table < replab.Str
         end
 
         function names = getColumnNames(self)
-        %  Returns:
-        %   names (cell(1, nColumns-1)): column names if present or else
-        %                                empty array
+        % Returns the column names
+        %
+        % Returns:
+        %   names (cell(1, nColumns-1)): column names if present or else empty array
             if self.colName
                 if self.rowName
                     names = self.elements(1, 2:end);
@@ -487,7 +495,9 @@ classdef Table < replab.Str
         end
 
         function names = getRowNames(self)
-        %  Returns:
+        % Returns the row names
+        %
+        % Returns:
         %   names (cell(1, nRows-1)): row names if present or else
         %                                empty array
             if self.rowName
