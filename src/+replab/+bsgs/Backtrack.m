@@ -164,7 +164,7 @@ classdef Backtrack < replab.Obj
             self.subChain0 = [];
             self.HchainInBase0 = replab.bsgs.Backtrack.groupChainInBase(self.H, self.base0, false, true);
             self.KchainInBase0 = replab.bsgs.Backtrack.groupChainInBase(self.K, self.base0, false, true);
-            res = self.generate(0, self.G.identity, self.HchainInBase0, 1);
+            res = self.generate(0, self.G.identity, self.HchainInBase0.mutableCopy, 1);
         end
 
         function res = subgroup(self)
@@ -215,16 +215,20 @@ classdef Backtrack < replab.Obj
 
                         ok = self.test0(s, identity, u);
                         if ok
+                            % Creates the stabilizer chain; cut at the current level, force
+                            % stabilization of the current base image, and then pass the result
+                            % to `.generate`, without cutting the first base point if it has
+                            % changed (this is why `.generate` takes a ``HstabLevel`` argument).
                             Hstab = self.HchainInBase0.chainFromLevel(s, false);
-                            if Hstab.stabilizes(1, gamma_s)
-                                HstabLevel = 1;
+                            if Hstab.stabilizes(1, gamma_s) % if the chain stabilizes already the point
+                                HstabLevel = 1; % we don't need to do a base change
                             else
-                                Hstab.changeBasePointAt(1, gamma_s);
+                                Hstab.changeBasePointAt(1, gamma_s); % otherwise, stabilize that point
                                 HstabLevel = 2;
                             end
-                            os = Hstab.orbitSizes;
+                            os = Hstab.orbitSizes; % test if the chain is trivial
                             if all(os(HstabLevel:end) == 1)
-                                Hstab = [];
+                                Hstab = []; % then pass the dummy value
                             end
                             found = self.generate(s+1, self.Gchain0.u(s, gamma_s), Hstab, HstabLevel);
                             if ~isempty(found)
@@ -257,6 +261,9 @@ classdef Backtrack < replab.Obj
         %   i (integer): Level to search
         %   prevG (permutation): Product ``u_1 ... u_{i-1}``
         %   Hstab (`.Chain` or ``[]``): Chain for `.H` with ``gamma(1) ... gamma(i-1)`` stabilized
+        %                               However, one has to consider the subchain starting at the level
+        %                               given below. Also, if the chain describes the trivial group,
+        %                               we pass the value ``[]`` instead.
         %   HstabLevel (integer): Level at which to start consider ``Hstab``
         %
         % Returns:
@@ -264,7 +271,7 @@ classdef Backtrack < replab.Obj
             if i == 0
                 identity = 1:self.degree;
                 self.test0(0, identity, identity);
-                found = self.generate(i + 1, identity, Hstab);
+                found = self.generate(i + 1, identity, Hstab, 1);
             elseif i == self.baseLen0 + 1
                 if self.prop(prevG);
                     found = prevG;
@@ -278,7 +285,7 @@ classdef Backtrack < replab.Obj
                 if isempty(Hstab)
                     mask = true(1, self.degree);
                 else
-                    mask = replab.bsgs.minimalMaskInOrbit(self.degree, Hstab.S, self.baseOrdering0);
+                    mask = replab.bsgs.minimalMaskInOrbit(self.degree, Hstab.S(:,Hstab.Sind(HstabLevel):end), self.baseOrdering0);
                 end
                 mu = self.computeMu(i, prevG);
                 ind = min(self.computeNu(i)-1, length(orbit_g));
@@ -290,14 +297,17 @@ classdef Backtrack < replab.Obj
                         if self.test0(i, prevG, u)
                             if isempty(Hstab)
                                 Hstab1 = Hstab;
-                                % do nothing
+                                % if trivial do nothing
                                 HstabLevel1 = 0;
                             elseif Hstab.stabilizes(HstabLevel, gamma_i)
+                                % if it already stabilizes, pass it on unchanged
                                 Hstab1 = Hstab;
                                 HstabLevel1 = HstabLevel;
                             else
+                                % otherwise stabilize the new point
                                 Hstab.changeBasePointAt(HstabLevel, gamma_i);
                                 HstabLevel1 = HstabLevel + 1;
+                                % if trivial, pass on the empty value
                                 os = Hstab.orbitSizes;
                                 if all(os(HstabLevel1:end) == 1)
                                     Hstab1 = [];
