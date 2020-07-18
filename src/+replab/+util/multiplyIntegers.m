@@ -1,4 +1,8 @@
 function o = multiplyIntegers(factors)
+    if isempty(factors)
+        o = vpi(1);
+        return
+    end
     if exist('java.math.BigInteger')
         o = java.math.BigInteger.valueOf(factors(1));
         for i = 2:length(factors)
