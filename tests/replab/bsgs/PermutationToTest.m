@@ -18,6 +18,6 @@ function test_findPermutationsTo
         t = s(g);
         P = G.findPermutationsTo(s, t);
         p = P.sample;
-        assertEqual(s, t(g));
+        assertEqual(s, t(p));
     end
 end
