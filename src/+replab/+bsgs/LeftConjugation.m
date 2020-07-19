@@ -2,7 +2,7 @@ classdef LeftConjugation < replab.bsgs.Backtrack
 % Computes a permutation that conjugates a permutation to another permutation
 %
 % ``t = g s g^-1``
-% take ``tc^-1`` in `.tCentralizer` and ``sc`` in `.sCentralizer`
+% take ``tc^-1`` in ``tCentralizer`` and ``sc`` in ``sCentralizer``
 % ``tc^-1 t tc = g sc s sc^-1 g^-1``
 % ``t = tc g sc s sc^-1 g^-1 tc^-1``
 % thus ``g -> tc g sc``

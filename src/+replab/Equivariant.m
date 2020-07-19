@@ -197,8 +197,6 @@ classdef Equivariant < replab.Domain
         %
         % ``repC.image(g) * X = X * repR.image(g)``
         %
-        % Note: default implementations are registered in `+replab.dispatchDefaults`
-        %
         % Args:
         %   repC (`+replab.Rep`): Representation on the source/column space
         %   repR (`+replab.Rep`): Representation on the target/row space
@@ -207,6 +205,8 @@ classdef Equivariant < replab.Domain
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
             if ~replab.dispatch('exists', 'replab.Equivariant.make')
+                % default implementations
+                
                 % Equivariant construction
                 replab.dispatch('register', 'replab.Equivariant.make', 'ForSubReps', 15, ...
                                 @(repC, repR, special) replab.equi.ForSubReps.make(repC, repR, special));
@@ -214,9 +214,11 @@ classdef Equivariant < replab.Domain
                                 @(repC, repR, special) replab.equi.ForRepByImages.make(repC, repR, special));
                 replab.dispatch('register', 'replab.Equivariant.make', 'ForFiniteGroup', 5, ...
                                 @(repC, repR, special) replab.equi.ForFiniteGroup.make(repC, repR, special));
-                % Default method, works for all compact groups
+                
+                            % Default method, works for all compact groups
                 replab.dispatch('register', 'replab.Equivariant.make', 'ForCompactGroup', 0, ...
                                 @(repC, repR, special) replab.equi.ForCompactGroup.make(repC, repR, special));
+            
             end
             E = replab.dispatch('call', 'replab.Equivariant.make', repC, repR, special);
         end

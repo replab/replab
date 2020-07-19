@@ -5,8 +5,6 @@ function irr = decomposition(rep)
 % algebras (for representations over the reals), and making sure that complex-type and quaternion-type
 % real representations are expressed in a canonical basis for the division algebra encoding.
 %
-% Note: see the default methods applied in `+replab.dispatchDefaults`
-%
 % Args:
 %   rep (`+replab.Rep`): Representation to decompose
 %
@@ -14,6 +12,7 @@ function irr = decomposition(rep)
 %   `+replab.Irreducible`: The irreducible decomposition
     assert(isa(rep, 'replab.Rep'));
     if ~replab.dispatch('exists', 'replab.irreducible.decomposition')
+        % default implementation
         replab.dispatch('register', 'replab.irreducible.decomposition', 'usingSplit', 0, ...
                         @(rep) replab.irreducible.decompositionUsingSplit(rep));
     end

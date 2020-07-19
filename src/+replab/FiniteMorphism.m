@@ -28,7 +28,7 @@ classdef FiniteMorphism < replab.Morphism
         function s = preimageRepresentative(self, t)
         % Returns an arbitrary preimage of the given element
         %
-        % Returns an ``s`` such that ``self.imageElement(s) == t`.
+        % Returns an ``s`` such that ``self.imageElement(s) == t`` .
 
         % Args:
         %   t (element of `.target`): Element to compute the preimage of

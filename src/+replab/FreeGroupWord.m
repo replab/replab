@@ -13,7 +13,7 @@ classdef FreeGroupWord < replab.Str
 
     properties
         group % (`+replab.FreeGroup`): Group this word is part of
-        reducedLetters % (integer(1,\*)): Contents of the word, see documentation in `.Word`
+        reducedLetters % (integer(1,\*)): Contents of the word, see documentation in `.FreeGroupWord`
     end
 
     methods (Access = protected) % Protected constructor
@@ -67,7 +67,7 @@ classdef FreeGroupWord < replab.Str
         %
         % Args:
         %   group (`.FreeGroup`): Free group in which to parse this word
-        %   letters (integer(1,\*)): Sequence of letters with indices in ``{-r,...,-1,1,...,r}`` where ``r`` is `.rank`
+        %   letters (integer(1,\*)): Sequence of letters with indices in ``{-r,...,-1,1,...,r}`` where ``r`` is `.FreeGroup.rank`
         %
         % Returns:
         %   `.FreeGroupWord`: The reduced word
@@ -106,7 +106,7 @@ classdef FreeGroupWord < replab.Str
         %
         % Returns:
         %   logical: True if this is not equal to the given word
-            l = ~(self == eq);
+            l = ~(self == rhs);
         end
 
         function l = eq(self, rhs)
@@ -189,7 +189,7 @@ classdef FreeGroupWord < replab.Str
         function s = toString(self)
         % Returns a string representation of this word
         %
-        % That string can be parsed back by `.FPGroup.parse`.
+        % That string can be parsed back by `.FreeGroup.parse`.
         %
         % Example:
         %   >>> [F x y] = replab.FreeGroup.of('x', 'y');

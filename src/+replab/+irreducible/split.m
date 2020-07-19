@@ -11,8 +11,6 @@ function sub = split(rep, context)
 %
 % If the return list contains more than one subrepresentation, no such restriction applies.
 %
-% See the default implementations of that method in `+replab.dispatchDefaults`
-%
 % Args:
 %   rep (`+replab.Rep`): Representation to decompose, must be not known to be irreducible
 %   context (`+replab.Context`): A context in which to cache samples
@@ -22,6 +20,7 @@ function sub = split(rep, context)
     assert(isa(rep, 'replab.Rep'));
     assert(isa(context, 'replab.Context'));
     if ~replab.dispatch('exists', 'replab.irreducible.split')
+        % default implementations
         replab.dispatch('register', 'replab.irreducible.split', 'splitTrivialGroup', 500, ...
                         @(r, c) replab.irreducible.splitTrivialGroup(r, c));
         replab.dispatch('register', 'replab.irreducible.split', 'splitBlocks', 400, ...

@@ -6,7 +6,7 @@ classdef Backtrack < replab.Obj
 % - the computation of a subgroup of a group, whose elements satisfy a property,
 % - the search of an element of a group satisfying a property.
 %
-% It attempts to reduce the search by considering only minimal elements in the double coset ``H g K`` of a group ``G``.
+% It attempts to reduce the search by considering only minimal elements in the double coset ``H g K`` of a group `.G`.
 %
 % We also use a object-oriented interface, instead of passing function handles for property and base image tests.
 %
@@ -57,7 +57,7 @@ classdef Backtrack < replab.Obj
         base % (integer(1,\*)): Actual base, starts with `.partialBase`
         orbitSizes % (integer(1,\*)): Orbit sizes corresponding to `.base`
 
-        Gchain0 % (`.Chain`): Stabilizer chain of `.group` following `.base` with redundant points removed
+        Gchain0 % (`.Chain`): Stabilizer chain of `.G` following `.base` with redundant points removed
         base0 % (integer(1,\*)): Prescribed base with redundant points removed
         baseLen0 % (integer): Equal to ``length(base0)``
         baseOrdering0 % (integer(1,domainSize+2)): Base ordering including two guard elements

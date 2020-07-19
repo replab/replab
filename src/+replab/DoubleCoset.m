@@ -7,8 +7,8 @@ classdef DoubleCoset < replab.FiniteSet
     properties (SetAccess = protected)
         parent % (`.FiniteGroup`): Group containing this double coset
         isomorphism % (`+replab.FiniteIsomorphism`): Isomorphism to a permutation group
-        H % (`.FiniteGroup`): Subgroup of `.group`
-        K % (`.FiniteGroup`): Subgroup of `.group`
+        H % (`.FiniteGroup`): Group
+        K % (`.FiniteGroup`): Group
         Hprmgrp % (`.PermutationGroup`): Realization of `.H` as a permutation group
         Kprmgrp % (`.PermutationGroup`): Realization of `.K` as a permutation group
     end
