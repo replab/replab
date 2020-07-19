@@ -4,18 +4,15 @@ classdef Intersection < replab.bsgs.Backtrack
 % See Section 4.6.6 of
 % ``D. Holt et al, Handbook of Computational Group Theory (CRC Press, 2005).``
 %
-% `.base` is a base for both `.group` and `.other`
-%
-% `.group` is a BSGS chain for the first group given
-% `.other` is a BSGS chain for the second group
+% `.base` is a base for both groups
 %
 % We use the partial base image test on p. 113 of
 % ``G. Butler, Fundamental Algorithms for Permutation Groups. vol. 559 (Springer Berlin Heidelberg, 1991).``
 % and in Holt, pp. 124-125
 
     properties
-        rhs
-        prevRhsInv % stores the inverses of ``h`` in Holt pp. 124-125
+        rhsChain % (.Chain): Stabilizer chain for the second group given
+        prevRhsInv % (cell(1,\*) of permutation): Stores the inverses of ``h`` in Holt pp. 124-125
     end
 
     methods
@@ -34,22 +31,22 @@ classdef Intersection < replab.bsgs.Backtrack
             c = rhs.lexChain.mutableCopy;
             c.baseChange(base);
             c.makeImmutable;
-            self.rhs = c;
+            self.rhsChain = c;
         end
 
         function ok = test(self, l, prev, ul)
             pri = self.prevRhsInv{l};
             b2 = pri(prev(ul(self.base(l))));
-            i = self.rhs.iDelta(b2, l);
+            i = self.rhsChain.iDelta(b2, l);
             ok = (i ~= 0);
             if ok
-                uinv = self.rhs.Uinv{l}(:,i);
+                uinv = self.rhsChain.Uinv{l}(:,i);
                 self.prevRhsInv{l+1} = uinv(pri);
             end
         end
 
         function ok = prop(self, g)
-            ok = self.rhs.contains(g);
+            ok = self.rhsChain.contains(g);
         end
 
     end
