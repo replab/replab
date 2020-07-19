@@ -12,7 +12,7 @@ classdef Laws < replab.Str
 %   The ``{types}`` part contains zero or more type identifiers: a type identifier is a letter (``A-Z``, ``a-z``)
 %   followed by zero of more digits (``0-9``). This part does not contain any underscore.
 %   The number of type identifiers must correspond to the number of arguments of the method (excluding ``self``).
-%   Each type identifier must correspond to a property field of this class of type `+replab.Samplable`, and
+%   Each type identifier must correspond to a property field of this class of type `+replab.Domain`, and
 %   those samplable sets will be used to sample the random instances passed to the law check method.
 %   Note that a law that does not require any arguments corresponds to a method name ending with an underscore.
 %

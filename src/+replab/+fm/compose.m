@@ -4,11 +4,11 @@ function m = compose(second, first)
 % Returns the most general type afforded by the arguments.
 %
 % Args:
-%   second (`.Morphism`): Morphism to apply second
-%   first (`.Morphism`): Morphism to apply first
+%   second (`+replab.Morphism`): Morphism to apply second
+%   first (`+replab.Morphism`): Morphism to apply first
 %
 % Returns:
-%   `.Morphism`: The composition of the two morphisms
+%   `+replab.Morphism`: The composition of the two morphisms
     assert(second.source.isSubgroupOf(first.target));
     if isa(first, 'replab.FiniteIsomorphism') && isa(second, 'replab.FiniteIsomorphism')
         m = replab.fm.IsoComposition(second, first);

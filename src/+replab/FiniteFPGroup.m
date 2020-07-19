@@ -6,7 +6,7 @@ classdef FiniteFPGroup < replab.NiceFiniteGroup
 
     properties (SetAccess = protected)
         freeGroup % (`.FreeGroup`): Free group over which this group is defined
-        relators % (cell(1,\*) of `.FreeGroupWord`: Relators
+        relators % (cell(1,\*) of `.FreeGroupWord`): Relators
     end
 
     methods
@@ -128,7 +128,7 @@ classdef FiniteFPGroup < replab.NiceFiniteGroup
         function l = imagesDefineMorphism(self, target, generatorImages)
         % Checks whether the given images satisfy the relations of the presentation of this group
         %
-        % If it returns true, it means those images describe a valid homomorphism from this `.FPGroup`
+        % If it returns true, it means those images describe a valid homomorphism from this `.FiniteFPGroup`
         % to the given target group.
         %
         % Args:

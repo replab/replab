@@ -1069,7 +1069,7 @@ classdef Chain < replab.Str
         function deterministicSchreierSims(self, maxOrder)
         % Runs the deterministic Schreier-Sims algorithm, with a bound on the maximum order
         %
-        % If `self.order > maxOrder` after this function returns, the chain may be incomplete.
+        % If ``self.order > maxOrder`` after this function returns, the chain may be incomplete.
         %
         % Args:
         %   maxOrder (integer or vpi or ``inf``): Order cutoff

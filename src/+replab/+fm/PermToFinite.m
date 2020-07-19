@@ -1,7 +1,7 @@
 classdef PermToFinite < replab.FiniteMorphism
 
     properties
-        images % (cell(1,\*) of `.target` elements)
+        images % (cell(1,\*) of `.target` elements): Images of the morphism
     end
 
     methods

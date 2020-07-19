@@ -8,8 +8,7 @@ classdef RandomBag < replab.Str
 % Straight-forward implementation of PRINITIALIZE and PRRANDOM of
 % section 3.2.2, pp. 70-71 of Holt 2005 (Handbook of Computational Group Theory)
 %
-% This implementation differs from `+replab.RandomBag` by specializing for
-% permutation groups.
+% This implementation is specialized for permutation groups.
 
     properties (SetAccess = protected)
         n % (integer): Size of the domain

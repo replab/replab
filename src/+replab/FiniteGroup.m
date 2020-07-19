@@ -1,7 +1,8 @@
 classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % Describes a group with a finite number of elements
 %
-% Each finite group has a type, that describes the most general group embedding its elements. For example, permutations of domain size ``n`` are embedded in the symmetric group of degree ``n``.
+% Each finite group has a type, that describes the most general group embedding its elements. 
+% For example, permutations of domain size ``n`` are embedded in the symmetric group of degree ``n``.
 
     properties (SetAccess = protected)
         generators % (cell(1,\*) of `.type` elements): Group generators
@@ -61,7 +62,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         end
 
         function f = niceMorphism(self)
-        % Returns the isomorphism from this group to `.niceGroup`
+        % Returns the isomorphism from this group to a permutation group
             f = self.cached('niceMorphism', @() self.computeNiceMorphism);
         end
 
