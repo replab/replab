@@ -184,30 +184,17 @@ classdef PermutationGroup < replab.FiniteGroup
             dec = replab.FiniteGroupDecomposition(self, T);
         end
 
-        function C = computeConjugacyClasses(self)
+        function classes = computeConjugacyClasses(self)
             if self.order < 100000
-                classes = replab.nfg.conjugacyClassesByOrbits(self);
-                n = length(classes);
-                C = cell(1, n);
+                C = replab.perm.conjugacyClassesByOrbits(self);
+                n = length(C);
+                classes = cell(1, n);
                 for i = 1:n
-                    cl = sortrows(classes{i}');
-                    C{i} = replab.ConjugacyClass(self, cl(1,:));
+                    cl = sortrows(C{i}');
+                    classes{i} = replab.ConjugacyClass(self, cl(1,:));
                 end
             else
-                C = {replab.ConjugacyClass(self, self.identity)};
-                remains = self.order - 1;
-                tries = 0;
-                while remains > 0
-                    remains
-                    tries = tries + 1;
-                    g = self.sample;
-                    if all(cellfun(@(c) ~c.contains(g), C))
-                        tries = 0;
-                        cl = replab.ConjugacyClass(self, g);
-                        C{1,end+1} = cl;
-                        remains = remains - cl.size;
-                    end
-                end
+                classes = replab.perm.conjugacyClassesByRandomSearch(self);
             end
         end
 

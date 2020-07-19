@@ -3,7 +3,8 @@ classdef ProgressBar < handle
     properties
         n % integer: Total number of steps
         startTime % date vector: Time of the first step
-        times % double(1,\*): Seconds elapsed at each step
+        steps % (integer(1,\*)): Steps with a sample
+        times % (double(1,\*)): Seconds elapsed at each step
 
         barSize % integer: Size of the progress bar in characters
         consoleLine % `.ConsoleLine`: Console state
@@ -20,31 +21,33 @@ classdef ProgressBar < handle
             self.n = n;
             self.consoleLine = replab.infra.repl.ConsoleLine;
             self.barSize = 20; % default value
-            self.times = zeros(1, n);
+            self.steps = zeros(1, 0);
+            self.times = zeros(1, 0);
             self.largestTimeEstSize = 0;
+            self.startTime = clock;
         end
 
         function step(self, i, txt)
         % Updates the progress bar with a 1-based index
         %
-        % This method should be called at the beginning of the ``i``-th step
+        % This method should be called at the beginning of the ``i``-th step.
+        %
+        % It should not be called twice for the same step.
         %
         % Args:
-        %   i (integer):
+        %   i (integer): Current step
         %   txt (integer, optional): Text corresponding to the current step
             if nargin < 3
                 txt = '';
             end
-            if i == 1
-                self.startTime = clock;
-                elapsed = 0;
-            else
-                elapsed = etime(clock, self.startTime);
-            end
-            self.times(i) = elapsed;
-            if i > 2
-                [p, S] = polyfit(1:i, self.times(1:i), 1);
-                [last, lastDelta] = polyval(p, self.n, S);
+            elapsed = etime(clock, self.startTime);
+            self.steps = [self.steps i];
+            self.times(1,end+1) = elapsed;
+            if length(self.steps) > 1
+                %[p, S] = polyfit(double(self.steps)/double(self.n), self.times, 1);
+                %[last, lastDelta] = polyval(p, 1, S);
+                p = polyfit(double(self.steps)/double(self.n), self.times, 1);
+                last = polyval(p, 1);
                 remaining = last - elapsed;
                 timeEst = sprintf('%s remaining', replab.infra.repl.seconds2human(remaining));
             else
@@ -52,13 +55,13 @@ classdef ProgressBar < handle
             end
             self.largestTimeEstSize = max(self.largestTimeEstSize, length(timeEst));
             timeEstPad = repmat(' ', 1, self.largestTimeEstSize - length(timeEst));
-            barFull = round(i/self.n*self.barSize);
+            barFull = min(round(double(i)/double(self.n)*self.barSize), self.barSize);
             barEmpty = self.barSize - barFull;
             if ~isempty(txt)
                 txt = sprintf('   %s', txt);
             end
-            str = sprintf('[%s%s] %d/%d, %s%s%s', repmat('#', 1, barFull), repmat('.', 1, barEmpty), ...
-                          i, self.n, timeEst, timeEstPad, txt);
+            str = sprintf('[%s%s] %s/%s, %s%s%s', repmat('#', 1, barFull), repmat('.', 1, barEmpty), ...
+                          strtrim(num2str(i)), strtrim(num2str(self.n)), timeEst, timeEstPad, txt);
             self.consoleLine.update(str);
         end
 
