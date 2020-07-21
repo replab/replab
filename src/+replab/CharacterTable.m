@@ -93,7 +93,10 @@ classdef CharacterTable < replab.Obj
         end
 
         function table = pointGroupTable(self)
-        % Returns a table with labels in chemistry notation
+        % Get table with labels in chemistry notation
+        %
+        % Returns:
+        %   table (`replab.str.Table`): character table using chemistry notation
             table = self.table;
             irrepLabels = table.getRowNames;
             for i = 1:length(irrepLabels)
@@ -104,8 +107,64 @@ classdef CharacterTable < replab.Obj
         end
 
         function sizes = classSizes(self)
-            sizes = cellfun(@(c) c.size, self.classes);
+        % Gets the number of elements in each conjugacy class
+        %
+        % Returns:
+        %   sizes (integer(1,nclasses)): vector of conjugacy class sizes
+            sizes = cellfun(@(x) double(x.size), self.classes);
         end
+        
+        function mults = multiplicities(self, rep)
+        % Calculate the multiplicities of irreducible representations in rep
+        %
+        % Args:
+        %   rep (`replab.Rep`): representation of self.group
+        %
+        % Returns:
+        %   mults (integer(1,nirreps)): vector of multiplicities of self.irreps 
+        %                               in the representation rep
+            nirreps = length(self.irreps);
+            mults = zeros(1, nirreps);
+            ord = double(self.group.order);
+            sizes = self.classSizes;
+            repchars = self.charactersOfRepresentation(rep);
+            for i = 1:nirreps
+                mults(i) = sum(sizes.*repchars.*conj(self.chars(i,:))) / ord;
+            end
+        end
+        
+        function mults = tensorProdMultiplicities(self, irreps)
+        % Find the multiplicities of irreducible representations in a
+        % tensor product of the irreducible representations
+        %
+        % Args:
+        %   irreps (integer(1,\*)): vector of the locations of the irreducible 
+        %                           representations of which we take the tensor product
+        % 
+        % Returns:
+        %   mults (integer(1,nirreps)): vector of the multiplicities of the
+        %                               irreps in the tensor representation
+        %
+        % Convention: to take tensor product of n copies of the same irrep, use
+        %             n copies of irrep location in irreps
+        % 
+        % Example:
+        %   >>> s4ct = replab.CharacterTable.forPermutationGroup(S4);
+        %   >>> s4ct.tensorProdMultiplicities([2,2,3])
+        %       1     2     2     2     1
+            tensorchars = ones(1, length(self.classes));
+            for i = 1:length(irreps)
+                tensorchars = tensorchars .* self.chars(irreps(i), :);
+            end
+            nclass = length(self.classes);
+            mults = zeros(1, nclass);
+            ord = double(self.group.order);
+            sizes = self.classSizes;
+            for i = 1:nclass
+                mults(i) = sum(sizes.*tensorchars.*conj(self.chars(i,:))) / ord;
+            end
+        end
+        
 
     end
 
@@ -115,11 +174,31 @@ classdef CharacterTable < replab.Obj
         % Returns the Mulliken symbol of a representation
         %
         % Requires knowledge of the principal axis to fully determine
+        %
+        % Args:
+        %   rep (`replab.Rep`): irreducible representation of a crystallographic group
+        %
+        % Returns:
+        %   sym (charstring): Mulliken symbol of the irrecudible representation
             if rep.dimension == 1
                 sym = 'A/B';
             else
                 sym = 'E';
             end
+        end
+        
+        function chars = charactersOfRepresentation(rep)
+        % Returns the characters of a representation
+        %
+        % Args:
+        %   rep (`replab.Rep`): representation whose characters we want
+        %
+        % Returns:
+        %   chars (double(1,nclasses)): vector with the character of each conjugacy class in rep
+            classReps = cellfun(@(x) x.representative, rep.group.conjugacyClasses, ...
+                                'UniformOutput', false);
+            images = cellfun(@(x) rep.image(x), classReps, 'UniformOutput', false);
+            chars = cellfun(@trace, images);
         end
 
         function table = forPermutationGroup(group)

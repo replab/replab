@@ -1,7 +1,7 @@
 classdef Table < replab.Str
 % Displays tables nicely in MATLAB and Octave
 %
-% TODO: document what happens if `.elements` is not cell of charstrings
+% Can take in any cell array or matrix
 %
 %   >>> replab.str.Table([1,20;300,2])
 %         1   20
@@ -23,10 +23,10 @@ classdef Table < replab.Str
         omitRange % (integer(1,\*)): Range of columns that can be omitted if space is lacking
                   %
                   %                  This can be empty and must be a vector with no repeated values
-        elements % (cell(nRows,nColumns) of TODO): Table contents (includes row and column names)
-        columnLengths % (integer(1, nColumns)): Character width of each column in table
+        elements % (cell(nRows,nColumns)): Table contents (includes row and column names)
         rowName % (logical): Whether table has row names
         colName % (logical): Whether table has column names
+        title % (charstring): String to show above table (shows nothing if empty)
     end
 
     methods
@@ -36,12 +36,15 @@ classdef Table < replab.Str
         %
         % The constructor can take a variable number of arguments after ``elements``, which are name-value pairs.
         %
-        % - 'colAlign' column alignment character array (TODO: if single one, => repeated, otherwise, set?)
-        % - 'rowSep' characters that separate rows
-        % - 'colSep' characters that separate columns (TODO: document that it's a single string used repeatedly)
-        % - 'rowName' cell array of row names (TODO: say it's a cell(1,\*))
-        % - 'colName' cell array of column names (TODO: same)
-        % - 'omitRange' matrix of columns to omit first (integer(1,\*) matrix?)
+        % - 'colAlign' column alignment charstring. Must be either one character that is repeated 
+        %              for all columns or charstring of length nColumns (including column of row names if given)
+        % - 'rowSep' characters that separate rows. Charstring given will repeated to fill the row
+        % - 'colSep' characters that separate columns. This will be used for all columns but individual 
+        %            columns can be set with .setColSep
+        % - 'rowName' cell(1, nRows) array of row names
+        % - 'colName' cell(1, nColumns) array of column names
+        % - 'omitRange' integer(1,\*) vector of columns to omit first
+        % - 'title' charstring of table title
         %
         % Args:
         %   elements (cell(nRows, nColumns) or double(nRows, nColumns)): body of table
@@ -50,7 +53,8 @@ classdef Table < replab.Str
         % Example:
         %   >>> T = replab.str.Table([11,2;100,4], 'colAlign', 'rlc', 'colSep', ' | ', ...
         %                 'colName', {'one', 'two'}, 'rowName', {1, 'second'}, ...
-        %                 'omitRange', [1], 'rowSep', '-')
+        %                 'omitRange', [1], 'rowSep', '-', 'title', 'Table 1')
+        %       Table 1
         %       ------------------------
         %        |        | one | two |
         %       ------------------------
@@ -65,11 +69,7 @@ classdef Table < replab.Str
                 err('Error: elements must be matrix or cell array')
             end
             dim = size(elements);
-            self.elements = self.convertToChars(elements);
-
-            elmtLens = max(cellfun(@length, self.elements), [], 1);
-            sepLens = repmat(2, 1, self.nColumns + 1); % this is default
-            self.columnLengths = [elmtLens, 0] + sepLens;
+            self.elements = elements;
 
             self.colName = false;
             self.rowName = false;
@@ -102,7 +102,6 @@ classdef Table < replab.Str
                 self.addRowNames(cellfun(@(x) s(x).rowName, num2cell(1:dim(1)), ...
                                           'UniformOutput', false))
                 self.rowName = true;
-                % TODO: is the embedded if intended?
                 if isfield(s, 'colAlign') && length(s(1).colAlign) == self.nColumns
                     self.setAlign(1, s(1).colAlign(1))
                 end
@@ -115,6 +114,9 @@ classdef Table < replab.Str
             end
             if isfield(s, 'rowSep')
                 self.setRowSep(0:self.nRows, s(1).rowSep);
+            end
+            if isfield(s, 'title')
+                self.addTitle(s(1).title)
             end
 
         end
@@ -134,16 +136,12 @@ classdef Table < replab.Str
             s = sprintf([num2str(dim(1)), ' x ', num2str(dim(2)), ' Table']);
         end
 
-        function tbstr = format(self, maxRows, maxColumns)
+        function [tbstr, truncated] = format(self, maxRows, maxColumns)
         % Formatting for the table display
         %
-        % TODO: how do we know that the table has been truncated? Can we return a second argument
-        % that specifies this?
-        %
-        % TODO: maxRows and maxColumns could be either set to ``[]`` or to ``inf`` and then
-        %       there is no restriction on the output size
-        %
-        % Convention: - adds column separators and then row separators if given
+        % Convention: - use maxRows = {[],Inf} or maxColumns = {[],Inf} to have no restriction 
+        %               on output size
+        %             - adds column separators and then row separators if given
         %             - if the table is wider than the display, omits first the columns
         %               given in omitRange and then works backwards from the
         %               second last column
@@ -151,21 +149,41 @@ classdef Table < replab.Str
         %               second last row
         %
         % Args:
-        %   maxRows (integer): TBC
-        %   maxColumns (integer): TBC
+        %   maxRows (integer): maximum number of rows (including rows of separators)
+        %   maxColumns (integer): maximum number of columns (where column
+        %   refers to character on the display screen)
         %
         % Returns:
-        %   TODO: cell array of strings? single string with ``\n`` separators?
+        %   tbstr (charstring): string with ``\n`` separators for display
+        %   truncated (logical): whethere part of the table was omitted
             dim = size(self.elements);
-            char_arr = self.elements;
+            if isempty(maxColumns)
+                maxColumns = Inf;
+            end
+            if isempty(maxRows)
+                maxRows = Inf;
+            end
+            % to replace align, make sure that two column tables with
+            % strings in the first column won't have a column omitted
+            if dim(2) == 2 && all(cellfun(@ischar, self.elements(:, 1)))
+                nameLen = max(cellfun(@length, self.elements(:,1)));
+                char_arr = self.convertToChars(self.elements, maxColumns-nameLen-2);
+            else
+                char_arr = self.convertToChars(self.elements, maxColumns);
+            end
+            
 
             % omit columns if table will be wider than maxColumns
             omitSymbol = ' ...';
-            lens = self.columnLengths;
+            truncated = false;
+            elmtLens = max(cellfun(@length, char_arr), [], 1);
+            sepLens = cellfun(@length, self.colSep);
+            lens = [elmtLens,0] + sepLens;
             colseps = self.colSep;
             len = sum(lens);
             spec = self.colAlign;
             if len > maxColumns
+                truncated = true;
                 ellipsisCol = cell(dim(1), 1);
                 ellipsisCol{floor(dim(1)/2)} = omitSymbol;
                 if ~isempty(self.omitRange)
@@ -181,19 +199,23 @@ classdef Table < replab.Str
                     len = sum(lens);
                 end
                 % start omitting columns backwards from second last column
-                if len > maxColumns
+                if len > maxColumns && dim(2) > 1
                     colToOmit = dim(2) - 1;
                     len = len - lens(colToOmit) + length(omitSymbol);
-                    while len > maxColumns
+                    while len > maxColumns && colToOmit > 2
                         colToOmit = colToOmit - 1;
                         len = len - lens(colToOmit);
                     end
                     char_arr(:, dim(2) - 1) = ellipsisCol;
-                    char_arr(:, colToOmit:dim(2)-2) = [];
+                    if dim(2) > 2
+                        char_arr(:, colToOmit:dim(2)-2) = [];
+                    end
                     dim = size(char_arr);
                     colseps(dim(2) - 1) = {''};
-                    colseps(colToOmit:dim(2)-2) = [];
-                    spec(colToOmit:dim(2)-2) = [];
+                    if dim(2) > 2
+                        colseps(colToOmit:dim(2)-2) = [];
+                        spec(colToOmit:dim(2)-2) = [];
+                    end
                 end
             end
 
@@ -207,6 +229,7 @@ classdef Table < replab.Str
             end
             omitRows = false;
             if dim(1) + length(self.rowSep) - sum(emptyRows) > maxRows
+                truncated = true;
                 if ~isempty(self.rowSep)
                     nrows = 2 + ~emptyRows(end);
                     i = 1;
@@ -285,13 +308,16 @@ classdef Table < replab.Str
                 end
             end
             tbstr = strjoin(tbarray, '\n');
+            if ~isempty(self.title)
+                tbstr = strjoin({self.title, tbstr}, '\n');
+            end
         end
 
         function n = nColumns(self)
         % Returns the number of columns (including row names)
         %
         % Returns:
-        %   integer: Number of columns
+        %   n (integer): Number of columns
             dim = size(self.elements);
             n = dim(2);
         end
@@ -300,7 +326,7 @@ classdef Table < replab.Str
         % Returns the number of rows (including column names)
         %
         % Returns:
-        %   integer: Number of columns
+        %   n (integer): Number of columns
             dim = size(self.elements);
             n = dim(1);
         end
@@ -310,6 +336,10 @@ classdef Table < replab.Str
         %
         % Convention: the column to the left of the table is 0.
         %
+        % Args:
+        %   range (integer(\*)): vector of column separator locations
+        %   sep (charstring): characters that separate columns in range
+        %
         % Example:
         %   >>> T = replab.str.Table({'one', 'two'});
         %   >>> T.setColSep(0:T.nColumns, ' | ');
@@ -317,9 +347,6 @@ classdef Table < replab.Str
         %       T =
         %        | one | two |
         %
-        % Args:
-        %   range (TODO): TODO
-        %   sep (TODO): TODO
             if isempty(self.colSep)
                 self.colSep = mat2cell(repmat('  ', self.nColumns+1, 1), ones(self.nColumns+1,1))';
             end
@@ -330,9 +357,6 @@ classdef Table < replab.Str
             else
                 sep_array = mat2cell(repmat(sep, length(range), 1), ones(length(range),1))';
             end
-            old_lengths = cellfun(@length, self.colSep);
-            new_lengths = cellfun(@length, sep_array);
-            self.columnLengths(range+1) = self.columnLengths(range+1) - old_lengths(range+1) + new_lengths;
             self.colSep(range+1) = sep_array;
         end
 
@@ -340,6 +364,10 @@ classdef Table < replab.Str
         % Sets the row separators for the rows inside the range
         %
         % Convention: the row at the top of the table is 0.
+        %
+        % Args:
+        %   range (integer(\*)): vector of row separator locations
+        %   sep (charstring): characters to be repeated to separate rows in range
         %
         % Example:
         %   >>> T = replab.str.Table({'one'; 'two'});
@@ -352,9 +380,6 @@ classdef Table < replab.Str
         %         two
         %       -------
         %
-        % Args:
-        %   range (TODO): TODO
-        %   sep (TODO): TODO
             if isempty(self.rowSep)
                 self.rowSep = cell(1, self.nRows + 1);
             end
@@ -370,6 +395,10 @@ classdef Table < replab.Str
         function setAlign(self, range, aligns)
         % Set the alignment of each column in range
         %
+        % Args:
+        %   range (integer(1,n)): vector of column positions in the same order as aligns
+        %   aligns (char(1,n)):  'l' for left, 'c' for centre, and 'r' for right
+        %
         % Example:
         %   >>> T = replab.str.Table({'one','two'; 'three','four'});
         %   >>> T.setAlign(1:T.nColumns, 'lr')
@@ -378,12 +407,12 @@ classdef Table < replab.Str
         %         one     two
         %         three  four
         %
-        % Args:
-        %   range (integer(1,n)): TODO
-        %   aligns (char(1,n)):  'l' for left, 'c' for centre, and 'r' for right
             range(range > self.nColumns) = []; % disregard characters after the range of the columns
             if length(aligns) > length(range)
                 aligns = aligns(1:length(range));
+            elseif length(aligns) < length(range)
+                repalign = repmat(aligns, 1, floor(length(range)/length(aligns)));
+                aligns = [repalign, aligns(1:length(range)-length(repalign))];
             end
             self.colAlign(range) = aligns;
         end
@@ -391,14 +420,17 @@ classdef Table < replab.Str
         function setOmitRange(self, omitRange)
         % Set columns that can be omitted if there is not enough space
         %
+        % Args:
+        %   omitRange (integer(\*)): range of columns that will be omitted first if
+        %                            columns don't fit
+        %
         % Example:
         %   >>> T = replab.str.Table({1:6,1:6,1:6,1:6,1:6,1:6;1,2,3,4,5,6});
         %   >>> T.setOmitRange([2:4])
         %   >>> disp(T.format(5, 75))
         %         [1, 2, 3, 4, 5, 6] ...  [1, 2, 3, 4, 5, 6]  [1, 2, 3, 4, 5, 6]
         %                  1                       5                   6
-        % Args:
-        %   range (TODO): TODO
+        %
             self.omitRange = sort(omitRange);
         end
 
@@ -411,7 +443,8 @@ classdef Table < replab.Str
         % Args:
         %   row (cell(1,nRows)): Row to add to table
         %   loc (integer): Location in table to add row
-        %   sep (charstring, optional): Row separator above new row, TODO: default value?
+        %   sep (charstring, optional): Row separator above new row,
+        %                               default to empty ''
         %
         % Example:
         %   >>> T = replab.str.Table([1,2,3]);
@@ -423,20 +456,18 @@ classdef Table < replab.Str
         %         one  two  three
             dim = size(self.elements);
             array = cell(dim(1) + 1, dim(2));
-            array(loc + 1, :) = self.convertToChars(row);
+            array(loc + 1, :) = row;
             array(loc + 2:end, :) = self.elements(loc + 1:end, :);
             array(1:loc, :) = self.elements(1:loc, :);
             self.elements = array;
-            if exist('sep', 'var')
-                if ~isempty(self.rowSep)
-                    self.rowSep = [self.rowSep(1:loc), {sep}, self.rowSep(loc+1:end)];
-                else
-                    self.rowSep = [cell(1, loc), {sep}, cell(1, self.nRows - loc)];
-                end
+            if ~exist('sep', 'var')
+                sep = '';
             end
-            elmtLens = max(cellfun(@length, self.elements));
-            sepLens = cellfun(@length, self.colSep);
-            self.columnLengths = [elmtLens, 0] + sepLens;
+            if ~isempty(self.rowSep)
+                self.rowSep = [self.rowSep(1:loc), {sep}, self.rowSep(loc+1:end)];
+            else
+                self.rowSep = [cell(1, loc), {sep}, cell(1, self.nRows - loc)];
+            end
         end
 
         function addColumn(self, column, loc, sep, align)
@@ -466,25 +497,21 @@ classdef Table < replab.Str
             end
             dim = size(self.elements);
             array = cell(dim(1), dim(2) + 1);
-            colchar = self.convertToChars(column);
-            array(:, loc + 1) = colchar;
+            array(:, loc + 1) = column;
             array(:, loc + 2:end) = self.elements(:, loc + 1:end);
             array(:, 1:loc) = self.elements(:, 1:loc);
             self.elements = array;
             self.colAlign = [self.colAlign(1:loc), align, self.colAlign(loc+1:end)];
             self.colSep = [self.colSep(1:loc), {sep}, self.colSep(loc+1:end)];
-            columnwidth = max(cellfun(@length, colchar));
-            self.columnLengths = [self.columnLengths(1:loc), ...
-                                    columnwidth + length(sep), self.columnLengths(min(loc+1, end):end)];
         end
 
         function addColumnNames(self, colNames)
-        % Adds row names to the current table
+        % Adds column names to the current table
         %
         % Convention: should not include an entry above row names
         %
         % Args:
-        %   colNames (TODO): TODO
+        %   colNames (cell(1,nColumns)): cell array of column names
             if self.colName
                 self.elements = self.elements(2:end,:);
                 self.rowSep = self.rowSep(2:end);
@@ -498,17 +525,16 @@ classdef Table < replab.Str
         end
 
         function addRowNames(self, rowNames)
-        % Adds column names to the current table
+        % Adds row names to the current table
         %
         % Convention: should not include an entry before column names
         %
         % Args:
-        %   rowNames (TODO): TODO
+        %   rowNames (cell(1,nRows)): cell array of row names
             if self.rowName
                 self.elements = self.elements(:, 2:end);
                 self.colAlign = self.colAlign(2:end);
                 self.colSep = self.colSep(2:end);
-                self.columnLengths = self.columnLengths(2:end);
             end
             if self.colName
                 self.addColumn([{''}, rowNames], 0, '', 'c');
@@ -516,6 +542,16 @@ classdef Table < replab.Str
                 self.addColumn(rowNames, 0, '', 'c');
             end
             self.rowName = true;
+        end
+        
+        function addTitle(self, title)
+        % Adds title to the table
+        %
+        % Args:
+        %   title (charstring): charstring to display above the table
+            if ischar(title)
+                self.title = title;
+            end
         end
 
         function names = getColumnNames(self)
@@ -555,7 +591,7 @@ classdef Table < replab.Str
 
     methods (Static)
 
-        function chararray = convertToChars(elements)
+        function chararray = convertToChars(elements, maxColumns)
             % converts all of elements to characters
             %
             % Args:
@@ -578,8 +614,15 @@ classdef Table < replab.Str
                         charac = convertStringsToChars(elmt);
                     else
                         charac = replab.shortStr(elmt);
+                        if length(charac) > maxColumns && ismatrix(elmt)
+                            charac = replab.headerStr(elmt);
+                        end
                     end
-                    chararray{i, j} = charac;
+                    if length(charac) > maxColumns
+                        chararray{i, j} = [charac(1:maxColumns-3), '...'];
+                    else
+                        chararray{i, j} = charac;
+                    end
                 end
             end
         end
