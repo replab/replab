@@ -191,7 +191,7 @@ classdef PermutationGroup < replab.FiniteGroup
                 classes = cell(1, n);
                 for i = 1:n
                     cl = sortrows(C{i}');
-                    classes{i} = replab.ConjugacyClass(self, cl(1,:));
+                    classes{i} = replab.ConjugacyClass.make(self, cl(1,:));
                 end
             else
                 classes = replab.perm.conjugacyClassesByRandomSearch(self);
