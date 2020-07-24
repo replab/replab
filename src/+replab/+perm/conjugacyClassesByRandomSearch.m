@@ -35,7 +35,7 @@ function classes = conjugacyClassesByRandomSearch(group)
                 end
             end
             if newClass
-                c = replab.ConjugacyClass(group, gn);
+                c = replab.ConjugacyClass.make(group, gn);
                 classes{1,end+1} = c;
                 remains = remains - c.size;
             end

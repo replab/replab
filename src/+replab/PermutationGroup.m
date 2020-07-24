@@ -196,6 +196,12 @@ classdef PermutationGroup < replab.FiniteGroup
             else
                 classes = replab.perm.conjugacyClassesByRandomSearch(self);
             end
+            reps = zeros(length(classes), self.domainSize);
+            for i = 1:length(classes)
+                reps(i,:) = classes{i}.representative;
+            end
+            [~, I] = sortrows(reps);
+            classes = classes(I); % sort by minimal representative
         end
 
         function res = computeIsCyclic(self)
