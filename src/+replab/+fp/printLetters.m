@@ -5,6 +5,9 @@ function word = printLetters(letters, names, times)
 %   letters (integer(1,\*)): Letters of the word as generator indices
 %   names (cell(1,\*) of charstring): Generator names
 %   times (charstring, optional): Composition operator, default value ``' '``
+%
+% Returns:
+%   charstring: Word given as an explicit string
     if nargin < 3
         times = ' ';
     end

@@ -1,4 +1,14 @@
 function relators = relatorsForPermutationGroup(group, names)
+% Computes relators for a finite group
+%
+% Note: calls the GAP system internally
+%
+% Args:
+%   group (`+replab.PermutationGroup`): Permutation group to find the relators of
+%   names (cell(1,\*) of charstring): Generator names to use in the relators
+%
+% Returns:
+%   cell(1,\*) of charstring: Relators given as explicit words
     permList = @(p) ['Inverse(PermList([' strjoin(arrayfun(@num2str, p, 'uniform', 0), ', ') ']))'];
     line1 = ['G := GroupByGenerators([' strjoin(cellfun(permList, group.generators, 'uniform', 0), ', ') ']);;'];
     line2 = 'F := Image(IsomorphismFpGroupByGenerators(G, GeneratorsOfGroup(G)));;';
@@ -9,7 +19,7 @@ function relators = relatorsForPermutationGroup(group, names)
     fid = fopen(tfile, 'wt');
     fprintf(fid, lines);
     fclose(fid);
-    [status, result] = system(['~/software/gap4/bin/gap.sh -q <' tfile]);
+    [status, result] = system([replab.globals.gapBinaryPath ' -q <' tfile]);
     delete(tfile);
     outs = strsplit(result, '\n');
     gapNames = strtrim(outs{1});
