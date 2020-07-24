@@ -32,7 +32,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             niceGroup = self.niceGroup;
             % TODO: optimize ChainWithImages by using deterministic Schreier-Sims while comparing orbits
             finImgs = [];
-            c = replab.bsgs.ChainWithImages.make(I.n, self, niceGens, self.generators, finImgs, ...
+            c = replab.bsgs.ChainWithImages.make(self.niceGroup.domainSize, self, niceGens, self.generators, finImgs, ...
                                                  niceGroup.chain.base, niceGroup.order);
         end
 

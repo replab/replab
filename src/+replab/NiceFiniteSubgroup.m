@@ -41,7 +41,7 @@ classdef NiceFiniteSubgroup < replab.NiceFiniteGroup
         % Group
 
         function xInv = inverse(self, x)
-            xInv = self.parent.inverse(x);
+            xInv = self.type.inverse(x);
         end
 
         % NiceFiniteGroup
