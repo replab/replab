@@ -4,10 +4,10 @@ classdef CharacterTable < replab.Obj
 % Example:
 %   >>> s3ct = replab.CharacterTable.forPermutationGroup(replab.S(3));
 %   >>> disp(s3ct.table)
-%            [1, 3, 2]  [2, 3, 1]  [1, 2, 3]
+%            [1, 2, 3]  [1, 3, 2]  [2, 3, 1]
 %       X.1      1          1          1
-%       X.2      0         -1          2
-%       X.3     -1          1          1
+%       X.2      2          0         -1
+%       X.3      1         -1          1
 
     properties (SetAccess = protected)
         group % (`+replab.Group`): group represented by character table
