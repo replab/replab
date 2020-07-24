@@ -76,7 +76,6 @@ classdef Chain < replab.Str
         %
         % Args:
         %   n (integer): Domain size
-        %                               The default value is `+replab.+bsgs.TrivialGroup`
         %
         % Returns:
         %   `+replab.bsgs.Chain`: A constructed BSGS chain
