@@ -35,10 +35,12 @@ classdef ConjugacyClasses
         %   permutation: Permutation that left conjugates ``h`` to ``h1``
             n = group.domainSize;
             candidates = h; % candidates as rows
+            conjugates = 1:n; % conjugating elements as rows
             sub = group.lexChain;
             beta = 1;
             while beta <= n
                 candidates1 = zeros(0, n);
+                conjugates1 = zeros(0, n);
                 minImg = n + 1;
                 stab2 = []; % corresponds to the result of sub.stabilizer(beta).stabilizer(minImg)
                 orbit2 = [];
@@ -51,34 +53,39 @@ classdef ConjugacyClasses
                     u1 = U1(:,j)';
                     uinv1 = Uinv1(:,j)';
                     for i = 1:size(candidates, 1)
-                        h = candidates(i,:);
-                        a = uinv1(h(b));
+                        c = candidates(i,:);
+                        ci = conjugates(i,:);
+                        cc = group.leftConjugate(ci, h);
+                        assert(all(c == cc));
+                        a = uinv1(c(b));
                         if i == 1 || candidates(i,b) ~= candidates(i-1,b)
                             orbit2 = stab1.orbitUnderG(1, a);
-                            %[stab1a orbit1a iOrbit1a U1a Uinv1a] = stab1.stabilizer(a, true);
                         end
                         m = min(orbit2);
                         if m <= minImg
                             if m < minImg
                                 minImg = m;
                                 candidates1 = zeros(0, n);
+                                conjugates1 = zeros(0, n);
                                 [stab2 orbit2 iOrbit2 U2 Uinv2] = stab1.stabilizer(minImg, true);
                             end
                             ind = iOrbit2(a);
                             u2 = U2(:,ind)';
                             uinv2 = Uinv2(:,ind)';
-                            h1 = uinv2(uinv1(h(u1(u2))));
-                            candidates1(end+1,:) = h1;
+                            c1 = uinv2(uinv1(c(u1(u2))));
+                            candidates1(end+1,:) = c1;
+                            conjugates1(end+1,:) = uinv2(uinv1(ci));
                         end
                     end
                 end
                 sub = stab2;
-                candidates = unique(candidates1, 'rows');
+                [candidates, I] = unique(candidates1, 'rows');
+                conjugates = conjugates1(I,:);
                 beta = beta + 1;
             end
             assert(size(candidates, 1) == 1);
             h1 = candidates(1,:);
-            g = replab.bsgs.LeftConjugation(group, h, h1).find;
+            g = conjugates1(1,:);
             assert(all(group.leftConjugate(g, h) == h1));
         end
 
