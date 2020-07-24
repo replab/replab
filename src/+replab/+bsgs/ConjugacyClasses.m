@@ -40,6 +40,11 @@ classdef ConjugacyClasses
             while beta <= n
                 candidates1 = zeros(0, n);
                 minImg = n + 1;
+                stab2 = []; % corresponds to the result of sub.stabilizer(beta).stabilizer(minImg)
+                orbit2 = [];
+                iOrbit2 = [];
+                U2 = [];
+                Uinv2 = [];
                 [stab1 orbit1 iOrbit1 U1 Uinv1] = sub.stabilizer(beta, true);
                 for j = 1:length(orbit1)
                     b = orbit1(j);
@@ -49,23 +54,25 @@ classdef ConjugacyClasses
                         h = candidates(i,:);
                         a = uinv1(h(b));
                         if i == 1 || candidates(i,b) ~= candidates(i-1,b)
-                            [stab1a orbit1a iOrbit1a U1a Uinv1a] = stab1.stabilizer(a, true);
+                            orbit2 = stab1.orbitUnderG(1, a);
+                            %[stab1a orbit1a iOrbit1a U1a Uinv1a] = stab1.stabilizer(a, true);
                         end
-                        [m, ind] = min(orbit1a);
-                        if m < minImg
-                            candidates1 = zeros(0, n);
-                            minImg = m;
-                        end
+                        m = min(orbit2);
                         if m <= minImg
-                            u1a = U1a(:,ind)';
-                            uinv1a = Uinv1a(:,ind)';
-                            % ``rest u1a uinv1 h u1 uinv1a rest``
-                            h1 = u1a(uinv1(h(u1(uinv1a))));
+                            if m < minImg
+                                minImg = m;
+                                candidates1 = zeros(0, n);
+                                [stab2 orbit2 iOrbit2 U2 Uinv2] = stab1.stabilizer(minImg, true);
+                            end
+                            ind = iOrbit2(a);
+                            u2 = U2(:,ind)';
+                            uinv2 = Uinv2(:,ind)';
+                            h1 = uinv2(uinv1(h(u1(u2))));
                             candidates1(end+1,:) = h1;
                         end
                     end
                 end
-                sub = stab1.stabilizer(minImg);
+                sub = stab2;
                 candidates = unique(candidates1, 'rows');
                 beta = beta + 1;
             end
