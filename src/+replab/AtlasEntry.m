@@ -8,7 +8,7 @@ classdef AtlasEntry < replab.Str
 
     properties
         name % (charstring): Group name
-        fpGroup % (`+replab.FiniteFPGroup`): Group presentation
+        abstractGroup % (`+replab.AbstractGroup`): Group presentation
         prmGroup % (`+replab.PermutationGroup`): Realization as permutation group
 
         outerRepresentatives % (cell(1,\*) of `+replab.Morphism`): Right coset representatives of the outer automorphism group
@@ -18,9 +18,9 @@ classdef AtlasEntry < replab.Str
 
     methods
 
-        function self = AtlasEntry(name, fpGroup, prmGroup, outerRepresentatives)
+        function self = AtlasEntry(name, abstractGroup, prmGroup, outerRepresentatives)
             self.name = name;
-            self.fpGroup = fpGroup;
+            self.abstractGroup = abstractGroup;
             self.prmGroup = prmGroup;
             if nargin == 4
                 self.outerRepresentatives = outerRepresentatives;

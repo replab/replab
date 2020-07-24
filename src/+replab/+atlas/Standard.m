@@ -37,11 +37,9 @@ classdef Standard < replab.Atlas
             prmGroup = replab.PermutationGroup.of(X, A);
             % Presentation from the groupprops wiki
             % < x, a | a^n = x^2 = 1, x a x^-1 = a^-1 >
-            [F x a] = replab.FreeGroup.of('x', 'a');
-            relators = {a^n, x^2, x*a/x*a};
-            fpGroup = F / relators;
-            fpGroup.setPermutationImages(prmGroup.generators);
-            E = replab.AtlasEntry(name, fpGroup, prmGroup);
+            relators = {['a^' num2str(n)] 'x^2' 'x a x^-1 a'};
+            abGroup = replab.AbstractGroup({'x' 'a'}, prmGroup, relators);
+            E = replab.AtlasEntry(name, abGroup, prmGroup);
         end
 
         function R = recognizeDihedral(self, G)
@@ -106,20 +104,18 @@ classdef Standard < replab.Atlas
             % this is the presentation from page 2100 of
             % https://www.ams.org/journals/tran/2003-355-05/S0002-9947-03-03040-X/S0002-9947-03-03040-X.pdf
             [F s t] = replab.FreeGroup.of('s', 't');
-            relators = {s^n, t^2, (s*t)^(n-1)};
+            relators = {['s^' num2str(n)], 't^2', ['(s*t)^' num2str(n-1)]};
             for j = 2:floor(n/2)
-                comm = inv(t)*inv(s^j)*t*s^j;
-                relators{1,end+1} = comm^2;
+                relators{1,end+1} = sprintf('(t^-1 s^-%d t s^%d)^2', j, j);
             end
-            fpGroup = F / relators;
-            fpGroup.setPermutationImages(prmGroup.generators);
+            abGroup = replab.AbstractGroup({'s' 't'}, prmGroup, relators);
             outer = {replab.FiniteIsomorphism.identity(prmGroup)};
             if n == 6
                 imgS = [6 1 5 4 3 2];
                 imgT = [2 1 4 3 6 5];
                 outer{1,2} = prmGroup.morphismByImages(prmGroup, {imgS, imgT});
             end
-            E = replab.AtlasEntry(name, fpGroup, prmGroup, outer);
+            E = replab.AtlasEntry(name, abGroup, prmGroup, outer);
         end
 
         function R = recognizeSymmetric(self, G)
@@ -163,12 +159,9 @@ classdef Standard < replab.Atlas
             X = [2:n 1];
             prmGroup = replab.PermutationGroup.of(X);
             % standard presentation
-            [F x] = replab.FreeGroup.of('x');
             % < x | x^n = 1 >
-            relators = {x^n};
-            fpGroup = F / relators;
-            fpGroup.setPermutationImages(prmGroup.generators);
-            E = replab.AtlasEntry(name, fpGroup, prmGroup);
+            abGroup = replab.AbstractGroup({'x'}, prmGroup, {['x^' num2str(n)]});
+            E = replab.AtlasEntry(name, abGroup, prmGroup);
         end
 
         function R = recognizeCyclic(self, G)
@@ -205,23 +198,21 @@ classdef Standard < replab.Atlas
             if isEven
                 S = [2 1 4:n 3];
             else
-                S= [1 2 4:n 3];
+                S = [1 2 4:n 3];
             end
             prmGroup = replab.PermutationGroup.of(S, T);
             % this is the presentation from page 2100 of
             % https://www.ams.org/journals/tran/2003-355-05/S0002-9947-03-03040-X/S0002-9947-03-03040-X.pdf
-            [F s t] = replab.FreeGroup.of('s', 't');
             if isEven
-                relators = {s^(n-2), t^3, (s*t)^(n-1), (inv(t)*inv(s)*t*s)^2};
+                relators = {['s^' num2str(n-2)], 't^3', ['(s t)^' num2str(n-1)], '(t^-1 s^-1 t s)^2'};
             else
-                relators = {s^(n-2), t^3, (s*t)^n};
+                relators = {['s^' num2str(n-2)], 't^3', ['(s t)^' num2str(n)]};
                 for k = 1:floor((n-3)/2)
-                    relators{1,end+1} = (t*s^(-k)*t*s^k)^2;
+                    relators{1,end+1} = sprintf('(t s^-%d t s^%d)^2', k, k);
                 end
             end
-            fpGroup = F / relators;
-            fpGroup.setPermutationImages(prmGroup.generators);
-            E = replab.AtlasEntry(name, fpGroup, prmGroup);
+            abGroup = replab.AbstractGroup({'s' 't'}, prmGroup, relators);
+            E = replab.AtlasEntry(name, abGroup, prmGroup);
         end
 
         function R = recognizeAlternating(self, G)
