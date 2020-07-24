@@ -65,7 +65,7 @@ classdef CharacterTable < replab.Obj
         %
         % Args:
         %   labels ({cell(1,nirreps), 'default'): cell array of character string labels
-        %                                         or 'default' to use default labels
+        %                                         or ``'default'`` to use default labels
             if iscell(labels)
                 if length(labels) == length(self.table.getRowNames)
                     self.table.addRowNames(labels)
@@ -113,7 +113,7 @@ classdef CharacterTable < replab.Obj
         %   sizes (integer(1,nclasses)): vector of conjugacy class sizes
             sizes = cellfun(@(x) double(x.size), self.classes);
         end
-        
+
         function mults = multiplicities(self, rep)
         % Calculate the multiplicities of irreducible representations in rep
         %
@@ -121,8 +121,7 @@ classdef CharacterTable < replab.Obj
         %   rep (`replab.Rep`): representation of self.group
         %
         % Returns:
-        %   mults (integer(1,nirreps)): vector of multiplicities of self.irreps 
-        %                               in the representation rep
+        %   mults (integer(1,nirreps)): vector of multiplicities of self.irreps in the representation rep
             nirreps = length(self.irreps);
             mults = zeros(1, nirreps);
             ord = double(self.group.order);
@@ -132,23 +131,23 @@ classdef CharacterTable < replab.Obj
                 mults(i) = sum(sizes.*repchars.*conj(self.chars(i,:))) / ord;
             end
         end
-        
+
         function mults = tensorProdMultiplicities(self, irreps)
-        % Find the multiplicities of irreducible representations in a
-        % tensor product of the irreducible representations
+        % Find the multiplicities of irreducible representations in a tensor product of the irreducible representations
         %
         % Args:
-        %   irreps (integer(1,\*)): vector of the locations of the irreducible 
+        %   irreps (integer(1,\*)): vector of the locations of the irreducible
         %                           representations of which we take the tensor product
-        % 
+        %
         % Returns:
         %   mults (integer(1,nirreps)): vector of the multiplicities of the
         %                               irreps in the tensor representation
         %
         % Convention: to take tensor product of n copies of the same irrep, use
         %             n copies of irrep location in irreps
-        % 
+        %
         % Example:
+        %   >>> S4 = replab.S(4);
         %   >>> s4ct = replab.CharacterTable.forPermutationGroup(S4);
         %   >>> s4ct.tensorProdMultiplicities([2,2,3])
         %       1     2     2     2     1
@@ -164,7 +163,7 @@ classdef CharacterTable < replab.Obj
                 mults(i) = sum(sizes.*tensorchars.*conj(self.chars(i,:))) / ord;
             end
         end
-        
+
 
     end
 
@@ -186,7 +185,7 @@ classdef CharacterTable < replab.Obj
                 sym = 'E';
             end
         end
-        
+
         function chars = charactersOfRepresentation(rep)
         % Returns the characters of a representation
         %
