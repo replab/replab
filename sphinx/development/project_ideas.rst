@@ -28,9 +28,9 @@ Graph automorphisms
 
 RepLAB has a decent implementation of (non-partition-based) backtrack search. Thus, naive algorithms could be implemented, with a possible nauty/saucy/bliss backend.
 
-- `https://users.cecs.anu.edu.au/~bdm/nauty/`_
-- `http://www.tcs.hut.fi/Software/bliss/`_
-- `http://vlsicad.eecs.umich.edu/BK/SAUCY/`_
+- `<https://users.cecs.anu.edu.au/~bdm/nauty/>`_
+- `<http://www.tcs.hut.fi/Software/bliss/>`_
+- `<http://vlsicad.eecs.umich.edu/BK/SAUCY/>`_
 
 Applications of (computational) representation theory
 -----------------------------------------------------
@@ -39,38 +39,39 @@ Applications of (computational) representation theory
 
 - A. Zingoni, “Group-theoretic applications in solid and structural mechanics: a review,” in Computational structures technology, GBR: Civil-Comp press, 2002, pp. 283–317.
 
-Applied to differential equations: `https://www.math.ubc.ca/~bluman/`_
+Applied to differential equations: `<https://www.math.ubc.ca/~bluman/>`_
 
 Support for efficient rational arithmetic
 -----------------------------------------
 
 Some computations always involve rational representations/bases, for example when decomposing permutation representations of (various products of) symmetric groups.
 
-- We can first use
-- SuiteSparse has a rational linear equation system solver with Matlab support, `https://github.com/DrTimothyAldenDavis/SuiteSparse/blob/master/SLIP_LU/MATLAB/SLIP_demo.m`_
+- We can first use an adhoc Matlab implementation that delegates to double-encoded integers or ``java.math.BigInteger``. See the ``replab.Rational`` class in this branch `<https://github.com/replab/replab/pull/356>`_.
+
+- SuiteSparse has a rational linear equation system solver with Matlab support, `<https://github.com/DrTimothyAldenDavis/SuiteSparse/blob/master/SLIP_LU/MATLAB/SLIP_demo.m>`_
 
 Implement matrices with elements in the cyclotomic field
 --------------------------------------------------------
 
 This would enable RepLAB to perform exact computations involving representations/characters.
 
-One of our collaborators has an implementation lifted from GAP System, see `https://github.com/denisrosset/cyclo`_, see `https://www.gap-system.org/Manuals/doc/ref/chap18.html`_.
+One of our collaborators has an implementation lifted from GAP System, see `<https://github.com/denisrosset/cyclo>`_, see `<https://www.gap-system.org/Manuals/doc/ref/chap18.html>`_.
 
-SAGE had an implementation, see `https://trac.sagemath.org/ticket/8327`_ and the top-level note on `https://doc.sagemath.org/html/en/reference/number_fields/sage/rings/universal_cyclotomic_field.html`_.
+SAGE had an implementation, see `<https://trac.sagemath.org/ticket/8327>`_ and the top-level note on `<https://doc.sagemath.org/html/en/reference/number_fields/sage/rings/universal_cyclotomic_field.html>`_.
 
-- T. Breuer, “Integral Bases for Subfields of Cyclotomic Fields,” AAECC, vol. 8, no. 4, pp. 279–289, Apr. 1997, doi: 10.1007/s002000050065, `https://link.springer.com/article/10.1007/s002000050065`_.
+- T. Breuer, "Integral Bases for Subfields of Cyclotomic Fields", AAECC, vol. 8, no. 4, pp. 279–289, Apr. 1997, doi: 10.1007/s002000050065, `<https://link.springer.com/article/10.1007/s002000050065>`_.
 
 Integrate support for manipulations of tableaux
 -----------------------------------------------
 
 Right now, we perform those computations in an adhoc way.
 
-- Discuss with the author of `https://www.mathworks.com/matlabcentral/fileexchange/62142-matrep-a-matlab-representation-theory-toolbox-symmetric-groups?focused=7410697&tab=function`_ to integrate the functions in RepLAB?
+- Discuss with the author of `<https://www.mathworks.com/matlabcentral/fileexchange/62142-matrep-a-matlab-representation-theory-toolbox-symmetric-groups?focused=7410697&tab=function>`_ to integrate the functions in RepLAB?
 
 Recognize direct products
 -------------------------
 
-- N. Kayal and T. Nezhmetdinov, “Factoring Groups Efficiently,” in Automata, Languages and Programming, Berlin, Heidelberg, 2009, pp. 585–596, doi: 10.1007/978-3-642-02927-1_49.
+- N. Kayal and T. Nezhmetdinov, "Factoring Groups Efficiently", in Automata, Languages and Programming, Berlin, Heidelberg, 2009, pp. 585–596, doi: 10.1007/978-3-642-02927-1_49.
 
 Recognition of symmetric/alternating groups for large orders
 ------------------------------------------------------------
@@ -86,7 +87,7 @@ For larger orders, implement one of the randomized algorithms below:
 Faster construction of irreducible representations of the symmetric group
 -------------------------------------------------------------------------
 
-See `https://sage.math.leidenuniv.nl/src/combinat/yang_baxter_graph.py`_
+See `<https://sage.math.leidenuniv.nl/src/combinat/yang_baxter_graph.py>`_
 
 based on
 
