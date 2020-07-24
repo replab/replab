@@ -7,9 +7,6 @@ classdef ConjugacyClass < replab.FiniteSet
 %
 % Thus, the left cosets $G/C_{G}(r) = \{ g C_{G}(r) : g \in G \}$ are in one to one correspondence with
 % the elements of the conjugacy class.
-%
-% Contrary to the case of cosets, the `.representative` element is not chosen to be lexicographically
-% minimal.
 
     properties (SetAccess = protected)
         group % (`+replab.FiniteGroup`): Group containing this conjugacy class
@@ -18,14 +15,30 @@ classdef ConjugacyClass < replab.FiniteSet
 
     methods
 
-        function self = ConjugacyClass(group, arbitraryRepresentative, representativeCentralizer)
+        function self = ConjugacyClass(group, representative, representativeCentralizer)
             self.type = group.type;
             self.group = group;
-            self.representative = arbitraryRepresentative;
+            self.representative = representative;
             if nargin < 3 || isempty(representativeCentralizer)
-                representativeCentralizer = self.group.centralizer(arbitraryRepresentative);
+                representativeCentralizer = self.group.centralizer(representative);
             end
             self.representativeCentralizer = representativeCentralizer;
+        end
+
+    end
+
+    methods (Static)
+
+        function c = make(group, element, elementCentralizer)
+            if nargin < 3
+                elementCentralizer = group.centralizer(element);
+            end
+            prmGroup = group.niceMorphism.imageGroup(group); % TODO: image
+            prmElement = group.niceMorphism.imageElement(element);
+            [h1 g] = replab.bsgs.ConjugacyClasses.representative(prmGroup, prmElement);
+            representative = group.niceMorphism.preimageElement(h1);
+            representativeCentralizer = elementCentralizer.leftConjugateGroup(group.niceMorphism.preimageElement(g));
+            c = replab.ConjugacyClass(group, representative, representativeCentralizer);
         end
 
     end

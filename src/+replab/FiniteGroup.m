@@ -1,7 +1,7 @@
 classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % Describes a group with a finite number of elements
 %
-% Each finite group has a type, that describes the most general group embedding its elements. 
+% Each finite group has a type, that describes the most general group embedding its elements.
 % For example, permutations of domain size ``n`` are embedded in the symmetric group of degree ``n``.
 
     properties (SetAccess = protected)
@@ -101,6 +101,17 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             for i = 2:length(eo)
                 e = lcm(e, eo(i));
             end
+        end
+
+        function c = conjugacyClass(self, g)
+        % Returns the conjugacy class corresponding to the given element
+        %
+        % Args:
+        %   g (element): Arbitrary group element
+        %
+        % Returns:
+        %   `.ConjugacyClass`: The conjugacy class containing the given element
+            c = replab.ConjugacyClass.make(self, g);
         end
 
         function c = conjugacyClasses(self)
