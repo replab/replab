@@ -49,32 +49,20 @@ classdef Parser
 %   11. generator, with the data giving the index of the generator
 %   12. end of word
 
-    properties
-        commutatorStartsWithInverses % (logical): If true, ``[x, y] = x^-1 y^-1 x y``, if false ``[x, y] = x y x^-1 y^-1``
-        types % (struct): Constant values for token types
-        specialChars % (charstring): List of special characters for the lexer
+    properties (Constant = true)
+        commutatorStartsWithInverses = true % (logical): If true, ``[x, y] = x^-1 y^-1 x y``, if false ``[x, y] = x y x^-1 y^-1``
+        types  = struct('EXPONENT', 1, 'OPEN_PAREN', 2, 'CLOSE_PAREN', 3, 'OPEN_BRACKET', 4, 'COMMA', 5, 'CLOSE_BRACKET', 6, 'EQUALITY', 7, 'IDENTITY', 8, 'TIMES', 9, 'DIVIDE', 10, 'GENERATOR', 11, 'END', 12) % (struct): Constant values for token types
+        specialChars  = '^()[,]=1*/' % (charstring): List of special characters for the lexer
     end
 
-    methods
+    methods (Static)
 
-        function self = Parser(commutatorStartsWithInverses)
-            if nargin < 1
-                commutatorStartsWithInverses = true;
-            end
-            self.commutatorStartsWithInverses = commutatorStartsWithInverses;
-            self.specialChars = '^()[,]=1*/';
-            self.types = struct('EXPONENT', 1, 'OPEN_PAREN', 2, 'CLOSE_PAREN', 3, ...
-                                'OPEN_BRACKET', 4, 'COMMA', 5, 'CLOSE_BRACKET', 6, ...
-                                'EQUALITY', 7, 'IDENTITY', 8, ...
-                                'TIMES', 9, 'DIVIDE', 10, 'GENERATOR', 11, 'END', 12);
-        end
-
-        function [pos, w] = part(self, tokens, pos)
+        function [pos, w] = part(tokens, pos)
         % Parses a part
             w = [];
             % parse the part
             type = tokens(1, pos);
-            types = self.types;
+            types = replab.fp.Parser.types;
             if type == types.IDENTITY % identity
                 pos = pos + 1;
                 % w = [] still empty
@@ -83,26 +71,26 @@ classdef Parser
                 pos = pos + 1;
             elseif type == types.OPEN_PAREN % subword
                 pos = pos + 1;
-                [pos, w] = self.nonEmptyWord(tokens, pos);
+                [pos, w] = replab.fp.Parser.nonEmptyWord(tokens, pos);
                 if pos == 0 || tokens(1, pos) ~= types.CLOSE_PAREN
                     return
                 end
                 pos = pos + 1;
             elseif type == types.OPEN_BRACKET % commutator
                 pos = pos + 1;
-                [pos, lhs] = self.nonEmptyWord(tokens, pos);
+                [pos, lhs] = replab.fp.Parser.nonEmptyWord(tokens, pos);
                 if pos == 0 || tokens(1, pos) ~= types.COMMA
                     return
                 end
                 pos = pos + 1;
-                [pos, rhs] = self.nonEmptyWord(tokens, pos);
+                [pos, rhs] = replab.fp.Parser.nonEmptyWord(tokens, pos);
                 if pos == 0 || tokens(1, pos) ~= types.CLOSE_BRACKET
                     return
                 end
                 pos = pos + 1;
                 lr = [lhs rhs];
                 lIrI = fliplr(-[rhs lhs]);
-                if self.commutatorStartsWithInverses
+                if replab.fp.Parser.commutatorStartsWithInverses
                     w = [lIrI lr];
                 else
                     w = [lr lIrI];
@@ -112,13 +100,13 @@ classdef Parser
             end
         end
 
-        function [pos, w] = component(self, tokens, pos)
+        function [pos, w] = component(tokens, pos)
         % Parses a component, which is a part with an optional exponent
-            [pos, w] = self.part(tokens, pos);
+            [pos, w] = replab.fp.Parser.part(tokens, pos);
             if pos == 0
                 return
             end
-            types = self.types;
+            types = replab.fp.Parser.types;
             if tokens(1, pos) == types.EXPONENT
                 e = tokens(2, pos);
                 pos = pos + 1;
@@ -134,17 +122,17 @@ classdef Parser
             end
         end
 
-        function [pos, w] = nonEmptyWord(self, tokens, pos)
+        function [pos, w] = nonEmptyWord(tokens, pos)
         % Parses a word from tokens, which is a sequence of components
-            [pos, w] = self.component(tokens, pos);
+            [pos, w] = replab.fp.Parser.component(tokens, pos);
             if pos == 0
                 return
             end
-            types = self.types;
+            types = replab.fp.Parser.types;
             while 1
                 if tokens(1, pos) == types.TIMES
                     pos = pos + 1;
-                    [pos, next] = self.component(tokens, pos);
+                    [pos, next] = replab.fp.Parser.component(tokens, pos);
                     if pos == 0 % times MUST be followed by component
                         w = [];
                         return
@@ -152,14 +140,14 @@ classdef Parser
                     w = [w next];
                 elseif tokens(1, pos) == types.DIVIDE
                     pos = pos + 1;
-                    [pos, next] = self.component(tokens, pos);
+                    [pos, next] = replab.fp.Parser.component(tokens, pos);
                     if pos == 0 % divide MUST be followed by component
                         w = [];
                         return
                     end
                     w = [w -fliplr(next)];
                 else
-                    [nextPos, next] = self.component(tokens, pos);
+                    [nextPos, next] = replab.fp.Parser.component(tokens, pos);
                     if nextPos == 0
                         % success, we're at the end of our empty word
                         return
@@ -170,10 +158,10 @@ classdef Parser
             end
         end
 
-        function [pos, w] = word(self, tokens, pos)
+        function [pos, w] = word(tokens, pos)
         % Parses a word
             w = [];
-            [pos1, w1] = self.nonEmptyWord(tokens, pos);
+            [pos1, w1] = replab.fp.Parser.nonEmptyWord(tokens, pos);
             if pos1 == 0
                 return % pos stays in place
             else
@@ -182,13 +170,13 @@ classdef Parser
             end
         end
 
-        function [pos, relators] = equation(self, tokens, pos)
+        function [pos, relators] = equation(tokens, pos)
         % Parses an equation and returns the relators as a cell array
         %
             r = [];
             relators = [];
-            types = self.types;
-            [pos, lhs] = self.nonEmptyWord(tokens, pos);
+            types = replab.fp.Parser.types;
+            [pos, lhs] = replab.fp.Parser.nonEmptyWord(tokens, pos);
             if pos == 0
                 return
             end
@@ -199,7 +187,7 @@ classdef Parser
             elements = {lhs};
             while tokens(1, pos) == types.EQUALITY
                 pos = pos + 1;
-                [pos, w] = self.nonEmptyWord(tokens, pos);
+                [pos, w] = replab.fp.Parser.nonEmptyWord(tokens, pos);
                 if pos == 0
                     return
                 end
@@ -209,21 +197,21 @@ classdef Parser
             relators = cellfun(@(l) [l rhs], elements(1:end-1), 'uniform', false);
         end
 
-        function [pos, relators] = relations(self, tokens, pos)
+        function [pos, relators] = relations(tokens, pos)
         % Parses a non-empty sequence of relations separated by commas
         %
         % Returns the relators as a cell array
             res = {};
             relators = [];
-            types = self.types;
-            [pos r] = self.equation(tokens, pos);
+            types = replab.fp.Parser.types;
+            [pos r] = replab.fp.Parser.equation(tokens, pos);
             if pos == 0
                 return
             end
             res = r;
             while tokens(1, pos) == types.COMMA
                 pos = pos + 1;
-                [pos r] = self.equation(tokens, pos);
+                [pos r] = replab.fp.Parser.equation(tokens, pos);
                 if pos == 0
                     return
                 end
@@ -232,7 +220,7 @@ classdef Parser
             relators = res;
         end
 
-        function [ok, names, relatorLetters] = parsePresentation(self, str)
+        function [ok, names, relatorLetters] = parsePresentation(str)
         % Parses a string representing a group presentation
         %
         % Args:
@@ -248,7 +236,7 @@ classdef Parser
         %     cell(1,\*) of integer(1,\*): Relators given as the letters composing words
             ok = false;
             names = [];
-            types = self.types;
+            types = replab.fp.Parser.types;
             relatorLetters = [];
             str = strtrim(str);
             if str(1) ~= '<' || str(end) ~= '>'
@@ -267,13 +255,13 @@ classdef Parser
             if isempty(relStr)
                 relatorLetters = {};
             else
-                [ok, tokens] = self.lex(relStr, names);
+                [ok, tokens] = replab.fp.Parser.lex(relStr, names);
                 if ~ok
                     names = [];
                     return
                 end
                 pos = 1;
-                [pos, relatorLetters] = self.relations(tokens, pos);
+                [pos, relatorLetters] = replab.fp.Parser.relations(tokens, pos);
                 if pos == 0 || tokens(1, pos) ~= types.END
                     names = [];
                     relators = [];
@@ -283,7 +271,7 @@ classdef Parser
             ok = true;
         end
 
-        function [ok, T] = lex(self, str, names)
+        function [ok, T] = lex(str, names)
         % Splits the given string into tokens
         %
         % See the class documentation string for `.Parser`
@@ -294,8 +282,8 @@ classdef Parser
             % whitespace mask
             ws = [isstrprop(str, 'wspace') false];
 
-            types = self.types;
-            spec = self.specialChars;
+            types = replab.fp.Parser.types;
+            spec = replab.fp.Parser.specialChars;
 
             % valid characters in a generator name
             gstart = isstrprop(str, 'alpha');
