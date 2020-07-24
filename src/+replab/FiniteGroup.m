@@ -701,6 +701,11 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function w = factorize(self, element)
         % Factorizes an element as a word in the generators
         %
+        % Example:
+        %   >>> G = replab.S(3);
+        %   >>> G.factorize([2 3 1])
+        %       'x1'
+        %
         % Args:
         %   element (element of this group): Element to factorize
         %
@@ -726,6 +731,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function m = abstractGroupIsomorphism(self, names)
         % Returns an isomorphism to an abstract group
+        %
+        % Example:
+        %   >>> G = replab.S(3);
+        %   >>> f = G.abstractGroupIsomorphism({'s' 't'});
+        %   >>> f.imageElement([2 3 1])
+        %       's'
         %
         % Args:
         %   names (cell(1,\*) of charstring): Generator names
