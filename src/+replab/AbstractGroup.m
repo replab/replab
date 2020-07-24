@@ -104,6 +104,10 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         end
 
         function r = relators(self)
+        % Returns the list of relators defining this abstract group
+        %
+        % Returns:
+        %   cell(1,\*) of charstring: Words defining the relators
             r = self.cached('relators', @() self.computeRelators);
         end
 
@@ -173,7 +177,6 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
         end
 
-
         function l = imagesDefineMorphism(self, target, targetGeneratorImages)
         % Checks whether the given images satisfy the relations of the presentation of this group
         %
@@ -239,15 +242,6 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         % NiceFiniteGroup
 
         function perm = niceImage(self, word)
-        % Computes the image of this word using the given generator images
-        %
-        % Does not verify the validity of the implied homomorphism.
-        %
-        % Args:
-        %   word (charstring): Word
-        %
-        % Returns:
-        %   permutation`: Computed image
             letters = self.toLetters(word);
             pg = self.permutationGroup;
             perm = pg.identity;
