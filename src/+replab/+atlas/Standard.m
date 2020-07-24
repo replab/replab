@@ -103,7 +103,6 @@ classdef Standard < replab.Atlas
             prmGroup = replab.PermutationGroup.of(S, T);
             % this is the presentation from page 2100 of
             % https://www.ams.org/journals/tran/2003-355-05/S0002-9947-03-03040-X/S0002-9947-03-03040-X.pdf
-            [F s t] = replab.FreeGroup.of('s', 't');
             relators = {['s^' num2str(n)], 't^2', ['(s*t)^' num2str(n-1)]};
             for j = 2:floor(n/2)
                 relators{1,end+1} = sprintf('(t^-1 s^-%d t s^%d)^2', j, j);
