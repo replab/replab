@@ -513,6 +513,12 @@ classdef Chain < replab.Str
                 if ~self.isMutable
                     c.makeImmutable;
                 end
+                n = self.n;
+                orbit = b;
+                iOrbit = zeros(1, n);
+                iOrbit(b) = 1;
+                U = (1:n)';
+                Uinv = (1:n)';
             elseif self.B(1) == b
                 newB = self.B(2:end);
                 newS = self.S(:, self.Sind(2):end);
