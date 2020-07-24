@@ -231,6 +231,10 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
         end
 
+        function m = computeNiceMorphism(self)
+            m = replab.nfg.AbstractGroupIsomorphism(self);
+        end
+
     end
 
 end

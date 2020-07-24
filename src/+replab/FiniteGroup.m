@@ -698,6 +698,46 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Morphisms
 
+        function w = factorize(self, element)
+        % Factorizes an element as a word in the generators
+        %
+        % Args:
+        %   element (element of this group): Element to factorize
+        %
+        % Returns:
+        %   charstring: Word in the generators
+            m = self.defaultAbstractGroupIsomorphism;
+            w = m.imageElement(element);
+        end
+
+        function m = defaultAbstractGroupIsomorphism(self)
+        % Returns an isomorphism to an abstract group with generic generator names
+        %
+        % Returns:
+        %   `.FiniteIsomorphism`: Isomorphism to an abstract group with generators named ``x1``, ``x2`` etc.
+            m = self.cached('defaultAbstractGroupIsomorphism', @() self.computeDefaultAbstractGroupIsomorphism);
+        end
+
+        function m = computeDefaultAbstractGroupIsomorphism(self)
+            names = arrayfun(@(i) ['x' num2str(i)], 1:self.nGenerators, 'uniform', 0);
+            m = self.abstractGroupIsomorphism(names);
+        end
+
+
+        function m = abstractGroupIsomorphism(self, names)
+        % Returns an isomorphism to an abstract group
+        %
+        % Args:
+        %   names (cell(1,\*) of charstring): Generator names
+        %
+        % Returns:
+        %   `.FiniteIsomorphism`: Isomorphism to an abstract group
+            finGroup = self;
+            prmGroup = self.niceMorphism.target;
+            abGroup = replab.AbstractGroup(names, prmGroup);
+            m = finGroup.niceMorphism.andThen(abGroup.niceMorphism.inverse);
+        end
+
 % $$$         % TODO
 % $$$         function f = leftConjugateMorphism(self, by)
 % $$$         % Returns the morphism that corresponds to left conjugation by an element
