@@ -12,6 +12,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 % Example:
 %   >>> [G, x] = replab.AbstractGroup.parsePresentation('< x | x^3 = 1 >');
 %   >>> x
+%       x =
 %       'x'
 %   >>> G.compose(x, x)
 %       'x^2'
