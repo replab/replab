@@ -105,7 +105,7 @@ classdef Chain < replab.Str
         %
         % Returns:
         %   logical: True if ``base(l) < base(l+1)`` holds for all ``l``.
-            l = all(self.B(2:end) < self.B(1:end-1));
+            l = all(self.B(2:end) > self.B(1:end-1));
         end
 
         function b = base(self)
