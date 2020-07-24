@@ -1,9 +1,31 @@
 classdef AbstractGroup < replab.NiceFiniteGroup
-% Describes a group whose elements are written as product of generators
+% Describes a group whose elements are written as products of generators
 %
-% The group is the quotient of a free group by the normal closure of a set of relators. The relators are
-% written using words in the free group.
-
+% The elements of that group obey an equivalence relation, which can be given in two different ways:
+%
+% - A list of relations form a group presentation (see `<https://en.wikipedia.org/wiki/Presentation_of_a_group>`_
+%
+% - The equivalence relation is given by an homomorphism into an explicit realization of the group.
+%
+% We now give two corresponding examples.
+%
+% Example:
+%   >>> [G, x] = replab.AbstractGroup.parsePresentation('< x | x^3 = 1 >');
+%   >>> x
+%       'x'
+%   >>> G.compose(x, x)
+%       'x^2'
+%   >>> G.order
+%       3
+%
+% Example:
+%   >>> G = replab.AbstractGroup({'s', 't'}, replab.S(3));
+%   >>> G.order
+%       6
+%   >>> G.elements.at(3)
+%       't'
+%
+%
     properties (Access = protected)
         groupId % (integer): Unique group id
     end
