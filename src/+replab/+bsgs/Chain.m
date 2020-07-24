@@ -1085,9 +1085,6 @@ classdef Chain < replab.Str
             while i >= 1 && self.order <= maxOrder
                 i = self.schreierSimsTest(i);
             end
-            if self.order <= maxOrder
-                self.check;
-            end
         end
 
         function randomizedSchreierSims(self, order)
