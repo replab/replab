@@ -20,20 +20,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         function g = nicePreimage(self, p)
         % Default implementation of chain
-            g = self.niceChain.image(p);
-        end
-
-        function c = niceChain(self)
-            c = self.cached('niceChain', @() self.computeNiceChain);
-        end
-
-        function c = computeNiceChain(self)
-            niceGens = cellfun(@(s) self.niceImage(s), self.generators, 'uniform', 0);
-            niceGroup = self.niceGroup;
-            % TODO: optimize ChainWithImages by using deterministic Schreier-Sims while comparing orbits
-            finImgs = [];
-            c = replab.bsgs.ChainWithImages.make(self.niceGroup.domainSize, self, niceGens, self.generators, finImgs, ...
-                                                 niceGroup.chain.base, niceGroup.order);
+            g = self.niceMorphism.preimageElement(p);
         end
 
         function p = niceImage(self, g)
@@ -91,7 +78,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         end
 
         function m = computeNiceMorphism(self)
-            m = replab.nfg.NiceFiniteGroupIsomorphism(self);
+            m = replab.nfg.NiceFiniteGroupIsomorphism(self, self.niceGroup);
         end
 
         function dec = computeDecomposition(self)

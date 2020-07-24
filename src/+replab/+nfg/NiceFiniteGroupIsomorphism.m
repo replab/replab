@@ -2,17 +2,17 @@ classdef NiceFiniteGroupIsomorphism < replab.FiniteIsomorphism
 
     methods
 
-        function self = NiceFiniteGroupIsomorphism(source)
+        function self = NiceFiniteGroupIsomorphism(source, target)
         % Constructs the nice isomorphism from a nice finite group to its permutation group
         %
         % Args:
         %   source (`+replab.NiceFiniteGroup`): Source of the isomorphism
+        %   target (`+replab.PermutationGroup`): Target of the isomorphism
         %
         % Returns:
         %   `+replab.FiniteIsomorphism`: The constructed isomorphism
             self.source = source;
-            domainSize = length(source.niceImage(source.identity));
-            self.target = replab.SymmetricGroup(domainSize);
+            self.target = target;
         end
 
         function c = chain(self)
