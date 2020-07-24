@@ -37,7 +37,8 @@ classdef ConjugacyClass < replab.FiniteSet
             prmElement = group.niceMorphism.imageElement(element);
             [h1 g] = replab.bsgs.ConjugacyClasses.representative(prmGroup, prmElement);
             representative = group.niceMorphism.preimageElement(h1);
-            c = replab.ConjugacyClass(group, representative);
+            representativeCentralizer = elementCentralizer.leftConjugateGroup(group.niceMorphism.preimageElement(g));
+            c = replab.ConjugacyClass(group, representative, representativeCentralizer);
         end
 
     end
