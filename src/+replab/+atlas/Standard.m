@@ -137,7 +137,7 @@ classdef Standard < replab.Atlas
                             U = T.elements;
                             for k = 1:length(U)
                                 t = U{k};
-                                if entry.abGroup.imagesDefineMorphism(G, {s t})
+                                if entry.abstractGroup.imagesDefineMorphism(G, {s t})
                                     if G.subgroup({s, t}).order == G.order
                                         R = replab.AtlasResult(G, entry, {s t});
                                         return

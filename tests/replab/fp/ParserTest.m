@@ -10,7 +10,6 @@ end
 function test_parse_words
     assertEqual(replab.fp.parseLetters('[a,x]', {'a' 'x'}), [-1 -2 1 2]);
     assertEqual(replab.fp.parseLetters('a (x a)^2', {'a' 'x'}), [1 2 1 2 1]);
-    assert(isempty(replab.fp.parseLetters('a a^-1', {'a' 'x'})));
 end
 
 function test_parse_correct_presentations
