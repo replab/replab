@@ -17,12 +17,12 @@ classdef Inverse < replab.FiniteIsomorphism
             f = self.of;
         end
 
-        function t = image(self, s)
-            t = self.of.preimage(s);
+        function t = imageElement(self, s)
+            t = self.of.preimageElement(s);
         end
 
-        function s = preimage(self, t)
-            s = self.of.image(t);
+        function s = preimageElement(self, t)
+            s = self.of.imageElement(t);
         end
 
     end
