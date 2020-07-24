@@ -1,4 +1,4 @@
-classdef SymmetricGroupIrrep < replab.Rep
+classdef SymmetricSpechtIrrep < replab.Rep
     
     properties (SetAccess = protected)
         partition
@@ -31,7 +31,7 @@ classdef SymmetricGroupIrrep < replab.Rep
         
         function dim = dimension(part)
             n = sum(part);
-            [~, cWord,dimWord] = replab.sym.SymmetricGroupIrrep.words(part,replab.sym.SymmetricGroupIrrep.conjugatePart(part));
+            [~, cWord,dimWord] = replab.sym.words(part,replab.sym.SymmetricSpechtIrrep.conjugatePart(part));
             columns = zeros(1,n);
             for k = 1:n
                 columns(k) = sum(cWord(k+1:n)==cWord(k));
@@ -62,7 +62,7 @@ classdef SymmetricGroupIrrep < replab.Rep
      end
 
      methods
-         function self = SymmetricGroupIrrep(group, part)
+         function self = SymmetricSpechtIrrep(group, part)
              if group.domainSize > 12
                  error('The domain size must be less than or equal to 12.')
              end
