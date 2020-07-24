@@ -12,6 +12,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 % Example:
 %   >>> [G, x] = replab.AbstractGroup.parsePresentation('< x | x^3 = 1 >');
 %   >>> x
+%       x =
 %       'x'
 %   >>> G.compose(x, x)
 %       'x^2'
@@ -25,7 +26,14 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 %   >>> G.elements.at(3)
 %       't'
 %
+% Abstract groups can also be created by isomorphisms from an explicit group.
 %
+% Example:
+%   >>> G = replab.S(3);
+%   >>> f = G.abstractGroupIsomorphism({'s' 't'});
+%   >>> f.imageElement([2 3 1])
+%       's'
+
     properties (Access = protected)
         groupId % (integer): Unique group id
     end
@@ -96,6 +104,10 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         end
 
         function r = relators(self)
+        % Returns the list of relators defining this abstract group
+        %
+        % Returns:
+        %   cell(1,\*) of charstring: Words defining the relators
             r = self.cached('relators', @() self.computeRelators);
         end
 
@@ -165,7 +177,6 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
         end
 
-
         function l = imagesDefineMorphism(self, target, targetGeneratorImages)
         % Checks whether the given images satisfy the relations of the presentation of this group
         %
@@ -231,15 +242,6 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         % NiceFiniteGroup
 
         function perm = niceImage(self, word)
-        % Computes the image of this word using the given generator images
-        %
-        % Does not verify the validity of the implied homomorphism.
-        %
-        % Args:
-        %   word (charstring): Word
-        %
-        % Returns:
-        %   permutation`: Computed image
             letters = self.toLetters(word);
             pg = self.permutationGroup;
             perm = pg.identity;
@@ -251,6 +253,10 @@ classdef AbstractGroup < replab.NiceFiniteGroup
                     perm = pg.composeWithInverse(perm, pg.generator(-l));
                 end
             end
+        end
+
+        function m = computeNiceMorphism(self)
+            m = replab.nfg.AbstractGroupIsomorphism(self);
         end
 
     end
