@@ -7,9 +7,9 @@
 %    - `~{{ el.matlabDomainIdentifier }}` -- {{ el.declarations.bestEffortDocFirstLine }}\n
 {% end %}
 {% end %}
-
+%\n
 {% for mg in cl.allMethodGroups %}
-% Methods: {{ mg.name }}\n
+%    Methods: {{ mg.name }}\n
 %\n
 {% for m in mg.methodsInGroup %}
 {% if m.isAccessible %}
