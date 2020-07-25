@@ -215,6 +215,29 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             p = self.inverse(self.generators{i});
         end
 
+        function g = imageLetters(self, letters)
+        % Returns the image of a word in the group generators, where the word is represented by letters
+        %
+        % The letters take the values ``1...nG`` which represent the group generators, and also the values
+        % ``-nG...-1`` which represent the inverses of those generators.
+        %
+        % Args:
+        %   letters (integer(1,\*)): Letters composing the word.
+        %
+        % Returns;
+        %   element: Element of the group corresponding to the given word
+            g = self.identity;
+            L = length(letters);
+            for i = 1:L
+                l = letters(i);
+                if l > 0
+                    g = self.compose(g, self.generator(l));
+                else
+                    g = self.composeWithInverse(g, self.generator(-l));
+                end
+            end
+        end
+
         function b = contains(self, g)
         % Tests whether this group contains the given element
         %
