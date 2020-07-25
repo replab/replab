@@ -7,7 +7,7 @@ classdef Monoid < replab.Domain
         identity % (element): Monoid identity element
     end
 
-    methods % Abstract methods
+    methods % Monoid operations (Abstract)
 
         function z = compose(self, x, y)
         % Composes two monoid/group elements
