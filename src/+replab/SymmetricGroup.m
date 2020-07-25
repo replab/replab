@@ -107,7 +107,7 @@ classdef SymmetricGroup < replab.PermutationGroup
 
     end
 
-    methods % Property computation
+    methods (Access = protected)
 
         function o = computeOrder(self)
             o = factorial(vpi(self.domainSize));
@@ -123,11 +123,6 @@ classdef SymmetricGroup < replab.PermutationGroup
             G = self.subgroup(self.generators, self.order);
             d = G.decomposition;
         end
-
-    end
-
-    methods (Access = protected)
-
 
         function ind = enumeratorFind(self, g)
             n = self.domainSize;

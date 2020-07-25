@@ -24,6 +24,32 @@ classdef OfFiniteGroups < replab.semidirectproduct.OfCompactGroups & replab.Nice
 
     end
 
+    methods (Access = protected)
+
+        % FiniteGroup
+
+        function o = computeOrder(self)
+            o = self.H.order * self.N.order;
+        end
+
+        function e = computeElements(self)
+            e = replab.IndexedFamily.lambda(self.order, ...
+                                            @(ind) self.atFun(ind), ...
+                                            @(g) self.findFun(g));
+        end
+
+        function gd = computeDecomposition(self)
+            TH = self.H.decomposition.T;
+            TN = self.N.decomposition.T;
+            idN = self.N.identity;
+            idH = self.H.identity;
+            TH1 = cellfun(@(t) cellfun(@(h) {h idN}, t, 'uniform', 0), TH, 'uniform', 0);
+            TN1 = cellfun(@(t) cellfun(@(n) {idH n}, t, 'uniform', 0), TN, 'uniform', 0);
+            gd = replab.FiniteGroupDecomposition(self, horzcat(TH1, TN1));
+        end
+
+    end
+
     methods % Implementations
 
         % Domain
@@ -46,28 +72,6 @@ classdef OfFiniteGroups < replab.semidirectproduct.OfCompactGroups & replab.Nice
 
         function xInv = inverse(self, x)
             xInv = inverse@replab.semidirectproduct.OfCompactGroups(self, x);
-        end
-
-        % FiniteGroup
-
-        function o = computeOrder(self)
-            o = self.H.order * self.N.order;
-        end
-
-        function e = computeElements(self)
-            e = replab.IndexedFamily.lambda(self.order, ...
-                                            @(ind) self.atFun(ind), ...
-                                            @(g) self.findFun(g));
-        end
-
-        function gd = computeDecomposition(self)
-            TH = self.H.decomposition.T;
-            TN = self.N.decomposition.T;
-            idN = self.N.identity;
-            idH = self.H.identity;
-            TH1 = cellfun(@(t) cellfun(@(h) {h idN}, t, 'uniform', 0), TH, 'uniform', 0);
-            TN1 = cellfun(@(t) cellfun(@(n) {idH n}, t, 'uniform', 0), TN, 'uniform', 0);
-            gd = replab.FiniteGroupDecomposition(self, horzcat(TH1, TN1));
         end
 
     end

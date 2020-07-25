@@ -58,100 +58,7 @@ classdef PermutationGroup < replab.FiniteGroup
 
     end
 
-
-    methods % Group internal description
-
-        function c = lexChain(self)
-        % Returns the reduced stabilizer chain corresponding to this permutation group in lexicographic order
-        %
-        % No base points are redundant.
-        %
-        % Returns:
-        %   `+replab.+bsgs.Chain`: Stabilizer chain
-            c = self.cached('lexChain', @() self.computeLexChain);
-        end
-
-        function c = computeLexChain(self)
-            c = self.chain;
-            if ~c.hasSortedBase
-                c = c.mutableCopy;
-                c.baseChange(1:self.domainSize, true);
-                c.makeImmutable;
-            end
-        end
-
-        function c = chain(self)
-        % Returns the stabilizer chain corresponding to this permutation group.
-        %
-        % Returns:
-        %   `+replab.+bsgs.Chain`: Stabilizer chain
-            c = self.cached('chain', @() self.computeChain);
-        end
-
-        function chain = computeChain(self)
-            for i = 1:self.nGenerators
-                assert(~self.isIdentity(self.generators{i}), 'Generators cannot contain the identity');
-            end
-            chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
-            base = chain.base;
-        end
-
-    end
-
-    methods % Implementations
-
-        % replab.Str
-
-        function s = headerStr(self)
-            if self.inCache('order')
-                s = sprintf('Permutation group acting on %d elements of order %s', self.domainSize, strtrim(num2str(self.order)));
-            else
-                s = sprintf('Permutation group acting on %d elements', self.domainSize);
-            end
-        end
-
-        % replab.Obj
-
-        function l = laws(self)
-            l = replab.PermutationGroupLaws(self);
-        end
-
-        % replab.Domain
-
-        function b = eqv(self, x, y)
-            b = isequal(x, y);
-        end
-
-        function s = sample(self)
-            s = self.chain.sample;
-        end
-
-        % replab.Monoid
-
-        function z = compose(self, x, y)
-            z = x(y);
-        end
-
-        % replab.Group
-
-        function y = inverse(self, x)
-            n = length(x);
-            y = zeros(1, n);
-            y(x) = 1:n;
-        end
-
-        function z = composeWithInverse(self, x, y)
-            z = zeros(1, length(x));
-            z(y) = x;
-        end
-
-        function z = leftConjugate(self, x, y)
-            z = zeros(1, length(x));
-            % x y xInv
-            z(x) = x(y);
-        end
-
-        % Group properties
+    methods (Access = protected)
 
         function o = computeOrder(self)
             o = self.chain.order;
@@ -248,6 +155,136 @@ classdef PermutationGroup < replab.FiniteGroup
             res = true; % all conjugacy classes generate the full group
         end
 
+        function c = computeLexChain(self)
+            c = self.chain;
+            if ~c.hasSortedBase
+                c = c.mutableCopy;
+                c.baseChange(1:self.domainSize, true);
+                c.makeImmutable;
+            end
+        end
+
+        function chain = computeChain(self)
+            for i = 1:self.nGenerators
+                assert(~self.isIdentity(self.generators{i}), 'Generators cannot contain the identity');
+            end
+            chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
+            base = chain.base;
+        end
+
+        function sub = computeDerivedSubgroup(self)
+            nG = self.nGenerators;
+            n = self.domainSize;
+            chain = replab.bsgs.Chain(n);
+            generators = {};
+            for i = 1:nG
+                gi = self.generator(i);
+                for j = 1:nG
+                    gj = self.generator(j);
+                    cm = self.composeWithInverse(self.compose(gi, gj), self.compose(gj, gi));
+                    if chain.stripAndAddStrongGenerator(cm)
+                        generators{1, end+1} = cm;
+                        chain.randomizedSchreierSims([]);
+                    end
+                end
+            end
+            % compute the normal closure
+            toCheck = generators;
+            while ~isempty(toCheck)
+                h = toCheck{end};
+                toCheck = toCheck(1:end-1);
+                for i = 1:nG
+                    gi = self.generator(i);
+                    cm = self.leftConjugate(gi, h);
+                    if chain.stripAndAddStrongGenerator(cm)
+                        generators{1, end+1} = cm;
+                        toCheck{1, end+1} = cm;
+                        chain.randomizedSchreierSims([]);
+                    end
+                end
+            end
+            sub = replab.PermutationGroup(self.domainSize, generators, chain.order, self.type, chain);
+        end
+
+    end
+
+    methods % Group internal description
+
+        function c = lexChain(self)
+        % Returns the reduced stabilizer chain corresponding to this permutation group in lexicographic order
+        %
+        % No base points are redundant.
+        %
+        % Returns:
+        %   `+replab.+bsgs.Chain`: Stabilizer chain
+            c = self.cached('lexChain', @() self.computeLexChain);
+        end
+
+        function c = chain(self)
+        % Returns the stabilizer chain corresponding to this permutation group.
+        %
+        % Returns:
+        %   `+replab.+bsgs.Chain`: Stabilizer chain
+            c = self.cached('chain', @() self.computeChain);
+        end
+
+    end
+
+    methods % Implementations
+
+        % replab.Str
+
+        function s = headerStr(self)
+            if self.inCache('order')
+                s = sprintf('Permutation group acting on %d elements of order %s', self.domainSize, strtrim(num2str(self.order)));
+            else
+                s = sprintf('Permutation group acting on %d elements', self.domainSize);
+            end
+        end
+
+        % replab.Obj
+
+        function l = laws(self)
+            l = replab.PermutationGroupLaws(self);
+        end
+
+        % replab.Domain
+
+        function b = eqv(self, x, y)
+            b = isequal(x, y);
+        end
+
+        function s = sample(self)
+            s = self.chain.sample;
+        end
+
+        % replab.Monoid
+
+        function z = compose(self, x, y)
+            z = x(y);
+        end
+
+        % replab.Group
+
+        function y = inverse(self, x)
+            n = length(x);
+            y = zeros(1, n);
+            y(x) = 1:n;
+        end
+
+        function z = composeWithInverse(self, x, y)
+            z = zeros(1, length(x));
+            z(y) = x;
+        end
+
+        function z = leftConjugate(self, x, y)
+            z = zeros(1, length(x));
+            % x y xInv
+            z(x) = x(y);
+        end
+
+        % Group properties
+
         % Group elements
 
         function b = contains(self, g)
@@ -336,40 +373,6 @@ classdef PermutationGroup < replab.FiniteGroup
                 order = [];
             end
             grp = replab.PermutationGroup(self.domainSize, generators, order, self.type);
-        end
-
-        function sub = computeDerivedSubgroup(self)
-            nG = self.nGenerators;
-            n = self.domainSize;
-            chain = replab.bsgs.Chain(n);
-            generators = {};
-            for i = 1:nG
-                gi = self.generator(i);
-                for j = 1:nG
-                    gj = self.generator(j);
-                    cm = self.composeWithInverse(self.compose(gi, gj), self.compose(gj, gi));
-                    if chain.stripAndAddStrongGenerator(cm)
-                        generators{1, end+1} = cm;
-                        chain.randomizedSchreierSims([]);
-                    end
-                end
-            end
-            % compute the normal closure
-            toCheck = generators;
-            while ~isempty(toCheck)
-                h = toCheck{end};
-                toCheck = toCheck(1:end-1);
-                for i = 1:nG
-                    gi = self.generator(i);
-                    cm = self.leftConjugate(gi, h);
-                    if chain.stripAndAddStrongGenerator(cm)
-                        generators{1, end+1} = cm;
-                        toCheck{1, end+1} = cm;
-                        chain.randomizedSchreierSims([]);
-                    end
-                end
-            end
-            sub = replab.PermutationGroup(self.domainSize, generators, chain.order, self.type, chain);
         end
 
         function c = centralizer(self, other)

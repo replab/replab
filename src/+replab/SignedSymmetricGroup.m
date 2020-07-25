@@ -48,7 +48,7 @@ classdef SignedSymmetricGroup < replab.SignedPermutationGroup
 
     end
 
-    methods % Property computation
+    methods (Access = protected)
 
         function o = computeOrder(self)
             o = factorial(vpi(self.domainSize)) * vpi(2)^self.domainSize;

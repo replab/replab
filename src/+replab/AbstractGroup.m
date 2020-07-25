@@ -83,6 +83,22 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
     end
 
+    methods (Access = protected)
+
+        function r = computeRelators(self)
+            r = replab.fp.relatorsForPermutationGroup(self.permutationGroup, self.names);
+        end
+
+        function m = computeNiceMorphism(self)
+            if self.order <= 65536
+                m = replab.nfg.AbstractGroupIsomorphismEnumeration.make(self);
+            else
+                m = replab.nfg.AbstractGroupIsomorphismChain(self);
+            end
+        end
+
+    end
+
     methods
 
         function self = AbstractGroup(names, permutationGroup, relators)
@@ -109,10 +125,6 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         % Returns:
         %   cell(1,\*) of charstring: Words defining the relators
             r = self.cached('relators', @() self.computeRelators);
-        end
-
-        function r = computeRelators(self)
-            r = replab.fp.relatorsForPermutationGroup(self.permutationGroup, self.names);
         end
 
         function letters = toLetters(self, word)
@@ -252,14 +264,6 @@ classdef AbstractGroup < replab.NiceFiniteGroup
                 else
                     perm = pg.composeWithInverse(perm, pg.generator(-l));
                 end
-            end
-        end
-
-        function m = computeNiceMorphism(self)
-            if self.order <= 65536
-                m = replab.nfg.AbstractGroupIsomorphismEnumeration.make(self);
-            else
-                m = replab.nfg.AbstractGroupIsomorphismChain(self);
             end
         end
 
