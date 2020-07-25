@@ -10,13 +10,13 @@
 
 {% for mg in cl.allMethodGroups %}
 % Methods: {{ mg.name }}\n
-\n
+%\n
 {% for m in mg.methodsInGroup %}
 {% if m.isAccessible %}
 %    - `~{{ m.matlabDomainIdentifier }}` -- {{ m.declarations.bestEffortDocFirstLine }}\n
 {% end %}
 {% end %}
-\n
+%\n
 {% end %}
 
 {% if ~isempty(cl.inheritedDocumentationElements) %}
