@@ -189,7 +189,7 @@ classdef Set < replab.Str
         end
 
         function inds = update(self, permutations)
-        % Returns the indices of the given permutations, adding them to the set if necessaryx
+        % Returns the indices of the given permutations, adding them to the set if necessary
         %
         % Modifies the set in place.
         %
