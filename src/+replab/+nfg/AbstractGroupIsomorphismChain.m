@@ -1,15 +1,23 @@
-classdef AbstractGroupIsomorphismChain < replab.FiniteIsomorphism
+classdef AbstractGroupIsomorphismChain < replab.nfg.AbstractGroupIsomorphism
 % Describes an isomorphism from an abstract group to its realization (permutation group) using a stabilizer chain
 
     methods
 
-        function self = AbstractGroupIsomorphismChain(source)
+        function self = AbstractGroupIsomorphismChain(source, chain)
         % Constructs the nice isomorphism from an abstract finite group to its permutation group
         %
         % Args:
         %   source (`+replab.AbstractGroup`): Source of the isomorphism
+        %   chain (`+replab.+bsgs.ChainWithWords`, optional): Computed stabilizer chain with reduced words
             self.source = source;
             self.target = source.permutationGroup;
+            if nargin >= 2 && ~isempty(chain
+                self.cache('chain', chain, 'ignore');
+            end
+        end
+
+        function iso1 = withUpdatedSource(self, source1)
+            iso1 = replab.nfg.AbstractGroupIsomorphismChain(source1, self.chain);
         end
 
         function c = chain(self)
