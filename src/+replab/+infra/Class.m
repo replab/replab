@@ -92,7 +92,7 @@ classdef Class < replab.infra.SourceElement
             am = am(:).';
             am = am(cellfun(@(x) x.isMethod, am));
             group = cellfun(@(x) x.declarations.bestEffortGroup, am, 'uniform', 0);
-            groups = unique(group, 'stable');
+            groups = replab.compat.uniqueStable(group);
             amg = cell(1, length(groups));
             for i = 1:length(groups)
                 name = groups{i};

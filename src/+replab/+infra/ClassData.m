@@ -65,7 +65,7 @@ classdef ClassData < replab.Str
             % Remove an eventual comment
             ind = find([line '%'] == '%', 1);
             group = strtrim(strrep(line(ind+1:end), '(Abstract)', ''));
-            if isequal(group, 'Implementations')
+            if isequal(group, 'Implementations') || isequal(group, 'Implementation')
                 group = '';
             end
             line = strtrim(line(1:ind-1));
