@@ -63,8 +63,12 @@ classdef ClassData < replab.Str
                 return
             end
             % Remove an eventual comment
-            parts = strsplit(line, '%');
-            line = strtrim(parts{1});
+            ind = find([line '%'] == '%', 1);
+            group = strtrim(strrep(line(ind+1:end), '(Abstract)', ''));
+            if isequal(group, 'Implementations')
+                group = '';
+            end
+            line = strtrim(line(1:ind-1));
             if isequal(line, 'methods')
                 % No attributes
                 attributes = struct;
@@ -75,6 +79,9 @@ classdef ClassData < replab.Str
                     replab.infra.parseError(ct, pos, 'Was expecting attributes, but unknown format encountered');
                 end
                 attributes = replab.infra.parseAttributes(tokens{1});
+            end
+            if ~isempty(group)
+                attributes.group = group;
             end
             while 1
                 [res met] = replab.infra.ClassData.parseMethodsElement(ct, pos, attributes);

@@ -43,15 +43,15 @@
 {% end %}
 
 {% if ~isempty(el.allMethods) %}
-{% if length(el.allMethods) == 1 %}
-   Method:\t\n
-{% else %}
-   Methods:\t\n
-{% end %}
-{% for m in el.allMethods %}
+{% for mg in el.allMethodGroups %}
+   Methods:\t{{ mg.name }}\n
+   \t\n
+{% for m in mg.methodsInGroup %}
 {% if m.isAccessible %}
      `~{{m.fullIdentifier}}` \t{{m.declarations.bestEffortDocFirstLine}}\n
 {% end %}
+{% end %}
+\t\n
 {% end %}
 {% end %}
 \n

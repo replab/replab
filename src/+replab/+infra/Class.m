@@ -86,9 +86,28 @@ classdef Class < replab.infra.SourceElement
             ae = ae(:).';
         end
 
+        function amg = allMethodGroups(self)
+        % Returns groups of all methods of this class (including inherited)
+            am = struct2cell(self.allElementsStruct);
+            am = am(:).';
+            am = am(cellfun(@(x) x.isMethod, am));
+            group = cellfun(@(x) x.declarations.bestEffortGroup, am, 'uniform', 0);
+            groups = unique(group, 'stable');
+            amg = cell(1, length(groups));
+            for i = 1:length(groups)
+                name = groups{i};
+                mask = cellfun(@(g) isequal(g, name), group);
+                methodsInGroup = am(mask);
+                methodNames = cellfun(@(m) m.name, methodsInGroup, 'uniform', 0);
+                [~, ind] = sort(methodNames);
+                methodsInGroup = methodsInGroup(ind);
+                amg{i} = replab.infra.MethodGroup(name, methodsInGroup);
+            end
+        end
+
         function ae = allElementsStruct(self)
         % Returns a struct whose fields contain all elements (including inherited)
-            ae = replab.infra.shm.merge2(self.ownElementsStruct, self.inheritedElementsStruct);
+            ae = replab.infra.shm.merge2(self.inheritedElementsStruct, self.ownElementsStruct);
         end
 
         function am = allMethods(self)
@@ -164,7 +183,7 @@ classdef Class < replab.infra.SourceElement
                     name = names{i};
                     already.(name) = true;
                 end
-                asc = self.allSuperclasses;
+                asc = fliplr(self.allSuperclasses); % visit in reverse order
                 for i = 1:length(asc)
                     sup = asc{i};
                     names = fieldnames(sup.ownElementsStruct);
