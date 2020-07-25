@@ -21,8 +21,9 @@ classdef AbstractGroupIsomorphismChain < replab.FiniteIsomorphism
         end
 
         function c = computeChain(self)
-            target = self.target;
-            c = replab.bsgs.ChainWithWords.make(target.domainSize, target.generators, target.chain.base, target.chain.order);
+            c = replab.bsgs.ChainWithWords(self.target);
+            c.sgsWordQuick(1000);
+            c.setCompleted;
         end
 
         function T = imageGroup(self, S)
@@ -34,11 +35,11 @@ classdef AbstractGroupIsomorphismChain < replab.FiniteIsomorphism
         end
 
         function s = preimageElement(self, t)
-            s = self.source.fromLetters(self.chain.image(t));
+            s = self.source.fromLetters(self.chain.word(t));
         end
 
         function S = preimageGroup(self, T)
-            gens = cellfun(@(t) self.source.fromLetters(self.chain.image(t)), T.generators, 'uniform', 0);
+            gens = cellfun(@(t) self.source.fromLetters(self.chain.word(t)), T.generators, 'uniform', 0);
             S = self.source.niceSubgroup(gens, T.order, T);
         end
 
