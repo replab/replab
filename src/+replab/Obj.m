@@ -50,6 +50,7 @@ classdef Obj < replab.Str
         % - ``ignore``: The existing value is left unchanged
         % - ``isequal``: The existing value and the given value are compared for equality using ``isequal``
         % - ``=``: The existing value and the given value are compared for equality using ``==``
+        % - ``error``: Raises an error
         %
         % Args:
         %   name (charstring): Name of the property
@@ -63,6 +64,8 @@ classdef Obj < replab.Str
                     handleExisting = 'ignore';
                 end
                 switch handleExisting
+                  case 'error'
+                    error('Value for %s already present in cache', name);
                   case 'overwrite'
                     self.cache_.(name) = value;
                   case 'ignore'

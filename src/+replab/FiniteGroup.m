@@ -215,6 +215,80 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             p = self.inverse(self.generators{i});
         end
 
+        function w = factorize(self, element, names)
+        % Factorizes an element as a word in the generators
+        %
+        % Example:
+        %   >>> G = replab.S(3);
+        %   >>> G.factorize([2 3 1])
+        %       'x1'
+        %   >>> names = {'s', 't'};
+        %   >>> G.factorize([2 3 1], names)
+        %       's'
+        %
+        % Args:
+        %   element (element of this group): Element to factorize
+        %   names (cell(1,\*) of charstring, optional): Generator names, default `.defaultGeneratorNames`
+        %
+        % Returns:
+        %   charstring: Word in the generators
+            if nargin < 3 || isempty(names)
+                m = self.abstractGroupIsomorphism;
+            else
+                m = self.abstractGroupIsomorphism(names);
+            end
+            w = m.imageElement(element);
+        end
+
+        function g = imageWord(self, word, names)
+        % Computes the image of a word in the group generators
+        %
+        % Example:
+        %   >>> G = replab.S(3);
+        %   >>> G.imageWord('x1')
+        %       2     3     1
+        %   >>> names = {'s', 't'};
+        %   >>> G.imageWord('s', names)
+        %       2     3     1
+        %
+        % Args:
+        %   word (charstring): Word written using mathematical notation
+        %   names (cell(1,\*) of charstring, optional): Generator names, default `.defaultGeneratorNames`
+        %
+        % Returns:
+        %   element: Element of the group corresponding to the given word
+
+            if nargin < 3 || isempty(names)
+                m = self.abstractGroupIsomorphism;
+            else
+                m = self.abstractGroupIsomorphism(names);
+            end
+            g = m.preimageElement(word);
+        end
+
+        function g = imageLetters(self, letters)
+        % Returns the image of a word in the group generators, where the word is represented by letters
+        %
+        % The letters take the values ``1...nG`` which represent the group generators, and also the values
+        % ``-nG...-1`` which represent the inverses of those generators.
+        %
+        % Args:
+        %   letters (integer(1,\*)): Letters composing the word.
+        %
+        % Returns;
+        %   element: Element of the group corresponding to the given word
+            g = self.identity;
+            L = length(letters);
+            for i = 1:L
+                l = letters(i);
+                if l > 0
+                    g = self.compose(g, self.generator(l));
+                else
+                    g = self.composeWithInverse(g, self.generator(-l));
+                end
+            end
+        end
+
         function b = contains(self, g)
         % Tests whether this group contains the given element
         %
@@ -698,36 +772,22 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Morphisms
 
-        function w = factorize(self, element)
-        % Factorizes an element as a word in the generators
-        %
-        % Example:
-        %   >>> G = replab.S(3);
-        %   >>> G.factorize([2 3 1])
-        %       'x1'
-        %
-        % Args:
-        %   element (element of this group): Element to factorize
+        function names = defaultGeneratorNames(self)
+        % Returns default generator names
         %
         % Returns:
-        %   charstring: Word in the generators
-            m = self.defaultAbstractGroupIsomorphism;
-            w = m.imageElement(element);
-        end
-
-        function m = defaultAbstractGroupIsomorphism(self)
-        % Returns an isomorphism to an abstract group with generic generator names
-        %
-        % Returns:
-        %   `.FiniteIsomorphism`: Isomorphism to an abstract group with generators named ``x1``, ``x2`` etc.
-            m = self.cached('defaultAbstractGroupIsomorphism', @() self.computeDefaultAbstractGroupIsomorphism);
+        %   cell(1,\*) of charstring: A list of generator names starting with ``x1``, ``x2``, ...
+            names = arrayfun(@(i) ['x' num2str(i)], 1:self.nGenerators, 'uniform', 0);
         end
 
         function m = computeDefaultAbstractGroupIsomorphism(self)
-            names = arrayfun(@(i) ['x' num2str(i)], 1:self.nGenerators, 'uniform', 0);
-            m = self.abstractGroupIsomorphism(names);
+        % Computes the isomorphism to an abstract group with default generator names
+            names = self.defaultGeneratorNames;
+            finGroup = self;
+            prmGroup = self.niceMorphism.target;
+            abGroup = replab.AbstractGroup(names, prmGroup);
+            m = finGroup.niceMorphism.andThen(abGroup.niceMorphism.inverse);
         end
-
 
         function m = abstractGroupIsomorphism(self, names)
         % Returns an isomorphism to an abstract group
@@ -739,14 +799,16 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %       's'
         %
         % Args:
-        %   names (cell(1,\*) of charstring): Generator names
+        %   names (cell(1,\*) of charstring, optional): Generator names, default `.defaultGeneratorNames`
         %
         % Returns:
         %   `.FiniteIsomorphism`: Isomorphism to an abstract group
-            finGroup = self;
-            prmGroup = self.niceMorphism.target;
-            abGroup = replab.AbstractGroup(names, prmGroup);
-            m = finGroup.niceMorphism.andThen(abGroup.niceMorphism.inverse);
+            if nargin < 2 || isempty(names)
+                m = self.cached('defaultAbstractGroupIsomorphism', @() self.computeDefaultAbstractGroupIsomorphism);
+            else
+                abGroup = self.abstractGroupIsomorphism.target.withRenamedGenerators(names);
+                m = self.niceMorphism.andThen(abGroup.niceMorphism.inverse);
+            end
         end
 
 % $$$         % TODO

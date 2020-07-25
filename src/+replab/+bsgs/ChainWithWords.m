@@ -1,460 +1,379 @@
 classdef ChainWithWords < replab.Str
 % A BSGS chain data structure for a permutation group
 %
-% This is a variant of `.Chain` which stores
+% This is a variant of `.Chain` which stores the words corresponding to the transversal elements.
+%
+% The notation below is adapted to the one in
+% T. Minkwitz, "An Algorithm for Solving the Factorization Problem in Permutation Groups,", Journal of Symbolic Computation, vol. 26, no. 1, pp. 89–95, Jul. 1998
+% doi: 10.1006/jsco.1998.0202
+
 
     properties (SetAccess = protected)
-        isMutable % (logical): Whether the chain can be modified
+        group % (`+replab.PermutationGroup`): Permutation group for which this chain is computed
+        chain % (`.Chain`): BSGS chain of the group being computed
+        completed % (logical): Whether the chain has been completed
         n % (integer): Domain size
-        B % (integer(1,nB)): Row vector of base points (all between 1..n without duplicates)
-
-        S % (integer(n,nS)): Matrix of strong generators stored as columns vectors (nS = # of strong generators)
-        T % (cell(1,nS) of integer(1,\*)): Strong generators as words
-        Sind % (integer(1,nB+1)): Starting index of strong generators for each stabilizer subgroup, where k = length(B)
-             %
-             %                    We have ``Sind(k+1) == nS + 1``.
-
-        Delta % (cell(1,nB) of integer(1,\*)): Each orbit is a row vector containing orbit elements
-        iDelta % (integer(n,nB)): For each orbit, maps a domain element to its position in Delta{i} or 0 if not present
-
-        U % (cell(1,nB) of cell(1,\*) of integer(n,\*)): Transversal elements
-        V % (cell(1,nB) of integer(1,\*)): Transversal elements as words
-        Uinv % (cell(1,k) of integer(n,\*)): Inverse transversal elements
+        k % (integer): Chain length
+        B % (integer(1,k)): Row vector of base points (all between 1..n without duplicates)
+        orbit % (cell(1,k) of integer(1,\*)): Each orbit is a row vector containing orbit elements
+        iOrbit % (integer(n,k)): For each orbit, maps a domain element to its position in orbit{i} or 0 if not present
+        newOrbit % (logical(n,k)): For each orbit, whether the element is new
+        nu % (cell(1,k) of integer(n,\*)): Inverse transversal elements
+        nuw % (cell(1,k) of cell(1,\*) of integer(1,\*)): Inverse transversal words
     end
 
     methods
 
-        function self = ChainWithWords(n, B, S, T, Sind, Delta, iDelta, U, V, Uinv)
-        % Constructs an empty mutable chain for a group of permutations acting on ``n`` elements
+        function self = ChainWithWords(group)
+        % Constructs an empty mutable chain to start the Minkwitz algorithm
         %
         % Args:
-        %   n (integer): Domain size
+        %   group (`+replab.PermutationGroup`): Group for which we compute a factorization of the elements
+            n = group.domainSize;
+            chain = group.chain;
+            B = chain.B;
+            k = length(B);
+            orbit = cell(1, k);
+            iOrbit = zeros(n, k);
+            newOrbit = false(n, k); % no need to say that the identity is new
+            nu = cell(1, k);
+            nuw = cell(1, k);
+            for i = 1:k
+                beta = B(i);
+                orbit{i} = beta;
+                iOrbit(beta,i) = 1;
+                nu{i} = (1:n)';
+                nuw{i} = {[]};
+            end
+            self.group = group;
+            self.chain = chain;
+            self.completed = false;
+            self.n = n;
+            self.k = k;
+            self.B = B;
+            self.orbit = orbit;
+            self.iOrbit = iOrbit;
+            self.newOrbit = newOrbit;
+            self.nu = nu;
+            self.nuw = nuw;
+        end
+
+        function setCompleted(self)
+        % Marks the chain as completed, and thus not modifiable
+            assert(self.tableFull, 'The chain is not complete');
+            self.completed = true;
+        end
+
+        function w = word(self, g)
+        % Returns the word corresponding to the given permutation
+        %
+        % Args:
+        %   g (permutation): Element of `.group`
         %
         % Returns:
-        %   `+replab.bsgs.Chain`: A constructed BSGS chain
-            self.isMutable = true;
-            self.n = n;
-            if nargin == 8
-                self.B = B;
-                self.S = S;
-                self.T = T;
-                self.Sind = Sind;
-                self.Delta = Delta;
-                self.iDelta = iDelta;
-                self.U = U;
-                self.V = V;
-                self.Uinv = Uinv;
-            else
-                self.B = zeros(1, 0);
-                self.S = zeros(n, 0);
-                self.T = cell(1, 0);
-                self.Sind = [1];
-                self.Delta = cell(1, 0);
-                self.iDelta = zeros(n,0);
-                self.U = cell(1, 0);
-                self.V = cell(1, 0);
-                self.Uinv = cell(1, 0);
+        %   integer(1,\*): Letters of the word representing ``g``
+            assert(self.completed);
+            w = [];
+            for i = 1:self.k
+                beta = self.B(i);
+                b = g(beta);
+                ind = self.iOrbit(b,i);
+                assert(ind > 0, 'Permutation not contained in the group');
+                nu = self.nu{i}(:,ind)';
+                nuw = self.nuw{i}{ind};
+                g = nu(g);
+                w = replab.fp.composeLetters(w, -fliplr(nuw));
             end
         end
 
-
-        %% Immutable functions
+        function l = maximumWordLength(self)
+        % Returns the maximal length of a word stored in this chain
+        %
+        % Returns:
+        %   integer: Maximal length that can be returned by `.word`
+            l = sum(cellfun(@(x) max(cellfun(@length, x)), self.nuw));
+        end
 
         function s = orbitSizes(self)
         % Returns the size of orbits for each level
-            s = cellfun(@(x) length(x), self.Delta);
-        end
-
-        function k = length(self)
-        % Returns the length of this BSGS chain
         %
         % Returns:
-        %   integer: Chain length
-            k = length(self.B);
+        %   integer(1,\*): List of orbit sizes
+            s = cellfun(@length, self.orbit);
         end
 
         function o = order(self)
-        % Returns the order of this BSGS chain
+        % Returns the order of the group stored in this (possibly partial) chain
         %
         % Returns:
-        %   vpi: Size of the group stored in the chain
-            if self.length == 0
-                o = vpi(1);
+        %   vpi: Order
+            o = replab.util.multiplyIntegers(self.orbitSizes);
+        end
+
+        function l = tableFull(self)
+        % Returns whether the chain is complete
+        %
+        % See Minkwitz, Eq. (1.5), p. 90
+        %
+        % It is faster to check if the size of orbits matches, as we reuse the base of the standard stabilizer
+        % computed for `.group`.
+        %
+        % Returns:
+        %   logical: True if the order of this (possibly partial) chain equals the order of the underlying `.group`
+            l = all(self.orbitSizes == self.chain.orbitSizes);
+            % this is effectively ``l = self.order == self.group.order``
+        end
+
+        function [r rw] = step(self, i, t, tw)
+        % Step procedure from Minkwitz
+        %
+        % Implemented as presented in Minkwitz, p. 91
+        %
+        % Args:
+        %   i (integer): Level of the stabilizer chain at which to perform the step
+        %   t (permutation): Permutation to examine
+        %   tw (integer(1,\*)): Word form of the permutation ``t``
+            assert(~self.completed);
+            beta = self.B(i);
+            img = t(beta);
+            ind = self.iOrbit(img, i);
+            if ind > 0
+                v = self.nu{i}(:,ind)';
+                vw = self.nuw{i}{ind};
+                r = v(t);
+                rw = replab.fp.composeLetters(vw, tw);
+                if length(tw) < length(vw)
+                    t_inv = self.group.inverse(t);
+                    tw_inv = -fliplr(tw);
+                    self.newOrbit(img, i) = true;
+                    self.nu{i}(:,ind) = t_inv';
+                    self.nuw{i}{ind} = tw_inv;
+                    self.step(i, t_inv, tw_inv);
+                end
             else
-                o = replab.util.multiplyIntegers(self.orbitSizes);
+                ind = length(self.orbit{i}) + 1;
+                self.orbit{i}(ind) = img;
+                self.iOrbit(img, i) = ind;
+                self.newOrbit(img, i) = true;
+                t_inv = self.group.inverse(t);
+                tw_inv = -fliplr(tw);
+                self.nu{i}(:,ind) = t_inv';
+                self.nuw{i}{ind} = tw_inv;
+                self.step(i, t_inv, tw_inv);
+                r = 1:self.n;
+                rw = [];
             end
         end
 
-        function g = u(self, i, b)
-        % Looks up a transversal element that maps beta_i to b
+        function [t tw] = round(self, l, c, t, tw)
+        % Round procedure
+        %
+        % Implemented as presented in Minkwitz, p. 91
         %
         % Args:
-        %   i (integer): Index of transversal
-        %   b (integer): Orbit element
-        %
-        % Returns:
-        %   The corresponding transversal element, or [] if b is not part of the orbit
-            j = self.iDelta(b, i);
-            if j == 0
-                g = [];
-            else
-                Ui = self.U{i};
-                g = Ui(:,j)';
-            end
-        end
-
-        function g = uinv(self, i, b)
-        % Looks up the inverse transversal element that maps b to beta_i
-        %
-        % Args:
-        %   i (integer): Index of transversal
-        %   b (integer): Orbit element
-        %
-        % Returns:
-        %   The corresponding inverse transversal element or [] if b is not part of the orbit
-            j = self.iDelta(b, i);
-            if j == 0
-                g = [];
-                return
-            end
-            Uinvi = self.Uinv{i};
-            g = Uinvi(:,j)';
-        end
-
-        function img = v(self, i, b)
-        % Looks up the word corresponding to the transversal element that maps beta_i to b
-        %
-        % The element needs to exist.
-        %
-        % Args:
-        %   i (integer): Index of transversal
-        %   b (integer): Orbit element
-        %
-        % Returns:
-        %   integer(1,\*): The corresponding transversal element image
-        %
-        % Raises:
-        %   An error if ``b`` is not part of the orbit Delta^i
-            j = self.iDelta(b, i);
-            assert(j ~= 0, 'Element not part of orbit');
-            Vi = self.V{i};
-            img = Vi{j};
-        end
-
-        function img = vinv(self, i, b)
-        % Looks up the word corresponding to the inverse transversal element that maps b to beta_i
-        %
-        % The element needs to exist.
-        %
-        % Args:
-        %   i: Index of transversal
-        %   b: Orbit element
-        %
-        % Returns:
-        %   integer(1,\*): The corresponding image of the inverse transversal element
-        %
-        % Raises:
-        %   An error if ``b`` is not part of the orbit Delta^i
-            j = self.iDelta(b, i);
-            assert(j ~= 0, 'Element not part of orbit');
-            Vi = self.V{i};
-            img = -fliplr(Vi{j});
-        end
-
-        function img = image(self, g)
-        % Returns the image of a chain element
-        %
-        % Args:
-        %   g (permutation row vector): Permutation part of this chain
-        %
-        % Returns:
-        %   The image of the given element ``g``
-        %
-        % Raises:
-        %   An error if the element is not part of the chain
-            h = g;
-            img = [];
-            for i = 1:self.length
-                beta_i = self.B(i);
-                b = h(beta_i);
-                j = self.iDelta(b, i);
-                assert(j ~= 0, 'Element is not member of the chain');
-                Uinvi = self.Uinv{i};
-                uinv = Uinvi(:, j)';
-                Vi = self.V{i};
-                v = Vi{j};
-                h = uinv(h); % compose(uinv, h)
-                img = replab.fp.composeLetters(img, v);
-            end
-        end
-
-        function [h i w] = strip(self, g, v)
-        % Strips a permutation through the chain
-        %
-        % Args:
-        %   g (permutation): Permutation
-        %   v (integer(1,\*)): Word
+        %   l (integer): Maximal word length
+        %   c (integer): Level of the chain at which to start the round
+        %   t (permutation): Permutation to examine
+        %   tw (integer(1,\*)): Word form of the permutation ``t``
         %
         % Returns
         % -------
-        %   h: permutation
-        %     The part of the group element that could not be sifted
-        %   i: integer
-        %     Index ``i`` such that ``h(beta_i)`` was not part of the orbit ``Delta^i``
-        %   w: integer(1,\*)
-        %     The part of the word that could not be sifted
-            k = self.length;
-            h = g;
-            w = v;
-            for i = 1:k
-                b = h(self.B(i));
-                j = self.iDelta(b, i);
-                if j == 0
-                    return
-                end
-                Uinvi = self.Uinv{i};
-                uinv = Uinvi(:, j)';
-                % note order is reversed compared to Holt, as
-                % we use a left action
-                h = uinv(h); % compose(uinv, h)
-                Vi = self.V{i};
-                vinv = -fliplr(Vi{j});
-                w = replab.fp.composeLetters(vinv, w);
+        %   t:
+        %     permutation: Part of the permutation that could not be sifted
+        %   tw:
+        %     integer(1,\*): Word form of the residual permutation
+            assert(~self.completed);
+            i = c;
+            while ~self.group.isIdentity(t) && length(tw) < l
+                beta = self.B(i);
+                [r rw] = self.step(i, t, tw);
+                assert(r(beta) == beta);
+                t = r;
+                tw = rw;
+                i = i + 1;
             end
-            i = k + 1; % marker that we striped through the chain
         end
 
-        %% Mutable methods
-
-        function insertInOrbit(self, i, b, u, v)
-        % Inserts a new orbit element in an orbit
+        function w = next(self, w)
+        % Enumerates words in the generators, by increasing word length
         %
-        % Modifies the chain in place.
+        % Sketched in Minkwitz, p. 91
         %
-        % Args:
-        %   i (integer): Level of the orbit, 1 <= i <= self.length
-        %   b (integer): New orbit point
-        %   u (permutation): New transversal element
-        %   v (integer(1,\*)): Word corresponding to the new transversal element
-            assert(self.isMutable);
-            assert(self.iDelta(b, i) == 0, 'Orbit point must be new');
-            self.Delta{i} = [self.Delta{i} b];
-            idx = length(self.Delta{i});
-            self.iDelta(b, i) = idx;
-            n = self.n;
-            uinv = zeros(1, n);
-            uinv(u) = 1:n;
-            self.U{i} = [self.U{i} u(:)];
-            self.Uinv{i} = [self.Uinv{i} uinv(:)];
-            self.V{i} = {self.V{i}{:} v};
-        end
-
-        function completeOrbit(self, i)
-        % Completes the i-th orbit
+        % We implement it by taking the previous word instead of a count, and simply increment the indices of the
+        %  generators in the word. We also use inverses of the generators: the enumeration of an index goes
+        % as ``1, ..., nG, -1, ..,. -nG``.
         %
-        % Iterates over current orbit elements and strong generators, and add new orbit points if necessary
+        % When running out of digits, we restart the process with a word of length increased by one.
+        %
+        % We also take care of generating reduced words, so that we do not generate words of the form ``[ ... i -i ...]``.
         %
         % Args:
-        %   i (integer): Level of the orbit, ``1 <= i <= self.length``
-            assert(self.isMutable);
-            n = self.n;
-            toTest = self.Delta{i}; % we need to test all elements in the currently known orbit
-            Srange = self.Sind(i):self.Sind(end)-1;
-            while ~isempty(toTest)
-                imgs = self.S(toTest, Srange); % images of the tested point for all the strong generators
-                iDelta = self.iDelta(:, i);
-                mask = iDelta(imgs) == 0;
-                mask = reshape(mask, size(imgs)); % in case imgs is a vector, Matlab may change btw row/column vectors
-                [b_ind, S_ind] = find(mask);
-                for j = 1:length(b_ind)
-                    s = self.S(:, Srange(S_ind(j))); % strong generator
-                    b = toTest(b_ind(j)); % orbit element
-                    newb = s(b);
-                    if self.iDelta(newb, i) == 0
-                        % new orbit point discovered, add it
-                        Ui = self.U{i};
-                        ind = self.iDelta(b, i);
-                        newu = s(Ui(:, ind)'); % new transversal compose(s, self.u(i, b))
-                        newv = replab.fp.composeLetters(self.T{Srange(S_ind(j))}, self.v(i, b));
-                        self.insertInOrbit(i, newb, newu, newv);
+        %   w (integer(1,\*)): Current word in the enumeration
+        %
+        % Returns:
+        %   integer(1,\*): Next word in the enumeration
+            assert(~self.completed);
+            nG = self.group.nGenerators;
+            L = length(w);
+            l = L;
+            while l > 0
+                if w(l) > -nG
+                    if w(l) == nG
+                        w(l) = -1;
+                    elseif w(l) > 0
+                        w(l) = w(l) + 1;
+                    else
+                        w(l) = w(l) - 1;
                     end
-                end
-                toTest = imgs(mask);
-                toTest = unique(toTest(:)');
-            end
-        end
-
-        function insertEndBasePoint(self, newBeta)
-        % Adds a new basis point at the end of the BSGS chain
-        %
-        % Args:
-        %   newBeta (integer): New basis point not part of the current basis
-            assert(self.isMutable, 'Chain needs to be mutable');
-            assert(all(self.B ~= newBeta), 'Base point already exists');
-            n = self.n;
-            k = self.length; % previous chain length
-            self.B = [self.B newBeta];
-            % We add the data structures for the new orbit/transversal
-            self.Delta = horzcat(self.Delta, newBeta);
-            self.iDelta = [self.iDelta zeros(n, 1)];
-            self.iDelta(newBeta, k+1) = 1;
-            self.U = {self.U{:} [1:n]'};
-            self.Uinv = {self.Uinv{:} [1:n]'};
-            self.V = {self.V{:} {[]}};
-            self.Sind = [self.Sind self.Sind(end)];
-        end
-
-        function addStrongGenerator(self, i, newS, newT)
-        % Adds a strong generator at a particular place in the BSGS chain
-        %
-        % Args:
-        %   i (integer): Smallest i such that the strong generator ``newS`` is part of S^(i)
-        %   newS (permutation): New strong generator
-        %   newT (integer(1,\*)): Word corresponding to the strong generator
-            self.S = [self.S(:, 1:(self.Sind(i+1)-1)) newS(:) self.S(:, self.Sind(i+1):end)];
-            self.T = {self.T{1:(self.Sind(i+1)-1)} newT self.T{self.Sind(i+1):end}};
-            self.Sind((i+1):end) = self.Sind((i+1):end) + 1;
-        end
-
-        function addStrongGeneratorAndRecomputeOrbits(self, i, newS, newT)
-        % Adds a strong generator at a particular place in the BSGS chain and recomputes orbits
-        %
-        % Args:
-        %   i (integer): Smallest i such that the strong generator ``newS`` is part of S^(i)
-        %   newS (permutation): New strong generator
-        %   newT (integer(1,\*)): Word corresponding to the strong generator
-            self.addStrongGenerator(i, newS, newT);
-            for j = 1:i
-                self.completeOrbit(j);
-            end
-        end
-
-        function newSG = stripAndAddStrongGenerator(self, g, v)
-        % Strips and, when relevant, adds a new strong generator to this BSGS chain
-        %
-        % Performs part of the RANDOMSCHREIER procedure in Holt et al., Handbook of CGT, page 98
-        %
-        % Args:
-        %   g (permutation): Element to strip
-        %   v (integer(1,\*)): Word
-        %
-        % Returns:
-        %   logical: True if a new strong generator has been found
-            n = self.n;
-            [h j w] = self.strip(g, v);
-            newSG = false;
-            if j <= self.length
-                % New strong generator h at level j
-                newSG = true;
-            else
-                % Check if h is the identity
-                gamma = find(h ~= 1:n, 1);
-                if ~isempty(gamma)
-                    % New strong generator h fixes all base points
-                    % We have a new base point gamma
-                    % and insert it at the end of the chain
-                    self.insertEndBasePoint(gamma);
-                    newSG = true;
+                    if (l == 1 || w(l-1) ~= -w(l)) && (l == L || w(l) ~= w(l+1))
+                        break
+                    end
+                else
+                    w(l) = 1;
+                    l = l - 1;
                 end
             end
-            if newSG
-                % if we have a new strong generator, add it to the chain
-                self.addStrongGeneratorAndRecomputeOrbits(j, h, w);
+            if l == 0
+                w = ones(1, length(w) + 1);
             end
         end
 
-        function makeImmutable(self)
-            assert(self.isMutable);
-            self.isMutable = false;
-        end
-
-        function inew = schreierSimsTest(self, i)
-        % Tests a level of the stabilizer chain for completeness of strong generators
+        function improve(self, l)
+        % Checks if the new entries computed so far can be employed to shorten the words already known
         %
-        % Adds the strong generators found to the chain
+        % Follows the pseudocode in Minkwitz, p. 93
         %
         % Args:
-        %   i (integer): Level to test
-        %
-        % Returns:
-        %   integer: Either $i-1$ if the level is complete, or the new level to test
-            orbit = self.Delta{i};
-            iOrbit = self.iDelta;
-            U = self.U{i};
-            Uinv = self.Uinv{i};
-            V = self.V{i};
-            Srange = self.Sind(i):self.Sind(end)-1;
-            n = self.n;
-            for o = 1:length(orbit)
-                betai = self.B(i);
-                b = orbit(o);
-                ub = U(:,o)';
-                vb = V{o};
-                for k = Srange
-                    x = self.S(:,k)';
-                    y = self.T{k};
-                    uxb_inv = Uinv(:,iOrbit(x(b),i))';
-                    vxb_inv = -fliplr(V{iOrbit(x(b),i)});
-                    toStrip = ub(x(uxb_inv));
-                    toStripW = replab.fp.composeLetters(vb, replab.fp.composeLetters(y, vxb_inv));
-                    if any(toStrip ~= 1:n)
-                        flag = true;
-                        [h j w] = self.strip(toStrip, toStripW);
-                        if j <= self.length
-                            % new strong generator h at level j
-                            flag = false;
-                        else % j = self.length + 1
-                            gamma = find(h ~= 1:n, 1);
-                            if ~isempty(gamma)
-                                % h fixes
-                                flag = false;
-                                self.insertEndBasePoint(gamma);
+        %   l (integer): Maximal word length
+            assert(~self.completed);
+            while any(self.newOrbit(:))
+                new = self.newOrbit;
+                self.newOrbit = false(self.n, self.k);
+                for j = 1:self.k
+                    for ox = 1:length(self.orbit{j})
+                        ix = self.orbit{j}(ox);
+                        x = self.nu{j}(:,ox)';
+                        xw = self.nuw{j}{ox};
+                        for oy = 1:length(self.orbit{j})
+                            iy = self.orbit{j}(oy);
+                            y = self.nu{j}(:,oy)';
+                            yw = self.nuw{j}{oy};
+                            if new(ix, j) || new(iy, j)
+                                t = x(y); % we do not need to inverse the product (left/right action thing)
+                                tw = replab.fp.composeLetters(xw, yw);
+                                self.round(l, j, t, tw);
                             end
                         end
-                        if ~flag
-                            self.addStrongGeneratorAndRecomputeOrbits(j, h, w);
-                            inew = j;
-                            return
+                    end
+                end
+            end
+        end
+
+        function fillOrbits(self, l)
+        % Fill the current orbits
+        %
+        % Follows the pseudocode in Minkwitz, p. 93
+        %
+        % Note that there is a typo in the pseudocode, nu_i(p^{x^-1}) must be read nu_i^{-1}(p^{x^-1})
+        %
+        % Args:
+        %   l (integer): Maximal word length
+            assert(~self.completed);
+            for i = 1:self.k
+                Oi = self.orbit{i};
+                for ii = 1:length(Oi)
+                    bi = Oi(ii);
+                    for j = i+1:self.k
+                        Oj = self.orbit{j};
+                        for jj = 1:length(Oj)
+                            x = self.nu{j}(:,jj)';
+                            xw = self.nuw{j}{jj};
+                            p = x(bi);
+                            if self.iOrbit(p, i) == 0
+                                nuii = self.nu{i}(:,ii);
+                                assert(nuii(bi) == self.B(i));
+                                nuiiw = self.nuw{i}{ii};
+                                t = self.group.composeWithInverse(x, nuii);
+                                tw = replab.fp.composeLetters(xw, -fliplr(nuiiw));
+                                if length(tw) < l
+                                    ind = length(self.orbit{i}) + 1;
+                                    self.orbit{i}(ind) = p;
+                                    self.iOrbit(p, i) = ind;
+                                    self.newOrbit(p, i) = true;
+                                    t_inv = self.group.inverse(t);
+                                    assert(t_inv(p) == self.B(i));
+                                    tw_inv = -fliplr(tw);
+                                    self.nu{i}(:,ind) = t_inv';
+                                    self.nuw{i}{ind} = tw_inv;
+                                end
+                            end
                         end
                     end
                 end
             end
-            inew = i - 1;
         end
 
-        function deterministicSchreierSims(self)
-        % Runs the deterministic Schreier-Sims algorithm, with a bound on the maximum order
+        function sgsWord(self, l, nRounds)
+        % Simplified generation procedure from Minkwitz
         %
-        % If ``self.order > maxOrder`` after this function returns, the chain may be incomplete.
+        % Pseudocode in Minkwitz, p. 92
         %
         % Args:
-        %   maxOrder (integer or vpi or ``inf``): Order cutoff
-            i = self.length;
-            while i >= 1
-                i = self.schreierSimsTest(i);
+        %   l (integer): Maximal word length
+        %   nRounds (integer): Minimal number of rounds to perform
+        %
+        % Returns:
+        %   integer(1,\*): The last word examined
+            assert(~self.completed);
+            tw = [];
+            count = 0;
+            while count < nRounds || ~self.tableFull
+                tw = self.next(tw);
+                t = self.group.imageLetters(tw);
+                self.round(l, 1, t, tw);
+                count = count + 1;
             end
         end
 
-    end
-
-    methods (Static)
-
-        function C = make(n, generators, base, order)
-            if nargin < 3
-                base = [];
+        function l = sgsWordQuick(self, nRounds, s, l)
+        % Complete chain completion algorithm
+        %
+        % Follows closely the pseudocode in Minkwitz, pp. 92-93.
+        %
+        % The maximal word length is adjusted during the computation.
+        %
+        % Args:
+        %   nRounds (integer): Minimal number of rounds to perform
+        %   s (integer, optional): Perform the improvement procedure every ``s`` rounds
+        %   l (integer): Maximal word length
+        %
+        % Returns:
+        %   integer: Current word length
+            assert(~self.completed);
+            if nargin < 2 || isempty(nRounds)
+                nRounds = 10000;
             end
-            if nargin < 4
-                order = [];
+            if nargin < 3 || isempty(s)
+                s = self.k*self.k;
             end
-            C = replab.bsgs.ChainWithWords(n);
-            for i = 1:length(base)
-                C.insertEndBasePoint(base(i));
+            if nargin < 4 || isempty(l)
+                l = 5;
             end
-            for i = 1:length(generators)
-                C.stripAndAddStrongGenerator(generators{i}, i);
+            tw = [];
+            count = 0;
+            while count < nRounds || ~self.tableFull
+                tw = self.next(tw);
+                t = self.group.imageLetters(tw);
+                self.round(l, 1, t, tw);
+                if mod(count, s) == 0
+                    self.improve(l);
+                    if ~self.tableFull
+                        self.fillOrbits(l);
+                        l = ceil(5*l/4);
+                    end
+                end
+                count = count + 1;
             end
-            C.deterministicSchreierSims;
-            C.makeImmutable;
         end
 
     end
