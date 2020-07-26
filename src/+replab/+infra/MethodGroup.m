@@ -13,6 +13,10 @@ classdef MethodGroup < replab.Str
             self.methodsInGroup = methodsInGroup;
         end
 
+        function l = hasAccessibleMethods(self)
+            l = any(cellfun(@(m) m.isAccessible, self.methodsInGroup));
+        end
+
     end
 
 

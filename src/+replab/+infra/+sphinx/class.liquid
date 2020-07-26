@@ -2,14 +2,20 @@
 % .. admonition:: Class members list\n
 %    :class: collapsed\n
 %\n
+{% if ~isempty(cl.allProperties) %}
+%    **Properties**\n
+%\n
 {% for el in cl.allProperties %}
 {% if el.isAccessible %}
 %    - `~{{ el.matlabDomainIdentifier }}` -- {{ el.declarations.bestEffortDocFirstLine }}\n
 {% end %}
 {% end %}
 %\n
+{% end %}
+
 {% for mg in cl.allMethodGroups %}
-%    Methods: {{ mg.name }}\n
+{% if mg.hasAccessibleMethods %}
+%    **{{ mg.name }}**\n
 %\n
 {% for m in mg.methodsInGroup %}
 {% if m.isAccessible %}
@@ -17,6 +23,7 @@
 {% end %}
 {% end %}
 %\n
+{% end %}
 {% end %}
 
 {% if ~isempty(cl.inheritedDocumentationElements) %}

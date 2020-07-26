@@ -42,8 +42,8 @@
 \t\n
 {% end %}
 
-{% if ~isempty(el.allMethods) %}
 {% for mg in el.allMethodGroups %}
+{% if mg.hasAccessibleMethods %}
    Methods:\t{{ mg.name }}\n
    \t\n
 {% for m in mg.methodsInGroup %}
