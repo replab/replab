@@ -1,27 +1,21 @@
 classdef FiniteIsomorphismLaws < replab.FiniteMorphismLaws
 
-    properties (SetAccess = protected)
-        morphism % (`+replab.FiniteIsomorphism`): Morphism tested
-        S % `.FiniteGroup`: Source group
-        T % `.FiniteGroup`: Target group
-    end
-
     methods
 
         function self = FiniteIsomorphismLaws(morphism)
-            self.morphism = morphism;
-            self.S = morphism.source;
-            self.T = morphism.target;
+            self@replab.FiniteMorphismLaws(morphism);
         end
 
-    end
+        function law_roundtrip_source_S(self, s)
+            t = self.morphism.imageElement(s);
+            s1 = self.morphism.preimageElement(t);
+            self.S.assertEqv(s, s1);
+        end
 
-    methods % Implementations
-
-        % Obj
-
-        function l = laws(self)
-            l = replab.FiniteIsomorphismLaws(self);
+        function law_roundtrip_target_T(self, t)
+            s = self.morphism.preimageElement(t);
+            t1 = self.morphism.imageElement(s);
+            self.T.assertEqv(t, t1);
         end
 
     end

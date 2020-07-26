@@ -119,6 +119,20 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
         end
 
+        function A1 = withRenamedGenerators(self, names1)
+        % Returns a modified copy of this abstract group with the generators renamed
+        %
+        % Args:
+        %   names1 (cell(1,\*) of charstring): New generator names
+        %
+        % Returns:
+        %   `.AbstractGroup`: Updated copy
+            A1 = replab.AbstractGroup(names1, self.permutationGroup, self.cachedOrEmpty('relators'));
+            if self.inCache('niceMorphism')
+                A1.cache('niceMorphism', self.niceMorphism.withUpdatedSource(A1), 'error');
+            end
+        end
+
         function r = relators(self)
         % Returns the list of relators defining this abstract group
         %

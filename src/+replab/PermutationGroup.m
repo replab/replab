@@ -302,6 +302,21 @@ classdef PermutationGroup < replab.FiniteGroup
             o = replab.Permutation.order(p);
         end
 
+
+        function g = imageLetters(self, letters)
+            g = self.identity;
+            L = length(letters);
+            for i = 1:L
+                l = letters(i);
+                if l > 0
+                    g = g(self.generator(l));
+                else
+                    g(self.generator(-l)) = g;
+                end
+            end
+        end
+
+
         % Construction of groups
 
         function res = closure(self, rhs)
