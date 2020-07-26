@@ -33,6 +33,51 @@ classdef OfFiniteGroups < replab.NiceFiniteGroup & replab.directproduct.OfCompac
             ind = ind + 1;
         end
 
+        function o = computeOrder(self)
+            o = vpi(1);
+            % The order of a direct product is the product of the
+            % order of the factors
+            for i = 1:self.nFactors
+                o = o * self.factor(i).order;
+            end
+        end
+
+        function e = computeElements(self)
+            e = replab.IndexedFamily.lambda(self.order, ...
+                                            @(ind) self.atFun(ind), ...
+                                            @(g) self.findFun(g));
+            % The elements of a direct product of finite groups can be
+            % enumerated by considering the direct product as a cartesian
+            % product of sets, and decomposing the index a la ind2sub/sub2ind
+            % which is the role of the `atFun` and `findFun` functions
+
+            % TODO: verify ordering
+        end
+
+        function gd = computeDecomposition(self)
+            T = {};
+            % The decomposition of a direct product into sets
+            % is simply the concatenation of the sequence of sets
+            % corresponding to each factor
+            for i = 1:self.nFactors
+                D = self.factor(i).decomposition.T;
+                Ti = cell(1, length(D));
+                for j = 1:length(D)
+                    Dj = D{j};
+                    Tij = cell(1, length(Dj));
+                    for k = 1:length(Dj)
+                       Djk = Dj{k};
+                       Tijk = self.identity;
+                       Tijk{i} = Djk;
+                       Tij{k} = Tijk;
+                    end
+                    Ti{j} = Tij;
+                end
+                T = horzcat(T, Ti);
+            end
+            gd = replab.FiniteGroupDecomposition(self, T);
+        end
+
     end
 
     methods
@@ -122,53 +167,6 @@ classdef OfFiniteGroups < replab.NiceFiniteGroup & replab.directproduct.OfCompac
                     return
                 end
             end
-        end
-
-        % FiniteGroup
-
-        function o = computeOrder(self)
-            o = vpi(1);
-            % The order of a direct product is the product of the
-            % order of the factors
-            for i = 1:self.nFactors
-                o = o * self.factor(i).order;
-            end
-        end
-
-        function e = computeElements(self)
-            e = replab.IndexedFamily.lambda(self.order, ...
-                                            @(ind) self.atFun(ind), ...
-                                            @(g) self.findFun(g));
-            % The elements of a direct product of finite groups can be
-            % enumerated by considering the direct product as a cartesian
-            % product of sets, and decomposing the index a la ind2sub/sub2ind
-            % which is the role of the `atFun` and `findFun` functions
-
-            % TODO: verify ordering
-        end
-
-        function gd = computeDecomposition(self)
-            T = {};
-            % The decomposition of a direct product into sets
-            % is simply the concatenation of the sequence of sets
-            % corresponding to each factor
-            for i = 1:self.nFactors
-                D = self.factor(i).decomposition.T;
-                Ti = cell(1, length(D));
-                for j = 1:length(D)
-                    Dj = D{j};
-                    Tij = cell(1, length(Dj));
-                    for k = 1:length(Dj)
-                       Djk = Dj{k};
-                       Tijk = self.identity;
-                       Tijk{i} = Djk;
-                       Tij{k} = Tijk;
-                    end
-                    Ti{j} = Tij;
-                end
-                T = horzcat(T, Ti);
-            end
-            gd = replab.FiniteGroupDecomposition(self, T);
         end
 
         % NiceFiniteGroup

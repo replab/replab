@@ -34,7 +34,7 @@ classdef Str < handle
 %     ans =
 %     'Symmetric group acting on 3 elements'
 
-    methods
+    methods % Prettyprinting
 
         function disp(self)
         % Standard MATLAB/Octave display method

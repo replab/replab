@@ -44,34 +44,15 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             G = self.cached('niceGroup', @() self.computeNiceGroup);
         end
 
+    end
+
+    methods (Access = protected)
+
         function G = computeNiceGroup(self)
             gens = cellfun(@(g) self.niceImage(g), self.generators, 'uniform', 0);
             ds = length(self.niceImage(self.identity));
             G = replab.PermutationGroup(ds, gens, self.cachedOrEmpty('order'));
         end
-
-    end
-
-    methods % Implementation
-
-        % Domain
-
-        function g = sample(self)
-            g = self.niceMorphism.preimageElement(self.niceGroup.sample);
-            % TODO: optimize
-        end
-
-        % FiniteSet
-
-        function E = computeElements(self)
-            atFun = @(ind) self.niceMorphism.preimageElement(self.niceGroup.elements.at(ind));
-            findFun = @(el) self.niceGroup.elements.find(self.niceImage(el));
-            E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
-        end
-
-        % FiniteGroup
-
-        % Group properties
 
         function order = computeOrder(self)
             order = self.niceGroup.order;
@@ -96,6 +77,35 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         function res = computeIsCyclic(self)
             res = self.niceGroup.isCyclic;
         end
+
+        function res = computeIsSimple(self)
+            res = self.niceGroup.isSimple;
+        end
+
+        function E = computeElements(self)
+            atFun = @(ind) self.niceMorphism.preimageElement(self.niceGroup.elements.at(ind));
+            findFun = @(el) self.niceGroup.elements.find(self.niceImage(el));
+            E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
+        end
+
+        function sub = computeDerivedSubgroup(self)
+            sub = self.niceMorphism.preimageGroup(self.niceGroup.derivedSubgroup);
+        end
+
+    end
+
+    methods % Implementation
+
+        % Domain
+
+        function g = sample(self)
+            g = self.niceMorphism.preimageElement(self.niceGroup.sample);
+            % TODO: optimize
+        end
+
+        % FiniteSet
+
+        % FiniteGroup
 
         % Group elements
 
@@ -158,10 +168,6 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             if nargin > 3 && ~isempty(niceGroup)
                 sub.cache('niceGroup', niceGroup, '==');
             end
-        end
-
-        function sub = computeDerivedSubgroup(self)
-            sub = self.niceMorphism.preimageGroup(self.niceGroup.derivedSubgroup);
         end
 
         function sub1 = centralizer(self, obj)

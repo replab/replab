@@ -42,6 +42,66 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     end
 
+    methods (Access = protected)
+
+        function o = computeOrder(self)
+        % See `.order`
+            error('Abstract');
+        end
+
+        function m = computeNiceMorphism(self)
+        % See `.niceMorphism`
+            error('Abstract');
+        end
+
+        function D = computeDecomposition(self)
+        % See `.decomposition`
+            error('Abstract');
+        end
+
+        function e = computeExponent(self)
+            eo = cellfun(@(c) self.elementOrder(c.representative), self.conjugacyClasses);
+            eo = unique(eo);
+            e = eo(1);
+            for i = 2:length(eo)
+                e = lcm(e, eo(i));
+            end
+        end
+
+        function c = computeConjugacyClasses(self)
+            error('Abstract');
+        end
+
+        function R = computeRecognize(self)
+            A = replab.atlas.Standard;
+            R = A.recognize(self);
+        end
+
+
+        function res = computeIsCyclic(self)
+            error('Abstract');
+        end
+
+        function res = computeIsSimple(self)
+            error('Abstract');
+        end
+
+        function sub = computeDerivedSubgroup(self)
+        % See `.derivedSubgroup`
+            error('Abstract');
+        end
+
+        function m = computeDefaultAbstractGroupIsomorphism(self)
+        % Computes the isomorphism to an abstract group with default generator names
+            names = self.defaultGeneratorNames;
+            finGroup = self;
+            prmGroup = self.niceMorphism.target;
+            abGroup = replab.AbstractGroup(names, prmGroup);
+            m = finGroup.niceMorphism.andThen(abGroup.niceMorphism.inverse);
+        end
+
+    end
+
     methods % Group properties
 
         function s = size(self)
@@ -56,20 +116,11 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             o = self.cached('order', @() self.computeOrder);
         end
 
-        function o = computeOrder(self)
-        % See `.order`
-            error('Abstract');
-        end
-
         function f = niceMorphism(self)
         % Returns the isomorphism from this group to a permutation group
             f = self.cached('niceMorphism', @() self.computeNiceMorphism);
         end
 
-        function m = computeNiceMorphism(self)
-        % See `.niceMorphism`
-            error('Abstract');
-        end
 
         function D = decomposition(self)
         % Returns a decomposition of this group as a product of sets
@@ -77,11 +128,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   `.FiniteGroupDecomposition`: The group decomposition
             D = self.cached('decomposition', @() self.computeDecomposition);
-        end
-
-        function D = computeDecomposition(self)
-        % See `.decomposition`
-            error('Abstract');
         end
 
         function e = exponent(self)
@@ -94,14 +140,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             e = self.cached('exponent', @() self.computeExponent);
         end
 
-        function e = computeExponent(self)
-            eo = cellfun(@(c) self.elementOrder(c.representative), self.conjugacyClasses);
-            eo = unique(eo);
-            e = eo(1);
-            for i = 2:length(eo)
-                e = lcm(e, eo(i));
-            end
-        end
 
         function c = conjugacyClass(self, g)
         % Returns the conjugacy class corresponding to the given element
@@ -122,21 +160,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
         end
 
-        function c = computeConjugacyClasses(self)
-            error('Abstract');
-        end
-
         function R = recognize(self)
         % Attempts to recognize this group in the standard atlas
         %
         % Returns:
         %   `+replab.AtlasResult` or []: A result in case the group is identified; or ``[]`` if unrecognized.
             R = self.cached('recognize', @() self.computeRecognize);
-        end
-
-        function R = computeRecognize(self)
-            A = replab.atlas.Standard;
-            R = A.recognize(self);
         end
 
         function b = isTrivial(self)
@@ -168,17 +197,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             res = self.cached('isCyclic', @() self.computeIsCyclic);
         end
 
-        function res = computeIsCyclic(self)
-            error('Abstract');
-        end
-
         function res = isSimple(self)
         % Returns whether this group is simple
             res = self.cached('isSimple', @() self.computeIsSimple);
-        end
-
-        function res = computeIsSimple(self)
-            error('Abstract');
         end
 
     end
@@ -481,11 +502,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             sub = self.cached('derivedSubgroup', @() self.computeDerivedSubgroup);
         end
 
-        function sub = computeDerivedSubgroup(self)
-        % See `.derivedSubgroup`
-            error('Abstract');
-        end
-
         function sub = center(self)
         % Returns the center of this group
         %
@@ -778,15 +794,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   cell(1,\*) of charstring: A list of generator names starting with ``x1``, ``x2``, ...
             names = arrayfun(@(i) ['x' num2str(i)], 1:self.nGenerators, 'uniform', 0);
-        end
-
-        function m = computeDefaultAbstractGroupIsomorphism(self)
-        % Computes the isomorphism to an abstract group with default generator names
-            names = self.defaultGeneratorNames;
-            finGroup = self;
-            prmGroup = self.niceMorphism.target;
-            abGroup = replab.AbstractGroup(names, prmGroup);
-            m = finGroup.niceMorphism.andThen(abGroup.niceMorphism.inverse);
         end
 
         function m = abstractGroupIsomorphism(self, names)

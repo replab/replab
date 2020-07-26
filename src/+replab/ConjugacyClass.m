@@ -43,6 +43,15 @@ classdef ConjugacyClass < replab.FiniteSet
 
     end
 
+    methods (Access = protected)
+
+        function E = computeElements(self)
+            T = self.group.leftCosetsOf(self.representativeCentralizer).transversal;
+            E = cellfun(@(t) self.group.leftConjugate(t, self.representative), T, 'uniform', 0);
+        end
+
+    end
+
     methods % Implementations
 
         % Domain
@@ -71,11 +80,6 @@ classdef ConjugacyClass < replab.FiniteSet
             % We want to solve ``t == b s b^-1`` with ``s`` the representative
             B = self.group.findLeftConjugations(s, t, sCentralizer);
             b = ~isempty(B);
-        end
-
-        function E = computeElements(self)
-            T = self.group.leftCosetsOf(self.representativeCentralizer).transversal;
-            E = cellfun(@(t) self.group.leftConjugate(t, self.representative), T, 'uniform', 0);
         end
 
     end
