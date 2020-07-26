@@ -24,11 +24,14 @@ function gens = permutationGeneratorsForRelators(names, relators)
     lineRest = arrayfun(@(i) sprintf('ListPerm(Inverse(Image(iso, g.%d)));', i), 1:length(names), 'uniform', 0);
     lines = strjoin(horzcat({line1 line2 line3}, lineRest), '\n');
     tfile = tempname();
+    ofile = tempname();
     fid = fopen(tfile, 'wt');
     fprintf(fid, lines);
     fclose(fid);
-    [status, result] = system([replab.globals.gapBinaryPath ' -q <' tfile]);
+    [status, result] = system([replab.globals.gapBinaryPath ' -n -q <' tfile ' > ' ofile]);
+    result = fileread(ofile);
     delete(tfile);
+    delete(ofile);
     gens = cellfun(@strtrim, strsplit(result, '\n'), 'uniform', 0);
     mask = cellfun(@isempty, gens);
     gens = gens(~mask);

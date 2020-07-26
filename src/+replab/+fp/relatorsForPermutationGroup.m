@@ -16,11 +16,14 @@ function relators = relatorsForPermutationGroup(group, names)
     line4 = 'RelatorsOfFpGroup(F);';
     lines = strjoin({line1 line2 line3 line4}, '\n');
     tfile = tempname();
+    ofile = tempname();
     fid = fopen(tfile, 'wt');
     fprintf(fid, lines);
     fclose(fid);
-    [status, result] = system([replab.globals.gapBinaryPath ' -q <' tfile]);
+    [status, result] = system([replab.globals.gapBinaryPath ' -n -q <' tfile ' > ' ofile]);
+    result = fileread(ofile);
     delete(tfile);
+    delete(ofile);
     outs = strsplit(result, '\n');
     gapNames = strtrim(outs{1});
     assert(gapNames(1) == '[' && gapNames(end) == ']');
