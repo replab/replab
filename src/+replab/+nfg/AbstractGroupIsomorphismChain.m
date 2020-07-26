@@ -11,7 +11,7 @@ classdef AbstractGroupIsomorphismChain < replab.nfg.AbstractGroupIsomorphism
         %   chain (`+replab.+bsgs.ChainWithWords`, optional): Computed stabilizer chain with reduced words
             self.source = source;
             self.target = source.permutationGroup;
-            if nargin >= 2 && ~isempty(chain
+            if nargin >= 2 && ~isempty(chain)
                 self.cache('chain', chain, 'ignore');
             end
         end
