@@ -206,4 +206,20 @@ classdef Set < replab.Str
 
     end
 
+    methods % Set construction
+
+        function s = fromPermutationGroup(group)
+        % Creates and fills a set with the elements of a permutation group
+        %
+        % Args:
+        %   group (`+replab.PermutationGroup`): Permutation group
+        %
+        % Returns:
+        %   `.Set`: The constructed set
+            s = replab.perm.Set(group.domainSize);
+            s.insert(group.chain.allElements);
+        end
+
+    end
+
 end
