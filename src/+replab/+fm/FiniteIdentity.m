@@ -1,9 +1,9 @@
-classdef Identity < replab.FiniteIsomorphism
+classdef FiniteIdentity < replab.FiniteIsomorphism
 % Identity isomorphism
 
     methods
 
-        function self = Identity(group)
+        function self = FiniteIdentity(group)
             self.source = group;
             self.target = group;
         end
@@ -12,7 +12,15 @@ classdef Identity < replab.FiniteIsomorphism
         % trivial
         end
 
+        function S = imageGroup(self, S)
+        % trivial
+        end
+
         function x = preimageElement(self, x)
+        % trivial
+        end
+
+        function S = preimageGroup(S)
         % trivial
         end
 

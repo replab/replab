@@ -10,11 +10,19 @@ function m = compose(second, first)
 % Returns:
 %   `+replab.Morphism`: The composition of the two morphisms
     assert(second.source.isSubgroupOf(first.target));
-    if isa(first, 'replab.FiniteIsomorphism') && isa(second, 'replab.FiniteIsomorphism')
-        m = replab.fm.IsoComposition(second, first);
-    elseif isa(first, 'replab.FiniteMorphism') && isa(second, 'replab.FiniteMorphism')
-        m = replab.fm.FiniteComposition(second, first);
+    areIsomorphisms = isa(first, 'replab.Isomorphism') && isa(second, 'replab.Isomorphism');
+    areFinite = isa(first, 'replab.FiniteMorphism') && isa(second, 'replab.FiniteMorphism');
+    if areIsomorphisms
+        if areFinite
+            m = replab.fm.FiniteIsomorphismComposition(second, first);
+        else
+            m = replab.fm.IsomorphismComposition(second, first);
+        end
     else
-        m = replab.fm.Composition(second, first);
+        if areFinite
+            m = replab.fm.FiniteComposition(second, first);
+        else
+            m = replab.fm.Composition(second, first);
+        end
     end
 end
