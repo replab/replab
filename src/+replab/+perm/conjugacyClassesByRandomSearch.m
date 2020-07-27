@@ -1,8 +1,12 @@
 function classes = conjugacyClassesByRandomSearch(group)
 % Generates the conjugacy classes of a group
 %
-% Based on the randomized method
-
+% Based on the randomized method, see p. 215 of
+% A. Seress, Permutation Group Algorithms. Cambridge University Press, 2003.
+%
+% and
+%
+% M. Jerrum, "Computational Pólya theory," in Surveys in combinatorics, 1995, 1995, pp. 103–118.
 % Args:
 %   group (`+replab.PermutationGroup`): Permutation group to compute the conjugacy classes of
 %
