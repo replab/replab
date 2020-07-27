@@ -8,16 +8,22 @@ classdef CompactGroup < replab.Group
         function prd = directProduct(varargin)
         % Returns the direct product of groups
         %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> G = S3.directProduct(S3, S3);
+        %   >>> G.order
+        %       216
+        %
         % Args:
         %   varargin: Variable number of arguments of type `+replab.CompactGroup`
         %
         % Returns:
-        %   replab.CompactGroup: The direct product group
-        %                        If all groups are of type `+replab.NiceFiniteGroup`, the return type
-        %                        is `+replab.NiceFiniteGroup` as well.
-        %                        If all groups are of type `+replab.FiniteGroup`, the return type
-        %                        is `+replab.FiniteGroup` as well.
-            prd = replab.directproduct.of(varargin);
+        %   `+replab.DirectProductGroup`: The direct product group
+        %                                 If all groups are of type `+replab.NiceFiniteGroup`, the return type
+        %                                 is `+replab.NiceFiniteGroup` as well.
+        %                                 If all groups are of type `+replab.FiniteGroup`, the return type
+        %                                 is `+replab.FiniteGroup` as well.
+            prd = replab.DirectProductGroup.make(varargin);
         end
 
         function prd = directPower(self, n)

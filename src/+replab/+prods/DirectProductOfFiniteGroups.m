@@ -1,4 +1,4 @@
-classdef OfFiniteGroups < replab.NiceFiniteGroup & replab.directproduct.OfCompactGroups
+classdef DirectProductOfFiniteGroups <  replab.DirectProductGroup & replab.NiceFiniteGroup
 % External direct product of finite groups
 %
 % In particular, the permutation image of an element of a direct product group
@@ -8,7 +8,30 @@ classdef OfFiniteGroups < replab.NiceFiniteGroup & replab.directproduct.OfCompac
 % We overload a bunch of methods to make sure we use the `+replab.+directproduct.OfFiniteGroups`
 % more efficient variants, that do not require the BSGS chain construction.
 
-    methods (Access = protected)
+    methods
+
+        function self = DirectProductOfFiniteGroups(factors)
+            assert(all(cellfun(@(x) isa(x, 'replab.FiniteGroup'), factors)));
+            self = self@replab.DirectProductGroup(factors);
+            % the generators of a direct product of finite groups is
+            % the union of the generators of the factors, lifted into the
+            % proper tuples
+            generators = {};
+            for i = 1:length(factors)
+                factor = factors{i};
+                for j = 1:factor.nGenerators
+                    generator = self.identity;
+                    generator{i} = factor.generator(j);
+                    generators{1, end+1} = generator;
+                end
+            end
+            self.generators = generators;
+            self.type = self;
+        end
+
+    end
+
+    methods (Access = protected) % Implementations
 
         function g = atFun(self, ind)
         % See comments in self.elements
@@ -80,53 +103,20 @@ classdef OfFiniteGroups < replab.NiceFiniteGroup & replab.directproduct.OfCompac
 
     end
 
-    methods
-
-        function self = OfFiniteGroups(factors, type)
-            self = self@replab.directproduct.OfCompactGroups(factors);
-            % the generators of a direct product of finite groups is
-            % the union of the generators of the factors, lifted into the
-            % proper tuples
-            generators = {};
-            for i = 1:length(factors)
-                factor = factors{i};
-                for j = 1:factor.nGenerators
-                    generator = self.identity;
-                    generator{i} = factor.generator(j);
-                    generators{1, end+1} = generator;
-                end
-            end
-            self.generators = generators;
-            if nargin < 2 || isempty(type)
-                factorTypes = cellfun(@(f) f.type, factors, 'uniform', 0);
-                self.type = replab.directproduct.OfFiniteGroups(factorTypes, 'self');
-            elseif isequal(type, 'self')
-                self.type = self;
-            else
-                self.type = type;
-            end
-        end
-
-        function t = requiredType(self)
-            t = 'replab.FiniteGroup';
-        end
-
-    end
-
-    methods % Implementation
+    methods % Implementations
 
         % Str
 
         function names = hiddenFields(self)
             names = replab.str.uniqueNames( ...
-                hiddenFields@replab.directproduct.OfCompactGroups(self), ...
-                hiddenFields@replab.FiniteGroup(self) ...
+                hiddenFields@replab.DirectProductGroup(self), ...
+                hiddenFields@replab.NiceFiniteGroup(self) ...
                 );
         end
 
         function [names values] = additionalFields(self)
-            [names1 values1] = additionalFields@replab.directproduct.OfCompactGroups(self);
-            [names2 values2] = additionalFields@replab.FiniteGroup(self);
+            [names1 values1] = additionalFields@replab.DirectProductGroup(self);
+            [names2 values2] = additionalFields@replab.NiceFiniteGroup(self);
             names = replab.str.horzcatForce(names1, names2);
             values = replab.str.horzcatForce(values1, values2);
         end
@@ -134,39 +124,19 @@ classdef OfFiniteGroups < replab.NiceFiniteGroup & replab.directproduct.OfCompac
         % Domain
 
         function g = sample(self)
-            g = sample@replab.directproduct.OfCompactGroups(self);
-            % force method selection
+            g = sample@replab.DirectProductGroup(self);
         end
 
-        function b = eqv(self, x, y)
-            b = eqv@replab.directproduct.OfCompactGroups(self, x, y);
-        end
+        % FiniteGroup
 
-        % Monoid
-
-        function z = compose(self, x, y)
-            z = compose@replab.directproduct.OfCompactGroups(self, x, y);
-        end
-
-        % Group
-
-        function xInv = inverse(self, x)
-            xInv = inverse@replab.directproduct.OfCompactGroups(self, x);
-        end
-
-        % FiniteSet
-
-        function res = hasSameTypeAs(self, rhs)
-            res = isa(rhs, 'replab.directproduct.OfFiniteGroups') && self.nFactors == rhs.nFactors;
-            if ~res
-                return
-            end
+        function l = contains(self, g)
             for i = 1:self.nFactors
-                res = res & self.factor(i).hasSameTypeAs(rhs.factor(i));
-                if ~res
+                if ~self.factor(i).contains(g{i})
+                    l = false;
                     return
                 end
             end
+            l = true;
         end
 
         % NiceFiniteGroup
