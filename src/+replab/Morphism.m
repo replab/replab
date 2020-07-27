@@ -6,6 +6,16 @@ classdef Morphism < replab.Obj
         target % (`.Group`): Target group
     end
 
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.MorphismLaws(self);
+        end
+
+    end
+
     methods
 
         function t = imageElement(self, s)
