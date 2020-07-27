@@ -29,35 +29,7 @@ classdef SymmetricSemiNormalIrrep < replab.Rep
         cSum
     end
    
-    methods(Static)
-        function conj = conjugatePart(part)
-        % Construct the conjugate partition for a given partition
-        %
-        % Args:
-        %   part (integer(1,:)): Partition
-            m = max(part);
-            conj = zeros(1,m);
-            for j = 1:m
-                conj(j) = sum(j-1<part);
-            end
-        end
-        
-        function dim = dimenCalc(part)
-        % Calculates the dimension of the irrep associated with 
-        % a partition.
-        %
-        % Args:
-        % part (integer(1,:)): Partition
-            n = sum(part);
-            helperWords = replab.sym.words(part,replab.sym.SymmetricSpechtIrrep.conjugatePart(part));
-            columns = zeros(1,n);
-            for k = 1:n
-                columns(k) = sum(helperWords.conjWord(k+1:n)==helperWords.conjWord(k));
-            end    
-            dim = round(factorial(n)/prod(helperWords.dimWord+columns));
-        end
-    end
-    
+
    methods
         function self = SymmetricSemiNormalIrrep(group, partition)
         % Constructs an irreducible representation of S_n
@@ -75,11 +47,11 @@ classdef SymmetricSemiNormalIrrep < replab.Rep
                 self.isIrreducible = true;
                 self.field = 'R';
                 self.group = group;
-                self.dimension = self.dimenCalc(partition);
                 self.partition = partition;
-                self.conjugatePartition = self.conjugatePart(partition);
+                self.dimension = replab.sym.partition.dimension(partition);
+                self.conjugatePartition = replab.sym.partition.conjugatePart(partition);
                 self.rangeOfParts = 1:self.dimension;
-                self.seminormalHelper();
+                self.seminormalHelper;
                 self.underlyingRep = self.constructRep;
         end
         
@@ -230,7 +202,7 @@ classdef SymmetricSemiNormalIrrep < replab.Rep
             for i = 1:n-1
                 images{i} = self.transImage(i);
             end
-            rep = replab.RepByImages(self.group,self.field,self.dimension,images,images);
+            rep = replab.RepByImages(self.group,self.field,self.dimension,images);
         end
         
         function t = transpotition(self,k)
