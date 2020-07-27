@@ -206,7 +206,7 @@ classdef Set < replab.Str
 
     end
 
-    methods % Set construction
+    methods (Static) % Set construction
 
         function s = fromPermutationGroup(group)
         % Creates and fills a set with the elements of a permutation group
