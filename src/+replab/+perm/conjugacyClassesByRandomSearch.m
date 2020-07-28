@@ -37,7 +37,7 @@ function classes = conjugacyClassesByRandomSearch(group)
         if newClass
             c = replab.ConjugacyClass.make(group, g);
             classes{1,end+1} = c;
-            remains = remains - c.size;
+            remains = remains - c.nElements;
         end
         g = c.representativeCentralizer.sample;
     end

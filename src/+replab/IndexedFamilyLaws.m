@@ -15,11 +15,11 @@ classdef IndexedFamilyLaws < replab.Laws
         % Args:
         %   I (`.IndexedFamily`): Indexed family to test
             self.I = I;
-            self.B = replab.domain.vpi(1, I.size);
-            if I.size > 2^53 - 1
+            self.B = replab.domain.vpi(1, I.nElements);
+            if I.nElements > 2^53 - 1
                 maxD = 2^53 - 1;
             else
-                maxD = double(I.size);
+                maxD = double(I.nElements);
             end
             self.D = replab.domain.intAsDouble(1, maxD);
         end

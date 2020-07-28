@@ -32,7 +32,7 @@ classdef FiniteGroupLaws < replab.GroupLaws
 
         function law_order_elements_(self)
         % Checks that the number of elements corresponds to the group order
-            self.assert(self.T.elements.size == self.T.order);
+            self.assert(self.T.elements.nElements == self.T.order);
         end
 
         function law_generators_(self)
