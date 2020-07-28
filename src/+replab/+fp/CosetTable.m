@@ -66,6 +66,7 @@ classdef CosetTable < replab.Str
                 end
                 alpha = alpha + 1;
             end
+            ct.C
             f = find(ct.p - (1:ct.n) == 0);
             ct.C = ct.C(1:length(f), :);
         end
@@ -205,7 +206,7 @@ classdef CosetTable < replab.Str
                 g = q(i);
                 i = i + 1;
                 gx = self.C(g, :);
-                for j = 1:self.nGenerators
+                for j = 1:self.nGenerators*2
                     if gx(j) > 0
                         delta = gx(j);
                         if j <= ngens
