@@ -68,7 +68,7 @@ classdef RightCoset < replab.Coset
 
         % FiniteSet
 
-        function s = size(self)
+        function s = nElements(self)
         % Returns the size of this coset
         %
         % Returns:

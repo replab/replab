@@ -15,7 +15,7 @@ function test_centralizer_order
     for i = 1:length(classes)
         cc1 = classes{i};
         cc2 = replab.ConjugacyClass(G, cc1(:,1)');
-        assert(size(cc1, 2) == cc2.size);
+        assert(size(cc1, 2) == cc2.nElements);
     end
 end
 
@@ -29,7 +29,7 @@ function test_conjugacyClass_number
     for i = 1:length(d)
         S = replab.S(d(i));
         C = S.conjugacyClasses;
-        sz = sum(cellfun(@(c) double(c.size), C));
+        sz = sum(cellfun(@(c) double(c.nElements), C));
         assert(sz == S.order);
         ni = length(S.conjugacyClasses);
         assert(n(i) == ni);

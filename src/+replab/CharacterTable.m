@@ -111,7 +111,7 @@ classdef CharacterTable < replab.Obj
         %
         % Returns:
         %   sizes (integer(1,nclasses)): vector of conjugacy class sizes
-            sizes = cellfun(@(x) double(x.size), self.classes);
+            sizes = cellfun(@(x) double(x.nElements), self.classes);
         end
 
         function mults = multiplicities(self, rep)
@@ -234,7 +234,7 @@ classdef CharacterTable < replab.Obj
             cclens = cell(1, length(classes));
             for i = 1:k
                 ccreps{i} = classes{i}.representative;
-                cclens{i} = double(classes{i}.size);
+                cclens{i} = double(classes{i}.nElements);
             end
             nirreps = length(irreps);
             chars = cell(nirreps, k);
