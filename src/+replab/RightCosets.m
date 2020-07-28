@@ -28,7 +28,7 @@ classdef RightCosets < replab.Cosets
             d = replab.DoubleCosets(self.group, self.subgroup, subgroup1);
         end
 
-        function s = size(self)
+        function s = nElements(self)
         % Returns the number of right cosets
         %
         % Returns:
