@@ -35,7 +35,11 @@ function [contents, docTopic] = help(varargin)
 
     % Are we in full mode or not?
     fullMode = false;
-    arg = varargin{1};
+    if nargin >= 1
+        arg = varargin{1};
+    else
+        arg = [];
+    end
     if nargin == 2
         if isequal(varargin{1}, '-f') || isequal(varargin{1}, '--full')
             fullMode = true;
@@ -47,6 +51,7 @@ function [contents, docTopic] = help(varargin)
 
     % extract own name
     [~, helpFunctionName, ~] = fileparts(which(mfilename));
+    helpPrinted = false;
     if ischar(arg)
         parts = strsplit(arg, '.');
         isVar = 0;
@@ -67,14 +72,16 @@ function [contents, docTopic] = help(varargin)
                 % it is a RepLAB object
                 contents = replab.infra.repl.lookupHelp(helpFunctionName, fullMode, strjoin({varType parts{2:end}}, '.'), varName);
             else
-                [contents, docTopic] = replab.infra.repl.callOriginalHelp({varargin}, varName, varValue);
+                helpPrinted = (nargout==0) && (~replab.globals.runsInMatlabEmacs);
+                [contents, docTopic] = replab.infra.repl.callOriginalHelp({varargin}, helpPrinted, varName, varValue);
             end
         else
             if replab.compat.startsWith(arg, 'replab') && ~isequal(arg, 'replab_init') && ~isequal(arg, 'replab_easyinstall')
                 % it is a RepLAB command
                 contents = replab.infra.repl.lookupHelp(helpFunctionName, fullMode, arg);
             else
-                [contents, docTopic] = replab.infra.repl.callOriginalHelp({varargin});
+                helpPrinted = (nargout==0) && (~replab.globals.runsInMatlabEmacs);
+                [contents, docTopic] = replab.infra.repl.callOriginalHelp({varargin}, helpPrinted);
             end
         end
     else
@@ -84,20 +91,23 @@ function [contents, docTopic] = help(varargin)
             contents = replab.infra.repl.lookupHelp(helpFunctionName, fullMode, type);
         else
             % Non RepLAB object, call original help function
-            [contents, docTopic] = replab.infra.repl.callOriginalHelp({varargin});
+            helpPrinted = (nargout==0) && (~replab.globals.runsInMatlabEmacs);
+            [contents, docTopic] = replab.infra.repl.callOriginalHelp({varargin}, helpPrinted);
         end
     end
     if nargout == 0
-        % display the help
-        if replab.globals.runsInMatlabEmacs
-            if ischar(arg)
-                replab.infra.repl.matlabEmacsHelpDisplay(arg, contents);
+        if ~helpPrinted
+            % The help was not displayed yet, we do it now
+            if replab.globals.runsInMatlabEmacs
+                if ischar(arg)
+                    replab.infra.repl.matlabEmacsHelpDisplay(arg, contents);
+                else
+                    replab.infra.repl.matlabEmacsHelpDisplay('object', contents);
+                end
             else
-                replab.infra.repl.matlabEmacsHelpDisplay('object', contents);
+                stdout = 1;
+                fwrite(stdout, contents);
             end
-        else
-            stdout = 1;
-            fwrite(stdout, contents);
         end
         clear contents; % to avoid displaying twice if called from the command line
     end
