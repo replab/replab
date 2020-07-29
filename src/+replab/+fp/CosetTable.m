@@ -5,6 +5,8 @@ classdef CosetTable < replab.Str
 % Holt, Derek. “Coset Enumeration.” Handbook of Computational Group Theory,
 % Chapman & Hall/CRC, 2004, pp. 149–198
 %
+% Note that the action on cosets is a right action, contrary to the conventions used everywhere else in RepLAB.
+%
 % Example:
 %   >>> ct = replab.fp.CosetTable.original({'x' 'y'}, {'x^2','y^3','(x*y)^3'}, {'x*y'});
 %   >>> ct.table
@@ -16,7 +18,6 @@ classdef CosetTable < replab.Str
 %       4 | 3  4     3       4
 
     properties
-        generatorNames % (cell(1,\*) of charstring): Names of the generators
         nGenerators % (integer): Number of generators
         relators % (cell(1,\*) of integer(1,\*)): Relators given as reduced words
         subgroupGenerators % (cell(1,\*) of integer(1,\*)): Words representing the generators of the subgroup
@@ -24,78 +25,76 @@ classdef CosetTable < replab.Str
         n % (integer): Largest coset
         p % (integer(1,n)): Map of coincidences, ``p(i) <= i`` gives the canonical coset in case of coincidences
         M % (integer): Upper bound on the number on the cosets
-
     end
 
-    methods (Static)
-
-        function ct = original(generators, relators, y)
-        % Enumerate cosets
-        %
-        % Args:
-        %   generators (cell(1,\*) of charstring): group generators
-        %   relators (cell(1,\*) of charstring): group relators to parse
-        %   y (cell(1, \*) of charstring): relators for a finite subset of the group
-            ct = replab.fp.CosetTable(generators, 2^51 - 1); % TODO: estimate memory use
-            ngens = length(generators);
-            for i = 1:length(y)
-                w = y{i};
-                ct.scanAndFill(1, w);
-            end
-            alpha = 1; % since p(1) is always 1
-            while alpha <= ct.n
-                if ct.p(alpha) ~= alpha
-                    alpha = alpha + 1;
-                    continue
-                end
-                for i = 1:length(relators)
-                    w = relators{i};
-                    ct.scanAndFill(alpha, w);
-                    if ct.p(alpha) < alpha
-                        break
-                    end
-                end
-                if ct.p(alpha) < alpha
-                    alpha = alpha + 1;
-                    continue
-                end
-                for x = 1:ngens * 2
-                    if ct.C(alpha, x) < 1
-                        ct.define(alpha, x);
-                    end
-                end
-                alpha = alpha + 1;
-            end
-            ct.C
-            f = find(ct.p - (1:ct.n) == 0);
-            ct.C = ct.C(1:length(f), :);
-        end
-
-    end
 
     methods
 
-        function self = CosetTable(generatorNames, M)
-            nG = length(generatorNames);
-            self.generatorNames = generatorNames;
-            self.nGenerators = nG;
-            self.C = zeros(1, nG*2);
+        function self = CosetTable(nGenerators, relators, subgroupGenerators, M)
+        % Constructs an empty coset table
+        %
+        % Args:
+        %   nGenerators (integer): Number of generators
+        %   relators (cell(1,\*) of integer(1,\*)): Relators written as letter arrays
+        %   subgroupGenerators (cell(1,\*) of integer(1,\*)): Subgroup generators written as letter arrays
+        %   M (integer): Upper bound on the number of cosets during enumeration
+            self.nGenerators = nGenerators;
+            self.relators = relators;
+            self.subgroupGenerators = subgroupGenerators;
+            self.C = zeros(1, nGenerators*2);
             self.n = 1;
             self.p = [1];
             self.M = M;
         end
 
-        function t = table(self)
-            t = replab.str.Table(self.C);
-            invNames = cellfun(@(x) ['inv(', x, ')'], self.generatorNames, 'UniformOutput', false);
-            t.addColumnNames([self.generatorNames, invNames]);
-            t.addRowNames(num2cell(1:size(self.C, 1)));
-            t.setRowSep(1, '-');
-            t.setColSep(1, ' | ');
+        function cosetEnumerationR(self)
+        % Enumerates cosets (relator based method)
+        %
+        % Taken from COSETENUMERATIONR, p. 164 of Holt
+            for i = 1:length(self.subgroupGenerators) % Line 3
+                w = self.subgroupGenerators{i};
+                % Enter the generators of the subgroup as relations (the generators are part of the identity coset!)
+                self.scanAndFill(1, w);
+            end
+            alpha = 1; % since p(1) is always 1
+            while alpha <= self.n % Line 4
+                if self.p(alpha) ~= alpha % only consider live cosets
+                    alpha = alpha + 1;
+                    continue
+                end
+                for i = 1:length(self.relators) % Line 5
+                    w = self.relators{i};
+                    % Lines 6-7
+                    self.scanAndFill(alpha, w);
+                    if self.p(alpha) < alpha
+                        break
+                    end
+                end
+                if self.p(alpha) < alpha % Line 8
+                    alpha = alpha + 1;
+                    continue
+                end
+                for x = 1:self.nGenerators * 2 % Lines 9-10
+                    if self.C(alpha, x) < 1
+                        self.define(alpha, x);
+                    end
+                end
+                alpha = alpha + 1;
+            end
+            % Clean up the coset table
+            f = find(self.p - (1:self.n) == 0); % @jvdv37: what's the rationale here?
+            self.C = self.C(1:length(f), :);
         end
+
 
         function invind = generatorInverse(self, ind)
         % Returns the index of the inverse of the given generator index
+        %
+        % Args:
+        %   ind (integer): Index of a generator or its inverse, ``1 <= ind <= 2*nGenerators``
+        %
+        % Returns:
+        %   integer: The index of the inverse of that generator
             nG = self.nGenerators;
             if i <= nG
                 invind = ind + nG;
@@ -108,6 +107,10 @@ classdef CosetTable < replab.Str
         % Defines a new coset
         %
         % DEFINE, Holt p. 153
+        %
+        % Args:
+        %   alpha (integer): TODO
+        %   x (integer): TODO
             if self.n == self.M
                 error('Error: exceeded maximum allowed number of cosets')
             end
@@ -124,6 +127,12 @@ classdef CosetTable < replab.Str
         % Replaces a coset in p
         %
         % REP, Holt p. 157
+        %
+        % Args:
+        %   k (integer): TODO
+        %
+        % Returns:
+        %   integer: TODO
             lambda = k;
             rho = self.p(lambda);
             while rho ~= lambda
@@ -141,19 +150,22 @@ classdef CosetTable < replab.Str
 
         function scanAndFill(self, alpha, w)
         % Scans through a relator and fills in table
-            letters = replab.fp.parseLetters(w, self.generatorNames);
-            s = sign(letters);
+        %
+        % Args:
+        %   alpha (integer): TODO
+        %   w (integer(1,\*)): Word letters
+            s = sign(w);
             ngens = self.nGenerators;
-            f = find(letters < 0);
-            letters(f) = arrayfun(@(x) abs(x) + ngens, letters(f));
-            r = length(letters);
+            f = find(w < 0);
+            w(f) = abs(w(f)) + ngens; % @jvdv37 optimized here!
+            r = length(w);
             f = alpha;
             i = 1;
             b = alpha;
             j = r;
             while true
-                while i <= r && self.C(f, letters(i)) > 0
-                    f = self.C(f, letters(i));
+                while i <= r && self.C(f, w(i)) > 0
+                    f = self.C(f, w(i));
                     i = i + 1;
                 end
                 if i > r
@@ -162,8 +174,8 @@ classdef CosetTable < replab.Str
                     end
                     return
                 end
-                while j >= i && self.C(b, letters(j) + s(j)*ngens) > 0
-                    b = self.C(b, letters(j) + s(j)*ngens);
+                while j >= i && self.C(b, w(j) + s(j)*ngens) > 0
+                    b = self.C(b, w(j) + s(j)*ngens);
                     j = j - 1;
                 end
                 if j < i
@@ -173,17 +185,25 @@ classdef CosetTable < replab.Str
                     b = alpha;
                     j = r;
                 elseif j == i
-                    self.C(f, letters(i)) = b;
-                    self.C(b, letters(j) + s(j)*ngens) = f;
+                    self.C(f, w(i)) = b;
+                    self.C(b, w(j) + s(j)*ngens) = f;
                     return
                 else
-                    self.define(f, letters(i));
+                    self.define(f, w(i));
                 end
             end
         end
 
         function [q, l] = merge(self, k, lambda, q, l)
         % Removes the smaller of k and lambda from active cosets
+        %
+        % MERGE, p. TODO
+        %
+        % Args:
+        %   k (integer): TODO
+        %   lambda (integer): TODO
+        %   q (integer(1,\*)): TODO
+        %   l (integer): TODO
             lam1 = self.rep(k);
             lam2 = self.rep(lambda);
             if lam1 ~= lam2
@@ -195,8 +215,14 @@ classdef CosetTable < replab.Str
             end
         end
 
-        function  coincidence(self, alpha, beta)
+        function coincidence(self, alpha, beta)
         % Deals with the same coset being represented with different values
+        %
+        % COINCIDENCE p. TODO
+        %
+        % Args:
+        %   alpha (integer): TODO
+        %   beta (integer): TODO
             ngens = self.nGenerators;
             l = 0;
             q = [];

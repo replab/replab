@@ -45,10 +45,11 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
     methods (Static)
 
-        function A = make(names, relators)
-            gens = replab.fp.permutationGeneratorsForRelators(names, relators);
+        function A = make(relatorWords, names)
+            relators = cellfun(@(w) replab.fp.parseLetters(w, names), relatorWords, 'uniform', 0);
+            gens = replab.fp.permutationGeneratorsForRelators(length(names), relators);
             pg = replab.PermutationGroup.of(gens{:});
-            A = replab.AbstractGroup(names, pg, relators);
+            A = replab.AbstractGroup(names, pg, relatorWords);
         end
 
         function [A varargout] = parsePresentation(str)
@@ -73,7 +74,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             for i = 1:length(relatorLetters)
                 relators{i} = replab.fp.printLetters(relatorLetters{i}, names, ' ');
             end
-            A = replab.AbstractGroup.make(names, relators);
+            A = replab.AbstractGroup.make(relators, names);
             if nargout > 1
                 for i = 1:length(A.nGenerators)
                     varargout{i} = A.generator(i);
