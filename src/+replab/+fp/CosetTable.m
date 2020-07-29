@@ -6,16 +6,6 @@ classdef CosetTable < replab.Str
 % Chapman & Hall/CRC, 2004, pp. 149–198
 %
 % Note that the action on cosets is a right action, contrary to the conventions used everywhere else in RepLAB.
-%
-% Example:
-%   >>> ct = replab.fp.CosetTable.original({'x' 'y'}, {'x^2','y^3','(x*y)^3'}, {'x*y'});
-%   >>> ct.table
-%         | x  y  inv(x)  inv(y)
-%       --------------------------
-%       1 | 2  3     2       2
-%       2 | 1  1     1       3
-%       3 | 4  2     4       1
-%       4 | 3  4     3       4
 
     properties
         nGenerators % (integer): Number of generators

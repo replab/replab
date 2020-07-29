@@ -1,9 +1,20 @@
 classdef CosetTable < replab.Str
 % Describes a coset table
 %
-% Note that the action of words on cosets is a left action, contrary to the algorithms described in Holt.
-% Thus, we implement the algorithms of Holt in a different class, which matches the pseudocode closely.
-% This class, however, translates between those conventions.
+% Example:
+%   >>> ct = replab.CosetTable.fromPresentation({'x' 'y'}, {'x^2','y^3','(x*y)^3'}, {'x*y'});
+%   >>> ct.table
+%         | x  y  inv(x)  inv(y)
+%       --------------------------
+%       1 | 2  2     2       3
+%       2 | 1  3     1       1
+%       3 | 4  1     4       2
+%       4 | 3  4     3       4
+%
+% Note:
+%   The action of words on cosets is a left action, contrary to the algorithms described in Holt.
+%   Thus, we implement the algorithms of Holt in a different class, which matches the pseudocode closely.
+%   This class, however, translates between those conventions.
 
     properties (Access = protected)
         generatorNames % (cell(1,\*) of charstring): Names of the generators
