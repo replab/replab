@@ -435,7 +435,7 @@ classdef PermutationGroup < replab.FiniteGroup
         % Morphisms
 
         function m = morphismByImages(self, target, images)
-            if isa(target, 'replab.FiniteGroup')
+            if isa(target, 'replab.PermutationGroup')
                 m = replab.fm.PermToPerm(self, target, images);
             else
                 m = replab.fm.PermToFinite(self, target, images);
@@ -642,7 +642,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %
         % Returns:
         %   `+replab.+wreathproduct.Common`: A wreath product group
-            w = replab.wreathproduct.of(self, A);
+            w = replab.WreathProductGroup.make(self, A);
         end
 
     end

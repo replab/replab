@@ -1,38 +1,64 @@
-classdef OfCompactGroups < replab.CompactGroup
-% Describes an external direct product of compact groups
+classdef DirectProductGroup < replab.Group
+% Describes an external direct product of groups
+%
+% This is an abstract base class. Use `.DirectProductGroup.make` or `.CompactGroup.directProduct` to construct an instance.
 
     properties (SetAccess = protected)
-        factors % (factors{1,:} of subclass of `+replab.CompactGroup`): Factor groups
+        factors % (cell(1,\*) of subclass of `.Group`): Factor groups
+    end
+
+    methods (Static)
+
+        function prd = make(factors)
+            isFinite = all(cellfun(@(g) isa(g, 'replab.FiniteGroup'), factors));
+            if isFinite
+                prd = replab.prods.DirectProductOfFiniteGroups(factors);
+            else
+                prd = replab.prods.DirectProductOfCompactGroups(factors);
+            end
+        end
+
     end
 
     methods
 
-        function self = OfCompactGroups(factors)
+        function self = DirectProductGroup(factors)
         % Constructs a direct product of groups
         %
         % Args:
-        %   factors (row cell array): Factor groups
-            n = length(factors);
-            for i = 1:n
-                assert(isa(factors{i}, self.requiredType), ['All factors must be instances of' self.requiredType]);
-            end
+        %   factors (cell(1,\*) of `.Group`): Factor groups
             self.factors = factors;
             self.identity = cellfun(@(f) f.identity, factors, 'uniform', 0);
         end
 
-        function t = requiredType(self)
-            t = 'replab.CompactGroup';
-        end
+    end
+
+    methods % Factor manipulation
 
         function n = nFactors(self)
+        % Returns the number of factors in this direct product
+        %
+        % Returns:
+        %   integer: Number of factors
             n = length(self.factors);
         end
 
         function f = factor(self, i)
+        % Returns a factor in this direct product
+        %
+        % Args:
+        %   i (integer): Factor idnex
+        %
+        % Returns:
+        %   `.Group`: The ``i``-th factor
             f = self.factors{i};
         end
 
-        function rep = directSumRep(self, factorReps)
+    end
+
+    methods % Representations
+
+        function rep = directSumFactorRep(self, factorReps)
         % Constructs a direct sum representation
         %
         % Args:
@@ -44,25 +70,8 @@ classdef OfCompactGroups < replab.CompactGroup
             rep = replab.directproduct.SumRep(self, factorReps);
         end
 
-        function rep = directSumRepFun(self, fun)
+        function rep = directSumFactorRepFun(self, fun)
         % Constructs a direct sum representation from a function that maps factors to representations
-        %
-        % Enables constructions such as ``directProduct.sumRepFun(@(x) x.definingRep)``
-        %
-        % Args:
-        %   fun (function_handle): A function valid for each factor group that maps the group to one of
-        %                          its representations
-        %
-        % Returns:
-        %   replab.Rep: A direct sum representation
-            reps = arrayfun(@(i) fun(self.factor(i)), 1:self.nFactors, 'uniform', 0);
-            rep = self.directSumRep(reps);
-        end
-
-        function rep = directSumRepFunWithIndex(self, fun)
-        % Constructs a direct sum representation from a function that maps factors to representations
-        %
-        % Enables constructions such as ``directProduct.sumRepFunWithIndex(@(x, i) x.definingRep)``
         %
         % Args:
         %   fun (function_handle): A function valid for each factor group that maps the group and its index
@@ -71,10 +80,10 @@ classdef OfCompactGroups < replab.CompactGroup
         % Returns:
         %   replab.Rep: A direct sum representation
             reps = arrayfun(@(i) fun(self.factor(i), i), 1:self.nFactors, 'uniform', 0);
-            rep = self.directSumRep(reps);
+            rep = self.directSumFactorRep(reps);
         end
 
-        function rep = tensorRep(self, factorReps)
+        function rep = tensorFactorRep(self, factorReps)
         % Constructs a tensor product representation
         %
         % Args:
@@ -86,25 +95,8 @@ classdef OfCompactGroups < replab.CompactGroup
             rep = replab.directproduct.TensorRep(self, factorReps);
         end
 
-        function rep = tensorRepFun(self, fun)
+        function rep = tensorFactorRepFun(self, fun)
         % Constructs a direct sum representation from a function that maps factors to representations
-        %
-        % Enables constructions such as ``directProduct.tensorRepFun(@(x) x.definingRep)``
-        %
-        % Args:
-        %   fun (function_handle): A function valid for each factor group that maps the group to one of
-        %                          its representations
-        %
-        % Returns:
-        %   replab.Rep: A tensor representation
-            reps = arrayfun(@(i) fun(self.factor(i)), 1:self.nFactors, 'uniform', 0);
-            rep = self.tensorRep(reps);
-        end
-
-        function rep = tensorRepFunWithIndex(self, fun)
-        % Constructs a direct sum representation from a function that maps factors to representations
-        %
-        % Enables constructions such as ``directProduct.tensorRepFunWithIndex(@(x, i) x.definingRep)``
         %
         % Args:
         %   fun (function_handle): A function valid for each factor group that maps the group and its index
@@ -113,26 +105,29 @@ classdef OfCompactGroups < replab.CompactGroup
         % Returns:
         %   replab.Rep: A tensor representation
             reps = arrayfun(@(i) fun(self.factor(i), i), 1:self.nFactors, 'uniform', 0);
-            rep = self.tensorRep(reps);
+            rep = self.tensorFactorRep(reps);
         end
 
+    end
 
-        %% Str methods
+    methods % Implementations
+
+        % Str
 
         function names = hiddenFields(self)
-            names = hiddenFields@replab.CompactGroup(self);
+            names = hiddenFields@replab.Group(self);
             names{1, end+1} = 'factors';
         end
 
         function [names values] = additionalFields(self)
-            [names values] = additionalFields@replab.CompactGroup(self);
+            [names values] = additionalFields@replab.Group(self);
             for i = 1:self.nFactors
                 names{1, end+1} = sprintf('factor(%d)', i);
                 values{1, end+1} = self.factor(i);
             end
         end
 
-        %% Domain methods
+        % Domain
 
         function b = eqv(self, x, y)
             b = true;
@@ -144,7 +139,14 @@ classdef OfCompactGroups < replab.CompactGroup
             end
         end
 
-        %% Monoid methods
+        function g = sample(self)
+            g = cell(1, self.nFactors);
+            for i = 1:self.nFactors
+                g{i} = self.factor(i).sample;
+            end
+        end
+
+        % Monoid
 
         function z = compose(self, x, y)
             z = cell(1, self.nFactors);
@@ -153,21 +155,12 @@ classdef OfCompactGroups < replab.CompactGroup
             end
         end
 
-        %% Group methods
+        % Group
 
         function xInv = inverse(self, x)
             xInv = cell(1, self.nFactors);
             for i = 1:self.nFactors
                 xInv{i} = self.factor(i).inverse(x{i});
-            end
-        end
-
-        %% CompactGroup methods
-
-        function g = sample(self)
-            g = cell(1, self.nFactors);
-            for i = 1:self.nFactors
-                g{i} = self.factor(i).sample;
             end
         end
 

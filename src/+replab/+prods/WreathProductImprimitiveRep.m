@@ -1,4 +1,4 @@
-classdef ImprimitiveRep < replab.Rep
+classdef WreathProductImprimitiveRep < replab.Rep
 % Imprimitive representation of a wreath product group
 %
 % See `+replab.+wreathproduct.Common.imprimitiveRep`
@@ -11,16 +11,16 @@ classdef ImprimitiveRep < replab.Rep
 
     methods
 
-        function self = ImprimitiveRep(group, Arep)
+        function self = WreathProductImprimitiveRep(group, Arep)
         % Constructs an imprimitive representation of a wreath product group
         %
         % Args:
-        %   group (`+replab.+wreathproduct.Common`): Wreath product group
+        %   group (`+replab.WreathProductGroup`): Wreath product group
         %   Arep (`+replab.Rep`): Representation of the wreath product base factor
         %
         % Returns:
         %   `+replab.Rep`: A wreath product group representation
-            assert(isa(group, 'replab.wreathproduct.Common'));
+            assert(isa(group, 'replab.WreathProductGroupx'));
             assert(group.A == Arep.group);
             dA = Arep.dimension;
             n = group.H.domainSize;

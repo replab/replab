@@ -1,4 +1,4 @@
-classdef GHZ < replab.semidirectproduct.OfCompactGroups
+classdef GHZ < replab.prods.SemidirectProductOfCompactGroups
 % Symmetry group of the GHZ states
 
     properties
@@ -20,7 +20,7 @@ classdef GHZ < replab.semidirectproduct.OfCompactGroups
             discrete = directProduct(SParties, SLevels);
             f = @(q, b) base.permuteParties(q{1}, base.permuteLevels(q{2}, b));
             phi = replab.Action.lambda('Permutation of parties/levels', discrete, base, f);
-            self@replab.semidirectproduct.OfCompactGroups(phi);
+            self@replab.prods.SemidirectProductOfCompactGroups(phi);
             self.nParties = nParties;
             self.nLevels = nLevels;
         end
