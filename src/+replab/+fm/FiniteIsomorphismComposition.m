@@ -15,7 +15,7 @@ classdef FiniteIsomorphismComposition < replab.FiniteIsomorphism & replab.fm.Fin
 
     methods (Access = protected)
 
-                function I = computeInverse(self)
+        function I = computeInverse(self)
             I = replab.fm.compose(self.first.inverse, self.second.inverse);
         end
 

@@ -6,12 +6,15 @@ classdef FiniteInverse < replab.FiniteIsomorphism
 
     methods
 
-        function self = Inverse(of)
+        function self = FiniteInverse(of)
             self.of = of;
             self.source = of.target;
             self.target = of.source;
         end
 
+    end
+
+    methods % Implementations
 
         function f = inverse(self)
             f = self.of;

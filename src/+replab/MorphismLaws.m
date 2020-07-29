@@ -8,7 +8,7 @@ classdef MorphismLaws < replab.Laws
 
     methods
 
-        function self = FiniteMorphismLaws(morphism)
+        function self = MorphismLaws(morphism)
             self.morphism = morphism;
             self.S = morphism.source;
             self.T = morphism.target;
