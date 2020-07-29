@@ -1,4 +1,4 @@
-function [subsets componentIndex] = connectedComponents(edges)
+function [subsets, componentIndex] = connectedComponents(edges)
 % Identifies connected components of a graph
 %
 % Performs the burning algorithm on the network described by the
@@ -8,13 +8,13 @@ function [subsets componentIndex] = connectedComponents(edges)
 % the existence of vertices which are linked with other vertices.
 %
 % Args:
-%     edges (double array) : nx2 array of vertices linked by an edge
+%     edges (integer (\n,2)) : array of vertices linked by an edge
 %
 % Returns:
 % --------
 %     subsets: cell array
 %         connex components
-%     componentIndex: sparse horizontal vector
+%     componentIndex: sparse integer (1,\n)
 %         the index of the component to which each vertex belongs
 %
 % Example:
