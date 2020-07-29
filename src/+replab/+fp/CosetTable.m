@@ -86,7 +86,7 @@ classdef CosetTable < replab.Str
         % Returns:
         %   integer: The index of the inverse of that generator
             nG = self.nGenerators;
-            if i <= nG
+            if ind <= nG
                 invind = ind + nG;
             else
                 invind = ind - nG;
