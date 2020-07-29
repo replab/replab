@@ -21,8 +21,11 @@ function classes = conjugacyClassesByRandomSearch(group)
     classes = {};
     remains = group.order;
     g = group.sample;
+    newClass = true;
     while remains > 0
-        bar.step(group.order - remains);
+        if newClass
+            bar.step(group.order - remains);
+        end
         newClass = true;
         for i = 1:length(classes)
             c = classes{i};
