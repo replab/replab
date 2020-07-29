@@ -84,10 +84,10 @@ classdef PermToPerm < replab.FiniteMorphism
         function s = preimageRepresentative(self, t)
             n1 = self.source.domainSize;
             n2 = self.target.domainSize;
-            chain = self.inverseChain;
-            [h i] = self.chain.strip([1:n1 t+n1]);
-            l = find(chain.B <= n1, 1);
-            assert(i > l);
+            el = [1:n1 t+n1];
+            [h i] = self.inverseChain.strip(el);
+            l = find([self.inverseChain.B n1] <= n1, 1);
+            assert(i >= l);
             sinv = h(1:n1);
             s(sinv) = 1:n1;
         end
