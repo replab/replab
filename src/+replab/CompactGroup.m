@@ -70,7 +70,7 @@ classdef CompactGroup < replab.Group
         % Returns:
         %   replab.CompactGroup: Semidirect product group
             action = replab.Action.lambda('Semidirect homomorphism', self, N, phi);
-            sd = replab.semidirectproduct.of(action);
+            sd = replab.SemidirectProductGroup.make(action);
         end
 
         %% Representations

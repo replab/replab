@@ -435,7 +435,7 @@ classdef PermutationGroup < replab.FiniteGroup
         % Morphisms
 
         function m = morphismByImages(self, target, images)
-            if isa(target, 'replab.FiniteGroup')
+            if isa(target, 'replab.PermutationGroup')
                 m = replab.fm.PermToPerm(self, target, images);
             else
                 m = replab.fm.PermToFinite(self, target, images);

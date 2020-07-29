@@ -12,7 +12,7 @@ classdef SemidirectProductGroup < replab.Group
 
     methods (Static) % SemidirectProductGroup creation
 
-        function make(phi)
+        function prd = make(phi)
         % Constructs a semidirect product group from an action
         %
         % Args:
@@ -20,11 +20,11 @@ classdef SemidirectProductGroup < replab.Group
         %
         % Returns:
         %   `.SemidirectProductGroup`: A specialized instance of `.SemidirectProductGroup`
-            isFinite = all(cellfun(@(g) isa(g, 'replab.FiniteGroup'), factors));
+            isFinite = isa(phi.G, 'replab.FiniteGroup') && isa(phi.P, 'replab.FiniteGroup');
             if isFinite
-                prd = replab.prods.SemidirectProductOfFiniteGroups(factors);
+                prd = replab.prods.SemidirectProductOfFiniteGroups(phi);
             else
-                prd = replab.prods.SemidirectProductOfCompactGroups(factors);
+                prd = replab.prods.SemidirectProductOfCompactGroups(phi);
             end
         end
 
@@ -32,7 +32,7 @@ classdef SemidirectProductGroup < replab.Group
 
     methods
 
-        function self = OfCompactGroups(phi)
+        function self = SemidirectProductGroup(phi)
             assert(isa(phi, 'replab.Action'));
             H = phi.G;
             N = phi.P;
