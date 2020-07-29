@@ -6,7 +6,17 @@ classdef Morphism < replab.Obj
         target % (`.Group`): Target group
     end
 
-    methods
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.MorphismLaws(self);
+        end
+
+    end
+
+    methods % Images
 
         function t = imageElement(self, s)
         % Returns the image of the given source element
@@ -18,6 +28,10 @@ classdef Morphism < replab.Obj
         %   element of `.target`: Image
             error('Abstract');
         end
+
+    end
+
+    methods % Morphism composition
 
         function res = compose(self, applyFirst)
         % Composition of morphisms, the right hand side applied first
@@ -51,7 +65,7 @@ classdef Morphism < replab.Obj
 
     end
 
-    methods (Static)
+    methods (Static) % Morphism creation
 
         function m = lambda(source, target, imageElementFun)
         % Creates a morphism from an image function

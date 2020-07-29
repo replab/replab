@@ -38,7 +38,7 @@ classdef Set < replab.Str
             assert(isequal(self.hash, self.seed * self.matrix(:, self.perm)));
         end
 
-        function s = size(self)
+        function s = nElements(self)
         % Returns the number of elements in this set
             s = size(self.matrix, 2);
         end
@@ -83,18 +83,18 @@ classdef Set < replab.Str
         %
         % Returns:
         %   integer(1,\*): Indices of the inserted permutations
-            unhash = zeros(1, self.size); % unsorted hash
+            unhash = zeros(1, self.nElements); % unsorted hash
             unhash(self.perm) = self.hash;
             addHash = self.seed*permutations;
             unhash1 = [unhash addHash]; % new unsorted hash
             matrix1 = [self.matrix permutations];
             assert(isequal(unhash1, self.seed * matrix1));
             [hash1, perm1] = sort(unhash1);
-            oldSize = self.size;
+            oldSize = self.nElements;
             self.matrix = matrix1;
             self.perm = perm1;
             self.hash = hash1;
-            inds = oldSize+1:self.size;
+            inds = oldSize+1:self.nElements;
         end
 
         function ind = findElement(self, col, range)
@@ -202,6 +202,22 @@ classdef Set < replab.Str
             mask = (inds == 0);
             inds1 = self.insert(permutations(:, find(mask)));
             inds(mask) = inds1;
+        end
+
+    end
+
+    methods (Static) % Set construction
+
+        function s = fromPermutationGroup(group)
+        % Creates and fills a set with the elements of a permutation group
+        %
+        % Args:
+        %   group (`+replab.PermutationGroup`): Permutation group
+        %
+        % Returns:
+        %   `.Set`: The constructed set
+            s = replab.perm.Set(group.domainSize);
+            s.insert(group.chain.allElements);
         end
 
     end

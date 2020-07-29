@@ -14,6 +14,10 @@ classdef Composition < replab.Morphism
             self.second = second;
         end
 
+    end
+
+    methods % Implementations
+
         function t = imageElement(self, s)
             t = self.second.imageElement(self.first.imageElement(s));
         end

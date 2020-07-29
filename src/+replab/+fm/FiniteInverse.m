@@ -1,16 +1,20 @@
-classdef Inverse < replab.Isomorphism
+classdef FiniteInverse < replab.FiniteIsomorphism
 
     properties (SetAccess = protected)
-        of % (`+replab.Isomorphism`): Original isomorphism
+        of % (`+replab.FiniteIsomorphism`): Original isomorphism
     end
 
     methods
 
-        function self = Inverse(of)
+        function self = FiniteInverse(of)
             self.of = of;
             self.source = of.target;
             self.target = of.source;
         end
+
+    end
+
+    methods % Implementations
 
         function f = inverse(self)
             f = self.of;

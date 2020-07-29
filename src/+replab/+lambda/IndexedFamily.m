@@ -8,11 +8,11 @@ classdef IndexedFamily < replab.IndexedFamily
 
     methods
 
-        function self = IndexedFamily(size, atFun, findFun)
-            if isa(size, 'vpi')
-                self.size = size;
+        function self = IndexedFamily(nElements, atFun, findFun)
+            if isa(nElements, 'vpi')
+                self.nElements = nElements;
             else
-                self.size = vpi(size);
+                self.nElements = vpi(nElements);
             end
             self.atFun = atFun;
             self.findFun = findFun;

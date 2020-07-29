@@ -20,7 +20,7 @@ classdef LeftCosets < replab.Cosets
             self@replab.Cosets(group, subgroup);
         end
 
-        function s = size(self)
+        function s = nElements(self)
         % Returns the number of left cosets
         %
         % Returns:
@@ -60,7 +60,7 @@ classdef LeftCosets < replab.Cosets
         function T = computeTransversal(self)
         % See `.transversal`
             M = self.transversalAsMatrix;
-            T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:double(self.size), 'uniform', 0);
+            T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:double(self.nElements), 'uniform', 0);
         end
 
         function M = transversalAsMatrix(self)

@@ -36,8 +36,8 @@ classdef AbstractGroupIsomorphismEnumeration < replab.nfg.AbstractGroupIsomorphi
             nG = target.nGenerators;
             gens = target.generators;
             invGens = cellfun(@(g) target.inverse(g), gens, 'uniform', 0);
-            elements = replab.perm.Set(n);
-            elements.insert(target.chain.allElements);
+            elements = replab.perm.Set.fromPermutationGroup(target);
+            elements.sort;
             ind = elements.find((1:n)');
             ok = false(1, o);
             ok(ind) = true;
