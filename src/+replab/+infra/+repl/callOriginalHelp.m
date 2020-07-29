@@ -3,7 +3,7 @@ function [output, docTopic] = callOriginalHelp(coh_argument, coh_printIt, coh_va
 %
 % This function either displays the help content or returns it, as
 % instructed by the 'coh_printIt' argument. Printing should not be 
-% requested here under matlab/emacs environment.
+% requested here under either octave or matlab/emacs environment.
 %
 % Args:
 %   coh_argument (cell of cell of charstring or object): Argument to call the help function with
@@ -23,6 +23,7 @@ function [output, docTopic] = callOriginalHelp(coh_argument, coh_printIt, coh_va
     end
     if coh_printIt
         assert(~replab.globals.runsInMatlabEmacs);
+        assert(~replab.compat.isOctave);
     end
     
     coh_functionHandle = replab.globals.defaultHelpFunction;
@@ -34,14 +35,21 @@ function [output, docTopic] = callOriginalHelp(coh_argument, coh_printIt, coh_va
         assert(~ismember(coh_variableName, {'coh_functionHandle' 'coh_printIt', 'coh_argument' 'coh_variableName' 'coh_variableValue'}));
         eval([coh_variableName ' = coh_variableValue;'])
     end
-    if coh_printIt
-        coh_functionHandle(coh_argument{1}{:});
+    if replab.compat.isOctave
+        output = coh_functionHandle(coh_argument{1}{:});
+        if coh_printIt
+            
+        end
     else
-        if replab.compat.isOctave
-            output = coh_functionHandle(coh_argument{1}{:});
+        if coh_printIt 
+            coh_functionHandle(coh_argument{1}{:});
         else
             [output, docTopic] = coh_functionHandle(coh_argument{1}{:});
         end
     end
     
+    % Octave help doesn't finish with a newline, so we add one
+    if ~isempty(output) && replab.compat.isOctave
+        output = [output, char(10)];
+    end
 end

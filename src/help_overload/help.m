@@ -72,7 +72,7 @@ function [contents, docTopic] = help(varargin)
                 % it is a RepLAB object
                 contents = replab.infra.repl.lookupHelp(helpFunctionName, fullMode, strjoin({varType parts{2:end}}, '.'), varName);
             else
-                helpPrinted = (nargout==0) && (~replab.globals.runsInMatlabEmacs);
+                helpPrinted = (nargout==0) && (~replab.globals.runsInMatlabEmacs) && (~replab.compat.isOctave);
                 [contents, docTopic] = replab.infra.repl.callOriginalHelp({varargin}, helpPrinted, varName, varValue);
             end
         else
@@ -80,7 +80,7 @@ function [contents, docTopic] = help(varargin)
                 % it is a RepLAB command
                 contents = replab.infra.repl.lookupHelp(helpFunctionName, fullMode, arg);
             else
-                helpPrinted = (nargout==0) && (~replab.globals.runsInMatlabEmacs);
+                helpPrinted = (nargout==0) && (~replab.globals.runsInMatlabEmacs) && (~replab.compat.isOctave);
                 [contents, docTopic] = replab.infra.repl.callOriginalHelp({varargin}, helpPrinted);
             end
         end
@@ -91,7 +91,7 @@ function [contents, docTopic] = help(varargin)
             contents = replab.infra.repl.lookupHelp(helpFunctionName, fullMode, type);
         else
             % Non RepLAB object, call original help function
-            helpPrinted = (nargout==0) && (~replab.globals.runsInMatlabEmacs);
+            helpPrinted = (nargout==0) && (~replab.globals.runsInMatlabEmacs) && (~replab.compat.isOctave);
             [contents, docTopic] = replab.infra.repl.callOriginalHelp({varargin}, helpPrinted);
         end
     end
