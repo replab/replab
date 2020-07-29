@@ -28,12 +28,22 @@ classdef PermToFinite < replab.FiniteMorphism
             c = self.cached('chain', @() self.computeChain);
         end
 
+    end
+
+    methods (Access = protected)
+
         function c = computeChain(self)
             n = self.source.domainSize;
             % TODO: optimize ChainWithImages by using deterministic Schreier-Sims while comparing orbits
             c = replab.bsgs.ChainWithImages.make(n, self.target, self.source.generators, self.images, [], ...
                                                  self.source.chain.base, self.source.order);
         end
+
+    end
+
+    methods % Implementatoins
+
+
 
         function t = imageElement(self, s)
             t = self.chain.image(s);

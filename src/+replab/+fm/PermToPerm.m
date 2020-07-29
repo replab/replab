@@ -17,15 +17,7 @@ classdef PermToPerm < replab.FiniteMorphism
 
     end
 
-    methods
-
-        function self = PermToPerm(source, target, images)
-            assert(isa(source, 'replab.PermutationGroup'));
-            assert(isa(target, 'replab.PermutationGroup'));
-            self.source = source;
-            self.target = target;
-            self.images = images;
-        end
+    methods (Access = protected)
 
         function K = computeKernel(self)
             n1 = self.source.domainSize;
@@ -46,6 +38,49 @@ classdef PermToPerm < replab.FiniteMorphism
             end
         end
 
+        function c = computeInverseChain(self)
+            n1 = self.source.domainSize;
+            n2 = self.target.domainSize;
+            c = self.chain.mutableCopy;
+            c.baseChange(n1+1:n1+n2, true);
+            c.makeImmutable;
+        end
+
+        function c = computeChain(self)
+            n1 = self.source.domainSize;
+            n2 = self.target.domainSize;
+            S = arrayfun(@(i) self.join(self.source.generator(i), self.images{i}), 1:self.source.nGenerators, 'uniform', 0);
+            chain = replab.bsgs.Chain.make(n1+n2, S, self.source.chain.base, self.source.order);
+            chain = chain.mutableCopy;
+            chain.baseChange(1:n1, true);
+            chain.makeImmutable;
+            c = chain;
+        end
+
+    end
+
+    methods
+
+        function self = PermToPerm(source, target, images)
+            assert(isa(source, 'replab.PermutationGroup'));
+            assert(isa(target, 'replab.PermutationGroup'));
+            self.source = source;
+            self.target = target;
+            self.images = images;
+        end
+
+        function c = inverseChain(self)
+            c = self.cached('inverseChain', @() self.computeInverseChain);
+        end
+
+        function c = chain(self)
+            c = self.cached('chain', @() self.computeChain);
+        end
+
+    end
+
+    methods % Implementations
+
         function s = preimageRepresentative(self, t)
             n1 = self.source.domainSize;
             n2 = self.target.domainSize;
@@ -64,33 +99,6 @@ classdef PermToPerm < replab.FiniteMorphism
                 preimages = cellfun(@(t) self.preimageRepresentative(t), T.generators, 'uniform', 0);
                 S = self.kernel.closure(self.source.subgroup(preimages));
             end
-        end
-
-        function c = inverseChain(self)
-            c = self.cached('inverseChain', @() self.computeInverseChain);
-        end
-
-        function c = computeInverseChain(self)
-            n1 = self.source.domainSize;
-            n2 = self.target.domainSize;
-            c = self.chain.mutableCopy;
-            c.baseChange(n1+1:n1+n2, true);
-            c.makeImmutable;
-        end
-
-        function c = chain(self)
-            c = self.cached('chain', @() self.computeChain);
-        end
-
-        function c = computeChain(self)
-            n1 = self.source.domainSize;
-            n2 = self.target.domainSize;
-            S = arrayfun(@(i) self.join(self.source.generator(i), self.images{i}), 1:self.source.nGenerators, 'uniform', 0);
-            chain = replab.bsgs.Chain.make(n1+n2, S, self.source.chain.base, self.source.order);
-            chain = chain.mutableCopy;
-            chain.baseChange(1:n1, true);
-            chain.makeImmutable;
-            c = chain;
         end
 
         function t = imageElement(self, s)
