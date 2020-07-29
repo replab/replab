@@ -86,7 +86,7 @@ classdef DoubleCoset < replab.FiniteSet
                     newEl = h(cur);
                     if S.find(newEl') == 0
                         newEl = newEl';
-                        sz = S.size;
+                        sz = S.nElements;
                         inds = S.insert(newEl(Kmat));
                         assert(all(inds > sz));
                         toCheck = [toCheck sz+1];
