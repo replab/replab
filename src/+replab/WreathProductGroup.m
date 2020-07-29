@@ -123,7 +123,7 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
         %
         % Returns:
         %   `.Rep`: The corresponding imprimitive representation
-            rep = replab.wreathproduct.ImprimitiveRep(self, Arep);
+            rep = replab.prods.WreathProductImprimitiveRep(self, Arep);
         end
 
         function rep = imprimitiveRepFun(self, fun)
@@ -152,7 +152,7 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
         %
         % Returns:
         %   `.Rep`: The corresponding primitive representation
-            rep = replab.wreathproduct.PrimitiveRep(self, Arep);
+            rep = replab.prods.WreathProductPrimitiveRep(self, Arep);
         end
 
         function rep = primitiveRepFun(self, fun)
