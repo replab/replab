@@ -16,8 +16,6 @@ classdef PermToFinite < replab.FiniteMorphism
             self.source = source;
             self.target = target;
             self.images = images;
-            domainSize = length(source.niceImage(source.identity));
-            self.target = replab.SymmetricGroup(domainSize);
         end
 
         function c = chain(self)
