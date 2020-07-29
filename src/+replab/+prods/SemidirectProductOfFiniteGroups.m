@@ -98,7 +98,7 @@ classdef SemidirectProductOfFiniteGroups < replab.SemidirectProductGroup & repla
             end
             a = self.H.morphismByImages(replab.S(o), phiImages);
         end
-x
+
     end
 
     methods

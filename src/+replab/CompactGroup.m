@@ -36,7 +36,7 @@ classdef CompactGroup < replab.Group
         %   replab.CompactGroup: The direct product self x ...(n times)... x self
         %                        The return type is specialized as in `+replab.CompactGroup.directProduct`.
             factors = arrayfun(@(x) self, 1:n, 'uniform', 0);
-            prd = replab.directproduct.of(factors);
+            prd = replab.DirectProductGroup.make(factors);
         end
 
         function sd = semidirectProduct(self, N, phi)

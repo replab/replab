@@ -1,18 +1,41 @@
-classdef Common < handle
-% Methods common to all wreath product groups
-%
-% This class is used as a mixin, because the wreath product construction
-% depends on the semidirect product infrastructure, and we want to
-% avoid the pitfalls of multiple inheritance.
+classdef WreathProductGroup < replab.SemidirectProductGroup
+% Wreath product group
 
     properties (SetAccess = protected)
-        A % replab.CompactGroup: factor of base group
-        n % integer: Number of copies of the base group
+        n % (integer): Number of copies of the base group
+        A % (`.CompactGroup`): Factor of base group
+    end
+
+    methods (Static) % WreathProductGroup creation
+
+        function w = make(H, A)
+        % Constructs a wreath product group
+        %
+        % Args:
+        %   H (`.PermutationGroup`): Group that permutes the factors
+        %   A (`.CompactGroup`): Group whose copies compose the factors
+        %
+        % Returns:
+        %   `.WreathProductGroup`: A specialized instance of `.WreathProductGroup`
+            if isa(A, 'replab.FiniteGroup')
+                w = replab.prods.WreathProductOfFiniteGroups(H, A);
+            else
+                w = replab.prods.WreathProductOfCompactGroups(H, A);
+            end
+        end
+
     end
 
     methods
 
-        %% Helpers to construct permutation actions
+        function self = WreathProductGroup(phi)
+            self@replab.SemidirectProductGroup(phi);
+        end
+
+    end
+
+
+    methods % Permutation actions
 
         function p = imprimitivePermutation(self, w, phiA)
         % Returns the permutation corresponding to the canonical imprimitive action
@@ -84,7 +107,9 @@ classdef Common < handle
             p = replab.SymmetricGroup(prod(dims)).compose(ip, p);
         end
 
-        %% Representation construction
+    end
+
+    methods % Representations
 
         function rep = imprimitiveRep(self, Arep)
         % Returns an imprimitive representation of this wreath product
@@ -94,24 +119,24 @@ classdef Common < handle
         % by permuting the blocks.
         %
         % Args:
-        %   Arep (replab.Rep): A representation of `A`
+        %   Arep (`.Rep`): A representation of `.A`
         %
         % Returns:
-        %   replab.Rep: The corresponding imprimitive representation
+        %   `.Rep`: The corresponding imprimitive representation
             rep = replab.wreathproduct.ImprimitiveRep(self, Arep);
         end
 
         function rep = imprimitiveRepFun(self, fun)
         % Returns an imprimitive representation of this wreath product
         %
-        % See `imprimitiveRep`
+        % See `.imprimitiveRep`.
         %
         % Args:
-        %   fun (function_handle): A function that returns a representation of `A`
-        %                          when called on `A` as in ``Arep = fun(self.A)``
+        %   fun (function_handle): A function that returns a representation of `.A`
+        %                          when called on `.A` as in ``Arep = fun(self.A)``
         %
         % Returns:
-        %   replab.Rep: The corresponding imprimitive representation
+        %   `.Rep`: The corresponding imprimitive representation
             rep = self.imprimitiveRep(fun(self.A));
         end
 
@@ -123,24 +148,24 @@ classdef Common < handle
         % by permuting tensor indices.
         %
         % Args:
-        %   Arep (replab.Rep): A representation of `A`
+        %   Arep (`.Rep`): A representation of `.A`
         %
         % Returns:
-        %   replab.Rep: The corresponding primitive representation
+        %   `.Rep`: The corresponding primitive representation
             rep = replab.wreathproduct.PrimitiveRep(self, Arep);
         end
 
         function rep = primitiveRepFun(self, fun)
         % Returns an primitive representation of this wreath product
         %
-        % See `primitiveRep`
+        % See `.primitiveRep`
         %
         % Args:
-        %   fun (function_handle): A function that returns a representation of `A`
-        %                          when called on `A` as in ``Arep = fun(self.A)``
+        %   fun (function_handle): A function that returns a representation of `.A`
+        %                          when called on `.A` as in ``Arep = fun(self.A)``
         %
         % Returns:
-        %   replab.Rep: The corresponding primitive representation
+        %   `.Rep`: The corresponding primitive representation
             rep = self.primitiveRep(fun(self.A));
         end
 

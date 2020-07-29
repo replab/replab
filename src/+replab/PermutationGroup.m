@@ -642,7 +642,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %
         % Returns:
         %   `+replab.+wreathproduct.Common`: A wreath product group
-            w = replab.wreathproduct.of(self, A);
+            w = replab.WreathProductGroup.make(self, A);
         end
 
     end
