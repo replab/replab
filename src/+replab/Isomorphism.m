@@ -36,4 +36,19 @@ classdef Isomorphism < replab.Morphism
 
     end
 
+    methods (Static)
+
+        function m = identity(group)
+        % Returns the identity morphism from a group to itself
+        %
+        % Args:
+        %   group (`.Group`): Group
+        %
+        % Returns:
+        %   `.Isomorphism`: The identity automorphism on the given group
+            m = replab.fm.Identity(group);
+        end
+
+    end
+
 end

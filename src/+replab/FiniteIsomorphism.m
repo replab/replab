@@ -52,7 +52,7 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
         %
         % Returns:
         %   `.FiniteIsomorphism`: The identity automorphism on the given group
-            m = replab.fm.Identity(group);
+            m = replab.fm.FiniteIdentity(group);
         end
 
     end
