@@ -116,7 +116,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             self.generators = names;
             self.permutationGroup = permutationGroup;
             if nargin >= 3
-                self.cache('relators', relators, '=');
+                self.cache('relators', relators, 'error');
             end
         end
 
