@@ -1,4 +1,4 @@
-classdef FiniteComposition < replab.FiniteMorphism
+classdef FiniteComposition < replab.FiniteMorphism & replab.fm.Composition
 
     properties (SetAccess = protected)
         first % (`+replab.FiniteMorphism`): First morphism
@@ -8,10 +8,7 @@ classdef FiniteComposition < replab.FiniteMorphism
     methods
 
         function self = FiniteComposition(second, first)
-            self.target = second.target;
-            self.source = first.source;
-            self.first = first;
-            self.second = second;
+            self@replab.fm.Composition(second, first);
         end
 
         function s = preimageRepresentative(self, t)

@@ -23,19 +23,21 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
 
     end
 
-    methods
+    methods % Implementations
 
-        function S = preimagesElement(self, t)
-            S = self.normalCoset(self.source, self.kernel, self.preimageElement(t));
-        end
+        % FiniteMorphism
 
-        function T = imageGroup(self, S)
-            images = cellfun(@(g) self.imageElement(g), S.generators, 'uniform', 0);
-            T = self.target.subgroupWithGenerators(images); % upgraded
+        function s = preimageRepresentative(self, t)
+            s = t;
         end
 
         function S = preimageGroup(T)
             S = self.inverse.imageGroup(T);
+        end
+
+        function T = imageGroup(self, S)
+            images = cellfun(@(g) self.imageElement(g), S.generators, 'uniform', 0);
+            T = self.target.subgroupWithGenerators(images); % do not need to check for non-generators
         end
 
     end

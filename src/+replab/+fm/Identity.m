@@ -1,4 +1,4 @@
-classdef Identity < replab.FiniteIsomorphism
+classdef Identity < replab.Isomorphism
 % Identity isomorphism
 
     methods
@@ -8,23 +8,23 @@ classdef Identity < replab.FiniteIsomorphism
             self.target = group;
         end
 
-        function x = imageElement(self, x)
-        % trivial
+    end
+
+    methods % Implementations
+
+        function y = imageElement(self, x)
+            y = x;
         end
 
-        function x = preimageElement(self, x)
-        % trivial
+        function x = preimageElement(self, y)
+            x = y;
         end
 
-        function res = compose(self, applyFirst)
-            res = applyFirst;
-        end
+    end
 
-        function res = andThen(self, applyLast)
-            res = applyLast;
-        end
+    methods (Access = protected)
 
-        function res = inverse(self)
+        function res = computeInverse(self)
             res = self;
         end
 

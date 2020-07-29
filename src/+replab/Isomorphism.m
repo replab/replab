@@ -11,15 +11,16 @@ classdef Isomorphism < replab.Morphism
 
     end
 
-    methods
+    methods (Access = protected)
 
-        function I = inverse(self)
-            I = self.cached('inverse', @() self.computeInverse);
+        function I = computeInverse(self)
+            I = replab.fm.Inverse(self);
         end
 
-        function s = preimageElement(t)
-            error('Abstract');
-        end
+    end
+
+
+    methods % Morphism composition
 
         function I = inverse(self)
             I = self.cached('inverse', @() self.computeInverse);
@@ -27,10 +28,10 @@ classdef Isomorphism < replab.Morphism
 
     end
 
-    methods (Access = protected)
+    methods % Preimages
 
-        function I = computeInverse(self)
-            I = replab.fm.Inverse(self);
+        function s = preimageElement(t)
+            error('Abstract');
         end
 
     end

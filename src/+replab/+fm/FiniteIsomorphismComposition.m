@@ -1,9 +1,10 @@
-classdef FiniteIsomorphismComposition < replab.fm.FiniteComposition & replab.FiniteIsomorphism
+classdef FiniteIsomorphismComposition < replab.FiniteIsomorphism & replab.fm.FiniteComposition & replab.fm.IsomorphismComposition
 
     methods
 
-        function self = IsoComposition(second, first)
-            self@replab.fm.Composition(second, first)
+        function self = FiniteIsomorphismComposition(second, first)
+            self@replab.fm.FiniteComposition(second, first)
+            self@replab.fm.IsomorphismComposition(second, first);
         end
 
         function s = preimageElement(t)
