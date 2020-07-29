@@ -63,7 +63,7 @@ classdef ConjugacyClass < replab.FiniteSet
 
         % FiniteSet
 
-        function s = size(self)
+        function s = nElements(self)
             s = self.group.order / self.representativeCentralizer.order;
         end
 

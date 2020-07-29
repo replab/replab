@@ -23,7 +23,7 @@ classdef FiniteSet < replab.Domain
 
     methods
 
-        function s = size(self)
+        function s = nElements(self)
         % Returns the size of this set
         %
         % Returns:

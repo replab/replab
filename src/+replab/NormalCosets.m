@@ -13,8 +13,8 @@ classdef NormalCosets < replab.LeftCosets & replab.RightCosets
             self@replab.RightCosets(group, subgroup);
         end
 
-        function s = size(self)
-            s = size@replab.LeftCosets(self);
+        function s = nElements(self)
+            s = nElements@replab.LeftCosets(self);
         end
 
         function t = cosetRepresentative(self, g)

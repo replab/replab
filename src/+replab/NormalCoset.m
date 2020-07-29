@@ -40,8 +40,8 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
             s = sample@replab.LeftCoset(self);
         end
 
-        function s = size(self)
-            s = size@replab.LeftCoset(self);
+        function s = nElements(self)
+            s = nElements@replab.LeftCoset(self);
         end
 
         function b = contains(self, el)
