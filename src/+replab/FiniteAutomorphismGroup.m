@@ -9,7 +9,12 @@ classdef FiniteAutomorphismGroup < replab.NiceFiniteGroup
 % The inner automorphism group is described by coset representatives of the group we study by its center.
 %
 % This code has bugs when the outer automorphism group is not trivial!
-
+%
+% Example:
+%   >>> S = replab.S(6);
+%   >>> outerAutomorphisms = replab.S(2).morphismByImages(replab.nfg.PlainAutomorphismGroup(S), {S.morphismByImages(S, {[6 1 5 4 3 2], [2 1 4 3 6 5]})});
+%   >>> A = replab.FiniteAutomorphismGroup(S, outerAutomorphisms);
+%
     properties (Access = protected)
         innerAutomorphisms % (`.NormalCosets`): Cosets of `.object` over ``object.center``
         outerAutomorphisms % (`.FiniteMorphism`): Homomorphism of a permutation group whose image is the outer automorphism group
