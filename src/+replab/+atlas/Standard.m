@@ -3,10 +3,10 @@ classdef Standard < replab.Atlas
 %
 % Example:
 %   >>> D4 = replab.DihedralGroup(4);
-%   >>> D4.recognize.entry.name
+%   >>> D4.recognize.atlasGroup.name
 %       'Dihedral group of order 8'
 %   >>> S5 = replab.SymmetricGroup(5);
-%   >>> S5.recognize.entry.name
+%   >>> S5.recognize.atlasGroup.name
 %       'Symmetric group S(5) of degree 5'
 
     methods (Static)
