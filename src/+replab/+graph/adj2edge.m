@@ -18,7 +18,7 @@ function [edges, n, weights] = adj2edge(adj)
     [a, b, weights] = find(adj);
     edges = [a, b];
     
-    if norm(weights - weights(1)) == 0
+    if (n > 0) && (norm(weights - weights(1)) == 0)
         weights = weights(1);
     end
 end
