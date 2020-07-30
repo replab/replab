@@ -56,6 +56,11 @@ IndexedFamily
 
 .. autoclass:: IndexedFamily
 
+Laws
+++++
+
+.. autoclass:: Laws
+
 dispatch
 ++++++++
 
