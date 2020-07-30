@@ -26,6 +26,5 @@ function adj = edge2adj(edges, n, weights)
     assert(isequal(size(weights,2), 1));
     assert((size(weights,1) == size(edges,1)) || (size(weights,1) == 1));
 
-    edges2way = unique([edges; edges(:, [2 1])], 'rows');
-    adj = sparse(edges2way(:,1), edges2way(:,2), weights, n, n);
+    adj = sparse(edges(:,1), edges(:,2), weights, n, n);
 end

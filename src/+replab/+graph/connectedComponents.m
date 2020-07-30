@@ -18,10 +18,10 @@ function [subsets, componentIndex] = connectedComponents(edges)
 %         the index of the component to which each vertex belongs
 %
 % Example:
-%     >>> replab.graph.connectedComponents([1 2; 2 6; 3 4]); % a graph with 5 nodes labelled 1, 2, 3, 4, 6
+%     >>> replab.Graph.fromEdges([1 2; 2 6; 3 4]).connectedComponents; % a graph with 5 nodes labelled 1, 2, 3, 4, 6
 %
 % See also:
-%     `replab.Partition.connectedComponents`
+%     `replab.Graph.connectedComponents`
 %     `replab.graph.burningAlgorithmFast`
 %     `replab.graph.burningAlgorithm`
 

@@ -1,5 +1,7 @@
 classdef Graph < replab.Obj
 % Describes a graph
+%
+% Vertices of the graph are numbered continuously from 1 to nVertices
 
     properties (SetAccess = protected)
         nVertices % (integer): number of vertices in the graph
@@ -9,7 +11,7 @@ classdef Graph < replab.Obj
 
     methods (Access = protected)
         
-        function self = Partition(nVertices, edges, weights)
+        function self = Graph(nVertices, edges, weights)
         % Construct a Graph
         %
         % Do not use this function direclty, rather use another
@@ -19,17 +21,16 @@ classdef Graph < replab.Obj
         %   `.fromBlocks`
         %   `.check`
 
-            self.n = length(blockIndex);
-            self.blockIndex = blockIndex;
-            self.blocks = blocks;
+            self.nVertices = nVertices;
+            self.edges = edges;
+            self.weights = weights;
         end
-
 
     end
     
     methods (Static) % Constructors
 
-        function self = fromCoincidenceMatrix(adj)
+        function self = fromAdjacencyMatrix(adj)
         % Constructs a Graph from an adjacency matrix
         %
         % The element (i,j) of an adjacency matrix is 1 iff vertex i is
@@ -45,8 +46,8 @@ classdef Graph < replab.Obj
         % Example:
         %   >>> replab.Graph.fromCoincidenceMatrix([0 1 1; 1 0 1; 1 1 0]);
             
-            self = replab.Graph;
-            [self.edges, self.nVertices, self.weights] = replab.graph.adj2edge(adj);
+            [edges, nVertices, weights] = replab.graph.adj2edge(adj);
+            self = replab.Graph(nVertices, edges, weights);
         end
 
         function self = fromEdges(edges, nVertices, weights)
@@ -58,7 +59,7 @@ classdef Graph < replab.Obj
         %
         % Args:
         %     edges (integer (\*,2)): array of vertices linked by an edge
-        %     nVertices (integer): number of vertices
+        %     nVertices (integer, optional): number of vertices
         %     weights (double (\*,1), optional): weight associated to each edge
         %
         % Returns:
@@ -67,6 +68,10 @@ classdef Graph < replab.Obj
         % Example:
         %   >>> replab.Graph.fromEdges([1 2; 2 3; 3 1], 3);
 
+            if nargin < 2
+                nVertices = max(max(edges));
+            end
+            
             if nargin < 3
                 weights = 1;
             end
@@ -81,10 +86,7 @@ classdef Graph < replab.Obj
             assert(isequal(size(weights,2), 1));
             assert((size(weights,1) == size(edges,1)) || (size(weights,1) == 1));
 
-            self = replab.Graph;
-            self.nVertices = nVertices;
-            self.edges = edges;
-            self.weights = weights;
+            self = replab.Graph(nVertices, edges, weights);
         end
 
         function self = fromBiadjacencyMatrix(biadj)
@@ -112,8 +114,8 @@ classdef Graph < replab.Obj
             % Construct the associated full adjacency matrix
             adj = [zeros(size(biadj,1)*[1 1]), biadj;
                    biadj.' zeros(size(biadj,2)*[1 1])];
-            self = replab.Graph;
-            [self.edges, self.nVertices, self.weights] = replab.graph.adj2edge(adj);
+            [edges, nVertices, weights] = replab.graph.adj2edge(adj);
+            self = replab.Graph(nVertices, edges, weights);
         end
 
     end
@@ -121,7 +123,7 @@ classdef Graph < replab.Obj
     methods % Methods
 
         function adj = adjacencyMatrix(self)
-        % adjacency matrix of a graph
+        % Returns the adjacency matrix of a graph
         %
         % Args:
         %   graph (`.Graph`)
