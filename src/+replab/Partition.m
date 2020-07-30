@@ -83,11 +83,11 @@ classdef Partition < replab.Str
                         s = sprintf('%s%d', s, b(j));
                     end
                 end
-                if length(b) < maxColumns
+                if length(b) > maxColumns
                     s = sprintf('%s...', s);
                 end
             end
-            if self.nBlocks < maxColumns
+            if self.nBlocks > maxColumns
                 s = sprintf('%s...', s);
             end
         end
