@@ -1,13 +1,14 @@
-classdef Automorphism < replab.FiniteIsomorphism
+classdef PlainAutomorphism < replab.FiniteIsomorphism
+% Describes an automorphism in a finite group through an automorphism of its permutation realization
 
     properties (SetAccess = protected)
-        object % (`.FiniteGroup`): Group
+        object % (`+replab.FiniteGroup`): Group
         generatorImages % (cell(1,\*) of elements of `.object`): Images of generators defining an automorphism
     end
 
     methods
 
-        function self = Automorphism(object, generatorImages)
+        function self = PlainAutomorphism(object, generatorImages)
             self.source = object;
             self.target = object;
             self.object = object;
@@ -30,7 +31,7 @@ classdef Automorphism < replab.FiniteIsomorphism
 
         function m = computeInverse(self)
             generatorImages1 = cellfun(@(g) self.preimageElement(g), self.object.generators, 'uniform', 0);
-            m = replab.Automorphism(self.object, generatorImages1);
+            m = replab.nfg.PlainAutomorphism(self.object, generatorImages1);
         end
 
     end
@@ -39,9 +40,9 @@ classdef Automorphism < replab.FiniteIsomorphism
 
         % Str
 
-        function s = shortStr(self)
+        function s = shortStr(self, maxColumns)
             images = arrayfun(@(i) [replab.shortStr(self.object.generator(i)) ' -> ' replab.shortStr(self.generatorImages{i})], 1:self.object.nGenerators, 'uniform', 0);
-            s = ['Automorphism(' strjoin(images, ', ') ')'];
+            s = ['PlainAutomorphism(' strjoin(images, ', ') ')'];
         end
 
         function [names values] = additionalFields(self)
@@ -76,13 +77,29 @@ classdef Automorphism < replab.FiniteIsomorphism
     methods (Static)
 
         function a = byConjugation(h, object)
-            generatorImages = cellfun(@(g) object.leftConjugate(h, g), object.generators, 'uniform', 0);
-            a = replab.Automorphism(object, generatorImages);
+        % Creates an automorphism of a group by conjugation
+        %
+        % Args:
+        %   h (Group element): Element of the same type as ``object.type``
+        %   object (`+replab.FiniteGroup`): Finite group being conjugated
+        %
+        % Returns:
+        %   `.PlainAutomorphism`: A conjugation automorphism
+            generatorImages = cellfun(@(g) object.type.leftConjugate(h, g), object.generators, 'uniform', 0);
+            assert(all(cellfun(@(g) object.contains(g), generatorImages)), 'The conjugation does not define an automorphism');
+            a = replab.nfg.PlainAutomorphism(object, generatorImages);
         end
 
         function a = identity(object)
+        % Returns the identity automorphism
+        %
+        % Args:
+        %   object (`+replab.FiniteGroup`): Finite group
+        %
+        % Returns:
+        %   `.PlainAutomorphism`: Identity automorphism
             generatorImages = object.generators;
-            a = replab.Automorphism(object, generatorImages);
+            a = replab.nfg.PlainAutomorphism(object, generatorImages);
         end
 
     end

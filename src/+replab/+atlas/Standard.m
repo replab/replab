@@ -39,7 +39,7 @@ classdef Standard < replab.Atlas
             % < x, a | a^n = x^2 = 1, x a x^-1 = a^-1 >
             relators = {['a^' num2str(n)] 'x^2' 'x a x^-1 a'};
             abGroup = replab.AbstractGroup({'x' 'a'}, prmGroup, relators);
-            E = replab.AtlasEntry(name, abGroup, prmGroup);
+            E = replab.AtlasEntry(name, abGroup);
         end
 
         function R = recognizeDihedral(self, G)
@@ -114,7 +114,7 @@ classdef Standard < replab.Atlas
                 imgT = [2 1 4 3 6 5];
                 outer{1,2} = prmGroup.morphismByImages(prmGroup, {imgS, imgT});
             end
-            E = replab.AtlasEntry(name, abGroup, prmGroup, outer);
+            E = replab.AtlasEntry(name, abGroup, outer);
         end
 
         function R = recognizeSymmetric(self, G)
@@ -160,7 +160,7 @@ classdef Standard < replab.Atlas
             % standard presentation
             % < x | x^n = 1 >
             abGroup = replab.AbstractGroup({'x'}, prmGroup, {['x^' num2str(n)]});
-            E = replab.AtlasEntry(name, abGroup, prmGroup);
+            E = replab.AtlasEntry(name, abGroup);
         end
 
         function R = recognizeCyclic(self, G)
@@ -211,7 +211,7 @@ classdef Standard < replab.Atlas
                 end
             end
             abGroup = replab.AbstractGroup({'s' 't'}, prmGroup, relators);
-            E = replab.AtlasEntry(name, abGroup, prmGroup);
+            E = replab.AtlasEntry(name, abGroup);
         end
 
         function R = recognizeAlternating(self, G)

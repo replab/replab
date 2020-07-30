@@ -141,6 +141,13 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             r = self.cached('relators', @() self.computeRelators);
         end
 
+        function s = presentationString(self)
+            r = self.relators;
+            gens = strjoin(self.names, ', ');
+            rels = strjoin(self.relators, ' = ');
+            s = sprintf('< %s | %s = 1 >', gens, rels);
+        end
+
         function letters = toLetters(self, word)
         % Parses word letters from word as a string
         %
@@ -236,6 +243,16 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
         function res = ne(self, rhs)
             res = self.groupId ~= rhs.groupId;
+        end
+
+        % Str
+
+        function s = shortStr(self, maxColumns)
+            if self.inCache('relators')
+                s = self.presentationString;
+            else
+                s = 'AbstractGroup';
+            end
         end
 
         % Domain
