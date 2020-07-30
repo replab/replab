@@ -44,7 +44,7 @@ classdef Graph < replab.Obj
         %   graph (`.Graph`)
         %
         % Example:
-        %   >>> replab.Graph.fromCoincidenceMatrix([0 1 1; 1 0 1; 1 1 0]);
+        %   >>> replab.Graph.fromAdjacencyMatrix([0 1 1; 1 0 1; 1 1 0]);
             
             [edges, nVertices, weights] = replab.graph.adj2edge(adj);
             self = replab.Graph(nVertices, edges, weights);
@@ -69,22 +69,31 @@ classdef Graph < replab.Obj
         %   >>> replab.Graph.fromEdges([1 2; 2 3; 3 1], 3);
 
             if nargin < 2
-                nVertices = max(max(edges));
+                if isempty(edges)
+                    nVertices = 0;
+                else
+                    nVertices = max(max(edges));
+                end
             end
             
             if nargin < 3
-                weights = 1;
+                if isempty(edges)
+                    weights = [];
+                else
+                    weights = 1;
+                end
             end
             
             if isempty(edges)
                 edges = zeros(0,2);
+            else
+                assert(nVertices >= max(max(edges)), 'Number of vertices insufficient');
+                assert(isequal(size(edges,2), 2), 'Incorrect size for edge argument');
+                assert(length(size(edges)) <= 2, 'Edge argument should be a 2-dimensional array');
+                assert(isvector(weights), 'Weight argument should be a vector');
+                weights = weights(:); % Force verticality
+                assert((size(weights,1) == size(edges,1)) || (size(weights,1) == 1), 'Incompatible number of weight and edges');
             end
-
-            assert(nVertices >= max(max(edges)));
-            assert(isequal(size(edges,2), 2));
-            assert(length(size(edges)) <= 2);
-            assert(isequal(size(weights,2), 1));
-            assert((size(weights,1) == size(edges,1)) || (size(weights,1) == 1));
 
             self = replab.Graph(nVertices, edges, weights);
         end
