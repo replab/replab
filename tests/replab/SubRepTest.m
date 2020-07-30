@@ -12,5 +12,5 @@ function test_suite = SubRepTest()
          0  3 -3]/6;
     S3 = replab.S(3);
     rep = S3.naturalRep.subRep(F, G);
-    test_suite = replab.SubRepLaws(rep).addTestCases(test_suite);
+    test_suite = rep.laws.addTestCases(test_suite);
 end

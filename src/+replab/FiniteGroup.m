@@ -32,12 +32,17 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 names{1, end+1} = sprintf('generator(%d)', i);
                 values{1, end+1} = self.generator(i);
             end
+            r = self.fastRecognize;
+            if ~isempty(r)
+                names{1,end+1} = 'recognize';
+                values{1,end+1} = r;
+            end
         end
 
         % Obj
 
         function l = laws(self)
-            l = replab.FiniteGroupLaws(self);
+            l = replab.laws.FiniteGroupLaws(self);
         end
 
     end
@@ -70,6 +75,15 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function c = computeConjugacyClasses(self)
             error('Abstract');
+        end
+
+        function R = computeFastRecognize(self)
+            R = [];
+            c = self.niceMorphism.image.partialChain;
+            if ~c.isMutable
+                A = replab.atlas.Standard;
+                R = A.recognize(self);
+            end
         end
 
         function R = computeRecognize(self)
@@ -158,6 +172,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   cell(1, \*) of `+replab.ConjugacyClass`: Array of conjugacy classes
             c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
+        end
+
+        function R = fastRecognize(self)
+        % Attempts to recognize this group in the standard atlas
+        %
+        % Returns:
+        %   `+replab.AtlasResult` or []: A result in case the group is identified; or ``[]`` if unrecognized.
+            R = self.cached('fastRecognize', @() self.computeFastRecognize);
         end
 
         function R = recognize(self)
@@ -838,7 +860,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Example:
         %   >>> S4 = replab.S(4);
         %   >>> m = S4.morphismByImages(replab.S(3), {[1 3 2] [3 2 1]});
-        %   >>> replab.FiniteMorphismLaws(m).checkSilent
+        %   >>> m.laws.checkSilent
         %       1
         %
         % Args:

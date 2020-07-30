@@ -18,9 +18,13 @@ classdef PermutationGroup < replab.FiniteGroup
         %                                                or ``'self'`` if this group is its own type
         %   chain (`+replab.+bsgs.Chain`): BSGS chain describing the group
             self.domainSize = domainSize;
-            self.identity = 1:domainSize;
+            identity = 1:domainSize;
+            self.identity = identity;
             self.representative = self.identity;
             self.generators = generators;
+            for i = 1:self.nGenerators
+                assert(~all(generators{i} == identity), 'Generators cannot contain the identity');
+            end
             if nargin > 2 && ~isempty(order)
                 self.cache('order', order, '==');
             end
@@ -165,11 +169,24 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function chain = computeChain(self)
-            for i = 1:self.nGenerators
-                assert(~self.isIdentity(self.generators{i}), 'Generators cannot contain the identity');
+            chain = self.cachedOrEmpty('partialChain');
+            if isempty(chain)
+                chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
+            else
+                if chain.isMutable
+                    chain.randomizedSchreierSims(self.cachedOrEmpty('order'));
+                    chain.makeImmutable;
+                    self.cache('partialChain', chain, 'overwrite');
+                end
             end
-            chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
-            base = chain.base;
+        end
+
+        function c = computePartialChain(self)
+            if self.inCache('chain')
+                c = self.chain;
+            else
+                c = replab.bsgs.Chain.makeBoundedOrder(self.domainSize, self.generators, replab.globals.fastChainOrder);
+            end
         end
 
         function sub = computeDerivedSubgroup(self)
@@ -228,6 +245,11 @@ classdef PermutationGroup < replab.FiniteGroup
             c = self.cached('chain', @() self.computeChain);
         end
 
+        function c = partialChain(self)
+        % Returns the stabilizer chain corresponding to this permutation group if it can be computed quickly
+            c = self.cached('partialChain', @() self.computePartialChain);
+        end
+
     end
 
     methods % Implementations
@@ -245,7 +267,7 @@ classdef PermutationGroup < replab.FiniteGroup
         % replab.Obj
 
         function l = laws(self)
-            l = replab.PermutationGroupLaws(self);
+            l = replab.laws.PermutationGroupLaws(self);
         end
 
         % replab.Domain
@@ -435,7 +457,7 @@ classdef PermutationGroup < replab.FiniteGroup
         % Morphisms
 
         function m = morphismByImages(self, target, images)
-            if isa(target, 'replab.FiniteGroup')
+            if isa(target, 'replab.PermutationGroup')
                 m = replab.fm.PermToPerm(self, target, images);
             else
                 m = replab.fm.PermToFinite(self, target, images);
@@ -642,7 +664,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %
         % Returns:
         %   `+replab.+wreathproduct.Common`: A wreath product group
-            w = replab.wreathproduct.of(self, A);
+            w = replab.WreathProductGroup.make(self, A);
         end
 
     end

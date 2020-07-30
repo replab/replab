@@ -9,7 +9,7 @@ classdef RightCosets < replab.Cosets
         % Obj
 
         function l = laws(self)
-            l = replab.RightCosetsLaws(self);
+            l = replab.laws.RightCosetsLaws(self);
         end
 
     end

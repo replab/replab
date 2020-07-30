@@ -66,7 +66,7 @@ classdef FiniteSet < replab.Domain
         %
         % Returns:
         %   logical: True if the groups have compatible types
-            res = self.parent.type.hasSameTypeAs(rhs.parent.type); % we delegate to the types themselves
+            res = self.type.hasSameTypeAs(rhs.type); % we delegate to the types themselves
         end
 
     end

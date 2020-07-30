@@ -45,7 +45,7 @@ classdef Domain < replab.Obj
         % Obj
 
         function l = laws(self)
-            l = replab.DomainLaws(self);
+            l = replab.laws.DomainLaws(self);
         end
 
     end

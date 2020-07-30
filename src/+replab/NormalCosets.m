@@ -37,6 +37,10 @@ classdef NormalCosets < replab.LeftCosets & replab.RightCosets
             C = cellfun(@(t) replab.NormalCoset(self.subgroup, t, self.group), self.transversal, 'uniform', 0);
         end
 
+        function l = laws(self)
+            l = laws@replab.LeftCosetsLaws(self);
+        end
+
     end
 
 end

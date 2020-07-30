@@ -340,7 +340,7 @@ classdef Rep < replab.Obj
         % Obj
 
         function l = laws(self)
-            l = replab.RepLaws(self);
+            l = replab.laws.RepLaws(self);
         end
 
     end

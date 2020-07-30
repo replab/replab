@@ -28,7 +28,7 @@ classdef Monoid < replab.Domain
         % Obj
 
         function l = laws(self)
-            l = replab.MonoidLaws(self);
+            l = replab.laws.MonoidLaws(self);
         end
 
     end

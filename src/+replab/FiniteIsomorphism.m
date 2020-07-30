@@ -1,4 +1,4 @@
-classdef FiniteIsomorphism < replab.FiniteMorphism
+classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
 % Describes an isomorphism between finite groups
 
     methods % Implementations
@@ -6,40 +6,38 @@ classdef FiniteIsomorphism < replab.FiniteMorphism
         % Obj
 
         function l = laws(self)
-            l = replab.FiniteIsomorphismLaws(self);
+            l = replab.laws.FiniteIsomorphismLaws(self);
         end
 
     end
 
-    methods
+    methods (Access = protected)
+
+        function I = computeInverse(self)
+            I = replab.fm.FiniteInverse(self);
+        end
 
         function K = computeKernel(self)
             K = self.source.trivialSubgroup;
         end
 
-        function S = preimagesElement(self, t)
-            S = self.normalCoset(self.source, self.kernel, self.preimageElement(t));
-        end
+    end
 
-        function T = imageGroup(self, S)
-            images = cellfun(@(g) self.imageElement(g), S.generators, 'uniform', 0);
-            T = self.target.subgroupWithGenerators(images); % upgraded
-        end
+    methods % Implementations
 
-        function s = preimageElement(t)
-            error('Abstract');
+        % FiniteMorphism
+
+        function s = preimageRepresentative(self, t)
+            s = t;
         end
 
         function S = preimageGroup(T)
             S = self.inverse.imageGroup(T);
         end
 
-        function I = inverse(self)
-            I = self.cached('inverse', @() self.computeInverse);
-        end
-
-        function I = computeInverse(self)
-            I = replab.fm.Inverse(self);
+        function T = imageGroup(self, S)
+            images = cellfun(@(g) self.imageElement(g), S.generators, 'uniform', 0);
+            T = self.target.subgroupWithGenerators(images); % do not need to check for non-generators
         end
 
     end
@@ -54,7 +52,7 @@ classdef FiniteIsomorphism < replab.FiniteMorphism
         %
         % Returns:
         %   `.FiniteIsomorphism`: The identity automorphism on the given group
-            m = replab.fm.Identity(group);
+            m = replab.fm.FiniteIdentity(group);
         end
 
     end

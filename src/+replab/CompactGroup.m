@@ -8,16 +8,22 @@ classdef CompactGroup < replab.Group
         function prd = directProduct(varargin)
         % Returns the direct product of groups
         %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> G = S3.directProduct(S3, S3);
+        %   >>> G.order
+        %       216
+        %
         % Args:
         %   varargin: Variable number of arguments of type `+replab.CompactGroup`
         %
         % Returns:
-        %   replab.CompactGroup: The direct product group
-        %                        If all groups are of type `+replab.NiceFiniteGroup`, the return type
-        %                        is `+replab.NiceFiniteGroup` as well.
-        %                        If all groups are of type `+replab.FiniteGroup`, the return type
-        %                        is `+replab.FiniteGroup` as well.
-            prd = replab.directproduct.of(varargin);
+        %   `+replab.DirectProductGroup`: The direct product group
+        %                                 If all groups are of type `+replab.NiceFiniteGroup`, the return type
+        %                                 is `+replab.NiceFiniteGroup` as well.
+        %                                 If all groups are of type `+replab.FiniteGroup`, the return type
+        %                                 is `+replab.FiniteGroup` as well.
+            prd = replab.DirectProductGroup.make(varargin);
         end
 
         function prd = directPower(self, n)
@@ -30,7 +36,7 @@ classdef CompactGroup < replab.Group
         %   replab.CompactGroup: The direct product self x ...(n times)... x self
         %                        The return type is specialized as in `+replab.CompactGroup.directProduct`.
             factors = arrayfun(@(x) self, 1:n, 'uniform', 0);
-            prd = replab.directproduct.of(factors);
+            prd = replab.DirectProductGroup.make(factors);
         end
 
         function sd = semidirectProduct(self, N, phi)
@@ -64,7 +70,7 @@ classdef CompactGroup < replab.Group
         % Returns:
         %   replab.CompactGroup: Semidirect product group
             action = replab.Action.lambda('Semidirect homomorphism', self, N, phi);
-            sd = replab.semidirectproduct.of(action);
+            sd = replab.SemidirectProductGroup.make(action);
         end
 
         %% Representations
