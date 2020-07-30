@@ -1,7 +1,7 @@
 classdef PermToFinite < replab.FiniteMorphism
 
-    properties
-        images % (cell(1,\*) of `.target` elements): Images of the morphism
+    properties (Access = protected)
+        imageSourceGenerators_ % (cell(1,\*) of `.target` elements): Images of the source generators
     end
 
     methods
@@ -15,7 +15,7 @@ classdef PermToFinite < replab.FiniteMorphism
         %   images (cell(1,\*) of `.target` elements): Images of the source generators
             self.source = source;
             self.target = target;
-            self.images = images;
+            self.imageSourceGenerators_ = images;
         end
 
         function c = chain(self)
@@ -33,18 +33,20 @@ classdef PermToFinite < replab.FiniteMorphism
         function c = computeChain(self)
             n = self.source.domainSize;
             % TODO: optimize ChainWithImages by using deterministic Schreier-Sims while comparing orbits
-            c = replab.bsgs.ChainWithImages.make(n, self.target, self.source.generators, self.images, [], ...
+            c = replab.bsgs.ChainWithImages.make(n, self.target, self.source.generators, self.imageSourceGenerators_, [], ...
                                                  self.source.chain.base, self.source.order);
         end
 
     end
 
-    methods % Implementatoins
-
-
+    methods % Implementations
 
         function t = imageElement(self, s)
             t = self.chain.image(s);
+        end
+
+        function I = imageSourceGenerators(self)
+            I = self.imageSourceGenerators_;
         end
 
     end
