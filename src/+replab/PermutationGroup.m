@@ -169,11 +169,24 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function chain = computeChain(self)
-            for i = 1:self.nGenerators
-                assert(~self.isIdentity(self.generators{i}), 'Generators cannot contain the identity');
+            chain = self.cachedOrEmpty('partialChain');
+            if isempty(chain)
+                chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
+            else
+                if chain.isMutable
+                    chain.randomizedSchreierSims(self.cachedOrEmpty('order'));
+                    chain.makeImmutable;
+                    self.cache('partialChain', chain, 'overwrite');
+                end
             end
-            chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
-            base = chain.base;
+        end
+
+        function c = computePartialChain(self)
+            if self.inCache('chain')
+                c = self.chain;
+            else
+                c = replab.bsgs.Chain.makeBoundedOrder(self.domainSize, self.generators, replab.globals.fastChainOrder);
+            end
         end
 
         function sub = computeDerivedSubgroup(self)
@@ -230,6 +243,11 @@ classdef PermutationGroup < replab.FiniteGroup
         % Returns:
         %   `+replab.+bsgs.Chain`: Stabilizer chain
             c = self.cached('chain', @() self.computeChain);
+        end
+
+        function c = partialChain(self)
+        % Returns the stabilizer chain corresponding to this permutation group if it can be computed quickly
+            c = self.cached('partialChain', @() self.computePartialChain);
         end
 
     end
