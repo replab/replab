@@ -1115,6 +1115,14 @@ classdef Chain < replab.Str
     methods (Static)
 
         function C = make(n, generators, base, order)
+        % Computes a BSGS chain using the randomized Schreier-Sims algorithm
+        %
+        % Args:
+        %   n (integer): Domain size
+        %   generators (cell(1,\*) of permutation): Group generators
+        %
+        % Returns:
+        %   `.Chain`: A complete immutable BSGS chain
             if nargin < 3
                 base = [];
             end

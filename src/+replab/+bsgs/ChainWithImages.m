@@ -284,7 +284,7 @@ classdef ChainWithImages < replab.Str
         % Returns the image of a chain element
         %
         % Args:
-        %   g (permutation row vector): Permutation part of this chain
+        %   g (permutation): Permutation to compute the image of
         %
         % Returns:
         %   The image of the given element ``g``
@@ -315,7 +315,7 @@ classdef ChainWithImages < replab.Str
         % self.J.compose(self.image(g), self.inverseImage(g)) == self.J.identity
         %
         % Args:
-        %   g (permutation row vector): Permutation part of this chain
+        %   g (permutation): Permutation part of this chain
         %
         % Returns:
         %   The inverse image of the given element ``g``
