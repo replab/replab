@@ -1,10 +1,5 @@
 classdef FiniteComposition < replab.FiniteMorphism & replab.fm.Composition
 
-    properties (SetAccess = protected)
-        first % (`+replab.FiniteMorphism`): First morphism
-        second % (`+replab.FiniteMorphism`): Second morphism
-    end
-
     methods
 
         function self = FiniteComposition(second, first)

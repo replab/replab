@@ -7,8 +7,20 @@ classdef FiniteIsomorphismComposition < replab.FiniteIsomorphism & replab.fm.Fin
             self@replab.fm.IsomorphismComposition(second, first);
         end
 
-        function s = preimageElement(t)
+        function s = preimageElement(self, t)
             s = first.preimageElement(second.preimageElement(t));
+        end
+
+        function S = preimageGroup(self, T)
+            S = preimageGroup@replab.fm.FiniteComposition(self, T);
+        end
+
+        function T = imageGroup(self, S)
+            T = imageGroup@replab.fm.FiniteComposition(self, S);
+        end
+
+        function s = preimageRepresentative(self, t)
+            s = preimageRepresentative@replab.fm.FiniteComposition(self, t);
         end
 
     end
@@ -17,6 +29,10 @@ classdef FiniteIsomorphismComposition < replab.FiniteIsomorphism & replab.fm.Fin
 
         function I = computeInverse(self)
             I = replab.fm.compose(self.first.inverse, self.second.inverse);
+        end
+
+        function K = computeKernel(self)
+            K = computeKernel@replab.fm.FiniteComposition(self);
         end
 
     end
