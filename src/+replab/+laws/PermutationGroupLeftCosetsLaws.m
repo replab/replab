@@ -1,4 +1,4 @@
-classdef PermutationGroupLeftCosetsLaws < replab.LeftCosetsLaws
+classdef PermutationGroupLeftCosetsLaws < replab.laws.LeftCosetsLaws
 % Laws for `.PermutationGroupLeftCosets`
 %
 % Property types
@@ -7,7 +7,7 @@ classdef PermutationGroupLeftCosetsLaws < replab.LeftCosetsLaws
     methods
         function self = PermutationGroupLeftCosetsLaws(L)
             assert(isa(L, 'replab.PermutationGroupLeftCosets'));
-            self@replab.LeftCosetsLaws(L);
+            self@replab.laws.LeftCosetsLaws(L);
         end
     end
     methods

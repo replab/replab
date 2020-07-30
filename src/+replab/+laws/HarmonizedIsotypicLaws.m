@@ -1,9 +1,9 @@
-classdef HarmonizedIsotypicLaws < replab.IsotypicLaws
+classdef HarmonizedIsotypicLaws < replab.laws.IsotypicLaws
 
     methods
 
         function self = HarmonizedIsotypicLaws(iso)
-            self@replab.IsotypicLaws(iso);
+            self@replab.laws.IsotypicLaws(iso);
         end
 
         function law_all_irreps_same_basis_G(self, g)

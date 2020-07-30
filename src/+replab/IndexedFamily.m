@@ -111,7 +111,7 @@ classdef IndexedFamily < replab.Domain
         % Obj
 
         function l = laws(self)
-            l = replab.IndexedFamilyLaws(self);
+            l = replab.laws.IndexedFamilyLaws(self);
         end
 
         % Domain

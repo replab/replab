@@ -11,7 +11,7 @@ classdef Morphism < replab.Obj
         % Obj
 
         function l = laws(self)
-            l = replab.MorphismLaws(self);
+            l = replab.laws.MorphismLaws(self);
         end
 
     end

@@ -1,10 +1,10 @@
-classdef GroupLaws < replab.MonoidLaws
+classdef GroupLaws < replab.laws.MonoidLaws
 % Group axioms
 
     methods
 
         function self = GroupLaws(T)
-            self@replab.MonoidLaws(T);
+            self@replab.laws.MonoidLaws(T);
         end
 
         function law_composeN_integers_TN10(self, x, n)

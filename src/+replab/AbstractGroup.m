@@ -245,7 +245,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         end
 
         function l = laws(self)
-            l = replab.AbstractGroupLaws(self);
+            l = replab.laws.AbstractGroupLaws(self);
         end
 
         % Monoid

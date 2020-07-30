@@ -1,11 +1,11 @@
-classdef SignedPermutationGroupLaws < replab.FiniteGroupLaws
+classdef SignedPermutationGroupLaws < replab.laws.FiniteGroupLaws
 % Laws obeyed by signed permutations
     properties
         P % (`replab.Domain`): Signed domain on which those signed permutations act
     end
     methods
         function self = SignedPermutationGroupLaws(T)
-            self@replab.FiniteGroupLaws(T);
+            self@replab.laws.FiniteGroupLaws(T);
             self.P = replab.domain.signedIntAsDouble(1, T.domainSize);
         end
         function law_toPermutation_fromPermutation_T(self, t)
@@ -16,18 +16,18 @@ classdef SignedPermutationGroupLaws < replab.FiniteGroupLaws
         function morphismLaws = laws_toPermutation(self)
             d = self.T.domainSize;
             SymGrp = replab.SymmetricGroup(2*d);
-            morphismLaws = replab.GroupMorphismLaws(@(s) replab.SignedPermutation.toPermutation(s), self.T, SymGrp);
+            morphismLaws = replab.laws.GroupMorphismLaws(@(s) replab.SignedPermutation.toPermutation(s), self.T, SymGrp);
         end
         function actionLaws = laws_naturalAction(self)
-            actionLaws = replab.ActionLaws(self.T.naturalAction);
+            actionLaws = self.T.naturalAction.laws;
         end
 
         function actionLaws = laws_vectorAction(self)
-            actionLaws = replab.ActionLaws(self.T.vectorAction);
+            actionLaws = self.T.vectorAction.laws;
         end
 
         function actionLaws = laws_matrixAction(self)
-            actionLaws = replab.ActionLaws(self.T.matrixAction);
+            actionLaws = self.T.matrixAction.laws;
         end
         function law_toMatrix_fromMatrix_T(self, t)
             M = replab.SignedPermutation.toMatrix(t);

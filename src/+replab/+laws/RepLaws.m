@@ -29,7 +29,7 @@ classdef RepLaws < replab.Laws
         end
 
         function morphismLaws = laws_asGroupHomomorphism(self)
-            morphismLaws = replab.GroupMorphismLaws(@(g) self.rep.image(g), self.G, self.U);
+            morphismLaws = replab.laws.GroupMorphismLaws(@(g) self.rep.image(g), self.G, self.U);
         end
 
         function law_commutes_with_commutant_algebra_GC(self, g, c)

@@ -358,7 +358,7 @@ classdef Isotypic < replab.SubRep
         % Obj
 
         function l = laws(self)
-            l = replab.IsotypicLaws(self);
+            l = replab.laws.IsotypicLaws(self);
         end
 
         % SubRep

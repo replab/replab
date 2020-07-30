@@ -37,7 +37,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Obj
 
         function l = laws(self)
-            l = replab.FiniteGroupLaws(self);
+            l = replab.laws.FiniteGroupLaws(self);
         end
 
     end
@@ -838,7 +838,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Example:
         %   >>> S4 = replab.S(4);
         %   >>> m = S4.morphismByImages(replab.S(3), {[1 3 2] [3 2 1]});
-        %   >>> replab.FiniteMorphismLaws(m).checkSilent
+        %   >>> m.laws.checkSilent
         %       1
         %
         % Args:

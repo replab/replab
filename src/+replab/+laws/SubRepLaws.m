@@ -1,10 +1,10 @@
-classdef SubRepLaws < replab.RepLaws
+classdef SubRepLaws < replab.laws.RepLaws
 % Laws for subrepresentations
 
     methods
 
         function self = SubRepLaws(rep)
-            self = self@replab.RepLaws(rep);
+            self = self@replab.laws.RepLaws(rep);
         end
 
         function law_basis_and_internal_embedding_(self)

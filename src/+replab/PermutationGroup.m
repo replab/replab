@@ -267,7 +267,7 @@ classdef PermutationGroup < replab.FiniteGroup
         % replab.Obj
 
         function l = laws(self)
-            l = replab.PermutationGroupLaws(self);
+            l = replab.laws.PermutationGroupLaws(self);
         end
 
         % replab.Domain

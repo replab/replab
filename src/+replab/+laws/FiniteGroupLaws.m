@@ -1,10 +1,10 @@
-classdef FiniteGroupLaws < replab.GroupLaws
+classdef FiniteGroupLaws < replab.laws.GroupLaws
 % Law checks for finite groups: the operations below are pretty expensive
 
     methods
 
         function self = FiniteGroupLaws(T)
-            self@replab.GroupLaws(T);
+            self@replab.laws.GroupLaws(T);
         end
 
     end
@@ -49,7 +49,7 @@ classdef FiniteGroupLaws < replab.GroupLaws
 
         function elementsLaws = laws_elements(self)
         % Tests the group elements as an indexed family
-            elementsLaws = replab.IndexedFamilyLaws(self.T.elements);
+            elementsLaws = self.T.elements.laws;
         end
 
         function law_decomposition_size_(self)

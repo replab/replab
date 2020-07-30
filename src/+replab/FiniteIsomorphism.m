@@ -6,7 +6,7 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
         % Obj
 
         function l = laws(self)
-            l = replab.FiniteIsomorphismLaws(self);
+            l = replab.laws.FiniteIsomorphismLaws(self);
         end
 
     end
