@@ -611,7 +611,7 @@ classdef CommutantVar < replab.Str
         % under the group.
         %
         % Args:
-        %     indexMatrix (integer array): matrix with integer values
+        %     indexMatrix (integer (\*,\*)): matrix with integer values
         %         corresponding to the label of the variable at each
         %         element. The actual index values are irrelevant.
         %     generators (permutation): a list of generators under which
