@@ -11,17 +11,15 @@ An API Reference, as described in the table of contents below:
 .. toctree::
    :maxdepth: 1
 
-   print
    base
-   laws
-   dispatch
    groups
+   permutation_groups
+   named_groups
+   abstract_groups
+   group_products
+   group_subsets
+   group_morphisms
    rep
-   rep_technical
-   rep_irreducible
-   permutations
-   group_constructions
-   infrastructure
-   infrastructure_technical
+   convex_programming
    misc
    list
