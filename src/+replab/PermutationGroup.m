@@ -18,9 +18,13 @@ classdef PermutationGroup < replab.FiniteGroup
         %                                                or ``'self'`` if this group is its own type
         %   chain (`+replab.+bsgs.Chain`): BSGS chain describing the group
             self.domainSize = domainSize;
-            self.identity = 1:domainSize;
+            identity = 1:domainSize;
+            self.identity = identity;
             self.representative = self.identity;
             self.generators = generators;
+            for i = 1:self.nGenerators
+                assert(~all(generators{i} == identity), 'Generators cannot contain the identity');
+            end
             if nargin > 2 && ~isempty(order)
                 self.cache('order', order, '==');
             end
