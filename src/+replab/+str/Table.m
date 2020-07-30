@@ -585,6 +585,58 @@ classdef Table < replab.Str
                 names = {};
             end
         end
+        
+        function row = row(self, loc)
+        % Returns the row at the given location
+        %
+        % Convention: - returns as a vector only if all entries are numeric
+        %             - loc does not include the row of column names
+        %             - row will not include the row name
+        %
+        % Args:
+        %   loc (integer): row number
+        %
+        % Returns:
+        %   row ({cell(1,\*), double(1,\*)}): cell array of row entries or vector of row 
+        %                                     entries if all are numeric
+            if self.colName
+                loc = loc + 1;
+            end
+            if self.rowName
+                row = self.elements(loc, 2:end);
+            else
+                row = self.elements(loc, 1:end);
+            end
+            if all(cellfun(@isnumeric, row))
+                row = cell2mat(row);
+            end
+        end
+        
+        function col = column(self, loc)
+        % Returns the column at the given location
+        %
+        % Convention: - returns as a vector only if all entries are numeric
+        %             - loc does not include the column of row names
+        %             - col will not include the column name
+        %
+        % Args:
+        %   loc (integer): row number
+        %
+        % Returns:
+        %   col ({cell(1,\*), double(1,\*)}): cell array of column entries or vector of column 
+        %                                     entries if all are numeric
+            if self.rowName
+                loc = loc + 1;
+            end
+            if self.colName
+                col = self.elements(2:end, loc);
+            else
+                col = self.elements(1:end, loc);
+            end
+            if all(cellfun(@isnumeric, col))
+                col = cell2mat(col);
+            end
+        end
 
 
     end

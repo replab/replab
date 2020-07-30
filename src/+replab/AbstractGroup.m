@@ -46,10 +46,11 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
     methods (Static)
 
-        function A = make(generatorNames, relators)
-            gens = replab.fp.permutationGeneratorsForRelators(generatorNames, relators);
+        function A = make(generatorNames, relatorWords)
+            relators = cellfun(@(w) replab.fp.parseLetters(w, generatorNames), relatorWords, 'uniform', 0);
+            gens = replab.fp.permutationGeneratorsForRelators(length(generatorNames), relators);
             pg = replab.PermutationGroup.of(gens{:});
-            A = replab.AbstractGroup(generatorNames, pg, relators);
+            A = replab.AbstractGroup(generatorNames, pg, relatorWords);
         end
 
         function [A varargout] = parsePresentation(str)
@@ -88,6 +89,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
         function r = computeRelators(self)
             r = replab.fp.relatorsForPermutationGroup(self.permutationGroup, self.generatorNames);
+            r = cellfun(@(w) self.fromLetters(w), r, 'uniform', 0);
         end
 
         function m = computeNiceMorphism(self)
@@ -116,7 +118,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             self.generators = generatorNames;
             self.permutationGroup = permutationGroup;
             if nargin >= 3 && ~isempty(relators)
-                self.cache('relators', relators, '=');
+                self.cache('relators', relators, 'error');
             end
             if nargin >= 4 && ~isempty(name);
                 self.name = name;
