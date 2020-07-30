@@ -27,7 +27,7 @@ classdef Standard < replab.Atlas
             self@replab.Atlas(1000);
         end
 
-        function E = dihedral(self, n)
+        function A = dihedral(self, n)
         % Constructs the atlas entry corresponding to the dihedral group of order 2*n
             assert(n > 2);
             name = sprintf('Dihedral group of order %d', 2*n);
@@ -38,8 +38,7 @@ classdef Standard < replab.Atlas
             % Presentation from the groupprops wiki
             % < x, a | a^n = x^2 = 1, x a x^-1 = a^-1 >
             relators = {['a^' num2str(n)] 'x^2' 'x a x^-1 a'};
-            abGroup = replab.AbstractGroup({'x' 'a'}, prmGroup, relators);
-            E = replab.AtlasEntry(name, abGroup);
+            A = replab.AbstractGroup({'x' 'a'}, prmGroup, relators, name);
         end
 
         function R = recognizeDihedral(self, G)
@@ -93,7 +92,7 @@ classdef Standard < replab.Atlas
             R = replab.AtlasResult(G, entry, {x a});
         end
 
-        function E = symmetric(self, n)
+        function A = symmetric(self, n)
         % Constructs the atlas entry corresponding to the symmetric group of degree n
             assert(n > 2);
             name = sprintf('Symmetric group S(%d) of degree %d', n, n);
@@ -107,14 +106,13 @@ classdef Standard < replab.Atlas
             for j = 2:floor(n/2)
                 relators{1,end+1} = sprintf('(t^-1 s^-%d t s^%d)^2', j, j);
             end
-            abGroup = replab.AbstractGroup({'s' 't'}, prmGroup, relators);
-            outer = {replab.FiniteIsomorphism.identity(prmGroup)};
-            if n == 6
-                imgS = [6 1 5 4 3 2];
-                imgT = [2 1 4 3 6 5];
-                outer{1,2} = prmGroup.morphismByImages(prmGroup, {imgS, imgT});
-            end
-            E = replab.AtlasEntry(name, abGroup, outer);
+            A = replab.AbstractGroup({'s' 't'}, prmGroup, relators);
+            %outer = {replab.FiniteIsomorphism.identity(prmGroup)};
+            %if n == 6
+            %    imgS = [6 1 5 4 3 2];
+            %    imgT = [2 1 4 3 6 5];
+            %    outer{1,2} = prmGroup.morphismByImages(prmGroup, {imgS, imgT});
+            %end
         end
 
         function R = recognizeSymmetric(self, G)
@@ -150,7 +148,7 @@ classdef Standard < replab.Atlas
             end
         end
 
-        function E = cyclic(self, n)
+        function A = cyclic(self, n)
         % Constructs the cyclic group of order n
             assert(n >= 2);
             name = sprintf('Cyclic group C(%d) of order %d', n, n);
@@ -159,8 +157,7 @@ classdef Standard < replab.Atlas
             prmGroup = replab.PermutationGroup.of(X);
             % standard presentation
             % < x | x^n = 1 >
-            abGroup = replab.AbstractGroup({'x'}, prmGroup, {['x^' num2str(n)]});
-            E = replab.AtlasEntry(name, abGroup);
+            A = replab.AbstractGroup({'x'}, prmGroup, {['x^' num2str(n)]}, name);
         end
 
         function R = recognizeCyclic(self, G)
@@ -187,7 +184,7 @@ classdef Standard < replab.Atlas
             R = replab.AtlasResult(G, entry, {x});
         end
 
-        function E = alternating(self, n)
+        function A = alternating(self, n)
         % Constructs the alternating group of degree n
             assert(n >= 4);
             name = sprintf('Alternating group A(%d) of degree %d', n, n);
@@ -210,8 +207,7 @@ classdef Standard < replab.Atlas
                     relators{1,end+1} = sprintf('(t s^-%d t s^%d)^2', k, k);
                 end
             end
-            abGroup = replab.AbstractGroup({'s' 't'}, prmGroup, relators);
-            E = replab.AtlasEntry(name, abGroup);
+            A = replab.AbstractGroup({'s' 't'}, prmGroup, relators, name);
         end
 
         function R = recognizeAlternating(self, G)
