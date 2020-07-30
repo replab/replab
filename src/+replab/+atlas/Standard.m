@@ -106,7 +106,7 @@ classdef Standard < replab.Atlas
             for j = 2:floor(n/2)
                 relators{1,end+1} = sprintf('(t^-1 s^-%d t s^%d)^2', j, j);
             end
-            A = replab.AbstractGroup({'s' 't'}, prmGroup, relators);
+            A = replab.AbstractGroup({'s' 't'}, prmGroup, relators, name);
             %outer = {replab.FiniteIsomorphism.identity(prmGroup)};
             %if n == 6
             %    imgS = [6 1 5 4 3 2];
@@ -135,7 +135,7 @@ classdef Standard < replab.Atlas
                             U = T.elements;
                             for k = 1:length(U)
                                 t = U{k};
-                                if entry.abstractGroup.imagesDefineMorphism(G, {s t})
+                                if entry.imagesDefineMorphism(G, {s t})
                                     if G.subgroup({s, t}).order == G.order
                                         R = replab.AtlasResult(G, entry, {s t});
                                         return
