@@ -10,17 +10,29 @@ classdef Partition < replab.Str
         blocks % (cell(1,\*) of integer(1,\*)): List of blocks
     end
 
-    methods (Access = protected)
+    methods
 
         function self = Partition(blockIndex, blocks)
+        % Constructs a Partition from blockIndex and list of blocks
+        %
+        % Do not use this function direclty, rather use another
+        % constructor such as ``.fromBlocks``.
+        %
+        % Args:
+        %   blockIndex
+        %   blocks (cell(1,\*) of integer(1,\*)): Disjoint blocks
+        %
+        % Returns:
+        %   `.Partition`: The partition
+        %
+        % See also:
+        %   `.fromBlocks`
+        %   `.check`
+            
             self.n = length(blockIndex);
             self.blockIndex = blockIndex;
             self.blocks = blocks;
         end
-
-    end
-
-    methods
 
         function check(self)
         % Verifies the sanity of this partition
