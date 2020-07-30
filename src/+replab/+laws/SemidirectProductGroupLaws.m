@@ -17,7 +17,7 @@ classdef SemidirectProductGroupLaws < replab.Laws
 
     methods
         function actionLaws = laws_phi(self)
-            actionLaws = replab.ActionLaws(self.G.phi);
+            actionLaws = self.G.phi.laws;
         end
         function law_compose_elements_HN(self, h, n)
             gh = {h self.N.identity};

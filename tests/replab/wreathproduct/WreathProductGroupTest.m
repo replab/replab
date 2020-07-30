@@ -8,7 +8,7 @@ function test_suite = WreathProductGroupTest()
 
     S3 = replab.S(2);
     W = S3.wreathProduct(S3);
-    test_suite = replab.FiniteGroupLaws(W).addTestCases(test_suite);
+    test_suite = W.laws.addTestCases(test_suite);
 end
 
 function test_wreath_subgroup

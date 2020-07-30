@@ -35,7 +35,6 @@ classdef LeftCosetsLaws < replab.Laws
         function morphismLaws = laws_leftAction(self)
             morphismLaws = replab.FiniteMorphismLaws(self.L.leftAction);
         end
-
     end
 
 end

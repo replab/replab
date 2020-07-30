@@ -1,10 +1,10 @@
-classdef AbstractGroupLaws < replab.FiniteGroupLaws
+classdef AbstractGroupLaws < replab.laws.FiniteGroupLaws
 % Law checks for abstract groups: the operations below are pretty expensive
 
     methods
 
         function self = AbstractGroupLaws(T)
-            self@replab.FiniteGroupLaws(T);
+            self@replab.laws.FiniteGroupLaws(T);
         end
 
     end

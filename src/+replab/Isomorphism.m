@@ -6,7 +6,7 @@ classdef Isomorphism < replab.Morphism
         % Obj
 
         function l = laws(self)
-            l = replab.IsomorphismLaws(self);
+            l = replab.laws.IsomorphismLaws(self);
         end
 
     end

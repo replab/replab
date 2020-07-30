@@ -1,4 +1,4 @@
-classdef MonoidLaws < replab.DomainLaws
+classdef MonoidLaws < replab.laws.DomainLaws
 % Laws obeyed by a monoid
 
     properties
@@ -8,7 +8,7 @@ classdef MonoidLaws < replab.DomainLaws
     methods
 
         function self = MonoidLaws(T)
-            self@replab.DomainLaws(T);
+            self@replab.laws.DomainLaws(T);
             self.N10 = replab.domain.intAsDouble(1, 10);
         end
 

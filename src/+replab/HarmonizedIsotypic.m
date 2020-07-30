@@ -16,7 +16,7 @@ classdef HarmonizedIsotypic < replab.Isotypic
         % Obj
 
         function l = laws(self)
-            l = replab.HarmonizedIsotypicLaws(self);
+            l = replab.laws.HarmonizedIsotypicLaws(self);
         end
 
         % Rep

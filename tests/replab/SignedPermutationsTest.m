@@ -14,6 +14,6 @@ function test_suite = SignedPermutationsTest()
 
     for n = allNs
         G = replab.SignedSymmetricGroup(n);
-        test_suite = replab.SignedPermutationGroupLaws(G).addTestCases(test_suite);
+        test_suite = G.laws.addTestCases(test_suite);
     end
 end

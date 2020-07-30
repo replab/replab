@@ -19,7 +19,7 @@ classdef IsotypicLaws < replab.Laws
         end
 
         function irrepLaws = laws_subReps(self)
-            children = cellfun(@(x) replab.SubRepLaws(x), self.iso.irreps, 'uniform', 0);
+            children = cellfun(@(x) x.laws, self.iso.irreps, 'uniform', 0);
             irrepLaws = replab.laws.Collection(children);
         end
 

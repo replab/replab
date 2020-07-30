@@ -6,7 +6,7 @@ classdef FiniteMorphism < replab.Morphism
         % Obj
 
         function l = laws(self)
-            l = replab.FiniteMorphismLaws(self);
+            l = replab.laws.FiniteMorphismLaws(self);
         end
 
     end

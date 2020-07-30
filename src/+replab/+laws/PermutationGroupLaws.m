@@ -1,22 +1,22 @@
-classdef PermutationGroupLaws < replab.FiniteGroupLaws
+classdef PermutationGroupLaws < replab.laws.FiniteGroupLaws
     properties (SetAccess = protected)
         P % (`replab.Domain`): Domain on which those permutations act
     end
     methods
         function self = PermutationGroupLaws(T)
-            self@replab.FiniteGroupLaws(T);
+            self@replab.laws.FiniteGroupLaws(T);
             self.P = replab.domain.intAsDouble(1, T.domainSize);
         end
     end
     methods
         function actionLaws = laws_naturalAction(self)
-            actionLaws = replab.ActionLaws(self.T.naturalAction);
+            actionLaws = self.T.naturalAction.laws;
         end
         function actionLaws = laws_vectorAction(self)
-            actionLaws = replab.ActionLaws(self.T.vectorAction);
+            actionLaws = self.T.vectorAction.laws;
         end
         function actionLaws = laws_matrixAction(self)
-            actionLaws = replab.ActionLaws(self.T.matrixAction);
+            actionLaws = self.T.matrixAction.laws;
         end
         function law_orbits_TP(self, t, p)
             p1 = t(p);

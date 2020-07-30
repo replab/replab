@@ -8,7 +8,7 @@ classdef Group < replab.Monoid
         % Obj
 
         function l = laws(self)
-            l = replab.GroupLaws(self);
+            l = replab.laws.GroupLaws(self);
         end
 
     end

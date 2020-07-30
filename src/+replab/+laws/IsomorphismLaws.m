@@ -1,9 +1,9 @@
-classdef IsomorphismLaws < replab.MorphismLaws
+classdef IsomorphismLaws < replab.laws.MorphismLaws
 
     methods
 
         function self = IsomorphismLaws(morphism)
-            self@replab.MorphismLaws(morphism);
+            self@replab.laws.MorphismLaws(morphism);
         end
 
         function law_roundtrip_source_S(self, s)
