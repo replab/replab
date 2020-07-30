@@ -647,62 +647,25 @@ classdef CommutantVar < replab.Str
             end
 
             % First, we make the indexMatrix invariant under the group
-
-            % We renumber all indices so they match default numbering
-            [values, indices] = unique(indexMatrix(:), 'first');
-            invPerm = sparse(values, 1, indices);
-            indexMatrix = full(invPerm(indexMatrix));
-
-            % We write the action of the generators on the matrix elements
-            generators2 = cell(size(generators));
-            M = reshape(1:d^2, [d d]);
-            for i = 1:length(generators)
-                generators2{i} = reshape(M(generators{i}, generators{i}), 1, d^2);
+            if isequal(matrixType, 'hermitian')
+                matrixType2 = 'full';
+            else
+                matrixType2 = matrixType;
             end
-            group = replab.SymmetricGroup(d^2).subgroup(generators2);
+            imagesMatrix = replab.cvar.symmetrizeIndexMatrix(indexMatrix, generators, matrixType2);
 
-            % Identify the orbits
-            orbits = group.orbits.blockIndex;
-
-            % Make sure orbits are numbered in a similar way
-            [values, indices] = unique(orbits(:), 'first');
-            invPerm = sparse(values, 1, indices);
-            orbits = full(invPerm(orbits));
-
-            % Merge orbits with indices
-            pairs = [reshape(indexMatrix, d^2, 1), orbits];
-
-            if isequal(matrixType, 'symmetric')
-                % Also impose that indexMatrix is symmetric
-                pairs = [pairs; reshape(indexMatrix, d^2, 1) reshape(indexMatrix', d^2, 1)];
-            end
-            pairs = unique(sort(pairs, 2), 'rows');
-
-            % We identify all connected subsets
-            subsets = replab.graph.connectedComponents(pairs);
-
-            % We attribute the number to each element of each class
-            images = zeros(max(unique(pairs)), 1);
-            for i = 1:length(subsets)
-                images(subsets{i}) = i;
-            end
-
-            % First we identify the index for each element
-            % We substitute just one index per class of indices
-            [values, indices] = unique(unique(indexMatrix(:)), 'first');
-            invPerm = sparse(values, 1, indices);
-            tmp = sparse(1:numel(indexMatrix), invPerm(reshape(indexMatrix,1,numel(indexMatrix))), true);
-            %indexMatrix = reshape(tmp*images(values), d, d)
+            % We extract the position of each variable
+            nbVars = max(max(imagesMatrix));
+            tmp2 = sparse(1:numel(indexMatrix), imagesMatrix(:), true);
 
             % Now we can declare the desired number of variables and
             % attribute them
             if isequal(field, 'real')
-                vars = sdpvar(length(subsets), 1);
+                vars = sdpvar(nbVars, 1);
             else
                 % complex coefficients
                 if isequal(matrixType, 'hermitian')
                     % find coefficients which must be real
-                    imagesMatrix = reshape(tmp*images(values), d, d);
                     diagImages = unique(diag(imagesMatrix));
                     pairsH = [reshape(imagesMatrix, d^2, 1) reshape(imagesMatrix', d^2, 1)];
                     pairsH = unique(sort(pairsH, 2), 'rows');
@@ -795,10 +758,10 @@ classdef CommutantVar < replab.Str
 
                     vars = sparse(ind1, ind2, 1)*[varsR; varsC];
                 else
-                    vars = sdpvar(length(subsets), 1, 'full', 'complex');
+                    vars = sdpvar(nbVars, 1, 'full', 'complex');
                 end
             end
-            sdpMatrix = reshape(tmp*vars(images(values)), d, d);
+            sdpMatrix = reshape(tmp2*vars, d, d);
 
             R = replab.CommutantVar(generators, sdpMatrix, 1, matrixType, field);
         end
