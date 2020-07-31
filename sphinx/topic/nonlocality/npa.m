@@ -13,13 +13,14 @@
 %     name: octave
 % ---
 
-% # 2. Finding an upper bound on CHSH, symmetrized version
+% # Symmetric NPA relaxations
 %
 % We initialize the RepLAB library.
 
 run ../../../replab_init
 
-% During the lecture, we found a form of the SDP that had only one optimization variable. We'll now see how to symmetrize the problem completely.
+% We examine an upper bound on the quantum maximum of the CHSH inequality. We use the NPA hierarchy, and assume the moment matrix has been constructed in the
+% symmetric subspace, as in [arXiv:1808.09598](https://arxiv.org/abs/1808.09598).
 %
 % We first declare the one and only variable, before constructing the moment matrix.
 
@@ -36,7 +37,7 @@ A = [ 0  0  0  0  0
       0  1 -1  0  0];
 X = C + A*y;
 I_CHSH = 4*y; % it is <A0B0> + <A0B1> + <A1B0> - <A1B1>, and y_A1B1 = -y_A0B0.
-optimize(X >= 0, -I_CHSH, sdpsettings('verbose', 0)); % sign change to maximize, and we don't show solver out
+optimize(X >= 0, -I_CHSH, sdpsettings('verbose', 0)); % sign change to maximize, and we don't show solver output
 double(I_CHSH)
 
 % To help with symmetrization, we'll use an equivalent form of the constraint X, and check the result.
@@ -44,11 +45,11 @@ double(I_CHSH)
 % Now, we want to find a change of basis that brings X into a block-diagonal form. This is easier to check on the basis matrices `C` and `A`, i.e. we want to find `U` such that `U*C*U'` and `U*A*U'` are block-diagonal. Let us use RepLAB for that.
 % First, remark that the moment matrix is invariant under the following signed permutations:
 %
-% $\vec{v} = \left( 1, A_0, A_1, B_0, B_1 \right) \rightarrow  \left( 1, B_0, B_1, A_0, A_1 \right) $
+% $\vec{v} = \left( 1, A_0, A_1, B_0, B_1 \right) \rightarrow  \left( 1, B_0, B_1, A_0, A_1 \right)$
 %
-% $\vec{v} = \left( 1, A_0, A_1, B_0, B_1 \right) \rightarrow  \left( 1, -A_0, -A_1, -B_0, -B_1 \right) $
+% $\vec{v} = \left( 1, A_0, A_1, B_0, B_1 \right) \rightarrow  \left( 1, -A_0, -A_1, -B_0, -B_1 \right)$
 %
-% $\vec{v} = \left( 1, A_0, A_1, B_0, B_1 \right) \rightarrow  \left( 1, A_1, A_0, B_0, -B_1 \right) $
+% $\vec{v} = \left( 1, A_0, A_1, B_0, B_1 \right) \rightarrow  \left( 1, A_1, A_0, B_0, -B_1 \right)$
 %
 % We now show how to use RepLAB to find the change of basis for the symmetry group that includes only the first symmetry.
 
@@ -56,10 +57,9 @@ g1 = [1 4 5 2 3]; % permutation of parties
 g2 = [1 -2 -3 -4 -5]; % sign flip everywhere, note the signed permutation convention
 g3 = [1 3 2 4 -5]; % additional symmetry
 
-% We build the symmetry group from those generators, which are signed permutations on five elements. For the permutation of parties only, the order (=size) of the group is 2. When adding the other symmetries, the order of the group should be 16.
+% We build the symmetry group from those generators. For the permutation of parties only, the order (=size) of the group is 2. When adding the other symmetries, the order of the group should be 16.
 
-nElements = 5;
-G = replab.SignedPermutations(nElements).subgroup({g1 g2 g3});
+nElements = 5;G = replab.SignedPermutationGroup.of(g1, g2, g3);
 G.order
 
 % If necessary, we can also expand the group elements (use `G.elements.at(2)` to get the second element for example).
@@ -71,7 +71,6 @@ G.elements
 rep = G.naturalRep
 
 g = G.sample
-full(rep.image(g)) % we use full, as signed permutation representations return sparse matrices
 
 % Now, we decompose the representation into irreducible components. For that, we call `rep.decomposition`. In the answer I(m)xR(d), we express that the component has $m$ copies (multiplicity) of a `R`eal representation of dimension `d`. We then play with the indices of the component, and copy.
 %
