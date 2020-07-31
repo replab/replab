@@ -401,7 +401,7 @@ classdef Backtrack < replab.Obj
         % Note that the element ``g`` in Holt is given by ``g = compose(gPrev, ul)``.
         %
         % This tests if there is any element in the searched set that has the partial base image
-        % ``[g(base(1)) ... g(base(l))]``. False negatives are possible, but not false positives.
+        % ``[g(base(1)) ... g(base(l))]``. False positives are possible, but not false negatives.
         %
         % Note that those tests are performed in the context of the original base `.base`, and thus
         % ``l`` has to be understood in that context. The rest of the code transparently handles the removed base
