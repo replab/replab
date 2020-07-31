@@ -1,9 +1,7 @@
 classdef WreathProductImprimitiveRep < replab.Rep
 % Imprimitive representation of a wreath product group
 %
-% See `+replab.+wreathproduct.Common.imprimitiveRep`
-%
-% See `+replab.+wreathproduct.PrimitiveRep`
+% See `+replab.+prods.WreathProductPrimitiveRep`
 
     properties (SetAccess = protected)
         Arep % (`+replab.Rep`): Representation of the group whose copies are acted upon

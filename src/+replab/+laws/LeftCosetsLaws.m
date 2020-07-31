@@ -1,9 +1,9 @@
 classdef LeftCosetsLaws < replab.Laws
 
     properties (SetAccess = protected)
-        L % (`.PermutationGroupLeftCosets`): Left cosets structure
-        G % (`.PermutationGroup`): Group
-        H % (`.PermutationGroup`): Subgroup
+        L % (`+replab.LeftCosets`): Left cosets structure
+        G % (`+replab.FiniteGroup`): Group
+        H % (`+replab.FiniteGroup`): Subgroup
     end
     methods
         function self = LeftCosetsLaws(L)

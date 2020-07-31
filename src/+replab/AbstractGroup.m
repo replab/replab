@@ -205,7 +205,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %   targetGeneratorImages (cell(1,\*) of elements of ``target``): Images of the generators of this group
         %
         % Returns:
-        %   permutation`: Computed image
+        %   permutation: Computed image
             letters = self.toLetters(word);
             img = target.identity;
             for i = 1:length(letters)

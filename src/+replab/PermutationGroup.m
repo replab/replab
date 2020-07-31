@@ -663,7 +663,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %   A (`.CompactGroup`): The group whose copies are acted upon
         %
         % Returns:
-        %   `+replab.+wreathproduct.Common`: A wreath product group
+        %   `+replab.WreathProductGroup`: A wreath product group
             w = replab.WreathProductGroup.make(self, A);
         end
 

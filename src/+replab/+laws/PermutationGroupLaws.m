@@ -1,6 +1,6 @@
 classdef PermutationGroupLaws < replab.laws.FiniteGroupLaws
     properties (SetAccess = protected)
-        P % (`replab.Domain`): Domain on which those permutations act
+        P % (`+replab.Domain`): Domain on which those permutations act
     end
     methods
         function self = PermutationGroupLaws(T)

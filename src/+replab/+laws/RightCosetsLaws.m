@@ -1,8 +1,8 @@
 classdef RightCosetsLaws < replab.Laws
     properties (SetAccess = protected)
-        R % (`.RightCosets`): Right cosets structure
-        G % (`.FiniteGroup`): Group
-        H % (`.FiniteGroup`): Subgroup
+        R % (`+replab.RightCosets`): Right cosets structure
+        G % (`+replab.FiniteGroup`): Group
+        H % (`+replab.FiniteGroup`): Subgroup
     end
     methods
         function self = RightCosetsLaws(R)

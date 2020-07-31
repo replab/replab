@@ -24,7 +24,7 @@ classdef ConjugacyClasses
         % second base point ``beta = 2``, now with ``group`` stabilizing both ``beta_1 = 1`` and ``gInv(h(g(1)))``.
         %
         % Args:
-        %   group (`+replab.+bsgs.Permutatoin`): Group to explore
+        %   group (`+replab.PermutationGroup`): Group to explore
         %   h (permutation): Group element
         %
         % Returns

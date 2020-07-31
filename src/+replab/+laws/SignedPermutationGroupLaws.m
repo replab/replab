@@ -1,7 +1,7 @@
 classdef SignedPermutationGroupLaws < replab.laws.FiniteGroupLaws
 % Laws obeyed by signed permutations
     properties
-        P % (`replab.Domain`): Signed domain on which those signed permutations act
+        P % (`+replab.Domain`): Signed domain on which those signed permutations act
     end
     methods
         function self = SignedPermutationGroupLaws(T)

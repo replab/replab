@@ -1,10 +1,10 @@
 classdef IsotypicLaws < replab.Laws
 
     properties
-        iso % replab.Isotypic: Isotypic component
-        C % replab.Commutant: Commutant algebra
-        G % replab.CompactGroup: group of which iso is a representation decomposition
-        M1  % replab.domain.Matrices: n x n matrices over R or C
+        iso % (`+replab.Isotypic`): Isotypic component
+        C % (`+replab.Commutant`): Commutant algebra
+        G % (`+replab.CompactGroup`): group of which iso is a representation decomposition
+        M1  % (`+replab.+domain.Matrices`): n x n matrices over R or C
     end
 
     methods
