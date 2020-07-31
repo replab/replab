@@ -71,9 +71,9 @@ classdef CosetTable < replab.Str
                 end
                 alpha = alpha + 1;
             end
-            % Clean up the coset table
-            f = find(self.p - (1:self.n) == 0); % @jvdv37: what's the rationale here?
-            self.C = self.C(1:length(f), :);
+            % Compress and standardize coset table
+            self.compress
+            self.standardize
         end
 
 
@@ -92,6 +92,72 @@ classdef CosetTable < replab.Str
                 invind = ind - nG;
             end
         end
+        
+        function compress(self)
+        % Removes repeated cosets from table
+        %
+        % COMPRESS, Holt p. 167
+            g = 0;
+            for alpha = 1:self.n
+                if self.p(alpha) == alpha
+                    g = g + 1;
+                    if g ~= alpha
+                        for x = 1:self.nGenerators*2
+                            beta = self.C(alpha, x);
+                            if beta == alpha
+                                beta = g;
+                            end
+                            self.C(g, x) = beta; 
+                            self.C(beta, self.generatorInverse(x)) = g;
+                        end
+                    end
+                end
+            end
+            self.n = g;
+            self.p = 1:self.n;
+            self.C = self.C(1:self.n, :);
+        end
+        
+        function switchElmts(self, beta, g)
+        % Switch the elements beta and g
+        %
+        % SWITCH, Holt p. 167
+            for x = 1:self.nGenerators*2
+                z = self.C(g, x);
+                self.C(g, x) = self.C(beta, x);
+                self.C(beta, x) = z;
+                for alpha = 1:self.n
+                    if self.C(alpha, x) == beta
+                        self.C(alpha, x) = g;
+                    elseif self.C(alpha, x) == g
+                        self.C(alpha, x) = beta;
+                    end
+                end
+            end
+        end
+        
+        function standardize(self)
+        % Standardizes coset table such that elements appear in order they
+        % would with no coincidences
+        %
+        % STANDARDIZE, Holt, p. 168
+            g = 2;
+            for alpha = 1:self.n
+                for x = 1:self.nGenerators*2
+                    beta = self.C(alpha, x);
+                    if beta >= g
+                        if beta > g
+                            self.switchElmts(g, beta)
+                        end
+                        g = g + 1;
+                        if g == self.n
+                            return
+                        end
+                    end
+                end
+            end
+        end
+                            
 
         function define(self, alpha, x)
         % Defines a new coset
@@ -99,8 +165,8 @@ classdef CosetTable < replab.Str
         % DEFINE, Holt p. 153
         %
         % Args:
-        %   alpha (integer): TODO
-        %   x (integer): TODO
+        %   alpha (integer): next unused coset number
+        %   x (integer): generator or inverse generator
             if self.n == self.M
                 error('Error: exceeded maximum allowed number of cosets')
             end
@@ -119,10 +185,10 @@ classdef CosetTable < replab.Str
         % REP, Holt p. 157
         %
         % Args:
-        %   k (integer): TODO
+        %   k (integer): coset number to insert
         %
         % Returns:
-        %   integer: TODO
+        %   integer: coset number that was replaced
             lambda = k;
             rho = self.p(lambda);
             while rho ~= lambda
@@ -142,8 +208,8 @@ classdef CosetTable < replab.Str
         % Scans through a relator and fills in table
         %
         % Args:
-        %   alpha (integer): TODO
-        %   w (integer(1,\*)): Word letters
+        %   alpha (integer): initial coset number
+        %   w (integer(1,\*)): word letters
             s = sign(w);
             ngens = self.nGenerators;
             f = find(w < 0);
@@ -187,13 +253,13 @@ classdef CosetTable < replab.Str
         function [q, l] = merge(self, k, lambda, q, l)
         % Removes the smaller of k and lambda from active cosets
         %
-        % MERGE, p. TODO
+        % MERGE, p. 157
         %
         % Args:
-        %   k (integer): TODO
-        %   lambda (integer): TODO
-        %   q (integer(1,\*)): TODO
-        %   l (integer): TODO
+        %   k (integer): coset coincident with lambda
+        %   lambda (integer): coset coincident with k
+        %   q (integer(1,\*)): coset numbers that are replaced
+        %   l (integer): number of elements that were replaced (length of q)
             lam1 = self.rep(k);
             lam2 = self.rep(lambda);
             if lam1 ~= lam2
@@ -208,11 +274,13 @@ classdef CosetTable < replab.Str
         function coincidence(self, alpha, beta)
         % Deals with the same coset being represented with different values
         %
-        % COINCIDENCE p. TODO
+        % COINCIDENCE p. 158
         %
         % Args:
-        %   alpha (integer): TODO
-        %   beta (integer): TODO
+        %   alpha (integer): coincident coset (arrive to this coset from
+        %                    one direction in the word)
+        %   beta (integer): coset coicident with alpha (arrive to this
+        %                   coset from the other direction
             ngens = self.nGenerators;
             l = 0;
             q = [];
