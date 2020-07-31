@@ -14,17 +14,19 @@
 % ---
 
 % # Eigenvalue problem of a vibrating square membrane, part 2
-%
 
 run ../../../replab_init
 g1 = [9 6 3 8 5 2 7 4 1];
 g2 = [3 2 1 6 5 4 9 8 7];
-DH = replab.PermutationGroup.of({g1 g2})
+DH = replab.PermutationGroup.of(g1, g2)
+natRep = DH.naturalRep;
+natDec = natRep.decomposition.nice;
 basis = natDec.basis;
 image1 = natRep.image(g1);
 image2 = natRep.image(g2);
 M=[4 -1 0 -1 0 0 0 0 0; -1 4 -1 0 -1 0 0 0 0; 0 -1 4 0 0 -1 0 0 0;
     -1 0 0 4 -1 0 -1 0 0; 0 -1 0 -1 4 -1 0 -1 0; 0 0 -1 0 -1 4 0 0 -1;
+    0 0 0 -1 0 0 4 -1 0;0 0 0 0 -1 0 -1 4 -1 ; 0 0 0 0 0 -1 0 -1 4] ;
 
 % ### The Block Diagonalization of the matrix $M$
 %
