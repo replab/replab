@@ -20,7 +20,7 @@ classdef WreathProductImprimitiveRep < replab.Rep
         %
         % Returns:
         %   `+replab.Rep`: A wreath product group representation
-            assert(isa(group, 'replab.WreathProductGroupx'));
+            assert(isa(group, 'replab.WreathProductGroup'));
             assert(group.A == Arep.group);
             dA = Arep.dimension;
             n = group.H.domainSize;
