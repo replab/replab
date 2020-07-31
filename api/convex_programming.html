@@ -1,0 +1,1621 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Convex programming &#8212; RepLAB 0.9.0 documentation</title>
+    <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/collapse_admonitions.js"></script>
+    <script src="../_static/js/collapse_helper.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Miscellaneous functions/classes" href="misc.html" />
+    <link rel="prev" title="Representations" href="rep.html" />
+  
+  
+   
+
+  
+  
+  <style type="text/css">
+    ul.ablog-archive {list-style: none; overflow: auto; margin-left: 0px}
+    ul.ablog-archive li {float: left; margin-right: 5px; font-size: 80%}
+    ul.postlist a {font-style: italic;}
+    ul.postlist-style-disc {list-style-type: disc;}
+    ul.postlist-style-none {list-style-type: none;}
+    ul.postlist-style-circle {list-style-type: circle;}
+  </style>
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="misc.html" title="Miscellaneous functions/classes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="rep.html" title="Representations"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Technical Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Convex programming</a></li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar"><div class="text-logo">
+  <a href="
+    ../index.html">RepLAB</a>&nbsp;&nbsp;
+  <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.0.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
+  <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
+  <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
+</div><div class="sidebar-block">
+  <div class="sidebar-toc">
+    
+    
+      <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications using RepLAB</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Technical Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="base.html">Base object types and functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="groups.html">Base group structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permutation_groups.html">Permutation groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="named_groups.html">Named groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="abstract_groups.html">Abstract groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_products.html">Group products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_subsets.html">Group subsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="group_morphisms.html">Group morphisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rep.html">Representations</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Convex programming</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#commutantvar">CommutantVar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sedumidata">SedumiData</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="misc.html">Miscellaneous functions/classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../blog/index.html">Blog</a></li>
+</ul>
+
+    
+  </div>
+</div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <h2><a href="../blog.html">Recent Blog Posts</a></h2>
+  </div>
+  <div class="sidebar-toc">
+    <ul>
+      
+      
+      <li class="toctree-l1"><a href="../blog/20200123-RepLAB-website-live.html">26 January - The RepLAB documentation and the infrastructure behind it</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../index.html">Docs</a></li>
+              
+                <li><a href="index.html">Technical Reference</a></li>
+              
+              <li>Convex programming</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+            
+  <div class="section" id="module-+replab">
+<span id="convex-programming"></span><h1>Convex programming<a class="headerlink" href="#module-+replab" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="commutantvar">
+<h2>CommutantVar<a class="headerlink" href="#commutantvar" title="Permalink to this headline">¶</a></h2>
+<dl class="mat class">
+<dt id="+replab.CommutantVar">
+<em class="property">class </em><code class="sig-prename descclassname">replab.</code><code class="sig-name descname">CommutantVar</code><span class="sig-paren">(</span><em class="sig-param">generators</em>, <em class="sig-param">sdpMatrix</em>, <em class="sig-param">sdpMatrixIsSym</em>, <em class="sig-param">matrixType</em>, <em class="sig-param">field</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="base.html#+replab.Str" title="+replab.Str"><code class="xref mat mat-class docutils literal notranslate"><span class="pre">replab.Str</span></code></a></p>
+<p>Sdpvar matrices subject to symmetry constraints.</p>
+<p>A general matrix invariant under a permutation group can be constructed
+with the method <a class="reference internal" href="#+replab.CommutantVar.fromPermutations" title="+replab.CommutantVar.fromPermutations"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromPermutations</span></code></a>. <a class="reference internal" href="#+replab.CommutantVar.fromIndexMatrix" title="+replab.CommutantVar.fromIndexMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromIndexMatrix</span></code></a> allows for the
+construction of a symmetry-invariant matrix with additional structure.
+Symmetry constraints can also be imposed on existing sdpvar object with
+the <a class="reference internal" href="#+replab.CommutantVar.fromSdpMatrix" title="+replab.CommutantVar.fromSdpMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromSdpMatrix</span></code></a> constructor. If the provided SDP matrix is already
+known to be invariant under the group, then <a class="reference internal" href="#+replab.CommutantVar.fromSymSdpMatrix" title="+replab.CommutantVar.fromSymSdpMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromSymSdpMatrix</span></code></a> can be
+used to only add the induced block structure onto this matrix.</p>
+<p>The class implements basic algebra for invariant matrices, such as
+addition, trace, comparison, etc. These operations take precedence over
+matlab’s when combining a <a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a> object with a matlab builtin
+type, such as a double matrix. Due to a bug in octave, correct precedence
+cannot be guaranteed when combining a <a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a> object with another
+class object on the left, such as a sdpvar. Doing so typically results in
+an error. This can be avoided in two ways:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Always put the <a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a> on the left of other class objects
+(e.g. write <code class="docutils literal notranslate"><span class="pre">M</span> <span class="pre">&gt;=</span> <span class="pre">N</span></code> instead of <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">&lt;=</span> <span class="pre">M</span></code> if <code class="docutils literal notranslate"><span class="pre">M</span></code> is a <a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a> and <code class="docutils literal notranslate"><span class="pre">N</span></code> a
+sdpvar object)</p></li>
+<li><p>Embed the sdpvar object into a <a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a> object with trivial
+symmetry: both <code class="docutils literal notranslate"><span class="pre">M</span> <span class="pre">&gt;=</span> <span class="pre">N2</span></code> and <code class="docutils literal notranslate"><span class="pre">N2</span> <span class="pre">&gt;=</span> <span class="pre">M</span></code> are possible after defining
+<code class="docutils literal notranslate"><span class="pre">N2</span> <span class="pre">=</span> <span class="pre">replab.CommutantVar.fromSdpMatrix(N,</span> <span class="pre">{[]})</span></code></p></li>
+</ol>
+</div></blockquote>
+<p>Warning: this object inherits from a handle object, therefore it is also
+a handle object. To copy this object and obtain two identical but
+independent objects, use the <a class="reference internal" href="#+replab.CommutantVar.copy" title="+replab.CommutantVar.copy"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">copy</span></code></a> method.</p>
+<dl class="simple">
+<dt>See also <a class="reference internal" href="#+replab.CommutantVar.fromPermutations" title="+replab.CommutantVar.fromPermutations"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromPermutations</span></code></a>,</dt><dd><p><a class="reference internal" href="#+replab.CommutantVar.fromIndexMatrix" title="+replab.CommutantVar.fromIndexMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromIndexMatrix</span></code></a>,
+<a class="reference internal" href="#+replab.CommutantVar.fromSdpMatrix" title="+replab.CommutantVar.fromSdpMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromSdpMatrix</span></code></a>,
+<a class="reference internal" href="#+replab.CommutantVar.fromSymSdpMatrix" title="+replab.CommutantVar.fromSymSdpMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromSymSdpMatrix</span></code></a></p>
+</dd>
+</dl>
+<div class="collapsed admonition">
+<p class="admonition-title">Class members list</p>
+<p><strong>Properties</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.CommutantVar.U_" title="+replab.CommutantVar.U_"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">U_</span></code></a> – Unitary operator block-diagonalizing the matrix</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.blocks" title="+replab.CommutantVar.blocks"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">blocks</span></code></a> – The sdp blocks corresponding to each irreducible representation</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.dim" title="+replab.CommutantVar.dim"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dim</span></code></a> – matrix dimension</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.dimensions1" title="+replab.CommutantVar.dimensions1"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">dimensions1</span></code></a> – Dimensions of all irreducible representations</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.field" title="+replab.CommutantVar.field"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">field</span></code></a> – real or complex</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.fullBlockMatrix_" title="+replab.CommutantVar.fullBlockMatrix_"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fullBlockMatrix_</span></code></a> – The combinations, lazy evaluated</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.linearConstraints" title="+replab.CommutantVar.linearConstraints"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">linearConstraints</span></code></a> – linear constraints imposed on the matrix</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.matrixType" title="+replab.CommutantVar.matrixType"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">matrixType</span></code></a> – full, symmetric of hermitian</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.multiplicities" title="+replab.CommutantVar.multiplicities"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">multiplicities</span></code></a> – Multipliticies of all irreducible representations</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.nComponents" title="+replab.CommutantVar.nComponents"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">nComponents</span></code></a> – Number of block components</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.sdpMatrix_" title="+replab.CommutantVar.sdpMatrix_"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">sdpMatrix_</span></code></a> – The provided or constructed sdpMatrix</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.types" title="+replab.CommutantVar.types"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">types</span></code></a> – Type of all irreducible representations</p></li>
+</ul>
+<p><strong>Prettyprinting</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.CommutantVar.additionalFields" title="+replab.CommutantVar.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">additionalFields</span></code></a> – Overload of <a class="reference internal" href="base.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Str.additionalFields</span></code></a></p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.disp" title="+replab.CommutantVar.disp"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">disp</span></code></a> – Standard MATLAB/Octave display method</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.headerStr" title="+replab.CommutantVar.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">headerStr</span></code></a> – Header string representing the object</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.hiddenFields" title="+replab.CommutantVar.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">hiddenFields</span></code></a> – Overload of <a class="reference internal" href="base.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Str.hiddenFields</span></code></a></p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.longStr" title="+replab.CommutantVar.longStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">longStr</span></code></a> – Multi-line description of the current object</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.shortStr" title="+replab.CommutantVar.shortStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">shortStr</span></code></a> – Single line text description of the current object</p></li>
+</ul>
+<p><strong>Factory methods</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.CommutantVar.fromIndexMatrix" title="+replab.CommutantVar.fromIndexMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromIndexMatrix</span></code></a> – An invariant matrix with additional constraints.</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.fromPermutations" title="+replab.CommutantVar.fromPermutations"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromPermutations</span></code></a> – A matrix invariant under joint permutations of lines and columns.</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.fromSdpMatrix" title="+replab.CommutantVar.fromSdpMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromSdpMatrix</span></code></a> – An sdpvar matrix with symmetry constraints</p></li>
+<li><p><a class="reference internal" href="#+replab.CommutantVar.fromSymSdpMatrix" title="+replab.CommutantVar.fromSymSdpMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">fromSymSdpMatrix</span></code></a> – An invariant sdpvar matrix with symmetry constraints</p></li>
+</ul>
+</div>
+<div class="collapsed admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="mat method">
+<dt id="+replab.CommutantVar.disp">
+<code class="sig-name descname">disp</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.disp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.disp" title="+replab.Str.disp"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.disp()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.longStr">
+<code class="sig-name descname">longStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxRows</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.longStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.longStr" title="+replab.Str.longStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.longStr()</span></code></a></p>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.shortStr">
+<code class="sig-name descname">shortStr</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">maxColumns</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.shortStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation in <a class="reference internal" href="base.html#+replab.Str.shortStr" title="+replab.Str.shortStr"><code class="xref mat mat-meth docutils literal notranslate"><span class="pre">replab.Str.shortStr()</span></code></a></p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="mat attribute">
+<dt id="+replab.CommutantVar.U_">
+<code class="sig-name descname">U_</code><a class="headerlink" href="#+replab.CommutantVar.U_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unitary operator block-diagonalizing the matrix</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.CommutantVar.blocks">
+<code class="sig-name descname">blocks</code><a class="headerlink" href="#+replab.CommutantVar.blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>The sdp blocks corresponding to each irreducible representation</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.CommutantVar.dim">
+<code class="sig-name descname">dim</code><a class="headerlink" href="#+replab.CommutantVar.dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>matrix dimension</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.CommutantVar.dimensions1">
+<code class="sig-name descname">dimensions1</code><a class="headerlink" href="#+replab.CommutantVar.dimensions1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dimensions of all irreducible representations</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.CommutantVar.field">
+<code class="sig-name descname">field</code><a class="headerlink" href="#+replab.CommutantVar.field" title="Permalink to this definition">¶</a></dt>
+<dd><p>real or complex</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.CommutantVar.fullBlockMatrix_">
+<code class="sig-name descname">fullBlockMatrix_</code><a class="headerlink" href="#+replab.CommutantVar.fullBlockMatrix_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The combinations, lazy evaluated</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.CommutantVar.linearConstraints">
+<code class="sig-name descname">linearConstraints</code><a class="headerlink" href="#+replab.CommutantVar.linearConstraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>linear constraints imposed on the matrix</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.CommutantVar.matrixType">
+<code class="sig-name descname">matrixType</code><a class="headerlink" href="#+replab.CommutantVar.matrixType" title="Permalink to this definition">¶</a></dt>
+<dd><p>full, symmetric of hermitian</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.CommutantVar.multiplicities">
+<code class="sig-name descname">multiplicities</code><a class="headerlink" href="#+replab.CommutantVar.multiplicities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multipliticies of all irreducible representations</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.CommutantVar.nComponents">
+<code class="sig-name descname">nComponents</code><a class="headerlink" href="#+replab.CommutantVar.nComponents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of block components</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.CommutantVar.sdpMatrix_">
+<code class="sig-name descname">sdpMatrix_</code><a class="headerlink" href="#+replab.CommutantVar.sdpMatrix_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The provided or constructed sdpMatrix</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.CommutantVar.types">
+<code class="sig-name descname">types</code><a class="headerlink" href="#+replab.CommutantVar.types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type of all irreducible representations</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.U">
+<code class="sig-name descname">U</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.U" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the block-diagonalizing unitary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>unitary</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>double matrix</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span><span class="o">.</span><span class="n">U</span><span class="p">;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.additionalFields">
+<code class="sig-name descname">additionalFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.additionalFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overload of <a class="reference internal" href="base.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Str.additionalFields</span></code></a></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="base.html#+replab.Str.additionalFields" title="+replab.Str.additionalFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Str.additionalFields</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.block">
+<code class="sig-name descname">block</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">i</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.block" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the desired block</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>i</strong> (<em>integer</em>) – block component number</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>sdpvar block</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>sdpvar</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span><span class="o">.</span><span class="n">block</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.nComponents" title="+replab.CommutantVar.nComponents"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.nComponents</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.blockMask">
+<code class="sig-name descname">blockMask</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.blockMask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Block structure</p>
+<p>Returns a 0-1-filled matrix showing the block structure of the
+matrix in the irreducible basis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>matrix</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>integer matrix</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span><span class="o">.</span><span class="n">blockMask</span><span class="p">;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.compatibleWith">
+<code class="sig-name descname">compatibleWith</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.compatibleWith" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares the block structure</p>
+<p>Checks whether the block structure of Y is compatible with that
+of X.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+</ul>
+</dd>
+</dl>
+<blockquote>
+<div><dl>
+<dt>integer:</dt><dd><p>0 if Y is not compatible with X
+1 if Y has the block structure of X
+2 if Y has the block structure of X and identical blocks</p>
+<blockquote>
+<div><p>in X correspond to identical blocks in Y</p>
+</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix1</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix2</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">1</span> <span class="mi">3</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%</span> <span class="n">both</span> <span class="n">matrices</span> <span class="n">have</span> <span class="n">comparable</span> <span class="n">block</span> <span class="n">structures</span> <span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">full</span><span class="p">(</span><span class="n">blockMask</span><span class="p">(</span><span class="n">matrix1</span><span class="p">));</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">full</span><span class="p">(</span><span class="n">blockMask</span><span class="p">(</span><span class="n">matrix2</span><span class="p">));</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%</span> <span class="o">...</span> <span class="n">but</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">same</span> <span class="n">basis</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix1</span><span class="o">.</span><span class="n">compatibleWith</span><span class="p">(</span><span class="n">matrix2</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%</span> <span class="n">The</span> <span class="n">following</span> <span class="n">matrix</span> <span class="n">has</span> <span class="n">the</span> <span class="n">correct</span> <span class="n">structure</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">right</span> <span class="n">basis</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">M</span> <span class="o">=</span> <span class="n">matrix1</span><span class="o">.</span><span class="n">U</span><span class="o">*</span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.*</span><span class="n">matrix1</span><span class="o">.</span><span class="n">blockMask</span><span class="p">)</span><span class="o">*</span><span class="n">matrix1</span><span class="o">.</span><span class="sa">U</span><span class="s1">&#39;;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix1</span><span class="o">.</span><span class="n">compatibleWith</span><span class="p">(</span><span class="n">M</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><em class="sig-param">rhs</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies a <a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a> object</p>
+<p>Creates an identical but independent copy of rhs. Modifying the
+copy does not modify the original object. This is useful
+internally.</p>
+<dl class="simple">
+<dt>Arg:</dt><dd><p>rhs (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>): object to be copied</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>result</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.end">
+<code class="sig-name descname">end</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">k</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the last index</p>
+<p>Returns the last index in an indexing expression such as
+self(1,2:end) or self(end).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> – dimension</p></li>
+<li><p><strong>n</strong> – number of dimensions on which the indexing is done</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>double</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.subsref" title="+replab.CommutantVar.subsref"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.subsref</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.eq">
+<code class="sig-name descname">eq</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Equality constraint</p>
+<p>The constraint is imposed through a series of equality constraint
+for each block. If X or Y includes linear constraints, they are
+also added to the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – matrix or scalar</p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – matrix of scalar</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>constraint</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>constraint</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="n">matrix</span> <span class="o">==</span> <span class="mi">0</span><span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromSdpMatrix</span><span class="p">(</span><span class="n">sdpvar</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="p">{[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]});</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="n">matrix</span> <span class="o">==</span> <span class="mi">0</span><span class="p">];</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.eq" title="+replab.CommutantVar.eq"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">eq</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.ge" title="+replab.CommutantVar.ge"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.ge</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt id="+replab.CommutantVar.fromIndexMatrix">
+<em class="property">static </em><code class="sig-name descname">fromIndexMatrix</code><span class="sig-paren">(</span><em class="sig-param">indexMatrix</em>, <em class="sig-param">generators</em>, <em class="sig-param">matrixType</em>, <em class="sig-param">field</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.fromIndexMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>An invariant matrix with additional constraints.</p>
+<p>Creates a <a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a> matrix with additional structure. The
+produced sdpvar matrix:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>is invariant under the permutation group</p></li>
+<li><p>satisfies the structure imposed by the index matrix: two
+matrix elements with same index are equal to each other</p></li>
+</ul>
+</div></blockquote>
+<p>This is obtained by first performing an exact Reynolds
+simplification of the matrix of indices so that it is invariant
+under the group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indexMatrix</strong> (<em>integer array</em>) – matrix with integer values
+corresponding to the label of the variable at each
+element. The actual index values are irrelevant.</p></li>
+<li><p><strong>generators</strong> (<em>permutation</em>) – a list of generators under which
+the matrix remains unchanged</p></li>
+<li><p><strong>matrixType</strong> (<em>charstring</em>) – one of the following:
+‘full’ : no particular structure
+‘symmetric’ : transpose-invariant matrix
+‘hermitian’ : hermitian matrix</p></li>
+<li><p><strong>field</strong> (<em>charstring</em>) – matrix elements are either ‘real’ or ‘complex’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">indexMatrix</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">30</span><span class="p">;</span> <span class="mi">3</span> <span class="mi">6</span> <span class="mi">10</span> <span class="mi">11</span><span class="p">;</span> <span class="mi">4</span> <span class="mi">30</span> <span class="mi">11</span> <span class="mi">15</span><span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromIndexMatrix</span><span class="p">(</span><span class="n">indexMatrix</span><span class="p">,</span> <span class="p">{[</span><span class="mi">4</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.fromPermutations" title="+replab.CommutantVar.fromPermutations"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromPermutations</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fromSdpMatrix" title="+replab.CommutantVar.fromSdpMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromSdpMatrix</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fromSymSdpMatrix" title="+replab.CommutantVar.fromSymSdpMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromSymSdpMatrix</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt id="+replab.CommutantVar.fromPermutations">
+<em class="property">static </em><code class="sig-name descname">fromPermutations</code><span class="sig-paren">(</span><em class="sig-param">generators</em>, <em class="sig-param">matrixType</em>, <em class="sig-param">field</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.fromPermutations" title="Permalink to this definition">¶</a></dt>
+<dd><p>A matrix invariant under joint permutations of lines and columns.</p>
+<p>Creates a <a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a> matrix that is invariant under joint
+permutations of its lines and columns by the provided generators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>generators</strong> (<em>permutation</em>) – list of generators under which the
+matrix is to remain unchanged</p></li>
+<li><p><strong>matrixType</strong> (<em>charstring</em>) – one of the following:
+‘full’ : no particular structure
+‘symmetric’ : transpose-invariant matrix
+‘hermitian’ : hermitian matrix</p></li>
+<li><p><strong>field</strong> (<em>charstring</em>) – matrix elements are either ‘real’ or
+‘complex’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.fromIndexMatrix" title="+replab.CommutantVar.fromIndexMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromIndexMatrix</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fromSdpMatrix" title="+replab.CommutantVar.fromSdpMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromSdpMatrix</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fromSymSdpMatrix" title="+replab.CommutantVar.fromSymSdpMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromSymSdpMatrix</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt id="+replab.CommutantVar.fromSdpMatrix">
+<em class="property">static </em><code class="sig-name descname">fromSdpMatrix</code><span class="sig-paren">(</span><em class="sig-param">sdpMatrix</em>, <em class="sig-param">generators</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.fromSdpMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>An sdpvar matrix with symmetry constraints</p>
+<p>Imposes symmetry constraints onto an existing SDP matrix. This
+creates a <a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a> matrix which satisfies both:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>the structure encoded into sdpMatrix</p></li>
+<li><p>invariance under joint permutations of its lines and
+columns by the provided generators.</p></li>
+</ul>
+</div></blockquote>
+<p>The type of matrix (full/symmetric/hermitian) as well as the
+field (real/complex) is inferred from the provided matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sdpMatrix</strong> (<em>sdpvar</em>) – the SDP matrix on which to impose
+permutation invariance</p></li>
+<li><p><strong>generators</strong> (<em>permutation</em>) – a list of generators under which
+the matrix is to remain unchanged</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sdpMatrix</span> <span class="o">=</span> <span class="n">sdpvar</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromSdpMatrix</span><span class="p">(</span><span class="n">sdpMatrix</span><span class="p">,</span> <span class="p">{[</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">]});</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.fromPermutations" title="+replab.CommutantVar.fromPermutations"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromPermutations</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fromIndexMatrix" title="+replab.CommutantVar.fromIndexMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromIndexMatrix</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fromSymSdpMatrix" title="+replab.CommutantVar.fromSymSdpMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromSymSdpMatrix</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat staticmethod">
+<dt id="+replab.CommutantVar.fromSymSdpMatrix">
+<em class="property">static </em><code class="sig-name descname">fromSymSdpMatrix</code><span class="sig-paren">(</span><em class="sig-param">sdpMatrix</em>, <em class="sig-param">generators</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.fromSymSdpMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>An invariant sdpvar matrix with symmetry constraints</p>
+<p>Block-diagonalizes an existing SDP matrix which is already
+invariant under the group generators. The type of matrix
+(full/symmetric/hermitian) as well as the field (real/complex) is
+inferred from the provided matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sdpMatrix</strong> (<em>sdpvar</em>) – the SDP matrix to block diagonlize</p></li>
+<li><p><strong>generators</strong> (<em>permutation</em>) – a list of generators under which
+the matrix remains unchanged</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">sdpvar</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">sdpvar</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sdpMatrix</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="n">y</span> <span class="n">y</span><span class="p">;</span> <span class="n">y</span> <span class="n">x</span> <span class="n">y</span><span class="p">;</span> <span class="n">y</span> <span class="n">y</span> <span class="n">x</span><span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromSymSdpMatrix</span><span class="p">(</span><span class="n">sdpMatrix</span><span class="p">,</span> <span class="p">{[</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">]});</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.fromPermutations" title="+replab.CommutantVar.fromPermutations"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromPermutations</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fromIndexMatrix" title="+replab.CommutantVar.fromIndexMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromIndexMatrix</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fromSdpMatrix" title="+replab.CommutantVar.fromSdpMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fromSdpMatrix</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.fullBlockMatrix">
+<code class="sig-name descname">fullBlockMatrix</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.fullBlockMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the full matrix in its block-diagonal form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>sdpvar matrix in block diagonal form</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>sdpvar matrix</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%</span> <span class="n">see</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">fullBlockMatrix</span><span class="p">);</span> <span class="n">TODO</span><span class="p">:</span> <span class="n">correct</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.fullMatrix">
+<code class="sig-name descname">fullMatrix</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.fullMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs the invariant matrix in the natural basis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>sdpvar matrix</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>sdpvar matrix</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">%</span> <span class="n">see</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">fullMatrix</span><span class="p">);</span> <span class="n">TODO</span><span class="p">:</span> <span class="n">correct</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.ge">
+<code class="sig-name descname">ge</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.ge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Greater or equal semi-definite constraint.</p>
+<p>The constraint on the matrices are imposed through a series of
+constraint for each block. If X or Y includes linear constraints,
+they are also added to the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – matrix or scalar</p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – matrix or scalar</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>constraint</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>constraint</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="n">matrix</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromSdpMatrix</span><span class="p">(</span><span class="n">sdpvar</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="p">{[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]});</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="n">matrix</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">];</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.le" title="+replab.CommutantVar.le"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.le</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.getBaseMatrix">
+<code class="sig-name descname">getBaseMatrix</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">index</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.getBaseMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matrix of coefficient for a given sdp variable index</p>
+<p>Returns the coefficients contributing the the SDP variable with
+given index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>integer</em>) – index of the sdp variable (or 0 for the
+constant term)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the matrix of coefficients</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>double matrix</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.getVariables" title="+replab.CommutantVar.getVariables"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.getVariables</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.see" title="+replab.CommutantVar.see"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.see</span></code></a>
+<code class="docutils literal notranslate"><span class="pre">sdpvar.getBaseMatrix</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.getVariables">
+<code class="sig-name descname">getVariables</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.getVariables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists sdp variables used by the object</p>
+<p>Returns the Yalmip indices of the SDP variable used by the
+object. If the object includes linear constraints, variables from
+the constraints are also counted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>vector of indices</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>integer row vector</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix1</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix1</span><span class="o">.</span><span class="n">getVariables</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix2</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromSdpMatrix</span><span class="p">(</span><span class="n">sdpvar</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="p">{[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]});</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix2</span><span class="o">.</span><span class="n">getVariables</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">sdpvar</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sdpMatrix</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="n">x</span> <span class="n">x</span><span class="p">;</span> <span class="n">x</span> <span class="mi">1</span> <span class="n">x</span><span class="p">;</span> <span class="n">x</span> <span class="n">x</span> <span class="mi">1</span><span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix3</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromSymSdpMatrix</span><span class="p">(</span><span class="n">sdpMatrix</span><span class="p">,</span> <span class="p">{[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]});</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix3</span><span class="o">.</span><span class="n">getVariables</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.nbVars" title="+replab.CommutantVar.nbVars"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.nbVars</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.getBaseMatrix" title="+replab.CommutantVar.getBaseMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.getBaseMatrix</span></code></a>
+<code class="docutils literal notranslate"><span class="pre">sdpvar.getvariables</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.gt">
+<code class="sig-name descname">gt</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.gt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Greater than constraint.</p>
+<p>Strict constraints cannot be guarantees, please use ge(X,Y)
+instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – matrix or scalar</p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – matrix or scalar</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>constraint</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>constraint</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.ge" title="+replab.CommutantVar.ge"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.ge</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.headerStr">
+<code class="sig-name descname">headerStr</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.headerStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Header string representing the object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>description of the object</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>charstring</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.str" title="+replab.CommutantVar.str"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.str</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.hiddenFields">
+<code class="sig-name descname">hiddenFields</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.hiddenFields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overload of <a class="reference internal" href="base.html#+replab.Str.hiddenFields" title="+replab.Str.hiddenFields"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.Str.hiddenFields</span></code></a></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>replab.Str.hiddenFields</p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.ishermitian">
+<code class="sig-name descname">ishermitian</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.ishermitian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tells whether the matrix is invariant under complex transposition</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>true iff the matrix is invariant under complex transposition</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">]},</span> <span class="s1">&#39;hermitian&#39;</span><span class="p">,</span> <span class="s1">&#39;complex&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ishermitian</span><span class="p">(</span><span class="n">matrix</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.ishermitian" title="+replab.CommutantVar.ishermitian"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ishermitian</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.isreal" title="+replab.CommutantVar.isreal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.isreal</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.issymmetric" title="+replab.CommutantVar.issymmetric"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.issymmetric</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.isreal">
+<code class="sig-name descname">isreal</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.isreal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tells whether the matrix is real</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>true iff the matrix is real</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">isreal</span><span class="p">(</span><span class="n">matrix</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.isreal" title="+replab.CommutantVar.isreal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">isreal</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.issymmetric" title="+replab.CommutantVar.issymmetric"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.issymmetric</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.ishermitian" title="+replab.CommutantVar.ishermitian"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.ishermitian</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.issymmetric">
+<code class="sig-name descname">issymmetric</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.issymmetric" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tells whether the matrix is invariant under transposition</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>true iff the matrix is invariant under transposition</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">issymmetric</span><span class="p">(</span><span class="n">matrix</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.issymmetric" title="+replab.CommutantVar.issymmetric"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">issymmetric</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.isreal" title="+replab.CommutantVar.isreal"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.isreal</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.ishermitian" title="+replab.CommutantVar.ishermitian"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.ishermitian</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.ldivide">
+<code class="sig-name descname">ldivide</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.ldivide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Element-wise left division operator</p>
+<p>This is to be used only for division by a scalar. Use fullMatrix
+otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.ldivide" title="+replab.CommutantVar.ldivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">ldivide</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.times" title="+replab.CommutantVar.times"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.times</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.rdivide" title="+replab.CommutantVar.rdivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.rdivide</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fullMatrix" title="+replab.CommutantVar.fullMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fullMatrix</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.le">
+<code class="sig-name descname">le</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.le" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lesser or equal semi-definite constraint.</p>
+<p>The constraint on the matrices are imposed through a series of
+constraint for each block. If X or Y includes linear constraints,
+they are also added to the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – matrix or scalar</p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – matrix or scalar</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>constraint</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>constraint</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="n">matrix</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromSdpMatrix</span><span class="p">(</span><span class="n">sdpvar</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="p">{[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]});</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="p">[</span><span class="n">matrix</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">];</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.ge" title="+replab.CommutantVar.ge"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.ge</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.lt">
+<code class="sig-name descname">lt</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.lt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lesser than constraint.</p>
+<p>Strict constraints cannot be guarantees, please use le(X,Y)
+instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – matrix or scalar</p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – matrix or scalar</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>constraint</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>constraint</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.le" title="+replab.CommutantVar.le"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.le</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.minus">
+<code class="sig-name descname">minus</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.minus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Substraction operator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.minus" title="+replab.CommutantVar.minus"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">minus</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.plus" title="+replab.CommutantVar.plus"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.plus</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.mldivide">
+<code class="sig-name descname">mldivide</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.mldivide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matrix left division operator</p>
+<p>This is to be used only for division by a scalar. Use fullMatrix
+otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.mldivide" title="+replab.CommutantVar.mldivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mldivide</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.mtimes" title="+replab.CommutantVar.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.mtimes</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.mrdivide" title="+replab.CommutantVar.mrdivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.mrdivide</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fullMatrix" title="+replab.CommutantVar.fullMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fullMatrix</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.mrdivide">
+<code class="sig-name descname">mrdivide</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.mrdivide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matrix right division operator</p>
+<p>This is to be used only for division by a scalar. Use fullMatrix
+otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.mrdivide" title="+replab.CommutantVar.mrdivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mrdivide</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.mtimes" title="+replab.CommutantVar.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.mtimes</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.mldivide" title="+replab.CommutantVar.mldivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.mldivide</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fullMatrix" title="+replab.CommutantVar.fullMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fullMatrix</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.mtimes">
+<code class="sig-name descname">mtimes</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.mtimes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Matrix multiplication</p>
+<p>This is to be used only for division by a scalar. Use fullMatrix
+otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.mtimes" title="+replab.CommutantVar.mtimes"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">mtimes</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.mrdivide" title="+replab.CommutantVar.mrdivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.mrdivide</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fullMatrix" title="+replab.CommutantVar.fullMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fullMatrix</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.nbVars">
+<code class="sig-name descname">nbVars</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.nbVars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of SDP variable used be the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>number of SDP variables</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix1</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix1</span><span class="o">.</span><span class="n">nbVars</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix2</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromSdpMatrix</span><span class="p">(</span><span class="n">sdpvar</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="p">{[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]});</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix2</span><span class="o">.</span><span class="n">nbVars</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">sdpvar</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sdpMatrix</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="n">x</span> <span class="n">x</span><span class="p">;</span> <span class="n">x</span> <span class="mi">1</span> <span class="n">x</span><span class="p">;</span> <span class="n">x</span> <span class="n">x</span> <span class="mi">1</span><span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix3</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromSymSdpMatrix</span><span class="p">(</span><span class="n">sdpMatrix</span><span class="p">,</span> <span class="p">{[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]});</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix3</span><span class="o">.</span><span class="n">nbVars</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.getVariables" title="+replab.CommutantVar.getVariables"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.getVariables</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.getBaseMatrix" title="+replab.CommutantVar.getBaseMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.getBaseMatrix</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.numel">
+<code class="sig-name descname">numel</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.numel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of elements</p>
+<p>Returns the number of objects (i.e. 1). To obtain the number of
+elements in the matrix, use prod(size(self)) instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>integer</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">numel</span><span class="p">(</span><span class="n">matrix</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.numel" title="+replab.CommutantVar.numel"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">numel</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.size" title="+replab.CommutantVar.size"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.size</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.plus">
+<code class="sig-name descname">plus</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.plus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Addition operator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.plus" title="+replab.CommutantVar.plus"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">plus</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.minus" title="+replab.CommutantVar.minus"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.minus</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.rdivide">
+<code class="sig-name descname">rdivide</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.rdivide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Element-wise right division operator</p>
+<p>This is to be used only for division by a scalar. Use fullMatrix
+otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.rdivide" title="+replab.CommutantVar.rdivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rdivide</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.times" title="+replab.CommutantVar.times"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.times</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.ldivide" title="+replab.CommutantVar.ldivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.ldivide</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fullMatrix" title="+replab.CommutantVar.fullMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fullMatrix</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.see">
+<code class="sig-name descname">see</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.see" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays internal structure of variables</p>
+<p>Displays internal info about the structure of the matrix in full
+form.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="docutils literal notranslate"><span class="pre">sdpvar.see</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.size">
+<code class="sig-name descname">size</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">d</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the matrix size</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> (<em>integer, optional</em>) – specific dimension</p>
+</dd>
+</dl>
+<blockquote>
+<div><dl class="simple">
+<dt>s1: integer</dt><dd><p>The dimension array, or first dimension if s2 is also
+requested</p>
+</dd>
+<dt>s2: integer</dt><dd><p>The second dimension (optional)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">size</span><span class="p">(</span><span class="n">matrix</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.size" title="+replab.CommutantVar.size"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">size</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.numel" title="+replab.CommutantVar.numel"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.numel</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.str">
+<code class="sig-name descname">str</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Nice string representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>result</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>charstring</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.headerStr" title="+replab.CommutantVar.headerStr"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.headerStr</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.subsref">
+<code class="sig-name descname">subsref</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">varargin</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.subsref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overload of subsref.</p>
+<p>This function is called when using the syntax ‘()’ to extract one
+part of a matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>varargin</strong> – as usual</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>depends on usage</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>depends on the usage</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.subsref" title="+replab.CommutantVar.subsref"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">subsref</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.times">
+<code class="sig-name descname">times</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.times" title="Permalink to this definition">¶</a></dt>
+<dd><p>Element-wise multiplication</p>
+<p>This is to be used only for multiplication by a scalar. Use
+fullMatrix otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+<li><p><strong>Y</strong> (<a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a>, sdpvar or double) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>result</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.times" title="+replab.CommutantVar.times"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">times</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.rdivide" title="+replab.CommutantVar.rdivide"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.rdivide</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.fullMatrix" title="+replab.CommutantVar.fullMatrix"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.fullMatrix</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.trace">
+<code class="sig-name descname">trace</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trace operator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>trace</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>sdpvar</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">matrix</span> <span class="o">=</span> <span class="n">replab</span><span class="o">.</span><span class="n">CommutantVar</span><span class="o">.</span><span class="n">fromPermutations</span><span class="p">({[</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">]},</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="s1">&#39;real&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">trace</span><span class="p">(</span><span class="n">matrix</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.trace" title="+replab.CommutantVar.trace"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">trace</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.uminus">
+<code class="sig-name descname">uminus</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.uminus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unary minus operator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>result</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#+replab.CommutantVar" title="+replab.CommutantVar"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">CommutantVar</span></code></a></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#+replab.CommutantVar.uminus" title="+replab.CommutantVar.uminus"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">uminus</span></code></a>
+<a class="reference internal" href="#+replab.CommutantVar.minus" title="+replab.CommutantVar.minus"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">replab.CommutantVar.minus</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.CommutantVar.value">
+<code class="sig-name descname">value</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.CommutantVar.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current numerical value of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numerical value taken by the object</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>double matrix</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="docutils literal notranslate"><span class="pre">sdpvar.value</span></code></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="sedumidata">
+<h2>SedumiData<a class="headerlink" href="#sedumidata" title="Permalink to this headline">¶</a></h2>
+<dl class="mat class">
+<dt id="+replab.SedumiData">
+<em class="property">class </em><code class="sig-prename descclassname">replab.</code><code class="sig-name descname">SedumiData</code><span class="sig-paren">(</span><em class="sig-param">At</em>, <em class="sig-param">b</em>, <em class="sig-param">c</em>, <em class="sig-param">K</em>, <em class="sig-param">G</em>, <em class="sig-param">rho</em><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SedumiData" title="Permalink to this definition">¶</a></dt>
+<dd><p>A block-diagonalizing preprocessor for SDPs in SeDuMi format.</p>
+<p>The problem data is stored in (At, b, c, K) according to the SeDuMi
+documentation, with size(At, 2) the number of dual variables.</p>
+<p>We only support a single SDP block, and no other cones
+(so K.f = K.l = 0, K.q = K.r = [] and K.s = s).</p>
+<p>We provide the symmetry group acting on the SDP block X, such that
+rho(g) * X * rho(g)’ = X for all elements g in the group G.</p>
+<p>The finite group G and its representation rho are jointly written as follows.</p>
+<p>Without loss of generality, a finite group can be represented by permutations.
+Then G is a (row) cell array containing the N generators of this permutation
+group.</p>
+<div class="collapsed admonition">
+<p class="admonition-title">Class members list</p>
+<p><strong>Properties</strong></p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#+replab.SedumiData.At" title="+replab.SedumiData.At"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">At</span></code></a> – double: Data matrix of size n x m</p></li>
+<li><p><a class="reference internal" href="#+replab.SedumiData.G" title="+replab.SedumiData.G"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">G</span></code></a> – cell array of generators as permutations</p></li>
+<li><p><a class="reference internal" href="#+replab.SedumiData.K" title="+replab.SedumiData.K"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">K</span></code></a> – struct: Cone specification (Sedumi data)</p></li>
+<li><p><a class="reference internal" href="#+replab.SedumiData.b" title="+replab.SedumiData.b"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">b</span></code></a> – double: Constraint right hand side (Sedumi data)</p></li>
+<li><p><a class="reference internal" href="#+replab.SedumiData.c" title="+replab.SedumiData.c"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">c</span></code></a> – double: Primal objective (Sedumi data)</p></li>
+<li><p><a class="reference internal" href="#+replab.SedumiData.m" title="+replab.SedumiData.m"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">m</span></code></a> – number of dual variables</p></li>
+<li><p><a class="reference internal" href="#+replab.SedumiData.rep" title="+replab.SedumiData.rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rep</span></code></a> – <a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a>: group representation commuting with the SDP block</p></li>
+<li><p><a class="reference internal" href="#+replab.SedumiData.rho" title="+replab.SedumiData.rho"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">rho</span></code></a> – cell array of generator images defining the representation</p></li>
+<li><p><a class="reference internal" href="#+replab.SedumiData.s" title="+replab.SedumiData.s"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">s</span></code></a> – size of single SDP block present</p></li>
+</ul>
+</div>
+<div class="collapsed admonition">
+<p class="admonition-title">Inherited elements</p>
+<dl class="mat method">
+<dt id="+replab.SedumiData.blockDiagonalData">
+<code class="sig-name descname">blockDiagonalData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SedumiData.blockDiagonalData" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.SedumiData.blockDiagonalize">
+<code class="sig-name descname">blockDiagonalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SedumiData.blockDiagonalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.SedumiData.fromMatFile">
+<code class="sig-name descname">fromMatFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SedumiData.fromMatFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.SedumiData.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SedumiData.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.SedumiData.saveBlockDiagonalizedMatFile">
+<code class="sig-name descname">saveBlockDiagonalizedMatFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SedumiData.saveBlockDiagonalizedMatFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+<dl class="mat method">
+<dt id="+replab.SedumiData.toYalmip">
+<code class="sig-name descname">toYalmip</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#+replab.SedumiData.toYalmip" title="Permalink to this definition">¶</a></dt>
+<dd><p>No documentation</p>
+</dd></dl>
+
+</div>
+<h3>Own members</h3><dl class="mat attribute">
+<dt id="+replab.SedumiData.At">
+<code class="sig-name descname">At</code><a class="headerlink" href="#+replab.SedumiData.At" title="Permalink to this definition">¶</a></dt>
+<dd><p>double: Data matrix of size n x m</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.SedumiData.G">
+<code class="sig-name descname">G</code><a class="headerlink" href="#+replab.SedumiData.G" title="Permalink to this definition">¶</a></dt>
+<dd><p>cell array of generators as permutations</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.SedumiData.K">
+<code class="sig-name descname">K</code><a class="headerlink" href="#+replab.SedumiData.K" title="Permalink to this definition">¶</a></dt>
+<dd><p>struct: Cone specification (Sedumi data)</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.SedumiData.b">
+<code class="sig-name descname">b</code><a class="headerlink" href="#+replab.SedumiData.b" title="Permalink to this definition">¶</a></dt>
+<dd><p>double: Constraint right hand side (Sedumi data)</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.SedumiData.c">
+<code class="sig-name descname">c</code><a class="headerlink" href="#+replab.SedumiData.c" title="Permalink to this definition">¶</a></dt>
+<dd><p>double: Primal objective (Sedumi data)</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.SedumiData.m">
+<code class="sig-name descname">m</code><a class="headerlink" href="#+replab.SedumiData.m" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of dual variables</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.SedumiData.rep">
+<code class="sig-name descname">rep</code><a class="headerlink" href="#+replab.SedumiData.rep" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="rep.html#+replab.Rep" title="+replab.Rep"><code class="xref mat mat-obj docutils literal notranslate"><span class="pre">Rep</span></code></a>: group representation commuting with the SDP block</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.SedumiData.rho">
+<code class="sig-name descname">rho</code><a class="headerlink" href="#+replab.SedumiData.rho" title="Permalink to this definition">¶</a></dt>
+<dd><p>cell array of generator images defining the representation</p>
+</dd></dl>
+
+<dl class="mat attribute">
+<dt id="+replab.SedumiData.s">
+<code class="sig-name descname">s</code><a class="headerlink" href="#+replab.SedumiData.s" title="Permalink to this definition">¶</a></dt>
+<dd><p>size of single SDP block present</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+  <div class="section">
+  
+  
+  </div>
+
+          </div>
+            
+  <div class="footer-relations">
+    
+      <div class="pull-left">
+        <a class="btn btn-default" href="rep.html" title="previous chapter (use the left arrow)">Representations</a>
+      </div>
+    
+      <div class="pull-right">
+        <a class="btn btn-default" href="misc.html" title="next chapter (use the right arrow)">Miscellaneous functions/classes</a>
+      </div>
+    </div>
+    <div class="clearer"></div>
+  
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../mat-modindex.html" title="MATLAB Module Index"
+             >matlab index</a> |</li>
+        <li class="right" >
+          <a href="misc.html" title="Miscellaneous functions/classes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="rep.html" title="Representations"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Technical Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Convex programming</a></li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2018-2020, Denis Rosset, Jean-Daniel Bancal and collaborators. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>

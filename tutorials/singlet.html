@@ -1,9 +1,10 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- Licensed under the Apache 2.0 License -->
   <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
@@ -13,7 +14,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Tutorial for quantum information people &#8212; RepLAB 0.8.0 documentation</title>
+    <title>Tutorial for quantum information people &#8212; RepLAB 0.9.0 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -25,9 +26,9 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script src="../_static/collapse_admonitions.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/collapse_helper.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -64,8 +65,9 @@
         <li class="right" >
           <a href="S3.html" title="Tutorial for mathematicians"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.8.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Tutorials</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Tutorials</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tutorial for quantum information people</a></li> 
       </ul>
     </div>
     <div class="container-wrapper">
@@ -78,7 +80,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.8.0.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -99,7 +101,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications using RepLAB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
@@ -206,20 +207,33 @@ div.nboutput.container div.prompt pre {
 /* all prompts */
 div.nbinput.container div.prompt,
 div.nboutput.container div.prompt {
-    min-width: 5.5ex;
-    padding-top: 0.3rem;
-    padding-right: 0.3rem;
-    text-align: right;
-    flex: 0;
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
 }
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
 @media (max-width: 540px) {
     div.nbinput.container div.prompt,
     div.nboutput.container div.prompt {
+        width: unset;
         text-align: left;
         padding: 0.4em;
     }
     div.nboutput.container div.prompt.empty {
         padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
     }
 }
 
@@ -312,7 +326,7 @@ div.nboutput.container div.output_area div[class*=highlight].math,
 div.nboutput.container div.output_area.rendered_html,
 div.nboutput.container div.output_area > div.output_javascript,
 div.nboutput.container div.output_area:not(.rendered_html) > img{
-    padding: 0.3rem;
+    padding: 5px;
 }
 
 /* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
@@ -380,10 +394,9 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
-Adding RepLAB package to the path
 Loading optim package for Octave...
 OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = &#34;org.octave.OctClassLoader&#34;). To use archived non-system classes, this property must be not be set
+Loading symbolic package for Octave...
 Adding VPI to the path
 Adding MOxUnit to the path
 Adding embedded YALMIP to the path
@@ -428,7 +441,7 @@ Adding MOcov to the path
 </div>
 </div>
 <p>To identify the subspaces which are invariant under this group, we decompose the representation:</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
@@ -436,29 +449,6 @@ Adding MOcov to the path
 <span></span><span class="n">dec</span> <span class="p">=</span> <span class="n">U2TensorRep</span><span class="p">.</span><span class="n">decomposition</span><span class="p">.</span><span class="n">nice</span><span class="p">;</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-error: horizontal dimensions mismatch (2x2 vs 1x1)
-error: called from
-    project at line 99 column 53
-    sampleWithError at line 99 column 20
-    sampleInContext at line 139 column 28
-    sampleInContext at line 38 column 32
-    splitTrivialComponent at line 7 column 7
-    dispatchDefaults&gt;@&lt;anonymous&gt; at line 40 column 29
-    dispatch at line 85 column 22
-    split at line 24 column 9
-    splitIntoIrreducibles at line 577 column 25
-    decompositionUsingSplit at line 7 column 10
-    dispatchDefaults&gt;@&lt;anonymous&gt; at line 31 column 28
-    dispatch at line 85 column 22
-    decomposition at line 16 column 9
-    decomposition at line 214 column 37
-</pre></div></div>
 </div>
 <p>The decomposition has</p>
 <div class="nbinput docutils container">
@@ -475,7 +465,7 @@ error: called from
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;dec&#39; undefined near line 1 column 1
+ans =  2
 </pre></div></div>
 </div>
 <p>components, of dimension</p>
@@ -493,7 +483,7 @@ error: &#39;dec&#39; undefined near line 1 column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;dec&#39; undefined near line 1 column 1
+ans =  1
 </pre></div></div>
 </div>
 <p>and</p>
@@ -511,7 +501,7 @@ error: &#39;dec&#39; undefined near line 1 column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;dec&#39; undefined near line 1 column 1
+ans =  3
 </pre></div></div>
 </div>
 <p>These are the antisymmetric and symmetric subspaces respectively. The change of basis into the first component identifies the antisymetric subspace, also known as the <em>singlet state</em>:</p>
@@ -530,8 +520,20 @@ error: &#39;dec&#39; undefined near line 1 column 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-error: &#39;dec&#39; undefined near line 1 column 16
-error: &#39;dec&#39; undefined near line 1 column 8
+singletBasis =
+
+  -0
+   1
+  -1
+  -0
+
+rest =
+
+   1  -0   0
+  -0   0   1
+  -0   0   1
+  -0   1   0
+
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -583,8 +585,9 @@ error: &#39;dec&#39; undefined near line 1 column 8
         <li class="right" >
           <a href="S3.html" title="Tutorial for mathematicians"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.8.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >Tutorials</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Tutorials</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Tutorial for quantum information people</a></li> 
       </ul>
     </div>
 <script type="text/javascript">

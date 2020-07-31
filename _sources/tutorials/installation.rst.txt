@@ -70,6 +70,15 @@ Option 2: Clone the library
    or add a ``ignore = untracked`` line to the ``[submodule "SDPT3"]`` section
    in ``.git/config``.
 
+   If you want to run the release process, check out the ``gh-pages`` branch in the
+   ``docs/`` folder by running:
+
+   ::
+
+      git worktree add docs gh-pages
+
+   in the root RepLAB folder.
+
 
 Initializing the library
 ------------------------
@@ -94,7 +103,7 @@ which should lead to the following output
     Adding embedded YALMIP to the path
     Adding embedded SDPT3 solver to the path
     Adding MOcov to the path
-    >> 
+    >>
 
 This command checks in particular whether an instance of YALMIP is
 `available <https://yalmip.github.io/download/>`__ and

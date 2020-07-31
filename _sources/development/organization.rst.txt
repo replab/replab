@@ -5,6 +5,7 @@ Directories
 -----------
 
 -  ``docs``: compiled documentation ready to be served by GitHub Pages,
+   and is a Git worktree with the branch ``gh-pages`` checked out.
 
 -  ``external``: external libraries, either included as a Git submodule
    (if available on a public repository such as Github), or vendored
@@ -30,5 +31,7 @@ RepLAB has a ``major.minor.patch`` version number.
 The ``develop`` branch contains a snapshot, i.e. a version number that ends in ``-SNAP``.
 
 The ``master`` branch contains a release, i.e. a version number that does not end in ``-SNAP``.
+
+The ``gh-pages`` contains the documentation pages.
 
 See `~root.replab_release` for a description of the release process.

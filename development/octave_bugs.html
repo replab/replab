@@ -1,9 +1,10 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- Licensed under the Apache 2.0 License -->
   <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
@@ -13,7 +14,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Octave bugs &#8212; RepLAB 0.8.0 documentation</title>
+    <title>Octave bugs &#8212; RepLAB 0.9.0 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -25,13 +26,13 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script src="../_static/collapse_admonitions.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/collapse_helper.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Blog" href="../blog/index.html" />
+    <link rel="next" title="Project ideas" href="project_ideas.html" />
     <link rel="prev" title="Sphinx tips and tricks" href="sphinx.html" />
   
   
@@ -59,13 +60,14 @@
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="../blog/index.html" title="Blog"
+          <a href="project_ideas.html" title="Project ideas"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="sphinx.html" title="Sphinx tips and tricks"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.8.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Development/Community</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Development/Community</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Octave bugs</a></li> 
       </ul>
     </div>
     <div class="container-wrapper">
@@ -78,7 +80,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.8.0.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -90,7 +92,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications using RepLAB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Development/Community</a><ul class="current">
@@ -108,6 +109,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#bugs-affecting-other-parts">Bugs affecting other parts</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="project_ideas.html">Project ideas</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../blog/index.html">Blog</a></li>
@@ -196,7 +198,7 @@ our <code class="xref mat mat-obj docutils literal notranslate"><span class="pre
       </div>
     
       <div class="pull-right">
-        <a class="btn btn-default" href="../blog/index.html" title="next chapter (use the right arrow)">Blog</a>
+        <a class="btn btn-default" href="project_ideas.html" title="next chapter (use the right arrow)">Project ideas</a>
       </div>
     </div>
     <div class="clearer"></div>
@@ -214,13 +216,14 @@ our <code class="xref mat mat-obj docutils literal notranslate"><span class="pre
           <a href="../mat-modindex.html" title="MATLAB Module Index"
              >matlab index</a> |</li>
         <li class="right" >
-          <a href="../blog/index.html" title="Blog"
+          <a href="project_ideas.html" title="Project ideas"
              >next</a> |</li>
         <li class="right" >
           <a href="sphinx.html" title="Sphinx tips and tricks"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.8.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >Development/Community</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Development/Community</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Octave bugs</a></li> 
       </ul>
     </div>
 <script type="text/javascript">

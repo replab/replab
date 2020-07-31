@@ -1,9 +1,10 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- Licensed under the Apache 2.0 License -->
   <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
@@ -13,7 +14,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>Symmetric SDPs &#8212; RepLAB 0.8.0 documentation</title>
+    <title>Symmetric SDPs &#8212; RepLAB 0.9.0 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -25,9 +26,9 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script src="../_static/collapse_admonitions.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/collapse_helper.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -64,8 +65,9 @@
         <li class="right" >
           <a href="index.html" title="How to"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.8.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">How to</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">How to</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Symmetric SDPs</a></li> 
       </ul>
     </div>
     <div class="container-wrapper">
@@ -78,7 +80,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.8.0.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -92,23 +94,16 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">How to solve a semi-definite program (SDP) subject to symmetries</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Preparation">Preparation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Introduction">Introduction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Formulating-a-symmetric-SDP">Formulating a symmetric SDP</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Symmetric-formulation">Symmetric formulation</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#Formulating-a-symmetric-SDP">Formulating a symmetric SDP</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Constructing-a-symmetric-SDP-matrix-with-additional-structure">Constructing a symmetric SDP matrix with additional structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Imposing-symmetry-to-an-existing-SDP-matrix">Imposing symmetry to an existing SDP matrix</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Block-diagonalizing-a-symmetric-SDP-matrix">Block-diagonalizing a symmetric SDP matrix</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Comparison-with-a-direct-formulation">Comparison with a direct formulation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Complexity-comparison">Complexity comparison</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#Comparison-with-a-direct-formulation">Comparison with a direct formulation</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications using RepLAB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development/Community</a></li>
@@ -215,20 +210,33 @@ div.nboutput.container div.prompt pre {
 /* all prompts */
 div.nbinput.container div.prompt,
 div.nboutput.container div.prompt {
-    min-width: 5.5ex;
-    padding-top: 0.3rem;
-    padding-right: 0.3rem;
-    text-align: right;
-    flex: 0;
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
 }
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
 @media (max-width: 540px) {
     div.nbinput.container div.prompt,
     div.nboutput.container div.prompt {
+        width: unset;
         text-align: left;
         padding: 0.4em;
     }
     div.nboutput.container div.prompt.empty {
         padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
     }
 }
 
@@ -321,7 +329,7 @@ div.nboutput.container div.output_area div[class*=highlight].math,
 div.nboutput.container div.output_area.rendered_html,
 div.nboutput.container div.output_area > div.output_javascript,
 div.nboutput.container div.output_area:not(.rendered_html) > img{
-    padding: 0.3rem;
+    padding: 5px;
 }
 
 /* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
@@ -390,10 +398,9 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Adding RepLAB to the path
-warning: function /home/denis/w/replab/src/help.m shadows a core library function
-Adding RepLAB package to the path
 Loading optim package for Octave...
 OpenJDK 64-Bit Server VM warning: Archived non-system classes are disabled because the java.system.class.loader property is specified (value = &#34;org.octave.OctClassLoader&#34;). To use archived non-system classes, this property must be not be set
+Loading symbolic package for Octave...
 Adding VPI to the path
 Adding MOxUnit to the path
 Adding embedded YALMIP to the path
@@ -420,7 +427,7 @@ Adding MOcov to the path
 </div>
 <div class="section" id="Formulating-a-symmetric-SDP">
 <h2>Formulating a symmetric SDP<a class="headerlink" href="#Formulating-a-symmetric-SDP" title="Permalink to this headline">¶</a></h2>
-<p>To illustrate the usage of <em>RepLAB</em> for symmetric SDPs, we consider a simple example involving a 3x3 matrix <span class="math notranslate nohighlight">\(M\)</span> with trace 1 that is symmetric under cyclic permutation of its indices, i.e. it satisfies <span class="math notranslate nohighlight">\(M([2\ 3\ 1], [2\ 3\ 1]) = M\)</span>. We ask what is the smallest value that the off-diagonal element <span class="math notranslate nohighlight">\(M(1,2)\)</span> can take if this matrix <span class="math notranslate nohighlight">\(M\)</span> has only positive eigenvalues.</p>
+<p>To illustrate the usage of <em>RepLAB</em> for symmetric SDPs, we consider a simple example involving a 3x3 matrix <span class="math notranslate nohighlight">\(M\)</span> with trace 1 that is symmetric under cyclic permutation of its indices, i.e. it satisfies <span class="math notranslate nohighlight">\(M([2\ 3\ 1], [2\ 3\ 1]) = M\)</span>. We ask what is the smallest value that the off-diagonal element <span class="math notranslate nohighlight">\(M(1,2)\)</span> can take if this matrix <span class="math notranslate nohighlight">\(M\)</span> has only positive eigenvalues.</p>
 <div class="section" id="Symmetric-formulation">
 <h3>Symmetric formulation<a class="headerlink" href="#Symmetric-formulation" title="Permalink to this headline">¶</a></h3>
 <p>Using <em>RepLAB</em>, we can solve this problem as follows.</p>
@@ -533,7 +540,7 @@ multiplicities: [1, 1]
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Linear scalar (real, 1 variable)
-Coeffiecient range: 1 to 1
+Coefficients range: 1 to 1
 </pre></div></div>
 </div>
 <p>We can directly impose cyclic symmetry onto this matrix:</p>
@@ -728,7 +735,7 @@ ans =
 |   ID|                    Constraint|   Coefficient range|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 |   #1|   Element-wise inequality 1x1|              2 to 2|
-|   #2|         Matrix inequality 2x2|     2.2204e-16 to 2|
+|   #2|         Matrix inequality 2x2|     2.7756e-16 to 2|
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 </pre></div></div>
 </div>
@@ -757,9 +764,9 @@ diagnostic =
 
   scalar structure containing the fields:
 
-    yalmipversion = 20190425
-    yalmiptime =  0.095471
-    solvertime =  0.53634
+    yalmipversion = 20200116
+    yalmiptime =  0.075149
+    solvertime =  0.35799
     info = Successfully solved (SDPT3-4)
     problem = 0
 
@@ -777,9 +784,9 @@ MOpt =
 <p>The symmetric formulation of the above problem involves fewer variables and simpler constraints, as summarized in the following table:</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 51%" />
-<col style="width: 20%" />
-<col style="width: 29%" />
+<col style="width: 56%" />
+<col style="width: 15%" />
+<col style="width: 28%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Formulation:</p></th>
@@ -952,8 +959,9 @@ multiplicities: [1, 1]
         <li class="right" >
           <a href="index.html" title="How to"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.8.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >How to</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >How to</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Symmetric SDPs</a></li> 
       </ul>
     </div>
 <script type="text/javascript">

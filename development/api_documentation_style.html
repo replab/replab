@@ -1,9 +1,10 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- Licensed under the Apache 2.0 License -->
   <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
@@ -13,7 +14,7 @@
   <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-    <title>API Documentation style guide &#8212; RepLAB 0.8.0 documentation</title>
+    <title>API Documentation style guide &#8212; RepLAB 0.9.0 documentation</title>
     <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/collapse_admonitions.css" />
@@ -25,9 +26,9 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <script src="../_static/collapse_admonitions.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/collapse_helper.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -64,8 +65,9 @@
         <li class="right" >
           <a href="organization.html" title="Code organization and release process"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.8.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Development/Community</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Development/Community</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">API Documentation style guide</a></li> 
       </ul>
     </div>
     <div class="container-wrapper">
@@ -78,7 +80,7 @@
   <a href="
     ../index.html">RepLAB</a>&nbsp;&nbsp;
   <a href="https://github.com/replab/replab"><i class="fab fa-github"></i></a>&nbsp;
-  <a href="https://github.com/replab/replab/archive/v0.8.0.zip"><i class="fa fa-download"></i></a>&nbsp;
+  <a href="https://github.com/replab/replab/archive/v0.9.0.zip"><i class="fa fa-download"></i></a>&nbsp;
   <a href="https://gitter.im/replab/replab"><i class="fab fa-gitter"></i></a>&nbsp;
   <a href="https://travis-ci.com/replab/replab"><i class="fas fa-sync-alt"></i></a>&nbsp;
   <a href="https://codecov.io/gh/replab/replab"><i class="fas fa-umbrella"></i></a>
@@ -90,7 +92,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../howto/index.html">How to</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../topic/index.html">Topic guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../talks/index.html">Talks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../publications/index.html">Publications using RepLAB</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">Technical Reference</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Development/Community</a><ul class="current">
@@ -98,11 +99,7 @@
 <li class="toctree-l2"><a class="reference internal" href="organization.html">Code organization and release process</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">API Documentation style guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#documentation-comments">Documentation comments</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#first-part-of-a-documentation-comment">First part of a documentation comment</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#sections">Sections</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#documentation-comments">Documentation comments</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#documenting-functions">Documenting functions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#documenting-classes">Documenting classes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#documenting-types">Documenting types</a></li>
@@ -115,6 +112,7 @@
 <li class="toctree-l2"><a class="reference internal" href="docker.html">Docker Octave image</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sphinx.html">Sphinx tips and tricks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="octave_bugs.html">Octave bugs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_ideas.html">Project ideas</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../blog/index.html">Blog</a></li>
@@ -385,11 +383,21 @@ each property, and following them by a comment as in below:</p>
 </pre></div>
 </div>
 <p>Property types are specified before a semicolon, in parenthesis, as for arguments.</p>
-<p>Methods are documented as standalone functions. Do not include <code class="docutils literal notranslate"><span class="pre">self</span></code>
-in the list of parameters. The constructor is documented separately as
-any method.</p>
+<p>Methods are documented as standalone functions. Do not include <code class="docutils literal notranslate"><span class="pre">self</span></code> in the list of parameters.
+The constructor is documented separately as any method.</p>
 <p>Abstract methods should have a single code line in their body
 <code class="docutils literal notranslate"><span class="pre">error('Abstract');</span></code>.</p>
+<p>Method blocks can be assigned to a <em>method group</em>, using the following syntax:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">methods</span> <span class="c">% Group operations</span>
+
+<span class="k">   function</span><span class="w"> </span>z <span class="p">=</span><span class="w"> </span><span class="nf">compose</span><span class="p">(</span>self, x, y<span class="p">)</span><span class="w"></span>
+
+<span class="w">   </span><span class="k">end</span>
+
+<span class="n">end</span>
+</pre></div>
+</div>
+<p>The group name <code class="docutils literal notranslate"><span class="pre">Implementation</span></code> or <code class="docutils literal notranslate"><span class="pre">Implementations</span></code> will be ignored: it concerns a block that implements abstract methods. The substring <code class="docutils literal notranslate"><span class="pre">(Abstract)</span></code> will be erased from group names: it can be used to mention that methods in a block need to be implemented in a subclass.</p>
 </div>
 <div class="section" id="documenting-types">
 <h2>Documenting types<a class="headerlink" href="#documenting-types" title="Permalink to this headline">¶</a></h2>
@@ -457,8 +465,9 @@ will be used in descriptions of subclasses in other packages.</p></li>
         <li class="right" >
           <a href="organization.html" title="Code organization and release process"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.8.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="index.html" >Development/Community</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">RepLAB 0.9.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Development/Community</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">API Documentation style guide</a></li> 
       </ul>
     </div>
 <script type="text/javascript">

@@ -72,7 +72,7 @@ Capitalization
 CamelCase/camelCase follows the separations of US English; words
 separated either by a hyphen or a space are separated in the camel case.
 Class names are ``UpperCamelCase``. Method and function names are
-``lowerCamelCase``.
+``lowerCamelCase``; exception: functions that create objects such as `DihedralGroup`.
 
 Lazy properties
 ---------------
@@ -103,3 +103,8 @@ No abstract methods in abstract base classes
 As Octave does not support the ``methods (Abstract)`` syntax, we provide
 generic implementations for abstract methods by having the method body be
 a single line with ``error('Abstract');``.
+
+Use of cell arrays vs. varargin
+-------------------------------
+
+In general, we avoid using methods/functions with a variable number of arguments, as it makes future extensions with optional parameters difficult. Exception: helper methods/function names with ``of`` in their names.
