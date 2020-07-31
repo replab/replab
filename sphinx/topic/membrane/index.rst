@@ -5,3 +5,4 @@ Membrane vibration modes
    :maxdepth: 1
 
    membrane1
+   membrane2
