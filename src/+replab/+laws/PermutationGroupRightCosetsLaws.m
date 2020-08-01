@@ -1,9 +1,9 @@
 classdef PermutationGroupRightCosetsLaws < replab.laws.RightCosetsLaws
-% Laws for `.PermutationGroupRightCosets`
+% Laws for `+replab.RightCosets`
 %
 % Property types
 %
-% R is now a `.PermutationGroupRightCosets`, G and H are `.PermutationGroup`
+% G and H are `+replab.PermutationGroup`
 
     methods
         function self = PermutationGroupRightCosetsLaws(R)

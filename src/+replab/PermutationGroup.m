@@ -126,8 +126,8 @@ classdef PermutationGroup < replab.FiniteGroup
                     res = true;
                     return
                 end
-                pds = unique(pds);
                 assert(all(pds <= 2^53-1)); % to be sure (otherwise can a BSGS have been computed?)
+                pds = unique(double(pds));
                 pds = double(pds);
                 for p = pds
                     newGens = cellfun(@(g) self.composeN(g, p), self.generators, 'uniform', 0);
@@ -663,7 +663,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %   A (`.CompactGroup`): The group whose copies are acted upon
         %
         % Returns:
-        %   `+replab.+wreathproduct.Common`: A wreath product group
+        %   `+replab.WreathProductGroup`: A wreath product group
             w = replab.WreathProductGroup.make(self, A);
         end
 

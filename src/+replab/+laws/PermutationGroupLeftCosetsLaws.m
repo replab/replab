@@ -1,9 +1,9 @@
 classdef PermutationGroupLeftCosetsLaws < replab.laws.LeftCosetsLaws
-% Laws for `.PermutationGroupLeftCosets`
+% Laws for `+replab.LeftCosets`
 %
 % Property types
 %
-% L is now a `.PermutationGroupLeftCosets`, G and H are `.PermutationGroup`
+% G and H are `+replab.PermutationGroup`
     methods
         function self = PermutationGroupLeftCosetsLaws(L)
             assert(isa(L, 'replab.PermutationGroupLeftCosets'));

@@ -1,7 +1,7 @@
 classdef SemidirectProductGroup < replab.Group
 % Describes an external semidirect product of groups
 %
-% This is an abstract base class. Call `.semidirectProduct` on a compact group to construct an instance.
+% This is an abstract base class. Call `.CompactGroup.semidirectProduct` to construct an instance.
 %
 % Example:
 %   >>> N = replab.S(3);
@@ -51,7 +51,7 @@ classdef SemidirectProductGroup < replab.Group
 
     end
 
-    methods % Implementatoins
+    methods % Implementations
 
         % Domain
 

@@ -5,8 +5,7 @@ classdef DirectProductOfFiniteGroups <  replab.DirectProductGroup & replab.NiceF
 % is simply the concatenation of the permutation images of the factors (which
 % are nice finite groups themselves).
 %
-% We overload a bunch of methods to make sure we use the `+replab.+directproduct.OfFiniteGroups`
-% more efficient variants, that do not require the BSGS chain construction.
+% We overload a bunch of methods to make sure we use the more efficient variants, that do not require the BSGS chain construction.
 
     methods
 
