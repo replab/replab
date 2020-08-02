@@ -20,13 +20,6 @@ classdef CosetTable < replab.Str
 
     methods (Static)
 
-        function r = cyclicallyReduce(r)
-        end
-
-        function c = cyclicConjugates(relator)
-            r = replab.fp.CosetTable.cyclicallyReduce
-        end
-
         function ct = fromRelatorsAndSubgroupGenerators(nGenerators, relators, subgroupGenerators)
             ct = replab.fp.CosetTable(nGenerators, relators, subgroupGenerators, 2^50);
             ct.cosetEnumerationR;
@@ -50,7 +43,7 @@ classdef CosetTable < replab.Str
             ct.standardize;
         end
 
-        function relators = presentation(group, subgroup, s, subgroupRelators)
+        function relators = presentation(group, subgroup, subgroupRelators)
         % Creates a presentation for a group based on the presentation for a subgroup
         %
         % We require ``group.generators(1:s) == subgroup.generators``.
@@ -58,11 +51,11 @@ classdef CosetTable < replab.Str
         % Args:
         %   group (`+replab.FiniteGroup`): Group
         %   subgroup (`+replab.FiniteGroup`): Subgroup
-        %   s (integer): Number of generators of ``group`` that match the generators of ``subgroup``
         %   subgroupRelators (cell(1,\*) of integer(1,\*)): Relators defining a presentation of subgroup
             r = group.nGenerators;
             s = subgroup.nGenerators;
             relators = subgroupRelators;
+            rc = replab.fp.RelatorConjugates.fromRelators(r, relators);
             C = replab.fp.CosetTable.fromGroupAndSubgroup(group, subgroup);
             % line 1
             if r == s
@@ -70,7 +63,9 @@ classdef CosetTable < replab.Str
             end
             % line 2
             n = double(group.order/subgroup.order);
-            Chat = replab.fp.CosetTable(r, 2*n);
+            Chat = replab.fp.CosetTable(r);
+            Chat.storeDeductions = true;
+            Chat.M = n;
             % line 3
             for i = 1:s
                 Chat.C(1,i) = 1;
@@ -85,7 +80,7 @@ classdef CosetTable < replab.Str
             % line 5
             m = subgroup.abstractGroupIsomorphism;
             while true
-                Chat.n
+                % transpose so that it is the smallest beta
                 [x beta] = find((C.C ~= Chat.C(1:n, :))', 1);
                 if isempty(beta)
                     break
@@ -100,30 +95,10 @@ classdef CosetTable < replab.Str
                 newRelator = [tbeta genIndex(x) -fliplr(tbetax) -fliplr(uhat_inH)];
                 assert(group.isIdentity(group.imageLetters(newRelator)));
                 relators{1,end+1} = newRelator;
-                Chat.scanAndFill(1, newRelator);
-                alpha = 1; % since p(1) is always 1
-                while alpha <= Chat.n % Line 4
-                    if Chat.p(alpha) ~= alpha % only consider live cosets
-                        alpha = alpha + 1;
-                        continue
-                    end
-                    for i = 1:length(relators) % Line 5
-                        w = relators{i};
-                        % Lines 6-7
-                        try
-                            Chat.scanAndFill(alpha, w);
-                        catch
-                        end
-                        if Chat.p(alpha) < alpha
-                            break
-                        end
-                    end
-                    if Chat.p(alpha) < alpha % Line 8
-                        alpha = alpha + 1;
-                        continue
-                    end
-                    alpha = alpha + 1;
-                end
+                rc = rc.updated({newRelator});
+                Chat.scan(1, newRelator);
+                % run coset'ta
+                Chat.processDeductions(relators, rc.groupedRelators);
             end
         end
 
@@ -131,6 +106,14 @@ classdef CosetTable < replab.Str
         % Enumerates cosets (relator based method)
         %
         % Taken from COSETENUMERATIONR, p. 164 of Holt
+        %
+        % Args:
+        %   nGenerators (integer): Number of generators
+        %   relators (cell(1,\*) of integer(1,\*)): Relators given as letter arrays
+        %   subgroupGenerators (cell(1,\*) of integer(1,\*)): Subgroup generators given as letter arrays
+        %
+        % Returns:
+        %   `.CosetTable`: The enumerated, standardized coset table
             ct = replab.fp.CosetTable(nGenerators);
             for i = 1:length(subgroupGenerators) % Line 3
                 w = subgroupGenerators{i};
@@ -168,31 +151,25 @@ classdef CosetTable < replab.Str
         end
 
         function ct = cosetEnumerationC(nGenerators, relators, subgroupGenerators)
+        % Enumerates cosets (coset-table based method)
+        %
+        % Taken from COSETENUMERATIONC, p. 166 of Holt
+        %
+        % Args:
+        %   nGenerators (integer): Number of generators
+        %   relators (cell(1,\*) of integer(1,\*)): Relators given as letter arrays
+        %   subgroupGenerators (cell(1,\*) of integer(1,\*)): Subgroup generators given as letter arrays
+        %
+        % Returns:
+        %   `.CosetTable`: The enumerated, standardized coset table
             ct = replab.fp.CosetTable(nGenerators);
             ct.storeDeductions = true;
-            relators = cellfun(@(r) replab.fp.Letters.cyclicallyReduce(r), relators, 'uniform', 0); % line 1
-            relators = relators(~cellfun(@isempty, relators));
-            relators = replab.fp.Letters.unique(relators);
-            relatorsC = cell(1, 0); % line 2
-            for i = 1:length(relators)
-                relatorsC = horzcat(relatorsC, replab.fp.Letters.cyclicConjugates(relators{i}));
-                relatorsC = horzcat(relatorsC, replab.fp.Letters.cyclicConjugates(-fliplr(relators{i})));
-            end
-            relatorsC1 = replab.fp.Letters.unique(relatorsC);
-            groupedRelators = cell(1, nGenerators*2);
-            for i = 1:nGenerators*2
-                groupedRelators{i} = cell(1, 0);
-            end
-            for i = 1:length(relatorsC1)
-                r = relatorsC1{i};
-                f = ct.lettersToColumnIndices(r(1));
-                groupedRelators{f} = horzcat(groupedRelators{f}, r);
-            end
+            rc = replab.fp.RelatorConjugates.fromRelators(nGenerators, relators);
             for i = 1:length(subgroupGenerators)
                 w = subgroupGenerators{i};
                 ct.scanAndFill(1, w);
             end
-            ct.processDeductions(relators, groupedRelators);
+            ct.processDeductions(relators, rc.groupedRelators);
             alpha = 1;
             while alpha <= ct.n
                 if ct.p(alpha) ~= alpha % only consider live cosets
@@ -205,7 +182,7 @@ classdef CosetTable < replab.Str
                     end
                     if ct.C(alpha, x) == 0
                         ct.define(alpha, x);
-                        ct.processDeductions(relators, groupedRelators);
+                        ct.processDeductions(relators, rc.groupedRelators);
                     end
                 end
                 alpha = alpha + 1;
@@ -215,7 +192,6 @@ classdef CosetTable < replab.Str
         end
 
     end
-
 
     methods
 
@@ -585,7 +561,9 @@ classdef CosetTable < replab.Str
                     if delta > 0
                         xinv = self.generatorInverse(x);
                         self.C(delta, xinv) = 0;
-                        self.deductions(:,end+1) = [delta; xinv];
+                        if self.storeDeductions
+                            self.deductions(:,end+1) = [delta; xinv];
+                        end
                         mu = self.rep(gamma);
                         nu = self.rep(delta);
                         if self.C(mu, x) > 0
