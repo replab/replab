@@ -38,7 +38,7 @@ classdef Letters
             word = '';
             sep = '';
             i = 1;
-            letters = replab.fp.reduceLetters(letters);
+            letters = replab.fp.Letters.reduce(letters);
             while i <= length(letters)
                 e = sign(letters(i)); % exponent
                 l = abs(letters(i));

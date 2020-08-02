@@ -47,7 +47,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
     methods (Static)
 
         function A = make(generatorNames, relatorWords)
-            relators = cellfun(@(w) replab.fp.parseLetters(w, generatorNames), relatorWords, 'uniform', 0);
+            relators = cellfun(@(w) replab.fp.Letters.parse(w, generatorNames), relatorWords, 'uniform', 0);
             gens = replab.fp.permutationGeneratorsForRelators(length(generatorNames), relators);
             pg = replab.PermutationGroup.of(gens{:});
             A = replab.AbstractGroup(generatorNames, pg, relatorWords);
