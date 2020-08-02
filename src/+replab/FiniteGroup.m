@@ -300,7 +300,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   element: Element of the group corresponding to the given word
-
             if nargin < 3 || isempty(names)
                 m = self.abstractGroupIsomorphism;
             else

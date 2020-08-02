@@ -16,14 +16,9 @@ classdef CosetTable < replab.Str
 %   Thus, we implement the algorithms of Holt in a different class, which matches the pseudocode closely.
 %   This class, however, translates between those conventions.
 
-    properties (Access = protected)
+    properties (SetAccess = protected)
         generatorNames % (cell(1,\*) of charstring): Names of the generators
         internal % (`+replab.+fp.CosetTable`): Internal coset table
-    end
-
-    methods (Static)
-
-
     end
 
     methods
@@ -63,8 +58,7 @@ classdef CosetTable < replab.Str
             nGenerators = length(generatorNames);
             subgroupGenerators = cellfun(@(w) replab.fp.parseLetters(w, generatorNames), subgroupGeneratorWords, 'uniform', 0);
             relators = cellfun(@(w) replab.fp.parseLetters(w, generatorNames), relatorWords, 'uniform', 0);
-            internal = replab.fp.CosetTable(nGenerators, relators, subgroupGenerators, 2^51 - 1); % TODO: estimate memory use
-            internal.cosetEnumerationR;
+            internal = replab.fp.CosetTable.cosetEnumerationR(nGenerators, relators, subgroupGenerators, 2^51 - 1); % TODO: estimate memory use
             ct = replab.CosetTable(generatorNames, internal);
         end
 

@@ -7,7 +7,6 @@ function gens = permutationGeneratorsForRelators(nGenerators, relators)
 %
 % Returns:
 %   cell(1,\*) of permutation: Generators of a permutation group realizing the presentation
-    ct = replab.fp.CosetTable(nGenerators, relators, {}, 2^50);
-    ct.cosetEnumerationR;
+    ct = replab.fp.cosetEnumerationR(nGenerators, relators, {}, 2^50);
     gens = arrayfun(@(i) ct.C(:,nGenerators+i)', 1:nGenerators, 'uniform', 0);
 end
