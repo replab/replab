@@ -88,8 +88,8 @@ classdef AbstractGroup < replab.NiceFiniteGroup
     methods (Access = protected)
 
         function r = computeRelators(self)
-            r = replab.fp.relatorsForPermutationGroup(self.permutationGroup, self.generatorNames);
-            r = cellfun(@(w) self.fromLetters(w), r, 'uniform', 0);
+            r = replab.fp.relatorsForPermutationGroup(self.permutationGroup);
+            r = cellfun(@(w) self.fromLetters(fliplr(w)), r, 'uniform', 0);
         end
 
         function m = computeNiceMorphism(self)

@@ -1,14 +1,13 @@
-function relators = relatorsForPermutationGroup(group, names)
+function relators = relatorsForPermutationGroup(group)
 % Computes relators for a finite group
 %
 % Note: calls the GAP system internally
 %
 % Args:
 %   group (`+replab.PermutationGroup`): Permutation group to find the relators of
-%   names (cell(1,\*) of charstring): Generator names to use in the relators
 %
 % Returns:
-%   cell(1,\*) of charstring: Relators given as explicit words
+%   cell(1,\*) of integer(1,\*): Relators given as explicit words
     relators = cell(1, 0);
     if group.isTrivial
         return
@@ -26,5 +25,4 @@ function relators = relatorsForPermutationGroup(group, names)
         sub_s = grp_s;
         grp_s = group.subgroup(group.generators(1:s));
     end
-    relators = cellfun(@(r) replab.fp.Letters.print(r, names), relators, 'uniform', 0);
 end

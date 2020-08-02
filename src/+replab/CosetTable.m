@@ -56,9 +56,9 @@ classdef CosetTable < replab.Str
         %   relatorWords (cell(1,\*) of charstring): Group relators to parse
         %   subgroupGeneratorWords (cell(1, \*) of charstring): Generators for a subgroup, expressed as words in the group generators
             nGenerators = length(generatorNames);
-            subgroupGenerators = cellfun(@(w) replab.fp.parseLetters(w, generatorNames), subgroupGeneratorWords, 'uniform', 0);
-            relators = cellfun(@(w) replab.fp.parseLetters(w, generatorNames), relatorWords, 'uniform', 0);
-            internal = replab.fp.CosetTable.cosetEnumerationR(nGenerators, relators, subgroupGenerators, 2^51 - 1); % TODO: estimate memory use
+            subgroupGenerators = cellfun(@(w) replab.fp.Letters.parse(w, generatorNames), subgroupGeneratorWords, 'uniform', 0);
+            relators = cellfun(@(w) replab.fp.Letters.parse(w, generatorNames), relatorWords, 'uniform', 0);
+            internal = replab.fp.CosetTable.cosetEnumerationR(nGenerators, relators, subgroupGenerators);
             ct = replab.CosetTable(generatorNames, internal);
         end
 
