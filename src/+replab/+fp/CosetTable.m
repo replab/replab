@@ -6,6 +6,16 @@ classdef CosetTable < replab.Str
 % Chapman & Hall/CRC, 2004, pp. 149–198
 %
 % Note that the action on cosets is a right action, contrary to the conventions used everywhere else in RepLAB.
+% We usually indicate when we convert between conventions.
+%
+% The coset table is a mutable object.
+%
+% This class is used for both relators-based coset enumeration, and coset-table based coset enumeration. In the
+% latter case, we need to keep track of deductions -- this happens when the flag `.storeDeductions` is true,
+% this flag can be changed manually after construction of the coset table.
+%
+% The bounds `.M` and `.maxDeductions` are set to the default values provided by the RepLAB globals. These values
+% can be modified after construction of the coset table.
 
     properties
         nGenerators % (integer): Number of generators
@@ -26,6 +36,14 @@ classdef CosetTable < replab.Str
         end
 
         function ct = fromGroupAndSubgroup(group, subgroup)
+        % Constructs a coset table from a given group and a given subgroup
+        %
+        % Args:
+        %   group (`+replab.FiniteGroup`): Group
+        %   subgroup (`+replab.FiniteGroup`): Subgroup of ``group``
+        %
+        % Returns:
+        %   `.CosetTable`: A standardized coset table corresponding to the right cosets of ``subgroup`` in ``group``
             nG = group.nGenerators;
             ct = replab.fp.CosetTable(nG);
             lc = group / subgroup;
@@ -46,12 +64,17 @@ classdef CosetTable < replab.Str
         function relators = presentation(group, subgroup, subgroupRelators)
         % Creates a presentation for a group based on the presentation for a subgroup
         %
-        % We require ``group.generators(1:s) == subgroup.generators``.
+        % We require ``group.generators(1:s) == subgroup.generators``, where ``s = subgroup.nGenerators``.
+        %
+        % PRESENTATION from Holt, p. 202
         %
         % Args:
         %   group (`+replab.FiniteGroup`): Group
         %   subgroup (`+replab.FiniteGroup`): Subgroup
         %   subgroupRelators (cell(1,\*) of integer(1,\*)): Relators defining a presentation of subgroup
+        %
+        % Returns:
+        %   cell(1,\*) of integer(1,\*): Relators for ``group``
             r = group.nGenerators;
             s = subgroup.nGenerators;
             relators = subgroupRelators;
@@ -362,11 +385,25 @@ classdef CosetTable < replab.Str
         end
 
         function l = lettersToColumnIndices(self, l)
+        % Converts a word given in letters to the convention used to index the columns of the coset table
+        %
+        % Args:
+        %   l (integer(1,\*)): Letters in ``-n,...,-1`` and ``1,...,n`` with ``n`` the number of generators
+        %
+        % Returns:
+        %   integer(1,\*): Expression referencing the columns of the coset table
             m = l < 0;
             l(m) = self.nGenerators + (-l(m));
         end
 
         function l = columnIndicesToLetters(self, l)
+        % Converts a word given using column indices to standard letters
+        %
+        % Args:
+        %   l (integer(1,\*)): Expression referencing the columns of the coset table
+        %
+        % Returns:
+        %   integer(1,\*): Letters in ``-n,...,-1`` and ``1,...,n`` with ``n`` the number of generators
             m = l > self.nGenerators;
             l(m) = -(l(m) - self.nGenerators);
         end
@@ -442,6 +479,7 @@ classdef CosetTable < replab.Str
         %   relators (cell(1,\*) of integer(1,\*)): Relators given as letters
         %   groupedRelators (cell(1,\*) of cell(1,\*) of integer(1,\*)): Relators and their conjugates, grouped by their first letter (in column convention)
             while size(self.deductions, 2) > 0
+                % If the deduction table is full, use lookahead and clear the table
                 if size(self.deductions, 2) >= self.maxDeductions
                     self.lookahead(relators);
                     self.deductions = zeros(2, 0);
