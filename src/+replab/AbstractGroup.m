@@ -68,12 +68,12 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %   `.AbstractGroup`: The parsed abstract group
             [ok, generatorNames, relatorLetters] = replab.fp.Parser.parsePresentation(str);
             assert(ok, 'Error in given presentation string');
-            relatorLetters = cellfun(@(r) replab.fp.reduceLetters(r), relatorLetters, 'uniform', 0);
+            relatorLetters = cellfun(@(r) replab.fp.Letters.reduce(r), relatorLetters, 'uniform', 0);
             mask = cellfun(@isempty, relatorLetters);
             relatorLetters = relatorLetters(~mask);
             relators = cell(1, length(relatorLetters));
             for i = 1:length(relatorLetters)
-                relators{i} = replab.fp.printLetters(relatorLetters{i}, generatorNames, ' ');
+                relators{i} = replab.fp.Letters.print(relatorLetters{i}, generatorNames, ' ');
             end
             A = replab.AbstractGroup.make(generatorNames, relators);
             if nargout > 1
@@ -191,7 +191,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   charstring: Word as a string
-            word = replab.fp.printLetters(letters, self.generatorNames, ' ');
+            word = replab.fp.Letters.print(letters, self.generatorNames, ' ');
         end
 
         function img = computeImage(self, word, target, targetGeneratorImages)
@@ -282,7 +282,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         function z = compose(self, x, y)
             xl = self.toLetters(x);
             yl = self.toLetters(y);
-            zl = replab.fp.composeLetters(xl, yl);
+            zl = replab.fp.Letters.compose(xl, yl);
             z = self.fromLetters(zl);
         end
 
@@ -290,8 +290,14 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
         function z = inverse(self, x)
             xl = self.toLetters(x);
-            zl = replab.fp.inverseLetters(xl);
+            zl = replab.fp.Letters.inverse(xl);
             z = self.fromLetters(zl);
+        end
+
+        % FiniteSet
+
+        function b = hasSameTypeAs(self, rhs)
+            b = self.type.groupId == rhs.type.groupId;
         end
 
         % NiceFiniteGroup
