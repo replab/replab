@@ -48,9 +48,11 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
         function A = make(generatorNames, relatorWords)
             relators = cellfun(@(w) replab.fp.Letters.parse(w, generatorNames), relatorWords, 'uniform', 0);
-            gens = replab.fp.permutationGeneratorsForRelators(length(generatorNames), relators);
+            [gens order] = replab.fp.permutationGeneratorsForRelators(length(generatorNames), relators);
             pg = replab.PermutationGroup.of(gens{:});
+            pg.cache('order', order, '==');
             A = replab.AbstractGroup(generatorNames, pg, relatorWords);
+            A.cache('order', order, '==');
         end
 
         function [A varargout] = parsePresentation(str)
