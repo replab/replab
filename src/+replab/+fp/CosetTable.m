@@ -35,11 +35,9 @@ classdef CosetTable < replab.Str
     end
 
     properties (Access = protected)
-        toMergeIndex % (integer(1,\*)): Coset numbers to be deleted from active cosets
-        toMergeNext % (integer(1,\*)): Next point in the linked list
-        toMergeFirst % (integer): First element in the linked list, or ``0`` if empty
-        toMergeLast % (integer): Last element in the linked list, or ``0`` if empty
-        toMergeFirstFree % (integer): First free element in the linked list, or ``0`` if empty
+        toMerge % (integer(1,\*)): Array of elements to merge, corresponds to the ``q`` variable in Holt
+        toMergeFirst % (integer): Index of first element in queue
+        toMergeLast % (integer): Index of last element in queue
     end
 
     methods (Static)
@@ -250,11 +248,9 @@ classdef CosetTable < replab.Str
             self.columnInverse = [nGenerators+(1:nGenerators) 1:nGenerators];
             % initialize the toMerge linked list
             m = 16;
-            self.toMergeIndex = zeros(1, m);
-            self.toMergeNext = [2:m 0];
+            self.toMerge = zeros(1, m);
             self.toMergeFirst = 0;
             self.toMergeLast = 0;
-            self.toMergeFirstFree = 1;
         end
 
     end
@@ -458,40 +454,6 @@ classdef CosetTable < replab.Str
             end
         end
 
-        function toMergePush(self, el)
-            if self.toMergeFirstFree == 0
-                n = length(self.toMergeIndex);
-                self.toMergeIndex = [self.toMergeIndex zeros(1, n)];
-                self.toMergeNext = [self.toMergeNext n+2:2*n 0];
-                self.toMergeFirstFree = n+1;
-            end
-            newI = self.toMergeFirstFree; % get a free element
-            self.toMergeFirstFree = self.toMergeNext(newI); % remove it from the free list
-            if self.toMergeFirst == 0
-                self.toMergeFirst = newI;
-            else
-                self.toMergeNext(self.toMergeLast) = newI;
-            end
-            self.toMergeNext(newI) = 0;
-            self.toMergeIndex(newI) = el;
-            self.toMergeLast = newI;
-        end
-
-        function b = toMergeIsEmpty(self)
-            b = self.toMergeFirst == 0;
-        end
-
-        function el = toMergePop(self)
-            ind = self.toMergeFirst;
-            el = self.toMergeIndex(ind);
-            self.toMergeFirst = self.toMergeNext(ind);
-            self.toMergeNext(ind) = self.toMergeFirstFree;
-            self.toMergeFirstFree = ind;
-            if self.toMergeFirst == 0
-                self.toMergeLast = 0;
-            end
-        end
-
         function merge(self, k, lambda)
         % Removes the smaller of k and lambda from active cosets
         %
@@ -506,7 +468,19 @@ classdef CosetTable < replab.Str
                 mu = min([lam1, lam2]);
                 v = max([lam1, lam2]);
                 self.p(v) = mu;
-                self.toMergePush(v);
+                m = length(self.toMerge);
+                if self.toMergeLast == m
+                    if self.toMergeFirst > m/2
+                        self.toMerge(1:m/2) = self.toMerge(m/2+1:m);
+                        self.toMergeFirst = self.toMergeFirst - m/2;
+                        self.toMergeLast = self.toMergeLast - m/2;
+                    else
+                        self.toMerge = [self.toMerge zeros(1, m)];
+                    end
+                end
+                ind = self.toMergeLast + 1;
+                self.toMergeLast = ind;
+                self.toMerge(ind) = v;
             end
         end
 
@@ -518,9 +492,12 @@ classdef CosetTable < replab.Str
         % Args:
         %   alpha (integer): coincident coset (arrive to this coset from one direction in the word)
         %   beta (integer): coset coicident with alpha (arrive to this coset from the other direction)
+            self.toMergeFirst = 1;
+            self.toMergeLast = 0;
             self.merge(alpha, beta);
-            while ~self.toMergeIsEmpty
-                gamma = self.toMergePop;
+            while self.toMergeFirst <= self.toMergeLast
+                gamma = self.toMerge(self.toMergeFirst);
+                self.toMergeFirst = self.toMergeFirst + 1;
                 for x = 1:self.nGenerators*2
                     delta = self.C(gamma, x);
                     if delta > 0
