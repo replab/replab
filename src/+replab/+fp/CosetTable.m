@@ -245,7 +245,7 @@ classdef CosetTable < replab.Str
             self.storeDeductions = false;
             self.deductions = zeros(2, 0);
             self.columnInverse = [nGenerators+(1:nGenerators) 1:nGenerators];
-            % initialize the toMerge linked list
+            % initialize the toMerge queue
             m = 16;
             self.toMerge = zeros(1, m);
             self.toMergeFirst = 0;
@@ -359,11 +359,11 @@ classdef CosetTable < replab.Str
         function switchElmts(self, beta, gamma)
         % Switch the given coset numbers
         %
+        % Faster implementation of `.switchElmtsSlow`
+        %
         % Args:
         %   beta (integer): First coset number to switch
         %   gamma (integer): Second coset number to switch
-        %
-        % SWITCH, Holt p. 167
             beta1 = self.C(gamma, :);
             gamma1 = self.C(beta, :);
             beta1(self.C(gamma, :) == beta) = gamma;
@@ -682,7 +682,7 @@ classdef CosetTable < replab.Str
                 end
                 if j < i
                     self.coincidence(f, b);
-                    return
+                    return % not in Holt, but is needed
                 elseif j == i
                     self.C(f, wC(i)) = b;
                     self.C(b, colinv(wC(j))) = f;
