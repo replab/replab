@@ -77,7 +77,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
             A = replab.AbstractGroup.make(generatorNames, relators);
             if nargout > 1
-                for i = 1:length(A.nGenerators)
+                for i = 1:A.nGenerators
                     varargout{i} = A.generator(i);
                 end
             end

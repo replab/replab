@@ -839,19 +839,19 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-% $$$         % TODO
-% $$$         function f = leftConjugateMorphism(self, by)
-% $$$         % Returns the morphism that corresponds to left conjugation by an element
-% $$$         %
-% $$$         % Args:
-% $$$         %   by (element of `parent`): Element to conjugate the group with
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Morphism`: Conjugation morphism
-% $$$             generatorImages = cellfun(@(g) self.parent.leftConjugate(by, g), self.generators, 'uniform', 0);
-% $$$             target = self.parent.subgroup(newGenerators, self.order);
-% $$$             f = self.morphismByImages(self, target, generatorImages);
-% $$$         end
+        % TODO
+        function f = leftConjugateMorphism(self, by)
+        % Returns the morphism that corresponds to left conjugation by an element
+        %
+        % Args:
+        %   by (element of `.type`): Element to conjugate the group with
+        %
+        % Returns:
+        %   `+replab.Morphism`: Conjugation morphism
+            generatorImages = cellfun(@(g) self.type.leftConjugate(by, g), self.generators, 'uniform', 0);
+            target = self.type.subgroup(newGenerators, self.order);
+            f = self.morphismByImages(self, target, generatorImages);
+        end
 
         function m = morphismByImages(self, target, generatorImages)
         % Constructs a morphism to a group using images of generators
