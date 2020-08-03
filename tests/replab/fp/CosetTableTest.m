@@ -74,13 +74,19 @@ function test_symmetric_group_presentation
     assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
 end
 
-function test_dihedrral_group_presentation
+function test_dihedral_group_presentation
+    if ReplabTestParameters.onlyFastTests
+        return
+    end
     G = replab.DihedralGroup(20);
     relators = replab.fp.relatorsForPermutationGroup(G);
     assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
 end
 
 function test_Mathieu_M11
+    if ReplabTestParameters.onlyFastTests
+        return
+    end
     r1 = [1 1];
     r2 = [2 2 2 2];
     r3 = [1 2 1 2 1 2 1 2 1 2  1 2 1 2 1 2 1 2 1 2  1 2];
