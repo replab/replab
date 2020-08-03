@@ -59,3 +59,23 @@ function test_holt_Exercise2
     assert(isequal(ctR.C, ctC.C));
     assert(size(ctR.C, 1) == 8);
 end
+
+function test_quaternion_presentation
+    a = [2 6 1 8 7 3 4 5];
+    b = [4 7 8 6 1 5 3 2];
+    G = replab.PermutationGroup.of(a, b);
+    relators = replab.fp.relatorsForPermutationGroup(G);
+    assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
+end
+
+function test_symmetric_group_presentation
+    G = replab.SymmetricGroup(6);
+    relators = replab.fp.relatorsForPermutationGroup(G);
+    assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
+end
+
+function test_dihedrral_group_presentation
+    G = replab.DihedralGroup(20);
+    relators = replab.fp.relatorsForPermutationGroup(G);
+    assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
+end
