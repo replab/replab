@@ -2,8 +2,7 @@ classdef CosetTable < replab.Str
 % Generates a coset table from the generators and relators of a finitely presented group and subset
 %
 % Based on Todd-Coxeter algorithm for coset enumeration from:
-% Holt, Derek. “Coset Enumeration.” Handbook of Computational Group Theory,
-% Chapman & Hall/CRC, 2004, pp. 149–198
+% Holt, Derek. "Coset Enumeration." Handbook of Computational Group Theory, Chapman & Hall/CRC, 2004, pp. 149–198
 %
 % Note that the action on cosets is a right action, contrary to the conventions used everywhere else in RepLAB.
 % We usually indicate when we convert between conventions.
