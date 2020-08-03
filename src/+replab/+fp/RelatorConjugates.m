@@ -2,7 +2,7 @@ classdef RelatorConjugates < replab.Str
 
     properties (SetAccess = protected)
         nGenerators % (integer): Number of generators
-        groupedRelators % (cell(1,\*) of cell(1,\*) of integer(1,\*)):
+        groupedRelators % (cell(1,\*) of cell(1,\*) of integer(1,\*)): Relators, their inverses and conjugates, grouped by first index
     end
 
     methods
