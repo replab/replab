@@ -79,3 +79,36 @@ function test_dihedrral_group_presentation
     relators = replab.fp.relatorsForPermutationGroup(G);
     assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
 end
+
+function test_Mathieu_M11
+    r1 = [1 1];
+    r2 = [2 2 2 2];
+    r3 = [1 2 1 2 1 2 1 2 1 2  1 2 1 2 1 2 1 2 1 2  1 2];
+    r4 = [1 2 2 1 2 2 1 2 2  1 2 2 1 2 2 1 2 2];
+    r5 = [1 2 1 2 1 -2 1 2 1 2 2 1 -2 1 2 1 -2 1 -2];
+    ctR = replab.fp.CosetTable.cosetEnumerationR(2, {r1 r2 r3 r4 r5}, {});
+    ctC = replab.fp.CosetTable.cosetEnumerationC(2, {r1 r2 r3 r4 r5}, {});
+    assert(isequal(ctR.C, ctC.C));
+end
+
+function test_Mathieu_M12_Holt
+    if ReplabTestParameters.onlyFastTests
+        return
+    end
+    nGenerators = 3;
+    relators = {ones(1,11), [2,2], [3,3], [1,2,1,2,1,2], [1,3,1,3,1,3], ...
+                repmat([2,3],1,10), [1,1,2,3,2,3,1,-3,-2,-3,-2]};
+    y = {};
+    ctR = replab.fp.CosetTable.cosetEnumerationR(nGenerators, relators, y);
+    ctC = replab.fp.CosetTable.cosetEnumerationC(nGenerators, relators, y);
+    assert(isequal(ctR.C, ctC.C));
+    assert(size(ctR.C, 1) == 95040);
+end
+
+function test_Mathieu_M12_atlas
+    if ReplabTestParameters.onlyFastTests
+        return
+    end
+    G = replab.AbstractGroup.parsePresentation('< x, y | x^2 = y^3 = (x*y)^11 = [x,y]^6 = (x*y*x*y*x*y^-1)^6 = [x,y*x*y]^5 = 1 >');
+    assert(G.order == 95040);
+end
