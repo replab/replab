@@ -34,6 +34,14 @@ classdef CosetTable < replab.Str
         deductions % (integer(2,\*)): Deduction stack containing pairs (alpha, x)
     end
 
+    properties (Access = protected)
+        toMergeIndex % (integer(1,\*)): Coset numbers to be deleted from active cosets
+        toMergeNext % (integer(1,\*)): Next point in the linked list
+        toMergeFirst % (integer): First element in the linked list, or ``0`` if empty
+        toMergeLast % (integer): Last element in the linked list, or ``0`` if empty
+        toMergeFirstFree % (integer): First free element in the linked list, or ``0`` if empty
+    end
+
     methods (Static)
 
         function ct = fromGroupAndSubgroup(group, subgroup)
@@ -240,6 +248,13 @@ classdef CosetTable < replab.Str
             self.storeDeductions = false;
             self.deductions = zeros(2, 0);
             self.columnInverse = [nGenerators+(1:nGenerators) 1:nGenerators];
+            % initialize the toMerge linked list
+            m = 16;
+            self.toMergeIndex = zeros(1, m);
+            self.toMergeNext = [2:m 0];
+            self.toMergeFirst = 0;
+            self.toMergeLast = 0;
+            self.toMergeFirstFree = 1;
         end
 
     end
@@ -443,7 +458,41 @@ classdef CosetTable < replab.Str
             end
         end
 
-        function q = merge(self, k, lambda, q)
+        function toMergePush(self, el)
+            if self.toMergeFirstFree == 0
+                n = length(self.toMergeIndex);
+                self.toMergeIndex = [self.toMergeIndex zeros(1, n)];
+                self.toMergeNext = [self.toMergeNext n+2:2*n 0];
+                self.toMergeFirstFree = n+1;
+            end
+            newI = self.toMergeFirstFree; % get a free element
+            self.toMergeFirstFree = self.toMergeNext(newI); % remove it from the free list
+            if self.toMergeFirst == 0
+                self.toMergeFirst = newI;
+            else
+                self.toMergeNext(self.toMergeLast) = newI;
+            end
+            self.toMergeNext(newI) = 0;
+            self.toMergeIndex(newI) = el;
+            self.toMergeLast = newI;
+        end
+
+        function b = toMergeIsEmpty(self)
+            b = self.toMergeFirst == 0;
+        end
+
+        function el = toMergePop(self)
+            ind = self.toMergeFirst;
+            el = self.toMergeIndex(ind);
+            self.toMergeFirst = self.toMergeNext(ind);
+            self.toMergeNext(ind) = self.toMergeFirstFree;
+            self.toMergeFirstFree = ind;
+            if self.toMergeFirst == 0
+                self.toMergeLast = 0;
+            end
+        end
+
+        function merge(self, k, lambda)
         % Removes the smaller of k and lambda from active cosets
         %
         % MERGE, p. 157
@@ -451,14 +500,13 @@ classdef CosetTable < replab.Str
         % Args:
         %   k (integer): coset coincident with lambda
         %   lambda (integer): coset coincident with k
-        %   q (integer(1,\*)): coset numbers that are replaced
             lam1 = self.rep(k);
             lam2 = self.rep(lambda);
             if lam1 ~= lam2
                 mu = min([lam1, lam2]);
                 v = max([lam1, lam2]);
                 self.p(v) = mu;
-                q(1,end+1) = v;
+                self.toMergePush(v);
             end
         end
 
@@ -470,11 +518,9 @@ classdef CosetTable < replab.Str
         % Args:
         %   alpha (integer): coincident coset (arrive to this coset from one direction in the word)
         %   beta (integer): coset coicident with alpha (arrive to this coset from the other direction)
-            q = [];
-            q = self.merge(alpha, beta, q);
-            while ~isempty(q)
-                gamma = q(1);
-                q = q(2:end);
+            self.merge(alpha, beta);
+            while ~self.toMergeIsEmpty
+                gamma = self.toMergePop;
                 for x = 1:self.nGenerators*2
                     delta = self.C(gamma, x);
                     if delta > 0
@@ -485,13 +531,17 @@ classdef CosetTable < replab.Str
                         end
                         mu = self.rep(gamma);
                         nu = self.rep(delta);
-                        if self.C(mu, x) > 0
-                            q = self.merge(nu, self.C(mu, x), q);
-                        elseif self.C(nu, xinv) > 0
-                            q = self.merge(mu, self.C(nu, xinv), q);
+                        Cmux = self.C(mu, x);
+                        if Cmux > 0
+                            self.merge(nu, self.C(mu, x));
                         else
-                            self.C(mu, x) = nu;
-                            self.C(nu, xinv) = mu;
+                            Cnuxinv = self.C(nu, xinv);
+                            if Cnuxinv > 0
+                                self.merge(mu, Cnuxinv);
+                            else
+                                self.C(mu, x) = nu;
+                                self.C(nu, xinv) = mu;
+                            end
                         end
                     end
                 end
@@ -512,9 +562,14 @@ classdef CosetTable < replab.Str
         %   wC (integer(1,\*)): Word to scan, whose letters are column indices
             f = alpha; % line 2
             r = length(wC);
+            colinv = self.columnInverse;
             i = 1;
-            while i <= r && self.C(f, wC(i)) > 0 % line 3
-                f = self.C(f, wC(i)); % line 4
+            while i <= r
+                CfwC = self.C(f, wC(i)); % line 3
+                if CfwC == 0
+                    break
+                end
+                f = CfwC; % line 4
                 i = i + 1;
             end
             if i > r % line 5
@@ -526,15 +581,19 @@ classdef CosetTable < replab.Str
             % Forward scan incomplete, scan backwards
             b = alpha; % line 8
             j = r;
-            while j >= i && self.C(b, self.columnInverse(wC(j))) > 0 % line 9
-                b = self.C(b, self.columnInverse(wC(j))); % line 10
+            while j >= i
+                CbwinvC = self.C(b, colinv(wC(j)));
+                if CbwinvC == 0 % line 9
+                    break
+                end
+                b = CbwinvC; % line 10
                 j = j - 1;
             end
             if j < i % line 11
                 self.coincidence(f, b); % line 12
             elseif j == i % line 13
                 self.C(f, wC(i)) = b; % line 14
-                self.C(b, self.columnInverse(wC(i))) = f;
+                self.C(b, colinv(wC(i))) = f;
                 if self.storeDeductions
                     self.deductions(:,end+1) = [f; wC(i)];
                 end
@@ -617,13 +676,18 @@ classdef CosetTable < replab.Str
         %   alpha (integer): Initial coset number
         %   wC (integer(1,\*)): Word whose letters are column indices
             r = length(wC);
+            colinv = self.columnInverse;
             f = alpha;
             i = 1;
             b = alpha;
             j = r;
             while true
-                while i <= r && self.C(f, wC(i)) > 0
-                    f = self.C(f, wC(i));
+                while i <= r
+                    CfwC = self.C(f, wC(i)); % line 3
+                    if CfwC == 0
+                        break
+                    end
+                    f = CfwC; % line 4
                     i = i + 1;
                 end
                 if i > r
@@ -632,8 +696,12 @@ classdef CosetTable < replab.Str
                     end
                     return
                 end
-                while j >= i && self.C(b, self.columnInverse(wC(j))) > 0
-                    b = self.C(b, self.columnInverse(wC(j)));
+                while j >= i
+                    CbwinvC = self.C(b, colinv(wC(j)));
+                    if CbwinvC == 0 % line 9
+                        break
+                    end
+                    b = CbwinvC; % line 10
                     j = j - 1;
                 end
                 if j < i
@@ -641,7 +709,7 @@ classdef CosetTable < replab.Str
                     return
                 elseif j == i
                     self.C(f, wC(i)) = b;
-                    self.C(b, self.columnInverse(wC(j))) = f;
+                    self.C(b, colinv(wC(j))) = f;
                     if self.storeDeductions
                         self.deductions(:,end+1) = [f; wC(i)];
                     end
