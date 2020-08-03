@@ -23,6 +23,7 @@ classdef CosetTable < replab.Str
         n % (integer): Largest coset
         p % (integer(1,n)): Map of coincidences, ``p(i) <= i`` gives the canonical coset in case of coincidences
         M % (integer): Upper bound on the number on the cosets
+        columnInverse % (integer(1,\*)): Inverse for each column
         maxDeductions % (integer): Maximum number of deductions to store on the stack
         storeDeductions % (logical): Whether to store deductions
         deductions % (integer(2,\*)): Deduction stack containing pairs (alpha, x)
@@ -97,7 +98,7 @@ classdef CosetTable < replab.Str
             % line 4
             for i = 2:n
                 [i1, x] = min(C.C(i,:));
-                Chat.define(i1, Chat.generatorInverse(x));
+                Chat.define(i1, Chat.columnInverse(x));
             end
             genIndex = [1:r -(1:r)];
             % line 5
@@ -119,9 +120,11 @@ classdef CosetTable < replab.Str
                 assert(group.isIdentity(group.imageLetters(newRelator)));
                 relators{1,end+1} = newRelator;
                 rc = rc.updated({newRelator});
-                Chat.scan(1, newRelator);
+                Chat.scan1(1, Chat.lettersToColumnIndices(newRelator));
                 % run coset-table based enumeration
-                Chat.processDeductions(relators, rc.groupedRelators);
+                relatorsC = cellfun(@(w) Chat.lettersToColumnIndices(w), relators, 'uniform', 0);
+                groupedRelatorsC = cellfun(@(list) cellfun(@(w) Chat.lettersToColumnIndices(w), list, 'uniform', 0), rc.groupedRelators, 'uniform', 0);
+                Chat.processDeductions1(relatorsC, groupedRelatorsC);
             end
         end
 
@@ -139,10 +142,11 @@ classdef CosetTable < replab.Str
         %   `.CosetTable`: The enumerated, standardized coset table
             ct = replab.fp.CosetTable(nGenerators);
             for i = 1:length(subgroupGenerators) % Line 3
-                w = subgroupGenerators{i};
+                w = ct.lettersToColumnIndices(subgroupGenerators{i});
                 % Enter the generators of the subgroup as relations (the generators are part of the identity coset!)
-                ct.scanAndFill(1, w);
+                ct.scanAndFill1(1, w);
             end
+            relators = cellfun(@(w) ct.lettersToColumnIndices(w), relators, 'uniform', 0);
             alpha = 1; % since p(1) is always 1
             while alpha <= ct.n % Line 4
                 if ct.p(alpha) ~= alpha % only consider live cosets
@@ -152,7 +156,7 @@ classdef CosetTable < replab.Str
                 for i = 1:length(relators) % Line 5
                     w = relators{i};
                     % Lines 6-7
-                    ct.scanAndFill(alpha, w);
+                    ct.scanAndFill1(alpha, w);
                     if ct.p(alpha) < alpha
                         break
                     end
@@ -188,11 +192,13 @@ classdef CosetTable < replab.Str
             ct = replab.fp.CosetTable(nGenerators);
             ct.storeDeductions = true;
             rc = replab.fp.RelatorConjugates.fromRelators(nGenerators, relators);
+            relators = cellfun(@(w) ct.lettersToColumnIndices(w), relators, 'uniform', 0);
+            groupedRelators = cellfun(@(list) cellfun(@(w) ct.lettersToColumnIndices(w), list, 'uniform', 0), rc.groupedRelators, 'uniform', 0);
             for i = 1:length(subgroupGenerators)
-                w = subgroupGenerators{i};
-                ct.scanAndFill(1, w);
+                w = ct.lettersToColumnIndices(subgroupGenerators{i});
+                ct.scanAndFill1(1, w);
             end
-            ct.processDeductions(relators, rc.groupedRelators);
+            ct.processDeductions1(relators, groupedRelators);
             alpha = 1;
             while alpha <= ct.n
                 if ct.p(alpha) ~= alpha % only consider live cosets
@@ -205,7 +211,7 @@ classdef CosetTable < replab.Str
                     end
                     if ct.C(alpha, x) == 0
                         ct.define(alpha, x);
-                        ct.processDeductions(relators, rc.groupedRelators);
+                        ct.processDeductions1(relators, groupedRelators);
                     end
                 end
                 alpha = alpha + 1;
@@ -232,6 +238,7 @@ classdef CosetTable < replab.Str
             self.maxDeductions = replab.globals.maxDeductions;
             self.storeDeductions = false;
             self.deductions = zeros(2, 0);
+            self.columnInverse = [nGenerators+(1:nGenerators) 1:nGenerators];
         end
 
         function w = transversal(self, beta)
@@ -248,38 +255,23 @@ classdef CosetTable < replab.Str
             i = beta;
             while i ~= 1
                 [i1, x] = min(self.C(i,:));
-                w = [self.generatorInverse(x) w];
+                w = [self.columnInverse(x) w];
                 i = i1;
             end
             nG = self.nGenerators;
             w(w > nG) = -(w(w > nG) - nG);
         end
 
-
-        function invind = generatorInverse(self, ind)
-        % Returns the index of the inverse of the given generator index
-        %
-        % Args:
-        %   ind (integer): Index of a generator or its inverse, ``1 <= ind <= 2*nGenerators``
-        %
-        % Returns:
-        %   integer: The index of the inverse of that generator
-            nG = self.nGenerators;
-            if ind <= nG
-                invind = ind + nG;
-            else
-                invind = ind - nG;
-            end
-        end
-
-        function compress(self)
+        function newIndex = compress(self)
         % Removes repeated cosets from table
         %
         % COMPRESS, Holt p. 167
             g = 0;
+            newIndex = zeros(1, self.n);
             for alpha = 1:self.n
                 if self.p(alpha) == alpha
                     g = g + 1;
+                    newIndex(alpha) = g;
                     if g ~= alpha
                         for x = 1:self.nGenerators*2
                             beta = self.C(alpha, x);
@@ -287,7 +279,9 @@ classdef CosetTable < replab.Str
                                 beta = g;
                             end
                             self.C(g, x) = beta;
-                            self.C(beta, self.generatorInverse(x)) = g;
+                            if beta ~= 0
+                                self.C(beta, self.columnInverse(x)) = g;
+                            end
                         end
                     end
                 end
@@ -352,7 +346,7 @@ classdef CosetTable < replab.Str
             beta = self.n;
             self.p(beta) = beta;
             self.C(alpha, x) = beta;
-            xinv = self.generatorInverse(x);
+            xinv = self.columnInverse(x);
             self.C(beta, xinv) = alpha;
             if self.storeDeductions
                 self.deductions(:,end+1) = [alpha; x];
@@ -393,7 +387,7 @@ classdef CosetTable < replab.Str
         % Returns:
         %   integer(1,\*): Expression referencing the columns of the coset table
             m = l < 0;
-            l(m) = self.nGenerators + (-l(m));
+            l(m) = self.columnInverse(-l(m));
         end
 
         function l = columnIndicesToLetters(self, l)
@@ -405,18 +399,17 @@ classdef CosetTable < replab.Str
         % Returns:
         %   integer(1,\*): Letters in ``-n,...,-1`` and ``1,...,n`` with ``n`` the number of generators
             m = l > self.nGenerators;
-            l(m) = -(l(m) - self.nGenerators);
+            l(m) = -self.columnInverse(l(m));
         end
 
-        function scan(self, alpha, w)
+        function scan1(self, alpha, w)
         % Scans through a relator
         %
         % SCAN, Holt p. 155
         %
         % Args:
         %   alpha (integer): Initial coset number
-        %   w (integer(1,\*)): Word letters
-            w = self.lettersToColumnIndices(w); % line 1
+        %   w (integer(1,\*)): Word to scan, whose letters are column indices
             f = alpha; % line 2
             r = length(w);
             i = 1;
@@ -433,15 +426,15 @@ classdef CosetTable < replab.Str
             % Forward scan incomplete, scan backwards
             b = alpha; % line 8
             j = r;
-            while j >= i && self.C(b, self.generatorInverse(w(j))) > 0 % line 9
-                b = self.C(b, self.generatorInverse(w(j))); % line 10
+            while j >= i && self.C(b, self.columnInverse(w(j))) > 0 % line 9
+                b = self.C(b, self.columnInverse(w(j))); % line 10
                 j = j - 1;
             end
             if j < i % line 11
                 self.coincidence(f, b); % line 12
             elseif j == i % line 13
                 self.C(f, w(i)) = b; % line 14
-                self.C(b, self.generatorInverse(w(i))) = f;
+                self.C(b, self.columnInverse(w(i))) = f;
                 if self.storeDeductions
                     self.deductions(:,end+1) = [f; w(i)];
                 end
@@ -449,19 +442,19 @@ classdef CosetTable < replab.Str
             % otherwise j > i, scan is incomplete and yields no information
         end
 
-        function lookahead(self, relators)
+        function lookahead1(self, relators)
         % Scan all cosets under all relators, without making new definitions
         %
         % LOOKAHEAD, Holt, p. 164
         %
         % Args:
-        %   relators (cell(1,\*) of integer(1,\*)): Relators given as letters
+        %   relators (cell(1,\*) of integer(1,\*)): Relators given as letters in the column indices
             n = self.n;
             for beta = 1:n
                 if self.p(beta) == beta % in Omega, live
                     for i = 1:length(relators)
                         w = relators{i};
-                        self.scan(beta, w);
+                        self.scan1(beta, w);
                         if self.p(beta) < beta
                             break
                         end
@@ -470,18 +463,18 @@ classdef CosetTable < replab.Str
             end
         end
 
-        function processDeductions(self, relators, groupedRelators)
+        function processDeductions1(self, relators, groupedRelators)
         % Process the deduction table
         %
         % PROCESSDEDUCTIONS, Holt, p. 165
         %
         % Args:
-        %   relators (cell(1,\*) of integer(1,\*)): Relators given as letters
+        %   relators (cell(1,\*) of integer(1,\*)): Relators given as letters in the column indices
         %   groupedRelators (cell(1,\*) of cell(1,\*) of integer(1,\*)): Relators and their conjugates, grouped by their first letter (in column convention)
             while size(self.deductions, 2) > 0
                 % If the deduction table is full, use lookahead and clear the table
                 if size(self.deductions, 2) >= self.maxDeductions
-                    self.lookahead(relators);
+                    self.lookahead1(relators);
                     self.deductions = zeros(2, 0);
                 else
                     alpha = self.deductions(1, end);
@@ -491,7 +484,7 @@ classdef CosetTable < replab.Str
                         rels = groupedRelators{x};
                         for i = 1:length(rels)
                             w = rels{i};
-                            self.scan(alpha, w);
+                            self.scan1(alpha, w);
                             if self.p(alpha) < alpha
                                 break
                             end
@@ -499,11 +492,11 @@ classdef CosetTable < replab.Str
                     end
                     beta = self.C(alpha, x);
                     if beta ~= 0 && self.p(beta) == beta % is active
-                        xinv = self.generatorInverse(x);
+                        xinv = self.columnInverse(x);
                         rels = groupedRelators{xinv};
                         for i = 1:length(rels)
                             w = rels{i};
-                            self.scan(beta, w);
+                            self.scan1(beta, w);
                             if self.p(beta) < beta
                                 break
                             end
@@ -513,15 +506,14 @@ classdef CosetTable < replab.Str
             end
         end
 
-        function scanAndFill(self, alpha, w)
+        function scanAndFill1(self, alpha, w)
         % Scans through a relator and fills in table
         %
         % SCANANDFILL, Holt p. 163
         %
         % Args:
         %   alpha (integer): initial coset number
-        %   w (integer(1,\*)): word letters
-            w = self.lettersToColumnIndices(w);
+        %   w (integer(1,\*)): word whose letters are column indices
             r = length(w);
             f = alpha;
             i = 1;
@@ -538,19 +530,16 @@ classdef CosetTable < replab.Str
                     end
                     return
                 end
-                while j >= i && self.C(b, self.generatorInverse(w(j))) > 0
-                    b = self.C(b, self.generatorInverse(w(j)));
+                while j >= i && self.C(b, self.columnInverse(w(j))) > 0
+                    b = self.C(b, self.columnInverse(w(j)));
                     j = j - 1;
                 end
                 if j < i
                     self.coincidence(f, b);
-                    f = alpha;
-                    i = 1;
-                    b = alpha;
-                    j = r;
+                    return
                 elseif j == i
                     self.C(f, w(i)) = b;
-                    self.C(b, self.generatorInverse(w(j))) = f;
+                    self.C(b, self.columnInverse(w(j))) = f;
                     if self.storeDeductions
                         self.deductions(:,end+1) = [f; w(i)];
                     end
@@ -596,7 +585,7 @@ classdef CosetTable < replab.Str
                 for x = 1:self.nGenerators*2
                     delta = self.C(gamma, x);
                     if delta > 0
-                        xinv = self.generatorInverse(x);
+                        xinv = self.columnInverse(x);
                         self.C(delta, xinv) = 0;
                         if self.storeDeductions
                             self.deductions(:,end+1) = [delta; xinv];
