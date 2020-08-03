@@ -45,7 +45,7 @@ function test_Holt_5_3
     relators = {[1 1 2 2], [1 1 1 2 2 2 2 2]};
     y = {};
     ctR = replab.fp.CosetTable.cosetEnumerationR(nGenerators, relators, y);
-    ctC = replab.fp.CosetTable.cosetEnumerationR(nGenerators, relators, y);
+    ctC = replab.fp.CosetTable.cosetEnumerationC(nGenerators, relators, y);
     assert(isequal(ctR.C, ctC.C));
     assert(size(ctR.C, 1) == 4);
 end
@@ -55,7 +55,7 @@ function test_holt_Exercise2
     relators = {[1 1 2 2], [-2 1 2 -1 -1 -1]};
     y = {};
     ctR = replab.fp.CosetTable.cosetEnumerationR(nGenerators, relators, y);
-    ctC = replab.fp.CosetTable.cosetEnumerationR(nGenerators, relators, y);
+    ctC = replab.fp.CosetTable.cosetEnumerationC(nGenerators, relators, y);
     assert(isequal(ctR.C, ctC.C));
     assert(size(ctR.C, 1) == 8);
 end
