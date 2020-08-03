@@ -327,10 +327,11 @@ classdef CosetTable < replab.Str
             self.C = self.C(1:self.n, :);
         end
 
-        function switchElmts(self, beta, g)
+        function switchElmtsSlow(self, beta, g)
         % Switch the elements beta and g
         %
         % SWITCH, Holt p. 167
+
             for x = 1:self.nGenerators*2
                 z = self.C(g, x);
                 self.C(g, x) = self.C(beta, x);
@@ -342,6 +343,30 @@ classdef CosetTable < replab.Str
                         self.C(alpha, x) = beta;
                     end
                 end
+            end
+        end
+
+        function switchElmts(self, beta, gamma)
+        % Switch the given coset numbers
+        %
+        % Args:
+        %   beta (integer): First coset number to switch
+        %   gamma (integer): Second coset number to switch
+        %
+        % SWITCH, Holt p. 167
+            beta1 = self.C(gamma, :);
+            gamma1 = self.C(beta, :);
+            beta1(self.C(gamma, :) == beta) = gamma;
+            beta1(self.C(gamma, :) == gamma) = beta;
+            gamma1(self.C(beta, :) == beta) = gamma;
+            gamma1(self.C(beta, :) == gamma) = beta;
+            self.C(gamma, :) = gamma1;
+            self.C(beta, :) = beta1;
+            for x = 1:self.nGenerators*2
+                betax = beta1(x);
+                gammax = gamma1(x);
+                self.C(betax, self.columnInverse(x)) = beta;
+                self.C(gammax, self.columnInverse(x)) = gamma;
             end
         end
 
