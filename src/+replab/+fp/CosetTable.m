@@ -544,10 +544,14 @@ classdef CosetTable < replab.Str
                 end
                 if j < i
                     self.coincidence(f, b);
-                    f = alpha;
-                    i = 1;
-                    b = alpha;
-                    j = r;
+                    if self.p(alpha) == alpha
+                        f = alpha;
+                        i = 1;
+                        b = alpha;
+                        j = r;
+                    else
+                        return
+                    end
                 elseif j == i
                     self.C(f, w(i)) = b;
                     self.C(b, self.generatorInverse(w(j))) = f;

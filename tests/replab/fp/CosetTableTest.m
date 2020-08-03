@@ -59,3 +59,14 @@ function test_holt_Exercise2
     assert(isequal(ctR.C, ctC.C));
     assert(size(ctR.C, 1) == 8);
 end
+
+function test_holt_M12
+    nGenerators = 3;
+    relators = {ones(1,11), [2,2], [3,3], [1,2,1,2,1,2], [1,3,1,3,1,3], ...
+                repmat([2,3],1,10), [1,1,2,3,2,3,1,-2,-3,-2,-3]};
+    y = {};
+    ctR = replab.fp.CosetTable.cosetEnumerationR(nGenerators, relators, y);
+    ctC = replab.fp.CosetTable.cosetEnumerationR(nGenerators, relators, y);
+    assert(isequal(ctR.C, ctC.C));
+    assert(size(ctR.C, 1) == 1);
+end
