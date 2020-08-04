@@ -12,16 +12,6 @@ classdef CharacterTable < replab.Obj
 % The character values, and coefficients for the explicit matrices defining the irreducible representations, are given using
 % charstrings. We use a subset of the Matlab grammar, with the additional definition ``E(n) = exp(1i*2*pi/n)``, where ``n`` is
 % either ``integer`` or ``-integer``.
-%
-% Otherwise, we accept:
-%
-% * integer literals, which are either ``0``, or a number composed by one digit between ``1`` and ``9`` followed by an arbitrary number of digits,
-%
-% * the unary operation ``-expr``,
-%
-% * the binary operators ``+``, ``-``, ``*``, ``/``, ``^``,
-%
-% * parentheses ``(expr)``.
 
     properties (SetAccess = protected)
         group % (`+replab.FiniteGroup`): Group represented by character table
@@ -29,35 +19,48 @@ classdef CharacterTable < replab.Obj
         conjugacyClassNames % (cell(1, nClasses) of charstring): Names of the conjugacy classes
         irrepNames % (cell(1, nClasses) of charstring): Names of the irreducible representations
         characterExpressions % (cell(nClasses, nClasses) of charstring): Analytical expressions for the characters
+        characterValues % (double(nClasses, nClasses)): Character values
         irrepExpressions % (cell(1, nClasses) of ``[]`` or cell(1, nGenerators) of cell(d, d) of charstring): Explicit matrix representations (optional)x
     end
 
     methods (Static)
 
         function ct = make(group, conjugacyClasses, conjugacyClassNames, characterExpressions, irrepNames, irrepExpressions)
-        % TODO
+            if isempty(conjugacyClassNames)
+                conjugacyClassNames = cellfun(@(c) replab.shortStr(c.representative), conjugacyClasses, 'uniform', 0);
+            end
+            characterValues = cellfun(@(str) replab.cyclo.Parser.parse(str), characterExpressions);
+            if isempty(irrepNames)
+                ind = 1;
+                for i = 1:size(characterValues, 1)
+                    if all(characterValues(i, :) == 1)
+                        irrepNames{i} = 't';
+                    else
+                        irrepNames{i} = sprintf('r_%d', ind);
+                        ind = ind + 1;
+                    endx
+                    end
+                end
+            end
+            ct = replab.CharacterTable(group, conjugacyClasses, conjugacyClassNames, irrepNames, characterExpressions, characterValues, irrepExpressions);
         end
 
     end
 
     methods
 
-% $$$         function self = CharacterTable(group, classes, ccharacterExpressions, irrepGenerators)
-% $$$         % Constructs a character table
-% $$$         %
-% $$$         % Args:
-% $$$         %   characterExpressions (cell(n, n) of charstring): Character exact values
-% $$$         %   irrepGeneratorExpressions (cell(n,nG) of cell(d,d) of charstring): Matrix coefficients for the irreps
-% $$$
-% $$$             self.group = group;
-% $$$             nClasses = length(classes);
-% $$$             self.classes = classes;
-% $$$             self.characters = characters;
-% $$$             if nargin < 4
-% $$$                 irreps = cell(1, nClasses);
-% $$$             end
-% $$$             self.irreps = irreps;
-% $$$         end
+        function self = CharacterTable(group, conjugacyClasses, conjugacyClassNames, irrepNames, characterExpressions, characterValues, irrepExpressions)
+        % Constructs a character table
+            self.group = group;
+            self.conjugacyClasses = conjugacyClasses;
+            self.conjugacyClassNames = conjugacyClassNames;
+            self.irrepNames = irrepNames;
+            self.characterExpressions = characterExpressions;
+            self.characterValues = characterValues;
+            self.irrepExpressions = irrepExpressions;
+        end
+
+    end
 % $$$
 % $$$         function s = headerStr(self)
 % $$$             group_str = replab.headerStr(self.group);
@@ -188,7 +191,6 @@ classdef CharacterTable < replab.Obj
 % $$$         end
 
 
-    end
 
 % $$$     methods (Static)
 % $$$
