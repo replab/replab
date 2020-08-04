@@ -44,6 +44,24 @@ classdef CharacterTable < replab.Obj
             end
             ct = replab.CharacterTable(group, conjugacyClasses, conjugacyClassNames, irrepNames, characterExpressions, characterValues, irrepExpressions);
         end
+        
+        function character = numToExpression(n)
+        % Convert number to an expression that can be parsed
+        %
+        % Assumes numbers are all integers or cyclotomic numbers expressed symbolicly
+            % If n is an integer can just convert to string
+            if isequal(round(n), n)
+                character = num2str(n);
+                return
+            end
+            % Otherwise determine cyclotomic expression
+            theta = angle(n)/(2*sym(pi));
+            if theta < 0
+                theta = 1 + theta;
+            end
+            [numerator, denominator] = numden(theta);
+            character = ['E(', num2str(eval(denominator)), ')', '^', num2str(eval(numerator))];
+        end
 
     end
 
