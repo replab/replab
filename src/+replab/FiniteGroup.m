@@ -79,10 +79,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function R = computeFastRecognize(self)
             R = [];
-            c = self.niceMorphism.image.partialChain;
-            if ~c.isMutable
-                A = replab.atlas.Standard;
-                R = A.recognize(self);
+            if self.niceMorphism.image.domainSize < replab.globals.fastChainDomainSize
+                c = self.niceMorphism.image.partialChain;
+                if ~c.isMutable
+                    A = replab.atlas.Standard;
+                    R = A.recognize(self);
+                end
             end
         end
 
@@ -300,7 +302,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   element: Element of the group corresponding to the given word
-
             if nargin < 3 || isempty(names)
                 m = self.abstractGroupIsomorphism;
             else

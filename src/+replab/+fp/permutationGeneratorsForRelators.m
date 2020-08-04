@@ -1,4 +1,4 @@
-function gens = permutationGeneratorsForRelators(nGenerators, relators)
+function [gens order] = permutationGeneratorsForRelators(nGenerators, relators)
 % Computes a permutation realization of a finite group given by a presentation
 %
 % Args:
@@ -7,7 +7,14 @@ function gens = permutationGeneratorsForRelators(nGenerators, relators)
 %
 % Returns:
 %   cell(1,\*) of permutation: Generators of a permutation group realizing the presentation
-    ct = replab.fp.CosetTable(nGenerators, relators, {}, 2^50);
-    ct.cosetEnumerationR;
+    switch replab.globals.cosetEnumerationMethod
+      case 'R'
+        ct = replab.fp.CosetTable.cosetEnumerationR(nGenerators, relators, {});
+      case 'C'
+        ct = replab.fp.CosetTable.cosetEnumerationC(nGenerators, relators, {});
+      otherwise
+        error('Unknown coset enumeration method ''%s''', replab.globals.cosetEnumerationMethod);
+    end
     gens = arrayfun(@(i) ct.C(:,nGenerators+i)', 1:nGenerators, 'uniform', 0);
+    order = size(ct.C, 1);
 end
