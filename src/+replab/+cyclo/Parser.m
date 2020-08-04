@@ -15,10 +15,7 @@ classdef Parser < replab.Str
 %    <integer> ::= '0' | ( ['1'-'9'] ['0'-'9']* )
 %
 % Example:
-%   >>> [ok, value] = replab.cyclo.Parser.parse('2+2');
-%   >>> ok
-%       1
-%   >>> value
+%   >>> replab.cyclo.Parser.parse('2+2')
 %       4
 %
 % Note:
@@ -34,16 +31,15 @@ classdef Parser < replab.Str
 
     methods (Static)
 
-        function [ok value] = parse(str)
+        function value = parse(str)
             value = [];
             [ok, tokens] = replab.cyclo.Parser.lex(str);
             if ~ok
-                return
+                error('Invalid expression %s', str);
             end
             [pos, value] = replab.cyclo.Parser.parseExpression(tokens, 1);
             if pos == 0
-                ok = false;
-                value = [];
+                error('Invalid expression %s', str);
             end
         end
 
