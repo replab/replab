@@ -8,32 +8,47 @@ classdef CharacterTable < replab.Obj
 %       X.1      1          1          1
 %       X.2      2          0         -1
 %       X.3      1         -1          1
+%
+%
+% Grammar for the character expressions:
+%
+% - + / * ^ binary operations (^ for exponentation)
+% -expr unary operation
+% () for grouping
+% integer literals
+% no floating point literals (no '.')
+% E(integer) for exp(1i*2*pi/integer)
+% E(3)^2 for exp(1i*4*pi/3)
+% E(4) for the imaginary unit
 
     properties (SetAccess = protected)
-        group % (`+replab.Group`): group represented by character table
-        irreps % (cell(1, nclasses) of `+replab.Rep`): irreducible representations
-        classes % (cell(1, nclasses) of `+replab.ConjugacyClass`): conjugacy classes
-        chars % (double(nclasses, nclasses)): matrix of characters
-        table % (`+replab.str.Table`): table object for display purposes
+        group % (`+replab.FiniteGroup`): Group represented by character table
+        classes % (cell(1, nClasses) of `+replab.ConjugacyClass`): Conjugacy classes of `.group`
+        classNames % (cell(1, nClasses) of charstring): Names of the conjugacy classes
+        irrepNames % (cell(1, nClasses) of charstring): Names of the irreducible representations
+        characterExpressions % (cell(nClasses, nClasses) of charstring): Analytical expressions for the characters
+        characters % (double(nClasses, nClasses)): Character values
+
+        irreps % (cell(1, nClasses) of `+replab.Rep` or ``[]``): Irreducible representations (may be empty)
     end
 
     methods
 
-        function self = CharacterTable(group, irreps, classes, chars)
-        %  Assigns properties and generates Table with given properties
+        function self = CharacterTable(group, classes, characterExpressions, irrepGenerators)
+        % Constructs a character table
+        %
+        % Args:
+        %   characterExpressions (cell(n, n) of charstring): Character exact values
+        %   irrepGeneratorExpressions (cell(n,nG) of cell(d,d) of charstring): Matrix coefficients for the irreps
+
             self.group = group;
-            self.irreps = irreps;
+            nClasses = length(classes);
             self.classes = classes;
-            self.chars = chars;
-
-            % make Table object of character table
-            colnames = cellfun(@(v) v.representative, self.classes, 'UniformOutput', false);
-            nirreps = length(self.irreps);
-            rownames = cellfun(@(n)['X.', num2str(n)], num2cell(1:nirreps), 'UniformOutput', false);
-            self.table = replab.str.Table(self.chars);
-            self.table.addRowNames(rownames);
-            self.table.addColumnNames(colnames);
-
+            self.characters = characters;
+            if nargin < 4
+                irreps = cell(1, nClasses);
+            end
+            self.irreps = irreps;
         end
 
         function s = headerStr(self)
