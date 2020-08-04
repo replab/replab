@@ -20,7 +20,7 @@ classdef CharacterTable < replab.Obj
         irrepNames % (cell(1, nClasses) of charstring): Names of the irreducible representations
         characterExpressions % (cell(nClasses, nClasses) of charstring): Analytical expressions for the characters
         characterValues % (double(nClasses, nClasses)): Character values
-        irrepExpressions % (cell(1, nClasses) of ``[]`` or cell(1, nGenerators) of cell(d, d) of charstring): Explicit matrix representations (optional)x
+        irrepExpressions % (cell(1, nClasses) of ``[]`` or cell(1, nGenerators) of cell(d, d) of charstring): Explicit matrix representations (optional)
     end
 
     methods (Static)
