@@ -407,8 +407,8 @@ classdef CosetTable < replab.Str
         % DEFINE, Holt p. 153
         %
         % Args:
-        %   alpha (integer): next unused coset number
-        %   x (integer): generator or inverse generator
+        %   alpha (integer): Coset whose image is undefined
+        %   x (integer): Generator or inverse generator, given as column index
             if self.n == self.maxCosets
                 error('Error: exceeded maximum allowed number of cosets')
             end
