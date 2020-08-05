@@ -1,5 +1,8 @@
 function ct = DihedralCharacterTable(n)
 % Generates the character table for the dihedral group Dn
+%
+% From Fässler, A., Stiefel, E., &amp; Wong, B. D. (1992). Group theoretical methods and their applications. 
+% Boston: Birkhäuser, 23-24.
 % 
 % Args:
 %   n (integer): number of dihedral group

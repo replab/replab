@@ -1,5 +1,8 @@
 function ct = CyclicCharacterTable(n)
 % Generates the character table for the cyclic group Cn
+%
+% From Fässler, A., Stiefel, E., &amp; Wong, B. D. (1992). Group theoretical methods and their applications. 
+% Boston: Birkhäuser, 22.
 % 
 % Args:
 %   n (integer): order of cyclic group

@@ -1,6 +1,9 @@
 function ct = PermutationCharacterTable(group)
 % Generates the character table for a permutation group with integer characters
 % 
+% From Dixon, John. “Computing Irreducible Representations of Groups.” 
+% Mathematics of Computation, Volume 24, Number 111, American Mathematical Society, 1970
+%
 % Args:
 %   group (`+replab.PermutationGroup`): permutation group
 %
