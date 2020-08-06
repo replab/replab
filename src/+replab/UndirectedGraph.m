@@ -1,0 +1,148 @@
+classdef UndirectedGraph < replab.DirectedGraph
+% Describes an undirected graph
+%
+% Vertices of the graph are numbered continuously from 1 to nVertices
+
+    methods (Access = public)
+        
+        function self = UndirectedGraph(nVertices, edges, colors, weights)
+        % Construct an undirected graph
+        %
+        % Do not use this function direclty, rather use another
+        % constructor such as ``.fromBlocks``.
+        %
+        % See also:
+        %   `.fromBlocks`
+        %   `.check`
+
+            self@replab.DirectedGraph(nVertices, edges, colors, weights);
+        end
+
+    end
+    
+    methods (Static) % Constructors
+
+        function self = fromAdjacencyMatrix(adj, colors)
+        % Constructs an undirected graph from an adjacency matrix
+        %
+        % The element (i,j) of an adjacency matrix is 1 only if vertex i is
+        % connected to vertex j. Alternatively, the value of the matrix
+        % element is the weight associated to this edge.
+        %
+        % Args:
+        %   adj (double (\*,\*)): the adjacency matrix
+        %   colors (double (\*,1), optional): coloring of the vertices
+        %
+        % Returns:
+        %   graph (`.UndirectedGraph`)
+        %
+        % Example:
+        %   >>> replab.UndirectedGraph.fromAdjacencyMatrix([0 1 1; 1 0 1; 1 1 0]);
+            
+            assert(size(adj,1) == size(adj,2), 'Adjacency matrix should be square');
+            
+            % We symmetrize the adjacency matrix
+            adj = max(adj, adj.');
+            
+            % But keep only a short description
+            adj = triu(adj);
+            
+            [edges, nVertices, weights] = replab.graph.adj2edge(adj);
+
+            if nargin < 2
+                colors = 0;
+            end
+            
+            self = replab.DirectedGraph(nVertices, edges, colors, weights);
+        end
+        
+        function self = fromEdges(edges, nVertices, weights)
+        % Constructs an undirected graph from a liste of edges
+        %
+        % The element (i,j) of an adjacency matrix is 1 only if vertex i is
+        % connected to vertex j. Alternatively, the value of the matrix
+        % element is the weight associated to this vertex.
+        %
+        % Args:
+        %     edges (integer (\*,2)): array of vertices linked by an edge
+        %     nVertices (integer, optional): number of vertices
+        %     weights (double (\*,1), optional): weight associated to each edge
+        %
+        % Returns:
+        %   graph (`.UndirectedGraph`)
+        %
+        % Example:
+        %   >>> replab.UndirectedGraph.fromEdges([1 2; 2 3; 3 1], 3);
+
+            if nargin < 2
+                if isempty(edges)
+                    nVertices = 0;
+                else
+                    nVertices = max(max(edges));
+                end
+            end
+            
+            if (nargin < 3)
+                colors = [];
+            end
+            
+            if (nargin < 4)
+                weights = [];
+            end
+            
+            % Symmetrize the connections
+            edges = sort(edges, 2);
+            
+            self = replab.UndirectedGraph(nVertices, edges, colors, weights);
+        end
+
+        function self = fromBiadjacencyMatrix(biadj)
+        % Constructs an undirected graph from a biadjacency matrix
+        %
+        % A bipartite undirected graph is one in which vertices can
+        % be divided into two sets, such that edges only connect
+        % vertices belonging to different sets.
+        %
+        % The element (i,j) of an biadjacency matrix is 1 for an
+        % undirected bipartite graph iff vertex i of the first set of
+        % vertices is linked with vertex j in the second set of vertices.
+        % Alternatively, the value of the matrix element is the weight
+        % associated to this edge. 
+        %
+        % Args:
+        %   biadj(double (\*,\*)): array of vertices linked by an edge
+        %
+        % Returns:
+        %   graph (`.UndirectedGraph`)
+        %
+        % Example:
+        %   >>> replab.UndirectedGraph.fromBiadjacencyMatrix([1 0 1; 1 1 0]);
+
+            % Construct the associated full adjacency matrix
+            adj = [zeros(size(biadj,1)*[1 1]), biadj;
+                   biadj.' zeros(size(biadj,2)*[1 1])];
+               
+            self = replab.UndirectedGraph.fromAdjacencyMatrix(adj);
+        end
+
+    end
+
+    methods % Methods
+
+        function adj = adjacencyMatrix(self)
+        % Returns the adjacency matrix of a graph
+        %
+        % Args:
+        %   graph (`.UndirectedGraph`)
+        %
+        % Returns:
+        %   adj (double (\*,\*)): adjacency matrix
+
+            adj = adjacencyMatrix@replab.Graph(self);
+            adj = adj + adj.' - diag(diag(adj));
+            adj = full(adj);
+        end
+        
+    end
+    
+end
