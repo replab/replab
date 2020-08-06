@@ -56,7 +56,7 @@ classdef UndirectedGraph < replab.DirectedGraph
             self = replab.DirectedGraph(nVertices, edges, colors, weights);
         end
         
-        function self = fromEdges(edges, nVertices, weights)
+        function self = fromEdges(edges, nVertices, colors, weights)
         % Constructs an undirected graph from a liste of edges
         %
         % The element (i,j) of an adjacency matrix is 1 only if vertex i is
@@ -66,6 +66,7 @@ classdef UndirectedGraph < replab.DirectedGraph
         % Args:
         %     edges (integer (\*,2)): array of vertices linked by an edge
         %     nVertices (integer, optional): number of vertices
+        %     colors (double (\*,1), optional): coloring of the vertices
         %     weights (double (\*,1), optional): weight associated to each edge
         %
         % Returns:
@@ -125,6 +126,21 @@ classdef UndirectedGraph < replab.DirectedGraph
             self = replab.UndirectedGraph.fromAdjacencyMatrix(adj);
         end
 
+        function self = fromDirectedGraph(graph)
+            % Define an undirected graph from a directed one
+            %
+            % This function returns an undirected graph with the same
+            % connectivity as the input directed graph.
+            %
+            % Args:
+            %   graph (`.DirectedGraph`)
+            %
+            % Returns:
+            %   graph (`.UndirectedGraph`)
+
+            self = graph.ignoreDirectionality();
+        end
+        
     end
 
     methods % Methods
