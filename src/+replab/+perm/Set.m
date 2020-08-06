@@ -1,34 +1,42 @@
 classdef Set < replab.Str
-% Stores a set of permutations
+% Stores a set of integer arrays, for example permutations
 %
-% This is not a multiset; permutations are stored only once, and the implementation is mutable.
+% This is not a multiset; arrays are stored only once. The set is mutable.
 %
-% Those permutations are stored, not necessarily ordered, as columns in a matrix.
-% In parallel, we compute a hash of each of those permutations, and we stored
-% a sorted list of hash values, and the relation between the ordering of permutations
-% in this sorted and the ordering in the matrix of permutations.
+% The stored arrays should all have the same length.
+%
+% Those arrays are stored, not necessarily ordered, as columns in a matrix.
+%
+% In parallel, we compute a hash of each of those arrays, and we store
+% a sorted list of hash values, and the relation between the ordering of arrays
+% in this sorted list and the ordering in the matrix.
 %
 % This enables the use of fast vectorized operations in Matlab while retrieving elements.
 
     properties
-        domainSize % (integer): Size of the stored permutations
-        matrix % (integer(domainSize,size)): Elements stored as column vectors
-        seed % integer(1,domainSize): Vector used to hash a permutation
+        arrayLength % (integer): Length of the stored arrays
+        arrayRange % (integer): Range of the array coefficients: ``-arrayRange ... arrayRange``
+        matrix % (integer(arrayLength,size)): Elements stored as column vectors
+        seed % integer(1,arrayLength): Vector used to hash a permutation
         perm % integer(1,size): Permutation of the columns of `.matrix`
         hash % integer(1,size): Sorted hash vector ``= seed * matrix(:, perm)``
     end
 
     methods
 
-        function self = Set(domainSize)
-            self.domainSize = domainSize;
-            self.matrix = zeros(domainSize, 0);
+        function self = Set(arrayLength, arrayRange)
+            if nargin < 2 || isempty(arrayRange)
+                arrayRange = arrayLength;
+            end
+            self.arrayLength = arrayLength;
+            self.arrayRange = arrayRange;
+            self.matrix = zeros(arrayLength, 0);
             % we use a simple hash function that maps permutations to doubles
             % we want that ``seed * perm``, is an integer that fits in a double
             % if the seed coefficients have range in ``[-r, r]``, then the resulting hash
-            % is in ``[-r*domainSize^2, r*domainSize^2]``
-            r = floor(2^52/domainSize/domainSize) - 1;
-            self.seed = randi([-r r], 1, domainSize);
+            % is in ``[-r*arrayLength*arrayRange, r*arrayLength*arrayRange]``
+            r = floor(2^52/arrayRange/arrayLength) - 1;
+            self.seed = randi([-r r], 1, arrayLength);
             self.perm = zeros(1, 0);
             self.hash = zeros(1, 0);
         end
@@ -50,7 +58,7 @@ classdef Set < replab.Str
         %   inds (integer(1,\*)): Indices to retrieve
         %
         % Returns:
-        %   integer(domainSize,\*): Permutations as column vectors
+        %   integer(arrayLength,\*): Permutations as column vectors
             permutations = self.matrix(:, inds);
         end
 
@@ -79,7 +87,7 @@ classdef Set < replab.Str
         % Modifies the set in place.
         %
         % Args:
-        %   permutations (integer(domainSize,\*)): New permutations to insert, must not be already present
+        %   permutations (integer(arrayLength,\*)): New permutations to insert, must not be already present
         %
         % Returns:
         %   integer(1,\*): Indices of the inserted permutations
@@ -145,7 +153,7 @@ classdef Set < replab.Str
         % Returns the indices of the given permutations, or 0 if not found
         %
         % Args:
-        %   permutations(domainSize,\*): Permutations to look for
+        %   permutations(arrayLength,\*): Permutations to look for
         %
         % Returns:
         %   integer(1,\*): Indices of the given permutations, or ``0`` where not found
@@ -194,7 +202,7 @@ classdef Set < replab.Str
         % Modifies the set in place.
         %
         % Args:
-        %   permutations(domainSize,\*): Permutations to look for
+        %   permutations(arrayLength,\*): Permutations to look for
         %
         % Returns:
         %   integer(1,\*): Indices of the given permutations
