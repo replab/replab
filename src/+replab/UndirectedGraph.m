@@ -138,11 +138,68 @@ classdef UndirectedGraph < replab.DirectedGraph
         % Returns:
         %   adj (double (\*,\*)): adjacency matrix
 
-            adj = adjacencyMatrix@replab.Graph(self);
+            adj = adjacencyMatrix@replab.DirectedGraph(self);
             adj = adj + adj.' - diag(diag(adj));
             adj = full(adj);
         end
         
+        function L = laplacian(self)
+        % Computes the graph Laplacian
+        %
+        % This is a generalized laplacian which also takes into account the
+        % graph coloring. It reduces to the standard laplacian when
+        % self.color = 0. A graph laplacian is semidefinite positive
+        %
+        % Args:
+        %   graph (`.UndirectedGraph`)
+        %
+        % Returns:
+        %   L (double (\*,\*)): Laplacian of the graph
+        
+            M = self.adjacencyMatrix();
+            D = diag(sum(M));
+            
+            colors = abs(self.colors);
+            if numel(colors) == 1
+                colors = colors*ones(1,self.nVertices);
+            end
+            
+            L = D - M + diag(colors);
+        end
+        
+        function Kt = heatKernel(self, nbTimes)
+        % Computes the heat kernel
+        %
+        % Evaluates the heat kernel of the graph at several times.
+        %
+        % Args:
+        %   graph (`.UndirectedGraph`)
+        %   nbTimes (integer, optional): the number of distinct times at 
+        %     which to evaluate the kernel (default is 10)
+        %
+        % Returns:
+        %   Kt (double (\*,\*,\*)): The heat kernel
+        
+            if nargin < 2
+                nbTimes = 10;
+            else
+                nbTimes = round(nbTimes);
+                assert(nbTimes > 0, 'The number of time steps should be a positive integer');
+            end
+
+            [phi, lambda] = eig(self.laplacian());
+            lambda = diag(lambda);
+
+            co = 0;
+            Kt = zeros(nbTimes, self.nVertices, self.nVertices);
+            for t = 1/nbTimes:1/nbTimes:1
+                co = co + 1;
+                Kt(co,:,:) = exp(-lambda(1)*t)*phi(:,1)*phi(:,1)';
+                for i = 2:self.nVertices
+                    Kt(co,:,:) = Kt(co,:,:) + permute(exp(-lambda(i)*t)*phi(:,i)*phi(:,i)', [3 1 2]);
+                end
+            end
+        end
     end
     
 end

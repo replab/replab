@@ -182,6 +182,9 @@ classdef DirectedGraph < replab.Obj
         %
         % For edges = [1 3] and n = 3, it returns the partition {[1 3] [2]}
         %
+        % Note: Graph connectedness does not take into account the graph
+        % directionality.
+        %
         % Args:
         %   graph (`.DirectedGraph`)
         %
