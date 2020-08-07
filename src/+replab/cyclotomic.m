@@ -46,6 +46,14 @@ classdef cyclotomic
             c = replab.cyclotomic(mat);
         end
 
+        function c = sqrt(num, den)
+            if nargin == 1
+                c = replab.cyclotomic({com.faacets.gluon.Cyclotomic.sqrt(num)});
+            else
+                c = replab.cyclotomic({com.faacets.gluon.Cyclotomic.sqrt(num, den)});
+            end
+        end
+
     end
 
     methods
