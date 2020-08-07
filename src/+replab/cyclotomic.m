@@ -37,12 +37,12 @@ classdef cyclotomic
         end
 
         function c = fromString(strings)
-            mat = cellfun(@(s) com.faacets.gluon.CycloUtils.parse(s), strings, 'uniform', 0);
+            mat = cellfun(@(s) com.faacets.gluon.Cyclotomic.parse(s), strings, 'uniform', 0);
             c = replab.cyclotomic(mat);
         end
 
         function c = fromDouble(doubles)
-            mat = arrayfun(@(d) com.faacets.gluon.CycloUtils.fromDouble(d), doubles, 'uniform', 0);
+            mat = arrayfun(@(d) com.faacets.gluon.Cyclotomic.fromDouble(d), doubles, 'uniform', 0);
             c = replab.cyclotomic(mat);
         end
 
@@ -50,83 +50,52 @@ classdef cyclotomic
 
     methods
 
+        function res = matArray(self)
+            m = self.mat;
+            res = [m{:}];
+        end
+
         function self = cyclotomic(mat)
             assert(iscell(mat));
             self.mat = mat;
         end
 
         function disp(self)
-            t = replab.str.Table(cellfun(@(c) char(com.faacets.gluon.CycloUtils.printCyclo(c)), self.mat, 'uniform', 0));
+            t = replab.str.Table(cellfun(@(c) char(com.faacets.gluon.Cyclotomic.printCyclo(c)), self.mat, 'uniform', 0));
             disp(t);
         end
 
         function res = conj(self)
-            res = replab.cyclotomic(cellfun(@(c) c.conjugate, self.mat, 'uniform', 0));
+            mat = reshape(cell(com.faacets.gluon.Cyclotomic.conjugate([self.matArray])), size(self.mat));
+            res = replab.cyclotomic(mat);
         end
 
         function res = plus(self, rhs)
-            I = com.faacets.gluon.Interface.compile({
-                'import com.faacets.gluon._; import scalin.immutable.{Mat, DenseMat}; import cyclo.Cyclo; import scalin.immutable.dense._'
-                'implicit val forCyclo: ArgAdapter[Array[Cyclo]] = ArgAdapter[Array[Cyclo]]("Array[Cyclo]")(_.asInstanceOf[Array[_]].map(_.asInstanceOf[Cyclo]))'
-                'Interface[Int, Int, Array[Cyclo], Array[Cyclo], Array[Cyclo]]("plus", "nR", "nC", "lhs", "rhs") {'
-                '(nR, nC, lhs, rhs) =>'
-                'val l = DenseMat.tabulate(nR, nC)( (r, c) => lhs(r + nR*c) )'
-                'val r = DenseMat.tabulate(nR, nC)( (r, c) => rhs(r + nR*c) )'
-                'val z = l + r'
-                'Array.tabulate(nR, nC)( (r, c) => z(r, c) ).flatten'
-                '}'
-                   });
-            nRows = size(self.mat, 1);
-            nCols = size(self.mat, 2);
-            assert(size(rhs.mat, 1) == nRows);
-            assert(size(rhs.mat, 2) == nCols);
-            res1 = I.call4(nRows, nCols, self.mat(:), rhs.mat(:));
-            res = replab.cyclotomic(reshape(cell(res1), nRows, nCols));
+            mat = reshape(cell(com.faacets.gluon.Cyclotomic.plus([self.matArray], [rhs.matArray])), size(self.mat));
+            res = replab.cyclotomic(mat);
         end
 
         function res = minus(self, rhs)
-            I = com.faacets.gluon.Interface.compile({
-                'import com.faacets.gluon._; import scalin.immutable.{Mat, DenseMat}; import cyclo.Cyclo; import scalin.immutable.dense._'
-                'implicit val forCyclo: ArgAdapter[Array[Cyclo]] = ArgAdapter[Array[Cyclo]]("Array[Cyclo]")(_.asInstanceOf[Array[_]].map(_.asInstanceOf[Cyclo]))'
-                'Interface[Int, Int, Array[Cyclo], Array[Cyclo], Array[Cyclo]]("plus", "nR", "nC", "lhs", "rhs") {'
-                '(nR, nC, lhs, rhs) =>'
-                'val l = DenseMat.tabulate(nR, nC)( (r, c) => lhs(r + nR*c) )'
-                'val r = DenseMat.tabulate(nR, nC)( (r, c) => rhs(r + nR*c) )'
-                'val z = l - r'
-                'Array.tabulate(nR, nC)( (r, c) => z(r, c) ).flatten'
-                '}'
-                   });
-            nRows = size(self.mat, 1);
-            nCols = size(self.mat, 2);
-            assert(size(rhs.mat, 1) == nRows);
-            assert(size(rhs.mat, 2) == nCols);
-            res1 = I.call4(nRows, nCols, self.mat(:), rhs.mat(:));
-            res = replab.cyclotomic(reshape(cell(res1), nRows, nCols));
+            mat = reshape(cell(com.faacets.gluon.Cyclotomic.minus([self.matArray], [rhs.matArray])), size(self.mat));
+            res = replab.cyclotomic(mat);
+        end
+
+        function res = times(self, rhs)
+            mat = reshape(cell(com.faacets.gluon.Cyclotomic.pw_times([self.matArray], [rhs.matArray])), size(self.mat));
+            res = replab.cyclotomic(mat);
         end
 
         function res = mtimes(self, rhs)
-            I = com.faacets.gluon.Interface.compile({
-                'import com.faacets.gluon._; import scalin.immutable.{Mat, DenseMat}; import cyclo.Cyclo; import scalin.immutable.dense._'
-                'implicit val forCyclo: ArgAdapter[Array[Cyclo]] = ArgAdapter[Array[Cyclo]]("Array[Cyclo]")(_.asInstanceOf[Array[_]].map(_.asInstanceOf[Cyclo]))'
-                'Interface[Int, Int, Int, Array[Cyclo], Array[Cyclo], Array[Cyclo]]("plus", "nR1", "nC1", "nC2", "lhs", "rhs") {'
-                '(nR1, nC1, nC2, lhs, rhs) =>'
-                'val l = DenseMat.tabulate(nR1, nC1)( (r, c) => lhs(r + nR1*c) )'
-                'val r = DenseMat.tabulate(nC1, nC2)( (r, c) => rhs(r + nC1*c) )'
-                'val z = l * r'
-                'Array.tabulate(nR1, nC2)( (r, c) => z(r, c) ).flatten'
-                '}'
-                   });
-            nR1 = size(self.mat, 1);
-            nC1 = size(self.mat, 2);
-            nR2 = size(rhs.mat, 1);
-            assert(nC1 == nR2);
-            nC2 = size(rhs.mat, 2);
-            res1 = I.call5(nR1, nC1, nC2, self.mat(:), rhs.mat(:));
-            res = replab.cyclotomic(reshape(cell(res1), nR1, nC2));
+            l = size(self.mat, 1);
+            m = size(self.mat, 2);
+            assert(m == size(self.mat, 1));
+            n = size(rhs.mat, 2);
+            mat = com.faacets.gluon.Cyclotomic.times(l, m, n, self.matArray, rhs.matArray);
+            res = replab.cyclotomic(reshape(cell(mat), [l n]));
         end
 
-        function s = size(self)
-            s = size(self.mat);
+        function s = size(self, varargin)
+            s = size(self.mat, varargin{:});
         end
 
         function l = length(self)
@@ -167,13 +136,10 @@ classdef cyclotomic
         end
 
         function res = double(self)
-            els = self.mat(:);
-            res = zeros(length(els), 1);
-            for i = 1:length(els)
-                cd = com.faacets.gluon.CycloUtils.toDouble(els{i});
-                res(i) = cd(1) + 1i*cd(2);
-            end
-            res = reshape(res, size(self.mat));
+            pairs = com.faacets.gluon.Cyclotomic.toDouble([self.matArray]);
+            r = pairs(1,:);
+            i = pairs(2,:);
+            res = reshape(r, size(self.mat)) + 1i * reshape(i, size(self.mat));
         end
 
         function res = horzcat(self, varargin)
