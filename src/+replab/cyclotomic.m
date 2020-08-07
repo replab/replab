@@ -120,6 +120,19 @@ classdef cyclotomic
             res = replab.cyclotomic(mat);
         end
 
+        function res = mrdivide(lhs, rhs)
+            if isa(lhs, 'double')
+                lhs = replab.cyclotomic.fromDouble(lhs);
+            end
+            if isa(rhs, 'double')
+                rhs = replab.cyclotomic.fromDouble(rhs);
+            end
+            assert(isscalar(rhs.mat));
+            rm = rhs.mat;
+            mat = reshape(cell(com.faacets.gluon.Cyclotomic.divideScalar(lhs.matArray, rm{1})), size(lhs.mat));
+            res = replab.cyclotomic(mat);
+        end
+
         function res = mtimes(lhs, rhs)
             if isa(lhs, 'double')
                 lhs = replab.cyclotomic.fromDouble(lhs);
