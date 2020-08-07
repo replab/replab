@@ -42,7 +42,7 @@ classdef cyclotomic
         end
 
         function c = fromDouble(doubles)
-            mat = arrayfun(@(d) com.faacets.gluon.Cyclotomic.fromDouble(d), doubles, 'uniform', 0);
+            mat = arrayfun(@(d) com.faacets.gluon.Cyclotomic.fromDouble(d), full(doubles), 'uniform', 0);
             c = replab.cyclotomic(mat);
         end
 
@@ -51,8 +51,13 @@ classdef cyclotomic
     methods
 
         function res = matArray(self)
-            m = self.mat;
-            res = [m{:}];
+            if prod(size(self.mat)) == 1
+                res = javaArray('cyclo.Cyclo', 1);
+                res(1) = self.mat{1,1};
+            else
+                m = self.mat;
+                res = [m{:}];
+            end
         end
 
         function self = cyclotomic(mat)
@@ -65,32 +70,60 @@ classdef cyclotomic
             disp(t);
         end
 
+        function res = eq(self, rhs)
+            res = double(self.minus(rhs)) == 0;
+        end
+
         function res = conj(self)
-            mat = reshape(cell(com.faacets.gluon.Cyclotomic.conjugate([self.matArray])), size(self.mat));
+            mat = reshape(cell(com.faacets.gluon.Cyclotomic.conjugate(self.matArray)), size(self.mat));
             res = replab.cyclotomic(mat);
         end
 
-        function res = plus(self, rhs)
-            mat = reshape(cell(com.faacets.gluon.Cyclotomic.plus([self.matArray], [rhs.matArray])), size(self.mat));
+        function res = plus(lhs, rhs)
+            if isa(lhs, 'double')
+                lhs = replab.cyclotomic.fromDouble(lhs);
+            end
+            if isa(rhs, 'double')
+                rhs = replab.cyclotomic.fromDouble(rhs);
+            end
+            mat = reshape(cell(com.faacets.gluon.Cyclotomic.plus(lhs.matArray, rhs.matArray)), size(lhs.mat));
             res = replab.cyclotomic(mat);
         end
 
-        function res = minus(self, rhs)
-            mat = reshape(cell(com.faacets.gluon.Cyclotomic.minus([self.matArray], [rhs.matArray])), size(self.mat));
+        function res = minus(lhs, rhs)
+            if isa(lhs, 'double')
+                lhs = replab.cyclotomic.fromDouble(lhs);
+            end
+            if isa(rhs, 'double')
+                rhs = replab.cyclotomic.fromDouble(rhs);
+            end
+            mat = reshape(cell(com.faacets.gluon.Cyclotomic.minus(lhs.matArray, rhs.matArray)), size(lhs.mat));
             res = replab.cyclotomic(mat);
         end
 
-        function res = times(self, rhs)
-            mat = reshape(cell(com.faacets.gluon.Cyclotomic.pw_times([self.matArray], [rhs.matArray])), size(self.mat));
+        function res = times(lhs, rhs)
+            if isa(lhs, 'double')
+                lhs = replab.cyclotomic.fromDouble(lhs);
+            end
+            if isa(rhs, 'double')
+                rhs = replab.cyclotomic.fromDouble(rhs);
+            end
+            mat = reshape(cell(com.faacets.gluon.Cyclotomic.pw_times(lhs.matArray, rhs.matArray)), size(lhs.mat));
             res = replab.cyclotomic(mat);
         end
 
-        function res = mtimes(self, rhs)
-            l = size(self.mat, 1);
-            m = size(self.mat, 2);
-            assert(m == size(self.mat, 1));
+        function res = mtimes(lhs, rhs)
+            if isa(lhs, 'double')
+                lhs = replab.cyclotomic.fromDouble(lhs);
+            end
+            if isa(rhs, 'double')
+                rhs = replab.cyclotomic.fromDouble(rhs);
+            end
+            l = size(lhs.mat, 1);
+            m = size(lhs.mat, 2);
+            assert(m == size(lhs.mat, 1));
             n = size(rhs.mat, 2);
-            mat = com.faacets.gluon.Cyclotomic.times(l, m, n, self.matArray, rhs.matArray);
+            mat = com.faacets.gluon.Cyclotomic.times(l, m, n, lhs.matArray, rhs.matArray);
             res = replab.cyclotomic(reshape(cell(mat), [l n]));
         end
 
