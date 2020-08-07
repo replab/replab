@@ -1,5 +1,5 @@
 classdef UndirectedGraph < replab.DirectedGraph
-% Describes an undirected graph
+% Describes an immutable undirected graph
 %
 % Vertices of the graph are numbered continuously from 1 to nVertices
 
@@ -53,7 +53,7 @@ classdef UndirectedGraph < replab.DirectedGraph
                 colors = 0;
             end
             
-            self = replab.DirectedGraph(nVertices, edges, colors, weights);
+            self = replab.UndirectedGraph(nVertices, edges, colors, weights);
         end
         
         function self = fromEdges(edges, nVertices, colors, weights)
@@ -121,7 +121,7 @@ classdef UndirectedGraph < replab.DirectedGraph
 
             % Construct the associated full adjacency matrix
             adj = [zeros(size(biadj,1)*[1 1]), biadj;
-                   biadj.' zeros(size(biadj,2)*[1 1])];
+                   zeros(size(biadj,2), sum(size(biadj)))];
                
             self = replab.UndirectedGraph.fromAdjacencyMatrix(adj);
         end
@@ -143,6 +143,19 @@ classdef UndirectedGraph < replab.DirectedGraph
         
     end
 
+    methods
+        
+        function s = headerStr(self)
+        % Header string representing the object
+        %
+        % Returns:
+        %     charstring: description of the object
+
+            s = sprintf('Undirected graph with %d vertices and %d edges', self.nVertices, size(self.edges,1));
+        end
+        
+    end
+    
     methods % Methods
 
         function adj = adjacencyMatrix(self)
@@ -160,7 +173,7 @@ classdef UndirectedGraph < replab.DirectedGraph
         end
         
         function L = laplacian(self)
-        % Computes the graph Laplacian
+        % Returns the graph Laplacian
         %
         % This is a generalized laplacian which also takes into account the
         % graph coloring. It reduces to the standard laplacian when
@@ -171,6 +184,11 @@ classdef UndirectedGraph < replab.DirectedGraph
         %
         % Returns:
         %   L (double (\*,\*)): Laplacian of the graph
+            L = self.cached('laplacian', @() self.computeLaplacian);
+        end
+        
+        function L = computeLaplacian(self)
+        % Computes the graph Laplacian
         
             M = self.adjacencyMatrix();
             D = diag(sum(M));
@@ -184,7 +202,7 @@ classdef UndirectedGraph < replab.DirectedGraph
         end
         
         function Kt = heatKernel(self, nbTimes)
-        % Computes the heat kernel
+        % The heat kernel
         %
         % Evaluates the heat kernel of the graph at several times.
         %
@@ -195,14 +213,26 @@ classdef UndirectedGraph < replab.DirectedGraph
         %
         % Returns:
         %   Kt (double (\*,\*,\*)): The heat kernel
-        
+            
+            defaultNbTimes = 3;
+            
             if nargin < 2
-                nbTimes = 10;
+                nbTimes = defaultNbTimes;
             else
                 nbTimes = round(nbTimes);
                 assert(nbTimes > 0, 'The number of time steps should be a positive integer');
             end
-
+            
+            if (nbTimes == defaultNbTimes)
+                Kt = self.cached('heatKernel', @() self.computeHeatKernel(nbTimes));
+            else
+                Kt = self.computeHeatKernel(nbTimes);
+            end
+        end
+        
+        function Kt = computeHeatKernel(self, nbTimes)
+        % Computes the heat kernel
+        
             [phi, lambda] = eig(self.laplacian());
             lambda = diag(lambda);
 
@@ -216,6 +246,7 @@ classdef UndirectedGraph < replab.DirectedGraph
                 end
             end
         end
+        
     end
     
 end

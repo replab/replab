@@ -1,5 +1,5 @@
 classdef DirectedGraph < replab.Obj
-% Describes a directed graph
+% Describes an immutable directed graph
 %
 % Vertices of the graph are numbered continuously from 1 to nVertices
 
@@ -143,7 +143,7 @@ classdef DirectedGraph < replab.Obj
 
             % Construct the associated full adjacency matrix
             adj = [zeros(size(biadj,1)*[1 1]), biadj;
-                   biadj.' zeros(size(biadj,2)*[1 1])];
+                   zeros(size(biadj,2), sum(size(biadj)))];
             
             self = replab.DirectedGraph.fromAdjacencyMatrix(adj);
         end
@@ -174,6 +174,46 @@ classdef DirectedGraph < replab.Obj
         
     end
 
+    methods
+        
+        function s = headerStr(self)
+        % Header string representing the object
+        %
+        % Returns:
+        %     charstring: description of the object
+
+            s = sprintf('Directed graph with %d vertices and %d edges', self.nVertices, size(self.edges,1));
+        end
+        
+        function names = hiddenFields(self)
+        % Overload of `+replab.Str.hiddenFields`
+
+            names = hiddenFields@replab.Str(self);
+            names{1, end+1} = 'nVertices';
+            names{1, end+1} = 'colors';
+            names{1, end+1} = 'weights';
+        end
+
+        function [names, values] = additionalFields(self)
+        % Overload of `+replab.Str.additionalFields`
+
+            [names, values] = additionalFields@replab.Str(self);
+
+            % We only display nontrivial colorings
+            if ~isequal(self.colors, 0)
+                names{1, end+1} = 'colors';
+                values{1, end+1} = self.colors;
+            end
+            
+            % We only display nontrivial weights
+            if ~isequal(self.weights, 1)
+                names{1, end+1} = 'weights';
+                values{1, end+1} = self.weights;
+            end
+        end
+        
+    end
+    
     methods % Methods
 
         function adj = adjacencyMatrix(self)
