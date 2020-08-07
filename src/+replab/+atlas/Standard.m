@@ -91,6 +91,35 @@ classdef Standard < replab.Atlas
             entry = self.dihedral(n);
             R = replab.AtlasResult(G, entry, {x a});
         end
+        
+        function A = klein(self)
+        % Constructs the atlas entry corresponding to the klein four-group
+            name = sprintf('Klein four-group of order %d', 4);
+            % Permutation realization
+            X = [2,1,4,3];
+            A = [3,4,1,2];
+            prmGroup = replab.PermutationGroup.of(X, A);
+            % Presentation from the groupprops wiki
+            % < x, a | a^2 = x^2 = 1, x a x^-1 = a^-1 >
+            relators = {'a^2' 'x^2' 'x a x^-1 a'};
+            A = replab.AbstractGroup({'x' 'a'}, prmGroup, relators, name);
+        end
+        
+        function R = recognizeKlein(self, G)
+        % Recognizes if the given group is the Klein four-group and provides the generators according to the standard presentation
+        %
+        % The standard presentation is ``<x, a| a^2 = x^2 = id, x a x^-1 = a>``
+            if G.order ~= 4
+                return
+            end
+            if G.isCyclic
+                return
+            end
+            x = [2,1,4,3];
+            a = [3,4,1,2];
+            entry = self.klein;
+            R = replab.AtlasResult(G, entry, {x a});
+        end
 
         function A = symmetric(self, n)
         % Constructs the atlas entry corresponding to the symmetric group of degree n
@@ -245,6 +274,10 @@ classdef Standard < replab.Atlas
 
         function R = recognize(self, G)
             R = self.recognizeCyclic(G);
+            if ~isempty(R)
+                return
+            end
+            R = self.recognizeKlein(G);
             if ~isempty(R)
                 return
             end
