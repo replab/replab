@@ -10,3 +10,6 @@
 [submodule "YALMIP"]
 	path = external/YALMIP
 	url = https://github.com/yalmip/YALMIP
+[submodule "external/gluon"]
+	path = external/gluon
+	url = https://github.com/denisrosset/gluonjars
