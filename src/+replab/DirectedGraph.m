@@ -85,6 +85,9 @@ classdef DirectedGraph < replab.Obj
         function self = fromEdges(edges, nVertices, colors, weights)
         % Constructs a directed graph from a liste of edges
         %
+        % Duplicated edges are merged. Their weights are added up iff a
+        % weight was defined individually for each edge.
+        %
         % Args:
         %     edges (integer (\*,2)): array of vertices linked by an edge
         %     nVertices (integer, optional): number of vertices
@@ -113,7 +116,15 @@ classdef DirectedGraph < replab.Obj
                 weights = [];
             end
             
-            % TODO: Combine duplicated edges
+            % Remove duplicated edges
+            if (numel(weights) > 1) && (numel(weights) == size(edges,1))
+                % We add up the weights associated to identical edges
+                [edges, IA, IC] = unique(edges, 'rows');
+                weights = full(sparse(IC, 1, weights));
+            else
+                % The edge weight remains uniform
+                edges = unique(edges, 'rows');
+            end
             
             self = replab.DirectedGraph(nVertices, edges, colors, weights);
         end
@@ -160,6 +171,8 @@ classdef DirectedGraph < replab.Obj
             % Returns:
             %   graph (`.DirectedGraph`)
 
+            assert(isa(graph, 'replab.UndirectedGraph'), 'Input is not an undirected graph');
+            
             % We duplicate edges
             edges = graph.edges;
             sel = (diff(edges,1,2) ~= 0); % only duplicate links to distinct vertices
@@ -216,6 +229,21 @@ classdef DirectedGraph < replab.Obj
     
     methods % Methods
 
+        function graph = toUndirectedGraph(self)
+            % Removes the graph directionality
+            %
+            % This function returns an undirected graph with the same
+            % connectivity as the current graph.
+            %
+            % Args:
+            %   graph (`.DirectedGraph`)
+            %
+            % Returns:
+            %   graph (`.UndirectedGraph`)
+            
+            graph = replab.UndirectedGraph.fromDirectedGraph(self);
+        end
+        
         function adj = adjacencyMatrix(self)
         % Returns the adjacency matrix of a graph
         %
@@ -286,21 +314,6 @@ classdef DirectedGraph < replab.Obj
 
             % Construct the Partition object
             P = replab.Partition(blockIndex, blocks);
-        end
-        
-        function graph = ignoreDirectionality(self)
-            % Removes the graph directionality
-            %
-            % This function returns an undirected graph with the same
-            % connectivity as the input directed graph.
-            %
-            % Args:
-            %   graph (`.DirectedGraph`)
-            %
-            % Returns:
-            %   graph (`.UndirectedGraph`)
-            
-            graph = replab.UndirectedGraph.fromEdges(self.edges, self.nVertices, self.colors, self.weights);
         end
         
     end
