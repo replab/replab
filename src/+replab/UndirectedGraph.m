@@ -184,16 +184,10 @@ classdef UndirectedGraph < replab.DirectedGraph
             graph = replab.DirectedGraph.fromUndirectedGraph(self);
         end
         
-        function adj = adjacencyMatrix(self)
-        % Returns the adjacency matrix of a graph
-        %
-        % Args:
-        %   graph (`.UndirectedGraph`)
-        %
-        % Returns:
-        %   adj (double (\*,\*)): adjacency matrix
+        function adj = computeAdjacencyMatrix(self)
+        % Computes the adjacency matrix
 
-            adj = adjacencyMatrix@replab.DirectedGraph(self);
+            adj = computeAdjacencyMatrix@replab.DirectedGraph(self);
             adj = adj + adj.' - diag(diag(adj));
             adj = full(adj);
         end

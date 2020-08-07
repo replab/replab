@@ -252,6 +252,12 @@ classdef DirectedGraph < replab.Obj
         %
         % Returns:
         %   adj (double (\*,\*)): adjacency matrix
+            
+            adj = self.cached('adjacencyMatrix', @() self.computeAdjacencyMatrix);
+        end
+        
+        function adj = computeAdjacencyMatrix(self)
+        % Computes the adjacency matrix
 
             adj = replab.graph.edge2adj(self.edges, self.nVertices, self.weights);
             adj = full(adj);
