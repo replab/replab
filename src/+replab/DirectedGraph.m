@@ -316,6 +316,18 @@ classdef DirectedGraph < replab.Obj
             P = replab.Partition(blockIndex, blocks);
         end
         
+        function autoG = automorphismGroup(self)
+        % Returns the automorphism group of the graph
+        %
+        % Args:
+        %   graph (`.DirectedGraph`)
+        %
+        % Returns:
+        %   autoG (`.PemutationGroup`)
+        
+            autoG = self.cached('automorphismGroup', @() replab.graph.AutomorphismSearch(self).subgroup);
+        end
+        
     end
     
 end
