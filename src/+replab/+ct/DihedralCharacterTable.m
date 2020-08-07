@@ -1,7 +1,7 @@
 function ct = DihedralCharacterTable(n)
 % Generates the character table for the dihedral group Dn
 %
-% From Fässler, A., Stiefel, E., &amp; Wong, B. D. (1992). Group theoretical methods and their applications. 
+% From Fässler, A., Stiefel, E., & Wong, B. D. (1992). Group theoretical methods and their applications. 
 % Boston: Birkhäuser, 23-24.
 % 
 % Args:
@@ -16,7 +16,6 @@ function ct = DihedralCharacterTable(n)
     irrepExp = cell(1, nclasses);
     irrepExp{1} = {{'1'}, {'1'}};
     irrepExp{2} = {{'1'}, {'-1'}};
-    base = ['E(', num2str(n), ')'];
     if even(n)
         n1D = 4;
         irrepExp{3} = {{'-1'}, {'1'}};
@@ -25,8 +24,8 @@ function ct = DihedralCharacterTable(n)
         n1D = 2;
     end
     for j = 1:nclasses - n1D
-        g1 = {[base,'^',num2str(j)], '0'; '0', [base,'^',num2str(-j)]};
-        g2 = {'0', [base,'^',num2str(j)]; [base,'^',num2str(-j)], '0'};
+        g1 = {sprintf('E(%d)^%d', n, j), '0'; '0', sprintf('E(%d)^%d', n, -j)};
+        g2 = {'0', sprintf('E(%d)^%d', n, j); sprintf('E(%d)^%d', n, -j), '0'};
         irrepExp{n1D+j} = {g1, g2};
     end
     chars = cell(nclasses);
@@ -46,7 +45,7 @@ function ct = DihedralCharacterTable(n)
                 chars{4, i} = num2str((-1)^k);
             end
             for j = 1:nclasses - n1D
-                g1 = [base, '^', num2str(mod(j*k, ord)), '+', base,'^', num2str(-1*mod(j*k, ord))];
+                g1 = sprintf('E(%d)^%d+E(%d)^%d', n, mod(j*k, ord), n, -1*mod(j*k, ord));
                 chars{n1D+j, i} = g1;
             end
         else
