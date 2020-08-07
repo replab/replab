@@ -2,7 +2,7 @@ classdef IndexedFamilyLaws < replab.Laws
 % Laws for indexed families
 
     properties (SetAccess = protected)
-        I % `+replab.IndexedFamily`: Indexed family to test
+        I % (`+replab.IndexedFamily`): Indexed family to test
         B % Domain of element indices as type vpi
         D % Domain of element indices as type double (capped by 2^53 -1)
     end
@@ -13,7 +13,7 @@ classdef IndexedFamilyLaws < replab.Laws
         % Constructs a laws instance
         %
         % Args:
-        %   I (`.IndexedFamily`): Indexed family to test
+        %   I (`+replab.IndexedFamily`): Indexed family to test
             self.I = I;
             self.B = replab.domain.vpi(1, I.nElements);
             if I.nElements > 2^53 - 1

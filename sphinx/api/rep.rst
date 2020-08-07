@@ -10,17 +10,19 @@ Representations
    (matrix) images of the group generators; the computation of images
    rests on the factorization of group elements.
 
+-  `.SimilarRep` describes a representation with an associated change of basis matrix.
+
 Once a `.Rep` has been constructed, it can be decomposed into
 irreducible representations using the ``rep.decomposition`` method.
 
 -  `.SubRep` describes a subrepresentation of an existing
    representation. The instance can remember which representation it
-   splits (as a ``parent``) and the change of basis matrix (``U``),
-   with associated `.SubRepLaws`.
+   splits (as a ``parent``) and the change of basis matrix (``basis``).
 
 -  `.Isotypic` are isotypic components, which group equivalent
-   irreducible representations present in a representation,
-   with associated `.IsotypicLaws`.
+   irreducible representations present in a representation. If the irreducible
+   representations are all in the same basis, this will be an instance of
+   `.HarmonizedIsotypic`.
 
 -  `.Irreducible` regroups isotypic components, with associated
    `.IrreducibleLaws`.
@@ -28,59 +30,61 @@ irreducible representations using the ``rep.decomposition`` method.
 Representations induce vector spaces.
 
 -  `.Equivariant` describes the vector space of equivariant linear maps
-   between two representations of the same group.
-
--  `.Commutant` describes a generic commutant algebra.
-   The key to the simplification of invariant semidefinite programs is the
-   decomposition of *matrices that commute with a group representation*;
-   the set of all such matrices is the *commutant algebra*.
+   between two representations of the same group, with specialization
+   for commutant maps of isotypic and irreducible decompositions:
+   `.IsotypicCommutant` and `.IrreducibleCommutant`.
 
 Rep
 +++
 
 .. autoclass:: Rep
 
-RepLaws
-+++++++
-
-.. autoclass:: RepLaws
-
 RepByImages
 +++++++++++
 
 .. autoclass:: RepByImages
+
+SimilarRep
+++++++++++
+
+.. autoclass:: SimilarRep
 
 SubRep
 ++++++
 
 .. autoclass:: SubRep
 
-SubRepLaws
-++++++++++
-
-.. autoclass:: SubRepLaws
-
 Isotypic
 ++++++++
 
 .. autoclass:: Isotypic
 
-IsotypicLaws
-++++++++++++
+HarmonizedIsotypic
+++++++++++++++++++
 
-.. autoclass:: IsotypicLaws
+.. autoclass:: HarmonizedIsotypic
 
 Irreducible
 +++++++++++
 
 .. autoclass:: Irreducible
 
-IrreducibleLaws
-+++++++++++++++
-
-.. autoclass:: IrreducibleLaws
-
 Equivariant
 +++++++++++
 
 .. autoclass:: Equivariant
+
+IsotypicCommutant
++++++++++++++++++
+
+.. autoclass:: IsotypicCommutant
+
+IrreducibleCommutant
+++++++++++++++++++++
+
+.. autoclass:: IrreducibleCommutant
+
+CharacterTable
+++++++++++++++
+
+.. autoclass:: CharacterTable

@@ -1,9 +1,7 @@
 classdef WreathProductImprimitiveRep < replab.Rep
 % Imprimitive representation of a wreath product group
 %
-% See `+replab.+wreathproduct.Common.imprimitiveRep`
-%
-% See `+replab.+wreathproduct.PrimitiveRep`
+% See `+replab.+prods.WreathProductPrimitiveRep`
 
     properties (SetAccess = protected)
         Arep % (`+replab.Rep`): Representation of the group whose copies are acted upon
@@ -20,7 +18,7 @@ classdef WreathProductImprimitiveRep < replab.Rep
         %
         % Returns:
         %   `+replab.Rep`: A wreath product group representation
-            assert(isa(group, 'replab.WreathProductGroupx'));
+            assert(isa(group, 'replab.WreathProductGroup'));
             assert(group.A == Arep.group);
             dA = Arep.dimension;
             n = group.H.domainSize;

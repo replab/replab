@@ -1,7 +1,7 @@
 function value = fastChainOrder(newValue)
 % Maximum order for fast chain construction
 %
-% See `+replab.PermutationGroup.fastChain`
+% See `+replab.PermutationGroup.partialChain`
 %
 % Args:
 %   newValue (integer or ``[]``, optional): Value to be stored if provided

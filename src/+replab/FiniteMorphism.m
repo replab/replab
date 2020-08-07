@@ -73,6 +73,14 @@ classdef FiniteMorphism < replab.Morphism
 
     methods % Images
 
+        function I = imageSourceGenerators(self)
+        % Returns the images of the source generators
+        %
+        % Returns:
+        %   cell(1,\*) of elements of target: Generator images
+            I = cellfun(@(s) self.imageElement(s), self.source.generators, 'uniform', 0);
+        end
+
         function I = image(self)
         % Returns the image of this morphism
         %

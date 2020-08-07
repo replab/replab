@@ -1,27 +1,30 @@
-function [subsets componentIndex] = connectedComponents(edges)
+function [subsets, componentIndex] = connectedComponents(edges)
 % Identifies connected components of a graph
 %
 % Performs the burning algorithm on the network described by the
 % edges given in pairs.
 %
 % Note: This function treats vertices numbers as names, hence only assumes
-% the existence of vertices which are linked with other vertices.
+% the existence of vertices which are linked with other vertices. This
+% contrasts with the `+replab.Graph` class, which includes vertices with no
+% edge.
 %
 % Args:
-%     edges (double array) : nx2 array of vertices linked by an edge
+%     edges (integer (\n,2)) : array of vertices linked by an edge
 %
 % Returns:
 % --------
 %     subsets: cell array
 %         connex components
-%     componentIndex: sparse horizontal vector
+%     componentIndex: sparse integer (1,\n)
 %         the index of the component to which each vertex belongs
 %
 % Example:
-%     >>> replab.graph.connectedComponents([1 2; 2 6; 3 4]); % a graph with 5 nodes labelled 1, 2, 3, 4, 6
+%     >>> replab.Graph.fromEdges([1 2; 2 6; 3 4]).connectedComponents; % a graph with 6 nodes labelled 1, 2, 3, 4, 6
+%     >>> replab.Graph.fromEdges([1 2; 2 6; 3 4]).connectedComponents; % a graph with 5 nodes labelled 1, 2, 3, 4, 6
 %
 % See also:
-%     `replab.Partition.connectedComponents`
+%     `replab.Graph.connectedComponents`
 %     `replab.graph.burningAlgorithmFast`
 %     `replab.graph.burningAlgorithm`
 

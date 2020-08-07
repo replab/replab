@@ -1,45 +1,28 @@
-function relators = relatorsForPermutationGroup(group, names)
+function relators = relatorsForPermutationGroup(group)
 % Computes relators for a finite group
 %
 % Note: calls the GAP system internally
 %
 % Args:
 %   group (`+replab.PermutationGroup`): Permutation group to find the relators of
-%   names (cell(1,\*) of charstring): Generator names to use in the relators
 %
 % Returns:
-%   cell(1,\*) of charstring: Relators given as explicit words
-    permList = @(p) ['Inverse(PermList([' strjoin(arrayfun(@num2str, p, 'uniform', 0), ', ') ']))'];
-    line1 = ['G := GroupByGenerators([' strjoin(cellfun(permList, group.generators, 'uniform', 0), ', ') ']);;'];
-    line2 = 'F := Image(IsomorphismFpGroupByGenerators(G, GeneratorsOfGroup(G)));;';
-    line3 = 'GeneratorsOfGroup(F);';
-    line4 = 'RelatorsOfFpGroup(F);';
-    lines = strjoin({line1 line2 line3 line4}, '\n');
-    tfile = tempname();
-    ofile = tempname();
-    fid = fopen(tfile, 'wt');
-    fprintf(fid, lines);
-    fclose(fid);
-    [status, result] = system([replab.globals.gapBinaryPath ' -n -q <' tfile ' > ' ofile]);
-    result = fileread(ofile);
-    delete(tfile);
-    delete(ofile);
-    outs = strsplit(result, '\n');
-    gapNames = strtrim(outs{1});
-    assert(gapNames(1) == '[' && gapNames(end) == ']');
-    gapNames = gapNames(2:end-1);
-    gapNames = strsplit(gapNames, ',');
-    gapNames = cellfun(@strtrim, gapNames, 'uniform', 0);
-    relators = strtrim(outs{2});
-    assert(relators(1) == '[' && relators(end) == ']');
-    relators = relators(2:end-1);
-    relators = strsplit(relators, ',');
-    relators = cellfun(@strtrim, relators, 'uniform', 0);
-    for i = 1:length(relators)
-        r = relators{i};
-        for j = 1:length(names)
-            r = strrep(r, sprintf('F%d', j), names{j});
+%   cell(1,\*) of integer(1,\*): Relators given as explicit words
+    relators = cell(1, 0);
+    if group.isTrivial
+        return
+    end
+    nG = group.nGenerators;
+    grp_s = group.subgroup({group.generator(1)});
+    sub_s = group.trivialSubgroup;
+    s = 1;
+    while true
+        relators = replab.fp.CosetTable.presentation(grp_s, sub_s, relators);
+        s = s + 1;
+        if s > nG
+            break
         end
-        relators{i} = r;
+        sub_s = grp_s;
+        grp_s = group.subgroup(group.generators(1:s));
     end
 end

@@ -32,6 +32,11 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 names{1, end+1} = sprintf('generator(%d)', i);
                 values{1, end+1} = self.generator(i);
             end
+            r = self.fastRecognize;
+            if ~isempty(r)
+                names{1,end+1} = 'recognize';
+                values{1,end+1} = r;
+            end
         end
 
         % Obj
@@ -70,6 +75,17 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function c = computeConjugacyClasses(self)
             error('Abstract');
+        end
+
+        function R = computeFastRecognize(self)
+            R = [];
+            if self.niceMorphism.image.domainSize < replab.globals.fastChainDomainSize
+                c = self.niceMorphism.image.partialChain;
+                if ~c.isMutable
+                    A = replab.atlas.Standard;
+                    R = A.recognize(self);
+                end
+            end
         end
 
         function R = computeRecognize(self)
@@ -158,6 +174,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   cell(1, \*) of `+replab.ConjugacyClass`: Array of conjugacy classes
             c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
+        end
+
+        function R = fastRecognize(self)
+        % Attempts to recognize this group in the standard atlas
+        %
+        % Returns:
+        %   `+replab.AtlasResult` or []: A result in case the group is identified; or ``[]`` if unrecognized.
+            R = self.cached('fastRecognize', @() self.computeFastRecognize);
         end
 
         function R = recognize(self)
@@ -278,7 +302,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   element: Element of the group corresponding to the given word
-
             if nargin < 3 || isempty(names)
                 m = self.abstractGroupIsomorphism;
             else
@@ -818,19 +841,19 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-% $$$         % TODO
-% $$$         function f = leftConjugateMorphism(self, by)
-% $$$         % Returns the morphism that corresponds to left conjugation by an element
-% $$$         %
-% $$$         % Args:
-% $$$         %   by (element of `parent`): Element to conjugate the group with
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Morphism`: Conjugation morphism
-% $$$             generatorImages = cellfun(@(g) self.parent.leftConjugate(by, g), self.generators, 'uniform', 0);
-% $$$             target = self.parent.subgroup(newGenerators, self.order);
-% $$$             f = self.morphismByImages(self, target, generatorImages);
-% $$$         end
+        % TODO
+        function f = leftConjugateMorphism(self, by)
+        % Returns the morphism that corresponds to left conjugation by an element
+        %
+        % Args:
+        %   by (element of `.type`): Element to conjugate the group with
+        %
+        % Returns:
+        %   `+replab.Morphism`: Conjugation morphism
+            generatorImages = cellfun(@(g) self.type.leftConjugate(by, g), self.generators, 'uniform', 0);
+            target = self.type.subgroup(newGenerators, self.order);
+            f = self.morphismByImages(self, target, generatorImages);
+        end
 
         function m = morphismByImages(self, target, generatorImages)
         % Constructs a morphism to a group using images of generators

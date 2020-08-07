@@ -1,9 +1,9 @@
 classdef SemidirectProductGroupLaws < replab.Laws
 
     properties (SetAccess = protected)
-        G % `.SemidirectProductGroup`: Semidirect product group
-        H % `.CompactGroup`: Group acting
-        N % `.CompactGroup`: Group acted upon
+        G % (`+replab.SemidirectProductGroup`): Semidirect product group
+        H % (`+replab.CompactGroup`): Group acting
+        N % (`+replab.CompactGroup`): Group acted upon
     end
 
     methods

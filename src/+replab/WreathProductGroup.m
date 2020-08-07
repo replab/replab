@@ -1,9 +1,12 @@
 classdef WreathProductGroup < replab.SemidirectProductGroup
 % Wreath product group
+%
+% It is a semidirect product of a permutation group, called the complement group `.H`, which
+% acts on copies (`.N`) of a base factor group `.A`.
 
     properties (SetAccess = protected)
         n % (integer): Number of copies of the base group
-        A % (`.CompactGroup`): Factor of base group
+        A % (`.CompactGroup`): Base factor group
     end
 
     methods (Static) % WreathProductGroup creation
@@ -12,8 +15,8 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
         % Constructs a wreath product group
         %
         % Args:
-        %   H (`.PermutationGroup`): Group that permutes the factors
-        %   A (`.CompactGroup`): Group whose copies compose the factors
+        %   H (`.PermutationGroup`): Complement group that permutes the factors
+        %   A (`.CompactGroup`): Base factor group of which the direct product composes the base
         %
         % Returns:
         %   `.WreathProductGroup`: A specialized instance of `.WreathProductGroup`

@@ -421,14 +421,7 @@ classdef CommutantVar < replab.Str
                     % 2. Fine-grained form of blocks in presence of large
                     % dimensions
                     if (dp > 1)
-                        switch self.types(i)
-                            case 'R'
-                                tmp = reshape(permute(reshape(self.blocks{i}, [dp mp dp mp]), [2 1 4 3]), dp*mp*[1 1]);
-                            case 'C'
-                                tmp = reshape(permute(reshape(self.blocks{i}, [2 dp mp/2 2 dp mp/2]), [1 3 2 4 6 5]), dp*mp*[1 1]);
-                            case 'H'
-                                tmp = reshape(permute(reshape(self.blocks{i}, [4 dp mp/4 4 dp mp/4]), [1 3 2 4 6 5]), dp*mp*[1 1]);
-                        end
+                        tmp = reshape(permute(reshape(self.blocks{i}, [dp mp dp mp]), [2 1 4 3]), dp*mp*[1 1]);
 
                         if (sdpMatrixIsSym == 1)
                             for j = 1:dp-1

@@ -2,8 +2,8 @@ classdef GroupMorphismLaws < replab.Laws
 
     properties (SetAccess = protected)
         fun % morphism function handle
-        S % `.Group`: Source group
-        T % `.Group`: Target group
+        S % (`+replab.Group`): Source group
+        T % (`+replab.Group`): Target group
     end
 
     methods

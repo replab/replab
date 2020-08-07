@@ -82,7 +82,7 @@ classdef ChainWithWords < replab.Str
                 nu = self.nu{i}(:,ind)';
                 nuw = self.nuw{i}{ind};
                 g = nu(g);
-                w = replab.fp.composeLetters(w, -fliplr(nuw));
+                w = replab.fp.Letters.compose(w, -fliplr(nuw));
             end
         end
 
@@ -141,7 +141,7 @@ classdef ChainWithWords < replab.Str
                 v = self.nu{i}(:,ind)';
                 vw = self.nuw{i}{ind};
                 r = v(t);
-                rw = replab.fp.composeLetters(vw, tw);
+                rw = replab.fp.Letters.compose(vw, tw);
                 if length(tw) < length(vw)
                     t_inv = self.group.inverse(t);
                     tw_inv = -fliplr(tw);
@@ -260,7 +260,7 @@ classdef ChainWithWords < replab.Str
                             yw = self.nuw{j}{oy};
                             if new(ix, j) || new(iy, j)
                                 t = x(y); % we do not need to inverse the product (left/right action thing)
-                                tw = replab.fp.composeLetters(xw, yw);
+                                tw = replab.fp.Letters.compose(xw, yw);
                                 self.round(l, j, t, tw);
                             end
                         end
@@ -294,7 +294,7 @@ classdef ChainWithWords < replab.Str
                                 assert(nuii(bi) == self.B(i));
                                 nuiiw = self.nuw{i}{ii};
                                 t = self.group.composeWithInverse(x, nuii);
-                                tw = replab.fp.composeLetters(xw, -fliplr(nuiiw));
+                                tw = replab.fp.Letters.compose(xw, -fliplr(nuiiw));
                                 if length(tw) < l
                                     ind = length(self.orbit{i}) + 1;
                                     self.orbit{i}(ind) = p;

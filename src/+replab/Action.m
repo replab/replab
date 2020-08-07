@@ -4,8 +4,8 @@ classdef Action < replab.Obj
 % Elements of the group ``G`` act upon elements of type ``P``.
 
     properties (SetAccess = protected)
-        G % (`+replab.Group`): Group acting
-        P % (`+replab.Domain`): Set acted upon
+        G % replab.Group: Group acting
+        P % replab.Domain: Set acted upon
     end
 
     methods % Implementations

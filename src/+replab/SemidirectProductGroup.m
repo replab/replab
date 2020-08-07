@@ -1,13 +1,13 @@
 classdef SemidirectProductGroup < replab.Group
 % Describes an external semidirect product of groups
 %
-% This is an abstract base class. Call `.semidirectProduct` on a compact group to construct an instance.
+% This is an abstract base class. Call `.CompactGroup.semidirectProduct` to construct an instance.
 %
 % Example:
 %   >>> N = replab.S(3);
 %   >>> H = replab.CyclicGroup(3);
-%   >>> A = replab.Automorphism.byConjugation([2 3 1], N);
-%   >>> phi = H.morphismByImages(replab.AutomorphismGroup.innerAutomorphismGroup(N), {A});
+%   >>> A = replab.nfg.PlainAutomorphism.byConjugation([2 3 1], N);
+%   >>> phi = H.morphismByImages(replab.nfg.PlainAutomorphismGroup(N), {A});
 %   >>> sd = H.semidirectProduct(N, @(h, n) phi.imageElement(h).imageElement(n));
 %   >>> sd.laws.checkSilent;
 
@@ -51,7 +51,7 @@ classdef SemidirectProductGroup < replab.Group
 
     end
 
-    methods % Implementatoins
+    methods % Implementations
 
         % Domain
 
