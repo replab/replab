@@ -1,4 +1,11 @@
 classdef cyclotomic
+% Matrix of cyclotomic numbers
+%
+% Example:
+%   >>> I = replab.cyclotomic.eye(3)
+%       1  0  0
+%       0  1  0
+%       0  0  1
 
     properties %(Access = protected)
         mat % (cell(\*,\*) of cyclo.Cyclo): Matrix of cyclotomic numbers
@@ -158,7 +165,6 @@ classdef cyclotomic
                 error('Not a valid indexing expression')
             end
         end
-
 
         function res = double(self)
             els = self.mat(:);
