@@ -148,6 +148,13 @@ classdef cyclotomic
             res = replab.cyclotomic(reshape(cell(mat), [l n]));
         end
 
+        function res = mpower(self, e)
+            n = size(self.mat, 1);
+            assert(size(self.mat, 2) == n);
+            mat = com.faacets.gluon.Cyclotomic.power(n, self.matArray, e);
+            res = replab.cyclotomic(reshape(cell(mat), [n n]));
+        end
+
         function res = inv(self)
             n = size(self.mat, 1);
             assert(size(self.mat, 2) == n);
