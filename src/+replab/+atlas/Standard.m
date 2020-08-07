@@ -27,6 +27,29 @@ classdef Standard < replab.Atlas
             self@replab.Atlas(1000);
         end
 
+        function A = trivial(self, ds)
+        % Constructs the atlas entry corresponding to the trivial group
+            name = 'Trivial group';
+            prmGroup = replab.PermutationGroup.of(1:ds);
+            relators = {'x'};
+            % Presentation from the groupprops wiki
+            % < x | x = 1 >
+            A = replab.AbstractGroup({'x'}, prmGroup, relators, name);
+        end
+        
+        function R = recognizeTrivial(self, G)
+        % Recognizes if the given group is the trivial group and provides the generators according to the standard presentation
+        %
+        % The standard presentation is ``<x| x = id>`` 
+            R = [];
+            if ~G.isTrivial
+                return
+            end
+            x = G.identity;
+            entry = self.trivial(G.domainSize);
+            R = replab.AtlasResult(G, entry, {x});
+        end
+        
         function A = dihedral(self, n)
         % Constructs the atlas entry corresponding to the dihedral group of order 2*n
             assert(n > 2);
@@ -109,6 +132,7 @@ classdef Standard < replab.Atlas
         % Recognizes if the given group is the Klein four-group and provides the generators according to the standard presentation
         %
         % The standard presentation is ``<x, a| a^2 = x^2 = id, x a x^-1 = a>``
+            R = [];
             if G.order ~= 4
                 return
             end
@@ -123,7 +147,7 @@ classdef Standard < replab.Atlas
 
         function A = symmetric(self, n)
         % Constructs the atlas entry corresponding to the symmetric group of degree n
-            assert(n > 2);
+%             assert(n > 2);
             name = sprintf('Symmetric group S(%d) of degree %d', n, n);
             % Permutation realization
             S = [2:n 1];
@@ -273,6 +297,10 @@ classdef Standard < replab.Atlas
         end
 
         function R = recognize(self, G)
+            R = self.recognizeTrivial(G);
+            if ~isempty(R)
+                return
+            end
             R = self.recognizeCyclic(G);
             if ~isempty(R)
                 return
