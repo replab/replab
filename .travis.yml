@@ -24,7 +24,7 @@ cache:
 before_install:
   - sudo add-apt-repository universe
   - sudo apt update
-  - sudo apt install octave liboctave-dev octave-optim octave-symbolic
+  - sudo apt install octave liboctave-dev octave-optim octave-symbolic openjdk-11-jre
   - git submodule update --init
 
 ###############################################################################

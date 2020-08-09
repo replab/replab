@@ -111,9 +111,9 @@ function replab_init(verbose)
     %% VPI
     VPIInPath = replab.init.initVPI(verbose);
 
-    %% Gluon
+    %% CycloLab
 
-    GluonInPath = replab.init.initGluon(verbose);
+    CycloLabInPath = replab.init.initCycloLab(verbose);
 
     %% MOxUnit
     MOxUnitInPath = replab.init.initMOxUnit(verbose);
@@ -134,7 +134,7 @@ function replab_init(verbose)
     MOcovInPath = replab.init.initMOcov(verbose);
 
     %% If everything was successful, the next call will be quicker
-    if VPIInPath && MOxUnitInPath && YALMIPInPath && SDPSolverInPath && MOcovInPath && GluonInPath
+    if VPIInPath && MOxUnitInPath && YALMIPInPath && SDPSolverInPath && MOcovInPath && CycloLabInPath
         allGood = true;
     end
 

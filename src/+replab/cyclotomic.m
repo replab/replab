@@ -1,5 +1,7 @@
 classdef cyclotomic
-% Matrix of cyclotomic numbers
+% Matrix with elements in the cyclotomic field
+%
+% Requires Java
 %
 % Example:
 %   >>> I = replab.cyclotomic.eye(3)
@@ -16,37 +18,37 @@ classdef cyclotomic
         function c = eye(n)
             c = replab.cyclotomic.zeros(n, n);
             mat = c.mat;
+            one = javaMethod('one', 'cyclo.Cyclo');
             for i = 1:n
-                mat{i,i} = cyclo.Cyclo.one;
+                mat{i,i} = one;
             end
             c = replab.cyclotomic(mat);
         end
 
         function c = zeros(m, n)
-            mat = repmat({cyclo.Cyclo.zero}, m, n);
+            mat = repmat({javaMethod('zero', 'cyclo.Cyclo')}, m, n);
             c = replab.cyclotomic(mat);
         end
 
         function c = ones(m, n)
-            mat = repmat({cyclo.Cyclo.one}, m, n);
+            mat = repmat({javaMethod('one', 'cyclo.Cyclo')}, m, n);
             c = replab.cyclotomic(mat);
         end
 
         function c = E(n)
-            c = replab.cyclotomic({cyclo.Cyclo.e(n)});
+            c = replab.cyclotomic({javaMethod('e', 'cyclo.Cyclo')});
         end
 
-        function c = fromString(strings)
-            mat = cellfun(@(s) com.faacets.gluon.Cyclotomic.parse(s), strings, 'uniform', 0);
-            c = replab.cyclotomic(mat);
+        function c = fromStrings(strings)
+            ja = javaMethod('parse', 'cyclo.Lab', strings(:));
+            c = replab.cyclotomic.fromJavaArray(ja, size(strings));
         end
 
-        function c = fromDouble(doubles)
-            mat = arrayfun(@(d) com.faacets.gluon.Cyclotomic.fromDouble(d), full(doubles), 'uniform', 0);
-            c = replab.cyclotomic(mat);
+        function c = fromDoubles(doubles)
+            c = replab.cyclotomic.fromJavaArray(javaMethod('fromDouble', 'cyclo.Lab', doubles(:)), size(doubles));
         end
 
-        function c = sqrt(num, den)
+        function c = sqrtRational(num, den)
             if nargin == 1
                 c = replab.cyclotomic({com.faacets.gluon.Cyclotomic.sqrt(num)});
             else
@@ -54,17 +56,32 @@ classdef cyclotomic
             end
         end
 
+        function c = fromJavaArray(ja, sz)
+        % Creates a cyclotomic matrix from the data in a Java array
+        %
+        % Args:
+        %   ja (1D Java array of ``cyclo.Cyclo``): Matrix elements
+        %   sz (integer(1, 2)): Size of the cyclotomic matrix
+        %
+        % Returns:
+        %   `.cyclotomic`: Cyclotomic matrix
+            c = replab.cyclotomic(reshape(replab.compat.javaArrayToCell(ja), sz));
+        end
+
     end
 
     methods
 
         function res = matArray(self)
-            if prod(size(self.mat)) == 1
-                res = javaArray('cyclo.Cyclo', 1);
-                res(1) = self.mat{1,1};
+            c = self.mat;
+            c = c(:);
+            if prod(size(self.mat)) == 1 || replab.compat.isOctave
+                res = javaArray('cyclo.Cyclo', length(c));
+                for i = 1:length(c)
+                    res(i) = c{i};
+                end
             else
-                m = self.mat;
-                res = [m{:}];
+                res = [c{:}];
             end
         end
 
@@ -74,47 +91,49 @@ classdef cyclotomic
         end
 
         function disp(self)
-            t = replab.str.Table(cellfun(@(c) char(com.faacets.gluon.Cyclotomic.printCyclo(c)), self.mat, 'uniform', 0));
+            t = replab.compat.javaArrayToCell(javaMethod('print', 'cyclo.Lab', self.matArray));
+            t = replab.str.Table(reshape(t, self.size), 'uniform', 0);
             disp(t);
         end
 
         function res = eq(self, rhs)
-            res = double(self.minus(rhs)) == 0;
+            res = reshape(javaMethod('eqv', 'cyclo.Lab', self.matArray, rhs.matArray), size(self.mat));
         end
 
         function res = conj(self)
-            mat = reshape(cell(com.faacets.gluon.Cyclotomic.conjugate(self.matArray)), size(self.mat));
-            res = replab.cyclotomic(mat);
+            res = replab.cyclotomic.fromJavaArray(javaMethod('conjugate', 'cyclo.Lab', self.matArray), self.size);
+        end
+
+        function res = sqrt(self)
+            res = replab.cyclotomic.fromJavaArray(javaMethod('sqrt', 'cyclo.Lab', self.matArray), self.size);
         end
 
         function res = plus(lhs, rhs)
             if isa(lhs, 'double')
-                lhs = replab.cyclotomic.fromDouble(lhs);
+                lhs = replab.cyclotomic.fromDoubles(lhs);
             end
             if isa(rhs, 'double')
-                rhs = replab.cyclotomic.fromDouble(rhs);
+                rhs = replab.cyclotomic.fromDoubles(rhs);
             end
-            mat = reshape(cell(com.faacets.gluon.Cyclotomic.plus(lhs.matArray, rhs.matArray)), size(lhs.mat));
-            res = replab.cyclotomic(mat);
+            res = replab.cyclotomic.fromJavaArray(javaMethod('plus', 'cyclo.Lab', lhs.matArray, rhs.matArray), size(lhs));
         end
 
         function res = minus(lhs, rhs)
             if isa(lhs, 'double')
-                lhs = replab.cyclotomic.fromDouble(lhs);
+                lhs = replab.cyclotomic.fromDoubles(lhs);
             end
             if isa(rhs, 'double')
-                rhs = replab.cyclotomic.fromDouble(rhs);
+                rhs = replab.cyclotomic.fromDoubles(rhs);
             end
-            mat = reshape(cell(com.faacets.gluon.Cyclotomic.minus(lhs.matArray, rhs.matArray)), size(lhs.mat));
-            res = replab.cyclotomic(mat);
+            res = replab.cyclotomic.fromJavaArray(javaMethod('minus', 'cyclo.Lab', lhs.matArray, rhs.matArray), size(lhs));
         end
 
         function res = times(lhs, rhs)
             if isa(lhs, 'double')
-                lhs = replab.cyclotomic.fromDouble(lhs);
+                lhs = replab.cyclotomic.fromDoubles(lhs);
             end
             if isa(rhs, 'double')
-                rhs = replab.cyclotomic.fromDouble(rhs);
+                rhs = replab.cyclotomic.fromDoubles(rhs);
             end
             mat = reshape(cell(com.faacets.gluon.Cyclotomic.pw_times(lhs.matArray, rhs.matArray)), size(lhs.mat));
             res = replab.cyclotomic(mat);
@@ -122,44 +141,51 @@ classdef cyclotomic
 
         function res = mrdivide(lhs, rhs)
             if isa(lhs, 'double')
-                lhs = replab.cyclotomic.fromDouble(lhs);
+                lhs = replab.cyclotomic.fromDoubles(lhs);
             end
             if isa(rhs, 'double')
-                rhs = replab.cyclotomic.fromDouble(rhs);
+                rhs = replab.cyclotomic.fromDoubles(rhs);
             end
-            assert(isscalar(rhs.mat));
+            assert(isscalar(rhs.mat), 'The / operator is only implemented for scalar rhs');
             rm = rhs.mat;
-            mat = reshape(cell(com.faacets.gluon.Cyclotomic.divideScalar(lhs.matArray, rm{1})), size(lhs.mat));
-            res = replab.cyclotomic(mat);
+            res = replab.cyclotomic.fromJavaArray(javaMethod('divideScalar', 'cyclo.Lab', lhs.matArray, rm{1}), lhs.size);
         end
 
         function res = mtimes(lhs, rhs)
             if isa(lhs, 'double')
-                lhs = replab.cyclotomic.fromDouble(lhs);
+                lhs = replab.cyclotomic.fromDoubles(lhs);
             end
             if isa(rhs, 'double')
-                rhs = replab.cyclotomic.fromDouble(rhs);
+                rhs = replab.cyclotomic.fromDoubles(rhs);
+            end
+            if ~isscalar(rhs.mat) && isscalar(lhs.mat)
+                res = rhs * lhs;
+                return
+            end
+            if isscalar(rhs.mat)
+                l = size(lhs.mat, 1);
+                m = size(lhs.mat, 2);
+                rm = rhs.mat;
+                res = replab.cyclotomic.fromJavaArray(javaMethod('timesScalar', 'cyclo.Lab', lhs.matArray, rm{1,1}), size(lhs));
+                return
             end
             l = size(lhs.mat, 1);
             m = size(lhs.mat, 2);
             assert(m == size(lhs.mat, 1));
             n = size(rhs.mat, 2);
-            mat = com.faacets.gluon.Cyclotomic.times(l, m, n, lhs.matArray, rhs.matArray);
-            res = replab.cyclotomic(reshape(cell(mat), [l n]));
+            res = replab.cyclotomic.fromJavaArray(javaMethod('times', 'cyclo.Lab', l, m, n, lhs.matArray, rhs.matArray), [l n]);
         end
 
         function res = mpower(self, e)
             n = size(self.mat, 1);
             assert(size(self.mat, 2) == n);
-            mat = com.faacets.gluon.Cyclotomic.power(n, self.matArray, e);
-            res = replab.cyclotomic(reshape(cell(mat), [n n]));
+            res = replab.cyclotomic.fromJavaArray(javaMethod('power', 'cyclo.Lab', n, self.matArray, e), [n n]);
         end
 
         function res = inv(self)
             n = size(self.mat, 1);
             assert(size(self.mat, 2) == n);
-            mat = com.faacets.gluon.Cyclotomic.inverse(n, self.matArray);
-            res = replab.cyclotomic(reshape(cell(mat), [n n]));
+            res = replab.cyclotomic.fromJavaArray(javaMethod('inverse', 'cyclo.Lab', n, self.matArray), [n n]);
         end
 
         function s = size(self, varargin)
@@ -194,7 +220,7 @@ classdef cyclotomic
                     if isa(val, 'replab.cyclotomic')
                         self.mat = builtin('subsasgn', self.mat, s(1), val.mat);
                     elseif isa(val, 'double')
-                        arg = replab.cyclotomic.fromDouble(val);
+                        arg = replab.cyclotomic.fromDoubles(val);
                         self = subsasgn(self, s(1), arg);
                     end
                 end
@@ -204,10 +230,15 @@ classdef cyclotomic
         end
 
         function res = double(self)
-            pairs = com.faacets.gluon.Cyclotomic.toDouble([self.matArray]);
-            r = pairs(1,:);
-            i = pairs(2,:);
-            res = reshape(r, size(self.mat)) + 1i * reshape(i, size(self.mat));
+            pairs = javaMethod('toDouble', 'cyclo.Lab', self.matArray);
+            if replab.compat.isOctave
+                R = pairs(1);
+                I = pairs(2);
+            else
+                R = pairs(1,:);
+                I = pairs(2,:);
+            end
+            res = reshape(R, size(self.mat)) + 1i * reshape(I, size(self.mat));
         end
 
         function res = horzcat(self, varargin)
