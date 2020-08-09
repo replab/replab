@@ -96,6 +96,12 @@ classdef cyclotomic
             disp(t);
         end
 
+        function s = num2str(self)
+            t = replab.compat.javaArrayToCell(javaMethod('print', 'cyclo.Lab', self.matArray));
+            t = replab.str.Table(reshape(t, self.size), 'uniform', 0);
+            s = t.format(1000, 1000);
+        end
+
         function res = eq(self, rhs)
             res = reshape(javaMethod('eqv', 'cyclo.Lab', self.matArray, rhs.matArray), size(self.mat));
         end
