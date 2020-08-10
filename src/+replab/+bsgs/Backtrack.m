@@ -399,6 +399,7 @@ classdef Backtrack < replab.Obj
         % Tests if base images are possible at a given level
         %
         % Note that the element ``g`` in Holt is given by ``g = compose(gPrev, ul)``.
+        % Hence, the permutation being tested is ``gPrev(ul)``.
         %
         % This tests if there is any element in the searched set that has the partial base image
         % ``[g(base(1)) ... g(base(l))]`` of the preimage ``[base(1) ... base(l)]``.

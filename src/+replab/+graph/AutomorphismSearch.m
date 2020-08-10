@@ -22,6 +22,7 @@ classdef AutomorphismSearch < replab.bsgs.Backtrack
 
         function ok = test(self, l, prev, ul)
             % TODO: optimize this condition
+
 %            disp(num2str(l));
 %            disp(num2str([prev; ul]));
             
