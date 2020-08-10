@@ -365,7 +365,7 @@ classdef Backtrack < replab.Obj
         % Same as `.test` except it performs the test on the reduced base `.base0`
         %
         % ... should be called for ``l0 == 0`` as well
-                l = sum(self.numRed0(1:l0)) + l0; % index in the original base
+            l = sum(self.numRed0(1:l0)) + l0; % index in the original base
             if l > length(self.partialBase)
                 ok = true;
                 return
