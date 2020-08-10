@@ -185,7 +185,7 @@ classdef Table < replab.Str
             if len > maxColumns
                 truncated = true;
                 ellipsisCol = cell(dim(1), 1);
-                ellipsisCol{floor(dim(1)/2)} = omitSymbol;
+                ellipsisCol{max(floor(dim(1)/2), 1)} = omitSymbol;
                 if ~isempty(self.omitRange)
                     [dots, hide] = self.addEllipses(self.omitRange);
                     char_arr(:, dots) = repmat(ellipsisCol, 1, length(dots));
