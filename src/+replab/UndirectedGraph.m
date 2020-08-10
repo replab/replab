@@ -1,7 +1,5 @@
-classdef UndirectedGraph < replab.DirectedGraph
+classdef UndirectedGraph < replab.graph.Graph
 % Describes an immutable undirected graph
-%
-% Vertices of the graph are numbered continuously from 1 to nVertices
 
     methods (Access = public)
         
@@ -15,7 +13,7 @@ classdef UndirectedGraph < replab.DirectedGraph
         %   `.fromBlocks`
         %   `.check`
 
-            self@replab.DirectedGraph(nVertices, edges, colors, weights);
+            self@replab.graph.Graph(nVertices, edges, colors, weights);
         end
 
     end
@@ -136,20 +134,38 @@ classdef UndirectedGraph < replab.DirectedGraph
         end
 
         function self = fromDirectedGraph(graph)
-            % Define an undirected graph from a directed one
-            %
-            % This function returns an undirected graph with the same
-            % connectivity as the input directed graph.
-            %
-            % Args:
-            %   graph (`.DirectedGraph`)
-            %
-            % Returns:
-            %   graph (`.UndirectedGraph`)
+        % Define an undirected graph from a directed one
+        %
+        % This function returns an undirected graph with the same
+        % connectivity as the input directed graph.
+        %
+        % Args:
+        %   graph (`.DirectedGraph`)
+        %
+        % Returns:
+        %   graph (`.UndirectedGraph`)
 
             assert(isa(graph, 'replab.DirectedGraph'), 'Input is not a directed graph');
 
             self = replab.UndirectedGraph.fromEdges(graph.edges, graph.nVertices, graph.colors, graph.weights);
+        end
+
+
+        function self = fromFile(fileName)
+        % Loads a graph from a Bliss file
+        %
+        % Following the specifications from
+        % http://www.tcs.hut.fi/Software/bliss/fileformat.shtml
+        %
+        % Args:
+        %   fileName (charstring) : Name of the file to be loaded
+        %
+        % Returns:
+        %   graph (`.UndirectedGraph`)
+            
+            [nVertices, edges, colors] = replab.graph.parseBlissFile(fileName);
+            
+            self = replab.UndirectedGraph.fromEdges(edges, nVertices, colors);
         end
         
     end
@@ -187,24 +203,9 @@ classdef UndirectedGraph < replab.DirectedGraph
         function adj = computeAdjacencyMatrix(self)
         % Computes the adjacency matrix
 
-            adj = computeAdjacencyMatrix@replab.DirectedGraph(self);
+            adj = replab.graph.edge2adj(self.edges, self.nVertices, self.weights);
             adj = adj + adj.' - diag(diag(adj));
             adj = full(adj);
-        end
-        
-        function L = laplacian(self)
-        % Returns the graph Laplacian
-        %
-        % This is a generalized laplacian which also takes into account the
-        % graph coloring. It reduces to the standard laplacian when
-        % self.color = 0. A graph laplacian is semidefinite positive
-        %
-        % Args:
-        %   graph (`.UndirectedGraph`)
-        %
-        % Returns:
-        %   L (double (\*,\*)): Laplacian of the graph
-            L = self.cached('laplacian', @() self.computeLaplacian);
         end
         
         function L = computeLaplacian(self)
@@ -219,52 +220,6 @@ classdef UndirectedGraph < replab.DirectedGraph
             end
             
             L = D - M + diag(colors);
-        end
-        
-        function Kt = heatKernel(self, nbTimes)
-        % The heat kernel
-        %
-        % Evaluates the heat kernel of the graph at several times.
-        %
-        % Args:
-        %   graph (`.UndirectedGraph`)
-        %   nbTimes (integer, optional): the number of distinct times at 
-        %     which to evaluate the kernel (default is 10)
-        %
-        % Returns:
-        %   Kt (double (\*,\*,\*)): The heat kernel
-            
-            defaultNbTimes = 3;
-            
-            if nargin < 2
-                nbTimes = defaultNbTimes;
-            else
-                nbTimes = round(nbTimes);
-                assert(nbTimes > 0, 'The number of time steps should be a positive integer');
-            end
-            
-            if (nbTimes == defaultNbTimes)
-                Kt = self.cached('heatKernel', @() self.computeHeatKernel(nbTimes));
-            else
-                Kt = self.computeHeatKernel(nbTimes);
-            end
-        end
-        
-        function Kt = computeHeatKernel(self, nbTimes)
-        % Computes the heat kernel
-        
-            [phi, lambda] = eig(self.laplacian());
-            lambda = diag(lambda);
-
-            co = 0;
-            Kt = zeros(nbTimes, self.nVertices, self.nVertices);
-            for t = 1/nbTimes:1/nbTimes:1
-                co = co + 1;
-                Kt(co,:,:) = exp(-lambda(1)*t)*phi(:,1)*phi(:,1)';
-                for i = 2:self.nVertices
-                    Kt(co,:,:) = Kt(co,:,:) + permute(exp(-lambda(i)*t)*phi(:,i)*phi(:,i)', [3 1 2]);
-                end
-            end
         end
         
     end

@@ -1,53 +1,19 @@
-classdef DirectedGraph < replab.Obj
-% Describes an immutable directed graph
-%
-% Vertices of the graph are numbered continuously from 1 to nVertices
-
-    properties (SetAccess = protected)
-        nVertices % (integer): number of vertices in the graph
-        edges % (integer (\*,2)): list of edges between vertices
-        colors % (double (\*,1)): color of each all vertices; if a scalar, identical for all vertices
-        weights % (double (\*,1)): weights associated to the edges; if a scalar, identical for all edges
-    end
+classdef DirectedGraph < replab.graph.Graph
+% Describes an immutable directed graphs
 
     methods (Access = protected)
         
         function self = DirectedGraph(nVertices, edges, colors, weights)
         % Construct a directed graph
         %
-        % Do not use this function directly, rather use another
+        % Do not use this function direclty, rather use another
         % constructor such as ``.fromBlocks``.
         %
         % See also:
         %   `.fromBlocks`
         %   `.check`
 
-            if isempty(edges)
-                edges = zeros(0,2);
-            end
-            
-            if isempty(colors)
-                colors = 0;
-            end
-            
-            if isempty(weights)
-                weights = 1;
-            end
-            
-            assert(numel(nVertices) == 1, 'Number of elements should be a scalar');
-            assert(isempty(edges) || (nVertices >= max(max(edges))), 'Insufficient number of vertices');
-            assert(isequal(size(edges,2), 2), 'Incorrect size for edge argument');
-            assert(length(size(edges)) <= 2, 'Edge argument should be a 2-dimensional array');
-
-            assert((numel(colors) == 1) || (numel(colors) == nVertices), 'Number of vertices and of colors incompatible');
-            assert(isvector(colors), 'Colors argument should be a vector');
-            assert((numel(weights) == 1) || (numel(weights) == size(edges,1)), 'Number of edges and of weights incompatible');
-            assert(isvector(weights), 'Weights argument should be a vector');
-
-            self.nVertices = nVertices;
-            self.edges = edges;
-            self.colors = colors(:);
-            self.weights = weights(:);
+            self@replab.graph.Graph(nVertices, edges, colors, weights)
         end
 
     end
@@ -185,6 +151,23 @@ classdef DirectedGraph < replab.Obj
             self = replab.DirectedGraph.fromEdges(edges, graph.nVertices, graph.colors, weights);
         end
         
+        function self = fromFile(fileName)
+        % Loads a graph from a Bliss file
+        %
+        % Following the specifications from
+        % http://www.tcs.hut.fi/Software/bliss/fileformat.shtml
+        %
+        % Args:
+        %   fileName (charstring) : Name of the file to be loaded
+        %
+        % Returns:
+        %   graph (`.UndirectedGraph`)
+            
+            [nVertices, edges, colors] = replab. graph.parseBlissFile(fileName);
+            
+            self = replab.DirectedGraph.fromEdges(edges, nVertices, colors);
+        end
+        
     end
 
     methods
@@ -198,37 +181,10 @@ classdef DirectedGraph < replab.Obj
             s = sprintf('Directed graph with %d vertices and %d edges', self.nVertices, size(self.edges,1));
         end
         
-        function names = hiddenFields(self)
-        % Overload of `+replab.Str.hiddenFields`
-
-            names = hiddenFields@replab.Str(self);
-            names{1, end+1} = 'nVertices';
-            names{1, end+1} = 'colors';
-            names{1, end+1} = 'weights';
-        end
-
-        function [names, values] = additionalFields(self)
-        % Overload of `+replab.Str.additionalFields`
-
-            [names, values] = additionalFields@replab.Str(self);
-
-            % We only display nontrivial colorings
-            if ~isequal(self.colors, 0)
-                names{1, end+1} = 'colors';
-                values{1, end+1} = self.colors;
-            end
-            
-            % We only display nontrivial weights
-            if ~isequal(self.weights, 1)
-                names{1, end+1} = 'weights';
-                values{1, end+1} = self.weights;
-            end
-        end
-        
     end
     
     methods % Methods
-
+        
         function graph = toUndirectedGraph(self)
             % Removes the graph directionality
             %
@@ -244,18 +200,6 @@ classdef DirectedGraph < replab.Obj
             graph = replab.UndirectedGraph.fromDirectedGraph(self);
         end
         
-        function adj = adjacencyMatrix(self)
-        % Returns the adjacency matrix of a graph
-        %
-        % Args:
-        %   graph (`.DirectedGraph`)
-        %
-        % Returns:
-        %   adj (double (\*,\*)): adjacency matrix
-            
-            adj = self.cached('adjacencyMatrix', @() self.computeAdjacencyMatrix);
-        end
-        
         function adj = computeAdjacencyMatrix(self)
         % Computes the adjacency matrix
 
@@ -263,75 +207,21 @@ classdef DirectedGraph < replab.Obj
             adj = full(adj);
         end
         
-        function ok = isBipartite(self)
-        % Tests if a graph is bipartite
+        function L = computeLaplacian(self)
+        % Computes the graph Laplacian
         %
-        % Args:
-        %   graph (`.DirectedGraph`)
-        %
-        % Returns:
-        %   ok (bool): true iff the graph is bipartite
+        % The laplacian should be positive semi-definite, so we define it
+        % from the equivalent un-directed graph
+        
+            M = self.toUndirectedGraph.adjacencyMatrix();
+            D = diag(sum(M));
             
-            ok = replab.graph.graphIsBipartite(self.edges);
-        end
-
-        function P = connectedComponents(self)
-        % Returns the sets of vertices corresponding to connected components
-        %
-        % For edges = [1 3] and n = 3, it returns the partition {[1 3] [2]}
-        %
-        % Note: Graph connectedness does not take into account the graph
-        % directionality.
-        %
-        % Args:
-        %   graph (`.DirectedGraph`)
-        %
-        % Returns:
-        %   P (`.Partition`): Partitioning of the vertices
-
-            if isempty(self.edges)
-                % Trivial case
-                blockIndex = 1:self.nVertices;
-                blocks = num2cell(1:self.nVertices, 1);
-            else
-                [blocks, blockIndex] = replab.graph.connectedComponents(self.edges);
-
-                % If some elements are isolated, we add them
-                connectedVertices = [blocks{:}];
-                isolatedVertices = setdiff(1:self.nVertices, connectedVertices);
-                nbConnectedSets = length(blocks);
-
-                if length(isolatedVertices) >= 1
-                    % allocate memory
-                    blocks{nbConnectedSets + length(isolatedVertices)} = [];
-                    if length(blockIndex) < self.nVertices
-                        blockIndex(self.nVertices) = 0;
-                    end
-
-                    % assign values
-                    co = nbConnectedSets;
-                    for i = 1:length(isolatedVertices)
-                        co = co + 1;
-                        blocks{co} = isolatedVertices(i);
-                        blockIndex(isolatedVertices(i)) = co;
-                    end
-                end
+            colors = abs(self.colors);
+            if numel(colors) == 1
+                colors = colors*ones(1,self.nVertices);
             end
-
-            % Construct the Partition object
-            P = replab.Partition(blockIndex, blocks);
-        end
-        
-        function autoG = automorphismGroup(self)
-        % Returns the automorphism group of the graph
-        %
-        % Args:
-        %   graph (`.DirectedGraph`)
-        %
-        % Returns:
-        %   autoG (`.PemutationGroup`)
-        
-            autoG = self.cached('automorphismGroup', @() replab.graph.AutomorphismSearch(self).subgroup);
+            
+            L = D - M + diag(colors);
         end
         
     end
