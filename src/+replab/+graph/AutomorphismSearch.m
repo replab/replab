@@ -15,7 +15,7 @@ classdef AutomorphismSearch < replab.bsgs.Backtrack
                 knownSubgroup = [];
             end
             group = replab.S(graph.nVertices);
-            base = group.lexChain.base;
+            base = 1:graph.nVertices;
             self@replab.bsgs.Backtrack(group, base, knownSubgroup, knownSubgroup, debug);
             self.graph = graph;
         end
