@@ -192,17 +192,20 @@ classdef Dependency < replab.Str
     methods % GitHub specific
 
         function u = zipUrl(self)
+        % Returns the URL to the GitHub .zip file that contains the dependency files
             assert(~isempty(self.githubUsername));
             assert(~isempty(self.githubRepository));
             u = sprintf('https://github.com/%s/%s/archive/%s.zip', self.githubUsername, self.githubRepository, self.gitCommit);
         end
 
         function f = zipFilename(self)
+        % Returns the .zip filename formatted according to the GitHub conventions
             assert(~isempty(self.githubRepository));
             f = sprintf('%s_%s.zip', self.githubRepository, self.gitCommit);
         end
 
         function zipDownloadIn(self, folder)
+        % Downloads the .zip files containing the dependency in the given folder
             url = self.zipUrl;
             zipPath = fullfile(folder, self.zipFilename);
             if replab.compat.isOctave
@@ -243,6 +246,7 @@ classdef Dependency < replab.Str
         end
 
         function autoInstall(self)
+        % Installs the dependency automatically in the external/ folder
             self.preAutoInstallChecks;
             replabPath = replab.globals.replabPath;
             externalPath = fullfile(replabPath, 'external');
@@ -269,11 +273,13 @@ classdef Dependency < replab.Str
             movefile(zipPath, depPath);
         end
 
-        function res = externalFolderName(self)
+        function res = externalFolderPath(self)
+        % Returns the full path of the folder that contains the dependency in external/
             res = fullfile(replab.globals.replabPath, 'external', self.name);
         end
 
         function res = inExternal(self)
+        % Returns whether the dependency is present in the external/ folder
             replabPath = replab.globals.replabPath;
             verbose = replab.globals.verboseInit;
             path = fullfile(replabPath, 'external', self.name, self.testFilename);
@@ -281,6 +287,24 @@ classdef Dependency < replab.Str
         end
 
         function require(self)
+        % Initializes the dependency; downloads the dependency under certain conditions
+        %
+        % This method first checks if the dependency is already present in the path; if so, it verifies that the
+        % dependency functions correctly, and throws an error if there is a malfunction.
+        %
+        % If the dependency is not in the path, but is present in the external/ folder, it initializes it and
+        % verifies it works correctly.
+        %
+        % If the dependency is neither in the path, neither in the external/ folder, it does as follows:
+        %
+        % * If the `+replab.+globals.autoInstall` flag is ``false``, it throws an error.
+        %
+        % * If the `+replab.+globals.autoInstall` flag is ``true``, but a ``.git/`` directory is present, it throws an error
+        %   mentioning that the Git submodules need to be initialized.
+        %
+        % * If the `+replab.+globals.autoInstall` flag is ``true`` and no ``.git/`` directory is present, it first checks
+        %   whether a ZIP file is present in the ``external/`` folder. If not, it attempts to download it from GitHub.
+        %   Then, having the ZIP file, it unzips it and restarts the initialization.
             replabPath = replab.globals.replabPath;
             verbose = replab.globals.verboseInit;
             if ~self.inPath
@@ -298,7 +322,7 @@ classdef Dependency < replab.Str
                 end
                 assert(self.inExternal, 'Auto installation of dependency %s failed', self.name);
                 replab.init.log(1, 'Initializing dependency %s', self.name);
-                self.init(self.externalFolderName);
+                self.init(self.externalFolderPath);
                 assert(self.inPath, 'Initialization of dependency %s failed', self.name);
             else
                 replab.init.log(2, 'Dependency %s present in current path', self.name);
