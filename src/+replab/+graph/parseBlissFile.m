@@ -66,3 +66,5 @@ fclose(fid);
 if length(unique(colors)) == 1
     colors = colors(1);
 end
+
+end
