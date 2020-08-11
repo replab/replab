@@ -1,4 +1,4 @@
-classdef AutomorphismSearch < replab.bsgs.Backtrack
+classdef GraphAutomorphism < replab.bsgs.Backtrack
 % Computes the automorphism group of a graph
 
     properties
@@ -7,7 +7,7 @@ classdef AutomorphismSearch < replab.bsgs.Backtrack
 
     methods
 
-        function self = AutomorphismSearch(graph, knownSubgroup, debug)
+        function self = GraphAutomorphism(graph, knownSubgroup, debug)
             if nargin < 3 || isempty(debug)
                 debug = false;
             end

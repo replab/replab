@@ -256,7 +256,7 @@ classdef Graph < replab.Obj
         % Returns:
         %   autoG (`.PemutationGroup`)
         
-            autoG = self.cached('automorphismGroup', @() replab.graph.AutomorphismSearch(self).subgroup);
+            autoG = self.cached('automorphismGroup', @() replab.bsgs.GraphAutomorphism(self).subgroup);
         end
         
     end
