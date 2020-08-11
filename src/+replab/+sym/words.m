@@ -17,12 +17,15 @@ classdef  words
     end
     
     methods
-      function self = words(part,conjPart,type);
+      function self = words(part,conjPart);
       % Construct the words for a given partition
       %
       % Args:
       %   part (integer(1,:)): Partition
       %   conjPart (integer(1,:)): Conjugate partition of part
+        if nargin == 1
+            conjPart = replab.sym.findPartitions.conjugatePart(part);
+        end
         N = numel(part);
         l = sum(part);
         self.word = repelem(1:N,part);
@@ -34,12 +37,6 @@ classdef  words
             self.conjWord(index:index+p-1) = 1:p;
             self.dimWord(index:index+p-1) = p:-1:1;
             index = index + p;
-        end
-        if nargin == 3
-            if type == 'char'
-                self.conjWord = char(64+self.conjWord);
-                self.word = char(64+self.word);
-            end
         end
         end
     end
