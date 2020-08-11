@@ -49,7 +49,7 @@ classdef Dependency < replab.Str
 
         function d = SDP
             d = replab.init.Dependency;
-            d.name = 'SDPT3';
+            d.name = 'sdpt3';
             d.inPathFun = @() replab.init.Dependency.sdpSolverInPath;
             d.testFilename = 'sdpt3.m';
             d.worksFun = @() replab.init.Dependency.sdpSolverWorks;
@@ -62,7 +62,7 @@ classdef Dependency < replab.Str
         function d = YALMIP
             d = replab.init.Dependency;
             d.name = 'YALMIP';
-            d.inPathFun =  any(exist('yalmiptest') == 2);
+            d.inPathFun = @() exist('yalmiptest') == 2;
             d.testFilename = 'yalmiptest.m';
             d.worksFun = @() ~isempty(yalmip('version'));
             d.initFun = @(path) replab.init.Dependency.initYALMIP(path);
@@ -247,6 +247,7 @@ classdef Dependency < replab.Str
             replabPath = replab.globals.replabPath;
             externalPath = fullfile(replabPath, 'external');
             depPath = fullfile(replabPath, 'external', self.name);
+            zipPath = fullfile(replabPath, 'external', sprintf('%s-%s', self.name, self.gitCommit));
             z = fullfile(replabPath, 'external', self.zipFilename);
             if exist(z) == 2
                 replab.init.log(2, 'File %s exists, not downloading.', z);
@@ -257,14 +258,15 @@ classdef Dependency < replab.Str
             end
             switch exist(depPath)
               case 7
-                replab.init.log(2, 'Folder %s exists', depPath);
+                replab.init.log(2, 'Folder %s exists, deleting', depPath);
+                replab.compat.rmdirRec(depPath);
               case 0
-                replab.init.log(2, 'Folder %s does not exist, creating', depPath);
-                mkdir(externalPath, self.name);
+                replab.init.log(2, 'Folder %s does not exist', depPath);
               otherwise
                 error('File %s should be a directory', depPath);
             end
-            unzip(z, depPath);
+            unzip(z, externalPath);
+            movefile(zipPath, depPath);
         end
 
         function res = externalFolderName(self)
