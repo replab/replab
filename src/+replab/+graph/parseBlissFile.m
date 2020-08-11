@@ -3,6 +3,7 @@ function [nVertices, edges, colors] = parseBlissFile(fileName)
 %
 % Following the specifications from
 % http://www.tcs.hut.fi/Software/bliss/fileformat.shtml
+% Note that this file format does not support weighted edges.
 %
 % Args:
 %   fileName (charstring) : Name of the file to be loaded
@@ -57,6 +58,8 @@ while true
             assert(str2double(vs{1}) <= nVertices);
             assert(str2double(vs{2}) <= nVertices);
             edges = [edges; str2double(vs{1}) str2double(vs{2})];
+        otherwise
+            % unknown kind of line
     end
 end
 

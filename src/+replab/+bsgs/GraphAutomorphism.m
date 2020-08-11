@@ -3,6 +3,11 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
 
     properties
         graph
+        candidate % permutation under consideration
+        lastL     % last level considered
+        matchesU  % potential matches on the left
+        matchesV  % potential matches on the right
+        Phi       % known permutation images
     end
 
     methods
@@ -18,6 +23,11 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
             base = 1:graph.nVertices;
             self@replab.bsgs.Backtrack(group, base, knownSubgroup, knownSubgroup, debug);
             self.graph = graph;
+
+            self.candidate = zeros();
+            self.lastL = 0;
+            self.matchesU = {};
+            self.matchesV = {};
         end
 
         function ok = test(self, l, prev, ul)
@@ -26,6 +36,40 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
 %            disp(num2str(l));
 %            disp(num2str([prev; ul]));
             
+            % Initialize variables
+            ok = false;
+            tolerance = 1e-10; % Since we allow false positives, it's ok if this number is significantly bigger than eps
+            nVertices = self.graph.nVertices;
+            Kt = self.graph.heatKernel;
+            nbT = size(Kt,1); % number of considered timings
+            p = 1:l;
+            pTilde = candidate(1:l);
+            
+            % We only update the last possibly modified item
+            self.candidate(l) = prev(ul(l));
+
+            if l == 1
+                % Initialize the potential matches
+                matchesU = cell(1, nVertices);
+                matchesV = cell(1, nVertices);
+                for i = 1:nVertices
+                    matchesU{i} = 1:nVertices;
+                    matchesV{i} = 1:nVertices;
+                end
+            end
+            if self.lastL > l
+                % We erase the
+                matchesU(matchesU > l) = l;
+                matchesV(matchesV > l) = l;
+            end
+            
+            
+            self.lastL = l;
+
+            return;
+            
+            
+
             % Here is the candidate permutation
             candidate = prev(ul);
 
