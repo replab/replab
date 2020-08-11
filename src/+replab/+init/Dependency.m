@@ -291,7 +291,7 @@ classdef Dependency < replab.Str
                     elseif exist(fullfile(replabPath, '.git')) == 7
                         error('Dependency %s not present. Please run ''git submodule init'' and ''git submodule update'' from the command line. Or download the latest RepLAB release without the Git data using the link: https://github.com/replab/replab/archive/master.zip', self.name);
                     else
-                        error('Dependency %s not present. Please run replab_init -autoinstall if you have Internet access, or follow installation instructions.')
+                        error('Dependency %s not present. Please run replab_init -autoinstall if you have Internet access, or follow installation instructions.', self.name)
                     end
                 end
                 assert(self.inExternal, 'Auto installation of dependency %s failed', self.name);
