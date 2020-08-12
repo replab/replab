@@ -70,6 +70,7 @@ classdef ExternalDependency < replab.init.Dependency
         function zipDownloadIn(self, folder)
         % Downloads the .zip files containing the dependency in the given folder
             url = self.zipUrl;
+            replab.init.log_(1, 'Downloading dependency %s from %s', self.name, url);
             zipPath = fullfile(folder, self.zipFilename);
             if replab.compat.isOctave
                 [f, success] = urlwrite (url, zipPath);
