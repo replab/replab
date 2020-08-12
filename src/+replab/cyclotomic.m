@@ -17,6 +17,7 @@ classdef cyclotomic
 %
 % Example:
 %   >>> I = replab.cyclotomic.eye(3)
+%       I =
 %       1  0  0
 %       0  1  0
 %       0  0  1
@@ -86,8 +87,8 @@ classdef cyclotomic
         %
         % Example:
         %   >>> replab.cyclotomic.fromStrings({'1' '1/2'; '1/2' '1'})
-        %         1  1/2
-        %       1/2    1
+        %         1   1/2
+        %        1/2   1
         %
         % Args:
         %    strings (cell(\*,\*) of charstring): Expressions
@@ -219,9 +220,15 @@ classdef cyclotomic
             res = ~(self == rhs);
         end
 
-        function res = eq(self, rhs)
+        function res = eq(lhs, rhs)
         % Equality test
-            res = reshape(javaMethod('eqv', 'cyclo.Lab', self.matArray, rhs.matArray), size(self.mat));
+            if isa(lhs, 'double')
+                lhs = replab.cyclotomic.fromDoubles(lhs);
+            end
+            if isa(rhs, 'double')
+                rhs = replab.cyclotomic.fromDoubles(rhs);
+            end
+            res = reshape(javaMethod('eqv', 'cyclo.Lab', lhs.matArray, rhs.matArray), size(lhs.mat));
         end
 
         function res = conj(self)
