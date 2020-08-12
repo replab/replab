@@ -1,4 +1,4 @@
-function replab_init(verbose)
+function replab_init(varargin)
 % function replab_init
 %
 % Sets up the search path in order to enable all functionalities of the RepLAB library.
@@ -6,16 +6,20 @@ function replab_init(verbose)
 % Also verifies that a SDP solver is available, installs and registers the bundled SDPT3 solver if needed,
 % and initializes important variables.
 %
-% A few persistent variables in functions present in `replab.globals` are initialized by this script;
-% those persistent variables are locked by `mlock` to avoid being cleared when ``clear all`` is used;
-% this concerns in particular `replab.globals.replabPath`, `replab.globals.defaultHelpFunction` and
-% `replab.globals.runsInMatlabEmacs`.
+% The global variable `+replab.+globals.replabPath` is set up and ``mlock``-ed so that it persists a ``clear all``.
+%
+% This script accepts flags or key/value pairs as follows:
+%
+% * Key ``-verbose`` followed by a value 0,1,2, controls the display level when initializating
+%
+%   * 0: only produce a display in case of error/warning or for critical cases
+%   * 1: informs of the changes made (default value)
+%   * 2: prints full information
+%
+% * Argument ``-autoinstall``: Install dependencies automatically
 %
 % Args:
-%     verbose ({0, 1, 2}, optional): Controls the display level
-%                                    - 0: only produce a display in case of error/warning or for critical cases
-%                                    - 1: informs of the changes made (default value)
-%                                    - 2: prints full information
+%     varargin (cell(1,\*) of key/value pairs): Options, see description above
 %
 % Example:
 %     >>> replab_init   % doctest: +SKIP
@@ -25,11 +29,29 @@ function replab_init(verbose)
 %         Adding embedded YALMIP to the path
 %         Adding MOcov to the path
 
-    persistent allGood % set to true if everything is already set up previously
+    persistent allGood % set to true if everything is already set up previously, including running ``replab_config``
 
-    %% Parameter checking
-    if nargin < 1
-        verbose = 1;
+    verbose = 1;
+    autoinstall = false;
+
+    i = 1;
+    while i <= nargin
+        key = varargin{i};
+        i = i + 1;
+        switch key
+          case 'autoinstall'
+            autoinstall = true;
+          case 'verbose'
+            value = varargin{i};
+            if isa(value, 'char')
+                value = str2num(value);
+            end
+            assert(isa(value, 'double'));
+            verbose = value;
+            i = i + 1;
+          otherwise
+            error('Unrecognized option %s', key);
+        end
     end
 
 
@@ -97,42 +119,16 @@ function replab_init(verbose)
         % path already memorized
     end
 
-    % From now on, we can use stuff in the replab.init package
+    %% Sets the initialization verbosity level
 
-    %% Initializes the RepLAB help system
-    replab.init.initHelp(verbose);
+    replab.globals.verboseInit(verbose);
+    replab.globals.autoInstall(autoinstall);
 
-    %% Verifying that the nlinfit function is available
-    replab.init.initNlinfit(verbose);
+    %% Run the config script
 
-    %% Verifying that the symbolic toolbox is available
-    replab.init.initSym(verbose);
-
-    %% VPI
-    VPIInPath = replab.init.initVPI(verbose);
-
-    %% MOxUnit
-    MOxUnitInPath = replab.init.initMOxUnit(verbose);
-
-    %% YALMIP
-    YALMIPInPath = replab.init.initYALMIP(verbose);
-
-    %% SDPT3
-    % Makes sure a working SDP solver is in the path and working, otherwise tries to add SDPT3
-    SDPSolverInPath = false;
-    if YALMIPInPath
-        SDPSolverInPath = replab.init.initSDP(verbose);
-    elseif verbose >= 2
-        warning('YALMIP not in path, not checking for an SDP solver')
-    end
-
-    %% MOcov
-    MOcovInPath = replab.init.initMOcov(verbose);
-
-    %% If everything was successful, the next call will be quicker
-    if VPIInPath && MOxUnitInPath && YALMIPInPath && SDPSolverInPath && MOcovInPath
-        allGood = true;
-    end
+    replab_config
+    % If we haven't errored yet, then it's all good
+    allGood = true;
 
 end
 
@@ -187,7 +183,7 @@ function str = findInstancesInPath(item)
 %
 % Assumes that ``item`` is implemented as a ``.m`` file.
 %
-% Note: this is a copy of replab.init.findInstancesInPath
+% Note: this is a copy of `+replab.+init.findInstancesInPath`
 %
 % Args:
 %   item (charstring): MATLAB function to look for
