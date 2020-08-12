@@ -122,7 +122,7 @@ classdef ExternalDependency < replab.init.Dependency
             else
                 replab.init.log_(2, 'File %s does not exists, downloading.', z);
                 self.zipDownloadIn(fullfile(replab.globals.replabPath, 'external'));
-                assert(exist(z) == 2, 'Download failed, file %s did not download.', z);
+                assert(exist(z) == 2, 'Download failed, file %s did not download. Run "replab_init showurls".', z);
             end
             switch exist(depPath)
               case 7
