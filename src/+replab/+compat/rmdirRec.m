@@ -8,7 +8,7 @@ function rmdirRec(path)
 %   Throws errors if the folder doesn't exist, or if it can't be removed
     assert(exist(path) == 7, 'The path %s is not a folder', path);
     if replab.compat.isOctave
-        confirm_recursive_rmdir (false, 'local');
+        confirm_recursive_rmdir(false, 'local');
     end
     rmdir(path, 's');
 end
