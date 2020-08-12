@@ -4,18 +4,30 @@ classdef SymPoly
         m% Sum of partitions/ degree of polynomials
     end
     methods(Static)
-        function lin = fromCell(partitions,values) %m=degree
+        function lin = fromCell(partStandForm,values) %m=degree
+            len = numel(partStandForm);
+            deg = sum(partStandForm{1});
+            partitions = zeros(len,deg);
+            for i = 1:len
+                partitions(i,:) = toGroupForm(partStandForm{i});
+            end
             allData = replab.sym.CTData.instance;
-            len = numel(partitions);
-            deg = sum(partitions{1}-64);
             mData = allData(deg);
+            inds = mData.partitionHash.find(partitions');
             arr = zeros(1,mData.nParts);
-            for j =1:len
-                part = partitions{j};
-                arr(mData.partitionOrder.(part)) = arr(mData.partitionOrder.(part))+values(j);
+            for j =1:numel(inds);
+                arr(inds(j)) = arr(inds(j))+values(j);
             end
             lin = replab.sym.SymPoly(arr,deg);
+            
+            function group = toGroupForm(partit)
+                    group = zeros(1,deg);
+                    for k = 1:deg
+                        group(k) = nnz(partit == k);
+                    end
+                end
         end
+        
         function lin = emptyPoly
             lin = replab.sym.SymPoly(1,0);
         end
@@ -23,7 +35,7 @@ classdef SymPoly
     function lin = multRowWithAugmented(rowPart,part)
                 len = numel(part);
                 if len == 0
-                    lin =  replab.sym.SymPoly.fromCell({rowPart},1);
+                    lin =  replab.sym.SymPoly.fromCell(rowPart,1);
                     return
                 elseif len == 1
                     [rowPart,part] = deal(part,rowPart);
@@ -37,7 +49,7 @@ classdef SymPoly
                 coeffs(1:numel(compositions)) = 1;
                 lin =   replab.sym.SymPoly.fromCell(compositions,coeffs);
                 function arr = addElem(arr,ind,value)
-                    arr(ind) = arr(ind) + value-64;
+                    arr(ind) = arr(ind) + value;
                     arr = sort(arr,'descend');
                 end
             end

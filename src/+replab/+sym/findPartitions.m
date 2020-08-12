@@ -1,13 +1,14 @@
-classdef partition
+classdef findPartitions
     properties
-        partCellChar
         partCell
         conjPartCell
-        partOrder
+        partitionHash
+        partSet
         nParts
         cycleSizes
         nCycles
     end
+    
     methods(Static)
         function conj = conjugatePart(part)
             m = max(part);
@@ -19,32 +20,38 @@ classdef partition
         
         function dim = dimension(part)
             n = sum(part);
-            words = replab.sym.words(part,replab.sym.partition.conjugatePart(part));
+            words = replab.sym.words(part,replab.sym.findPartitions.conjugatePart(part));
             columns = zeros(1,n);
             for k = 1:n
                 columns(k) = sum(words.conjWord(k+1:n)==words.conjWord(k));
             end    
             dim = round(factorial(n)/prod(words.dimWord+columns));
         end     
+        
+        function eigVal = eigenvalue(part)
+            eigVal = -(part-2*(1:numel(part))+1)*part'/2;
+        end
     end
+    
     methods
-        function self = partition(N)
-            powers = fliplr(generate(N));
+        function self = findPartitions(N)
+            powers = generate(N);
+            self.partitionHash = replab.perm.Set(N);
+            self.partitionHash.insert(powers');  
+            powers = fliplr(powers);
             self.nParts = size(powers,1);
             self.cycleSizes = cell(1,self.nParts);
             self.nCycles = cell(1,self.nParts);
             self.nParts = size(powers,1);
             self.partCell = cell(1,self.nParts);
-            self.partOrder = struct;
             inds = N:-1:1;
             for k = self.nParts:-1:1
-                part =repelem(inds,powers(k,:));
-                self.nCycles{k} = nonzeros(powers(k,:));
+                pow = powers(k,:);
+                part =repelem(inds,pow);
+                self.nCycles{k} = nonzeros(pow);
                 self.cycleSizes{k} = inds(self.nCycles{k});
-                self.partCellChar{k} = char(64+part);
                 self.partCell{k} = part;
-                self.conjPartCell{k} = replab.sym.partition.conjugatePart(part);
-                self.partOrder.(char(64+part)) = k;
+                self.conjPartCell{k} = replab.sym.findPartitions.conjugatePart(part);
             end
             function plist = generate(total_sum,candidate_set,max_count,fixed_count)
                 % extracts the list of all partitions of a number as integer sums of a list of candidates

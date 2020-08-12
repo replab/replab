@@ -1,6 +1,6 @@
 function conjClasses = findConjClasses(group)
     pData = replab.sym.findPartitions(group.domainSize);
-    conjClasses = cellFun(@(part) group.conjugacyClass(conjClassElem(part),pData.partCells,'UniformOutput', false);
+    conjClasses = cellfun(@(part) group.conjugacyClass(conjClassElem(part)),pData.partCell,'UniformOutput', false);
     function arr = conjClassElem(part)
         count = 1;
         arr = 1:sum(part);

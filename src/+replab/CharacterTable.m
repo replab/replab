@@ -127,7 +127,7 @@ classdef CharacterTable < replab.Obj
             ord = double(self.group.order);
             sizes = self.classSizes;
             repchars = self.charactersOfRepresentation(rep);
-            mults = (sizes.*repchars)*conj(self.chars(i,:))' / ord;
+            mults = (sizes.*repchars)*conj(self.chars)' / ord;
         end
 
         function mults = tensorProdMultiplicities(self, irreps)
@@ -200,10 +200,10 @@ classdef CharacterTable < replab.Obj
             n = permGroup.domainSize;
             allData = replab.sym.CTData.instance(n);
             nData = allData(n);
-            irreps = cellFun(@(part) num2str(part),nData.partitionList,'UniformOutput', false);
+            irreps = cellfun(@(part) replab.sym.findPartitions.conjugatePart(part),nData.partitionList,'UniformOutput', false);
             classes = replab.sym.findConjClasses(permGroup);
             chars = permCTValues(n);
-            permCT = CharacterTable(permGroup, irreps, classes, chars);
+            permCT = replab.CharacterTable(permGroup, irreps, classes, chars);
             
             function CT = permCTValues(n)
                 nParts = nData.nParts;

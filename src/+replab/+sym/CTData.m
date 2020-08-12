@@ -3,7 +3,7 @@ classdef CTData
     properties
         n
         fact %factorial
-        partitionOrder %canonical ordering
+        partitionHash %canonical ordering
         partitionList %list of partitions
         stabSizes %stabilizer sizes list
         conjSizes % conjugacy class sizes
@@ -19,20 +19,20 @@ classdef CTData
         self.fact = factorial(n);
         genPartitions(n);
                 function genPartitions(n) 
-                    end
-                    parts = replab.sym.partition(n);
-                    [self.partitionList,self.partitionOrder,self.nParts] = deal(parts.partCellChar,parts.partOrder,parts.nParts);
+                    parts = replab.sym.findPartitions(n);
+                    [self.partitionList,self.partitionHash,self.nParts] = deal(parts.partCell,parts.partitionHash,parts.nParts);
                     self.cycSizes = parts.cycleSizes;
                     self.nCycles = parts.nCycles;
                     self.stabSizes = zeros(1,self.nParts);
-                    self.conjSizes = zeros(1,self.nParts);;
+                    self.conjSizes = zeros(1,self.nParts);
                     for i = 1:self.nParts
-                        part = double(self.partitionList{i})-64;
+                        part = self.partitionList{i};
                         cell(1,self.nParts);
                         self.stabSizes(i) = prod(factorial(self.nCycles{i}));
                         self.conjSizes(i)= self.fact/prod(part)/self.stabSizes(i);
                     end
                 end
+        end
     end
     
     methods(Static)
