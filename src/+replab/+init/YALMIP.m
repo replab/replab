@@ -1,8 +1,7 @@
 classdef YALMIP < replab.init.ExternalDependency
 
     properties (Constant = true)
-        subfolders = {'demos' 'extras' 'modules' 'modules/bilevel' 'modules/global' 'modules/moment' ...
-                      'modules/parametric' 'modules/robust' 'modules/sos' 'operators' 'solvers'};
+        subfolders = {'demos' 'extras' 'modules' 'modules/bilevel' 'modules/global' 'modules/moment' 'modules/parametric' 'modules/robust' 'modules/sos' 'operators' 'solvers'};
     end
 
     methods
