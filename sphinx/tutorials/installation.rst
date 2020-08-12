@@ -17,8 +17,8 @@ Option 1: Download the latest RepLAB release, and use our easy install script.
 1. Download the `latest release ZIP`_, see the `GitHub release page <https://www.github.com/replab/replab/releases>`_ for all releases.
    This ZIP file includes the core code, but not the external dependencies.
 
-2. Launch MATLAB/Octave, run the ``replab_easyinstall`` script in the root folder which will take care of downloading and installing
-   dependencies, which are:
+2. Launch MATLAB/Octave, run the ``replab_init autoinstall`` script in the root folder
+   which will take care of downloading and installing dependencies, which are:
 
 -  to run tests: `MOxUnit <https://github.com/MOxUnit/MOxUnit>`__
 -  to test code coverage: `MOcov <https://github.com/MOcov/MOcov>`__
@@ -27,10 +27,10 @@ Option 1: Download the latest RepLAB release, and use our easy install script.
 -  to solve SDP problems and run corresponding tests:
    `SDPT3 <https://github.com/sqlp/sdpt3>`__
 
-3. Go to the "Initializing the library" section below and follow the
-   usage instructions there.
+3. Go to the "Initializing the library" section below and follow the usage instructions there.
 
-.. figure:: EasyInstall.gif
+..
+   .. figure:: EasyInstall.gif
    :width: 483px
    :height: 361px
    :align: center
@@ -97,12 +97,12 @@ which should lead to the following output
 
     >> replab_init
     Adding RepLAB to the path
-    Adding RepLAB package to the path
-    Adding VPI to the path
-    Adding MOxUnit to the path
-    Adding embedded YALMIP to the path
+    Initializing dependency vpi
+    Initializing dependency YALMIP
+    Initializing dependency sdpt3
     Adding embedded SDPT3 solver to the path
-    Adding MOcov to the path
+    Initializing dependency MOcov
+    Initializing dependency MOxUnit
     >>
 
 This command checks in particular whether an instance of YALMIP is
@@ -120,6 +120,17 @@ proper installation of a YALMIP instance can be checked with the command
 The command ``replab_init`` should always be used before running any
 **RepLAB** command. This command only takes some time to run the first
 time it is called in a MATLAB/Octave session.
+
+Customizing the initialization script
+-------------------------------------
+
+The script ``replab_config.m`` present in the root folder can be customized:
+for example, unneeded dependencies can be commented out, and various RepLAB
+options can be configured.
+
+This script is run once during the ``replab_init`` initialization; subsequent calls
+to ``replab_init`` will not run it again, except if a ``clear all`` command has been
+run in between.
 
 Testing
 -------
