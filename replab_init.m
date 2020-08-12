@@ -8,15 +8,17 @@ function replab_init(varargin)
 %
 % The global variable `+replab.+globals.replabPath` is set up and ``mlock``-ed so that it persists a ``clear all``.
 %
-% This script accepts flags or key/value pairs as follows:
+% This script accepts the following options:
 %
-% * Key ``-verbose`` followed by a value 0,1,2, controls the display level when initializating
+% * The key ``verbose`` followed by a value 0,1,2, controls the display level when initializating
 %
 %   * 0: only produce a display in case of error/warning or for critical cases
 %   * 1: informs of the changes made (default value)
 %   * 2: prints full information
 %
-% * Argument ``-autoinstall``: Install dependencies automatically
+% * The option ``autoinstall``: Install dependencies automatically
+%
+% * The option ``showurls``: Shows the URL that need to be downloaded to activate dependencies
 %
 % Args:
 %     varargin (cell(1,\*) of key/value pairs): Options, see description above
@@ -33,12 +35,14 @@ function replab_init(varargin)
 
     verbose = 1;
     autoinstall = false;
-
+    showurls = false;
     i = 1;
     while i <= nargin
         key = varargin{i};
         i = i + 1;
         switch key
+          case 'showurls'
+            showurls = true;
           case 'autoinstall'
             autoinstall = true;
           case 'verbose'
@@ -59,10 +63,8 @@ function replab_init(varargin)
     if isempty(allGood)
         allGood = false;
     end
-    if allGood
-        if verbose >= 2
-            disp('replab_init has already been successfully called.');
-        end
+    if allGood && ~showurls
+        replab.init.log_(2, 'replab_init has already been successfully called.');
         return
     end
 
@@ -126,9 +128,13 @@ function replab_init(varargin)
 
     %% Run the config script
 
-    replab_config
-    % If we haven't errored yet, then it's all good
-    allGood = true;
+    if showurls
+        replab.init.showUrls;
+    else
+        replab_config
+        % If we haven't errored yet, then it's all good
+        allGood = true;
+    end
 
 end
 
