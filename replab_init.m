@@ -39,10 +39,15 @@ function replab_init(varargin)
         key = varargin{i};
         i = i + 1;
         switch key
-          case '-autoinstall'
+          case 'autoinstall'
             autoinstall = true;
-          case '-verbose'
-            verbose = str2num(varargin{i});
+          case 'verbose'
+            value = varargin{i};
+            if isa(value, 'char')
+                value = str2num(value);
+            end
+            assert(isa(value, 'double'));
+            verbose = value;
             i = i + 1;
           otherwise
             error('Unrecognized option %s', key);
