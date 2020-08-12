@@ -16,7 +16,7 @@ replab.init.symToolbox().require;
 
 % Support for the convex modeling framework and SDP solvers
 replab.init.YALMIP().require;
-% replab.init.Dependency.SDP.require;
+replab.init.sdpt3().require;
 
 % This can be commented out if you're not decomposing representations of compact groups
 replab.init.nlinfit().require;

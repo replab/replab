@@ -117,18 +117,18 @@ classdef ExternalDependency < replab.init.Dependency
             zipPath = fullfile(replabPath, 'external', sprintf('%s-%s', self.name, self.gitCommit));
             z = fullfile(replabPath, 'external', self.zipFilename);
             if exist(z) == 2
-                replab.init.log(2, 'File %s exists, not downloading.', z);
+                replab.init.log_(2, 'File %s exists, not downloading.', z);
             else
-                replab.init.log(2, 'File %s does not exists, downloading.', z);
+                replab.init.log_(2, 'File %s does not exists, downloading.', z);
                 self.zipDownloadIn(fullfile(replab.globals.replabPath, 'external'));
                 assert(exist(z) == 2, 'Download failed, file %s did not download.', z);
             end
             switch exist(depPath)
               case 7
-                replab.init.log(2, 'Folder %s exists, deleting', depPath);
+                replab.init.log_(2, 'Folder %s exists, deleting', depPath);
                 replab.compat.rmdirRec(depPath);
               case 0
-                replab.init.log(2, 'Folder %s does not exist', depPath);
+                replab.init.log_(2, 'Folder %s does not exist', depPath);
               otherwise
                 error('File %s should be a directory', depPath);
             end
@@ -171,11 +171,11 @@ classdef ExternalDependency < replab.init.Dependency
             replabPath = replab.globals.replabPath;
             verbose = replab.globals.verboseInit;
             if ~self.inPath
-                replab.init.log(2, 'Dependency %s not present in current path', self.name);
+                replab.init.log_(2, 'Dependency %s not present in current path', self.name);
                 if ~self.inExternal
-                    replab.init.log(2, 'Dependency %s not present in external/ folder', self.name);
+                    replab.init.log_(2, 'Dependency %s not present in external/ folder', self.name);
                     if replab.globals.autoInstall
-                        replab.init.log(1, 'Installing dependency %s', self.name);
+                        replab.init.log_(1, 'Installing dependency %s', self.name);
                         self.autoInstall;
                     elseif exist(fullfile(replabPath, '.git')) == 7
                         error('Dependency %s not present. Please run ''git submodule init'' and ''git submodule update'' from the command line. Or download the latest RepLAB release without the Git data using the link: https://github.com/replab/replab/archive/master.zip', self.name);
@@ -184,14 +184,14 @@ classdef ExternalDependency < replab.init.Dependency
                     end
                 end
                 assert(self.inExternal, 'Auto installation of dependency %s failed', self.name);
-                replab.init.log(1, 'Initializing dependency %s', self.name);
+                replab.init.log_(1, 'Initializing dependency %s', self.name);
                 self.init(self.externalFolderPath);
                 assert(self.inPath, 'Initialization of dependency %s failed', self.name);
             else
-                replab.init.log(2, 'Dependency %s present in current path', self.name);
+                replab.init.log_(2, 'Dependency %s present in current path', self.name);
             end
             if self.works
-                replab.init.log(2, 'Dependency %s is working properly', self.name);
+                replab.init.log_(2, 'Dependency %s is working properly', self.name);
             else
                 error('Dependency %s available in path, but not working properly', self.name);
             end

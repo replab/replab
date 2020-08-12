@@ -9,7 +9,7 @@ classdef vpi < replab.init.ExternalDependency
         end
 
         function res = inPath(self)
-            res = exist('vpi') == 2;
+            res = exist('getprimeslist') == 2;
         end
 
         function res = works(self)

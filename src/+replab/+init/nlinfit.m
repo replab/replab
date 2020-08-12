@@ -19,7 +19,7 @@ classdef nlinfit < replab.init.Dependency
 
         function init(self, folderName)
             if replab.compat.isOctave
-                replab.init.log(1, 'Loading optim package for Octave...');
+                replab.init.log_(1, 'Loading optim package for Octave...');
                 pkg load optim
             end
         end

@@ -2,19 +2,11 @@ classdef sdpt3 < replab.init.ExternalDependency
 
     methods
 
-        function d = SDP
-            d = replab.init.Dependency;
-            d.name = 'sdpt3';
-            d.inPathFun = @() replab.init.Dependency.sdpSolverInPath;
-            d.testFilename = 'sdpt3.m';
-            d.worksFun = @() replab.init.Dependency.sdpSolverWorks;
-            d.initFun = @(path) replab.init.Dependency.initSDPT3(path);
-            d.githubUsername = 'sqlp';
-            d.githubRepository = 'sdpt3';
-            d.gitCommit = '3b880163eba732c396a1a346dac4a350a259249a';
+        function self = sdpt3
+            self@replab.init.ExternalDependency('sdpt3', 'sdpt3.m');
         end
 
-        function res = sdpt3InPath
+        function res = sdpt3_works(self)
             res = false;
             try
                 [blk, Avec, C, b, X0, y0, Z0] = randsdp([2 2], [2 2], 2, 2);
@@ -26,7 +18,7 @@ classdef sdpt3 < replab.init.ExternalDependency
         end
 
 
-        function res = sdpSolverInPath
+        function res = inPath(self)
             assert(exist('compileinterfacedata') == 2, 'Needs to have YALMIP in the path');
             x = sdpvar(2);
             F = [x >= 0, trace(x) == 1];
@@ -38,7 +30,7 @@ classdef sdpt3 < replab.init.ExternalDependency
             end
         end
 
-        function res = sdpSolverWorks
+        function res = works(self)
             res = false;
             x = sdpvar(2);
             F = [x >= 0, trace(x) == 1];
@@ -47,7 +39,7 @@ classdef sdpt3 < replab.init.ExternalDependency
                 return
             end
             if ~isempty(strfind(upper(solver.tag), 'LMILAB'))
-                replab.init.log(2, 'LMILAB is not an appropriate SDP solver');
+                replab.init.log_(2, 'LMILAB is not an appropriate SDP solver');
                 return
             end
             sol = solvesdp(F, x(1, 2), sdpsettings('verbose', 0));
@@ -63,9 +55,9 @@ classdef sdpt3 < replab.init.ExternalDependency
             res = true;
         end
 
-        function initSDPT3(path)
+        function init(self, path)
             addpath(path);
-            replab.init.log(1, 'Adding embedded SDPT3 solver to the path');
+            replab.init.log_(1, 'Adding embedded SDPT3 solver to the path');
 
             % Now we run install_sdpt3
             compilationSuccessful = false;
@@ -82,9 +74,9 @@ classdef sdpt3 < replab.init.ExternalDependency
             if compilationSuccessful
                 SDPT3InPath = true;
                 if ~isempty(regexp(logSDPT3, 'Looking for existing binaries\.\.\.none found; building\.\.\.'))
-                    replab.init.log(1, 'Compiled SDPT3 binaries');
+                    replab.init.log_(1, 'Compiled SDPT3 binaries');
                 end
-                replab.init.log(2, logSDPT3);
+                replab.init.log_(2, logSDPT3);
             else
                 disp(logSDPT3);
                 error(['An error occured while trying to set up the SDPT3 solver. This can happen if no', char(10), ...

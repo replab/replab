@@ -16,7 +16,7 @@ classdef symToolbox < replab.init.Dependency
         function init(self, path)
             if replab.compat.isOctave
                 try
-                    replab.init.log(1, 'Loading symbolic package for Octave...');
+                    replab.init.log_(1, 'Loading symbolic package for Octave...');
                     pkg load symbolic
                 catch
                 end
