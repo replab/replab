@@ -5,7 +5,7 @@ function value = verboseInit(newValue)
         storedValue = newValue;
     end
     if isempty(storedValue)
-        storedValue = 0;
+        storedValue = 1;
     end
     value = storedValue;
 end
