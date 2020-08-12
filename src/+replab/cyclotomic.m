@@ -256,6 +256,10 @@ classdef cyclotomic
             res = replab.cyclotomic.fromJavaArray(javaMethod('plus', 'cyclo.Lab', lhs.matArray, rhs.matArray), size(lhs));
         end
 
+        function res = uminus(self)
+            res = replab.cyclotomic.fromJavaArray(javaMethod('negate', 'cyclo.Lab', self.matArray), size(self.matArray));
+        end
+
         function res = minus(lhs, rhs)
         % Standard ``-`` operator
         %
@@ -296,6 +300,14 @@ classdef cyclotomic
             assert(isscalar(rhs.mat), 'The / operator is only implemented for scalar rhs');
             rm = rhs.mat;
             res = replab.cyclotomic.fromJavaArray(javaMethod('divideScalar', 'cyclo.Lab', lhs.matArray, rm{1}), lhs.size);
+        end
+
+        function res = transpose(self)
+            res = replab.cyclotomic(self.mat.');
+        end
+
+        function res = ctranspose(self)
+            res = conj(transpose(self));
         end
 
         function res = mtimes(lhs, rhs)
