@@ -43,8 +43,8 @@ classdef SymmetricSpechtIrrep < replab.Rep
             self.field = 'R';
             self.group = group;
             self.partition = part;
-            self.dimension = replab.sym.partition.dimension(part);
-            self.conjugatePartition = replab.sym.partition.conjugatePart(part);
+            self.dimension = replab.sym.findPartitions.dimension(part);
+            self.conjugatePartition = replab.sym.findPartitions.conjugatePart(part);
             symIrrepHelper(self);
             self.underlyingRep = replab.RepByImages.fromImageFunction(self.group, self.field, self.dimension, @(g) naiveImage(self,g));
             
@@ -66,73 +66,11 @@ classdef SymmetricSpechtIrrep < replab.Rep
                 % Helper function for constructor
                 len = numel(self.partition);
                 self.cSum = [0 cumsum(self.partition(1:len-1))];
-                baseWords = replab.sym.words(self.partition,self.conjugatePartition);
-                %Generate our choice of base words corresponding to the partition and
-                %conjuagate partition.
-                [self.indepRowWords,self.indepColWords] = tabs(self.partition,...
-                self.dimension,baseWords.word,baseWords.conjWord);
-                %Generate words corresponding to linearly independent
+                youngLattice = replab.sym.YoungLattice(self.partition,self.group.domainSize);
+                [self.indepRowWords,self.indepColWords,~] = youngLattice.generateTableaux;
+                %Use Young Lattice to generate words corresponding to linearly independent
                 %columns and rows
-                self.basis = self.subSpecht(self.indepRowWords);      
-                function [rowWords,colWords] = tabs(partition,dim,word,cWord)
-                % Enumerate standard Young tableaux for a given partition
-                %
-                % Indices in the Young diagram increase left to right then top to bottom
-                %
-                % These tableaux are in one-to-one correspondence with rearrangements of words
-                %
-                % Returns:
-                %  rowWords (integer(:,:): A matrix whose rows enumerate all row words corresponding to standard Young tableaux
-                %  colWords (integer(:,:): A matrix whose rows enumerate all column words corresponding to standard Young tableaux
-                    n = sum(partition);
-                    rowWords = zeros(dim,n);
-                    colWords = zeros(dim,n);
-                    rowCount = 0;
-                    [left_index, top_index] = aboveLeft(partition);
-                    rec(zeros(1, n), 1, 1:n);
-
-                    function rec(entries_sofar, i, remain)
-                    % Performs a recursion step
-                    %
-                    % Mutates the variables ``tableaux`` of the main function
-                    %
-                    % Args:
-                    %   entries_sofar (integer(1,\*)): Row vector of size ``n``, whose entries 1 to ``i`` have been populated
-                    %   i (integer): Current current entry to populate
-                    %   remain (integer(1,\*)): Numbers that can be filled in
-                        for j = remain % for loop over the numbers that we can put
-                            if left_index(i) ==0 || entries_sofar(left_index(i)) < j
-                                % either the i-th box doesn't have a left neighbor, or this neighbor index is less than the candidate j
-                                if top_index(i)==0 || entries_sofar(top_index(i)) < j
-                                    % either the i-th box doesn't have a top neighbor, or this neighbor index is less than the candidate j
-                                    entries_sofar1 = entries_sofar;
-                                    entries_sofar1(i) = j;
-                                    if i == n
-                                        rowCount = rowCount + 1;
-                                        colWords(rowCount,entries_sofar1) = word;
-                                        rowWords(rowCount,entries_sofar1) = cWord;
-                                    else % i < n
-                                        remain1 = setdiff(remain, j);
-                                        rec(entries_sofar1, i + 1, remain1);
-                                    end
-                                end
-                            end
-                        end
-                    end
-
-                    function [above,left] = aboveLeft(part)
-                        n = sum(part);
-                        m = numel(part);
-                        self.cSum = [0 cumsum(part(1:m-1))];
-                        above = zeros(1,n);
-                        left = 0:(n-1);
-                        left(self.cSum+1)=0;
-                        for j = 2:m
-                            inds = 1:(part(j));
-                            above(self.cSum(j)+inds) = self.cSum(j-1)+inds;
-                        end
-                    end
-                end
+                self.basis = self.subSpecht(self.indepRowWords);
             end
             function specht = subSpecht(self,rowWords)
                     % Finds the Specht submatrix given a list of rows
@@ -176,7 +114,7 @@ classdef SymmetricSpechtIrrep < replab.Rep
                     % its nonzero. Empty if the entry is zero.
                         row = rowWords(rowNum,:);
                         col = self.indepColWords(colNum,:);
-                        perm = self.cSum(col) + row;
+                        perm = self.cSum(row) + col;
                             if noRepeats(perm)
                                 val = PermSign(perm);
                             else
@@ -227,10 +165,11 @@ classdef SymmetricSpechtIrrep < replab.Rep
                     sign = (-1)^mod(round(oddOrEven),2); %Sign of permutation
                     end
                     end
-                end
+            end
+                
             function im = naiveImage(self,perm)
-            action = self.subSpecht(self.indepRowWords(:,perm));
-            im = round(self.basis/action);
-       end
+                action = self.subSpecht(self.indepRowWords(:,perm));
+                im = round(self.basis/action);
+            end
        end
 end

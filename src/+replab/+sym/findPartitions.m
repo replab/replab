@@ -29,7 +29,7 @@ classdef findPartitions
         end     
         
         function eigVal = eigenvalue(part)
-            eigVal = -(part-2*(1:numel(part))+1)*part'/2;
+            eigVal = (part-2*(1:numel(part))+1)*part'/2;
         end
     end
     
