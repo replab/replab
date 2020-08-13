@@ -134,6 +134,7 @@ classdef ConjugacyClasses < replab.Obj
         end
 
         function a = powerMapMatrix(self)
+        % Returns an adjacency-like matrix that describes (incomplete) relationships between conjugacy classes
             primes = unique(double(factor(self.group.order)));
             m = self.powerMaps(primes);
             a = zeros(self.nClasses, self.nClasses);

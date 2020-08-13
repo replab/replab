@@ -17,7 +17,7 @@ classdef CharacterTable < replab.Obj
 
     properties (SetAccess = protected)
         group % (`+replab.FiniteGroup`): Group represented by character table
-        classes % (cell(1, nClasses) of `+replab.ConjugacyClass`): Conjugacy classes of `.group`
+        classes % (`.ConjugacyClasses`): Conjugacy classes of `.group`
         irreps % (cell(1, nClasses) of ``[]`` or `.RepByImages`): Explicit matrix representations (can contain empty values)
         characters % (`.cyclotomic` (nClasses, nClasses)): Character values
     end
