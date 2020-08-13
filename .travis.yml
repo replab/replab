@@ -2,7 +2,7 @@
 # available (as of January 2016)
 language: java
 
-dist: bionic
+dist: focal
 
 ###############################################################################
 env:
