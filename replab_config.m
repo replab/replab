@@ -25,6 +25,8 @@ replab.init.nlinfit().require;
 replab.init.MOcov().require;
 replab.init.MOxUnit().require;
 
+replab.init.cyclolab().require;
+
 % Default values for coset enumeration parameters
 replab.globals.cosetEnumerationMethod('R'); % try 'C' if the method doesn't work
 replab.globals.maxCosets(2^22);
