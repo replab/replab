@@ -27,18 +27,25 @@ function classes = conjugacyClassesByRandomSearch(group)
             bar.step(group.order - remains);
         end
         newClass = true;
+        gr = [];
         for i = 1:length(classes)
             c = classes{i};
             r = c.representative;
             if isequal(replab.Permutation.cycleStructure(r), replab.Permutation.cycleStructure(g))
-                if c.contains(g)
+                if isempty(gr)
+                    gr = replab.bsgs.ConjugacyClasses.representative(group, g);
+                end
+                if group.eqv(r, gr)
                     newClass = false;
                     break
                 end
             end
         end
         if newClass
-            c = replab.ConjugacyClass.make(group, g);
+            if isempty(gr)
+                gr = replab.bsgs.ConjugacyClasses.representative(group, g);
+            end
+            c = replab.ConjugacyClass(group, gr);
             classes{1,end+1} = c;
             remains = remains - c.nElements;
         end
