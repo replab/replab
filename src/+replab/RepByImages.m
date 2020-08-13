@@ -6,8 +6,8 @@ classdef RepByImages < replab.Rep
 % group transversals and their images (see `+replab.+bsgs.ChainWithImages`).
 
     properties (SetAccess = protected)
-        images_internal % (cell(1,\*) of double(\*,\*), may be sparse): Generator images
-        inverseImages_internal % (cell(1,\*) of double(\*,\*), may be sparse): Inverses of generator images
+        images_internal % (cell(1,\*) of double(\*,\*) or `.cyclotomic`, may be sparse): Generator images
+        inverseImages_internal % (cell(1,\*) of double(\*,\*) or `.cyclotomic`, may be sparse): Inverses of generator images
     end
 
     methods
