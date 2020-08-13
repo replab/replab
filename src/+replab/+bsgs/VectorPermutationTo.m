@@ -21,7 +21,7 @@ classdef VectorPermutationTo < replab.bsgs.Backtrack
             if nargin < 4 || isempty(sStabilizer)
                 sStabilizer = group.vectorStabilizer(s);
             end
-            self@replab.bsgs.Backtrack(group, [], tStabilizer, sStabilizer, debug);
+            self@replab.bsgs.Backtrack(group, 1:group.domainSize, tStabilizer, sStabilizer, debug);
             self.s = s;
             self.t = t;
         end

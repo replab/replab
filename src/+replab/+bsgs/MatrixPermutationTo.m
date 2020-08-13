@@ -20,7 +20,7 @@ classdef MatrixPermutationTo < replab.bsgs.Backtrack
             if nargin < 4 || isempty(SStabilizer)
                 SStabilizer = group.matrixStabilizer(S);
             end
-            self@replab.bsgs(group, [], TStabilizer, SStabilizer, debug);
+            self@replab.bsgs.Backtrack(group, 1:group.domainSize, TStabilizer, SStabilizer, debug);
             self.S = S;
             self.T = T;
         end
