@@ -10,55 +10,99 @@ function ct = DihedralCharacterTable(n)
 % Returns:
 %   ct (`+replab.CharacterTable`)
     group = replab.DihedralGroup(n);
-    ord = double(group.order);
-    classes = group.conjugacyClasses;
-    nclasses = length(classes);
-    irrepExp = cell(1, nclasses);
-    irrepExp{1} = {{'1'}, {'1'}};
-    irrepExp{2} = {{'1'}, {'-1'}};
+    ord = 2*n;
+    
     if even(n)
-        n1D = 4;
-        irrepExp{3} = {{'-1'}, {'1'}};
-        irrepExp{4} = {{'-1'}, {'-1'}};
+        nclasses = 4 + n/2 - 1;
     else
-        n1D = 2;
+        nclasses = 2 + (n - 1) / 2;
     end
-    for j = 1:nclasses - n1D
-        g1 = {sprintf('E(%d)^%d', n, j), '0'; '0', sprintf('E(%d)^%d', n, -j)};
-        g2 = {'0', sprintf('E(%d)^%d', n, j); sprintf('E(%d)^%d', n, -j), '0'};
-        irrepExp{n1D+j} = {g1, g2};
+
+    % We have the group < d,s | d^n = s^2 = e, dxd^-1 = s^-1 >
+    
+    % Classes will be listed with first rotations and then reflections
+    classreps = cell(1, nclasses);
+    d = [2:n, 1];
+    s = fliplr(1:n);
+    if even(n)
+        stop = n/2;
+    else
+        stop = (n-1)/2;
     end
-    chars = cell(nclasses);
-    chars(1, :) = {'1'};
-    chars(1:n1D, 1) = {'1'};
-    if nclasses > n1D
-        chars(n1D+1:nclasses, 1) = {'2'};
+    rep = 1:n;
+    for i = 1:stop + 1
+        classreps{i} = rep;
+        rep = rep(d);
     end
-    for i = 2:nclasses
-        rep = classes{i}.representative;
-        dk = group.composeN(group.generators{2}, rep(1) - 1);
-        if isequal(dk, rep)
-            k = rep(1) - 1;
-            chars{2, i} = '1';
-            if even(n)
-                chars{3, i} = num2str((-1)^k);
-                chars{4, i} = num2str((-1)^k);
-            end
-            for j = 1:nclasses - n1D
-                g1 = sprintf('E(%d)^%d+E(%d)^%d', n, mod(j*k, ord), n, -1*mod(j*k, ord));
-                chars{n1D+j, i} = g1;
-            end
-        else
-            k = n - rep(1);
-            chars{2, i} = '-1';
-            if even(n)
-                chars{3, i} = num2str((-1)^k);
-                chars{4, i} = num2str((-1)^(k+1));
-            end
-            for j = 1:nclasses - n1D
-                chars{n1D+j, i} = '0';
-            end
+    if n > 2
+        classreps{i + 1} = s;
+        if even(n)
+            classreps{i + 2} = d(s);
         end
     end
-    ct = replab.CharacterTable.make(group, classes, [], chars, [], irrepExp);
+    classarray = cellfun(@(r) group.conjugacyClass(r), classreps, 'UniformOutput', false);
+    classes = replab.ConjugacyClasses(group, classarray);
+    
+    % Irreps are generated first in 1D and then in 2D
+    irreps = cell(1, nclasses);
+    w = replab.cyclotomic.E(n);
+    irreps{1} = group.repByImages('R', 1, {1, 1});
+    irreps{2} = group.repByImages('R', 1, {-1, 1});
+    n1D = 2;
+    if even(n)
+        irreps{3} = group.repByImages('R', 1, {1, -1});
+        irreps{4} = group.repByImages('R', 1, {-1, -1});
+        stop = stop - 1;
+        n1D = 4;
+    end
+    for j = 1:stop
+        g1 = replab.cyclotomic.zeros(2, 2);
+        g1(1, 1) = w^j;
+        g1(2, 2) = w^(-j);
+        g2 = replab.cyclotomic.zeros(2, 2);
+        g2(1, 2) = w^j;
+        g2(2, 1) = w^(-j);
+        irreps{n1D + j} = group.repByImages('C', 2, {g2, g1});
+    end
+    
+    % Characters can be assigned to rotations then reflections
+    chars = replab.cyclotomic.zeros(nclasses, nclasses);
+    chars(1, :) = replab.cyclotomic.fromDoubles(1);
+    chars(1:n1D, 1) = replab.cyclotomic.fromDoubles(1);
+    if nclasses > n1D
+        chars(n1D+1:nclasses, 1) = replab.cyclotomic.fromDoubles(2);
+    end
+    if even(n)
+        for k = 1:nclasses - 3
+            chars(2, k+1) = replab.cyclotomic.fromDoubles(1);
+            chars(3:4, k+1) = replab.cyclotomic.fromDoubles((-1)^k);
+            for j = 1:stop
+                pow = mod(j*k, ord);
+                chars(n1D+j, k+1) = w^pow + w^(-pow);
+            end
+        end
+        for k = nclasses - 2:nclasses - 1
+            chars(2, k+1) = replab.cyclotomic.fromDoubles(-1);
+            chars(3, k+1) = replab.cyclotomic.fromDoubles((-1)^k);
+            chars(4, k+1) = replab.cyclotomic.fromDoubles((-1)^(k+1));
+            for j = 1:stop
+                chars(n1D+j, k+1) = replab.cyclotomic.fromDoubles(0);
+            end
+        end
+    else
+        for k = 1:nclasses - 2
+            chars(2, k+1) = replab.cyclotomic.fromDoubles(1);
+            for j = 1:stop
+                pow = mod(j*k, ord);
+                chars(n1D+j, k+1) = w^pow + w^(-pow);
+            end
+        end
+        chars(2, nclasses) = replab.cyclotomic.fromDoubles(-1);
+        for j = 1:stop
+            chars(n1D+j, nclasses) = replab.cyclotomic.fromDoubles(0);
+        end
+    end
+    
+    ct = replab.CharacterTable(group, classes, irreps, chars);
+    
 end

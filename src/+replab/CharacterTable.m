@@ -47,10 +47,11 @@ classdef CharacterTable < replab.Obj
 
     methods
 
-        function self = CharacterTable(group, classes, characters)
+        function self = CharacterTable(group, classes, irreps, characters)
         % Constructs a character table
             self.group = group;
             self.classes = classes;
+            self.irreps = irreps;
             self.characters = characters;
         end
 

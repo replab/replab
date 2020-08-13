@@ -70,15 +70,7 @@ function ct = PermutationCharacterTable(group)
             end
         end
     end
-    chars = num2cell(round(chars));
-    chars = cellfun(@num2str, chars, 'UniformOutput', false);
-    gens = group.generators;
-    irrepExp = cell(1, nirreps);
-    for i = 1:nirreps
-        genImages = cellfun(@(x) irreps{i}.image(x), gens, 'UniformOutput', false);
-        genImages = cellfun(@(x) cellfun(@num2str, num2cell(x), 'UniformOutput', false), genImages, 'UniformOutput', false);
-        irrepExp{i} = genImages;
-    end
-    ct = replab.CharacterTable.make(group, classes, [], chars, [], irrepExp);
+    chars = replab.cyclotomic.fromDoubles(round(chars));
+    ct = replab.CharacterTable(group, classes, irreps, chars);
 end
 
