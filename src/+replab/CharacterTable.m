@@ -9,65 +9,120 @@ classdef CharacterTable < replab.Obj
 % $$$ %       X.2      2          0         -1
 % $$$ %       X.3      1         -1          1
 %
-% The character values, and coefficients for the explicit matrices defining the irreducible representations, are given using
-% charstrings. We use a subset of the Matlab grammar, with the additional definition ``E(n) = exp(1i*2*pi/n)``, where ``n`` is
-% either ``integer`` or ``-integer``.
+% The character values are stored as elements of the cyclotomic field, using the `.cyclotomic` class which requires
+% external libraries and a Java Virtual Machine available.
+%
+% Instances of `.CharacterTable` are immutable; however, they can be enriched by calling the appropriate methods to
+% add contextual information.
 
     properties (SetAccess = protected)
         group % (`+replab.FiniteGroup`): Group represented by character table
-        conjugacyClasses % (cell(1, nClasses) of `+replab.ConjugacyClass`): Conjugacy classes of `.group`
-        conjugacyClassNames % (cell(1, nClasses) of charstring): Names of the conjugacy classes
-        irrepNames % (cell(1, nClasses) of charstring): Names of the irreducible representations
-        characterExpressions % (cell(nClasses, nClasses) of charstring): Analytical expressions for the characters
-        characterValues % (double(nClasses, nClasses)): Character values
-        irrepExpressions % (cell(1, nClasses) of ``[]`` or cell(1, nGenerators) of cell(d, d) of charstring): Explicit matrix representations (optional)
+        classes % (cell(1, nClasses) of `+replab.ConjugacyClass`): Conjugacy classes of `.group`
+        irreps % (cell(1, nClasses) of ``[]`` or `.RepByImages`): Explicit matrix representations (can contain empty values)
+        characters % (`.cyclotomic` (nClasses, nClasses)): Character values
     end
 
-    methods (Static)
-
-        function ct = make(group, conjugacyClasses, conjugacyClassNames, characterExpressions, irrepNames, irrepExpressions)
-            if isempty(conjugacyClassNames)
-                conjugacyClassNames = cellfun(@(c) replab.shortStr(c.representative), conjugacyClasses, 'uniform', 0);
-            end
-            characterValues = cellfun(@(str) replab.cyclo.Parser.parse(str), characterExpressions);
-            if isempty(irrepNames)
-                ind = 1;
-                for i = 1:size(characterValues, 1)
-                    if all(characterValues(i, :) == 1)
-                        irrepNames{i} = 't';
-                    else
-                        irrepNames{i} = sprintf('r_%d', ind);
-                        ind = ind + 1;
-                    end
-                end
-            end
-            ct = replab.CharacterTable(group, conjugacyClasses, conjugacyClassNames, irrepNames, characterExpressions, characterValues, irrepExpressions);
-        end
-
-    end
+% $$$     methods (Static)
+% $$$
+% $$$         function ct = make(group, conjugacyClasses, conjugacyClassNames, characterExpressions, irrepNames, irrepExpressions)
+% $$$             if isempty(conjugacyClassNames)
+% $$$                 conjugacyClassNames = cellfun(@(c) replab.shortStr(c.representative), conjugacyClasses, 'uniform', 0);
+% $$$             end
+% $$$             characterValues = cellfun(@(str) replab.cyclo.Parser.parse(str), characterExpressions);
+% $$$             if isempty(irrepNames)
+% $$$                 ind = 1;
+% $$$                 for i = 1:size(characterValues, 1)
+% $$$                     if all(characterValues(i, :) == 1)
+% $$$                         irrepNames{i} = 't';
+% $$$                     else
+% $$$                         irrepNames{i} = sprintf('r_%d', ind);
+% $$$                         ind = ind + 1;
+% $$$                     end
+% $$$                 end
+% $$$             end
+% $$$             ct = replab.CharacterTable(group, conjugacyClasses, conjugacyClassNames, irrepNames, characterExpressions, characterValues, irrepExpressions);
+% $$$         end
+% $$$
+% $$$     end
 
     methods
 
-        function self = CharacterTable(group, conjugacyClasses, conjugacyClassNames, irrepNames, characterExpressions, characterValues, irrepExpressions)
+        function self = CharacterTable(group, classes, characters)
         % Constructs a character table
             self.group = group;
-            self.conjugacyClasses = conjugacyClasses;
-            self.conjugacyClassNames = conjugacyClassNames;
-            self.irrepNames = irrepNames;
-            self.characterExpressions = characterExpressions;
-            self.characterValues = characterValues;
-            self.irrepExpressions = irrepExpressions;
+            self.classes = classes;
+            self.characters = characters;
+        end
+
+        function s = headerStr(self)
+            group_str = replab.headerStr(self.group);
+            if length(group_str) > 1
+                group_str = [lower(group_str(1)), group_str(2:end)];
+            end
+            s = sprintf(['Character table for ', group_str]);
+        end
+
+        function v = findInTable(self, c, hshs, vars, vals)
+            h = c.hash;
+            inds = find(hshs == h);
+            v = [];
+            for i = inds
+                if vals(i) == c
+                    v = vars{i};
+                    return
+                end
+            end
+        end
+
+        function [cells vars vals] = tableValues(self)
+            chars = self.characters;
+            cells = cell(size(chars));
+            hshs = zeros(1, 0);
+            vars = cell(1, 0);
+            vals = replab.cyclotomic.zeros(1, 0);
+            for i = 1:size(chars, 1)
+                for j = 1:size(chars, 2)
+                    c = chars(i, j);
+                    d = double(c);
+                    if c == 1i
+                        cells{i,j} = 'i ';
+                    elseif c == -1i
+                        cells{i,j} = '-i ';
+                    elseif isreal(d) && floor(d) == d
+                        cells{i,j} = [strtrim(num2str(c)) ' '];
+                    else
+                        v = self.findInTable(c, hshs, vars, vals);
+                        if ~isempty(v)
+                            cells{i,j} = [v ' '];
+                            continue
+                        end
+                        v = self.findInTable(conj(c), hshs, vars, vals);
+                        if ~isempty(v)
+                            cells{i,j} = [v '*'];
+                            continue
+                        end
+                        v = self.findInTable(-c, hshs, vars, vals);
+                        if ~isempty(v)
+                            cells{i,j} = ['-' v ' '];
+                            continue
+                        end
+                        v = self.findInTable(-conj(c), hshs, vars, vals);
+                        if ~isempty(v)
+                            cells{i,j} = ['-' v '*'];
+                            continue
+                        end
+                        ind = length(vars) + 1;
+                        hshs(1,ind) = c.hash;
+                        vars{1,ind} = char('A'+ind-1);
+                        vals = [vals c];
+                        cells{i,j} = vars{1,ind};
+                    end
+                end
+            end
         end
 
     end
 % $$$
-% $$$         function s = headerStr(self)
-% $$$             group_str = replab.headerStr(self.group);
-% $$$             if length(group_str) > 1
-% $$$                 group_str = [lower(group_str(1)), group_str(2:end)];
-% $$$             end
-% $$$             s = sprintf(['Character table for ', group_str]);
-% $$$         end
 % $$$
 % $$$         function useBorders(self, logical)
 % $$$         %  Turn on and off borders on the table
