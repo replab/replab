@@ -235,12 +235,7 @@ classdef Graph < replab.Obj
         function Kt = computeHeatKernel(self, nbTimes)
         % Computes the heat kernel
         
-            if self.nVertices > 100
-                % We compute an approximate eigendecomposition
-                [phi, lambda] = eigs(self.laplacian());
-            else
-                [phi, lambda] = eig(self.laplacian());
-            end
+            [phi, lambda] = eig(self.laplacian());
             lambda = diag(lambda);
 
             co = 0;
