@@ -205,6 +205,8 @@ classdef Graph < replab.Obj
         % The heat kernel
         %
         % Evaluates the heat kernel of the graph at several times.
+        % For graphs with more than 100 vertices, an approximate heat
+        % kernel is computed.
         %
         % Args:
         %   graph (`.UndirectedGraph`)
@@ -233,7 +235,12 @@ classdef Graph < replab.Obj
         function Kt = computeHeatKernel(self, nbTimes)
         % Computes the heat kernel
         
-            [phi, lambda] = eig(self.laplacian());
+            if self.nVertices > 100
+                % We compute an approximate eigendecomposition
+                [phi, lambda] = eigs(self.laplacian());
+            else
+                [phi, lambda] = eig(self.laplacian());
+            end
             lambda = diag(lambda);
 
             co = 0;
@@ -241,7 +248,7 @@ classdef Graph < replab.Obj
             for t = 1/nbTimes:1/nbTimes:1
                 co = co + 1;
                 Kt(co,:,:) = exp(-lambda(1)*t)*phi(:,1)*phi(:,1)';
-                for i = 2:self.nVertices
+                for i = 2:length(lambda)
                     Kt(co,:,:) = Kt(co,:,:) + permute(exp(-lambda(i)*t)*phi(:,i)*phi(:,i)', [3 1 2]);
                 end
             end
