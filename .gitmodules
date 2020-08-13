@@ -10,3 +10,6 @@
 [submodule "YALMIP"]
 	path = external/YALMIP
 	url = https://github.com/yalmip/YALMIP
+[submodule "external/cyclolab"]
+	path = external/cyclolab
+	url = https://github.com/denisrosset/cyclolab.git

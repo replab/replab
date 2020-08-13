@@ -157,10 +157,10 @@ classdef Table < replab.Str
         %   tbstr (charstring): string with ``\n`` separators for display
         %   truncated (logical): whethere part of the table was omitted
             dim = size(self.elements);
-            if isempty(maxColumns)
+            if nargin < 3 || isempty(maxColumns)
                 maxColumns = Inf;
             end
-            if isempty(maxRows)
+            if nargin < 2 || isempty(maxRows)
                 maxRows = Inf;
             end
             % to replace align, make sure that two column tables with
