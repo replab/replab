@@ -15,3 +15,6 @@ They assume some :doc:`familiarity </tutorials/index>` with **RepLAB**.
    :maxdepth: 1
 
    How to solve a semi-definite program (SDP) subject to symmetries <SDP>
+   How to compute the automorphism group of a graph <graphAutomorphisms>
+   How to define the group which leave a vector invariant <vectorStabilizerGroup>
+   How to compute the intersection of two groups <intersection>
