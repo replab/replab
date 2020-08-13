@@ -71,15 +71,16 @@ classdef cyclotomic
             c = replab.cyclotomic(mat);
         end
 
-        function c = E(n)
-        % Returns a root of unity
+        function c = E(orders)
+        % Returns roots of unity
         %
         % Args:
-        %    n (integer): Root order
+        %    n (integer(\*,\*)): Root orders
         %
         % Returns:
         %    `.cyclotomic`: The value ``exp(2i*pi/n)``
-            c = replab.cyclotomic({javaMethod('e', 'cyclo.Cyclo')});
+            ja = javaMethod('E', 'cyclo.Lab', orders);
+            c = replab.cyclotomic.fromJavaArray(ja, size(orders));
         end
 
         function c = fromStrings(strings)
@@ -218,6 +219,11 @@ classdef cyclotomic
         function res = ne(self, rhs)
         % (Non-)equality test
             res = ~(self == rhs);
+        end
+
+        function h = hash(self)
+        % Returns a matrix of hash codes
+            h = cellfun(@(c) javaMethod('hashCode', c), self.mat);
         end
 
         function res = eq(lhs, rhs)
