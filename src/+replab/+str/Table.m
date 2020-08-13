@@ -157,10 +157,10 @@ classdef Table < replab.Str
         %   tbstr (charstring): string with ``\n`` separators for display
         %   truncated (logical): whethere part of the table was omitted
             dim = size(self.elements);
-            if isempty(maxColumns)
+            if nargin < 3 || isempty(maxColumns)
                 maxColumns = Inf;
             end
-            if isempty(maxRows)
+            if nargin < 2 || isempty(maxRows)
                 maxRows = Inf;
             end
             % to replace align, make sure that two column tables with
@@ -185,7 +185,7 @@ classdef Table < replab.Str
             if len > maxColumns
                 truncated = true;
                 ellipsisCol = cell(dim(1), 1);
-                ellipsisCol{floor(dim(1)/2)} = omitSymbol;
+                ellipsisCol{max(floor(dim(1)/2), 1)} = omitSymbol;
                 if ~isempty(self.omitRange)
                     [dots, hide] = self.addEllipses(self.omitRange);
                     char_arr(:, dots) = repmat(ellipsisCol, 1, length(dots));

@@ -5,6 +5,14 @@ function test_suite = RepByImagesTest()
     catch
     end
     initTestSuite;
+    % cyclotomics
+    G = replab.AbstractGroup.parsePresentation('<a, x | a^8 = x^2 = 1, x a x^-1 = a^-1 >');
+    sqrt1_2 = replab.cyclotomic.sqrtRational(1,2);
+    img_a = [sqrt1_2 -sqrt1_2
+             sqrt1_2 sqrt1_2];
+    img_x = [1 0; 0 -1];
+    rep = G.repByImages('R', 2, {img_a img_x});
+    test_suite = rep.laws.addTestCases(test_suite);
 end
 
 function test_symbolic

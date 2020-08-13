@@ -97,3 +97,10 @@ Implement EPIMORPHISMS from Holt
 --------------------------------
 
 This enables the computation of isomorphisms between groups, and the automorphism group of a group.
+
+Real representations
+--------------------
+
+Have better support/documentation for real representations
+
+See `<https://www.maths.manchester.ac.uk/~jm/wiki/Representations/Representations>`
