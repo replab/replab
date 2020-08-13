@@ -44,7 +44,7 @@ classdef MatrixAutomorphism < replab.bsgs.Backtrack
 
         function ok = prop(self, g)
         % Verifies the image of every block is a block of the same partition
-            ok = isequal(self.matrix, self.matrix(g, g));
+            ok = all(all(self.matrix == self.matrix(g, g)));
         end
 
     end
