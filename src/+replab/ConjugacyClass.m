@@ -89,6 +89,17 @@ classdef ConjugacyClass < replab.FiniteSet
             b = ~isempty(B);
         end
 
+        function c1 = imap(self, f)
+        % Maps this conjugacy class under an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %
+        % Returns:
+        %   `.ConjugacyClass`: The conjugacy class mapped under ``f``, expressed as a subset of ``f.image``
+
+        end
+
     end
 
 end

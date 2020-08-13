@@ -62,65 +62,6 @@ classdef CharacterTable < replab.Obj
             s = sprintf(['Character table for ', group_str]);
         end
 
-        function v = findInTable(self, c, hshs, vars, vals)
-            h = c.hash;
-            inds = find(hshs == h);
-            v = [];
-            for i = inds
-                if vals(i) == c
-                    v = vars{i};
-                    return
-                end
-            end
-        end
-
-        function [cells vars vals] = tableValues(self)
-            chars = self.characters;
-            cells = cell(size(chars));
-            hshs = zeros(1, 0);
-            vars = cell(1, 0);
-            vals = replab.cyclotomic.zeros(1, 0);
-            for i = 1:size(chars, 1)
-                for j = 1:size(chars, 2)
-                    c = chars(i, j);
-                    d = double(c);
-                    if c == 1i
-                        cells{i,j} = 'i ';
-                    elseif c == -1i
-                        cells{i,j} = '-i ';
-                    elseif isreal(d) && floor(d) == d
-                        cells{i,j} = [strtrim(num2str(c)) ' '];
-                    else
-                        v = self.findInTable(c, hshs, vars, vals);
-                        if ~isempty(v)
-                            cells{i,j} = [v ' '];
-                            continue
-                        end
-                        v = self.findInTable(conj(c), hshs, vars, vals);
-                        if ~isempty(v)
-                            cells{i,j} = [v '*'];
-                            continue
-                        end
-                        v = self.findInTable(-c, hshs, vars, vals);
-                        if ~isempty(v)
-                            cells{i,j} = ['-' v ' '];
-                            continue
-                        end
-                        v = self.findInTable(-conj(c), hshs, vars, vals);
-                        if ~isempty(v)
-                            cells{i,j} = ['-' v '*'];
-                            continue
-                        end
-                        ind = length(vars) + 1;
-                        hshs(1,ind) = c.hash;
-                        vars{1,ind} = char('A'+ind-1);
-                        vals = [vals c];
-                        cells{i,j} = vars{1,ind};
-                    end
-                end
-            end
-        end
-
     end
 % $$$
 % $$$

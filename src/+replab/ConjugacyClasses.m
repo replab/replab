@@ -6,7 +6,6 @@ classdef ConjugacyClasses < replab.Obj
     properties (SetAccess = protected)
         group % (`.FiniteGroup`): Group under study
         classes % (cell(1,nC) of `.ConjugacyClass`): Conjugacy classes
-        sorted % (logical): Whether the conjugacy classes are sorted by min lexicographic order
         primes % (integer(1,nP)): List of primes that divide the group order (computed as needed)
         primePowerMap % (integer(nP,nC)): Power maps (computed as needed)
     end
@@ -42,10 +41,9 @@ classdef ConjugacyClasses < replab.Obj
 
     methods
 
-        function self = ConjugacyClasses(group, classes, sorted)
+        function self = ConjugacyClasses(group, classes)
             self.group = group;
             self.classes = classes;
-            self.sorted = sorted;
             self.primes = zeros(1, 0);
             self.primePowerMap = zeros(0, length(classes));
         end
