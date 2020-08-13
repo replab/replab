@@ -74,7 +74,6 @@ __pycache__/
 ##---------------------------------------------------
 
 # Editor backup files
-*~
 
 # KDE directory preferences
 .directory
@@ -134,3 +133,4 @@ tests/doctest
 
 ## Jupyter checkpoints
 .ipynb_checkpoints
+*.g

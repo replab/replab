@@ -1,5 +1,7 @@
 classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
 % Describes an isomorphism between finite groups
+%
+% Adds the guarantee that `.target`/`.image` has for generators the images of the generators of `.source`
 
     methods % Implementations
 
@@ -12,6 +14,10 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
     end
 
     methods (Access = protected)
+
+        function I = computeImage(self)
+            I = self.target; % due to self being an isomorphism
+        end
 
         function I = computeInverse(self)
             I = replab.fm.FiniteInverse(self);
@@ -28,7 +34,7 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
         % FiniteMorphism
 
         function s = preimageRepresentative(self, t)
-            s = t;
+            s = self.preimageElement(s);
         end
 
         function S = preimageGroup(T)
