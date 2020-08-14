@@ -113,7 +113,13 @@ classdef Graph < replab.Obj
         %
         % Returns:
         %   adj (double (\*,\*)): adjacency matrix
-            
+        %
+        % Example:
+        %   >>> replab.UndirectedGraph.fromEdges([1 3]).adjacencyMatrix
+        %     0     0     1
+        %     0     0     0
+        %     1     0     0
+     
             adj = self.cached('adjacencyMatrix', @() self.computeAdjacencyMatrix);
         end
         
@@ -147,6 +153,13 @@ classdef Graph < replab.Obj
         %
         % Returns:
         %   P (`.Partition`): Partitioning of the vertices
+        %
+        % Example:
+        %   >>> replab.UndirectedGraph.fromEdges([1 3]).connectedComponents
+        %     Partition '13|2'
+        %     blockIndex: [1, 2, 1]
+        %         blocks: {[1, 3], 2}
+        %              n: 3
 
             if isempty(self.edges)
                 % Trivial case
@@ -193,6 +206,7 @@ classdef Graph < replab.Obj
         %
         % Returns:
         %   L (double (\*,\*)): Laplacian of the graph
+        
             L = self.cached('laplacian', @() self.computeLaplacian);
         end
         

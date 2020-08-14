@@ -35,7 +35,9 @@ classdef DirectedGraph < replab.graph.Graph
         %   graph (`.DirectedGraph`)
         %
         % Example:
-        %   >>> replab.DirectedGraph.fromAdjacencyMatrix([0 1 1; 1 0 1; 1 1 0]);
+        %   >>> replab.DirectedGraph.fromAdjacencyMatrix([0 1 1; 1 0 1; 1 1 0])
+        %     Directed graph with 3 vertices and 6 edges
+        %     edges: [2, 1; 3, 1; 1, 2; 3, 2; 1, 3; 2, 3]
             
             assert(size(adj,1) == size(adj,2), 'Adjacency matrix should be square');
             
@@ -64,7 +66,9 @@ classdef DirectedGraph < replab.graph.Graph
         %   graph (`.DirectedGraph`)
         %
         % Example:
-        %   >>> replab.DirectedGraph.fromEdges([1 2; 2 3; 3 1], 3);
+        %   >>> replab.DirectedGraph.fromEdges([1 2; 2 3; 3 1], 3)
+        %     Directed graph with 3 vertices and 3 edges
+        %     edges: [1, 2; 2, 3; 3, 1]
 
             if nargin < 2
                 if isempty(edges)
@@ -116,7 +120,9 @@ classdef DirectedGraph < replab.graph.Graph
         %   graph (`.DirectedGraph`)
         %
         % Example:
-        %   >>> replab.DirectedGraph.fromBiadjacencyMatrix([1 0 1; 1 1 0]);
+        %   >>> replab.DirectedGraph.fromBiadjacencyMatrix([1 0 1; 1 1 0])
+        %     Directed graph with 5 vertices and 4 edges
+        %     edges: [1, 3; 2, 3; 2, 4; 1, 5]
 
             % Construct the associated full adjacency matrix
             adj = [zeros(size(biadj,1)*[1 1]), biadj;
@@ -126,16 +132,16 @@ classdef DirectedGraph < replab.graph.Graph
         end
 
         function self = fromUndirectedGraph(graph)
-            % Define an directed graph from an undirected one
-            %
-            % This function returns an directed graph with the same
-            % connectivity as the input undirected graph.
-            %
-            % Args:
-            %   graph (`.UndirectedGraph`)
-            %
-            % Returns:
-            %   graph (`.DirectedGraph`)
+        % Define an directed graph from an undirected one
+        %
+        % This function returns an directed graph with the same
+        % connectivity as the input undirected graph.
+        %
+        % Args:
+        %   graph (`.UndirectedGraph`)
+        %
+        % Returns:
+        %   graph (`.DirectedGraph`)
 
             assert(isa(graph, 'replab.UndirectedGraph'), 'Input is not an undirected graph');
             
@@ -186,16 +192,16 @@ classdef DirectedGraph < replab.graph.Graph
     methods % Methods
         
         function graph = toUndirectedGraph(self)
-            % Removes the graph directionality
-            %
-            % This function returns an undirected graph with the same
-            % connectivity as the current graph.
-            %
-            % Args:
-            %   graph (`.DirectedGraph`)
-            %
-            % Returns:
-            %   graph (`.UndirectedGraph`)
+        % Removes the graph directionality
+        %
+        % This function returns an undirected graph with the same
+        % connectivity as the current graph.
+        %
+        % Args:
+        %   graph (`.DirectedGraph`)
+        %
+        % Returns:
+        %   graph (`.UndirectedGraph`)
             
             graph = replab.UndirectedGraph.fromDirectedGraph(self);
         end

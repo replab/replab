@@ -35,7 +35,9 @@ classdef UndirectedGraph < replab.graph.Graph
         %   graph (`.UndirectedGraph`)
         %
         % Example:
-        %   >>> replab.UndirectedGraph.fromAdjacencyMatrix([0 1 1; 1 0 1; 1 1 0]);
+        %   >>> replab.UndirectedGraph.fromAdjacencyMatrix([0 1 1; 1 0 1; 1 1 0])
+        %     Undirected graph with 3 vertices and 3 edges
+        %     edges: [1, 2; 1, 3; 2, 3]
             
             assert(size(adj,1) == size(adj,2), 'Adjacency matrix should be square');
             
@@ -70,7 +72,9 @@ classdef UndirectedGraph < replab.graph.Graph
         %   graph (`.UndirectedGraph`)
         %
         % Example:
-        %   >>> replab.UndirectedGraph.fromEdges([1 2; 2 3; 3 1], 3);
+        %   >>> replab.UndirectedGraph.fromEdges([1 2; 2 3; 3 1], 3)
+        %     Undirected graph with 3 vertices and 3 edges
+        %     edges: [1, 2; 1, 3; 2, 3]
 
             if nargin < 2
                 if isempty(edges)
@@ -124,7 +128,9 @@ classdef UndirectedGraph < replab.graph.Graph
         %   graph (`.UndirectedGraph`)
         %
         % Example:
-        %   >>> replab.UndirectedGraph.fromBiadjacencyMatrix([1 0 1; 1 1 0]);
+        %   >>> replab.UndirectedGraph.fromBiadjacencyMatrix([1 0 1; 1 1 0])
+        %     Undirected graph with 5 vertices and 4 edges
+        %     edges: [1, 3; 2, 3; 2, 4; 1, 5]
 
             % Construct the associated full adjacency matrix
             adj = [zeros(size(biadj,1)*[1 1]), biadj;
@@ -186,16 +192,16 @@ classdef UndirectedGraph < replab.graph.Graph
     methods % Methods
 
         function graph = toDirectedGraph(self)
-            % Adds directionality to the graph's edges
-            %
-            % This function returns an directed graph with the same
-            % connectivity as the current graph.
-            %
-            % Args:
-            %   graph (`.UndirectedGraph`)
-            %
-            % Returns:
-            %   graph (`.DirectedGraph`)
+        % Adds directionality to the graph's edges
+        %
+        % This function returns an directed graph with the same
+        % connectivity as the current graph.
+        %
+        % Args:
+        %   graph (`.UndirectedGraph`)
+        %
+        % Returns:
+        %   graph (`.DirectedGraph`)
             
             graph = replab.DirectedGraph.fromUndirectedGraph(self);
         end
