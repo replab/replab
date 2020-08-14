@@ -24,6 +24,7 @@ classdef symToolbox < replab.init.Dependency
         end
 
         function res = works(self)
+            evalc('sym(''2'');'); % run a first command to trigger loading of the library
             res = double(sym('2') + sym('2')) == 4;
         end
 
