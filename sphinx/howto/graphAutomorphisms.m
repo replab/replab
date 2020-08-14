@@ -5,7 +5,8 @@
 % ## Preparation
 % As always, before using *RepLAB* commands, initialize the library:
 
-run ../../replab_init
+addpath([pwd, '/../..']);
+replab_init('verbose', 0);
 
 % ## Graph definition
 %
@@ -26,9 +27,9 @@ graph = replab.UndirectedGraph.fromAdjacencyMatrix(M)
 %
 % The automorphisms of a graph are obtained by simply calling
 
-graph.automorphismGroup
+group = graph.automorphismGroup
 
-% This returns the group under which the graph is invariant. In the present case, this group has order 4 and admits 2 generators.
+% This returns the group under which the graph is invariant. In the present case, this group is a Klein group of order 4, which admits 2 generators.
 
 % ## Bonus
 %

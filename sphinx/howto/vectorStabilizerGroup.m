@@ -1,12 +1,12 @@
 % # Vector Stabilizer group
 %
 % This document illustrated how to define groups which leave a vector invariant in *RepLAB*.
-
 %
 % ## Preparation
 % As always, before using *RepLAB* commands, initialize the library:
 
-run ../../replab_init
+addpath([pwd, '/../..']);
+replab_init('verbose', 0);
 
 % ## Vector stabilizer group
 %
@@ -24,7 +24,7 @@ Gv = S7.vectorStabilizer(v)
 
 % This group G1 contains all 4 permutations which leave the vector v invariant:
 
-G1v.elements
+Gv.elements
 
 % ## Vector stabilization over a specific group
 %

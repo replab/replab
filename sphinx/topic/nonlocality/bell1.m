@@ -4,9 +4,10 @@
 %
 % Follow the [installation instructions](https://replab.github.io/replab/docs/installation.html).
 %
-% Then add the RepLAB path. The path below is the one for the machine that produced this notebook! Replace by your own. Or, better, move to the root RepLAB folder and just run the `replab_addpaths` script.
+% Then add the RepLAB path. The path below is the one for the machine that produced this notebook! Replace by your own. Or, better, move to the root RepLAB folder and just run the `replab_init` script.
 
-run ../../../replab_init
+addpath([pwd, '/../../..']);
+replab_init('verbose', 0);
 
 % ## Symmetries of the outcomes of a measurement
 %
