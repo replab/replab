@@ -27,6 +27,29 @@ classdef Standard < replab.Atlas
             self@replab.Atlas(1000);
         end
 
+        function A = trivial(self)
+        % Constructs the atlas entry corresponding to the trivial group
+            name = 'Trivial group';
+            prmGroup = replab.S(1); % this is a legit permutation representation
+            generators = cell(1, 0);
+            relators = cell(1, 0);
+            % Presentation from the groupprops wiki
+            % < x | x = 1 >
+            A = replab.AbstractGroup(generators, prmGroup, relators, name);
+        end
+
+        function R = recognizeTrivial(self, G)
+        % Recognizes if the given group is the trivial group and provides the generators according to the standard presentation
+        %
+        % The standard presentation is ``<x| x = id>``
+            R = [];
+            if ~G.isTrivial
+                return
+            end
+            entry = self.trivial;
+            R = replab.AtlasResult(G, entry, cell(1, 0));
+        end
+
         function A = dihedral(self, n)
         % Constructs the atlas entry corresponding to the dihedral group of order 2*n
             assert(n > 2);
@@ -89,6 +112,44 @@ classdef Standard < replab.Atlas
             Rcyclic = self.recognizeCyclic(Zn);
             a = Rcyclic.standardGenerators{1};
             entry = self.dihedral(n);
+            R = replab.AtlasResult(G, entry, {x a});
+        end
+
+        function A = klein(self)
+        % Constructs the atlas entry corresponding to the klein four-group
+            name = sprintf('Klein four-group of order %d', 4);
+            % Permutation realization
+            X = [2,1,4,3];
+            A = [3,4,1,2];
+            prmGroup = replab.PermutationGroup.of(X, A);
+            % Presentation from the groupprops wiki
+            % < x, a | a^2 = x^2 = 1, x a x^-1 = a^-1 >
+            relators = {'a^2' 'x^2' 'x a x^-1 a'};
+            A = replab.AbstractGroup({'x' 'a'}, prmGroup, relators, name);
+        end
+
+        function R = recognizeKlein(self, G)
+        % Recognizes if the given group is the Klein four-group and provides the generators according to the standard presentation
+        %
+        % The standard presentation is ``<x, a| a^2 = x^2 = id, x a x^-1 = a>``
+            R = [];
+            if G.order ~= 4
+                return
+            end
+            if G.isCyclic
+                return
+            end
+            x = G.generator(1);
+            a = [];
+            for i = 2:G.nGenerators
+                g = G.generator(i);
+                if ~G.eqv(x, g)
+                    a = g;
+                    break
+                end
+            end
+            assert(~isempty(a));
+            entry = self.klein;
             R = replab.AtlasResult(G, entry, {x a});
         end
 
@@ -244,7 +305,15 @@ classdef Standard < replab.Atlas
         end
 
         function R = recognize(self, G)
+            R = self.recognizeTrivial(G);
+            if ~isempty(R)
+                return
+            end
             R = self.recognizeCyclic(G);
+            if ~isempty(R)
+                return
+            end
+            R = self.recognizeKlein(G);
             if ~isempty(R)
                 return
             end
