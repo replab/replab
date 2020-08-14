@@ -248,7 +248,7 @@ classdef Partition < replab.Str
             end
 
             % Compute the connected components
-            P = replab.Graph.fromEdges(edges, d).connectedComponents;
+            P = replab.UndirectedGraph.fromEdges(edges, d).connectedComponents;
         end
 
     end
