@@ -113,9 +113,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %   generatorNames (cell(1,\*) of charstring): Generator names
         %   permutationGroup (`.PermutationGroup`): Permutation group realization of this abstract group
         %   relators (cell(1,\*) of charstring, optional): Relators
-            if isempty(relators)
-                assert(isempty(generatorNames), 'We do not support free groups.');
-            end
+        %   name (charstring): Name of the abstract group
             self.type = self;
             self.groupId = replab.globals.nextUniqueId;
             self.identity = '1';
