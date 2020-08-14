@@ -1,12 +1,12 @@
 classdef PermToGroup < replab.Morphism
 
     properties (SetAccess = protected)
-        imagesSourceGenerators % (cell(1,self.sourcenGenerators) of `.target` elements): Generator images
+        imageSourceGenerators % (cell(1,self.source.nGenerators) of `.target` elements): Generator images
     end
 
     methods
 
-        function self = PermToFinite(source, target, images)
+        function self = PermToGroup(source, target, images)
         % Constructs a morphism from a permutation group to a finite group
         %
         % Args:

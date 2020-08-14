@@ -29,7 +29,7 @@ classdef FiniteMorphism < replab.Morphism
 
     methods % Conversions
 
-        function m = restrictedSource(self, s1)
+        function m = restrictedSource(self, newSource)
         % Returns a finite morphism with its source restricted
         %
         % Note that the return type may be more precise.
@@ -43,8 +43,8 @@ classdef FiniteMorphism < replab.Morphism
             if self.source.isSubgroupOf(newSource)
                 m = self; % we have newSource == self.source
             else
-                images = cellfun(@(g) self.imageElement(g), s1.generators, 'uniform', 0);
-                m = s1.morphismByImages(self.target, images);
+                images = cellfun(@(g) self.imageElement(g), newSource.generators, 'uniform', 0);
+                m = newSource.morphismByImages(self.target, images);
             end
         end
 
@@ -90,7 +90,7 @@ classdef FiniteMorphism < replab.Morphism
         %
         % Returns:
         %   `.FiniteSet`: Set of source elements
-            S = self.source.normalCoset(self.kernel, self.preimageRepresentative(t));
+            S = self.kernel.normalCoset(self.preimageRepresentative(t), self.source);
         end
 
         function S = preimageGroup(self, T)

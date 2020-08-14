@@ -460,22 +460,9 @@ classdef PermutationGroup < replab.FiniteGroup
             if isa(target, 'replab.PermutationGroup')
                 m = replab.fm.PermToPerm(self, target, images);
             elseif isa(target, 'replab.FiniteGroup')
-                prmMorphism = target.niceMorphism;
-                prmImages = cellfun(@(g) prmMorphism.imageElement(g), images, 'uniform', 0);
-                prmGroup = target.niceMorphism.image;
-
-
-                m1 = replab.fm.PermToPerm(self, prmMorphism.target, prmImages);
-                m = m1.andThen(prmMorphism.inverse);
+                m = replab.fm.PermToFiniteGroup(self, target, images);
             else
                 m = replab.fm.PermToGroup(self, target, images);
-            end
-        end
-
-            if isa(target, 'replab.PermutationGroup')
-                m = replab.fm.PermToPerm(self, target, images);
-            else
-                m = replab.fm.PermToFinite(self, target, images);
             end
         end
 

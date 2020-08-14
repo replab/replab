@@ -1,7 +1,11 @@
 classdef PermToFiniteGroup < replab.FiniteMorphism
+% Morphism from a permutation group to a finite group
+%
+% Uses a BSGS chain with associated images to compute images of elements, delegating the operation to `+replab.+fm.PermToGroup`, stored
+% in `.fastMorphism`; the other operations are computed by a round-trip to permutation groups through the nice morphisms.
 
     properties (SetAccess = protected)
-        fastMorphism % (`+replab.fm.PermToGroup`): Fast morphism that cannot compute preimage representatives
+        fastMorphism % (`+replab.fm.PermToGroup`): Fast morphism that only computes images of elements
     end
 
     methods
@@ -19,34 +23,63 @@ classdef PermToFiniteGroup < replab.FiniteMorphism
         end
 
         function m = slowFiniteMorphism(self)
+        % Returns the finite morphism that implements the complete set of operations
+        %
+        % Returns:
+        %   `+replab.FiniteMorphism`: The finite morphism equivalent to `.fastMorphism`, but with additional methods
             m = self.cached('slowFiniteMorphism', @() self.computeSlowFiniteMorphism);
+        end
+
+    end
+
+    methods (Access = protected) % Implementations
+
+        % FiniteMorphism
+
+        function K = computeKernel(self)
+            K = self.slowFiniteMorphism.kernel;
+        end
+
+
+        function I = computeImage(self)
+            I = self.slowFiniteMorphism.image;
+        end
+
+        function I = computeImageSourceGenerators(self)
+            I = self.fastMorphism.imageSourceGenerators;
+        end
 
     end
 
     methods (Access = protected)
 
         function sfm = computeSlowFiniteMorphism(self)
-            images = self.fastMorphism.imagesSourceGenerators;
-            % we have the following diagram, that we use to compute the slow finite morphism
-            %
-            % self.source -- snm --> sng
-            %     |                   |
-            %    sfm                 ppm
-            %     |                   |
-            %     v                   v
-            % self.target -- tnm --> tng
-            snm = self.source.niceMorphism;
-            sng = snm.image;
-            %
+            images = self.fastMorphism.imageSourceGenerators;
             tnm = self.target.niceMorphism;
-            prmImages = cellfun(@(g) tnm.imageElement(g), images, 'uniform', 0);
-            prmSource = self.source.niceMorphism.image;
-            prmTarget = self.target.niceMorphism.image;
-            m = self.source.morphismByImages(prmImages
+            tng = tnm.target;
+            prmImages = cellfun(@(g) tnm.preimageElement(g), images, 'uniform', 0);
+            pm = self.source.morphismByImages(tng, prmImages);
+            sfm = pm.andThen(tnm.inverse);
         end
 
     end
 
-end
+    methods % Implementations
+
+        % FiniteMorphism
+
+        function s = preimageRepresentative(self, t)
+            s = self.slowFiniteMorphism.preimageRepresentative(t);
+        end
+
+        function S = preimageGroup(self, T)
+            S = self.slowFiniteMorphism.preimageGroup(T);
+        end
+
+        function t = imageElement(self, s)
+            t = self.fastMorphism.imageElement(s);
+        end
+
+    end
 
 end
