@@ -11,7 +11,7 @@ function grp = DihedralGroup(n)
     if n == 1
         grp = replab.SymmetricGroup(2);
     elseif n == 2
-        error('Not a subgroup of Sn')
+        grp = replab.KleinFourGroup;
     else
         g1 = fliplr(1:n);
         g2 = [2:n 1];
