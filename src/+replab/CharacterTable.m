@@ -18,8 +18,10 @@ classdef CharacterTable < replab.Obj
     properties (SetAccess = protected)
         group % (`+replab.FiniteGroup`): Group represented by character table
         classes % (`.ConjugacyClasses`): Conjugacy classes of `.group`
-        irreps % (cell(1, nClasses) of ``[]`` or `.RepByImages`): Explicit matrix representations (can contain empty values)
+        classNames % (cell(1,nClasses) of charstring): Names of conjugacy classes
+        irrepNames % (cell(1,nIrreps) of charstring): Names of the irreducible representations/characters
         characters % (`.cyclotomic` (nClasses, nClasses)): Character values
+        irreps % (cell(1, nClasses) of ``[]`` or `.RepByImages`): Explicit matrix representations (can contain empty values)
     end
 
 % $$$     methods (Static)
@@ -53,6 +55,27 @@ classdef CharacterTable < replab.Obj
             self.classes = classes;
             self.irreps = irreps;
             self.characters = characters;
+            assert(classes.nClasses == size(characters, 2));
+            orders = [];
+            numbers = [];
+            classNames = cell(1, classes.nClasses);
+            for i = 1:classes.nClasses
+                c = classes.classes{i};
+                o = group.elementOrder(c.representative);
+                j = find(orders == o);
+                if isempty(j)
+                    j = length(orders) + 1;
+                    orders(j) = o;
+                    numbers(j) = 1;
+                else
+                    numbers(j) = numbers(j) + 1;
+                end
+                classNames{i} = sprintf('%d%s', o, char('a' + numbers(j) - 1));
+            end
+            self.classNames = classNames;
+            nIrreps = size(self.characters, 2);
+            assert(nIrreps == classes.nClasses);
+            self.irrepNames = arrayfun(@(i) sprintf('X.%d', i), 1:nIrreps, 'uniform', 0);
         end
 
         function s = headerStr(self)
@@ -61,6 +84,50 @@ classdef CharacterTable < replab.Obj
                 group_str = [lower(group_str(1)), group_str(2:end)];
             end
             s = sprintf(['Character table for ', group_str]);
+        end
+
+        function strings = centralizerSizeTable(self)
+            primes = unique(double(factor(self.group.order)));
+            nC = self.classes.nClasses;
+            strings = cell(length(primes), nC+1);
+            for i = 1:length(primes)
+                strings{i,1} = sprintf('%d', primes(i));
+            end
+            for i = 1:nC
+                c = self.classes.classes{i};
+                f = double(factor(c.representativeCentralizer.order));
+                for j = 1:length(primes)
+                    s = sum(f == primes(j));
+                    if s == 0
+                        strings{j,i+1} = '.';
+                    else
+                        strings{j,i+1} = sprintf('%d', sum(f == primes(j)));
+                    end
+                end
+            end
+        end
+
+        function lines = longStr(self, maxRows, maxColumns)
+            ct = replab.str.CyclotomicTable(self.characters);
+            primes = unique(double(factor(self.group.order)));
+            m = self.classes.powerMaps(primes);
+            nC = self.classes.nClasses;
+            powerMaps = cell(length(primes)+1, nC + 1);
+            powerMaps{1,1} = '';
+            powerMaps(1,2:end) = self.classNames;
+            for i = 1:length(primes)
+                powerMaps{i+1,1} = sprintf('%dP', primes(i));
+                for j = 1:nC
+                    powerMaps{i+1,j+1} = self.classNames{m(i,j)};
+                end
+            end
+            chars = horzcat(self.irrepNames(:), ct.strings);
+            cst = self.centralizerSizeTable;
+            sep = repmat({''}, 1, nC+1);
+            t = replab.str.Table(vertcat(cst, sep, powerMaps, sep, chars), 'colAlign', repmat('r', 1, nC+1));
+            lines1 = strsplit(t.format(maxRows, maxColumns), '\n');
+            lines2 = arrayfun(@(i) sprintf(' %s = %s', ct.variables{i}, num2str(ct.values(i))), 1:length(ct.variables), 'uniform', 0);
+            lines = vertcat(lines1(:), {''}, lines2(:));
         end
 
     end

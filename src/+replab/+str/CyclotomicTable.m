@@ -29,15 +29,17 @@ classdef CyclotomicTable < replab.Str
             self.values = replab.cyclotomic.zeros(1, 0);
             self.hashes = zeros(1, 0);
             self.strings = cell(size(matrix));
+            E4 = replab.cyclotomic.E(4);
+            mE4 = -E4;
             for i = 1:size(matrix, 1)
                 for j = 1:size(matrix, 2)
                     c = matrix(i,j);
-                    if c == 1i
-                        self.strings{i,j} = 'i';
-                    elseif c == -1i
-                        self.strings{i,j} = '-i';
+                    if c == E4
+                        self.strings{i,j} = 'i ';
+                    elseif c == mE4
+                        self.strings{i,j} = '-i ';
                     elseif c.isWhole
-                        self.strings{i,j} = sprintf('%d', double(c));
+                        self.strings{i,j} = sprintf('%d ', double(c));
                     else
                         [ind negate conjugate] = self.find(matrix(i, j));
                         s = self.variables{ind};
@@ -55,6 +57,13 @@ classdef CyclotomicTable < replab.Str
             end
         end
 
+        function lines = longStr(self, maxRows, maxColumns)
+            coeffTable = replab.str.Table(self.strings, 'colAlign', repmat('r',1,size(self.strings,2)));
+            tableLines = strsplit(coeffTable.format(maxRows, maxColumns), '\n');
+            varLines = arrayfun(@(i) sprintf(' %s = %s', self.variables{i}, num2str(self.values(i))), 1:length(self.variables), 'uniform', 0);
+            lines = vertcat(tableLines(:), varLines(:));
+        end
+
         function [ind negate conjugate] = find(self, c)
             for negate = [false true]
                 c1 = c;
@@ -68,9 +77,11 @@ classdef CyclotomicTable < replab.Str
                     end
                     h = c2.hash;
                     ind = find(self.hashes == h);
-                    ind = ind(find(self.values(ind) == c2));
                     if ~isempty(ind)
-                        return
+                        ind = ind(find(self.values(ind) == c2));
+                        if ~isempty(ind)
+                            return
+                        end
                     end
                 end
             end
