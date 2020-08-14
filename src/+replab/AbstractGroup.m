@@ -113,6 +113,9 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %   generatorNames (cell(1,\*) of charstring): Generator names
         %   permutationGroup (`.PermutationGroup`): Permutation group realization of this abstract group
         %   relators (cell(1,\*) of charstring, optional): Relators
+            if isempty(relators)
+                assert(isempty(generatorNames), 'We do not support free groups.');
+            end
             self.type = self;
             self.groupId = replab.globals.nextUniqueId;
             self.identity = '1';
@@ -153,9 +156,13 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
         function s = presentationString(self)
             r = self.relators;
-            gens = strjoin(self.generatorNames, ', ');
-            rels = strjoin(self.relators, ' = ');
-            s = sprintf('< %s | %s = 1 >', gens, rels);
+            if isempty(self.relators)
+                s = '< | >'; % empty presentation
+            else
+                gens = strjoin(self.generatorNames, ', ');
+                rels = strjoin(self.relators, ' = ');
+                s = sprintf('< %s | %s = 1 >', gens, rels);
+            end
         end
 
         function letters = toLetters(self, word)
