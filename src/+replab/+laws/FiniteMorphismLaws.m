@@ -19,7 +19,7 @@ classdef FiniteMorphismLaws < replab.laws.MorphismLaws
         end
 
         function isoLaws = laws_toIsomorphism(self)
-            if self.morphism.kernel.isTrivial
+            if self.morphism.kernel.isTrivial && ~isa(self.morphism, 'replab.Isomorphism')
                 isoLaws = self.morphism.toIsomorphism.laws;
             else
                 isoLaws = replab.laws.Collection(cell(1, 0));
@@ -46,7 +46,7 @@ classdef FiniteMorphismLaws < replab.laws.MorphismLaws
        function law_preimageGroup_(self)
            K1 = self.morphism.preimageGroup(self.T.trivialSubgroup);
            K2 = self.morphism.kernel;
-           assertEqual(K1, K2);
+           assertTrue(K1 == K2);
        end
 
        function law_imageSourceGenerators_(self)
@@ -60,7 +60,7 @@ classdef FiniteMorphismLaws < replab.laws.MorphismLaws
 
        function law_image_(self)
             img = self.T.subgroup(self.morphism.imageSourceGenerators);
-            assertEqual(img, self.morphism.image);
+            assertTrue(img == self.morphism.image);
         end
 
         function law_imageGroup_S(self, s)

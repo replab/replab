@@ -34,10 +34,10 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
         % FiniteMorphism
 
         function s = preimageRepresentative(self, t)
-            s = self.preimageElement(s);
+            s = self.preimageElement(t);
         end
 
-        function S = preimageGroup(T)
+        function S = preimageGroup(self, T)
             S = self.inverse.imageGroup(T);
         end
 

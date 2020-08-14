@@ -10,7 +10,7 @@ classdef PermToFiniteGroup < replab.FiniteMorphism
 
     methods
 
-        function self = PermToFinite(source, target, images)
+        function self = PermToFiniteGroup(source, target, images)
         % Constructs a morphism from a permutation group to a finite group
         %
         % Args:
@@ -57,7 +57,7 @@ classdef PermToFiniteGroup < replab.FiniteMorphism
             images = self.fastMorphism.imageSourceGenerators;
             tnm = self.target.niceMorphism;
             tng = tnm.target;
-            prmImages = cellfun(@(g) tnm.preimageElement(g), images, 'uniform', 0);
+            prmImages = cellfun(@(g) tnm.imageElement(g), images, 'uniform', 0);
             pm = self.source.morphismByImages(tng, prmImages);
             sfm = pm.andThen(tnm.inverse);
         end

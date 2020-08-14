@@ -1,8 +1,8 @@
 classdef FiniteIsomorphismWrapper < replab.FiniteIsomorphism
 % Wraps a finite morphism which happens to be injective, and restricts its target
 
-    properties (SetAccess = true)
-        finiteMorphism
+    properties (SetAccess = protected)
+        finiteMorphism % (`+replab.FiniteMorphism`): Wrapped finite morphism that happens to have trivial kernel
     end
 
     methods
@@ -35,8 +35,8 @@ classdef FiniteIsomorphismWrapper < replab.FiniteIsomorphism
 
         % Isomorphism
 
-        function s = preimageElement(t)
-            s = self.finiteMorphism.preimageRepresentative(self, t);
+        function s = preimageElement(self, t)
+            s = self.finiteMorphism.preimageRepresentative(t);
         end
 
         % FiniteMorphism

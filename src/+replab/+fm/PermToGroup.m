@@ -33,7 +33,7 @@ classdef PermToGroup < replab.Morphism
         function c = computeChain(self)
             n = self.source.domainSize;
             % TODO: optimize ChainWithImages by using deterministic Schreier-Sims while comparing orbits
-            c = replab.bsgs.ChainWithImages.make(n, self.target, self.source.generators, self.images, [], ...
+            c = replab.bsgs.ChainWithImages.make(n, self.target, self.source.generators, self.imageSourceGenerators, [], ...
                                                  self.source.chain.base, self.source.order);
         end
 
