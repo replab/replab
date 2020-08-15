@@ -262,8 +262,8 @@ classdef UndirectedGraph < replab.graph.Graph
         %   deg (double (1,\*)): list of degrees
         %
         % Example:
-        %   >>> replab.UndirectedGraph.fromEdges([1 3]).degrees
-        %     1     0     1
+        %   >>> replab.UndirectedGraph.fromEdges([1 3]).secondOrderDegree(1)
+        %     1
 
             assert((numel(v) == 1) && (v >= 0) && (v <= self.nVertices) && isequal(v, round(v)), ...
                 ['No vertex number ', num2str(v)]);

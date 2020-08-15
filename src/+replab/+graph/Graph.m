@@ -148,7 +148,7 @@ classdef Graph < replab.Obj
         %   deg (double (1,\*)): list of degrees
         %
         % Example:
-        %   >>> replab.UndirectedGraph.fromEdges([1 3]).degrees
+        %   >>> replab.UndirectedGraph.fromEdges([1 3]).secondOrderDegrees
         %     1     0     1
 
             deg2 = arrayfun(@(x) self.secondOrderDegree(x), [1:self.nVertices]);
