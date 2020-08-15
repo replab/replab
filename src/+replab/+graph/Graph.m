@@ -128,6 +128,16 @@ classdef Graph < replab.Obj
             error('abstract');
         end
         
+        function deg = degrees(self)
+        % Returns the degrees of all vertices
+            error('abstract');
+        end
+        
+        function deg = degree(self, v)
+        % Returns the degrees of vertex v
+            error('abstract');
+        end
+        
         function ok = isBipartite(self)
         % Tests if a graph is bipartite
         %

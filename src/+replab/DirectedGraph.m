@@ -213,6 +213,43 @@ classdef DirectedGraph < replab.graph.Graph
             adj = full(adj);
         end
         
+        function deg = degrees(self)
+        % Returns the degrees of all vertices
+        %
+        % Args:
+        %   graph (`.Graph`)
+        %
+        % Returns:
+        %   deg (double (1,\*)): list of degrees
+        %
+        % Example:
+        %   >>> replab.DirectedGraph.fromEdges([1 3]).degrees
+        %     1     0     1
+        
+            deg = sum(self.adjacencyMatrix()) + sum(self.adjacencyMatrix().');
+        end
+        
+        function deg = degree(self, v)
+        % Returns the degrees of vertex v
+        %
+        % Args:
+        %   graph (`.Graph`)
+        %   v (integer) : vertex number
+        %
+        % Returns:
+        %   deg (double (1,\*)): list of degrees
+        %
+        % Example:
+        %   >>> replab.DirectedGraph.fromEdges([1 3; 1 4]).degrees(1)
+        %     2
+            
+            assert(all(v >= 0) && all(v <= self.nVertices) && isequal(v, round(v)), ...
+                ['No vertex number ', num2str(v)]);
+            
+            adj = self.adjacencyMatrix();
+            deg = sum(adj(v,:)) + sum(adj(:,v).');
+        end
+        
         function L = computeLaplacian(self)
         % Computes the graph Laplacian
         %
