@@ -59,6 +59,14 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
         end
 
         function ok = test(self, l, prev, ul)
+        % Tests whether the partial assignment is plausible
+        %
+        % This function makes use of the theory presented in "Graph
+        % Isomorphisms and Automorphisms via Spectral Signatures" by Dan
+        % Raviv, Ron Kimmel and Alfred M. Bruckstein, doi:10.1109/TPAMI.2012.260
+        %
+        % This function is an overload of `.Backtrack.test`
+            
             % Here is the candidate permutation
             candidate = prev(ul);
 
