@@ -159,6 +159,38 @@ classdef Graph < replab.Obj
             error('abstract');
         end
         
+        function degN = degreesSequences(self)
+        % Returns the degrees sequence for all vertices
+        %
+        % In each sequence, a vertex can only be counted once.
+        %
+        % Args:
+        %   graph (`.Graph`)
+        %
+        % Returns:
+        %   degN (integer (\*,\*)): list of degrees sequences
+        %
+        % Example:
+        %   >>> replab.UndirectedGraph.fromEdges([1 3]).degreesSequences
+        %     1
+        %     0
+        %     1
+
+            degNs = arrayfun(@(x) self.degreesSequence(x), [1:self.nVertices], 'UniformOutput', false);
+            
+            maxLength = max(cellfun(@(x) length(x), degNs));
+            
+            degN = zeros(self.nVertices, maxLength);
+            for i = 1:self.nVertices
+                degN(i,1:length(degNs{i})) = degNs{i};
+            end
+        end
+        
+        function degN = degreesSequence(self, v)
+        % Returns the degrees sequence for all vertices
+            error('abstract');
+        end
+        
         function ok = isBipartite(self)
         % Tests if a graph is bipartite
         %

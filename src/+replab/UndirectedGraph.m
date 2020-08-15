@@ -273,6 +273,38 @@ classdef UndirectedGraph < replab.graph.Graph
             deg2 = sum(sum(adj(sel,:))~=0);
         end
         
+        function degN = degreesSequence(self, v)
+        % Returns the degrees sequence for all vertices
+        %
+        % Each vertex can only be counted once.
+        %
+        % Args:
+        %   graph (`.Graph`)
+        %
+        % Returns:
+        %   degN (integer (1,\*)): sequence of degrees
+        %
+        % Example:
+        %   >>> replab.UndirectedGraph.fromEdges([1 3]).degreesSequence(1)
+        %     1
+        
+            adj = self.adjacencyMatrix;
+            adj = abs(adj);
+            sel = (adj(v,:) ~= 0);
+            
+            co = 1;
+            selBefore = false(1,self.nVertices);
+            degN = sum(sel);
+            while sum(sel) > sum(selBefore)
+                co = co + 1;
+                selBefore = selBefore | sel;
+                
+                sel = (sum(adj(sel,:) ~= 0) ~= 0);
+                degN(co) = sum(sel & (~selBefore));
+            end
+            degN = degN(1:end-1);
+        end
+        
         function L = computeLaplacian(self)
         % Computes the graph Laplacian
         

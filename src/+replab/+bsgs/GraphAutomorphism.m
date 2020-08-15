@@ -33,11 +33,10 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
                 invariant2 = graph.degrees;
                 invariant3 = graph.secondOrderDegrees;
 
-                if length(unique(invariant2)) > 1
-                    invariants = [invariants, invariant2(:)];
-                end
-                if length(unique(invariant3)) > 1
-                    invariants = [invariants, invariant3(:)];
+                % If any of these degree-related invariant is useful, we
+                % compute a more complete degree-related invariant
+                if (length(unique(invariant2)) > 1) || (length(unique(invariant3)) > 1)
+                    invariants = [invariants, graph.degreesSequences];
                 end
             end
             
