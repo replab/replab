@@ -17,7 +17,30 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
             if nargin < 2 || isempty(knownSubgroup)
                 knownSubgroup = [];
             end
+            
+            % We compute a group 
             group = replab.S(graph.nVertices);
+            
+            % Try to make the group smaller by taking into account some
+            % vertices invariants
+            invariant1 = graph.colors;
+            if numel(invariant1) > 1
+                group = group.vectorStabilizer(invariant1(:).');
+            end
+            
+            % Additional invariants
+            if graph.nVertices > 10
+                invariant2 = graph.degrees;
+                invariant3 = graph.secondOrderDegrees;
+
+                if length(unique(invariant2)) > 1
+                    group = group.vectorStabilizer(invariant2(:).');
+                end
+                if length(unique(invariant3)) > 1
+                    group = group.vectorStabilizer(invariant3(:).');
+                end
+            end
+            
             base = 1:graph.nVertices;
             self@replab.bsgs.Backtrack(group, base, knownSubgroup, knownSubgroup, debug);
             self.graph = graph;
@@ -137,14 +160,8 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
         end
 
         function ok = prop(self, g)
-            ok = false;
-            if numel(self.graph.colors) > 1
-                ok = isequal(self.graph.colors(g), self.graph.colors);
-            end
-            if ~ok
-                adj = self.graph.adjacencyMatrix;
-                ok = isequal(adj, adj(g, g));
-            end
+            adj = self.graph.adjacencyMatrix;
+            ok = isequal(adj, adj(g, g));
         end
 
     end

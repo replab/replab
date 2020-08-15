@@ -128,6 +128,37 @@ classdef Graph < replab.Obj
             error('abstract');
         end
         
+        function deg = degrees(self)
+        % Returns the degrees of all vertices
+            error('abstract');
+        end
+        
+        function deg = degree(self, v)
+        % Returns the degrees of vertex v
+            error('abstract');
+        end
+        
+        function deg2 = secondOrderDegrees(self)
+        % Returns the number of vertices at a distance 2 of all vertices
+        %
+        % Args:
+        %   graph (`.Graph`)
+        %
+        % Returns:
+        %   deg (double (1,\*)): list of degrees
+        %
+        % Example:
+        %   >>> replab.UndirectedGraph.fromEdges([1 3]).secondOrderDegrees
+        %     1     0     1
+
+            deg2 = arrayfun(@(x) self.secondOrderDegree(x), [1:self.nVertices]);
+        end
+        
+        function deg2 = secondOrderDegree(self, v)
+        % Returns the number of vertices at a distance 2 of vertex v
+            error('abstract');
+        end
+        
         function ok = isBipartite(self)
         % Tests if a graph is bipartite
         %
