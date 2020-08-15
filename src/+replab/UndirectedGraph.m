@@ -250,6 +250,28 @@ classdef UndirectedGraph < replab.graph.Graph
             adj = self.adjacencyMatrix();
             deg = sum(adj(v,:));
         end
+                
+        function deg2 = secondOrderDegree(self, v)
+        % Returns the number of vertices at a distance 2 of all vertices
+        %
+        % Args:
+        %   graph (`.Graph`)
+        %   v (integer) : vertex number
+        %
+        % Returns:
+        %   deg (double (1,\*)): list of degrees
+        %
+        % Example:
+        %   >>> replab.UndirectedGraph.fromEdges([1 3]).degrees
+        %     1     0     1
+
+            assert((numel(v) == 1) && (v >= 0) && (v <= self.nVertices) && isequal(v, round(v)), ...
+                ['No vertex number ', num2str(v)]);
+
+            adj = self.adjacencyMatrix();
+            sel = (adj(v,:) ~= 0);
+            deg2 = sum(sum(adj(sel,:))~=0);
+        end
         
         function L = computeLaplacian(self)
         % Computes the graph Laplacian
