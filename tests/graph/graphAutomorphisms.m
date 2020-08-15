@@ -9,9 +9,9 @@ function test_suite = graphAutomorphisms()
 end
 
 function test_Frucht
-    MFrucht = [0  1  0  0  0  0  0  0  0  0  0  1
+    MFrucht = [0  1  1  0  0  0  0  0  0  0  0  1
                1  0  1  1  0  0  0  0  0  0  0  0
-               0  1  0  0  0  0  0  0  0  0  1  0
+               1  1  0  0  0  0  0  0  0  0  1  0
                0  1  0  0  1  1  0  0  0  0  0  0
                0  0  0  1  0  1  0  1  0  0  0  0
                0  0  0  1  1  0  0  0  0  1  0  0
