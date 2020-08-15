@@ -23,9 +23,9 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
             
             % Try to make the group smaller by taking into account some
             % vertices invariants
-            invariant1 = graph.colors;
-            if numel(invariant1) > 1
-                group = group.vectorStabilizer(invariant1(:).');
+            invariants = [];
+            if numel(graph.colors) > 1
+                invariants = graph.colors(:);
             end
             
             % Additional invariants
@@ -34,12 +34,18 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
                 invariant3 = graph.secondOrderDegrees;
 
                 if length(unique(invariant2)) > 1
-                    group = group.vectorStabilizer(invariant2(:).');
+                    invariants = [invariants, invariant2(:)];
                 end
                 if length(unique(invariant3)) > 1
-                    group = group.vectorStabilizer(invariant3(:).');
+                    invariants = [invariants, invariant3(:)];
                 end
             end
+            
+            if ~isempty(invariants) > 1
+                [~, ~, invariants] = unique(invariants, 'rows');
+                group = group.vectorStabilizer(invariants.');
+            end
+            
             
             base = 1:graph.nVertices;
             self@replab.bsgs.Backtrack(group, base, knownSubgroup, knownSubgroup, debug);
