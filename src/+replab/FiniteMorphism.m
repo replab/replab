@@ -18,7 +18,7 @@ classdef FiniteMorphism < replab.Morphism
         end
 
         function I = computeImage(self)
-            I = self.imageGroup(self.source);
+            I = self.target.subgroup(self.imageSourceGenerators);
         end
 
         function I = computeImageSourceGenerators(self)
