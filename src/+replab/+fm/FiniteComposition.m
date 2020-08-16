@@ -10,10 +10,6 @@ classdef FiniteComposition < replab.FiniteMorphism & replab.fm.Composition
             s = self.first.preimageRepresentative(self.second.preimageRepresentative(t));
         end
 
-        function S = preimageGroup(self, T)
-            S = self.first.preimageGroup(self.second.preimageGroup(T));
-        end
-
         function t = imageElement(self, s)
             t = self.second.imageElement(self.first.imageElement(s));
         end

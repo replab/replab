@@ -72,10 +72,6 @@ classdef PermToFiniteGroup < replab.FiniteMorphism
             s = self.slowFiniteMorphism.preimageRepresentative(t);
         end
 
-        function S = preimageGroup(self, T)
-            S = self.slowFiniteMorphism.preimageGroup(T);
-        end
-
         function t = imageElement(self, s)
             t = self.fastMorphism.imageElement(s);
         end

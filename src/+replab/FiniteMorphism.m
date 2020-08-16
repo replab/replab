@@ -101,7 +101,12 @@ classdef FiniteMorphism < replab.Morphism
         %
         % Returns:
         %   `.FiniteGroup`: Subgroup of `.source`
-            error('Abstract');
+            if T.isTrivial
+                S = self.kernel;
+            else
+                preimages = cellfun(@(t) self.preimageRepresentative(t), T.generators, 'uniform', 0);
+                S = self.kernel.closure(self.source.subgroup(preimages));
+            end
         end
 
     end

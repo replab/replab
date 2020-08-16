@@ -38,7 +38,8 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
         end
 
         function S = preimageGroup(self, T)
-            S = self.inverse.imageGroup(T);
+            preimages = cellfun(@(g) self.preimageElement(g), T.generators, 'uniform', 0);
+            S = self.source.subgroupWithGenerators(images); % do not need to check for non-generators
         end
 
         function T = imageGroup(self, S)
