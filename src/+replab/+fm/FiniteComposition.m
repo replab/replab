@@ -14,10 +14,6 @@ classdef FiniteComposition < replab.FiniteMorphism & replab.fm.Composition
             t = self.second.imageElement(self.first.imageElement(s));
         end
 
-        function T = imageGroup(self, S)
-            T = self.second.imageGroup(self.first.imageGroup(S));
-        end
-
     end
 
     methods (Access = protected)

@@ -11,14 +11,6 @@ classdef FiniteIsomorphismComposition < replab.FiniteIsomorphism & replab.fm.Fin
             s = first.preimageElement(second.preimageElement(t));
         end
 
-        function S = preimageGroup(self, T)
-            S = preimageGroup@replab.fm.FiniteComposition(self, T);
-        end
-
-        function T = imageGroup(self, S)
-            T = imageGroup@replab.fm.FiniteComposition(self, S);
-        end
-
         function s = preimageRepresentative(self, t)
             s = preimageRepresentative@replab.fm.FiniteComposition(self, t);
         end

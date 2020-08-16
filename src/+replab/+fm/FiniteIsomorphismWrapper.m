@@ -45,13 +45,12 @@ classdef FiniteIsomorphismWrapper < replab.FiniteIsomorphism
             s = self.finiteMorphism.preimageRepresentative(t);
         end
 
-        function S = preimageGroup(self, T)
-            S = self.finiteMorphism.preimageGroup(T);
-        end
-
-        % imageGroup
         function T = imageGroup(self, S)
             T = self.finiteMorphism.imageGroup(S);
+        end
+
+        function S = preimageGroup(self, T)
+            S = self.finiteMorphism.preimageGroup(T);
         end
 
     end
