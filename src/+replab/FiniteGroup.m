@@ -870,7 +870,60 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             f = self.morphismByImages(self, target, generatorImages);
         end
 
-        function m = morphismByImages(self, target, generatorImages)
+        function l = isMorphismByImages(self, target, varargin)
+        % Checks whether the given images describe a group morphism
+        %
+        % The calling convention of this method is the same as `.morphismByImages`, except that ``nChecks`` is missing.
+        %
+        % Args:
+        %   target (`+replab.Group`): Target group
+        %
+        % Keyword Args:
+        %   preimages (cell(1, \*) of ``self`` elements): Preimages of the morphism which generate ``self``, defaults to ``self.generators``
+        %   images (cell(1, \*) of ``target`` elements): Images of the given preimages, defaults to ``target.generators`` if ``target`` is a `.FiniteGroup`
+        %
+        % Returns:
+        %   logical: True if the given images define a morphism
+            assert(isa(target, 'replab.Group'));
+            preimages = self.generators;
+            if isa(target, 'replab.FiniteGroup')
+                images = target.generators;
+            else
+                images = [];
+            end
+            ind = 1;
+            while ind <= length(varargin)
+                key = varargin{ind};
+                assert(ischar(key), 'Named arguments must be key-value pairs, where the key in position %d is a charstring', ind);
+                ind = ind + 1;
+                assert(ind <= length(varargin), 'Named argument key %s must be followed by value');
+                value = varargin{ind};
+                ind = ind + 1;
+                switch key
+                  case 'preimages'
+                    preimages = values;
+                  case 'images'
+                    images = values;
+                  otherwise
+                    error('Invalid key %s', key);
+                end
+            end
+            assert(self.isTrivial || ~isempty(images));
+            abg = source.abstractGroupIsomorphism.image;
+
+            if sameGens
+                source = self;
+            else
+                source = self.subgroup(preimages);
+                assert(self == source, 'The preimages must generate the source group');
+            end
+            l = abg.isMorphismByImages(target, 'preimages',
+
+            m.target.
+
+        end
+
+        function m = morphismByImages(self, target, varargin)
         % Constructs a morphism to a group using images of generators
         %
         % The type of the morphism depends on the type of ``target``:
@@ -887,11 +940,62 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Args:
         %   target (`.Group` or `.FiniteGroup`): Target of the morphism, the morphism image is a subgroup of this
-        %   generatorImages (cell(1, \*) of target elements): Images of this group generators
+        %
+        % Keyword Args:
+        %   preimages (cell(1, \*) of ``self`` elements): Preimages of the morphism which generate ``self``, defaults to ``self.generators``
+        %   images (cell(1, \*) of ``target`` elements): Images of the given preimages, defaults to ``target.generators`` if ``target`` is a `.FiniteGroup`
+        %   nChecks (integer or ``inf``): Number of randomized image checks to perform, if ``inf`` computes and verifies a presentation of ``self``
         %
         % Returns:
         %   `.Morphism` or `.FiniteMorphism`: The constructed morphism
-            error('Abstract');
+            preimages = self.generators;
+            if isa(target, 'replab.FiniteGroup')
+                images = target.generators;
+            else
+                images = [];
+            end
+            nChecks = replab.globals.morphismNChecks;
+            if length(varargin) == 1 && ~ischar(varargin{1})
+                images = varargin{1};
+            else
+                ind = 1;
+                while ind <= length(varargin)
+                    key = varargin{ind};
+                    assert(ischar(key), 'Named arguments must be key-value pairs, where the key in position %d is a charstring', ind);
+                    ind = ind + 1;
+                    assert(ind <= length(varargin), 'Named argument key %s must be followed by value');
+                    value = varargin{ind};
+                    ind = ind + 1;
+                    switch key
+                      case 'preimages'
+                        preimages = values;
+                      case 'images'
+                        images = values;
+                      case 'nChecks'
+                        nChecks = value;
+                      otherwise
+                        error('Invalid key %s', key);
+                    end
+                end
+            end
+            if isinf(nChecks)
+
+
+            end
+            m = self.morphismByImages_(target, preimages, images);
+            if isfinite(nChecks) && nChecks > 0
+                for i = 1:nChecks
+                    s1 = self.sample;
+                    s2 = self.sample;
+                    s12 = self.compose(s1, s2);
+                    t1 = m.imageElement(s1);
+                    t2 = m.imageElement(s2);
+                    t12 = m.imageElement(s12);
+                    t1_2 = target.compose(t1, t2);
+                    assert(target.eqv(t12, t1_2), 'The given images do not define a morphism');
+                end
+            end
+
         end
 
         function m = isomorphismByImages(self, imageSuperGroup, generatorImages, imageGroup)
@@ -909,6 +1013,28 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         end
 
     end
+
+    methods (Access = protected)
+
+        function m = morphismByImages_(self, target, preimages, images)
+        % Implements the `.morphismByImages` method
+        %
+        % Does not perform checks
+            error('Abstract');
+        end
+
+        function l = isMorphismByImages_(self, target, preimages, images)
+            sameGens = all(arrayfun(@(i) self.eqv(preimages{i}, self.generator(i)), 1:self.nGenerators));
+            if ~sameGens
+                source = self.subgroup(preimages);
+                l = source.isMorphismByImages_(target, preimages, images);
+
+            elseif isa(self, 'replab.AbstractGroup')
+            end
+
+
+    end
+
 
     methods % Representations
 

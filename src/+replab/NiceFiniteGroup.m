@@ -226,11 +226,16 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         % Relation to other groups
 
+    end
+
+    methods (Access = protected)
+
         % Morphisms
 
-        function m = morphismByImages(self, target, images)
+        function m = morphismByImages_(self, target, preimages, images, nChecks)
             first = self.niceMorphism; % maps this to the perm group
-            second = self.niceGroup.morphismByImages(target, images); % from the perm group to the images
+            preimagesNG = cellfun(@(g) self.niceMorphism.imageElement(g), preimages, 'uniform', 0);
+            second = self.niceGroup.morphismByImages_(target, preimagesNG, images, nChecks); % from the perm group to the images
             m = first.andThen(second);
         end
 

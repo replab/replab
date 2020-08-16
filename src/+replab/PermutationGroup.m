@@ -274,6 +274,24 @@ classdef PermutationGroup < replab.FiniteGroup
 
     end
 
+    methods (Access = protected)
+
+        % Morphisms
+
+        function m = morphismByImages_(self, target, preimages, images, nChecks)
+            assert(length(preimages) == self.nGenerators);
+            assert(all(arrayfun(@(i) self.eqv(preimages{i}, self.generator(i)), 1:self.nGenerators)));
+            if isa(target, 'replab.PermutationGroup')
+                m = replab.fm.PermToPerm(self, target, images);
+            elseif isa(target, 'replab.FiniteGroup')
+                m = replab.fm.PermToFiniteGroup(self, target, images);
+            else
+                m = replab.fm.PermToGroup(self, target, images);
+            end
+        end
+
+    end
+
     methods % Implementations
 
         % replab.Str
@@ -477,18 +495,6 @@ classdef PermutationGroup < replab.FiniteGroup
 
         function res = hasSameTypeAs(self, rhs)
             res = isa(rhs, 'replab.PermutationGroup') && (self.type.domainSize == rhs.type.domainSize);
-        end
-
-        % Morphisms
-
-        function m = morphismByImages(self, target, images)
-            if isa(target, 'replab.PermutationGroup')
-                m = replab.mrp.PermToPerm(self, target, images);
-            elseif isa(target, 'replab.FiniteGroup')
-                m = replab.mrp.PermToFiniteGroup(self, target, images);
-            else
-                m = replab.mrp.PermToGroup(self, target, images);
-            end
         end
 
         % Representations
