@@ -1,11 +1,11 @@
 classdef PermToFiniteGroup < replab.FiniteMorphism
 % Morphism from a permutation group to a finite group
 %
-% Uses a BSGS chain with associated images to compute images of elements, delegating the operation to `+replab.+fm.PermToGroup`, stored
+% Uses a BSGS chain with associated images to compute images of elements, delegating the operation to `+replab.+mrp.PermToGroup`, stored
 % in `.fastMorphism`; the other operations are computed by a round-trip to permutation groups through the nice morphisms.
 
     properties (SetAccess = protected)
-        fastMorphism % (`+replab.fm.PermToGroup`): Fast morphism that only computes images of elements
+        fastMorphism % (`+replab.+mrp.PermToGroup`): Fast morphism that only computes images of elements
     end
 
     methods
@@ -19,7 +19,7 @@ classdef PermToFiniteGroup < replab.FiniteMorphism
         %   images (cell(1,\*) of `.target` elements): Images of the source generators
             self.source = source;
             self.target = target;
-            self.fastMorphism = replab.fm.PermToGroup(source, target, images);
+            self.fastMorphism = replab.mrp.PermToGroup(source, target, images);
         end
 
         function m = slowFiniteMorphism(self)

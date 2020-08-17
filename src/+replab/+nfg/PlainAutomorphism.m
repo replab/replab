@@ -26,7 +26,7 @@ classdef PlainAutomorphism < replab.FiniteIsomorphism
         function m = computeNiceAutomorphism(self)
             permGrp = self.object.niceMorphism.image;
             permImages = cellfun(@(g) self.object.niceMorphism.imageElement(g), self.generatorImages, 'uniform', 0);
-            m = replab.fm.PermToPerm(permGrp, permGrp, permImages);
+            m = replab.mrp.PermToPerm(permGrp, permGrp, permImages);
         end
 
         function m = computeInverse(self)

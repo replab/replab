@@ -96,9 +96,9 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
         function m = computeNiceMorphism(self)
             if self.order <= 65536
-                m = replab.nfg.AbstractGroupIsomorphismEnumeration.make(self);
+                m = replab.mrp.AbstractGroupIsomorphismEnumeration.make(self);
             else
-                m = replab.nfg.AbstractGroupIsomorphismChain(self);
+                m = replab.mrp.AbstractGroupIsomorphismChain(self);
             end
         end
 

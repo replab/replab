@@ -1,9 +1,9 @@
-classdef FiniteComposition < replab.FiniteMorphism & replab.fm.Composition
+classdef FiniteComposition < replab.FiniteMorphism & replab.mrp.Composition
 
     methods
 
         function self = FiniteComposition(second, first)
-            self@replab.fm.Composition(second, first);
+            self@replab.mrp.Composition(second, first);
         end
 
         function s = preimageRepresentative(self, t)

@@ -20,7 +20,7 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
         end
 
         function I = computeInverse(self)
-            I = replab.fm.FiniteInverse(self);
+            I = replab.mrp.FiniteInverse(self);
         end
 
         function K = computeKernel(self)
@@ -59,7 +59,7 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
         %
         % Returns:
         %   `.FiniteIsomorphism`: The identity automorphism on the given group
-            m = replab.fm.FiniteIdentity(group);
+            m = replab.mrp.FiniteIdentity(group);
         end
 
     end

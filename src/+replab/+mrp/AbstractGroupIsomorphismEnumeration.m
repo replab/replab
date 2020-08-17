@@ -1,4 +1,4 @@
-classdef AbstractGroupIsomorphismEnumeration < replab.nfg.AbstractGroupIsomorphism
+classdef AbstractGroupIsomorphismEnumeration < replab.mrp.AbstractGroupIsomorphism
 % Describes an isomorphism from an abstract group to its realization (permutation group) using brute force enumeration
 
     properties
@@ -22,7 +22,7 @@ classdef AbstractGroupIsomorphismEnumeration < replab.nfg.AbstractGroupIsomorphi
         end
 
         function iso1 = withUpdatedSource(self, source1)
-            iso1 = replab.nfg.AbstractGroupIsomorphismEnumeration(source1, self.elements, self.words);
+            iso1 = replab.mrp.AbstractGroupIsomorphismEnumeration(source1, self.elements, self.words);
         end
 
     end
@@ -78,7 +78,7 @@ classdef AbstractGroupIsomorphismEnumeration < replab.nfg.AbstractGroupIsomorphi
                 end
                 l = l + 1;
             end
-            m = replab.nfg.AbstractGroupIsomorphismEnumeration(source, elements, words);
+            m = replab.mrp.AbstractGroupIsomorphismEnumeration(source, elements, words);
         end
 
     end

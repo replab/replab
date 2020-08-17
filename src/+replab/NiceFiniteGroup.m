@@ -59,7 +59,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         end
 
         function m = computeNiceMorphism(self)
-            m = replab.nfg.NiceFiniteGroupIsomorphism(self, self.niceGroup);
+            m = replab.mrp.NiceFiniteGroupIsomorphism(self, self.niceGroup);
         end
 
         function dec = computeDecomposition(self)

@@ -1,4 +1,4 @@
-classdef AbstractGroupIsomorphismChain < replab.nfg.AbstractGroupIsomorphism
+classdef AbstractGroupIsomorphismChain < replab.mrp.AbstractGroupIsomorphism
 % Describes an isomorphism from an abstract group to its realization (permutation group) using a stabilizer chain
 
     methods
@@ -17,7 +17,7 @@ classdef AbstractGroupIsomorphismChain < replab.nfg.AbstractGroupIsomorphism
         end
 
         function iso1 = withUpdatedSource(self, source1)
-            iso1 = replab.nfg.AbstractGroupIsomorphismChain(source1, self.chain);
+            iso1 = replab.mrp.AbstractGroupIsomorphismChain(source1, self.chain);
         end
 
         function c = chain(self)

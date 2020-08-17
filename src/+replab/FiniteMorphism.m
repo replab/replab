@@ -54,7 +54,7 @@ classdef FiniteMorphism < replab.Morphism
         % Returns:
         %   `.FiniteIsomorphism`: The isomorphism
             assert(self.kernel.isTrivial);
-            m = replab.fm.FiniteIsomorphismWrapper(self);
+            m = replab.mrp.FiniteIsomorphismWrapper(self);
         end
 
     end

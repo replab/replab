@@ -1,10 +1,10 @@
-classdef FiniteIdentity < replab.FiniteIsomorphism & replab.fm.Identity
+classdef FiniteIdentity < replab.FiniteIsomorphism & replab.mrp.Identity
 % Identity isomorphism
 
     methods
 
         function self = FiniteIdentity(group)
-            self@replab.fm.Identity(group);
+            self@replab.mrp.Identity(group);
         end
 
     end
