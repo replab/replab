@@ -37,9 +37,9 @@ function indexMatrix = symmetrizeIndexMatrix(indexMatrix, generators, matrixType
         assert(length(generators{i}) == d, 'Generators and indexMatrix dimensions don''t match.');
     end
     assert(isequal(matrixType, 'full') || isequal(matrixType, 'symmetric'), 'The matrix type must be ''full'', ''symmetric''.');
-
+    assert(min(min(indexMatrix)) >= 1, 'Only positive indices are currently supported');
+    
     % We renumber all indices so they match default numbering
-    indexMatrix = indexMatrix - min(min(indexMatrix))+1;
     [values, indices] = unique(indexMatrix(:), 'first');
     invPerm = sparse(values, 1, indices);
     indexMatrix = full(invPerm(indexMatrix));

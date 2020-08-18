@@ -603,6 +603,8 @@ classdef CommutantVar < replab.Str
         % simplification of the matrix of indices so that it is invariant
         % under the group.
         %
+        % Note: at the moment, only positive indices are supported.
+        %
         % Args:
         %     indexMatrix (integer (\*,\*)): matrix with integer values
         %         corresponding to the label of the variable at each
