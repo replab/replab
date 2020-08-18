@@ -7,7 +7,8 @@
 
 % Before using *RepLAB* commands, we must first initialize the library:
 
-run ../../../replab_init
+addpath([pwd, '/../../..']);
+replab_init('verbose', 0);
 
 % ## Only outputs
 %

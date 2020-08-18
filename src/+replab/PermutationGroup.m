@@ -459,8 +459,10 @@ classdef PermutationGroup < replab.FiniteGroup
         function m = morphismByImages(self, target, images)
             if isa(target, 'replab.PermutationGroup')
                 m = replab.fm.PermToPerm(self, target, images);
+            elseif isa(target, 'replab.FiniteGroup')
+                m = replab.fm.PermToFiniteGroup(self, target, images);
             else
-                m = replab.fm.PermToFinite(self, target, images);
+                m = replab.fm.PermToGroup(self, target, images);
             end
         end
 
@@ -575,6 +577,24 @@ classdef PermutationGroup < replab.FiniteGroup
         %   `.PermutationGroup`: The subgroup of this group leaving ``vector`` invariant
             partition = replab.Partition.fromVector(vector);
             sub = self.orderedPartitionStabilizer(partition);
+        end
+
+        function sub = matrixStabilizer(self, matrix)
+        % Returns the permutation subgroup that leaves a given matrix invariant by joint permutation of its rows and columns
+        %
+        % Example:
+        %   >>> S4 = replab.S(4);
+        %   >>> A = [1 1 0 1; 1 1 1 0; 0 1 1 1; 1 0 1 1]; % adjacency matrix of the square
+        %   >>> G = S4.matrixStabilizer(A);
+        %   >>> G.order == 8 % is the dihedral group of order 8
+        %       1
+        %
+        % Args:
+        %   matrix (double(domainSize,domainSize)): Matrix to stabilize under permutation
+        %
+        % Returns:
+        %   `.PermutationGroup`: The subgroup of this group such that every element ``g`` satisfies ``matrix(g,g) == matrix``
+            sub = replab.bsgs.MatrixAutomorphism(self, matrix).subgroup;
         end
 
         function s = setwiseStabilizer(self, set)

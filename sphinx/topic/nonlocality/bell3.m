@@ -2,7 +2,8 @@
 %
 % Let us now turn our attention to the symmetries of the full scenario. We first recall the definitions of part 1.
 
-run ../../../replab_init
+addpath([pwd, '/../../..']);
+replab_init('verbose', 0);
 outputGroup = replab.S(2);
 outputRep = outputGroup.naturalRep;
 inputGroup = replab.S(2);

@@ -2,8 +2,8 @@ classdef MorphismLaws < replab.Laws
 
     properties (SetAccess = protected)
         morphism % (`+replab.Morphism`): Morphism tested
-        S % (`+replab.FiniteGroup`): Source group
-        T % (`+replab.FiniteGroup`): Target group
+        S % (`+replab.Group`): Source group
+        T % (`+replab.Group`): Target group
     end
 
     methods

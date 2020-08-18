@@ -1,5 +1,5 @@
 classdef OrderedPartitionStabilizer < replab.bsgs.Backtrack
-% Computes the unordered partition stabilizer of a group
+% Computes the ordered partition stabilizer of a group
 
     properties
         partition % (`+replab.Partition`): Partition to stabilize

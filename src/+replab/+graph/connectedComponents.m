@@ -6,8 +6,8 @@ function [subsets, componentIndex] = connectedComponents(edges)
 %
 % Note: This function treats vertices numbers as names, hence only assumes
 % the existence of vertices which are linked with other vertices. This
-% contrasts with the `+replab.Graph` class, which includes vertices with no
-% edge.
+% contrasts with the `+replab.UndirectedGraph` class, which includes
+% vertices with no edge.
 %
 % Args:
 %     edges (integer (\n,2)) : array of vertices linked by an edge
@@ -20,11 +20,11 @@ function [subsets, componentIndex] = connectedComponents(edges)
 %         the index of the component to which each vertex belongs
 %
 % Example:
-%     >>> replab.Graph.fromEdges([1 2; 2 6; 3 4]).connectedComponents; % a graph with 6 nodes labelled 1, 2, 3, 4, 6
-%     >>> replab.Graph.fromEdges([1 2; 2 6; 3 4]).connectedComponents; % a graph with 5 nodes labelled 1, 2, 3, 4, 6
+%     >>> replab.UndirectedGraph.fromEdges([1 2; 2 6; 3 4]).connectedComponents; % a graph with 6 nodes labelled 1, 2, 3, 4, 6
+%     >>> replab.UndirectedGraph.fromEdges([1 2; 2 6; 3 4]).connectedComponents; % a graph with 5 nodes labelled 1, 2, 3, 4, 6
 %
 % See also:
-%     `replab.Graph.connectedComponents`
+%     `replab.UndirectedGraph.connectedComponents`
 %     `replab.graph.burningAlgorithmFast`
 %     `replab.graph.burningAlgorithm`
 
