@@ -159,6 +159,67 @@ classdef Graph < replab.Obj
             error('abstract');
         end
         
+        function degN = degreesSequences(self)
+        % Returns the degrees sequence for all vertices
+        %
+        % In each sequence, a vertex can only be counted once.
+        %
+        % Args:
+        %   graph (`.Graph`)
+        %
+        % Returns:
+        %   degN (integer (\*,\*)): list of degrees sequences
+        %
+        % Example:
+        %   >>> replab.UndirectedGraph.fromEdges([1 3]).degreesSequences
+        %     1
+        %     0
+        %     1
+
+            degNs = arrayfun(@(x) self.degreesSequence(x), [1:self.nVertices], 'UniformOutput', false);
+            
+            maxLength = max(cellfun(@(x) length(x), degNs));
+            
+            degN = zeros(self.nVertices, maxLength);
+            for i = 1:self.nVertices
+                degN(i,1:length(degNs{i})) = degNs{i};
+            end
+        end
+        
+        function degN = degreesSequence(self, v)
+        % Returns the degrees sequence for all vertices
+        %
+        % Each vertex can only be counted once. For directed graphs, this
+        % corresponds to the outgoing degree sequence.
+        %
+        % Args:
+        %   graph (`.Graph`)
+        %
+        % Returns:
+        %   degN (integer (1,\*)): sequence of degrees
+        %
+        % Example:
+        %   >>> graph = replab.DirectedGraph.fromEdges([1 3]);
+        %   >>> graph.degreesSequence(1)
+        %     1
+        
+            adj = self.adjacencyMatrix;
+
+            co = 0;
+            selBefore = false(1,self.nVertices);
+            sel = ([1:self.nVertices] == v);
+            degN = [];
+            while sum(sel) > 0
+                co = co + 1;
+                selBefore = selBefore | sel;
+                sel = (sum(adj(sel,:) ~= 0,1) ~= 0);
+                sel = sel & (~selBefore);
+                if any(sel)
+                    degN(co) = sum(sel);
+                end
+            end
+        end
+        
         function ok = isBipartite(self)
         % Tests if a graph is bipartite
         %
@@ -292,6 +353,7 @@ classdef Graph < replab.Obj
                     Kt(co,:,:) = Kt(co,:,:) + permute(exp(-lambda(i)*t)*phi(:,i)*phi(:,i)', [3 1 2]);
                 end
             end
+            %Kt = abs(Kt);
         end
         
         function autoG = automorphismGroup(self)

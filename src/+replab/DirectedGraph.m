@@ -240,7 +240,8 @@ classdef DirectedGraph < replab.graph.Graph
         %   deg (double (1,\*)): list of degrees
         %
         % Example:
-        %   >>> replab.DirectedGraph.fromEdges([1 3; 1 4]).degree(1)
+        %   >>> graph = replab.DirectedGraph.fromEdges([1 3; 1 4]);
+        %   >>> graph.degree(1)
         %     2
             
             assert(all(v >= 0) && all(v <= self.nVertices) && isequal(v, round(v)), ...
@@ -278,7 +279,27 @@ classdef DirectedGraph < replab.graph.Graph
         % The laplacian should be positive semi-definite, so we define it
         % from the equivalent un-directed graph
         
-            M = self.toUndirectedGraph.adjacencyMatrix();
+%             % Here we compute a hermitian Laplacian
+%             M = self.adjacencyMatrix;
+%             selSym = (M == M.');
+%             MSym = M;
+%             MSym(~selSym) = 0;
+%             MAsym = M;
+%             MAsym(selSym) = 0;
+%             MH = MSym + 1i*(MAsym - MAsym.');
+%             
+%             D = diag(sum(M + M.'));
+%             
+%             colors = abs(self.colors);
+%             if numel(colors) == 1
+%                 colors = colors*ones(1,self.nVertices);
+%             end
+%             
+%             L = D - MH + diag(colors);
+% 
+%             return;
+            
+            M = self.toUndirectedGraph.adjacencyMatrix;
             D = diag(sum(M));
             
             colors = abs(self.colors);

@@ -23,9 +23,9 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
             
             % Try to make the group smaller by taking into account some
             % vertices invariants
-            invariant1 = graph.colors;
-            if numel(invariant1) > 1
-                group = group.vectorStabilizer(invariant1(:).');
+            invariants = [];
+            if numel(graph.colors) > 1
+                invariants = graph.colors(:);
             end
             
             % Additional invariants
@@ -33,13 +33,18 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
                 invariant2 = graph.degrees;
                 invariant3 = graph.secondOrderDegrees;
 
-                if length(unique(invariant2)) > 1
-                    group = group.vectorStabilizer(invariant2(:).');
-                end
-                if length(unique(invariant3)) > 1
-                    group = group.vectorStabilizer(invariant3(:).');
+                % If any of these degree-related invariant is useful, we
+                % compute a more complete degree-related invariant
+                if (length(unique(invariant2)) > 1) || (length(unique(invariant3)) > 1)
+                    invariants = [invariants, graph.degreesSequences];
                 end
             end
+            
+            if ~isempty(invariants) > 1
+                [~, ~, invariants] = unique(invariants, 'rows');
+                group = group.vectorStabilizer(invariants.');
+            end
+            
             
             base = 1:graph.nVertices;
             self@replab.bsgs.Backtrack(group, base, knownSubgroup, knownSubgroup, debug);
@@ -59,6 +64,14 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
         end
 
         function ok = test(self, l, prev, ul)
+        % Tests whether the partial assignment is plausible
+        %
+        % This function makes use of the theory presented in "Graph
+        % Isomorphisms and Automorphisms via Spectral Signatures" by Dan
+        % Raviv, Ron Kimmel and Alfred M. Bruckstein, doi:10.1109/TPAMI.2012.260
+        %
+        % This function is an overload of `.Backtrack.test`
+            
             % Here is the candidate permutation
             candidate = prev(ul);
 
