@@ -73,7 +73,9 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function f = computeFactorization(self)
-            if self.order <= replab.globals.factorizationOrderCutoff
+            if self.isTrivial
+                f = replab.mrp.FactorizationTrivial(self);
+            elseif self.order <= replab.globals.factorizationOrderCutoff
                 f = replab.mrp.FactorizationEnumeration.make(self);
             else
                 f = replab.mrp.FactorizationChain(self);
