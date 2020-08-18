@@ -282,10 +282,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Example:
         %   >>> G = replab.S(3);
-        %   >>> G.factorize([2 3 1])
+        %   >>> G.factorizeWord([2 3 1])
         %       'x1'
         %   >>> names = {'s', 't'};
-        %   >>> G.factorize([2 3 1], names)
+        %   >>> G.factorizeWord([2 3 1], names)
         %       's'
         %
         % Args:
