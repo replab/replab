@@ -240,7 +240,8 @@ classdef DirectedGraph < replab.graph.Graph
         %   deg (double (1,\*)): list of degrees
         %
         % Example:
-        %   >>> replab.DirectedGraph.fromEdges([1 3; 1 4]).degree(1)
+        %   >>> graph = replab.DirectedGraph.fromEdges([1 3; 1 4]);
+        %   >>> graph.degree(1)
         %     2
             
             assert(all(v >= 0) && all(v <= self.nVertices) && isequal(v, round(v)), ...

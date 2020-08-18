@@ -199,7 +199,8 @@ classdef Graph < replab.Obj
         %   degN (integer (1,\*)): sequence of degrees
         %
         % Example:
-        %   >>> replab.DirectedGraph.fromEdges([1 3]).degreesSequence(1)
+        %   >>> graph = replab.DirectedGraph.fromEdges([1 3]);
+        %   >>> graph.degreesSequence(1)
         %     1
         
             adj = self.adjacencyMatrix;

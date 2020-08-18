@@ -241,7 +241,8 @@ classdef UndirectedGraph < replab.graph.Graph
         %   deg (double (1,\*)): list of degrees
         %
         % Example:
-        %   >>> replab.UndirectedGraph.fromEdges([1 3; 1 4]).degree(1)
+        %   >>> graph = replab.UndirectedGraph.fromEdges([1 3; 1 4]);
+        %   >>> graph.degree(1)
         %     2
             
             assert(all(v >= 0) && all(v <= self.nVertices) && isequal(v, round(v)), ...
@@ -262,7 +263,8 @@ classdef UndirectedGraph < replab.graph.Graph
         %   deg (double (1,\*)): list of degrees
         %
         % Example:
-        %   >>> replab.UndirectedGraph.fromEdges([1 3]).secondOrderDegree(1)
+        %   >>> graph = replab.UndirectedGraph.fromEdges([1 3]);
+        %   >>> graph.secondOrderDegree(1)
         %     1
 
             assert((numel(v) == 1) && (v >= 0) && (v <= self.nVertices) && isequal(v, round(v)), ...
