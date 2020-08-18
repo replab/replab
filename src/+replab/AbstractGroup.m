@@ -91,15 +91,11 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
         function r = computeRelators(self)
             r = replab.fp.relatorsForPermutationGroup(self.permutationGroup);
-            r = cellfun(@(w) self.fromLetters(fliplr(w)), r, 'uniform', 0);
+            r = cellfun(@(w) self.factorizeLetters(fliplr(w)), r, 'uniform', 0);
         end
 
         function m = computeNiceMorphism(self)
-            if self.order <= 65536
-                m = replab.mrp.AbstractGroupIsomorphismEnumeration.make(self);
-            else
-                m = replab.mrp.AbstractGroupIsomorphismChain(self);
-            end
+            m = replab.mrp.AbstractGroupNiceIsomorphism(self);
         end
 
     end
@@ -163,12 +159,12 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
         end
 
-        function letters = toLetters(self, word)
+        function letters = factorizeLetters(self, word)
         % Parses word letters from word as a string
         %
         % Example:
         %   >>> A = replab.AbstractGroup({'x'}, {[2 3 1]}, {'x^3'});
-        %   >>> isequal(A.toLetters('x^2'), [1 1])
+        %   >>> isequal(A.factorizeLetters('x^2'), [1 1])
         %       1
         %
         % Args:
@@ -186,11 +182,11 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             assert(tokens(1, pos) == replab.fp.Parser.types.END, 'Badly terminated word');
         end
 
-        function word = fromLetters(self, letters)
+        function word = imageLetters(self, letters)
         % Prints a word formed of letters as a string
         %
         %   >>> A = replab.AbstractGroup({'x'}, {[2 3 1]}, {'x^3'});
-        %   >>> A.fromLetters([1 1])
+        %   >>> A.imageLetters([1 1])
         %       'x^2'
         %
         % Args:
@@ -213,7 +209,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   permutation: Computed image
-            letters = self.toLetters(word);
+            letters = self.factorizeLetters(word);
             img = target.identity;
             for i = 1:length(letters)
                 l = letters(i);
@@ -287,18 +283,18 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         % Monoid
 
         function z = compose(self, x, y)
-            xl = self.toLetters(x);
-            yl = self.toLetters(y);
+            xl = self.factorizeLetters(x);
+            yl = self.factorizeLetters(y);
             zl = replab.fp.Letters.compose(xl, yl);
-            z = self.fromLetters(zl);
+            z = self.imageLetters(zl);
         end
 
         % Group
 
         function z = inverse(self, x)
-            xl = self.toLetters(x);
+            xl = self.factorizeLetters(x);
             zl = replab.fp.Letters.inverse(xl);
-            z = self.fromLetters(zl);
+            z = self.imageLetters(zl);
         end
 
         % FiniteSet
@@ -310,7 +306,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         % NiceFiniteGroup
 
         function perm = niceImage(self, word)
-            letters = self.toLetters(word);
+            letters = self.factorizeLetters(word);
             pg = self.permutationGroup;
             perm = pg.identity;
             for i = 1:length(letters)
