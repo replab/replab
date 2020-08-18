@@ -77,6 +77,18 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws
             self.assert(sub.order == self.T.elementOrder(t));
         end
 
+        function law_factorizeLetters_imageLetters_T(self, t)
+            l = self.T.factorizeLetters(t);
+            t1 = self.T.imageLetters(l);
+            self.T.assertEqv(t, t1);
+        end
+
+        function law_factorizeWord_imageWord_T(self, t)
+            w = self.T.factorizeWord(t);
+            t1 = self.T.imageWord(w);
+            self.T.assertEqv(t, t1);
+        end
+
     end
 
 end

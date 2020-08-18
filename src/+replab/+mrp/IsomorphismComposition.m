@@ -1,9 +1,9 @@
-classdef IsomorphismComposition < replab.Isomorphism & replab.fm.Composition
+classdef IsomorphismComposition < replab.Isomorphism & replab.mrp.Composition
 
     methods
 
         function self = IsomorphismComposition(second, first)
-            self@replab.fm.Composition(second, first)
+            self@replab.mrp.Composition(second, first)
         end
 
     end
@@ -19,7 +19,7 @@ classdef IsomorphismComposition < replab.Isomorphism & replab.fm.Composition
     methods (Access = protected) % Implementations
 
         function I = computeInverse(self)
-            I = replab.fm.compose(self.first.inverse, self.second.inverse);
+            I = replab.mrp.compose(self.first.inverse, self.second.inverse);
         end
 
     end

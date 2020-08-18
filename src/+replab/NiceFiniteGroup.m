@@ -44,6 +44,25 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             G = self.cached('niceGroup', @() self.computeNiceGroup);
         end
 
+
+        function sub = niceSubgroup(self, generators, order, niceGroup)
+        % Constructs a subgroup of this group with a small optional optimization
+        %
+        % This method is used by the other subgroup construction methods.
+        %
+        % Args:
+        %   generators (cell(1,\*) of group elements): Subgroup generators
+        %   order (vpi or ``[]``, optional): Subgroup order if known, default value ``[]``
+        %   niceGroup (`.PermutationGroup` or ``[]``, optional): Permutation realization of the subgroup if known, default value ``[]``
+            if nargin < 3 || isempty(order)
+                order = [];
+            end
+            sub = replab.NiceFiniteSubgroup(self.type, generators, order);
+            if nargin > 3 && ~isempty(niceGroup)
+                sub.cache('niceGroup', niceGroup, '==');
+            end
+        end
+
     end
 
     methods (Access = protected)
@@ -54,12 +73,16 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             G = replab.PermutationGroup(ds, gens, self.cachedOrEmpty('order'));
         end
 
+    end
+
+    methods (Access = protected) % Implementations
+
         function order = computeOrder(self)
             order = self.niceGroup.order;
         end
 
         function m = computeNiceMorphism(self)
-            m = replab.nfg.NiceFiniteGroupIsomorphism(self, self.niceGroup);
+            m = replab.mrp.NiceFiniteGroupIsomorphism(self, self.niceGroup);
         end
 
         function dec = computeDecomposition(self)
@@ -117,6 +140,10 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             o = self.niceGroup.elementOrder(self.niceImage(g));
         end
 
+        function l = factorizeLetters(self, element)
+            l = self.niceGroup.factorizeLetters(self.niceImage(element));
+        end
+
         % Construction of groups
 
         function res1 = closure(self, obj)
@@ -161,13 +188,6 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             end
             niceGroup = self.niceGroup.subgroupWithGenerators(cellfun(@(g) self.niceImage(g), generators, 'uniform', 0), order);
             sub = self.niceSubgroup(generators, order, niceGroup);
-        end
-
-        function sub = niceSubgroup(self, generators, order, niceGroup)
-            sub = replab.NiceFiniteSubgroup(self.type, generators, order);
-            if nargin > 3 && ~isempty(niceGroup)
-                sub.cache('niceGroup', niceGroup, '==');
-            end
         end
 
         function sub1 = centralizer(self, obj)

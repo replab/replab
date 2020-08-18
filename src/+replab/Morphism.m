@@ -44,7 +44,7 @@ classdef Morphism < replab.Obj
         %
         % Returns:
         %   `.Morphism`: The composition of the given morphism applied first, followed by this morphism.
-            res = replab.fm.compose(self, applyFirst);
+            res = replab.mrp.compose(self, applyFirst);
         end
 
         function res = andThen(self, applyLast)
@@ -55,7 +55,7 @@ classdef Morphism < replab.Obj
         %
         % Returns:
         %   `.Morphism`: The composition of this morphism applied first, followed by the given morphism
-            res = replab.fm.compose(applyLast, self);
+            res = replab.mrp.compose(applyLast, self);
         end
 
         function res = mtimes(self, applyFirst)
@@ -74,7 +74,7 @@ classdef Morphism < replab.Obj
         %   source (`.Group`): Source group
         %   target (`.Group`): Target group
         %   imageElementFun (function_handle): Function computing images of elements
-            m = replab.fm.Lambda(source, target, imageElementFun);
+            m = replab.mrp.Lambda(source, target, imageElementFun);
         end
 
     end

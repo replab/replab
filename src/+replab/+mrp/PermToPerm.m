@@ -92,15 +92,6 @@ classdef PermToPerm < replab.FiniteMorphism
             s(sinv) = 1:n1;
         end
 
-        function S = preimageGroup(self, T)
-            if T.isTrivial
-                S = self.kernel;
-            else
-                preimages = cellfun(@(t) self.preimageRepresentative(t), T.generators, 'uniform', 0);
-                S = self.kernel.closure(self.source.subgroup(preimages));
-            end
-        end
-
         function t = imageElement(self, s)
             n1 = self.source.domainSize;
             n2 = self.target.domainSize;

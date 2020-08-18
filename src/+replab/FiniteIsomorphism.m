@@ -20,7 +20,7 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
         end
 
         function I = computeInverse(self)
-            I = replab.fm.FiniteInverse(self);
+            I = replab.mrp.FiniteInverse(self);
         end
 
         function K = computeKernel(self)
@@ -38,7 +38,8 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
         end
 
         function S = preimageGroup(self, T)
-            S = self.inverse.imageGroup(T);
+            preimages = cellfun(@(g) self.preimageElement(g), T.generators, 'uniform', 0);
+            S = self.source.subgroupWithGenerators(images); % do not need to check for non-generators
         end
 
         function T = imageGroup(self, S)
@@ -58,7 +59,7 @@ classdef FiniteIsomorphism < replab.Isomorphism & replab.FiniteMorphism
         %
         % Returns:
         %   `.FiniteIsomorphism`: The identity automorphism on the given group
-            m = replab.fm.FiniteIdentity(group);
+            m = replab.mrp.FiniteIdentity(group);
         end
 
     end

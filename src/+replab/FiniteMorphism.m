@@ -18,7 +18,7 @@ classdef FiniteMorphism < replab.Morphism
         end
 
         function I = computeImage(self)
-            I = self.imageGroup(self.source);
+            I = self.target.subgroup(self.imageSourceGenerators);
         end
 
         function I = computeImageSourceGenerators(self)
@@ -54,7 +54,7 @@ classdef FiniteMorphism < replab.Morphism
         % Returns:
         %   `.FiniteIsomorphism`: The isomorphism
             assert(self.kernel.isTrivial);
-            m = replab.fm.FiniteIsomorphismWrapper(self);
+            m = replab.mrp.FiniteIsomorphismWrapper(self);
         end
 
     end
@@ -101,7 +101,12 @@ classdef FiniteMorphism < replab.Morphism
         %
         % Returns:
         %   `.FiniteGroup`: Subgroup of `.source`
-            error('Abstract');
+            if T.isTrivial
+                S = self.kernel;
+            else
+                preimages = cellfun(@(t) self.preimageRepresentative(t), T.generators, 'uniform', 0);
+                S = self.kernel.closure(self.source.subgroup(preimages));
+            end
         end
 
     end

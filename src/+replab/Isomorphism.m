@@ -14,7 +14,7 @@ classdef Isomorphism < replab.Morphism
     methods (Access = protected)
 
         function I = computeInverse(self)
-            I = replab.fm.Inverse(self);
+            I = replab.mrp.Inverse(self);
         end
 
     end
@@ -46,7 +46,7 @@ classdef Isomorphism < replab.Morphism
         %
         % Returns:
         %   `.Isomorphism`: The identity automorphism on the given group
-            m = replab.fm.Identity(group);
+            m = replab.mrp.Identity(group);
         end
 
     end

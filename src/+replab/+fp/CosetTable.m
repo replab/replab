@@ -120,7 +120,7 @@ classdef CosetTable < replab.Str
                 uhat_inG = [tbeta genIndex(x) -fliplr(tbetax)];
                 u = group.imageLetters(-fliplr(uhat_inG));
                 assert(subgroup.contains(u));
-                uhat_inH = -fliplr(m.target.toLetters(m.imageElement(u))); % flip due to inverse convention
+                uhat_inH = -fliplr(m.target.factorizeLetters(m.imageElement(u))); % flip due to inverse convention
                 newRelator = [tbeta genIndex(x) -fliplr(tbetax) -fliplr(uhat_inH)];
                 assert(group.isIdentity(group.imageLetters(newRelator)));
                 relators{1,end+1} = newRelator;
