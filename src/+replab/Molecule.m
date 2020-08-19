@@ -78,6 +78,7 @@ classdef Molecule < replab.Str
                         % direct product C2 and alternating group 4
                     elseif pg{2} == 'd'
                         % symmetric group 4
+                        ct = replab.ct.PermutationCharacterTable(replab.S(4));
                     end
                 else
                     % alternating group 4
