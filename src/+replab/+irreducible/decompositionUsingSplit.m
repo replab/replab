@@ -31,7 +31,7 @@ function I = decompositionUsingSplit(rep)
             mask(i,j) = replab.isNonZeroMatrix(CI * subJ.B_internal, tol);
         end
     end
-    cc = replab.Graph.fromAdjacencyMatrix(mask).connectedComponents.blocks;
+    cc = replab.UndirectedGraph.fromAdjacencyMatrix(mask).connectedComponents.blocks;
     % the blocks of the partition cc represent isotypic components
     nNT = length(cc);
     NT = cell(1, nNT);

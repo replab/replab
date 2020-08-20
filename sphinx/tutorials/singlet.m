@@ -11,7 +11,8 @@
 
 % Before trying any of the *RepLAB* commands, we must initialize the library:
 
-run ../../replab_init
+addpath([pwd, '/../..']);
+replab_init('verbose', 0);
 
 % ## The unitary group representation
 %

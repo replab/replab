@@ -63,7 +63,7 @@ classdef FiniteAutomorphismGroup < replab.NiceFiniteGroup
                 g2 = m.imageElement(g);
             end
             ab = self.outerAutomorphisms.source.abstractGroupIsomorphism;
-            w = ab.target.toLetters(ab.imageElement(outerPreimage));
+            w = ab.target.factorizeLetters(ab.imageElement(outerPreimage));
             if applyInverse
                 w = -fliplr(w);
             end

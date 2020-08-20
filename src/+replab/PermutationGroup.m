@@ -64,6 +64,58 @@ classdef PermutationGroup < replab.FiniteGroup
 
     methods (Access = protected)
 
+        function f = factorization(self)
+        % Returns an object able to compute factorizations in the group generators
+        %
+        % Returns:
+        %   `+replab.+mrp.Factorization`: A factorization instance
+            f = self.cached('factorization', @() self.computeFactorization);
+        end
+
+        function f = computeFactorization(self)
+            if self.isTrivial
+                f = replab.mrp.FactorizationTrivial(self);
+            elseif self.order <= replab.globals.factorizationOrderCutoff
+                f = replab.mrp.FactorizationEnumeration.make(self);
+            else
+                f = replab.mrp.FactorizationChain(self);
+            end
+        end
+
+        function c = computeLexChain(self)
+            c = self.chain;
+            if ~c.hasSortedBase
+                c = c.mutableCopy;
+                c.baseChange(1:self.domainSize, true);
+                c.makeImmutable;
+            end
+        end
+
+        function chain = computeChain(self)
+            chain = self.cachedOrEmpty('partialChain');
+            if isempty(chain)
+                chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
+            else
+                if chain.isMutable
+                    chain.randomizedSchreierSims(self.cachedOrEmpty('order'));
+                    chain.makeImmutable;
+                    self.cache('partialChain', chain, 'overwrite');
+                end
+            end
+        end
+
+        function c = computePartialChain(self)
+            if self.inCache('chain')
+                c = self.chain;
+            else
+                c = replab.bsgs.Chain.makeBoundedOrder(self.domainSize, self.generators, replab.globals.fastChainOrder);
+            end
+        end
+
+    end
+
+    methods (Access = protected) % Implementations
+
         function o = computeOrder(self)
             o = self.chain.order;
         end
@@ -157,36 +209,6 @@ classdef PermutationGroup < replab.FiniteGroup
                 end
             end
             res = true; % all conjugacy classes generate the full group
-        end
-
-        function c = computeLexChain(self)
-            c = self.chain;
-            if ~c.hasSortedBase
-                c = c.mutableCopy;
-                c.baseChange(1:self.domainSize, true);
-                c.makeImmutable;
-            end
-        end
-
-        function chain = computeChain(self)
-            chain = self.cachedOrEmpty('partialChain');
-            if isempty(chain)
-                chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
-            else
-                if chain.isMutable
-                    chain.randomizedSchreierSims(self.cachedOrEmpty('order'));
-                    chain.makeImmutable;
-                    self.cache('partialChain', chain, 'overwrite');
-                end
-            end
-        end
-
-        function c = computePartialChain(self)
-            if self.inCache('chain')
-                c = self.chain;
-            else
-                c = replab.bsgs.Chain.makeBoundedOrder(self.domainSize, self.generators, replab.globals.fastChainOrder);
-            end
         end
 
         function sub = computeDerivedSubgroup(self)
@@ -338,6 +360,9 @@ classdef PermutationGroup < replab.FiniteGroup
             end
         end
 
+        function l = factorizeLetters(self, element)
+            l = self.factorization.preimageElement(element);
+        end
 
         % Construction of groups
 
@@ -458,11 +483,11 @@ classdef PermutationGroup < replab.FiniteGroup
 
         function m = morphismByImages(self, target, images)
             if isa(target, 'replab.PermutationGroup')
-                m = replab.fm.PermToPerm(self, target, images);
+                m = replab.mrp.PermToPerm(self, target, images);
             elseif isa(target, 'replab.FiniteGroup')
-                m = replab.fm.PermToFiniteGroup(self, target, images);
+                m = replab.mrp.PermToFiniteGroup(self, target, images);
             else
-                m = replab.fm.PermToGroup(self, target, images);
+                m = replab.mrp.PermToGroup(self, target, images);
             end
         end
 

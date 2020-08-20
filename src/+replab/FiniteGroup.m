@@ -2,7 +2,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 % Describes a group with a finite number of elements
 %
 % Each finite group has a type, that describes the most general group embedding its elements.
-% For example, permutations of domain size ``n`` are embedded in the symmetric group of degree ``n``.
+% For example, permutations of domain size ``n`` are embedded in the symmetric group of degree ``n``. We call that
+% embedding a `.type`. All groups with the same type have the same `.niceMorphism` enabling the shift of computations
+% to a "nice" permutation group.
 
     properties (SetAccess = protected)
         generators % (cell(1,\*) of `.type` elements): Group generators
@@ -15,7 +17,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         end
 
         function res = eq(self, rhs)
-            res = self.hasSameTypeAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
+            res = isa(rhs, 'replab.FiniteGroup') && self.hasSameTypeAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
         end
 
         function res = isequal(self, rhs)
@@ -264,15 +266,26 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             p = self.inverse(self.generators{i});
         end
 
-        function w = factorize(self, element, names)
-        % Factorizes an element as a word in the generators
+        function l = factorizeLetters(self, element)
+        % Factorizes an element as a word in the generators (returns letters)
+        %
+        % Args:
+        %   element (element this group): Element to factorize
+        %
+        % Returns:
+        %   integer(1,\*): Letters of the word in the generators
+            error('Abstract');
+        end
+
+        function w = factorizeWord(self, element, names)
+        % Factorizes an element as a word in the generators (returns word)
         %
         % Example:
         %   >>> G = replab.S(3);
-        %   >>> G.factorize([2 3 1])
+        %   >>> G.factorizeWord([2 3 1])
         %       'x1'
         %   >>> names = {'s', 't'};
-        %   >>> G.factorize([2 3 1], names)
+        %   >>> G.factorizeWord([2 3 1], names)
         %       's'
         %
         % Args:
@@ -282,11 +295,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   charstring: Word in the generators
             if nargin < 3 || isempty(names)
-                m = self.abstractGroupIsomorphism;
-            else
-                m = self.abstractGroupIsomorphism(names);
+                names = self.defaultGeneratorNames;
             end
-            w = m.imageElement(element);
+            l = self.factorizeLetters(element);
+            w = replab.fp.Letters.print(l, names);
         end
 
         function g = imageWord(self, word, names)
@@ -307,11 +319,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   element: Element of the group corresponding to the given word
             if nargin < 3 || isempty(names)
-                m = self.abstractGroupIsomorphism;
-            else
-                m = self.abstractGroupIsomorphism(names);
+                names = self.defaultGeneratorNames;
             end
-            g = m.preimageElement(word);
+            l = replab.fp.Letters.parse(word, names);
+            g = self.imageLetters(l);
         end
 
         function g = imageLetters(self, letters)
