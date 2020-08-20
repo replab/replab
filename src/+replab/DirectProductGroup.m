@@ -126,6 +126,14 @@ classdef DirectProductGroup < replab.Group
                 values{1, end+1} = self.factor(i);
             end
         end
+        
+        function s = headerStr(self)
+            if self.inCache('order')
+                s = sprintf('Direct product group with %d factors of order %s', self.nFactors, strtrim(num2str(self.order)));
+            else
+                s = sprintf('Direct product group with %d factors', self.nFactors);
+            end
+        end
 
         % Domain
 

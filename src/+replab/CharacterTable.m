@@ -138,7 +138,7 @@ classdef CharacterTable < replab.Obj
         %
         % Returns:
         %   ct (`+replab.CharacterTable`): The direct product of the character tables
-            new_group = self.group.directProduct(self.group, ct2.group);
+            new_group = self.group.directProduct(ct2.group);
             % New characters are kronecker product of character matrices
             A = self.characters;
             B = ct2.characters;
@@ -159,10 +159,10 @@ classdef CharacterTable < replab.Obj
             new_classes = replab.ConjugacyClasses(new_group, classarray);
             % New irreps are direct products of input irreps
             new_irreps = cell(1, length(self.irreps) * length(ct2.irreps));
-            for i = 0:length(self.irreps) - 1
-                new_irrep = cellfun(@(r)  kron(self.irreps{i}, r), ct2.irreps, 'UniformOutput', false);
-                new_irreps(i*length(self.irreps)+1:(i+1)*length(ct2.irreps)) = new_irrep;
-            end
+%             for i = 0:length(self.irreps) - 1
+%                 new_irrep = cellfun(@(r)  kron(self.irreps{i+1}, r), ct2.irreps, 'UniformOutput', false);
+%                 new_irreps(i*length(self.irreps)+1:(i+1)*length(ct2.irreps)) = new_irrep;
+%             end
             ct = replab.CharacterTable(new_group, new_classes, new_irreps, new_chars);
         end
 
