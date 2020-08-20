@@ -159,10 +159,39 @@ classdef CharacterTable < replab.Obj
             new_classes = replab.ConjugacyClasses(new_group, classarray);
             % New irreps are direct products of input irreps
             new_irreps = cell(1, length(self.irreps) * length(ct2.irreps));
-%             for i = 0:length(self.irreps) - 1
-%                 new_irrep = cellfun(@(r)  kron(self.irreps{i+1}, r), ct2.irreps, 'UniformOutput', false);
-%                 new_irreps(i*length(self.irreps)+1:(i+1)*length(ct2.irreps)) = new_irrep;
-%             end
+            for i = 1:length(self.irreps)
+                for j = 1:length(ct2.irreps)
+                    B = ct2.irreps{j}.image(ct2.group.identity);
+                    new_images1 = cell(1, self.group.nGenerators);
+                    for k = 1:self.group.nGenerators
+                        A = self.irreps{i}.images_internal{k};
+                        % Kronecker product of cyclotomics
+                        new_image = replab.cyclotomic.zeros(size(A,1) * size(B, 1), size(A, 2) * size(B, 2));
+                        for m = 0:size(A, 1)-1
+                            for n = 0:size(A, 2)-1
+                               new_image(m*size(B,1)+1:(m+1)*size(B,1), n*size(B,2)+1:(n+1)*size(B,2)) = A(m+1, n+1) * B;
+                            end
+                        end
+                        new_images1{k} = new_image;
+                    end
+                    new_images2 = cell(1, ct2.group.nGenerators);
+                    A = self.irreps{i}.image(self.group.identity);
+                    for k = 1:ct2.group.nGenerators
+                        B = ct2.irreps{j}.images_internal{k};
+                        % Kronecker product of cyclotomics
+                        new_image = replab.cyclotomic.zeros(size(A,1) * size(B, 1), size(A, 2) * size(B, 2));
+                        for m = 0:size(A, 1)-1
+                            for n = 0:size(A, 2)-1
+                               new_image(m*size(B,1)+1:(m+1)*size(B,1), n*size(B,2)+1:(n+1)*size(B,2)) = A(m+1, n+1) * B;
+                            end
+                        end
+                        new_images2{k} = new_image;
+                    end
+                    new_dim = double(self.irreps{i}.dimension) * double(ct2.irreps{j}.dimension);
+                    new_irrep = new_group.repByImages('C', new_dim, [new_images1, new_images2]);
+                    new_irreps{j + (i-1)*length(ct2.irreps)} = new_irrep;
+                end
+            end
             ct = replab.CharacterTable(new_group, new_classes, new_irreps, new_chars);
         end
 
