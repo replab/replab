@@ -17,7 +17,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         end
 
         function res = eq(self, rhs)
-            res = self.hasSameTypeAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
+            res = isa(rhs, 'replab.FiniteGroup') && self.hasSameTypeAs(rhs) && self.isSubgroupOf(rhs) && rhs.isSubgroupOf(self);
         end
 
         function res = isequal(self, rhs)
