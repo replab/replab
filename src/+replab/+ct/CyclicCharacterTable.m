@@ -24,7 +24,7 @@ function ct = CyclicCharacterTable(n)
     
     % Generate irreps with images as increasing powers of E(n)
     w = replab.cyclotomic.E(n);
-    irreps = cellfun(@(x) group.repByImages('C', 1, {w^x}), num2cell(0:n-1));
+    irreps = cellfun(@(x) group.repByImages('C', 1, {w^x}), num2cell(0:n-1), 'UniformOutput', false);
     
     % Generate characters with increasing powers of conjugacy classes and irreps
     chars = replab.cyclotomic.zeros(n, n);
