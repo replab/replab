@@ -34,17 +34,6 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             error('Abstract');
         end
 
-        function G = niceGroup(self)
-        % Returns the permutation group isomorphic to this finite group
-        %
-        % This is the image of `.niceMorphism`.
-        %
-        % Returns:
-        %   `+replab.PermutationGroup`: The image of the isomorphism
-            G = self.cached('niceGroup', @() self.computeNiceGroup);
-        end
-
-
         function sub = niceSubgroup(self, generators, order, niceGroup)
         % Constructs a subgroup of this group with a small optional optimization
         %
@@ -65,24 +54,10 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
     end
 
-    methods (Access = protected)
-
-        function G = computeNiceGroup(self)
-            gens = cellfun(@(g) self.niceImage(g), self.generators, 'uniform', 0);
-            ds = length(self.niceImage(self.identity));
-            G = replab.PermutationGroup(ds, gens, self.cachedOrEmpty('order'));
-        end
-
-    end
-
     methods (Access = protected) % Implementations
 
         function order = computeOrder(self)
             order = self.niceGroup.order;
-        end
-
-        function m = computeNiceMorphism(self)
-            m = replab.mrp.NiceFiniteGroupIsomorphism(self, self.niceGroup);
         end
 
         function dec = computeDecomposition(self)
@@ -113,6 +88,28 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         function sub = computeDerivedSubgroup(self)
             sub = self.niceMorphism.preimageGroup(self.niceGroup.derivedSubgroup);
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function G = computeNiceGroup(self)
+            gens = cellfun(@(g) self.niceImage(g), self.generators, 'uniform', 0);
+            ds = length(self.niceImage(self.identity));
+            G = replab.PermutationGroup(ds, gens, self.cachedOrEmpty('order'));
+        end
+
+        function m = computeNiceMorphism(self)
+            m = replab.mrp.NiceFiniteGroupIsomorphism(self, self.niceGroup);
+        end
+
+        function A = computeDefaultAbstractGroup(self)
+            A = self.niceGroup.abstractGroup;
+        end
+
+        function m = computeDefaultAbstractMorphism(self)
+            m = self.niceMorphism.andThen(self.niceGroup.abstractMorphism);
         end
 
     end

@@ -127,10 +127,6 @@ classdef PermutationGroup < replab.FiniteGroup
             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
         end
 
-        function m = computeNiceMorphism(self)
-            m = replab.FiniteIsomorphism.identity(self);
-        end
-
         function dec = computeDecomposition(self)
             c = self.chain;
             k = c.length;
@@ -247,6 +243,26 @@ classdef PermutationGroup < replab.FiniteGroup
 
     end
 
+    methods (Access = protected)
+
+        function G = computeNiceGroup(self)
+            G = self;
+        end
+
+        function m = computeNiceMorphism(self)
+            m = replab.FiniteIsomorphism.identity(self);
+        end
+
+        function A = computeDefaultAbstractGroup(self)
+            A = replab.AbstractGroup(self.defaultGeneratorNames, self);
+        end
+
+        function m = computeDefaultAbstractMorphism(self)
+            m = self.abstractGroup.niceMorphism.inverse;
+        end
+
+    end
+
     methods % Group internal description
 
         function c = lexChain(self)
@@ -279,14 +295,13 @@ classdef PermutationGroup < replab.FiniteGroup
         % Morphisms
 
         function m = morphismByImages_(self, target, preimages, images, nChecks)
-            assert(length(preimages) == self.nGenerators);
-            assert(all(arrayfun(@(i) self.eqv(preimages{i}, self.generator(i)), 1:self.nGenerators)));
+            assert(length(preimages) == length(images));
             if isa(target, 'replab.PermutationGroup')
-                m = replab.fm.PermToPerm(self, target, images);
+                m = replab.mrp.PermToPerm(self, target, preimages, images);
             elseif isa(target, 'replab.FiniteGroup')
-                m = replab.fm.PermToFiniteGroup(self, target, images);
+                m = replab.mrp.PermToFiniteGroup(self, target, preimages, images);
             else
-                m = replab.fm.PermToGroup(self, target, images);
+                m = replab.mrp.PermToGroup(self, target, preimages, images);
             end
         end
 

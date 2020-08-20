@@ -6,8 +6,8 @@ classdef SemidirectProductGroup < replab.Group
 % Example:
 %   >>> N = replab.S(3);
 %   >>> H = replab.CyclicGroup(3);
-%   >>> A = replab.nfg.PlainAutomorphism.byConjugation([2 3 1], N);
-%   >>> phi = H.morphismByImages(replab.nfg.PlainAutomorphismGroup(N), {A});
+%   >>> A = N.innerAutomorphism([2 3 1]);
+%   >>> phi = H.morphismByImages(replab.AutomorphismGroup(N), {A});
 %   >>> sd = H.semidirectProduct(N, @(h, n) phi.imageElement(h).imageElement(n));
 %   >>> sd.laws.checkSilent;
 

@@ -30,7 +30,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 %
 % Example:
 %   >>> G = replab.S(3);
-%   >>> f = G.abstractGroupIsomorphism({'s' 't'});
+%   >>> f = G.abstractMorphism({'s' 't'});
 %   >>> f.imageElement([2 3 1])
 %       's'
 
@@ -91,11 +91,35 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
         function r = computeRelators(self)
             r = replab.fp.relatorsForPermutationGroup(self.permutationGroup);
-            r = cellfun(@(w) self.factorizeLetters(fliplr(w)), r, 'uniform', 0);
+            r = cellfun(@(w) self.imageLetters(fliplr(w)), r, 'uniform', 0);
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function G = computeNiceGroup(self)
+            G = self.permutationGroup;
         end
 
         function m = computeNiceMorphism(self)
             m = replab.mrp.AbstractGroupNiceIsomorphism(self);
+        end
+
+        function A = computeDefaultAbstractGroup(self)
+            if isequal(self.generatorNames, self.defaultGeneratorNames)
+                A = self;
+            else
+                A = self.withRenamedGenerators(self.defaultGeneratorNames);
+            end
+        end
+
+        function m = computeDefaultAbstractMorphism(self)
+            if isequal(self.generatorNames, self.defaultGeneratorNames)
+                m = replab.FiniteIsomorphism.identity(self);
+            else
+                m = replab.mrp.AbstractGroupRenamingIsomorphism(self, self.abstractGroup);
+            end
         end
 
     end
@@ -299,12 +323,13 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
         function l = isMorphismByImages_(self, target, preimages, images)
             hasSameGenerators = length(preimages) == self.nGenerators && ...
-                all(arrayfun(@(i) self.eqv(preimages{i}, self.generators(i)), 1:self.nGenerators));
+                all(arrayfun(@(i) self.eqv(preimages{i}, self.generator(i)), 1:self.nGenerators));
             if hasSameGenerators
                 nR = length(self.relators);
                 for i = 1:nR
-                    r = self.relators{i};
-                    if ~target.isIdentity(target.composeLetters(r, images))
+                    r = self.factorizeLetters(self.relators{i});
+                    g = target.composeLetters(images, r);
+                    if ~target.isIdentity(g)
                         l = false;
                         return
                     end

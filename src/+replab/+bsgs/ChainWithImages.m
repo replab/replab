@@ -572,7 +572,7 @@ classdef ChainWithImages < replab.Str
 
     methods (Static)
 
-        function C = make(n, target, generators, images, finalizeImages, base, order)
+        function C = make(n, target, preimages, images, finalizeImages, base, order)
             if nargin < 7
                 order = [];
             end
@@ -586,8 +586,8 @@ classdef ChainWithImages < replab.Str
             for i = 1:length(base)
                 C.insertEndBasePoint(base(i));
             end
-            for i = 1:length(generators)
-                C.stripAndAddStrongGenerator(generators{i}, images{i});
+            for i = 1:length(preimages)
+                C.stripAndAddStrongGenerator(preimages{i}, images{i});
             end
             C.randomizedSchreierSims(order);
             if ~isempty(finalizeImages)

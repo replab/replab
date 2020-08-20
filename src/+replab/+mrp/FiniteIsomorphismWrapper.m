@@ -19,9 +19,6 @@ classdef FiniteIsomorphismWrapper < replab.FiniteIsomorphism
     methods (Access = protected)
 
     % computeImage/computeKernel/computeInverse in FiniteIsomorphism
-        function I = computeImageSourceGenerators(self)
-            I = self.finiteMorphism.imageSourceGenerators;
-        end
 
     end
 

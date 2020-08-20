@@ -107,7 +107,7 @@ classdef CosetTable < replab.Str
             end
             genIndex = [1:r -(1:r)];
             % line 5
-            m = subgroup.abstractGroupIsomorphism;
+            m = subgroup.abstractMorphism;
             while true
                 % transpose so that it is the smallest beta
                 [x beta] = find((C.C ~= Chat.C(1:n, :))', 1);

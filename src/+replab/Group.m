@@ -96,16 +96,37 @@ classdef Group < replab.Monoid
             if nargin < 4
                 arrayInverse = [];
             end
-            g = self.identity;
+            z = self.identity;
             L = length(letters);
             for i = 1:L
                 l = letters(i);
                 if l > 0
-                    g = self.compose(g, array{l});
+                    z = self.compose(z, array{l});
                 else
-                    g = self.composeWithInverse(g, array{l});
+                    z = self.composeWithInverse(z, array{-l});
                 end
             end
+        end
+
+    end
+
+    methods % Morphisms
+
+        function G = automorphismGroup(self)
+        % Returns the automorphism group of this group
+            G = replab.AutomorphismGroup(self);
+        end
+
+        function m = innerAutomorphism(self, by)
+        % Returns the inner automorphism given using conjugation by the given element
+        %
+        % Args:
+        %   by (element): Conjugating element
+        %
+        % Returns:
+        %   `.Morphism`: Group automorphism
+            byInv = self.inverse(by);
+            m = replab.Isomorphism.lambda(self, self, @(h) self.leftConjugate(byInv, h), @(h) self.leftConjugate(by, h));
         end
 
     end
