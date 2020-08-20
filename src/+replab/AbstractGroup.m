@@ -218,29 +218,6 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
         end
 
-        function l = imagesDefineMorphism(self, target, targetGeneratorImages)
-        % Checks whether the given images satisfy the relations of the presentation of this group
-        %
-        % If it returns true, it means those images describe a valid homomorphism from this `.AbstractGroup`
-        % to the given target group.
-        %
-        % Args:
-        %   target (`+replab.Group`): Target group
-        %   targetGeneratorImages (cell(1,\*) of elements of ``target``): Images of the generators of this group
-        %
-        % Returns:
-        %   logical: True if the images verify the presentation
-            nR = length(self.relators);
-            for i = 1:nR
-                r = self.relators{i};
-                if ~target.isIdentity(self.computeImage(r, target, targetGeneratorImages))
-                    l = false;
-                    return
-                end
-            end
-            l = true;
-        end
-
     end
 
     methods % Implementations
@@ -313,6 +290,28 @@ classdef AbstractGroup < replab.NiceFiniteGroup
                 else
                     perm = pg.composeWithInverse(perm, pg.generator(-l));
                 end
+            end
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function l = isMorphismByImages_(self, target, preimages, images)
+            hasSameGenerators = length(preimages) == self.nGenerators && ...
+                all(arrayfun(@(i) self.eqv(preimages{i}, self.generators(i)), 1:self.nGenerators));
+            if hasSameGenerators
+                nR = length(self.relators);
+                for i = 1:nR
+                    r = self.relators{i};
+                    if ~target.isIdentity(target.composeLetters(r, images))
+                        l = false;
+                        return
+                    end
+                end
+                l = true;
+            else
+                l = isMorphismByImages_@replab.FiniteGroup(self, target, preimages, images);
             end
         end
 

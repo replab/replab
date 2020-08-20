@@ -186,8 +186,12 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             if nargin < 3
                 order = [];
             end
-            niceGroup = self.niceGroup.subgroupWithGenerators(cellfun(@(g) self.niceImage(g), generators, 'uniform', 0), order);
-            sub = self.niceSubgroup(generators, order, niceGroup);
+            if length(generators) == self.nGenerators && all(arrayfun(@(i) self.eqv(self.generator(i), generators{i}), 1:length(generators)))
+                sub = self;
+            else
+                niceGroup = self.niceGroup.subgroupWithGenerators(cellfun(@(g) self.niceImage(g), generators, 'uniform', 0), order);
+                sub = self.niceSubgroup(generators, order, niceGroup);
+            end
         end
 
         function sub1 = centralizer(self, obj)

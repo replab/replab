@@ -440,7 +440,7 @@ classdef PermutationGroup < replab.FiniteGroup
 
         % Subgroups
 
-        function grp = subgroupWithGenerators(self, generators, order)
+        function sub = subgroupWithGenerators(self, generators, order)
         % Constructs a permutation subgroup from its generators
         %
         % Args:
@@ -452,7 +452,11 @@ classdef PermutationGroup < replab.FiniteGroup
             if nargin < 3
                 order = [];
             end
-            grp = replab.PermutationGroup(self.domainSize, generators, order, self.type);
+            if length(generators) == self.nGenerators && all(arrayfun(@(i) self.eqv(self.generator(i), generators{i}), 1:length(generators)))
+                sub = self;
+            else
+                sub = replab.PermutationGroup(self.domainSize, generators, order, self.type);
+            end
         end
 
         function c = centralizer(self, other)

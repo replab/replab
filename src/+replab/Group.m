@@ -82,6 +82,32 @@ classdef Group < replab.Monoid
             z = self.compose(x, self.inverse(y));
         end
 
+        function z = composeLetters(self, array, letters)
+        % Returns the composition of elements from an array picked according to the given indices/letters
+        %
+        % Computes ``composeAll({array(letters(1)) ... array(letters(n))})`` with the convention that
+        %
+        % Args:
+        %   letters (integer(1,\*)): Letters composing word
+        %   array (cell(1,\*) of elements): Elements to compose
+        %
+        % Returns:
+        %   element: The result of the composition
+            if nargin < 4
+                arrayInverse = [];
+            end
+            g = self.identity;
+            L = length(letters);
+            for i = 1:L
+                l = letters(i);
+                if l > 0
+                    g = self.compose(g, array{l});
+                else
+                    g = self.composeWithInverse(g, array{l});
+                end
+            end
+        end
+
     end
 
     methods (Static)
