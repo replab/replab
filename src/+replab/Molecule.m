@@ -88,7 +88,7 @@ classdef Molecule < replab.Str
                 if length(pg) > 1 && pg{2} == 'h'
                     % direct product C2 and S4
                 else
-                    % just S4
+                    ct = replab.ct.PermutationCharacterTable(replab.S(4));
                 end
             elseif pg{1} == 'I'
                 % alternating group 5
