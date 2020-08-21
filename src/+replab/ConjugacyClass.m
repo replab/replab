@@ -27,6 +27,24 @@ classdef ConjugacyClass < replab.FiniteSet
 
     end
 
+    methods (Access = protected)
+
+        function o = computeElementOrder(self)
+            o = self.group.elementOrder(self.representative);
+        end
+
+    end
+
+    methods
+
+        function o = elementOrder(self)
+        % Returns the order of the elements in this conjugacy class
+        %
+        % Returns:
+        %   integer: Element order
+            o = self.cached('elementOrder', @() self.computeElementOrder);
+        end
+
         function c1 = imap(self, f, imageGroup, preserveLexOrder)
         % Maps this conjugacy class under an isomorphism
         %
@@ -49,6 +67,8 @@ classdef ConjugacyClass < replab.FiniteSet
                 c1 = replab.ConjugacyClass.make(imageGroup, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
             end
         end
+
+    end
 
     methods (Static)
 
@@ -83,6 +103,15 @@ classdef ConjugacyClass < replab.FiniteSet
     end
 
     methods % Implementations
+
+        % Str
+
+        function s = shortStr(self, maxColumns)
+            s = sprintf('ConjugacyClass of %s in %s', replab.shortStr(self.representative, maxColumns), replab.shortStr(self.group, maxColumns));
+            if length(s) > maxColumns
+                s = sprintf('ConjugacyClass of %s', replab.shortStr(self.representative, maxColumns));
+            end
+        end
 
         % Domain
 

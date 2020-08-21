@@ -109,14 +109,14 @@ classdef CharacterTable < replab.Obj
 
         function lines = longStr(self, maxRows, maxColumns)
             ct = replab.str.CyclotomicTable(self.characters);
-            primes = unique(double(factor(self.group.order)));
-            m = self.classes.powerMaps(primes);
+            pp = self.classes.powerMapDefaultPrimes;
+            m = self.classes.powerMaps(pp);
             nC = self.classes.nClasses;
-            powerMaps = cell(length(primes)+1, nC + 1);
+            powerMaps = cell(length(pp)+1, nC + 1);
             powerMaps{1,1} = '';
             powerMaps(1,2:end) = self.classNames;
-            for i = 1:length(primes)
-                powerMaps{i+1,1} = sprintf('%dP', primes(i));
+            for i = 1:length(pp)
+                powerMaps{i+1,1} = sprintf('%dP', pp(i));
                 for j = 1:nC
                     powerMaps{i+1,j+1} = self.classNames{m(i,j)};
                 end
@@ -129,6 +129,28 @@ classdef CharacterTable < replab.Obj
             lines2 = arrayfun(@(i) sprintf(' %s = %s', ct.variables{i}, num2str(ct.values(i))), 1:length(ct.variables), 'uniform', 0);
             lines = vertcat(lines1(:), {''}, lines2(:));
         end
+
+% $$$         function imap(self, f, imageGroup, preserveLexOrder)
+% $$$         % Maps the conjugacy classes under an isomorphism
+% $$$         %
+% $$$         % Args:
+% $$$         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+% $$$         %   imageGroup (`.FiniteGroup`, optional): Image of `.group` under ``f``, default ``[]`` (recompute)
+% $$$         %   preserveLexOrder (logical, optional): Whether the isomorphism preserves the lexicographic order of group elements, default false
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `.CharacterTable`: The character table of the subgroup in the image of the isomorphism
+% $$$             if nargin < 3 || isempty(imageGroup)
+% $$$                 imageGroup = f.imageGroup(self.group);
+% $$$             end
+% $$$             if nargin < 4 || isempty(preserveLexOrder)
+% $$$                 preserveLexOrder = false;
+% $$$             end
+% $$$             classes1 = cellfun(@(c) c.imap(f, imageGroup, preserveLexOrder), self.classes, 'uniform', 0);
+% $$$             c1 = replab.ConjugacyClasses(imageGroup, classes1);
+% $$$
+% $$$         end
+
 
     end
 % $$$
