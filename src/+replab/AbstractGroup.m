@@ -47,8 +47,28 @@ classdef AbstractGroup < replab.NiceFiniteGroup
     methods (Static)
 
         function A = make(generatorNames, relatorWords)
+        % Creates an abstract group from generator names and relators
+        %
+        % Args:
+        %   generatorNames (cell(1,\*) of charstring): Names of the generators
+        %   relatorWords (cell(1,\*) of charstring): Relators of the abstract group
+        %
+        % Returns:
+        %   `.AbstractGroup`: The constructed abstract group
+            if length(generatorNames) == 0
+                % Trivial group case
+                S1 = replab.S(1);
+                A = replab.AbstractGroup(cell(1, 0), S1.trivialSubgroup, cell(1, 0));
+                return
+            end
             relators = cellfun(@(w) replab.fp.Letters.parse(w, generatorNames), relatorWords, 'uniform', 0);
-            [gens order] = replab.fp.permutationGeneratorsForRelators(length(generatorNames), relators);
+            [gens order] = replab.fp.permutationRealizationForRelators(length(generatorNames), relators);
+
+            ds = length(gens{1});
+            isId = cellfun(@(g) isequal(g, 1:ds), gens);
+            if any(isId)
+                error('One of the generators in the presentation is the identity');
+            end
             pg = replab.PermutationGroup.of(gens{:});
             pg.cache('order', order, '==');
             A = replab.AbstractGroup(generatorNames, pg, relatorWords);
