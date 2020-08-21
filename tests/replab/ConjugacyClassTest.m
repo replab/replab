@@ -11,7 +11,7 @@ function test_centralizer_order
     n = 8;
     Sn = replab.S(n);
     G = Sn.randomProperSubgroup(2);
-    classes = replab.perm.conjugacyClassesByOrbits(G);
+    classes = G.conjugacyClasses.classes;
     for i = 1:length(classes)
         cc1 = classes{i};
         cc2 = replab.ConjugacyClass(G, cc1(:,1)');
@@ -28,10 +28,10 @@ function test_conjugacyClass_number
     end
     for i = 1:length(d)
         S = replab.S(d(i));
-        C = S.conjugacyClasses;
+        C = S.conjugacyClasses.classes;
         sz = sum(cellfun(@(c) double(c.nElements), C));
         assert(sz == S.order);
-        ni = length(S.conjugacyClasses);
+        ni = length(C);
         assert(n(i) == ni);
     end
 end
