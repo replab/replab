@@ -12,7 +12,7 @@ classdef Domain < replab.Obj
 
 % Those elements can be compared (`~replab.Domain.eqv`), and random elements can be produced (`~replab.Domain.sample`).
 
-    methods % Abstract
+    methods % Sampling and equality test
 
         function t = sample(self)
         % Samples an element from this set
@@ -45,7 +45,7 @@ classdef Domain < replab.Obj
         % Obj
 
         function l = laws(self)
-            l = replab.DomainLaws(self);
+            l = replab.laws.DomainLaws(self);
         end
 
     end

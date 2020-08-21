@@ -8,8 +8,10 @@ function grp = DihedralGroup(n)
 %
 % Returns:
 %   `+replab.PermutationGroup`: The dihedral group permuting the vertices of the ``n``-gon
-    if n <= 2
+    if n == 1
         grp = replab.SymmetricGroup(2);
+    elseif n == 2
+        grp = replab.KleinFourGroup;
     else
         g1 = fliplr(1:n);
         g2 = [2:n 1];

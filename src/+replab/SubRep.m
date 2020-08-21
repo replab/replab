@@ -99,7 +99,7 @@ classdef SubRep < replab.Rep
         % Obj
 
         function l = laws(self)
-            l = replab.SubRepLaws(self);
+            l = replab.laws.SubRepLaws(self);
         end
 
         % Rep

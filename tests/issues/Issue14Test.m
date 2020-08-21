@@ -12,5 +12,5 @@ function test_suite = Issue14Test()
 
     group = replab.SignedPermutationGroup.of([1 -3 2 4]);
     I = group.naturalRep.decomposition;
-    test_suite = replab.IrreducibleLaws(I).addTestCases(test_suite);
+    test_suite = I.laws.addTestCases(test_suite);
 end

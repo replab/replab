@@ -105,7 +105,7 @@ classdef Irreducible < replab.SubRep
         % Obj
 
         function l = laws(self)
-            l = replab.IrreducibleLaws(self);
+            l = replab.laws.IrreducibleLaws(self);
         end
 
         % Rep

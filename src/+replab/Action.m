@@ -13,7 +13,7 @@ classdef Action < replab.Obj
         % Obj
 
         function l = laws(self)
-            l = replab.ActionLaws(self);
+            l = replab.laws.ActionLaws(self);
         end
 
     end

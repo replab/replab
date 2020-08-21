@@ -26,22 +26,26 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
 
     end
 
+    methods (Access = protected)
+
+        function E = computeElements(self)
+            E = computeElements@replab.LeftCoset(self);
+        end
+
+    end
+
     methods
 
         function s = sample(self)
             s = sample@replab.LeftCoset(self);
         end
 
-        function s = size(self)
-            s = size@replab.LeftCoset(self);
+        function s = nElements(self)
+            s = nElements@replab.LeftCoset(self);
         end
 
         function b = contains(self, el)
             b = contains@replab.LeftCoset(self, el);
-        end
-
-        function E = computeElements(self)
-            E = computeElements@replab.LeftCoset(self);
         end
 
     end

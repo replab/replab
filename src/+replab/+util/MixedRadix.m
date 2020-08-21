@@ -23,7 +23,7 @@ classdef MixedRadix < replab.Str
             self.n = length(base);
         end
 
-        function sub = sub2ind(self, ind)
+        function sub = ind2sub(self, ind)
         % Return the tabular representation vector corresponding to an integer
         %
         % Args:
@@ -41,7 +41,7 @@ classdef MixedRadix < replab.Str
             end
         end
 
-        function ind = ind2sub(self, sub)
+        function ind = sub2ind(self, sub)
         % Returns the integer corresponding to the given digits
         %
         % Args:

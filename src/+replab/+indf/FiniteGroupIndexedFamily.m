@@ -24,7 +24,7 @@ classdef FiniteGroupIndexedFamily < replab.IndexedFamily
             ps.insert(matrix);
             self.permSet = ps;
             self.isomorphism = isomorphism;
-            self.size = vpi(size(matrix, 2));
+            self.nElements = vpi(size(matrix, 2));
         end
 
         function obj = at(self, ind)

@@ -3,10 +3,10 @@ classdef Standard < replab.Atlas
 %
 % Example:
 %   >>> D4 = replab.DihedralGroup(4);
-%   >>> D4.recognize.entry.name
+%   >>> D4.recognize.atlasGroup.name
 %       'Dihedral group of order 8'
 %   >>> S5 = replab.SymmetricGroup(5);
-%   >>> S5.recognize.entry.name
+%   >>> S5.recognize.atlasGroup.name
 %       'Symmetric group S(5) of degree 5'
 
     methods (Static)
@@ -27,7 +27,30 @@ classdef Standard < replab.Atlas
             self@replab.Atlas(1000);
         end
 
-        function E = dihedral(self, n)
+        function A = trivial(self)
+        % Constructs the atlas entry corresponding to the trivial group
+            name = 'Trivial group';
+            prmGroup = replab.S(1); % this is a legit permutation representation
+            generators = cell(1, 0);
+            relators = cell(1, 0);
+            % Presentation from the groupprops wiki
+            % < x | x = 1 >
+            A = replab.AbstractGroup(generators, prmGroup, relators, name);
+        end
+
+        function R = recognizeTrivial(self, G)
+        % Recognizes if the given group is the trivial group and provides the generators according to the standard presentation
+        %
+        % The standard presentation is ``<x| x = id>``
+            R = [];
+            if ~G.isTrivial
+                return
+            end
+            entry = self.trivial;
+            R = replab.AtlasResult(G, entry, cell(1, 0));
+        end
+
+        function A = dihedral(self, n)
         % Constructs the atlas entry corresponding to the dihedral group of order 2*n
             assert(n > 2);
             name = sprintf('Dihedral group of order %d', 2*n);
@@ -38,8 +61,7 @@ classdef Standard < replab.Atlas
             % Presentation from the groupprops wiki
             % < x, a | a^n = x^2 = 1, x a x^-1 = a^-1 >
             relators = {['a^' num2str(n)] 'x^2' 'x a x^-1 a'};
-            abGroup = replab.AbstractGroup({'x' 'a'}, prmGroup, relators);
-            E = replab.AtlasEntry(name, abGroup, prmGroup);
+            A = replab.AbstractGroup({'x' 'a'}, prmGroup, relators, name);
         end
 
         function R = recognizeDihedral(self, G)
@@ -93,7 +115,45 @@ classdef Standard < replab.Atlas
             R = replab.AtlasResult(G, entry, {x a});
         end
 
-        function E = symmetric(self, n)
+        function A = klein(self)
+        % Constructs the atlas entry corresponding to the klein four-group
+            name = sprintf('Klein four-group of order %d', 4);
+            % Permutation realization
+            X = [2,1,4,3];
+            A = [3,4,1,2];
+            prmGroup = replab.PermutationGroup.of(X, A);
+            % Presentation from the groupprops wiki
+            % < x, a | a^2 = x^2 = 1, x a x^-1 = a^-1 >
+            relators = {'a^2' 'x^2' 'x a x^-1 a'};
+            A = replab.AbstractGroup({'x' 'a'}, prmGroup, relators, name);
+        end
+
+        function R = recognizeKlein(self, G)
+        % Recognizes if the given group is the Klein four-group and provides the generators according to the standard presentation
+        %
+        % The standard presentation is ``<x, a| a^2 = x^2 = id, x a x^-1 = a>``
+            R = [];
+            if G.order ~= 4
+                return
+            end
+            if G.isCyclic
+                return
+            end
+            x = G.generator(1);
+            a = [];
+            for i = 2:G.nGenerators
+                g = G.generator(i);
+                if ~G.eqv(x, g)
+                    a = g;
+                    break
+                end
+            end
+            assert(~isempty(a));
+            entry = self.klein;
+            R = replab.AtlasResult(G, entry, {x a});
+        end
+
+        function A = symmetric(self, n)
         % Constructs the atlas entry corresponding to the symmetric group of degree n
             assert(n > 2);
             name = sprintf('Symmetric group S(%d) of degree %d', n, n);
@@ -107,14 +167,13 @@ classdef Standard < replab.Atlas
             for j = 2:floor(n/2)
                 relators{1,end+1} = sprintf('(t^-1 s^-%d t s^%d)^2', j, j);
             end
-            abGroup = replab.AbstractGroup({'s' 't'}, prmGroup, relators);
-            outer = {replab.FiniteIsomorphism.identity(prmGroup)};
-            if n == 6
-                imgS = [6 1 5 4 3 2];
-                imgT = [2 1 4 3 6 5];
-                outer{1,2} = prmGroup.morphismByImages(prmGroup, {imgS, imgT});
-            end
-            E = replab.AtlasEntry(name, abGroup, prmGroup, outer);
+            A = replab.AbstractGroup({'s' 't'}, prmGroup, relators, name);
+            %outer = {replab.FiniteIsomorphism.identity(prmGroup)};
+            %if n == 6
+            %    imgS = [6 1 5 4 3 2];
+            %    imgT = [2 1 4 3 6 5];
+            %    outer{1,2} = prmGroup.morphismByImages(prmGroup, 'images', {imgS, imgT});
+            %end
         end
 
         function R = recognizeSymmetric(self, G)
@@ -125,7 +184,7 @@ classdef Standard < replab.Atlas
                 return
             end
             n = double(n);
-            C = G.conjugacyClasses;
+            C = G.conjugacyClasses.classes;
             entry = self.symmetric(n);
             for i = 1:length(C)
                 S = C{i};
@@ -137,7 +196,7 @@ classdef Standard < replab.Atlas
                             U = T.elements;
                             for k = 1:length(U)
                                 t = U{k};
-                                if entry.abstractGroup.imagesDefineMorphism(G, {s t})
+                                if entry.isMorphismByImages(G, 'images', {s t})
                                     if G.subgroup({s, t}).order == G.order
                                         R = replab.AtlasResult(G, entry, {s t});
                                         return
@@ -150,7 +209,7 @@ classdef Standard < replab.Atlas
             end
         end
 
-        function E = cyclic(self, n)
+        function A = cyclic(self, n)
         % Constructs the cyclic group of order n
             assert(n >= 2);
             name = sprintf('Cyclic group C(%d) of order %d', n, n);
@@ -159,8 +218,7 @@ classdef Standard < replab.Atlas
             prmGroup = replab.PermutationGroup.of(X);
             % standard presentation
             % < x | x^n = 1 >
-            abGroup = replab.AbstractGroup({'x'}, prmGroup, {['x^' num2str(n)]});
-            E = replab.AtlasEntry(name, abGroup, prmGroup);
+            A = replab.AbstractGroup({'x'}, prmGroup, {['x^' num2str(n)]}, name);
         end
 
         function R = recognizeCyclic(self, G)
@@ -187,7 +245,7 @@ classdef Standard < replab.Atlas
             R = replab.AtlasResult(G, entry, {x});
         end
 
-        function E = alternating(self, n)
+        function A = alternating(self, n)
         % Constructs the alternating group of degree n
             assert(n >= 4);
             name = sprintf('Alternating group A(%d) of degree %d', n, n);
@@ -210,8 +268,7 @@ classdef Standard < replab.Atlas
                     relators{1,end+1} = sprintf('(t s^-%d t s^%d)^2', k, k);
                 end
             end
-            abGroup = replab.AbstractGroup({'s' 't'}, prmGroup, relators);
-            E = replab.AtlasEntry(name, abGroup, prmGroup);
+            A = replab.AbstractGroup({'s' 't'}, prmGroup, relators, name);
         end
 
         function R = recognizeAlternating(self, G)
@@ -222,7 +279,7 @@ classdef Standard < replab.Atlas
                 return
             end
             n = double(n);
-            C = G.conjugacyClasses;
+            C = G.conjugacyClasses.classes;
             entry = self.alternating(n);
             for i = 1:length(C)
                 S = C{i};
@@ -234,7 +291,7 @@ classdef Standard < replab.Atlas
                             U = T.elements;
                             for k = 1:length(U)
                                 t = U{k};
-                                if entry.fpGroup.imagesDefineMorphism(G, {s t})
+                                if entry.isMorphismByImages(G, 'images', {s t})
                                     if G.subgroup({s, t}).order == G.order
                                         R = replab.AtlasResult(G, entry, {s t});
                                         return
@@ -248,7 +305,15 @@ classdef Standard < replab.Atlas
         end
 
         function R = recognize(self, G)
+            R = self.recognizeTrivial(G);
+            if ~isempty(R)
+                return
+            end
             R = self.recognizeCyclic(G);
+            if ~isempty(R)
+                return
+            end
+            R = self.recognizeKlein(G);
             if ~isempty(R)
                 return
             end

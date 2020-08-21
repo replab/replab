@@ -2,7 +2,7 @@
 # available (as of January 2016)
 language: java
 
-dist: bionic
+dist: focal
 
 ###############################################################################
 env:
@@ -24,12 +24,12 @@ cache:
 before_install:
   - sudo add-apt-repository universe
   - sudo apt update
-  - sudo apt install octave liboctave-dev octave-optim octave-symbolic
+  - sudo apt install octave liboctave-dev octave-optim octave-symbolic openjdk-11-jre
   - git submodule update --init
 
 ###############################################################################
 install:
-  ADDPATH_COMMAND="replab_init(2);"
+  ADDPATH_COMMAND="replab_init('verbose', 2);"
 
 ###############################################################################
 before_script:

@@ -5,7 +5,6 @@
    tutorials/index
    howto/index
    topic/index
-   talks/index
    publications/index
    api/index
    development/index

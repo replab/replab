@@ -114,5 +114,5 @@ function res = formatHelp(txt, context, helpCommand, strongIds, plainIds)
         lines = {lines{1:tableLN(1)-1} tableLines{:} lines{tableLN(end)+1:end}};
     end
 
-    res = strjoin(lines, '\n');
+    res = strjoin(cellfun(@deblank, lines, 'uniform', 0), '\n');
 end

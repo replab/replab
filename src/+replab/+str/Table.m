@@ -36,10 +36,10 @@ classdef Table < replab.Str
         %
         % The constructor can take a variable number of arguments after ``elements``, which are name-value pairs.
         %
-        % - 'colAlign' column alignment charstring. Must be either one character that is repeated 
+        % - 'colAlign' column alignment charstring. Must be either one character that is repeated
         %              for all columns or charstring of length nColumns (including column of row names if given)
         % - 'rowSep' characters that separate rows. Charstring given will repeated to fill the row
-        % - 'colSep' characters that separate columns. This will be used for all columns but individual 
+        % - 'colSep' characters that separate columns. This will be used for all columns but individual
         %            columns can be set with .setColSep
         % - 'rowName' cell(1, nRows) array of row names
         % - 'colName' cell(1, nColumns) array of column names
@@ -139,7 +139,7 @@ classdef Table < replab.Str
         function [tbstr, truncated] = format(self, maxRows, maxColumns)
         % Formatting for the table display
         %
-        % Convention: - use maxRows = {[],Inf} or maxColumns = {[],Inf} to have no restriction 
+        % Convention: - use maxRows = {[],Inf} or maxColumns = {[],Inf} to have no restriction
         %               on output size
         %             - adds column separators and then row separators if given
         %             - if the table is wider than the display, omits first the columns
@@ -157,10 +157,10 @@ classdef Table < replab.Str
         %   tbstr (charstring): string with ``\n`` separators for display
         %   truncated (logical): whethere part of the table was omitted
             dim = size(self.elements);
-            if isempty(maxColumns)
+            if nargin < 3 || isempty(maxColumns)
                 maxColumns = Inf;
             end
-            if isempty(maxRows)
+            if nargin < 2 || isempty(maxRows)
                 maxRows = Inf;
             end
             % to replace align, make sure that two column tables with
@@ -171,7 +171,7 @@ classdef Table < replab.Str
             else
                 char_arr = self.convertToChars(self.elements, maxColumns);
             end
-            
+
 
             % omit columns if table will be wider than maxColumns
             omitSymbol = ' ...';
@@ -185,7 +185,7 @@ classdef Table < replab.Str
             if len > maxColumns
                 truncated = true;
                 ellipsisCol = cell(dim(1), 1);
-                ellipsisCol{floor(dim(1)/2)} = omitSymbol;
+                ellipsisCol{max(floor(dim(1)/2), 1)} = omitSymbol;
                 if ~isempty(self.omitRange)
                     [dots, hide] = self.addEllipses(self.omitRange);
                     char_arr(:, dots) = repmat(ellipsisCol, 1, length(dots));
@@ -253,20 +253,24 @@ classdef Table < replab.Str
             for i = 1:dim(1)
                 for j = 1:dim(2)
                     elmt = char_arr{i, j};
+                    csj = colseps{j};
+                    if isempty(csj)
+                        csj = '';
+                    end
                     if spec(j) == 'l'
                         padding = elmt_lens(j) - length(elmt);
-                        sized_elmt = [colseps{j}, elmt, repmat(' ', 1, padding)];
+                        sized_elmt = [csj, elmt, repmat(' ', 1, padding)];
                     elseif spec(j) == 'c'
                         if rem(elmt_lens(j), 2) == 0
                             padding = floor((elmt_lens(j) - length(elmt)) / 2);
                         else
                             padding = ceil((elmt_lens(j) - length(elmt)) / 2);
                         end
-                        sized_elmt = [colseps{j}, repmat(' ', 1, elmt_lens(j) - length(elmt) - padding), elmt, ...
+                        sized_elmt = [csj, repmat(' ', 1, elmt_lens(j) - length(elmt) - padding), elmt, ...
                                       repmat(' ', 1, padding)];
                     elseif spec(j) == 'r'
                         padding = elmt_lens(j) - length(elmt);
-                        sized_elmt = [colseps{j}, repmat(' ', 1, padding), elmt];
+                        sized_elmt = [csj, repmat(' ', 1, padding), elmt];
                     end
                     char_arr{i, j} = sized_elmt;
 
@@ -543,7 +547,7 @@ classdef Table < replab.Str
             end
             self.rowName = true;
         end
-        
+
         function addTitle(self, title)
         % Adds title to the table
         %
@@ -583,6 +587,58 @@ classdef Table < replab.Str
                 end
             else
                 names = {};
+            end
+        end
+
+        function row = row(self, loc)
+        % Returns the row at the given location
+        %
+        % Convention: - returns as a vector only if all entries are numeric
+        %             - loc does not include the row of column names
+        %             - row will not include the row name
+        %
+        % Args:
+        %   loc (integer): row number
+        %
+        % Returns:
+        %   row ({cell(1,\*), double(1,\*)}): cell array of row entries or vector of row
+        %                                     entries if all are numeric
+            if self.colName
+                loc = loc + 1;
+            end
+            if self.rowName
+                row = self.elements(loc, 2:end);
+            else
+                row = self.elements(loc, 1:end);
+            end
+            if all(cellfun(@isnumeric, row))
+                row = cell2mat(row);
+            end
+        end
+
+        function col = column(self, loc)
+        % Returns the column at the given location
+        %
+        % Convention: - returns as a vector only if all entries are numeric
+        %             - loc does not include the column of row names
+        %             - col will not include the column name
+        %
+        % Args:
+        %   loc (integer): row number
+        %
+        % Returns:
+        %   col ({cell(1,\*), double(1,\*)}): cell array of column entries or vector of column
+        %                                     entries if all are numeric
+            if self.rowName
+                loc = loc + 1;
+            end
+            if self.colName
+                col = self.elements(2:end, loc);
+            else
+                col = self.elements(1:end, loc);
+            end
+            if all(cellfun(@isnumeric, col))
+                col = cell2mat(col);
             end
         end
 

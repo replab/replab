@@ -14,7 +14,6 @@ classdef SymmetricGroup < replab.PermutationGroup
         %
         % Args:
         %   domainSize (integer): Domain size, must be > 0
-            o = replab.util.multiplyIntegers(1:domainSize);
             if domainSize < 2
                 generators = cell(1, 0);
             elseif domainSize == 2
@@ -22,7 +21,7 @@ classdef SymmetricGroup < replab.PermutationGroup
             else
                 generators = {[2:domainSize 1] [2 1 3:domainSize]};
             end
-            self = self@replab.PermutationGroup(domainSize, generators, o, 'self');
+            self = self@replab.PermutationGroup(domainSize, generators, [], 'self');
         end
 
     end
@@ -107,10 +106,15 @@ classdef SymmetricGroup < replab.PermutationGroup
 
     end
 
-    methods % Property computation
+    methods (Access = protected)
+
+        function c = computeChain(self)
+            self.order; % force order computation
+            c = computeChain@replab.PermutationGroup(self);
+        end
 
         function o = computeOrder(self)
-            o = factorial(vpi(self.domainSize));
+            o = replab.util.multiplyIntegers(1:self.domainSize);
         end
 
         function E = computeElements(self)
@@ -118,16 +122,6 @@ classdef SymmetricGroup < replab.PermutationGroup
                                             @(ind) self.enumeratorAt(ind), ...
                                             @(el) self.enumeratorFind(el));
         end
-
-        function d = computeDecomposition(self)
-            G = self.subgroup(self.generators, self.order);
-            d = G.decomposition;
-        end
-
-    end
-
-    methods (Access = protected)
-
 
         function ind = enumeratorFind(self, g)
             n = self.domainSize;

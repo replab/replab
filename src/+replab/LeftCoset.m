@@ -36,6 +36,24 @@ classdef LeftCoset < replab.Coset
 
     end
 
+    methods (Access = protected)
+
+        function E = computeElements(self)
+        % Returns an indexed family of the elements of this coset
+        %
+        % Returns:
+        %   `+replab.IndexedFamily`: Elements
+            H = self.groupChain.allElements;
+            g = self.representative;
+            if ~isempty(self.isomorphism)
+                g = self.isomorphism.imageElement(g);
+            end
+            matrix = sortrows(g(H'))';
+            E = replab.indf.FiniteGroupIndexedFamily(matrix, self.isomorphism);
+        end
+
+    end
+
     methods % Implementations
 
         % Domain
@@ -46,7 +64,7 @@ classdef LeftCoset < replab.Coset
 
         % FiniteSet
 
-        function s = size(self)
+        function s = nElements(self)
         % Returns the size of this coset
         %
         % Returns:
@@ -67,20 +85,6 @@ classdef LeftCoset < replab.Coset
             end
             el = replab.bsgs.Cosets.leftRepresentative(self.groupChain, el);
             b = isequal(self.representative, el);
-        end
-
-        function E = computeElements(self)
-        % Returns an indexed family of the elements of this coset
-        %
-        % Returns:
-        %   `+replab.IndexedFamily`: Elements
-            H = self.groupChain.allElements;
-            g = self.representative;
-            if ~isempty(self.isomorphism)
-                g = self.isomorphism.imageElement(g);
-            end
-            matrix = sortrows(g(H'))';
-            E = replab.indf.FiniteGroupIndexedFamily(matrix, self.isomorphism);
         end
 
     end

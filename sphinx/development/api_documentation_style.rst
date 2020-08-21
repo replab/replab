@@ -283,12 +283,25 @@ each property, and following them by a comment as in below:
 
 Property types are specified before a semicolon, in parenthesis, as for arguments.
 
-Methods are documented as standalone functions. Do not include ``self``
-in the list of parameters. The constructor is documented separately as
-any method.
+Methods are documented as standalone functions. Do not include ``self`` in the list of parameters.
+The constructor is documented separately as any method.
 
 Abstract methods should have a single code line in their body
 ``error('Abstract');``.
+
+Method blocks can be assigned to a *method group*, using the following syntax:
+
+.. code:: matlab
+
+   methods % Group operations
+
+      function z = compose(self, x, y)
+
+      end
+
+   end
+
+The group name ``Implementation`` or ``Implementations`` will be ignored: it concerns a block that implements abstract methods. The substring ``(Abstract)`` will be erased from group names: it can be used to mention that methods in a block need to be implemented in a subclass.
 
 Documenting types
 -----------------

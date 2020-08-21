@@ -145,7 +145,7 @@ classdef Rep < replab.Obj
         function K = computeKernel(self)
             assert(isa(self.group, 'replab.FiniteGroup'));
             % TODO error estimation: take in account the uncertainty on computed images
-            C = self.group.conjugacyClasses;
+            C = self.group.conjugacyClasses.classes;
             % for a character, we have chi(g) == chi(id) only if rho(g) == eye(d)
             % what is the maximal value of real(chi(g)) for chi(g) ~= chi(id)?
             % write chi(g) = sum(lambda(g)) where lambda(g) = eig(chi(g))
@@ -340,7 +340,7 @@ classdef Rep < replab.Obj
         % Obj
 
         function l = laws(self)
-            l = replab.RepLaws(self);
+            l = replab.laws.RepLaws(self);
         end
 
     end
@@ -385,6 +385,21 @@ classdef Rep < replab.Obj
         % Returns:
         %   double(\*,\*): The matrix ``M * self.inverseImage(g)``
             M = full(M * self.inverseImage_internal(g));
+        end
+
+    end
+
+    methods % Morphism composition
+
+        function res = compose(self, applyFirst)
+        % Composition of a representation with a morphism, with the morphism applied first
+        %
+        % Args:
+        %   applyFirst (`.Morphism`): Morphism from a finite group
+        %
+        % Returns:
+        %   `.Rep`: Representation
+            res = replab.rep.CompositionRep(self, applyFirst);
         end
 
     end

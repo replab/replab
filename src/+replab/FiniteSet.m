@@ -12,9 +12,18 @@ classdef FiniteSet < replab.Domain
         representative % (element of `.type`): Minimal member of this set under lexicographic ordering. If the set is empty, value is undefined.
     end
 
+    methods (Access = protected)
+
+        function E = computeElements(self)
+        % See `.elements`
+            error('Abstract');
+        end
+
+    end
+
     methods
 
-        function s = size(self)
+        function s = nElements(self)
         % Returns the size of this set
         %
         % Returns:
@@ -43,11 +52,6 @@ classdef FiniteSet < replab.Domain
             E = self.cached('elements', @() self.computeElements);
         end
 
-        function E = computeElements(self)
-        % See `.elements`
-            error('Abstract');
-        end
-
     end
 
     methods % Relations to other sets
@@ -62,7 +66,7 @@ classdef FiniteSet < replab.Domain
         %
         % Returns:
         %   logical: True if the groups have compatible types
-            res = self.parent.type.hasSameTypeAs(rhs.parent.type); % we delegate to the types themselves
+            res = self.type.hasSameTypeAs(rhs.type); % we delegate to the types themselves
         end
 
     end

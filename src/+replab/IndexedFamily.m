@@ -7,7 +7,7 @@ classdef IndexedFamily < replab.Domain
 % The family supports element indexing and searching for elements.
 
     properties (SetAccess = protected)
-        size % vpi: Number of elements contained in this enumerator
+        nElements % vpi: Number of elements contained in this enumerator
     end
 
     methods
@@ -19,7 +19,7 @@ classdef IndexedFamily < replab.Domain
         % (esp. on the command line), this method must also accept string and double arguments.
         %
         % Args:
-        %   ind (vpi or double or string): Index of element to be retrieved, 1 <= ``ind`` <= ``self.size``
+        %   ind (vpi or double or string): Index of element to be retrieved, 1 <= ``ind`` <= ``self.nElements``
         %
         % Returns:
         %   The element at the "ind" position
@@ -47,12 +47,12 @@ classdef IndexedFamily < replab.Domain
         %
         % Raises:
         %   An error if the enumerator is too big and the elements cannot fit in a cell array.
-            if self.size == 0
+            if self.nElements == 0
                 C = cell(1, 0);
             else
-                n = self.size;
+                n = self.nElements;
                 msg = 'Indexed family of size %s too big to enumerate in a matrix';
-                assert(n < intmax('int32'), msg, num2str(self.size));
+                assert(n < intmax('int32'), msg, num2str(self.nElements));
                 n = double(n);
                 C = cell(1, n);
                 for i = 1:n
@@ -68,18 +68,18 @@ classdef IndexedFamily < replab.Domain
         % Str
 
         function s = shortStr(self, maxColumns)
-            s = sprintf('Indexed family of %s elements', replab.shortStr(self.size, maxColumns));
+            s = sprintf('Indexed family of %s elements', replab.shortStr(self.nElements, maxColumns));
         end
 
         function lines = longStr(self, maxRows, maxColumns)
-            if self.size > maxRows - 1
+            if self.nElements > maxRows - 1
                 n = maxRows - 2;
                 start = ceil(n/2);
                 finish = n - start;
-                omit = self.size - start - finish;
+                omit = self.nElements - start - finish;
                 omitting = 1;
             else
-                start = double(self.size);
+                start = double(self.nElements);
                 omit = [];
                 omitting = 0;
                 finish = 0;
@@ -99,7 +99,7 @@ classdef IndexedFamily < replab.Domain
                 ind = ind + 1;
             end
             for i = 1:finish
-                index = self.size - finish + i;
+                index = self.nElements - finish + i;
                 table{ind,1} = replab.shortStr(index, maxColumns);
                 table{ind,2} = ' = ';
                 table{ind,3} = replab.shortStr(self.at(index), maxColumns);
@@ -111,7 +111,7 @@ classdef IndexedFamily < replab.Domain
         % Obj
 
         function l = laws(self)
-            l = replab.IndexedFamilyLaws(self);
+            l = replab.laws.IndexedFamilyLaws(self);
         end
 
         % Domain
@@ -123,18 +123,18 @@ classdef IndexedFamily < replab.Domain
         end
 
         function obj = sample(self)
-            obj = self.at(randint(self.size)); % use randint as it is the method equivalent to randi on @vpi
+            obj = self.at(randint(self.nElements)); % use randint as it is the method equivalent to randi on @vpi
         end
 
     end
 
     methods (Static) % IndexedFamily construction
 
-        function family = lambda(size, atFun, findFun)
+        function family = lambda(nElements, atFun, findFun)
         % Constructs an indexed family from function handles
         %
         % Args:
-        %   size (vpi): Size of the indexed family, so that the index set is 1..``size``
+        %   nElements (vpi): Size of the indexed family, so that the index set is 1..``nElements``
         %   atFun (function_handle): Handle that implements the ``at`` method
         %                            To simplify implementation, it is guaranteed
         %                            that ``atFun`` will receive an argument of type ``vpi``.
@@ -142,7 +142,7 @@ classdef IndexedFamily < replab.Domain
         %
         % Returns:
         %   `.IndexedFamily`: The constructed indexed family
-            family = replab.lambda.IndexedFamily(size, atFun, findFun);
+            family = replab.lambda.IndexedFamily(nElements, atFun, findFun);
         end
 
     end
