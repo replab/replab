@@ -183,7 +183,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns the conjugacy classes of this group
         %
         % Returns:
-        %   `+replab.ConjugacyClasses`: Conjugacy classes
+        %   cell(1,\*) of `+replab.ConjugacyClass`: Conjugacy classes
             c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
         end
 

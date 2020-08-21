@@ -1,7 +1,7 @@
 function ct = PermutationCharacterTable(group)
 % Generates the character table for a permutation group with integer characters
-% 
-% From Dixon, John. “Computing Irreducible Representations of Groups.” 
+%
+% From Dixon, John. “Computing Irreducible Representations of Groups.”
 % Mathematics of Computation, Volume 24, Number 111, American Mathematical Society, 1970
 %
 % Args:
@@ -71,6 +71,5 @@ function ct = PermutationCharacterTable(group)
         end
     end
     chars = replab.cyclotomic.fromDoubles(round(chars));
-    ct = replab.CharacterTable(group, classes, irreps, chars);
+    ct = replab.CharacterTable(group, replab.ConjugacyClasses(group, classes), irreps, chars);
 end
-
