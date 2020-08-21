@@ -129,6 +129,19 @@ classdef Group < replab.Monoid
             m = replab.Isomorphism.lambda(self, self, @(h) self.leftConjugate(byInv, h), @(h) self.leftConjugate(by, h));
         end
 
+        function m = morphismByFunction(self, target, imageElementFun)
+        % Constructs a group morphism by function
+        %
+        % Args:
+        %   target (`replab.Group`):
+            m = replab.Morphism.lambda(self, target, imageElementFun)
+
+        end
+
+        function m = isomorphismByFunction(self, target, preimageElementFun, imageElementFun)
+            m = replab.Isomorphism.lambda(self, target, preimageElementFun, imageElementFun);
+        end
+
     end
 
     methods (Static)

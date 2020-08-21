@@ -145,7 +145,7 @@ classdef DirectProductGroup < replab.Group
         %
         % Returns:
         %   `.Morphism`: The projection
-            m = self.morphismByFunction(self, @(g) g{i});
+            m = self.morphismByFunction(self.factor(i), @(g) g{i});
         end
 
     end

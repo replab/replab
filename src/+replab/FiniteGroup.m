@@ -51,7 +51,17 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             l = replab.laws.FiniteGroupLaws(self);
         end
 
-        % Morphims
+        % Group
+
+        function m = morphismByFunction(self, target, imageElementFun)
+            imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
+            m = self.morphismByImages(target, 'preimages', self.generators, 'images', imgs);
+        end
+
+        function m = isomorphismByFunction(self, target, preimageElementFun, imageElementFun)
+            imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
+            m = self.isomorphismByImages(target, 'preimages', self.generators, 'images', imgs);
+        end
 
         function m = innerAutomorphism(self, by)
         % Returns the morphism that corresponds to left conjugation by an element
