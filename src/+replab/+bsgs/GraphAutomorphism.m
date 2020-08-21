@@ -40,7 +40,7 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
                 end
             end
             
-            if ~isempty(invariants) > 1
+            if ~isempty(invariants)
                 [~, ~, invariants] = unique(invariants, 'rows');
                 group = group.vectorStabilizer(invariants.');
             end
