@@ -87,7 +87,7 @@ classdef SymmetricOrthogonalIrrep < replab.Rep
             %  colWords (integer(:,:): A matrix whose rows enumerate all column words corresponding to standard Young tableaux
                 n = sum(self.partition);
                 %stores all indices and values for sparse matrix construction,
-                %The ith row stores values for the the (i)-(i+1) transpoition
+                %The ith row stores values for the the (i)-(i+1) transposition
                 %image
                 rowCount = 0;
                 [left_index, top_index] = aboveLeft(self.partition);
@@ -161,7 +161,7 @@ classdef SymmetricOrthogonalIrrep < replab.Rep
              count = 1;
              for i  = 1:len
                  if self.rowFunction(nInds(i),k)<self.rowFunction(nInds(i),k+1)
-                    rPrime = self.rowFunction(nInds(i),transpotition(self,k));
+                    rPrime = self.rowFunction(nInds(i),replab.Permutation.transposition(self.group.domainSize,k,k+1));
                     rPrimeInd = self.basisOrder.(rPrime);
                     axDist = self.rowFunction(nInds(i),k+1)-self.rowFunction(nInds(i),k)+...
                     abs(self.colFunction(nInds(i),k+1)-self.colFunction(nInds(i),k));
@@ -187,7 +187,7 @@ classdef SymmetricOrthogonalIrrep < replab.Rep
             for i = 1:n-1
                 images{i} = self.transImage(i);
             end
-            rep = replab.RepByImages(self.group, self.field, self.dimension, 'preimages', preimages, 'images', images);
+            rep = self.group.repByImages(self.field, self.dimension, 'preimages', preimages, 'images', images);
         end
 
    end

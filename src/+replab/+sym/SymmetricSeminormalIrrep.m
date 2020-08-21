@@ -175,7 +175,7 @@ classdef SymmetricSeminormalIrrep < replab.Rep
              count = 1;
              for i  = 1:len
                  if self.rowFunction(nInds(i),k)<self.rowFunction(nInds(i),k+1)
-                    rPrime = self.rowFunction(nInds(i),transpotition(self,k));
+                    rPrime = self.rowFunction(nInds(i),replab.Permutation.transposition(self.group.domainSize,k,k+1));
                     rPrimeInd = self.basisOrder.(rPrime);
                     axDist = self.rowFunction(nInds(i),k+1)-self.rowFunction(nInds(i),k)+...
                     abs(self.colFunction(nInds(i),k+1)-self.colFunction(nInds(i),k));
@@ -201,7 +201,7 @@ classdef SymmetricSeminormalIrrep < replab.Rep
             for i = 1:n-1
                 images{i} = self.transImage(i);
             end
-            rep = replab.RepByImages(self.group, self.field, self.dimension, 'preimages', preimages, 'images', images);
+            rep = self.group.repByImages(self.field, self.dimension, 'preimages', preimages, 'images', images);
         end
 
    end
