@@ -117,7 +117,7 @@ classdef ConjugacyClasses < replab.Obj
         %
         % Returns:
         %   integer: Index of the class containing ``g``
-            r = replab.ConjugacyClass.representative(self.group, g);
+            r = replab.ConjugacyClasses.representative(self.group, g);
             for k = 1:length(self.classes)
                 if self.group.eqv(self.classes{k}.representative, r)
                     ind = k;
@@ -198,6 +198,18 @@ classdef ConjugacyClasses < replab.Obj
             end
             classes1 = cellfun(@(c) c.imap(f, imageGroup, preserveLexOrder), self.classes, 'uniform', 0);
             c1 = replab.ConjugacyClasses(imageGroup, classes1);
+        end
+
+    end
+
+    methods (Static)
+
+
+        function r = representative(group, element)
+            prmGroup = group.niceMorphism.image;
+            prmElement = group.niceMorphism.imageElement(element);
+            h = replab.bsgs.ConjugacyClasses.representative(prmGroup, prmElement);
+            r = group.niceMorphism.preimageElement(h);
         end
 
     end

@@ -72,13 +72,6 @@ classdef ConjugacyClass < replab.FiniteSet
 
     methods (Static)
 
-        function r = representative(group, element)
-            prmGroup = group.niceMorphism.image;
-            prmElement = group.niceMorphism.imageElement(element);
-            h = replab.bsgs.ConjugacyClasses.representative(prmGroup, prmElement);
-            r = group.niceMorphism.preimageElement(h);
-        end
-
         function c = make(group, element, elementCentralizer)
             if nargin < 3
                 elementCentralizer = group.centralizer(element);

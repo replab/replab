@@ -12,7 +12,7 @@ classdef ConjugacyClassLaws < replab.Laws
         end
 
         function law_representative_C(self, c)
-            r = replab.ConjugacyClass.representative(self.C.group, c);
+            r = replab.ConjugacyClasses.representative(self.C.group, c);
             self.C.group.assertEqv(self.C.representative, r);
         end
 
