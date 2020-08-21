@@ -40,7 +40,7 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
                 end
             end
             
-            if ~isempty(invariants) > 1
+            if ~isempty(invariants)
                 [~, ~, invariants] = unique(invariants, 'rows');
                 group = group.vectorStabilizer(invariants.');
             end
@@ -111,6 +111,16 @@ classdef GraphAutomorphism < replab.bsgs.Backtrack
             Sku = reshape(Kt(:,p(end),:), nbT, nVertices);
             Skv = reshape(Kt(:,pTilde(end),:), nbT, nVertices);
             
+            % We check whether previous matches are valid with the current
+            % state of affair
+            for u = 1:nVertices
+                if (Phi(u) ~= 0) && (sum(abs(Sku(:,u) - Skv(:,Phi(u)))) >= 1e-10)
+                    % Some assignment done previously doesn't work
+                    ok = false;
+                    return;
+                end
+            end
+
             % Now we refine the matches
             candidatesV = 1:nVertices;
             candidatesV(Phi(Phi~=0)) = 0;
