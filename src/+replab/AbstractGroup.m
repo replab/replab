@@ -30,7 +30,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 %
 % Example:
 %   >>> G = replab.S(3);
-%   >>> f = G.abstractGroupIsomorphism({'s' 't'});
+%   >>> f = G.abstractMorphism({'s' 't'});
 %   >>> f.imageElement([2 3 1])
 %       's'
 
@@ -47,8 +47,28 @@ classdef AbstractGroup < replab.NiceFiniteGroup
     methods (Static)
 
         function A = make(generatorNames, relatorWords)
+        % Creates an abstract group from generator names and relators
+        %
+        % Args:
+        %   generatorNames (cell(1,\*) of charstring): Names of the generators
+        %   relatorWords (cell(1,\*) of charstring): Relators of the abstract group
+        %
+        % Returns:
+        %   `.AbstractGroup`: The constructed abstract group
+            if length(generatorNames) == 0
+                % Trivial group case
+                S1 = replab.S(1);
+                A = replab.AbstractGroup(cell(1, 0), S1.trivialSubgroup, cell(1, 0));
+                return
+            end
             relators = cellfun(@(w) replab.fp.Letters.parse(w, generatorNames), relatorWords, 'uniform', 0);
-            [gens order] = replab.fp.permutationGeneratorsForRelators(length(generatorNames), relators);
+            [gens order] = replab.fp.permutationRealizationForRelators(length(generatorNames), relators);
+
+            ds = length(gens{1});
+            isId = cellfun(@(g) isequal(g, 1:ds), gens);
+            if any(isId)
+                error('One of the generators in the presentation is the identity');
+            end
             pg = replab.PermutationGroup.of(gens{:});
             pg.cache('order', order, '==');
             A = replab.AbstractGroup(generatorNames, pg, relatorWords);
@@ -91,11 +111,35 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
         function r = computeRelators(self)
             r = replab.fp.relatorsForPermutationGroup(self.permutationGroup);
-            r = cellfun(@(w) self.factorizeLetters(fliplr(w)), r, 'uniform', 0);
+            r = cellfun(@(w) self.imageLetters(fliplr(w)), r, 'uniform', 0);
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function G = computeNiceGroup(self)
+            G = self.permutationGroup;
         end
 
         function m = computeNiceMorphism(self)
             m = replab.mrp.AbstractGroupNiceIsomorphism(self);
+        end
+
+        function A = computeDefaultAbstractGroup(self)
+            if isequal(self.generatorNames, self.defaultGeneratorNames)
+                A = self;
+            else
+                A = self.withRenamedGenerators(self.defaultGeneratorNames);
+            end
+        end
+
+        function m = computeDefaultAbstractMorphism(self)
+            if isequal(self.generatorNames, self.defaultGeneratorNames)
+                m = replab.FiniteIsomorphism.identity(self);
+            else
+                m = replab.mrp.AbstractGroupRenamingIsomorphism(self, self.abstractGroup);
+            end
         end
 
     end
@@ -218,29 +262,6 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
         end
 
-        function l = imagesDefineMorphism(self, target, targetGeneratorImages)
-        % Checks whether the given images satisfy the relations of the presentation of this group
-        %
-        % If it returns true, it means those images describe a valid homomorphism from this `.AbstractGroup`
-        % to the given target group.
-        %
-        % Args:
-        %   target (`+replab.Group`): Target group
-        %   targetGeneratorImages (cell(1,\*) of elements of ``target``): Images of the generators of this group
-        %
-        % Returns:
-        %   logical: True if the images verify the presentation
-            nR = length(self.relators);
-            for i = 1:nR
-                r = self.relators{i};
-                if ~target.isIdentity(self.computeImage(r, target, targetGeneratorImages))
-                    l = false;
-                    return
-                end
-            end
-            l = true;
-        end
-
     end
 
     methods % Implementations
@@ -313,6 +334,29 @@ classdef AbstractGroup < replab.NiceFiniteGroup
                 else
                     perm = pg.composeWithInverse(perm, pg.generator(-l));
                 end
+            end
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function l = isMorphismByImages_(self, target, preimages, images)
+            hasSameGenerators = length(preimages) == self.nGenerators && ...
+                all(arrayfun(@(i) self.eqv(preimages{i}, self.generator(i)), 1:self.nGenerators));
+            if hasSameGenerators
+                nR = length(self.relators);
+                for i = 1:nR
+                    r = self.factorizeLetters(self.relators{i});
+                    g = target.composeLetters(images, r);
+                    if ~target.isIdentity(g)
+                        l = false;
+                        return
+                    end
+                end
+                l = true;
+            else
+                l = isMorphismByImages_@replab.FiniteGroup(self, target, preimages, images);
             end
         end
 

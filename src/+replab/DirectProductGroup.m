@@ -110,6 +110,55 @@ classdef DirectProductGroup < replab.Group
 
     end
 
+    methods % Morphisms
+
+        function m = embedding(self, i)
+        % Returns the morphism embedding the i-th factor into the direct product
+        %
+        % Example:
+        %   >>> S2 = replab.S(2);
+        %   >>> D = S2.directProduct(S2);
+        %   >>> m = D.embedding(1);
+        %   >>> D.eqv({[2 1] [1 2]}, m.imageElement([2 1]))
+        %       1
+        %
+        % Args:
+        %   i (integer): Factor index
+        %
+        % Returns:
+        %   `.Morphism`: The embedding
+            m = self.factor(i).morphismByFunction(self, @(g) replab.DirectProductGroup.updateCellArray(self.identity, i, g));
+        end
+
+        function m = projection(self, i)
+        % Returns the morphism projecting this group into its i-th factor
+        %
+        % Example:
+        %   >>> S2 = replab.S(2);
+        %   >>> D = S2.directProduct(S2);
+        %   >>> m = D.projection(1);
+        %   >>> S2.eqv([2 1], m.imageElement({[2 1] [1 2]}))
+        %       1
+        %
+        % Args:
+        %   i (integer): Factor index
+        %
+        % Returns:
+        %   `.Morphism`: The projection
+            m = self.morphismByFunction(self.factor(i), @(g) g{i});
+        end
+
+    end
+
+    methods (Static, Access = protected)
+
+        function c = updateCellArray(c, i, v)
+        % Updates the i-th element of a cell array
+            c{i} = v;
+        end
+
+    end
+
     methods % Implementations
 
         % Str

@@ -27,6 +27,49 @@ classdef ConjugacyClass < replab.FiniteSet
 
     end
 
+    methods (Access = protected)
+
+        function o = computeElementOrder(self)
+            o = self.group.elementOrder(self.representative);
+        end
+
+    end
+
+    methods
+
+        function o = elementOrder(self)
+        % Returns the order of the elements in this conjugacy class
+        %
+        % Returns:
+        %   integer: Element order
+            o = self.cached('elementOrder', @() self.computeElementOrder);
+        end
+
+        function c1 = imap(self, f, imageGroup, preserveLexOrder)
+        % Maps this conjugacy class under an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %   imageGroup (`.FiniteGroup`, optional): Image of `.group` under ``f``, default ``[]`` (recompute)
+        %   preserveLexOrder (logical, optional): Whether the isomorphism preserves the lexicographic order of group elements, default false
+        %
+        % Returns:
+        %   `.ConjugacyClass`: The conjugacy class mapped under ``f``, expressed as a subset of ``f.image``
+            if nargin < 3 || isempty(imageGroup)
+                imageGroup = f.imageGroup(self.group);
+            end
+            if nargin < 4 || isempty(preserveLexOrder)
+                preserveLexOrder = false;
+            end
+            if preserveLexOrder
+                c1 = replab.ConjugacyClass(imageGroup, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
+            else
+                c1 = replab.ConjugacyClass.make(imageGroup, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
+            end
+        end
+
+    end
+
     methods (Static)
 
         function r = representative(group, element)
@@ -61,6 +104,21 @@ classdef ConjugacyClass < replab.FiniteSet
 
     methods % Implementations
 
+        % Str
+
+        function s = shortStr(self, maxColumns)
+            s = sprintf('ConjugacyClass of %s in %s', replab.shortStr(self.representative, maxColumns), replab.shortStr(self.group, maxColumns));
+            if length(s) > maxColumns
+                s = sprintf('ConjugacyClass of %s', replab.shortStr(self.representative, maxColumns));
+            end
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.ConjugacyClassLaws(self);
+        end
+
         % Domain
 
         function s = sample(self)
@@ -87,17 +145,6 @@ classdef ConjugacyClass < replab.FiniteSet
             % We want to solve ``t == b s b^-1`` with ``s`` the representative
             B = self.group.findLeftConjugations(s, t, sCentralizer);
             b = ~isempty(B);
-        end
-
-        function c1 = imap(self, f)
-        % Maps this conjugacy class under an isomorphism
-        %
-        % Args:
-        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
-        %
-        % Returns:
-        %   `.ConjugacyClass`: The conjugacy class mapped under ``f``, expressed as a subset of ``f.image``
-
         end
 
     end

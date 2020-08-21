@@ -1,7 +1,7 @@
 function ct = PermutationCharacterTable(group)
 % Generates the character table for a permutation group with integer characters
-% 
-% From Dixon, John. “Computing Irreducible Representations of Groups.” 
+%
+% From Dixon, John. “Computing Irreducible Representations of Groups.”
 % Mathematics of Computation, Volume 24, Number 111, American Mathematical Society, 1970
 %
 % Args:
@@ -14,11 +14,12 @@ function ct = PermutationCharacterTable(group)
     decomp = group.naturalRep.decomposition.nice;
     irreps = decomp.components;
     classes = group.conjugacyClasses;
-    k = length(classes);
+    nClasses = classes.nClasses;
+    k = nClasses;
     for i = 1:k
         % verify that g^n is conjugate to g for all g \in G and n \in Z with n and (g) coprime
         % https://math.stackexchange.com/questions/2792741/classification-of-groups-with-integer-valued-characters
-        cl = classes{i};
+        cl = classes.classes{i};
         g = cl.representative;
         eo = group.elementOrder(g);
         for j = 2:eo-1
@@ -29,11 +30,11 @@ function ct = PermutationCharacterTable(group)
             end
         end
     end
-    ccreps = cell(1, length(classes));
-    cclens = cell(1, length(classes));
+    ccreps = cell(1, nClasses);
+    cclens = cell(1, nClasses);
     for i = 1:k
-        ccreps{i} = classes{i}.representative;
-        cclens{i} = double(classes{i}.nElements);
+        ccreps{i} = classes.classes{i}.representative;
+        cclens{i} = double(classes.classes{i}.nElements);
     end
     nirreps = length(irreps);
     chars = cell(nirreps, k);
@@ -70,8 +71,6 @@ function ct = PermutationCharacterTable(group)
             end
         end
     end
-    classes = replab.ConjugacyClasses(group, classes);
     chars = replab.cyclotomic.fromDoubles(round(chars));
-    ct = replab.CharacterTable(group, classes, irreps, chars);
+    ct = replab.CharacterTable(group, classes, chars, 'irreps', irreps);
 end
-

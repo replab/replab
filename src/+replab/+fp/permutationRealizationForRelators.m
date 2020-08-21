@@ -1,4 +1,4 @@
-function [gens order] = permutationGeneratorsForRelators(nGenerators, relators)
+function [gens order] = permutationRealizationForRelators(nGenerators, relators)
 % Computes a permutation realization of a finite group given by a presentation
 %
 % Args:
@@ -6,7 +6,7 @@ function [gens order] = permutationGeneratorsForRelators(nGenerators, relators)
 %   relators (cell(1,\*) of integer(1,\*)): Relators given as words in letters
 %
 % Returns:
-%   cell(1,\*) of permutation: Generators of a permutation group realizing the presentation
+%   cell(1,\*) of permutation: Permutations realizing the presentation
     switch replab.globals.cosetEnumerationMethod
       case 'R'
         ct = replab.fp.CosetTable.cosetEnumerationR(nGenerators, relators, {});

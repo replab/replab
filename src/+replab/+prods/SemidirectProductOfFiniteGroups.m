@@ -76,7 +76,7 @@ classdef SemidirectProductOfFiniteGroups < replab.SemidirectProductGroup & repla
                 end
                 images{i} = img;
             end
-            m = self.N.morphismByImages(replab.S(o), images);
+            m = self.N.morphismByImages(replab.S(o), 'images', images);
         end
 
         function a = computePhiMorphism(self)
@@ -96,7 +96,7 @@ classdef SemidirectProductOfFiniteGroups < replab.SemidirectProductGroup & repla
                 end
                 phiImages{i} = phiImage;
             end
-            a = self.H.morphismByImages(replab.S(o), phiImages);
+            a = self.H.morphismByImages(replab.S(o), 'images', phiImages);
         end
 
     end

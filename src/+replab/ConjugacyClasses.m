@@ -3,11 +3,14 @@ classdef ConjugacyClasses < replab.Obj
 %
 % In particular, it can compute power maps.
 
+    properties (Access = protected)
+        primes % (integer(1,nP)): List of primes that divide the group order (computed as needed)
+        primePowerMap % (integer(nP,nC)): Power maps (computed as needed)
+    end
+
     properties (SetAccess = protected)
         group % (`.FiniteGroup`): Group under study
         classes % (cell(1,nC) of `.ConjugacyClass`): Conjugacy classes
-        primes % (integer(1,nP)): List of primes that divide the group order (computed as needed)
-        primePowerMap % (integer(nP,nC)): Power maps (computed as needed)
     end
 
     methods (Access = protected)
@@ -39,6 +42,31 @@ classdef ConjugacyClasses < replab.Obj
 
     end
 
+    methods % Implementations
+
+        % Str
+
+        function [names values] = additionalFields(self)
+            [names values] = additionalFields@replab.Obj(self);
+            for i = 1:self.nClasses
+                names{1, end+1} = sprintf('classes{%d}', i);
+                values{1, end+1} = self.classes{i};
+            end
+        end
+
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Obj(self);
+            names{1, end+1} = 'classes';
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.ConjugacyClassesLaws(self);
+        end
+
+    end
+
     methods
 
         function self = ConjugacyClasses(group, classes)
@@ -64,12 +92,12 @@ classdef ConjugacyClasses < replab.Obj
             s = cellfun(@(c) c.representativeCentralizer.order, self.classes, 'uniform', 0);
         end
 
-        function s = classOrders(self)
+        function s = classElementOrders(self)
         % Returns the element order for each of the conjugacy classes
         %
         % Returns:
         %   integer(1,\*): Elements orders
-            s = cellfun(@(c) self.group.elementOrder(c.representative), self.classes, 'uniform', 0);
+            s = cellfun(@(c) c.elementOrder, self.classes);
         end
 
         function s = classSizes(self)
@@ -89,7 +117,7 @@ classdef ConjugacyClasses < replab.Obj
         %
         % Returns:
         %   integer: Index of the class containing ``g``
-            r = replab.ConjugacyClass.representative(self.group, g);
+            r = replab.ConjugacyClasses.representative(self.group, g);
             for k = 1:length(self.classes)
                 if self.group.eqv(self.classes{k}.representative, r)
                     ind = k;
@@ -131,17 +159,57 @@ classdef ConjugacyClasses < replab.Obj
             end
         end
 
+        function pp = powerMapDefaultPrimes(self)
+        % Returns the list of primes that are necessary to reconstruct any power map
+        %
+        % Returns:
+        %   integer(1,\*): Prime numbers that are less or equal to the largest class element order
+            pp = primes(max(self.classElementOrders));
+        end
+
         function a = powerMapMatrix(self)
         % Returns an adjacency-like matrix that describes (incomplete) relationships between conjugacy classes
-            primes = unique(double(factor(self.group.order)));
-            m = self.powerMaps(primes);
+            pp = self.powerMapDefaultPrimes;
+            m = self.powerMaps(pp);
             a = zeros(self.nClasses, self.nClasses);
             for r = 1:self.nClasses
                 powers = m(:,r);
                 for c = 1:self.nClasses
-                    a(r,c) = prod(primes(powers == c));
+                    a(r,c) = prod(pp(powers == c));
                 end
             end
+        end
+
+        function c1 = imap(self, f, imageGroup, preserveLexOrder)
+        % Maps the conjugacy classes under an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %   imageGroup (`.FiniteGroup`, optional): Image of `.group` under ``f``, default ``[]`` (recompute)
+        %   preserveLexOrder (logical, optional): Whether the isomorphism preserves the lexicographic order of group elements, default false
+        %
+        % Returns:
+        %   `.ConjugacyClasses`: The conjugacy classes mapped under ``f``, expressed as a subset of ``f.image``
+            if nargin < 3 || isempty(imageGroup)
+                imageGroup = f.imageGroup(self.group);
+            end
+            if nargin < 4 || isempty(preserveLexOrder)
+                preserveLexOrder = false;
+            end
+            classes1 = cellfun(@(c) c.imap(f, imageGroup, preserveLexOrder), self.classes, 'uniform', 0);
+            c1 = replab.ConjugacyClasses(imageGroup, classes1);
+        end
+
+    end
+
+    methods (Static)
+
+
+        function r = representative(group, element)
+            prmGroup = group.niceMorphism.image;
+            prmElement = group.niceMorphism.imageElement(element);
+            h = replab.bsgs.ConjugacyClasses.representative(prmGroup, prmElement);
+            r = group.niceMorphism.preimageElement(h);
         end
 
     end

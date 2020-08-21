@@ -127,10 +127,6 @@ classdef PermutationGroup < replab.FiniteGroup
             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
         end
 
-        function m = computeNiceMorphism(self)
-            m = replab.FiniteIsomorphism.identity(self);
-        end
-
         function dec = computeDecomposition(self)
             c = self.chain;
             k = c.length;
@@ -164,7 +160,7 @@ classdef PermutationGroup < replab.FiniteGroup
                 reps(i,:) = classes{i}.representative;
             end
             [~, I] = sortrows(reps);
-            classes = classes(I); % sort by minimal representative
+            classes = replab.ConjugacyClasses(self, classes(I)); % sort by minimal representative
         end
 
         function res = computeIsCyclic(self)
@@ -247,6 +243,26 @@ classdef PermutationGroup < replab.FiniteGroup
 
     end
 
+    methods (Access = protected)
+
+        function G = computeNiceGroup(self)
+            G = self;
+        end
+
+        function m = computeNiceMorphism(self)
+            m = replab.FiniteIsomorphism.identity(self);
+        end
+
+        function A = computeDefaultAbstractGroup(self)
+            A = replab.AbstractGroup(self.defaultGeneratorNames, self);
+        end
+
+        function m = computeDefaultAbstractMorphism(self)
+            m = self.abstractGroup.niceMorphism.inverse;
+        end
+
+    end
+
     methods % Group internal description
 
         function c = lexChain(self)
@@ -270,6 +286,23 @@ classdef PermutationGroup < replab.FiniteGroup
         function c = partialChain(self)
         % Returns the stabilizer chain corresponding to this permutation group if it can be computed quickly
             c = self.cached('partialChain', @() self.computePartialChain);
+        end
+
+    end
+
+    methods (Access = protected)
+
+        % Morphisms
+
+        function m = morphismByImages_(self, target, preimages, images, nChecks)
+            assert(length(preimages) == length(images));
+            if isa(target, 'replab.PermutationGroup')
+                m = replab.mrp.PermToPerm(self, target, preimages, images);
+            elseif isa(target, 'replab.FiniteGroup')
+                m = replab.mrp.PermToFiniteGroup(self, target, preimages, images);
+            else
+                m = replab.mrp.PermToGroup(self, target, preimages, images);
+            end
         end
 
     end
@@ -422,7 +455,7 @@ classdef PermutationGroup < replab.FiniteGroup
 
         % Subgroups
 
-        function grp = subgroupWithGenerators(self, generators, order)
+        function sub = subgroupWithGenerators(self, generators, order)
         % Constructs a permutation subgroup from its generators
         %
         % Args:
@@ -434,7 +467,11 @@ classdef PermutationGroup < replab.FiniteGroup
             if nargin < 3
                 order = [];
             end
-            grp = replab.PermutationGroup(self.domainSize, generators, order, self.type);
+            if length(generators) == self.nGenerators && all(arrayfun(@(i) self.eqv(self.generator(i), generators{i}), 1:length(generators)))
+                sub = self;
+            else
+                sub = replab.PermutationGroup(self.domainSize, generators, order, self.type);
+            end
         end
 
         function c = centralizer(self, other)
@@ -477,18 +514,6 @@ classdef PermutationGroup < replab.FiniteGroup
 
         function res = hasSameTypeAs(self, rhs)
             res = isa(rhs, 'replab.PermutationGroup') && (self.type.domainSize == rhs.type.domainSize);
-        end
-
-        % Morphisms
-
-        function m = morphismByImages(self, target, images)
-            if isa(target, 'replab.PermutationGroup')
-                m = replab.mrp.PermToPerm(self, target, images);
-            elseif isa(target, 'replab.FiniteGroup')
-                m = replab.mrp.PermToFiniteGroup(self, target, images);
-            else
-                m = replab.mrp.PermToGroup(self, target, images);
-            end
         end
 
         % Representations

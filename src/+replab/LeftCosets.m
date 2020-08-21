@@ -106,7 +106,7 @@ classdef LeftCosets < replab.Cosets
                 images{i} = img;
             end
             Sn = replab.S(n);
-            mu = self.group.morphismByImages(Sn, images);
+            mu = self.group.morphismByImages(Sn, 'images', images);
         end
 
     end

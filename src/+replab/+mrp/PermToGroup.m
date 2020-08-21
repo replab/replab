@@ -1,21 +1,24 @@
 classdef PermToGroup < replab.Morphism
 
     properties (SetAccess = protected)
-        imageSourceGenerators % (cell(1,self.source.nGenerators) of `.target` elements): Generator images
+        preimages % (cell(1,n) of `.source` elements): Preimages
+        images % (cell(1,n) of `.target` elements): Images
     end
 
     methods
 
-        function self = PermToGroup(source, target, images)
+        function self = PermToGroup(source, target, preimages, images)
         % Constructs a morphism from a permutation group to a finite group
         %
         % Args:
         %   source (`+replab.PermutationGroup`): Source of the morphism
         %   target (`+replab.Group`): Target of the morphism
-        %   images (cell(1,\*) of `.target` elements): Images of the source generators
+        %   preimages (cell(1,n) of `.source` elements): Preimages
+        %   images (cell(1,n) of `.target` elements): Images
             self.source = source;
             self.target = target;
-            self.imageSourceGenerators = images;
+            self.preimages = preimages;
+            self.images = images;
         end
 
         function c = chain(self)
@@ -33,7 +36,7 @@ classdef PermToGroup < replab.Morphism
         function c = computeChain(self)
             n = self.source.domainSize;
             % TODO: optimize ChainWithImages by using deterministic Schreier-Sims while comparing orbits
-            c = replab.bsgs.ChainWithImages.make(n, self.target, self.source.generators, self.imageSourceGenerators, [], ...
+            c = replab.bsgs.ChainWithImages.make(n, self.target, self.preimages, self.images, [], ...
                                                  self.source.chain.base, self.source.order);
         end
 

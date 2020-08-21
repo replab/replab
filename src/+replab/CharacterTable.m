@@ -12,8 +12,7 @@ classdef CharacterTable < replab.Obj
 % The character values are stored as elements of the cyclotomic field, using the `.cyclotomic` class which requires
 % external libraries and a Java Virtual Machine available.
 %
-% Instances of `.CharacterTable` are immutable; however, they can be enriched by calling the appropriate methods to
-% add contextual information.
+% Instances of `.CharacterTable` are immutable.
 
     properties (SetAccess = protected)
         group % (`+replab.FiniteGroup`): Group represented by character table
@@ -49,87 +48,34 @@ classdef CharacterTable < replab.Obj
 
     methods
 
-        function self = CharacterTable(group, classes, irreps, characters)
+        function self = CharacterTable(group, classes, characters, varargin)
         % Constructs a character table
+        %
+        % Args:
+        %   group (`+replab.FiniteGroup`): Group represented by character table
+        %   classes (`.ConjugacyClasses`): Conjugacy classes of `.group`
+        %   characters (`.cyclotomic` (nClasses, nClasses)): Character values
+        %
+        % Keyword Args:
+        %   irreps (cell(1,\*) of ``[]`` or `+replab.RepByImages`): Explicit matrix representations (can contain empty values)
+        %   classNames (cell(1,\*) of charstring): Names of conjugacy classes
+        %   irrepNames (cell(1,\*) of charstring): Names of irreducible representations
+            nIrreps = size(characters, 1);
+            nClasses = classes.nClasses;
+            assert(size(characters, 2) == nClasses);
+            assert(nIrreps == nClasses);
+            args = struct('irrepNames', {replab.CharacterTable.defaultIrrepNames(nIrreps)}, ...
+                          'classNames', {replab.CharacterTable.defaultClassNames(classes.classElementOrders)}, ...
+                          'irreps', {cell(1, nIrreps)});
+            args = replab.util.populateStruct(args, varargin);
             self.group = group;
             self.classes = classes;
-            self.irreps = irreps;
             self.characters = characters;
-            assert(classes.nClasses == size(characters, 2));
-            orders = [];
-            numbers = [];
-            classNames = cell(1, classes.nClasses);
-            for i = 1:classes.nClasses
-                c = classes.classes{i};
-                o = group.elementOrder(c.representative);
-                j = find(orders == o);
-                if isempty(j)
-                    j = length(orders) + 1;
-                    orders(j) = o;
-                    numbers(j) = 1;
-                else
-                    numbers(j) = numbers(j) + 1;
-                end
-                classNames{i} = sprintf('%d%s', o, char('a' + numbers(j) - 1));
-            end
-            self.classNames = classNames;
-            nIrreps = size(self.characters, 2);
-            assert(nIrreps == classes.nClasses);
-            self.irrepNames = arrayfun(@(i) sprintf('X.%d', i), 1:nIrreps, 'uniform', 0);
+            self.irrepNames = args.irrepNames;
+            self.classNames = args.classNames;
+            self.irreps = args.irreps;
         end
 
-        function s = headerStr(self)
-            group_str = replab.headerStr(self.group);
-            if length(group_str) > 1
-                group_str = [lower(group_str(1)), group_str(2:end)];
-            end
-            s = sprintf(['Character table for ', group_str]);
-        end
-
-        function strings = centralizerSizeTable(self)
-            primes = unique(double(factor(self.group.order)));
-            nC = self.classes.nClasses;
-            strings = cell(length(primes), nC+1);
-            for i = 1:length(primes)
-                strings{i,1} = sprintf('%d', primes(i));
-            end
-            for i = 1:nC
-                c = self.classes.classes{i};
-                f = double(factor(c.representativeCentralizer.order));
-                for j = 1:length(primes)
-                    s = sum(f == primes(j));
-                    if s == 0
-                        strings{j,i+1} = '.';
-                    else
-                        strings{j,i+1} = sprintf('%d', sum(f == primes(j)));
-                    end
-                end
-            end
-        end
-
-        function lines = longStr(self, maxRows, maxColumns)
-            ct = replab.str.CyclotomicTable(self.characters);
-            primes = unique(double(factor(self.group.order)));
-            m = self.classes.powerMaps(primes);
-            nC = self.classes.nClasses;
-            powerMaps = cell(length(primes)+1, nC + 1);
-            powerMaps{1,1} = '';
-            powerMaps(1,2:end) = self.classNames;
-            for i = 1:length(primes)
-                powerMaps{i+1,1} = sprintf('%dP', primes(i));
-                for j = 1:nC
-                    powerMaps{i+1,j+1} = self.classNames{m(i,j)};
-                end
-            end
-            chars = horzcat(self.irrepNames(:), ct.strings);
-            cst = self.centralizerSizeTable;
-            sep = repmat({''}, 1, nC+1);
-            t = replab.str.Table(vertcat(cst, sep, powerMaps, sep, chars), 'colAlign', repmat('r', 1, nC+1));
-            lines1 = strsplit(t.format(maxRows, maxColumns), '\n');
-            lines2 = arrayfun(@(i) sprintf(' %s = %s', ct.variables{i}, num2str(ct.values(i))), 1:length(ct.variables), 'uniform', 0);
-            lines = vertcat(lines1(:), {''}, lines2(:));
-        end
-        
         function ct = directProduct(self, ct2)
         % Returns the direct product of character tables
         %
@@ -192,8 +138,178 @@ classdef CharacterTable < replab.Obj
                     new_irreps{j + (i-1)*length(ct2.irreps)} = new_irrep;
                 end
             end
-            ct = replab.CharacterTable(new_group, new_classes, new_irreps, new_chars);
+            ct = replab.CharacterTable(new_group, new_classes, new_chars, 'irreps', new_irreps);
         end
+
+        function n = nClasses(self)
+            n = self.classes.nClasses;
+        end
+
+        function n = nIrreps(self)
+            n = self.nClasses;
+        end
+
+    end
+
+    methods (Static)
+
+        function names = defaultIrrepNames(n)
+        % Constructs default names for irreducible representations
+        %
+        % Args:
+        %   n (integer): Number of irreducible representations
+        %
+        % Returns:
+        %   cell(1,\*) of charstring: Irreducible representation names
+            names = arrayfun(@(i) sprintf('X.%d', i), 1:n, 'uniform', 0);
+        end
+
+        function names = defaultClassNames(elementOrders)
+        % Constructs default names for conjugacy classes
+        %
+        % Args:
+        %   elementOrders (integer(1,\*)): Orders of the conjugacy classes elements
+        %
+        % Returns:
+        %   cell(1,\*) of charstring: Conjugacy class names
+            orders = [];
+            numbers = [];
+            nClasses = length(elementOrders);
+            names = cell(1, nClasses);
+            for i = 1:nClasses
+                o = elementOrders(i);
+                j = find(orders == o);
+                if isempty(j)
+                    j = length(orders) + 1;
+                    orders(j) = o;
+                    numbers(j) = 1;
+                else
+                    numbers(j) = numbers(j) + 1;
+                end
+                names{i} = sprintf('%d%s', o, char('a' + numbers(j) - 1));
+            end
+        end
+
+    end
+
+    methods % Implementations
+
+        % Str
+
+        function s = headerStr(self)
+            group_str = replab.headerStr(self.group);
+            if length(group_str) > 1
+                group_str = [lower(group_str(1)), group_str(2:end)];
+            end
+            s = sprintf(['Character table for ', group_str]);
+        end
+
+        function lines = longStr(self, maxRows, maxColumns)
+            switch replab.globals.formatCharacterTable
+              case 'gap'
+                lines = self.gapLongStr(maxRows, maxColumns);
+              case 'plain'
+                lines = self.plainLongStr(maxRows, maxColumns);
+              otherwise
+                error('Unknown format %s', replab.globals.formatCharacterTable);
+            end
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.CharacterTableLaws(self);
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function strings = centralizerSizeTable(self)
+            primes = unique(double(factor(self.group.order)));
+            nC = self.classes.nClasses;
+            strings = cell(length(primes), nC+1);
+            for i = 1:length(primes)
+                strings{i,1} = sprintf('%d', primes(i));
+            end
+            for i = 1:nC
+                c = self.classes.classes{i};
+                f = double(factor(c.representativeCentralizer.order));
+                for j = 1:length(primes)
+                    s = sum(f == primes(j));
+                    if s == 0
+                        strings{j,i+1} = '.';
+                    else
+                        strings{j,i+1} = sprintf('%d', sum(f == primes(j)));
+                    end
+                end
+            end
+        end
+
+        function lines = gapLongStr(self, maxRows, maxColumns)
+            ct = replab.str.CyclotomicTable(self.characters);
+            pp = self.classes.powerMapDefaultPrimes;
+            m = self.classes.powerMaps(pp);
+            nC = self.classes.nClasses;
+            powerMaps = cell(length(pp)+1, nC + 1);
+            powerMaps{1,1} = '';
+            powerMaps(1,2:end) = self.classNames;
+            for i = 1:length(pp)
+                powerMaps{i+1,1} = sprintf('%dP', pp(i));
+                for j = 1:nC
+                    powerMaps{i+1,j+1} = self.classNames{m(i,j)};
+                end
+            end
+            chars = horzcat(self.irrepNames(:), ct.strings);
+            cst = self.centralizerSizeTable;
+            sep = repmat({''}, 1, nC+1);
+            t = replab.str.Table(vertcat(cst, sep, powerMaps, sep, chars), 'colAlign', repmat('r', 1, nC+1));
+            lines1 = strsplit(t.format(maxRows, maxColumns), '\n');
+            lines2 = arrayfun(@(i) sprintf(' %s = %s', ct.variables{i}, num2str(ct.values(i))), 1:length(ct.variables), 'uniform', 0);
+            lines = vertcat(lines1(:), {''}, lines2(:));
+        end
+
+        function lines = plainLongStr(self, maxRows, maxColumns)
+            ct = replab.str.CyclotomicTable(self.characters);
+            nC = self.classes.nClasses;
+            header = cell(2, nC + 1);
+            header{1,1} = 'Class';
+            header(1,2:end) = self.classNames;
+            header{2,1} = 'Size';
+            header(2,2:end) = cellfun(@(s) strtrim(num2str(s)), self.classes.classSizes, 'uniform', 0);
+            chars = horzcat(self.irrepNames(:), ct.strings);
+            sep = repmat({''}, 1, nC+1);
+            t = replab.str.Table(vertcat(header, sep, chars), 'colAlign', repmat('r', 1, nC+1));
+            lines1 = strsplit(t.format(maxRows, maxColumns), '\n');
+            lines2 = arrayfun(@(i) sprintf(' %s = %s', ct.variables{i}, num2str(ct.values(i))), 1:length(ct.variables), 'uniform', 0);
+            lines = vertcat(lines1(:), {''}, lines2(:));
+        end
+
+    end
+
+    methods
+
+% $$$         function imap(self, f, imageGroup, preserveLexOrder)
+% $$$         % Maps the conjugacy classes under an isomorphism
+% $$$         %
+% $$$         % Args:
+% $$$         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+% $$$         %   imageGroup (`.FiniteGroup`, optional): Image of `.group` under ``f``, default ``[]`` (recompute)
+% $$$         %   preserveLexOrder (logical, optional): Whether the isomorphism preserves the lexicographic order of group elements, default false
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `.CharacterTable`: The character table of the subgroup in the image of the isomorphism
+% $$$             if nargin < 3 || isempty(imageGroup)
+% $$$                 imageGroup = f.imageGroup(self.group);
+% $$$             end
+% $$$             if nargin < 4 || isempty(preserveLexOrder)
+% $$$                 preserveLexOrder = false;
+% $$$             end
+% $$$             classes1 = cellfun(@(c) c.imap(f, imageGroup, preserveLexOrder), self.classes, 'uniform', 0);
+% $$$             c1 = replab.ConjugacyClasses(imageGroup, classes1);
+% $$$
+% $$$         end
+
 
     end
 % $$$

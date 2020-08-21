@@ -10,16 +10,17 @@ classdef PermToFiniteGroup < replab.FiniteMorphism
 
     methods
 
-        function self = PermToFiniteGroup(source, target, images)
+        function self = PermToFiniteGroup(source, target, preimages, images)
         % Constructs a morphism from a permutation group to a finite group
         %
         % Args:
         %   source (`+replab.PermutationGroup`): Source of the morphism
         %   target (`+replab.Group`): Target of the morphism
-        %   images (cell(1,\*) of `.target` elements): Images of the source generators
+        %   preimages (cell(1,n) of `.source` elements): Preimages
+        %   images (cell(1,n) of `.target` elements): Images
             self.source = source;
             self.target = target;
-            self.fastMorphism = replab.mrp.PermToGroup(source, target, images);
+            self.fastMorphism = replab.mrp.PermToGroup(source, target, preimages, images);
         end
 
         function m = slowFiniteMorphism(self)
@@ -42,11 +43,8 @@ classdef PermToFiniteGroup < replab.FiniteMorphism
 
 
         function I = computeImage(self)
-            I = self.slowFiniteMorphism.image;
-        end
-
-        function I = computeImageSourceGenerators(self)
-            I = self.fastMorphism.imageSourceGenerators;
+            images = self.fastMorphism.images;
+            I = self.target.subgroup(images);
         end
 
     end
@@ -54,12 +52,16 @@ classdef PermToFiniteGroup < replab.FiniteMorphism
     methods (Access = protected)
 
         function sfm = computeSlowFiniteMorphism(self)
-            images = self.fastMorphism.imageSourceGenerators;
-            tnm = self.target.niceMorphism;
-            tng = tnm.target;
-            prmImages = cellfun(@(g) tnm.imageElement(g), images, 'uniform', 0);
-            pm = self.source.morphismByImages(tng, prmImages);
-            sfm = pm.andThen(tnm.inverse);
+            preimages1 = self.fastMorphism.preimages;
+            preimages2 = self.fastMorphism.images;
+            iso2 = self.target.niceMorphism;
+            images12 = cellfun(@(g) iso2.imageElement(g), preimages2, 'uniform', 0);
+            inter = iso2.target.subgroup(images12);
+            f1 = self.source.morphismByImages(inter, 'preimages', preimages1, 'images', images12);
+            I = self.image;
+            f2 = iso2.restrictedSource(I);
+            % source -- f1 --> inter <-- f2 -- target
+            sfm = f1.andThen(f2.inverse);
         end
 
     end
