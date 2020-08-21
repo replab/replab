@@ -91,7 +91,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function e = computeExponent(self)
         % See `.exponent`
-            eo = cellfun(@(c) self.elementOrder(c.representative), self.conjugacyClasses);
+            eo = self.conjugacyClasses.classElementOrders;
             eo = unique(eo);
             e = eo(1);
             for i = 2:length(eo)
@@ -1032,7 +1032,11 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         end
 
         function g1 = imap(self, f)
+        % Maps this finite group through an isomorphism
         %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.isSubgroupOf(f.source)``
+            g1 = f.imageGroup(self);
         end
 
     end

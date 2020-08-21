@@ -145,7 +145,7 @@ classdef Rep < replab.Obj
         function K = computeKernel(self)
             assert(isa(self.group, 'replab.FiniteGroup'));
             % TODO error estimation: take in account the uncertainty on computed images
-            C = self.group.conjugacyClasses;
+            C = self.group.conjugacyClasses.classes;
             % for a character, we have chi(g) == chi(id) only if rho(g) == eye(d)
             % what is the maximal value of real(chi(g)) for chi(g) ~= chi(id)?
             % write chi(g) = sum(lambda(g)) where lambda(g) = eig(chi(g))

@@ -7,8 +7,8 @@ classdef RepByImages < replab.Rep
 
     properties (SetAccess = protected)
         preimages % (cell(1,\*) of `.group` elements): Preimages
-        images_internal % (cell(1,\*) of double(\*,\*), may be sparse): Images
-        inverseImages_internal % (cell(1,\*) of double(\*,\*), may be sparse): Inverses of images
+        images_internal % (cell(1,\*) of double(\*,\*) or `.cyclotomic`, may be sparse): Images
+        inverseImages_internal % (cell(1,\*) of double(\*,\*) or `.cyclotomic`, may be sparse): Inverses of images
     end
 
     methods

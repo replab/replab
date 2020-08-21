@@ -1,7 +1,7 @@
-classdef PermutationTo < replab.bsgs.Backtrack
+classdef VectorPermutationTo < replab.bsgs.Backtrack
 % Computes the permutation that sends a vector to another vector
 %
-% We return the set of ``p`` such that ``t == s(inverse(p))`` or ``s == t(p)``.
+% We find one ``p`` such that ``t == s(inverse(p))`` or ``s == t(p)``.
 %
 
     properties
@@ -11,7 +11,7 @@ classdef PermutationTo < replab.bsgs.Backtrack
 
     methods
 
-        function self = PermutationTo(group, s, t, sStabilizer, tStabilizer, debug)
+        function self = VectorPermutationTo(group, s, t, sStabilizer, tStabilizer, debug)
             if nargin < 6 || isempty(debug)
                 debug = false;
             end
@@ -21,7 +21,7 @@ classdef PermutationTo < replab.bsgs.Backtrack
             if nargin < 4 || isempty(sStabilizer)
                 sStabilizer = group.vectorStabilizer(s);
             end
-            self@replab.bsgs.Backtrack(group, [], tStabilizer, sStabilizer, debug);
+            self@replab.bsgs.Backtrack(group, 1:group.domainSize, tStabilizer, sStabilizer, debug);
             self.s = s;
             self.t = t;
         end
@@ -31,7 +31,7 @@ classdef PermutationTo < replab.bsgs.Backtrack
         % Verifies that blocks are mapped to blocks consistently
             beta = self.base(l);
             b = prev(ul(beta));
-            ok = s(beta) == t(b);
+            ok = self.s(beta) == self.t(b);
         end
 
 

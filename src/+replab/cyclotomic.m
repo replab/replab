@@ -71,15 +71,16 @@ classdef cyclotomic
             c = replab.cyclotomic(mat);
         end
 
-        function c = E(n)
-        % Returns a root of unity
+        function c = E(orders)
+        % Returns roots of unity
         %
         % Args:
-        %    n (integer): Root order
+        %    n (integer(\*,\*)): Root orders
         %
         % Returns:
         %    `.cyclotomic`: The value ``exp(2i*pi/n)``
-            c = replab.cyclotomic({javaMethod('e', 'cyclo.Cyclo')});
+            ja = javaMethod('E', 'cyclo.Lab', orders);
+            c = replab.cyclotomic.fromJavaArray(ja, size(orders));
         end
 
         function c = fromStrings(strings)
@@ -174,6 +175,15 @@ classdef cyclotomic
 
     methods (Access = protected)
 
+        function self = cyclotomic(mat)
+        % Constructs a cyclotomic matrix from a cell array of coefficients
+        %
+        % Args:
+        %   mat (cell(\*,\*) of Java ``cyclo.Cyclo``): Coefficients
+            assert(iscell(mat));
+            self.mat = mat;
+        end
+
         function res = matArray(self)
         % Returns the data of this cyclotomic matrix as a 1D Java array
             c = self.mat;
@@ -188,13 +198,23 @@ classdef cyclotomic
             end
         end
 
-        function self = cyclotomic(mat)
-        % Constructs a cyclotomic matrix from a cell array of coefficients
-        %
-        % Args:
-        %   mat (cell(\*,\*) of Java ``cyclo.Cyclo``): Coefficients
-            assert(iscell(mat));
-            self.mat = mat;
+    end
+
+    methods (Static, Access = protected)
+
+        function [lhs rhs] = shapeArgs(lhs, rhs)
+            if isa(lhs, 'double')
+                lhs = replab.cyclotomic.fromDoubles(lhs);
+            end
+            if isa(rhs, 'double')
+                rhs = replab.cyclotomic.fromDoubles(rhs);
+            end
+            if isscalar(lhs) && ~isscalar(rhs)
+                lhs = replab.cyclotomic(repmat(lhs.mat, size(rhs)));
+            end
+            if ~isscalar(lhs) && isscalar(rhs)
+                rhs = replab.cyclotomic(repmat(rhs.mat, size(lhs)));
+            end
         end
 
     end
@@ -215,19 +235,38 @@ classdef cyclotomic
             s = t.format(1000, 1000);
         end
 
+        function d = diag(self)
+            m = min(self.size);
+            matd = cell(m, 1);
+            for i = 1:m
+                matd{i} = self.mat{i,i};
+            end
+            d = replab.cyclotomic(matd);
+        end
+
+        function s = sum(self)
+            assert(isscalar(self.mat) || isvector(self.mat));
+            s = replab.cyclotomic({javaMethod('sum', 'cyclo.Lab', self.matArray)});
+        end
+
+        function p = prod(self)
+            assert(isscalar(self.mat) || isvector(self.mat));
+            p = replab.cyclotomic({javaMethod('prod', 'cyclo.Lab', self.matArray)});
+        end
+
         function res = ne(self, rhs)
         % (Non-)equality test
             res = ~(self == rhs);
         end
 
+        function h = hash(self)
+        % Returns a matrix of hash codes
+            h = cellfun(@(c) javaMethod('hashCode', c), self.mat);
+        end
+
         function res = eq(lhs, rhs)
         % Equality test
-            if isa(lhs, 'double')
-                lhs = replab.cyclotomic.fromDoubles(lhs);
-            end
-            if isa(rhs, 'double')
-                rhs = replab.cyclotomic.fromDoubles(rhs);
-            end
+            [lhs rhs] = replab.cyclotomic.shapeArgs(lhs, rhs);
             res = reshape(javaMethod('eqv', 'cyclo.Lab', lhs.matArray, rhs.matArray), size(lhs.mat));
         end
 
@@ -247,12 +286,7 @@ classdef cyclotomic
         % Standard ``+`` operator
         %
         % Does not support broadcasting (i.e. ``M + 1`` when ``M`` is not a scalar)
-            if isa(lhs, 'double')
-                lhs = replab.cyclotomic.fromDoubles(lhs);
-            end
-            if isa(rhs, 'double')
-                rhs = replab.cyclotomic.fromDoubles(rhs);
-            end
+            [lhs rhs] = replab.cyclotomic.shapeArgs(lhs, rhs);
             res = replab.cyclotomic.fromJavaArray(javaMethod('plus', 'cyclo.Lab', lhs.matArray, rhs.matArray), size(lhs));
         end
 
@@ -262,27 +296,13 @@ classdef cyclotomic
 
         function res = minus(lhs, rhs)
         % Standard ``-`` operator
-        %
-        % Does not support broadcasting (i.e. ``M + 1`` when ``M`` is not a scalar)
-            if isa(lhs, 'double')
-                lhs = replab.cyclotomic.fromDoubles(lhs);
-            end
-            if isa(rhs, 'double')
-                rhs = replab.cyclotomic.fromDoubles(rhs);
-            end
+            [lhs rhs] = replab.cyclotomic.shapeArgs(lhs, rhs);
             res = replab.cyclotomic.fromJavaArray(javaMethod('minus', 'cyclo.Lab', lhs.matArray, rhs.matArray), size(lhs));
         end
 
         function res = times(lhs, rhs)
         % Pointwise ``*`` operator
-        %
-        % Does not support broadcasting (i.e. ``M * 2`` when ``M`` is not a scalar)
-            if isa(lhs, 'double')
-                lhs = replab.cyclotomic.fromDoubles(lhs);
-            end
-            if isa(rhs, 'double')
-                rhs = replab.cyclotomic.fromDoubles(rhs);
-            end
+            [lhs rhs] = replab.cyclotomic.shapeArgs(lhs, rhs);
             mat = reshape(cell(com.faacets.gluon.Cyclotomic.pw_times(lhs.matArray, rhs.matArray)), size(lhs.mat));
             res = replab.cyclotomic(mat);
         end
@@ -424,6 +444,16 @@ classdef cyclotomic
             rhs = cellfun(@(a) a.mat, varargin, 'uniform', 0);
             res = vertcat(self.mat, rhs{:});
             res = replab.cyclotomic(res);
+        end
+
+        function res = isRational(self)
+        % Returns which coefficients are rational
+            res = reshape(javaMethod('isRational', 'cyclo.Lab', self.matArray), self.size);
+        end
+
+        function res = isWhole(self)
+        % Returns which coefficients are integers
+            res = reshape(javaMethod('isWhole', 'cyclo.Lab', self.matArray), self.size);
         end
 
     end

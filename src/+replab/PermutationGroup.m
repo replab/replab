@@ -160,7 +160,7 @@ classdef PermutationGroup < replab.FiniteGroup
                 reps(i,:) = classes{i}.representative;
             end
             [~, I] = sortrows(reps);
-            classes = classes(I); % sort by minimal representative
+            classes = replab.ConjugacyClasses(self, classes(I)); % sort by minimal representative
         end
 
         function res = computeIsCyclic(self)
@@ -588,15 +588,15 @@ classdef PermutationGroup < replab.FiniteGroup
             sub = replab.bsgs.OrderedPartitionStabilizer(self, partition).subgroup;
         end
 
-        function P = findPermutationsTo(self, s, t, sStabilizer, tStabilizer)
-        % Finds the permutations that sends a vector to another vector
+        function P = vectorFindPermutationsTo(self, s, t, sStabilizer, tStabilizer)
+        % Finds the permutations that send a vector to another vector
         %
         % We return the set of ``p`` such that ``t == s(inverse(p))`` or ``s == t(p)``.
         %
         % We use this notation as the left action of ``p`` on a list ``s`` is given by ``s(inverse(p))``.
         %
         % Args:
-        %   s (double(1,\*)): Source vector
+        %   s (double(1,domainSize)): Source vector
         %   t (double(1,domainSize)): Target vector
         %   sStabilizer (`.PermutationGroup` or ``[]``, optional): Stabilizer of ``s``
         %   tStabilizer (`.PermutationGroup` or ``[]``, optional): Stabilizer of ``t``
@@ -609,9 +609,38 @@ classdef PermutationGroup < replab.FiniteGroup
             if nargin < 5 || isequal(tStabilizer, [])
                 tStabilizer = self.vectorStabilizer(t);
             end
-            p = replab.bsgs.PermutationTo(self, s, t, sStabilizer, tStabilizer).find;
+            p = replab.bsgs.VectorPermutationTo(self, s, t, sStabilizer, tStabilizer).find;
             if ~isempty(p)
                 P = sStabilizer.leftCoset(p, self);
+            else
+                P = [];
+            end
+        end
+
+        function P = matrixFindPermutationsTo(self, S, T, SStabilizer, TStabilizer)
+        % Finds the permutations that send a matrix to another matrix
+        %
+        % We return the set of ``p`` such that ``T == S(inverse(p),inverse(p))`` or ``S == T(p,p)``.
+        %
+        % We use this notation as the left action of ``p`` on a matrix ``S`` is given by ``S(inverse(p),inverse(p))``.
+        %
+        % Args:
+        %   S (double(1,domainSize)): Source matrix
+        %   T (double(1,domainSize)): Target matrix
+        %   SStabilizer (`.PermutationGroup` or ``[]``, optional): Stabilizer of ``S``
+        %   TStabilizer (`.PermutationGroup` or ``[]``, optional): Stabilizer of ``T``
+        %
+        % Returns:
+        %   `+replab.LeftCoset`: The set of permutations ``{p}`` such that ``T == S(inverse(p),inverse(p))``; or ``[]`` if no element found
+            if nargin < 4 || isequal(SStabilizer, [])
+                SStabilizer = self.matrixStabilizer(S);
+            end
+            if nargin < 5 || isequal(TStabilizer, [])
+                TStabilizer = self.matrixStabilizer(T);
+            end
+            p = replab.bsgs.MatrixPermutationTo(self, S, T, SStabilizer, TStabilizer).find;
+            if ~isempty(p)
+                P = SStabilizer.leftCoset(p, self);
             else
                 P = [];
             end

@@ -184,7 +184,7 @@ classdef Standard < replab.Atlas
                 return
             end
             n = double(n);
-            C = G.conjugacyClasses;
+            C = G.conjugacyClasses.classes;
             entry = self.symmetric(n);
             for i = 1:length(C)
                 S = C{i};
@@ -279,7 +279,7 @@ classdef Standard < replab.Atlas
                 return
             end
             n = double(n);
-            C = G.conjugacyClasses;
+            C = G.conjugacyClasses.classes;
             entry = self.alternating(n);
             for i = 1:length(C)
                 S = C{i};
