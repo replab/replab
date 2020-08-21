@@ -181,18 +181,13 @@ classdef SymmetricOrthogonalIrrep < replab.Rep
             n = self.group.domainSize;
             preimages = cell(1, n-1);
             for i = 1:n-1
-                preimages{i} = self.transposition(i);
+                preimages{i} = replab.Permutation.transposition(n, i, i + 1);
             end
             images = cell(1, n-1);
             for i = 1:n-1
                 images{i} = self.transImage(i);
             end
             rep = replab.RepByImages(self.group, self.field, self.dimension, 'preimages', preimages, 'images', images);
-        end
-
-        function t = transposition(self,k)
-            t = 1:self.group.domainSize;
-            t([k k+1]) = [k+1 k];
         end
 
    end
