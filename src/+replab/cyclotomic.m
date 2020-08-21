@@ -235,6 +235,25 @@ classdef cyclotomic
             s = t.format(1000, 1000);
         end
 
+        function d = diag(self)
+            m = min(self.size);
+            matd = cell(m, 1);
+            for i = 1:m
+                matd{i} = self.mat{i,i};
+            end
+            d = replab.cyclotomic(matd);
+        end
+
+        function s = sum(self)
+            assert(isscalar(self.mat) || isvector(self.mat));
+            s = replab.cyclotomic({javaMethod('sum', 'cyclo.Lab', self.matArray)});
+        end
+
+        function p = prod(self)
+            assert(isscalar(self.mat) || isvector(self.mat));
+            p = replab.cyclotomic({javaMethod('prod', 'cyclo.Lab', self.matArray)});
+        end
+
         function res = ne(self, rhs)
         % (Non-)equality test
             res = ~(self == rhs);

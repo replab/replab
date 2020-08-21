@@ -76,6 +76,14 @@ classdef CharacterTable < replab.Obj
             self.irreps = args.irreps;
         end
 
+        function n = nClasses(self)
+            n = self.classes.nClasses;
+        end
+
+        function n = nIrreps(self)
+            n = self.nClasses;
+        end
+
     end
 
     methods (Static)
@@ -121,6 +129,8 @@ classdef CharacterTable < replab.Obj
 
     methods % Implementations
 
+        % Str
+
         function s = headerStr(self)
             group_str = replab.headerStr(self.group);
             if length(group_str) > 1
@@ -138,6 +148,12 @@ classdef CharacterTable < replab.Obj
               otherwise
                 error('Unknown format %s', replab.globals.formatCharacterTable);
             end
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.CharacterTableLaws(self);
         end
 
     end
