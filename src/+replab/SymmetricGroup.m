@@ -50,62 +50,6 @@ classdef SymmetricGroup < replab.PermutationGroup
 
     end
 
-    methods % Element creation methods
-
-        function p = transposition(self, i, j)
-        % Returns the transposition permuting ``i`` and ``j``.
-        %
-        % Args:
-        %   i (integer): First domain element to be transposed.
-        %   j (integer): Second domain element to be transposed.
-        %
-        % Returns:
-        %   permutation: The constructed transposition
-            n = self.domainSize;
-            assert(1 <= i);
-            assert(i <= n);
-            assert(1 <= j);
-            assert(j <= n);
-            assert(i ~= j);
-            p = 1:n;
-            p([i j]) = [j i];
-        end
-
-        function p = shift(self, i)
-        % Returns the cyclic permutation that shifts the domain indices by ``i``.
-        %
-        % Args:
-        %   i: Shift so that ``j`` is sent to ``j + i`` (wrapping around).
-        %
-        % Returns:
-        %   permutation: The constructed cyclic shift
-            p = mod((0:n-1)+i, n)+1;
-        end
-
-        function p = fromCycles(self, varargin)
-        % Constructs a permutation from a product of cycles.
-        %
-        % Each cycle is given as a row vector, and the sequence of cycles is given as variable arguments.
-        %
-        % Args:
-        %   varargin (cell(1,\*) of integer(1,\*)): Sequence of cycles as row vectors of indices
-        %
-        % Returns:
-        %   permutation: The permutation corresponding to the product of cycles.
-            n = self.domainSize;
-            p = 1:n;
-            for i = length(varargin):-1:1
-                cycle = varargin{i};
-                % cycle 2 3 1 means that 2 -> 3, 3 -> 1, 1 -> 2
-                cycleImage = [cycle(2:end) cycle(1)];
-                newEl = 1:n;
-                newEl(cycle) = cycleImage;
-                p = newEl(p); % compose(newEl, p);
-            end
-        end
-
-    end
-
     methods (Access = protected)
 
         function c = computeChain(self)
