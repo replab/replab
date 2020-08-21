@@ -144,6 +144,26 @@ classdef ConjugacyClasses < replab.Obj
             end
         end
 
+        function c1 = imap(self, f, imageGroup, preserveLexOrder)
+        % Maps the conjugacy classes under an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %   imageGroup (`.FiniteGroup`, optional): Image of `.group` under ``f``, default ``[]`` (recompute)
+        %   preserveLexOrder (logical, optional): Whether the isomorphism preserves the lexicographic order of group elements, default false
+        %
+        % Returns:
+        %   `.ConjugacyClasses`: The conjugacy classes mapped under ``f``, expressed as a subset of ``f.image``
+            if nargin < 3 || isempty(imageGroup)
+                imageGroup = f.imageGroup(self.group);
+            end
+            if nargin < 4 || isempty(preserveLexOrder)
+                preserveLexOrder = false;
+            end
+            classes1 = cellfun(@(c) c.imap(f, imageGroup, preserveLexOrder), self.classes, 'uniform', 0);
+            c1 = replab.ConjugacyClasses(imageGroup, classes1);
+        end
+
     end
 
 end

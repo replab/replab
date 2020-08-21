@@ -160,7 +160,7 @@ classdef PermutationGroup < replab.FiniteGroup
                 reps(i,:) = classes{i}.representative;
             end
             [~, I] = sortrows(reps);
-            classes = classes(I); % sort by minimal representative
+            classes = replab.ConjugacyClasses(self, classes(I)); % sort by minimal representative
         end
 
         function res = computeIsCyclic(self)

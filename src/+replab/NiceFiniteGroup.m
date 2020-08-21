@@ -67,9 +67,8 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         end
 
         function C = computeConjugacyClasses(self)
-            C = cellfun(@(cl) replab.ConjugacyClass(self, self.niceMorphism.preimageElement(cl.representative), ...
-                                                    self.niceMorphism.preimageGroup(cl.representativeCentralizer)), ...
-                        self.niceGroup.conjugacyClasses, 'uniform', 0);
+            nc = self.niceGroup.conjugacyClasses;
+            C = nc.imap(self.niceMorphism.inverse);
         end
 
         function res = computeIsCyclic(self)

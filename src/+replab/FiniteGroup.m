@@ -183,7 +183,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns the conjugacy classes of this group
         %
         % Returns:
-        %   cell(1,\*) of `+replab.ConjugacyClass`: Conjugacy classes
+        %   `+replab.ConjugacyClasses`: Conjugacy classes
             c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
         end
 
@@ -1032,7 +1032,11 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         end
 
         function g1 = imap(self, f)
+        % Maps this finite group through an isomorphism
         %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.isSubgroupOf(f.source)``
+            g1 = f.imageGroup(self);
         end
 
     end
