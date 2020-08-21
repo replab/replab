@@ -31,7 +31,7 @@ classdef VectorPermutationTo < replab.bsgs.Backtrack
         % Verifies that blocks are mapped to blocks consistently
             beta = self.base(l);
             b = prev(ul(beta));
-            ok = s(beta) == t(b);
+            ok = self.s(beta) == self.t(b);
         end
 
 

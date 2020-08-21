@@ -389,6 +389,21 @@ classdef Rep < replab.Obj
 
     end
 
+    methods % Morphism composition
+
+        function res = compose(self, applyFirst)
+        % Composition of a representation with a morphism, with the morphism applied first
+        %
+        % Args:
+        %   applyFirst (`.Morphism`): Morphism from a finite group
+        %
+        % Returns:
+        %   `.Rep`: Representation
+            res = replab.rep.CompositionRep(self, applyFirst);
+        end
+
+    end
+
     methods % Derived representations
 
         function rep1 = contramap(self, morphism)

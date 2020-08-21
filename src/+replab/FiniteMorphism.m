@@ -18,11 +18,8 @@ classdef FiniteMorphism < replab.Morphism
         end
 
         function I = computeImage(self)
-            I = self.imageGroup(self.source);
-        end
-
-        function I = computeImageSourceGenerators(self)
-            I = cellfun(@(s) self.imageElement(s), self.source.generators, 'uniform', 0);
+            gens = cellfun(@(g) self.imageElement(g), self.source.generators, 'uniform', 0);
+            I = self.target.subgroup(gens);
         end
 
     end
@@ -44,7 +41,7 @@ classdef FiniteMorphism < replab.Morphism
                 m = self; % we have newSource == self.source
             else
                 images = cellfun(@(g) self.imageElement(g), newSource.generators, 'uniform', 0);
-                m = newSource.morphismByImages(self.target, images);
+                m = newSource.morphismByImages(self.target, 'images', images);
             end
         end
 
@@ -54,7 +51,7 @@ classdef FiniteMorphism < replab.Morphism
         % Returns:
         %   `.FiniteIsomorphism`: The isomorphism
             assert(self.kernel.isTrivial);
-            m = replab.fm.FiniteIsomorphismWrapper(self);
+            m = replab.mrp.FiniteIsomorphismWrapper(self);
         end
 
     end
@@ -101,20 +98,17 @@ classdef FiniteMorphism < replab.Morphism
         %
         % Returns:
         %   `.FiniteGroup`: Subgroup of `.source`
-            error('Abstract');
+            if T.isTrivial
+                S = self.kernel;
+            else
+                preimages = cellfun(@(t) self.preimageRepresentative(t), T.generators, 'uniform', 0);
+                S = self.kernel.closure(self.source.subgroup(preimages));
+            end
         end
 
     end
 
     methods % Images
-
-        function I = imageSourceGenerators(self)
-        % Returns the images of the source generators
-        %
-        % Returns:
-        %   cell(1,\*) of elements of target: Generator images
-            I = self.cached('imageSourceGenerators', @() self.computeImageSourceGenerators);
-        end
 
         function I = image(self)
         % Returns the image of this morphism

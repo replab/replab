@@ -365,7 +365,7 @@ classdef Backtrack < replab.Obj
         % Same as `.test` except it performs the test on the reduced base `.base0`
         %
         % ... should be called for ``l0 == 0`` as well
-                l = sum(self.numRed0(1:l0)) + l0; % index in the original base
+            l = sum(self.numRed0(1:l0)) + l0; % index in the original base
             if l > length(self.partialBase)
                 ok = true;
                 return
@@ -399,6 +399,7 @@ classdef Backtrack < replab.Obj
         % Tests if base images are possible at a given level
         %
         % Note that the element ``g`` in Holt is given by ``g = compose(gPrev, ul)``.
+        % Hence, the permutation being tested is ``gPrev(ul)``.
         %
         % This tests if there is any element in the searched set that has the partial base image
         % ``[g(base(1)) ... g(base(l))]`` of the preimage ``[base(1) ... base(l)]``.

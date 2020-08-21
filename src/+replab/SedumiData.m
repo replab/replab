@@ -62,7 +62,7 @@ classdef SedumiData
             % check for unitarity
             tol = 1e-12;
             rhoInv = cell(1, length(G));
-            self.rep = group.repByImages('R', self.s, rho);
+            self.rep = group.repByImages('R', self.s, 'images', rho);
         end
 
         function vec1 = project(self, vec)

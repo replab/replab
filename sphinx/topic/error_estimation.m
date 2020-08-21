@@ -18,7 +18,8 @@
 %
 % Before explaining things, we initialize the library
 
-run ../../replab_init
+addpath([pwd, '/../..']);
+replab_init('verbose', 0);
 
 % Error estimation will play a central role in RepLAB. Currently, tolerances are baked-in in the representation decomposition algorithms, but we will remove those “magic constants” in the next RepLAB releases, to be replaced by proper error estimation.
 %

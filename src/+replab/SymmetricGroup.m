@@ -123,11 +123,6 @@ classdef SymmetricGroup < replab.PermutationGroup
                                             @(el) self.enumeratorFind(el));
         end
 
-        function d = computeDecomposition(self)
-            G = self.subgroup(self.generators, self.order);
-            d = G.decomposition;
-        end
-
         function ind = enumeratorFind(self, g)
             n = self.domainSize;
             ind0 = vpi(0);

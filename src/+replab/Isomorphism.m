@@ -14,7 +14,7 @@ classdef Isomorphism < replab.Morphism
     methods (Access = protected)
 
         function I = computeInverse(self)
-            I = replab.fm.Inverse(self);
+            I = replab.mrp.Inverse(self);
         end
 
     end
@@ -46,7 +46,21 @@ classdef Isomorphism < replab.Morphism
         %
         % Returns:
         %   `.Isomorphism`: The identity automorphism on the given group
-            m = replab.fm.Identity(group);
+            m = replab.mrp.Identity(group);
+        end
+
+        function m = lambda(source, target, preimageElementFun, imageElementFun)
+        % Creates a morphism from an image function
+        %
+        % Args:
+        %   source (`.Group`): Source group
+        %   target (`.Group`): Target group
+        %   preimageElementFun (function_handle): Function computing preimages of elements
+        %   imageElementFun (function_handle): Function computing images of elements
+        %
+        % Returns:
+        %   `+replab.Isoorphism`: Constructed isomorphism
+            m = replab.mrp.LambdaIsomorphism(source, target, preimageElementFun, imageElementFun);
         end
 
     end

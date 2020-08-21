@@ -1,9 +1,9 @@
 function ct = DihedralCharacterTable(n)
 % Generates the character table for the dihedral group Dn
 %
-% From Fässler, A., Stiefel, E., & Wong, B. D. (1992). Group theoretical methods and their applications. 
+% From Fässler, A., Stiefel, E., & Wong, B. D. (1992). Group theoretical methods and their applications.
 % Boston: Birkhäuser, 23-24.
-% 
+%
 % Args:
 %   n (integer): number of dihedral group
 %
@@ -11,7 +11,7 @@ function ct = DihedralCharacterTable(n)
 %   ct (`+replab.CharacterTable`)
     group = replab.DihedralGroup(n);
     ord = 2*n;
-    
+
     if even(n)
         nclasses = 4 + n/2 - 1;
     else
@@ -19,7 +19,7 @@ function ct = DihedralCharacterTable(n)
     end
 
     % We have the group < d,s | d^n = s^2 = e, dxd^-1 = s^-1 >
-    
+
     % Classes will be listed with first rotations and then reflections
     classreps = cell(1, nclasses);
     d = [2:n, 1];
@@ -42,16 +42,16 @@ function ct = DihedralCharacterTable(n)
     end
     classarray = cellfun(@(r) group.conjugacyClass(r), classreps, 'UniformOutput', false);
     classes = replab.ConjugacyClasses(group, classarray);
-    
+
     % Irreps are generated first in 1D and then in 2D
     irreps = cell(1, nclasses);
     w = replab.cyclotomic.E(n);
-    irreps{1} = group.repByImages('R', 1, {1, 1});
-    irreps{2} = group.repByImages('R', 1, {-1, 1});
+    irreps{1} = group.repByImages('R', 1, 'images', {1, 1});
+    irreps{2} = group.repByImages('R', 1, 'images', {-1, 1});
     n1D = 2;
     if even(n)
-        irreps{3} = group.repByImages('R', 1, {1, -1});
-        irreps{4} = group.repByImages('R', 1, {-1, -1});
+        irreps{3} = group.repByImages('R', 1, 'images', {1, -1});
+        irreps{4} = group.repByImages('R', 1, 'images', {-1, -1});
         stop = stop - 1;
         n1D = 4;
     end
@@ -62,9 +62,9 @@ function ct = DihedralCharacterTable(n)
         g2 = replab.cyclotomic.zeros(2, 2);
         g2(1, 2) = w^j;
         g2(2, 1) = w^(-j);
-        irreps{n1D + j} = group.repByImages('C', 2, {g2, g1});
+        irreps{n1D + j} = group.repByImages('C', 2, 'images', {g2, g1});
     end
-    
+
     % Characters can be assigned to rotations then reflections
     chars = replab.cyclotomic.zeros(nclasses, nclasses);
     chars(1, :) = replab.cyclotomic.fromDoubles(1);
@@ -102,7 +102,7 @@ function ct = DihedralCharacterTable(n)
             chars(n1D+j, nclasses) = replab.cyclotomic.fromDoubles(0);
         end
     end
-    
+
     ct = replab.CharacterTable(group, classes, irreps, chars);
-    
+
 end

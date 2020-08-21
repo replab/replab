@@ -19,9 +19,6 @@ classdef FiniteIsomorphismWrapper < replab.FiniteIsomorphism
     methods (Access = protected)
 
     % computeImage/computeKernel/computeInverse in FiniteIsomorphism
-        function I = computeImageSourceGenerators(self)
-            I = self.finiteMorphism.imageSourceGenerators;
-        end
 
     end
 
@@ -45,13 +42,12 @@ classdef FiniteIsomorphismWrapper < replab.FiniteIsomorphism
             s = self.finiteMorphism.preimageRepresentative(t);
         end
 
-        function S = preimageGroup(self, T)
-            S = self.finiteMorphism.preimageGroup(T);
-        end
-
-        % imageGroup
         function T = imageGroup(self, S)
             T = self.finiteMorphism.imageGroup(S);
+        end
+
+        function S = preimageGroup(self, T)
+            S = self.finiteMorphism.preimageGroup(T);
         end
 
     end

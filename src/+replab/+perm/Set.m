@@ -36,6 +36,9 @@ classdef Set < replab.Str
             % if the seed coefficients have range in ``[-r, r]``, then the resulting hash
             % is in ``[-r*arrayLength*arrayRange, r*arrayLength*arrayRange]``
             r = floor(2^52/arrayRange/arrayLength) - 1;
+            if r > 2^52
+                r = 2^52 - 1;
+            end
             self.seed = randi([-r r], 1, arrayLength);
             self.perm = zeros(1, 0);
             self.hash = zeros(1, 0);
@@ -210,6 +213,23 @@ classdef Set < replab.Str
             mask = (inds == 0);
             inds1 = self.insert(permutations(:, find(mask)));
             inds(mask) = inds1;
+        end
+
+    end
+
+    methods (Static)
+
+
+        function s = fromPermutationGroup(group)
+        % Creates and fills a set with the elements of a permutation group
+        %
+        % Args:
+        %   group (`+replab.PermutationGroup`): Permutation group
+        %
+        % Returns:
+        %   `.Set`: The constructed set
+            s = replab.perm.Set(group.domainSize);
+            s.insert(group.chain.allElements);
         end
 
     end

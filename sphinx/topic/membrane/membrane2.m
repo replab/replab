@@ -15,7 +15,8 @@
 
 % # Eigenvalue problem of a vibrating square membrane, part 2
 
-run ../../../replab_init
+addpath([pwd, '/../../..']);
+replab_init('verbose', 0);
 g1 = [9 6 3 8 5 2 7 4 1];
 g2 = [3 2 1 6 5 4 9 8 7];
 DH = replab.PermutationGroup.of(g1, g2)
@@ -133,13 +134,13 @@ HS_matrix = reshape(hs,[3 3])'
 [s,t] = meshgrid(1:3);
 figure;
 subplot(1,2,1)
-surfc(GS_matrix,'EdgeColor','red')
+surf(GS_matrix,'EdgeColor','red')
 title('Ground Oscillation State')
 view(285,11)
 grid off;
 colorbar ("southoutside");
 subplot(1,2,2)
-surfc(HS_matrix,'EdgeColor','blue')
+surf(HS_matrix,'EdgeColor','blue')
 colormap('jet')
 title('Highest Frequency State')
 grid off;

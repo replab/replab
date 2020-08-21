@@ -17,7 +17,7 @@ function sub = splitBlocks(rep, trivialSamples, hermitianInvariantSamples)
         for i = 2:rep.group.nGenerators
             mask = mask | (rep.image_internal(rep.group.generator(i)) == 0);
         end
-        partition = replab.Graph.fromAdjacencyMatrix(mask).connectedComponents;
+        partition = replab.UndirectedGraph.fromAdjacencyMatrix(mask).connectedComponents;
         if partition.nBlocks == 1
             sub = replab.DispatchNext('No blocks identified');
             return

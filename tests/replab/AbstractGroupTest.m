@@ -17,3 +17,7 @@ function test_suite = AbstractGroupTest()
     G = replab.AbstractGroup.parsePresentation('< x, a | a^3 = x^2 = a x a x = 1 >');
     test_suite = G.laws.addTestCases(test_suite);
 end
+
+function test_identity_generator
+    assertExceptionThrown(@() replab.AbstractGroup.make({'x'}, {'x'}));
+end

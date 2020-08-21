@@ -17,3 +17,4 @@ Scientific articles:
 
    nonlocality/index
    membrane/index
+   SDP
