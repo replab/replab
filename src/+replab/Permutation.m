@@ -6,6 +6,57 @@ classdef Permutation
 
     methods (Static)
 
+        function p = fromCycles(n, varargin)
+        % Constructs a permutation from a product of cycles.
+        %
+        % Each cycle is given as a row vector, and the sequence of cycles is given as variable arguments.
+        %
+        % Args:
+        %   n (integer): Domain size
+        %   varargin (cell(1,\*) of integer(1,\*)): Sequence of cycles as row vectors of indices
+        %
+        % Returns:
+        %   permutation: The permutation corresponding to the product of cycles.
+            p = 1:n;
+            for i = length(varargin):-1:1
+                cycle = varargin{i};
+                % cycle 2 3 1 means that 2 -> 3, 3 -> 1, 1 -> 2
+                cycleImage = [cycle(2:end) cycle(1)];
+                newEl = 1:n;
+                newEl(cycle) = cycleImage;
+                p = newEl(p); % compose(newEl, p);
+            end
+        end
+
+        function p = transposition(n, i, j)
+        % Returns the transposition permuting ``i`` and ``j``.
+        %
+        % Args:
+        %   n (integer): Domain size
+        %   i (integer): First domain element to be transposed.
+        %   j (integer): Second domain element to be transposed.
+        %
+        % Returns:
+        %   permutation: The constructed transposition
+            assert(1 <= i && i <= n);
+            assert(1 <= j && j <= n);
+            assert(i ~= j);
+            p = 1:n;
+            p([i j]) = [j i];
+        end
+
+        function p = shift(n, i)
+        % Returns the cyclic permutation that shifts the domain indices by ``i``.
+        %
+        % Args:
+        %   n (integer): Domain size
+        %   i (nonnegative integer): Shift so that ``j`` is sent to ``j + i`` (wrapping around).
+        %
+        % Returns:
+        %   permutation: The constructed cyclic shift
+            p = mod((0:n-1)+i, n)+1;
+        end
+
         function o = order(perm)
         % Returns the order of the permutation
         %
