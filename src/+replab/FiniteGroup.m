@@ -91,7 +91,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function e = computeExponent(self)
         % See `.exponent`
-            eo = cellfun(@(c) self.elementOrder(c.representative), self.conjugacyClasses);
+            eo = self.conjugacyClasses.classElementOrders;
             eo = unique(eo);
             e = eo(1);
             for i = 2:length(eo)
