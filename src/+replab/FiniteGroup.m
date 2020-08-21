@@ -992,6 +992,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   `.Morphism` or `.FiniteMorphism`: The constructed morphism
             args = struct('nChecks', replab.globals.morphismNChecks, 'preimages', {self.generators});
             if length(varargin) == 1 && iscell(varargin{1})
+                warning('Old call style deprecated, add a ''images'' keyword argument');
                 args.images = varargin{1};
             else
                 if isa(target, 'replab.FiniteGroup')
@@ -1067,16 +1068,32 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
-        function rho = repByImages(self, field, dimension, images)
+        function rho = repByImages(self, field, dimension, varargin)
         % Constructs a finite dimensional representation of this group from generator images
         %
         % Args:
         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
         %   dimension (integer): Representation dimension
-        %   images (cell(1,\*) of double(\*,\*), may be sparse): Images of the group generators
+        %
+        % Keyword Args:
+        %   preimages (cell(1, \*) of ``self`` elements): Preimages of the representation map which generate ``self``, defaults to ``self.generators``
+        %   images (cell(1,\*) of double(\*,\*), may be sparse): Images of the given preimages
+        %
         % Returns:
         %   `+replab.Rep`: The constructed group representation
-            rho = replab.RepByImages(self, field, dimension, images);
+            args = struct('preimages', {self.generators}, 'images', {{}});
+            if length(varargin) == 1 && iscell(varargin{1})
+                warning('Old style non-keyword argument syntax is deprecated');
+                args.images = varargin{1};
+            else
+                args = replab.util.populateStruct(args, varargin);
+            end
+            if isempty(args.images) && ~self.isTrivial
+                error('Images must be provided');
+            end
+            assert(length(args.preimages) == length(args.images), 'Number of images does not match the number of preimages');
+            preId = cellfun(@(g) self.isIdentity(g), args.preimages);
+            rho = replab.RepByImages(self, field, dimension, args.preimages(~preId), args.images(~preId));
         end
 
         function rho = permutationRep(self, dimension, permutations)
