@@ -41,7 +41,7 @@ classdef FiniteMorphism < replab.Morphism
                 m = self; % we have newSource == self.source
             else
                 images = cellfun(@(g) self.imageElement(g), newSource.generators, 'uniform', 0);
-                m = newSource.morphismByImages(self.target, images);
+                m = newSource.morphismByImages(self.target, 'images', images);
             end
         end
 

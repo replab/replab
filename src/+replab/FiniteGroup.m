@@ -976,7 +976,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Example:
         %   >>> S4 = replab.S(4);
-        %   >>> m = S4.morphismByImages(replab.S(3), {[1 3 2] [3 2 1]});
+        %   >>> m = S4.morphismByImages(replab.S(3), 'images', {[1 3 2] [3 2 1]});
         %   >>> m.laws.checkSilent
         %       1
         %
@@ -1109,7 +1109,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   `+replab.Rep`: The constructed group representation
             f = @(g) replab.Permutation.toSparseMatrix(g);
             images = cellfun(f, permutations, 'uniform', 0);
-            rho = self.repByImages('R', dimension, images);
+            rho = self.repByImages('R', dimension, 'images', images);
         end
 
         function rho = signedPermutationRep(self, dimension, signedPermutations)
@@ -1125,7 +1125,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   `+replab.Rep`: The constructed group representation
             f = @(g) replab.SignedPermutation.toSparseMatrix(g);
             images = cellfun(f, signedPermutations, 'uniform', 0);
-            rho = self.repByImages('R', dimension, images);
+            rho = self.repByImages('R', dimension, 'images', images);
         end
 
     end

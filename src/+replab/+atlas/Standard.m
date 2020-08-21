@@ -172,7 +172,7 @@ classdef Standard < replab.Atlas
             %if n == 6
             %    imgS = [6 1 5 4 3 2];
             %    imgT = [2 1 4 3 6 5];
-            %    outer{1,2} = prmGroup.morphismByImages(prmGroup, {imgS, imgT});
+            %    outer{1,2} = prmGroup.morphismByImages(prmGroup, 'images', {imgS, imgT});
             %end
         end
 

@@ -88,8 +88,8 @@ classdef RepByImages < replab.Rep
                 target1 = replab.GeneralLinearGroupWithInverses(self.field, self.dimension, useSparse);
                 target2 = replab.GeneralLinearGroup(self.field, self.dimension, useSparse);
                 cut = replab.Morphism.lambda(target1, target2, @(X) double(X(:, 1:self.dimension)));
-                images = cell(1, nG);
-                for i = 1:nG
+                images = cell(1, m);
+                for i = 1:m
                     images{i} = [self.images_internal{i} self.inverseImages_internal{i}];
                 end
                 res = replab.bsgs.ChainWithImages.make(n, target1, nicePreimages, images, cut, ...
