@@ -172,7 +172,7 @@ classdef Standard < replab.Atlas
             %if n == 6
             %    imgS = [6 1 5 4 3 2];
             %    imgT = [2 1 4 3 6 5];
-            %    outer{1,2} = prmGroup.morphismByImages(prmGroup, {imgS, imgT});
+            %    outer{1,2} = prmGroup.morphismByImages(prmGroup, 'images', {imgS, imgT});
             %end
         end
 
@@ -196,7 +196,7 @@ classdef Standard < replab.Atlas
                             U = T.elements;
                             for k = 1:length(U)
                                 t = U{k};
-                                if entry.imagesDefineMorphism(G, {s t})
+                                if entry.isMorphismByImages(G, 'images', {s t})
                                     if G.subgroup({s, t}).order == G.order
                                         R = replab.AtlasResult(G, entry, {s t});
                                         return
@@ -291,7 +291,7 @@ classdef Standard < replab.Atlas
                             U = T.elements;
                             for k = 1:length(U)
                                 t = U{k};
-                                if entry.imagesDefineMorphism(G, {s t})
+                                if entry.isMorphismByImages(G, 'images', {s t})
                                     if G.subgroup({s, t}).order == G.order
                                         R = replab.AtlasResult(G, entry, {s t});
                                         return

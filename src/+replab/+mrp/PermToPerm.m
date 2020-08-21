@@ -1,7 +1,8 @@
 classdef PermToPerm < replab.FiniteMorphism
 
-    properties
-        images % (cell(1,\*) of permutation): Images of the generators of the source group
+    properties (SetAccess = protected)
+        preimages % (cell(1,\*) of permutation): Preimages in the source group
+        images % (cell(1,\*) of permutation): Images in the target group
     end
 
     methods (Access = protected)
@@ -49,7 +50,7 @@ classdef PermToPerm < replab.FiniteMorphism
         function c = computeChain(self)
             n1 = self.source.domainSize;
             n2 = self.target.domainSize;
-            S = arrayfun(@(i) self.join(self.source.generator(i), self.images{i}), 1:self.source.nGenerators, 'uniform', 0);
+            S = arrayfun(@(i) self.join(self.preimages{i}, self.images{i}), 1:length(self.preimages), 'uniform', 0);
             chain = replab.bsgs.Chain.make(n1+n2, S, self.source.chain.base, self.source.order);
             chain = chain.mutableCopy;
             chain.baseChange(1:n1, true);
@@ -61,11 +62,12 @@ classdef PermToPerm < replab.FiniteMorphism
 
     methods
 
-        function self = PermToPerm(source, target, images)
+        function self = PermToPerm(source, target, preimages, images)
             assert(isa(source, 'replab.PermutationGroup'));
             assert(isa(target, 'replab.PermutationGroup'));
             self.source = source;
             self.target = target;
+            self.preimages = preimages;
             self.images = images;
         end
 

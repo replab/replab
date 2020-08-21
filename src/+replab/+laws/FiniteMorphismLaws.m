@@ -49,25 +49,17 @@ classdef FiniteMorphismLaws < replab.laws.MorphismLaws
            assertTrue(K1 == K2);
        end
 
-       function law_imageSourceGenerators_(self)
-           I1 = self.morphism.imageSourceGenerators;
-           I2 = cellfun(@(g) self.morphism.imageElement(g), self.S.generators, 'uniform', 0);
-           assert(length(I1) == length(I2));
-           for i = 1:length(I1)
-               self.T.assertEqv(I1{i}, I2{i});
-           end
+       function law_image_(self)
+           gens = cellfun(@(g) self.morphism.imageElement(g), self.morphism.source.generators, 'uniform', 0);
+           img = self.T.subgroup(gens);
+           assertTrue(img == self.morphism.image);
        end
 
-       function law_image_(self)
-            img = self.T.subgroup(self.morphism.imageSourceGenerators);
-            assertTrue(img == self.morphism.image);
-        end
-
-        function law_imageGroup_S(self, s)
-            GS = self.S.subgroup({s});
-            GT = self.morphism.imageGroup(GS);
-            assert(mod(double(GS.order), double(GT.order)) == 0);
-        end
+       function law_imageGroup_S(self, s)
+           GS = self.S.subgroup({s});
+           GT = self.morphism.imageGroup(GS);
+           assert(mod(double(GS.order), double(GT.order)) == 0);
+       end
 
     end
 

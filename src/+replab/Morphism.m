@@ -74,6 +74,9 @@ classdef Morphism < replab.Obj
         %   source (`.Group`): Source group
         %   target (`.Group`): Target group
         %   imageElementFun (function_handle): Function computing images of elements
+        %
+        % Returns:
+        %   `+replab.Morphism`: Constructed morphism
             m = replab.mrp.Lambda(source, target, imageElementFun);
         end
 

@@ -18,6 +18,10 @@ function m = compose(second, first)
         m = first;
         return
     end
+    if isa(second, 'replab.Rep')
+        m = second.compose(first);
+        return
+    end
     areIsomorphisms = isa(first, 'replab.Isomorphism') && isa(second, 'replab.Isomorphism');
     areFinite = isa(first, 'replab.FiniteMorphism') && isa(second, 'replab.FiniteMorphism');
     if areIsomorphisms
