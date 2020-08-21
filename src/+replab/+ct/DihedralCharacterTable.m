@@ -103,6 +103,6 @@ function ct = DihedralCharacterTable(n)
         end
     end
 
-    ct = replab.CharacterTable(group, classes, irreps, chars);
+    ct = replab.CharacterTable(group, classes, chars, 'irreps', irreps);
 
 end

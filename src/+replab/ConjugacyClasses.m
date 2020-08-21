@@ -59,6 +59,12 @@ classdef ConjugacyClasses < replab.Obj
             names{1, end+1} = 'classes';
         end
 
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.ConjugacyClassesLaws(self);
+        end
+
     end
 
     methods

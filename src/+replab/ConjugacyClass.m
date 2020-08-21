@@ -113,6 +113,12 @@ classdef ConjugacyClass < replab.FiniteSet
             end
         end
 
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.ConjugacyClassLaws(self);
+        end
+
         % Domain
 
         function s = sample(self)
