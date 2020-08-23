@@ -5,7 +5,7 @@ classdef SemidirectProductGroup < replab.Group
 %
 % Example:
 %   >>> N = replab.S(3);
-%   >>> H = replab.CyclicGroup(3);
+%   >>> H = replab.PermutationGroup.cyclic(3);
 %   >>> A = N.innerAutomorphism([2 3 1]);
 %   >>> phi = H.morphismByImages(replab.AutomorphismGroup(N), 'images', {A});
 %   >>> sd = H.semidirectProduct(N, @(h, n) phi.imageElement(h).imageElement(n));

@@ -69,7 +69,7 @@ function test_quaternion_presentation
 end
 
 function test_symmetric_group_presentation
-    G = replab.SymmetricGroup(6);
+    G = replab.S(6);
     relators = replab.fp.relatorsForPermutationGroup(G);
     assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
 end

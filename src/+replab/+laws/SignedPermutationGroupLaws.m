@@ -15,7 +15,7 @@ classdef SignedPermutationGroupLaws < replab.laws.FiniteGroupLaws
         end
         function morphismLaws = laws_toPermutation(self)
             d = self.T.domainSize;
-            SymGrp = replab.SymmetricGroup(2*d);
+            SymGrp = replab.S(2*d);
             morphismLaws = replab.laws.GroupMorphismLaws(@(s) replab.SignedPermutation.toPermutation(s), self.T, SymGrp);
         end
         function actionLaws = laws_naturalAction(self)

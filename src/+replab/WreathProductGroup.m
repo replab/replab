@@ -72,7 +72,7 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
             ip = reshape(1:n*d, [d n]);
             ip = ip(:,h);
             ip = ip(:)';
-            p = replab.SymmetricGroup(d*n).compose(ip, basePerm);
+            p = replab.SymmetricGroup.make(d*n).compose(ip, basePerm);
         end
 
         function p = primitivePermutation(self, w, phiA)
@@ -107,7 +107,7 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
             ip = reshape(1:prod(dims), dims);
             ip = permute(ip, fliplr(n + 1 - h));
             ip = ip(:)';
-            p = replab.SymmetricGroup(prod(dims)).compose(ip, p);
+            p = replab.SymmetricGroup.make(prod(dims)).compose(ip, p);
         end
 
     end
