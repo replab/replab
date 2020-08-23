@@ -13,7 +13,7 @@ classdef Str < handle
 % Compare the two outputs:
 %
 % Example:
-%   >>> P = replab.SymmetricGroup(3)
+%   >>> P = replab.S(3)
 %     P =
 %     Symmetric group acting on 3 elements
 %       domainSize: 3

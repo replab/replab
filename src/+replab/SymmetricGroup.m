@@ -2,7 +2,7 @@ classdef SymmetricGroup < replab.PermutationGroup
 % Describes permutations over n = "domainSize" elements, i.e. the symmetric group Sn
 %
 % Example:
-%   >>> S5 = replab.SymmetricGroup(5);
+%   >>> S5 = replab.S(5);
 %   >>> S5.order
 %      ans =
 %      120
@@ -24,22 +24,27 @@ classdef SymmetricGroup < replab.PermutationGroup
                 cache = cell(1, 0);
             end
             if n > length(cache) || isempty(cache{n+1})
-                cache{1,n+1} = replab.SymmetricGroup(n);
+                cache{1,n+1} = replab.SymmetricGroup(n, true);
             end
             G = cache{n+1};
         end
 
     end
 
-    methods (Access = protected)
+    methods
+        % TODO: after deprecation period (Access = protected)
 
-        function self = SymmetricGroup(domainSize)
+        function self = SymmetricGroup(domainSize, fromMake)
         % Constructs the symmetric over a given domain size
         %
         % Instead of the constructor, use `.make`, which caches the constructed group.
         %
         % Args:
         %   domainSize (integer): Domain size, must be >= 0
+            if nargin < 2 || isempty(fromMake) || ~fromMake
+                % TODO: remove deprecation warning
+                warning('Direct constructor call is deprecated. Please call replab.S(n) instead of replab.SymmetricGroup(n)');
+            end
             if domainSize < 2
                 generators = cell(1, 0);
             elseif domainSize == 2

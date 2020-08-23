@@ -525,7 +525,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Computes the derived subgroup of this group
         %
         % Example:
-        %   >>> S4 = replab.SymmetricGroup(4);
+        %   >>> S4 = replab.S(4);
         %   >>> S4.order
         %       24
         %   >>> D = S4.derivedSubgroup;
