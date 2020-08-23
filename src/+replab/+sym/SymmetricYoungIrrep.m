@@ -29,6 +29,7 @@ classdef SymmetricYoungIrrep < replab.Rep
 
 
    methods
+
         function self = SymmetricYoungIrrep(group, partition,form)
         % Constructs an irreducible representation of S_n
         %
@@ -66,8 +67,10 @@ classdef SymmetricYoungIrrep < replab.Rep
         % rho (integer(:,:)) Image of g
             rho = self.underlyingRep.image(g);
         end
+
    end
-   methods(Access =protected)
+
+   methods (Access = protected)
 
         function seminormalHelper(self)
         % Helper function for constructor
