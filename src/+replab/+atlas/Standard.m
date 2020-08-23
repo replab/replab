@@ -2,7 +2,7 @@ classdef Standard < replab.Atlas
 % A collection of descriptions of common groups, with presentations used in the mathematical literature
 %
 % Example:
-%   >>> D4 = replab.DihedralGroup(4);
+%   >>> D4 = replab.PermutationGroup.dihedral(4);
 %   >>> D4.recognize.atlasGroup.name
 %       'Dihedral group of order 8'
 %   >>> S5 = replab.S(5);

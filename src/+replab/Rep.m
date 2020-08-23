@@ -134,7 +134,7 @@ classdef Rep < replab.Obj
         % Example:
         %   >>> S3 = replab.S(3);
         %   >>> K = S3.signRep.kernel;
-        %   >>> K == replab.AlternatingGroup(3)
+        %   >>> K == replab.PermutationGroup.alternating(3)
         %       1
         %
         % Returns:
