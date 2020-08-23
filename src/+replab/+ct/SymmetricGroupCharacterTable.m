@@ -1,4 +1,4 @@
-function permCT = characterTable(n)
+function permCT = SymmetricGroupCharacterTable(n)
     permGroup = replab.S(n);
     allData = replab.sym.CTData.instance(n);
     nData = allData(n);

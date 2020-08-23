@@ -84,8 +84,8 @@ classdef SymmetricGroup < replab.PermutationGroup
     methods (Access = protected)
 
         function classes = computeConjugacyClasses(self)
-            Y = replab.sym.YoungDiagram.allYoungDiagrams(self.domainSize);
-            classes = replab.ConjugacyClasses.sorted(self, cellfun(@(y) y.conjugacyClass, Y, 'uniform', 0));
+            I = replab.sym.IntegerPartition.all(self.domainSize);
+            classes = replab.ConjugacyClasses.sorted(self, cellfun(@(ip) ip.conjugacyClass, I, 'uniform', 0));
         end
 
         function c = computeChain(self)
@@ -146,7 +146,7 @@ classdef SymmetricGroup < replab.PermutationGroup
         %                              decreasing order (e.g ``[3 3 1]`` represents the partition of 7 elements: ``7 = 3+3+1``
         %   form ('specht', 'seminormal', or 'orthogonal'): The form the irrep takes. Default is 'specht'.
         %
-        %   Note: 'specht' is slower to construct than 'seminormal' or 'orthogonal' but, unlike them, has 
+        %   Note: 'specht' is slower to construct than 'seminormal' or 'orthogonal' but, unlike them, has
         %   integer entries
         %   entries
         %
