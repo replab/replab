@@ -83,6 +83,11 @@ classdef SymmetricGroup < replab.PermutationGroup
 
     methods (Access = protected)
 
+        function classes = computeConjugacyClasses(self)
+            Y = replab.sym.YoungDiagram.allYoungDiagrams(self.domainSize);
+            classes = replab.ConjugacyClasses.sorted(self, cellfun(@(y) y.conjugacyClass, Y, 'uniform', 0));
+        end
+
         function c = computeChain(self)
             self.order; % force order computation
             c = computeChain@replab.PermutationGroup(self);
