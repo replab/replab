@@ -91,11 +91,12 @@ classdef SymmetricYoungIrrep < replab.Rep
             %
             % Returns:
             % im (integer(:,:)) Image of g
+                n = self.group.domainSize;
             rowFunEq = self.rowFunction(:,k) == self.rowFunction(:,k+1);
             colFunEq = self.colFunction(:,k) == self.colFunction(:,k+1);
             rowFunLess = self.rowFunction(:,k) < self.rowFunction(:,k+1);
             nInds1 = self.rangeOfParts(~rowFunEq&~colFunEq&rowFunLess);
-            nInds2 = self.basisHash.find(self.rowFunction(nInds1,self.transposition(k))');
+            nInds2 = self.basisHash.find(self.rowFunction(nInds1, replab.Permutation.transposition(n, k, k+1))');
             axDistRec = 1./(self.rowFunction(nInds1,k+1)-self.rowFunction(nInds1,k) + ...
             abs(self.colFunction(nInds1,k+1)-self.colFunction(nInds1,k)));
             m1a = sparse(nInds1,nInds1,-axDistRec,self.dimension,self.dimension);
@@ -116,20 +117,15 @@ classdef SymmetricYoungIrrep < replab.Rep
             n = self.group.domainSize;
             gens = cell(1,n-1);
             for i = 1:n-1
-                gens{i} = self.transposition(i);
+                gens{i} = replab.Permutation.transposition(n, i, i + 1);
             end
-            self.group = self.group.subgroup(gens);
             images = cell(1,n-1);
             for i = 1:n-1
                 images{i} = self.transImage(i);
             end
-            rep = replab.RepByImages(self.group,self.field,self.dimension,gens,images);
+            rep = self.group.repByImages(self.field, self.dimension, 'preimages', gens, 'images', images);
         end
 
-        function t = transposition(self,k)
-            t = 1:self.group.domainSize;
-            [t(k),t(k+1)] = deal(t(k+1),t(k));
-        end
    end
 
 end
