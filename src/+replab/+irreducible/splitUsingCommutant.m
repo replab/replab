@@ -28,7 +28,7 @@ function sub = splitUsingCommutant(rep, context)
     D = D(:)';
     mask = bsxfun(@(x,y) abs(x-y)<tol, D, D');
     % find repeated eigenvalues
-    runs = replab.Partition.connectedComponents(mask).blocks;
+    runs = replab.UndirectedGraph.fromAdjacencyMatrix(mask).connectedComponents.blocks;
     n = length(runs);
     if n == 1
         rep.isIrreducible = true;

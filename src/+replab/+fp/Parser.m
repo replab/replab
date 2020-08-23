@@ -3,16 +3,17 @@ classdef Parser
 %
 % The grammar is given by:
 %
-%   <presentation> ::= '<' <generator> (','? <generator>)* '|' <relators> '>'
-%   <relators> ::= (<equation> (',' <equation>)*)?
-%   <equation> ::= <nonEmptyWord> ('=' <nonEmptyWord>)*
-%   <word> ::= <nonEmptyWord>?
-%   <nonEmptyWord> ::= <component> ('*' <component> | '/' <component> | <component>)*
-%   <component> ::= <part> <exponent>?
-%   <part> ::= <identity> | <generator> | <subword> | <commutator>
-%   <subword> ::= '(' <nonEmptyWord> ')'
-%   <commutator> ::= '[' <nonEmptyWord> ',' <nonEmptyWord> ']'
-%   <generator> ::= corresponds to the regexp [A-Za-z][A-Za-z0-9_]*
+% ::
+%    <presentation> ::= '<' <generator> (','? <generator>)* '|' <relators> '>'
+%    <relators> ::= (<equation> (',' <equation>)*)?
+%    <equation> ::= <nonEmptyWord> ('=' <nonEmptyWord>)*
+%    <word> ::= <nonEmptyWord>?
+%    <nonEmptyWord> ::= <component> ('*' <component> | '/' <component> | <component>)*
+%    <component> ::= <part> <exponent>?
+%    <part> ::= <identity> | <generator> | <subword> | <commutator>
+%    <subword> ::= '(' <nonEmptyWord> ')'
+%    <commutator> ::= '[' <nonEmptyWord> ',' <nonEmptyWord> ']'
+%    <generator> ::= corresponds to the regexp [A-Za-z][A-Za-z0-9_]*
 
 % The commutator $[x,y]$ can be defined in two ways:
 %

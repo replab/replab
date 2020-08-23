@@ -8,5 +8,5 @@ function test_suite = DirectProductGroupTest()
 
     S4 = replab.S(4);
     S4xS4 = S4.directProduct(S4);
-    test_suite = replab.FiniteGroupLaws(S4xS4).addTestCases(test_suite);
+    test_suite = S4xS4.laws.addTestCases(test_suite);
 end

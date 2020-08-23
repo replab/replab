@@ -17,7 +17,7 @@ function subsets = burningAlgorithmFast(edges)
 %     >>> % replab.graph.burningAlgorithmFast([1 2; 2 6; 3 4]); % a graph with 5 nodes labelled 1, 2, 3, 4, 6
 %
 % See also:
-%     replab.Partition.connectedComponents
+%     replab.UndirectedGraph.connectedComponents
 %     replab.graph.connectedComponents
 %     replab.graph.burningAlgorithm
 

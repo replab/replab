@@ -13,8 +13,8 @@ classdef NormalCosets < replab.LeftCosets & replab.RightCosets
             self@replab.RightCosets(group, subgroup);
         end
 
-        function s = size(self)
-            s = size@replab.LeftCosets(self);
+        function s = nElements(self)
+            s = nElements@replab.LeftCosets(self);
         end
 
         function t = cosetRepresentative(self, g)
@@ -35,6 +35,10 @@ classdef NormalCosets < replab.LeftCosets & replab.RightCosets
         % Returns:
         %   cell(1,\*) of `+replab.NormalCoset`: Set of normal cosets
             C = cellfun(@(t) replab.NormalCoset(self.subgroup, t, self.group), self.transversal, 'uniform', 0);
+        end
+
+        function l = laws(self)
+            l = laws@replab.LeftCosetsLaws(self);
         end
 
     end

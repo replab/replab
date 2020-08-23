@@ -6,7 +6,17 @@ classdef Morphism < replab.Obj
         target % (`.Group`): Target group
     end
 
-    methods
+    methods % Implementations
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.MorphismLaws(self);
+        end
+
+    end
+
+    methods % Images
 
         function t = imageElement(self, s)
         % Returns the image of the given source element
@@ -19,6 +29,10 @@ classdef Morphism < replab.Obj
             error('Abstract');
         end
 
+    end
+
+    methods % Morphism composition
+
         function res = compose(self, applyFirst)
         % Composition of morphisms, the right hand side applied first
         %
@@ -30,7 +44,7 @@ classdef Morphism < replab.Obj
         %
         % Returns:
         %   `.Morphism`: The composition of the given morphism applied first, followed by this morphism.
-            res = replab.fm.compose(self, applyFirst);
+            res = replab.mrp.compose(self, applyFirst);
         end
 
         function res = andThen(self, applyLast)
@@ -41,7 +55,7 @@ classdef Morphism < replab.Obj
         %
         % Returns:
         %   `.Morphism`: The composition of this morphism applied first, followed by the given morphism
-            res = replab.fm.compose(applyLast, self);
+            res = replab.mrp.compose(applyLast, self);
         end
 
         function res = mtimes(self, applyFirst)
@@ -51,7 +65,7 @@ classdef Morphism < replab.Obj
 
     end
 
-    methods (Static)
+    methods (Static) % Morphism creation
 
         function m = lambda(source, target, imageElementFun)
         % Creates a morphism from an image function
@@ -60,7 +74,10 @@ classdef Morphism < replab.Obj
         %   source (`.Group`): Source group
         %   target (`.Group`): Target group
         %   imageElementFun (function_handle): Function computing images of elements
-            m = replab.fm.Lambda(source, target, imageElementFun);
+        %
+        % Returns:
+        %   `+replab.Morphism`: Constructed morphism
+            m = replab.mrp.Lambda(source, target, imageElementFun);
         end
 
     end

@@ -18,12 +18,12 @@ function test_suite = SymmetricGroupIrrepsTest()
             if i == 1
                 % This part of the test is currently commented for most i as of issue #247
                 rep = replab.sym.specht(Y);
-                test_suite = replab.RepLaws(rep).addTestCases(test_suite);
+                test_suite = rep.laws.addTestCases(test_suite);
                 rep = replab.sym.youngSeminormal(Y);
-                test_suite = replab.RepLaws(rep).addTestCases(test_suite);
+                test_suite = rep.laws.addTestCases(test_suite);
             end
             rep = replab.sym.youngOrthogonal(Y);
-            test_suite = replab.RepLaws(rep).addTestCases(test_suite);
+            test_suite = rep.laws.addTestCases(test_suite);
         end
     end
 end

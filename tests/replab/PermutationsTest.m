@@ -14,7 +14,7 @@ function test_suite = PermutationsTest()
 
     for n = allNs
         G = replab.S(n);
-        laws = replab.PermutationGroupLaws(G);
+        laws = G.laws;
         if n > 5
             laws = laws.skippingSlow;
         end
@@ -22,7 +22,7 @@ function test_suite = PermutationsTest()
     end
     S5 = replab.S(5);
     signRep = S5.signRep;
-    test_suite = replab.RepLaws(signRep).addTestCases(test_suite);
+    test_suite = signRep.laws.addTestCases(test_suite);
 end
 
 function test_sign

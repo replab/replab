@@ -1114,7 +1114,38 @@ classdef Chain < replab.Str
 
     methods (Static)
 
+        function C = makeBoundedOrder(n, generators, maxOrder)
+        % Computes a BSGS chain up to some order
+        %
+        % If the group has order bigger than ``maxOrder``, returns a partial mutable chain. Otherwise,
+        % it returns an immutable chain.
+        %
+        % Args:
+        %   n (integer): Domain size
+        %   generators (cell(1,\*) of permutation): Group generators
+        %   maxOrder (integer): Order at which we exit
+        %
+        % Returns:
+        %   `.Chain`: Complete or partial stabilizer chain
+            C = replab.bsgs.Chain(n);
+            for i = 1:length(generators)
+                C.stripAndAddStrongGenerator(generators{i});
+            end
+            C.deterministicSchreierSims(maxOrder);
+            if C.order <= maxOrder
+                C.makeImmutable;
+            end
+        end
+
         function C = make(n, generators, base, order)
+        % Computes a BSGS chain using the randomized Schreier-Sims algorithm
+        %
+        % Args:
+        %   n (integer): Domain size
+        %   generators (cell(1,\*) of permutation): Group generators
+        %
+        % Returns:
+        %   `.Chain`: A complete immutable BSGS chain
             if nargin < 3
                 base = [];
             end

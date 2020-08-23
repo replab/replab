@@ -7,7 +7,7 @@ function test_suite = PermutationToTest()
     initTestSuite;
 end
 
-function test_findPermutationsTo
+function test_vectorFindPermutationsTo
     if ReplabTestParameters.onlyFastTests
         n = 1;
         d = 3;
@@ -21,7 +21,7 @@ function test_findPermutationsTo
         g = G.sample;
         s = randi(3, 1, d);
         t = s(g);
-        P = G.findPermutationsTo(s, t);
+        P = G.vectorFindPermutationsTo(s, t);
         p = P.sample;
         assertEqual(s, t(p));
     end

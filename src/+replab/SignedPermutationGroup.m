@@ -41,7 +41,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
         % Obj
 
         function l = laws(self)
-            l = replab.SignedPermutationGroupLaws(self);
+            l = replab.laws.SignedPermutationGroupLaws(self);
         end
 
         % Domain

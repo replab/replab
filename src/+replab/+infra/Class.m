@@ -86,9 +86,28 @@ classdef Class < replab.infra.SourceElement
             ae = ae(:).';
         end
 
+        function amg = allMethodGroups(self)
+        % Returns groups of all methods of this class (including inherited)
+            am = struct2cell(self.allElementsStruct);
+            am = am(:).';
+            am = am(cellfun(@(x) x.isMethod, am));
+            group = cellfun(@(x) x.declarations.bestEffortGroup, am, 'uniform', 0);
+            groups = self.allMethodGroupNames;
+            amg = cell(1, length(groups));
+            for i = 1:length(groups)
+                name = groups{i};
+                mask = cellfun(@(g) isequal(g, name), group);
+                methodsInGroup = am(mask);
+                methodNames = cellfun(@(m) m.name, methodsInGroup, 'uniform', 0);
+                [~, ind] = sort(methodNames);
+                methodsInGroup = methodsInGroup(ind);
+                amg{i} = replab.infra.MethodGroup(name, methodsInGroup);
+            end
+        end
+
         function ae = allElementsStruct(self)
         % Returns a struct whose fields contain all elements (including inherited)
-            ae = replab.infra.shm.merge2(self.ownElementsStruct, self.inheritedElementsStruct);
+            ae = replab.infra.shm.merge2(self.inheritedElementsStruct, self.ownElementsStruct);
         end
 
         function am = allMethods(self)
@@ -101,6 +120,10 @@ classdef Class < replab.infra.SourceElement
         % Returns a row cell vector containing all properties, inc. inherited, sorted by name
             ae = self.allElements;
             ap = ae(cellfun(@(x) x.isProperty, ae));
+        end
+
+        function an = allMethodGroupNames(self)
+            an = replab.compat.uniqueStable(horzcat(self.inheritedMethodGroupNames, self.ownMethodGroupNames));
         end
 
         function oe = ownDocumentationElements(self)
@@ -150,6 +173,20 @@ classdef Class < replab.infra.SourceElement
             om = oe(cellfun(@(x) x.isMethod, oe));
         end
 
+        function on = ownMethodGroupNames(self)
+            om = self.ownMethods;
+            n = length(om);
+            on = cell(1, n);
+            for i = 1:n
+                m = om{i};
+                if isfield(m.attributes, 'group')
+                    on{i} = m.attributes.group;
+                else
+                    on{i} = '';
+                end
+            end
+        end
+
         function op = ownProperties(self)
             oe = self.ownElements;
             op = oe(cellfun(@(x) x.isProperty, oe));
@@ -164,7 +201,7 @@ classdef Class < replab.infra.SourceElement
                     name = names{i};
                     already.(name) = true;
                 end
-                asc = self.allSuperclasses;
+                asc = fliplr(self.allSuperclasses); % visit in reverse order
                 for i = 1:length(asc)
                     sup = asc{i};
                     names = fieldnames(sup.ownElementsStruct);
@@ -181,6 +218,15 @@ classdef Class < replab.infra.SourceElement
                 self.inheritedElementsStruct_ = ie;
             end
             ie = self.inheritedElementsStruct_;
+        end
+
+        function in = inheritedMethodGroupNames(self)
+            asc = fliplr(self.allSuperclasses); % visit in reverse order
+            in = cell(1, 0);
+            for i = 1:length(asc)
+                in = horzcat(in, asc{i}.ownMethodGroupNames);
+            end
+            in = replab.compat.uniqueStable(in);
         end
 
         function ie = inheritedElements(self)
@@ -236,16 +282,21 @@ classdef Class < replab.infra.SourceElement
 
         function asc = computeAllSuperclasses(self)
             asc = {};
+            ids = {};
             visitedClassIds = struct;
             queue = self.ownSuperclasses;
             while ~isempty(queue)
                 c = queue{1};
                 queue = queue(2:end);
-                id = c.shmIdentifier;
-                if ~isfield(visitedClassIds, id)
-                    visitedClassIds.(id) = true;
+                [~, ind] = ismember(c.fullIdentifier, ids);
+                if ind == 0
+                    ids{1,end+1} = c.fullIdentifier;
                     asc{1,end+1} = c;
                     queue = horzcat(queue, c.ownSuperclasses);
+                else
+                    rest = setdiff(1:length(ids), ind);
+                    ids = horzcat(ids(rest), {c.fullIdentifier});
+                    asc = horzcat(asc(rest), {c});
                 end
             end
         end

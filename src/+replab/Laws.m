@@ -18,7 +18,7 @@ classdef Laws < replab.Str
 %
 % - Methods that start with a ``laws_`` prefix must return another `.Laws` instance (see also `+replab.+laws.Collection`).
 %   It enables delegation of checks when a tested object has subparts (for example, a `.FiniteGroup` has a `~+replab.FiniteGroup.elements`
-%   method of type `.IndexedFamily` that is conveniently checked by `.IndexedFamilyLaws`, see `.FiniteGroupLaws`).
+%   method of type `.IndexedFamily` that is conveniently checked by `+replab.+laws.IndexedFamilyLaws`, see `+replab.+laws.FiniteGroupLaws`).
 %
 % Example:
 %    >>> % We build a group from scratch, using function handles,
@@ -30,7 +30,7 @@ classdef Laws < replab.Str
 %    >>> identity = 1:n;
 %    >>> inverseFun = @(x) arrayfun(@(i) find(x == i), 1:10);
 %    >>> S10 = replab.Group.lambda('Permutations of 1..10', eqvFun, sampleFun, composeFun, identity, inverseFun);
-%    >>> S10laws = replab.GroupLaws(S10);
+%    >>> S10laws = S10.laws;
 %    >>> S10laws.checkSilent
 %        1
 
@@ -126,6 +126,12 @@ classdef Laws < replab.Str
         function res = checkSilent(self)
         % Runs the randomized tests without usign MOxUnit, and returns whether all tests passed
         %
+        % Example:
+        %    >>> S10 = replab.S(10);
+        %    >>> S10laws = S10.laws;
+        %    >>> S10laws.checkSilent
+        %        1
+        %
         % Returns:
         %   logical: True if all tests successful
             res = true;
@@ -144,22 +150,6 @@ classdef Laws < replab.Str
         % Runs the randomized tests without using MOxUnit
         %
         % This method is useful from the REPL command line.
-        %
-        % Example:
-        %   >>> S5 = replab.S(5);
-        %   >>> L = replab.GroupLaws(S5);
-        %   >>> L.check
-        %       Checking associativity...
-        %       Checking composeAll...
-        %       Checking composeN integers...
-        %       Checking composeN positive...
-        %       Checking composeN zero...
-        %       Checking composeWithInverse...
-        %       Checking eqv...
-        %       Checking identity...
-        %       Checking inverse...
-        %       Checking inverse compatible with compose...
-        %       Checking leftConjugate...
             [testNames testFuns] = self.getTestCases;
             for i = 1:length(testNames)
                 disp(sprintf('Checking %s...', testNames{i}));

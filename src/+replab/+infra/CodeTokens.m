@@ -61,6 +61,8 @@ classdef CodeTokens < replab.Str
                     replab.infra.parseError(self, pos, 'Function declaration name %s does not match filename %s.m', ...
                                             data.name, self.sourceIdentifier);
                 end
+              otherwise
+                replab.infra.parseError(self, pos, 'Invalid token at start of file %s.m', self.sourceIdentifier);
             end
         end
 

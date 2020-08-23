@@ -9,8 +9,15 @@ function primeslist = getprimeslist
 % Release: 1.0
 % Release date: 7/22/09
 
+vpipath = which('getprimeslist');
+vpipath = fileparts(vpipath);
+
+% this is the full name (path included) of the
+% _primeslist_ .mat file
+primeslistfilename = fullfile(vpipath,'@vpi','_primeslist_.mat');
+
 % load the compressed form
-load _primeslist_
+load(primeslistfilename)
 
 % these are uint8 numbers, where I simply stored
 % difference between consecutive primes as a uint8.
@@ -19,7 +26,3 @@ load _primeslist_
 % The act of decompressing the list takes no more
 % than a double and a cumsum.
 primeslist = cumsum([2,double(primeslist)]);
-
-
-
-

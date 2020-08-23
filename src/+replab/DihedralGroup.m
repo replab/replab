@@ -8,11 +8,6 @@ function grp = DihedralGroup(n)
 %
 % Returns:
 %   `+replab.PermutationGroup`: The dihedral group permuting the vertices of the ``n``-gon
-    if n <= 2
-        grp = replab.SymmetricGroup(2);
-    else
-        g1 = fliplr(1:n);
-        g2 = [2:n 1];
-        grp = replab.PermutationGroup.of(g1, g2);
-    end
+    warning('Deprecated. Use replab.PermutationGroup.dihedral(n) instead of replab.DihedralGroup(n)');
+    grp = replab.PermutationGroup.dihedral(n);
 end

@@ -9,7 +9,7 @@ classdef RightCosets < replab.Cosets
         % Obj
 
         function l = laws(self)
-            l = replab.RightCosetsLaws(self);
+            l = replab.laws.RightCosetsLaws(self);
         end
 
     end
@@ -28,7 +28,7 @@ classdef RightCosets < replab.Cosets
             d = replab.DoubleCosets(self.group, self.subgroup, subgroup1);
         end
 
-        function s = size(self)
+        function s = nElements(self)
         % Returns the number of right cosets
         %
         % Returns:
@@ -67,7 +67,7 @@ classdef RightCosets < replab.Cosets
 
         function T = computeTransversal(self)
             M = replab.bsgs.Cosets.rightTransversalMatrix(self.groupChain, self.subgroupChain);
-            T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:double(self.size), 'uniform', 0);
+            T = arrayfun(@(i) self.isomorphism.preimageElement(M(:,i)'), 1:double(self.nElements), 'uniform', 0);
         end
 
         function C = elements(self)

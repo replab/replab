@@ -134,7 +134,7 @@ classdef Rep < replab.Obj
         % Example:
         %   >>> S3 = replab.S(3);
         %   >>> K = S3.signRep.kernel;
-        %   >>> K == replab.AlternatingGroup(3)
+        %   >>> K == replab.PermutationGroup.alternating(3)
         %       1
         %
         % Returns:
@@ -145,7 +145,7 @@ classdef Rep < replab.Obj
         function K = computeKernel(self)
             assert(isa(self.group, 'replab.FiniteGroup'));
             % TODO error estimation: take in account the uncertainty on computed images
-            C = self.group.conjugacyClasses;
+            C = self.group.conjugacyClasses.classes;
             % for a character, we have chi(g) == chi(id) only if rho(g) == eye(d)
             % what is the maximal value of real(chi(g)) for chi(g) ~= chi(id)?
             % write chi(g) = sum(lambda(g)) where lambda(g) = eig(chi(g))
@@ -340,7 +340,7 @@ classdef Rep < replab.Obj
         % Obj
 
         function l = laws(self)
-            l = replab.RepLaws(self);
+            l = replab.laws.RepLaws(self);
         end
 
     end
@@ -385,6 +385,21 @@ classdef Rep < replab.Obj
         % Returns:
         %   double(\*,\*): The matrix ``M * self.inverseImage(g)``
             M = full(M * self.inverseImage_internal(g));
+        end
+
+    end
+
+    methods % Morphism composition
+
+        function res = compose(self, applyFirst)
+        % Composition of a representation with a morphism, with the morphism applied first
+        %
+        % Args:
+        %   applyFirst (`.Morphism`): Morphism from a finite group
+        %
+        % Returns:
+        %   `.Rep`: Representation
+            res = replab.rep.CompositionRep(self, applyFirst);
         end
 
     end
@@ -519,7 +534,7 @@ classdef Rep < replab.Obj
         % has the identity matrix as a change of basis.
         %
         % Example:
-        %   >>> S3 = replab.SymmetricGroup(3);
+        %   >>> S3 = replab.S(3);
         %   >>> defRep = S3.naturalRep.complexification;
         %   >>> C = randn(3,3) + 1i * rand(3,3);
         %   >>> nonUnitaryRep = defRep.subRep(C, inv(C));
