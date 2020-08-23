@@ -1,7 +1,7 @@
 classdef SymmetricYoungIrrep < replab.Rep
 % Young's orthogonal representation of a symmetric group
 %
-% Each irrep corresponds to an unordered partition of n. 
+% Each irrep corresponds to an unordered partition of n.
 % E.g: 4 = 2+2 and 4 = 3+1 both generate an irrep of S_4.
 %
 %This is a unitary representation.
@@ -16,17 +16,17 @@ classdef SymmetricYoungIrrep < replab.Rep
        basisHash %replab.sym.Set: Describes the row index of the row function of a basis vector.
 
     end
-    
+
     properties(GetAccess=protected,SetAccess=protected)
          cSum
-        %This represents the sum of the first n-1 elements in the partition 
+        %This represents the sum of the first n-1 elements in the partition
         % Eg: [4 2 1] => [0 4 6]
         rangeOfParts
         %This saves the array 1:(#tableax)
         underlyingRep
         % This is an underlying RepByImages Object used to quickly find the image
     end
-   
+
 
    methods
         function self = SymmetricYoungIrrep(group, partition,form)
@@ -55,7 +55,7 @@ classdef SymmetricYoungIrrep < replab.Rep
                 self.seminormalHelper();
                 self.underlyingRep = self.constructRep;
         end
-        
+
         function rho = image_internal(self, g)
         % Image function used by replab to calculate the images of a permutation
         %
@@ -68,20 +68,20 @@ classdef SymmetricYoungIrrep < replab.Rep
         end
    end
    methods(Access =protected)
-       
+
         function seminormalHelper(self)
         % Helper function for constructor
             youngLattice = replab.sym.YoungLattice(self.partition,self.group.domainSize);
             [self.rowFunction,self.colFunction,~] = youngLattice.generateTableaux;
-            %Use Young Lattice to generate row and 
+            %Use Young Lattice to generate row and
             %column functions corresponding to partitions and
             %conjugate partitions.
             self.basisHash = replab.perm.Set(self.group.domainSize);
             self.basisHash.insert(self.rowFunction');
             %Generate words corresponding to linearly independent columns
         end
-        
-            
+
+
         function im = transImage(self,k)
             % Image function used to calculate the images of all adjacent transposition generators
             %
@@ -93,7 +93,7 @@ classdef SymmetricYoungIrrep < replab.Rep
             % im (integer(:,:)) Image of g
             rowFunEq = self.rowFunction(:,k) == self.rowFunction(:,k+1);
             colFunEq = self.colFunction(:,k) == self.colFunction(:,k+1);
-            rowFunLess = self.rowFunction(:,k) < self.rowFunction(:,k+1);  
+            rowFunLess = self.rowFunction(:,k) < self.rowFunction(:,k+1);
             nInds1 = self.rangeOfParts(~rowFunEq&~colFunEq&rowFunLess);
             nInds2 = self.basisHash.find(self.rowFunction(nInds1,self.transposition(k))');
             axDistRec = 1./(self.rowFunction(nInds1,k+1)-self.rowFunction(nInds1,k) + ...
@@ -111,7 +111,7 @@ classdef SymmetricYoungIrrep < replab.Rep
             m3 = spdiags(-1*colFunEq,0,self.dimension,self.dimension);
             im = m1a+m1b+m1c+m1d+m2+m3;
         end
-        
+
         function rep = constructRep(self)
             n = self.group.domainSize;
             gens = cell(1,n-1);
@@ -123,9 +123,9 @@ classdef SymmetricYoungIrrep < replab.Rep
             for i = 1:n-1
                 images{i} = self.transImage(i);
             end
-            rep = replab.RepByImages(self.group,self.field,self.dimension,images);
+            rep = replab.RepByImages(self.group,self.field,self.dimension,gens,images);
         end
-        
+
         function t = transposition(self,k)
             t = 1:self.group.domainSize;
             [t(k),t(k+1)] = deal(t(k+1),t(k));
