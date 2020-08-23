@@ -4,7 +4,8 @@ classdef SymPoly
         m% Sum of partitions/ degree of polynomials
     end
     methods(Static)
-        function lin = fromCell(partStandForm,values) %m=degree
+        function lin = fromCell(partStandForm,values)
+        %m=degree
             len = numel(partStandForm);
             deg = sum(partStandForm{1});
             partitions = zeros(len,deg);
@@ -19,7 +20,7 @@ classdef SymPoly
                 arr(inds(j)) = arr(inds(j))+values(j);
             end
             lin = replab.sym.SymPoly(arr,deg);
-            
+
             function group = toGroupForm(partit)
                     group = zeros(1,deg);
                     for k = 1:deg
@@ -27,11 +28,11 @@ classdef SymPoly
                     end
                 end
         end
-        
+
         function lin = emptyPoly
             lin = replab.sym.SymPoly(1,0);
         end
-    
+
     function lin = multRowWithAugmented(rowPart,part)
                 len = numel(part);
                 if len == 0
@@ -67,7 +68,7 @@ classdef SymPoly
                 parts3 = zeros(len1*len2,data3.nParts);
                 for j = 1:len1
                     for k = 1:len2
-                        if coeffs3((j-1)*len2+k) 
+                        if coeffs3((j-1)*len2+k)
                             lin = func(parts1{j},parts2{k});
                             parts3((j-1)*len2+k,:) = lin.coeffs;
                         end
@@ -96,20 +97,20 @@ classdef SymPoly
                 augMonom = replab.sym.SymPoly.powerToAugmentedMonomial(part);
                 monom = augMonom.multDiag(nData.stabSizes);
            end
-    end    
-    
+    end
+
     methods
         function self = SymPoly(arr,m)
             self.coeffs = arr;
             self.m = m;
         end
-        
+
         function self = multDiag(self,diag)
             self.coeffs = self.coeffs.*diag;
         end
-        
-     
+
+
     end
-    
-    
+
+
 end
