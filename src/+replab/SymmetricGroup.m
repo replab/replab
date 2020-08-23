@@ -7,13 +7,39 @@ classdef SymmetricGroup < replab.PermutationGroup
 %      ans =
 %      120
 
-    methods
+    methods (Static)
+
+        function G = make(n)
+        % Constructs the symmetric over a given domain size
+        %
+        % This static method keeps the constructed copies of ``S(n)`` in cache.
+        %
+        % Args:
+        %   domainSize (integer): Domain size, must be > 0
+        %
+        % Returns;
+        %   `.SymmetricGroup`: The constructed or cached symmetric group
+            persistent cache
+            if isempty(cache)
+                cache = cell(1, 0);
+            end
+            if n > length(cache) || isempty(cache{n+1})
+                cache{1,n+1} = replab.SymmetricGroup(n);
+            end
+            G = cache{n+1};
+        end
+
+    end
+
+    methods (Access = protected)
 
         function self = SymmetricGroup(domainSize)
         % Constructs the symmetric over a given domain size
         %
+        % Instead of the constructor, use `.make`, which caches the constructed group.
+        %
         % Args:
-        %   domainSize (integer): Domain size, must be > 0
+        %   domainSize (integer): Domain size, must be >= 0
             if domainSize < 2
                 generators = cell(1, 0);
             elseif domainSize == 2

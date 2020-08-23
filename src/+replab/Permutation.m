@@ -221,9 +221,9 @@ classdef Permutation
         function mat = toSparseMatrix(perm)
         % Returns the sparse permutation matrix corresponding to the given permutation
         %
-        % The returned matrix is such that matrix multiplication is compatible with composition of
-        % permutations, i.e. for ``P = replab.SymmetricGroup(domainSize)`` we have
-        % ``P.toMatrix(P.compose(x, y)) = P.toMatrix(x) * P.toMatrix(y)``
+        % The returned matrix is such that matrix multiplication is compatible with composition of permutations.
+        % I.e. for ``Sn = replab.S(n)`` we have
+        % ``replab.Permutation.toMatrix(Sn.compose(x, y)) = replab.Permutation.toMatrix(x) * replab.Permutation.toMatrix(y)``
         %
         % Args:
         %   perm (permutation): Permutation
@@ -238,8 +238,8 @@ classdef Permutation
         % Returns the permutation matrix corresponding to the given permutation
         %
         % The returned matrix is such that matrix multiplication is compatible with composition of
-        % permutations, i.e. for ``P = replab.Permutations(domainSize)`` we have
-        % ``P.toMatrix(P.compose(x, y)) = P.toMatrix(x) * P.toMatrix(y)``
+        % permutations, i.e. for ``Sn = replab.S(domainSize)`` we have
+        % ``replab.permutation.toMatrix(Sn.compose(x, y)) = replab.Permutation.toMatrix(x) * replab.Permutation.toMatrix(y)``
         %
         % Args:
         %   perm (permutation): Permutation
