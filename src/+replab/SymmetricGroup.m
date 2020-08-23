@@ -23,7 +23,7 @@ classdef SymmetricGroup < replab.PermutationGroup
             if isempty(cache)
                 cache = cell(1, 0);
             end
-            if n > length(cache) || isempty(cache{n+1})
+            if n+1 > length(cache) || isempty(cache{n+1})
                 cache{1,n+1} = replab.SymmetricGroup(n, true);
             end
             G = cache{n+1};
