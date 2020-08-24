@@ -347,6 +347,23 @@ classdef cyclotomic
             res = conj(transpose(self));
         end
 
+        function res = null(self)
+        % Computes the null space of a cyclotomic matrix
+        %
+        % Example:
+        %   >>> M = replab.cyclotomic.fromDoubles([1 3 0; -2 -6 0; 3 9 6]);
+        %   >>> null(M)'
+        %       -3  1  0
+        %
+        % Returns:
+        %   `.cyclotomic`: The matrix null space
+            rr = javaMethod('rref', 'cyclo.Lab', self.matArray, size(self, 1), size(self, 2));
+            rank = double(rr.rank);
+            rows = size(self, 2);
+            cols = size(self, 2) - rank;
+            res = replab.cyclotomic.fromJavaArray(javaMethod('nullSpace', rr), [rows cols]);
+        end
+
         function res = mtimes(lhs, rhs)
         % Matrix multiplication
         %
