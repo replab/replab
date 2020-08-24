@@ -21,23 +21,29 @@ function ct = DihedralCharacterTable(n)
     % We have the group < d,s | d^n = s^2 = e, dxd^-1 = s^-1 >
 
     % Classes will be listed with first rotations and then reflections
-    classreps = cell(1, nclasses);
-    d = [2:n, 1];
-    s = fliplr(1:n);
-    if even(n)
-        stop = n/2;
+    if n == 2
+        % Use the order d^0, d^1, sd^0, sd^1 to be consistent
+        classreps = {[1,2,3,4], [3,4,1,2], [2,1,4,3], [4,3,2,1]};
+        stop = 1;
     else
-        stop = (n-1)/2;
-    end
-    rep = 1:n;
-    for i = 1:stop + 1
-        classreps{i} = rep;
-        rep = rep(d);
-    end
-    if n > 2
-        classreps{i + 1} = s;
+        classreps = cell(1, nclasses);
+        d = [2:n, 1];
+        s = fliplr(1:n);
         if even(n)
-            classreps{i + 2} = d(s);
+            stop = n/2;
+        else
+            stop = (n-1)/2;
+        end
+        rep = 1:n;
+        for i = 1:stop + 1
+            classreps{i} = rep;
+            rep = rep(d);
+        end
+        if n > 2
+            classreps{i + 1} = s;
+            if even(n)
+                classreps{i + 2} = s(d);
+            end
         end
     end
     classarray = cellfun(@(r) group.conjugacyClass(r), classreps, 'UniformOutput', false);
@@ -81,12 +87,12 @@ function ct = DihedralCharacterTable(n)
                 chars(n1D+j, k+1) = w^pow + w^(-pow);
             end
         end
-        for k = nclasses - 2:nclasses - 1
-            chars(2, k+1) = replab.cyclotomic.fromDoubles(-1);
-            chars(3, k+1) = replab.cyclotomic.fromDoubles((-1)^k);
-            chars(4, k+1) = replab.cyclotomic.fromDoubles((-1)^(k+1));
+        for k = 0:1
+            chars(2, nclasses - 1 + k) = replab.cyclotomic.fromDoubles(-1);
+            chars(3, nclasses - 1 + k) = replab.cyclotomic.fromDoubles((-1)^k);
+            chars(4, nclasses - 1 + k) = replab.cyclotomic.fromDoubles((-1)^(k+1));
             for j = 1:stop
-                chars(n1D+j, k+1) = replab.cyclotomic.fromDoubles(0);
+                chars(n1D+j, nclasses - 1 + k) = replab.cyclotomic.fromDoubles(0);
             end
         end
     else
@@ -102,7 +108,5 @@ function ct = DihedralCharacterTable(n)
             chars(n1D+j, nclasses) = replab.cyclotomic.fromDoubles(0);
         end
     end
-
     ct = replab.CharacterTable(group, classes, chars, 'irreps', irreps);
-
 end

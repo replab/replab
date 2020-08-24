@@ -76,6 +76,71 @@ classdef CharacterTable < replab.Obj
             self.irreps = args.irreps;
         end
 
+        function ct = directProduct(self, ct2)
+        % Returns the direct product of character tables
+        %
+        % Args:
+        %   ct2 (`+replab.CharacterTable`): character table with which to take direct product
+        %
+        % Returns:
+        %   ct (`+replab.CharacterTable`): The direct product of the character tables
+            new_group = self.group.directProduct(ct2.group);
+            % New characters are kronecker product of character matrices
+            A = self.characters;
+            B = ct2.characters;
+            new_chars = replab.cyclotomic.zeros(size(A, 1) * size(B, 1), size(A, 2) * size(B, 2));
+            for i = 0:size(A, 1)-1
+                for j = 0:size(A, 2)-1
+                   new_chars(i * size(B,1) + 1:(i+1) * size(B,1), j * size(B,2) + 1:(j+1) * size(B,2)) = A(i+1, j+1) * B;
+                end
+            end
+            % New conjugacy classes are cartesian product of input
+            c1 = cellfun(@(c) c.representative, self.classes.classes, 'UniformOutput', false);
+            c2 = cellfun(@(c) c.representative, ct2.classes.classes, 'UniformOutput', false);
+            new_classes = cell(1, length(c1) * length(c2));
+            for i = 0:length(c1) - 1
+                new_classes(i*length(c2)+1:(i+1)*length(c2)) = cellfun(@(x) {c1{i+1}, x}, c2, 'UniformOutput', false);
+            end
+            classarray = cellfun(@(r) new_group.conjugacyClass(r), new_classes, 'UniformOutput', false);
+            new_classes = replab.ConjugacyClasses(new_group, classarray);
+            % New irreps are direct products of input irreps
+            new_irreps = cell(1, length(self.irreps) * length(ct2.irreps));
+            for i = 1:length(self.irreps)
+                for j = 1:length(ct2.irreps)
+                    B = ct2.irreps{j}.image(ct2.group.identity);
+                    new_images1 = cell(1, self.group.nGenerators);
+                    for k = 1:self.group.nGenerators
+                        A = self.irreps{i}.images_internal{k};
+                        % Kronecker product of cyclotomics
+                        new_image = replab.cyclotomic.zeros(size(A,1) * size(B, 1), size(A, 2) * size(B, 2));
+                        for m = 0:size(A, 1)-1
+                            for n = 0:size(A, 2)-1
+                               new_image(m*size(B,1)+1:(m+1)*size(B,1), n*size(B,2)+1:(n+1)*size(B,2)) = A(m+1, n+1) * B;
+                            end
+                        end
+                        new_images1{k} = new_image;
+                    end
+                    new_images2 = cell(1, ct2.group.nGenerators);
+                    A = self.irreps{i}.image(self.group.identity);
+                    for k = 1:ct2.group.nGenerators
+                        B = ct2.irreps{j}.images_internal{k};
+                        % Kronecker product of cyclotomics
+                        new_image = replab.cyclotomic.zeros(size(A,1) * size(B, 1), size(A, 2) * size(B, 2));
+                        for m = 0:size(A, 1)-1
+                            for n = 0:size(A, 2)-1
+                               new_image(m*size(B,1)+1:(m+1)*size(B,1), n*size(B,2)+1:(n+1)*size(B,2)) = A(m+1, n+1) * B;
+                            end
+                        end
+                        new_images2{k} = new_image;
+                    end
+                    new_dim = double(self.irreps{i}.dimension) * double(ct2.irreps{j}.dimension);
+                    new_irrep = new_group.repByImages('C', new_dim, [new_images1, new_images2]);
+                    new_irreps{j + (i-1)*length(ct2.irreps)} = new_irrep;
+                end
+            end
+            ct = replab.CharacterTable(new_group, new_classes, new_chars, 'irreps', new_irreps);
+        end
+
         function n = nClasses(self)
             n = self.classes.nClasses;
         end
