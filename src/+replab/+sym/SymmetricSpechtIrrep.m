@@ -22,7 +22,7 @@ classdef SymmetricSpechtIrrep < replab.Rep
               %words of standard tableaux.
     end
 
-    properties(GetAccess=protected,SetAccess=protected)
+    properties (SetAccess=protected)
         cSum
         underlyingRep
         % This is an underlying RepByImages object used to quickly find the image
@@ -49,7 +49,6 @@ classdef SymmetricSpechtIrrep < replab.Rep
             self.conjugatePartition = replab.sym.findPartitions.conjugatePart(part);
             symIrrepHelper(self);
             self.underlyingRep = replab.RepByImages.fromImageFunction(self.group, self.field, self.dimension, @(g) naiveImage(self,g));
-
         end
 
         function rho = image_internal(self, g)
@@ -65,7 +64,7 @@ classdef SymmetricSpechtIrrep < replab.Rep
 
     end
 
-    methods(Access = protected)
+    methods
 
         function symIrrepHelper(self)
         % Helper function for constructor
@@ -78,7 +77,7 @@ classdef SymmetricSpechtIrrep < replab.Rep
             self.basis = self.subSpecht(self.indepRowWords);
         end
 
-        function specht = subSpecht(self,rowWords)
+        function specht = subSpecht(self, rowWords)
         % Finds the Specht submatrix given a list of rows
         % and using the linearly independent columns
         %
