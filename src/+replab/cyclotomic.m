@@ -119,6 +119,23 @@ classdef cyclotomic
             c = replab.cyclotomic.fromJavaArray(javaMethod('fromDouble', 'cyclo.Lab', doubles(:)), size(doubles));
         end
 
+        function c = approximate(lowerBounds, upperBounds)
+        % Constructs the simplest rational approximation within an interval, for coefficients of a matrix
+        %
+        % Example:
+        %   >>> replab.cyclotomic.approximate(3.141592, 3.141593)
+        %     355/113
+        %
+        % Args:
+        %   lowerBounds (double(\*,\*)): Interval lower bounds
+        %   upperBounds (double(\*,\*)): Interval upper bounds
+        %
+        % Returns:
+        %   `.cyclotomic`: The simplest rational approximation, coefficient by coefficient
+            assert(isequal(size(lowerBounds), size(upperBounds)));
+            c = replab.cyclotomic.fromJavaArray(javaMethod('approximate', 'cyclo.Lab', lowerBounds(:), upperBounds(:)), size(lowerBounds));
+        end
+
         function c = fromRationals(numerators, denominators)
         % Constructs a cyclotomic matrix of rational numbers
         %

@@ -11,7 +11,7 @@ function rep = youngSeminormal(partition)
 % Returns:
 %   A `+replab.Rep` nonunitary irreducible representation
     n = sum(partition);
-    Sn = replab.SymmetricGroup(n);
+    Sn = replab.SymmetricGroup.make(n);
     [~, ~, NA, NB, ~, ~] = replab.sym.symIrrepImages(partition);
     d = size(NA, 1);
     if n == 1

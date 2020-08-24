@@ -895,7 +895,96 @@ classdef PermutationGroup < replab.FiniteGroup
 
     end
 
-    methods(Static)
+    methods (Static) % Construction of particular permutation groups
+
+        function G = symmetric(n)
+        % Returns the symmetric group acting on a certain domain size
+        %
+        % Args:
+        %   domainSize (integer): Domain size, must be >= 0
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: Symmetric group
+            G = replab.SymmetricGroup.make(n);
+        end
+
+        function G = kleinFourGroup
+        % Constructs the Klein Four-Group
+        %
+        % This corresponds to the symmetry group of a non-square rectangle, and corresponds to the direct product ``S2 x S2``.
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The Klein four-group as a permutation gorup
+            g1 = [2,1,4,3];
+            g2 = [3,4,1,2];
+            G = replab.PermutationGroup.of(g1, g2);
+        end
+
+        function G = dihedral(n)
+        % Constructs the dihedral group of order ``2*n``
+        %
+        % This corresponds to the group of symmetries of the polygon with ``n`` vertices
+        %
+        % Args:
+        %   n (integer): Half the dihedral group order
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The dihedral group permuting the vertices of the ``n``-gon
+            switch n
+              case 1
+                G = replab.PermutationGroup.symmetric(2);
+              case 2
+                G = replab.PermutationGroup.kleinFourGroup;
+              otherwise
+                g1 = fliplr(1:n);
+                g2 = [2:n 1];
+                G = replab.PermutationGroup.of(g1, g2);
+            end
+        end
+
+        function G = alternating(n)
+        % Constructs the alternating group
+        %
+        % Args:
+        %   n (integer): Group degree
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The alternating group of degree ``n``
+            Sn = replab.PermutationGroup.symmetric(n);
+            if n <= 2 % special case: group is trivial
+                G = replab.PermutationGroup.trivial(n);
+            else
+                t = [2 3 1 4:n];
+                if n == 3 % special case: it is a cyclic group, one generator only
+                    G = Sn.subgroupWithGenerators({t}, Sn.order/2);
+                    return
+                end
+                % generators from page 2100 of
+                % https://www.ams.org/journals/tran/2003-355-05/S0002-9947-03-03040-X/S0002-9947-03-03040-X.pdf
+                if mod(n, 2) == 0
+                    s = [2 1 4:n 3];
+                else
+                    s = [1 2 4:n 3];
+                end
+                G = Sn.subgroupWithGenerators({s t}, Sn.order/2);
+            end
+        end
+
+        function G = cyclic(n)
+        % Constructs the cyclic group of order ``n`` acting on ``n`` points
+        %
+        % Args:
+        %   n (integer): Cyclic group order and domain size
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: The cyclic group of given order/domain size
+            Sn = replab.PermutationGroup.symmetric(n);
+            if n == 1
+                G = Sn;
+            else
+                G = Sn.subgroupWithGenerators({[2:n 1]}, vpi(n));
+            end
+        end
 
         function G = permutingGivenPoints(n, points)
         % Constructs the group that permutes the given points

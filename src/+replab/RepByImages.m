@@ -24,13 +24,13 @@ classdef RepByImages < replab.Rep
         %   images (cell(1,\*) of double(\*,\*), may be sparse or symbolic): Images of the preimages
             assert(isa(group, 'replab.FiniteGroup'));
             assert(isa(images, 'cell') && (isempty(images) || isrow(images)));
-            assert(length(images) == group.nGenerators);
+            assert(length(images) == length(preimages));
             knownUnitary = true;
-            nG = group.nGenerators;
-            images_internal = cell(1, nG);
-            inverseImages_internal = cell(1, nG);
-            for i = 1:nG
-                g = group.generator(i);
+            nI = length(preimages);
+            images_internal = cell(1, nI);
+            inverseImages_internal = cell(1, nI);
+            for i = 1:nI
+                g = preimages{i};
                 o = group.elementOrder(g);
                 img = images{i};
                 assert(isequal(size(img), [dimension dimension]));

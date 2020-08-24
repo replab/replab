@@ -67,6 +67,18 @@ classdef ConjugacyClasses < replab.Obj
 
     end
 
+    methods (Static)
+
+        function C = sorted(group, classes)
+            reps = cellfun(@(c) group.niceMorphism.imageElement(c.representative), classes, 'uniform', 0);
+            repMat = cellfun(@transpose, reps, 'uniform', 0);
+            repMat = [repMat{:}]';
+            [~, I] = sortrows(repMat);
+            C = replab.ConjugacyClasses(group, classes(I));
+        end
+
+    end
+
     methods
 
         function self = ConjugacyClasses(group, classes)
