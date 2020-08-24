@@ -188,7 +188,7 @@ classdef SymmetricGroup < replab.PermutationGroup
         %                              in decreasing order (e.g ``[5 3 1]`` represents the partition of 9 elements ``9 = 5+3+1``
         % Returns:
         %   integer: The dimension of the corresponding irreducible representation.
-            dim = replab.sym.SymmetricGroupIrrep.dimension(partition);
+            dim = replab.sym.findPartitions.dimension(partition);
         end
 
     end
