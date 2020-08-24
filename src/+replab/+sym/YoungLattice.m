@@ -26,11 +26,14 @@ classdef YoungLattice
         %
         %The rows of the following arrays describe standard tableaux which
         %can be represented as unique paths up this subgraph
-        %standRows % integer(:,n): Lists the rows of the Young Diagram index k is in
-        %standCols % integer(:,n): Lists the columns of the Young Diagram index k is in
-        %standTabs % integer(:,n): Lists the label of the Young Diagram index k is in
+        standRows % integer(:,n): Lists the rows of the Young Diagram index k is in
+        standCols % integer(:,n): Lists the columns of the Young Diagram index k is in
+        standTabs % integer(:,n): Lists the label of the Young Diagram index k is in
         %standEigs % integer(:,n): Lists the eigenvalues of class functions
         %associated with partitions found on the tableau's path
+        %tabFuncs % integer(:,n): Lists tableaux function (the square of the change
+        % of basis coefficent from seminormal to orthogonal for each tableaux
+        %
     end
     
     methods(Static)
@@ -125,6 +128,21 @@ classdef YoungLattice
             end
         end
         
+        function mat = symAndAntiSym(self)
+            if self.partition(end) 
+                mat = [1 0]';
+                return
+            elseif self.partition(1) == numel(self.partition)
+                mat = [0 1]';
+                return
+            end
+            n = self.domainSize;
+            mat = full(logical(self.below{2}));
+            for k = 4:n
+                mat = mat*double(logical(self.below{k-1}));
+            end
+        end
+       
         function nTabs = numTableaux(self)
             n = self.domainSize;
             mat = 1;
@@ -148,6 +166,9 @@ classdef YoungLattice
             tabVec(1) = 1;
             count = 1;
             rec(1,1);
+            self.standRows = standRows;
+            self.standCols = standCols;
+            self.standTabs = standTabs;
             function rec(i,column)
                 if i == n
                     standTabs(count,:) = tabVec;
@@ -165,37 +186,56 @@ classdef YoungLattice
         end
             
         function standEigs = generateEigenVals(self)
+            rows = self.standRows;
+            cols = self.standCols;
+            standEigs = rows(:,2:end)-cols(:,2:end);
+        end
+        
+        function psi = generateTabFun(self)
             n = self.domainSize;
-            standEigs = zeros(self.numTableaux{n},n);
-            eigVec =zeros(1,n-1);
-            eigs = genEigs;
-            rec(1,1);
+            part = self.partition; 
+            words = replab.sym.words(flip(repelem(1:n,part)));
+            d = self.numTableaux{n};
+            psi = zeros(1,d);
             count = 1;
-            function rec(i,column)
+            rec(1,1,[1 zeros(1,sum(part)-1)],zeros(1,n-1));
+            function rec(i,column,maxInRows,phiVec)
                 if i == n
-                    standEigs(count,:) = eigVec;
+                    psi(count) = prod(phiVec);
+                    count = count + 1;
                     return
                 end
                 for j = find(self.above{i}(:,column))'
-                    eigVec(i) = eigs{i}(j);
-                    rec(i+1,j);
+                    maxInRows2 = maxInRows;
+                    phiVec2 = phiVec;
+                    index = self.above{i}(j,column);
+                    row = words.word(index);
+                    col = words.conjWord(index);
+                    phiVec2(i) =phiFun(maxInRows2,row,col);
+                    maxInRows2(row) = index; 
+                    rec(i+1,j,maxInRows2,phiVec2);
                 end
             end
-            
-            function eigenVals = genEigs
-                eigenVals = cell(1,n-1);
-                for i = 1:(n-1)
-                    m = self.sets{i}.size;
-                    eigenVals{i} = zeros(1,m);
-                    for j = 1:self.sets{i}.size
-                        eigenVals{i}(j) = replab.sym.findPartitions.eigenvalue(repelem(1:n,self.sets{i}.matrix(:,j)'));
+                
+                function phi = phiFun(maxInRow,iRow,iCol)
+                    phi = 1;
+                    if iRow == 1
+                        return
+                    end
+                    for k = 1:numel(maxInRow)
+                        if maxInRow(k)
+                            if k == iRow
+                                return
+                            end
+                            axDist = (abs(words.word(maxInRow(k))-iRow)+...
+                                abs(words.conjWord(maxInRow(k))-iCol));
+                            phi = phi*(1+1/axDist);
+                        end
                     end
                 end
             end
-        end
-        
+    end
     end
     
     
-    
-end
+  

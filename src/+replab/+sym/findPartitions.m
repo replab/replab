@@ -29,7 +29,15 @@ classdef findPartitions
         end     
         
         function eigVal = eigenvalue(part)
-            eigVal = (part-2*(1:numel(part))+1)*part'/2;
+            eigVal = -(sum(part)+(part-2*(1:numel(part)))*part')/2;
+        end
+        
+        function powers = toPowerForm(part)
+            n = sum(part);
+            powers = zeros(1,n);
+            for j = 1:n
+                powers(j) = nnz(part == j);
+            end
         end
     end
     

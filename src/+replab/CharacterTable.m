@@ -157,7 +157,7 @@ classdef CharacterTable < replab.Obj
             mults = zeros(1, nclass);
             ord = double(self.group.order);
             sizes = self.classSizes;
-            mults(i) = sizes.*tensorchars*conj(self.chars')/ ord;
+            mults = sizes.*tensorchars*conj(self.chars')/ ord;
         end
 
 
