@@ -3,12 +3,10 @@ classdef CTData
     properties
         n
         fact %factorial
-        partitionHash %canonical ordering
-        partitionList %list of partitions
-        stabSizes %stabilizer sizes list
-        conjSizes % conjugacy class sizes
-        cycSizes %'Group notation' Cycle sizes list
-        nCycles %'Group notation' Number sizes list
+        partitions %replab.sym.IntegerPartitions
+        stabSizes %double(1,\*): stabilizer sizes list
+        conjSizes %double(1,\*): conjugacy class sizes
+        innerProdDenom % %double(1,\*): Inner product is <y,x> = y'*diag(1./ innerProdDenom)*x
         nParts
     end
     
@@ -17,21 +15,11 @@ classdef CTData
         self.n=n;
         %Factorial
         self.fact = factorial(n);
-        genPartitions(n);
-                function genPartitions(n) 
-                    parts = replab.sym.findPartitions(n);
-                    [self.partitionList,self.partitionHash,self.nParts] = deal(parts.partCell,parts.partitionHash,parts.nParts);
-                    self.cycSizes = parts.cycleSizes;
-                    self.nCycles = parts.nCycles;
-                    self.stabSizes = zeros(1,self.nParts);
-                    self.conjSizes = zeros(1,self.nParts);
-                    for i = 1:self.nParts
-                        part = self.partitionList{i};
-                        cell(1,self.nParts);
-                        self.stabSizes(i) = prod(factorial(self.nCycles{i}));
-                        self.conjSizes(i)= self.fact/prod(part)/self.stabSizes(i);
-                    end
-                end
+        self.partitions = replab.sym.IntegerPartitions(n);
+        self.nParts = self.partitions.nParts;
+        self.stabSizes = cellfun(@(part) prod(factorial(nonzeros(part.powers))),self.partitions.list);
+        self.innerProdDenom = round(self.stabSizes.*cellfun(@(part) prod(part.partition),self.partitions.list));
+        self.conjSizes = round(self.fact./self.innerProdDenom);
         end
     end
     

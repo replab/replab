@@ -165,33 +165,8 @@ classdef YoungLattice
         end
 
         function standEigs = generateEigenVals(self)
-            n = self.domainSize;
-            standEigs = zeros(self.numTableaux{n},n);
-            eigVec =zeros(1,n-1);
-            eigs = genEigs;
-            rec(1,1);
-            count = 1;
-            function rec(i,column)
-                if i == n
-                    standEigs(count,:) = eigVec;
-                    return
-                end
-                for j = find(self.above{i}(:,column))'
-                    eigVec(i) = eigs{i}(j);
-                    rec(i+1,j);
-                end
-            end
-
-            function eigenVals = genEigs
-                eigenVals = cell(1,n-1);
-                for i = 1:(n-1)
-                    m = self.sets{i}.size;
-                    eigenVals{i} = zeros(1,m);
-                    for j = 1:self.sets{i}.size
-                        eigenVals{i}(j) = replab.sym.findPartitions.eigenvalue(repelem(1:n,self.sets{i}.matrix(:,j)'));
-                    end
-                end
-            end
+            [rows,cols,~] = self.generateTableaux;
+            standEigs = rows(2:end,:)-cols(2:end,:);
         end
 
     end

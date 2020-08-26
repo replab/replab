@@ -4,51 +4,37 @@ classdef SymPoly
         m% Sum of partitions/ degree of polynomials
     end
     methods(Static)
-        function lin = fromCell(partStandForm,values)
+        function lin = fromCell(partStandForm)
         %m=degree
             len = numel(partStandForm);
             deg = sum(partStandForm{1});
-            partitions = zeros(len,deg);
-            for i = 1:len
-                partitions(i,:) = toGroupForm(partStandForm{i});
-            end
             allData = replab.sym.CTData.instance;
             mData = allData(deg);
-            inds = mData.partitionHash.find(partitions');
             arr = zeros(1,mData.nParts);
-            for j =1:numel(inds);
-                arr(inds(j)) = arr(inds(j))+values(j);
+            for j =1:len
+                ind = mData.partitions.index(partStandForm{j});
+                arr(ind) = arr(ind)+1;
             end
             lin = replab.sym.SymPoly(arr,deg);
 
-            function group = toGroupForm(partit)
-                    group = zeros(1,deg);
-                    for k = 1:deg
-                        group(k) = nnz(partit == k);
-                    end
-                end
-        end
-
-        function lin = emptyPoly
-            lin = replab.sym.SymPoly(1,0);
         end
 
     function lin = multRowWithAugmented(rowPart,part)
                 len = numel(part);
                 if len == 0
-                    lin =  replab.sym.SymPoly.fromCell(rowPart,1);
+                    lin =  replab.sym.SymPoly.fromCell(rowPart);
                     return
                 elseif len == 1
                     [rowPart,part] = deal(part,rowPart);
                 end
                 if (numel(rowPart)~=1)
-                    lin =   replab.sym.SymPoly.fromCell({[]},1);
+                    lin =   replab.sym.SymPoly.fromCell({[]});
                     return
                 end
                 compositions = arrayfun(@(i) addElem(part,i,rowPart),1:len,'UniformOutput',false);
                 compositions{len+1} = sort([rowPart part],'descend');
-                coeffs(1:numel(compositions)) = 1;
-                lin =   replab.sym.SymPoly.fromCell(compositions,coeffs);
+                lin =   replab.sym.SymPoly.fromCell(compositions);
+                
                 function arr = addElem(arr,ind,value)
                     arr(ind) = arr(ind) + value;
                     arr = sort(arr,'descend');
@@ -61,15 +47,15 @@ classdef SymPoly
                 data1 = allData(lin1.m);
                 data2 = allData(lin2.m);
                 data3 = allData(lin1.m+lin2.m);
-                parts1 = data1.partitionList;
-                parts2 = data2.partitionList;
+                parts1 = data1.partitions;
+                parts2 = data2.partitions;
                 len1 = data1.nParts;
                 len2 = data2.nParts;
                 parts3 = zeros(len1*len2,data3.nParts);
                 for j = 1:len1
                     for k = 1:len2
                         if coeffs3((j-1)*len2+k)
-                            lin = func(parts1{j},parts2{k});
+                            lin = func(parts1.list{j}.partition,parts2.list{k}.partition);
                             parts3((j-1)*len2+k,:) = lin.coeffs;
                         end
                     end
@@ -80,19 +66,19 @@ classdef SymPoly
            function augMonom = powerToAugmentedMonomial(part)
                 len = numel(part);
                 if len == 1
-                    augMonom =    replab.sym.SymPoly.fromCell({part},1);
+                    augMonom =    replab.sym.SymPoly.fromCell({part});
                     return
                 end
-                augMonom = replab.sym.SymPoly.applyBilinear( replab.sym.SymPoly.fromCell({part(1)},1), ...
-                replab.sym.SymPoly.fromCell({part(2)},1),@replab.sym.SymPoly.multRowWithAugmented);
+                augMonom = replab.sym.SymPoly.applyBilinear( replab.sym.SymPoly.fromCell({part(1)}), ...
+                replab.sym.SymPoly.fromCell({part(2)}),@replab.sym.SymPoly.multRowWithAugmented);
                 for i = 3:len
-                    lin2 =    replab.sym.SymPoly.fromCell({part(i)},1);
+                    lin2 =    replab.sym.SymPoly.fromCell({part(i)});
                     augMonom = replab.sym.SymPoly.applyBilinear(lin2,augMonom,@replab.sym.SymPoly.multRowWithAugmented);
                 end
             end
 
            function monom = powerToMonomial(part,n)
-                allData = replab.sym.CTData.instance(n);
+                allData = replab.sym.CTData.instance;
                 nData = allData(n);
                 augMonom = replab.sym.SymPoly.powerToAugmentedMonomial(part);
                 monom = augMonom.multDiag(nData.stabSizes);

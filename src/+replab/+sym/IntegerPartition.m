@@ -3,9 +3,13 @@ classdef IntegerPartition < replab.Str
     properties (SetAccess = protected)
         n % integer: Number of boxes in the Young diagram
         partition % (integer(1,\*)): Partition corresponding to the Young diagram
+        conjugate % (integer(1,\*)): Partition corresponding to the conjugate Young diagram
+        powers % (integer(1,n)): Power form representation of partition
+        %e.g. [3 1 1] can be represented as [2 0 1 0 0], because it has 2
+        %ones and 1 three
     end
 
-    methods (Static, Access = protected)
+    methods (Static)
 
         function I = enumerate(n, m)
         % Computes all integer partitions of the given number
@@ -76,6 +80,31 @@ classdef IntegerPartition < replab.Str
                 gens{1,end+1} = cycle;
             end
         end
+        
+        function conj = conjugatePart(part)
+            m = max(part);
+            conj = zeros(1,m);
+            for j = 1:m
+                conj(j) = nnz(j-1<part);
+            end
+        end
+        
+        function dim = dimension(part)
+            n = sum(part);
+            words = replab.sym.words(part,replab.sym.IntegerPartition.conjugate(part));
+            columns = zeros(1,n);
+            for k = 1:n
+                columns(k) = sum(words.conjWord(k+1:n)==words.conjWord(k));
+            end    
+            dim = round(factorial(n)/prod(words.dimWord+columns));
+        end    
+        
+        function power = powerForm(part,n)
+            power = zeros(1,n);
+            for i = 1:n
+                power(i) = nnz(part==i);
+            end
+        end
 
     end
 
@@ -96,9 +125,14 @@ classdef IntegerPartition < replab.Str
 
     methods
 
-        function self = IntegerPartition(partition)
+        function self = IntegerPartition(partition,n)
             self.partition = partition;
-            self.n = sum(partition);
+            if nargin == 1
+                n= sum(partition);
+            end
+            self.n = n;
+            self.powers = self.powerForm(partition,n);
+            self.conjugate = self.conjugatePart(partition);
         end
 
         function C = conjugacyClass(self)
