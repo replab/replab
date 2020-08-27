@@ -1,5 +1,5 @@
 classdef SymmetricYoungIrrep < replab.Rep
-% Young's orthogonal representation of a symmetric group
+% Young's orthogonal and seminormal representations of a symmetric group
 %
 % Each irrep corresponds to an unordered partition of n.
 % E.g: 4 = 2+2 and 4 = 3+1 both generate an irrep of S_4.
@@ -11,10 +11,13 @@ classdef SymmetricYoungIrrep < replab.Rep
        conjugatePartition % integer(1,:): The conjuagte partition is the partition obtained by transposing the
        % young diagram of a partition
        partition % integer(1,:):The generating partition of n
-       rowFunction % integer(:,:): The i'th row is the row function for tableaux. The k'th entry is the row index k in?
-       colFunction % integer(:,:): The i'th row is the column function for tableaux. Analogous
-       basisHash %replab.sym.Set: Describes the row index of the row function of a basis vector.
-
+       rowFunction % integer(:,:): The i'th row is the row function for tableaux. The k'th entry is the row index k is in
+       colFunction % integer(:,:): The i'th row is the column function for tableaux. Analogous to the row function
+       % E.g the Young Tableax 1 2 5 
+       %                                  3 4
+       % has row function [1 1 2 2 1] and column function [1 2 1 2 3] 
+       %These are the j and j' function in Schindler Miriam
+       basisHash %replab.sym.Set: Describes the row index of the row function of a Young Tableaux.
     end
 
     properties(GetAccess=protected,SetAccess=protected)
@@ -22,7 +25,7 @@ classdef SymmetricYoungIrrep < replab.Rep
         %This represents the sum of the first n-1 elements in the partition
         % Eg: [4 2 1] => [0 4 6]
         rangeOfParts
-        %This saves the array 1:(#tableax)
+        %This saves the array 1:(dimension)
         underlyingRep
         % This is an underlying RepByImages Object used to quickly find the image
     end
@@ -87,6 +90,8 @@ classdef SymmetricYoungIrrep < replab.Rep
 
         function im = transImage(self,k)
             % Image function used to calculate the images of all adjacent transposition generators
+            % This implements the formulas as described in section III -
+            % equation (9-13) of Schindler and Miriam's decomposition paper
             %
             % Args:
             % k (integer): We calculate the image of the transposition
@@ -95,25 +100,39 @@ classdef SymmetricYoungIrrep < replab.Rep
             % Returns:
             % im (integer(:,:)) Image of g
                 n = self.group.domainSize;
-            rowFunEq = self.rowFunction(:,k) == self.rowFunction(:,k+1);
-            colFunEq = self.colFunction(:,k) == self.colFunction(:,k+1);
-            rowFunLess = self.rowFunction(:,k) < self.rowFunction(:,k+1);
-            nInds1 = self.rangeOfParts(~rowFunEq&~colFunEq&rowFunLess);
-            nInds2 = self.basisHash.find(self.rowFunction(nInds1, replab.Permutation.transposition(n, k, k+1))');
-            axDistRec = 1./(self.rowFunction(nInds1,k+1)-self.rowFunction(nInds1,k) + ...
-            abs(self.colFunction(nInds1,k+1)-self.colFunction(nInds1,k)));
-            m1a = sparse(nInds1,nInds1,-axDistRec,self.dimension,self.dimension);
-            m1b = sparse(nInds2,nInds2,axDistRec,self.dimension,self.dimension);
-            if self.isUnitary
-                m1c = sparse(nInds1,nInds2,sqrt(1-axDistRec.^2),self.dimension,self.dimension);
-                m1d = sparse(nInds2,nInds1,sqrt(1-axDistRec.^2),self.dimension,self.dimension);
-            else
-                m1c = sparse(nInds1,nInds2,1-axDistRec.^2,self.dimension,self.dimension);
-                m1d = sparse(nInds2,nInds1,1,self.dimension,self.dimension);
-            end
-            m2 = spdiags(rowFunEq,0,self.dimension,self.dimension);
-            m3 = spdiags(-1*colFunEq,0,self.dimension,self.dimension);
-            im = m1a+m1b+m1c+m1d+m2+m3;
+                rowFunEq = self.rowFunction(:,k) == self.rowFunction(:,k+1); %Where are the row functions equal?
+                colFunEq = self.colFunction(:,k) == self.colFunction(:,k+1); %Where are the column functions equal?
+                %These tell us when to use Equation 10/12
+                rowFunLess = self.rowFunction(:,k) < self.rowFunction(:,k+1);  %Where are the j_k less than j_(k+1)?
+                neitherAndIsR = self.rangeOfParts(~rowFunEq&~colFunEq&rowFunLess);
+                neitherAndIsRPrime = self.basisHash.find(self.rowFunction(neitherAndIsR, ...
+                    replab.Permutation.transposition(n, k, k+1))');
+                %These tell us when to use Equation 11/13 and which are r
+                %and r', as described in the paper.
+                axDistRec = 1./(self.rowFunction(neitherAndIsR,k+1)-self.rowFunction(neitherAndIsR,k) + ...
+                    abs(self.colFunction(neitherAndIsR,k+1)-self.colFunction(neitherAndIsR,k)));
+                % This is the axial distance described in equation 9 but
+                % only calculated where we need it (for equation 11/13)
+                m1a = sparse(neitherAndIsR,neitherAndIsR,-axDistRec,self.dimension,self.dimension);
+                m1b = sparse(neitherAndIsRPrime,neitherAndIsRPrime,axDistRec,self.dimension,self.dimension);
+                % The m1's describes the matrix elements from Equation 11/13. a
+                % and b describe the common matrix elements in Eq 11 and
+                % 13
+                if self.isUnitary
+                    m1c = sparse(neitherAndIsR,neitherAndIsRPrime,sqrt(1-axDistRec.^2),self.dimension,self.dimension);
+                    m1d = sparse(neitherAndIsRPrime,neitherAndIsR,sqrt(1-axDistRec.^2),self.dimension,self.dimension);
+                    % These are the matrix elements from Eq 11
+                else
+                    m1c = sparse(neitherAndIsR,neitherAndIsRPrime,1-axDistRec.^2,self.dimension,self.dimension);
+                    m1d = sparse(neitherAndIsRPrime,neitherAndIsR,1,self.dimension,self.dimension);
+                    % These are the matrix elements from Eq 11
+                end
+                m2 = spdiags(rowFunEq,0,self.dimension,self.dimension);
+                m3 = spdiags(-1*colFunEq,0,self.dimension,self.dimension);
+                % These are the matrix elements from Eq 10 and 12 (note
+                % that they are the same)
+                im = m1a+m1b+m1c+m1d+m2+m3;
+                % Add all of the matrix elements together
         end
 
         function rep = constructRep(self)

@@ -75,6 +75,12 @@ classdef SymmetricSpechtIrrep < replab.Rep
             %Use Young Lattice to generate words corresponding to linearly independent
             %columns and rows
             self.basis = self.subSpecht(self.indepRowWords);
+            %This is a submatrix of the specht matrix described in the
+            %paper, chosen to be taken from linearly independent columns of
+            %the matrix. We use the standard tableaux to find these and rows columns
+            %and we construct only those matrix elements
+            %rather than constructing the entire Specht matrix
+            %This gives us a basis for our action
         end
 
         function specht = subSpecht(self, rowWords)
@@ -93,9 +99,17 @@ classdef SymmetricSpechtIrrep < replab.Rep
             colInds = zeros(1,self.dimension^2);
             values = zeros(1,self.dimension^2);
             count = 0;
+            % Double Loop through all words 
+            % corresponding to standard tableaux 
+            % I.e. a loop over all matrix elements
             for r = 1:self.dimension
                 for c = 1:self.dimension
-                    ent = entry(r,c);
+                    rowWord = rowWords(r,:);
+                    colWord = self.indepColWords(c,:);
+                    possiblePerm = self.cSum(rowWord) + colWord;
+                    %This will be a permutation if and only if the matrix
+                    %entry is nonzeros
+                    ent = self.entry(possiblePerm);
                     if ~isempty(ent)
                         count = count+1;
                         rowInds(count) = r;
@@ -105,8 +119,18 @@ classdef SymmetricSpechtIrrep < replab.Rep
                 end
             end
             specht = sparse(nonzeros(rowInds),nonzeros(colInds),nonzeros(values));
+        end
 
-            function val = entry(rowNum,colNum)
+        function im = naiveImage(self,perm)
+            action = self.subSpecht(self.indepRowWords(:,perm));
+            % A permutation acts by rearranging the rows of the Specht
+            % matrix, as described in the cited paper
+            im = round(self.basis/action);
+            %We now can find the image of this permutation, since we know
+            %our basis
+        end
+        
+        function val = entry(self,possiblePerm)
             % Finds the entry of the Specht submatrix given a row
             % and column number
             %
@@ -117,64 +141,34 @@ classdef SymmetricSpechtIrrep < replab.Rep
             % Returns:
             % val (double): Corresponding Specht submatrix entry if
             % its nonzero. Empty if the entry is zero.
-                row = rowWords(rowNum,:);
-                col = self.indepColWords(colNum,:);
-                perm = self.cSum(row) + col;
-                if noRepeats(perm)
-                    val = PermSign(perm);
-                else
-                    val = [];
-                end
-
-
-                function noRepeat = noRepeats(A)
-                % Finds whether any elements in an array repeat
-                %
-                % Args:
-                % A (integer(1,:)):
-                % Returns:
-                % noRepeats (bool): True if there are no repeats
-                    noRepeat = true;
-                    A = sort(A);
-                    for l=1:(self.group.domainSize-1)
-                        if A(l)==A(l+1)
-                            noRepeat = false;
-                            break;
-                        end
-                    end
-                end
-
-                function sign = PermSign(perm)
-                %Returns sign of a given permuatation
-                %perm (row vector): Vector representing a permutation (e.g. [3 2 1 4])
-                %sign (float): sign of the permutation
-                    x = perm;
-                    n = length(x);
-                    oddOrEven = 0; %Records whether the permutation is odd or even
-                    for k = 1:n
-                        if x(k) == 0 || x(k) == k %Skip over one cycles and numbers that have been cycled through
-                            continue
-                        end
-                        cycleSize = -1; %The first element in a cycle isn't counted
-                        q = k;
-                        while x(q) ~= 0
-                            pHold = x(q);
-                            x(q) = 0;
-                            q = pHold;
-                            cycleSize = cycleSize + 1;
-                        end
-                        if cycleSize > 0
-                            oddOrEven = oddOrEven + cycleSize; %At the end, this will match the parity (even/odd) of the permuation
-                        end
-                    end
-                    sign = (-1)^mod(round(oddOrEven),2); %Sign of permutation
+            if self.noRepeats(possiblePerm) 
+                % This finds if the
+                %given array is a permutation 
+                % It is if and only if it doesn't repeat, (this is non-trivial and
+                % proven in the paper)
+                val = replab.Permutation.sign(possiblePerm);
+                % The entry is the sign of the permutation if it is one
+            else
+                val = [];
+                % There is no entry if it isn't a permutation
+            end
+         end
+            
+        function noRepeat = noRepeats(self,A)
+        % Finds whether any elements in an array repeat
+        %
+        % Args:
+        % A (integer(1,:)):
+        % Returns:
+        % noRepeats (bool): True if there are no repeats
+            noRepeat = true;
+            A = sort(A);
+            for l=1:(self.group.domainSize-1)
+                if A(l)==A(l+1)
+                    noRepeat = false;
+                    break;
                 end
             end
-        end
-
-        function im = naiveImage(self,perm)
-            action = self.subSpecht(self.indepRowWords(:,perm));
-            im = round(self.basis/action);
         end
 
     end
