@@ -158,7 +158,7 @@ classdef YoungLattice
             n = self.domainSize;
             part = self.partition; 
             d = self.numTableaux{n};
-            words = replab.sym.words(flip(repelem(1:n,part)));
+            words = replab.sym.Words(flip(repelem(1:n,part)));
             standRows = zeros(d,n);
             standCols = zeros(d,n);
             standTabs = zeros(d,n);

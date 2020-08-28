@@ -141,6 +141,18 @@ classdef SymmetricGroup < replab.PermutationGroup
         function rep = irrep(self, partition,form)
         % Returns the irreducible representation of this symmetric group corresponding the given Young Diagram
         %
+        % Example:
+        %   >>> S5 = replab.S(5);
+        %   >>> rep = S5.irrep([3 2], 'specht');
+        %   >>> rep.dimension
+        %         5
+        %   >>> rep = S5.irrep([3 2], 'seminormal');
+        %   >>> rep.dimension
+        %         5
+        %   >>> rep = S5.irrep([3 2], 'orthogonal');
+        %   >>> rep.dimension
+        %         5
+        %
         % Args:
         %   partition (integer(1,\*)): The partition corresponding the Young Diagram, with elements listed in
         %                              decreasing order (e.g ``[3 3 1]`` represents the partition of 7 elements: ``7 = 3+3+1``
@@ -157,13 +169,14 @@ classdef SymmetricGroup < replab.PermutationGroup
                 form = 'specht';
             end
             partition = sort(partition,'descend');
-            if isequal(form,'specht')
+            switch form
+                case 'specht'
                 rep = replab.sym.SymmetricSpechtIrrep(self, partition);
-            elseif isequal(form,'seminormal')
-                rep = replab.sym.SymmetricYoungIrrep(self, partition,'semi');
-            elseif isequal(form,'orthogonal')
-                rep = replab.sym.SymmetricYoungIrrep(self, partition,'orth');
-            else
+              case 'seminormal'
+                rep = replab.sym.SymmetricYoungIrrep(self, partition, 'semi');
+              case 'orthogonal'
+                rep = replab.sym.SymmetricYoungIrrep(self, partition, 'orth');
+              otherwise
                 error('That is not a valid irreducible representation form')
             end
         end
