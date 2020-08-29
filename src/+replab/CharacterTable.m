@@ -59,9 +59,10 @@ classdef CharacterTable < replab.Obj
             K = zeros(n,n,n);
             for j = 1:n
                 cj = self.character(j);
-                for k = 1:n
+                for k = j:n
                     ck = self.character(k);
                     K(:,j,k) = self.multiplicities(cj*ck);
+                    K(:,k,j) = K(:,j,k);
                 end
             end
         end
