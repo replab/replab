@@ -52,12 +52,12 @@ function ct = DihedralCharacterTable(n)
     % Irreps are generated first in 1D and then in 2D
     irreps = cell(1, nclasses);
     w = replab.cyclotomic.E(n);
-    irreps{1} = group.repByImages('R', 1, 'images', {1, 1});
-    irreps{2} = group.repByImages('R', 1, 'images', {-1, 1});
+    irreps{1} = group.repByImages('C', 1, 'images', {1, 1});
+    irreps{2} = group.repByImages('C', 1, 'images', {-1, 1});
     n1D = 2;
     if even(n)
-        irreps{3} = group.repByImages('R', 1, 'images', {1, -1});
-        irreps{4} = group.repByImages('R', 1, 'images', {-1, -1});
+        irreps{3} = group.repByImages('C', 1, 'images', {1, -1});
+        irreps{4} = group.repByImages('C', 1, 'images', {-1, -1});
         stop = stop - 1;
         n1D = 4;
     end
