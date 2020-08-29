@@ -125,7 +125,7 @@ classdef ConjugacyClasses < replab.Obj
         % Returns the sizes of the centralizers
         %
         % Returns:
-        %   integer(1,\*): Size of the centralizer for each conjugacy class
+        %   cell(1,\*) of vpi: Size of the centralizer for each conjugacy class
             s = cellfun(@(c) c.representativeCentralizer.order, self.classes, 'uniform', 0);
         end
 
@@ -141,9 +141,9 @@ classdef ConjugacyClasses < replab.Obj
         % Returns the sizes of the conjugacy classes
         %
         % Returns:
-        %   integer(1,\*): Size of each conjugacy class
+        %   cell(1,\*) of vpi: Size of each conjugacy class
             o = self.group.order;
-            s = cellfun(@(c) o/c.representativeCentralizer.order, self.classes, 'uniform', 0);
+            s = cellfun(@(c) c.nElements, self.classes, 'uniform', 0);
         end
 
         function ind = classIndexRepresentative(self, rep)
