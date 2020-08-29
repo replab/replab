@@ -88,6 +88,19 @@ classdef ConjugacyClasses < replab.Obj
             self.primePowerMap = zeros(0, length(classes));
         end
 
+        function ind = indicesOfClasses(self, classes)
+        % Returns the indices of the given conjugacy classes in this list
+        %
+        % Args:
+        %   classes (`.ConjugacyClasses`): Conjugacy classes of `.group`
+        %
+        % Returns:
+        %   integer(1,\*): Indices of the given classes in these classes
+            n = classes.nClasses;
+            assert(self.nClasses == n);
+            ind = arrayfun(@(i) self.classIndexRepresentative(classes.classes{i}.representative), 1:n);
+        end
+
         function n = nClasses(self)
         % Returns the number of conjugacy classes in the group
         %
@@ -96,11 +109,23 @@ classdef ConjugacyClasses < replab.Obj
             n = length(self.classes);
         end
 
+        function G = normalSubgroupClasses(self, indices)
+        % Returns the normal subgroup consisting of the conjugacy classes whose positions are given
+        %
+        % Args:
+        %   indices (integer(1,\*)): Indices of conjugacy classes
+        %
+        % Returns:
+        %   `.FiniteGroup`: Normal subgroup representing that union
+            reps = arrayfun(@(ind) self.classes{ind}.representative, indices, 'uniform', 0);
+            G = self.group.normalClosure(self.group.subgroup(reps));
+        end
+
         function s = centralizerSizes(self)
         % Returns the sizes of the centralizers
         %
         % Returns:
-        %   integer(1,\*): Size of the centralizer for each conjugacy class
+        %   cell(1,\*) of vpi: Size of the centralizer for each conjugacy class
             s = cellfun(@(c) c.representativeCentralizer.order, self.classes, 'uniform', 0);
         end
 
@@ -116,9 +141,27 @@ classdef ConjugacyClasses < replab.Obj
         % Returns the sizes of the conjugacy classes
         %
         % Returns:
-        %   integer(1,\*): Size of each conjugacy class
+        %   cell(1,\*) of vpi: Size of each conjugacy class
             o = self.group.order;
-            s = cellfun(@(c) o/c.representativeCentralizer.order, self.classes, 'uniform', 0);
+            s = cellfun(@(c) c.nElements, self.classes, 'uniform', 0);
+        end
+
+        function ind = classIndexRepresentative(self, rep)
+        % Finds the conjugacy class where a given conjugacy class representative is located
+        %
+        % Args:
+        %   rep (element of `.group`): Conjugacy class representative
+        %
+        % Returns:
+        %   integer: Index of the class containing ``g``
+            for k = 1:length(self.classes)
+                if self.group.eqv(self.classes{k}.representative, rep)
+                    ind = k;
+                    return
+                end
+            end
+            assert(self.group.contains(rep));
+            error('Error in the list of conjugacy classes');
         end
 
         function ind = classIndex(self, g)
@@ -130,14 +173,7 @@ classdef ConjugacyClasses < replab.Obj
         % Returns:
         %   integer: Index of the class containing ``g``
             r = replab.ConjugacyClasses.representative(self.group, g);
-            for k = 1:length(self.classes)
-                if self.group.eqv(self.classes{k}.representative, r)
-                    ind = k;
-                    return
-                end
-            end
-            assert(self.group.contains(g));
-            error('Error in the list of conjugacy classes');
+            ind = self.classIndexRepresentative(r);
         end
 
         function m = powerMap(self, n)

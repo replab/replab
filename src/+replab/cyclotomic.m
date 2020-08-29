@@ -136,6 +136,23 @@ classdef cyclotomic
             c = replab.cyclotomic.fromJavaArray(javaMethod('approximate', 'cyclo.Lab', lowerBounds(:), upperBounds(:)), size(lowerBounds));
         end
 
+        function c = fromVPIs(values)
+        % Constructs a cyclotomic matrix from VPI big integers
+        %
+        % Args:
+        %   values (vpi(\*,\*)): Coefficients
+        %
+        % Returns:
+        %   `.cyclotomic`: The corresponding integer cyclotomic matrix
+            v = values(:);
+            s = cell(1, length(v));
+            for i = 1:length(v)
+                s{i} = strtrim(num2str(values(i)));
+            end
+            s = reshape(s, size(values));
+            c = replab.cyclotomic.fromStrings(s);
+        end
+
         function c = fromRationals(numerators, denominators)
         % Constructs a cyclotomic matrix of rational numbers
         %
@@ -220,6 +237,7 @@ classdef cyclotomic
     methods (Static, Access = protected)
 
         function [lhs rhs] = shapeArgs(lhs, rhs)
+
             if isa(lhs, 'double')
                 lhs = replab.cyclotomic.fromDoubles(lhs);
             end
@@ -237,6 +255,10 @@ classdef cyclotomic
     end
 
     methods
+
+        function res = reshape(self, varargin)
+            res = replab.cyclotomic(reshape(self.mat, varargin{:}));
+        end
 
         function disp(self)
         % Standard display method
@@ -259,6 +281,10 @@ classdef cyclotomic
                 matd{i} = self.mat{i,i};
             end
             d = replab.cyclotomic(matd);
+        end
+
+        function v = trace(self)
+            v = sum(diag(self));
         end
 
         function s = sum(self)
@@ -320,8 +346,7 @@ classdef cyclotomic
         function res = times(lhs, rhs)
         % Pointwise ``*`` operator
             [lhs rhs] = replab.cyclotomic.shapeArgs(lhs, rhs);
-            mat = reshape(cell(com.faacets.gluon.Cyclotomic.pw_times(lhs.matArray, rhs.matArray)), size(lhs.mat));
-            res = replab.cyclotomic(mat);
+            res = replab.cyclotomic.fromJavaArray(javaMethod('pw_times', 'cyclo.Lab', lhs.matArray, rhs.matArray), size(lhs));
         end
 
         function res = mrdivide(lhs, rhs)
