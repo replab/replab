@@ -330,6 +330,17 @@ classdef CharacterTable < replab.Obj
 
     end
 
+    methods (Access = protected)
+
+        function mul12 = multiplicityProduct(self, mul1, mul2)
+            n = self.classes.nClasses;
+            K = self.kronecker;
+            mul12 = reshape(K, n, n*n) * reshape(mul1(:) * mul2(:)', n*n, 1);
+            mul12 = mul12(:)';
+        end
+
+    end
+
     methods
 
         function mults = multiplicities(self, arg)
@@ -348,15 +359,22 @@ classdef CharacterTable < replab.Obj
                 for i = 1:n
                     mults(i) = self.character(i).dot(arg);
                 end
+            elseif isa(arg, 'replab.rep.TensorRep')
+                factorM = cellfun(@(f) self.multiplicities(f), arg.factors, 'uniform', 0);
+                mults = factorM{1};
+                for i = 2:length(factorM)
+                    mults = self.multiplicityProduct(mults, factorM{i});
+                end
             elseif isa(arg, 'replab.Rep')
                 for i = 1:n
-                    mults(i) = self.character(i).dotRep(rep);
+                    mults(i) = self.character(i).dotRep(arg);
                 end
             else
                 error('Invalid argument');
             end
             mults = round(mults);
         end
+
 
 % $$$         function imap(self, f, imageGroup, preserveLexOrder)
 % $$$         % Maps the conjugacy classes under an isomorphism
