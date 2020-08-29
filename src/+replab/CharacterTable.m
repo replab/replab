@@ -23,6 +23,34 @@ classdef CharacterTable < replab.Obj
         irreps % (cell(1, nClasses) of ``[]`` or `.RepByImages`): Explicit matrix representations (can contain empty values)
     end
 
+    methods (Static)
+
+        function ct = cyclic(n)
+            ct = replab.ct.CyclicCharacterTable(n);
+        end
+
+        function ct = dihedral(n)
+            ct = replab.ct.DihedralCharacterTable(n);
+        end
+
+        function ct = A5
+            ct = replab.ct.A5CharacterTable;
+        end
+
+        function ct = A4
+            ct = replab.ct.A4CharacterTable;
+        end
+
+        function ct = S4
+            ct = replab.ct.S4CharacterTable;
+        end
+
+        function ct = forPermutationGroup(G)
+            ct = replab.ct.PermutationCharacterTable(G);
+        end
+
+    end
+
     methods (Access = protected)
 
         function K = computeKronecker(self)
@@ -104,7 +132,7 @@ classdef CharacterTable < replab.Obj
             new_chars = replab.cyclotomic.zeros(size(A, 1) * size(B, 1), size(A, 2) * size(B, 2));
             for i = 0:size(A, 1)-1
                 for j = 0:size(A, 2)-1
-                   new_chars(i * size(B,1) + 1:(i+1) * size(B,1), j * size(B,2) + 1:(j+1) * size(B,2)) = A(i+1, j+1) * B;
+                    new_chars(i * size(B,1) + 1:(i+1) * size(B,1), j * size(B,2) + 1:(j+1) * size(B,2)) = A(i+1, j+1) * B;
                 end
             end
             % New conjugacy classes are cartesian product of input
@@ -128,7 +156,7 @@ classdef CharacterTable < replab.Obj
                         new_image = replab.cyclotomic.zeros(size(A,1) * size(B, 1), size(A, 2) * size(B, 2));
                         for m = 0:size(A, 1)-1
                             for n = 0:size(A, 2)-1
-                               new_image(m*size(B,1)+1:(m+1)*size(B,1), n*size(B,2)+1:(n+1)*size(B,2)) = A(m+1, n+1) * B;
+                                new_image(m*size(B,1)+1:(m+1)*size(B,1), n*size(B,2)+1:(n+1)*size(B,2)) = A(m+1, n+1) * B;
                             end
                         end
                         new_images1{k} = new_image;
@@ -141,7 +169,7 @@ classdef CharacterTable < replab.Obj
                         new_image = replab.cyclotomic.zeros(size(A,1) * size(B, 1), size(A, 2) * size(B, 2));
                         for m = 0:size(A, 1)-1
                             for n = 0:size(A, 2)-1
-                               new_image(m*size(B,1)+1:(m+1)*size(B,1), n*size(B,2)+1:(n+1)*size(B,2)) = A(m+1, n+1) * B;
+                                new_image(m*size(B,1)+1:(m+1)*size(B,1), n*size(B,2)+1:(n+1)*size(B,2)) = A(m+1, n+1) * B;
                             end
                         end
                         new_images2{k} = new_image;
@@ -353,53 +381,6 @@ classdef CharacterTable < replab.Obj
     end
     % $$$
     % $$$
-% $$$         function useBorders(self, logical)
-% $$$         %  Turn on and off borders on the table
-% $$$         %
-% $$$         % Args:
-% $$$         %   logical (logical): whether borders are on (true) or off (false)
-% $$$             if logical
-% $$$                 self.table.setColSep(0, '| ')
-% $$$                 self.table.setColSep(self.table.nColumns, ' |')
-% $$$                 self.table.setColSep(1:self.table.nColumns-1, ' | ')
-% $$$                 self.table.setRowSep(0:self.table.nRows, '-')
-% $$$             else
-% $$$                 self.table.setColSep(0:self.table.nColumns, '  ')
-% $$$                 self.table.setRowSep(0:self.table.nRows, '')
-% $$$             end
-% $$$         end
-% $$$
-% $$$         function setIrrepLabels(self, labels)
-% $$$         % Set the labels for the irreducible representation in the table
-% $$$         %
-% $$$         % Args:
-% $$$         %   labels ({cell(1,nirreps), 'default'): cell array of character string labels
-% $$$         %                                         or ``'default'`` to use default labels
-% $$$             if iscell(labels)
-% $$$                 if length(labels) == length(self.table.getRowNames)
-% $$$                     self.table.addRowNames(labels)
-% $$$                 end
-% $$$             elseif isequal(labels, 'default')
-% $$$                 nirreps = length(self.irreps);
-% $$$                 rownames = cellfun(@(n)['X.', num2str(n)], num2cell(1:nirreps), 'UniformOutput', false);
-% $$$                 self.table.addRowNames(rownames)
-% $$$             end
-% $$$         end
-% $$$
-% $$$         function setClassLabels(self, labels)
-% $$$         % Set the labels for the conjugacy classes in the table
-% $$$         %
-% $$$         % Args:
-% $$$         %   labels (cell(1,nclasses)): cell array of character string labels
-% $$$             if iscell(labels)
-% $$$                 if length(labels) == length(self.table.getColumnNames)
-% $$$                     self.table.addColumnNames(labels)
-% $$$                 end
-% $$$             elseif isequal(labels, 'default')
-% $$$                 colnames = cellfun(@(v) v.representative, self.classes, 'UniformOutput', false);
-% $$$                 self.table.addColumnNames(colnames)
-% $$$             end
-% $$$         end
 % $$$
 % $$$         function table = pointGroupTable(self)
 % $$$         % Get table with labels in chemistry notation
@@ -476,95 +457,5 @@ classdef CharacterTable < replab.Obj
 % $$$             end
 % $$$         end
 % $$$
-% $$$         function chars = charactersOfRepresentation(rep)
-% $$$         % Returns the characters of a representation
-% $$$         %
-% $$$         % Args:
-% $$$         %   rep (`replab.Rep`): representation whose characters we want
-% $$$         %
-% $$$         % Returns:
-% $$$         %   chars (double(1,nclasses)): vector with the character of each conjugacy class in rep
-% $$$             classReps = cellfun(@(x) x.representative, rep.group.conjugacyClasses, ...
-% $$$                                 'UniformOutput', false);
-% $$$             images = cellfun(@(x) rep.image(x), classReps, 'UniformOutput', false);
-% $$$             chars = cellfun(@trace, images);
-% $$$         end
-% $$$
-% $$$         function table = forPermutationGroup(group)
-% $$$         % Generates character table for a permutation group
-% $$$         %
-% $$$         % This currently assumes that the characters are integers, and the algorithm is slow.
-% $$$         %
-% $$$         % Args:
-% $$$         %    group (`+replab.PermutationGroup`): Permutation group
-% $$$         %
-% $$$         % Returns:
-% $$$         %    table (`+replab.CharacterTable`): Character table of group
-% $$$             assert(isa(group, 'replab.PermutationGroup'));
-% $$$             ord = double(group.order);
-% $$$             decomp = group.naturalRep.decomposition.nice;
-% $$$             irreps = decomp.components;
-% $$$             classes = group.conjugacyClasses;
-% $$$             k = length(classes);
-% $$$             for i = 1:k
-% $$$                 % verify that g^n is conjugate to g for all g \in G and n \in Z with n and (g) coprime
-% $$$                 % https://math.stackexchange.com/questions/2792741/classification-of-groups-with-integer-valued-characters
-% $$$                 cl = classes{i};
-% $$$                 g = cl.representative;
-% $$$                 eo = group.elementOrder(g);
-% $$$                 for j = 2:eo-1
-% $$$                     if gcd(j, eo) == 1
-% $$$                         if ~cl.contains(group.composeN(g, j))
-% $$$                             error('Group does not have integer characters');
-% $$$                         end
-% $$$                     end
-% $$$                 end
-% $$$             end
-% $$$             ccreps = cell(1, length(classes));
-% $$$             cclens = cell(1, length(classes));
-% $$$             for i = 1:k
-% $$$                 ccreps{i} = classes{i}.representative;
-% $$$                 cclens{i} = double(classes{i}.nElements);
-% $$$             end
-% $$$             nirreps = length(irreps);
-% $$$             chars = cell(nirreps, k);
-% $$$             for i = 1:nirreps
-% $$$                 irrep = irreps{i};
-% $$$                 chars(i,:) = cellfun(@(x) trace(irrep.image(x)), ccreps, 'UniformOutput', false);
-% $$$             end
-% $$$             chars = cell2mat(chars);
-% $$$             start_irreps = 1;
-% $$$             while nirreps ~= k
-% $$$                 for i = start_irreps:nirreps
-% $$$                     for j = start_irreps:nirreps
-% $$$                         new_rep = irreps{i}.kron(irreps{j});
-% $$$                         ss = 0;
-% $$$                         for n = 1:k
-% $$$                             char = trace(new_rep.image(ccreps{n}));
-% $$$                             ss = ss + cclens{n}*(char)^2;
-% $$$                         end
-% $$$                         if ss ~= ord
-% $$$                             new_irreps = new_rep.decomposition.nice;
-% $$$                             start_irreps = nirreps + 1;
-% $$$                             for m = 1:new_irreps.nComponents
-% $$$                                 new_irrep = new_irreps.component(m);
-% $$$                                 new_char = cellfun(@(x) trace(new_irrep.image(x)), ...
-% $$$                                                     ccreps, 'UniformOutput', false);
-% $$$                                 new_char = cell2mat(new_char);
-% $$$                                 if ~any(all(abs(chars - new_char) < 1/2, 2))
-% $$$                                     irreps{nirreps + 1} = new_irrep;
-% $$$                                     chars(nirreps + 1, :) = new_char;
-% $$$                                     nirreps = nirreps + 1;
-% $$$                                 end
-% $$$                             end
-% $$$                         end
-% $$$                     end
-% $$$                 end
-% $$$             end
-% $$$             chars = round(chars);
-% $$$             table = replab.CharacterTable(group, irreps, classes, chars);
-% $$$         end
-% $$$
-% $$$     end
 % $$$
 end
