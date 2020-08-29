@@ -1,13 +1,14 @@
 classdef CharacterTable < replab.Obj
 % Describes the character table of a group
 %
-% $$$ % Example:
-% $$$ %   >>> s3ct = replab.CharacterTable.forPermutationGroup(replab.S(3));
-% $$$ %   >>> disp(s3ct.table)
-% $$$ %            [1, 2, 3]  [1, 3, 2]  [2, 3, 1]
-% $$$ %       X.1      1          1          1
-% $$$ %       X.2      2          0         -1
-% $$$ %       X.3      1         -1          1
+% Example:
+%   >>> replab.CharacterTable.dihedral(3)
+%       Class  1a   3a   2a
+%        Size   1    2    3
+%
+%         X.1  1    1    1
+%         X.2  1    1   -1
+%         X.3  2   -1    0
 %
 % The character values are stored as elements of the cyclotomic field, using the `.cyclotomic` class which requires
 % external libraries and a Java Virtual Machine available.

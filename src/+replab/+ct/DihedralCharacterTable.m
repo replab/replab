@@ -9,7 +9,7 @@ function ct = DihedralCharacterTable(n)
 %
 % Returns:
 %   ct (`+replab.CharacterTable`)
-    group = replab.DihedralGroup(n);
+    group = replab.PermutationGroup.dihedral(n);
     ord = 2*n;
 
     if even(n)
