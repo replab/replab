@@ -283,6 +283,10 @@ classdef cyclotomic
             d = replab.cyclotomic(matd);
         end
 
+        function v = trace(self)
+            v = sum(diag(self));
+        end
+
         function s = sum(self)
             assert(isscalar(self.mat) || isvector(self.mat));
             s = replab.cyclotomic({javaMethod('sum', 'cyclo.Lab', self.matArray)});
