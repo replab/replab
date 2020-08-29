@@ -348,6 +348,16 @@ classdef CharacterTable < replab.Obj
         %
         % The ordering of coefficients corresponds to the order of irreducible representations in this character table.
         %
+        % Note that this method is optimized when the representation is a tensor product.
+        %
+        % Example:
+        %   >>> ct = replab.CharacterTable.dihedral(3);
+        %   >>> rep2 = ct.irreps{2};
+        %   >>> rep3 = ct.irreps{3};
+        %   >>> rep = kron(rep2, rep3);
+        %   >>> isequal(ct.multipliticies(rep), [0 0 1])
+        %       1
+        %
         % Args:
         %   arg (`.Character` or `.Rep`): Character or representation of `.group`
         %
@@ -399,83 +409,5 @@ classdef CharacterTable < replab.Obj
 
 
     end
-    % $$$
-    % $$$
-% $$$
-% $$$         function table = pointGroupTable(self)
-% $$$         % Get table with labels in chemistry notation
-% $$$         %
-% $$$         % Returns:
-% $$$         %   table (`replab.str.Table`): character table using chemistry notation
-% $$$             table = self.table;
-% $$$             irrepLabels = table.getRowNames;
-% $$$             for i = 1:length(irrepLabels)
-% $$$                 sym = self.mulliken(self.irreps{i});
-% $$$                 irrepLabels{i} = sym;
-% $$$             end
-% $$$             table.addRowNames(irrepLabels)
-% $$$         end
-% $$$
-% $$$         function sizes = classSizes(self)
-% $$$         % Gets the number of elements in each conjugacy class
-% $$$         %
-% $$$         % Returns:
-% $$$         %   sizes (integer(1,nclasses)): vector of conjugacy class sizes
-% $$$             sizes = cellfun(@(x) double(x.nElements), self.classes);
-% $$$         end
-% $$$
-% $$$         function mults = tensorProdMultiplicities(self, irreps)
-% $$$         % Find the multiplicities of irreducible representations in a tensor product of the irreducible representations
-% $$$         %
-% $$$         % Args:
-% $$$         %   irreps (integer(1,\*)): vector of the locations of the irreducible
-% $$$         %                           representations of which we take the tensor product
-% $$$         %
-% $$$         % Returns:
-% $$$         %   mults (integer(1,nirreps)): vector of the multiplicities of the
-% $$$         %                               irreps in the tensor representation
-% $$$         %
-% $$$         % Convention: to take tensor product of n copies of the same irrep, use
-% $$$         %             n copies of irrep location in irreps
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> S4 = replab.S(4);
-% $$$         %   >>> s4ct = replab.CharacterTable.forPermutationGroup(S4);
-% $$$         %   >>> s4ct.tensorProdMultiplicities([2,2,3])
-% $$$         %       1     2     2     2     1
-% $$$             tensorchars = ones(1, length(self.classes));
-% $$$             for i = 1:length(irreps)
-% $$$                 tensorchars = tensorchars .* self.chars(irreps(i), :);
-% $$$             end
-% $$$             nclass = length(self.classes);
-% $$$             mults = zeros(1, nclass);
-% $$$             ord = double(self.group.order);
-% $$$             sizes = self.classSizes;
-% $$$             for i = 1:nclass
-% $$$                 mults(i) = sum(sizes.*tensorchars.*conj(self.chars(i,:))) / ord;
-% $$$             end
-% $$$         end
 
-
-
-% $$$     methods (Static)
-% $$$
-% $$$         function sym = mulliken(rep)
-% $$$         % Returns the Mulliken symbol of a representation
-% $$$         %
-% $$$         % Requires knowledge of the principal axis to fully determine
-% $$$         %
-% $$$         % Args:
-% $$$         %   rep (`replab.Rep`): irreducible representation of a crystallographic group
-% $$$         %
-% $$$         % Returns:
-% $$$         %   sym (charstring): Mulliken symbol of the irrecudible representation
-% $$$             if rep.dimension == 1
-% $$$                 sym = 'A/B';
-% $$$             else
-% $$$                 sym = 'E';
-% $$$             end
-% $$$         end
-% $$$
-% $$$
 end
