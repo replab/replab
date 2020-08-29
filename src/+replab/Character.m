@@ -62,6 +62,13 @@ classdef Character < replab.Obj
             self.values = values;
         end
 
+        function res = forClasses(self, newConjugacyClasses)
+        % Returns the character with conjugacy classes reordered
+            ind = self.conjugacyClasses.indicesOfClasses(newConjugacyClasses);
+            newValues = self.values(ind);
+            res = replab.Character(newConjugacyClasses, newValues);
+        end
+
         function v = value(self, arg)
         % Returns the value of the class function over a group element or conjugacy class
         %
@@ -115,20 +122,28 @@ classdef Character < replab.Obj
         %
         % Returns:
         %   `.cyclotomic`: Value of the dot product
-            if self.conjugacyClasses.id == rhs.conjugacyClasses.id
-                v = replab.cyclotomic.zeros(1, 1);
-                for i = 1:self.conjugacyClasses.nClasses
-                    v = v + self.values(i) * rhs.values(i) * replab.cyclotomic.fromVPIs(self.conjugacyClasses.classes{i}.nElements);
-                end
-                v = v / replab.cyclotomic.fromVPIs(self.group.order);
-            else
-                v = replab.cyclotomic.zeros(1, 1);
-                for i = 1:self.conjugacyClasses.nClasses
-                    cl = self.conjugacyClasses.classes{i};
-                    v = v + self.values(i) * rhs.value(cl.representative) * replab.cyclotomic.fromVPIs(cl.nElements);
-                end
-                v = v / replab.cyclotomic.fromVPIs(self.group.order);
+            if self.conjugacyClasses.id ~= rhs.conjugacyClasses.id
+                rhs = rhs.forClasses(self.conjugacyClasses);
             end
+            v = replab.cyclotomic.zeros(1, 1);
+            for i = 1:self.conjugacyClasses.nClasses
+                v = v + self.values(i) * rhs.values(i) * replab.cyclotomic.fromVPIs(self.conjugacyClasses.classes{i}.nElements);
+            end
+            v = v / replab.cyclotomic.fromVPIs(self.group.order);
+        end
+
+        function res = plus(lhs, rhs)
+            if lhs.conjugacyClasses.id ~= rhs.conjugacyClasses.id
+                rhs = rhs.forClasses(lhs.conjugacyClasses);
+            end
+            res = replab.Character(lhs.conjugacyClasses, lhs.values + rhs.values);
+        end
+
+        function res = mtimes(lhs, rhs)
+            if lhs.conjugacyClasses.id ~= rhs.conjugacyClasses.id
+                rhs = rhs.forClasses(lhs.conjugacyClasses);
+            end
+            res = replab.Character(lhs.conjugacyClasses, lhs.values .* rhs.values);
         end
 
     end

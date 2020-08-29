@@ -23,6 +23,22 @@ classdef CharacterTable < replab.Obj
         irreps % (cell(1, nClasses) of ``[]`` or `.RepByImages`): Explicit matrix representations (can contain empty values)
     end
 
+    methods (Access = protected)
+
+        function K = computeKronecker(self)
+            n = self.classes.nClasses;
+            K = zeros(n,n,n);
+            for j = 1:n
+                cj = self.character(j);
+                for k = 1:n
+                    ck = self.character(k);
+                    K(:,j,k) = self.multiplicities(cj*ck);
+                end
+            end
+        end
+
+    end
+
     methods
 
         function self = CharacterTable(group, classes, characters, varargin)
@@ -34,23 +50,38 @@ classdef CharacterTable < replab.Obj
         %   characters (`.cyclotomic` (nClasses, nClasses)): Character values
         %
         % Keyword Args:
-        %   irreps (cell(1,\*) of ``[]`` or `+replab.RepByImages`): Explicit matrix representations (can contain empty values)
-        %   classNames (cell(1,\*) of charstring): Names of conjugacy classes
-        %   irrepNames (cell(1,\*) of charstring): Names of irreducible representations
+        %   irreps (cell(1,\*) of ``[]`` or `+replab.RepByImages`, optional): Explicit matrix representations (can contain empty values)
+        %   classNames (cell(1,\*) of charstring, optional): Names of conjugacy classes
+        %   irrepNames (cell(1,\*) of charstring, optional): Names of irreducible representations
+        %   kronecker (integer(\*,\*,\*), optional): Kronecker coefficients
             nIrreps = size(characters, 1);
             nClasses = classes.nClasses;
             assert(size(characters, 2) == nClasses);
             assert(nIrreps == nClasses);
             args = struct('irrepNames', {replab.CharacterTable.defaultIrrepNames(nIrreps)}, ...
                           'classNames', {replab.CharacterTable.defaultClassNames(classes.classElementOrders)}, ...
-                          'irreps', {cell(1, nIrreps)});
+                          'irreps', {cell(1, nIrreps)}, 'kronecker', []);
             args = replab.util.populateStruct(args, varargin);
+            if ~isempty(args.kronecker)
+                self.cache('kronecker', args.kronecker);
+            end
             self.group = group;
             self.classes = classes;
             self.characters = characters;
             self.irrepNames = args.irrepNames;
             self.classNames = args.classNames;
             self.irreps = args.irreps;
+        end
+
+        function K = kronecker(self)
+        % Returns the Kronecker coefficients corresponding to this character table
+        %
+        % This returns an integer matrix $K$ such that $K(i,j,k)$ is the multiplicity of the $i$-th irrep in
+        % the product of the $j$-th and $k$-th irrep.
+        %
+        % Returns:
+        %   integer(\*,\*,\*): Kronecker coefficients
+            K = self.cached('kronecker', @() self.computeKronecker);
         end
 
         function c = character(self, ind)
@@ -271,20 +302,28 @@ classdef CharacterTable < replab.Obj
 
     methods
 
-        function mults = multiplicities(self, rep)
-        % Calculate the multiplicities of irreducible representations in a given representation
+        function mults = multiplicities(self, arg)
+        % Calculate the multiplicities of the irreducible characters in this table in a given representation or character
         %
-        % The coefficient order corresponds to the order of irreducible representations in this character table.
+        % The ordering of coefficients corresponds to the order of irreducible representations in this character table.
         %
         % Args:
-        %   rep (`replab.Rep`): representation of `.group`
+        %   arg (`.Character` or `.Rep`): Character or representation of `.group`
         %
         % Returns:
         %    (integer(1,\*)): Multiplicities of irreducible representations
             n = self.nIrreps;
             mults = zeros(1, n);
-            for i = 1:n
-                mults(i) = self.character(i).dotRep(rep);
+            if isa(arg, 'replab.Character')
+                for i = 1:n
+                    mults(i) = self.character(i).dot(arg);
+                end
+            elseif isa(arg, 'replab.Rep')
+                for i = 1:n
+                    mults(i) = self.character(i).dotRep(rep);
+                end
+            else
+                error('Invalid argument');
             end
             mults = round(mults);
         end

@@ -342,8 +342,7 @@ classdef cyclotomic
         function res = times(lhs, rhs)
         % Pointwise ``*`` operator
             [lhs rhs] = replab.cyclotomic.shapeArgs(lhs, rhs);
-            mat = reshape(cell(com.faacets.gluon.Cyclotomic.pw_times(lhs.matArray, rhs.matArray)), size(lhs.mat));
-            res = replab.cyclotomic(mat);
+            res = replab.cyclotomic.fromJavaArray(javaMethod('pw_times', 'cyclo.Lab', lhs.matArray, rhs.matArray), size(lhs));
         end
 
         function res = mrdivide(lhs, rhs)

@@ -88,6 +88,19 @@ classdef ConjugacyClasses < replab.Obj
             self.primePowerMap = zeros(0, length(classes));
         end
 
+        function ind = indicesOfClasses(self, classes)
+        % Returns the indices of the given conjugacy classes in this list
+        %
+        % Args:
+        %   classes (`.ConjugacyClasses`): Conjugacy classes of `.group`
+        %
+        % Returns:
+        %   integer(1,\*): Indices of the given classes in these classes
+            n = classes.nClasses;
+            assert(self.nClasses == n);
+            ind = arrayfun(@(i) self.classIndexRepresentative(classes.classes{i}.representative), 1:n);
+        end
+
         function n = nClasses(self)
         % Returns the number of conjugacy classes in the group
         %
