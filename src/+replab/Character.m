@@ -141,10 +141,9 @@ classdef Character < replab.Obj
             if self.conjugacyClasses.id ~= rhs.conjugacyClasses.id
                 rhs = rhs.forClasses(self.conjugacyClasses);
             end
-            v = replab.cyclotomic.zeros(1, 1);
-            for i = 1:self.conjugacyClasses.nClasses
-                v = v + self.values(i) * rhs.values(i) * replab.cyclotomic.fromVPIs(self.conjugacyClasses.classes{i}.nElements);
-            end
+            sizes = self.conjugacyClasses.classSizes;
+            sizes = [sizes{:}];
+            v = sum(self.values .* rhs.values .* replab.cyclotomic.fromVPIs(sizes));
             v = v / replab.cyclotomic.fromVPIs(self.group.order);
         end
 
