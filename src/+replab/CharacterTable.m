@@ -45,7 +45,7 @@ classdef CharacterTable < replab.Obj
         % Constructs a character table
         %
         % Args:
-        %   group (`+replab.FiniteGroup`): Group represented by character table
+        %   group (`.FiniteGroup`): Group represented by character table
         %   classes (`.ConjugacyClasses`): Conjugacy classes of `.group`
         %   characters (`.cyclotomic` (nClasses, nClasses)): Character values
         %

@@ -1,5 +1,21 @@
 classdef Character < replab.Obj
 % Describes a character
+%
+% Example:
+%   >>> D = replab.PermutationGroup.dihedral(6);
+%   >>> rep = D.naturalRep.tensorPower(2);
+%   >>> dec = rep.decomposition;
+%   >>> irr = dec.irrep(4);
+%   >>> c = replab.Character.fromApproximateRep(irr);
+%   >>> g = [2 3 4 5 6 1];
+%   >>> c.value(g)
+%       -1
+%   >>> c1 = c + c;
+%   >>> c1.value(g)
+%       -2
+%   >>> c2 = c * c;
+%   >>> c2.value(g)
+%       1
 
     properties (SetAccess = protected)
         group % (`.FiniteGroup`): Group on which this class function is defined
