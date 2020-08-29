@@ -23,29 +23,6 @@ classdef CharacterTable < replab.Obj
         irreps % (cell(1, nClasses) of ``[]`` or `.RepByImages`): Explicit matrix representations (can contain empty values)
     end
 
-% $$$     methods (Static)
-% $$$
-% $$$         function ct = make(group, conjugacyClasses, conjugacyClassNames, characterExpressions, irrepNames, irrepExpressions)
-% $$$             if isempty(conjugacyClassNames)
-% $$$                 conjugacyClassNames = cellfun(@(c) replab.shortStr(c.representative), conjugacyClasses, 'uniform', 0);
-% $$$             end
-% $$$             characterValues = cellfun(@(str) replab.cyclo.Parser.parse(str), characterExpressions);
-% $$$             if isempty(irrepNames)
-% $$$                 ind = 1;
-% $$$                 for i = 1:size(characterValues, 1)
-% $$$                     if all(characterValues(i, :) == 1)
-% $$$                         irrepNames{i} = 't';
-% $$$                     else
-% $$$                         irrepNames{i} = sprintf('r_%d', ind);
-% $$$                         ind = ind + 1;
-% $$$                     end
-% $$$                 end
-% $$$             end
-% $$$             ct = replab.CharacterTable(group, conjugacyClasses, conjugacyClassNames, irrepNames, characterExpressions, characterValues, irrepExpressions);
-% $$$         end
-% $$$
-% $$$     end
-
     methods
 
         function self = CharacterTable(group, classes, characters, varargin)
