@@ -96,6 +96,18 @@ classdef ConjugacyClasses < replab.Obj
             n = length(self.classes);
         end
 
+        function G = normalSubgroupClasses(self, indices)
+        % Returns the normal subgroup consisting of the conjugacy classes whose positions are given
+        %
+        % Args:
+        %   indices (integer(1,\*)): Indices of conjugacy classes
+        %
+        % Returns:
+        %   `.FiniteGroup`: Normal subgroup representing that union
+            reps = arrayfun(@(ind) self.classes{ind}.representative, indices, 'uniform', 0);
+            G = self.group.normalClosure(self.group.subgroup(reps));
+        end
+
         function s = centralizerSizes(self)
         % Returns the sizes of the centralizers
         %
@@ -121,6 +133,24 @@ classdef ConjugacyClasses < replab.Obj
             s = cellfun(@(c) o/c.representativeCentralizer.order, self.classes, 'uniform', 0);
         end
 
+        function ind = classIndexRepresentative(self, rep)
+        % Finds the conjugacy class where a given conjugacy class representative is located
+        %
+        % Args:
+        %   rep (element of `.group`): Conjugacy class representative
+        %
+        % Returns:
+        %   integer: Index of the class containing ``g``
+            for k = 1:length(self.classes)
+                if self.group.eqv(self.classes{k}.representative, rep)
+                    ind = k;
+                    return
+                end
+            end
+            assert(self.group.contains(rep));
+            error('Error in the list of conjugacy classes');
+        end
+
         function ind = classIndex(self, g)
         % Finds the conjugacy class where a given element is located
         %
@@ -130,14 +160,7 @@ classdef ConjugacyClasses < replab.Obj
         % Returns:
         %   integer: Index of the class containing ``g``
             r = replab.ConjugacyClasses.representative(self.group, g);
-            for k = 1:length(self.classes)
-                if self.group.eqv(self.classes{k}.representative, r)
-                    ind = k;
-                    return
-                end
-            end
-            assert(self.group.contains(g));
-            error('Error in the list of conjugacy classes');
+            ind = self.classIndexRepresentative(r);
         end
 
         function m = powerMap(self, n)

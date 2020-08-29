@@ -76,6 +76,11 @@ classdef CharacterTable < replab.Obj
             self.irreps = args.irreps;
         end
 
+        function c = character(self, ind)
+        % Returns an irreducible character in this character table
+            c = replab.Character(self.classes, self.characters(ind, :));
+        end
+
         function ct = directProduct(self, ct2)
         % Returns the direct product of character tables
         %
@@ -285,6 +290,24 @@ classdef CharacterTable < replab.Obj
             lines = vertcat(lines1(:), {''}, lines2(:));
         end
 
+         function mults = multiplicities(self, rep)
+        % Calculate the multiplicities of irreducible representations in rep
+        %
+        % Args:
+        %   rep (`replab.Rep`): representation of self.group
+        %
+        % Returns:
+        %   mults (integer(1,nirreps)): vector of multiplicities of self.irreps in the representation rep
+            nirreps = length(self.irreps);
+            mults = zeros(1, nirreps);
+            ord = double(self.group.order);
+            sizes = self.classSizes;
+            repchars = self.charactersOfRepresentation(rep);
+            for i = 1:nirreps
+                mults(i) = sum(sizes.*repchars.*conj(self.chars(i,:))) / ord;
+            end
+        end
+
     end
 
     methods
@@ -382,24 +405,6 @@ classdef CharacterTable < replab.Obj
 % $$$         % Returns:
 % $$$         %   sizes (integer(1,nclasses)): vector of conjugacy class sizes
 % $$$             sizes = cellfun(@(x) double(x.nElements), self.classes);
-% $$$         end
-% $$$
-% $$$         function mults = multiplicities(self, rep)
-% $$$         % Calculate the multiplicities of irreducible representations in rep
-% $$$         %
-% $$$         % Args:
-% $$$         %   rep (`replab.Rep`): representation of self.group
-% $$$         %
-% $$$         % Returns:
-% $$$         %   mults (integer(1,nirreps)): vector of multiplicities of self.irreps in the representation rep
-% $$$             nirreps = length(self.irreps);
-% $$$             mults = zeros(1, nirreps);
-% $$$             ord = double(self.group.order);
-% $$$             sizes = self.classSizes;
-% $$$             repchars = self.charactersOfRepresentation(rep);
-% $$$             for i = 1:nirreps
-% $$$                 mults(i) = sum(sizes.*repchars.*conj(self.chars(i,:))) / ord;
-% $$$             end
 % $$$         end
 % $$$
 % $$$         function mults = tensorProdMultiplicities(self, irreps)
