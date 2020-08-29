@@ -4,7 +4,7 @@ classdef Character < replab.Obj
     properties (SetAccess = protected)
         group % (`.FiniteGroup`): Group on which this class function is defined
         conjugacyClasses % (`.ConjugacyClasses`): List of conjugacy classes for which the order of `.values` is defined
-        values % (`.cyclotomic`(1,\*)): Values of the class function over the conjugacy classes
+        values % (`.cyclotomic`(1,\*)): Values of the character over the conjugacy classes
     end
 
     methods (Static)
@@ -89,6 +89,46 @@ classdef Character < replab.Obj
             idval = self.value(self.group.identity);
             mask = arrayfun(@(i) self.value(self.conjugacyClasses.classes{i}.representative) == idval, 1:self.conjugacyClasses.nClasses);
             K = self.conjugacyClasses.normalSubgroupClasses(find(mask));
+        end
+
+        function v = dotRep(self, rhs)
+        % Computes the approximate inner product of this character with the character of an approximate representation
+        %
+        % Args:
+        %   rhs (`.Rep`): Approximate representation
+        %
+        % Returns:
+        %   double: Value of the dot product
+            v = 0;
+            for i = 1:self.conjugacyClasses.nClasses
+                cl = self.conjugacyClasses.classes{i};
+                v = v + double(self.values(i)) * trace(rhs.image(cl.representative)) * double(cl.nElements);
+            end
+            v = v / double(self.group.order);
+        end
+
+        function v = dot(self, rhs)
+        % Computes the inner product of this character with another character
+        %
+        % Args:
+        %   rhs (`.Character`): Character
+        %
+        % Returns:
+        %   `.cyclotomic`: Value of the dot product
+            if self.conjugacyClasses.id == rhs.conjugacyClasses.id
+                v = replab.cyclotomic.zeros(1, 1);
+                for i = 1:self.conjugacyClasses.nClasses
+                    v = v + self.values(i) * rhs.values(i) * replab.cyclotomic.fromVPIs(self.conjugacyClasses.classes{i}.nElements);
+                end
+                v = v / replab.cyclotomic.fromVPIs(self.group.order);
+            else
+                v = replab.cyclotomic.zeros(1, 1);
+                for i = 1:self.conjugacyClasses.nClasses
+                    cl = self.conjugacyClasses.classes{i};
+                    v = v + self.values(i) * rhs.value(cl.representative) * replab.cyclotomic.fromVPIs(cl.nElements);
+                end
+                v = v / replab.cyclotomic.fromVPIs(self.group.order);
+            end
         end
 
     end

@@ -136,6 +136,23 @@ classdef cyclotomic
             c = replab.cyclotomic.fromJavaArray(javaMethod('approximate', 'cyclo.Lab', lowerBounds(:), upperBounds(:)), size(lowerBounds));
         end
 
+        function c = fromVPIs(values)
+        % Constructs a cyclotomic matrix from VPI big integers
+        %
+        % Args:
+        %   values (vpi(\*,\*)): Coefficients
+        %
+        % Returns:
+        %   `.cyclotomic`: The corresponding integer cyclotomic matrix
+            v = values(:);
+            s = cell(1, length(v));
+            for i = 1:length(v)
+                s{i} = strtrim(num2str(values(i)));
+            end
+            s = reshape(s, size(values));
+            c = replab.cyclotomic.fromStrings(s);
+        end
+
         function c = fromRationals(numerators, denominators)
         % Constructs a cyclotomic matrix of rational numbers
         %
@@ -220,6 +237,7 @@ classdef cyclotomic
     methods (Static, Access = protected)
 
         function [lhs rhs] = shapeArgs(lhs, rhs)
+
             if isa(lhs, 'double')
                 lhs = replab.cyclotomic.fromDoubles(lhs);
             end
@@ -237,6 +255,10 @@ classdef cyclotomic
     end
 
     methods
+
+        function res = reshape(self, varargin)
+            res = replab.cyclotomic(reshape(self.mat, varargin{:}));
+        end
 
         function disp(self)
         % Standard display method

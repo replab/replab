@@ -290,27 +290,27 @@ classdef CharacterTable < replab.Obj
             lines = vertcat(lines1(:), {''}, lines2(:));
         end
 
-         function mults = multiplicities(self, rep)
-        % Calculate the multiplicities of irreducible representations in rep
-        %
-        % Args:
-        %   rep (`replab.Rep`): representation of self.group
-        %
-        % Returns:
-        %   mults (integer(1,nirreps)): vector of multiplicities of self.irreps in the representation rep
-            nirreps = length(self.irreps);
-            mults = zeros(1, nirreps);
-            ord = double(self.group.order);
-            sizes = self.classSizes;
-            repchars = self.charactersOfRepresentation(rep);
-            for i = 1:nirreps
-                mults(i) = sum(sizes.*repchars.*conj(self.chars(i,:))) / ord;
-            end
-        end
-
     end
 
     methods
+
+        function mults = multiplicities(self, rep)
+        % Calculate the multiplicities of irreducible representations in a given representation
+        %
+        % The coefficient order corresponds to the order of irreducible representations in this character table.
+        %
+        % Args:
+        %   rep (`replab.Rep`): representation of `.group`
+        %
+        % Returns:
+        %    (integer(1,\*)): Multiplicities of irreducible representations
+            n = self.nIrreps;
+            mults = zeros(1, n);
+            for i = 1:n
+                mults(i) = self.character(i).dotRep(rep);
+            end
+            mults = round(mults);
+        end
 
 % $$$         function imap(self, f, imageGroup, preserveLexOrder)
 % $$$         % Maps the conjugacy classes under an isomorphism
@@ -335,8 +335,8 @@ classdef CharacterTable < replab.Obj
 
 
     end
-% $$$
-% $$$
+    % $$$
+    % $$$
 % $$$         function useBorders(self, logical)
 % $$$         %  Turn on and off borders on the table
 % $$$         %
