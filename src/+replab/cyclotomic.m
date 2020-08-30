@@ -323,6 +323,15 @@ classdef cyclotomic
             mat = reshape(cell(com.faacets.gluon.Cyclotomic.pw_times(lhs.matArray, rhs.matArray)), size(lhs.mat));
             res = replab.cyclotomic(mat);
         end
+        
+        function mat = kron(lhs, rhs)
+            mat = replab.cyclotomic.zeros(size(lhs, 1) * size(rhs, 1), size(lhs, 2) * size(rhs, 2));
+            for i = 0:size(lhs, 1)-1
+                for j = 0:size(lhs, 2)-1
+                    mat(i * size(rhs,1) + 1:(i+1) * size(rhs,1), j * size(rhs,2) + 1:(j+1) * size(rhs,2)) = lhs(i+1, j+1) * rhs;
+                end
+            end
+        end
 
         function res = mrdivide(lhs, rhs)
         % Division

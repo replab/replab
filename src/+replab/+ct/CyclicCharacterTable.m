@@ -9,7 +9,7 @@ function ct = CyclicCharacterTable(n)
 %
 % Returns:
 %   ct (`+replab.CharacterTable`)
-    group = replab.CyclicGroup(n);
+    group = replab.PermutationGroup.cyclic(n);
 
     % Generate conjugacy class representatives in order gen^0, gen^1, gen^2, ...
     classreps = cell(1, n);
