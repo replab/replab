@@ -1,7 +1,7 @@
 function Asum = sum(A,dim)
 % vpi/Asum: sum of a vpi array
 % usage: Asum = sum(A,dim);
-% 
+%
 % Arguments:
 %  A - a vpi object array
 %
@@ -11,7 +11,7 @@ function Asum = sum(A,dim)
 %
 % Arguments: (output)
 %  Asum - the sum vpi object array
-% 
+%
 % Example:
 %  A = vpi(-3:2:25);
 %  sum(A)
@@ -20,7 +20,7 @@ function Asum = sum(A,dim)
 %      165
 %
 %  See also: prod, cumsum
-% 
+%
 %  Author: John D'Errico
 %  e-mail: woodchips@rochester.rr.com
 %  Release: 1.0
@@ -35,7 +35,7 @@ if numel(A) == 1
   Asum = A;
 else
   % a vector or array
-  
+
   % default for dim?
   if (nargin==1) || isempty(dim)
     dim = find(size(A)>1,1,'first');
@@ -43,14 +43,18 @@ else
       dim = 1;
     end
   end
-  
+
   % sum over the dimension dim. Do so by
   % a permutation, then a sum and an
   % inverse permute.
-  P = 1:length(size(A));
-  P([1,dim]) = [dim,1];
-  
-  A = permute(A,P);
+  isVector = nnz(size(A) > 1) <= 1;
+  if ~isVector
+      P = 1:length(size(A));
+      P([1,dim]) = [dim,1];
+      A = permute(A,P);
+  else
+      A = A(:);
+  end
   Asum = A;
   NAsum = size(A);
   N1 = NAsum(1);
@@ -62,18 +66,8 @@ else
       Asum(j) = Asum(j) + A(k);
     end
   end
-  
-  % do the inverse permutation
-  Asum = ipermute(Asum,P);
-  
+  if ~isVector
+      % do the inverse permutation
+      Asum = ipermute(Asum,P);
+  end
 end
-
-
-
-
-
-
-
-
-
-

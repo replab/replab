@@ -93,6 +93,10 @@ classdef ConjugacyClass < replab.FiniteSet
             E = cellfun(@(t) self.group.leftConjugate(t, self.representative), T, 'uniform', 0);
         end
 
+        function n = computeNElements(self)
+            n = self.group.order / self.representativeCentralizer.order;
+        end
+
     end
 
     methods % Implementations
@@ -122,7 +126,7 @@ classdef ConjugacyClass < replab.FiniteSet
         % FiniteSet
 
         function s = nElements(self)
-            s = self.group.order / self.representativeCentralizer.order;
+            s = self.cached('nElements', @() self.computeNElements);
         end
 
         function b = contains(self, t)

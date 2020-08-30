@@ -7,7 +7,7 @@ function s = shortStr(obj, maxColumns)
             if length(s) < maxColumns
                 s = [s '}'];
             end
-        elseif isa(obj, 'vpi')
+        elseif isa(obj, 'vpi') || isa(obj, 'replab.cyclotomic')
             s = num2str(obj);
             if size(s, 1) > 1
                 % corrects for multiline vpi num2str
