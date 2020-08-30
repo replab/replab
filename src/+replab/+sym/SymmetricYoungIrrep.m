@@ -115,17 +115,17 @@ classdef SymmetricYoungIrrep < replab.Rep
                 % only calculated where we need it (for equation 11/13)
                 m1a = sparse(neitherAndIsR,neitherAndIsR,-axDistRec,self.dimension,self.dimension);
                 m1b = sparse(neitherAndIsRPrime,neitherAndIsRPrime,axDistRec,self.dimension,self.dimension);
-                % The m1's describes the matrix elements from Equation 11/13. a
-                % and b describe the common matrix elements in Eq 11 and
+                % The m1's describes the matrix elements from Equation 11/13. 
+                % m1a and m1b describe the common matrix elements in Eq 11 and
                 % 13
-                if self.isUnitary
+                if self.isUnitary %preset this if we are in the orthogonal representation
                     m1c = sparse(neitherAndIsR,neitherAndIsRPrime,sqrt(1-axDistRec.^2),self.dimension,self.dimension);
                     m1d = sparse(neitherAndIsRPrime,neitherAndIsR,sqrt(1-axDistRec.^2),self.dimension,self.dimension);
-                    % These are the matrix elements from Eq 11
+                    % These are the unqiue matrix elements from Eq 13
                 else
                     m1c = sparse(neitherAndIsR,neitherAndIsRPrime,1-axDistRec.^2,self.dimension,self.dimension);
                     m1d = sparse(neitherAndIsRPrime,neitherAndIsR,1,self.dimension,self.dimension);
-                    % These are the matrix elements from Eq 11
+                    % These are the unique matrix elements from Eq 11
                 end
                 m2 = spdiags(rowFunEq,0,self.dimension,self.dimension);
                 m3 = spdiags(-1*colFunEq,0,self.dimension,self.dimension);

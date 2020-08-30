@@ -1,0 +1,53 @@
+function [bases,irreps] = repBlockBasisEigAlg(rep,symb)
+    n = rep.group.domainSize;
+    parts = replab.sym.IntegerPartitions(n);
+    mults = replab.CharacterTable.permutationCharTable...
+        (rep.group).multiplicities(rep);
+    irrepInds = find(mults);
+    irreps = parts.list(irrepInds);
+    nIrreps = numel(irrepInds);
+    csco = symCSCO(n,0,rep.dimension,':');
+    matList = csco.makeMatList;
+    eigenVals = csco.findSplitEigs(irreps);
+    if ~symb
+        if rep.isUnitary
+            [V0,D0] = eig((matList{1}+matList{1}')/2,'vector');
+        else
+            [V0,D0] = eig(matList{1},'vector');
+        end
+        bases = arrayfun(@(index) getCoeffs(index),1:nIrreps,'UniformOutput',false);
+    else
+        stack = vertcat(matList{:});
+        bases = arrayfun(@(index) getSymbCoeffs(index),1:nIrreps,'UniformOutput',false);
+    end
+    
+    function cgs = getCoeffs(ind)
+        splitEigs = eigenVals(ind,:);
+        nEigs = numel(splitEigs);
+        cgs =  V0(:,round(D0)==splitEigs(1));
+        for i = 2:nEigs
+            cgs = reducedClebschGordan(i,splitEigs(i),cgs);
+        end
+    end
+
+    function coeffs = getSymbCoeffs(ind)
+        mult = mults(end-irrepInds(ind)+1);
+        identityMatStack = sparse(1:m*(rep.dimension),repmat(1:rep.dimension,1,m),...
+           repelem(findSplitEigs(ind),rep.dimension));
+        coeffs = null(stack-identityMatStack,mult); %replace with cycoltomic stuff here
+    end
+
+    function iso = reducedClebschGordan(i,eigenvalue,oldIso)
+        if rep.isUnitary
+            mat = oldIso'*matList{i}*oldIso;
+            [V,D] = eig((mat+mat')/2,'vector');
+            reducedCG= V(:,round(D)==eigenvalue);
+            iso = oldIso*reducedCG;
+        else
+            mat = oldIso\matList{i}*oldIso;
+            [V,D] = eig(mat,'vector');
+            reducedCG= V(:,round(D)==eigenvalue);
+            iso = real(oldIso*reducedCG);
+        end
+    end
+end
