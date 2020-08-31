@@ -219,9 +219,9 @@ classdef NiceFiniteGroup < replab.FiniteGroup
                 tCentralizer = self.niceMorphism.imageGroup(tCentralizer);
             end
             B = self.niceGroup.findLeftConjugations(s, t, sCentralizer, tCentralizer);
-            subgroup = self.niceMorphism.preimageGroup(B.subgroup);
+            group = self.niceMorphism.preimageGroup(B.group);
             canRep = self.niceMorphism.preimageElement(B.representative);
-            B = replab.LeftCoset(subgroup, canRep, self);
+            B = replab.LeftCoset(group, canRep, self);
         end
 
         % Relation to other groups
