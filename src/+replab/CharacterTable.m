@@ -413,6 +413,14 @@ classdef CharacterTable < replab.Obj
         function res = imap(self, f)
         % Maps the character table under an isomorphism
         %
+        % Example:
+        %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]);
+        %   >>> D6b = replab.PermutationGroup.of([1 4 3 2], [1 3 4 2]);
+        %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
+        %   >>> Ca = replab.ct.DihedralCharacterTable(3);
+        %   >>> Cb = Ca.imap(f);
+        %   >>> Cb.checkSilent;
+        %
         % Args:
         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
         %
