@@ -1,5 +1,5 @@
 {
-    "name": "Alternating gorup A4",
+    "name": "Alternating group A4",
     "group": {
 	"generatorNames": ["x1", "x2"],
 	"permutationGenerators": [[4,1,3,2], [4,2,1,3]],
