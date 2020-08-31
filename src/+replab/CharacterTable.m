@@ -419,7 +419,7 @@ classdef CharacterTable < replab.Obj
         %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
         %   >>> Ca = replab.ct.DihedralCharacterTable(3);
         %   >>> Cb = Ca.imap(f);
-        %   >>> Cb.checkSilent;
+        %   >>> Cb.laws.checkSilent;
         %
         % Args:
         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
