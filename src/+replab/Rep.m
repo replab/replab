@@ -391,6 +391,25 @@ classdef Rep < replab.Obj
 
     methods % Morphism composition
 
+        function res = imap(self, f)
+        % Maps the representation under an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %
+        % Returns:
+        %   `.Rep`: Representation satisfying ``newRep.group.isSubgroup(f.target)``.
+            if self.group.order < f.source.order
+                f = f.restrictedSource(self.group);
+            end
+            res = replab.rep.CompositionRep(f.inverse, self);
+            res.isUnitary = self.isUnitary;
+            res.trivialDimension = self.trivialDimension;
+            res.isIrreducible = self.isIrreducible;
+            res.frobeniusSchurIndicator = self.frobeniusSchurIndicator;
+            res.isDivisionAlgebraCanonical = self.isDivisionAlgebraCanonical;
+        end
+
         function res = compose(self, applyFirst)
         % Composition of a representation with a morphism, with the morphism applied first
         %
