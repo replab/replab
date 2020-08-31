@@ -45,26 +45,21 @@ classdef ConjugacyClass < replab.FiniteSet
             o = self.cached('elementOrder', @() self.computeElementOrder);
         end
 
-        function c1 = imap(self, f, imageGroup, preserveLexOrder)
+        function c1 = imap(self, f)
         % Maps this conjugacy class under an isomorphism
         %
         % Args:
         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
-        %   imageGroup (`.FiniteGroup`, optional): Image of `.group` under ``f``, default ``[]`` (recompute)
-        %   preserveLexOrder (logical, optional): Whether the isomorphism preserves the lexicographic order of group elements, default false
         %
         % Returns:
         %   `.ConjugacyClass`: The conjugacy class mapped under ``f``, expressed as a subset of ``f.image``
-            if nargin < 3 || isempty(imageGroup)
-                imageGroup = f.imageGroup(self.group);
+            if self.group.order < f.source.order
+                f = f.restrictedSource(self.group);
             end
-            if nargin < 4 || isempty(preserveLexOrder)
-                preserveLexOrder = false;
-            end
-            if preserveLexOrder
-                c1 = replab.ConjugacyClass(imageGroup, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
+            if isa(f, 'replab.mrp.NiceIsomorphism') % preserves lexicographic order
+                c1 = replab.ConjugacyClass(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
             else
-                c1 = replab.ConjugacyClass.make(imageGroup, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
+                c1 = replab.ConjugacyClass.make(f.target, f.imageElement(self.representative), f.imageGroup(self.representativeCentralizer));
             end
         end
 

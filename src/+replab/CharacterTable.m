@@ -410,27 +410,39 @@ classdef CharacterTable < replab.Obj
         end
 
 
-% $$$         function imap(self, f, imageGroup, preserveLexOrder)
-% $$$         % Maps the conjugacy classes under an isomorphism
-% $$$         %
-% $$$         % Args:
-% $$$         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
-% $$$         %   imageGroup (`.FiniteGroup`, optional): Image of `.group` under ``f``, default ``[]`` (recompute)
-% $$$         %   preserveLexOrder (logical, optional): Whether the isomorphism preserves the lexicographic order of group elements, default false
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.CharacterTable`: The character table of the subgroup in the image of the isomorphism
-% $$$             if nargin < 3 || isempty(imageGroup)
-% $$$                 imageGroup = f.imageGroup(self.group);
-% $$$             end
-% $$$             if nargin < 4 || isempty(preserveLexOrder)
-% $$$                 preserveLexOrder = false;
-% $$$             end
-% $$$             classes1 = cellfun(@(c) c.imap(f, imageGroup, preserveLexOrder), self.classes, 'uniform', 0);
-% $$$             c1 = replab.ConjugacyClasses(imageGroup, classes1);
-% $$$
-% $$$         end
-
+        function res = imap(self, f)
+        % Maps the character table under an isomorphism
+        %
+        % Example:
+        %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]);
+        %   >>> D6b = replab.PermutationGroup.of([1 4 3 2], [1 3 4 2]);
+        %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
+        %   >>> Ca = replab.ct.DihedralCharacterTable(3);
+        %   >>> Cb = Ca.imap(f);
+        %   >>> Cb.laws.checkSilent;
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %
+        % Returns:
+        %   `.CharacterTable`: The character table of the subgroup in the image of the isomorphism
+            if self.group.order < f.source.order
+                f = f.restrictedSource(self.group);
+            end
+            classes1 = self.classes.imap(f);
+            group1 = f.target;
+            characters1 = self.characters;
+            irreps1 = cell(1, self.nIrreps);
+            for i = 1:self.nIrreps
+                if ~isempty(self.irreps{i})
+                    irreps1{i} = self.irreps{i}.imap(f);
+                end
+            end
+            res = replab.CharacterTable(group1, classes1, characters1, 'irreps', irreps1, 'classNames', self.classNames, 'irrepNames', self.irrepNames);
+            if self.inCache('kronecker')
+                res.cache('kronecker', self.kronecker, 'error');
+            end
+        end
 
     end
 
