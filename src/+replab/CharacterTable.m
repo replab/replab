@@ -20,7 +20,7 @@ classdef CharacterTable < replab.Obj
         classes % (`.ConjugacyClasses`): Conjugacy classes of `.group`
         classNames % (cell(1,nClasses) of charstring): Names of conjugacy classes
         irrepNames % (cell(1,nIrreps) of charstring): Names of the irreducible representations/characters
-        characters % (`.cyclotomic` (nClasses, nClasses)): Character values
+        characters % (`.cyclotomic` (nIrreps,nClasses)): Character values
         irreps % (cell(1, nClasses) of ``[]`` or `.RepByImages`): Explicit matrix representations (can contain empty values)
     end
 
@@ -112,6 +112,20 @@ classdef CharacterTable < replab.Obj
         % Returns:
         %   integer(\*,\*,\*): Kronecker coefficients
             K = self.cached('kronecker', @() self.computeKronecker);
+        end
+
+        function ind = trivialCharacterIndex(self)
+        % Returns the row index of the trivial character
+            ind = 1:self.nIrreps;
+            for i = 1:self.nClasses
+                ind = ind(self.characters(ind, i) == 1);
+            end
+            assert(length(ind) == 1);
+        end
+
+        function ind = identityConjugacyClassIndex(self)
+        % Returns the column index of the identity conjugacy class
+            ind = self.classes.classIndex(self.group.identity);
         end
 
         function c = character(self, ind)
@@ -355,7 +369,7 @@ classdef CharacterTable < replab.Obj
         %   >>> rep2 = ct.irreps{2};
         %   >>> rep3 = ct.irreps{3};
         %   >>> rep = kron(rep2, rep3);
-        %   >>> isequal(ct.multipliticies(rep), [0 0 1])
+        %   >>> isequal(ct.multiplicities(rep), [0 0 1])
         %       1
         %
         % Args:

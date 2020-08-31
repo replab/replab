@@ -27,6 +27,41 @@ classdef CharacterTableLaws < replab.Laws
                 end
             end
         end
+
+        function law_orthogonality_rows_(self)
+            n = self.C.nIrreps;
+            res = replab.cyclotomic.zeros(n, n);
+            for i1 = 1:n
+                chi1 = self.C.character(i1);
+                for i2 = 1:n
+                    chi2 = self.C.character(i2);
+                    res(i1, i2) = dot(chi1, chi2);
+                end
+            end
+            assert(all(all(res == replab.cyclotomic.eye(n))));
+        end
+
+        function law_orthogonality_columns_(self)
+            n = self.C.nClasses;
+            for i1 = 1:n
+                for i2 = 1:n
+                    r = dot(self.C.characters(:, i1), self.C.characters(:, i2));
+                    if i1 ~= i2
+                        assert(r == 0);
+                    else
+                        assert(r == replab.cyclotomic.fromVPIs(self.C.classes.classes{i1}.representativeCentralizer.order));
+                    end
+                end
+            end
+        end
+
+        function law_group_order_(self)
+            col = self.C.characters(:, self.C.identityConjugacyClassIndex);
+            order1 = sum(col.*col);
+            order2 = replab.cyclotomic.fromVPIs(self.C.group.order);
+            assert(order1 == order2);
+        end
+
     end
 
 end
