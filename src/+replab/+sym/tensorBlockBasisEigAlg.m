@@ -1,4 +1,4 @@
-function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isRat)
+function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isSymb)
     % FInds all Clebsch Gordan coefficients of a tensor product
     % representation
     % Args:
@@ -8,7 +8,7 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isRat)
         %
         % part2 (integer(*\)): Partition of second irrep in tensor product
         %
-        % symb (boolean): Do we want a symbolic result? Note that
+        % isSymb (boolean): Do we want a symbolic result? Note that
         % the result will be rational. Use seminormalToOrthogonal to
         % help find the change of basis vectors to the orthogonal form.
         %
@@ -25,20 +25,17 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isRat)
     irrepInds = find(mults);
     irreps = parts.list(irrepInds);
     lat1 = replab.sym.YoungLattice(part1,n);
-    s1 = lat1.symAndAntiSym;
+    s1 = lat1.symAndAntiSym; % This is an array [k1 k2]
+    % The first 
     s2 = replab.sym.YoungLattice(part2,n).symAndAntiSym;
     subMatrixDim = s1(1)*s2(1)+s1(2)*s2(2);
     subMatInds = subMatrixIndices;
     nIrreps = numel(irrepInds);
-    csco = SymCSCO(n,1,subMatrixDim,subMatInds);
+    csco = replab.sym.SymCSCO(n,1,subMatrixDim,subMatInds);
     matList = csco.makeMatList(rep);
     eigenVals = csco.findSplitEigs(irreps);
-    if ~isRat
-        if rep.isUnitary
-            [V0,D0] = eig((matList{1}+matList{1}')/2,'vector');
-        else
-            [V0,D0] = eig(matList{1},'vector');
-        end
+    if ~isSymb
+        [V0,D0] = eig((matList{1}+matList{1}')/2,'vector');
         bases = arrayfun(@(index) getCGCoeffs(index),1:nIrreps,'UniformOutput',false);
     else
         stack = vertcat(matList{:});
@@ -58,11 +55,12 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isRat)
         end
         splitEigs = eigenVals(ind,:);
         nEigs = numel(splitEigs);
-        subCG =  V0(:,round(D0)==splitEigs(end));
-        for i = 1:nEigs-1
+        subCG =  V0(:,round(D0)==splitEigs(1));
+        for i = 2:nEigs
             subCG = reducedClebschGordan(i,splitEigs(i),subCG);
         end
         cgs(subMatInds,:) = subCG;
+        
         function coeffs= oneDimCoeffs(isTrivial)
             if isTrivial
                 dim = sum(s1);
@@ -88,9 +86,9 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isRat)
                 cgs = oneDimCoeffs(true); %trival rep coefficents are also known
                 return
             end
-            identityMatStack = sparse(1:m*(subMatrixDim),repmat(1:subMatrixDim,1,m),...
-               repelem(findSplitEigs(ind),subMatrixDim));
-            subCG = nullForTest(stack-identityMatStack,mult); %You would do cyclotomic stuff here
+            identityMatStack = sparse(1:csco.m*(subMatrixDim),repmat(1:subMatrixDim,1,csco.m),...
+               repelem(eigenVals(ind,:),subMatrixDim));
+            subCG = nullOfRationalFloat(stack-identityMatStack); %You would do cyclotomic stuff here
             cgs(subMatInds,:) = subCG;
             
             function coeffs= oneDimCoeffs(isTrivial)
@@ -119,6 +117,12 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isRat)
         a = logical( [ ones(1,s1(1)) , zeros(1,s1(2)) ] );
         b = logical( [ ones(1,s2(1)) , zeros(1,s2(2)) ] );
         inds = kron(a,b)|kron(~a,~b);
+    end
+
+    function kernel = nullOfRationalFloat(mat)
+        [top,bot] = rat(mat);
+        cycloMat = replab.cyclotomic.fromRationals(top,bot);
+        kernel = double(null(cycloMat));
     end
 
 end

@@ -1,3 +1,6 @@
 function CT = PermutationCharacterTable(group)
-    CT = replab.CharacterTable(group,group.conjugacyClasses,replab.sym.permutationCharTableArray(group.domainSize));
+    cellArr = replab.sym.IntegerPartitions(group.domainSize).conjugacyClasses;
+    conjClasses= replab.ConjugacyClasses(group,cellArr);
+    CT = replab.CharacterTable(group,conjClasses,...
+    replab.sym.permutationCharTableArray(group.domainSize));
 end

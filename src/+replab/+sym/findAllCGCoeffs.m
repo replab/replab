@@ -24,11 +24,16 @@ function [basis, basisMat, irreps] = findAllCGCoeffs(group,part1,part2,isSymb)
         % Partitions corresponding to the irreducible components of the
         % tensor product
     n = group.domainSize;
-    rep = kron(group.irrep(part1,'orthogonal'),group.irrep(part2,'orthogonal'));
+    if ~isSymb
+        rep = kron(group.irrep(part1,'orthogonal'),group.irrep(part2,'orthogonal'));
+    else
+        rep = kron(group.irrep(part1,'seminormal'),group.irrep(part2,'seminormal'));
+    end
     [basisCell1,irreps] =  replab.sym.tensorBlockBasisEigAlg(rep,part1,part2,isSymb);
     adjSwapIms = arrayfun(@(j) sparse(rep.image(replab.Permutation.transposition(n,j,j+1))),1:(n-1),'UniformOutput',false); 
     %We do this because we know the ajacent transpotions are sparse
-    basis = arrayfun(@(i) extendBasis(basisCell1{i},irreps{i}.partition,adjSwapIms),1:numel(irreps),'UniformOutput',false);
+    basis = arrayfun(@(i) replab.sym.extendBasis(basisCell1{i},irreps{i}.partition,adjSwapIms,...
+        isSymb),1:numel(irreps),'UniformOutput',false);
     basisMat = cellfun(@(matCell) [matCell{:}],basis,'UniformOutput',false);
     basisMat = [basisMat{:}];
 end

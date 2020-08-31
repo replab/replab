@@ -9,7 +9,7 @@ function CT = permutationCharTableArray(n)
        CTunNormed(:,row) = lin.coeffs';
    end
    CT = round(grahamSchmidt(CTunNormed,@(x,y) round(sum(x.*y./nData.innerProdDenom))));
-   CT = fliplr(CT);
+   %CT = fliplr(CT);
    function mat = grahamSchmidt(mat,innerProd)
        d = nData.nParts;
        for i = 1:d-1

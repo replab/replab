@@ -27,7 +27,7 @@ function irrepBasCell = extendBasis(basisElem1,partition,adjSwapIms,isSymb)
         end
         [connectList,transList,offDiagList,diagList] = replab.sym.tableauxTree(partition);
         irrepBasCell = cell(1,dim);
-        irrepBasCell(1) = basisElem1;
+        irrepBasCell{1} = basisElem1;
         for index = 2:(dim)
             rec(index);
         end
@@ -36,7 +36,7 @@ function irrepBasCell = extendBasis(basisElem1,partition,adjSwapIms,isSymb)
             if ~isempty(irrepBasCell{index})
                 shiftedBasis = irrepBasCell{index};
                 return
-            end
+            else
                 parentIndex = connectList(index-1);
                 basisOfParent = rec(parentIndex);
                 if ~isSymb
@@ -48,4 +48,5 @@ function irrepBasCell = extendBasis(basisElem1,partition,adjSwapIms,isSymb)
                 end   
                 irrepBasCell{index} = shiftedBasis;
             end
+        end
     end

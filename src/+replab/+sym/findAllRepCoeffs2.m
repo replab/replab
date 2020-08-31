@@ -23,6 +23,7 @@ function [basis, basisMat,irreps] = findAllRepCoeffs2(rep,isSymb)
         % representation
     n = rep.group.domainSize;
     [basisCell1,irreps] =  replab.sym.repBlockBasisEigAlg(rep,isSymb);
+    numel(irreps)
     adjSwapIms = arrayfun(@(j) rep.image(replab.Permutation.transposition(n,j,j+1)),1:(n-1),'UniformOutput',false); 
     basis = arrayfun(@(i) replab.sym.extendBasis(basisCell1{i},irreps{i}.partition,adjSwapIms,isSymb),1:numel(irreps),'UniformOutput',false);
     basisMat = cellfun(@(matCell) [matCell{:}],basis,'UniformOutput',false);

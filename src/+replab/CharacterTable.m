@@ -416,8 +416,7 @@ classdef CharacterTable < replab.Obj
             else
                 error('Invalid argument');
             end
-            %mults
-            %mults = round(mults);
+            mults = round(mults);
         end
 
 
