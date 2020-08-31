@@ -130,7 +130,7 @@ classdef Character < replab.Obj
                 cl = self.conjugacyClasses.classes{i};
                 chi(i) = trace(rhs.image(cl.representative));
             end
-            v = sum(conj(double(self.values)) .* chi .* double(sizes));
+            v = sum(conj(double(self.values)) .* chi .* double([sizes{:}]));
             v = v / double(self.group.order);
         end
 
