@@ -128,6 +128,16 @@ classdef CharacterTable < replab.Obj
             ind = self.classes.classIndex(self.group.identity);
         end
 
+        function ind = linearCharacterIndices(self)
+        % Returns the indices of the linear characters
+        %
+        % The linear characters correspond to representation of dimension ``1``.
+        %
+        % Returns:
+        %   integer(1,\*): Indices of the linear characters
+            ind = find(self.characters(:, self.identityConjugacyClassIndex) == 1);
+        end
+
         function c = character(self, ind)
         % Returns an irreducible character in this character table
             c = replab.Character(self.classes, self.characters(ind, :));

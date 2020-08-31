@@ -38,7 +38,7 @@ classdef CharacterTableLaws < replab.Laws
                     res(i1, i2) = dot(chi1, chi2);
                 end
             end
-            assert(all(all(res == replab.cyclotomic.eye(n))));
+            self.assert(all(all(res == replab.cyclotomic.eye(n))));
         end
 
         function law_orthogonality_columns_(self)
@@ -47,9 +47,9 @@ classdef CharacterTableLaws < replab.Laws
                 for i2 = 1:n
                     r = dot(self.C.characters(:, i1), self.C.characters(:, i2));
                     if i1 ~= i2
-                        assert(r == 0);
+                        self.assert(r == 0);
                     else
-                        assert(r == replab.cyclotomic.fromVPIs(self.C.classes.classes{i1}.representativeCentralizer.order));
+                        self.assert(r == replab.cyclotomic.fromVPIs(self.C.classes.classes{i1}.representativeCentralizer.order));
                     end
                 end
             end
@@ -59,7 +59,18 @@ classdef CharacterTableLaws < replab.Laws
             col = self.C.characters(:, self.C.identityConjugacyClassIndex);
             order1 = sum(col.*col);
             order2 = replab.cyclotomic.fromVPIs(self.C.group.order);
-            assert(order1 == order2);
+            self.assert(order1 == order2);
+        end
+
+        function law_commutator_subgroup_(self)
+        % The commutator subgroup of the group is the intersection of the kernels of the linear characters
+            chars = arrayfun(@(i) self.C.character(i), self.C.linearCharacterIndices, 'uniform', 0);
+            kernels = cellfun(@(c) c.kernel, chars, 'uniform', 0);
+            K = kernels{1};
+            for i = 2:length(kernels)
+                K = K.intersection(kernels{i});
+            end
+            self.assert(K == self.C.group.derivedSubgroup);
         end
 
     end
