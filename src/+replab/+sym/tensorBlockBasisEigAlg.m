@@ -1,8 +1,7 @@
-function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,symb)
+function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isRat)
     n = rep.group.domainSize;
     parts = replab.sym.IntegerPartitions(n);
-    mults =  replab.CharacterTable.permutationCharTable(rep.group).tensorProdMultiplicities...
-        ([parts.index(part1) parts.index(part2)]);
+    mults =  replab.CharacterTable.forPermutationGroup(rep.group).multiplicities(rep);
     irrepInds = find(mults);
     irreps = parts.list(irrepInds);
     lat1 = replab.sym.YoungLattice(part1,n);
@@ -11,10 +10,10 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,symb)
     subMatrixDim = s1(1)*s2(1)+s1(2)*s2(2);
     subMatInds = subMatrixIndices;
     nIrreps = numel(irrepInds);
-    csco = symCSCO(n,1,subMatrixDim,subMatInds);
-    matList = csco.makeMatList;
+    csco = SymCSCO(n,1,subMatrixDim,subMatInds);
+    matList = csco.makeMatList(rep);
     eigenVals = csco.findSplitEigs(irreps);
-    if ~symb
+    if ~isRat
         if rep.isUnitary
             [V0,D0] = eig((matList{1}+matList{1}')/2,'vector');
         else
@@ -90,7 +89,7 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,symb)
         end
 
     function iso = reducedClebschGordan(i,eigenvalue,oldIso)
-        mat = oldIso'*matrixList{i}*oldIso;
+        mat = oldIso'*matList{i}*oldIso;
         [V,D] = eig((mat+mat')/2,'vector');
         reducedCG= V(:,round(D)==eigenvalue);
         iso = oldIso*reducedCG;

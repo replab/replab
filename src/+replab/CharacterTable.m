@@ -47,7 +47,7 @@ classdef CharacterTable < replab.Obj
         end
 
         function ct = forPermutationGroup(G)
-            ct = replab.ct.PermutationCharacterTable(G);
+            ct = replab.sym.PermutationCharacterTable(G);
         end
 
     end
@@ -382,7 +382,8 @@ classdef CharacterTable < replab.Obj
             else
                 error('Invalid argument');
             end
-            mults = round(mults);
+            %mults
+            %mults = round(mults);
         end
 
 

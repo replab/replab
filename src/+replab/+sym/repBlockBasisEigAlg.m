@@ -1,13 +1,14 @@
 function [bases,irreps] = repBlockBasisEigAlg(rep,symb)
     n = rep.group.domainSize;
     parts = replab.sym.IntegerPartitions(n);
-    mults = replab.CharacterTable.permutationCharTable...
-        (rep.group).multiplicities(rep);
+    CT = replab.CharacterTable.forPermutationGroup...
+        (rep.group);
+    mults = CT.multiplicities(rep);
     irrepInds = find(mults);
     irreps = parts.list(irrepInds);
     nIrreps = numel(irrepInds);
-    csco = symCSCO(n,0,rep.dimension,':');
-    matList = csco.makeMatList;
+    csco = SymCSCO(n,0,rep.dimension,':');
+    matList = csco.makeMatList(rep);
     eigenVals = csco.findSplitEigs(irreps);
     if ~symb
         if rep.isUnitary

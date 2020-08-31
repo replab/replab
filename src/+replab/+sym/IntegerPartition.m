@@ -91,7 +91,7 @@ classdef IntegerPartition < replab.Str
         
         function dim = dimension(part)
             n = sum(part);
-            words = replab.sym.words(part,replab.sym.IntegerPartition.conjugate(part));
+            words = replab.sym.words(part,replab.sym.IntegerPartition.conjugatePart(part));
             columns = zeros(1,n);
             for k = 1:n
                 columns(k) = sum(words.conjWord(k+1:n)==words.conjWord(k));

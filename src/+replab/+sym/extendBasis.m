@@ -1,10 +1,10 @@
-function irrepBasCell = extendBasis(basisCell,partition,adjSwapIms)
+function irrepBasCell = extendBasis(basisCell1,partition,adjSwapIms,isRat)
         dim = replab.sym.IntegerPartition.dimension(partition);
         if dim == 1
             irrepBasCell = basisCell1;
             return
         end
-        [connectList,transList,offDiagList,diagList] = tableauxTree(partition);
+        [connectList,transList,offDiagList,diagList] = replab.sym.tableauxTree(partition);
         irrepBasCell = cell(1,dim);
         irrepBasCell(1) = basisCell1(i);
         for index = 2:(dim)
@@ -18,7 +18,7 @@ function irrepBasCell = extendBasis(basisCell,partition,adjSwapIms)
             end
                 parentIndex = connectList(index-1);
                 basisOfParent = rec(parentIndex);
-                if ~symb
+                if ~isRat
                     shiftedBasis = (adjSwapIms{transList(index-1)}*basisOfParent-...
                         diagList(index-1)*basisOfParent)/offDiagList(index-1);
                 else
