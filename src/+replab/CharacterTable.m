@@ -46,6 +46,10 @@ classdef CharacterTable < replab.Obj
             ct = replab.ct.S4CharacterTable;
         end
 
+        function ct = S5
+            ct = replab.ct.S5CharacterTable;
+        end
+
         function ct = forPermutationGroup(G)
             ct = replab.ct.PermutationCharacterTable(G);
         end
@@ -380,6 +384,12 @@ classdef CharacterTable < replab.Obj
         %   >>> rep3 = ct.irreps{3};
         %   >>> rep = kron(rep2, rep3);
         %   >>> isequal(ct.multiplicities(rep), [0 0 1])
+        %       1
+        %
+        % Example:
+        %   >>> ct = replab.CharacterTable.S5;
+        %   >>> S5 = ct.group;
+        %   >>> isequal(ct.multiplicities(S5.naturalRep), [1 0 1 0 0 0 0])
         %       1
         %
         % Args:
