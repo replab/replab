@@ -165,6 +165,17 @@ classdef Character < replab.Obj
             res = replab.Character(lhs.conjugacyClasses, lhs.values .* rhs.values);
         end
 
+        function res = eq(lhs, rhs)
+            if lhs.conjugacyClasses.id ~= rhs.conjugacyClasses.id
+                rhs = rhs.forClasses(lhs.conjugacyClasses);
+            end
+            res = all(lhs.values == rhs.values);
+        end
+
+        function res = ne(lhs, rhs)
+            res = ~(lhs == rhs);
+        end
+
     end
 
 end
