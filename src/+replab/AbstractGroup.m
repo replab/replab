@@ -200,6 +200,21 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
         end
 
+        function res = simplify(self, word)
+        % Attempts to simplify the given word
+        %
+        % Args:
+        %   word (charstring): Word to simplify
+        %
+        % Returns:
+        %   charstring: Simplified word
+            res = self.niceMorphism.preimageElement(self.niceMorphism.imageElement(word));
+            if length(res) > length(word)
+                res = word;
+            end
+        end
+
+
         function letters = factorizeLetters(self, word)
         % Parses word letters from word as a string
         %
