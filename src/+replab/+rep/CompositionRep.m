@@ -11,14 +11,6 @@ classdef CompositionRep < replab.Rep
         function self = CompositionRep(first, second)
             self.first = first;
             self.second = second;
-            self.group = first.preimageGroup(second.group);
-            self.field = second.field;
-            self.dimension = second.dimension;
-            self.isUnitary = [];
-            self.trivialDimension = [];
-            self.isIrreducible = [];
-            self.frobeniusSchurIndicator = [];
-            self.isDivisionAlgebraCanonical = [];
         end
 
         % Rep

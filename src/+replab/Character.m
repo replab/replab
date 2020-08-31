@@ -123,14 +123,10 @@ classdef Character < replab.Obj
         % Returns:
         %   double: Value of the dot product
             v = 0;
-            n = self.conjugacyClasses.nClasses;
-            sizes = self.conjugacyClasses.classSizes;
-            chi = zeros(1, n);
-            for i = 1:n
+            for i = 1:self.conjugacyClasses.nClasses
                 cl = self.conjugacyClasses.classes{i};
-                chi(i) = trace(rhs.image(cl.representative));
+                v = v + double(self.values(i)) * trace(rhs.image(cl.representative)) * double(cl.nElements);
             end
-            v = sum(conj(double(self.values)) .* chi .* double([sizes{:}]));
             v = v / double(self.group.order);
         end
 
@@ -147,7 +143,7 @@ classdef Character < replab.Obj
             end
             sizes = self.conjugacyClasses.classSizes;
             sizes = [sizes{:}];
-            v = sum(conj(self.values) .* rhs.values .* replab.cyclotomic.fromVPIs(sizes));
+            v = sum(self.values .* rhs.values .* replab.cyclotomic.fromVPIs(sizes));
             v = v / replab.cyclotomic.fromVPIs(self.group.order);
         end
 
@@ -163,17 +159,6 @@ classdef Character < replab.Obj
                 rhs = rhs.forClasses(lhs.conjugacyClasses);
             end
             res = replab.Character(lhs.conjugacyClasses, lhs.values .* rhs.values);
-        end
-
-        function res = eq(lhs, rhs)
-            if lhs.conjugacyClasses.id ~= rhs.conjugacyClasses.id
-                rhs = rhs.forClasses(lhs.conjugacyClasses);
-            end
-            res = all(lhs.values == rhs.values);
-        end
-
-        function res = ne(lhs, rhs)
-            res = ~(lhs == rhs);
         end
 
     end

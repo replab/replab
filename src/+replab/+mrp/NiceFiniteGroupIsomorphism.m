@@ -1,4 +1,4 @@
-classdef NiceFiniteGroupIsomorphism < replab.mrp.NiceIsomorphism
+classdef NiceFiniteGroupIsomorphism < replab.FiniteIsomorphism
 
     methods
 
@@ -31,12 +31,21 @@ classdef NiceFiniteGroupIsomorphism < replab.mrp.NiceIsomorphism
                                                  niceGroup.chain.base, niceGroup.order);
         end
 
-    end
+        function T = imageGroup(self, S)
+            T = S.niceGroup;
+        end
 
-    methods % Implementations
+        function t = imageElement(self, s)
+            t = self.source.niceImage(s);
+        end
 
         function s = preimageElement(self, t)
             s = self.chain.image(t);
+        end
+
+        function S = preimageGroup(self, T)
+            gens = cellfun(@(t) self.chain.image(t), T.generators, 'uniform', 0);
+            S = self.source.niceSubgroup(gens, T.order, T);
         end
 
     end
