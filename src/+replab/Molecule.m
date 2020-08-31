@@ -43,7 +43,7 @@ classdef Molecule < replab.Str
             end
             mol.masses = masses;
             mol.id = replab.IdentifyPointGroup(mol.coords, mol.symbols, mol.masses, ndec);
-%             mol.id.table = mol.id.findCharacterTable(mol.id.pointGroup);
+            mol.id.table = mol.id.findCharacterTable(mol.id.pointGroup);
         end
         
         function mol = fromAtoms(coords, symbols, atomicSymbols, atomicMasses)
