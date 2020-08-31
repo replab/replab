@@ -256,6 +256,18 @@ classdef cyclotomic
 
     methods
 
+        function res = isvector(self)
+            res = isvector(self.mat);
+        end
+
+        function res = isscalar(self)
+            res = isscalar(self.mat);
+        end
+
+        function res = dot(lhs, rhs)
+            res = sum(conj(lhs(:)).*rhs(:));
+        end
+
         function res = reshape(self, varargin)
             res = replab.cyclotomic(reshape(self.mat, varargin{:}));
         end
