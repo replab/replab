@@ -28,6 +28,23 @@ classdef DirectProductOfFiniteGroups <  replab.DirectProductGroup & replab.NiceF
             self.type = self;
         end
 
+        function res = hasSameTypeAs(self, rhs)
+            res = false;
+            lhs = self.type;
+            rhs = rhs.type;
+            if ~isa(rhs, 'replab.prods.DirectProductOfFiniteGroups') || lhs.nFactors ~= rhs.nFactors
+                return
+            end
+            for i = 1:lhs.nFactors
+                f1 = lhs.factor(i);
+                f2 = rhs.factor(i);
+                if ~f1.hasSameTypeAs(f2)
+                    return
+                end
+            end
+            res = true;
+        end
+
     end
 
     methods (Access = protected) % Implementations
