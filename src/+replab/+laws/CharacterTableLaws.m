@@ -18,8 +18,10 @@ classdef CharacterTableLaws < replab.Laws
         function law_irrep_(self)
             for i = 1:self.C.nIrreps
                 irrep = self.C.irreps{i};
-                charI = replab.Character.fromApproximateRep(irrep);
-                self.assert(charI == self.C.character(i));
+                if ~isempty(irrep)
+                    charI = replab.Character.fromApproximateRep(irrep);
+                    self.assert(charI == self.C.character(i));
+                end
             end
         end
 
