@@ -401,6 +401,16 @@ classdef cyclotomic
             res = replab.cyclotomic.fromJavaArray(javaMethod('nullSpace', rr), [rows cols]);
         end
 
+        function res = kron(lhs, rhs)
+            if isa(lhs, 'double')
+                lhs = replab.cyclotomic.fromDoubles(lhs);
+            end
+            if isa(rhs, 'double')
+                rhs = replab.cyclotomic.fromDoubles(rhs);
+            end
+            res = replab.cyclotomic.fromJavaArray(javaMethod('kron', 'cyclo.Lab', size(lhs, 1), size(lhs, 2), size(rhs, 1), size(rhs, 2), lhs.matArray, rhs.matArray), [size(lhs, 1)*size(rhs, 1) size(lhs, 2)*size(rhs, 2)]);
+        end
+
         function res = mtimes(lhs, rhs)
         % Matrix multiplication
         %
