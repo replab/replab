@@ -51,7 +51,7 @@ classdef CharacterTable < replab.Obj
         end
 
         function ct = forPermutationGroup(G)
-            ct = replab.ct.PermutationCharacterTable(G);
+            ct = replab.sym.PermutationCharacterTable(G);
         end
 
     end
