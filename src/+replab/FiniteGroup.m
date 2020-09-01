@@ -926,17 +926,24 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function res = findMorphisms(self, to, varargin)
         % Finds all the morphisms from this finite group to another finite group
         %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> S4 = replab.S(4);
+        %   >>> m = S4.findMorphisms(S3, 'upToConjugation', true, 'surjective', false);
+        %   >>> length(m)
+        %       3
+        %
         % Args:
         %   to (`+replab.FiniteGroup`): Target of the morphism
         %
         % Keyword Args:
         %   upToConjugation (logical, optional): Whether to list morphisms up to conjugation of the image group, default: false
-        %   surjective (logical, optional): Whether to consider only surjective morphisms (or epimorphisms), whose image span ``to``, default: true
+        %   surjective (logical, optional): Whether to consider only surjective morphisms (or epimorphisms), whose image span ``to``, default: false
         %   single (logical, optoinal): Whether to return maximum a single result, default: false
         %
         % Returns:
         %   cell(1,\*) of `.FiniteMorphism`: The morphisms
-            args = struct('upToConjugation', false, 'surjective', true, 'single', false);
+            args = struct('upToConjugation', false, 'surjective', false, 'single', false);
             args = replab.util.populateStruct(args, varargin);
             if args.surjective
                 if self.order == to.order
