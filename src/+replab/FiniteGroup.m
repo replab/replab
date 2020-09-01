@@ -908,9 +908,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   single (logical, optoinal): Whether to return maximum a single result, default: false
         %
         % Returns:
-        %   cell(1,\*) of `.FiniteIsomorphism`: The morphisms
+        %   cell(1,\*) of `.FiniteIsomorphism`: The isomorphisms
             args = struct('upToConjugation', false, 'single', false);
             args = replab.util.populateStruct(args, varargin);
+            if args.single
+                args.upToConjugation = true;
+            end
             F = self.abstractGroup;
             G = to;
             A = to;
@@ -945,6 +948,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   cell(1,\*) of `.FiniteMorphism`: The morphisms
             args = struct('upToConjugation', false, 'surjective', false, 'single', false);
             args = replab.util.populateStruct(args, varargin);
+            if args.single
+                args.upToConjugation = true;
+            end
             if args.surjective
                 if self.order == to.order
                     res = self.findIsomorphisms(to, 'upToConjugation', args.upToConjugation, 'single', args.single);
