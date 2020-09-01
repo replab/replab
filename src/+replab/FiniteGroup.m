@@ -891,6 +891,22 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Morphisms
 
+        function res = findIsomorphism(self, to)
+        % Finds an isomorphism from this finite group to another finite group, if it exists
+        %
+        % Args:
+        %   to (`+replab.FiniteGroup`): Target of the isomorphism
+        %
+        % Returns:
+        %   `.FiniteIsomorphism` or ``[]``: The isomorphism if it exists, or an empty array
+            res = self.findIsomorphisms(to, 'single', true, 'upToConjugation', true);
+            if ~isempty(res)
+                res = res{1};
+            else
+                res = [];
+            end
+        end
+
         function res = findIsomorphisms(self, to, varargin)
         % Finds all the isomorphisms from this finite group to another finite group
         %
