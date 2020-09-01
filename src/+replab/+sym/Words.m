@@ -11,12 +11,12 @@ classdef Words
 % Example:
 %   >>> partition = [4 2];
 %   >>> W = replab.sym.Words(partition);
-%   >>> W.word
-%       1   1   1   1   2   2
-%   >>> W.conjWord
-%       1   2   3   4   1   2
-%   >>> W.dimWord
-%       4   3   2   1   2   1
+%   >>> isequal(W.word, [1 1 1 1 2 2])
+%       1
+%   >>> isequal(W.conjWord, [1 2 3 4 1 2])
+%       1
+%   >>> isequal(W.dimWord, [4 3 2 1 2 1])
+%       1
 
     properties (SetAccess = protected)
         word % (integer(1,\*)): Word ``w1``
