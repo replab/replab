@@ -894,6 +894,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function res = findIsomorphisms(self, to, varargin)
         % Finds all the isomorphisms from this finite group to another finite group
         %
+        % Example:
+        %   >>> G = replab.S(6);
+        %   >>> m = G.findIsomorphisms(G, 'upToConjugation', true);
+        %   >>> length(m)
+        %       2
+        %
         % Args:
         %   to (`+replab.FiniteGroup`): Target of the isomorphism
         %

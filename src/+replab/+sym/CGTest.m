@@ -1,8 +1,6 @@
-clebschGordanTest
-
-function clebschGordanTest
+function CGTest
     S5 = replab.S(5);
-    [~,mat1,irreps1]  =replab.sym.findAllCGCoeffs(S5,[4 1],[3 1 1],0); 
+    [~,mat1,irreps1]  =replab.sym.findAllCGCoeffs(S5,[4 1],[3 1 1],0);
     %Testing of floating point orthogonal decomp
     rep1 = kron(S5.irrep([4 1],'orthogonal'),S5.irrep([3 1 1],'orthogonal'));
     assert(isdiag(removeZeroErrors(mat1'*rep1.commutant.sample*mat1)));
@@ -10,22 +8,22 @@ function clebschGordanTest
     isequal(f,irreps1);
     assert(isequal(f,irreps1));
     assert(norm(mat1*mat1'-eye(rep1.dimension))<1e-14);
-    
-    
+
+
     %Test of slightly higher dimensions and general orthogonal decomp
     S3 = replab.S(3);
     rep2 = kron(S3.naturalRep,S3.naturalRep,S3.naturalRep);
-    [~,mat2,irreps2]  =replab.sym.findAllRepCoeffs(rep2,0); 
+    [~,mat2,irreps2]  =replab.sym.findAllRepCoeffs(rep2,0);
     assert(nnz(removeZeroErrors(mat2'*rep2.commutant.sample*mat2))==203);
     f = intPartList({[3],[2 1],[1 1 1]});
     assert(isequal(f,irreps2));
     assert(norm(mat2*mat2'-eye(rep2.dimension))<1e-14);
-    
-    
+
+
     %Test of symbolic general decomp
     S6 = replab.S(6);
     rep2 = kron(S6.naturalRep);
-    [~,mat3,~]  =replab.sym.findAllRepCoeffs(rep2,1); 
+    [~,mat3,~]  =replab.sym.findAllRepCoeffs(rep2,1);
     numerTest = [1    -1    -6    -3    -2    -3;...
      1    -1    -6    -3    -2     3;...
      1    -1    -6    -3     4     0;...
