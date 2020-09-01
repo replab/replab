@@ -899,16 +899,17 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Keyword Args:
         %   upToConjugation (logical, optional): Whether to list morphisms up to conjugation of the image group, default: false
+        %   single (logical, optoinal): Whether to return maximum a single result, default: false
         %
         % Returns:
         %   cell(1,\*) of `.FiniteIsomorphism`: The morphisms
-            args = struct('upToConjugation', false);
+            args = struct('upToConjugation', false, 'single', false);
             args = replab.util.populateStruct(args, varargin);
             F = self.abstractGroup;
             G = to;
             A = to;
-            fm = replab.mrp.FindMorphisms(F, G, A, 'isomorphisms');
-            if args.upToConjugation
+            fm = replab.mrp.FindMorphisms(F, G, A, 'isomorphisms', args.single);
+            if args.upToConjugation || args.single
                 res = fm.searchUpToConjugation;
             else
                 res = fm.searchAll;
@@ -925,14 +926,15 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Keyword Args:
         %   upToConjugation (logical, optional): Whether to list morphisms up to conjugation of the image group, default: false
         %   surjective (logical, optional): Whether to consider only surjective morphisms (or epimorphisms), whose image span ``to``, default: true
+        %   single (logical, optoinal): Whether to return maximum a single result, default: false
         %
         % Returns:
         %   cell(1,\*) of `.FiniteMorphism`: The morphisms
-            args = struct('upToConjugation', false, 'surjective', true);
+            args = struct('upToConjugation', false, 'surjective', true, 'single', false);
             args = replab.util.populateStruct(args, varargin);
             if args.surjective
                 if self.order == to.order
-                    res = self.findIsomorphisms(to, 'upToConjugation', args.upToConjugation);
+                    res = self.findIsomorphisms(to, 'upToConjugation', args.upToConjugation, 'single', args.single);
                     return
                 else
                     filter = 'epimorphisms';
@@ -943,8 +945,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             F = self.abstractGroup;
             G = to;
             A = to;
-            fm = replab.mrp.FindMorphisms(F, G, A, filter);
-            if args.upToConjugation
+            fm = replab.mrp.FindMorphisms(F, G, A, filter, args.single);
+            if args.upToConjugation || args.single
                 res = fm.searchUpToConjugation;
             else
                 res = fm.searchAll;

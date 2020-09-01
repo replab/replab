@@ -15,11 +15,12 @@ classdef FindMorphisms
         relatorLetters % (cell(1,\*) of integer(1,\*)): Relators of F in letter form
         relatorSubsets % (integer(1,nFGens)): How many relators contain only the first ``k`` generators, see line 1 of EPIMORPHISMS
         filter % ({'morphisms', 'epimorphisms', 'isomorphisms'): Whether to look for morphisms, epimorphisms, isomorphisms
+        single % (logical): Whether to return only the first result
     end
 
     methods
 
-        function self = FindMorphisms(F, G, A, filter)
+        function self = FindMorphisms(F, G, A, filter, single)
         % Constructor
             assert(G == A); % for now, contact D. Holt to know how to compute representative of conjugacy classes in subgroups
             r = F.nGenerators;
@@ -66,9 +67,11 @@ classdef FindMorphisms
             self.relatorLetters = relatorLetters;
             self.relatorSubsets = relatorSubsets;
             self.filter = filter;
+            self.single = single;
         end
 
         function res = searchAll(self)
+            assert(~self.single);
             red = self.searchUpToConjugation;
             res = cell(1, 0);
             for i = 1:length(red)
@@ -92,6 +95,9 @@ classdef FindMorphisms
                 Cg1 = CI1{i};
                 res1 = self.rec(2, {Cg1}, {g1}, {self.A.identity}, {g1});
                 res = horzcat(res, res1);
+                if self.single && ~isempty(res)
+                    return
+                end
             end
         end
 
@@ -144,6 +150,9 @@ classdef FindMorphisms
                         Lambda{k} = Lkprev.centralizer(im{k});
                         res1 = self.rec(k + 1, Lambda, g, alpha, im);
                         res = horzcat(res, res1);
+                        if self.single && ~isempty(res)
+                            return
+                        end
                     end
                 end
             end
