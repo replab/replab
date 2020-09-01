@@ -131,7 +131,7 @@ classdef FindMorphisms
                         return % empty res
                     end
                 end
-                res = {self.F.morphismByImages(self.G, 'preimages', self.F.generators, 'images', im)};
+                res = {self.F.morphismByImages(self.G, 'preimages', self.F.generators, 'images', im, 'nChecks', 0)};
                 return
             end
             Ik = self.I{k};

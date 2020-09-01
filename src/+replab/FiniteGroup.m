@@ -977,7 +977,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   `+replab.FiniteMorphism`: Conjugating automorphism
             generatorImages = cellfun(@(g) self.type.leftConjugate(by, g), self.generators, 'uniform', 0);
             assert(all(cellfun(@(g) self.contains(g), generatorImages)));
-            m = self.morphismByImages(self, 'preimages', self.generators, 'images', generatorImages);
+            m = self.morphismByImages(self, 'preimages', self.generators, 'images', generatorImages, 'nChecks', 0);
         end
 
         function f = niceMorphism(self)
