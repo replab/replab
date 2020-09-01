@@ -68,7 +68,21 @@ classdef FindMorphisms
             self.filter = filter;
         end
 
-        function res = search(self)
+        function res = searchAll(self)
+            red = self.searchUpToConjugation;
+            res = cell(1, 0);
+            for i = 1:length(red)
+                f = red{i};
+                G = f.image;
+                innerElements = G/G.center;
+                innerElements = innerElements.transversal;
+                for i = 1:length(innerElements)
+                    res{1,end+1} = f.andThen(G.conjugatingAutomorphism(innerElements{i}));
+                end
+            end
+        end
+
+        function res = searchUpToConjugation(self)
             I1 = self.I{1};
             CI1 = self.CI{1};
             res = cell(1, 0);

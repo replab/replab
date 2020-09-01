@@ -891,6 +891,67 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods % Morphisms
 
+        function res = findIsomorphisms(self, to, varargin)
+        % Finds all the isomorphisms from this finite group to another finite group
+        %
+        % Args:
+        %   to (`+replab.FiniteGroup`): Target of the isomorphism
+        %
+        % Keyword Args:
+        %   upToConjugation (logical, optional): Whether to list morphisms up to conjugation of the image group, default: false
+        %
+        % Returns:
+        %   cell(1,\*) of `.FiniteIsomorphism`: The morphisms
+            args = struct('upToConjugation', false);
+            args = replab.util.populateStruct(args, varargin);
+            F = self.abstractGroup;
+            G = to;
+            A = to;
+            fm = replab.mrp.FindMorphisms(F, G, A, 'isomorphisms');
+            if args.upToConjugation
+                res = fm.searchUpToConjugation;
+            else
+                res = fm.searchAll;
+            end
+            res = cellfun(@(m) m.toIsomorphism, res, 'uniform', 0);
+        end
+
+        function res = findMorphisms(self, to, varargin)
+        % Finds all the morphisms from this finite group to another finite group
+        %
+        % Args:
+        %   to (`+replab.FiniteGroup`): Target of the morphism
+        %
+        % Keyword Args:
+        %   upToConjugation (logical, optional): Whether to list morphisms up to conjugation of the image group, default: false
+        %   surjective (logical, optional): Whether to consider only surjective morphisms (or epimorphisms), whose image span ``to``, default: true
+        %
+        % Returns:
+        %   cell(1,\*) of `.FiniteMorphism`: The morphisms
+            args = struct('upToConjugation', false, 'surjective', true);
+            args = replab.util.populateStruct(args, varargin);
+            if args.surjective
+                if self.order == to.order
+                    res = self.findIsomorphisms(to, 'upToConjugation', args.upToConjugation);
+                    return
+                else
+                    filter = 'epimorphisms';
+                end
+            else
+                filter = 'morphisms';
+            end
+            F = self.abstractGroup;
+            G = to;
+            A = to;
+            fm = replab.mrp.FindMorphisms(F, G, A, filter);
+            if args.upToConjugation
+                res = fm.searchUpToConjugation;
+            else
+                res = fm.searchAll;
+            end
+        end
+
+
         function m = conjugatingAutomorphism(self, by)
         % Returns the morphism that corresponds to left conjugation by an element
         %
@@ -901,7 +962,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   `+replab.FiniteMorphism`: Conjugating automorphism
             generatorImages = cellfun(@(g) self.type.leftConjugate(by, g), self.generators, 'uniform', 0);
             assert(all(cellfun(@(g) self.contains(g), generatorImages)));
-            f = self.morphismByImages(self, 'preimages', self.generators, 'images', generatorImages);
+            m = self.morphismByImages(self, 'preimages', self.generators, 'images', generatorImages);
         end
 
         function f = niceMorphism(self)
