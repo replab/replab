@@ -8,7 +8,7 @@ classdef findPartitions
         cycleSizes
         nCycles
     end
-    
+
     methods(Static)
         function conj = conjugatePart(part)
             m = max(part);
@@ -17,27 +17,27 @@ classdef findPartitions
                 conj(j) = nnz(j-1<part);
             end
         end
-        
+
         function dim = dimension(part)
             n = sum(part);
-            words = replab.sym.words(part,replab.sym.findPartitions.conjugatePart(part));
+            words = replab.sym.Words(part,replab.sym.findPartitions.conjugatePart(part));
             columns = zeros(1,n);
             for k = 1:n
                 columns(k) = sum(words.conjWord(k+1:n)==words.conjWord(k));
-            end    
+            end
             dim = round(factorial(n)/prod(words.dimWord+columns));
-        end     
-        
+        end
+
         function eigVal = eigenvalue(part)
             eigVal = (part-2*(1:numel(part))+1)*part'/2;
         end
     end
-    
+
     methods
         function self = findPartitions(N)
             powers = generate(N);
             self.partitionHash = replab.perm.Set(N);
-            self.partitionHash.insert(powers');  
+            self.partitionHash.insert(powers');
             powers = fliplr(powers);
             self.nParts = size(powers,1);
             self.cycleSizes = cell(1,self.nParts);

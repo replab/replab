@@ -80,7 +80,7 @@ classdef IntegerPartition < replab.Str
                 gens{1,end+1} = cycle;
             end
         end
-        
+
         function conj = conjugatePart(part)
             m = max(part);
             conj = zeros(1,m);
@@ -88,17 +88,17 @@ classdef IntegerPartition < replab.Str
                 conj(j) = nnz(j-1<part);
             end
         end
-        
+
         function dim = dimension(part)
             n = sum(part);
-            words = replab.sym.words(part,replab.sym.IntegerPartition.conjugatePart(part));
+            words = replab.sym.Words(part,replab.sym.IntegerPartition.conjugatePart(part));
             columns = zeros(1,n);
             for k = 1:n
                 columns(k) = sum(words.conjWord(k+1:n)==words.conjWord(k));
-            end    
+            end
             dim = round(factorial(n)/prod(words.dimWord+columns));
-        end    
-        
+        end
+
         function power = powerForm(part,n)
             power = zeros(1,n);
             for i = 1:n

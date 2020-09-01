@@ -1,27 +1,27 @@
 classdef YoungLattice
     %Representation of a subgraph of the Young's lattices, which connects
     %Young Diagrams that differ by the removal/addition of one box
-    %The subgraph is the set of all diagrams contained  a particular diagram. 
+    %The subgraph is the set of all diagrams contained  a particular diagram.
     %The subgraph is multipartate, with different levels' for each k from 1
     %to n.
     properties
         partition %The partition at the top of the graph
         domainSize %Domain size of the partition at the top of the graph
         sets %cell(1,n) of replab.perm.Set: The k'th element holds data for the partitions of level k
-        above %cell(1,n-1) of integer(:,:): The k'th element is a matrix recording the connections between 
+        above %cell(1,n-1) of integer(:,:): The k'th element is a matrix recording the connections between
         %the partitions level of of k and k+1.
-        below %cell(1,n-1) of integer(:,:): The k'th element is a matrix recording the connections between 
+        below %cell(1,n-1) of integer(:,:): The k'th element is a matrix recording the connections between
         %the partitions level of of k+1 and k.
-        %These are sort of like an adjacency matrix but the rows and columns are two different levels of the graph. 
+        %These are sort of like an adjacency matrix but the rows and columns are two different levels of the graph.
         %The connections are 'coloured' by an integer labeling the box that is removed/added
         %to make the connection. (The boxes are labeled left to right, then
         %top to bottom)
-        labels %integer(:,:): Matrix representing the labeling of boxes 
+        labels %integer(:,:): Matrix representing the labeling of boxes
         %
-        %        1 2 3 4 
+        %        1 2 3 4
         % E.g.: 5 6 7 0 represents the labeling of 8 = 4+3+1
         %        8 0 0 0
-        %nTabs %cell of integer(1,:): The k'th element lists the number of standard tableaux for 
+        %nTabs %cell of integer(1,:): The k'th element lists the number of standard tableaux for
         % diagrams in level k.
         %
         %The rows of the following arrays describe standard tableaux which
@@ -35,7 +35,7 @@ classdef YoungLattice
         % of basis coefficent from seminormal to orthogonal for each tableaux
         %
     end
-    
+
     methods(Static)
         function partFunc = nPartitions(n)
             partFunc = [1 zeros(1,n)];
@@ -46,10 +46,10 @@ classdef YoungLattice
                 j1 = 1:maxSum1(i);
                 j2 = 1:maxSum2(i);
                 partFunc(i+1) = sum( (-1).^(j1-1) .* partFunc(i-j1.*(3.*j1-1)/2+1) ) + sum( (-1).^(j2-1) .* partFunc(i-j2.*(3.*j2+1)/2+1) );
-            end     
+            end
             partFunc = partFunc(2:n+1);
         end
-        
+
         function labels = findLabels(part)
             n = numel(part);
             inds = find(part);
@@ -64,23 +64,23 @@ classdef YoungLattice
                 end
             end
         end
-        
+
     end
-    
+
     methods
-        
-        
-        
+
+
+
         function self = YoungLattice(part,n)
             self.domainSize = n;
-            if sum(part) == n &&(part(1) ~= n || numel(part) == 1) 
+            if sum(part) == n &&(part(1) ~= n || numel(part) == 1)
                 part = arrayfun(@(k) nnz(part == k),1:n);
             end
             self.partition = part;
-            self.labels = YoungLattice.findLabels(part);
+            self.labels = replab.sym.YoungLattice.findLabels(part);
             self = self.createLattice(part);
         end
-        
+
         function self = createLattice(self,part)
             n = self.domainSize;
             self.sets = cell(1,n);
@@ -110,7 +110,7 @@ classdef YoungLattice
                         otherwise
                             sup2([i-1 i]) =  sup2([i-1 i])+[1 -1];
                     end
-                    row = self.sets{k-1}.find(sup2'); 
+                    row = self.sets{k-1}.find(sup2');
                     col = self.sets{k}.find(sup');
                     val = self.labels(sum(sup(i:n)),i);
                     if ~row
@@ -127,9 +127,9 @@ classdef YoungLattice
                 end
             end
         end
-        
+
         function mat = symAndAntiSym(self)
-            if self.partition(end) 
+            if self.partition(end)
                 mat = [1 0]';
                 return
             elseif self.partition(1) == numel(self.partition)
@@ -142,7 +142,7 @@ classdef YoungLattice
                 mat = mat*double(logical(self.below{k-1}));
             end
         end
-       
+
         function nTabs = numTableaux(self)
             n = self.domainSize;
             mat = 1;
@@ -153,12 +153,12 @@ classdef YoungLattice
                 nTabs{k} = full(mat);
             end
         end
-        
+
         function [standRows,standCols,standTabs] = generateTableaux(self)
             n = self.domainSize;
-            part = self.partition; 
+            part = self.partition;
             d = self.numTableaux{n};
-            words = replab.sym.words(flip(repelem(1:n,part)));
+            words = replab.sym.Words(flip(repelem(1:n,part)));
             standRows = zeros(d,n);
             standCols = zeros(d,n);
             standTabs = zeros(d,n);
@@ -184,16 +184,16 @@ classdef YoungLattice
                 end
             end
         end
-            
+
         function standEigs = generateEigenVals(self)
             rows = self.standRows;
             cols = self.standCols;
             standEigs = rows(:,2:end)-cols(:,2:end);
         end
-        
+
         function psi = generateTabFun(self)
             n = self.domainSize;
-            part = self.partition; 
+            part = self.partition;
             words = replab.sym.words(flip(repelem(1:n,part)));
             d = self.numTableaux{n};
             psi = zeros(1,d);
@@ -212,11 +212,11 @@ classdef YoungLattice
                     row = words.word(index);
                     col = words.conjWord(index);
                     phiVec2(i) =phiFun(maxInRows2,row,col);
-                    maxInRows2(row) = index; 
+                    maxInRows2(row) = index;
                     rec(i+1,j,maxInRows2,phiVec2);
                 end
             end
-                
+
                 function phi = phiFun(maxInRow,iRow,iCol)
                     phi = 1;
                     if iRow == 1
@@ -236,5 +236,3 @@ classdef YoungLattice
             end
     end
 end
-    
-    

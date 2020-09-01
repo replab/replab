@@ -1,5 +1,4 @@
 classdef SymmetricSpechtIrrep < replab.Rep
-
 % An irreducible representation of a symmetric group
 %
 % Each irrep corresponds to an unordered partition of n.
@@ -99,8 +98,8 @@ classdef SymmetricSpechtIrrep < replab.Rep
             colInds = zeros(1,self.dimension^2);
             values = zeros(1,self.dimension^2);
             count = 0;
-            % Double Loop through all words 
-            % corresponding to standard tableaux 
+            % Double Loop through all words
+            % corresponding to standard tableaux
             % I.e. a loop over all matrix elements
             for r = 1:self.dimension
                 for c = 1:self.dimension
@@ -129,7 +128,7 @@ classdef SymmetricSpechtIrrep < replab.Rep
             %We now can find the image of this permutation, since we know
             %our basis
         end
-        
+
         function val = entry(self,possiblePerm)
             % Finds the entry of the Specht submatrix given a row
             % and column number
@@ -141,9 +140,9 @@ classdef SymmetricSpechtIrrep < replab.Rep
             % Returns:
             % val (double): Corresponding Specht submatrix entry if
             % its nonzero. Empty if the entry is zero.
-            if self.noRepeats(possiblePerm) 
+            if self.noRepeats(possiblePerm)
                 % This finds if the
-                %given array is a permutation 
+                %given array is a permutation
                 % It is if and only if it doesn't repeat, (this is non-trivial and
                 % proven in the paper)
                 val = replab.Permutation.sign(possiblePerm);
@@ -153,7 +152,7 @@ classdef SymmetricSpechtIrrep < replab.Rep
                 % There is no entry if it isn't a permutation
             end
          end
-            
+
         function noRepeat = noRepeats(self,A)
         % Finds whether any elements in an array repeat
         %
