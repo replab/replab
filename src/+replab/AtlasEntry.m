@@ -1,10 +1,9 @@
 classdef AtlasEntry < replab.Obj
 % Identifies a user-defined group as a standard group present in an atlas
 
-    properties
+    properties (SetAccess = protected)
         group % (`.AbstractGroup`): Group
         characterTable % (`.CharacterTable`): Group character table
-        automorphisms % (`.Automorphisms` or ``[]``): Group automorphisms
     end
 
     methods
