@@ -895,7 +895,7 @@ classdef PermutationGroup < replab.FiniteGroup
 
     end
 
-    methods (Static) % Construction of particular permutation groups
+    methods (Static) % Construction of standard groups
 
         function G = symmetric(n)
         % Returns the symmetric group acting on a certain domain size
@@ -986,6 +986,27 @@ classdef PermutationGroup < replab.FiniteGroup
             end
         end
 
+        function G = trivial(n)
+        % Constructs the trivial permutation group acting on ``n`` points
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.trivial(4);
+        %   >>> G.order
+        %     1
+        %
+        % Args:
+        %   n (integer): Domain size
+        %
+        % Returns:
+        %   `+replab.PermutationGroup`: Trivial group
+            Sn = replab.S(n);
+            G = Sn.subgroup({});
+        end
+
+    end
+
+    methods (Static) % Construction of permutation groups
+
         function G = permutingGivenPoints(n, points)
         % Constructs the group that permutes the given points
         %
@@ -1013,23 +1034,6 @@ classdef PermutationGroup < replab.FiniteGroup
             end
         end
 
-        function G = trivial(n)
-        % Constructs the trivial permutation group acting on ``n`` points
-        %
-        % Example:
-        %   >>> G = replab.PermutationGroup.trivial(4);
-        %   >>> G.order
-        %     1
-        %
-        % Args:
-        %   n (integer): Domain size
-        %
-        % Returns:
-        %   `+replab.PermutationGroup`: Trivial group
-            Sn = replab.S(n);
-            G = Sn.subgroup({});
-        end
-
         function G = of(varargin)
         % Constructs a nontrivial permutation group from the given generators
         %
@@ -1053,5 +1057,7 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
     end
+
+end
 
 end
