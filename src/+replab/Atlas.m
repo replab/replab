@@ -213,6 +213,16 @@ classdef Atlas
             if ~isempty(R)
                 return
             end
+            entries = replab.globals.atlasEntries;
+            for i = 1:length(entries)
+                entry = entries{i};
+                if entry.canMatch(group)
+                    R = entry.match(group);
+                    if ~isempty(R)
+                        return
+                    end
+                end
+            end
             R = [];
         end
 
