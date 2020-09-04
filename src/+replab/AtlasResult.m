@@ -28,6 +28,8 @@ classdef AtlasResult < replab.Str
                 names{1,end+1} = sprintf('isomorphism.imageElement(''%s'')', g);
                 values{1,end+1} = self.isomorphism.imageElement(g);
             end
+            names{1,end+1} = 'name';
+            values{1,end+1} = self.atlasEntry.group.name;
         end
 
         function f = presentationString(self)
