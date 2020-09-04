@@ -16,7 +16,7 @@ classdef AtlasResult < replab.Str
         end
 
         function s = headerStr(self)
-            s = ['AtlasResult (' self.atlasGroup.name ')'];
+            s = ['AtlasResult (' self.atlasEntry.group.name ')'];
         end
 
         function [names values] = additionalFields(self)

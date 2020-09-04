@@ -144,7 +144,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function R = computeFastRecognize(self)
             R = [];
-            return % TODO
             if self.niceMorphism.image.domainSize < replab.globals.fastChainDomainSize
                 c = self.niceMorphism.image.partialChain;
                 if ~c.isMutable
