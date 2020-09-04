@@ -36,6 +36,11 @@ classdef AtlasResult < replab.Str
             f = self.atlasEntry.group.presentationString;
         end
 
+        function A = imap(self, m)
+        % Maps the userGroup through an isomorphism
+            A = replab.AtlasResult(m.target, self.atlasEntry, self.isomorphism.andThen(m));
+        end
+
 % $$$         function G = allStandardGenerators(self)
 % $$$         % Returns all variants of standard generators as rows in a cell array
 % $$$             prmGroup = self.entry.prmGroup;
