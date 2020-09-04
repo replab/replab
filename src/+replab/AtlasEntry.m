@@ -174,8 +174,73 @@ classdef AtlasEntry < replab.Obj
             A = replab.AtlasEntry(ag, ct.imap(ag.niceMorphism.inverse));
         end
 
-        function A = symmetric(n)
+        function A = kleinFourGroup
+        % Constructs the atlas entry corresponding to the klein four-group
+            name = sprintf('Klein four-group of order %d', 4);
+            % Permutation realization
+            X = [2,1,4,3];
+            A = [3,4,1,2];
+            prmGroup = replab.PermutationGroup.of(X, A);
+            % Presentation from the groupprops wiki
+            % < x, a | a^2 = x^2 = 1, x a x^-1 = a^-1 >
+            relators = {'a^2' 'x^2' 'x a x^-1 a'};
+            ag = replab.AbstractGroup({'x' 'a'}, prmGroup, relators, name);
+            classes = replab.ConjugacyClasses(ag, cellfun(@(g) ag.conjugacyClass(g), {'1' 'x' 'a' 'x a'}, 'uniform', 0));
+            chars = replab.cyclotomic.fromDoubles([1 1 1 1; 1 1 -1 -1; 1 -1 1 -1; 1 -1 -1 1]);
+            classNames = {'1' 'x' 'a' 'xa'};
+            irrepNames = {'trivial' 'ker x' 'ker a' 'ker xa'};
+            irreps = {ag.repByImages('C', 1, 'images', {replab.cyclotomic.fromDoubles(1) replab.cyclotomic.fromDoubles(1)}) ...
+                      ag.repByImages('C', 1, 'images', {replab.cyclotomic.fromDoubles(1) replab.cyclotomic.fromDoubles(-1)}) ...
+                      ag.repByImages('C', 1, 'images', {replab.cyclotomic.fromDoubles(-1) replab.cyclotomic.fromDoubles(1)}) ...
+                      ag.repByImages('C', 1, 'images', {replab.cyclotomic.fromDoubles(-1) replab.cyclotomic.fromDoubles(-1)})};
+            ct = replab.CharacterTable(ag, classes, chars, 'classNames', classNames, 'irrepNames', irrepNames, 'irreps', irreps);
+            A = replab.AtlasEntry(ag, ct);
+        end
 
+        function A = symmetric(n)
+        % Constructs the atlas entry corresponding to the symmetric group of degree n
+            assert(n > 2);
+            name = sprintf('Symmetric group S(%d) of degree %d', n, n);
+            % Permutation realization
+            S = [2:n 1];
+            T = [2 1 3:n];
+            prmGroup = replab.PermutationGroup.of(S, T);
+            % this is the presentation from page 2100 of
+            % https://www.ams.org/journals/tran/2003-355-05/S0002-9947-03-03040-X/S0002-9947-03-03040-X.pdf
+            relators = {['s^' num2str(n)], 't^2', ['(s*t)^' num2str(n-1)]};
+            for j = 2:floor(n/2)
+                relators{1,end+1} = sprintf('(t^-1 s^-%d t s^%d)^2', j, j);
+            end
+            ag = replab.AbstractGroup({'s' 't'}, prmGroup, relators, name);
+            ct = replab.sym.SymmetricGroupCharacterTable(n);
+            A = replab.AtlasEntry(ag, ct.imap(ag.niceMorphism.inverse));
+        end
+
+        function A = alternating(n)
+        % Constructs the alternating group of degree n
+            assert(n >= 4);
+            name = sprintf('Alternating group A(%d) of degree %d', n, n);
+            isEven = mod(n, 2) == 0;
+            % Permutation realization
+            T = [2 3 1 4:n];
+            if isEven
+                S = [2 1 4:n 3];
+            else
+                S = [1 2 4:n 3];
+            end
+            prmGroup = replab.PermutationGroup.of(S, T);
+            % this is the presentation from page 2100 of
+            % https://www.ams.org/journals/tran/2003-355-05/S0002-9947-03-03040-X/S0002-9947-03-03040-X.pdf
+            if isEven
+                relators = {['s^' num2str(n-2)], 't^3', ['(s t)^' num2str(n-1)], '(t^-1 s^-1 t s)^2'};
+            else
+                relators = {['s^' num2str(n-2)], 't^3', ['(s t)^' num2str(n)]};
+                for k = 1:floor((n-3)/2)
+                    relators{1,end+1} = sprintf('(t s^-%d t s^%d)^2', k, k);
+                end
+            end
+            ag = replab.AbstractGroup({'s' 't'}, prmGroup, relators, name);
+            A = replab.AtlasEntry(ag, []);
         end
 
     end
