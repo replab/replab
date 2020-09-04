@@ -46,7 +46,7 @@ classdef FindMorphisms
                 CIi = cell(1, 0);
                 for j = 1:length(h)
                     if isequal(filter, 'isomorphisms')
-                        condition = t == heo(j);
+                        condition = (t == 0) || (t == heo(j));
                     else
                         condition = mod(t, heo(j)) == 0;
                     end
