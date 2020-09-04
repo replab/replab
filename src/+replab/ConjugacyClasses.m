@@ -247,7 +247,6 @@ classdef ConjugacyClasses < replab.Obj
 
     methods (Static)
 
-
         function r = representative(group, element)
             prmGroup = group.niceMorphism.image;
             prmElement = group.niceMorphism.imageElement(element);
