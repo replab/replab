@@ -11,7 +11,7 @@ function value = atlasEntries(newValue)
         storedValue = newValue;
     end
     if isempty(storedValue)
-        storedValue = cell(1, x0);
+        storedValue = cell(1, 0);
     end
     value = storedValue;
 end
