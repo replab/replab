@@ -1,22 +1,7 @@
-classdef Atlas < replab.Str
+classdef Atlas
 % An atlas of finite groups
 
-    properties
-        maximalOrder % (integer): Maximal order for which to attempt group recognition
-    end
-
-    methods
-
-        function self = Atlas(maximalOrder)
-            self.maximalOrder = maximalOrder;
-        end
-
-        function setAsDefault(self)
-        % Sets this atlas as the default atlas
-        %
-        % Modifies the global variable `+replab.+globals.atlas`
-            replab.globals.atlas(self);
-        end
+    methods (Static)
 
         function result = recognize(self, group)
         % Attempts to identify the given group

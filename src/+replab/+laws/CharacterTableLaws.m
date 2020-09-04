@@ -16,6 +16,10 @@ classdef CharacterTableLaws < replab.Laws
         end
 
         function law_irrep_(self)
+            if self.C.group.order > 100
+                return
+            end
+            % TODO: use the approximation error estimation
             for i = 1:self.C.nIrreps
                 irrep = self.C.irreps{i};
                 if ~isempty(irrep)

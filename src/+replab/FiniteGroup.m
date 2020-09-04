@@ -144,18 +144,17 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function R = computeFastRecognize(self)
             R = [];
+            return % TODO
             if self.niceMorphism.image.domainSize < replab.globals.fastChainDomainSize
                 c = self.niceMorphism.image.partialChain;
                 if ~c.isMutable
-                    A = replab.atlas.Standard;
-                    R = A.recognize(self);
+                    R = replab.Atlas.recognize(self);
                 end
             end
         end
 
         function R = computeRecognize(self)
-            A = replab.atlas.Standard;
-            R = A.recognize(self);
+            R = replab.Atlas.recognize(self);
         end
 
         function res = computeIsCyclic(self)
