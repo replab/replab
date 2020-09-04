@@ -3,6 +3,29 @@ classdef Atlas
 
     methods (Static)
 
+        function readFolder(folderPath)
+            if nargin < 1
+                folderPath = fullfile(replab.globals.replabPath, 'atlas');
+            end
+            files = dir(folderPath);
+            entries = cell(1, 0);
+            for i = 1:length(files)
+                file = files(i);
+                if ~file.isdir && replab.compat.endsWith(file.name, '.json')
+                    filename = fullfile(folderPath, file.name);
+                    contents = fileread(filename);
+                    try
+                        entries{1, end+1} = replab.AtlasEntry.parse(contents);
+                    catch
+                        err = lasterror;
+                        fprintf('Error while reading %s\n', filename);
+                        fprintf(strjoin(replab.longStr(err), '\n'));
+                    end
+                end
+            end
+            replab.globals.atlasEntries(horzcat(replab.globals.atlasEntries, entries));
+        end
+
         function R = recognizeTrivial(G)
         % Recognizes if the given group is the trivial group and provides the generators according to the standard presentation
         %
