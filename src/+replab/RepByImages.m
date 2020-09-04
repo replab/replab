@@ -136,6 +136,16 @@ classdef RepByImages < replab.Rep
             end
         end
 
+        function res = imap(self, f)
+            preimages1 = cellfun(@(p) f.imageElement(p), self.preimages, 'uniform', 0);
+            res = replab.RepByImages(f.image, self.field, self.dimension, preimages1, self.images_internal);
+            res.isUnitary = self.isUnitary;
+            res.trivialDimension = self.trivialDimension;
+            res.isIrreducible = self.isIrreducible;
+            res.frobeniusSchurIndicator = self.frobeniusSchurIndicator;
+            res.isDivisionAlgebraCanonical = self.isDivisionAlgebraCanonical;
+        end
+
     end
 
     methods (Static)
