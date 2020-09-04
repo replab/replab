@@ -137,6 +137,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
+        function c = computeCharacterTable(self)
+        % See `.characterTable`
+            r = self.recognize;
+            assert(~isempty(r), 'This group has not been recognized.');
+            c = r.atlasEntry.characterTable.imap(r.isomorphism);
+            assert(~isempty(c), 'This group does not have a stored character table.');
+        end
+
         function c = computeConjugacyClasses(self)
         % See `.conjugacyClasses`
             error('Abstract');
@@ -236,6 +244,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   `+replab.ConjugacyClasses`: Conjugacy classes
             c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
+        end
+
+        function c = characterTable(self)
+            c = self.cached('characterTable', @() self.computeCharacterTable);
         end
 
         function R = fastRecognize(self)
