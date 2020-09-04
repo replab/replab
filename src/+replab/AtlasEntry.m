@@ -3,7 +3,7 @@ classdef AtlasEntry < replab.Obj
 
     properties (SetAccess = protected)
         group % (`.AbstractGroup`): Group
-        characterTable % (`.CharacterTable`): Group character table
+        characterTable % (`.CharacterTable` or ``[]``): Group character table
     end
 
     methods
@@ -44,6 +44,10 @@ classdef AtlasEntry < replab.Obj
         end
 
         function C = parseCharacterTable(J, group)
+            if ~isfield(J, 'characterTable')
+                C = [];
+                return
+            end
             classesData = J.characterTable.classes;
             classes = cell(1, length(classesData));
             for i = 1:length(classesData)
