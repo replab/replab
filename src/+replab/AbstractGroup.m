@@ -286,7 +286,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
     methods % Implementations
 
         function res = eq(self, rhs)
-            res = (self.groupId == rhs.groupId);
+            res = (self.type.groupId == rhs.type.groupId) && self.niceGroup == rhs.niceGroup;
         end
 
         function res = ne(self, rhs)
