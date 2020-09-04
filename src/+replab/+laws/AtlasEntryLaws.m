@@ -12,7 +12,11 @@ classdef AtlasEntryLaws < replab.Laws
         end
 
         function laws = laws_characterTable(self)
-            laws = replab.laws.Collection({self.A.characterTable.laws});
+            if isempty(self.A.characterTable)
+                laws = replab.laws.Collection({});
+            else
+                laws = replab.laws.Collection({self.A.characterTable.laws});
+            end
         end
 
         function laws = laws_group(self)
