@@ -27,7 +27,7 @@ function runNTimes(nRuns, laws, methodName, sets)
                 fprintf('skipping slow test');
                 return
               otherwise
-                    rethrow(err);
+                rethrow(err);
             end
         end
     end
