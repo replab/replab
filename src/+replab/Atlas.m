@@ -212,6 +212,16 @@ classdef Atlas
         %
         % Returns:
         %   `+replab.AtlasResult` or []: A result in case of positive identification; or ``[]`` if unrecognized.
+            entries = replab.globals.atlasEntries;
+            for i = 1:length(entries)
+                entry = entries{i};
+                if entry.canMatch(group)
+                    R = entry.match(group);
+                    if ~isempty(R)
+                        return
+                    end
+                end
+            end
             R = replab.Atlas.recognizeTrivial(group);
             if ~isempty(R)
                 return
@@ -235,16 +245,6 @@ classdef Atlas
             R = replab.Atlas.recognizeAlternating(group);
             if ~isempty(R)
                 return
-            end
-            entries = replab.globals.atlasEntries;
-            for i = 1:length(entries)
-                entry = entries{i};
-                if entry.canMatch(group)
-                    R = entry.match(group);
-                    if ~isempty(R)
-                        return
-                    end
-                end
             end
             R = [];
         end
