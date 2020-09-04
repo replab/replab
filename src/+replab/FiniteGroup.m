@@ -599,6 +599,15 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             sub = self.cached('derivedSubgroup', @() self.computeDerivedSubgroup);
         end
 
+        function ser = derivedSeries(self)
+            D = self.derivedSubgroup;
+            if self == D
+                ser = {self};
+            else
+                ser = horzcat({self}, D.derivedSeries);
+            end
+        end
+
         function sub = center(self)
         % Returns the center of this group
         %
