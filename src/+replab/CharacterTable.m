@@ -110,6 +110,27 @@ classdef CharacterTable < replab.Obj
             self.irreps_ = args.irreps;
         end
 
+        function dec = decomposition(self, rep)
+            nI = self.nIrreps;
+            I = cell(1, nI);
+            for i = 1:self.nIrreps
+                irrep = self.irrep(i);
+                B = replab.irreducible.findIsotypicBasis(rep, irrep);
+                sub = rep.subRep(B);
+                E = sub.E_internal;
+                d = irrep.dimension;
+                m = size(B, 2) / d;
+                irreds = cell(1, m);
+                for j = 1:m
+                    comp = rep.subRep(B(:, (j-1)*d + (1:d)));
+                    comp.isIrreducible = true;
+                    irreds{j} = comp;
+                end
+                I{i} = replab.HarmonizedIsotypic(rep, irreds, E);
+            end
+            dec = replab.Irreducible(rep, I);
+        end
+
         function K = kronecker(self)
         % Returns the Kronecker coefficients corresponding to this character table
         %
