@@ -142,6 +142,13 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
         end
 
+        function R = computeFastRecognize(self)
+            R = self.niceGroup.fastRecognize;
+            if ~isempty(R)
+                R = R.imap(self.niceMorphism.inverse);
+            end
+        end
+
     end
 
     methods
