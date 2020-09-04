@@ -1059,5 +1059,3 @@ classdef PermutationGroup < replab.FiniteGroup
     end
 
 end
-
-end

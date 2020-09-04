@@ -2,8 +2,8 @@ classdef AtlasEntry < replab.Obj
 % Identifies a user-defined group as a standard group present in an atlas
 
     properties (SetAccess = protected)
-        group % (`.AbstractGroup`): Finite group
-        characterTable % (`.CharacterTable`): Group character table
+        group % (`.AbstractGroup`): Group
+        characterTable % (`.CharacterTable` or ``[]``): Group character table
     end
 
     methods
@@ -77,6 +77,10 @@ classdef AtlasEntry < replab.Obj
         end
 
         function C = parseCharacterTable(J, group)
+            if ~isfield(J, 'characterTable')
+                C = [];
+                return
+            end
             classesData = J.characterTable.classes;
             classes = cell(1, length(classesData));
             for i = 1:length(classesData)

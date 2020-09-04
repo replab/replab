@@ -5,8 +5,8 @@ classdef IntegerPartition < replab.Str
         partition % (integer(1,\*)): Partition corresponding to the Young diagram
         conjugate % (integer(1,\*)): Partition corresponding to the conjugate Young diagram
         powers % (integer(1,n)): Power form representation of partition
-        %e.g. [3 1 1] can be represented as [2 0 1 0 0], because it has 2
-        %ones and 1 three
+               %
+               % Ex: ``[3 1 1]` can be represented as ``[2 0 1 0 0]``, because it has 2 ones and 1 three
     end
 
     methods (Static)

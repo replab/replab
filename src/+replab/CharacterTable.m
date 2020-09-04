@@ -21,7 +21,10 @@ classdef CharacterTable < replab.Obj
         classNames % (cell(1,nClasses) of charstring): Names of conjugacy classes
         irrepNames % (cell(1,nIrreps) of charstring): Names of the irreducible representations/characters
         characters % (`.cyclotomic` (nIrreps,nClasses)): Character values
-        irreps % (cell(1, nClasses) of ``[]`` or `.RepByImages`): Explicit matrix representations (can contain empty values)
+    end
+
+    properties (Access = protected)
+        irreps_ % (cell(1, nClasses) of ``[]`` or `.RepByImages`): Explicit matrix representations (can contain empty values)
     end
 
     methods (Static)
@@ -104,7 +107,7 @@ classdef CharacterTable < replab.Obj
             self.characters = characters;
             self.irrepNames = args.irrepNames;
             self.classNames = args.classNames;
-            self.irreps = args.irreps;
+            self.irreps_ = args.irreps;
         end
 
         function K = kronecker(self)
@@ -164,6 +167,28 @@ classdef CharacterTable < replab.Obj
 
         function n = nIrreps(self)
             n = self.nClasses;
+        end
+
+        function r = irreps(self)
+        % Returns a cell vector of the irreducible representations corresponding to the characters in this table
+        %
+        % Returns:
+        %   cell(1,nIrreps) of `.RepByImages`: Irreducible representations
+            r = arrayfun(@(i) self.irrep(i), 1:self.nIrreps, 'uniform', 0);
+        end
+
+        function r = irrep(self, ind)
+        % Returns the irreducible representation that corresponds to the character of given index
+        %
+        % Args:
+        %   ind (integer): Index of the character
+        %
+        % Returns:
+        %   `.RepByImages`: An irreducible representation with coefficients in the cyclotomic field
+            r = self.irreps_{ind};
+            if isempty(r)
+                error('I do not know how to compute the %d-th irrep of this group', ind);
+            end
         end
 
     end
