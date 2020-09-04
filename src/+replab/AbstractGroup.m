@@ -178,7 +178,11 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   `.AbstractGroup`: Updated copy
-            A1 = replab.AbstractGroup(generatorNames1, self.permutationGroup, self.cachedOrEmpty('relators'));
+            rels = self.cachedOrEmpty('relators');
+            if ~isempty(rels)
+                rels = cellfun(@(r) replab.fp.Letters.print(self.factorizeLetters(r), generatorNames1), rels, 'uniform', 0);
+            end
+            A1 = replab.AbstractGroup(generatorNames1, self.permutationGroup, rels);
         end
 
         function r = relators(self)

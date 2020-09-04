@@ -29,6 +29,15 @@ classdef AtlasEntry < replab.Obj
             m = self.group.findIsomorphism(group);
         end
 
+        function r = match(self, group)
+            m = self.isomorphism(group);
+            if isempty(m)
+                r = [];
+                return
+            end
+            r = replab.AtlasResult(group, self, m);
+        end
+
         function laws = laws(self)
             laws = replab.laws.AtlasEntryLaws(self);
         end

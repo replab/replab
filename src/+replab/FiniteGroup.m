@@ -991,6 +991,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             else
                 res = fm.searchAll;
             end
+            res = cellfun(@(m) self.abstractMorphism.andThen(m), res, 'uniform', 0);
             res = cellfun(@(m) m.toIsomorphism, res, 'uniform', 0);
         end
 
@@ -1038,6 +1039,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             else
                 res = fm.searchAll;
             end
+            res = cellfun(@(m) self.abstractMorphism.andThen(m), res, 'uniform', 0);
         end
 
 

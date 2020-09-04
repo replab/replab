@@ -2,17 +2,17 @@ classdef AtlasResult < replab.Str
 % Identifies a user-defined group as a standard group present in an atlas
 
     properties
-        userGroup % (`+replab.FiniteGroup`): User-defined group
-        atlasGroup % (`+replab.AbstractGroup`): Entry of the group in an atlas
-        standardGenerators % (cell(1,\*) of elements of group): Generators for `.userGroup` that respect the standard presentation in `.atlasGroup`
+        userGroup % (`.FiniteGroup`): User-defined group
+        atlasEntry % (`.AtlasEntry`): Entry of the group in an atlas
+        isomorphism % (`.FiniteIsomorphism`): Isomorphism from the abstract group in the atlas entry to the user group
     end
 
     methods
 
-        function self = AtlasResult(userGroup, atlasGroup, standardGenerators)
+        function self = AtlasResult(userGroup, atlasEntry, isomorphism)
             self.userGroup = userGroup;
-            self.atlasGroup = atlasGroup;
-            self.standardGenerators = standardGenerators;
+            self.atlasEntry = atlasEntry;
+            self.isomorphism = isomorphism;
         end
 
         function s = headerStr(self)
@@ -23,10 +23,15 @@ classdef AtlasResult < replab.Str
             [names values] = additionalFields@replab.Str(self);
             names{1,end+1} = 'presentationString';
             values{1,end+1} = self.presentationString;
+            for i = 1:self.atlasEntry.group.nGenerators
+                g = self.atlasEntry.group.generator(i);
+                names{1,end+1} = sprintf('isomorphism.imageElement(''%s'')', g);
+                values{1,end+1} = self.isomorphism.imageElement(g);
+            end
         end
 
         function f = presentationString(self)
-            f = self.atlasGroup.presentationString;
+            f = self.atlasEntry.group.presentationString;
         end
 
 % $$$         function G = allStandardGenerators(self)

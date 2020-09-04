@@ -2,7 +2,7 @@ classdef AbstractGroupRenamingIsomorphism < replab.FiniteIsomorphism
 
     methods
 
-        function self = AbstractGroupNiceIsomorphism(source, target)
+        function self = AbstractGroupRenamingIsomorphism(source, target)
             self.source = source;
             self.target = target;
         end
