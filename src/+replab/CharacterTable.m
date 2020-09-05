@@ -29,30 +29,6 @@ classdef CharacterTable < replab.Obj
 
     methods (Static)
 
-        function ct = cyclic(n)
-            ct = replab.ct.CyclicCharacterTable(n);
-        end
-
-        function ct = dihedral(n)
-            ct = replab.ct.DihedralCharacterTable(n);
-        end
-
-        function ct = A5
-            ct = replab.ct.A5CharacterTable;
-        end
-
-        function ct = A4
-            ct = replab.ct.A4CharacterTable;
-        end
-
-        function ct = S4
-            ct = replab.ct.S4CharacterTable;
-        end
-
-        function ct = S5
-            ct = replab.ct.S5CharacterTable;
-        end
-
         function ct = forPermutationGroup(G)
             ct = replab.sym.PermutationCharacterTable(G);
         end
