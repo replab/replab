@@ -5,16 +5,20 @@ function test_suite = CharacterTableTest()
     catch
     end
     initTestSuite;
-    ct = replab.CharacterTable.dihedral(4);
-    test_suite = ct.laws.addTestCases(test_suite);
-    ct = replab.CharacterTable.cyclic(5);
-    test_suite = ct.laws.addTestCases(test_suite);
-    ct = replab.CharacterTable.A4;
-    test_suite = ct.laws.addTestCases(test_suite);
-    ct = replab.CharacterTable.A5;
-    test_suite = ct.laws.addTestCases(test_suite);
-    ct = replab.CharacterTable.S4;
-    test_suite = ct.laws.addTestCases(test_suite);
+    G = replab.PermutationGroup.kleinFourGroup;
+    test_suite = G.characterTable.laws.addTestCases(test_suite);
+    G = replab.PermutationGroup.dihedral(4);
+    test_suite = G.characterTable.laws.addTestCases(test_suite);
+    G = replab.PermutationGroup.dihedral(5);
+    test_suite = G.characterTable.laws.addTestCases(test_suite);
+    G = replab.PermutationGroup.cyclic(6);
+    test_suite = G.characterTable.laws.addTestCases(test_suite);
+    G = replab.PermutationGroup.alternating(4);
+    test_suite = G.characterTable.laws.addTestCases(test_suite);
+    G = replab.PermutationGroup.alternating(5);
+    test_suite = G.characterTable.laws.addTestCases(test_suite);
+    G = replab.S(4);
+    test_suite = G.characterTable.laws.addTestCases(test_suite);
 end
 
 function test_centralizer_order
