@@ -15,8 +15,8 @@ classdef Cosets < replab.Obj
             self.group = group;
             self.subgroup = subgroup;
             self.isomorphism = group.niceMorphism;
-            self.groupChain = self.isomorphism.imageGroup(group).lexChain;
-            self.subgroupChain = self.isomorphism.imageGroup(subgroup).lexChain;
+            self.groupChain = group.niceGroup.lexChain;
+            self.subgroupChain = subgroup.niceGroup.lexChain;
         end
 
     end
