@@ -33,7 +33,7 @@ classdef LeftCosetsLaws < replab.Laws
             assertEqual(length(self.L.transversal), double(self.G.order/self.H.order));
         end
         function morphismLaws = laws_leftAction(self)
-            morphismLaws = replab.FiniteMorphismLaws(self.L.leftAction);
+            morphismLaws = replab.laws.FiniteMorphismLaws(self.L.leftAction);
         end
     end
 
