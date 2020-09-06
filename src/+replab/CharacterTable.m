@@ -2,7 +2,8 @@ classdef CharacterTable < replab.Obj
 % Describes the character table of a group
 %
 % Example:
-%   >>> replab.CharacterTable.dihedral(3)
+%   >>> G = replab.PermutationGroup.dihedral(3);
+%   >>> G.characterTable
 %       Class  1a   3a   2a
 %        Size   1    2    3
 %
