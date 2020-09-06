@@ -993,7 +993,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Keyword Args:
         %   upToConjugation (logical, optional): Whether to list morphisms up to conjugation of the image group, default: false
-        %   single (logical, optoinal): Whether to return maximum a single result, default: false
+        %   single (logical, optional): Whether to return maximum a single result, default: false
         %
         % Returns:
         %   cell(1,\*) of `.FiniteIsomorphism`: The isomorphisms
@@ -1005,6 +1005,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             F = self.abstractGroup;
             G = to;
             A = to;
+            if F.order ~= G.order
+                res = cell(1, 0);
+                return
+            end
             fm = replab.mrp.FindMorphisms(F, G, A, 'isomorphisms', args.single);
             if args.upToConjugation || args.single
                 res = fm.searchUpToConjugation;
