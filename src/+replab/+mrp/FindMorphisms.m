@@ -46,6 +46,7 @@ classdef FindMorphisms
                 CIi = cell(1, 0);
                 for j = 1:length(h)
                     if isequal(filter, 'isomorphisms')
+                        assert(F.order == G.order, 'To search for isomorphisms, the groups must have the same order.');
                         condition = (t == 0) || (t == heo(j));
                     else
                         condition = mod(t, heo(j)) == 0;
