@@ -13,12 +13,15 @@ function test_suite = CharacterTableTest()
     test_suite = G.characterTable.laws.addTestCases(test_suite);
     G = replab.PermutationGroup.cyclic(6);
     test_suite = G.characterTable.laws.addTestCases(test_suite);
-    G = replab.PermutationGroup.alternating(4);
-    test_suite = G.characterTable.laws.addTestCases(test_suite);
-    G = replab.PermutationGroup.alternating(5);
-    test_suite = G.characterTable.laws.addTestCases(test_suite);
     G = replab.S(4);
     test_suite = G.characterTable.laws.addTestCases(test_suite);
+    if ~ReplabTestParameters.withCoverage
+        % coverage tests copy the source code; unfortunately the "atlas/" subfolder is not part of that
+        G = replab.PermutationGroup.alternating(4);
+        test_suite = G.characterTable.laws.addTestCases(test_suite);
+        G = replab.PermutationGroup.alternating(5);
+        test_suite = G.characterTable.laws.addTestCases(test_suite);
+    end
 end
 
 function test_centralizer_order
