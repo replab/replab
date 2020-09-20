@@ -142,6 +142,13 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
         end
 
+        function R = computeFastRecognize(self)
+            R = self.niceGroup.fastRecognize;
+            if ~isempty(R)
+                R = R.imap(self.niceMorphism.inverse);
+            end
+        end
+
     end
 
     methods
@@ -178,7 +185,11 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   `.AbstractGroup`: Updated copy
-            A1 = replab.AbstractGroup(generatorNames1, self.permutationGroup, self.cachedOrEmpty('relators'));
+            rels = self.cachedOrEmpty('relators');
+            if ~isempty(rels)
+                rels = cellfun(@(r) replab.fp.Letters.print(self.factorizeLetters(r), generatorNames1), rels, 'uniform', 0);
+            end
+            A1 = replab.AbstractGroup(generatorNames1, self.permutationGroup, rels);
         end
 
         function r = relators(self)
@@ -282,7 +293,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
     methods % Implementations
 
         function res = eq(self, rhs)
-            res = (self.groupId == rhs.groupId);
+            res = (self.type.groupId == rhs.type.groupId) && self.niceGroup == rhs.niceGroup;
         end
 
         function res = ne(self, rhs)

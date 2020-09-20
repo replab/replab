@@ -27,6 +27,10 @@ classdef FiniteIsomorphismComposition < replab.FiniteIsomorphism & replab.mrp.Fi
             K = computeKernel@replab.mrp.FiniteComposition(self);
         end
 
+        function I = computeImage(self)
+            I = self.target;
+        end
+
     end
 
 end

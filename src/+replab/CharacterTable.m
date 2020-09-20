@@ -2,7 +2,8 @@ classdef CharacterTable < replab.Obj
 % Describes the character table of a group
 %
 % Example:
-%   >>> replab.CharacterTable.dihedral(3)
+%   >>> G = replab.PermutationGroup.dihedral(3);
+%   >>> G.characterTable
 %       Class  1a   3a   2a
 %        Size   1    2    3
 %
@@ -28,30 +29,6 @@ classdef CharacterTable < replab.Obj
     end
 
     methods (Static)
-
-        function ct = cyclic(n)
-            ct = replab.ct.CyclicCharacterTable(n);
-        end
-
-        function ct = dihedral(n)
-            ct = replab.ct.DihedralCharacterTable(n);
-        end
-
-        function ct = A5
-            ct = replab.ct.A5CharacterTable;
-        end
-
-        function ct = A4
-            ct = replab.ct.A4CharacterTable;
-        end
-
-        function ct = S4
-            ct = replab.ct.S4CharacterTable;
-        end
-
-        function ct = S5
-            ct = replab.ct.S5CharacterTable;
-        end
 
         function ct = forPermutationGroup(G)
             ct = replab.sym.PermutationCharacterTable(G);
@@ -108,6 +85,27 @@ classdef CharacterTable < replab.Obj
             self.irrepNames = args.irrepNames;
             self.classNames = args.classNames;
             self.irreps_ = args.irreps;
+        end
+
+        function dec = decomposition(self, rep)
+            nI = self.nIrreps;
+            I = cell(1, nI);
+            for i = 1:self.nIrreps
+                irrep = self.irrep(i);
+                B = replab.irreducible.findIsotypicBasis(rep, irrep);
+                sub = rep.subRep(B);
+                E = sub.E_internal;
+                d = irrep.dimension;
+                m = size(B, 2) / d;
+                irreds = cell(1, m);
+                for j = 1:m
+                    comp = rep.subRep(B(:, (j-1)*d + (1:d)));
+                    comp.isIrreducible = true;
+                    irreds{j} = comp;
+                end
+                I{i} = replab.HarmonizedIsotypic(rep, irreds, E);
+            end
+            dec = replab.Irreducible(rep, I);
         end
 
         function K = kronecker(self)
@@ -350,7 +348,8 @@ classdef CharacterTable < replab.Obj
         % Note that this method is optimized when the representation is a tensor product.
         %
         % Example:
-        %   >>> ct = replab.CharacterTable.dihedral(3);
+        %   >>> G = replab.PermutationGroup.dihedral(3);
+        %   >>> ct = G.characterTable;
         %   >>> rep2 = ct.irreps{2};
         %   >>> rep3 = ct.irreps{3};
         %   >>> rep = kron(rep2, rep3);
@@ -358,7 +357,8 @@ classdef CharacterTable < replab.Obj
         %       1
         %
         % Example:
-        %   >>> ct = replab.CharacterTable.S5;
+        %   >>> G = replab.S(5);
+        %   >>> ct = G.characterTable;
         %   >>> S5 = ct.group;
         %   >>> isequal(ct.multiplicities(S5.naturalRep), [1 0 1 0 0 0 0])
         %       1
@@ -398,7 +398,7 @@ classdef CharacterTable < replab.Obj
         %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]);
         %   >>> D6b = replab.PermutationGroup.of([1 4 3 2], [1 3 4 2]);
         %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
-        %   >>> Ca = replab.ct.DihedralCharacterTable(3);
+        %   >>> Ca = D6a.characterTable;
         %   >>> Cb = Ca.imap(f);
         %   >>> Cb.laws.checkSilent;
         %

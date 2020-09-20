@@ -137,6 +137,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
+        function c = computeCharacterTable(self)
+        % See `.characterTable`
+            r = self.recognize;
+            assert(~isempty(r), 'This group has not been recognized.');
+            c = r.atlasEntry.characterTable.imap(r.isomorphism);
+            assert(~isempty(c), 'This group does not have a stored character table.');
+        end
+
         function c = computeConjugacyClasses(self)
         % See `.conjugacyClasses`
             error('Abstract');
@@ -147,15 +155,13 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             if self.niceMorphism.image.domainSize < replab.globals.fastChainDomainSize
                 c = self.niceMorphism.image.partialChain;
                 if ~c.isMutable
-                    A = replab.atlas.Standard;
-                    R = A.recognize(self);
+                    R = replab.Atlas.recognize(self);
                 end
             end
         end
 
         function R = computeRecognize(self)
-            A = replab.atlas.Standard;
-            R = A.recognize(self);
+            R = replab.Atlas.recognize(self);
         end
 
         function res = computeIsCyclic(self)
@@ -238,6 +244,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   `+replab.ConjugacyClasses`: Conjugacy classes
             c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
+        end
+
+        function c = characterTable(self)
+            c = self.cached('characterTable', @() self.computeCharacterTable);
         end
 
         function R = fastRecognize(self)
@@ -587,6 +597,15 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   `+replab.FiniteGroup`: The derived subgroup
             sub = self.cached('derivedSubgroup', @() self.computeDerivedSubgroup);
+        end
+
+        function ser = derivedSeries(self)
+            D = self.derivedSubgroup;
+            if self == D
+                ser = {self};
+            else
+                ser = horzcat({self}, D.derivedSeries);
+            end
         end
 
         function sub = center(self)
@@ -996,6 +1015,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             else
                 res = fm.searchAll;
             end
+            res = cellfun(@(m) self.abstractMorphism.andThen(m), res, 'uniform', 0);
             res = cellfun(@(m) m.toIsomorphism, res, 'uniform', 0);
         end
 
@@ -1043,6 +1063,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             else
                 res = fm.searchAll;
             end
+            res = cellfun(@(m) self.abstractMorphism.andThen(m), res, 'uniform', 0);
         end
 
 
