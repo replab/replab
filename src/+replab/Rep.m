@@ -31,6 +31,69 @@ classdef Rep < replab.Obj
         isDivisionAlgebraCanonical % ({true, false, []}): If the representation is real and irreducible and the Frobenius-Schur indicator is not 1, means that the images encode the complex or quaternion division algebras in the RepLAB canonical form
     end
 
+    properties
+        nearEps2_ % (double): Upper bound on ``||rep(g) rep(h) - rep(gh)||2 <= nearEps2``
+        nearEpsF_ % (double): Upper bound on ``||rep(g) rep(h) - rep(gh)||F <= nearEpsF``
+        approxEps2_ % (double): There exists an exact representation ``repE`` such that ``||rep(g) - repE(g)||2 <= approxEps2``
+        approxEpsF_ % (double): There exists an exact representation ``repE`` such that ``||rep(g) - repE(g)||2 <= approxEpsF``
+    end
+
+    methods
+
+        function computeNearEps(self)
+            if isa(self.group, 'replab.FiniteGroup')
+                els = self.group.elements.toCell;
+                n = length(els);
+                for i = 1:n
+                    for j = 1:n
+                        g = els{i};
+                        h = els{j};
+                        gh = self.group.compose(g, h);
+                        repgh1 = self.image(g) * self.image(h);
+                        repgh2 = self.image(gh);
+                        diff = repgh1 - repgh2;
+                        self.nearEps2_ = norm(diff, 2);
+                        self.nearEpsF_ = norm(diff, 'fro');
+                    end
+                end
+            end
+        end
+
+        function e = nearEps2(self)
+            if isempty(self.nearEps2_)
+
+                e = NaN;
+            else
+                e = self.nearEps2_;
+            end
+        end
+
+        function e = nearEpsF(self)
+            if isempty(self.nearEpsF_)
+                e = NaN;
+            else
+                e = self.nearEpsF_;
+            end
+        end
+
+        function e = approxEps2(self)
+            if isempty(self.approxEps2_)
+                e = NaN;
+            else
+                e = self.approxEps2_;
+            end
+        end
+
+        function e = approxEpsF(self)
+            if isempty(self.approxEpsF_)
+                e = NaN;
+            else
+                e = self.approxEpsF_;
+            end
+        end
+
+    end
+
     properties (SetAccess = protected)
         group     % (`+replab.CompactGroup`): Group being represented
         field     % ({'R', 'C'}): Vector space defined on real (R) or complex (C) field
