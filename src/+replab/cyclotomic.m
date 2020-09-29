@@ -513,6 +513,13 @@ classdef cyclotomic
             res = reshape(R, size(self.mat)) + 1i * reshape(I, size(self.mat));
         end
 
+        function [res error] = doubleApproximation(self)
+        % Conversion to floating-point double
+            data = javaMethod('toDoubleApproximation', 'cyclo.Lab', self.matArray);
+            res = reshape(data.real, size(self.mat)) + 1i * reshape(data.imag, size(self.mat));
+            error = reshape(data.error, size(self.mat));
+        end
+
         function res = horzcat(self, varargin)
         % Horizontal concatenation
             rhs = cellfun(@(a) a.mat, varargin, 'uniform', 0);
