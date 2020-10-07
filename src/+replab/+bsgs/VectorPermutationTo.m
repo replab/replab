@@ -2,7 +2,6 @@ classdef VectorPermutationTo < replab.bsgs.Backtrack
 % Computes the permutation that sends a vector to another vector
 %
 % We find one ``p`` such that ``t == s(inverse(p))`` or ``s == t(p)``.
-%
 
     properties
         s % (double(1,domainSize)): Source vector

@@ -15,7 +15,7 @@ function str = lookupHelp(helpFunctionName, fullMode, identifier, variableName)
         str = [str sprintf('%s is an object of type %s.\n\n', firstPart, ...
                            replab.infra.repl.linkHelp(helpFunctionName, type, type))];
     end
-    str = [str sprintf('--- help for %s ---\n', replab.infra.strong(identifier))];
+    str = [str sprintf('--- help for %s ---\n\n', replab.infra.strong(identifier))];
     codeBase = replab.globals.codeBase;
     el = codeBase.get(parts{:});
     hasToggle = false;
@@ -67,6 +67,6 @@ function str = lookupHelp(helpFunctionName, fullMode, identifier, variableName)
     end
     if isa(el, 'replab.infra.SourceElement')
         sourceLink = replab.infra.repl.linkOpen('See source', '', el.absoluteFilename, el.startLineNumber);
-        str = [str char(10) char(10) sourceLink char(10)];
+        str = [str char(10) sourceLink char(10)];
     end
 end

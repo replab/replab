@@ -1,5 +1,6 @@
 classdef SignedPermutation
-
+% This class regroups functions that are useful when dealing with signed permutations.
+    
     methods (Static)
 
         function perm = toPermutation(signedPerm)

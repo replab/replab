@@ -1,5 +1,8 @@
 classdef Parameters
-
+% Parameters of the RepLAB library
+%
+% This class contains the global parameters of the library.
+    
     methods (Static)
 
         function value = randomizedSchreierSimsTries(newValue)
