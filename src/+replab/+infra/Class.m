@@ -32,7 +32,7 @@ classdef Class < replab.infra.SourceElement
             oe = struct;
             for i = 1:length(classData.ownMethods)
                 md = classData.ownMethods{i};
-                if ~isequal(md.name, classData.name)
+                if ~isequal(md.name, classData.name) % remove this line to allow constructors to appear in methods listing
                     kind = 'method';
                     m = replab.infra.ConcreteClassElement(codeBase, package, self, md.name, md.declarationLineNumber, ...
                                                           kind, md.declaration, md.attributes, ...
@@ -175,16 +175,7 @@ classdef Class < replab.infra.SourceElement
 
         function on = ownMethodGroupNames(self)
             om = self.ownMethods;
-            n = length(om);
-            on = cell(1, n);
-            for i = 1:n
-                m = om{i};
-                if isfield(m.attributes, 'group')
-                    on{i} = m.attributes.group;
-                else
-                    on{i} = '';
-                end
-            end
+            on = cellfun(@(x) x.declarations.bestEffortGroup, om, 'uniform', 0);
         end
 
         function op = ownProperties(self)
