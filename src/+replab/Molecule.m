@@ -12,8 +12,7 @@ classdef Molecule < replab.Str
     
     properties
         name % (charstring): name of `+replab.Molecule` object
-        coords % (double(3, natoms)): the coordinates of atoms in the molecule
-               %                                   coords are sorted by increasing values  
+        coords % (double(3, natoms)): the coordinates of atoms in the molecule (coords are sorted by increasing values)
         symbols % (cell(1, natoms) of charstring): symbols of atoms corresponding to coordinates
         masses % (double(1, natoms)): masses of atoms corresponding to coordinates
         natoms % (integer): total number of atoms

@@ -1,24 +1,25 @@
 function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isSymb)
-    % FInds all Clebsch Gordan coefficients of a tensor product
-    % representation
+    % Finds all Clebsch Gordan coefficients of a tensor product representation
+    %
     % Args:
-        % group (replab.SymmetricGroup): Group being represented
-        %
-        % part1 (integer(*\)): Partition of first irrep in tensor product
-        %
-        % part2 (integer(*\)): Partition of second irrep in tensor product
-        %
-        % isSymb (boolean): Do we want a symbolic result? Note that
-        % the result will be rational. Use seminormalToOrthogonal to
-        % help find the change of basis vectors to the orthogonal form.
-        %
-        % Returns:
-        % basis (cell(1,*\) of double(*\,*\)): Bases of one multiplicity space,
-        % from each irrep
-        %
-        % irreps: (cell(1,*\) of replab.sym.IntegerPartition):
-        % Partitions corresponding to the irreducible components of the
-        % tensor product
+    %     group (replab.SymmetricGroup): Group being represented
+    %     
+    %     part1 (integer(*\)): Partition of first irrep in tensor product
+    %     
+    %     part2 (integer(*\)): Partition of second irrep in tensor product
+    %     
+    %     isSymb (boolean): Do we want a symbolic result? Note that
+    %         the result will be rational. Use seminormalToOrthogonal to
+    %         help find the change of basis vectors to the orthogonal form.
+    %     
+    % Returns:
+    %     basis (cell(1,*\) of double(*\,*\)): Bases of one multiplicity space,
+    %         from each irrep
+    %     
+    %     irreps: (cell(1,*\) of replab.sym.IntegerPartition):
+    %         Partitions corresponding to the irreducible components of the
+    %         tensor product
+    
     n = rep.group.domainSize;
     parts = replab.sym.IntegerPartitions(n);
     mults =  replab.CharacterTable.forPermutationGroup(rep.group).multiplicities(rep);

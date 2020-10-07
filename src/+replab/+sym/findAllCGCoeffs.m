@@ -1,28 +1,29 @@
 function [basis, basisMat, irreps] = findAllCGCoeffs(group,part1,part2,isSymb)
-    % FInds all Clebsch Gordan coefficients of a tensor product
-    % representation
+    % Finds all Clebsch Gordan coefficients of a tensor product representation
+    % 
     % Args:
-        % group (replab.SymmetricGroup): Group being represented
-        %
-        % part1 (integer(*\)): Partition of first irrep in tensor product
-        %
-        % part2 (integer(*\)): Partition of second irrep in tensor product
-        %
-        % isSymb (boolean): Do we want a symbolic result? Note that
-        % the result will be rational. Use seminormalToOrthogonal to
-        % help find the change of basis vectors to the orthogonal form.
-        %
-        %
+    %     group (replab.SymmetricGroup): Group being represented
+    %     
+    %     part1 (integer(*\)): Partition of first irrep in tensor product
+    %     
+    %     part2 (integer(*\)): Partition of second irrep in tensor product
+    %     
+    %     isSymb (boolean): Do we want a symbolic result? Note that
+    %         the result will be rational. Use seminormalToOrthogonal to
+    %         help find the change of basis vectors to the orthogonal form.
+    %     
+    %     
     % Returns:
-        % basis (cell(1,*\) of cell(1,*\) of double(*\,*\)): Bases of all
-        % multiplicity spaces, organized by irrep, then by corresponding standard
-        % tableaux
-        %
-        % basisMat: (double(*\,*\)): change of basis matrix
-        %
-        % irreps: (cell(1,*\) of replab.sym.IntegerPartition):
-        % Partitions corresponding to the irreducible components of the
-        % tensor product
+    %     basis (cell(1,*\) of cell(1,*\) of double(*\,*\)): Bases of all
+    %         multiplicity spaces, organized by irrep, then by corresponding
+    %         standard tableaux
+    % 
+    %     basisMat: (double(*\,*\)): change of basis matrix
+    % 
+    %     irreps: (cell(1,*\) of replab.sym.IntegerPartition):
+    %         Partitions corresponding to the irreducible components of the
+    %         tensor product
+    
     n = group.domainSize;
     if ~isSymb
         rep = kron(group.irrep(part1,'orthogonal'),group.irrep(part2,'orthogonal'));

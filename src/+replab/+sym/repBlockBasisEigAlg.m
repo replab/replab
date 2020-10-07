@@ -1,23 +1,24 @@
 function [bases,irreps] = repBlockBasisEigAlg(rep,symb)
-    % FInds enough decomposition coefficients to block diagonalize
-    % a matrix in the commutant of a representation.
+    % Finds enough decomposition coefficients to block diagonalize a matrix in the commutant of a representation.
+    %
     % Args:
-        % group (replab.SymmetricGroup): Group being represented
-        %
-        % rep (replab.Rep): Representation to be decomposed. 
-        %
-        % symb (boolean): Do we want a symbolic result? Note that
-        % the result will be rational. Use seminormalToOrthogonal to
-        % help find the change of basis vectors to the orthogonal form.
-        %
-        %
+    %     group (replab.SymmetricGroup): Group being represented
+    %     
+    %     rep (replab.Rep): Representation to be decomposed. 
+    %     
+    %     symb (boolean): Do we want a symbolic result? Note that
+    %         the result will be rational. Use seminormalToOrthogonal to
+    %         help find the change of basis vectors to the orthogonal form.
+    %     
+    %     
     % Returns:
-        % basis (cell(1,*\) of double(*\,*\)): Bases of one multiplicity space,
-        % from each irrep
-        %
-        % irreps: (cell(1,*\) of replab.sym.IntegerPartition):
-        % Partitions corresponding to the irreducible components of
-        % representation.
+    %     basis (cell(1,*\) of double(*\,*\)): Bases of one multiplicity space,
+    %         from each irrep
+    %     
+    %     irreps: (cell(1,*\) of replab.sym.IntegerPartition):
+    %         Partitions corresponding to the irreducible components of
+    %         representation.
+    
     n = rep.group.domainSize;
     parts = replab.sym.IntegerPartitions(n);
     mults = replab.CharacterTable.forPermutationGroup...

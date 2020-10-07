@@ -8,26 +8,23 @@ classdef SymmetricYoungIrrep < replab.Rep
 %
 % This is
     properties
-       conjugatePartition % integer(1,:): The conjuagte partition is the partition obtained by transposing the
-       % young diagram of a partition
+       conjugatePartition % integer(1,:): The conjuagte partition is the partition obtained by transposing the young diagram of a partition
        partition % integer(1,:):The generating partition of n
        rowFunction % integer(:,:): The i'th row is the row function for tableaux. The k'th entry is the row index k is in
        colFunction % integer(:,:): The i'th row is the column function for tableaux. Analogous to the row function
+
        % E.g the Young Tableax 1 2 5 
-       %                                  3 4
+       %                       3 4
        % has row function [1 1 2 2 1] and column function [1 2 1 2 3] 
-       %These are the j and j' function in Schindler Miriam
-       basisHash %replab.sym.Set: Describes the row index of the row function of a Young Tableaux.
+       % These are the j and j' function in Schindler Miriam
+
+       basisHash % replab.sym.Set: Describes the row index of the row function of a Young Tableaux.
     end
 
     properties(GetAccess=protected,SetAccess=protected)
-         cSum
-        %This represents the sum of the first n-1 elements in the partition
-        % Eg: [4 2 1] => [0 4 6]
-        rangeOfParts
-        %This saves the array 1:(dimension)
-        underlyingRep
-        % This is an underlying RepByImages Object used to quickly find the image
+        cSum % Represents the sum of the first n-1 elements in the partition. Eg: [4 2 1] => [0 4 6]
+        rangeOfParts % This saves the array 1:(dimension)
+        underlyingRep % This is an underlying RepByImages Object used to quickly find the image
     end
 
 
@@ -77,6 +74,7 @@ classdef SymmetricYoungIrrep < replab.Rep
 
         function seminormalHelper(self)
         % Helper function for constructor
+        
             youngLattice = replab.sym.YoungLattice(self.partition,self.group.domainSize);
             [self.rowFunction,self.colFunction,~] = youngLattice.generateTableaux;
             %Use Young Lattice to generate row and
@@ -90,6 +88,7 @@ classdef SymmetricYoungIrrep < replab.Rep
 
         function im = transImage(self,k)
             % Image function used to calculate the images of all adjacent transposition generators
+            %
             % This implements the formulas as described in section III -
             % equation (9-13) of Schindler and Miriam's decomposition paper
             %

@@ -1,13 +1,15 @@
 classdef SymCSCO
-    % We borrowing the term CSCO from quantum mechanics.
     % Given a rep, this creates a commuting set of matrices with shared eigenvectors
+    %
     % Any 'basis vector' of the decomposition, (i.e. corresponding to a  
-    % standard tableaux of an irreducible compoenent of the rep) is an
+    % standard tableaux of an irreducible compoenent of the rep) is a
     % simultaneous eigenvector with a unique set of eigenvalues 
     %
     % This CSCO are the set of matrices A_k = sum_(i<k) image(swap(i,k))
     % or specially chosen linear combinations of these to reduce the number
     % of total commuting matrices
+    %
+    % We borrow the term CSCO from quantum mechanics.
     %
     % See Section 4.6 of Chen's Group Representation Theory for Physicists
     properties
@@ -17,22 +19,17 @@ classdef SymCSCO
     end
     
     properties(Access = protected)
-        xk %cell of double(1,*\): How we linearly combine these matrices to 
-        %make fewer total matrices in the CSCO
-        % Each cell corresponds to a matrix in the CSCO and describes the
-        % linear combination needed to get it.
-        kGroups %double(1,*\): This is convinent for finding the A that each 
-        % component in a cell corresponds to
-        %Eg if xk was {[1 3] [-4 3 5] [4]}, kGroups would be [0 2 5 6]
+        xk %cell of double(1,*\): How we linearly combine these matrices to make fewer total matrices in the CSCO. Each cell corresponds to a matrix in the CSCO and describes the linear combination needed to get it.
+        kGroups %double(1,*\): This is convinent for finding the A that each component in a cell corresponds to.
+        
+        % Eg if xk was {[1 3] [-4 3 5] [4]}, kGroups would be [0 2 5 6].
         % So, we would know the first two A's are combined using the first cell
         % the 3rd, 4th and 5th are combined, as well, etc.
         %
-        %For the next two, first know that, for CG coefficients, we only
-        %need a sub matrix
-        dim %(integer): Dimension of sub matrix, 
-        % If not calculating CG,use  the dimension of the rep
-        subMatIndices % (logical(*\)), Indices of sub matrix
-        % If not calculating CG, use the character ':'
+        % For the next two, first know that, for CG coefficients, we only need a sub matrix
+        
+        dim %(integer): Dimension of sub matrix, if not calculating CG, use the dimension of the rep
+        subMatIndices % (logical(*\)): Indices of sub matrix. If not calculating CG, use the character ':'
     end
     
     methods(Static)
@@ -79,7 +76,8 @@ classdef SymCSCO
         end
 
         function [alpha,boundaries] = coeffs(self)
-            %other choices will be given below each assignment for all n
+            
+            % other choices will be given below each assignment for all n
             % which one to use depends on which is faster to have small
             % eigenvalues or smallar dimensions on the matrices
             n = self.domainSize;

@@ -12,13 +12,11 @@ classdef SymmetricSpechtIrrep < replab.Rep
 % https://arxiv.org/abs/1701.05277
 
     properties
-        conjugatePartition % integer(1,:): The conjuagte partition is the partition obtained by transposing the
-                           % young diagram of a partition
+        conjugatePartition % integer(1,:): The conjuagte partition is the partition obtained by transposing the young diagram of a partition
         partition % integer(1,:):The generating partition of n
         indepRowWords % integer(:,:): The row words; corresponding to all standard tableaux
         indepColWords% integer(:,:): The column words; corresponding to all standard tableaux
-        basis % integer(:,:): The submatrix of the Specht matrix whose rows and columns correspond to the row and colum
-              %words of standard tableaux.
+        basis % integer(:,:): The submatrix of the Specht matrix whose rows and columns correspond to the row and colum words of standard tableaux.
     end
 
     properties (SetAccess=protected)
@@ -83,8 +81,7 @@ classdef SymmetricSpechtIrrep < replab.Rep
         end
 
         function specht = subSpecht(self, rowWords)
-        % Finds the Specht submatrix given a list of rows
-        % and using the linearly independent columns
+        % Finds the Specht submatrix given a list of rows and using the linearly independent columns
         %
         % Args:
         % rowWords (integer(:.:)): List of row words
@@ -130,8 +127,7 @@ classdef SymmetricSpechtIrrep < replab.Rep
         end
 
         function val = entry(self,possiblePerm)
-            % Finds the entry of the Specht submatrix given a row
-            % and column number
+            % Finds the entry of the Specht submatrix given a row and column number
             %
             % Args:
             % rowNum (integer): Row index

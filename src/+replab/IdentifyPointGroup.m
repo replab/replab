@@ -689,6 +689,8 @@ classdef IdentifyPointGroup < replab.Str
         end
         
         function determineSphericalGroup(self, coords, symbols, SEAs)
+        % Determine spherical group of the molecule
+        %
         % Determines whether molecule has tetrahedral, octahedral, or icosahedral symmetry
         % and assigns point group
         %

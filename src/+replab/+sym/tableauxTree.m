@@ -1,23 +1,26 @@
 function [connectList,transList,offDiagList,diagList] = tableauxTree(part)
 % Creates a tree that connects standard tableaux
+%
 % The connection correspond to adjacent transpositions
 % This tree finds a way to go from a root to all standard tableaux
 % by only swapping adjacent elements
+%
 % Args:
-    % group (double(1,*\): Partition of which we are connecting the standard
-    % tableaux
+%     group (double(1,*\): Partition of which we are connecting the standard
+%         tableaux
 % Returns:
-    % connectList (double(*\,*\)): Representation of the tree 
-    % The index at i labels the index of the parent of the i'th standard
-    % tableaux
-    %
-    % transList (double(*\,*\)): Labels what adjacent transposition was used
-    %
-    % offDiagList (double(*\,*\)): Records the off-diagonal matric element
-    % in Chen's equation
-    %
-    % diagList (double(*\,*\)):  Records the diagonal matric element
-    % in Chen's equation
+%     connectList (double(*\,*\)): Representation of the tree 
+%         The index at i labels the index of the parent of the i'th standard
+%         tableaux
+%     
+%     transList (double(*\,*\)): Labels what adjacent transposition was used
+%     
+%     offDiagList (double(*\,*\)): Records the off-diagonal matric element
+%         in Chen's equation
+%     
+%     diagList (double(*\,*\)):  Records the diagonal matric element
+%         in Chen's equation
+
     n = sum(part);
     [rows,cols,~] = replab.sym.YoungLattice(part,n).generateTableaux;
     hash = replab.perm.Set(n);
