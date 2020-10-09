@@ -104,6 +104,22 @@ classdef Rep < replab.Obj
 
         % Abstract method
 
+        function [rho error2 errorF] = image_error(self, g)
+        % Returns the image of a group element, dense or sparse, along with an error estimate
+        %
+        % Args:
+        %   g (element of `.group`): Element being represented
+        %
+        % Returns
+        % -------
+        %   rho:
+        %     double(\*,\*): Image, may be sparse
+        %   error2:
+        %     double: Error estimation (2-norm)
+        %   errorF:
+        %     double: Error estimation (Frobenius norm)
+        end
+
         function rho = image_internal(self, g)
         % Returns the image of a group element, dense or sparse
         %
