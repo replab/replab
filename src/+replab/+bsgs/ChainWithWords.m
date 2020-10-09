@@ -10,6 +10,7 @@ classdef ChainWithWords < replab.Str
 
     properties (SetAccess = protected)
         group % (`+replab.PermutationGroup`): Permutation group for which this chain is computed
+        generators % (cell(1,\*) of elements of `.group`): Generators on which to decompose group elements
         chain % (`.Chain`): BSGS chain of the group being computed
         completed % (logical): Whether the chain has been completed
         n % (integer): Domain size
@@ -24,7 +25,7 @@ classdef ChainWithWords < replab.Str
 
     methods
 
-        function self = ChainWithWords(group)
+        function self = ChainWithWords(group, generators)
         % Constructs an empty mutable chain to start the Minkwitz algorithm
         %
         % Args:
@@ -46,6 +47,7 @@ classdef ChainWithWords < replab.Str
                 nuw{i} = {[]};
             end
             self.group = group;
+            self.generators = generators;
             self.chain = chain;
             self.completed = false;
             self.n = n;
@@ -213,7 +215,7 @@ classdef ChainWithWords < replab.Str
         % Returns:
         %   integer(1,\*): Next word in the enumeration
             assert(~self.completed);
-            nG = self.group.nGenerators;
+            nG = length(self.generators);
             L = length(w);
             l = L;
             while l > 0
@@ -329,7 +331,7 @@ classdef ChainWithWords < replab.Str
             count = 0;
             while count < nRounds || ~self.tableFull
                 tw = self.next(tw);
-                t = self.group.imageLetters(tw);
+                t = self.group.composeLetters(self.generators, tw);
                 self.round(l, 1, t, tw);
                 count = count + 1;
             end
@@ -363,7 +365,7 @@ classdef ChainWithWords < replab.Str
             count = 0;
             while count < nRounds || ~self.tableFull
                 tw = self.next(tw);
-                t = self.group.imageLetters(tw);
+                t = self.group.composeLetters(self.generators, tw);
                 self.round(l, 1, t, tw);
                 if mod(count, s) == 0
                     self.improve(l);

@@ -3,8 +3,13 @@ classdef FactorizationTrivial < replab.mrp.Factorization
 
     methods
 
-        function self = FactorizationTrivial(group)
+        function self = FactorizationTrivial(group, useInverses)
+            if nargin < 2 || isempty(useInverses)
+                useInverses = false;
+            end
             self.group = group;
+            self.generators = cell(1, 0);
+            self.useInverses = useInverses;
         end
 
         function letters = preimageElement(self, g)
