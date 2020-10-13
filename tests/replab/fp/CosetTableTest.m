@@ -78,7 +78,7 @@ function test_dihedral_group_presentation
     if ReplabTestParameters.onlyFastTests
         return
     end
-    G = replab.DihedralGroup(20);
+    G = replab.PermutationGroup.dihedral(20);
     relators = replab.fp.relatorsForPermutationGroup(G);
     assert(all(cellfun(@(r) G.isIdentity(G.imageLetters(r)), relators)));
 end
