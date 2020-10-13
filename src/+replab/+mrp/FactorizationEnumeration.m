@@ -28,12 +28,29 @@ classdef FactorizationEnumeration < replab.mrp.Factorization
 
     methods (Static)
 
-        function m = make(group)
+        function m = make(group, generators, useInverses)
+        % Constructs a group factorization object by enumerating all elements of a permutation group
+        %
+        % Args:
+        %   group (`+replab.PermutationGroup`): Group to decompose elements of
+        %   generators (cell(1,\*) of elements of ``group``): Group generators (default: ``group.generators``)
+        %   useInverses (logical, optional): Whether to use inverses in the decomposition (default: true)
+        %
+        % Returns:
+        %   `+replab.+mrp.Factorization`: The factorization object that can compute preimages in words of the generators
+            if nargin < 2 || isempty(generators)
+                generators = group.generators;
+            end
+            if nargin < 3 || isempty(useInverses)
+                useInverses = true;
+            end
             n = group.domainSize;
             o = double(group.order);
-            nG = group.nGenerators;
-            gens = group.generators;
-            invGens = cellfun(@(g) group.inverse(g), gens, 'uniform', 0);
+            nG = length(generators);
+            gens = generators;
+            if useInverses
+                invGens = cellfun(@(g) group.inverse(g), gens, 'uniform', 0);
+            end
             elements = replab.perm.Set(n);
             elements.insert(group.chain.allElements);
             ind = elements.find((1:n)');
@@ -63,15 +80,17 @@ classdef FactorizationEnumeration < replab.mrp.Factorization
                         computed = [computed ind];
                     end
                 end
-                for i = range
-                    g = invGens{i};
-                    p1 = g(p);
-                    w1 = [-i w];
-                    ind = elements.find(p1');
-                    if ~ok(ind)
+                if useInverses
+                    for i = range
+                        g = invGens{i};
+                        p1 = g(p);
+                        w1 = [-i w];
+                        ind = elements.find(p1');
+                        if ~ok(ind)
                         ok(ind) = true;
                         words{ind} = w1;
                         computed = [computed ind];
+                        end
                     end
                 end
                 l = l + 1;
