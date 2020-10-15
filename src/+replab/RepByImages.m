@@ -13,7 +13,7 @@ classdef RepByImages < replab.Rep
 
     methods
 
-        function self = RepByImages(group, field, dimension, preimages, images)
+        function self = RepByImages(group, field, dimension, preimages, images, fromMake)
         % Constructs a representation from images of group generators and their inverses
         %
         % Args:
@@ -22,6 +22,11 @@ classdef RepByImages < replab.Rep
         %   dimension (integer): Representation dimension
         %   preimages (cell(1,\*) of ``group`` elements): Preimages
         %   images (cell(1,\*) of double(\*,\*), may be sparse or symbolic): Images of the preimages
+        %   fromMake (logical): Whether this is called from the `.make` static method
+            if nargin < 6 || isempty(fromMake) || ~fromMake
+                % TODO: remove deprecation warning
+                warning('Direct constructor call is deprecated. Please call replab.RepByImages.make instead of the constructor');
+            end
             assert(isa(group, 'replab.FiniteGroup'));
             assert(isa(images, 'cell') && (isempty(images) || isrow(images)));
             assert(length(images) == length(preimages));
@@ -138,7 +143,7 @@ classdef RepByImages < replab.Rep
 
         function res = imap(self, f)
             preimages1 = cellfun(@(p) f.imageElement(p), self.preimages, 'uniform', 0);
-            res = replab.RepByImages(f.image, self.field, self.dimension, preimages1, self.images_internal);
+            res = replab.RepByImages.make(f.image, self.field, self.dimension, preimages1, self.images_internal);
             res.isUnitary = self.isUnitary;
             res.trivialDimension = self.trivialDimension;
             res.isIrreducible = self.isIrreducible;
@@ -150,12 +155,24 @@ classdef RepByImages < replab.Rep
 
     methods (Static)
 
+        function rep = make(group, field, dimension, preimages, images)
+        % Constructs a representation from images of group generators and their inverses
+        %
+        % Args:
+        %   group (`+replab.FiniteGroup`): Finite group represented
+        %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
+        %   dimension (integer): Representation dimension
+        %   preimages (cell(1,\*) of ``group`` elements): Preimages
+        %   images (cell(1,\*) of double(\*,\*), may be sparse or symbolic): Images of the preimages
+            rep = replab.RepByImages(group, field, dimension, preimages, images, true);
+        end
+
         function rep1 = fromExactRep(rep)
         % Constructs a `.RepByImages` from an existing representation with exact images
             assert(isa(rep.group, 'replab.NiceFiniteGroup'));
             nG = rep.group.nGenerators;
             images = arrayfun(@(i) rep.image_internal(rep.group.generator(i)), 1:nG, 'uniform', 0);
-            rep1 = replab.RepByImages(rep.group, rep.field, rep.dimension, rep.group.generators, images);
+            rep1 = replab.RepByImages.make(rep.group, rep.field, rep.dimension, rep.group.generators, images);
         end
 
         function rep = fromImageFunction(group, field, dimension, imageFun)
@@ -172,7 +189,7 @@ classdef RepByImages < replab.Rep
             assert(isa(group, 'replab.FiniteGroup'), 'The given group must be a FiniteGroup');
             nG = group.nGenerators;
             images = arrayfun(@(i) imageFun(group.generator(i)), 1:nG, 'uniform', 0);
-            rep = replab.RepByImages(group, field, dimension, group.generators, images);
+            rep = replab.RepByImages.make(group, field, dimension, group.generators, images);
         end
 
     end

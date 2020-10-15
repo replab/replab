@@ -1273,7 +1273,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
             assert(length(args.preimages) == length(args.images), 'Number of images does not match the number of preimages');
             preId = cellfun(@(g) self.isIdentity(g), args.preimages);
-            rho = replab.RepByImages(self, field, dimension, args.preimages(~preId), args.images(~preId));
+            rho = replab.RepByImages.make(self, field, dimension, args.preimages(~preId), args.images(~preId));
         end
 
         function rho = permutationRep(self, dimension, permutations)
