@@ -32,18 +32,10 @@ classdef RepByImages < replab.Rep
             assert(length(images) == length(preimages));
             knownUnitary = true;
             nI = length(preimages);
-            images_internal = cell(1, nI);
-            inverseImages_internal = cell(1, nI);
+            images_internal = images;
+            inverseImages_internal = replab.rep.computeInverses(group, @(x,y) x*y, preimages, images);
             for i = 1:nI
-                g = preimages{i};
-                o = group.elementOrder(g);
-                img = images{i};
-                assert(isequal(size(img), [dimension dimension]));
-                inv_img = replab.util.repeatedSquaring(img, o-1, @(x,y) x*y);
-                %assert(all(all(img * inv_img == eye(dimension))), 'RepByImages can only be used with exact images. Use symbolic arguments.');
-                knownUnitary = knownUnitary && all(all(img == ctranspose(inv_img)));
-                images_internal{i} = img;
-                inverseImages_internal{i} = inv_img;
+                knownUnitary = knownUnitary && all(all(images_internal{i} == ctranspose(inverseImages_internal{i})));
             end
             % replab.Rep immutable
             self.group = group;
