@@ -11,9 +11,6 @@ replab.init.vpi().require;
 % are locked with ``mlock`` to avoid being cleared when ``clear all`` is used.
 replab.init.initHelp;
 
-% Support for symbolic expressions in Octave
-replab.init.symToolbox().require;
-
 % Support for the convex modeling framework and SDP solvers
 replab.init.YALMIP().require;
 replab.init.sdpt3().require;
