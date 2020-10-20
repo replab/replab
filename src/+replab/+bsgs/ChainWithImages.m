@@ -32,19 +32,18 @@ classdef ChainWithImages < replab.Str
 
     methods
 
-        function self = ChainWithImages(n, J, S, T, Sind, Delta, iDelta, U, Uinv, V, Vinv)
+        function self = ChainWithImages(n, J, B, S, T, Sind, Delta, iDelta, U, Uinv, V, Vinv)
         % Constructs an empty mutable chain for a group of permutations acting on ``n`` elements
         %
         % Args:
         %   n (integer): Domain size
-        %                               The default value is `+replab.+bsgs.TrivialGroup`
         %
         % Returns:
         %   `+replab.bsgs.ChainWithImages`: A constructed BSGS chain
             self.isMutable = true;
             self.n = n;
             self.J = J;
-            if nargin == 1
+            if nargin > 2
                 self.B = B;
                 self.S = S;
                 self.T = T;
@@ -391,6 +390,33 @@ classdef ChainWithImages < replab.Str
             i = k + 1; % marker that we striped through the chain
         end
 
+        function res = mapImages(self, mu)
+        % Returns a new BSGS chain with the images mapped through a function
+        %
+        % The returned chain has the same mutability (`.isMutable`) as this chain.
+        %
+        % Args:
+        %   mu (`+replab.Morphism`): Group homomorphism from the current `J` to ``newJ``
+        %
+        % Returns:
+        %   `+replab.+bsgs.ChainWithImages`: A copy of this BSGS chain with updated images
+            k = self.length;
+            f = @(v) mu.imageElement(v);
+            newT = cellfun(f, self.T, 'uniform', 0);
+            newV = cell(1, k);
+            newVinv = cell(1, k);
+            for i = 1:k
+                newV{i} = cellfun(f, self.V{i}, 'uniform', 0);
+                newVinv{i} = cellfun(f, self.Vinv{i}, 'uniform', 0);
+            end
+            newJ = mu.target;
+            res = replab.bsgs.ChainWithImages(self.n, newJ, self.B, self.S, newT, self.Sind, self.Delta, self.iDelta, ...
+                                              self.U, self.Uinv, newV, newVinv);
+            if ~self.isMutable
+                res.makeImmutable;
+            end
+        end
+
         %% Mutable methods
 
         function mutableMapImages(self, mu)
@@ -590,10 +616,10 @@ classdef ChainWithImages < replab.Str
                 C.stripAndAddStrongGenerator(preimages{i}, images{i});
             end
             C.randomizedSchreierSims(order);
-            if ~isempty(finalizeImages)
-                C.mutableMapImages(finalizeImages);
-            end
             C.makeImmutable;
+            if ~isempty(finalizeImages)
+                C = C.mapImages(finalizeImages);
+            end
         end
 
     end
