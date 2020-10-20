@@ -236,8 +236,13 @@ classdef cyclotomic
 
     methods (Static, Access = protected)
 
-        function [lhs rhs] = shapeArgs(lhs, rhs)
+        function arg = shapeArg(arg)
+            if isa(arg, 'double')
+                arg = replab.cyclotomic.fromDoubles(arg);
+            end
+        end
 
+        function [lhs rhs] = shapeArgs(lhs, rhs)
             if isa(lhs, 'double')
                 lhs = replab.cyclotomic.fromDoubles(lhs);
             end
@@ -520,17 +525,21 @@ classdef cyclotomic
             error = reshape(data.error, size(self.mat));
         end
 
-        function res = horzcat(self, varargin)
+        function res = horzcat(lhs, varargin)
         % Horizontal concatenation
-            rhs = cellfun(@(a) a.mat, varargin, 'uniform', 0);
-            res = horzcat(self.mat, rhs{:});
+            lhs = replab.cyclotomic.shapeArg(lhs);
+            rhs = cellfun(@(a) replab.cyclotomic.shapeArg(a), varargin, 'uniform', 0);
+            rhs = cellfun(@(a) a.mat, rhs, 'uniform', 0);
+            res = horzcat(lhs.mat, rhs{:});
             res = replab.cyclotomic(res);
         end
 
-        function res = vertcat(self, varargin)
+        function res = vertcat(lhs, varargin)
         % Vertical concatenation
-            rhs = cellfun(@(a) a.mat, varargin, 'uniform', 0);
-            res = vertcat(self.mat, rhs{:});
+            lhs = replab.cyclotomic.shapeArg(lhs);
+            rhs = cellfun(@(a) replab.cyclotomic.shapeArg(a), varargin, 'uniform', 0);
+            rhs = cellfun(@(a) a.mat, rhs, 'uniform', 0);
+            res = vertcat(lhs.mat, rhs{:});
             res = replab.cyclotomic(res);
         end
 
