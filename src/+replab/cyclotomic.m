@@ -346,7 +346,7 @@ classdef cyclotomic
         end
 
         function res = uminus(self)
-            res = replab.cyclotomic.fromJavaArray(javaMethod('negate', 'cyclo.Lab', self.matArray), size(self.matArray));
+            res = replab.cyclotomic.fromJavaArray(javaMethod('negate', 'cyclo.Lab', self.matArray), size(self));
         end
 
         function res = minus(lhs, rhs)
