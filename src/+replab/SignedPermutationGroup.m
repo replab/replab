@@ -47,7 +47,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
         % Domain
 
         function b = eqv(self, x, y)
-            b = isequal(x, y);
+            b = all(x == y);
         end
 
         % Monoid
