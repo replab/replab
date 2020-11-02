@@ -36,6 +36,55 @@ classdef SubRep < replab.Rep
             self.B_internal = B_internal;
         end
 
+        function verifyInvariance(self)
+        % Verifies that the basis of this object defines a subrepresentation up to a given precision
+        %
+        % From the basis `.basis` which we write $B$ of this subrepresentation, we compute a projector
+        % $\pi_R = B B^\dagger$. The user provides a parameter ``epsilon`` ($\epsilon$), and when the verification
+        % succeeds, it means that there exists a projector $\pi_K$ on an invariant subspace
+        % with $|| \pi_R - \pi_K ||_2 \le \epsilon$.
+        %
+        % Limitations:
+        %
+        % * Assumes that the parent representation is unitary, and the basis is
+        %   orthonormal.
+        % * Assumes that the errors in the basis are much larger than the errors
+        %   in the representation images themselves.
+        % * Only works for finite groups.
+        %
+        % Args:
+        %   epsilon (double): Maximal error on the subrepresentation basis (see above)
+            assert(isa(self.group, 'replab.FiniteGroup'));
+            assert(isequal( [isUnitary] )); % ETC
+            % by the construction of the BSGS chain, there is a family of sets {T_i},
+            % where i = 1,...,depth, such that every group element can be written as
+            % g = t_1 t_2 ... t_depth, and t_i \in T_i
+            %
+            % As S, we take the union of the T_i. Done.
+            %
+            % Then k = depth, delta = 0, q = 0
+            %
+            % Use Algorithm IV.1
+        end
+
+        function verifyIrreducibilityExact(self)
+        % Verifies that this subrepresentation is irreducible
+        %
+        % * Assumes that the basis is exact
+        % * Same assumptions as `.verifyInvariance`
+        %
+        % Args:
+        %   pthr (double): Probability of a false positive (should be ~1e-12 or something)
+        %   thetamax (double): Upper bound on theta
+            assert(isa(self.group, 'replab.FiniteGroup'));
+            % S = the whole group, and we sample from the Haar measure
+            % t = depth = 1, choose m such that the theta is << 1
+            % quality of the generating set enters in the length of the product
+            %
+            % Estimate the probability of a false negative given the above
+            % (run experimental experiments?)
+        end
+
         function H = basis(self)
         % Returns the basis of this subrepresentation in the parent representation
         %
