@@ -418,7 +418,7 @@ classdef Rep < replab.Obj
         %
         % Returns:
         %   `.Rep`: Representation
-            res = replab.rep.CompositionRep(self, applyFirst);
+            res = replab.rep.CompositionRep(applyFirst, self);
         end
 
     end
