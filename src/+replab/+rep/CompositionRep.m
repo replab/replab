@@ -9,9 +9,11 @@ classdef CompositionRep < replab.Rep
     methods
 
         function self = CompositionRep(first, second)
+            assert(isa(first, 'replab.Morphism'));
+            assert(isa(second, 'replab.Rep'));
             self.first = first;
             self.second = second;
-            self.group = first.preimageGroup(second.group);
+            self.group = first.source;
             self.field = second.field;
             self.dimension = second.dimension;
             self.isUnitary = [];
