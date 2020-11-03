@@ -14,8 +14,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
         %   domainSize (integer): Size of the domain
         %   generators (cell(1,\*) of permutation): Group generators
         %   order (vpi, optional): Order of the group
-        %   type (`+replab.SignedPermutationGroup`, optional): Type of this group if known,
-        %                                                      or ``'self'`` if this group is its own type
+        %   type (`+replab.SignedPermutationGroup`, optional): Type of this group if known, or ``'self'`` if this group is its own type
             self.domainSize = domainSize;
             self.identity = 1:domainSize;
             self.generators = generators;
