@@ -1,4 +1,4 @@
-classdef ForRepByImages < replab.Equivariant
+classdef ForExactRepByImages < replab.Equivariant
 
     properties (Access = protected)
         decompositionR % transversal images for repR
@@ -33,18 +33,18 @@ classdef ForRepByImages < replab.Equivariant
     methods (Static)
 
         function e = make(repC, repR, special)
-            if ~isa(repR, 'replab.RepByImages') || ~isa(repC, 'replab.RepByImages')
+            if ~isa(repR, 'replab.rep.ExactRepByImages') || ~isa(repC, 'replab.rep.ExactRepByImages')
                 e = replab.DispatchNext;
                 return
             end
-            e = replab.equi.ForRepByImages(repC, repR, special);
+            e = replab.equi.ForExactRepByImages(repC, repR, special);
         end
 
     end
 
     methods
 
-        function self = ForRepByImages(repC, repR, special)
+        function self = ForExactRepByImages(repC, repR, special)
             self@replab.Equivariant(repC, repR, special);
         end
 

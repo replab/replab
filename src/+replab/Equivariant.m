@@ -206,19 +206,19 @@ classdef Equivariant < replab.Domain
         %   `+replab.Equivariant`: The equivariant vector space
             if ~replab.dispatch('exists', 'replab.Equivariant.make')
                 % default implementations
-                
+
                 % Equivariant construction
                 replab.dispatch('register', 'replab.Equivariant.make', 'ForSubReps', 15, ...
                                 @(repC, repR, special) replab.equi.ForSubReps.make(repC, repR, special));
-                replab.dispatch('register', 'replab.Equivariant.make', 'ForRepByImages', 10, ...
-                                @(repC, repR, special) replab.equi.ForRepByImages.make(repC, repR, special));
+                replab.dispatch('register', 'replab.Equivariant.make', 'ForExactRepByImages', 10, ...
+                                @(repC, repR, special) replab.equi.ForExactRepByImages.make(repC, repR, special));
                 replab.dispatch('register', 'replab.Equivariant.make', 'ForFiniteGroup', 5, ...
                                 @(repC, repR, special) replab.equi.ForFiniteGroup.make(repC, repR, special));
-                
+
                             % Default method, works for all compact groups
                 replab.dispatch('register', 'replab.Equivariant.make', 'ForCompactGroup', 0, ...
                                 @(repC, repR, special) replab.equi.ForCompactGroup.make(repC, repR, special));
-            
+
             end
             E = replab.dispatch('call', 'replab.Equivariant.make', repC, repR, special);
         end

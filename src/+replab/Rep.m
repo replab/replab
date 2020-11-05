@@ -24,6 +24,7 @@ classdef Rep < replab.Obj
 
     properties
         % see `+replab.+rep.copyProperties`
+        isExact % ({true, false, []}): Whether this representation can computed exact (cyclotomic) images
         isUnitary % ({true, false, []}): Whether this representation is unitary
         trivialDimension % (integer or []): Dimension of the trivial subrepresentation in this representation
         isIrreducible % (true, false, []): Whether this representation is irreducible
