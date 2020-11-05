@@ -74,7 +74,7 @@ classdef FactorizationChain < replab.mrp.Factorization
             end
         end
 
-        function letters = preimageElement(self, g)
+        function letters = factorize(self, g)
             letters = self.chain.word(g);
             if ~self.useInverses
                 letters = self.substituteInverses(letters);

@@ -22,6 +22,23 @@ classdef GeneralizedSymmetricGroup < replab.perm.GeneralizedSymmetricSubgroup
             self = self@replab.perm.GeneralizedSymmetricSubgroup(n, m, generators, o, 'self');
         end
 
+        function m = naturalMorphism(self, larger)
+        % Returns the natural morphism to a GeneralizedSymmetricGroup
+        %
+        % The given group needs to be larger/compatible in the sense that ``self.n == larger.n`` and
+        % ``self.m`` divides ``larger.m``.
+        %
+        % Args:
+        %   gsg (`+replab.+perm.GeneralizedSymmetricGroup`): Generalized symmetric group in the sense above
+        %
+        % Returns:
+        %   `+replab.FiniteMorphism`: An injective morphism
+            assert(self.n == larger.n, 'Groups must have the same size');
+            assert(mod(larger.m, self.m) == 0, 'Cyclic orders must be compatible');
+            factor = larger.m/self.m;
+            m = self.morphismByFunction(larger, @(g) [g(1,:); g(2,:)*factor]);
+        end
+
     end
 
     methods % Implementations
@@ -50,6 +67,42 @@ classdef GeneralizedSymmetricGroup < replab.perm.GeneralizedSymmetricSubgroup
 
         function f = morphismFromSignedPermutationGroup(G)
             f = replab.Morphism.lambda(G, replab.perm.GeneralizedSymmetricGroup(G.domainSize, 2), @(g) [abs(g); (1-sign(g))/2]);
+        end
+
+        function [G g] = fromMatrix(M)
+        % Recognizes a generalized permutation matrix
+        %
+        % Returns
+        % -------
+        %   G:
+        %     `.GeneralizedSymmetricGroup` or ``[]``: Group the recognized element is part of, or ``[]`` if unsuccessful
+        %   g:
+        %     group element or ``[]``: Group element if successful otherwise ``[]``
+            G = [];
+            g = [];
+            [I J V] = find(M);
+            n = length(I);
+            sI = sort(I);
+            [sJ IJ] = sort(J);
+            if ~all(sI' == 1:n) || ~all(sJ' == 1:n)
+                return
+            end
+            if any(V.*conj(V) ~= 1)
+                return
+            end
+            angles = angle(double(V));
+            angles(angles<0) = angles(angles<0) + 2*pi;
+            [N D] = rat(angles/2/pi);
+            o = 1;
+            for i = 1:n
+                o = lcm(o, D(i));
+                if replab.cyclotomic.E(D(i))^N(i) ~= V(i)
+                    return
+                end
+            end
+            N = N.*o./D;
+            G = replab.perm.GeneralizedSymmetricGroup(n, o);
+            g = [I(IJ)'; N(IJ)'];
         end
 
     end

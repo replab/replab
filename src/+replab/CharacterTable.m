@@ -88,6 +88,14 @@ classdef CharacterTable < replab.Obj
         end
 
         function dec = decomposition(self, rep)
+        % Computes the decomposition of a representation into irreducibles using the characters
+        %
+        % Args:
+        %   rep (`.Rep`): Representation to decompose, must be complex
+        %
+        % Returns:
+        %   `.Irreducible`: Irreducible decomposition
+            assert(rep.overC, 'Can only decompose complex representations');
             nI = self.nIrreps;
             I = cell(1, nI);
             for i = 1:self.nIrreps
