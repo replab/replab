@@ -419,25 +419,6 @@ classdef ChainWithImages < replab.Str
 
         %% Mutable methods
 
-        function mutableMapImages(self, mu)
-        % Maps in place the chain images
-        %
-        % Args:
-        %   mu (`+replab.Morphism`): Group homomorphism from the current `J` to ``newJ``
-            assert(self.isMutable);
-            k = self.length;
-            f = @(v) mu.imageElement(v);
-            self.T = cellfun(f, self.T, 'uniform', 0);
-            for i = 1:k
-                Vi = self.V{i};
-                self.V{i} = cellfun(f, Vi, 'uniform', 0);
-                Vinvi = self.Vinv{i};
-                self.Vinv{i} = cellfun(f, Vinvi, 'uniform', 0);
-            end
-            self.J = mu.target;
-        end
-
-
         function insertInOrbit(self, i, b, u, v)
         % Inserts a new orbit element in an orbit
         %
