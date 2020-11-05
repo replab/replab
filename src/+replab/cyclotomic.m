@@ -470,6 +470,26 @@ classdef cyclotomic
             l = length(self.mat);
         end
 
+        function varargout = find(self, varargin)
+            assert(isempty(varargin), 'Additional input arguments are not supported');
+            mask = self ~= 0;
+            switch nargout
+              case 0
+              case 1
+                I = find(mask);
+                varargout = {I};
+              case 2
+                [I J] = find(mask);
+                varargout = {I J};
+              case 3
+                [I J] = find(mask);
+                V = replab.cyclotomic(self.mat(mask));
+                varargout = {I J V};
+              otherwise
+                error('Too many output arguments');
+            end
+        end
+
         function varargout = subsref(self, s)
         % Indexing
             switch s(1).type
