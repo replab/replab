@@ -388,7 +388,7 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function l = factorizeLetters(self, element)
-            l = self.factorization.preimageElement(element);
+            l = self.factorization.factorize(element);
         end
 
         % Construction of groups

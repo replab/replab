@@ -18,7 +18,7 @@ classdef FactorizationEnumeration < replab.mrp.Factorization
 
     methods % Implementations
 
-        function letters = preimageElement(self, g)
+        function letters = factorize(self, g)
             ind = self.elements.find(g');
             assert(~isempty(ind), 'The permutation %s is not a member of the group.', replab.shortStr(g));
             letters = self.words{ind};

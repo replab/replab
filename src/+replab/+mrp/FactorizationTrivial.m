@@ -12,7 +12,7 @@ classdef FactorizationTrivial < replab.mrp.Factorization
             self.useInverses = useInverses;
         end
 
-        function letters = preimageElement(self, g)
+        function letters = factorize(self, g)
             letters = zeros(1, 0);
         end
 
