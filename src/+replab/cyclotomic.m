@@ -263,7 +263,7 @@ classdef cyclotomic
 
         function res = intval(self)
             d = double(self);
-            res = intval(d, eps(d)*10); % TODO: compute a proper interval
+            res = intval(d, eps(d)); % "double" is pretty precise
         end
 
         function res = isvector(self)
