@@ -24,6 +24,10 @@ classdef FactorizationEnumeration < replab.mrp.Factorization
             letters = self.words{ind};
         end
 
+        function n = maximumWordLength(self)
+            n = max(cellfun(@length, self.words));
+        end
+
     end
 
     methods (Static)

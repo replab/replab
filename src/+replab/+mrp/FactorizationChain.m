@@ -81,6 +81,16 @@ classdef FactorizationChain < replab.mrp.Factorization
             end
         end
 
+        function n = maximumWordLength(self)
+            c = self.chain;
+            n = 0;
+            for i = 1:c.k
+                W = c.nuw{i};
+                l = cellfun(@(w) length(self.substituteInverses(w)), c.nuw{i});
+                n = n + max(l);
+            end
+        end
+
     end
 
 end
