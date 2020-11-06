@@ -13,9 +13,9 @@ classdef SymmetricYoungIrrep < replab.Rep
        rowFunction % integer(:,:): The i'th row is the row function for tableaux. The k'th entry is the row index k is in
        colFunction % integer(:,:): The i'th row is the column function for tableaux. Analogous to the row function
 
-       % E.g the Young Tableax 1 2 5 
+       % E.g the Young Tableax 1 2 5
        %                       3 4
-       % has row function [1 1 2 2 1] and column function [1 2 1 2 3] 
+       % has row function [1 1 2 2 1] and column function [1 2 1 2 3]
        % These are the j and j' function in Schindler Miriam
 
        basisHash % replab.sym.Set: Describes the row index of the row function of a Young Tableaux.
@@ -28,7 +28,7 @@ classdef SymmetricYoungIrrep < replab.Rep
     end
 
 
-   methods
+    methods
 
         function self = SymmetricYoungIrrep(group, partition,form)
         % Constructs an irreducible representation of S_n
@@ -36,26 +36,30 @@ classdef SymmetricYoungIrrep < replab.Rep
         % Args:
         % partition (integer(1,:)): Partition
         % group (`replab.Group`): Group being representation
-               if sum(partition) ~= group.domainSize
-                     error('This is not a valid Young Diagram for this domain size.')
-               end
-                if size(partition,2) == 1
-                    partition = partition';
-                end
-                assert(size(partition,1) == 1);
-                self.isIrreducible = true;
-                self.field = 'R';
-                self.group = group;
-                self.partition = partition;
-                self.dimension = replab.sym.findPartitions.dimension(partition);
-                self.conjugatePartition = replab.sym.findPartitions.conjugatePart(partition);
-                self.rangeOfParts = 1:self.dimension;
-                if isequal(form,'orth')
-                    self.isUnitary = 1;
-                end
-                self.seminormalHelper();
-                self.underlyingRep = self.constructRep;
+            if sum(partition) ~= group.domainSize
+                error('This is not a valid Young Diagram for this domain size.')
+            end
+            if size(partition,2) == 1
+                partition = partition';
+            end
+            assert(size(partition,1) == 1);
+            self.isIrreducible = true;
+            self.field = 'R';
+            self.group = group;
+            self.partition = partition;
+            self.dimension = replab.sym.findPartitions.dimension(partition);
+            self.conjugatePartition = replab.sym.findPartitions.conjugatePart(partition);
+            self.rangeOfParts = 1:self.dimension;
+            if isequal(form,'orth')
+                self.isUnitary = 1;
+            end
+            self.seminormalHelper();
+            self.underlyingRep = self.constructRep;
         end
+
+    end
+
+    methods (Access = protected)
 
         function rho = image_internal(self, g)
         % Image function used by replab to calculate the images of a permutation
@@ -68,13 +72,13 @@ classdef SymmetricYoungIrrep < replab.Rep
             rho = self.underlyingRep.image(g);
         end
 
-   end
+    end
 
-   methods (Access = protected)
+    methods (Access = protected)
 
         function seminormalHelper(self)
         % Helper function for constructor
-        
+
             youngLattice = replab.sym.YoungLattice(self.partition,self.group.domainSize);
             [self.rowFunction,self.colFunction,~] = youngLattice.generateTableaux;
             %Use Young Lattice to generate row and
@@ -114,7 +118,7 @@ classdef SymmetricYoungIrrep < replab.Rep
                 % only calculated where we need it (for equation 11/13)
                 m1a = sparse(neitherAndIsR,neitherAndIsR,-axDistRec,self.dimension,self.dimension);
                 m1b = sparse(neitherAndIsRPrime,neitherAndIsRPrime,axDistRec,self.dimension,self.dimension);
-                % The m1's describes the matrix elements from Equation 11/13. 
+                % The m1's describes the matrix elements from Equation 11/13.
                 % m1a and m1b describe the common matrix elements in Eq 11 and
                 % 13
                 if self.isUnitary %preset this if we are in the orthogonal representation
