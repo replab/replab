@@ -24,75 +24,12 @@ classdef Rep < replab.Obj
 
     properties
         % see `+replab.+rep.copyProperties`
-        isExact % ({true, false, []}): Whether this representation can computed exact (cyclotomic) images
+        isExact % ({true, false, []}): Whether this representation can compute exact (cyclotomic) images
         isUnitary % ({true, false, []}): Whether this representation is unitary
         trivialDimension % (integer or []): Dimension of the trivial subrepresentation in this representation
         isIrreducible % (true, false, []): Whether this representation is irreducible
         frobeniusSchurIndicator % (integer or []): Value of the non-approximated Frobenius-Schur indicator
         isDivisionAlgebraCanonical % ({true, false, []}): If the representation is real and irreducible and the Frobenius-Schur indicator is not 1, means that the images encode the complex or quaternion division algebras in the RepLAB canonical form
-    end
-
-    properties
-        nearEps2_ % (double): Upper bound on ``||rep(g) rep(h) - rep(gh)||2 <= nearEps2``
-        nearEpsF_ % (double): Upper bound on ``||rep(g) rep(h) - rep(gh)||F <= nearEpsF``
-        approxEps2_ % (double): There exists an exact representation ``repE`` such that ``||rep(g) - repE(g)||2 <= approxEps2``
-        approxEpsF_ % (double): There exists an exact representation ``repE`` such that ``||rep(g) - repE(g)||2 <= approxEpsF``
-    end
-
-    methods
-
-        function computeNearEps(self)
-            if isa(self.group, 'replab.FiniteGroup')
-                els = self.group.elements.toCell;
-                n = length(els);
-                for i = 1:n
-                    for j = 1:n
-                        g = els{i};
-                        h = els{j};
-                        gh = self.group.compose(g, h);
-                        repgh1 = self.image(g) * self.image(h);
-                        repgh2 = self.image(gh);
-                        diff = repgh1 - repgh2;
-                        self.nearEps2_ = norm(diff, 2);
-                        self.nearEpsF_ = norm(diff, 'fro');
-                    end
-                end
-            end
-        end
-
-        function e = nearEps2(self)
-            if isempty(self.nearEps2_)
-
-                e = NaN;
-            else
-                e = self.nearEps2_;
-            end
-        end
-
-        function e = nearEpsF(self)
-            if isempty(self.nearEpsF_)
-                e = NaN;
-            else
-                e = self.nearEpsF_;
-            end
-        end
-
-        function e = approxEps2(self)
-            if isempty(self.approxEps2_)
-                e = NaN;
-            else
-                e = self.approxEps2_;
-            end
-        end
-
-        function e = approxEpsF(self)
-            if isempty(self.approxEpsF_)
-                e = NaN;
-            else
-                e = self.approxEpsF_;
-            end
-        end
-
     end
 
     properties (SetAccess = protected)
@@ -101,71 +38,108 @@ classdef Rep < replab.Obj
         dimension % (integer): Representation dimension
     end
 
-    methods % Representation methods
-
-        % Abstract method
-
-        function [rho error2 errorF] = image_error(self, g)
-        % Returns the image of a group element, dense or sparse, along with an error estimate
-        %
-        % Args:
-        %   g (element of `.group`): Element being represented
-        %
-        % Returns
-        % -------
-        %   rho:
-        %     double(\*,\*): Image, may be sparse
-        %   error2:
-        %     double: Error estimation (2-norm)
-        %   errorF:
-        %     double: Error estimation (Frobenius norm)
-        end
+    methods (Access = protected) % Abstract methods
 
         function rho = image_internal(self, g)
-        % Returns the image of a group element, dense or sparse
+        % Returns the image of a group element in its internal representation
         %
         % Args:
         %   g (element of `.group`): Element being represented
         %
         % Returns:
-        %   double(\*,\*): Image of the given element for this representation, may be sparse
+        %   double/cyclotomic/intval(\*,\*): Image of the given element for this representation
             error('Abstract');
         end
 
-        % Methods with default implementations
+        function e = computeErrorBound(self)
+            error('Abstract');
+        end
 
-        function rho = image(self, g)
+    end
+
+    methods % Representation methods
+
+        function e = errorBound(self)
+        % Returns a bound on the approximation error of this representation
+        %
+        % Returns:
+        %   double: There exists an exact representation ``repE`` such that ``||rep(g) - repE(g)||fro <= errorBound``
+            e = self.cached('errorBound', @() self.computeErrorBound);
+        end
+
+        function rho = image(self, g, type)
         % Returns the image of a group element
         %
         % Args:
         %   g (element of `.group`): Element being represented
+        %   type ({'double', 'sparse', 'cyclotomic', 'intval', 'native'}, optional): Type of the returned value, default: 'double'
         %
         % Returns:
         %   double(\*,\*): Image of the given element for this representation
-            rho = full(self.image_internal(g));
+            if nargin < 3 || isempty(type)
+                type = 'double';
+            end
+            rho = self.image_internal(g);
+            switch type
+              case 'native'
+                % do nothing
+              case 'double'
+                switch class(rho)
+                  case 'double'
+                    rho = full(rho);
+                  case 'intval'
+                    rho = mid(rho);
+                  case 'cyclotomic'
+                    rho = double(rho);
+                end
+              case 'sparse'
+                switch class(rho)
+                  case 'double'
+                    rho = sparse(rho);
+                  case 'intval'
+                    rho = sparse(mid(rho));
+                  case 'cyclotomic'
+                    [I J V] = find(rho);
+                    V = double(V);
+                    rho = sparse(I, J, V, size(rho, 1), size(rho, 2));
+                end
+              case 'cyclotomic'
+                switch class(rho)
+                  case 'double'
+                    rho0 = rho;
+                    rho = round(rho);
+                    assert(isreal(rho0) && all(all(rho == rho0)), 'Can only convert real, integer, images to cyclotomics');
+                    rho = replab.cyclotomic.fromDoubles(rho);
+                  case 'intval'
+                    assert(all(all(rad(rho) == 0)), 'Can only convert exact images to cyclotomics');
+                    rho0 = mid(rho);
+                    rho = round(rho0);
+                    assert(isreal(rho0) && all(all(rho == rho0)), 'Can only convert real, integer, images to cyclotomics');
+                end
+              case 'intval'
+                switch class(rho)
+                  case 'double'
+                    e = self.errorBound;
+                    assert(~isempty(e) && ~isnan(e), 'Must know approximation error self.errorBound');
+                    rho = midrad(rho, ones(size(rho)) * e);
+                  case 'cyclotomic'
+                    rho = intval(rho);
+                end
+            end
         end
 
-        function rho = inverseImage_internal(self, g)
+        function rho = inverseImage(self, g, type)
         % Returns the image of the inverse of a group element
         %
         % Args:
         %   g (element of `.group`): Element of which the inverse is represented
-        %
-        % Returns:
-        %   double(\*,\*): Image of the inverse of the given element for this representation, may be sparse
-            gInv = self.group.inverse(g);
-            rho = self.image_internal(gInv);
-        end
-
-        function rho = inverseImage(self, g)
-        % Returns the image of the inverse of a group element
-        %
-        % Args:
-        %   g (element of `.group`): Element of which the inverse is represented
+        %   type ({'double', 'sparse', 'cyclotomic', 'intval', 'native'}, optional): Type of the returned value, default: 'double'
         %
         % Returns:
         %   double(\*,\*): Image of the inverse of the given element for this representation
-            rho = full(self.inverseImage_internal(g));
+            warning('Deprecated');
+            gInv = self.group.inverse(g);
+            rho = self.image(gInv);
         end
 
         function [rho rhoInverse] = sample(self)
@@ -463,8 +437,9 @@ classdef Rep < replab.Obj
         %   M (double(\*,\*)): Matrix acted upon
         %
         % Returns:
-        %   double(\*,\*): The matrix ``M * self.inverseImage(g)``
-            M = full(M * self.inverseImage_internal(g));
+        %   double(\*,\*): The matrix ``M * self.image(inverse(g))``
+            gInv = self.group.inverse(g);
+            M = full(M * self.image_internal(gInv));
         end
 
     end

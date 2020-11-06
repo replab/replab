@@ -1,4 +1,4 @@
-classdef ExactRepByImages < replab.RepByImages
+classdef RepByImages_exact < replab.RepByImages
 % A finite dimensional representation of a finite group
 %
 % The finite group must have an isomorphism to a permutation group, so that the images of that representation
@@ -6,12 +6,12 @@ classdef ExactRepByImages < replab.RepByImages
 % group transversals and their images (see `+replab.+bsgs.ChainWithImages`).
 
     properties (SetAccess = protected)
-        inverseImages % (cell(1,\*) of double/sparse double/cyclotomic(\*,\*)): Image inverses
+        inverseImages_internal % (cell(1,\*) of double/sparse double/cyclotomic(\*,\*)): Image inverses
     end
 
     methods
 
-        function self = ExactRepByImages(group, field, dimension, preimages, images, inverseImages, knownUnitary, chain)
+        function self = RepByImages_exact(group, field, dimension, preimages, images)
         % Constructs a representation from images of group generators and their inverses
         %
         % Args:
@@ -20,26 +20,16 @@ classdef ExactRepByImages < replab.RepByImages
         %   dimension (integer): Representation dimension
         %   preimages (cell(1,\*) of ``group`` elements): Preimages
         %   images (cell(1,\*) of double/sparse double/intval/cyclotomic(\*,\*)): Images of the preimages
-        %   inverseImages (cell(1,\*) of double/sparse double/intval/cyclotomic(\*,\*)): Images of the inverses of the preimages
-        %   knownUnitary (logical, optional): Whether the representation is known, defaults to false
-        %   chain (`+replab.+bsgs.ChainWithImages`, optional): BSGS chain
-            if nargin < 7 || isempty(knownUnitary)
-                knownUnitary = false;
-            end
-            if nargin < 8
-                chain = [];
-            end
-            % replab.Rep immutable
-            self.group = group;
+            self.group = group; % replab.Rep immutable
             self.field = field;
             self.dimension = dimension;
             % replab.Rep mutable
-            if knownUnitary
-                self.isUnitary = true;
-            end
+            inverseImages = replab.rep.computeInverses(group, @(x,y) x*y, preimages, images);
+            self.isExact = true;
+            self.isUnitary = arrayfun(@(i) full(all(all(images{i} == inverseImages{i}'))), 1:length(preimages));
             self.preimages = preimages;
-            self.images = images;
-            self.inverseImages = inverseImages;
+            self.images_internal = images;
+            self.inverseImages_internal = inverseImages;
         end
 
         function c = chain(self)
@@ -53,12 +43,15 @@ classdef ExactRepByImages < replab.RepByImages
         end
 
         function res = computeChain(self)
+            images = self.images_internal;
+            inverseImages = self.inverseImages_internal;
             m = length(self.preimages);
             d = self.dimension;
             n = self.group.niceMorphism.target.domainSize;
             iso = self.group.niceMorphism;
             nicePreimages = cellfun(@(g) iso.imageElement(g), self.preimages, 'uniform', 0);
             order = self.group.order;
+            base = [];
             if self.isUnitary
                 % for unitary/orthogonal representations, we don't need to compute inverses explicitly
                 if self.overR
@@ -66,24 +59,22 @@ classdef ExactRepByImages < replab.RepByImages
                 else
                     target = replab.UnitaryGroup(d, true);
                 end
-                res = replab.bsgs.ChainWithImages.make(n, target, nicePreimages, self.images, ...
-                                                       [], [], order);
+                res = replab.bsgs.ChainWithImages.make(n, target, nicePreimages, images, base, order);
             else
                 % for nonunitary/nonorthogonal representations, we store the inverses alongside the matrix, and use a special
                 % group structure to perform computations
                 target1 = replab.GeneralLinearGroupWithInverses(self.field, self.dimension, true);
                 target2 = replab.GeneralLinearGroup(self.field, self.dimension, true);
                 cut = replab.Morphism.lambda(target1, target2, @(X) double(X(:, 1:self.dimension)));
-                images = arrayfun(@(i) [self.images{i} self.inverseImages{i}], 1:m, 'uniform', 0);
-                res = replab.bsgs.ChainWithImages.make(n, target1, nicePreimages, images, ...
-                                                       [], [], order);
+                images = arrayfun(@(i) [images{i} inverseImages{i}], 1:m, 'uniform', 0);
+                res = replab.bsgs.ChainWithImages.make(n, target1, nicePreimages, images, base , order);
                 res = res.mapImages(cut);
             end
         end
 
     end
 
-    methods % Implementations
+    methods (Access = protected) % Implementations
 
         % Rep
 
@@ -92,9 +83,22 @@ classdef ExactRepByImages < replab.RepByImages
             rho = self.chain.image(perm);
         end
 
-        function rho = inverseImage_internal(self, g)
-            perm = self.group.niceMorphism.imageElement(g);
-            rho = self.chain.inverseImage(perm);
+        function e = computeErrorBound(self)
+            if self.isUnitary
+                % coefficients are bounded in [-1,1], so their error is at most eps(1)
+                % and there is dim*dim of them, under the square root
+                e = eps(1)*self.dimension;
+                if self.overC
+                    e = e*sqrt(2); % real and imaginary part
+                end
+            else
+                simRep = self.unitarize;
+                % worst case is given by the condition number of the change of basis
+                e = eps(1)*self.dimension*cond(simRep.A_internal);
+                if self.overC
+                    e = e*sqrt(2); % real and imaginary part
+                end
+            end
         end
 
     end

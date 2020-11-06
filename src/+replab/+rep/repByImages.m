@@ -1,4 +1,4 @@
-function rep = repByImages(group, field, dimension, preimages, images)
+function rep = repByImages(group, field, dimension, preimages, images, imagesErrorBound)
 % Constructs a representation from images of group generators and their inverses
 %
 % Args:
@@ -7,6 +7,10 @@ function rep = repByImages(group, field, dimension, preimages, images)
 %   dimension (integer): Representation dimension
 %   preimages (cell(1,\*) of ``group`` elements): Preimages generating the group
 %   images (cell(1,\*) of double(\*,\*), may be sparse or cyclotomic): Images of the preimages
+%   imagesErrorBound (double, optional): Error bound on the images
+    if nargin < 6
+        imagesErrorBound = [];
+    end
     assert(isa(group, 'replab.FiniteGroup'));
     assert(isa(images, 'cell') && isrow(images));
     n = length(preimages);
@@ -46,12 +50,41 @@ function rep = repByImages(group, field, dimension, preimages, images)
         exactImages = all(isInteger);
     end
     if exactImages
-        inverseImages = replab.rep.computeInverses(group, @(x,y) x*y, preimages, images);
-        isUnitary = arrayfun(@(i) full(all(all(images{i} == inverseImages{i}'))), 1:n);
-        rep = replab.rep.ExactRepByImages(group, field, dimension, preimages, images, inverseImages, all(isUnitary));
+        recG = cell(1, n);
+        recg = cell(1, n);
+        isGenPerm = true;
+        o = 1;
+        for i = 1:n
+            [G g] = replab.perm.GeneralizedSymmetricGroup.fromMatrix(images{i});
+            if isempty(G)
+                isGenPerm = false;
+                break
+            else
+                recG{i} = G;
+                recg{i} = g;
+                o = lcm(o, G.m);
+            end
+        end
+        if isGenPerm
+            G = replab.perm.GeneralizedSymmetricGroup(recG{1}.n, o);
+            genPerms = arrayfun(@(i) recG{i}.naturalMorphism(G).imageElement(recg{i}), 1:n, 'uniform', 0);
+            rep = replab.rep.RepByImages_monomial(group, field, dimension, preimages, images, G, genPerms);
+        else
+            rep = replab.rep.RepByImages_exact(group, field, dimension, preimages, images);
+        end
     else % ~exactImages
-        ind = replab.mrp.inverseIndices(group, preimages);
-        isUnitary = arrayfun(@(i) ind(i) > 0 && full(all(all(images{i} == images{ind(i)}'))), 1:n);
-        rep = replab.rep.InexactRepByImages(group, field, dimension, preimages, images, all(isUnitary));
+        if isempty(imagesErrorBound)
+            warning('Error bound not provided for inexact images; using adhoc error estimation');
+            imagesErrorBound = 0;
+            for i = 1:n
+                img = images{i};
+                if isa(img, 'intval')
+                    img = mid(img);
+                end
+                eo = group.elementOrder(preimages{i});
+                imagesErrorBound = max(errorBound, norm(img^eo - eye(dimension), 'fro')/eo);
+            end
+        end
+        rep = replab.rep.RepByImages_inexact(group, field, dimension, preimages, images, imagesErrorBound);
     end
 end

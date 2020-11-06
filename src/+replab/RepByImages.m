@@ -3,7 +3,7 @@ classdef RepByImages < replab.Rep
 
     properties (SetAccess = protected)
         preimages % (cell(1,\*) of `.group` elements): Preimages
-        images % (cell(1,\*) of double(\*,\*) or `.cyclotomic`, may be sparse): Images
+        images_internal % (cell(1,\*) of double/cyclotomic/intval(\*,\*), may be sparse): Images
     end
 
     methods % Implementations
@@ -13,25 +13,24 @@ classdef RepByImages < replab.Rep
         function names = hiddenFields(self)
             names = hiddenFields@replab.Rep(self);
             names{1, end+1} = 'preimages';
-            names{1, end+1} = 'images';
+            names{1, end+1} = 'images_internal';
         end
 
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Rep(self);
-            for i = 1:length(self.images)
+            for i = 1:length(self.images_internal)
                 names{1, end+1} = sprintf('preimages{%d}', i);
                 values{1, end+1} = self.preimages{i};
-                names{1, end+1} = sprintf('images{%d}', i);
-                values{1, end+1} = self.images{i};
+                names{1, end+1} = sprintf('images_internal{%d}', i);
+                values{1, end+1} = self.images_internal{i};
             end
         end
 
         % Rep
 
-
         function res = imap(self, f)
             preimages1 = cellfun(@(p) f.imageElement(p), self.preimages, 'uniform', 0);
-            res = replab.RepByImages.make(f.image, self.field, self.dimension, preimages1, self.images);
+            res = replab.RepByImages.make(f.image, self.field, self.dimension, preimages1, self.images_internal);
             res.isExact = self.isExact;
             res.isUnitary = self.isUnitary;
             res.trivialDimension = self.trivialDimension;
@@ -58,7 +57,8 @@ classdef RepByImages < replab.Rep
 
         function rep1 = fromExactRep(rep)
         % Constructs a `.RepByImages` from an existing representation with exact images
-            assert(isa(rep.group, 'replab.NiceFiniteGroup'));
+            assert(isa(rep.group, 'replab.FiniteGroup'));
+            assert(rep.isExact);
             nG = rep.group.nGenerators;
             images = arrayfun(@(i) rep.image_internal(rep.group.generator(i)), 1:nG, 'uniform', 0);
             rep1 = replab.RepByImages.make(rep.group, rep.field, rep.dimension, rep.group.generators, images);
