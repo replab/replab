@@ -579,15 +579,12 @@ classdef ChainWithImages < replab.Str
 
     methods (Static)
 
-        function C = make(n, target, preimages, images, finalizeImages, base, order)
-            if nargin < 7
+        function C = make(n, target, preimages, images, base, order)
+            if nargin < 6
                 order = [];
             end
-            if nargin < 6
-                base = [];
-            end
             if nargin < 5
-                finalizeImages = [];
+                base = [];
             end
             C = replab.bsgs.ChainWithImages(n, target);
             for i = 1:length(base)
@@ -598,9 +595,6 @@ classdef ChainWithImages < replab.Str
             end
             C.randomizedSchreierSims(order);
             C.makeImmutable;
-            if ~isempty(finalizeImages)
-                C = C.mapImages(finalizeImages);
-            end
         end
 
     end
