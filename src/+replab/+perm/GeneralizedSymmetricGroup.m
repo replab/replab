@@ -95,9 +95,19 @@ classdef GeneralizedSymmetricGroup < replab.perm.GeneralizedSymmetricSubgroup
             [N D] = rat(angles/2/pi);
             o = 1;
             for i = 1:n
-                o = lcm(o, D(i));
-                if replab.cyclotomic.E(D(i))^N(i) ~= V(i)
-                    return
+                if V(i) == 1i
+                    o = lcm(o, 4);
+                    N(i) = 1;
+                    D(i) = 4;
+                elseif V(i) == -1i
+                    o = lcm(o, 4);
+                    N(i) = 3;
+                    D(i) = 4;
+                else
+                    o = lcm(o, D(i));
+                    if replab.cyclotomic.E(D(i))^N(i) ~= V(i)
+                        return
+                    end
                 end
             end
             N = N.*o./D;
