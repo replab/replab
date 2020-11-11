@@ -1261,6 +1261,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `+replab.Rep`: The constructed group representation
+        %
+        % Example:
+        %   >>> S4 = replab.S(4);
+        %   >>> m = S4.repByImages('R', 1, 'images', {-1 -1});
+        %   >>> m.laws.checkSilent
+        %       1
             args = struct('preimages', {self.generators}, 'images', {{}});
             if length(varargin) == 1 && iscell(varargin{1})
                 warning('Old style non-keyword argument syntax is deprecated');
