@@ -32,27 +32,17 @@ classdef DerivedRep < replab.Rep
             s = headerStr@replab.Rep(self); % logic in parent class
         end
 
+    end
+
+    methods (Access = protected)
+
         % Rep
 
         function img = image_internal(self, g)
             if self.inverse
-                img = self.parent.inverseImage_internal(g);
+                img = self.parent.image_internal(self.group.inverse(g));
             else
                 img = self.parent.image_internal(g);
-            end
-            if self.conjugate
-                img = conj(img);
-            end
-            if self.transpose
-                img = img.';
-            end
-        end
-
-        function img = inverseImage_internal(self, g)
-            if self.inverse
-                img = self.parent.image_internal(g);
-            else
-                img = self.parent.inverseImage_internal(g);
             end
             if self.conjugate
                 img = conj(img);
