@@ -30,7 +30,7 @@ classdef SymmetricYoungIrrep < replab.Rep
 
     methods
 
-        function self = SymmetricYoungIrrep(group, partition,form)
+        function self = SymmetricYoungIrrep(group, partition, form)
         % Constructs an irreducible representation of S_n
         %
         % Args:
@@ -43,25 +43,24 @@ classdef SymmetricYoungIrrep < replab.Rep
                 partition = partition';
             end
             assert(size(partition,1) == 1);
-            self.isIrreducible = true;
-            self.field = 'R';
-            self.group = group;
+            dimension = replab.sym.findPartitions.dimension(partition);
+            self@replab.Rep(group, 'R', dimension, 'isIrreducible', true, 'isUnitary', strcmp(form, 'orth'));
             self.partition = partition;
-            self.dimension = replab.sym.findPartitions.dimension(partition);
             self.conjugatePartition = replab.sym.findPartitions.conjugatePart(partition);
             self.rangeOfParts = 1:self.dimension;
-            if isequal(form,'orth')
-                self.isUnitary = 1;
-            end
             self.seminormalHelper();
             self.underlyingRep = self.constructRep;
         end
 
     end
 
-    methods (Access = protected)
+    methods
 
-        function rho = image_internal(self, g)
+        function b = canComputeType(self, type)
+            b = self.underlyingRep.canComputeType(type);
+        end
+
+        function rho = image(self, g, varargin)
         % Image function used by replab to calculate the images of a permutation
         %
         % Args:
@@ -69,7 +68,15 @@ classdef SymmetricYoungIrrep < replab.Rep
         %
         % Returns:
         % rho (integer(:,:)) Image of g
-            rho = self.underlyingRep.image(g);
+            rho = self.underlyingRep.image(g, varargin{:});
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function e = computeErrorBound(self)
+            e = self.underlyingRep.errorBound;
         end
 
     end
@@ -148,7 +155,7 @@ classdef SymmetricYoungIrrep < replab.Rep
             for i = 1:n-1
                 images{i} = self.transImage(i);
             end
-            rep = self.group.repByImages(self.field, self.dimension, 'preimages', gens, 'images', images);
+            rep = self.group.repByImages(self.field, self.dimension, 'preimages', gens, 'images', images, 'isUnitary', self.isUnitary);
         end
 
    end

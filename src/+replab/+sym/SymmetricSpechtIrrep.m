@@ -39,16 +39,27 @@ classdef SymmetricSpechtIrrep < replab.Rep
             if sum(part) ~= group.domainSize
                 error('This is not a valid Young Diagram for this domain size.')
             end
-            self.field = 'R';
-            self.group = group;
+            dimension = replab.sym.findPartitions.dimension(part);
+            self@replab.Rep(group, 'R', dimension);
             self.partition = part;
-            self.dimension = replab.sym.findPartitions.dimension(part);
             self.conjugatePartition = replab.sym.findPartitions.conjugatePart(part);
             symIrrepHelper(self);
             self.underlyingRep = replab.RepByImages.fromImageFunction(self.group, self.field, self.dimension, @(g) naiveImage(self,g));
         end
 
-        function rho = image_internal(self, g)
+    end
+
+    methods (Access = protected)
+
+        function e = computeErrorBound(self)
+            e = self.underlyingRep.errorBound;
+        end
+
+    end
+
+    methods
+
+        function rho = image(self, g, varargin)
         % Image function used by replab to calculate the images of a permutation
         %
         % Args:
@@ -56,7 +67,11 @@ classdef SymmetricSpechtIrrep < replab.Rep
         %
         % Returns:
         % rho (integer(:,:)) Image of g
-            rho = round(self.underlyingRep.image(g));
+            rho = round(self.underlyingRep.image(g, varargin{:}));
+        end
+
+        function b = canComputeType(self, type)
+            b = self.underlyingRep.canComputeType(type);
         end
 
     end

@@ -1,90 +1,66 @@
-function rep = repByImages(group, field, dimension, preimages, images, imagesErrorBound)
+function rep = repByImages(group, field, dimension, varargin)
 % Constructs a representation from images of group generators and their inverses
 %
-% Args:
-%   group (`+replab.FiniteGroup`): Finite group represented, must not be trivial
-%   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
-%   dimension (integer): Representation dimension
-%   preimages (cell(1,\*) of ``group`` elements): Preimages generating the group
-%   images (cell(1,\*) of double(\*,\*), may be sparse or cyclotomic): Images of the preimages
-%   imagesErrorBound (double, optional): Error bound on the images
-    if nargin < 6
-        imagesErrorBound = [];
+% Arguments are the same as the `+replab.FiniteGroup.repByImages` function call.
+    assert(isa(group, 'replab.FiniteGroup'), 'The group must be finite for the repByImages construction');
+    assert(ismember(field, {'R' 'C'}), 'Field must be R or C for real or complex respectively.');
+    assert(isscalar(dimension) && dimension == round(dimension), 'Dimension must be an integer');
+    args = struct('preimages', {group.generators}, 'images', {{}}, 'imagesErrorBound', {[]});
+    [args repKWargs] = replab.util.populateStruct(args, varargin);
+    images = args.images;
+    preimages = args.preimages;
+    imagesErrorBound = args.imagesErrorBound;
+    assert(isa(preimages, 'cell') && (isempty(preimages) || isrow(preimages)), 'Preimages are given as a cell row vector');
+    assert(isa(images, 'cell') && (isempty(images) || isrow(images)), 'Images are given as a cell row vector');
+    if isempty(images) && ~group.isTrivial
+        error('Images must be provided for a non-trivial group');
     end
-    assert(isa(group, 'replab.FiniteGroup'));
-    assert(isa(images, 'cell') && isrow(images));
-    n = length(preimages);
-    assert(n == length(images));
-    nicePreimages = cellfun(@(g) group.niceMorphism.imageElement(g), preimages, 'uniform', 0);
-    assert(length(images) == n);
-    isCyclotomic = cellfun(@(m) isa(m, 'replab.cyclotomic'), images);
-    isSym = cellfun(@(m) isa(m, 'sym'), images);
-    if any(isSym)
-        error('We do not support symbolic images. Please use replab.cyclotomic instead.');
-    end
+    assert(length(preimages) == length(images), 'Number of images does not match the number of preimages');
+
+    % Detect inexact representations
     isIntval = cellfun(@(m) isa(m, 'intval'), images);
     isDouble = cellfun(@(m) isa(m, 'double'), images);
-    isSparse = cellfun(@(m) isa(m, 'double') && issparse(m), images);
-    isInteger = cellfun(@(m) isreal(m) && all(all(floor(m) == m)), images);
-    exactImages = [];
-    if any(isIntval) % if any is intval, convert everything to intval
-        for i = 1:n
-            if isCyclotomic(i) || (isDouble(i) && isInteger(i))
-                images{i} = intval(images{i})
-            elseif isDouble(i) && ~isInteger(i)
-                images{i} = midrad(images{i}, eps(images{i})*10);
-            end
+    isInteger = zeros(1, length(images));
+    for i = 1:length(images)
+        img = images{i};
+        switch class(img)
+          case 'double'
+            isInteger(i) = full(all(all(round(img) == img)));
+          case 'intval'
+            isInteger(i) = false;
+          case 'replab.cyclotomic'
+            isInteger(i) = all(all(img.isWhole));
         end
-        exactImages = false;
-    elseif any(isCyclotomic) && all(isCyclotomic | isInteger) % if any is cyclotomic and rest are exact, convert to cyclo
-        for i = 1:n
-            if isDouble(i)
-                images{i} = replab.cyclotomic.fromDoubles(images{i});
-            end
-        end
-        exactImages = true;
-    else % otherwise, convert everything to double
-        for i = 1:n
-            images{i} = double(images{i});
-        end
-        exactImages = all(isInteger);
     end
-    if exactImages
-        recG = cell(1, n);
-        recg = cell(1, n);
-        isGenPerm = true;
-        o = 1;
-        for i = 1:n
-            [G g] = replab.perm.GeneralizedSymmetricGroup.fromMatrix(images{i});
-            if isempty(G)
-                isGenPerm = false;
-                break
-            else
-                recG{i} = G;
-                recg{i} = g;
-                o = lcm(o, G.m);
-            end
-        end
-        if isGenPerm
-            G = replab.perm.GeneralizedSymmetricGroup(recG{1}.n, o);
-            genPerms = arrayfun(@(i) recG{i}.naturalMorphism(G).imageElement(recg{i}), 1:n, 'uniform', 0);
-            rep = replab.rep.RepByImages_monomial(group, field, dimension, preimages, images, G, genPerms);
+    if any(isIntval) || any(isDouble & ~isInteger) || (~isempty(imagesErrorBound) && any(imagesErrorBound > 0))
+        rep = replab.rep.RepByImages_inexact(group, field, dimension, preimages, images, imagesErrorBound, repKWargs{:});
+        return
+    end
+
+    % Detect monomial representations
+    n = length(preimages);
+    GSG = cell(1, n);
+    GSG_element = cell(1, n);
+    isGenPerm = true;
+    cycloOrder = 1;
+    for i = 1:n
+        I = images{i};
+        % detect generalized permutation matrices
+        [G g] = replab.perm.GeneralizedSymmetricGroup.fromMatrix(I);
+        if isempty(G)
+            isGenPerm = false;
+            break
         else
-            rep = replab.rep.RepByImages_exact(group, field, dimension, preimages, images);
+            GSG{i} = G;
+            GSG_element{i} = g;
+            cycloOrder = lcm(cycloOrder, G.m);
         end
-    else % ~exactImages
-        if isempty(imagesErrorBound)
-            warning('Error bound not provided for inexact images; using adhoc error estimation');
-            imagesErrorBound = 0;
-            for i = 1:n
-                img = images{i};
-                if isa(img, 'intval')
-                    img = mid(img);
-                end
-                eo = group.elementOrder(preimages{i});
-                imagesErrorBound = max(errorBound, norm(img^eo - eye(dimension), 'fro')/eo);
-            end
-        end
-        rep = replab.rep.RepByImages_inexact(group, field, dimension, preimages, images, imagesErrorBound);
     end
+    if isGenPerm
+        G = replab.perm.GeneralizedSymmetricGroup(GSG{1}.n, cycloOrder);
+        genPerms = arrayfun(@(i) GSG{i}.naturalMorphism(G).imageElement(GSG_element{i}), 1:n, 'uniform', 0);
+        rep = replab.rep.RepByImages_monomial(group, field, dimension, preimages, images, G, genPerms, repKWargs{:});
+        return
+    end
+    rep = replab.rep.RepByImages_exact(group, field, dimension, preimages, images, repKWargs{:});
 end

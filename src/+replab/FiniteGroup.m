@@ -1249,31 +1249,52 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         end
 
         function rho = repByImages(self, field, dimension, varargin)
-        % Constructs a finite dimensional representation of this group from generator images
+        % Constructs a finite dimensional representation of this group from preimages/images pairs
+        %
+        % The preimages need to generate this group. If the preimages are omitted, they default to
+        % the generators of this group.
+        %
+        % The images can either be exact, in which case they should be provided as `.cyclotomic` matrices,
+        % or as ``double`` matrices -- the latter only if they have integer entries.
+        % In the case of exact images, the keyword argument ``imagesErrorBound`` can be omitted.
+        % When images are exact, RepLAB has the freedom of performing matrix products containing an
+        % arbitrary number of factors without loss of precision, and thus a wider range of algorithm
+        % can be used. Also, the constructed representation can return exact images,
+        % using ``rep.image(g, 'cyclotomic')``
+        %
+        % Otherwise, the provided images will be considered inexact. In that case, RepLAB uses a factorization
+        % algorithm to decompose group elements as short words in the preimages. In the inexact case, the
+        % images can be provided as interval matrices of type ``intval``, provided the INTLAB toolbox is in the path,
+        % and then interval arithmetic will be used.
+        % If some or all images are provided as ``double`` matrices instead, the keyword argument ``imagesErrorBound``
+        % should be given as well; it corresponds to an upper bound on the error of the matrix images in the Frobenius norm.
+        % Either a single number can be provided, as an upper bound on all images in the provided set; or an individual
+        % bound for each image. However, this error bound will be ignored for each image provided as an interval matrix.
+        % If inexact floating-point images are provided but ``imagesErrorBound`` is omitted, an ad-hoc error is
+        % estimated and a warning is emitted.
         %
         % Args:
         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
         %   dimension (integer): Representation dimension
         %
         % Keyword Args:
-        %   preimages (cell(1, \*) of ``self`` elements): Preimages of the representation map which generate ``self``, defaults to ``self.generators``
-        %   images (cell(1,\*) of double(\*,\*), may be sparse): Images of the given preimages
+        %   preimages (cell(1,n) of ``self`` elements, optional): Preimages of the representation map which generate ``self``, defaults to ``self.generators``
+        %   images (cell(1,n) of double(d,d) or intval(d,d) or cyclotomic(d,d), may be sparse): Images of the given preimages
+        %   imagesErrorBound (double or double(1,d) or ``[]``): Error
+        %   isUnitary (logical or ``[]``, optional): Value of the constructed `.Rep.isUnitary`
+        %   isIrreducible (logical or ``[]``, optional): Value of the constructed `.Rep.isIrreducible`
+        %   trivialDimension (integer or ``[]``, optional): Value of the constructed `.Rep.trivialDimension`
+        %   frobeniusSchurIndicator (integer or ``[]``, optional): Value of the constructed `.Rep.frobeniusSchurIndicator`
+        %   isDivisionAlgebraCanonical (logical or ``[]``, optional): Value of the constructed `.Rep.isDivisionAlgebraCanonical`
         %
         % Returns:
         %   `+replab.Rep`: The constructed group representation
-            args = struct('preimages', {self.generators}, 'images', {{}});
             if length(varargin) == 1 && iscell(varargin{1})
-                warning('Old style non-keyword argument syntax is deprecated');
-                args.images = varargin{1};
+                warning('Deprecated call convention');
+                rho = replab.rep.repByImages(self, field, dimension, 'images', varargin{1});
             else
-                args = replab.util.populateStruct(args, varargin);
+                rho = replab.rep.repByImages(self, field, dimension, varargin{:});
             end
-            if isempty(args.images) && ~self.isTrivial
-                error('Images must be provided');
-            end
-            assert(length(args.preimages) == length(args.images), 'Number of images does not match the number of preimages');
-            preId = cellfun(@(g) self.isIdentity(g), args.preimages);
-            rho = replab.RepByImages.make(self, field, dimension, args.preimages(~preId), args.images(~preId));
         end
 
         function rho = permutationRep(self, dimension, permutations)

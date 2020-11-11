@@ -6,12 +6,12 @@ classdef RepByImages_exact < replab.RepByImages
 % group transversals and their images (see `+replab.+bsgs.ChainWithImages`).
 
     properties (SetAccess = protected)
-        inverseImages_internal % (cell(1,\*) of double/sparse double/cyclotomic(\*,\*)): Image inverses
+        inverseImages % (cell(1,n) of double(d,d) or cyclotomic(d,d), may be sparse): Images
     end
 
     methods
 
-        function self = RepByImages_exact(group, field, dimension, preimages, images)
+        function self = RepByImages_exact(group, field, dimension, preimages, images, varargin)
         % Constructs a representation from images of group generators and their inverses
         %
         % Args:
@@ -20,16 +20,13 @@ classdef RepByImages_exact < replab.RepByImages
         %   dimension (integer): Representation dimension
         %   preimages (cell(1,\*) of ``group`` elements): Preimages
         %   images (cell(1,\*) of double/sparse double/intval/cyclotomic(\*,\*)): Images of the preimages
-            self.group = group; % replab.Rep immutable
-            self.field = field;
-            self.dimension = dimension;
-            % replab.Rep mutable
             inverseImages = replab.rep.computeInverses(group, @(x,y) x*y, preimages, images);
-            self.isExact = true;
-            self.isUnitary = arrayfun(@(i) full(all(all(images{i} == inverseImages{i}'))), 1:length(preimages));
-            self.preimages = preimages;
-            self.images_internal = images;
-            self.inverseImages_internal = inverseImages;
+            imagesErrorBound = zeros(1, length(preimages));
+            isUnitary = arrayfun(@(i) full(all(all(images{i} == inverseImages{i}'))), 1:length(preimages));
+            [args, exists, oldValue] = replab.util.keyValuePairsUpdate(varargin, 'isUnitary', isUnitary);
+            assert(~exists || isempty(oldValue) || isequal(oldValue, isUnitary), 'Wrong isUnitary keyword argument value');
+            self@replab.RepByImages(group, field, dimension, preimages, images, imagesErrorBound, args{:})
+            self.inverseImages = inverseImages;
         end
 
         function c = chain(self)
@@ -38,14 +35,19 @@ classdef RepByImages_exact < replab.RepByImages
         % The preimages are permutations.
         %
         % Returns:
-        %   `+replab.+bsgs.ChainWithImages`: The BSGS chain with matrix images
+        %   `+replab.+bsgs.ChainWithImages`: The BSGS chain with cyclotomic matrix images
             c = self.cached('chain', @() self.computeChain);
         end
 
         function res = computeChain(self)
-            images = self.images_internal;
-            inverseImages = self.inverseImages_internal;
-            m = length(self.preimages);
+            preimages = self.preimages;
+            images = self.images;
+            inverseImages = self.inverseImages;
+            isId = cellfun(@(g) self.group.isIdentity(g), preimages);
+            preimages = preimages(~isId);
+            images = images(~isId);
+            inverseImages = inverseImages(~isId);
+            m = length(preimages);
             d = self.dimension;
             n = self.group.niceMorphism.target.domainSize;
             iso = self.group.niceMorphism;
@@ -67,8 +69,36 @@ classdef RepByImages_exact < replab.RepByImages
                 target2 = replab.GeneralLinearGroup(self.field, self.dimension, true);
                 cut = replab.Morphism.lambda(target1, target2, @(X) double(X(:, 1:self.dimension)));
                 images = arrayfun(@(i) [images{i} inverseImages{i}], 1:m, 'uniform', 0);
-                res = replab.bsgs.ChainWithImages.make(n, target1, nicePreimages, images, base , order);
+                res = replab.bsgs.ChainWithImages.make(n, target1, nicePreimages, images, base, order);
                 res = res.mapImages(cut);
+            end
+        end
+
+    end
+
+    methods % Implementations
+
+        % Rep
+
+        function rho = image(self, g, type)
+            if nargin < 3 || isempty(type)
+                type = 'double';
+            end
+            perm = self.group.niceMorphism.imageElement(g);
+            rho = self.chain.image(perm);
+            switch type
+              case 'cyclotomic'
+                if ~isa(rho, 'replab.cyclotomic')
+                    rho = replab.cyclotomic.fromDoubles(rho);
+                end
+              case 'intval'
+                if ~isa(rho, 'intval')
+                    rho = full(intval(rho));
+                end
+              case 'double'
+                if isa(rho, 'replab.cyclotomic')
+                    rho = full(double(rho));
+                end
             end
         end
 
@@ -77,11 +107,6 @@ classdef RepByImages_exact < replab.RepByImages
     methods (Access = protected) % Implementations
 
         % Rep
-
-        function rho = image_internal(self, g)
-            perm = self.group.niceMorphism.imageElement(g);
-            rho = self.chain.image(perm);
-        end
 
         function e = computeErrorBound(self)
             if self.isUnitary
@@ -94,7 +119,7 @@ classdef RepByImages_exact < replab.RepByImages
             else
                 simRep = self.unitarize;
                 % worst case is given by the condition number of the change of basis
-                e = eps(1)*self.dimension*cond(simRep.A_internal);
+                e = eps(1)*self.dimension*self.conditionNumber;
                 if self.overC
                     e = e*sqrt(2); % real and imaginary part
                 end

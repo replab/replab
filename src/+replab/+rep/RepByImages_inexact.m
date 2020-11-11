@@ -1,37 +1,67 @@
 classdef RepByImages_inexact < replab.RepByImages
 % A finite dimensional representation of a finite group
 
-    properties (SetAccess = protected)
-        imagesErrorBound % (double): Error bound on the given images
+    properties (Access = protected)
+        intvalBased % (logical): Whether the images are stored as interval matrices
+        preimages_internal
+        images_internal
+        imagesErrorBound_internal
     end
 
     methods
 
-        function self = RepByImages_inexact(group, field, dimension, preimages, images, errorBound)
+        function self = RepByImages_inexact(group, field, dimension, preimages, images, imagesErrorBound, varargin)
         % Constructs a representation from images of group generators and their inverses
         %
+        % Keywords arguments are passed to the `+replab.Rep` constructor.
         % Args:
         %   group (`+replab.FiniteGroup`): Finite group represented
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
         %   dimension (integer): Representation dimension
-        %   preimages (cell(1,\*) of ``group`` elements): Preimages
-        %   images (cell(1,\*) of double/sparse double/intval/cyclotomic(\*,\*)): Images of the preimages
-        %   errorBound (double): Error bound on the given images, computed as `.errorBound` on the set of images
-            % replab.Rep immutable
-            self.group = group;
-            self.field = field;
-            self.dimension = dimension;
-            self.isExact = false;
-            % replab.Rep mutable
+        %   preimages (cell(1,n) of ``group`` elements): Preimages
+        %   images (cell(1,n) of double/sparse double/intval/cyclotomic(\*,\*)): Images of the preimages
+        %   imagesErrorBound (double or double(1,n) or ``[]`): Error bound on the given images
             n = length(preimages);
-            ind = replab.mrp.inverseIndices(group, preimages);
-            knownUnitary = arrayfun(@(i) ind(i) > 0 && full(all(all(images{i} == images{ind(i)}'))), 1:n);
-            if knownUnitary
-                self.isUnitary = true;
+            intvalBased = false;
+            if isempty(imagesErrorBound)
+                % if no error bound provided, compute estimate
+                imagesErrorBound = zeros(1, n);
+                w = false;
+                for i = 1:n
+                    img = images{i};
+                    if isa(img, 'intval')
+                        intvalBased = true;
+                        imagesErrorBound(i) = +inf;
+                    else
+                        if ~w
+                            warning('No error bound provided for the images, computing an estimate');
+                            w = true;
+                        end
+                        eo = group.elementOrder(preimages{i});
+                        imagesErrorBound(i) = norm(img^eo - eye(dimension), 'fro')/eo;
+                    end
+                end
+            elseif n > 1 && isscalar(imagesErrorBound)
+                imagesErrorBound = ones(1, n)*imagesErrorBound;
             end
-            self.preimages = preimages;
-            self.images_internal = images;
-            self.imagesErrorBound = errorBound;
+            % tighten the error estimates in case of interval matrices
+            for i = 1:n
+                if isa(images{i}, 'intval')
+                    imagesErrorBound(i) = min(imagesErrorBound(i), norm(rad(images{i}), 'fro'));
+                end
+            end
+            self@replab.RepByImages(group, field, dimension, preimages, images, imagesErrorBound, varargin{:});
+            % convert matrices to interval matrices if we use interval matrices
+            for i = 1:n
+                if intvalBased && isdouble(images{i})
+                    images{i} = midrad(images{i}, ones(dimension, dimension)*imagesErrorBound(i));
+                end
+            end
+            mask = cellfun(@(g) ~group.isIdentity(g), preimages);
+            self.intvalBased = intvalBased;
+            self.preimages_internal = preimages(mask);
+            self.images_internal = images(mask);
+            self.imagesErrorBound_internal = imagesErrorBound(mask);
         end
 
         function c = factorization(self)
@@ -39,39 +69,65 @@ classdef RepByImages_inexact < replab.RepByImages
         %
         % Returns:
         %   `+replab.+mrp.Factorization`: The factorization object
-            c = self.cached('factorization', @() replab.mrp.Factorization.make(self.group, self.preimages, false));
+            c = self.cached('factorization', @() replab.mrp.Factorization.make(self.group, self.preimages_internal, false));
         end
 
     end
 
-    methods (Access = protected) % Implementations
+    methods % Implementations
 
         % Rep
 
-        function rho = image_internal(self, g)
-            word = self.factorization.factorize(g);
-            rho = speye(self.dimension);
-            for i = 1:length(word)
-                rho = rho * self.images_internal{word(i)};
+        function b = canComputeType(self, type)
+            switch type
+              case 'cyclotomic'
+                b = false;
+              case 'intval';
+                b = self.intvalBased;
+              case 'double'
+                b = true;
             end
         end
 
+        function rho = image(self, g, type)
+            if nargin < 3 || isempty(type)
+                type = 'double';
+            end
+            assert(ismember(type, {'cyclotomic' 'intval' 'double'}));
+            assert(~strcmp(type, 'cyclotomic'), 'This representation is not exact');
+            assert(~strcmp(type, 'intval') || self.intvalBased, 'This representation was not constructed from interval matrices');
+            rho = speye(self.dimension);
+            if strcmp(type, 'intval')
+                rho = intval(rho);
+            end
+            word = self.factorization.factorize(g);
+            for i = 1:length(word)
+                rho = rho * self.images_internal{word(i)};
+            end
+            rho = full(rho);
+        end
+
+    end
+
+    methods (Access = protected)
+
         function e = computeErrorBound(self)
             l = self.factorization.maximumWordLength;
-            ieb = self.imagesErrorBound;
+            ieb = max(self.imagesErrorBound); % TODO: do better
             % estimate an upper bound on the operator norm (norm(X, 2))
             if self.isUnitary
                 s = 1;
             else
                 s = max(cellfun(@replab.numerical.norm2UpperBound, self.images_internal));
             end
-            % we have (R1 + E1)*(R2 + E2)* ...*(Rn + En)
+            % we have (R1 + E1)*(R2 + E2)* ...*(Rl + El)
             % where Ri is the exact generator image and Ei is the error
-            % now, the dominating error term is of the form R1 R2 ... Rn-1 En
+            % now, the dominating error terms are of the form R1 R2 ... Rl-1 El
             % for some permutation of indices. We bound the error of the result using
-            % norm(R1, 2) * ... * norm(Rn-1, 2) * norm(En, 'fro') up to permutation
-            % which is s * ... * s * ieb, where norm(Ri, 2) <= s.
-            e = s^(l-1)*ieb;
+            % norm(R1, 2) * ... * norm(Rl-1, 2) * norm(En, 'fro') up to permutation
+            % which is s * ... * s * ieb, where norm(Ri, 2) <= s. There are "l" such
+            % terms.
+            e = s^(l-1)*ieb*l;
         end
 
     end

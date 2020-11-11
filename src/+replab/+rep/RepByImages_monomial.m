@@ -11,8 +11,10 @@ classdef RepByImages_monomial < replab.RepByImages
 
     methods
 
-        function self = RepByImages_monomial(group, field, dimension, preimages, images, imageGroup, imageElements)
+        function self = RepByImages_monomial(group, field, dimension, preimages, images, imageGroup, imageElements, varargin)
         % Constructs a representation from images of group generators
+        %
+        % Additional keyword arguments are passed to the `+replab.Rep` constructor.
         %
         % Args:
         %   group (`+replab.FiniteGroup`): Finite group represented
@@ -22,14 +24,36 @@ classdef RepByImages_monomial < replab.RepByImages
         %   images (cell(1,\*) of double/sparse double/intval/cyclotomic(\*,\*)): Exact images of the preimages
         %   imageGroup (`+replab.+perm.GeneralizedSymmetricGroup`): Group of generalized permutations
         %   imageElements (cell(1,\*) of `.imageGroup` elements): Generalized permutations corresponding to the images
-            self.group = group;
-            self.field = field;
-            self.dimension = dimension;
-            self.isUnitary = true;
-            self.isExact = true;
-            self.preimages = preimages;
-            self.images_internal = images;
+            [args exists oldValue] = replab.util.keyValuePairsUpdate(varargin, 'isUnitary', true);
+            assert(~exists || isempty(oldValue) || isequal(oldValue, true), 'Monomial representations are unitary');
+            imagesErrorBound = zeros(1, length(preimages));
+            self@replab.RepByImages(group, field, dimension, preimages, images, imagesErrorBound, args{:});
             self.morphism = group.morphismByImages(imageGroup, 'preimages', preimages, 'images', imageElements);
+        end
+
+    end
+
+    methods % Implementations
+
+        function b = canComputeType(self, type)
+            b = true;
+        end
+
+        function rho = image(self, g, type)
+            if nargin < 3 || isempty(type)
+                type = 'double';
+            end
+            gp = self.morphism.imageElement(g);
+            switch type
+              case 'double'
+                rho = self.morphism.target.toMatrix(gp);
+              case 'intval'
+                rho = self.morphism.target.toIntvalMatrix(gp);
+              case 'cyclotomic'
+                rho = self.morphism.target.toCyclotomicMatrix(gp);
+              otherwise
+                error('Unknown type');
+            end
         end
 
     end
@@ -38,37 +62,12 @@ classdef RepByImages_monomial < replab.RepByImages
 
         % Rep
 
-        function rho = image_internal(self, g)
-            gp = self.morphism.imageElement(g);
-            rho = self.morphism.target.toCyclotomicMatrix(gp);
-        end
 
         function e = computeErrorBound(self)
             if any(self.morphism.target.m == [1 2 4])
                 e = 0;
             else
                 e = eps(1)*sqrt(2*self.dimension); % max "dimension" non-zero elements can have an error
-            end
-        end
-
-    end
-
-    methods % Implementations
-
-        function rho = image(self, g, type)
-            if nargin < 3
-                type = 'double';
-            end
-            gp = self.morphism.imageElement(g);
-            switch type
-              case {'cyclotomic', 'native'}
-                rho = self.morphism.target.toCyclotomicMatrix(gp);
-              case 'intval'
-                rho = intval(self.morphism.target.toCyclotomicMatrix(gp));
-              case 'double'
-                rho = full(self.morphism.target.toSparseMatrix(gp));
-              case 'sparse'
-                rho = self.morphism.target.toSparseMatrix(gp);
             end
         end
 
