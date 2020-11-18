@@ -4,23 +4,15 @@ classdef Rep < replab.Obj
 % This class has mutable properties that correspond to information that can be computed and cached
 % after the `+replab.Rep` instance is constructed, for example `.isUnitary` or `.trivialDimension`.
 %
-% By convention, those properties are not passed to constructors of subclasses of `+replab.Rep`,
-% but are instead their default value (``[]`` signifying unknown) is overwritten after construction.
-%
 % Notes:
 %   While we do not expect users to implement their own subclass of `~+replab.Rep`, to do
 %   so only the map from group elements to matrix images need to be implemented.
 %
-%   Internally RepLAB can use sparse matrices; however, we take care to not return sparse
-%   matrices in the user API, as doing so can lead to spurious breakages in user code
-%   (some MATLAB/Octave functions do not work with sparse arguments).
+%   Either the override the `.image_double` method if the user implementation provides floating-point
+%   images, or both the `.isExact` and `.image_exact` methods.
 %
-%   Thus, internally, the methods `.image_internal` and `.inverseImage_internal` are used,
-%   and the user facing methods `.image` and `.inverseImage` simply process the output of
-%   the internal methods by converting them, if necessary, to dense matrices
-%
-%   This class implements also row and column matrix actions, methods which can be overloaded
-%   for performance.
+%   This class implements also extra methods about the action of the representation on matrices,
+%   methods which can be overloaded for performance.
 
     properties (SetAccess = protected)
         group     % (`+replab.CompactGroup`): Group being represented
@@ -68,37 +60,55 @@ classdef Rep < replab.Obj
 
     end
 
-    methods % Image computation
+    methods (Access = protected) % Protected methods
 
-        function b = canComputeType(self, type)
-        % Returns whether this representation can compute images of the given type
-        %
-        % Args:
-        %   type ({'double', 'intval', 'cyclotomic'}): Type
-        %
-        % Returns:
-        %   logical: True if the call ``self.image(self.group, type)`` succeeds
-            b = true;
-            try
-                res = self.image(self.group.identity, type);
-            catch
-                b = false;
-            end
+        function e = computeErrorBound(self)
+            error('Abstract');
         end
+
+        function rho = image_double(self, g)
+            rho = double(self.image_exact(g));
+        end
+
+        function rho = image_exact(self, g)
+            error('Exact images not implemented');
+        end
+
+    end
+
+    methods % Image computation
 
         function rho = image(self, g, type)
         % Returns the image of a group element
         %
         % Raises:
-        %   An error if ``self.canComputeType(type)`` is false.
+        %   An error if ``type`` is ``'exact'`` and ``self.isExact`` is false.
         %
         % Args:
         %   g (element of `.group`): Element being represented
-        %   type ({'double', 'intval', 'cyclotomic'}, optional): Type of the returned value, default: 'double'
+        %   type ({'double', 'exact'}, optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   double(\*,\*) or intval(\*,\*) or cyclotomic(\*,\*): Image of the given element for this representation
-            error('Abstract');
+        %   double(\*,\*) or cyclotomic(\*,\*): Image of the given element for this representation
+            if nargin < 3 || isempty(type)
+                type = 'double';
+            end
+            switch type
+              case 'double'
+                rho = self.image_double(g);
+              case 'exact'
+                rho = self.image_exact(g);
+              otherwise
+                error('Type must be either double or exact');
+            end
+        end
+
+        function b = isExact(self)
+        % Returns whether this representation can compute exact images
+        %
+        % Returns:
+        %   logical: True if the call ``self.image(g, 'exact')`` always succeeds
+            b = false;
         end
 
         function rho = inverseImage(self, g, type)
@@ -106,21 +116,26 @@ classdef Rep < replab.Obj
         %
         % Args:
         %   g (element of `.group`): Element of which the inverse is represented
-        %   type ({'double', 'intval', 'cyclotomic'}, optional): Type of the returned value, default: 'double'
+        %   type ({'double', 'exact'}, optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   double(\*,\*) or intval(\*,\*) or cyclotomic(\*,\*): Image of the inverse of the given element for this representation
+        %   double(\*,\*) or cyclotomic(\*,\*): Image of the inverse of the given element for this representation
             if nargin < 3
                 type = 'double';
             end
-            rho = self.image(self.group.inverse(g), type);
+            if self.isUnitary
+                rho = self.image(g, type);
+                rho = rho';
+            else
+                rho = self.image(self.group.inverse(g), type);
+            end
         end
 
         function [rho rhoInverse] = sample(self, type)
         % Samples an element from the group and returns its image under the representation
         %
         % Args:
-        %   type ({'double', 'intval', 'cyclotomic'}, optional): Type of the returned value, default: 'double'
+        %   type ({'double', 'exact'}, optional): Type of the returned value, default: 'double'
         %
         % Optionally, the inverse of the image can be returned as well.
         %
@@ -142,18 +157,10 @@ classdef Rep < replab.Obj
 
     end
 
-    methods (Access = protected) % Protected methods
-
-        function e = computeErrorBound(self)
-            error('Abstract');
-        end
-
-    end
-
     methods (Access = protected)
 
         function c = computeConditionNumberEstimate(self)
-            if isequal(self.isUnitary, true)
+            if self.isUnitary
                 c = 1;
             else
                 simRep = self.unitarize;
@@ -161,8 +168,78 @@ classdef Rep < replab.Obj
             end
         end
 
+        function b = inKernel(self, g)
+        % Returns whether the given group element is in the kernel of the representation
+        %
+        % Args:
+        %   g (group element): Group element to test
+        %
+        % Returns:
+        %   logical: True if the group element is in the kernel
+            if self.isExact
+                chi = trace(self.image(g, 'exact'));
+                b = chi == self.dimension;
+            else
+                % for a character, we have chi(g) == chi(id) only if rho(g) == eye(d)
+                % what is the maximal value of real(chi(g)) for chi(g) ~= chi(id)?
+                % write chi(g) = sum(lambda(g)) where lambda(g) = eig(chi(g))
+                % the worst case is when lambda(g)(2:d) = 1, and lambda(g)(1) is something else
+                % now lambda(g)(1) ~= 1; we know that lambda(g)(1) is a root of unity, and that
+                % lambda(g)(1)^group.exponent == 1
+                % thus, the maximum real part is when lambda(g)(1) == exp(2*pi/group.exponent)
+                % which has real part cos(2*pi/group.exponent)
+                nonTrivialUB = self.dimension-cos(2*pi/double(self.group.exponent)); % maximum for nontrivial character
+                chi = real(trace(self.image(g, 'double')));
+                % the matrix with a given Frobenius norm F maximizing the trace is F*eye(d)/sqrt(d),
+                % which is of trace F*sqrt(d)
+                chiError = sqrt(self.dimension)*self.errorBound; % worst error on the character value
+                chiLB = chi - chiError;
+                chiUB = chi + chiError;
+
+                % Interval
+                %          nTUB      self.dimension
+                %  -----------]      X
+                %  nontriv. chars    trivial char
+                %
+                % Case 1 [-]                   -> nontrivial, b = false
+                % Case 2 [------]              -> nontrivial, b = false
+                % Case 3 [-------------]       -> inconclusive
+                % Case 4        [--]           -> inconsistent
+                % Case 5        [------]       -> trivial, b = true
+                % Case 6                [---]  -> inconsistent
+                %
+                % ^ plotting [chi-chiError, chi+chiError]
+                if chiLB < nonTrivialUB
+                    if chiUB < self.dimension
+                        % case 1 or 2
+                        b = false;
+                    else
+                        error('Representation is not precise enough to compute the kernel.')
+                    end
+                elseif chiLB < self.dimension
+                    if chiUB < self.dimension
+                        % case 4
+                        error('Inconsistent character value');
+                    else
+                        % case 5
+                        b = true;
+                    end
+                else
+                    error('Inconsistent character value');
+                end
+            end
+        end
+
+        function K = computeKernel(self)
+            assert(isa(self.group, 'replab.FiniteGroup'));
+            % TODO error estimation: take in account the uncertainty on computed images
+            C = self.group.conjugacyClasses.classes;
+            inK = cellfun(@(c) self.inKernel(c.representative), C);
+            K = self.group.subgroup(cellfun(@(c) c.representative, C(inK), 'uniform', 0));
+            K = self.group.normalClosure(K);
+        end
+
         function f = computeFrobeniusSchurIndicator(self)
-        % TODO: if this representation has a decomposition
             if isa(self.group, 'replab.FiniteGroup')
                 f = 0;
                 C = self.group.conjugacyClasses.classes;
@@ -177,16 +254,6 @@ classdef Rep < replab.Obj
                     f = double(f);
                     assert(isreal(f) && round(f) == f);
                     f = round(f);
-                elseif self.canComputeType('intval')
-                    f = intval(0);
-                    for i = 1:n
-                        [approx error] = doubleApproximation(replab.cyclotomic.fromVPIs(factor{i}));
-                        f = f + trace(self.image(g2{i}, 'intval'))/midrad(approx, error);
-                    end
-                    if rad(f) >= 1
-                        error('Error on this representation is too big to compute the Frobenius-Schur indicator');
-                    end
-                    f = mid(f);
                 else
                     if self.errorBound >= 1
                         error('Error on this representation is too big to compute the Frobenius-Schur indicator');
@@ -197,6 +264,9 @@ classdef Rep < replab.Obj
                     end
                     f = round(f);
                 end
+            else
+                error('Does not work with continuous groups.');
+                % TODO: if this representation has a decomposition, use it
             end
 
         end
@@ -237,16 +307,16 @@ classdef Rep < replab.Obj
             b = isequal(self.field, 'C');
         end
 
-        function b = isIrreducible(self)
-        end
+        %        function b = isIrreducible(self)
+        %        end
 
-        function d = trivialDimension(self)
+        %function d = trivialDimension(self)
         % Returns the dimension of the trivial subrepresentation in this representation
         %
         % Returns:
         %   integer: Dimension
-
-        end
+        %
+        %end
 
         function f = frobeniusSchurIndicator(self)
         % Returns the Frobenius-Schur indicator of this representation
@@ -259,8 +329,27 @@ classdef Rep < replab.Obj
             f = self.cached('frobeniusSchurIndicator', @() self.computeFrobeniusSchurIndicator);
         end
 
-        function b = isDivisionAlgebraCanonical(self)
+        function K = kernel(self)
+        % Returns the kernel of the given representation
+        %
+        % Only works if `.group` is a finite group.
+        %
+        % Raises:
+        %   An error is this representation is not precise enough to conclude.
+        %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> K = S3.signRep.kernel;
+        %   >>> K == replab.PermutationGroup.alternating(3)
+        %       1
+        %
+        % Returns:
+        %   `+replab.FiniteGroup`: The group ``K`` such that ``rho.image(k) == id`` for all ``k`` in ``K``
+            K = self.cached('kernel', @() self.computeKernel);
         end
+
+        %        function b = isDivisionAlgebraCanonical(self)
+        %        end
 
 
                 %   isUnitary (logical): Whether the representation is unitary, mandatory argument
@@ -274,42 +363,11 @@ classdef Rep < replab.Obj
 
 % $$$     methods (Access = protected)
 % $$$
-% $$$         function K = computeKernel(self)
-% $$$             assert(isa(self.group, 'replab.FiniteGroup'));
-% $$$             % TODO error estimation: take in account the uncertainty on computed images
-% $$$             C = self.group.conjugacyClasses.classes;
-% $$$             % for a character, we have chi(g) == chi(id) only if rho(g) == eye(d)
-% $$$             % what is the maximal value of real(chi(g)) for chi(g) ~= chi(id)?
-% $$$             % write chi(g) = sum(lambda(g)) where lambda(g) = eig(chi(g))
-% $$$             % the worst case is when lambda(g)(2:d) = 1, and lambda(g)(1) is something else
-% $$$             % now lambda(g)(1) ~= 1; we know that lambda(g)(1) is a root of unity, and that
-% $$$             % lambda(g)(1)^group.exponent == 1
-% $$$             % thus, the maximum real part is when lambda(g)(1) == exp(2*pi/group.exponent)
-% $$$             % which has real part cos(2*pi/group.exponent)
-% $$$             maxNTChi = self.dimension-cos(2*pi/double(self.group.exponent)); % maximum value for nontrivial character
-% $$$             chi = cellfun(@(c) trace(self.image_internal(c.representative)), C);
-% $$$             mask = real(chi) > maxNTChi;
-% $$$             K = self.group.subgroup(cellfun(@(c) c.representative, C(mask), 'uniform', 0));
-% $$$             K = self.group.normalClosure(K);
-% $$$         end
 % $$$
 % $$$     end
 % $$$
 % $$$     methods % Computed properties
 % $$$
-% $$$         function K = kernel(self)
-% $$$         % Returns the kernel of the given representation
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> S3 = replab.S(3);
-% $$$         %   >>> K = S3.signRep.kernel;
-% $$$         %   >>> K == replab.PermutationGroup.alternating(3)
-% $$$         %       1
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.FiniteGroup`: The group ``K`` such that ``rho.image(k) == id`` for all ``k`` in ``K``
-% $$$             K = self.cached('kernel', @() self.computeKernel);
-% $$$         end
 % $$$
 % $$$     end
 
@@ -415,23 +473,17 @@ classdef Rep < replab.Obj
 
         function s = headerStr(self)
             p = {};
-            if isequal(self.isUnitary, true)
+            if self.isUnitary
                 if self.overR
                     p{1,end+1} = 'orthogonal';
                 else
                     p{1,end+1} = 'unitary';
                 end
-            elseif isequal(self.isUnitary, false)
+            else % ~self.isUnitary
                 if self.overR
                     p{1,end+1} = 'nonorthogonal';
                 else
                     p{1,end+1} = 'nonunitary';
-                end
-            else
-                if self.overR
-                    p{1,end+1} = 'real';
-                else
-                    p{1,end+1} = 'complex';
                 end
             end
             if isequal(self.trivialDimension, self.dimension)
