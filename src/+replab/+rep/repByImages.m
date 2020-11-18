@@ -18,7 +18,6 @@ function rep = repByImages(group, field, dimension, varargin)
     assert(length(preimages) == length(images), 'Number of images does not match the number of preimages');
 
     % Detect inexact representations
-    isIntval = cellfun(@(m) isa(m, 'intval'), images);
     isDouble = cellfun(@(m) isa(m, 'double'), images);
     isInteger = zeros(1, length(images));
     for i = 1:length(images)
@@ -26,13 +25,11 @@ function rep = repByImages(group, field, dimension, varargin)
         switch class(img)
           case 'double'
             isInteger(i) = full(all(all(round(img) == img)));
-          case 'intval'
-            isInteger(i) = false;
           case 'replab.cyclotomic'
             isInteger(i) = all(all(img.isWhole));
         end
     end
-    if any(isIntval) || any(isDouble & ~isInteger) || (~isempty(imagesErrorBound) && any(imagesErrorBound > 0))
+    if any(isDouble & ~isInteger) || (~isempty(imagesErrorBound) && any(imagesErrorBound > 0))
         rep = replab.rep.RepByImages_inexact(group, field, dimension, preimages, images, imagesErrorBound, repKWargs{:});
         return
     end

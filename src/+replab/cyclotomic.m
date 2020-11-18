@@ -261,11 +261,6 @@ classdef cyclotomic
 
     methods
 
-        function res = intval(self)
-            d = double(self);
-            res = intval(d, eps(d)); % "double" is pretty precise
-        end
-
         function res = isvector(self)
             res = isvector(self.mat);
         end

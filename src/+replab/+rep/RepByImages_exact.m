@@ -76,37 +76,15 @@ classdef RepByImages_exact < replab.RepByImages
 
     end
 
-    methods % Implementations
-
-        % Rep
-
-        function rho = image(self, g, type)
-            if nargin < 3 || isempty(type)
-                type = 'double';
-            end
-            perm = self.group.niceMorphism.imageElement(g);
-            rho = self.chain.image(perm);
-            switch type
-              case 'cyclotomic'
-                if ~isa(rho, 'replab.cyclotomic')
-                    rho = replab.cyclotomic.fromDoubles(rho);
-                end
-              case 'intval'
-                if ~isa(rho, 'intval')
-                    rho = full(intval(rho));
-                end
-              case 'double'
-                if isa(rho, 'replab.cyclotomic')
-                    rho = full(double(rho));
-                end
-            end
-        end
-
-    end
-
     methods (Access = protected) % Implementations
 
         % Rep
+
+        function rho = image_exact(self, g)
+            perm = self.group.niceMorphism.imageElement(g);
+            rho = self.chain.image(perm);
+            rho = replab.cyclotomic.fromDoubles(rho);
+        end
 
         function e = computeErrorBound(self)
             if self.isUnitary

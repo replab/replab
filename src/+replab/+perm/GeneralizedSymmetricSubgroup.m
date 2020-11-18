@@ -52,17 +52,6 @@ classdef GeneralizedSymmetricSubgroup < replab.NiceFiniteGroup
             rho = replab.rep.GeneralizedPermutationNaturalRep(self, field);
         end
 
-        function M = toIntvalMatrix(self, x)
-        % Returns the generalized permutation matrix corresponding to the given element
-        %
-        % Args:
-        %   x (group element): Element to compute the matrix representation of
-        %
-        % Returns:
-        %   intval: Interval matrix
-            M = intval(self.toCyclotomicMatrix(x)); % TODO: faster implementation?
-        end
-
         function M = toCyclotomicMatrix(self, x)
         % Returns the generalized permutation matrix corresponding to the given element
         %

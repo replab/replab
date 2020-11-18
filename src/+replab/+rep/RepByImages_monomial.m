@@ -21,7 +21,7 @@ classdef RepByImages_monomial < replab.RepByImages
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
         %   dimension (integer): Representation dimension
         %   preimages (cell(1,\*) of ``group`` elements): Preimages
-        %   images (cell(1,\*) of double/sparse double/intval/cyclotomic(\*,\*)): Exact images of the preimages
+        %   images (cell(1,\*) of double/cyclotomic(\*,\*)): User-provided images of the preimages
         %   imageGroup (`+replab.+perm.GeneralizedSymmetricGroup`): Group of generalized permutations
         %   imageElements (cell(1,\*) of `.imageGroup` elements): Generalized permutations corresponding to the images
             [args exists oldValue] = replab.util.keyValuePairsUpdate(varargin, 'isUnitary', true);
@@ -35,7 +35,7 @@ classdef RepByImages_monomial < replab.RepByImages
 
     methods % Implementations
 
-        function b = canComputeType(self, type)
+        function b = isExact(self)
             b = true;
         end
 
@@ -44,15 +44,10 @@ classdef RepByImages_monomial < replab.RepByImages
                 type = 'double';
             end
             gp = self.morphism.imageElement(g);
-            switch type
-              case 'double'
-                rho = self.morphism.target.toMatrix(gp);
-              case 'intval'
-                rho = self.morphism.target.toIntvalMatrix(gp);
-              case 'cyclotomic'
+            if strcmp(type, 'exact')
                 rho = self.morphism.target.toCyclotomicMatrix(gp);
-              otherwise
-                error('Unknown type');
+            else
+                rho = self.morphism.target.toMatrix(gp);
             end
         end
 
@@ -61,7 +56,6 @@ classdef RepByImages_monomial < replab.RepByImages
     methods (Access = protected) % Implementations
 
         % Rep
-
 
         function e = computeErrorBound(self)
             if any(self.morphism.target.m == [1 2 4])
