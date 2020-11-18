@@ -862,7 +862,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %
         % Returns:
         %   replab.Rep: The (real) natural permutation representation
-            rho = self.permutationRep(self.domainSize, self.generators);
+            rho = self.permutationRep(self.domainSize, 'preimages', self.generators, 'images', self.generators);
         end
 
         function rho = standardRep(self)
@@ -883,8 +883,13 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function rho = signRep(self)
-        % Returns the sign representation of this permutation
-            rho = replab.RepByImages.fromImageFunction(self, 'R', 1, @(g) replab.Permutation.sign(g));
+        % Returns the sign representation of this permutation group
+        %
+        % Returns:
+        %   `+replab.Rep`: One dimensional sign representation of this group
+            preimages = self.generators;
+            images = cellfun(@(g) replab.Permutation.sign(g), preimages, 'uniform', 0);
+            rho = self.signedPermutationRep(1, 'preimages', preimages, 'images', images);
         end
 
     end
