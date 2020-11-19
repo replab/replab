@@ -18,7 +18,7 @@ classdef RepByImages_inexact < replab.RepByImages
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
         %   dimension (integer): Representation dimension
         %   preimages (cell(1,n) of ``group`` elements): Preimages
-        %   images (cell(1,n) of double/sparse double/intval/cyclotomic(\*,\*)): Images of the preimages
+        %   images (cell(1,n) of double/sparse double/cyclotomic(\*,\*)): Images of the preimages
         %   imagesErrorBound (double or double(1,n) or ``[]`): Error bound on the given images
             n = length(preimages);
             if isempty(imagesErrorBound)
@@ -34,7 +34,6 @@ classdef RepByImages_inexact < replab.RepByImages
             end
             self@replab.RepByImages(group, field, dimension, preimages, images, imagesErrorBound, varargin{:});
             mask = cellfun(@(g) ~group.isIdentity(g), preimages);
-            self.intvalBased = intvalBased;
             self.preimages_internal = preimages(mask);
             self.images_internal = images(mask);
             self.imagesErrorBound_internal = imagesErrorBound(mask);
