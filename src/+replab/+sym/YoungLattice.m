@@ -1,43 +1,44 @@
-classdef YoungLattice
-    % Young Lattice
-    %
-    % Representation of a subgraph of the Young's lattices, which connects
-    % Young Diagrams that differ by the removal/addition of one box
-    % The subgraph is the set of all diagrams contained  a particular diagram.
-    % The subgraph is multipartate, with different levels' for each k from 1
-    % to n.
-    properties
-        partition % The partition at the top of the graph
+classdef YoungLattice < replab.Obj
+% Young Lattice
+%
+% Representation of a subgraph of the Young's lattices, which connects Young Diagrams that differ by the
+% removal/addition of one box.
+% The subgraph is the set of all diagrams contained in a particular diagram.
+% The subgraph is multipartite, with different levels' for each k from 1 to n.
+
+    properties (SetAccess = protected)
+        partition  % The partition at the top of the graph
         domainSize % Domain size of the partition at the top of the graph
-        sets % cell(1,n) of replab.perm.Set: The k'th element holds data for the partitions of level k
-        above % cell(1,n-1) of integer(:,:): The k'th element is a matrix recording the connections between the partitions level of of k and k+1.
-        below %cell(1,n-1) of integer(:,:): The k'th element is a matrix recording the connections between the partitions level of of k+1 and k.
+        sets       % (cell(1,n) of `+replab.+perm.Set`): The k'th element holds data for the partitions of level k
+        above      % (cell(1,n-1) of integer(\*,\*)): The k'th element is a matrix recording the connections between the partitions level of of k and k+1.
+        below      % (cell(1,n-1) of integer(\*,\*)): The k'th element is a matrix recording the connections between the partitions level of of k+1 and k.
 
         % These are sort of like an adjacency matrix but the rows and columns are two different levels of the graph.
         % The connections are 'coloured' by an integer labeling the box that is removed/added
         % to make the connection. (The boxes are labeled left to right, then
         % top to bottom)
-        
-        labels % integer(:,:): Matrix representing the labeling of boxes
+
+        labels     % (integer(\*,\*)): Matrix representing the labeling of boxes
 
         %        1 2 3 4
-        % E.g.: 5 6 7 0 represents the labeling of 8 = 4+3+1
+        % E.g.:  5 6 7 0 represents the labeling of 8 = 4+3+1
         %        8 0 0 0
-        
-        %nTabs %cell of integer(1,:): The k'th element lists the number of standard tableaux for diagrams in level k.
+
+        % nTabs % (cell of integer(1,\*)): The k'th element lists the number of standard tableaux for diagrams in level k.
         %
         % The rows of the following arrays describe standard tableaux which
         % can be represented as unique paths up this subgraph
-        
-        standRows % integer(:,n): Lists the rows of the Young Diagram index k is in
-        standCols % integer(:,n): Lists the columns of the Young Diagram index k is in
-        standTabs % integer(:,n): Lists the label of the Young Diagram index k is in
+
+        standRows % (integer(\*,n)): Lists the rows of the Young Diagram index k is in
+        standCols % (integer(\*,n)): Lists the columns of the Young Diagram index k is in
+        standTabs % (integer(\*,n)): Lists the label of the Young Diagram index k is in
 
         %standEigs % integer(:,n): Lists the eigenvalues of class functions associated with partitions found on the tableau's path
         %tabFuncs % integer(:,n): Lists tableaux function (the square of the change of basis coefficent from seminormal to orthogonal for each tableaux
     end
 
     methods(Static)
+
         function partFunc = nPartitions(n)
             partFunc = [1 zeros(1,n)];
             nums = 1:n;
@@ -79,7 +80,7 @@ classdef YoungLattice
             end
             self.partition = part;
             self.labels = replab.sym.YoungLattice.findLabels(part);
-            self = self.createLattice(part);
+            self.createLattice(part);
         end
 
         function self = createLattice(self,part)
@@ -155,7 +156,7 @@ classdef YoungLattice
             end
         end
 
-        function [standRows,standCols,standTabs] = generateTableaux(self)
+        function [standRows, standCols, standTabs] = generateTableaux(self)
             n = self.domainSize;
             part = self.partition;
             d = self.numTableaux{n};
