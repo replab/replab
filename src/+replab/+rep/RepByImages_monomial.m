@@ -24,7 +24,7 @@ classdef RepByImages_monomial < replab.RepByImages
         %   images (cell(1,\*) of double/cyclotomic(\*,\*)): User-provided images of the preimages
         %   imageGroup (`+replab.+perm.GeneralizedSymmetricGroup`): Group of generalized permutations
         %   imageElements (cell(1,\*) of `.imageGroup` elements): Generalized permutations corresponding to the images
-            [args exists oldValue] = replab.util.keyValuePairsUpdate(varargin, 'isUnitary', true);
+            [args, exists, oldValue] = replab.util.keyValuePairsUpdate(varargin, 'isUnitary', true);
             assert(~exists || isempty(oldValue) || isequal(oldValue, true), 'Monomial representations are unitary');
             imagesErrorBound = zeros(1, length(preimages));
             self@replab.RepByImages(group, field, dimension, preimages, images, imagesErrorBound, args{:});

@@ -1,26 +1,25 @@
 classdef IndexRelabelingRep < replab.Rep
 % Representation that permutes the indices of a tensor
 
-    properties
-        localDimension % dimension of each subsystem in the tensor space
+    properties (SetAccess = protected)
+        localDimension % (integer): Dimension of each subsystem in the tensor space
     end
 
     methods
 
         function self = IndexRelabelingRep(group, localDimension)
             assert(isa(group, 'replab.PermutationGroup'));
+            n = group.domainSize;
+            self@replab.Rep(group, 'R', localDimension^n, 'isUnitary', true, 'isIrreducible', localDimension > 1 && n > 0);
             % own properties
             self.localDimension = localDimension;
-            % replab.Rep immutable
-            n = group.domainSize;
-            self.group = group;
-            self.field = 'R';
-            self.dimension = localDimension^n;
-            % replab.Rep mutable
-            self.isUnitary = true;
         end
 
-        function rho = image_internal(self, g)
+    end
+
+    methods (Access = protected)
+
+        function rho = image_double_sparse(self, g)
             n = self.group.domainSize;
             d = self.dimension;
             dims = self.localDimension*ones(1, n);
@@ -29,9 +28,8 @@ classdef IndexRelabelingRep < replab.Rep
             rho = sparse(I, 1:d, ones(1, d), d, d);
         end
 
-        function rho = imageInverse_internal(self, g)
-            rho = self.image_internal(g);
-            rho = rho';
+        function rho = image_exact(self, g)
+            rho = replab.cyclotomic.fromDoubles(self.image_double(g));
         end
 
     end

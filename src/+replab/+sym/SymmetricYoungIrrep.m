@@ -77,7 +77,7 @@ classdef SymmetricYoungIrrep < replab.Obj
             for i = 1:n-1
                 images{i} = self.transImage(i);
             end
-            r = self.group.repByImages('R', self.dimension, 'preimages', gens, 'images', images, 'isUnitary', strcmp(self.form, 'orthogonal'));
+            r = self.group.repByImages('R', self.dimension, 'preimages', gens, 'images', images);
         end
 
         function im = transImage(self,k)

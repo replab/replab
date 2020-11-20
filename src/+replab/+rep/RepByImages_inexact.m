@@ -13,6 +13,7 @@ classdef RepByImages_inexact < replab.RepByImages
         % Constructs a representation from images of group generators and their inverses
         %
         % Keywords arguments are passed to the `+replab.Rep` constructor.
+        %
         % Args:
         %   group (`+replab.FiniteGroup`): Finite group represented
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
@@ -21,16 +22,28 @@ classdef RepByImages_inexact < replab.RepByImages
         %   images (cell(1,n) of double/sparse double/cyclotomic(\*,\*)): Images of the preimages
         %   imagesErrorBound (double or double(1,n) or ``[]`): Error bound on the given images
             n = length(preimages);
+            % if no error bound provided
             if isempty(imagesErrorBound)
-                warning('No error bound provided for the images, computing an estimate');
-                imagesErrorBound = zeros(1, n);
-                for i = 1:n
-                    img = images{i};
+                imagesErrorBound = NaN(1, n);
+            end
+            % if given a scalar, extend
+            if isscalar(imagesErrorBound)
+                imagesErrorBound = ones(1, n) * imagesErrorBound;
+            end
+            if any(isnan(imagesErrorBound))
+                warning('Error bound missing for some/all images, computing an estimate');
+            end
+            % now check all images
+            for i = 1:n
+                img = images{i};
+                if isa(img, 'replab.cyclotomic')
+                    img = double(img);
+                    imagesErrorBound(i) = norm(eps(img), 'fro');
+                    images{i} = img;
+                elseif isnan(imagesErrorBound(i))
                     eo = group.elementOrder(preimages{i});
                     imagesErrorBound(i) = norm(img^eo - eye(dimension), 'fro')/eo;
                 end
-            elseif n > 1 && isscalar(imagesErrorBound)
-                imagesErrorBound = ones(1, n)*imagesErrorBound;
             end
             self@replab.RepByImages(group, field, dimension, preimages, images, imagesErrorBound, varargin{:});
             mask = cellfun(@(g) ~group.isIdentity(g), preimages);
@@ -61,13 +74,12 @@ classdef RepByImages_inexact < replab.RepByImages
 
     methods (Access = protected)
 
-        function rho = image_double(self, g)
+        function rho = image_double_sparse(self, g)
             rho = speye(self.dimension);
             word = self.factorization.factorize(g);
             for i = 1:length(word)
                 rho = rho * self.images_internal{word(i)};
             end
-            rho = full(rho);
         end
 
         function e = computeErrorBound(self)

@@ -14,6 +14,8 @@ classdef RepByImages_exact < replab.RepByImages
         function self = RepByImages_exact(group, field, dimension, preimages, images, varargin)
         % Constructs a representation from images of group generators and their inverses
         %
+        % Keywords arguments are passed to the `+replab.Rep` constructor.
+        %
         % Args:
         %   group (`+replab.FiniteGroup`): Finite group represented
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
@@ -93,6 +95,14 @@ classdef RepByImages_exact < replab.RepByImages
     methods (Access = protected) % Implementations
 
         % Rep
+
+        function rho = image_double_sparse(self, g)
+            perm = self.group.niceMorphism.imageElement(g);
+            rho = self.chain.image(perm);
+            if isa(rho, 'replab.cyclotomic')
+                rho = double(rho);
+            end
+        end
 
         function rho = image_exact(self, g)
             perm = self.group.niceMorphism.imageElement(g);
