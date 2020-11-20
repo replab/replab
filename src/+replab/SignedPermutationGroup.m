@@ -162,16 +162,12 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
 
         function rho = naturalRep(self)
         % Natural representation on R^d of signed permutations on integers -d..-1, 1..d
-            rho = self.signedPermutationRep(self.domainSize, self.generators);
+            rho = self.signedPermutationRep(self.domainSize, 'preimages', self.generators, 'images', self.generators);
         end
 
     end
 
     methods (Static)
-
-        function G = trivial(n)
-        % Returns
-        end
 
         function G = of(varargin)
         % Constructs a nontrivial signed permutation group from the given generators
