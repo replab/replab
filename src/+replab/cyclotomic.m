@@ -370,6 +370,12 @@ classdef cyclotomic
             res = replab.cyclotomic.fromJavaArray(javaMethod('minus', 'cyclo.Lab', lhs.matArray, rhs.matArray), size(lhs));
         end
 
+        function res = rdivide(lhs, rhs)
+        % Pointwise ``/`` operator
+            [lhs rhs] = replab.cyclotomic.shapeArgs(lhs, rhs);
+            res = replab.cyclotomic.fromJavaArray(javaMethod('pw_divide', 'cyclo.Lab', lhs.matArray, rhs.matArray), size(lhs));
+        end
+
         function res = times(lhs, rhs)
         % Pointwise ``*`` operator
             [lhs rhs] = replab.cyclotomic.shapeArgs(lhs, rhs);
