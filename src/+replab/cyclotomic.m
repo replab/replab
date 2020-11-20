@@ -28,6 +28,16 @@ classdef cyclotomic
 
     methods (Static)
 
+        function c = sparse(I, J, K, nR, nC)
+            if isa(K, 'double')
+                K = replab.cyclotomic.fromDoubles(K);
+            end
+            c = replab.cyclotomic.zeros(nR, nC);
+            for i = 1:length(I)
+                c.mat{I(i), J(i)} = K.mat{i};
+            end
+        end
+
         function c = eye(n)
         % Constructs the ``n x n`` identity matrix
         %
