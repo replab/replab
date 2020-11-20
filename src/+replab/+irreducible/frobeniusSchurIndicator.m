@@ -9,7 +9,7 @@ function fsi = frobeniusSchurIndicator(irrep, context)
 % - if the indicator is $1$, the representation is of real-type and its complexification
 %   is also irreducible,
 % - if the indicator is $0$, the representation is complex-type,
-% - if the indicator is $-1$, the representation is quaternion-type.
+% - if the indicator is $-2$, the representation is quaternion-type.
 %
 % Does not mutate the ``irrep`` argument.
 %
@@ -18,7 +18,7 @@ function fsi = frobeniusSchurIndicator(irrep, context)
 %   context (`+replab.Context`): Sampling context
 %
 % Returns:
-%   {-1, 0, 1}: Frobenius-Schur indicator
+%   {-2, 0, 1}: Frobenius-Schur indicator
     assert(isequal(irrep.isIrreducible, true), 'Representation must be known to be irreducible');
     assert(isa(context, 'replab.Context'));
     if ~isequal(irrep.isUnitary, true)
