@@ -579,7 +579,35 @@ classdef PermutationGroup < replab.FiniteGroup
         %
         % Returns:
         %   `.PermutationGroup`: The subgroup that stabilizes the ordered partition
-            sub = replab.bsgs.OrderedPartitionStabilizer(self, partition).subgroup;
+
+            % We compute explicitely the group that leaves each partition
+            % block invariant
+            generators = {};
+            for i = 1:partition.nBlocks
+                switch length(partition.block(i))
+                    case 1
+                        % No generator
+                    case 2
+                        % 1 generator
+                        block = sort(partition.block(i));
+                        generator = 1:self.domainSize;
+                        generator(block) = generator(block([2 1]));
+                        generators{end+1} = generator;
+                    otherwise
+                        % 2 generators
+                        block = sort(partition.block(i));
+                        generator = 1:self.domainSize;
+                        generator(block([1 2])) = generator(block([2 1]));
+                        generators{end+1} = generator;
+                        generator = 1:self.domainSize;
+                        generator(block) = generator(block([2:end, 1]));
+                        generators{end+1} = generator;
+                end
+            end
+            invarGroup = replab.S(self.domainSize).subgroup(generators);
+            
+            % Now we take the intersection between both groups
+            sub = self.intersection(invarGroup);
         end
 
         function P = vectorFindPermutationsTo(self, s, t, sStabilizer, tStabilizer)
