@@ -63,10 +63,10 @@ classdef UndirectedGraph < replab.graph.Graph
         % weights was defined individually for each edge.
         %
         % Args:
-        %     edges (integer (\*,2)): array of vertices linked by an edge
-        %     nVertices (integer, optional): number of vertices
-        %     colors (double (\*,1), optional): coloring of the vertices
-        %     weights (double (\*,1), optional): weight associated to each edge
+        %   edges (integer (\*,2)): array of vertices linked by an edge
+        %   nVertices (integer, optional): number of vertices
+        %   colors (double (\*,1), optional): coloring of the vertices
+        %   weights (double (\*,1), optional): weight associated to each edge
         %
         % Returns:
         %   graph (`.UndirectedGraph`)
@@ -108,7 +108,7 @@ classdef UndirectedGraph < replab.graph.Graph
             self = replab.UndirectedGraph(nVertices, edges, colors, weights);
         end
 
-        function self = fromBiadjacencyMatrix(biadj)
+        function self = fromBiadjacencyMatrix(biadj, colorsRows, colorsCols)
         % Constructs an undirected graph from a biadjacency matrix
         %
         % A bipartite undirected graph is one in which vertices can
@@ -123,6 +123,8 @@ classdef UndirectedGraph < replab.graph.Graph
         %
         % Args:
         %   biadj(double (\*,\*)): array of vertices linked by an edge
+        %   colors (double (\*,1), optional): coloring of the row vertices
+        %   colors (double (\*,1), optional): coloring of the column vertices
         %
         % Returns:
         %   graph (`.UndirectedGraph`)
@@ -132,11 +134,25 @@ classdef UndirectedGraph < replab.graph.Graph
         %     Undirected graph with 5 vertices and 4 edges
         %     edges: [1, 3; 2, 3; 2, 4; 1, 5]
 
+            if nargin < 2
+                colorsRows = zeros(1, size(biadj,1));
+            end
+            
+            if nargin < 3
+                colorsCols = zeros(1, size(biadj,2));
+            end
+                        
             % Construct the associated full adjacency matrix
             adj = [zeros(size(biadj,1)*[1 1]), biadj;
                    zeros(size(biadj,2), sum(size(biadj)))];
-               
-            self = replab.UndirectedGraph.fromAdjacencyMatrix(adj);
+            
+            % Carry over the coloring if it was provided
+            colors = [colorsRows(:); colorsCols(:)].';
+            if isequal(colors, zeros(1, sum(size(biadj))))
+                colors = 0;
+            end
+
+            self = replab.UndirectedGraph.fromAdjacencyMatrix(adj, colors);
         end
 
         function self = fromDirectedGraph(graph)
