@@ -604,7 +604,8 @@ classdef PermutationGroup < replab.FiniteGroup
                         generators{end+1} = generator;
                 end
             end
-            invarGroup = replab.S(self.domainSize).subgroup(generators);
+            Sn = replab.S(self.domainSize);
+            invarGroup = Sn.subgroup(generators);
             
             % Now we take the intersection between both groups
             sub = self.intersection(invarGroup);
