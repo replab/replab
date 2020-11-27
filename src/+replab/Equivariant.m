@@ -78,24 +78,24 @@ classdef Equivariant < replab.Domain
             self.cachedErrors_ = struct;
         end
 
-% $$$         function [X err] = sampleWithError(self)
-% $$$         % Returns an approximate sample from this equivariant space along with estimated numerical error
-% $$$         %
-% $$$         % The samples are cached in a context.
-% $$$         %
-% $$$         % Args:
-% $$$         %   context (`+replab.Context`): Context in which samples are cached
-% $$$         %   i (double): 1-based index of the sample
-% $$$         %
-% $$$         % Returns
-% $$$         % -------
-% $$$         % X:
-% $$$         %   double(\*,\*): A sample from this equivariant space
-% $$$         % err:
-% $$$         %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
-% $$$         %           the invariant subspace in Frobenius norm
-% $$$             [X err] = self.project(self.domain.sample);
-% $$$         end
+        function [X err] = sampleWithError(self)
+        % Returns an approximate sample from this equivariant space along with estimated numerical error
+        %
+        % The samples are cached in a context.
+        %
+        % Args:
+        %   context (`+replab.Context`): Context in which samples are cached
+        %   i (double): 1-based index of the sample
+        %
+        % Returns
+        % -------
+        % X:
+        %   double(\*,\*): A sample from this equivariant space
+        % err:
+        %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
+        %           the invariant subspace in Frobenius norm
+            [X err] = self.project(self.domain.sample);
+        end
 % $$$
 % $$$         function clearCache(self, context)
 % $$$         % Clears the samples cached for the given context
