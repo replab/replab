@@ -8,22 +8,32 @@ classdef SubRepLaws < replab.laws.RepLaws
         end
 
         function law_basis_and_internal_embedding_(self)
-            self.M.assertEqv(self.rep.E_internal * self.rep.B_internal, eye(self.rep.dimension));
-            P = self.rep.B_internal * self.rep.E_internal;
-            self.M.assertEqv(P*P, P);
+            if self.rep.isExact
+                self.assert(all(all(self.rep.projection('exact') * self.rep.injection('exact') == eye(self.rep.dimension))));
+            end
         end
 
-        function law_image_relation_with_parent_rep_GM(self, g, m)
-            m1 = full(self.rep.B_internal * self.rep.image(g) * m);
-            m2 = full(self.rep.parent.image(g) * self.rep.B_internal * m);
-            self.assert(~replab.isNonZeroMatrix(m1 - m2, replab.Parameters.doubleEigTol));
+        function law_projector_commutes_G(self, g)
+            if self.rep.isExact
+                piA = self.rep.projector('exact');
+                img = self.rep.parent.image(g, 'exact');
+                self.assert(all(all(piA*img == img*piA)));
+            end
+            piA = self.rep.projector('double/sparse');
+            img = self.rep.parent.image(g, 'double/sparse');
+            % || rho piA - piA rho ||_F = || rho D - D rho ||_F
+            % where D = piA - piE, piA is self.rep.projector and piE is the exact one
+            % then || rho D - D rho ||_F <= ||rho||2 ||D||F - ||D||F ||rho||2
+            tol = 2*self.rep.projectorErrorBound*self.rep.parent.conditionNumberEstimate;
+            self.assert(norm(piA*img - img*piA, 'fro') <= tol);
         end
 
-         function law_relation_with_parent_rep_G(self, g)
-            if ~isempty(self.rep.parent)
-                parentRho = self.rep.parent.image(g);
-                rho = self.rep.image(g);
-                self.M.assertEqv(full(self.rep.E_internal*parentRho*self.rep.B_internal), rho);
+        function law_relation_with_parent_rep_G(self, g)
+            if self.rep.isExact
+                rep = self.rep.parent.image(g, 'exact');
+                sub1 = self.rep.image(g, 'exact');
+                sub2 = self.rep.projection('exact') * self.parent.image(g, 'exact') * self.rep.injection('exact');
+                self.assert(all(all(sub1 == sub2)));
             end
         end
 
