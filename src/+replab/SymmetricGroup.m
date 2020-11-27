@@ -17,7 +17,7 @@ classdef SymmetricGroup < replab.PermutationGroup
         % Args:
         %   domainSize (integer): Domain size, must be > 0
         %
-        % Returns;
+        % Returns:
         %   `.SymmetricGroup`: The constructed or cached symmetric group
             persistent cache
             if isempty(cache)
