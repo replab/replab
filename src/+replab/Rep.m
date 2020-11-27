@@ -1167,40 +1167,39 @@ classdef Rep < replab.Obj
 
     methods (Access = protected)
 
-% $$$         function res = computeUnitarize(self)
-% $$$             if self.cachedOrDefault('isUnitary', false)
-% $$$                 res = replab.SimilarRep.identical(self);
-% $$$             else
-% $$$                 [A Ainv] = self.unitaryChangeOfBasis;
-% $$$                 res = self.similarRep(A, Ainv);
-% $$$                 res.isUnitary = true;
-% $$$             end
-% $$$         end
-% $$$
-% $$$         function [A Ainv] = unitaryChangeOfBasis(self)
-% $$$         % Returns the change of basis to a unitary representation
-% $$$         %
-% $$$         % Returns ``A`` and ``Ainv`` so that ``A * self.image(g) * Ainv`` is unitary.
-% $$$         %
-% $$$         % Returns
-% $$$         % -------
-% $$$         %   A: double(\*,\*)
-% $$$         %     Change of basis matrix
-% $$$         %   Ainv: double(\*,\*)
-% $$$         %     Inverse of change of basis matrix
-% $$$             if isequal(self.isUnitary, true)
-% $$$                 A = eye(self.dimension);
-% $$$                 Ainv = eye(self.dimension);
-% $$$             else
-% $$$                 X = self.hermitianInvariant.project(eye(self.dimension));
-% $$$                 for i = 1:self.dimension
-% $$$                     X(i,i) = real(X(i,i));
-% $$$                 end
-% $$$                 Ainv = chol(X, 'lower');
-% $$$                 A = inv(Ainv);
-% $$$             end
-% $$$         end
-% $$$
+        function res = computeUnitarize(self)
+            if self.cachedOrDefault('isUnitary', false)
+                res = replab.SimilarRep.identical(self);
+            else
+                [A Ainv] = self.unitaryChangeOfBasis;
+                res = self.similarRep(A, 'inverse', Ainv, 'isUnitary', true);
+            end
+        end
+
+        function [A Ainv] = unitaryChangeOfBasis(self)
+        % Returns the change of basis to a unitary representation
+        %
+        % Returns ``A`` and ``Ainv`` so that ``A * self.image(g) * Ainv`` is unitary.
+        %
+        % Returns
+        % -------
+        %   A: double(\*,\*), may be sparse
+        %     Change of basis matrix
+        %   Ainv: double(\*,\*), may be sparse
+        %     Inverse of change of basis matrix
+            if self.cachedOrDefault('isUnitary', false)
+                A = speye(self.dimension);
+                Ainv = speye(self.dimension);
+            else
+                X = self.hermitianInvariant.project(speye(self.dimension), 'double/sparse');
+                for i = 1:self.dimension
+                    X(i,i) = real(X(i,i));
+                end
+                Ainv = chol(X, 'lower');
+                A = inv(Ainv);
+            end
+        end
+
     end
 % $$$
 % $$$     methods (Static)
