@@ -27,6 +27,20 @@ classdef CompositionRep < replab.Rep
 
     end
 
+    methods % Simplification rules
+
+        function res = rewriteTerm_CompositionRepOfCompositionRep(self, options)
+            if isa(self.second, 'replab.Rep.CompositionRep')
+                newMorphism = self.first.andThen(self.second.first);
+                newRep = self.second.second;
+                res = replab.rep.CompositionRep(newMorphish, newRep);
+            else
+                res = [];
+            end
+        end
+
+    end
+
     methods (Access = protected) % Implementations
 
         % Rep
@@ -36,7 +50,7 @@ classdef CompositionRep < replab.Rep
         end
 
         function r = composeTerm(self, newParts)
-            r = replab.rep.Composition(self.first, newParts{1});
+            r = replab.rep.CompositionRep(self.first, newParts{1});
         end
 
         function rho = image_exact(self, g)

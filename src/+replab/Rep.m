@@ -831,24 +831,20 @@ classdef Rep < replab.Obj
 
     methods % Morphism composition
 
-% $$$         function res = imap(self, f)
-% $$$         % Maps the representation under an isomorphism
-% $$$         %
-% $$$         % Args:
-% $$$         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.Rep`: Representation satisfying ``newRep.group.isSubgroup(f.target)``.
-% $$$             if self.group.order < f.source.order
-% $$$                 f = f.restrictedSource(self.group);
-% $$$             end
-% $$$             res = replab.rep.CompositionRep(f.inverse, self);
-% $$$             res.isUnitary = self.isUnitary;
-% $$$             res.trivialDimension = self.trivialDimension;
-% $$$             res.isIrreducible = self.isIrreducible;
-% $$$             res.frobeniusSchurIndicator = self.frobeniusSchurIndicator;
-% $$$             res.isDivisionAlgebraCanonical = self.isDivisionAlgebraCanonical;
-% $$$         end
+        function res = imap(self, f)
+        % Maps the representation under an isomorphism
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %
+        % Returns:
+        %   `.Rep`: Representation satisfying ``newRep.group.isSubgroup(f.target)``.
+            if self.group.order < f.source.order
+                f = f.restrictedSource(self.group);
+            end
+            res = replab.rep.CompositionRep(f.inverse, self);
+            res.copyProperties(self);
+        end
 
         function res = compose(self, applyFirst)
         % Composition of a representation with a morphism, with the morphism applied first
@@ -865,27 +861,26 @@ classdef Rep < replab.Obj
 
     methods % Derived representations
 
-% $$$         function rep1 = contramap(self, morphism)
-% $$$         % Returns the representation composed with the given morphism applied first
-% $$$         %
-% $$$         % Args:
-% $$$         %   morphism (`+replab.FiniteMorphism`): Morphism of finite groups such that ``morphism.target == self.group``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Rep`: Representation on the finite group ``morphism.source``
-% $$$             assert(self.group == morphism.target);
-% $$$             rep1 = replab.Rep.lambda(morphism.source, self.field, self.dimension, @(g) rep.image_internal(morphism.image(g)), @(g) replab.inverseImage_internal(morphism.image(g)));
-% $$$         end
+        function rep1 = contramap(self, morphism)
+        % Returns the representation composed with the given morphism applied first
+        %
+        % Args:
+        %   morphism (`+replab.FiniteMorphism`): Morphism of finite groups such that ``morphism.target == self.group``
+        %
+        % Returns:
+        %   `+replab.Rep`: Representation on the finite group ``morphism.source``
+            assert(self.group == morphism.target);
+            rep1 = replab.Rep.CompositionRep(morphism, self);
+        end
 
-% $$$         function rep1 = restrictedTo(self, subgroup)
-% $$$         % Returns the restricted representation to the given subgroup
-% $$$         %
-% $$$         % Args:
-% $$$         %   subgroup (`.CompactGroup`): Subgroup to restrict the representation to, must be a subgroup of `.group`
-% $$$             rep1 = replab.Rep.lambda(subgroup, self.field, self.dimension, @(g) self.image(g), @(g) self.inverseImage(g));
-% $$$         end
-% $$$
-% $$$
+        function rep1 = restrictedTo(self, subgroup)
+        % Returns the restricted representation to the given subgroup
+        %
+        % Args:
+        %   subgroup (`.CompactGroup`): Subgroup to restrict the representation to, must be a subgroup of `.group`
+            rep1 = replab.Rep.lambda(subgroup, self.field, self.dimension, @(g) self.image(g), @(g) self.inverseImage(g));
+        end
+
         function complexRep = complexification(self)
         % Returns the complexification of a real representation
         %
@@ -1225,25 +1220,5 @@ classdef Rep < replab.Obj
         end
 
     end
-% $$$
-% $$$     methods (Static)
-% $$$
-% $$$         function rep = lambda(group, field, dimension, image_internalFun, inverseImage_internalFun)
-% $$$         % Creates a non unitary representation from an image function
-% $$$         %
-% $$$         % Args:
-% $$$         %   group (replab.Group): Group represented
-% $$$         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
-% $$$         %   dimension (integer): Representation dimension
-% $$$         %   image_internalFun (function_handle): Function handle that returns an image matrix given a group element
-% $$$         %   inverseImage_internalFun (function_handle): Function handle that returns the inverse of the image
-% $$$         %                                               matrix given a group element
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Rep`: The constructed representation
-% $$$             rep = replab.lambda.Rep(group, field, dimension, image_internalFun, inverseImage_internalFun);
-% $$$         end
-% $$$
-% $$$     end
 
 end
