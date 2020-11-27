@@ -59,7 +59,7 @@ classdef SimilarRep < replab.Rep
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             basisConditionNumberEstimate = args.basisConditionNumberEstimate;
             A_unitary = all(all(A_internal' == Ainv_internal));
-            if A_unitary && parent.isUnitary
+            if A_unitary && parent.cachedOrDefault('isUnitary', false)
                 [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'isUnitary', true);
                 assert(~exists || isempty(oldValue) || isequal(oldValue, true), 'This representation is actually unitary');
             end
