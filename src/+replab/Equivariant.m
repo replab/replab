@@ -23,7 +23,7 @@ classdef Equivariant < replab.Domain
         group % (`+replab.CompactGroup`): Group being represented
         repR % (`+replab.Rep`): Representation of row space
         repC % (`+replab.Rep`): Representation of column space
-        special % ({'hermitian', 'commutant', 'trivial', []}): Whether the equivariant space has special structure
+        special % ({'hermitian', 'commutant', 'trivialRows', 'trivialCols', []}): Whether the equivariant space has special structure
     end
 
     properties (Access = protected)
@@ -67,6 +67,7 @@ classdef Equivariant < replab.Domain
             self.nC = repC.dimension;
             assert(isequal(repR.field, repC.field), ...
                    'Both representations must have be defined on the same field');
+            assert(isempty(special) || ismember(special, {'hermitian', 'commutant', 'trivialRows', 'trivialCols'}));
             self.field = repR.field;
             assert(repR.group == repC.group, ...
                    'Both representations must be defined on the same group');

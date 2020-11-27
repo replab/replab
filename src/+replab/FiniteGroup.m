@@ -1280,7 +1280,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   preimages (cell(1,n) of ``self`` elements, optional): Preimages of the representation map which generate ``self``, defaults to ``self.generators``
         %   images (cell(1,n) of double(d,d) or cyclotomic(d,d), may be sparse): Images of the given preimages
         %   imagesErrorBound (double or double(1,d) or ``[]``): Error
-        %   isUnitary (logical or ``[]``, optional): Value of the constructed `.Rep.isUnitary`; mandatory if images are inexact
+        %   isUnitary (logical or ``[]``, optional): Value of the constructed `.Rep.isUnitary`; a "true" value accelerates computations
         %   isIrreducible (logical or ``[]``, optional): Value of the constructed `.Rep.isIrreducible`
         %   trivialDimension (integer or ``[]``, optional): Value of the constructed `.Rep.trivialDimension`
         %   frobeniusSchurIndicator (integer or ``[]``, optional): Value of the constructed `.Rep.frobeniusSchurIndicator`

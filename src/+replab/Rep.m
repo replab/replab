@@ -447,7 +447,13 @@ classdef Rep < replab.Obj
         end
 
         function d = computeTrivialDimension(self)
-            error('TODO');
+            P = speye(self.dimension);
+            [P1 E1] = self.trivialRowSpace.project(P);
+            [P2 E2] = self.trivialColSpace.project(P1);
+            if E1 + E2 >= 1
+                error('Representation is not precise enough to compute the trivial dimension.');
+            end
+            d = round(trace(P2));
         end
 
         function c = computeCommutant(self)
@@ -458,9 +464,14 @@ classdef Rep < replab.Obj
             h = replab.Equivariant.make(self.dual.conj, self, 'hermitian');
         end
 
-        function t = computeTrivialSpace(self)
+        function t = computeTrivialRowSpace(self)
             tRep = self.group.trivialRep(self.field, self.dimension);
-            t = replab.Equivariant.make(tRep, self, 'trivial');
+            t = replab.Equivariant.make(tRep, self, 'trivialRows');
+        end
+
+        function t = computeTrivialColSpace(self)
+            tRep = self.group.trivialRep(self.field, self.dimension);
+            t = replab.Equivariant.make(self, tRep, 'trivialCols');
         end
 
         function b = computeIsDivisionAlgebraCanonical(self)
@@ -470,6 +481,12 @@ classdef Rep < replab.Obj
     end
 
     methods % Representation properties
+
+        function P2 = trivialProjector(self)
+            P = speye(self.dimension);
+            [P1 E1] = self.trivialRowSpace.project(P);
+            [P2 E2] = self.trivialColSpace.project(P1);
+        end
 
         function c = conditionNumberEstimate(self)
         % Returns an estimation of the condition number of the change of basis that makes this representation unitary
@@ -639,12 +656,26 @@ classdef Rep < replab.Obj
             h = self.cached('hermitianInvariant', @() self.computeHermitianInvariant);
         end
 
-        function t = trivialSpace(self)
+        function t = trivialRowSpace(self)
         % Returns an equivariant space from a trivial representation to this representation
         %
         % The trivial representation has the same dimension as this representation
-            t = self.cached('trivialSpace', @() self.computeTrivialSpace);
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The equivariant space
+            t = self.cached('trivialRowSpace', @() self.computeTrivialRowSpace);
         end
+
+        function t = trivialColSpace(self)
+        % Returns an equivariant space from this representation to a trivial representation
+        %
+        % The trivial representation has the same dimension as this representation
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The equivariant space
+            t = self.cached('trivialColSpace', @() self.computeTrivialColSpace);
+        end
+
 
     end
 
@@ -695,19 +726,23 @@ classdef Rep < replab.Obj
                     p{1,end+1} = 'complex';
                 end
             end
-            if isequal(self.trivialDimension, self.dimension)
-                p{1,end+1} = 'trivial';
-            elseif isequal(self.trivialDimension, 0)
-                p{1,end+1} = 'fully nontrivial';
-            elseif ~isempty(self.trivialDimension)
-                p{1,end+1} = 'nontrivial';
+            if self.inCache('trivialDimension')
+                if self.trivialDimension == self.dimension
+                    p{1,end+1} = 'trivial';
+                elseif self.trivialDimension == 0
+                    p{1,end+1} = 'fully nontrivial';
+                else
+                    p{1,end+1} = 'nontrivial';
+                end
             end
-            if isequal(self.isIrreducible, true)
-                p{1,end+1} = 'irreducible';
-            elseif isequal(self.isIrreducible, true)
-                p{1,end+1} = 'reducible';
+            if self.inCache('isIrreducible')
+                if self.isIrreducible
+                    p{1,end+1} = 'irreducible';
+                else
+                    p{1,end+1} = 'reducible';
+                end
             end
-            if ~isequal(self.frobeniusSchurIndicator, []) && self.overR
+            if self.inCache('frobeniusSchurIndicator') && self.overR
                 switch self.frobeniusSchurIndicator
                   case 1
                     p{1,end+1} = 'real-type';

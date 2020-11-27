@@ -87,7 +87,7 @@ classdef SimilarRep < replab.Rep
             if hasExactBasis
                 prodError = 0;
             else
-                prodError = double(norm(A_internal*Ainv_internal - eye(d), 'fro'));
+                prodError = norm(double(A_internal)*double(Ainv_internal) - eye(d), 'fro');
             end
             self.parent = parent;
             self.A_internal = A_internal;
@@ -224,6 +224,7 @@ classdef SimilarRep < replab.Rep
         end
 
         function rho = image_exact(self, g)
+            assert(self.isExact);
             rho = self.A_internal * self.parent.image(g, 'exact') * self.Ainv_internal;
         end
 

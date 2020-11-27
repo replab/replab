@@ -319,6 +319,7 @@ classdef SubRep < replab.Rep
         end
 
         function rho = image_exact(self, g)
+            assert(self.isExact);
             rho = self.projection_internal * self.parent.image(g, 'exact') * self.injection_internal;
         end
 
