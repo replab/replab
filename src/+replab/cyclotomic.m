@@ -455,7 +455,7 @@ classdef cyclotomic
             end
             l = size(lhs.mat, 1);
             m = size(lhs.mat, 2);
-            assert(m == size(lhs.mat, 1));
+            assert(m == size(rhs.mat, 1));
             n = size(rhs.mat, 2);
             res = replab.cyclotomic.fromJavaArray(javaMethod('times', 'cyclo.Lab', l, m, n, lhs.matArray, rhs.matArray), [l n]);
         end
