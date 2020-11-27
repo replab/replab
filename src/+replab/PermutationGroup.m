@@ -873,13 +873,15 @@ classdef PermutationGroup < replab.FiniteGroup
         % acting on $n$ elements; but we can reuse that subrepresentation on
         % subgroups of the symmetric group.
         %
-        % It corresponds to the representation orthogonal to the
-        % trivial representation with basis ``[1, 1, ..., 1]'/sqrt(d)``
+        % It corresponds to the representation complementary to the
+        % trivial representation with basis ``[1, 1, ..., 1]'``
         %
         % Returns:
-        %   `+replab.Rep`: The (real) standard representation
-            [B_internal E_internal] = replab.sym.sageSpechtStandardBasis(self.domainSize);
-            rho = self.naturalRep.subRep(B_internal, E_internal);
+        %   `+replab.SubRep`: The (real) standard representation
+            d = self.domainSize;
+            [injectiond projection] = replab.sym.sageSpechtStandardBasis(d);
+            rho = self.naturalRep.subRep(replab.cyclotomic.fromDoubles(injectiond)/d, ...
+                                         'projection', replab.cyclotomic.fromDoubles(projection), 'mapErrorBound', 0);
         end
 
         function rho = signRep(self)
