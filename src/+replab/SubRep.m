@@ -25,6 +25,7 @@ classdef SubRep < replab.Rep
         parent % (`+replab.Rep`): Parent representation of dimension $D$
         injection_internal % (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
         projection_internal % (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
+        hasExactMaps % (logical): Whether the injection and projection maps are exact
     end
 
     methods
@@ -62,9 +63,20 @@ classdef SubRep < replab.Rep
                 assert(~exists || isempty(oldValue) || isequal(oldValue, true), 'This representation is actually unitary');
             end
             self@replab.Rep(parent.group, parent.field, d, restArgs{:});
+            if isa(injection_internal, 'replab.cyclotomic') && isa(projection_internal, 'replab.cyclotomic')
+                hasExactMaps = true;
+                assert(isempty(args.projectorErrorBound) || args.projectorErrorBound == 0);
+                args.projectorErrorBound = 0;
+            elseif replab.numerical.isExact(injection_internal) && replab.numerical.isExact(projection_internal) && ...
+                    ~isempty(args.projectorErrorBound) && args.projectorErrorBound == 0
+                hasExactMaps = true;
+            else
+                hasExactMaps = false;
+            end
             self.parent = parent;
             self.injection_internal = injection_internal;
             self.projection_internal = projection_internal;
+            self.hasExactMaps = hasExactMaps;
             if ~isempty(args.projectorErrorBound)
                 self.cache('projectorErrorBound', args.projectorErrorBound, 'error');
             end
@@ -340,7 +352,7 @@ classdef SubRep < replab.Rep
         % Rep
 
         function b = isExact(self)
-            b = self.errorBound == 0 && self.parent.isExact;
+            b = self.hasExactMaps && self.parent.isExact;
         end
 
 % $$$         function [A Ainv] = unitaryChangeOfBasis(self)

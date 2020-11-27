@@ -77,19 +77,17 @@ classdef SimilarRep < replab.Rep
             end
             self@replab.Rep(parent.group, parent.field, d, restArgs{:});
             % populate SimilarRep properties
-            if ~parent.isExact
-                A_internal = double(A_internal);
-                Ainv_internal = double(Ainv_internal);
-            end
             if isa(A_internal, 'replab.cyclotomic') && isa(Ainv_internal, 'replab.cyclotomic')
+                hasExactBasis = true;
+            elseif replab.numerical.isExact(A_internal) && replab.numerical.isExact(Ainv_internal)
+                hasExactBasis = full(all(all(A_internal*Ainv_internal - eye(d))));
+            else
+                hasExactBasis = false;
+            end
+            if hasExactBasis
                 prodError = 0;
             else
                 prodError = double(norm(A_internal*Ainv_internal - eye(d), 'fro'));
-            end
-            isExact = prodError == 0;
-            if ~isExact
-                A_internal = double(A_internal);
-                Ainv_internal = double(Ainv_internal);
             end
             self.parent = parent;
             self.A_internal = A_internal;
@@ -103,7 +101,7 @@ classdef SimilarRep < replab.Rep
                 end
             end
             self.basisConditionNumberEstimate = basisConditionNumberEstimate;
-            self.hasExactBasis = isExact;
+            self.hasExactBasis = hasExactBasis;
         end
 
         function mat = A(self, type)
