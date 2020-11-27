@@ -21,6 +21,8 @@ classdef RepByImages_inexact < replab.RepByImages
         %   preimages (cell(1,n) of ``group`` elements): Preimages
         %   images (cell(1,n) of double/sparse double/cyclotomic(\*,\*)): Images of the preimages
         %   imagesErrorBound (double or double(1,n) or ``[]`): Error bound on the given images
+            args = struct('isUnitary', false);
+            [args, restArgs] = replab.util.populateStruct(args, varargin);
             n = length(preimages);
             % if no error bound provided
             if isempty(imagesErrorBound)
@@ -45,7 +47,7 @@ classdef RepByImages_inexact < replab.RepByImages
                     imagesErrorBound(i) = norm(img^eo - eye(dimension), 'fro')/eo;
                 end
             end
-            self@replab.RepByImages(group, field, dimension, preimages, images, imagesErrorBound, varargin{:});
+            self@replab.RepByImages(group, field, dimension, preimages, images, imagesErrorBound, 'isUnitary', logical(args.isUnitary), restArgs{:});
             mask = cellfun(@(g) ~group.isIdentity(g), preimages);
             self.preimages_internal = preimages(mask);
             self.images_internal = images(mask);

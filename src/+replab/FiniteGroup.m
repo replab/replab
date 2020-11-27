@@ -1259,8 +1259,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % In the case of exact images, the keyword argument ``imagesErrorBound`` can be omitted.
         % When images are exact, RepLAB has the freedom of performing matrix products containing an
         % arbitrary number of factors without loss of precision, and thus a wider range of algorithm
-        % can be used. Also, the constructed representation can return exact images,
-        % using ``rep.image(g, 'exact')``
+        % can be used. Also, the constructed representation can return exact images using ``rep.image(g, 'exact')``
         %
         % Otherwise, the provided images will be considered inexact. In that case, RepLAB uses a factorization
         % algorithm to decompose group elements as short words in the preimages. The keyword argument
@@ -1271,6 +1270,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % If inexact floating-point images are provided but ``imagesErrorBound`` is omitted, an ad-hoc error is
         % estimated and a warning is emitted.
         %
+        % If the images are exact, the ``isUnitary`` keyword parameter can be omitted.
+        %
         % Args:
         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
         %   dimension (integer): Representation dimension
@@ -1279,7 +1280,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   preimages (cell(1,n) of ``self`` elements, optional): Preimages of the representation map which generate ``self``, defaults to ``self.generators``
         %   images (cell(1,n) of double(d,d) or cyclotomic(d,d), may be sparse): Images of the given preimages
         %   imagesErrorBound (double or double(1,d) or ``[]``): Error
-        %   isUnitary (logical or ``[]``, optional): Value of the constructed `.Rep.isUnitary`
+        %   isUnitary (logical or ``[]``, optional): Value of the constructed `.Rep.isUnitary`; mandatory if images are inexact
         %   isIrreducible (logical or ``[]``, optional): Value of the constructed `.Rep.isIrreducible`
         %   trivialDimension (integer or ``[]``, optional): Value of the constructed `.Rep.trivialDimension`
         %   frobeniusSchurIndicator (integer or ``[]``, optional): Value of the constructed `.Rep.frobeniusSchurIndicator`

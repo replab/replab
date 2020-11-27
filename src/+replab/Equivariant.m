@@ -32,11 +32,9 @@ classdef Equivariant < replab.Domain
         cachedErrors_ % (struct of double(1,\*)): Error information
     end
 
-    methods
+    methods % Projection
 
-        %% Abstract
-
-        function [X1 err] = project(self, X)
+        function [X1 err] = project(self, X, type)
         % Projects any ``nR x nC`` matrix in the equivariant subspace
         %
         % Performs the integration
@@ -44,15 +42,15 @@ classdef Equivariant < replab.Domain
         % `` X1 = int{g in G} dg rhoR.image(g) * X * rhoC.inverseImage(g) ``
         %
         % Args:
-        %   X (double(\*,\*), may be sparse): Matrix to project
+        %   X (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix to project
         %
         % Returns
         % -------
         % X1:
-        %   double(\*,\*): Projected matrix
+        %   double(\*,\*) or `.cyclotomic`(\*,\*): Projected matrix
         % err:
         %   double: Estimation of the numerical error, expressed as the distance of the returned ``X1`` to
-        %           the invariant subspace in Frobenius norm or ``NaN`` if no such estimation can be performed
+        %           the invariant subspace in Frobenius norm.
             error('Abstract');
         end
 
@@ -80,88 +78,92 @@ classdef Equivariant < replab.Domain
             self.cachedErrors_ = struct;
         end
 
-        function [X err] = sampleWithError(self)
-        % Returns an approximate sample from this equivariant space along with estimated numerical error
-        %
-        % The samples are cached in a context.
-        %
-        % Args:
-        %   context (`+replab.Context`): Context in which samples are cached
-        %   i (double): 1-based index of the sample
-        %
-        % Returns
-        % -------
-        % X:
-        %   double(\*,\*): A sample from this equivariant space
-        % err:
-        %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
-        %           the invariant subspace in Frobenius norm
-            [X err] = self.project(self.domain.sample);
-        end
+% $$$         function [X err] = sampleWithError(self)
+% $$$         % Returns an approximate sample from this equivariant space along with estimated numerical error
+% $$$         %
+% $$$         % The samples are cached in a context.
+% $$$         %
+% $$$         % Args:
+% $$$         %   context (`+replab.Context`): Context in which samples are cached
+% $$$         %   i (double): 1-based index of the sample
+% $$$         %
+% $$$         % Returns
+% $$$         % -------
+% $$$         % X:
+% $$$         %   double(\*,\*): A sample from this equivariant space
+% $$$         % err:
+% $$$         %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
+% $$$         %           the invariant subspace in Frobenius norm
+% $$$             [X err] = self.project(self.domain.sample);
+% $$$         end
+% $$$
+% $$$         function clearCache(self, context)
+% $$$         % Clears the samples cached for the given context
+% $$$         %
+% $$$         % Args:
+% $$$         %   context (`+replab.Context`): Context to clear
+% $$$             self.cachedSamples_ = rmfield(self.cachedSamples_, context.id);
+% $$$             self.cachedErrors_ = rmfield(self.cachedErrors_, context.id);
+% $$$         end
+% $$$
+% $$$         function [X err] = sampleInContext(self, context, ind)
+% $$$         % Returns an approximate sample from this equivariant space along with estimated numerical error
+% $$$         %
+% $$$         % The samples are cached in a context.
+% $$$         %
+% $$$         % Args:
+% $$$         %   context (`+replab.Context`): Context in which samples are cached
+% $$$         %   ind (double): 1-based index of the sample
+% $$$         %
+% $$$         % Returns
+% $$$         % -------
+% $$$         % X:
+% $$$         %   double(\*,\*): A sample from this equivariant space
+% $$$         % err:
+% $$$         %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
+% $$$         %           the invariant subspace in Frobenius norm
+% $$$             assert(~context.closed);
+% $$$             id = context.id;
+% $$$             if ~isfield(self.cachedSamples_, id)
+% $$$                 context.register(self);
+% $$$                 self.cachedSamples_.(id) = cell(1, 0);
+% $$$                 self.cachedErrors_.(id) = zeros(1, 0);
+% $$$             end
+% $$$             n = length(self.cachedSamples_.(id));
+% $$$             samples = self.cachedSamples_.(id);
+% $$$             errors = self.cachedErrors_.(id);
+% $$$             if ind > n
+% $$$                 for i = n+1:ind
+% $$$                     [X err] = self.sampleWithError;
+% $$$                     samples{1, i} = X;
+% $$$                     errors{1, i} = err;
+% $$$                 end
+% $$$                 self.cachedSamples_.(id) = samples;
+% $$$                 self.cachedErrors_.(id) = errors;
+% $$$             end
+% $$$             X = samples{ind};
+% $$$             err = errors(ind);
+% $$$         end
 
-        function clearCache(self, context)
-        % Clears the samples cached for the given context
-        %
-        % Args:
-        %   context (`+replab.Context`): Context to clear
-            self.cachedSamples_ = rmfield(self.cachedSamples_, context.id);
-            self.cachedErrors_ = rmfield(self.cachedErrors_, context.id);
-        end
+    end
 
-        function [X err] = sampleInContext(self, context, ind)
-        % Returns an approximate sample from this equivariant space along with estimated numerical error
-        %
-        % The samples are cached in a context.
-        %
-        % Args:
-        %   context (`+replab.Context`): Context in which samples are cached
-        %   ind (double): 1-based index of the sample
-        %
-        % Returns
-        % -------
-        % X:
-        %   double(\*,\*): A sample from this equivariant space
-        % err:
-        %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
-        %           the invariant subspace in Frobenius norm
-            assert(~context.closed);
-            id = context.id;
-            if ~isfield(self.cachedSamples_, id)
-                context.register(self);
-                self.cachedSamples_.(id) = cell(1, 0);
-                self.cachedErrors_.(id) = zeros(1, 0);
-            end
-            n = length(self.cachedSamples_.(id));
-            samples = self.cachedSamples_.(id);
-            errors = self.cachedErrors_.(id);
-            if ind > n
-                for i = n+1:ind
-                    [X err] = self.sampleWithError;
-                    samples{1, i} = X;
-                    errors{1, i} = err;
-                end
-                self.cachedSamples_.(id) = samples;
-                self.cachedErrors_.(id) = errors;
-            end
-            X = samples{ind};
-            err = errors(ind);
-        end
+    methods % Implementations
 
-        function E1 = subEquivariant(self, subC, subR, special)
-        % Constructs a invariant subspace of an equivariant space
-        %
-        % Args:
-        %   subC (`+replab.SubRep`): A subrepresentation of ``self.repC``
-        %   subR (`+replab.SubRep`): A subrepresentation of ``self.repR``
-        %   special (charstring): Whether the equivariant subspace has special structure
-            assert(isa(subC, 'replab.SubRep'));
-            assert(isa(subR, 'replab.SubRep'));
-            assert(subC.parent == self.repC);
-            assert(subR.parent == self.repR);
-            E1 = replab.equi.ForSubReps(subC, subR, special, self);
-        end
+% $$$         function E1 = subEquivariant(self, subC, subR, special)
+% $$$         % Constructs a invariant subspace of an equivariant space
+% $$$         %
+% $$$         % Args:
+% $$$         %   subC (`+replab.SubRep`): A subrepresentation of ``self.repC``
+% $$$         %   subR (`+replab.SubRep`): A subrepresentation of ``self.repR``
+% $$$         %   special (charstring): Whether the equivariant subspace has special structure
+% $$$             assert(isa(subC, 'replab.SubRep'));
+% $$$             assert(isa(subR, 'replab.SubRep'));
+% $$$             assert(subC.parent == self.repC);
+% $$$             assert(subR.parent == self.repR);
+% $$$             E1 = replab.equi.ForSubReps(subC, subR, special, self);
+% $$$         end
 
-        %% Str methods
+        % Str
 
         function s = headerStr(self)
             if isequal(self.special, 'hermitian')
@@ -176,7 +178,7 @@ classdef Equivariant < replab.Domain
             end
         end
 
-        %% Domain methods
+        % Domain
 
         function b = eqv(self, X, Y)
             b = self.domain.eqv(X, Y);
