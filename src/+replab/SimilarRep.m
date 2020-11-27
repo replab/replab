@@ -23,7 +23,7 @@ classdef SimilarRep < replab.Rep
         Ainv_internal % (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Inverse of change of basis matrix
         A_Ainv_error % (double): Frobenius norm of ``A * Ainv - identity``
         basisConditionNumberEstimate % (double): Estimate of the condition number of `.A_internal`
-        isExactBasis % (logical): Whether the change of basis matrices are exact
+        hasExactBasis % (logical): Whether the change of basis matrices are exact
     end
 
     methods
@@ -47,7 +47,7 @@ classdef SimilarRep < replab.Rep
         %
         % Keyword Args:
         %   isUnitary (logical, optional): Whether the resulting representation is unitary; may be omitted (see above)
-        %   basisConditionNumberEstimate (double): Estimate of the condition number of ``A_internal``
+        %   basisConditionNumberEstimate (double): Upper bound of the condition number of ``A_internal``
             if parent.overR
                 assert(isreal(A_internal) && isreal(Ainv_internal), 'A real Rep can only be conjugated by a real orthonormal matrix');
             end
@@ -103,13 +103,13 @@ classdef SimilarRep < replab.Rep
                 end
             end
             self.basisConditionNumberEstimate = basisConditionNumberEstimate;
-            self.isExactBasis = isExact;
+            self.hasExactBasis = isExact;
         end
 
         function mat = A(self, type)
         % Returns the change of basis matrix
         %
-        % rgs:
+        % Args:
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
@@ -117,7 +117,7 @@ classdef SimilarRep < replab.Rep
             if nargin < 2 || isempty(type)
                 type = 'double';
             end
-            mat = self.convert(self.A_internal, type);
+            mat = replab.numerical.convert(self.A_internal, type);
         end
 
         function mat = Ainv(self, type)
@@ -131,7 +131,7 @@ classdef SimilarRep < replab.Rep
             if nargin < 2 || isempty(type)
                 type = 'double';
             end
-            mat = self.convert(self.Ainv_internal, type);
+            mat = replab.numerical.convert(self.Ainv_internal, type);
         end
 
     end
@@ -147,7 +147,7 @@ classdef SimilarRep < replab.Rep
         % Rep
 
         function b = isExact(self)
-            b = self.isExactBasis && self.parent.isExact;
+            b = self.hasExactBasis && self.parent.isExact;
         end
 
     end
@@ -184,7 +184,7 @@ classdef SimilarRep < replab.Rep
         end
 
         function c = computeConditionNumberEstimate(self)
-            if self.isUnitary
+            if self.cachedOrDefault('isUnitary', false)
                 c = 1;
             else
                 % rho = parent
@@ -196,25 +196,6 @@ classdef SimilarRep < replab.Rep
                 %
                 % the condition number of A*B is cond(A) * cond(B)
                 c = self.basisConditionNumberEstimate * self.parent.conditionNumberEstimate;
-            end
-        end
-
-    end
-
-    methods (Access = protected) % Implementations
-
-        function X = convert(self, X, type)
-            if strcmp(type, 'exact')
-                if isa(X, 'double')
-                    X = replab.cyclotomic.fromDoubles(X);
-                end
-                return
-            end
-            if ~isa(mat, 'double')
-                mat = double(X); % can be sparse
-            end
-            if strcmp(type, 'double')
-                mat = full(X);
             end
         end
 

@@ -20,7 +20,6 @@ classdef Rep < replab.Obj
         group     % (`+replab.CompactGroup`): Group being represented
         field     % ({'R', 'C'}): Vector space defined on real (R) or complex (C) field
         dimension % (integer): Representation dimension
-        isUnitary % (logical): Whether the representation is unitary
     end
 
     methods
@@ -34,7 +33,7 @@ classdef Rep < replab.Obj
         %   dimension (integer): Representation dimension
         %
         % Keyword Args:
-        %   isUnitary (logical): Whether the representation is unitary, mandatory argument
+        %   isUnitary (logical or ``[]``, optional): Whether the representation is unitary, default ``[]``
         %   isIrreducible (logical or ``[]``, optional): Whether this representation is irreducible, default ``[]``
         %   trivialDimension (integer or ``[]``, optional): Dimension of the trivial subrepresentation, default ``[]``
         %   frobeniusSchurIndicator % (integer or ``[]``, optional): Exact value of the Frobenius-Schur indicator, default ``[]``
@@ -44,19 +43,20 @@ classdef Rep < replab.Obj
             self.dimension = dimension;
             args = struct('isUnitary', [], 'isIrreducible', [], 'trivialDimension', [], 'frobeniusSchurIndicator', [], 'isDivisionAlgebraCanonical', []);
             args = replab.util.populateStruct(args, varargin);
-            assert(~isempty(args.isUnitary), 'The isUnitary keyword parameter must be provided.');
-            self.isUnitary = logical(args.isUnitary);
+            if ~isempty(args.isUnitary)
+                self.cache('isUnitary', logical(args.isUnitary), 'error');
+            end
             if ~isempty(args.trivialDimension)
                 self.cache('trivialDimension', args.trivialDimension, 'error');
             end
             if ~isempty(args.isIrreducible)
-                self.cache('isIrreducible', args.isIrreducible, 'error');
+                self.cache('isIrreducible', logical(args.isIrreducible), 'error');
             end
             if ~isempty(args.frobeniusSchurIndicator)
                 self.cache('frobeniusSchurIndicator', args.frobeniusSchurIndicator, 'error');
             end
             if ~isempty(args.isDivisionAlgebraCanonical)
-                self.cache('isDivisionAlgebraCanonical', args.isDivisionAlgebraCanonical, 'error');
+                self.cache('isDivisionAlgebraCanonical', logical(args.isDivisionAlgebraCanonical), 'error');
             end
         end
 
@@ -144,7 +144,7 @@ classdef Rep < replab.Obj
             if nargin < 3
                 type = 'double';
             end
-            if self.isUnitary
+            if self.cachedOrDefault('isUnitary', false)
                 rho = self.image(g, type);
                 rho = rho';
             else
@@ -292,6 +292,10 @@ classdef Rep < replab.Obj
 
         end
 
+        function b = computeIsUnitary(self)
+            error('TODO');
+        end
+
         function b = computeIsIrreducible(self)
             error('TODO');
         end
@@ -386,6 +390,16 @@ classdef Rep < replab.Obj
         % Returns:
         %   logical: True if this representation is irreducible, false if it has a nontrivial subrepresentation
             b = self.cached('isIrreducible', @() self.computeIsIrreducible);
+        end
+
+        function b = isUnitary(self)
+        % Returns whether this representation is unitary
+        %
+        % In the case of approximate representations, we default to ``false``.
+        %
+        % Returns:
+        %   logical: True if this representation is unitary
+            b = self.cached('isUnitary', @() self.computeIsUnitary);
         end
 
         function K = kernel(self)
@@ -514,7 +528,7 @@ classdef Rep < replab.Obj
 
         function s = headerStr(self)
             p = {};
-            if self.isUnitary
+            if self.cachedOrDefault('isUnitary', false)
                 if self.overR
                     p{1,end+1} = 'orthogonal';
                 else
@@ -522,9 +536,9 @@ classdef Rep < replab.Obj
                 end
             else % ~self.isUnitary
                 if self.overR
-                    p{1,end+1} = 'nonorthogonal';
+                    p{1,end+1} = 'real';
                 else
-                    p{1,end+1} = 'nonunitary';
+                    p{1,end+1} = 'complex';
                 end
             end
             if isequal(self.trivialDimension, self.dimension)
@@ -617,14 +631,14 @@ classdef Rep < replab.Obj
                 end
                 M = self.image(g, 'exact') * M;
             else
-                M = self.image(g, 'double/sparse') * M
+                M = self.image(g, 'double/sparse') * M;
                 if strcmp(type, 'double')
                     M = full(M);
                 end
             end
         end
 
-        function M = matrixColAction(self, g, M)
+        function M = matrixColAction(self, g, M, type)
         % Computes the matrix-representation product
         %
         % We multiply by the inverse of the image, so this stays a left action.
@@ -642,6 +656,9 @@ classdef Rep < replab.Obj
         %
         % Returns:
         %   double(\*,\*): The matrix ``M * self.image(inverse(g))``
+            if nargin < 4
+                type = 'double';
+            end
             gInv = self.group.inverse(g);
             if strcmp(type, 'exact')
                 if isa(M, 'double')
@@ -830,92 +847,133 @@ classdef Rep < replab.Obj
             res = self.cached('unitarize', @() self.computeUnitarize);
         end
 
-% $$$         function [sub1 sub2] = maschke(self, basis1, embedding1)
-% $$$         % Given a basis of a subrepresentation, returns two complementary subrepresentations
-% $$$         %
-% $$$         % Note that we optimize special cases when the representation and/or the basis is
-% $$$         % unitary
-% $$$         %
-% $$$         % Args:
-% $$$         %   basis1 (double(dParent,dSub1)): Basis of the first subrepresentation
-% $$$         %   embedding1 (double(dChild,dParent), optional): Map from the parent space to the subrepresentation
-% $$$         %
-% $$$         % Returns
-% $$$         % -------
-% $$$         %   sub1: `replab.SubRep`
-% $$$         %     First subrepresentation
-% $$$         %   sub2: `replab.SubRep`
-% $$$         %     Second subrepresentation
-% $$$             assert(size(basis1, 1) == self.dimension);
-% $$$             d1 = size(basis1, 2);
-% $$$             if nargin > 2
-% $$$                 assert(size(embedding1, 1) == d1);
-% $$$                 assert(size(embedding1, 2) == self.dimension);
-% $$$             end
-% $$$             rest = null(basis1.');
-% $$$             if isequal(self.isUnitary, true)
-% $$$                 if nargin < 3
-% $$$                     BB = basis1'*basis1;
-% $$$                     BB = (BB+BB')/2;
-% $$$                     embedding1 = BB \ basis1';
-% $$$                 end
-% $$$                 sub1 = replab.SubRep(self, basis1, embedding1);
-% $$$                 % for the second subrepresentation, we take the orthogonal complement from 'null'
-% $$$                 sub2 = replab.SubRep(self, rest, rest');
-% $$$             else
-% $$$                 X = [basis1 rest];
-% $$$                 Xinv = inv(X);
-% $$$                 P = basis1 * Xinv(1:d1, :);
-% $$$                 P1 = self.commutant.project(P);
-% $$$                 embedding1 = basis1 \ P1;
-% $$$                 P2 = eye(self.dimension) - P1;
-% $$$                 basis2 = orth(P2);
-% $$$                 embedding2 = basis2 \ P2;
-% $$$                 sub1 = replab.SubRep(self, basis1, embedding1);
-% $$$                 sub2 = replab.SubRep(self, basis2, embedding2);
-% $$$             end
-% $$$         end
+% $$$ % $$$         function [sub1 sub2] = maschke(self, basis1, embedding1)
+% $$$ % $$$         % Given a basis of a subrepresentation, returns two complementary subrepresentations
+% $$$ % $$$         %
+% $$$ % $$$         % Note that we optimize special cases when the representation and/or the basis is
+% $$$ % $$$         % unitary
+% $$$ % $$$         %
+% $$$ % $$$         % Args:
+% $$$ % $$$         %   basis1 (double(dParent,dSub1)): Basis of the first subrepresentation
+% $$$ % $$$         %   embedding1 (double(dChild,dParent), optional): Map from the parent space to the subrepresentation
+% $$$ % $$$         %
+% $$$ % $$$         % Returns
+% $$$ % $$$         % -------
+% $$$ % $$$         %   sub1: `replab.SubRep`
+% $$$ % $$$         %     First subrepresentation
+% $$$ % $$$         %   sub2: `replab.SubRep`
+% $$$ % $$$         %     Second subrepresentation
+% $$$ % $$$             assert(size(basis1, 1) == self.dimension);
+% $$$ % $$$             d1 = size(basis1, 2);
+% $$$ % $$$             if nargin > 2
+% $$$ % $$$                 assert(size(embedding1, 1) == d1);
+% $$$ % $$$                 assert(size(embedding1, 2) == self.dimension);
+% $$$ % $$$             end
+% $$$ % $$$             rest = null(basis1.');
+% $$$ % $$$             if isequal(self.isUnitary, true)
+% $$$ % $$$                 if nargin < 3
+% $$$ % $$$                     BB = basis1'*basis1;
+% $$$ % $$$                     BB = (BB+BB')/2;
+% $$$ % $$$                     embedding1 = BB \ basis1';
+% $$$ % $$$                 end
+% $$$ % $$$                 sub1 = replab.SubRep(self, basis1, embedding1);
+% $$$ % $$$                 % for the second subrepresentation, we take the orthogonal complement from 'null'
+% $$$ % $$$                 sub2 = replab.SubRep(self, rest, rest');
+% $$$ % $$$             else
+% $$$ % $$$                 X = [basis1 rest];
+% $$$ % $$$                 Xinv = inv(X);
+% $$$ % $$$                 P = basis1 * Xinv(1:d1, :);
+% $$$ % $$$                 P1 = self.commutant.project(P);
+% $$$ % $$$                 embedding1 = basis1 \ P1;
+% $$$ % $$$                 P2 = eye(self.dimension) - P1;
+% $$$ % $$$                 basis2 = orth(P2);
+% $$$ % $$$                 embedding2 = basis2 \ P2;
+% $$$ % $$$                 sub1 = replab.SubRep(self, basis1, embedding1);
+% $$$ % $$$                 sub2 = replab.SubRep(self, basis2, embedding2);
+% $$$ % $$$             end
+% $$$ % $$$         end
 
-% $$$         function sub = subRep(self, basis, embedding)
-% $$$         % Returns a subrepresentation of this representation
-% $$$         %
-% $$$         % The subrepresentation is defined by its basis in the parent representation; to compute
-% $$$         % images, an embedding map can be provided.
-% $$$         %
-% $$$         % While the ``basis`` represents in essence a map from the subrepresentation to parent representation,
-% $$$         % the embedding map is a map from the parent representation to the subrepresentation.
-% $$$         %
-% $$$         % The embedding map is not uniquely defined, for example when the subrepresentation contains irreducible
-% $$$         % representations that have multiplicites outside the subrepresentation space.
-% $$$         %
-% $$$         % However, all variants of the embedding map provide identical results when computing images of the
-% $$$         % subrepresentation.
-% $$$         %
-% $$$         % If the embedding is not provided, one is obtained by a trick based on Maschke theorem.
-% $$$         % Args:
-% $$$         %   basis (double(dParent,dChild), may be sparse): Basis of the subrepresentation
-% $$$         %   embedding (double(dChild,dParent), may be sparse, optional): Map from the parent space to the subrepresentation
-% $$$         % Returns:
-% $$$         %   `+replab.SubRep`: Subrepresentation
-% $$$             if nargin < 3
-% $$$                 if isequal(self.isUnitary, true)
-% $$$                     % optimization for unitary parent representations
-% $$$                     embedding = (basis'*basis) \ basis';
-% $$$                     % there is an optimization that cannot be made yet:
-% $$$                     % if basis'*basis is identity, then embedding = basis'
-% $$$                     % works
-% $$$                 else
-% $$$                     dSub = size(basis, 2);
-% $$$                     rest = null(basis.');
-% $$$                     X = [basis rest];
-% $$$                     Xinv = inv(X);
-% $$$                     P = basis * Xinv(1:dSub, :);
-% $$$                     P1 = self.commutant.project(P);
-% $$$                     embedding = basis \ P1;
-% $$$                 end
-% $$$             end
-% $$$             sub = replab.SubRep(self, basis, embedding);
-% $$$         end
+        function sub = subRep(self, injection, varargin)
+        % Constructs a subrepresentation of this representation
+        %
+        % A subrepresentation is specified by an invariant subspace of the current representation.
+        %
+        % For simplicity, this subspace can be provided as column vectors in a matrix passed as the first
+        % argument to this function. This matrix is called ``injection`` for reasons that are clarified below.
+        %
+        % The user should also provide the keyword argument ``isUnitary``, except when this representation is
+        % unitary, and the injection map corresponds to an isometry; then RepLAB deduces that the subrepresentation
+        % is unitary as well.
+        %
+        % More precisely, the subrepresentation is defined by maps between two vector spaces:
+        %
+        % * the vector space $V$ corresponding to this representation, of dimension $D$,
+        % * the vector space $W$ corresponding to the created subrepresentation, of dimension $d$.
+        %
+        % The two maps are:
+        %
+        % * the injection $I: W \rightarrow V$ that takes a vector in $W$ and injects it in the parent representation,
+        % * the projection $P: V \rightarrow W$ that takes a vector in $V$ and extracts/returns its component in $W$.
+        %
+        % Correspondingly, the map $I$ is given as a $D x d$ matrix, while the map $P$ is given as a $d x D$ matrix.
+        %
+        % If only the injection map $I$ is given as an argument, a projection $P$ is computed; it is not necessarily
+        % unique. In particular, if the range of $I$ spans irreducible representations with non-trivial multiplicities,
+        % the recovered projection is chosen arbitrarily.
+        %
+        % However, all choices of the projection map provide the same results when computing images of the
+        % subrepresentation.
+        %
+        % If a floating-point approximation $\tilde{I}$ of the injection map is given instead of the exact map $I$,
+        % an upper bound on the error can be provided; otherwise, it will be automatically estimated. In that
+        % case, the projection map $\tilde{P}$ is also considered as approximate, regardless of whether it is
+        % user-provided or computed.
+        %
+        % The error bound is ``mapErrorBound``, and corresponds to an upper bound on both
+        % $|| I \tilde{P} - id ||_F$ and $|| \tilde{I} P - id ||_F$; in the expression, we assume
+        % that $I$ and $P$ are the exact injections/projections closest to $\tilde{I}$ and $\tilde{P}$.
+        %
+        % Args:
+        %   injection (double(D,d) or `cyclotomic`(D,d), may be sparse): Basis / Injection map
+        %
+        % Keyword Args:
+        %   projection (double(D,d) or `cyclotomic`(D,d), may be sparse, optional): Projection map
+        %   mapErrorBound (double, optional): Upper bound as described above
+        %   mapConditionNumberEstimate (double, optional): Upper bound on the condition number of both $P$ and $I$
+        %   isUnitary (logical, optional): Whether the resulting representation is unitary, may be omitted
+        %
+        % Returns:
+        %   `+replab.SubRep`: Subrepresentation
+            args = struct('projection', []);
+            [args, restArgs] = replab.util.populateStruct(args, varargin);
+            projection = args.projection;
+            isExact = isa(injection, 'replab.cyclotomic') && (isempty(projection) || isa(projection, 'replab.cyclotomic'));
+            if isempty(projection)
+                if self.cachedOrDefault('isUnitary', false)
+                    if isExact
+                        % slower because cyclotomic doesn't implement \ or /
+                        projection = inv(injection'*injection)*injection';
+                    else
+                        projection = (injection'*injection)\injection';
+                    end
+                else
+                    % this is a projector on the subspace W
+                    % as I*  (inv(I'*I)*I'*I) *inv(I'*I)*I' = I*inv(I'*I)*I'
+                    P1 = injection*inv(injection'*injection)*injection';
+                    P2 = self.commutant.project(P1);
+                    % A\B gives X which is the solution A*X=B
+                    % P1 = injection * projection
+                    if isExact
+                        % slower because cyclotomic doesn't implement \ or /
+                        projection = inv(injection'*injection)*injection'*P1;
+                    else
+                        projection = injection \ P1;
+                    end
+                end
+            end
+            sub = replab.SubRep(self, injection, projection, restArgs{:});
+        end
+
 % $$$
 % $$$         function irreps = splitIntoIrreducibles(self, context)
 % $$$         % Decomposes fully the given representation into subrepresentations
@@ -986,39 +1044,39 @@ classdef Rep < replab.Obj
 
     methods (Access = protected)
 
-        function res = computeUnitarize(self)
-            if isequal(self.isUnitary, true)
-                res = replab.SimilarRep.identical(self);
-            else
-                [A Ainv] = self.unitaryChangeOfBasis;
-                res = self.similarRep(A, Ainv);
-                res.isUnitary = true;
-            end
-        end
-
-        function [A Ainv] = unitaryChangeOfBasis(self)
-        % Returns the change of basis to a unitary representation
-        %
-        % Returns ``A`` and ``Ainv`` so that ``A * self.image(g) * Ainv`` is unitary.
-        %
-        % Returns
-        % -------
-        %   A: double(\*,\*)
-        %     Change of basis matrix
-        %   Ainv: double(\*,\*)
-        %     Inverse of change of basis matrix
-            if isequal(self.isUnitary, true)
-                A = eye(self.dimension);
-                Ainv = eye(self.dimension);
-            else
-                X = self.hermitianInvariant.project(eye(self.dimension));
-                for i = 1:self.dimension
-                    X(i,i) = real(X(i,i));
-                end
-                Ainv = chol(X, 'lower');
-                A = inv(Ainv);
-            end
-        end
+% $$$         function res = computeUnitarize(self)
+% $$$             if self.cachedOrDefault('isUnitary', false)
+% $$$                 res = replab.SimilarRep.identical(self);
+% $$$             else
+% $$$                 [A Ainv] = self.unitaryChangeOfBasis;
+% $$$                 res = self.similarRep(A, Ainv);
+% $$$                 res.isUnitary = true;
+% $$$             end
+% $$$         end
+% $$$
+% $$$         function [A Ainv] = unitaryChangeOfBasis(self)
+% $$$         % Returns the change of basis to a unitary representation
+% $$$         %
+% $$$         % Returns ``A`` and ``Ainv`` so that ``A * self.image(g) * Ainv`` is unitary.
+% $$$         %
+% $$$         % Returns
+% $$$         % -------
+% $$$         %   A: double(\*,\*)
+% $$$         %     Change of basis matrix
+% $$$         %   Ainv: double(\*,\*)
+% $$$         %     Inverse of change of basis matrix
+% $$$             if isequal(self.isUnitary, true)
+% $$$                 A = eye(self.dimension);
+% $$$                 Ainv = eye(self.dimension);
+% $$$             else
+% $$$                 X = self.hermitianInvariant.project(eye(self.dimension));
+% $$$                 for i = 1:self.dimension
+% $$$                     X(i,i) = real(X(i,i));
+% $$$                 end
+% $$$                 Ainv = chol(X, 'lower');
+% $$$                 A = inv(Ainv);
+% $$$             end
+% $$$         end
 % $$$
     end
 % $$$

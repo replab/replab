@@ -35,7 +35,7 @@ classdef ComplexTypeMatrices < replab.domain.VectorSpace
         %% Domain methods
 
         function b = eqv(self, X, Y)
-            b = ~replab.isNonZeroMatrix(X - Y, replab.Parameters.doubleEigTol);
+            b = all(all(X == Y));
         end
 
         function X = sample(self)
