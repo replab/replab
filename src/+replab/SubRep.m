@@ -113,6 +113,52 @@ classdef SubRep < replab.Rep
 
     methods
 
+        function sub1 = withNoise(self, injectionMapNoise, projectionMapNoise)
+        % Adds Gaussian noise to the injection/projection maps
+        %
+        % This method has two call conventions.
+        %
+        % If ``sub.withNoise(sigma)`` is called, then the injection map is changed to
+        % ``injection1 = injection + Delta``, where ``Delta`` is a matrix with normally distributed
+        % entries of standard deviation ``sigma``. ``Delta`` is real (resp. complex) if the representation
+        % is real (resp. complex). Then the original `.projection` map is ignored and ``projection1`` is recovered
+        % as in `.Rep.subRep`.
+        %
+        % If ``sub.withNoise(sigmaI, sigmaP)`` is called, then noise of magnitude ``sigmaI`` is added to the injection map
+        % and noise of magnitude ``sigmaP`` is added to the projection map. Then the new noisy maps are corrected
+        % so that ``injection1 * projection1`` is still a projector.
+        %
+        % Args:
+        %   injectionMapNoise (double): Magnitude of the noise to add to the injection map
+        %   projectionMapNoise (double, optional): Magnitude of the noise to add to projection map
+        %
+        % Returns:
+        %   `.SubRep`: A noisy subrepresentation
+            d = self.dimension;
+            D = self.parent.dimension;
+            switch nargin
+              case 2
+                if self.overR
+                    injection1 = self.injection('double') + randn(D, d)*injectionMapNoise;
+                else
+                    injection1 = self.injection('double') + (randn(D, d) + 1i*rand(D, d))*injectionMapNoise/sqrt(2);
+                end
+                sub1 = self.parent.subRep(injection1);
+              case 3
+                if self.overR
+                    injection1 = self.injection('double') + randn(D, d)*injectionMapNoise;
+                    projection1 = self.projection('double') + randn(d, D)*projectionMapNoise;
+                else
+                    injection1 = self.injection('double') + (randn(D, d) + 1i*rand(D, d))*injectionMapNoise/sqrt(2);
+                    projection1 = self.projection('double') + (randn(d, D) + 1i*rand(d, D))*projectionMapNoise/sqrt(2);
+                end
+                projection1 = inv(projection1 * injection1) * projection1;
+                sub1 = self.parent.subRep(injection1, 'projection', projection1);
+              otherwise
+                error('Wrong calling convention');
+            end
+        end
+
         function b = isIntegerValued(self)
         % Returns whether both the injection map and the projection map are expressed with Gaussian integer coefficients
         %
@@ -201,10 +247,10 @@ classdef SubRep < replab.Rep
             P = Ptilde;
             I = Itilde;
             fprintf('D Pi     DeltaP   DeltaI   P DeltaI\n');
-            for i = 1:10
+            for i = 1:3
                 Ftilde = I*P;
                 [Foverline err] = self.parent.commutant.project(Ftilde);
-                for j = 1:10
+                for j = 1:3
                     Pprev = P;
                     Iprev = I;
                     Iprime = Foverline / P;
