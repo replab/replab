@@ -739,85 +739,86 @@ classdef Rep < replab.Obj
 % $$$             rep1 = replab.rep.simplify(self);
 % $$$         end
 % $$$
-% $$$         function complexRep = complexification(self)
-% $$$         % Returns the complexification of a real representation
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Rep`: The complexification of this representation
-% $$$         %
-% $$$         % Raises:
-% $$$         %   An error if this representation is already complex.
-% $$$             assert(self.overR, 'Representation should be real to start with');
-% $$$             complexRep = replab.rep.ComplexifiedRep(self);
-% $$$         end
+        function complexRep = complexification(self)
+        % Returns the complexification of a real representation
+        %
+        % Returns:
+        %   `+replab.Rep`: The complexification of this representation
+        %
+        % Raises:
+        %   An error if this representation is already complex.
+            assert(self.overR, 'Representation should be real to start with');
+            complexRep = replab.rep.ComplexifiedRep(self);
+        end
 
-% $$$         function rep = conj(self)
-% $$$         % Returns the complex conjugate representation of this representation
-% $$$         %
-% $$$         % See https://en.wikipedia.org/wiki/Complex_conjugate_representation
-% $$$         %
-% $$$         % It obeys ``rep.conj.image(g) = conj(rep.image(g))``
-% $$$         %
-% $$$         % If this representation is real, it is returned unchanged.
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Rep`: The complex conjugate of this representation
-% $$$             rep = replab.rep.DerivedRep(self, true, false, false);
-% $$$         end
-% $$$
-% $$$         function rep = dual(self)
-% $$$         % Returns the dual representation of this representation
-% $$$         %
-% $$$         % See https://en.wikipedia.org/wiki/Dual_representation
-% $$$         %
-% $$$         % It obeys ``rep.dual.image(g) = rep.inverseImage(g).'``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   replab.Rep: The dual representation
-% $$$             rep = replab.rep.DerivedRep(self, false, true, true);
-% $$$         end
-% $$$
-% $$$         function rep = blkdiag(varargin)
-% $$$         % Direct sum of representations
-% $$$         %
-% $$$         % See `+replab.CompactGroup.directSumRep`
-% $$$             self = varargin{1};
-% $$$             rep = self.group.directSumRep(self.field, varargin);
-% $$$         end
-% $$$
-% $$$         function rep = kron(varargin)
-% $$$         % Tensor product of representations
-% $$$         %
-% $$$         % See `+replab.CompactGroup.tensorRep`
-% $$$             self = varargin{1};
-% $$$             rep = self.group.tensorRep(self.field, varargin);
-% $$$         end
-% $$$
-% $$$         function rep = tensorPower(self, n)
-% $$$         % Returns a tensor power of this representation
-% $$$         %
-% $$$         % Args:
-% $$$         %   n (integer): Exponent of the tensor power
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Rep`: The tensor power representation
-% $$$             reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
-% $$$             rep = self.group.tensorRep(self.field, reps);
-% $$$         end
-% $$$
-% $$$         function rep = directSumOfCopies(self, n)
-% $$$         % Returns a direct sum of copies of this representation
-% $$$         %
-% $$$         % Args:
-% $$$         %   n (integer): Number of copies
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Rep`: The direct sum representation
-% $$$             reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
-% $$$             rep = self.group.directSum(self.field, reps);
-% $$$         end
+        function rep = conj(self)
+        % Returns the complex conjugate representation of this representation
+        %
+        % See https://en.wikipedia.org/wiki/Complex_conjugate_representation
+        %
+        % It obeys ``rep.conj.image(g) = conj(rep.image(g))``
+        %
+        % If this representation is real, it is returned unchanged.
+        %
+        % Returns:
+        %   `+replab.Rep`: The complex conjugate of this representation
+            rep = replab.rep.DerivedRep(self, true, false, false);
+        end
+
+        function rep = dual(self)
+        % Returns the dual representation of this representation
+        %
+        % See https://en.wikipedia.org/wiki/Dual_representation
+        %
+        % It obeys ``rep.dual.image(g) = rep.inverseImage(g).'``
+        %
+        % Returns:
+        %   replab.Rep: The dual representation
+            rep = replab.rep.DerivedRep(self, false, true, true);
+        end
+
+        function rep = blkdiag(varargin)
+        % Direct sum of representations
+        %
+        % See `+replab.CompactGroup.directSumRep`
+            self = varargin{1};
+            rep = self.group.directSumRep(self.field, varargin);
+        end
+
+        function rep = kron(varargin)
+        % Tensor product of representations
+        %
+        % See `+replab.CompactGroup.tensorRep`
+            self = varargin{1};
+            rep = self.group.tensorRep(self.field, varargin);
+        end
+
+        function rep = tensorPower(self, n)
+        % Returns a tensor power of this representation
+        %
+        % Args:
+        %   n (integer): Exponent of the tensor power
+        %
+        % Returns:
+        %   `+replab.Rep`: The tensor power representation
+            reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
+            rep = self.group.tensorRep(self.field, reps);
+        end
+
+        function rep = directSumOfCopies(self, n)
+        % Returns a direct sum of copies of this representation
+        %
+        % Args:
+        %   n (integer): Number of copies
+        %
+        % Returns:
+        %   `+replab.Rep`: The direct sum representation
+            reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
+            rep = self.group.directSum(self.field, reps);
+        end
 
     end
+
     methods % Manipulation of representation space
 
         function res = unitarize(self)
