@@ -452,43 +452,41 @@ classdef SubRep < replab.Rep
 
     end
 
-% $$$     methods (Static)
-% $$$
-% $$$         function sub = fullSubRep(parent)
-% $$$         % Creates a full subrepresentation of the given representation, with identity basis
-% $$$         %
-% $$$         % Args:
-% $$$         %   parent (`+replab.Rep`): Representaiton
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.SubRep`: Subrepresentation identical to ``parent``
-% $$$             d = parent.dimension;
-% $$$             sub = parent.subRep(speye(d), speye(d));
-% $$$             assert(isequal(sub.isUnitary, parent.isUnitary));
-% $$$             sub.trivialDimension = parent.trivialDimension;
-% $$$             sub.isIrreducible = parent.isIrreducible;
-% $$$             sub.frobeniusSchurIndicator = parent.frobeniusSchurIndicator;
-% $$$             sub.isDivisionAlgebraCanonical = parent.isDivisionAlgebraCanonical;
-% $$$         end
-% $$$
-% $$$         function subRep = directSum(parent, subReps)
-% $$$         % Computes the direct sum of subrepresentations of the same parent representation
-% $$$         %
-% $$$         % The subrepresentations must not overlap.
-% $$$         %
-% $$$         % Args:
-% $$$         %   parent (`+replab.Rep`): Parent representation
-% $$$         %   subReps (cell(1,\*) of `+replab.SubRep`): A row cell array of subrepresentations of the parent representation
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.SubRep`: A block-diagonal subrepresentation composed of the given subrepresentations
-% $$$             Hs = cellfun(@(sr) sr.B_internal, subReps, 'uniform', 0);
-% $$$             Fs = cellfun(@(sr) sr.E_internal, subReps, 'uniform', 0);
-% $$$             newB_internal = horzcat(Hs{:});
-% $$$             newE_internal = vertcat(Fs{:});
-% $$$             subRep = parent.subRep(newB_internal, newE_internal);
-% $$$         end
-% $$$
-% $$$     end
+    methods (Static)
+
+        function sub = fullSubRep(parent)
+        % Creates a full subrepresentation of the given representation, with identity projection/injection maps
+        %
+        % Args:
+        %   parent (`+replab.Rep`): Representaiton
+        %
+        % Returns:
+        %   `+replab.SubRep`: Subrepresentation identical to ``parent``
+            d = parent.dimension;
+            sub = parent.subRep(speye(d), speye(d));
+            sub.copyProperties(parent);
+        end
+
+        function subRep = directSumBiorthogonal(parent, subReps)
+        % Computes the direct sum of subrepresentations of the same parent representation
+        %
+        % The subrepresentations must have biorthogonal injection projection maps:
+        % ``subReps{i}.projection * subReps{i}.injection = eye(subReps{i}.dimension)``, but
+        % ``subReps{i}.projection * subReps{j}.injection = 0`` for ``i ~= j``.
+        %
+        % Args:
+        %   parent (`+replab.Rep`): Parent representation
+        %   subReps (cell(1,\*) of `+replab.SubRep`): Subrepresentations of the parent representation
+        %
+        % Returns:
+        %   `+replab.SubRep`: A block-diagonal subrepresentation composed of the given subrepresentations
+            Ps = cellfun(@(sr) sr.projection_internal, subReps, 'uniform', 0);
+            Is = cellfun(@(sr) sr.injection_internal, subReps, 'uniform', 0);
+            newI_internal = horzcat(Is{:});
+            newP_internal = vertcat(Ps{:});
+            subRep = parent.subRep(newI_internal, newP_internal);
+        end
+
+    end
 
 end
