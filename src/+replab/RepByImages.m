@@ -16,6 +16,53 @@ classdef RepByImages < replab.Rep
             self.imagesErrorBound = imagesErrorBound;
         end
 
+        function res = rewriteTerm_isTrivial(self)
+        % Rewrite rule: replace this representation by a trivial representation if it is a representation of the trivial group
+            if length(self.images) == 0
+                res = self.group.trivialRep(self.field, self.dimension);
+            else
+                res = [];
+            end
+        end
+
+        function res = rewriteTerm_hasBlockStructure(self)
+        % Rewrite rule: rewrite this representation as a direct sum if it has a block structure
+            if self.isExact && length(self.images) > 0
+                n = length(self.images);
+                mask = self.images{1} ~= 0;
+                for i = 2:length(self.images)
+                    mask = mask | (self.images{i} ~= 0);
+                end
+                G = replab.UndirectedGraph.fromAdjacencyMatrix(double(mask));
+                P = G.connectedComponents;
+                blocks = P.blocks;
+                if length(blocks) == 1
+                    res = [];
+                    return
+                end
+                m = length(blocks);
+                factors = cell(1, m);
+                for i = 1:m
+                    block = blocks{i};
+                    blockImages = cell(1, n);
+                    for j = 1:n
+                        img = self.images{j};
+                        blockImages{j} = img(block, block);
+                    end
+                    factors{i} = self.group.repByImages(self.field, length(block), ...
+                                                        'preimages', self.preimages, 'images', blockImages);
+                end
+                ds = self.group.directSumRep(self.field, factors);
+                perm = [blocks{:}];
+                D = self.dimension;
+                A = sparse(perm, 1:D, ones(1, D), D, D);
+                Ainv = sparse(1:D, perm, ones(1, D), D, D);
+                res = ds.similarRep(A, 'inverse', Ainv);
+            else
+                res = [];
+            end
+        end
+
     end
 
     methods % Implementations

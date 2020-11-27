@@ -30,6 +30,69 @@ classdef DirectSumRep < replab.Rep
             self.factors = factors;
         end
 
+        function res = rewriteTerm_someFactorsArePermutationSimilarReps(self)
+        % Rewrite rule: move permutation similarity transforms before performing the direct sum
+            isPermSimilar = cellfun(@(f) isa(f, 'replab.SimilarRep') && f.isPermutation, self.factors);
+            if any(isPermSimilar)
+                A = sparse(0, 0);
+                Ainv = sparse(0, 0);
+                n = self.nFactors;
+                newFactors = cell(1, n);
+                for i = 1:n
+                    f = self.factor(i);
+                    if isPermSimilar(i)
+                        A = blkdiag(A, f.A_internal);
+                        Ainv = blkdiag(Ainv, f.Ainv_internal);
+                        newFactors{i} = f.parent;
+                    else
+                        A = blkdiag(A, speye(f.dimension));
+                        Ainv = blkdiag(Ainv, speye(f.dimension));
+                        newFactors{i} = f;
+                    end
+                end
+                res = replab.SimilarRep(replab.rep.DirectSumRep(self.group, self.field, newFactors), A, Ainv);
+            else
+                res = [];
+            end
+        end
+
+        function res = rewriteTerm_removeTrivialFactors(self)
+        % Rewrite rule: remove trivial factors
+            mask = cellfun(@(f) f.dimension == 0, self.factors);
+            if any(mask)
+                res = replab.rep.DirectSumRep(self.group, self.field, self.factors(~mask));
+            else
+                res = [];
+            end
+        end
+
+        function res = rewriteTerm_factorIsDirectSum(self)
+        % Rewrite rule: if any of the factors is a direct sum itself, collapse the sums
+            if any(cellfun(@(f) isa(f, 'replab.rep.DirectSumRep'), self.factors))
+                newFactors = cell(1, 0);
+                for i = 1:length(self.factors)
+                    f = self.factor(i);
+                    if isa(f, 'replab.rep.DirectSumRep')
+                        newFactors = horzcat(newFactors, f.factors);
+                    else
+                        newFactors{1,end+1} = f;
+                    end
+                end
+                res = replab.rep.DirectSumRep(self.group, self.field, newFactors);
+            else
+                res = [];
+            end
+        end
+
+        function res = rewriteTerm_hasOneFactor(self)
+        % Rewrite rule: removes the direct sum if it has a single factor
+            if self.nFactors == 1
+                res = self.factor(1);
+            else
+                res = [];
+            end
+        end
+
         function n = nFactors(self)
         % Returns the number of factors in the direct sum
         %
@@ -52,6 +115,14 @@ classdef DirectSumRep < replab.Rep
     end
 
     methods (Access = protected) % Implementations
+
+        function c = decomposeTerm(self)
+            c = self.factors;
+        end
+
+        function r = composeTerm(self, newFactors)
+            r = replab.rep.DirectSumRep(self.group, self.field, newFactors);
+        end
 
         function rho = image_exact(self, g)
             if self.dimension == 0

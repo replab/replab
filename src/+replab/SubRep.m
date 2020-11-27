@@ -85,6 +85,32 @@ classdef SubRep < replab.Rep
             end
         end
 
+        function res = rewriteTerm_SubRepOfSubRep(self)
+            if isa(self.parent, 'replab.SubRep') && (self.isIntegerValued || self.parent.isIntegerValued)
+                newI = self.injection_internal * self.parent.injection_internal;
+                newP = self.parent.projection_internal & self.projection_internal;
+                res = replab.SubRep(self.parent.parent, newI, newP);
+            else
+                res = [];
+            end
+        end
+
+        function res = rewriteTerm_SubRepOfSimilarRep(self)
+            if isa(self.parent, 'replab.SimilarRep') && (self.isIntegerValued || self.parent.isIntegerValued)
+                newI = self.injection_internal * self.parent.A_internal;
+                newP = self.parent.Ainv_internal & self.projection_internal;
+                res = replab.SubRep(self.parent.parent, newI, newP);
+            else
+                res = [];
+            end
+        end
+
+        function b = isIntegerValued(self)
+            I = self.injection_internal;
+            P = self.projection_internal;
+            b = self.hasExactMaps && all(all(I == round(I))) && all(all(P == round(P)));
+        end
+
         function e = projectorErrorBound(self)
         % Returns an upper bound on the quality of the approximation of the injection/projection maps
         %
@@ -188,6 +214,14 @@ classdef SubRep < replab.Rep
     end
 
     methods (Access = protected)
+
+        function c = decomposeTerm(self)
+            c = {self.parent};
+        end
+
+        function r = composeTerm(self, newParents)
+            r = replab.SubRep(newParents{1}, self.injection_internal, self.projection_internal);
+        end
 
         function rho = image_double_sparse(self, g)
             if self.isExact

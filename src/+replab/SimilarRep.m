@@ -104,6 +104,41 @@ classdef SimilarRep < replab.Rep
             self.hasExactBasis = hasExactBasis;
         end
 
+        function res = rewriteTerm_isIdentity(self)
+            if self.isIntegerValued && all(all(self.A_internal == speye(self.dimension)))
+                res = self.parent;
+            else
+                res = [];
+            end
+        end
+
+        function res = rewriteTerm_permutationSimilarRepOfSubRep(self)
+            if isa(self.parent, 'replab.SubRep') && (self.isIntegerValued || self.parent.isIntegerValued)
+                newInjection = self.A_internal * self.parent.injection_internal;
+                newProjection = self.parent.projection_internal * self.Ainv_internal;
+                res = replab.SubRep(self.parent.parent, newInjection, newProjection);
+            else
+                res = [];
+            end
+        end
+
+        function res = rewriteTerm_permutationSimilarRepOfSimilarRep(self)
+            if isa(self.parent, 'replab.SimilarRep') && (self.isIntegerValued || self.parent.isIntegerValued)
+                newA = self.A_internal * self.parent.A_internal;
+                newAinv = self.parent.Ainv_internal * self.Ainv_internal;
+                res = replab.SimilarRep(self.parent.parent, newA, newAinv);
+            else
+                res = [];
+            end
+        end
+
+        function b = isIntegerValued(self)
+        % Returns whether this similarity transformation has Gaussian integer change of basis matrices
+            A = self.A_internal;
+            Ainv = self.Ainv_internal;
+            b = self.hasExactBasis && all(all(A == round(A))) && all(all(Ainv == round(Ainv)));
+        end
+
         function mat = A(self, type)
         % Returns the change of basis matrix
         %
@@ -154,6 +189,14 @@ classdef SimilarRep < replab.Rep
     methods (Access = protected) % Implementations
 
         % Rep
+
+        function c = decomposeTerm(self)
+            c = {self.parent};
+        end
+
+        function r = composeTerm(self, newParents)
+            r = replab.SimilarRep(newParents{1}, self.A_internal, self.Ainv_internal);
+        end
 
         function rho = image_double_sparse(self, g)
             if self.isExact

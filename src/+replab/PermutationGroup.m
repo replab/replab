@@ -881,7 +881,7 @@ classdef PermutationGroup < replab.FiniteGroup
             d = self.domainSize;
             [injectiond projection] = replab.sym.sageSpechtStandardBasis(d);
             rho = self.naturalRep.subRep(replab.cyclotomic.fromDoubles(injectiond)/d, ...
-                                         'projection', replab.cyclotomic.fromDoubles(projection), 'mapErrorBound', 0);
+                                         'projection', replab.cyclotomic.fromDoubles(projection));
         end
 
         function rho = signRep(self)

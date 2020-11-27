@@ -15,6 +15,8 @@ classdef Rep < replab.Obj
 %
 %   This class implements also extra methods about the action of the representation on matrices,
 %   methods which can be overloaded for performance.
+%
+%   If this class has representations as "parts", override the `.decomposeTerm` and `.composeTerm` methods.
 
     properties (SetAccess = protected)
         group     % (`+replab.CompactGroup`): Group being represented
@@ -174,6 +176,133 @@ classdef Rep < replab.Obj
             if nargout > 1
                 rhoInverse = self.inverseImage(g, type);
             end
+        end
+
+    end
+
+    methods (Access = protected) % Simplification
+
+        function c = decomposeTerm(self)
+        % Returns the parts of this representation, if any
+        %
+        % Returns:
+        %   cell(1,\*) of `.Rep`: Representations that are part of this representation
+            c = cell(1, 0);
+        end
+
+        function newRep = composeTerm(self, newParts)
+        % Reconstructs the current representation having its parts possibly rewritting
+        %
+        % Args:
+        %   newParts (cell(1,\*) of `.Rep`): New parts, must be equivalent to the current parts up to simplification
+        %
+        % Returns:
+        %   `.Rep`: Reconstructed representation
+            newRep = self;
+        end
+
+        function copyProperties(self, rep)
+        % Copy the cached properties of another representation to this current representation
+        %
+        % Args:
+        %   rep (`.Rep`): Representation equal to the current representation
+            if rep.inCache('isUnitary')
+                self.cache('isUnitary', rep.isUnitary, '==');
+            end
+            if rep.inCache('trivialDimension')
+                self.cache('trivialDimension', rep.trivialDimension, '==');
+            end
+            if rep.inCache('isIrreducible')
+                self.cache('isIrreducible', rep.isIrreducible, '==');
+            end
+            if rep.inCache('frobeniusSchurIndicator')
+                self.cache('frobeniusSchurIndicator', rep.frobeniusSchurIndicator, '==');
+            end
+            if rep.inCache('isDivisionAlgebraCanonical')
+                self.cache('isDivisionAlgebraCanonical', rep.isDivisionAlgebraCanonical, '==');
+            end
+            if rep.inCache('kernel')
+                self.cache('kernel', rep.kernel, '==');
+            end
+            if rep.inCache('unitarize')
+                u = rep.unitarize;
+                u1 = replab.SimilarRep(self, u.A_internal, u.Ainv_internal);
+                self.cache('unitarize', u1, 'ignore');
+            end
+        end
+
+        function [newRep changed] = innermostTerm(self)
+        % Performs leftmost innermost tree rewriting
+        %
+        % Inspired by Algorithm 1 of `<https://doi.org/10.1145/941566.941568>`_ also available at
+        % `<https://homepages.cwi.nl/~paulk/publications/TOSEM03.pdf>`_
+        %
+        % We first make sure the parts of this current term are rewritten, then address the current term.
+        %
+        % The rewriting steps are implemented as methods with the name ``reduceTerm_XXX``, that return
+        % either ``[]`` if the rewrite is unsuccessful, or a rewritten representation if the rewriting step
+        % application is successful.
+        %
+        % Returns
+        % -------
+        %   newRep:
+        %     `.Rep`: Simplified representation
+        %   changed:
+        %     logical: Whether newRep has been updated
+            parts = self.decomposeTerm;
+            changed = false;
+            for i = 1:length(parts)
+                [newPart changed1] = parts{i}.innermostTerm;
+                parts{i} = newPart;
+                changed = changed | changed1;
+            end
+            if ~changed
+                self1 = self;
+            else
+                self1 = self.composeTerm(parts);
+                self1.copyProperties(self);
+            end
+            reduced = self1.reduceTerm;
+            if isempty(reduced)
+                newRep = self1;
+            else
+                changed = true;
+                newRep = reduced;
+            end
+        end
+
+        function newRep = reduceTerm(self)
+        % Attempts a rewriting step
+        %
+        % Returns:
+        %   `.Rep`: Simplified representation or ``[]`` if no rewriting step could be performed
+            methodList = replab.compat.methodList(metaclass(self));
+            for i = 1:length(methodList)
+                M = methodList{i};
+                name = M.Name;
+                if replab.compat.startsWith(name, 'rewriteTerm_')
+                    res = self.(name);
+                    if ~isempty(res)
+                        fprintf('Applying %s to a representation of dimension %d\n', name, self.dimension);
+                        res.copyProperties(self);
+                        newRep = res.innermostTerm;
+                        return
+                    end
+                end
+            end
+            newRep = [];
+        end
+
+    end
+
+    methods % Simplification
+
+        function newRep = simplify(self)
+        % Returns a representation identical to this, but possibly with its structure simplified
+        %
+        % Returns:
+        %   `+replab.Rep`: A possibly simplified representation
+            newRep = self.innermostTerm;
         end
 
     end
@@ -731,13 +860,6 @@ classdef Rep < replab.Obj
 % $$$             rep1 = replab.Rep.lambda(subgroup, self.field, self.dimension, @(g) self.image(g), @(g) self.inverseImage(g));
 % $$$         end
 % $$$
-% $$$         function rep1 = simplify(self)
-% $$$         % Returns a representation identical to this, but possibly with its composition simplified
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Rep`: A possibly simplified representation
-% $$$             rep1 = replab.rep.simplify(self);
-% $$$         end
 % $$$
         function complexRep = complexification(self)
         % Returns the complexification of a real representation

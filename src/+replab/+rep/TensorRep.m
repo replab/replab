@@ -32,6 +32,108 @@ classdef TensorRep < replab.Rep
             self.factors = factors;
         end
 
+        function res = rewriteTerm_someFactorsArePermutationSimilarReps(self)
+            isPermSimilar = cellfun(@(f) isa(f, 'replab.SimilarRep') && f.isPermutation, self.factors);
+            if any(isPermSimilar)
+                A = speye(1);
+                Ainv = speye(1);
+                n = self.nFactors;
+                newFactors = cell(1, n);
+                for i = 1:n
+                    f = self.factor(i);
+                    if isPermSimilar(i)
+                        A = kron(A, f.A_internal);
+                        Ainv = kron(Ainv, f.Ainv_internal);
+                        newFactors{i} = f.parent;
+                    else
+                        A = kron(A, speye(f.dimension));
+                        Ainv = kron(Ainv, speye(f.dimension));
+                        newFactors{i} = f;
+                    end
+                end
+                res = replab.SimilarRep(replab.rep.TensorRep(self.group, self.field, newFactors), A, Ainv);
+            else
+                res = [];
+            end
+        end
+
+        function res = rewriteTerm_moveDirectSumToFirstFactor(self)
+        % If a factor is a direct sum, move it as the first factor
+            i = find(cellfun(@(f) isa(f, 'replab.rep.DirectSumRep'), self.factors), 1);
+            if ~isempty(i)
+                n = self.nFactors;
+                perm = 1:n;
+                perm([(n-i+1) n]) = [n (n-i+1)];
+                D = self.dimension;
+                dims = cellfun(@(f) f.dimension, self.factors);
+                ind = reshape(1:D, fliplr(dims));
+                ind = permute(ind, perm);
+                ind = ind(:)';
+                Ainv = sparse(1:D, ind, ones(1, D), D, D);
+                A = sparse(ind, 1:D, ones(1, D), D, D);
+                newFactors = self.factors;
+                newFactors{1} = self.factor(i);
+                newFactors{i} = self.factor(1);
+                newTP = replab.rep.TensorRep(self.group, self.field, newFactors);
+                res = replab.SimilarRep(newTP, A, Ainv);
+            else
+                res = [];
+            end
+        end
+
+        function res = rewriteTerm_firstFactorIsDirectSum(self)
+        % If the first factor is a direct sum, distribute the tensor product
+            if self.nFactors > 0 && isa(self.factor(1), 'replab.rep.DirectSumRep')
+                f1 = self.factor(1);
+                n = f1.nFactors;
+                terms = cell(1, n);
+                for i = 1:n
+                    newFactors = self.factors;
+                    newFactors{1} = f1.factor(i);
+                    terms{i} = replab.rep.TensorRep(self.group, self.field, newFactors);
+                end
+                res = replab.rep.DirectSumRep(self.group, self.field, terms);
+            else
+                res = [];
+            end
+        end
+
+        function res = rewriteTerm_factorIsTrivial(self)
+            mask = cellfun(@(f) f.dimension == 1 && f.cachedOrDefault('trivialDimension', -1) == 1, self.factors);
+            if any(mask)
+                res = replab.rep.TensorRep(self.group, self.field, self.factors(~mask));
+            else
+                res = [];
+            end
+        end
+
+        function res = rewriteTerm_hasOneFactor(self)
+        % Rewrite rule: removes the direct sum if it has a single factor
+            if self.nFactors == 1
+                res = self.factor(1);
+            else
+                res = [];
+            end
+        end
+
+        function res = rewriteTerm_factorIsTensor(self)
+        % If any of the factors is a tensor product itself, collapse the products
+            if any(cellfun(@(f) isa(f, 'replab.rep.TensorRep'), self.factors))
+                newFactors = cell(1, 0);
+                for i = 1:length(self.factors)
+                    f = self.factor(i);
+                    if isa(f, 'replab.rep.TensorRep')
+                        newFactors = horzcat(newFactors, f.factors);
+                    else
+                        newFactors{1,end+1} = f;
+                    end
+                end
+                res = replab.rep.TensorRep(self.group, self.field, newFactors);
+            else
+                res = [];
+            end
+        end
+
         function n = nFactors(self)
         % Returns the number of factors in the tensor product
         %
@@ -56,6 +158,14 @@ classdef TensorRep < replab.Rep
     methods (Access = protected) % Implementations
 
         % Rep
+
+        function c = decomposeTerm(self)
+            c = self.factors;
+        end
+
+        function r = composeTerm(self, newFactors)
+            r = replab.rep.TensorRep(self.group, self.field, newFactors);
+        end
 
         function rho = image_exact(self, g)
             if self.dimension == 0
