@@ -108,7 +108,7 @@ classdef SimilarRep < replab.Rep
 
     methods % Simplification rules
 
-        function res = rewriteTerm_isIdentity(self)
+        function res = rewriteTerm_isIdentity(self, options)
             if self.isIntegerValued && all(all(self.A_internal == speye(self.dimension)))
                 res = self.parent;
             else
@@ -116,7 +116,7 @@ classdef SimilarRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_permutationSimilarRepOfSubRep(self)
+        function res = rewriteTerm_permutationSimilarRepOfSubRep(self, options)
             if isa(self.parent, 'replab.SubRep') && (self.isIntegerValued || self.parent.isIntegerValued)
                 newInjection = self.A_internal * self.parent.injection_internal;
                 newProjection = self.parent.projection_internal * self.Ainv_internal;
@@ -126,7 +126,7 @@ classdef SimilarRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_permutationSimilarRepOfSimilarRep(self)
+        function res = rewriteTerm_permutationSimilarRepOfSimilarRep(self, options)
             if isa(self.parent, 'replab.SimilarRep') && (self.isIntegerValued || self.parent.isIntegerValued)
                 newA = self.A_internal * self.parent.A_internal;
                 newAinv = self.parent.Ainv_internal * self.Ainv_internal;

@@ -231,7 +231,7 @@ classdef Rep < replab.Obj
             end
         end
 
-        function [newRep changed] = innermostTerm(self)
+        function [newRep changed] = innermostTerm(self, options)
         % Performs leftmost innermost tree rewriting
         %
         % Inspired by Algorithm 1 of `<https://doi.org/10.1145/941566.941568>`_ also available at
@@ -243,6 +243,9 @@ classdef Rep < replab.Obj
         % either ``[]`` if the rewrite is unsuccessful, or a rewritten representation if the rewriting step
         % application is successful.
         %
+        % Args:
+        %   options (struct): Structure of parameters
+        %
         % Returns
         % -------
         %   newRep:
@@ -252,7 +255,7 @@ classdef Rep < replab.Obj
             parts = self.decomposeTerm;
             changed = false;
             for i = 1:length(parts)
-                [newPart changed1] = parts{i}.innermostTerm;
+                [newPart changed1] = parts{i}.innermostTerm(options);
                 parts{i} = newPart;
                 changed = changed | changed1;
             end
@@ -262,7 +265,7 @@ classdef Rep < replab.Obj
                 self1 = self.composeTerm(parts);
                 self1.copyProperties(self);
             end
-            reduced = self1.reduceTerm;
+            reduced = self1.reduceTerm(options);
             if isempty(reduced)
                 newRep = self1;
             else
@@ -271,8 +274,11 @@ classdef Rep < replab.Obj
             end
         end
 
-        function newRep = reduceTerm(self)
+        function newRep = reduceTerm(self, options)
         % Attempts a rewriting step
+        %
+        % Args:
+        %   options (struct): Structure of parameters
         %
         % Returns:
         %   `.Rep`: Simplified representation or ``[]`` if no rewriting step could be performed
@@ -281,11 +287,11 @@ classdef Rep < replab.Obj
                 M = methodList{i};
                 name = M.Name;
                 if replab.compat.startsWith(name, 'rewriteTerm_')
-                    res = self.(name);
+                    res = self.(name)(options);
                     if ~isempty(res)
                         fprintf('Applying %s to a representation of dimension %d\n', name, self.dimension);
                         res.copyProperties(self);
-                        newRep = res.innermostTerm;
+                        newRep = res.innermostTerm(options);
                         return
                     end
                 end
@@ -297,12 +303,21 @@ classdef Rep < replab.Obj
 
     methods % Simplification
 
-        function newRep = simplify(self)
+        function newRep = simplify(self, varargin)
         % Returns a representation identical to this, but possibly with its structure simplified
+        %
+        % Additional keyword arguments can be provided as key-value pairs.
         %
         % Returns:
         %   `+replab.Rep`: A possibly simplified representation
-            newRep = self.innermostTerm;
+            options = struct;
+            for i = 1:2:length(varargin)
+                key = varargin{i};
+                assert(ischar(key), 'Key/value pairs must have charstring keys');
+                value = varargin{i+1};
+                options.(key) = value;
+            end
+            newRep = self.innermostTerm(options);
         end
 
     end

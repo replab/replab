@@ -32,11 +32,11 @@ classdef DerivedRep < replab.Rep
 
     end
 
-    methods (Access = protected)
+    methods % Simplfication rules
 
         % Rep
 
-        function res = rewriteTerm_distributeOverDirectSum(self)
+        function res = rewriteTerm_distributeOverDirectSum(self, options)
         % conj(.), and dual(.) distribute over a direct sum
             if isa(self.parent, 'replab.rep.DirectSumRep')
                 newFactors = cellfun(@(f) replab.rep.DerivedRep(f, self.conjugate, self.inverse, self.transpose), ...
@@ -47,7 +47,7 @@ classdef DerivedRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_distributeOverTensorProduct(self)
+        function res = rewriteTerm_distributeOverTensorProduct(self, options)
         % conj(.), and dual(.) distribute over a tensor product
             if isa(self.parent, 'replab.rep.TensorRep')
                 newFactors = cellfun(@(f) replab.rep.DerivedRep(f, self.conjugate, self.inverse, self.transpose), ...
@@ -58,7 +58,7 @@ classdef DerivedRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_noEffect(self)
+        function res = rewriteTerm_noEffect(self, options)
         % Remove this DerivedRep if it has no effect
             if ~self.conjugate && ~self.inverse && ~self.transpose
                 res = self.parent;
@@ -67,7 +67,7 @@ classdef DerivedRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_conjugateReal(self)
+        function res = rewriteTerm_conjugateReal(self, options)
         % Remove the conjugation part if it applies to a real representation
             if self.overR && self.conjugate
                 res = replab.rep.DerivedRep(self.parent, false, self.inverse, self.transpose);
@@ -76,7 +76,7 @@ classdef DerivedRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_dualIsConjugateWhenUnitary(self)
+        function res = rewriteTerm_dualIsConjugateWhenUnitary(self, options)
         % rho_{g^-1}.' = conj(rho) if rho is unitary
             if self.parent.knownUnitary && self.inverse && self.transpose
                 res = replab.rep.DerivedRep(self.parent, ~self.conjugate, false, false);
@@ -85,7 +85,7 @@ classdef DerivedRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_parentIsTrivialRep(self)
+        function res = rewriteTerm_parentIsTrivialRep(self, options)
         % We have no effect when applied on the trivial representation
             if isa(self.parent, 'replab.rep.TrivialRep')
                 res = self.parent;
@@ -94,7 +94,7 @@ classdef DerivedRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_parentIsComplexifiedRep(self)
+        function res = rewriteTerm_parentIsComplexifiedRep(self, options)
         % Move DerivedRep inside ComplexifiedRep where it can be simplified
             if isa(self.parent, 'replab.rep.ComplexifiedRep')
                 res = replab.rep.ComplexifiedRep(replab.rep.DerivedRep, self.parent.parent, ...
@@ -104,16 +104,22 @@ classdef DerivedRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_parentIsDerivedRep(self)
+        function res = rewriteTerm_parentIsDerivedRep(self, options)
         % Collapse two successive DerivedRep
             if isa(self.parent, 'replab.rep.DerivedRep')
                 res = replab.rep.DerivedRep(xor(self.parent.conjugate, self.conjugate), ...
                                               xor(self.parent.inverse, self.inverse), ...
-                                              xor(self.parent.transpose, self.transpose));
+                                            xor(self.parent.transpose, self.transpose));
             else
                 res = [];
             end
         end
+
+    end
+
+    methods % Implementations
+
+        % Rep
 
         function c = decomposeTerm(self)
             c = {self.parent};

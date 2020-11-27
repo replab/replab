@@ -23,7 +23,11 @@ classdef ComplexifiedRep < replab.Rep
             self.parent = parent;
         end
 
-        function res = rewriteTerm_complexifiedTrivial(self)
+    end
+
+    methods % Simplification rules
+
+        function res = rewriteTerm_complexifiedTrivial(self, options)
         % Complexified trivial is complex trivial
             if isa(self.parent, 'replab.rep.TrivialRep')
                 res = replab.rep.TrivialRep(self.parent.group, 'C', self.parent.dimension);

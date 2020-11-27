@@ -44,7 +44,8 @@ classdef RepByImages_inexact < replab.RepByImages
                     images{i} = img;
                 elseif isnan(imagesErrorBound(i))
                     eo = group.elementOrder(preimages{i});
-                    imagesErrorBound(i) = norm(img^eo - eye(dimension), 'fro')/eo;
+                    img1 = replab.rep.RepByImages_inexact.findCloseRootOfIdentity(img, eo);
+                    imagesErrorBound(i) = norm(img - img1, 'fro');
                 end
             end
             self@replab.RepByImages(group, field, dimension, preimages, images, imagesErrorBound, 'isUnitary', logical(args.isUnitary), restArgs{:});
@@ -70,6 +71,16 @@ classdef RepByImages_inexact < replab.RepByImages
 
         function b = isExact(self)
             b = false;
+        end
+
+    end
+
+    methods (Static)
+
+        function A1 = findCloseRootOfIdentity(A, p)
+            [V, D] = eig(A, 'vector');
+            F = 1./((D.^p).^(1/p));
+            A1 = (A*V*diag(F))/V;
         end
 
     end

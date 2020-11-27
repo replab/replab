@@ -32,7 +32,11 @@ classdef TensorRep < replab.Rep
             self.factors = factors;
         end
 
-        function res = rewriteTerm_someFactorsArePermutationSimilarReps(self)
+    end
+
+    methods % Simplification rules
+
+        function res = rewriteTerm_someFactorsArePermutationSimilarReps(self, options)
             isPermSimilar = cellfun(@(f) isa(f, 'replab.SimilarRep') && f.isPermutation, self.factors);
             if any(isPermSimilar)
                 A = speye(1);
@@ -57,7 +61,7 @@ classdef TensorRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_moveDirectSumToFirstFactor(self)
+        function res = rewriteTerm_moveDirectSumToFirstFactor(self, options)
         % If a factor is a direct sum, move it as the first factor
             i = find(cellfun(@(f) isa(f, 'replab.rep.DirectSumRep'), self.factors), 1);
             if ~isempty(i)
@@ -81,7 +85,7 @@ classdef TensorRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_firstFactorIsDirectSum(self)
+        function res = rewriteTerm_firstFactorIsDirectSum(self, options)
         % If the first factor is a direct sum, distribute the tensor product
             if self.nFactors > 0 && isa(self.factor(1), 'replab.rep.DirectSumRep')
                 f1 = self.factor(1);
@@ -98,7 +102,7 @@ classdef TensorRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_factorIsTrivial(self)
+        function res = rewriteTerm_factorIsTrivial(self, options)
             mask = cellfun(@(f) f.dimension == 1 && f.cachedOrDefault('trivialDimension', -1) == 1, self.factors);
             if any(mask)
                 res = replab.rep.TensorRep(self.group, self.field, self.factors(~mask));
@@ -107,7 +111,7 @@ classdef TensorRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_hasOneFactor(self)
+        function res = rewriteTerm_hasOneFactor(self, options)
         % Rewrite rule: removes the direct sum if it has a single factor
             if self.nFactors == 1
                 res = self.factor(1);
@@ -116,7 +120,7 @@ classdef TensorRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_factorIsTensor(self)
+        function res = rewriteTerm_factorIsTensor(self, options)
         % If any of the factors is a tensor product itself, collapse the products
             if any(cellfun(@(f) isa(f, 'replab.rep.TensorRep'), self.factors))
                 newFactors = cell(1, 0);
@@ -133,6 +137,10 @@ classdef TensorRep < replab.Rep
                 res = [];
             end
         end
+
+    end
+
+    methods
 
         function n = nFactors(self)
         % Returns the number of factors in the tensor product

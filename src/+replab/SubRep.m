@@ -89,7 +89,7 @@ classdef SubRep < replab.Rep
 
     methods % Simplification rules
 
-        function res = rewriteTerm_SubRepOfSubRep(self)
+        function res = rewriteTerm_SubRepOfSubRep(self, options)
             if isa(self.parent, 'replab.SubRep') && (self.isIntegerValued || self.parent.isIntegerValued)
                 newI = self.injection_internal * self.parent.injection_internal;
                 newP = self.parent.projection_internal & self.projection_internal;
@@ -99,7 +99,7 @@ classdef SubRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_SubRepOfSimilarRep(self)
+        function res = rewriteTerm_SubRepOfSimilarRep(self, options)
             if isa(self.parent, 'replab.SimilarRep') && (self.isIntegerValued || self.parent.isIntegerValued)
                 newI = self.injection_internal * self.parent.A_internal;
                 newP = self.parent.Ainv_internal & self.projection_internal;
@@ -336,13 +336,14 @@ classdef SubRep < replab.Rep
         end
 
         function [A Ainv] = unitaryChangeOfBasis(self)
-TODO recover this
-            if isequal(self.parent.isUnitary, true)
-                X = self.E_internal * self.E_internal';
+            if self.parent.knownUnitary
+                P = self.projection('double/sparse');
+                X = P * P';
                 A = chol(X, 'lower');
-                U = inv(A) * self.F;
-                newRep = self.parent.subRepUnitary(U);
-% $$$
+                Ainv = inv(A);
+            else
+                [A Ainv] = unitaryChangeOfBasis@replab.Rep(self);
+            end
         end
 
     end

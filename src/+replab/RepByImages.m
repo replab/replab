@@ -20,7 +20,7 @@ classdef RepByImages < replab.Rep
 
     methods % Simplification rules
 
-        function res = rewriteTerm_isTrivial(self)
+        function res = rewriteTerm_isTrivial(self, options)
         % Rewrite rule: replace this representation by a trivial representation if it is a representation of the trivial group
             if length(self.images) == 0
                 res = self.group.trivialRep(self.field, self.dimension);
@@ -29,7 +29,7 @@ classdef RepByImages < replab.Rep
             end
         end
 
-        function res = rewriteTerm_hasBlockStructure(self)
+        function res = rewriteTerm_hasBlockStructure(self, options)
         % Rewrite rule: rewrite this representation as a direct sum if it has a block structure
             if self.isExact && length(self.images) > 0
                 n = length(self.images);

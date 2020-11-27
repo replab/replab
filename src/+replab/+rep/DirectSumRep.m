@@ -30,7 +30,11 @@ classdef DirectSumRep < replab.Rep
             self.factors = factors;
         end
 
-        function res = rewriteTerm_someFactorsArePermutationSimilarReps(self)
+    end
+
+    methods % Simplification rules
+
+        function res = rewriteTerm_someFactorsArePermutationSimilarReps(self, options)
         % Rewrite rule: move permutation similarity transforms before performing the direct sum
             isPermSimilar = cellfun(@(f) isa(f, 'replab.SimilarRep') && f.isPermutation, self.factors);
             if any(isPermSimilar)
@@ -56,7 +60,7 @@ classdef DirectSumRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_removeTrivialFactors(self)
+        function res = rewriteTerm_removeTrivialFactors(self, options)
         % Rewrite rule: remove trivial factors
             mask = cellfun(@(f) f.dimension == 0, self.factors);
             if any(mask)
@@ -66,7 +70,7 @@ classdef DirectSumRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_factorIsDirectSum(self)
+        function res = rewriteTerm_factorIsDirectSum(self, options)
         % Rewrite rule: if any of the factors is a direct sum itself, collapse the sums
             if any(cellfun(@(f) isa(f, 'replab.rep.DirectSumRep'), self.factors))
                 newFactors = cell(1, 0);
@@ -84,7 +88,7 @@ classdef DirectSumRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_hasOneFactor(self)
+        function res = rewriteTerm_hasOneFactor(self, options)
         % Rewrite rule: removes the direct sum if it has a single factor
             if self.nFactors == 1
                 res = self.factor(1);
@@ -92,6 +96,10 @@ classdef DirectSumRep < replab.Rep
                 res = [];
             end
         end
+
+    end
+
+    methods
 
         function n = nFactors(self)
         % Returns the number of factors in the direct sum
