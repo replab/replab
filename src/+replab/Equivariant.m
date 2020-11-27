@@ -46,11 +46,10 @@ classdef Equivariant < replab.Domain
         %
         % Returns
         % -------
-        % X1:
-        %   double(\*,\*) or `.cyclotomic`(\*,\*): Projected matrix
-        % err:
-        %   double: Estimation of the numerical error, expressed as the distance of the returned ``X1`` to
-        %           the invariant subspace in Frobenius norm.
+        %   X1: double(\*,\*) or `.cyclotomic`(\*,\*)
+        %     Projected matrix
+        %   err: double
+        %     Estimation of the numerical error, expressed as the distance of the returned ``X1`` to the invariant subspace in Frobenius norm
             error('Abstract');
         end
 
