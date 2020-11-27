@@ -90,23 +90,29 @@ classdef SubRep < replab.Rep
     methods % Simplification rules
 
         function res = rewriteTerm_SubRepOfSubRep(self, options)
-            if isa(self.parent, 'replab.SubRep') && (self.isIntegerValued || self.parent.isIntegerValued)
-                newI = self.injection_internal * self.parent.injection_internal;
-                newP = self.parent.projection_internal & self.projection_internal;
-                res = replab.SubRep(self.parent.parent, newI, newP);
-            else
-                res = [];
+            if isa(self.parent, 'replab.SubRep')
+                if self.isIntegerValued || self.parent.isIntegerValued || ...
+                        (options.dense && (options.approximate || (self.hasExactMaps && self.parent.hasExactMaps)))
+                    newI = self.parent.injection_internal * self.injection_internal;
+                    newP = self.projection_internal & self.parent.projection_internal;
+                    res = replab.SubRep(self.parent.parent, newI, newP);
+                    return
+                end
             end
+            res = [];
         end
 
         function res = rewriteTerm_SubRepOfSimilarRep(self, options)
-            if isa(self.parent, 'replab.SimilarRep') && (self.isIntegerValued || self.parent.isIntegerValued)
-                newI = self.injection_internal * self.parent.A_internal;
-                newP = self.parent.Ainv_internal & self.projection_internal;
-                res = replab.SubRep(self.parent.parent, newI, newP);
-            else
-                res = [];
+            if isa(self.parent, 'replab.SimilarRep')
+                if self.isIntegerValued || self.parent.isIntegerValued || ...
+                        (options.dense && (options.approximate || (self.hasExactMaps && self.parent.hasExactBasis)))
+                    newI = self.parent.Ainv_internal * self.injection_internal;
+                    newP = self.projection_internal * self.parent.A_internal;
+                    res = replab.SubRep(self.parent.parent, newI, newP);
+                    return
+                end
             end
+            res = [];
         end
 
     end

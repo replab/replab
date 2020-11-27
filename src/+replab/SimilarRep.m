@@ -117,23 +117,29 @@ classdef SimilarRep < replab.Rep
         end
 
         function res = rewriteTerm_permutationSimilarRepOfSubRep(self, options)
-            if isa(self.parent, 'replab.SubRep') && (self.isIntegerValued || self.parent.isIntegerValued)
-                newInjection = self.A_internal * self.parent.injection_internal;
-                newProjection = self.parent.projection_internal * self.Ainv_internal;
-                res = replab.SubRep(self.parent.parent, newInjection, newProjection);
-            else
-                res = [];
+            if isa(self.parent, 'replab.SubRep')
+                if self.isIntegerValued || self.parent.isIntegerValued || ...
+                        (options.dense && (options.approximate || (self.hasExactBasis && self.parent.hasExactMaps)))
+                    newProjection = self.A_internal * self.parent.projection_internal;
+                    newInjection = self.parent.injection_internal * self.Ainv_internal;
+                    res = replab.SubRep(self.parent.parent, newInjection, newProjection);
+                    return
+                end
             end
+            res = [];
         end
 
         function res = rewriteTerm_permutationSimilarRepOfSimilarRep(self, options)
-            if isa(self.parent, 'replab.SimilarRep') && (self.isIntegerValued || self.parent.isIntegerValued)
-                newA = self.A_internal * self.parent.A_internal;
-                newAinv = self.parent.Ainv_internal * self.Ainv_internal;
-                res = replab.SimilarRep(self.parent.parent, newA, newAinv);
-            else
-                res = [];
+            if isa(self.parent, 'replab.SimilarRep')
+                if self.isIntegerValued || self.parent.isIntegerValued || ...
+                        (options.dense && (options.approximate || (self.hasExactBasis && self.parent.hasExactBasis)))
+                    newA = self.A_internal * self.parent.A_internal;
+                    newAinv = self.parent.Ainv_internal * self.Ainv_internal;
+                    res = replab.SimilarRep(self.parent.parent, newA, newAinv);
+                    return
+                end
             end
+            res = [];
         end
 
     end

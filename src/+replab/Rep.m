@@ -308,14 +308,16 @@ classdef Rep < replab.Obj
         %
         % Additional keyword arguments can be provided as key-value pairs.
         %
+        % Keyword Args:
+        %   dense (logical, optional): Whether to allow multiplication of non-sparse matrices
+        %   approximate (logical, optional): Whether to allow multiplication of non-exact matrices, implies ``dense = true``
+        %
         % Returns:
         %   `+replab.Rep`: A possibly simplified representation
-            options = struct;
-            for i = 1:2:length(varargin)
-                key = varargin{i};
-                assert(ischar(key), 'Key/value pairs must have charstring keys');
-                value = varargin{i+1};
-                options.(key) = value;
+            options = struct('dense', false, 'approximate', false);
+            options = replab.util.populateStruct(options, varargin);
+            if options.approximate
+                options.dense = true;
             end
             newRep = self.innermostTerm(options);
         end
