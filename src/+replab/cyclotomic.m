@@ -271,6 +271,10 @@ classdef cyclotomic
 
     methods
 
+        function res = isreal(self)
+            res = all(all(self == conj(self)));
+        end
+
         function res = isvector(self)
             res = isvector(self.mat);
         end
