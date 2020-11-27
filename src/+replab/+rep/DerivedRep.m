@@ -78,7 +78,7 @@ classdef DerivedRep < replab.Rep
 
         function res = rewriteTerm_dualIsConjugateWhenUnitary(self)
         % rho_{g^-1}.' = conj(rho) if rho is unitary
-            if self.parent.cachedOrDefault('isUnitary', false) && self.inverse && self.transpose
+            if self.parent.knownUnitary && self.inverse && self.transpose
                 res = replab.rep.DerivedRep(self.parent, ~self.conjugate, false, false);
             else
                 res = [];

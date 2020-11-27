@@ -11,7 +11,7 @@ classdef CompositionRep < replab.Rep
         function self = CompositionRep(first, second)
             assert(isa(first, 'replab.Morphism'));
             assert(isa(second, 'replab.Rep'));
-            if second.cachedOrDefault('isUnitary', false)
+            if second.knownUnitary
                 args = {'isUnitary' true};
             else
                 args = {};

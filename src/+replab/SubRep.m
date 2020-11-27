@@ -204,21 +204,26 @@ classdef SubRep < replab.Rep
             mat = replab.numerical.convert(self.injection_internal, type);
         end
 
-% $$$         function mat = basis(self, type)
-% $$$         % Returns the basis of the subrepresentation in the parent representation
-% $$$         %
-% $$$         % It is an alias for `.injection`.
-% $$$         %
-% $$$         % Args:
-% $$$         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
-% $$$         %
-% $$$         % Returns:
-% $$$         %   double(\*,\*) or `.cyclotomic`(\*,\*): The basis of the subrepresentation given as column vectors
-% $$$             if nargin < 2 || isempty(type)
-% $$$                 type = 'double';
-% $$$             end
-% $$$             mat = self.injection(type);
-% $$$         end
+        function mat = basis(self, indices, type)
+        % Returns (part of) the basis of the subrepresentation in the parent representation
+        %
+        % It is an alias for ``I(:, indices)`` where ``I = self.injection(type)``.
+        %
+        % Args:
+        %   indices (integer(1,\*) or ``[]``): Indices of the basis elements to return
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
+        % Returns:
+        %   double(\*,\*) or `.cyclotomic`(\*,\*): The basis of the subrepresentation given as column vectors
+            if nargin < 3 || isempty(type)
+                type = 'double';
+            end
+            if isempty(indices)
+                indices = 1:self.dimension;
+            end
+            mat = self.injection(type);
+            mat = mat(:, indices);
+        end
 
         function mat = projection(self, type)
         % Returns the projection from the parent representation to the subrepresentation
@@ -273,6 +278,24 @@ classdef SubRep < replab.Rep
 
     methods (Access = protected)
 
+        function c = computeInjectionConditionNumberEstimate(self)
+            if all(all(self.injection_internal == self.projection_internal'));
+                c = 1;
+            else
+                c = replab.numerical.condUpperBound(self.injection_internal, self.projection_internal);
+            end
+        end
+
+        function e = computeProjectorErrorBound(self)
+            PiA = self.projector('double/sparse');
+            [S DS] = self.parent.commutant.project(PiA);
+            e = norm(S - PiA, 'fro') + DS;
+        end
+
+    end
+
+    methods (Access = protected) % Implementations
+
         function c = decomposeTerm(self)
             c = {self.parent};
         end
@@ -293,20 +316,6 @@ classdef SubRep < replab.Rep
             rho = self.projection_internal * self.parent.image(g, 'exact') * self.injection_internal;
         end
 
-        function c = computeInjectionConditionNumberEstimate(self)
-            if all(all(self.injection_internal == self.projection_internal'));
-                c = 1;
-            else
-                c = replab.numerical.condUpperBound(self.injection_internal, self.projection_internal);
-            end
-        end
-
-        function e = computeProjectorErrorBound(self)
-            PiA = self.projector('double/sparse');
-            [S DS] = self.parent.commutant.project(PiA);
-            e = norm(S - PiA, 'fro') + DS;
-        end
-
         function c = computeConditionNumberEstimate(self)
             if self.cachedOrDefault('isUnitary', false)
                 c = 1;
@@ -324,6 +333,16 @@ classdef SubRep < replab.Rep
             e1 = self.injectionConditionNumberEstimate * self.parent.errorBound; % parent error
             e2 = self.injectionConditionNumberEstimate * self.parent.conditionNumberEstimate * (2*dU + dU^2);
             e = e1 + e2;
+        end
+
+        function [A Ainv] = unitaryChangeOfBasis(self)
+TODO recover this
+            if isequal(self.parent.isUnitary, true)
+                X = self.E_internal * self.E_internal';
+                A = chol(X, 'lower');
+                U = inv(A) * self.F;
+                newRep = self.parent.subRepUnitary(U);
+% $$$
         end
 
     end
@@ -376,24 +395,6 @@ classdef SubRep < replab.Rep
 % $$$             % (run experimental experiments?)
 % $$$         end
 
-% $$$         function H = basis(self)
-% $$$         % Returns the basis of this subrepresentation in the parent representation
-% $$$         %
-% $$$         % Always returns a dense matrix.
-% $$$         %
-% $$$         % Returns:
-% $$$         %   double(\*,\*): Subrepresentation basis given as column vectors
-% $$$             H = full(self.B_internal);
-% $$$         end
-% $$$
-% $$$         function s = refine(self)
-% $$$         % Refines the numerical basis of this subrepresentation
-% $$$         %
-% $$$         % Returns:
-% $$$         %   double(\*,\*): Similar subrepresentation with basis precision attempted improvement
-% $$$             s = replab.rep.refineSubRep(self);
-% $$$         end
-% $$$
 % $$$         function [s better] = nice(self)
 % $$$         % Returns a representation similar to the current subrepresentation, with a nicer basis
 % $$$         %
@@ -415,25 +416,20 @@ classdef SubRep < replab.Rep
 
         % Str
 
-% $$$         function names = hiddenFields(self)
-% $$$             names = replab.str.uniqueNames( ...
-% $$$                 hiddenFields@replab.Rep(self), ...
-% $$$                 {'injection_internal' 'projection_internal'} ...
-% $$$                 );
-% $$$         end
-% $$$
-% $$$         function [names values] = additionalFields(self)
-% $$$             [names values] = additionalFields@replab.Rep(self);
-% $$$             if self.dimension < 15
-% $$$                 for i = 1:self.dimension
-% $$$                     names{1, end+1} = sprintf('basis.(:,%d)', i);
-% $$$                     values{1, end+1} = full(self.B_internal(:,i));
-% $$$                 end
-% $$$             else
-% $$$                 names{1, end+1} = 'basis';
-% $$$                 values{1, end+1} = self.basis;
-% $$$             end
-% $$$         end
+        function [names values] = additionalFields(self)
+            [names values] = additionalFields@replab.Rep(self);
+            if self.dimension < 15
+                if self.isExact
+                    type = 'exact';
+                else
+                    type = 'double';
+                end
+                for i = 1:self.dimension
+                    names{1, end+1} = sprintf('basis(%d,''%s'')', i, type);
+                    values{1, end+1} = full(self.basis(i, type));
+                end
+            end
+        end
 
         % Obj
 
@@ -446,16 +442,6 @@ classdef SubRep < replab.Rep
         function b = isExact(self)
             b = self.hasExactMaps && self.parent.isExact;
         end
-
-% $$$         function [A Ainv] = unitaryChangeOfBasis(self)
-% $$$ TODO recover this
-% $$$             if isequal(self.parent.isUnitary, true)
-% $$$                 X = self.E_internal * self.E_internal';
-% $$$                 A = chol(X, 'lower');
-% $$$                 U = inv(A) * self.F;
-% $$$                 newRep = self.parent.subRepUnitary(U);
-% $$$
-% $$$         end
 
     end
 

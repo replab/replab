@@ -146,7 +146,7 @@ classdef Rep < replab.Obj
             if nargin < 3
                 type = 'double';
             end
-            if self.cachedOrDefault('isUnitary', false)
+            if self.knownUnitary
                 rho = self.image(g, type);
                 rho = rho';
             else
@@ -531,6 +531,14 @@ classdef Rep < replab.Obj
             b = self.cached('isUnitary', @() self.computeIsUnitary);
         end
 
+        function b = knownUnitary(self)
+        % Returns whether this representation is known to be unitary; only a true result is significant
+        %
+        % Returns:
+        %   logical: True if `.isUnitary` is known and is true
+            b = self.cachedOrDefault('isUnitary', false);
+        end
+
         function K = kernel(self)
         % Returns the kernel of the given representation
         %
@@ -657,7 +665,7 @@ classdef Rep < replab.Obj
 
         function s = headerStr(self)
             p = {};
-            if self.cachedOrDefault('isUnitary', false)
+            if self.knownUnitary
                 if self.overR
                     p{1,end+1} = 'orthogonal';
                 else
@@ -998,7 +1006,7 @@ classdef Rep < replab.Obj
             end
             projector1 = sub1.projector;
             projector2 = speye(D) - projector1;
-            if self.cachedOrDefault('isUnitary', false) && sub1.cachedOrDefault('isUnitary', false)
+            if self.knownUnitary && sub1.knownUnitary
                 projector2 = (projector2 + projector2')/2;
                 [V, D] = replab.numerical.sortedEig(projector2, 'descend', true);
                 injection2 = V(:,1:d2);
@@ -1071,7 +1079,7 @@ classdef Rep < replab.Obj
             projection = args.projection;
             isExact = isa(injection, 'replab.cyclotomic') && (isempty(projection) || isa(projection, 'replab.cyclotomic'));
             if isempty(projection)
-                if self.cachedOrDefault('isUnitary', false)
+                if self.knownUnitary
                     if isExact
                         % slower because cyclotomic doesn't implement \ or /
                         projection = inv(injection'*injection)*injection';
@@ -1167,7 +1175,7 @@ classdef Rep < replab.Obj
     methods (Access = protected)
 
         function res = computeUnitarize(self)
-            if self.cachedOrDefault('isUnitary', false)
+            if self.knownUnitary
                 res = replab.SimilarRep.identical(self);
             else
                 [A Ainv] = self.unitaryChangeOfBasis;
@@ -1186,7 +1194,7 @@ classdef Rep < replab.Obj
         %     Change of basis matrix
         %   Ainv: double(\*,\*), may be sparse
         %     Inverse of change of basis matrix
-            if self.cachedOrDefault('isUnitary', false)
+            if self.knownUnitary
                 A = speye(self.dimension);
                 Ainv = speye(self.dimension);
             else
