@@ -16,6 +16,10 @@ classdef RepByImages < replab.Rep
             self.imagesErrorBound = imagesErrorBound;
         end
 
+    end
+
+    methods % Simplification rules
+
         function res = rewriteTerm_isTrivial(self)
         % Rewrite rule: replace this representation by a trivial representation if it is a representation of the trivial group
             if length(self.images) == 0

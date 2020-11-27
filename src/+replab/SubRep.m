@@ -19,7 +19,7 @@ classdef SubRep < replab.Rep
 % one simply defines $\Pi = I P$.
 %
 % Note that often, only approximations $\tilde{P}$ and $\tilde{I}$ are known by RepLAB. We thus
-% store a measure of the error associated with those maps in `.mapErrorBound`.
+% store a measure of the error associated with those maps in `.projectorErrorBound`.
 
     properties (SetAccess = protected)
         parent % (`+replab.Rep`): Parent representation of dimension $D$
@@ -85,6 +85,10 @@ classdef SubRep < replab.Rep
             end
         end
 
+    end
+
+    methods % Simplification rules
+
         function res = rewriteTerm_SubRepOfSubRep(self)
             if isa(self.parent, 'replab.SubRep') && (self.isIntegerValued || self.parent.isIntegerValued)
                 newI = self.injection_internal * self.parent.injection_internal;
@@ -105,7 +109,15 @@ classdef SubRep < replab.Rep
             end
         end
 
+    end
+
+    methods
+
         function b = isIntegerValued(self)
+        % Returns whether both the injection map and the projection map are expressed with Gaussian integer coefficients
+        %
+        % Returns:
+        %   logical: True if both `.injection` and `.projection` have Gaussian integer entries
             I = self.injection_internal;
             P = self.projection_internal;
             b = self.hasExactMaps && all(all(I == round(I))) && all(all(P == round(P)));

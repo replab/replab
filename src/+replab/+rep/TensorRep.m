@@ -194,10 +194,10 @@ classdef TensorRep < replab.Rep
         end
 
         function e = computeErrorBound(self)
-        % we compute
-        % e = [(1 + e1/c1)(1 + e2/c2)...(1 + en/cn) - 1]*(c1 c2 ... cn)
             E = cellfun(@(rep) rep.errorBound, self.factors);
             C = cellfun(@(rep) rep.conditionNumberEstimate, self.factors);
+            % we compute
+            % e = [(1 + e1/c1)(1 + e2/c2)...(1 + en/cn) - 1]*(c1 c2 ... cn)
             e = (prod(1 + E./C) - 1)*prod(C);
         end
 

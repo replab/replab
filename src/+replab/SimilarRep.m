@@ -104,6 +104,10 @@ classdef SimilarRep < replab.Rep
             self.hasExactBasis = hasExactBasis;
         end
 
+    end
+
+    methods % Simplification rules
+
         function res = rewriteTerm_isIdentity(self)
             if self.isIntegerValued && all(all(self.A_internal == speye(self.dimension)))
                 res = self.parent;
@@ -132,8 +136,15 @@ classdef SimilarRep < replab.Rep
             end
         end
 
+    end
+
+    methods
+
         function b = isIntegerValued(self)
         % Returns whether this similarity transformation has Gaussian integer change of basis matrices
+        %
+        % Returns:
+        %   logical: True if both `.A` and `.Ainv` have Gaussian integer entries
             A = self.A_internal;
             Ainv = self.Ainv_internal;
             b = self.hasExactBasis && all(all(A == round(A))) && all(all(Ainv == round(Ainv)));
