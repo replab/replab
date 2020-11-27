@@ -970,51 +970,50 @@ classdef Rep < replab.Obj
             res = self.cached('unitarize', @() self.computeUnitarize);
         end
 
-% $$$ % $$$         function [sub1 sub2] = maschke(self, basis1, embedding1)
-% $$$ % $$$         % Given a basis of a subrepresentation, returns two complementary subrepresentations
-% $$$ % $$$         %
-% $$$ % $$$         % Note that we optimize special cases when the representation and/or the basis is
-% $$$ % $$$         % unitary
-% $$$ % $$$         %
-% $$$ % $$$         % Args:
-% $$$ % $$$         %   basis1 (double(dParent,dSub1)): Basis of the first subrepresentation
-% $$$ % $$$         %   embedding1 (double(dChild,dParent), optional): Map from the parent space to the subrepresentation
-% $$$ % $$$         %
-% $$$ % $$$         % Returns
-% $$$ % $$$         % -------
-% $$$ % $$$         %   sub1: `replab.SubRep`
-% $$$ % $$$         %     First subrepresentation
-% $$$ % $$$         %   sub2: `replab.SubRep`
-% $$$ % $$$         %     Second subrepresentation
-% $$$ % $$$             assert(size(basis1, 1) == self.dimension);
-% $$$ % $$$             d1 = size(basis1, 2);
-% $$$ % $$$             if nargin > 2
-% $$$ % $$$                 assert(size(embedding1, 1) == d1);
-% $$$ % $$$                 assert(size(embedding1, 2) == self.dimension);
-% $$$ % $$$             end
-% $$$ % $$$             rest = null(basis1.');
-% $$$ % $$$             if isequal(self.isUnitary, true)
-% $$$ % $$$                 if nargin < 3
-% $$$ % $$$                     BB = basis1'*basis1;
-% $$$ % $$$                     BB = (BB+BB')/2;
-% $$$ % $$$                     embedding1 = BB \ basis1';
-% $$$ % $$$                 end
-% $$$ % $$$                 sub1 = replab.SubRep(self, basis1, embedding1);
-% $$$ % $$$                 % for the second subrepresentation, we take the orthogonal complement from 'null'
-% $$$ % $$$                 sub2 = replab.SubRep(self, rest, rest');
-% $$$ % $$$             else
-% $$$ % $$$                 X = [basis1 rest];
-% $$$ % $$$                 Xinv = inv(X);
-% $$$ % $$$                 P = basis1 * Xinv(1:d1, :);
-% $$$ % $$$                 P1 = self.commutant.project(P);
-% $$$ % $$$                 embedding1 = basis1 \ P1;
-% $$$ % $$$                 P2 = eye(self.dimension) - P1;
-% $$$ % $$$                 basis2 = orth(P2);
-% $$$ % $$$                 embedding2 = basis2 \ P2;
-% $$$ % $$$                 sub1 = replab.SubRep(self, basis1, embedding1);
-% $$$ % $$$                 sub2 = replab.SubRep(self, basis2, embedding2);
-% $$$ % $$$             end
-% $$$ % $$$         end
+        function [sub1 sub2] = maschke(self, injection1, projection1)
+        % Given an injection into a subrepresentation, returns two complementary subrepresentations
+        %
+        % Note that we optimize special cases when the representation and/or the injection is unitary
+        %
+        % Args:
+        %   injection (double(D,d) or `cyclotomic`(D,d), may be sparse): Basis / Injection map for the first subrepresentation
+        %   projection (double(D,d) or `cyclotomic`(D,d), may be sparse, optional): Projection map for the first subrepresentation
+        %
+        % Returns
+        % -------
+        %   sub1: `replab.SubRep`
+        %     First subrepresentation
+        %   sub2: `replab.SubRep`
+        %     Second subrepresentation
+            D = self.dimension;
+            assert(size(injection1, 1) == D);
+            d1 = size(injection1, 2);
+            d2 = D - d1;
+            if nargin > 2
+                assert(size(projection1, 1) == d1);
+                assert(size(projection1, 2) == self.dimension);
+                sub1 = self.subRep(injection1, 'projection', projection1);
+            else
+                sub1 = self.subRep(injection1);
+            end
+            projector1 = sub1.projector;
+            projector2 = speye(D) - projector1;
+            if self.cachedOrDefault('isUnitary', false) && sub1.cachedOrDefault('isUnitary', false)
+                projector2 = (projector2 + projector2')/2;
+                [V, D] = replab.numerical.sortedEig(projector2, 'descend', true);
+                injection2 = V(:,1:d2);
+                projection2 = injection2';
+            else
+                [U,S,V] = svd(projector2);
+                % 1/sqrt(S) U' * X * V * 1/sqrt(S)
+                S = diag(S);
+                S = S(1:d2);
+                F = diag(1./sqrt(S));
+                projection2 = F * U(:,1:d2)';
+                injection2 = V(:,1:d2) * F;
+            end
+            sub2 = self.subRep(injection2, 'projection', projection2);
+        end
 
         function sub = subRep(self, injection, varargin)
         % Constructs a subrepresentation of this representation
