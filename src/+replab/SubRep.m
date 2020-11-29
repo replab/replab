@@ -472,8 +472,8 @@ classdef SubRep < replab.Rep
         % Computes the direct sum of subrepresentations of the same parent representation
         %
         % The subrepresentations must have biorthogonal injection projection maps:
-        % ``subReps{i}.projection * subReps{i}.injection = eye(subReps{i}.dimension)``, but
-        % ``subReps{i}.projection * subReps{j}.injection = 0`` for ``i ~= j``.
+        % ``subReps{i}.projection * subReps{i}.injection ~= eye(subReps{i}.dimension)``, but
+        % ``subReps{i}.projection * subReps{j}.injection ~= 0`` for ``i ~= j``.
         %
         % Args:
         %   parent (`+replab.Rep`): Parent representation
