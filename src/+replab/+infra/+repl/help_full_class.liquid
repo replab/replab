@@ -44,7 +44,7 @@
 
 {% for mg in el.allMethodGroups %}
 {% if mg.hasAccessibleMethods %}
-   Methods:\t{{ mg.name }}\n
+   {{ mg.name }} methods:\t\n
    \t\n
 {% for m in mg.methodsInGroup %}
 {% if m.isAccessible %}
