@@ -167,6 +167,10 @@ classdef TensorRep < replab.Rep
 
         % Rep
 
+        function rep = computeDouble(self)
+            rep = replab.rep.TensorRep(self.group, self.field, cellfun(@(f) double(f), self.factors));
+        end
+
         function c = decomposeTerm(self)
             c = self.factors;
         end

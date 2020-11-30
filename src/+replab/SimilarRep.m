@@ -206,6 +206,10 @@ classdef SimilarRep < replab.Rep
 
         % Rep
 
+        function r = computeDouble(self)
+            r = replab.SimilarRep(double(self.parent), self.A('double/sparse'), self.Ainv('double/sparse'), 'basisConditionNumberEstimate', self.basisConditionNumberEstimate);
+        end
+
         function c = decomposeTerm(self)
             c = {self.parent};
         end

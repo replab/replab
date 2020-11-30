@@ -1,9 +1,16 @@
 classdef TrivialRep < replab.Rep
 % Describes copies of the real or complex trivial representation of a group
 
+    properties (SetAccess = protected)
+        isExactValue % (logical): What to return for `.isExact`
+    end
+
     methods
 
-        function self = TrivialRep(group, field, dimension)
+        function self = TrivialRep(group, field, dimension, isExactValue)
+            if nargin < 4
+                isExactValue = true;
+            end
             assert(isa(group, 'replab.CompactGroup'));
             args = {'isUnitary', true, 'isIrreducible', dimension == 1, ...
                             'trivialDimension', dimension, 'frobeniusSchurIndicator', dimension};
@@ -17,7 +24,12 @@ classdef TrivialRep < replab.Rep
 
     methods (Access = protected)
 
+        function r = computeDouble(self)
+            r = replab.rep.TrivialRep(self.group, self.field, self.dimension, false);
+        end
+
         function rho = image_exact(self, g)
+            assert(self.isExact);
             rho = replab.cyclotomic.eye(self.dimension);
         end
 
@@ -46,7 +58,7 @@ classdef TrivialRep < replab.Rep
         % Rep
 
         function b = isExact(self)
-            b = true;
+            b = self.isExactValue;
         end
 
         function complexRep = complexification(self)

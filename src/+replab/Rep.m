@@ -11,6 +11,8 @@ classdef Rep < replab.Obj
 %   Either the override the `.image_double_sparse` method if the user implementation provides floating-point
 %   images, or both the `.isExact` and `.image_exact` methods.
 %
+%   Override also the `.double` method to speed up approximate computations.
+%
 %   The method `.computeErrorBound` must also be overriden (or the value cached at construction).
 %
 %   This class implements also extra methods about the action of the representation on matrices,
@@ -71,6 +73,14 @@ classdef Rep < replab.Obj
     end
 
     methods (Access = protected) % Protected methods
+
+        function d = computeDouble(self)
+        % Returns a double approximation of this representation, removing the exact data
+        %
+        % Returns:
+        %   `.Rep`: Approximate representation
+            error('Abstract');
+        end
 
         function e = computeErrorBound(self)
             error('Abstract');
@@ -458,10 +468,43 @@ classdef Rep < replab.Obj
             error('TODO');
         end
 
-        function iso = computeTrivialComponent(self)
+        function iso = computeTrivialComponent_exact(self)
+        % Computes the maximal trivial subrepresentation of this representation in exact arithmetic
+        %
+        % Returns:
+        %   `.Isotypic`: Subrepresentation as isotypic component
+            assert(self.isExact);
+            P = replab.cyclotomic.eye(self.dimension);
+            P1 = self.trivialRowSpace.project(P, 'exact');
+            P2 = self.trivialColSpace.project(P1, 'exact');
+            d = trace(P2);
+            assert(d.isWhole);
+            d = double(d);
+            [L, U, p] = lu(P2);
+            zeroRows = find(arrayfun(@(i) all(U(i,:) == 0), 1:size(U, 1)));
+            q = [setdiff(1:size(U, 1), zeroRows) zeroRows];
+            U = U(q,:);
+            L = L(:,q);
+            L = L(p, 1:d);
+            U = U(1:d, :);
+            % P2 = L * U -> I = L
+            I = L;
+            P = U;
+            if any(any(P*I ~= replab.cyclotomic.eye(d)))
+                P = inv(U*L)*P;
+            end
+            sub = self.subRep(I, 'projection', P);
+            iso = replab.Isotypic.fromTrivialSubRep(sub);
+        end
+
+        function iso = computeTrivialComponent_double(self)
+        % Computes the maximal trivial subrepresentation of this representation in floating-point precision
+        %
+        % Returns:
+        %   `.Isotypic`: Subrepresentation as isotypic component
             P = speye(self.dimension);
-            [P1 E1] = self.trivialRowSpace.project(P);
-            [P2 E2] = self.trivialColSpace.project(P1);
+            [P1 E1] = self.trivialRowSpace.project(P, 'double/sparse');
+            [P2 E2] = self.trivialColSpace.project(P1, 'double/sparse');
             if E1 + E2 >= 1
                 error('Representation is not precise enough to compute the trivial dimension.');
             end
@@ -478,7 +521,7 @@ classdef Rep < replab.Obj
         end
 
         function d = computeTrivialDimension(self)
-            c = self.trivialComponent;
+            c = self.trivialComponent('double');
             d = c.dimension;
         end
 
@@ -507,6 +550,23 @@ classdef Rep < replab.Obj
     end
 
     methods % Representation properties
+
+        function kv = knownProperties(self, keys)
+        % Returns the known properties among the set of given keys as a key-value cell array
+        %
+        % Args:
+        %   cell(1,\*) of charstring: Property names
+        %
+        % Returns:
+        %   cell(1,\*): Key-value pairs
+            kv = cell(1, 0);
+            for i = 1:length(keys)
+                if self.inCache(keys{i})
+                    kv{1,end+1} = keys{i};
+                    kv{1,end+1} = self.cachedOrEmpty(keys{i});
+                end
+            end
+        end
 
         function c = conditionNumberEstimate(self)
         % Returns an estimation of the condition number of the change of basis that makes this representation unitary
@@ -548,12 +608,35 @@ classdef Rep < replab.Obj
             d = self.cached('trivialDimension', @() self.computeTrivialDimension);
         end
 
-        function c = trivialComponent(self)
+        function c = trivialComponent(self, type)
         % Returns the trivial isotypic component present in this representation
         %
+        % Args:
+        %   type ('double' or 'exact', optional): Type of the returned value, default: 'double'
+        %
         % Returns:
-        %   `.HarmonizedIsotypic`: The trivial isotypic component
-            c = self.cached('trivialComponent', @() self.computeTrivialComponent);
+        %   `.Isotypic`: The trivial isotypic component
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            switch type
+              case 'double'
+                if self.inCache('trivialComponent_exact')
+                    T = self.trivialComponent('exact');
+                    if self.knownUnitary
+                        sub = self.subRep(T.injection('double'), 'isUnitary', true);
+                    else
+                        sub = self.subRep(T.injection('double'), 'projection', T.projection('double'));
+                    end
+                    c = replab.Isotypic.fromTrivialSubRep(sub);
+                else
+                    c = self.cached('trivialComponent_double', @() self.computeTrivialComponent_double);
+                end
+              case 'exact'
+                c = self.cached('trivialComponent_exact', @() self.computeTrivialComponent_exact);
+              otherwise
+                error('Unknown type');
+            end
         end
 
         function f = frobeniusSchurIndicator(self)
@@ -923,6 +1006,36 @@ classdef Rep < replab.Obj
     end
 
     methods % Derived representations
+
+        function approx = double(self)
+        % Returns the approximate representation corresponding to this representation
+        %
+        % Returns:
+        %   `.Rep`: Representation equivalent to this representation with `.isExact` false
+            if ~self.isExact
+                approx = self;
+            else
+                approx = self.computeDouble;
+                if self.inCache('isUnitary')
+                    approx.cache('isUnitary', self.isUnitary, '==');
+                end
+                if self.inCache('trivialDimension')
+                    approx.cache('trivialDimension', self.trivialDimension, '==');
+                end
+                if self.inCache('isIrreducible')
+                    approx.cache('isIrreducible', self.isIrreducible, '==');
+                end
+                if self.inCache('frobeniusSchurIndicator')
+                    approx.cache('frobeniusSchurIndicator', self.frobeniusSchurIndicator, '==');
+                end
+                if self.inCache('isDivisionAlgebraCanonical')
+                    approx.cache('isDivisionAlgebraCanonical', self.isDivisionAlgebraCanonical, '==');
+                end
+                if self.inCache('kernel')
+                    approx.cache('kernel', self.kernel, '==');
+                end
+            end
+        end
 
         function rep1 = contramap(self, morphism)
         % Returns the representation composed with the given morphism applied first

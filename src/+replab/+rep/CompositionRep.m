@@ -45,6 +45,10 @@ classdef CompositionRep < replab.Rep
 
         % Rep
 
+        function rep = computeDouble(self)
+            rep = replab.rep.CompositionRep(self.first, double(self.second));
+        end
+
         function c = decomposeTerm(self)
             c = {self.second};
         end
@@ -64,6 +68,8 @@ classdef CompositionRep < replab.Rep
     end
 
     methods % Implementations
+
+        % Rep
 
         function b = isExact(self)
             b = self.second.isExact;

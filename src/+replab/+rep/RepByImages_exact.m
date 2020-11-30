@@ -21,7 +21,7 @@ classdef RepByImages_exact < replab.RepByImages
         %   field ({'R', 'C'}): Whether the representation if real (R) or complex (C)
         %   dimension (integer): Representation dimension
         %   preimages (cell(1,\*) of ``group`` elements): Preimages
-        %   images (cell(1,\*) of double/sparse double/intval/cyclotomic(\*,\*)): Images of the preimages
+        %   images (cell(1,\*) of double/sparse double/cyclotomic(\*,\*)): Images of the preimages
             inverseImages = replab.rep.computeInverses(group, @(x,y) x*y, preimages, images);
             imagesErrorBound = zeros(1, length(preimages));
             isUnitary = all(arrayfun(@(i) full(all(all(images{i} == inverseImages{i}'))), 1:length(preimages)));
@@ -95,6 +95,10 @@ classdef RepByImages_exact < replab.RepByImages
     methods (Access = protected) % Implementations
 
         % Rep
+
+        function rho = computeDouble(self)
+            rho = replab.rep.RepByImages_inexactChain(self);
+        end
 
         function rho = image_double_sparse(self, g)
             perm = self.group.niceMorphism.imageElement(g);

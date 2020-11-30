@@ -42,6 +42,10 @@ classdef ComplexifiedRep < replab.Rep
 
         % Rep
 
+        function rep = computeDouble(self)
+            rep = replab.rep.ComplexifiedRep(double(self.parent));
+        end
+
         function c = decomposeTerm(self)
             c = {self.parent};
         end

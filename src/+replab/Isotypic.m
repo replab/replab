@@ -33,15 +33,11 @@ classdef Isotypic < replab.SubRep
             irreps = cell(1, dT);
             I = trivial.injection_internal;
             P = trivial.projection_internal;
-            if trivial.parent.knownUnitary && all(all(I == P'))
-                args = {'isUnitary', true};
-            else
-                args = {};
-            end
             for i = 1:dT
-                irreps{i} = parent.subRep(I(:,i), 'projection', P(i,:), 'isIrreducible', true, 'frobeniusSchurIndicator', 1, 'trivialDimension', 1, args{:});
+                irreps{i} = parent.subRep(I(:,i), 'projection', P(i,:), 'isIrreducible', true, 'frobeniusSchurIndicator', 1, 'trivialDimension', 1, 'isUnitary', true);
             end
-            iso = replab.Isotypic(parent, irreps, P, true);
+            isHarmonized = true;
+            iso = replab.Isotypic(parent, irreps, P, isHarmonized);
         end
 
 % $$$         function iso = fromIrreps(parent, irreps)

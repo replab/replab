@@ -145,6 +145,10 @@ classdef DerivedRep < replab.Rep
 
         % Rep
 
+        function rep = computeDouble(self)
+            rep = replab.rep.DerivedRep(double(self.parent), self.conjugate, self.inverse, self.transpose);
+        end
+
         function c = decomposeTerm(self)
             c = {self.parent};
         end

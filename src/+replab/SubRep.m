@@ -350,6 +350,11 @@ classdef SubRep < replab.Rep
 
     methods (Access = protected) % Implementations
 
+        function r = computeDouble(self)
+            args = self.knownProperties({'injectionConditionNumberEstimate'});
+            r = replab.SubRep(double(self.parent), self.injection('double/sparse'), self.projection('double/sparse'), args{:});
+        end
+
         function c = decomposeTerm(self)
             c = {self.parent};
         end

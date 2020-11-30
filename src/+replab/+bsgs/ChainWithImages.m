@@ -390,6 +390,71 @@ classdef ChainWithImages < replab.Str
             i = k + 1; % marker that we striped through the chain
         end
 
+        function [res, errorBound] = double(self, knownUnitary)
+        % Returns a new BSGS chain with the images approximated
+        %
+        % Args:
+        %   knownUnitary (logical): Whether the representation described by the chain is known to be unitary
+        %
+        % Returns
+        % -------
+        %   res: `+replab.+bsgs.ChainWithImages`
+        %     Chain with approximate images
+        %   errorBound: double
+        %     Bound on the computed images
+            if nargin < 2
+                knownUnitary = false;
+            end
+            k = self.length;
+            newT = cellfun(@(t) double(t), self.T, 'uniform', 0);
+            newV = cell(1, k);
+            newVinv = cell(1, k);
+            maxCondNums = zeros(1, k);
+            maxErrors = zeros(1, k);
+            for i = 1:k
+                Vi = self.V{i};
+                Vinv{i} = self.Vinv{i};
+                l = length(Vi);
+                newVi = cell(1, l);
+                newVinvi = cell(1, l);
+                maxError = 0;
+                maxCondNum = 1;
+                for j = 1:length(Vi)
+                    if isa(Vi{j}, 'replab.cyclotomic')
+                        [approx, err] = Vi{j}.doubleApproximation;
+                    else
+                        approx = Vi{j};
+                        err = 0;
+                    end
+                    newVi{j} = replab.numerical.bestStorage(approx);
+                    maxError = max(maxError, err);
+                    if knownUnitary
+                        newVinv{j} = newVi{j}';
+                    else
+                        maxCondNum = max(maxCondNum, replab.numerical.condUpperBound(newVi{j}));
+                        if isa(newVi{j}, 'replab.cyclotomic')
+                            [approx, err] = newVi{j}.doubleApproximation;
+                        else
+                            approx = newVi{j};
+                            err = 0;
+                        end
+                        newVinvi{j} = replab.numerical.bestStorage(approx);
+                        maxError = max(maxError, err);
+                    end
+                end
+                maxCondNums(i) = maxCondNum;
+                maxErrors(i) = maxError;
+                newV{i} = newVi;
+                newVinv{i} = newVinvi;
+            end
+            errorBound = (prod(1 + maxErrors./maxCondNums) - 1)*prod(maxCondNums);
+            res = replab.bsgs.ChainWithImages(self.n, self.J, self.B, self.S, newT, self.Sind, self.Delta, self.iDelta, ...
+                                              self.U, self.Uinv, newV, newVinv);
+            if ~self.isMutable
+                res.makeImmutable;
+            end
+        end
+
         function res = mapImages(self, mu)
         % Returns a new BSGS chain with the images mapped through a function
         %

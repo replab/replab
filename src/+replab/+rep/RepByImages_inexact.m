@@ -87,6 +87,10 @@ classdef RepByImages_inexact < replab.RepByImages
 
     methods (Access = protected)
 
+        function rho = computeDouble(self)
+            rho = self;
+        end
+
         function rho = image_double_sparse(self, g)
             rho = speye(self.dimension);
             word = self.factorization.factorize(g);

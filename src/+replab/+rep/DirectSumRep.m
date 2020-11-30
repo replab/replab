@@ -124,6 +124,12 @@ classdef DirectSumRep < replab.Rep
 
     methods (Access = protected) % Implementations
 
+        % Rep
+
+        function rep = computeDouble(self)
+            rep = replab.rep.DirectSumRep(self.group, self.field, cellfun(@(f) double(f), self.factors));
+        end
+
         function c = decomposeTerm(self)
             c = self.factors;
         end

@@ -106,14 +106,15 @@ classdef RepByImages < replab.Rep
 
     methods (Static)
 
-% $$$         function rep1 = fromExactRep(rep)
-% $$$         % Constructs a `.RepByImages` from an existing representation with exact images
-% $$$             assert(isa(rep.group, 'replab.FiniteGroup'));
-% $$$             assert(rep.isExact);
-% $$$             nG = rep.group.nGenerators;
-% $$$             images = arrayfun(@(i) rep.image_internal(rep.group.generator(i)), 1:nG, 'uniform', 0);
-% $$$             rep1 = replab.RepByImages.make(rep.group, rep.field, rep.dimension, rep.group.generators, images);
-% $$$         end
+        function rep1 = fromExactRep(rep)
+        % Constructs a `.RepByImages` from an existing representation with exact images
+            assert(isa(rep.group, 'replab.FiniteGroup'));
+            assert(rep.isExact);
+            gens = rep.group.generators;
+            images = cellfun(@(g) rep.image_internal(g), gens, 'uniform', 0);
+            rep1 = rep.group.repByImages(rep.field, rep.dimension, 'preimages', gens, 'images', images);
+            rep1.copyProperties(rep);
+        end
 % $$$
 % $$$         function rep = fromImageFunction(group, field, dimension, imageFun)
 % $$$         % Constructs a RepByImages representation using a given morphism
@@ -131,7 +132,6 @@ classdef RepByImages < replab.Rep
 % $$$             images = arrayfun(@(i) imageFun(group.generator(i)), 1:nG, 'uniform', 0);
 % $$$             rep = replab.RepByImages.make(group, field, dimension, group.generators, images);
 % $$$         end
-
     end
 
 end

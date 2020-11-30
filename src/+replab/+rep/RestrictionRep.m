@@ -25,6 +25,10 @@ classdef RestrictionRep < replab.Rep
 
         % Rep
 
+        function res = double(self)
+            res = replab.rep.RestrictionRep(double(self.parent), self.group);
+        end
+
         function c = decomposeTerm(self)
             c = {self.parent};
         end
