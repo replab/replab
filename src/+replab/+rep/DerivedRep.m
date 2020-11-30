@@ -97,8 +97,8 @@ classdef DerivedRep < replab.Rep
         function res = rewriteTerm_parentIsComplexifiedRep(self, options)
         % Move DerivedRep inside ComplexifiedRep where it can be simplified
             if isa(self.parent, 'replab.rep.ComplexifiedRep')
-                res = replab.rep.ComplexifiedRep(replab.rep.DerivedRep, self.parent.parent, ...
-                                                   self.conjugate, self.inverse, self.transpose);
+                res = replab.rep.ComplexifiedRep(replab.rep.DerivedRep(self.parent.parent, ...
+                                                                  self.conjugate, self.inverse, self.transpose));
             else
                 res = [];
             end
@@ -107,9 +107,33 @@ classdef DerivedRep < replab.Rep
         function res = rewriteTerm_parentIsDerivedRep(self, options)
         % Collapse two successive DerivedRep
             if isa(self.parent, 'replab.rep.DerivedRep')
-                res = replab.rep.DerivedRep(xor(self.parent.conjugate, self.conjugate), ...
-                                              xor(self.parent.inverse, self.inverse), ...
+                res = replab.rep.DerivedRep(self.parent.parent, ...
+                                            xor(self.parent.conjugate, self.conjugate), ...
+                                            xor(self.parent.inverse, self.inverse), ...
                                             xor(self.parent.transpose, self.transpose));
+            else
+                res = [];
+            end
+        end
+
+        function res = rewriteTerm_parentIsSimilarRep(self, options)
+            if isa(self.parent, 'replab.SimilarRep')
+                A = self.parent.A_internal;
+                Ainv = self.parent.Ainv_internal;
+                if self.conjugate
+                    A = conj(A);
+                    Ainv = conj(Ainv);
+                end
+                swap = false;
+                if self.transpose
+                    A0 = A;
+                    Ainv0 = Ainv;
+                    A = Ainv0.';
+                    Ainv = A0.';
+                end
+                res = replab.SimilarRep(replab.rep.DerivedRep(self.parent.parent, ...
+                                                              self.conjugate, self.inverse, self.transpose), ...
+                                        A, Ainv);
             else
                 res = [];
             end
@@ -117,7 +141,7 @@ classdef DerivedRep < replab.Rep
 
     end
 
-    methods % Implementations
+    methods (Access = protected) % Implementations
 
         % Rep
 

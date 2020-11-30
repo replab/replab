@@ -23,17 +23,25 @@ classdef IsotypicLaws < replab.Laws
             irrepLaws = replab.laws.Collection(children);
         end
 
-        function law_all_irreps_equivalent_C(self, c)
-            m = self.iso.multiplicity;
-            d1 = self.iso.irrepDimension;
-            for i = 1:m
-                for j = i:m
-                    rows = (i-1)*d1+(1:d1);
-                    cols = (j-1)*d1+(1:d1);
-                    self.M1.assertNotEqv(c(rows, cols), zeros(d1, d1));
-                end
-            end
-        end
+% $$$         function law_all_irreps_equivalent_C(self, c)
+% $$$             m = self.iso.multiplicity;
+% $$$             d1 = self.iso.irrepDimension;
+% $$$             for i = 1:m
+% $$$                 for j = i:m
+% $$$                     rows = (i-1)*d1+(1:d1);
+% $$$                     cols = (j-1)*d1+(1:d1);
+% $$$                     self.M1.assertNotEqv(c(rows, cols), zeros(d1, d1));
+% $$$                 end
+% $$$             end
+% $$$         end
+
+% $$$         function law_all_irreps_same_basis_G(self, g)
+% $$$             image1 = self.iso.irrep(1).image(g);
+% $$$             for i = 2:self.iso.nIrreps
+% $$$                 imagei = self.iso.irrep(i).image(g);
+% $$$                 self.M1.assertEqv(image1, imagei);
+% $$$             end
+% $$$         end
 
     end
 

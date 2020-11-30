@@ -6,19 +6,27 @@ classdef Equivariant_forFiniteGroup < replab.Equivariant
             self@replab.Equivariant(repC, repR, special);
         end
 
-        function [X eX] = project(self, X, type)
-            if nargin < 3
-                type = 'double';
-            end
-            if strcmp(type, 'exact')
-                actionType = 'exact';
-                if isa(X, 'double')
-                    X = replab.cyclotomic.fromDoubles(X);
+    end
+
+    methods (Access = protected)
+
+        function X = project_exact(self, X)
+            T = self.group.decomposition.T;
+            for i = length(T):-1:1
+                els = T{i};
+                nEls = length(els);
+                S = X;
+                for j = 2:nEls
+                    g = els{j};
+                    gX = self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X, 'exact'), 'exact');
+                    S = S + gX;
                 end
-            else
-                actionType = 'double/sparse';
+                X = S/nEls;
             end
-            if nargout > 1 && ~strcmp(type, 'exact')
+        end
+
+        function [X eX] = project_double_sparse(self, X)
+            if nargout > 1
                 sX = replab.numerical.norm2UpperBound(X); % estimate of largest singular value on X
                                                           % we assume this decreases under averaging
                 eX = 0; % starting error on X
@@ -34,16 +42,13 @@ classdef Equivariant_forFiniteGroup < replab.Equivariant
                 nEls = length(els);
                 for j = 2:nEls
                     g = els{j};
-                    gX = self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X, actionType), actionType);
+                    gX = self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X, 'double/sparse'), 'double/sparse');
                     S = S + gX;
                 end
                 X = S/nEls;
-                if nargout > 1 && ~strcmp(type, 'exact')
+                if nargout > 1
                     eX = nEls*(eR*cC*sX + cR*eC*sX + cR*cC*eX);
                 end
-            end
-            if strcmp(type, 'double')
-                X = full(X);
             end
         end
 

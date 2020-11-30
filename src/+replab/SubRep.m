@@ -58,9 +58,8 @@ classdef SubRep < replab.Rep
             args = struct('injectionConditionNumberEstimate', [], 'projectorErrorBound', []);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             IP_unitary = all(all(injection_internal == projection_internal'));
-            if IP_unitary && parent.isUnitary
-                [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'isUnitary', true);
-                assert(~exists || isempty(oldValue) || isequal(oldValue, true), 'This representation is actually unitary');
+            if IP_unitary && parent.knownUnitary
+                restArgs = replab.util.keyValuePairsUpdate(restArgs, 'knownUnitary', true);
             end
             self@replab.Rep(parent.group, parent.field, d, restArgs{:});
             if isa(injection_internal, 'replab.cyclotomic') && isa(projection_internal, 'replab.cyclotomic')
@@ -246,21 +245,70 @@ classdef SubRep < replab.Rep
         end
 
         function mat = projector(self, type)
+        % Returns the projector on this subrepresentation
+        %
+        % Note that the projector is in general not uniquely defined by the injection map;
+        % it is defined by the injection map only when the subrepresentation is a direct sum
+        % of isotypic components.
+        %
+        % Returns:
+        %   double(\*,\*): Projector matrix on the subrepresentation
             if nargin < 2 || isempty(type)
                 type = 'double';
             end
             mat = self.injection(type) * self.projection(type);
         end
 
-        function sub1 = refine(self)
+        function sub1 = refineUnitary(self)
+        %assert(self.isUnitary && self.parent.iUsnitary);
+            Q = self.injection('double');
+            fprintf('D Pi     DeltaQ   Delta\n');
+            for i = 1:10
+                Qprev = Q;
+                Ftilde = Q*Q';
+                [Foverline err] = self.parent.commutant.project(Ftilde);
+                D = Q - Foverline*Q;
+                D = D - Q*Q'*D;
+                D = orth(D);
+                rank(D)
+                Gtilde = D*D';
+                [Goverline err1] = self.parent.commutant.project(Gtilde);
+                D = Goverline * D;
+                D = orth(D);
+                rank(D)
+                Q = Q - D*D'*Q;
+                Q = Q/(Q'*Q);
+                fprintf('%6.2E %6.2E %6.2E\n', norm(Foverline-Ftilde, 'fro'), norm(Qprev-Q, 'fro'), norm(D, 'fro'));
+            end
+            sub1 = replab.SubRep(self.parent, Q, Q');
+        end
+
+        function sub1 = refine(self, k)
+            if nargin < 2
+                k = 0;
+            end
             Ptilde = self.projection('double');
             Itilde = self.injection('double');
             P = Ptilde;
             I = Itilde;
             fprintf('D Pi     DeltaP   DeltaI   P DeltaI\n');
-            for i = 1:3
+            for i = 1:30
                 Ftilde = I*P;
-                [Foverline err] = self.parent.commutant.project(Ftilde);
+                if k == 0
+                    [Foverline err] = self.parent.commutant.project(Ftilde);
+                else
+                    F = Ftilde;
+                    for j1 = 1:k
+                        F1 = zeros(size(F));
+                        ns = 10;
+                        for j2 = 1:ns
+                            g = self.group.sample;
+                            F1 = F1 + self.parent.image(g) * F * self.parent.inverseImage(g);
+                        end
+                        F = F1/ns;
+                    end
+                    Foverline = F;
+                end
                 for j = 1:3
                     Pprev = P;
                     Iprev = I;

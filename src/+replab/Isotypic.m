@@ -15,127 +15,125 @@ classdef Isotypic < replab.SubRep
 
     properties (SetAccess = protected)
         irreps % (cell(1,\*) of `.SubRep`): Equivalent irreducible subrepresentations in this isotypic component
+        isHarmonized % (logical): Whether all irreducible subrepresentations are expressed in the same basis
     end
 
     methods (Static)
 
-        function iso = fromTrivialSubRep(parent, trivial)
+        function iso = fromTrivialSubRep(trivial)
         % Builds an isotypic component from the (full) trivial subrepresentation
         %
         % Args:
-        %   parent (`+replab.Rep`): Representation being decomposed
         %   trivial (`+replab.SubRep`): Maximal trivial subrepresentation of ``parent``
         %
         % Returns:
-        %   `+replab.HarmonizedIsotypic`: The corresponding trivial isotypic component
+        %   `+replab.Isotypic`: The corresponding trivial isotypic component
+            parent = trivial.parent;
             dT = trivial.dimension;
             irreps = cell(1, dT);
-            B = trivial.B_internal;
-            E = trivial.E_internal;
-            for i = 1:dT
-                irreps{i} = parent.subRep(B(:,i), E(i,:));
-                irreps{i}.isIrreducible = true;
-                irreps{i}.trivialDimension = 1;
-                irreps{i}.frobeniusSchurIndicator = 1;
+            I = trivial.injection_internal;
+            P = trivial.projection_internal;
+            if trivial.parent.knownUnitary && all(all(I == P'))
+                args = {'isUnitary', true};
+            else
+                args = {};
             end
-            iso = replab.HarmonizedIsotypic(parent, irreps, E);
+            for i = 1:dT
+                irreps{i} = parent.subRep(I(:,i), 'projection', P(i,:), 'isIrreducible', true, 'frobeniusSchurIndicator', 1, 'trivialDimension', 1, args{:});
+            end
+            iso = replab.Isotypic(parent, irreps, P, true);
         end
 
-        function iso = fromIrreps(parent, irreps)
-        % Builds an isotypic component from equivalent subrepresentations
-        %
-        % Args:
-        %   parent (`+replab.Rep`): Representation being decomposed
-        %   irreps (cell(1,\*) of `+replab.SubRep`): Equivalent irreducible subrepresentations of ``parent``
-        %
-        % Returns:
-        %   `+replab.Isotypic`: The corresponding isotypic component
-            assert(length(irreps) >= 1, 'Isotypic component cannot be empty');
-            if length(irreps) == 1
-                % Single multiplicity? Embedding map is good to go!
-                iso = replab.Isotypic(parent, irreps, irreps{1}.E_internal);
-                return
-            end
-            m = length(irreps);
-            for i = 1:m
-                s = irreps{i};
-                assert(isa(s, 'replab.SubRep'));
-                assert(s.parent == parent);
-                assert(isequal(s.isIrreducible, true));
-            end
-            d = irreps{1}.dimension;
-            if isequal(parent.isUnitary, true)
-                b = cellfun(@(s) isequal(s.B_internal, s.E_internal'), irreps);
-                if all(b)
-                    % all bases are unitary, parent is unitary, we use orthogonality
-                    Es = cell(m, 1);
-                    for i = 1:m
-                        Es{i,1} = irreps{i}.E_internal;
-                    end
-                    E_internal = vertcat(Es{:});
-                    iso = replab.Isotypic(parent, irreps, E_internal);
-                    return
-                end
-            end
-            Bs = cell(1, m);
-            for i = 1:m
-                Bs{1,i} = irreps{i}.B_internal;
-            end
-            Biso = [Bs{:}];
-            subiso = parent.subRep(Biso);
-            E_internal = subiso.E_internal;
-            iso = replab.Isotypic(parent, irreps, E_internal);
-        end
+% $$$         function iso = fromIrreps(parent, irreps)
+% $$$         % Builds an isotypic component from equivalent subrepresentations
+% $$$         %
+% $$$         % All irreps of the isotypic component must be provided, and their injection maps must be linearly
+% $$$         % independent.
+% $$$         %
+% $$$         % Args:
+% $$$         %   parent (`+replab.Rep`): Representation being decomposed
+% $$$         %   irreps (cell(1,\*) of `+replab.SubRep`): Equivalent irreducible subrepresentations of ``parent``
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `+replab.Isotypic`: The corresponding isotypic component
+% $$$             assert(length(irreps) >= 1, 'Isotypic component cannot be empty');
+% $$$             if length(irreps) == 1
+% $$$                 % Single multiplicity? Embedding map is good to go!
+% $$$                 iso = replab.Isotypic(parent, irreps, irreps{1}.E_internal);
+% $$$                 return
+% $$$             end
+% $$$             m = length(irreps);
+% $$$             for i = 1:m
+% $$$                 s = irreps{i};
+% $$$                 assert(isa(s, 'replab.SubRep'));
+% $$$                 assert(s.parent == parent);
+% $$$                 assert(s.isIrreducible);
+% $$$             end
+% $$$             d = irreps{1}.dimension;
+% $$$             if parent.isUnitary
+% $$$                 b = cellfun(@(s) isequal(s.B_internal, s.E_internal'), irreps);
+% $$$                 if all(b)
+% $$$                     % all bases are unitary, parent is unitary, we use orthogonality
+% $$$                     Es = cell(m, 1);
+% $$$                     for i = 1:m
+% $$$                         Es{i,1} = irreps{i}.E_internal;
+% $$$                     end
+% $$$                     E_internal = vertcat(Es{:});
+% $$$                     iso = replab.Isotypic(parent, irreps, E_internal);
+% $$$                     return
+% $$$                 end
+% $$$             end
+% $$$             Bs = cell(1, m);
+% $$$             for i = 1:m
+% $$$                 Bs{1,i} = irreps{i}.B_internal;
+% $$$             end
+% $$$             Biso = [Bs{:}];
+% $$$             subiso = parent.subRep(Biso);
+% $$$             E_internal = subiso.E_internal;
+% $$$             iso = replab.Isotypic(parent, irreps, E_internal);
+% $$$         end
 
     end
 
     methods
 
-        function self = Isotypic(parent, irreps, E_internal)
+        function self = Isotypic(parent, irreps, projection, isHarmonized)
         % Constructs an isotypic component of a parent representation
         %
-        % The basis of the isotypic component comes from the concatenation of the bases of the irreps,
-        % while its embedding map is supplied as an argument.
+        % The injection map of the isotypic component comes from the sum of the injection maps of the irreps,
+        % while its projection map is supplied as an argument.
         %
         % The static method `.fromIrreps` computes this embedding map if necessary.
+        %
+        % Additional keyword arguments are passed to the `.Rep` constructor.
         %
         % Args:
         %   parent (`+replab.Rep`): Parent representation of which we construct a subrepresentation
         %   irreps (cell(1,\*) of `+replab.SubRep`): Irreducible subrepresentations
-        %   E_internal (double(\*,\*), may be sparse): Embedding map of the isotypic component
+        %   projection (double(\*,\*), may be sparse): Embedding map of the isotypic component
+        %   isHarmonized (logical): Whether all irreps are expressed in the same basis
             m = length(irreps);
-            assert(m >= 1, 'Isotypic component cannot be empty');
             assert(isa(parent, 'replab.Rep'));
-            Bs = cell(1, m);
-            for i = 1:m
-                ci = irreps{i};
-                assert(isa(ci, 'replab.SubRep'));
-                assert(ci.parent == parent);
-                assert(isequal(ci.isIrreducible, true));
-                Bs{1,i} = ci.B_internal;
+            assert(all(cellfun(@(irrep) irrep.parent == parent, irreps)));
+            assert(all(cellfun(@(irrep) isa(irrep, 'replab.SubRep'), irreps)));
+            assert(all(cellfun(@(irrep) irrep.isIrreducible, irreps)));
+            args = {};
+            if all(cellfun(@(irrep) irrep.knownUnitary, irreps))
+                args = horzcat(args, {'isUnitary', true});
             end
-            B_internal = [Bs{:}];
-            self = self@replab.SubRep(parent, B_internal, E_internal);
+            if all(cellfun(@(irrep) irrep.inCache('trivialDimension'), irreps))
+                td = sum(cellfun(@(irrep) irrep.trivialDimension, irreps));
+                args = horzcat(args, {'trivialDimension', td});
+            end
+            if all(cellfun(@(irrep) irrep.inCache('isDivisionAlgebraCanonical'), irreps))
+                dac = all(cellfun(@(irrep) irrep.isDivisionAlgebraCanonical, irreps));
+            end
+            args = horzcat(args, {'isIrreducible', m > 1});
+            injections = cellfun(@(irrep) irrep.injection_internal, irreps, 'uniform', 0);
+            injection = [injections{:}];
+            self = self@replab.SubRep(parent, injection, projection, args{:});
             self.irreps = irreps;
-            % mutable Rep properties
-            areUnitary = cellfun(@(irr) irr.isUnitary, irreps, 'uniform', 0);
-            if replab.util.areAllEqual(areUnitary)
-                self.isUnitary = irreps{1}.isUnitary;
-            end
-            trivialDimensions = cellfun(@(irr) irr.trivialDimension, irreps, 'uniform', 0);
-            if replab.util.areAllEqual(trivialDimensions)
-                self.trivialDimension = m * irreps{1}.trivialDimension;
-            end
-            isDAC = cellfun(@(irr) irr.isDivisionAlgebraCanonical, irreps, 'uniform', 0);
-            if replab.util.areAllEqual(isDAC)
-                self.isDivisionAlgebraCanonical = irreps{1}.isDivisionAlgebraCanonical;
-            end
-            if m == 1
-                self.isIrreducible = true;
-                if isequal(self.basis, eye(self.dimension))
-                    replab.rep.copyProperties(irreps{1}, self);
-                end
-            end
+            self.isHarmonized = isHarmonized;
         end
 
         function m = multiplicity(self)
@@ -181,125 +179,107 @@ classdef Isotypic < replab.SubRep
         %   `.SubRep`: Irreducible subrepresentation of `.parent`
             c = self.irreps{i};
         end
-
-        function P = projector(self)
-        % Returns the projector on this isotypic component
-        %
-        % Returns:
-        %   double(\*,\*): Projector matrix on the isotypic component
-            P = full(self.B_internal*self.E_internal);
-        end
-
-        function P = projectorOnIrrep(self, i)
-        % Returns the projector on the i-th irreducible representation in this component
-        %
-        % Returns:
-        %   double(\*,\*): Projector matrix on the irreducible representation
-            range = (i-1)*self.irrepDimension+(1:self.irrepDimension);
-            Bi = self.irrep(i).B_internal;
-            Ei = self.E_internal(range,:);
-            P = full(Bi*Ei);
-        end
-
-        function iso = harmonize(self, context)
-        % Harmonizes the isotypic component
-        %
-        % Returns:
-        %   `.HarmonizedIsotypic`: Isotypic component with bases harmonized
-            if isa(self, 'replab.HarmonizedIsotypic')
-                iso = self;
-            else
-                if isempty(context)
-                    c = replab.Context.make;
-                else
-                    c = context;
-                end
-                iso = replab.irreducible.harmonizeIsotypic(self, c);
-                if isempty(context)
-                    c.close;
-                end
-            end
-        end
-
-        function [A Ainv] = changeOfBasis(self, i, j, context)
-        % Returns change of basis matrices that relate two irreducible representations
-        %
-        % ``A`` such that ``A * self.irrep(j).image(g) * Ainv = self.irrep(i).image(g)``
-        %
-        % Args:
-        %   i (integer): Index of an irreducible representation
-        %   j (integer): Index of an irreducible representation
-        %   context (`+replab.Context`, optional): Sampling context
-        %
-        % Returns
-        % -------
-        %   A: double(\*,\*)
-        %     Change of basis matrix
-        %   Ainv: double(\*,\*)
-        %     Inverse of change of basis matrix
-            if i == j
-                A = eye(self.irrepDimension);
-                Ainv = A;
-                return
-            end
-            if nargin < 4
-                context = replab.Context.make;
-            end
-            C = self.parent.commutant.sampleInContext(context, 1);
-            A = full(self.irrep(i).E_internal * C * self.irrep(j).B_internal);
-            A = A * sqrt(self.irrepDimension/real(trace(A*A'))) * sign(A(1,1));
-            if isequal(self.irrep(i).isUnitary, true) && isequal(self.irrep(j).isUnitary, true)
-                Ainv = A';
-            elseif self.overC || isequal(self.irrep(1).frobeniusSchurIndicator, 1)
-                Ainv = full(self.irrep(j).E_internal * C * self.irrep(i).B_internal);
-                Ainv = Ainv/(trace(A*Ainv)/self.irrepDimension);
-            else
-                Ainv = inv(A);
-            end
-            if nargin < 4
-                context.close;
-            end
-        end
-
-        function iso = changeEachIrrepBasis(self, A, Ainv)
-        % Returns the isotypic component with irrep bases changed
-        %
-        % Does not modify this isotypic component.
-        %
-        % The returned isotypic component has ``iso.irrep(i) == self.irrep(i).similarRep(A{i}, Ainv{i})``
-        %
-        % Args:
-        %   A (cell(1,\*) of double(\*,\8), may be sparse): Change of basis matrices
-        %   Ainv (cell(1,\*) of double(\*,\8), may be sparse): Inverse matrices
-            irreps = cell(1, self.multiplicity);
-            E = self.E_internal;
-            for i = 1:self.multiplicity
-                irreps{i} = replab.rep.collapse(self.irreps{i}.similarRep(A{i}, Ainv{i}));
-                range = self.irrepRange(i);
-                E(range, :) = A{i} * E(range, :);
-            end
-            iso = replab.Isotypic(self.parent, irreps, E);
-        end
-
-        function iso = changeIrrepBasis(self, i, A_internal, Ainv_internal)
-        % Returns the isotypic component with the i-th irrep basis changed
-        %
-        % Does not modify this isotypic component.
-        %
-        % The new isotypic component has ``iso.irrep(i) == self.irrep(i).similarRep(A_internal, Ainv_internal)``.
-        %
-        % Args:
-        %   i (integer): Representation index
-        %   A_internal (double(\*,\*), may be sparse): Change of basis matrix
-        %   Ainv_internal (double(\*,\*), may be sparse): Inverse change of basis matrix
-            irrepi = replab.rep.collapse(self.irreps{i}.similarRep(A_internal, Ainv_internal));
-            range = self.irrepRange(i);
-            E = self.E_internal;
-            E(range,:) = A_internal * E(range,:);
-            irreps = self.irreps;
-            irreps{i} = irrepi;
-            iso = replab.Isotypic(self.parent, irreps, E);
-        end
+% $$$
+% $$$
+% $$$         function iso = harmonize(self, context)
+% $$$         % Harmonizes the isotypic component
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `.HarmonizedIsotypic`: Isotypic component with bases harmonized
+% $$$             if isa(self, 'replab.HarmonizedIsotypic')
+% $$$                 iso = self;
+% $$$             else
+% $$$                 if isempty(context)
+% $$$                     c = replab.Context.make;
+% $$$                 else
+% $$$                     c = context;
+% $$$                 end
+% $$$                 iso = replab.irreducible.harmonizeIsotypic(self, c);
+% $$$                 if isempty(context)
+% $$$                     c.close;
+% $$$                 end
+% $$$             end
+% $$$         end
+% $$$
+% $$$         function [A Ainv] = changeOfBasis(self, i, j, context)
+% $$$         % Returns change of basis matrices that relate two irreducible representations
+% $$$         %
+% $$$         % ``A`` such that ``A * self.irrep(j).image(g) * Ainv = self.irrep(i).image(g)``
+% $$$         %
+% $$$         % Args:
+% $$$         %   i (integer): Index of an irreducible representation
+% $$$         %   j (integer): Index of an irreducible representation
+% $$$         %   context (`+replab.Context`, optional): Sampling context
+% $$$         %
+% $$$         % Returns
+% $$$         % -------
+% $$$         %   A: double(\*,\*)
+% $$$         %     Change of basis matrix
+% $$$         %   Ainv: double(\*,\*)
+% $$$         %     Inverse of change of basis matrix
+% $$$             if i == j
+% $$$                 A = eye(self.irrepDimension);
+% $$$                 Ainv = A;
+% $$$                 return
+% $$$             end
+% $$$             if nargin < 4
+% $$$                 context = replab.Context.make;
+% $$$             end
+% $$$             C = self.parent.commutant.sampleInContext(context, 1);
+% $$$             A = full(self.irrep(i).E_internal * C * self.irrep(j).B_internal);
+% $$$             A = A * sqrt(self.irrepDimension/real(trace(A*A'))) * sign(A(1,1));
+% $$$             if isequal(self.irrep(i).isUnitary, true) && isequal(self.irrep(j).isUnitary, true)
+% $$$                 Ainv = A';
+% $$$             elseif self.overC || isequal(self.irrep(1).frobeniusSchurIndicator, 1)
+% $$$                 Ainv = full(self.irrep(j).E_internal * C * self.irrep(i).B_internal);
+% $$$                 Ainv = Ainv/(trace(A*Ainv)/self.irrepDimension);
+% $$$             else
+% $$$                 Ainv = inv(A);
+% $$$             end
+% $$$             if nargin < 4
+% $$$                 context.close;
+% $$$             end
+% $$$         end
+% $$$
+% $$$         function iso = changeEachIrrepBasis(self, A, Ainv)
+% $$$         % Returns the isotypic component with irrep bases changed
+% $$$         %
+% $$$         % Does not modify this isotypic component.
+% $$$         %
+% $$$         % The returned isotypic component has ``iso.irrep(i) == self.irrep(i).similarRep(A{i}, Ainv{i})``
+% $$$         %
+% $$$         % Args:
+% $$$         %   A (cell(1,\*) of double(\*,\8), may be sparse): Change of basis matrices
+% $$$         %   Ainv (cell(1,\*) of double(\*,\8), may be sparse): Inverse matrices
+% $$$             irreps = cell(1, self.multiplicity);
+% $$$             E = self.E_internal;
+% $$$             for i = 1:self.multiplicity
+% $$$                 irreps{i} = replab.rep.collapse(self.irreps{i}.similarRep(A{i}, Ainv{i}));
+% $$$                 range = self.irrepRange(i);
+% $$$                 E(range, :) = A{i} * E(range, :);
+% $$$             end
+% $$$             iso = replab.Isotypic(self.parent, irreps, E);
+% $$$         end
+% $$$
+% $$$         function iso = changeIrrepBasis(self, i, A_internal, Ainv_internal)
+% $$$         % Returns the isotypic component with the i-th irrep basis changed
+% $$$         %
+% $$$         % Does not modify this isotypic component.
+% $$$         %
+% $$$         % The new isotypic component has ``iso.irrep(i) == self.irrep(i).similarRep(A_internal, Ainv_internal)``.
+% $$$         %
+% $$$         % Args:
+% $$$         %   i (integer): Representation index
+% $$$         %   A_internal (double(\*,\*), may be sparse): Change of basis matrix
+% $$$         %   Ainv_internal (double(\*,\*), may be sparse): Inverse change of basis matrix
+% $$$             irrepi = replab.rep.collapse(self.irreps{i}.similarRep(A_internal, Ainv_internal));
+% $$$             range = self.irrepRange(i);
+% $$$             E = self.E_internal;
+% $$$             E(range,:) = A_internal * E(range,:);
+% $$$             irreps = self.irreps;
+% $$$             irreps{i} = irrepi;
+% $$$             iso = replab.Isotypic(self.parent, irreps, E);
+% $$$         end
 
     end
 
@@ -361,17 +341,17 @@ classdef Isotypic < replab.SubRep
             l = replab.laws.IsotypicLaws(self);
         end
 
-        % SubRep
-
-        function iso = refine(self)
-            ctx = replab.Context.make;
-            iso = replab.rep.refineIsotypic(self, ctx);
-            ctx.close;
-        end
-
-        function iso = nice(self)
-            iso = replab.nice.niceIsotypic(self);
-        end
+% $$$         % SubRep
+% $$$
+% $$$         function iso = refine(self)
+% $$$             ctx = replab.Context.make;
+% $$$             iso = replab.rep.refineIsotypic(self, ctx);
+% $$$             ctx.close;
+% $$$         end
+% $$$
+% $$$         function iso = nice(self)
+% $$$             iso = replab.nice.niceIsotypic(self);
+% $$$         end
 
     end
 

@@ -35,6 +35,8 @@ classdef Rep < replab.Obj
         %   dimension (integer): Representation dimension
         %
         % Keyword Args:
+        %   knownUnitary (logical or ``[]``, optional): Whether the representation is known to be unitary.
+        %                                               Only a true value has an effect, default ``false``.
         %   isUnitary (logical or ``[]``, optional): Whether the representation is unitary, default ``[]``
         %   isIrreducible (logical or ``[]``, optional): Whether this representation is irreducible, default ``[]``
         %   trivialDimension (integer or ``[]``, optional): Dimension of the trivial subrepresentation, default ``[]``
@@ -43,8 +45,12 @@ classdef Rep < replab.Obj
             self.group = group;
             self.field = field;
             self.dimension = dimension;
-            args = struct('isUnitary', [], 'isIrreducible', [], 'trivialDimension', [], 'frobeniusSchurIndicator', [], 'isDivisionAlgebraCanonical', []);
+            args = struct('isUnitary', [], 'knownUnitary', false, 'isIrreducible', [], 'trivialDimension', [], 'frobeniusSchurIndicator', [], 'isDivisionAlgebraCanonical', []);
             args = replab.util.populateStruct(args, varargin);
+            if isequal(args.knownUnitary, true)
+                assert(isempty(args.isUnitary) || args.isUnitary, 'This representation is actually unitary.');
+                args.isUnitary = true;
+            end
             if ~isempty(args.isUnitary)
                 self.cache('isUnitary', logical(args.isUnitary), 'error');
             end
@@ -156,6 +162,9 @@ classdef Rep < replab.Obj
 
         function [rho rhoInverse] = sample(self, type)
         % Samples an element from the group and returns its image under the representation
+        %
+        % Raises:
+        %   An error if ``type`` is ``'exact'`` and `.isExact` is false.
         %
         % Args:
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
@@ -306,6 +315,9 @@ classdef Rep < replab.Obj
         function newRep = simplify(self, varargin)
         % Returns a representation identical to this, but possibly with its structure simplified
         %
+        % It pushes `.SimilarRep` to the outer level, and `.DerivedRep` to the inner levels;
+        % expands tensor products.
+        %
         % Additional keyword arguments can be provided as key-value pairs.
         %
         % Keyword Args:
@@ -446,7 +458,7 @@ classdef Rep < replab.Obj
             error('TODO');
         end
 
-        function d = computeTrivialDimension(self)
+        function iso = computeTrivialComponent(self)
             P = speye(self.dimension);
             [P1 E1] = self.trivialRowSpace.project(P);
             [P2 E2] = self.trivialColSpace.project(P1);
@@ -454,6 +466,20 @@ classdef Rep < replab.Obj
                 error('Representation is not precise enough to compute the trivial dimension.');
             end
             d = round(trace(P2));
+            [I, P, p] = replab.numerical.sRRQR_rank(P2, 1.5, d);
+            if self.knownUnitary
+                sub = self.subRep(I, 'isUnitary', true);
+            else
+                P(:,p) = P; % apply permutation
+                P = (P*I)\P;
+                sub = self.subRep(I, 'projection', P);
+            end
+            iso = replab.Isotypic.fromTrivialSubRep(sub);
+        end
+
+        function d = computeTrivialDimension(self)
+            c = self.trivialComponent;
+            d = c.dimension;
         end
 
         function c = computeCommutant(self)
@@ -466,12 +492,12 @@ classdef Rep < replab.Obj
 
         function t = computeTrivialRowSpace(self)
             tRep = self.group.trivialRep(self.field, self.dimension);
-            t = replab.Equivariant.make(tRep, self, 'trivialRows');
+            t = replab.Equivariant.make(self, tRep, 'trivialRows');
         end
 
         function t = computeTrivialColSpace(self)
             tRep = self.group.trivialRep(self.field, self.dimension);
-            t = replab.Equivariant.make(self, tRep, 'trivialCols');
+            t = replab.Equivariant.make(tRep, self, 'trivialCols');
         end
 
         function b = computeIsDivisionAlgebraCanonical(self)
@@ -481,12 +507,6 @@ classdef Rep < replab.Obj
     end
 
     methods % Representation properties
-
-        function P2 = trivialProjector(self)
-            P = speye(self.dimension);
-            [P1 E1] = self.trivialRowSpace.project(P);
-            [P2 E2] = self.trivialColSpace.project(P1);
-        end
 
         function c = conditionNumberEstimate(self)
         % Returns an estimation of the condition number of the change of basis that makes this representation unitary
@@ -526,6 +546,14 @@ classdef Rep < replab.Obj
         % Returns:
         %   integer: Dimension
             d = self.cached('trivialDimension', @() self.computeTrivialDimension);
+        end
+
+        function c = trivialComponent(self)
+        % Returns the trivial isotypic component present in this representation
+        %
+        % Returns:
+        %   `.HarmonizedIsotypic`: The trivial isotypic component
+            c = self.cached('trivialComponent', @() self.computeTrivialComponent);
         end
 
         function f = frobeniusSchurIndicator(self)

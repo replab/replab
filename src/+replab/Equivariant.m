@@ -12,7 +12,8 @@ classdef Equivariant < replab.Domain
 %
 % - ``commutant`` equivariant spaces have ``repC == repR``,
 % - ``hermitian`` equivariant spaces have ``repC == repR.conjugate.dual``.
-% - ``trivial`` equivariant spaces have ``repC == repR.group.trivialRep(field, repR.dimension)``
+% - ``trivialRows`` equivariant spaces have ``repR == repC.group.trivialRep(field, repR.dimension)``
+% - ``trivialCols`` equivariant spaces have ``repC == repR.group.trivialRep(field, repC.dimension)``
 %
 % When ``repR`` is unitary, the ``commutant`` and ``hermitian`` cases are identical.
 
@@ -32,6 +33,45 @@ classdef Equivariant < replab.Domain
         cachedErrors_ % (struct of double(1,\*)): Error information
     end
 
+    methods (Access = protected) % Protected methods
+
+        function X1 = project_exact(self, X)
+        % Projects any ``nR x nC`` matrix in the equivariant subspace
+        %
+        % Implementation of `.project`
+        %
+        % Raises:
+        %   An error if `.isExact` is false.
+        %
+        % Args:
+        %   X (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix to project; if double, should be converted to `.cyclotomic`
+        %
+        % Returns
+        % -------
+        %   X1: `.cyclotomic`(\*,\*)
+        %     Projected matrix
+            error('Exact projection not implemented');
+        end
+
+        function [X1 err] = project_double_sparse(self, X)
+        % Projects any ``nR x nC`` matrix in the equivariant subspace
+        %
+        % Implementation of `.project`
+        %
+        % Args:
+        %   X (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix to project
+        %
+        % Returns
+        % -------
+        %   X1: double(\*,\*)
+        %     Projected matrix
+        %   err: double
+        %     Estimation of the numerical error, expressed as the distance of the returned ``X1`` to the invariant subspace in Frobenius norm
+            error('Abstract');
+        end
+
+    end
+
     methods % Projection
 
         function [X1 err] = project(self, X, type)
@@ -41,8 +81,14 @@ classdef Equivariant < replab.Domain
         %
         % `` X1 = int{g in G} dg rhoR.image(g) * X * rhoC.inverseImage(g) ``
         %
+        % Note that there are little benefits usually to use the ``'double/sparse'`` type compared to ``'double'``.
+        %
+        % Raises:
+        %   An error if ``type`` is ``'exact'`` and `.isExact` is false.
+        %
         % Args:
         %   X (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix to project
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns
         % -------
@@ -50,7 +96,36 @@ classdef Equivariant < replab.Domain
         %     Projected matrix
         %   err: double
         %     Estimation of the numerical error, expressed as the distance of the returned ``X1`` to the invariant subspace in Frobenius norm
-            error('Abstract');
+            if nargin < 3 || isempty(type)
+                type = 'double';
+            end
+            switch type
+              case 'double'
+                if nargout > 1
+                    [X1 err] = self.project_double_sparse(X);
+                else
+                    X1 = self.project_double_sparse(X);
+                end
+                X1 = full(X1);
+              case 'double/sparse'
+                if nargout > 1
+                    [X1 err] = self.project_double_sparse(X);
+                else
+                    X1 = self.project_double_sparse(X);
+                end
+              case 'exact'
+                X1 = self.project_exact(X);
+              otherwise
+                error('Type must be either double, double/sparse or exact');
+            end
+        end
+
+        function b = isExact(self)
+        % Returns whether this equivariant space can compute exact projection
+        %
+        % Returns:
+        %   logical: True if the call ``self.projection(X, 'exact')`` always succeeds
+            b = false;
         end
 
     end
@@ -78,24 +153,6 @@ classdef Equivariant < replab.Domain
             self.cachedErrors_ = struct;
         end
 
-        function [X err] = sampleWithError(self)
-        % Returns an approximate sample from this equivariant space along with estimated numerical error
-        %
-        % The samples are cached in a context.
-        %
-        % Args:
-        %   context (`+replab.Context`): Context in which samples are cached
-        %   i (double): 1-based index of the sample
-        %
-        % Returns
-        % -------
-        % X:
-        %   double(\*,\*): A sample from this equivariant space
-        % err:
-        %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
-        %           the invariant subspace in Frobenius norm
-            [X err] = self.project(self.domain.sample);
-        end
 % $$$
 % $$$         function clearCache(self, context)
 % $$$         % Clears the samples cached for the given context
@@ -184,8 +241,34 @@ classdef Equivariant < replab.Domain
             b = self.domain.eqv(X, Y);
         end
 
-        function X = sample(self)
-            X = self.sampleWithError;
+        function [X err] = sample(self, type)
+        % Returns an approximate sample from this equivariant space along with estimated numerical error
+        %
+        % Raises:
+        %   An error if ``type`` is ``'exact'`` and `.isExact` is false.
+        %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
+        % Returns
+        % -------
+        %   X: double(\*,\*)
+        %     A sample from this equivariant space
+        %   err: double
+        %     Estimation of the numerical error, expressed as the distance of the returned ``X`` to
+        %     the invariant subspace in Frobenius norm
+            if nargin < 2 || isempty(type)
+                type = 'double';
+            end
+            if strcmp(type, 'exact')
+                i = randi(self.nR);
+                j = randi(self.nC);
+                X = replab.cyclotomic.sparse(i, j, 1, self.nR, self.nC);
+                X = self.project(X, 'exact');
+                err = 0;
+            else
+                [X err] = self.project(self.domain.sample, type);
+            end
         end
 
     end
@@ -206,7 +289,9 @@ classdef Equivariant < replab.Domain
         %
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
-            if isa(repR.group, 'replab.FiniteGroup')
+            if isa(repR, 'replab.SimilarRep') || isa(repC, 'replab.SimilarRep')
+                E = replab.equi.Equivariant_forSimilarRep(repC, repR, special);
+            elseif isa(repR.group, 'replab.FiniteGroup')
                 E = replab.equi.Equivariant_forFiniteGroup(repC, repR, special);
             else
                 error('Unimplemented');

@@ -60,8 +60,7 @@ classdef SimilarRep < replab.Rep
             basisConditionNumberEstimate = args.basisConditionNumberEstimate;
             A_unitary = all(all(A_internal' == Ainv_internal));
             if A_unitary && parent.knownUnitary
-                [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'isUnitary', true);
-                assert(~exists || isempty(oldValue) || isequal(oldValue, true), 'This representation is actually unitary');
+                restArgs = replab.util.keyValuePairsUpdate(restArgs, 'knownUnitary', true);
             end
             if parent.inCache('trivialDimension')
                 [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'trivialDimension', parent.trivialDimension);
@@ -271,10 +270,12 @@ classdef SimilarRep < replab.Rep
         % Returns:
         %   `.SimilarRep`: Identical representation to ``rep``
             d = rep.dimension;
-            res = replab.SimilarRep(rep, speye(d), speye(d), 'isUnitary', rep.isUnitary);
             if rep.inCache('isDivisionAlgebraCanonical')
-                res.cache('isDivisionAlgebraCanonical', rep.isDivisionAlgebraCanonical, 'error');
+                args = {'isDivisionAlgebraCanonical', rep.isDivisionAlgebraCanonical};
+            else
+                args = {};
             end
+            res = replab.SimilarRep(rep, speye(d), speye(d), 'knownUnitary', rep.knownUnitary, args{:});
         end
 
     end

@@ -22,9 +22,9 @@ classdef DirectSumRep < replab.Rep
             d = sum(cellfun(@(f) f.dimension, factors));
             args = cell(1, 0);
             if all(factorsAllUnitary)
-                args = {'isUnitary' true};
+                args = {'isUnitary', true};
             elseif all(factorsAllNonUnitary)
-                args = {'isUnitary' false};
+                args = {'isUnitary', false};
             end
             self@replab.Rep(group, field, d, args{:});
             self.factors = factors;

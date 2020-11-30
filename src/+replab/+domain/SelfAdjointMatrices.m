@@ -1,12 +1,12 @@
 classdef SelfAdjointMatrices < replab.domain.VectorSpace
-% Describes the vector space of n x n symmetric/Hermitian matrices
+% Describes the vector space of ``n x n`` symmetric/Hermitian matrices
 
-    properties
-        n % integer: Matrix size
+    properties (SetAccess = protected)
+        n % (integer): Matrix size
     end
 
     properties (Access = protected)
-        parent;
+        parent % (`.Matrices`): General domain of ``n x n`` matrices
     end
 
     methods
