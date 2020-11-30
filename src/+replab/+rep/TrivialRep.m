@@ -8,7 +8,7 @@ classdef TrivialRep < replab.Rep
     methods
 
         function self = TrivialRep(group, field, dimension, isExactValue)
-            if nargin < 4
+            if nargin < 4 || isempty(isExactValue);
                 isExactValue = true;
             end
             assert(isa(group, 'replab.CompactGroup'));
@@ -18,6 +18,7 @@ classdef TrivialRep < replab.Rep
                 args = horzcat(args, {'isDivisionAlgebraCanonical' true});
             end
             self@replab.Rep(group, field, dimension, args{:});
+            self.isExactValue = isExactValue;
         end
 
     end
