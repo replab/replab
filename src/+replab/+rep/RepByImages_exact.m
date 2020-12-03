@@ -127,7 +127,7 @@ classdef RepByImages_exact < replab.RepByImages
             else
                 simRep = self.unitarize;
                 % worst case is given by the condition number of the change of basis
-                e = eps(1)*self.dimension*self.conditionNumber;
+                e = eps(1)*self.dimension*self.conditionNumberEstimate;
                 if self.overC
                     e = e*sqrt(2); % real and imaginary part
                 end

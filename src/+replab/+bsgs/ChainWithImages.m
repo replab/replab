@@ -413,7 +413,7 @@ classdef ChainWithImages < replab.Str
             maxErrors = zeros(1, k);
             for i = 1:k
                 Vi = self.V{i};
-                Vinv{i} = self.Vinv{i};
+                Vinvi = self.Vinv{i};
                 l = length(Vi);
                 newVi = cell(1, l);
                 newVinvi = cell(1, l);
@@ -427,19 +427,19 @@ classdef ChainWithImages < replab.Str
                         err = 0;
                     end
                     newVi{j} = replab.numerical.bestStorage(approx);
-                    maxError = max(maxError, err);
+                    maxError = max(maxError, norm(err, 'fro'));
                     if knownUnitary
                         newVinv{j} = newVi{j}';
                     else
-                        maxCondNum = max(maxCondNum, replab.numerical.condUpperBound(newVi{j}));
-                        if isa(newVi{j}, 'replab.cyclotomic')
-                            [approx, err] = newVi{j}.doubleApproximation;
+                        if isa(Vinvi{j}, 'replab.cyclotomic')
+                            [approx, err] = Vinvi{j}.doubleApproximation;
                         else
-                            approx = newVi{j};
+                            approx = Vinvi{j};
                             err = 0;
                         end
                         newVinvi{j} = replab.numerical.bestStorage(approx);
-                        maxError = max(maxError, err);
+                        maxCondNum = max(maxCondNum, replab.numerical.condUpperBound(newVi{j}, newVinvi{j}));
+                        maxError = max(maxError, norm(err, 'fro'));
                     end
                 end
                 maxCondNums(i) = maxCondNum;
@@ -447,7 +447,10 @@ classdef ChainWithImages < replab.Str
                 newV{i} = newVi;
                 newVinv{i} = newVinvi;
             end
-            errorBound = (prod(1 + maxErrors./maxCondNums) - 1)*prod(maxCondNums);
+            errorBound = 0;
+            for i = 1:k
+                errorBound = errorBound + maxErrors(i)*prod(maxCondNums(1:i-1))*prod(maxCondNums(i+1:end));
+            end
             res = replab.bsgs.ChainWithImages(self.n, self.J, self.B, self.S, newT, self.Sind, self.Delta, self.iDelta, ...
                                               self.U, self.Uinv, newV, newVinv);
             if ~self.isMutable

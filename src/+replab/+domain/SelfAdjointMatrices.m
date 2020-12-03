@@ -16,6 +16,7 @@ classdef SelfAdjointMatrices < replab.domain.VectorSpace
         function self = SelfAdjointMatrices(field, n)
             self.n = n;
             self.parent = replab.domain.Matrices(field, n, n);
+            self.field = field;
         end
 
         %% Str methods
@@ -35,6 +36,7 @@ classdef SelfAdjointMatrices < replab.domain.VectorSpace
         end
 
         function X = sample(self)
+            n = self.n;
             if self.overR
                 % Generates a symmetric matrix with measure invariant under orthogonal transformations,
                 % sampled from the Gaussian Orthogonal Ensemble, see
@@ -51,7 +53,6 @@ classdef SelfAdjointMatrices < replab.domain.VectorSpace
                 % Generates a Hermitian matrix with measure invariant under unitary transformations,
                 % sampled from the Gaussian Unitary Ensemble, see
                 % http://staff.math.su.se/shapiro/UIUC/random_matrices.pdf
-                n = self.n;
                 X = zeros(n, n);
                 for r = 1:n
                     X(r, r) = randn;

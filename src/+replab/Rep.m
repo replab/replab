@@ -503,15 +503,15 @@ classdef Rep < replab.Obj
         % Returns:
         %   `.Isotypic`: Subrepresentation as isotypic component
             P = speye(self.dimension);
-            [P1 E1] = self.trivialRowSpace.project(P, 'double/sparse');
-            [P2 E2] = self.trivialColSpace.project(P1, 'double/sparse');
+            [P1 E1] = self.trivialRowSpace.project(P, 'double');
+            [P2 E2] = self.trivialColSpace.project(P1, 'double');
             if E1 + E2 >= 1
                 error('Representation is not precise enough to compute the trivial dimension.');
             end
             d = round(trace(P2));
             [I, P, p] = replab.numerical.sRRQR_rank(P2, 1.5, d);
             if self.knownUnitary
-                sub = self.subRep(I, 'isUnitary', true);
+                sub = self.subRep(I, 'projection', I', 'isUnitary', true);
             else
                 P(:,p) = P; % apply permutation
                 P = (P*I)\P;
@@ -1166,49 +1166,29 @@ classdef Rep < replab.Obj
             res = self.cached('unitarize', @() self.computeUnitarize);
         end
 
-        function [sub1 sub2] = maschke(self, injection1, projection1)
-        % Given an injection into a subrepresentation, returns two complementary subrepresentations
+        function sub2 = maschke(self, sub1)
+        % Given a subrepresentation, returns the complementary subrepresentation
         %
         % Note that we optimize special cases when the representation and/or the injection is unitary
         %
         % Args:
-        %   injection (double(D,d) or `cyclotomic`(D,d), may be sparse): Basis / Injection map for the first subrepresentation
-        %   projection (double(D,d) or `cyclotomic`(D,d), may be sparse, optional): Projection map for the first subrepresentation
+        %   sub1 (`.SubRep`): Subrepresentation of this representation
         %
-        % Returns
-        % -------
-        %   sub1: `replab.SubRep`
-        %     First subrepresentation
-        %   sub2: `replab.SubRep`
-        %     Second subrepresentation
+        % Returns:
+        %   `.SubRep`: Complementary subrepresentation
             D = self.dimension;
-            assert(size(injection1, 1) == D);
-            d1 = size(injection1, 2);
+            d1 = sub1.dimension;
             d2 = D - d1;
-            if nargin > 2
-                assert(size(projection1, 1) == d1);
-                assert(size(projection1, 2) == self.dimension);
-                sub1 = self.subRep(injection1, 'projection', projection1);
-            else
-                sub1 = self.subRep(injection1);
-            end
-            projector1 = sub1.projector;
-            projector2 = speye(D) - projector1;
+            proj1 = sub1.projector;
+            proj2 = speye(D) - proj1;
+            [I, P, p] = replab.numerical.sRRQR_rank(proj2, 1.5, d2);
             if self.knownUnitary && sub1.knownUnitary
-                projector2 = (projector2 + projector2')/2;
-                [V, D] = replab.numerical.sortedEig(projector2, 'descend', true);
-                injection2 = V(:,1:d2);
-                projection2 = injection2';
+                sub2 = self.subRep(I, 'projection', I', 'isUnitary', true);
             else
-                [U,S,V] = svd(projector2);
-                % 1/sqrt(S) U' * X * V * 1/sqrt(S)
-                S = diag(S);
-                S = S(1:d2);
-                F = diag(1./sqrt(S));
-                projection2 = F * U(:,1:d2)';
-                injection2 = V(:,1:d2) * F;
+                P(:,p) = P;
+                P = (P*I)\P;
+                sub2 = self.subRep(I, 'projection', P);
             end
-            sub2 = self.subRep(injection2, 'projection', projection2);
         end
 
         function sub = subRep(self, injection, varargin)
@@ -1292,44 +1272,27 @@ classdef Rep < replab.Obj
             sub = replab.SubRep(self, injection, projection, restArgs{:});
         end
 
-% $$$
-% $$$         function irreps = splitIntoIrreducibles(self, context)
-% $$$         % Decomposes fully the given representation into subrepresentations
-% $$$         %
-% $$$         % Returns a list of irreducible representations, where trivial subrepresentations
-% $$$         % have been identified
-% $$$         %
-% $$$         % If this representation is irreducible, it will set its `~+replab.Rep.isIrreducible`.
-% $$$         %
-% $$$         % Args:
-% $$$         %   context (`+replab.Context`, optional): Sampling context to use
-% $$$         %
-% $$$         % Returns:
-% $$$         %   cell(1,\*) of `+replab.SubRep`: irreducible subrepresentations
-% $$$             if nargin < 2
-% $$$                 context = replab.Context.make;
-% $$$             end
-% $$$             d = self.dimension;
-% $$$             start = replab.SubRep.fullSubRep(self);
-% $$$             todo = {start};
-% $$$             irreps = cell(1, 0);
-% $$$             while ~isempty(todo)
-% $$$                 h = todo{1};
-% $$$                 if isequal(h.isIrreducible, true)
-% $$$                     % head of list is irreducible, remove it
-% $$$                     irreps{1,end+1} = h;
-% $$$                     todo = todo(2:end);
-% $$$                 else
-% $$$                     res = replab.irreducible.split(h, context);
-% $$$                     res1 = cellfun(@(sub) replab.rep.collapse(sub), res, 'uniform', 0);
-% $$$                     todo = horzcat(todo(2:end), res1);
-% $$$                 end
-% $$$             end
-% $$$             if nargin < 2
-% $$$                 context.close;
-% $$$             end
-% $$$         end
-% $$$
+        function irreps = splitIntoIrreducibles(self)
+        % Decomposes fully the given representation into subrepresentations
+        %
+        % Returns a list of irreducible representations, where trivial subrepresentations
+        % have been identified
+        %
+        % If this representation is irreducible, it will set its `~+replab.Rep.isIrreducible`.
+        %
+        % Returns:
+        %   cell(1,\*) of `+replab.SubRep`: Irreducible subrepresentations with their ``.parent`` set to this representation
+            trivial = self.trivialComponent('double');
+            if trivial.dimension == 0
+                rest = replab.SubRep.fullSubRep(self);
+            else
+                rest = self.maschke(trivial);
+            end
+            rest.cache('trivialDimension', 0);
+            restIrreps = replab.irreducible.splitUsingCommutant(self, rest);
+            irreps = horzcat(trivial.irreps, restIrreps);
+        end
+
         function rep1 = similarRep(self, A, varargin)
         % Returns a similar representation under a change of basis
         %
@@ -1386,7 +1349,7 @@ classdef Rep < replab.Obj
                 A = speye(self.dimension);
                 Ainv = speye(self.dimension);
             else
-                X = self.hermitianInvariant.project(speye(self.dimension), 'double/sparse');
+                X = self.hermitianInvariant.project(speye(self.dimension), 'double');
                 for i = 1:self.dimension
                     X(i,i) = real(X(i,i));
                 end

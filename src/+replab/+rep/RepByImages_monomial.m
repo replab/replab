@@ -44,10 +44,13 @@ classdef RepByImages_monomial < replab.RepByImages
                 type = 'double';
             end
             gp = self.morphism.imageElement(g);
-            if strcmp(type, 'exact')
+            switch type
+              case 'exact'
                 rho = self.morphism.target.toCyclotomicMatrix(gp);
-            else
+              case 'double'
                 rho = self.morphism.target.toMatrix(gp);
+              case 'double/sparse'
+                rho = self.morphism.target.toSparseMatrix(gp);
             end
         end
 

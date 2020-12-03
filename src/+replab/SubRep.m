@@ -61,6 +61,10 @@ classdef SubRep < replab.Rep
             if IP_unitary && parent.knownUnitary
                 restArgs = replab.util.keyValuePairsUpdate(restArgs, 'knownUnitary', true);
             end
+            if parent.inCache('trivialDimension') && parent.trivialDimension == 0
+                [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'trivialDimension', 0);
+                assert(~exists || oldValue == 0);
+            end
             self@replab.Rep(parent.group, parent.field, d, restArgs{:});
             if isa(injection_internal, 'replab.cyclotomic') && isa(projection_internal, 'replab.cyclotomic')
                 hasExactMaps = true;
@@ -328,6 +332,7 @@ classdef SubRep < replab.Rep
             sub1 = replab.SubRep(self.parent, I, P);
         end
 
+
     end
 
     methods (Access = protected)
@@ -517,7 +522,7 @@ classdef SubRep < replab.Rep
         % Returns:
         %   `+replab.SubRep`: Subrepresentation identical to ``parent``
             d = parent.dimension;
-            sub = parent.subRep(speye(d), speye(d));
+            sub = parent.subRep(speye(d), 'projection', speye(d));
             sub.copyProperties(parent);
         end
 

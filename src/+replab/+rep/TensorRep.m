@@ -209,8 +209,11 @@ classdef TensorRep < replab.Rep
             E = cellfun(@(rep) rep.errorBound, self.factors);
             C = cellfun(@(rep) rep.conditionNumberEstimate, self.factors);
             % we compute
-            % e = [(1 + e1/c1)(1 + e2/c2)...(1 + en/cn) - 1]*(c1 c2 ... cn)
-            e = (prod(1 + E./C) - 1)*prod(C);
+            % e = e1*c2*...*cn + c1*e2*...*cn + ...
+            e = 0;
+            for i = 1:self.nFactors
+                e = e + E(i)*prod(C(1:i-1))*prod(C(i+1:end));
+            end
         end
 
         function c = computeConditionNumberEstimate(self)
@@ -230,7 +233,7 @@ classdef TensorRep < replab.Rep
                 A = replab.numerical.kron(As, 'double/sparse');
                 Ainv = replab.numerical.kron(Ainvs, 'double/sparse');
             end
-            rep = replab.SimilarRep(self, A, AInv);
+            rep = replab.SimilarRep(self, A, Ainv);
         end
 
     end
