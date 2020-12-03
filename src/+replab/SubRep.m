@@ -263,75 +263,46 @@ classdef SubRep < replab.Rep
             mat = self.injection(type) * self.projection(type);
         end
 
-        function sub1 = refineUnitary(self)
-        %assert(self.isUnitary && self.parent.iUsnitary);
-            Q = self.injection('double');
-            fprintf('D Pi     DeltaQ   Delta\n');
-            for i = 1:10
-                Qprev = Q;
-                Ftilde = Q*Q';
-                [Foverline err] = self.parent.commutant.project(Ftilde);
-                D = Q - Foverline*Q;
-                D = D - Q*Q'*D;
-                D = orth(D);
-                rank(D)
-                Gtilde = D*D';
-                [Goverline err1] = self.parent.commutant.project(Gtilde);
-                D = Goverline * D;
-                D = orth(D);
-                rank(D)
-                Q = Q - D*D'*Q;
-                Q = Q/(Q'*Q);
-                fprintf('%6.2E %6.2E %6.2E\n', norm(Foverline-Ftilde, 'fro'), norm(Qprev-Q, 'fro'), norm(D, 'fro'));
-            end
-            sub1 = replab.SubRep(self.parent, Q, Q');
-        end
-
-        function sub1 = refine(self, k)
-            if nargin < 2
-                k = 0;
-            end
-            Ptilde = self.projection('double');
-            Itilde = self.injection('double');
-            P = Ptilde;
-            I = Itilde;
-            fprintf('D Pi     DeltaP   DeltaI   P DeltaI\n');
-            for i = 1:30
-                Ftilde = I*P;
-                if k == 0
-                    [Foverline err] = self.parent.commutant.project(Ftilde);
+        function sub1 = refine(self, varargin)
+        % Refines this subrepresentation
+        %
+        % Assumes that the subrepresentation is already close to an exact subrepresentation, and refines its subspace
+        % by an iterative procedure applied on its `.injection` and `.projection` maps.
+        %
+        % Keyword Args:
+        %   largeScale (logical or ``[]``, optional): Whether to use the large-scale version of the algorithm, default ``[]`` (automatic selection)
+        %   numNonImproving (integer, optional): Number of non-improving steps before stopping the large-scale algorithm, default ``3``
+        %   nSamples (integer, optional): Number of samples to use in the large-scale version of the algorithm, default ``3``
+        %   nInnerIterations (integer, optional): Number of inner iterations in the medium-scale version of the algorithm, default ``10``
+        %   maxIterations (integer, optional): Maximum number of (outer) iterations, default ``1000``
+        %
+        % Returns
+        % -------
+        %   sub1: `.SubRep`
+        %     Subrepresentation with refined subspace (injection/projection maps)
+            args = struct('numNonImproving', 5, 'largeScale', self.parent.dimension > 1000, 'nSamples', 3, 'nInnerIterations', 10, 'maxIterations', 1000);
+            args = replab.util.populateStruct(args, varargin);
+            I = self.injection;
+            P = self.projection;
+            if self.parent.knownUnitary
+                if ~all(all(self.injection == self.projection'))
+                    [I, ~] = qr(I, 0);
+                end
+                if args.largeScale
+                    I1 = replab.rep.refine_unitaryLargeScale(self.parent, I, args.numNonImproving, args.nSamples, args.maxIterations);
                 else
-                    F = Ftilde;
-                    for j1 = 1:k
-                        F1 = zeros(size(F));
-                        ns = 10;
-                        for j2 = 1:ns
-                            g = self.group.sample;
-                            F1 = F1 + self.parent.image(g) * F * self.parent.inverseImage(g);
-                        end
-                        F = F1/ns;
-                    end
-                    Foverline = F;
+                    I1 = replab.rep.refine_unitaryMediumScale(self.parent, I, args.nInnerIterations, args.maxIterations);
                 end
-                for j = 1:3
-                    Pprev = P;
-                    Iprev = I;
-                    Iprime = Foverline / P;
-                    Pprime = I \ Foverline;
-                    Inext = Iprime / (Ptilde * Iprime);
-                    Pnext = (Pprime * Inext) \ Pprime;
-                    if j == 1
-                        fprintf('%6.2E %6.2E %6.2E %6.2E\n', norm(Foverline-Ftilde, 'fro'), norm(Pprev-Pnext, 'fro'), norm(Iprev-Inext, 'fro'), norm(Pnext*(Iprev-Inext), 'fro'));
-                    else
-                        fprintf('         %6.2E %6.2E %6.2E\n', norm(Pprev-Pnext, 'fro'), norm(Iprev-Inext, 'fro'), norm(Pnext*(Iprev-Inext), 'fro'));
-                    end
-                    I = Inext;
-                    P = Pnext;
+                sub1 = self.parent.subRep(I1, 'projection', I1', 'isUnitary', true);
+            else
+                if args.largeScale
+                    [I1, P1] = replab.rep.refine_nonUnitaryLargeScale(self.parent, I, P, args.numNonImproving, args.nSamples, args.maxIterations);
+                else
+                    [I1, P1] = replab.rep.refine_nonUnitaryMediumScale(self.parent, I, P, args.nInnerIterations, args.maxIterations);
                 end
+                sub1 = self.parent.subRep(I1, 'projection', P1);
             end
-            sub1 = replab.SubRep(self.parent, I, P);
         end
-
 
     end
 
@@ -348,7 +319,7 @@ classdef SubRep < replab.Rep
         function e = computeProjectorErrorBound(self)
             PiA = self.projector('double/sparse');
             [S DS] = self.parent.commutant.project(PiA);
-            e = norm(S - PiA, 'fro') + DS;
+            e = norm(S - PiA, 'fro'); % + DS;
         end
 
     end

@@ -153,54 +153,54 @@ classdef Equivariant < replab.Domain
             self.cachedErrors_ = struct;
         end
 
-% $$$
-% $$$         function clearCache(self, context)
-% $$$         % Clears the samples cached for the given context
-% $$$         %
-% $$$         % Args:
-% $$$         %   context (`+replab.Context`): Context to clear
-% $$$             self.cachedSamples_ = rmfield(self.cachedSamples_, context.id);
-% $$$             self.cachedErrors_ = rmfield(self.cachedErrors_, context.id);
-% $$$         end
-% $$$
-% $$$         function [X err] = sampleInContext(self, context, ind)
-% $$$         % Returns an approximate sample from this equivariant space along with estimated numerical error
-% $$$         %
-% $$$         % The samples are cached in a context.
-% $$$         %
-% $$$         % Args:
-% $$$         %   context (`+replab.Context`): Context in which samples are cached
-% $$$         %   ind (double): 1-based index of the sample
-% $$$         %
-% $$$         % Returns
-% $$$         % -------
-% $$$         % X:
-% $$$         %   double(\*,\*): A sample from this equivariant space
-% $$$         % err:
-% $$$         %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
-% $$$         %           the invariant subspace in Frobenius norm
-% $$$             assert(~context.closed);
-% $$$             id = context.id;
-% $$$             if ~isfield(self.cachedSamples_, id)
-% $$$                 context.register(self);
-% $$$                 self.cachedSamples_.(id) = cell(1, 0);
-% $$$                 self.cachedErrors_.(id) = zeros(1, 0);
-% $$$             end
-% $$$             n = length(self.cachedSamples_.(id));
-% $$$             samples = self.cachedSamples_.(id);
-% $$$             errors = self.cachedErrors_.(id);
-% $$$             if ind > n
-% $$$                 for i = n+1:ind
-% $$$                     [X err] = self.sampleWithError;
-% $$$                     samples{1, i} = X;
-% $$$                     errors{1, i} = err;
-% $$$                 end
-% $$$                 self.cachedSamples_.(id) = samples;
-% $$$                 self.cachedErrors_.(id) = errors;
-% $$$             end
-% $$$             X = samples{ind};
-% $$$             err = errors(ind);
-% $$$         end
+
+        function clearCache(self, context)
+        % Clears the samples cached for the given context
+        %
+        % Args:
+        %   context (`+replab.Context`): Context to clear
+            self.cachedSamples_ = rmfield(self.cachedSamples_, context.id);
+            self.cachedErrors_ = rmfield(self.cachedErrors_, context.id);
+        end
+
+        function [X err] = sampleInContext(self, context, ind)
+        % Returns an approximate sample from this equivariant space along with estimated numerical error
+        %
+        % The samples are cached in a context.
+        %
+        % Args:
+        %   context (`+replab.Context`): Context in which samples are cached
+        %   ind (double): 1-based index of the sample
+        %
+        % Returns
+        % -------
+        % X:
+        %   double(\*,\*): A sample from this equivariant space
+        % err:
+        %   double: Estimation of the numerical error, expressed as the distance of the returned ``X`` to
+        %           the invariant subspace in Frobenius norm
+            assert(~context.closed);
+            id = context.id;
+            if ~isfield(self.cachedSamples_, id)
+                context.register(self);
+                self.cachedSamples_.(id) = cell(1, 0);
+                self.cachedErrors_.(id) = zeros(1, 0);
+            end
+            n = length(self.cachedSamples_.(id));
+            samples = self.cachedSamples_.(id);
+            errors = self.cachedErrors_.(id);
+            if ind > n
+                for i = n+1:ind
+                    [X err] = self.sampleWithError;
+                    samples{1, i} = X;
+                    errors{1, i} = err;
+                end
+                self.cachedSamples_.(id) = samples;
+                self.cachedErrors_.(id) = errors;
+            end
+            X = samples{ind};
+            err = errors(ind);
+        end
 
     end
 
