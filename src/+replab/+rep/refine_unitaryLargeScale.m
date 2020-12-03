@@ -40,6 +40,7 @@ function Q = refine_unitaryLargeScale(rep, Q, numNonImproving, nSamples, maxIter
             replab.log(2, '%6d   %6.2E %6.2E', iter, dSpan, ortho);
         end
         Q = Q1;
+        iter = iter + 1;
     end
     replab.log(1, 'Stopped after %d iterations with span delta %6.2E', iter, dSpan);
 end

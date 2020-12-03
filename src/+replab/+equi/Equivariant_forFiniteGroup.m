@@ -42,12 +42,15 @@ classdef Equivariant_forFiniteGroup < replab.Equivariant
                 nEls = length(els);
                 for j = 2:nEls
                     g = els{j};
-                    gX = self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X, 'double/sparse'), 'double/sparse');
+                    gX = self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X, 'double'), 'double');
                     S = S + gX;
                 end
                 X = S/nEls;
                 if nargout > 1
-                    eX = nEls*(eR*cC*sX + cR*eC*sX + cR*cC*eX);
+                    eX = nEls*(eR*cC*sX + cR*eC*sX + eX*cR*cC);
+                    if eR == 0 && eC == 0
+                        eX = eX + norm(eps(X), 'fro');
+                    end
                 end
             end
         end

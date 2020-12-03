@@ -271,8 +271,8 @@ classdef SubRep < replab.Rep
         %
         % Keyword Args:
         %   largeScale (logical or ``[]``, optional): Whether to use the large-scale version of the algorithm, default ``[]`` (automatic selection)
-        %   numNonImproving (integer, optional): Number of non-improving steps before stopping the large-scale algorithm, default ``3``
-        %   nSamples (integer, optional): Number of samples to use in the large-scale version of the algorithm, default ``3``
+        %   numNonImproving (integer, optional): Number of non-improving steps before stopping the large-scale algorithm, default ``20``
+        %   nSamples (integer, optional): Number of samples to use in the large-scale version of the algorithm, default ``5``
         %   nInnerIterations (integer, optional): Number of inner iterations in the medium-scale version of the algorithm, default ``10``
         %   maxIterations (integer, optional): Maximum number of (outer) iterations, default ``1000``
         %
@@ -280,7 +280,7 @@ classdef SubRep < replab.Rep
         % -------
         %   sub1: `.SubRep`
         %     Subrepresentation with refined subspace (injection/projection maps)
-            args = struct('numNonImproving', 5, 'largeScale', self.parent.dimension > 1000, 'nSamples', 3, 'nInnerIterations', 10, 'maxIterations', 1000);
+            args = struct('numNonImproving', 20, 'largeScale', self.parent.dimension > 1000, 'nSamples', 5, 'nInnerIterations', 10, 'maxIterations', 1000);
             args = replab.util.populateStruct(args, varargin);
             I = self.injection;
             P = self.projection;
