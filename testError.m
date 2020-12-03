@@ -1,6 +1,6 @@
 replab.globals.verbosity(2); % try 1 or 2
 n = 5;
-G = replab.S(5);
+G = replab.S(n);
 % get the natural representation
 nat = G.naturalRep;
 triv = nat.subRep(ones(n, 1));
