@@ -484,7 +484,7 @@ classdef Rep < replab.Obj
         end
 
         function b = computeIsIrreducible(self)
-            error('TODO');
+            b = replab.irreducible.identifyIrreps(self, {replab.SubRep.fullSubRep(self)});
         end
 
         function iso = computeTrivialComponent_exact(self)
@@ -1291,7 +1291,7 @@ classdef Rep < replab.Obj
             sub = replab.SubRep(self, injection, projection, restArgs{:});
         end
 
-        function irreps = splitIntoIrreducibles(self)
+        function irreps = split(self)
         % Decomposes fully the given representation into subrepresentations
         %
         % Returns a list of irreducible representations, where trivial subrepresentations
@@ -1300,16 +1300,17 @@ classdef Rep < replab.Obj
         % If this representation is irreducible, it will set its `~+replab.Rep.isIrreducible`.
         %
         % Returns:
-        %   cell(1,\*) of `+replab.SubRep`: Irreducible subrepresentations with their ``.parent`` set to this representation
+        %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to this representation
             trivial = self.trivialComponent('double');
             if trivial.dimension == 0
-                rest = replab.SubRep.fullSubRep(self);
+                irreps = cell(1, 0);
+                nontrivial = replab.SubRep.fullSubRep(self);
             else
-                rest = self.maschke(trivial);
+                nontrivial = self.maschke(trivial);
+                irreps = trivial.irreps;
             end
-            rest.cache('trivialDimension', 0);
-            restIrreps = replab.irreducible.splitUsingCommutant(self, rest);
-            irreps = horzcat(trivial.irreps, restIrreps);
+            nontrivial.cache('trivialDimension', 0);
+            irreps = horzcat(irreps, nontrivial.splitInParent);
         end
 
         function rep1 = similarRep(self, A, varargin)

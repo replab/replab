@@ -94,7 +94,7 @@ classdef SubRep < replab.Rep
 
         function res = rewriteTerm_SubRepOfSubRep(self, options)
             if isa(self.parent, 'replab.SubRep')
-                if self.isIntegerValued || self.parent.isIntegerValued || ...
+                if self.mapsAreIntegerValued || self.parent.mapsAreIntegerValued || ...
                         (options.dense && (options.approximate || (self.hasExactMaps && self.parent.hasExactMaps)))
                     newI = self.parent.injection_internal * self.injection_internal;
                     newP = self.projection_internal & self.parent.projection_internal;
@@ -107,7 +107,7 @@ classdef SubRep < replab.Rep
 
         function res = rewriteTerm_SubRepOfSimilarRep(self, options)
             if isa(self.parent, 'replab.SimilarRep')
-                if self.isIntegerValued || self.parent.isIntegerValued || ...
+                if self.mapsAreIntegerValued || self.parent.basisIsIntegerValued || ...
                         (options.dense && (options.approximate || (self.hasExactMaps && self.parent.hasExactBasis)))
                     newI = self.parent.Ainv_internal * self.injection_internal;
                     newP = self.projection_internal * self.parent.A_internal;
@@ -168,7 +168,7 @@ classdef SubRep < replab.Rep
             end
         end
 
-        function b = isIntegerValued(self)
+        function b = mapsAreIntegerValued(self)
         % Returns whether both the injection map and the projection map are expressed with Gaussian integer coefficients
         %
         % Returns:
@@ -263,6 +263,24 @@ classdef SubRep < replab.Rep
             mat = self.injection(type) * self.projection(type);
         end
 
+        function irreps = splitInParent(self)
+        % Decomposes fully this subrepresentation into irreducible subrepresentations of its parent
+        %
+        % Returns:
+        %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to the `.parent` of this subrepresentation
+            todo = {self};
+            irreps = cell(1, 0);
+            while ~isempty(todo)
+                subs = cell(1, 0);
+                for i = 1:length(todo)
+                    subs = horzcat(subs, replab.irreducible.coarseSplitUsingCommutant(self.parent, todo{i}));
+                end
+                isIrrep = replab.irreducible.identifyIrreps(self.parent, subs);
+                irreps = horzcat(irreps, subs(isIrrep));
+                todo = subs(~isIrrep);
+            end
+        end
+
         function sub1 = refine(self, varargin)
         % Refines this subrepresentation
         %
@@ -350,6 +368,10 @@ classdef SubRep < replab.Rep
         function rho = image_exact(self, g)
             assert(self.isExact);
             rho = self.projection_internal * self.parent.image(g, 'exact') * self.injection_internal;
+        end
+
+        function b = computeIsIrreducible(self)
+            b = replab.irreducible.identifyIrreps(self.parent, {self});
         end
 
         function c = computeConditionNumberEstimate(self)

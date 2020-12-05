@@ -108,7 +108,7 @@ classdef SimilarRep < replab.Rep
     methods % Simplification rules
 
         function res = rewriteTerm_isIdentity(self, options)
-            if self.isIntegerValued && all(all(self.A_internal == speye(self.dimension)))
+            if self.basisIsIntegerValued && all(all(self.A_internal == speye(self.dimension)))
                 res = self.parent;
             else
                 res = [];
@@ -117,7 +117,7 @@ classdef SimilarRep < replab.Rep
 
         function res = rewriteTerm_permutationSimilarRepOfSubRep(self, options)
             if isa(self.parent, 'replab.SubRep')
-                if self.isIntegerValued || self.parent.isIntegerValued || ...
+                if self.basisIsIntegerValued || self.parent.mapsAreIntegerValued || ...
                         (options.dense && (options.approximate || (self.hasExactBasis && self.parent.hasExactMaps)))
                     newProjection = self.A_internal * self.parent.projection_internal;
                     newInjection = self.parent.injection_internal * self.Ainv_internal;
@@ -130,7 +130,7 @@ classdef SimilarRep < replab.Rep
 
         function res = rewriteTerm_permutationSimilarRepOfSimilarRep(self, options)
             if isa(self.parent, 'replab.SimilarRep')
-                if self.isIntegerValued || self.parent.isIntegerValued || ...
+                if self.basisIsIntegerValued || self.parent.basisIsIntegerValued || ...
                         (options.dense && (options.approximate || (self.hasExactBasis && self.parent.hasExactBasis)))
                     newA = self.A_internal * self.parent.A_internal;
                     newAinv = self.parent.Ainv_internal * self.Ainv_internal;
@@ -145,7 +145,7 @@ classdef SimilarRep < replab.Rep
 
     methods
 
-        function b = isIntegerValued(self)
+        function b = basisIsIntegerValued(self)
         % Returns whether this similarity transformation has Gaussian integer change of basis matrices
         %
         % Returns:
@@ -229,6 +229,10 @@ classdef SimilarRep < replab.Rep
         function rho = image_exact(self, g)
             assert(self.isExact);
             rho = self.A_internal * self.parent.image(g, 'exact') * self.Ainv_internal;
+        end
+
+        function b = computeIsIrreducible(self)
+            b = self.parent.isIrreducible;
         end
 
         function e = computeErrorBound(self)
