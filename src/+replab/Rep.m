@@ -493,13 +493,19 @@ classdef Rep < replab.Obj
         % Returns:
         %   `.Isotypic`: Subrepresentation as isotypic component
             assert(self.isExact);
+            replab.log(1, '*** Computing trivial component (exact) of representation of dim = %d', self.dimension);
             P = replab.cyclotomic.eye(self.dimension);
+            t = cputime;
             P1 = self.trivialRowSpace.project(P, 'exact');
             P2 = self.trivialColSpace.project(P1, 'exact');
+            replab.log(2, 'Time (trivial subspace projection): %2.2f s', cputime - t);
             d = trace(P2);
             assert(d.isWhole);
             d = double(d);
+            replab.log(2, 'Starting exact LU decomposition');
+            t = cputime;
             [L, U, p] = lu(P2);
+            replab.log(2, 'Time (LU decomposition): %2.2f s', cputime - t);
             zeroRows = find(arrayfun(@(i) all(U(i,:) == 0), 1:size(U, 1)));
             q = [setdiff(1:size(U, 1), zeroRows) zeroRows];
             U = U(q,:);
@@ -521,14 +527,20 @@ classdef Rep < replab.Obj
         %
         % Returns:
         %   `.Isotypic`: Subrepresentation as isotypic component
+            replab.log(1, '*** Computing trivial component (double) of representation of dim = %d', self.dimension);
             P = speye(self.dimension);
+            t = cputime;
             [P1 E1] = self.trivialRowSpace.project(P, 'double');
             [P2 E2] = self.trivialColSpace.project(P1, 'double');
+            replab.log(2, 'Time (trivial subspace projection): %2.2f s', cputime - t);
             if E1 + E2 >= 1
                 error('Representation is not precise enough to compute the trivial dimension.');
             end
             d = round(trace(P2));
+            replab.log(2, 'Starting rank revealing QR decomposition');
+            t = cputime;
             [I, P, p] = replab.numerical.sRRQR_rank(P2, 1.5, d);
+            replab.log(2, 'Time (RRQR decomposition): %2.2f s', cputime - t);
             if self.knownUnitary
                 sub = self.subRep(I, 'projection', I', 'isUnitary', true);
             else
