@@ -1,5 +1,5 @@
 function Q = QuaternionGroup
-% Returns the quaternion group as a signed permutation groupq
+% Returns the quaternion group as a signed permutation group
 %
 % The quaternion group acts on the ``{1, j, k, l}`` basis elements.
 %
