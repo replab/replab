@@ -1258,33 +1258,43 @@ classdef Rep < replab.Obj
         %   mapErrorBound (double, optional): Upper bound as described above
         %   mapConditionNumberEstimate (double, optional): Upper bound on the condition number of both $P$ and $I$
         %   isUnitary (logical, optional): Whether the resulting representation is unitary, may be omitted
+        %   largeScale (logical or ``[]``, optional): Whether to use the large-scale version of the algorithm, default ``[]`` (automatic selection)
+        %   numNonImproving (integer, optional): Number of non-improving steps before stopping the large-scale algorithm, default ``20``
+        %   nSamples (integer, optional): Number of samples to use in the large-scale version of the algorithm, default ``5``
+        %   maxIterations (integer, optional): Maximum number of iterations, default ``1000``
         %
         % Returns:
         %   `+replab.SubRep`: Subrepresentation
-            args = struct('projection', []);
+            args = struct('projection', [], 'largeScale', self.dimension > 1000, 'numNonImproving', 20, 'nSamples', 5, 'maxIterations', 1000);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             projection = args.projection;
             isExact = isa(injection, 'replab.cyclotomic') && (isempty(projection) || isa(projection, 'replab.cyclotomic'));
             if isempty(projection)
-                if self.knownUnitary
-                    if isExact
+                if isExact
+                    if self.knownUnitary
                         % slower because cyclotomic doesn't implement \ or /
                         projection = inv(injection'*injection)*injection';
                     else
-                        projection = (injection'*injection)\injection';
-                    end
-                else
-                    % this is a projector on the subspace W
-                    % as I*  (inv(I'*I)*I'*I) *inv(I'*I)*I' = I*inv(I'*I)*I'
-                    P1 = injection*inv(injection'*injection)*injection';
-                    P2 = self.commutant.project(P1);
-                    % A\B gives X which is the solution A*X=B
-                    % P1 = injection * projection
-                    if isExact
+                        % this is a projector on the subspace W
+                        % as I*  (inv(I'*I)*I'*I) *inv(I'*I)*I' = I*inv(I'*I)*I'
+                        P1 = injection*inv(injection'*injection)*injection';
+                        P2 = self.commutant.project(P1);
+                        % A\B gives X which is the solution A*X=B
+                        % P1 = injection * projection
                         % slower because cyclotomic doesn't implement \ or /
-                        projection = inv(injection'*injection)*injection'*P1;
+                        projection = inv(injection'*injection)*injection'*P2;
+                    end
+                else % non exact
+                    if self.knownUnitary
+                        projection = (injection'*injection)\injection';
                     else
-                        projection = injection \ P1;
+                        if args.largeScale
+                            projection = replab.rep.findProjection_largeScale(self, injection, args.numNonImproving, args.nSamples, args.maxIterations);
+                        else
+                            P1 = injection*inv(injection'*injection)*injection';
+                            P2 = self.commutant.project(P1);
+                            projection = injection \ P2;
+                        end
                     end
                 end
             end
