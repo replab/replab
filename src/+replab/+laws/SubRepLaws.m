@@ -32,7 +32,7 @@ classdef SubRepLaws < replab.laws.RepLaws
             if self.rep.isExact
                 rep = self.rep.parent.image(g, 'exact');
                 sub1 = self.rep.image(g, 'exact');
-                sub2 = self.rep.projection('exact') * self.parent.image(g, 'exact') * self.rep.injection('exact');
+                sub2 = self.rep.projection('exact') * self.rep.parent.image(g, 'exact') * self.rep.injection('exact');
                 self.assert(all(all(sub1 == sub2)));
             end
         end
