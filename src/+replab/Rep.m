@@ -435,10 +435,10 @@ classdef Rep < replab.Obj
                 n = length(C);
                 g2 = cellfun(@(c) self.group.composeN(c.representative, 2), C, 'uniform', 0);
                 factor = cellfun(@(c) self.group.order/c.nElements, C, 'uniform', 0);
-                if self.canComputeType('cyclotomic')
+                if self.isExact
                     f = replab.cyclotomic.zeros(1, 1);
                     for i = 1:n
-                        f = f + trace(self.image(g2{i}, 'cyclotomic'))/replab.cyclotomic.fromVPIs(factor{i});
+                        f = f + trace(self.image(g2{i}, 'exact'))/replab.cyclotomic.fromVPIs(factor{i});
                     end
                     f = double(f);
                     assert(isreal(f) && round(f) == f);
@@ -449,7 +449,7 @@ classdef Rep < replab.Obj
                     end
                     f = 0;
                     for i = 1:n
-                        f = f + trace(self.image(g2{i}, 'double'))/double(factor{i});
+                        f = f + trace(self.image(g2{i}, 'double/sparse'))/double(factor{i});
                     end
                     f = round(f);
                 end
