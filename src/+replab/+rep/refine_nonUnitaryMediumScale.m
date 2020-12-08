@@ -1,10 +1,10 @@
 function [I, P] = refine_nonUnitaryMediumScale(rep, I0, P0, innerIterations, maxIterations)
-% Refines an orthogonal basis for subrepresentation of a unitary representation
+% Refines an injection/projection pair for subrepresentation of a possibly non-unitary representation
 %
 % Args:
 %   rep (`+replab.Rep`): Parent representation
-%   Itilde (double(\*,\*)): Injection map matrix
-%   Ptilde (double(\*,\*)): Projection map matrix
+%   I0 (double(\*,\*)): Injection map matrix
+%   P0 (double(\*,\*)): Projection map matrix
 %   nInnerIterations (integer): See `+replab.SubRep.refine`
 %   maxIterations (integer): See `+replab.SubRep.refine`
 %
