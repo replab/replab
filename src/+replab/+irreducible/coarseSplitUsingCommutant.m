@@ -13,6 +13,7 @@ function subs = coarseSplitUsingCommutant(rep, sub, safetyFactor)
     if nargin < 3 || isempty(safetyFactor)
         safetyFactor = 100;
     end
+    replab.log(1, '*** Split subspace using commutant sample: dim(parent) = %d, dim(subspace) = %d', rep.dimension, sub.dimension);
     d0 = rep.dimension;
     d1 = sub.dimension;
     % If the parent representation is unitary, then use a unitary variant, and make the injection map
@@ -23,6 +24,7 @@ function subs = coarseSplitUsingCommutant(rep, sub, safetyFactor)
         if sub.knownUnitary
             P = I';
         else
+            replab.log(2, 'Subrepresentation is not unitary, but parent representation is: making subrepresentation unitary');
             [I, ~] = qr(I, 0); % find orthogonal basis of the range of I
             P = I';
         end
@@ -31,10 +33,27 @@ function subs = coarseSplitUsingCommutant(rep, sub, safetyFactor)
         P = sub.projection;
     end
     % Get a sample from the parent representation commutant
-    [X, projErr] = replab.irreducible.sampleCommutantRealEV(rep);
+
+    % sample from the subrepresentation space
+    dom = replab.domain.Matrices(sub.field, sub.dimension, sub.dimension);
+    X = I * dom.sample * P;
+    if ~rep.knownUnitary
+        % make eigenvalues real in the basis where such matrices are self-adjoint
+        U = rep.unitarize;
+        X = U.A * X * U.Ainv;
+        X = (X + X')/2;
+        X = U.Ainv * X * U.A;
+    else
+        X = (X + X')/2;
+    end
+    t = cputime;
+    [X, projErr] = rep.commutant.project(X);
+    replab.log(2, 'Time (commutant projection): %2.2f s', cputime - t);
+    replab.log(2, 'Error upper bound on the projection (Frob. norm): %e', projErr);
     % Sample in the subrepresentation
     A = P * X * I;
     % Find the eigendecomposition, special path for unitary parent rep.
+    t = cputime;
     if unitary
         A = (A + A')/2;
         [V, D] = eig(A, 'vector');
@@ -44,6 +63,7 @@ function subs = coarseSplitUsingCommutant(rep, sub, safetyFactor)
         D = full(diag(D));
         W = W';
     end
+    replab.log(2, 'Time (eigendecomposition): %2.2f s', cputime - t);
     % Sort eigenvalues
     D = D(:)';
     [~, I] = sort(D, 'ascend');
@@ -56,10 +76,13 @@ function subs = coarseSplitUsingCommutant(rep, sub, safetyFactor)
     evError = zeros(1, d1); % Error estimates
     for i = 1:d1
         evError(i) = max(norm(S(i,:)), norm(R(:,i)))/abs(W(i,:)*V(:,i));
+        evError(i) = max(evError(i), eps(D(i)));
     end
+    replab.log(2, 'Estimated error on eigenvalues: min %e mean %e max %e', min(evError), mean(evError), max(evError));
     % Identify clusters of eigenvalues
     start = 1;
     blocks = cell(1, 0);
+    blockError = zeros(1, 0);
     while start <= d1
         next = start + 1;
         maxEVE = evError(start);
@@ -75,9 +98,13 @@ function subs = coarseSplitUsingCommutant(rep, sub, safetyFactor)
             start = lastBlock(1);
             blocks = blocks(1:end-1);
         end
-        blocks{1,end+1} = start:(next-1);
+        block = start:(next-1);
+        blocks{1,end+1} = block;
+        blockError(1,end+1) = max(D(block)) - min(D(block));
         start = next;
     end
+    replab.log(1, 'Identified %d invariant subspaces', length(blocks));
+    replab.log(2, 'Eigenvalue spread in clusters: min %e mean %e max %e', min(blockError), mean(blockError), max(blockError));
     % Create subrepresentations
     subs = cell(1, length(blocks));
     for i = 1:length(blocks)
