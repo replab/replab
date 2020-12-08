@@ -175,7 +175,7 @@ classdef SubRep < replab.Rep
         %   logical: True if both `.injection` and `.projection` have Gaussian integer entries
             I = self.injection_internal;
             P = self.projection_internal;
-            b = self.hasExactMaps && all(all(I == round(I))) && all(all(P == round(P)));
+            b = self.hasExactMaps && all(all(I == round(double(I)))) && all(all(P == round(double(P))));
         end
 
         function e = projectorErrorBound(self)
