@@ -152,7 +152,7 @@ classdef SimilarRep < replab.Rep
         %   logical: True if both `.A` and `.Ainv` have Gaussian integer entries
             A = self.A_internal;
             Ainv = self.Ainv_internal;
-            b = self.hasExactBasis && all(all(A == round(A))) && all(all(Ainv == round(Ainv)));
+            b = self.hasExactBasis && all(all(A == round(double(A)))) && all(all(Ainv == round(double(Ainv))));
         end
 
         function mat = A(self, type)
