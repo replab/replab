@@ -1,15 +1,14 @@
-classdef WreathProductOfFiniteGroups < replab.WreathProductGroup & replab.prods.SemidirectProductOfFiniteGroups
+classdef WreathProductGroup_finite < replab.WreathProductGroup & replab.prods.SemidirectProductGroup_finite
 % Wreath product of a permutation group acting on a finite group
 
     methods
 
-        function self = WreathProductOfFiniteGroups(H, A)
+        function self = WreathProductGroup_finite(H, A)
             assert(isa(H, 'replab.PermutationGroup'));
             n = H.domainSize;
             base = A.directPower(n);
             phi = replab.perm.PermutationCellAction(H, base);
-            self@replab.WreathProductGroup(phi);
-            self@replab.prods.SemidirectProductOfFiniteGroups(phi);
+            self@replab.prods.SemidirectProductGroup_finite(phi);
             self.n = n;
             self.A = A;
         end
@@ -21,23 +20,23 @@ classdef WreathProductOfFiniteGroups < replab.WreathProductGroup & replab.prods.
         % Domain
 
         function g = sample(self)
-            g = sample@replab.prods.SemidirectProductOfFiniteGroups(self); % force method selection
+            g = sample@replab.prods.SemidirectProductGroup_finite(self); % force method selection
         end
 
         function b = eqv(self, x, y)
-            b = eqv@replab.prods.SemidirectProductOfFiniteGroups(self, x, y);
+            b = eqv@replab.prods.SemidirectProductGroup_finite(self, x, y);
         end
 
         % Monoid
 
         function z = compose(self, x, y)
-            z = compose@replab.prods.SemidirectProductOfFiniteGroups(self, x, y);
+            z = compose@replab.prods.SemidirectProductGroup_finite(self, x, y);
         end
 
         % Group
 
         function xInv = inverse(self, x)
-            xInv = inverse@replab.prods.SemidirectProductOfFiniteGroups(self, x);
+            xInv = inverse@replab.prods.SemidirectProductGroup_finite(self, x);
         end
 
         % NiceFiniteGroup

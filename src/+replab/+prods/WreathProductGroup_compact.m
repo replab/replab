@@ -1,4 +1,4 @@
-classdef WreathProductOfCompactGroups < replab.WreathProductGroup & replab.prods.SemidirectProductOfCompactGroups
+classdef WreathProductGroup_compact < replab.WreathProductGroup & replab.prods.SemidirectProductGroup_compact
 % Wreath product of a permutation group acting on a compact group
 
     methods
@@ -8,8 +8,7 @@ classdef WreathProductOfCompactGroups < replab.WreathProductGroup & replab.prods
             n = H.domainSize;
             base = A.directPower(n);
             phi = replab.perm.PermutationCellAction(H, base);
-            self@replab.WreathProductGroup(phi);
-            self@replab.prods.SemidirectProductOfCompactGroups(phi);
+            self@replab.prods.SemidirectProductGroup_compact(phi);
             self.n = n;
             self.A = A;
         end

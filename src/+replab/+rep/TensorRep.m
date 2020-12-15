@@ -19,14 +19,15 @@ classdef TensorRep < replab.Rep
         %   field ({'R', 'C'}): Real or complex field
         %   blocks (cell(1,\*) of `+replab.Rep`): Factor representations
             replab.rep.assertCompatibleFactors(group, field, factors);
-            factorsAllUnitary = cellfun(@(x) x.cachedOrDefault('isUnitary', false), factors);
-            factorsAllNonUnitary = cellfun(@(x) ~x.cachedOrDefault('isUnitary', true), factors);
             d = prod(cellfun(@(f) f.dimension, factors));
-            args = cell(1, 0);
+            factorsAllUnitary = cellfun(@(x) x.knownUnitary, factors);
+            factorsAllNonUnitary = cellfun(@(x) x.knownNonUnitary, factors);
             if all(factorsAllUnitary)
                 args = {'isUnitary' true};
             elseif all(factorsAllNonUnitary)
                 args = {'isUnitary' false};
+            else
+                args = cell(1, 0);
             end
             self@replab.Rep(group, field, d, args{:});
             self.factors = factors;
@@ -218,6 +219,10 @@ classdef TensorRep < replab.Rep
 
         function c = computeConditionNumberEstimate(self)
             c = prod(cellfun(@(rep) rep.conditionNumberEstimate, self.factors));
+        end
+
+        function b = computeIsUnitary(self)
+            b = all(cellfun(@(r) r.isUnitary, self.factors));
         end
 
         function rep = computeUnitarize(self)

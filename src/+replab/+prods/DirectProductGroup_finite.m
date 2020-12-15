@@ -1,4 +1,4 @@
-classdef DirectProductOfFiniteGroups <  replab.DirectProductGroup & replab.NiceFiniteGroup
+classdef DirectProductGroup_finite <  replab.DirectProductGroup & replab.NiceFiniteGroup
 % External direct product of finite groups
 %
 % In particular, the permutation image of an element of a direct product group
@@ -9,9 +9,10 @@ classdef DirectProductOfFiniteGroups <  replab.DirectProductGroup & replab.NiceF
 
     methods
 
-        function self = DirectProductOfFiniteGroups(factors)
+        function self = DirectProductGroup_finite(factors)
             assert(all(cellfun(@(x) isa(x, 'replab.FiniteGroup'), factors)));
-            self = self@replab.DirectProductGroup(factors);
+            self.factors = factors;
+            self.identity = cellfun(@(f) f.identity, factors, 'uniform', 0);
             % the generators of a direct product of finite groups is
             % the union of the generators of the factors, lifted into the
             % proper tuples

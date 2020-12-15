@@ -2,6 +2,8 @@ classdef DirectProductGroup < replab.CompactGroup
 % Describes an external direct product of compact groups
 %
 % This is an abstract base class. Use `.DirectProductGroup.make` or `.CompactGroup.directProduct` to construct an instance.
+%
+% Constructors are defined in subclasses, as for other group products.
 
     properties (SetAccess = protected)
         factors % (cell(1,\*) of subclass of `.CompactGroup`): Factor groups
@@ -14,24 +16,10 @@ classdef DirectProductGroup < replab.CompactGroup
             assert(all(isCompact), 'All factors must be compact');
             isFinite = cellfun(@(g) isa(g, 'replab.FiniteGroup'), factors);
             if isFinite
-                prd = replab.prods.DirectProductOfFiniteGroups(factors);
+                prd = replab.prods.DirectProductGroup_finite(factors);
             else
-                prd = replab.DirectProductGroup(factors);
+                prd = replab.prods.DirectProductGroup_compact(factors);
             end
-        end
-
-    end
-
-    methods
-
-        function self = DirectProductGroup(factors)
-        % Constructs a direct product of groups
-        %
-        % Args:
-        %   factors (cell(1,\*) of `.CompactGroup`): Factor groups
-            assert(all(cellfun(@(x) isa(x, 'replab.CompactGroup'), factors)));
-            self.factors = factors;
-            self.identity = cellfun(@(f) f.identity, factors, 'uniform', 0);
         end
 
     end

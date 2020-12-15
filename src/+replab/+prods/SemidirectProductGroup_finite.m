@@ -1,13 +1,17 @@
-classdef SemidirectProductOfFiniteGroups < replab.SemidirectProductGroup & replab.NiceFiniteGroup
+classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.NiceFiniteGroup
 
     methods
 
-        function self = SemidirectProductOfFiniteGroups(phi)
-            self = self@replab.SemidirectProductGroup(phi);
+        function self = SemidirectProductGroup_finite(phi)
+            assert(isa(phi, 'replab.Action'));
             H = phi.G;
             N = phi.P;
             assert(isa(N, 'replab.FiniteGroup'));
             assert(isa(H, 'replab.FiniteGroup'));
+            self.phi = phi;
+            self.H = H;
+            self.N = N;
+            self.identity = {H.identity N.identity};
             generators = cell(1, H.nGenerators + N.nGenerators);
             for i = 1:length(H.generators)
                 generators{i} = {H.generator(i) N.identity};

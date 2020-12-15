@@ -1,7 +1,12 @@
 classdef SemidirectProductGroup < replab.Group
-% Describes an external semidirect product of groups
+% Describes an external semidirect product of compact groups
 %
-% This is an abstract base class. Call `.CompactGroup.semidirectProduct` to construct an instance.
+% This is an abstract base class.
+% Call `.CompactGroup.semidirectProduct` or `.make` to construct an instance.
+%
+% As semidirect product groups are used as a base for wreath product groups,
+% the constructors are duplicated in subclasses as to keep a simple hierarchy of
+% constructor calls.
 %
 % Example:
 %   >>> N = replab.S(3);
@@ -12,8 +17,8 @@ classdef SemidirectProductGroup < replab.Group
 %   >>> sd.laws.checkSilent;
 
     properties (SetAccess = protected)
-        H % (`+replab.Group`): Group acting
-        N % (`+replab.Group`): Group acted upon
+        H % (`+replab.CompactGroup`): Group acting
+        N % (`+replab.CompactGroup`): Group acted upon
         phi % (`+replab.Action`): Action of H on N
     end
 
@@ -23,30 +28,16 @@ classdef SemidirectProductGroup < replab.Group
         % Constructs a semidirect product group from an action
         %
         % Args:
-        %   phi (`+replab.Action`): Action of a group on another group
+        %   phi (`+replab.Action`): Action of a compact group on another compact group
         %
         % Returns:
         %   `.SemidirectProductGroup`: A specialized instance of `.SemidirectProductGroup`
             isFinite = isa(phi.G, 'replab.FiniteGroup') && isa(phi.P, 'replab.FiniteGroup');
             if isFinite
-                prd = replab.prods.SemidirectProductOfFiniteGroups(phi);
+                prd = replab.prods.SemidirectProductGroup_finite(phi);
             else
-                prd = replab.prods.SemidirectProductOfCompactGroups(phi);
+                prd = replab.prods.SemidirectProductGroup_compact(phi);
             end
-        end
-
-    end
-
-    methods
-
-        function self = SemidirectProductGroup(phi)
-            assert(isa(phi, 'replab.Action'));
-            H = phi.G;
-            N = phi.P;
-            self.phi = phi;
-            self.H = H;
-            self.N = N;
-            self.identity = {H.identity N.identity};
         end
 
     end

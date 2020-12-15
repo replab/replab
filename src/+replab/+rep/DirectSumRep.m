@@ -17,14 +17,15 @@ classdef DirectSumRep < replab.Rep
         %   field ({'R', 'C'}): Real or complex field
         %   blocks (cell(1,\*) of `+replab.Rep`): Subrepresentations
             replab.rep.assertCompatibleFactors(group, field, factors);
-            factorsAllUnitary = cellfun(@(x) x.cachedOrDefault('isUnitary', false), factors);
-            factorsAllNonUnitary = cellfun(@(x) ~x.cachedOrDefault('isUnitary', true), factors);
             d = sum(cellfun(@(f) f.dimension, factors));
-            args = cell(1, 0);
+            factorsAllUnitary = cellfun(@(x) x.knownUnitary, factors);
+            factorsAllNonUnitary = cellfun(@(x) x.knownNonUnitary, factors);
             if all(factorsAllUnitary)
-                args = {'isUnitary', true};
+                args = {'isUnitary' true};
             elseif all(factorsAllNonUnitary)
-                args = {'isUnitary', false};
+                args = {'isUnitary' false};
+            else
+                args = cell(1, 0);
             end
             self@replab.Rep(group, field, d, args{:});
             self.factors = factors;
@@ -169,6 +170,10 @@ classdef DirectSumRep < replab.Rep
                     K = K.intersection(self.factor(i).kernel);
                 end
             end
+        end
+
+        function b = computeIsUnitary(self)
+            b = all(cellfun(@(r) r.isUnitary, self.factors));
         end
 
         function rep = computeUnitarize(self)

@@ -19,6 +19,10 @@ classdef IndexRelabelingRep < replab.Rep
 
     methods (Access = protected)
 
+        function b = computeIsUnitary(self)
+            b = true;
+        end
+
         function rep = computeDouble(self)
             rep = double(replab.RepByImages.fromExactRep(self));
         end

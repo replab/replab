@@ -715,6 +715,14 @@ classdef Rep < replab.Obj
             b = self.cachedOrDefault('isUnitary', false);
         end
 
+        function b = knownNonUnitary(self)
+        % Returns whether this representation is known to be non-unitary; only a true result is significant
+        %
+        % Returns:
+        %   logical: True if `.isUnitary` is known and is false
+            b = ~self.cachedOrDefault('isUnitary', true);
+        end
+
         function K = kernel(self)
         % Returns the kernel of the given representation
         %

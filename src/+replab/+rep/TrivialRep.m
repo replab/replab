@@ -25,6 +25,10 @@ classdef TrivialRep < replab.Rep
 
     methods (Access = protected)
 
+        function b = computeIsUnitary(self)
+            b = true;
+        end
+
         function r = computeDouble(self)
             r = replab.rep.TrivialRep(self.group, self.field, self.dimension, false);
         end
