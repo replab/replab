@@ -26,6 +26,7 @@ classdef SubRep < replab.Rep
         injection_internal % (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
         projection_internal % (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
         hasExactMaps % (logical): Whether the injection and projection maps are exact
+        encodesComplexStructure % (logical): Whether this subrepresentation encodes a complex structure
     end
 
     methods
@@ -44,6 +45,7 @@ classdef SubRep < replab.Rep
         %   projection_internal (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map $P$
         %
         % Keyword Args:
+        %   encodesComplexStructure (logical, optional): Whether the representation encodes a complex structure, default: false
         %   isUnitary (logical, optional): Whether the resulting representation is unitary, may be omitted (see above)
         %   projectorErrorBound (double, optional): Upper bound on || I P - \tilde{I} \tilde{P} ||_F
         %   injectionConditionNumberEstimate (double, optional): Upper bound of the condition number of $\tilde{I}$ (and thus $\tilde{P}$)
@@ -55,7 +57,7 @@ classdef SubRep < replab.Rep
             if parent.overR
                 assert(isreal(injection_internal) && isreal(projection_internal), 'A real Rep can only have real subrepresentations.');
             end
-            args = struct('injectionConditionNumberEstimate', [], 'projectorErrorBound', []);
+            args = struct('injectionConditionNumberEstimate', [], 'projectorErrorBound', [], 'encodesComplexStructure', false);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             IP_unitary = all(all(injection_internal == projection_internal'));
             if IP_unitary && parent.knownUnitary
@@ -80,6 +82,7 @@ classdef SubRep < replab.Rep
             self.injection_internal = injection_internal;
             self.projection_internal = projection_internal;
             self.hasExactMaps = hasExactMaps;
+            self.encodesComplexStructure = args.encodesComplexStructure;
             if ~isempty(args.projectorErrorBound)
                 self.cache('projectorErrorBound', args.projectorErrorBound, 'error');
             end

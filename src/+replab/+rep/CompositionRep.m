@@ -45,6 +45,10 @@ classdef CompositionRep < replab.Rep
 
         % Rep
 
+        function e = computeErrorBound(self)
+            e = self.second.errorBound;
+        end
+
         function rep = computeDouble(self)
             rep = replab.rep.CompositionRep(self.first, double(self.second));
         end

@@ -2,7 +2,7 @@ classdef SumRep < replab.Rep
 % Representation of a direct product using a direct sum of factor representations
 
     properties (SetAccess = protected)
-        factorReps % (cell{1,:} `+replab.Rep`): Representations of factors
+        factorReps % (cell(1,\*) of `+replab.Rep`): Representations of factors
     end
 
     methods
@@ -10,7 +10,7 @@ classdef SumRep < replab.Rep
         function self = SumRep(group, factorReps)
         % Constructs a representation of a direct product
         %
-        % See `+replab.+directproduct.OfCompactGroups.directSumRep`
+        % See `+replab.DirectProductGroup.OfCompactGroups.directSumRep`
             assert(isa(group, 'replab.directproduct.OfCompactGroups'));
             n = group.nFactors;
             assert(n >= 1, 'Direct sum cannot be empty');
