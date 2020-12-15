@@ -19,15 +19,14 @@ function fsi = frobeniusSchurIndicator(irrep, context)
 %
 % Returns:
 %   {-2, 0, 1}: Frobenius-Schur indicator
-    assert(isequal(irrep.isIrreducible, true), 'Representation must be known to be irreducible');
+    assert(isa(irrep, 'replab.Rep'));
+    assert(irrep.isIrreducible, 'Representation must be irreducible');
     assert(isa(context, 'replab.Context'));
-    if ~isequal(irrep.isUnitary, true)
-        % TODO: can we do better than unitarizing? using the Hermitian invariant space?
-        fsi = replab.irreducible.frobeniusSchurIndicator(irrep.unitarize, context);
-        return
-    end
+    irrepU = irrep.unitarize;
+    A = irrepU.A('double/sparse');
+    Ainv = irrepU.Ainv('double/sparse');
     d = irrep.dimension;
-    X = irrep.commutant.sampleInContext(context, 1);
+    X = A * irrep.commutant.sampleInContext(context, 1) * Ainv;
     Xsym = (X+X')/2;
     Xanti = (X-X')/2;
     C = Xsym + 1i * Xanti;
@@ -39,9 +38,9 @@ function fsi = frobeniusSchurIndicator(irrep, context)
       case 1
         fsi = 1;
       case 2
-        X1 = irrep.commutant.sampleInContext(context, 1);
-        X2 = irrep.commutant.sampleInContext(context, 2);
-        X3 = irrep.commutant.sampleInContext(context, 3);
+        X1 = A * irrep.commutant.sampleInContext(context, 1) * Ainv;
+        X2 = A * irrep.commutant.sampleInContext(context, 2) * Ainv;
+        X3 = A * irrep.commutant.sampleInContext(context, 3) * Ainv;
         H1 = (X1 + X1')/2;
         Hi = (X1 - X1')/2;
         Hj = (X2 - X2')/2;

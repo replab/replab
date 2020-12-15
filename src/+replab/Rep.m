@@ -429,7 +429,16 @@ classdef Rep < replab.Obj
         end
 
         function f = computeFrobeniusSchurIndicator(self)
+        % Computes the Frobenius-Schur indicator
+            if self.inCache('isIrreducible') && self.overR && self.isIrreducible
+                % special case: irreducible real representations
+                c = replab.Context.make;
+                f = replab.irreducible.frobeniusSchurIndicator(self, c);
+                c.close;
+                return
+            end
             if isa(self.group, 'replab.FiniteGroup')
+                % for a finite group, use conjugacy classes
                 f = 0;
                 C = self.group.conjugacyClasses.classes;
                 n = length(C);
@@ -457,7 +466,6 @@ classdef Rep < replab.Obj
                 error('Does not work with continuous groups.');
                 % TODO: if this representation has a decomposition, use it
             end
-
         end
 
         function b = computeIsUnitary(self)
