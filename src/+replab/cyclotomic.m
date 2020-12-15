@@ -443,6 +443,22 @@ classdef cyclotomic
             end
         end
 
+        function res = blkdiag(lhs, rhs)
+            if isa(lhs, 'double')
+                lhs = replab.cyclotomic.fromDoubles(lhs);
+            end
+            if isa(rhs, 'double')
+                rhs = replab.cyclotomic.fromDoubles(rhs);
+            end
+            s1 = size(lhs);
+            s2 = size(rhs);
+            M = replab.cyclotomic.zeros(s1(1) + s2(1), s1(2) + s2(2));
+            mat = M.mat;
+            mat(1:s1(1),1:s1(2)) = lhs.mat;
+            mat(s2(1)+1:end,s2(2)+1:end) = rhs.mat;
+            res = replab.cyclotomic(mat);
+        end
+
         function res = kron(lhs, rhs)
             if isa(lhs, 'double')
                 lhs = replab.cyclotomic.fromDoubles(lhs);
