@@ -271,18 +271,51 @@ classdef SubRep < replab.Rep
         %
         % Returns:
         %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to the `.parent` of this subrepresentation
-            todo = {self};
-            irreps = cell(1, 0);
-            while ~isempty(todo)
-                subs = cell(1, 0);
-                for i = 1:length(todo)
-                    subs = horzcat(subs, replab.irreducible.coarseSplitUsingCommutant(self.parent, todo{i}));
+            if ~self.knownUnitary
+                % If not unitary, make the subrepresentation unitary
+                subU = self.unitarize;
+                P = subU.A('double/sparse') * self.projection('double/sparse');
+                I = self.injection('double/sparse') * subU.Ainv('double/sparse');
+                subU1 = self.parent.subRep(I, 'projection', P, 'isUnitary', true);
+                irreps = subU1.splitInParent;
+            end
+            tol = replab.Parameters.doubleEigTol;
+            % extract nontrivial representations by sampling the commutant
+            C = full(self.projection('double/sparse') * self.parent.commutant.sample('double') * self.injection('double/sparse'));
+            % the eigenspace decomposition is the basis of the numerical decomposition
+            % V'*C*V = D
+            [U1 D] = replab.numerical.sortedEig((C + C')/2, 'ascend', false);
+            D = diag(D);
+            D = D(:)';
+            mask = bsxfun(@(x,y) abs(x-y)<tol, D, D');
+            % find repeated eigenvalues
+            runs = replab.UndirectedGraph.fromAdjacencyMatrix(mask).connectedComponents.blocks;
+            n = length(runs);
+            if n == 1
+                self.cache('isIrreducible', true, '==');
+                irreps = {self};
+            else
+                irreps = cell(1, n);
+                for i = 1:n
+                    basis = U1(:, runs{i});
+                    I = self.injection('double/sparse') * basis;
+                    P = basis' * self.projection('double/sparse');
+                    irreps{i} = self.parent.subRep(I, 'projection', P, 'isUnitary', true, 'isIrreducible', true);
                 end
-                isIrrep = replab.irreducible.identifyIrreps(self.parent, subs);
-                irreps = horzcat(irreps, subs(isIrrep));
-                todo = subs(~isIrrep);
             end
         end
+
+% $$$             todo = {self};
+% $$$             irreps = cell(1, 0);
+% $$$             while ~isempty(todo)
+% $$$                 subs = cell(1, 0);
+% $$$                 for i = 1:length(todo)
+% $$$                     subs = horzcat(subs, replab.irreducible.coarseSplitUsingCommutant(self.parent, todo{i}));
+% $$$                 end
+% $$$                 isIrrep = replab.irreducible.identifyIrreps(self.parent, subs);
+% $$$                 irreps = horzcat(irreps, subs(isIrrep));
+% $$$                 todo = subs(~isIrrep);
+% $$$             end
 
         function sub1 = refine(self, varargin)
         % Refines this subrepresentation

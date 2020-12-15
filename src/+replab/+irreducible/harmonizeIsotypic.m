@@ -6,18 +6,13 @@ function hi = harmonizeIsotypic(iso, context)
 % representations not only equivalent but identical.
 %
 % Args:
-%   iso (`+replab.Isotypic`): Isotypic component, not necessarily harmonized
+%   iso (`+replab.Isotypic`): Isotypic component with ``isHarmonized`` false and ``trivialDimension == 0``
 %   context (`+replab.Context`): Sampling context
 %
 % Returns:
-%   `+replab.HarmonizedIsotypic`: The harmonized isotypic component
+%   `+replab.Isotypic`: The harmonized isotypic component
     assert(isa(iso, 'replab.Isotypic'));
-    assert(isa(context, 'replab.Context'));
-    if isequal(iso.trivialDimension, iso.dimension)
-        % trivial component, it's already harmonized
-        hi = replab.HarmonizedIsotypic(iso.parent, iso.irreps, iso.E_internal);
-        return
-    end
+    assert(~iso.isHarmonized && iso.trivialDimension == 0);
     n = iso.nIrreps;
     if iso.overR
         irr1 = replab.irreducible.canonicalDivisionAlgebra(iso.irrep(1), context);

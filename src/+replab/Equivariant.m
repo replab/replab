@@ -191,7 +191,7 @@ classdef Equivariant < replab.Domain
             errors = self.cachedErrors_.(id);
             if ind > n
                 for i = n+1:ind
-                    [X err] = self.sampleWithError;
+                    [X err] = self.sample;
                     samples{1, i} = X;
                     errors{1, i} = err;
                 end

@@ -829,33 +829,69 @@ classdef Rep < replab.Obj
 
     end
 
-% $$$     methods % Irreducible decomposition
-% $$$
-% $$$         function I = decomposition(self)
-% $$$         % Returns the irreducible decomposition of this representation
-% $$$         %
-% $$$         % Requires this representation to be unitary
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.Irreducible`: The irreducible decomposition
-% $$$         %
-% $$$         % Raises:
-% $$$         %   An error is this representation is not unitary.
-% $$$             I = self.cached('decomposition', @() self.computeDecomposition);
-% $$$         end
-% $$$
-% $$$         function dec = computeDecomposition(self)
-% $$$             dec = replab.irreducible.decomposition(self);
-% $$$             if dec.nComponents == 1 && dec.components{1}.multiplicity == 1
-% $$$                 assert(~isequal(self.isIrreducible, false));
-% $$$                 self.isIrreducible = true;
-% $$$                 if isequal(dec.basis, eye(self.dimension))
-% $$$                     replab.rep.copyProperties(dec, self);
-% $$$                 end
-% $$$             end
-% $$$         end
-% $$$
-% $$$     end
+    methods % Irreducible decomposition
+
+        function I = decomposition(self)
+        % Returns the irreducible decomposition of this representation
+        %
+        % Requires this representation to be unitary
+        %
+        % Returns:
+        %   `+replab.Irreducible`: The irreducible decomposition
+        %
+        % Raises:
+        %   An error is this representation is not unitary.
+            I = self.cached('decomposition', @() self.computeDecomposition);
+        end
+
+        function dec = computeDecomposition(self)
+        % Computes the representation decomposition
+        %
+        % First it splits the representation into irreducibles, before recognizing which
+        % irreducible representations are part of the same isotypic component.
+        %
+        % TODO: exact/double
+            irreps = self.split;
+            mask = cellfun(@(r) r.trivialDimension == 0, irreps);
+            nontrivial = irreps(mask);
+            trivialIsotypic = self.trivialComponent('double');
+            % regroup equivalent representations
+            context = replab.Context.make;
+            C = self.commutant.sampleInContext(context, 1);
+            nNT = length(nontrivial);
+            mask = logical(zeros(nNT, nNT));
+            tol = replab.Parameters.doubleEigTol;
+            for i = 1:nNT
+                subI = nontrivial{i};
+                CI = subI.projection('double/sparse') * C;
+                for j = 1:nNT
+                    subJ = nontrivial{j};
+                    mask(i,j) = replab.isNonZeroMatrix(CI * subJ.injection('double/sparse'), tol);
+                end
+            end
+            cc = replab.UndirectedGraph.fromAdjacencyMatrix(mask).connectedComponents.blocks;
+            % the blocks of the partition cc represent isotypic components
+            nNT = length(cc);
+            NT = cell(1, nNT);
+            for i = 1:nNT
+                subreps = nontrivial(cc{i});
+                iso = replab.Isotypic.fromIrreps(self, subreps, subreps{1}.dimension, false);
+                NT{i} = iso; % TODO iso.harmonize(context);
+            end
+            % Sort by dimension first and then multiplicity
+            dims = cellfun(@(iso) iso.irrepDimension, NT);
+            muls = cellfun(@(iso) iso.multiplicity, NT);
+            [~, I] = sortrows([dims(:) muls(:)]);
+            NT = NT(I);
+            if trivialIsotypic.dimension > 0
+                components = horzcat({trivialIsotypic}, NT);
+            else
+                components = NT;
+            end
+            dec = replab.Irreducible(self, components);
+        end
+
+    end
 
     methods % Implementations
 
