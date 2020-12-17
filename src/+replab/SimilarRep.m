@@ -261,6 +261,7 @@ classdef SimilarRep < replab.Rep
         end
 
         function e = computeErrorBound(self)
+
         % let B = A^-1
         % we assume A is exact, and B~ = Ainv_internal, with B~ = B + dB and dB the error
         % || A rho B - A rho~ B~ ||F =~ || A drho B ||F + || A rho dB ||F =
