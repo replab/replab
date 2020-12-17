@@ -583,7 +583,11 @@ classdef Rep < replab.Obj
         end
 
         function b = computeIsDivisionAlgebraCanonical(self)
-            error('TODO');
+            if self.overC || (self.overR && self.frobeniusSchurIndicator == 1)
+                b = true;
+            else
+                error('TODO');
+            end
         end
 
     end

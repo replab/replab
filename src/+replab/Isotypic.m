@@ -60,13 +60,14 @@ classdef Isotypic < replab.SubRep
                 iso = replab.Isotypic(parent, irreps, zeros(0, parent.dimension), irrepDimension, true);
                 return
             end
-            if length(irreps) == 1
+            m = length(irreps);
+            if m == 1
                 % Single multiplicity? Reuse projection
                 iso = replab.Isotypic(parent, irreps, irreps{1}.projection_internal, irrepDimension, isHarmonized);
                 return
             end
-            mapsAreUnitary = cellfun(@(s) all(all(s.B_internal == s.E_internal')), irreps);
-            if parent.knownUnitary && mapsAreUnitary
+            mapsAreUnitary = cellfun(@(s) all(all(s.injection_internal == s.projection_internal')), irreps);
+            if parent.knownUnitary && all(mapsAreUnitary)
                 % all maps are unitary, parent is unitary, we use orthogonality
                 projections = cell(1, m);
                 for i = 1:m
@@ -264,7 +265,7 @@ classdef Isotypic < replab.SubRep
                         rt = 'R';
                       case 0
                         rt = 'C';
-                      case -1
+                      case -2
                         rt = 'H';
                       otherwise
                         rt = '?';
