@@ -182,97 +182,19 @@ classdef Isotypic < replab.SubRep
                 isHarmonized = true;
                 iso = replab.Isotypic(self.parent, self.irreps, self.projection, self.irrepDimension, isHarmonized);
             else
-                if isempty(context)
+                if nargin < 2 || isempty(context)
+                    close = true;
                     c = replab.Context.make;
                 else
+                    close = false;
                     c = context;
                 end
-                iso = replab.irreducible.harmonizeIsotypic(self, c);
-                if isempty(context)
+                iso = replab.irreducible.Isotypic_harmonize(self, c);
+                if close
                     c.close;
                 end
             end
         end
-% $$$
-% $$$         function [A Ainv] = changeOfBasis(self, i, j, context)
-% $$$         % Returns change of basis matrices that relate two irreducible representations
-% $$$         %
-% $$$         % ``A`` such that ``A * self.irrep(j).image(g) * Ainv = self.irrep(i).image(g)``
-% $$$         %
-% $$$         % Args:
-% $$$         %   i (integer): Index of an irreducible representation
-% $$$         %   j (integer): Index of an irreducible representation
-% $$$         %   context (`+replab.Context`, optional): Sampling context
-% $$$         %
-% $$$         % Returns
-% $$$         % -------
-% $$$         %   A: double(\*,\*)
-% $$$         %     Change of basis matrix
-% $$$         %   Ainv: double(\*,\*)
-% $$$         %     Inverse of change of basis matrix
-% $$$             if i == j
-% $$$                 A = eye(self.irrepDimension);
-% $$$                 Ainv = A;
-% $$$                 return
-% $$$             end
-% $$$             if nargin < 4
-% $$$                 context = replab.Context.make;
-% $$$             end
-% $$$             C = self.parent.commutant.sampleInContext(context, 1);
-% $$$             A = full(self.irrep(i).E_internal * C * self.irrep(j).B_internal);
-% $$$             A = A * sqrt(self.irrepDimension/real(trace(A*A'))) * sign(A(1,1));
-% $$$             if isequal(self.irrep(i).isUnitary, true) && isequal(self.irrep(j).isUnitary, true)
-% $$$                 Ainv = A';
-% $$$             elseif self.overC || isequal(self.irrep(1).frobeniusSchurIndicator, 1)
-% $$$                 Ainv = full(self.irrep(j).E_internal * C * self.irrep(i).B_internal);
-% $$$                 Ainv = Ainv/(trace(A*Ainv)/self.irrepDimension);
-% $$$             else
-% $$$                 Ainv = inv(A);
-% $$$             end
-% $$$             if nargin < 4
-% $$$                 context.close;
-% $$$             end
-% $$$         end
-% $$$
-% $$$         function iso = changeEachIrrepBasis(self, A, Ainv)
-% $$$         % Returns the isotypic component with irrep bases changed
-% $$$         %
-% $$$         % Does not modify this isotypic component.
-% $$$         %
-% $$$         % The returned isotypic component has ``iso.irrep(i) == self.irrep(i).similarRep(A{i}, Ainv{i})``
-% $$$         %
-% $$$         % Args:
-% $$$         %   A (cell(1,\*) of double(\*,\8), may be sparse): Change of basis matrices
-% $$$         %   Ainv (cell(1,\*) of double(\*,\8), may be sparse): Inverse matrices
-% $$$             irreps = cell(1, self.multiplicity);
-% $$$             E = self.E_internal;
-% $$$             for i = 1:self.multiplicity
-% $$$                 irreps{i} = replab.rep.collapse(self.irreps{i}.similarRep(A{i}, Ainv{i}));
-% $$$                 range = self.irrepRange(i);
-% $$$                 E(range, :) = A{i} * E(range, :);
-% $$$             end
-% $$$             iso = replab.Isotypic(self.parent, irreps, E);
-% $$$         end
-% $$$
-% $$$         function iso = changeIrrepBasis(self, i, A_internal, Ainv_internal)
-% $$$         % Returns the isotypic component with the i-th irrep basis changed
-% $$$         %
-% $$$         % Does not modify this isotypic component.
-% $$$         %
-% $$$         % The new isotypic component has ``iso.irrep(i) == self.irrep(i).similarRep(A_internal, Ainv_internal)``.
-% $$$         %
-% $$$         % Args:
-% $$$         %   i (integer): Representation index
-% $$$         %   A_internal (double(\*,\*), may be sparse): Change of basis matrix
-% $$$         %   Ainv_internal (double(\*,\*), may be sparse): Inverse change of basis matrix
-% $$$             irrepi = replab.rep.collapse(self.irreps{i}.similarRep(A_internal, Ainv_internal));
-% $$$             range = self.irrepRange(i);
-% $$$             E = self.E_internal;
-% $$$             E(range,:) = A_internal * E(range,:);
-% $$$             irreps = self.irreps;
-% $$$             irreps{i} = irrepi;
-% $$$             iso = replab.Isotypic(self.parent, irreps, E);
-% $$$         end
 
     end
 

@@ -358,6 +358,31 @@ classdef SubRep < replab.Rep
             end
         end
 
+        function res = collapse(self)
+        % Simplifies a SubRep of a SubRep/SimilarRep
+        %
+        % Raises:
+        %   An error if `.parent` is not of type `.SubRep` or `.SimilarRep`
+        %
+        % Returns:
+        %   `.SubRep`: A subrepresentation of ``.parent.parent``
+            parent = self.parent;
+            switch class(parent)
+              case 'replab.SubRep'
+                newI_internal = parent.injection_internal * self.injection_internal;
+                newP_internal = self.projection_internal * parent.projection_internal;
+                res = parent.parent.subRep(newI_internal, 'projection', newP_internal);
+                res.copyProperties(self);
+              case 'replab.SimilarRep'
+                newI_internal = parent.Ainv_internal * self.injection_internal;
+                newP_internal = self.projection_internal * parent.A_internal;
+                res = parent.parent.subRep(newI_internal, 'projection', newP_internal);
+                res.copyProperties(self);
+              otherwise
+                error('Not supported');
+            end
+        end
+
     end
 
     methods (Access = protected)

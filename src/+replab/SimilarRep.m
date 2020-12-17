@@ -64,15 +64,15 @@ classdef SimilarRep < replab.Rep
             end
             if parent.inCache('trivialDimension')
                 [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'trivialDimension', parent.trivialDimension);
-                assert(~exists || isempty(oldValue) || oldValue ~= parent.trivialDimension);
+                assert(~exists || isempty(oldValue) || oldValue == parent.trivialDimension);
             end
             if parent.inCache('isIrreducible')
                 [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'isIrreducible', parent.isIrreducible);
-                assert(~exists || isempty(oldValue) || oldValue ~= parent.isIrreducible);
+                assert(~exists || isempty(oldValue) || oldValue == parent.isIrreducible);
             end
             if parent.inCache('frobeniusSchurIndicator')
                 [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'frobeniusSchurIndicator', parent.frobeniusSchurIndicator);
-                assert(~exists || isempty(oldValue) || oldValue ~= parent.frobeniusSchurIndicator);
+                assert(~exists || isempty(oldValue) || oldValue == parent.frobeniusSchurIndicator);
             end
             self@replab.Rep(parent.group, parent.field, d, restArgs{:});
             % populate SimilarRep properties
@@ -115,7 +115,7 @@ classdef SimilarRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_permutationSimilarRepOfSubRep(self, options)
+        function res = rewriteTerm_similarRepOfSubRep(self, options)
             if isa(self.parent, 'replab.SubRep')
                 if self.basisIsIntegerValued || self.parent.mapsAreIntegerValued || ...
                         (options.dense && (options.approximate || (self.hasExactBasis && self.parent.hasExactMaps)))
@@ -128,7 +128,7 @@ classdef SimilarRep < replab.Rep
             res = [];
         end
 
-        function res = rewriteTerm_permutationSimilarRepOfSimilarRep(self, options)
+        function res = rewriteTerm_similarRepOfSimilarRep(self, options)
             if isa(self.parent, 'replab.SimilarRep')
                 if self.basisIsIntegerValued || self.parent.basisIsIntegerValued || ...
                         (options.dense && (options.approximate || (self.hasExactBasis && self.parent.hasExactBasis)))
@@ -181,6 +181,31 @@ classdef SimilarRep < replab.Rep
                 type = 'double';
             end
             mat = replab.numerical.convert(self.Ainv_internal, type);
+        end
+
+        function res = collapse(self)
+        % Simplifies a SimilarRep of a SubRep/SimilarRep
+        %
+        % Raises:
+        %   An error if `.parent` is not of type `.SubRep` or `.SimilarRep`
+        %
+        % Returns:
+        %   `.Rep`: A subrepresentation of ``.parent.parent`` of the same type as `.parent`
+            parent = self.parent;
+            switch class(self.parent)
+              case 'replab.SubRep'
+                newI_internal = parent.injection_internal * self.Ainv_internal;
+                newP_internal = self.A_internal * parent.projection_internal;
+                res = parent.parent.subRep(newI_internal, 'projection', newP_internal);
+                res.copyProperties(self);
+              case 'replab.SimilarRep'
+                newAinv_internal = parent.Ainv_internal * self.Ainv_internal;
+                newA_internal = self.A_internal * parent.A_internal;
+                res = parent.parent.similarRep(newA_internal, 'inverse', newAinv_internal);
+                res.copyProperties(self);
+              otherwise
+                error('Not supported');
+            end
         end
 
     end

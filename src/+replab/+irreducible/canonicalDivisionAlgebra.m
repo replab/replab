@@ -10,22 +10,19 @@ function res = canonicalDivisionAlgebra(rep, context)
 %
 % Args:
 %   rep (`+replab.Rep`): Irreducible representation to find the canonical form of
+%   context (`+replab.Context`): Sampling context
 %
 % Returns:
 %   `+replab.SimilarRep`: Representation with division algebra in canonical form
-    assert(isa(rep, 'replab.Rep'));
+    assert(isa(rep, 'replab.Rep') && rep.isIrreducible);
     assert(isa(context, 'replab.Context'));
-    if rep.overC
+
+    if rep.overC || rep.frobeniusSchurIndicator == 1
+        % if over complex field, or real-type representation, no need to change
         res = replab.SimilarRep.identical(rep);
         return
     end
-    if isempty(rep.frobeniusSchurIndicator)
-        rep.frobeniusSchurIndicator = replab.irreducible.frobeniusSchurIndicator(rep, context);
-    end
-    if ~isequal(rep.isUnitary, true)
-        res = replab.rep.collapse(replab.irreducible.canonicalDivisionAlgebra(rep.unitarize, context));
-        return
-    end
+
     % from then on, we assume unitarity
     switch rep.frobeniusSchurIndicator
       case -2
@@ -34,10 +31,7 @@ function res = canonicalDivisionAlgebra(rep, context)
       case 0
         % complex
         res = replab.irreducible.enforceComplexEncoding(rep, context);
-      case 1
-        % real
-        res = replab.SimilarRep.identical(rep);
       otherwise
-        error('Real irreducible representation should have FS indicator -1,0 or 1');
+        error('Real irreducible representation should have FS indicator -2, 0 or 1');
     end
 end

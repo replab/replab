@@ -884,7 +884,7 @@ classdef Rep < replab.Obj
             for i = 1:nNT
                 subreps = nontrivial(cc{i});
                 iso = replab.Isotypic.fromIrreps(self, subreps, subreps{1}.dimension, false);
-                NT{i} = iso; % TODO iso.harmonize(context);
+                NT{i} = iso.harmonize(context);
             end
             % Sort by dimension first and then multiplicity
             dims = cellfun(@(iso) iso.irrepDimension, NT);

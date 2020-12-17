@@ -1,7 +1,6 @@
 function res = enforceComplexEncoding(rep, context)
 % Finds the similar representation that expresses the canonical basis of representation on a complex division algebra
 %
-%
 % See `+replab.+domain.ComplexTypeMatrices`
 %
 % Args:
@@ -11,17 +10,23 @@ function res = enforceComplexEncoding(rep, context)
 % Returns:
 %   `+replab.SimilarRep`: Similar representation that has the proper encoding
     assert(isa(rep, 'replab.Rep'));
-    assert(rep.overR);
-    assert(isequal(rep.frobeniusSchurIndicator, 0));
-    if isequal(rep.isDivisionAlgebraCanonical, true)
+    assert(rep.overR && rep.isIrreducible && rep.frobeniusSchurIndicator == 0);
+    assert(isa(context, 'replab.Context'));
+
+    if rep.inCache('isDivisionAlgebraCanonical') && rep.isDivisionAlgebraCanonical
+        % trivial case, already enforced
         res = replab.SimilarRep.identical(rep);
         return
     end
-    if ~isequal(rep.isUnitary, true)
-        res = replab.irreducible.enforceComplexEncoding(rep.unitarize, context);
-        res = replab.rep.collapse(res);
+
+    if ~rep.knownUnitary
+        % force the unitary case
+        repU = rep.unitarize;
+        resU = replab.irreducible.enforceComplexEncoding(repU, context);
+        res = resU.collapse;
         return
     end
+
     d = rep.dimension;
     S = rep.commutant.sampleInContext(context, 1);
     A = (S + S') + 1i * (S - S');
@@ -59,6 +64,5 @@ function res = enforceComplexEncoding(rep, context)
             W = [W X];
         end
     end
-    res = rep.similarRep(W', W);
-    res.isDivisionAlgebraCanonical = true;
+    res = rep.similarRep(W', 'inverse', W, 'isIrreducible', true, 'frobeniusSchurIndicator', 0, 'isDivisionAlgebraCanonical', true);
 end

@@ -27,8 +27,8 @@ function irreps = splitUsingCommutant(rep, sub, samples, ind, failureProb, error
     end
     d0 = rep.dimension;
     d1 = sub.dimension;
-    [A, projErr] = samples.sample(ind);
-    A = sub.injection * (sub.projection * A * sub.injection) * sub.projection;
+    [S, projErr] = samples.sample(ind);
+    A = sub.projection * S * sub.injection;
     if rep.knownUnitary && sub.knownUnitary
         A = (A + A')/2;
         [V, D] = eig(A, 'vector');
@@ -43,8 +43,8 @@ function irreps = splitUsingCommutant(rep, sub, samples, ind, failureProb, error
     V = V(:,I);
     W = W(I,:);
     D = D(I);
-    R = A * V - V * diag(sparse(D)); % column vectors
-    S = W * A - diag(sparse(D)) * W; % row vectors
+    R = A * V - V * diag(sparse(D)); % column vectors are residuals for right eigenvectors
+    S = W * A - diag(sparse(D)) * W; % row vectors are residuals for left eigenvectors
     evError = zeros(1, d0);
     for i = 1:d0
         evError(i) = max(norm(S(i,:)), norm(R(:,i)))/abs(W(i,:)*V(:,i));
