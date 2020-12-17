@@ -16,8 +16,8 @@ function [keyValuePairs exists oldValue] = keyValuePairsUpdate(keyValuePairs, ke
 %     Previous value if already present
     [exists, ind] = ismember(key, keyValuePairs(1:2:end));
     if exists
-        oldValue = keyValuePairs{ind+1};
-        keyValuePairs{ind+1} = newValue;
+        oldValue = keyValuePairs{ind*2};
+        keyValuePairs{ind*2} = newValue;
     else
         keyValuePairs{1,end+1} = key;
         keyValuePairs{1,end+1} = newValue;
