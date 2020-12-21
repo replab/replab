@@ -242,10 +242,6 @@ classdef Partition < replab.Str
             % We list the edges of the graph
             edges = permutations.';
             edges = [kron(ones(nG,1), (1:d)'), edges(:)];
-            if nG*d > 1000
-                % Do not optimize list for small problems
-                edges = unique(sort(edges,2), 'rows');
-            end
 
             % Compute the connected components
             P = replab.UndirectedGraph.fromEdges(edges, d).connectedComponents;
