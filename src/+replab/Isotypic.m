@@ -202,7 +202,7 @@ classdef Isotypic < replab.SubRep
     methods (Access = protected) % Implementations
 
         function rho = image_double_sparse(self, g)
-            if self.isHarmonized && self.multiplicity > 0
+            if self.isHarmonized && self.multiplicity > 1
                 p = self.parent.image(g, 'double/sparse');
                 I = self.irrep(1).injection;
                 P = self.irrep(1).projection;
@@ -220,7 +220,7 @@ classdef Isotypic < replab.SubRep
         end
 
         function rho = image_exact(self, g)
-            if self.isHarmonized && self.multiplicity > 0
+            if self.isHarmonized && self.multiplicity > 1
                 rho = self.irrep(1).image(g, 'exact');
                 rho = kron(replab.cyclotomic.eye(self.nIrreps), rho);
             else
@@ -228,6 +228,26 @@ classdef Isotypic < replab.SubRep
             end
         end
 
+        function c = computeCommutant(self)
+            if self.isHarmonized
+                if self.overC
+                    c = replab.IsotypicSimpleCommutant(self);
+                else
+                    switch self.irrep(1).frobeniusSchurIndicator
+                      case 1
+                        c = replab.IsotypicSimpleCommutant(self);
+                      case 0
+                        c = replab.IsotypicComplexCommutant(self);
+                      case -2
+                        c = replab.IsotypicQuaternionCommutant(self);
+                      otherwise
+                        error('Unknown indicator');
+                    end
+                end
+            else
+                c = computeCommutant@replab.SubRep(self);
+            end
+        end
     end
 
     methods % Implementations

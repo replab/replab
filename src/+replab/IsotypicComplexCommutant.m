@@ -3,8 +3,7 @@ classdef IsotypicComplexCommutant < replab.IsotypicCommutant
     methods
 
         function self = IsotypicComplexCommutant(isotypic)
-            self = self@replab.IsotypicCommutant(isotypic);
-            self.divisionAlgebraDimension = 2;
+            self = self@replab.IsotypicCommutant(isotypic, 2);
         end
 
         function [A B] = block(self, X)
