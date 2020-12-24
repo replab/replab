@@ -42,7 +42,7 @@ classdef Irreducible < replab.SubRep
         %
         % Returns:
         %   `+replab.Rep`: The block-diagonal representation as a representation similar to this rep. parent
-            r = self.parent.similarRep(self.projection_internal, self.injection_internal);
+            r = self.parent.similarRep(self.projection_internal, 'inverse', self.injection_internal);
         end
 
         function n = nComponents(self)
@@ -128,6 +128,11 @@ classdef Irreducible < replab.SubRep
 % $$$             components1 = cellfun(@(c) c.refine, self.components, 'uniform', 0);
 % $$$             irr = replab.Irreducible(self.parent, components1);
 % $$$         end
+
+    end
+
+
+    methods (Access = protected)
 
     end
 
