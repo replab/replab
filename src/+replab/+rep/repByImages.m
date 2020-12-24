@@ -54,7 +54,7 @@ function rep = repByImages(group, field, dimension, varargin)
         end
     end
     if isGenPerm
-        G = replab.perm.GeneralizedSymmetricGroup(GSG{1}.n, cycloOrder);
+        G = replab.perm.GeneralizedSymmetricGroup(dimension, cycloOrder);
         genPerms = arrayfun(@(i) GSG{i}.naturalMorphism(G).imageElement(GSG_element{i}), 1:n, 'uniform', 0);
         rep = replab.rep.RepByImages_monomial(group, field, dimension, preimages, images, G, genPerms, repKWargs{:});
         return
