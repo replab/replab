@@ -79,7 +79,7 @@ classdef SedumiData
             for r = 1:nb1 % iterate over representations
                           % apply Reynolds
                 C = I.component(r).commutant;
-                block = C.projectAndReduceFromParent(M);
+                block = C.projectAndFactorFromParent(M);
                 % store block flattened
                 nels = prod(size(block));
                 vec1(shift+(1:nels)) = block(:);

@@ -7,6 +7,22 @@ classdef IsotypicCommutant < replab.Equivariant
 
     methods (Access = protected)
 
+        function part1 = projectAndFactorFromParent_exact(self, X)
+            P = self.repR.projection(type, 'exact');
+            I = self.repR.injection(type, 'exact');
+            part1 = self.projectAndFactor_exact(P * X * I);
+        end
+
+        function [part1, err] = projectAndFactorFromParent_double_sparse(self, X)
+            P = self.repR.projection(type, 'double/sparse');
+            I = self.repR.injection(type, 'double/sparse');
+            if nargout >= 2
+                [part1, err] = self.projectAndFactor_double_sparse(P * X * I);
+            else
+                part1 = self.projectAndFactor_double_sparse(P * X * I);
+            end
+        end
+
         function part1 = projectAndFactor_exact(self, X)
             error('Exact projection not implemented');
         end
@@ -107,24 +123,36 @@ classdef IsotypicCommutant < replab.Equivariant
             if nargin < 3 || isempty(type)
                 type = 'double';
             end
-            if strcmp(type, 'exact')
-                P = self.repR.projection(type, 'exact');
-                I = self.repR.injection(type, 'exact');
-            else
-                P = self.repR.projection(type, 'double/sparse');
-                I = self.repR.injection(type, 'double/sparse');
-            end
-            X1 = P*X*I;
-            if strcmp(type, 'double')
-                X1 = full(X1);
-            end
-            switch nargout
-              case 2
-                [part1, part2] = self.projectAndReduce(X1, type);
-              case 3
-                [part1, part2, err] = self.projectAndReduce(X1, type);
+            switch type
+                case 'exact'
+                  part1 = self.projectAndFactorFromParent_exact(X);
+                  if nargout >= 2
+                      part2 = replab.cyclotomic.eye(self.repR.irrepDimension);
+                  end
+                  if nargout >= 3
+                      err = 0;
+                  end
+              case 'double'
+                if nargout >= 3
+                    [part1, err] = self.projectAndFactorFromParent_double_sparse(X);
+                else
+                    part1 = self.projectAndFactorFromParent_double_sparse(X);
+                end
+                part1 = full(part1);
+                if nargout >= 2
+                    part2 = eye(self.repR.irrepDimension)
+                end
+              case 'double/sparse'
+                if nargout >= 3
+                    [part1, err] = self.projectAndFactorFromParent_double_sparse(X);
+                else
+                    part1 = self.projectAndFactorFromParent_double_sparse(X);
+                end
+                if nargout >= 2
+                    part2 = speye(self.repR.irrepDimension)
+                end
               otherwise
-                part1 = self.projectAndReduce(X1, type);
+                error('Unknown type %s', type);
             end
         end
 
