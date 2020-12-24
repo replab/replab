@@ -245,7 +245,7 @@ classdef Rep < replab.Obj
             end
             if rep.inCache('unitarize')
                 u = rep.unitarize;
-                u1 = replab.SimilarRep(self, u.A_internal, u.Ainv_internal);
+                u1 = replab.SimilarRep(self, u.A_internal, 'inverse', u.Ainv_internal); % TODO: why?
                 self.cache('unitarize', u1, 'ignore');
             end
         end
@@ -308,7 +308,7 @@ classdef Rep < replab.Obj
                 if replab.compat.startsWith(name, 'rewriteTerm_')
                     res = self.(name)(options);
                     if ~isempty(res)
-                        fprintf('Applying %s to a representation of dimension %d\n', name, self.dimension);
+                        replab.log(1, 'Applying %s to a representation of dimension %d\n', name, self.dimension);
                         res.copyProperties(self);
                         newRep = res.innermostTerm(options);
                         return
@@ -1239,7 +1239,7 @@ classdef Rep < replab.Obj
         %   >>> S3 = replab.S(3);
         %   >>> defRep = S3.naturalRep.complexification;
         %   >>> C = randn(3,3) + 1i * rand(3,3);
-        %   >>> nonUnitaryRep = defRep.similarRep(C, inv(C));
+        %   >>> nonUnitaryRep = defRep.similarRep(C);
         %   >>> unitaryRep = nonUnitaryRep.unitarize;
         %   >>> U = unitaryRep.sample;
         %   >>> norm(U*U' - eye(3)) < 1e-10
