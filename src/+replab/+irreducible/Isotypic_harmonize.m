@@ -30,7 +30,7 @@ function hi = Isotypic_harmonize(iso, context)
     end
     for i = 2:n
         [A Ainv] = replab.irreducible.Isotypic_changeOfBasis(iso, 1, i, context);
-        irri = iso.irrep(1).similarRep(W * A, 'inverse', Ainv * Winv).collapse;
+        irri = iso.irrep(i).similarRep(W * A, 'inverse', Ainv * Winv).collapse;
         range = iso.irrepRange(i);
         P(range, :) = W * A * P(range, :);
         if irreps{1}.inCache('isUnitary')
