@@ -288,43 +288,71 @@ classdef Isotypic < replab.SubRep
             l = replab.laws.IsotypicLaws(self);
         end
 
+        % SubRep
+
+        function iso1 = refine(self, varargin)
+        % Refines this isotypic component
+        %
+        % Assumes that the isotypic component is already close to an exact isotypic component, and refines its subspace
+        % by an iterative procedure applied on its `.injection` and `.projection` maps.
+        %
+        % This procedure preserves biorthogonality of the irreducible representations, but not necessarily harmonization.
+        %
+        % Keyword Args:
+        %   largeScale (logical or ``[]``, optional): Whether to use the large-scale version of the algorithm, default ``[]`` (automatic selection)
+        %   numNonImproving (integer, optional): Number of non-improving steps before stopping the large-scale algorithm, default ``20``
+        %   nSamples (integer, optional): Number of samples to use in the large-scale version of the algorithm, default ``5``
+        %   nInnerIterations (integer, optional): Number of inner iterations in the medium-scale version of the algorithm, default ``10``
+        %   maxIterations (integer, optional): Maximum number of (outer) iterations, default ``1000``
+        %
+        % Returns:
+        %   `.Isotypic`: Isotypic component with refined subspace (injection/projection maps)
+            replab.log(1, 'Refining isotypic component');
+            args = struct('numNonImproving', 20, 'largeScale', self.parent.dimension > 1000, 'nSamples', 5, 'nInnerIterations', 10, 'maxIterations', 1000);
+            args = replab.util.populateStruct(args, varargin);
+            D = self.parent.dimension;
+            m = self.multiplicity;
+            irreps = cell(1, m);
+            if self.parent.knownUnitary
+                Q0 = self.injection;
+                if ~all(all(Q0 == self.projection'))
+                    [Q0, ~] = qr(Q0, 0);
+                end
+                Qo = zeros(D, 0);
+                for i = 1:m
+                    Q = Q0(:, self.irrepRange(i));
+                    if args.largeScale
+                        Q1 = replab.rep.refine_unitaryLargeScale(self.parent, Q, args.numNonImproving, args.nSamples, args.maxIterations, Qo);
+                    else
+                        Q1 = replab.rep.refine_unitaryMediumScale(self.parent, Q, args.nInnerIterations, args.maxIterations, Qo);
+                    end
+                    irreps{i} = self.parent.subRep(Q1, 'projection', Q1', 'isUnitary', true, 'isIrreducible', true);
+                    Qo = [Qo Q1];
+                end
+                isHarmonized = false;
+                iso1 = replab.Isotypic(self.parent, irreps, Qo', self.irrepDimension, isHarmonized);
+            else
+                I0 = self.injection;
+                P0 = self.projection;
+                Io = zeros(D, 0);
+                Po = zeros(0, D);
+                for i = 1:m
+                    I = I(:, self.irrepRange(i));
+                    P = P(self.irrepRange(i), :);
+                    if args.largeScale
+                        [I1, P1] = replab.rep.refine_nonUnitaryLargeScale(self.parent, I, P, args.numNonImproving, args.nSamples, args.maxIterations, Io, Po);
+                    else
+                        [I1, P1] = replab.rep.refine_nonUnitaryMediumScale(self.parent, I, P, args.nInnerIterations, args.maxIterations, Io, Po);
+                    end
+                    irreps{i} = self.parent.subRep(I1, 'projection', P1, 'isIrreducible', true);
+                    Io = [Io I1];
+                    Po = [Po; P1];
+                end
+                isHarmonized = false;
+                iso1 = replab.Isotypic(self.parent, irreps, Po, self.irrepDimension, isHarmonized);
+            end
+        end
+
     end
 
 end
-
-% $$$         % SubRep
-% $$$
-% $$$         function iso = refine(self)
-% $$$             ctx = replab.Context.make;
-% $$$             iso = replab.rep.refineIsotypic(self, ctx);
-% $$$             ctx.close;
-% $$$         end
-% $$$
-% $$$         function iso = nice(self)
-% $$$             iso = replab.nice.niceIsotypic(self);
-% $$$         end
-
-% $$$
-% $$$         function c = computeCommutant(self)
-% $$$             if self.overC
-% $$$                 c = replab.IsotypicSimpleCommutant(self);
-% $$$             else
-% $$$                 switch self.irrep(1).frobeniusSchurIndicator
-% $$$                   case 1
-% $$$                     c = replab.IsotypicSimpleCommutant(self);
-% $$$                   case 0
-% $$$                     c = replab.IsotypicComplexCommutant(self);
-% $$$                   case -2
-% $$$                     c = replab.IsotypicQuaternionCommutant(self);
-% $$$                   otherwise
-% $$$                     error('Unknown indicator');
-% $$$                 end
-% $$$             end
-% $$$         end
-% $$$
-% $$$         % Isotypic
-% $$$
-% $$$         function [A Ainv] = changeOfBasis(self, i, j, context)
-% $$$             A = eye(self.irrepDimension);
-% $$$             Ainv = A;
-% $$$         end

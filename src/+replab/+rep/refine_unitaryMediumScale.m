@@ -1,4 +1,4 @@
-function Q = refine_unitaryMediumScale(rep, Q, innerIterations, maxIterations)
+function Q = refine_unitaryMediumScale(rep, Q, innerIterations, maxIterations, Qo)
 % Refines an orthogonal basis for subrepresentation of a unitary representation
 %
 % Args:
@@ -6,6 +6,7 @@ function Q = refine_unitaryMediumScale(rep, Q, innerIterations, maxIterations)
 %   Q (double(\*,\*)): Orthogonal basis, given as column vectors
 %   nInnerIterations (integer): See `+replab.SubRep.refine`
 %   maxIterations (integer): See `+replab.SubRep.refine`
+%   Qo (double(D,do)): Basis matrix prescribing orthogonality, used in isotypic components
 %
 % Returns:
 %   double(\*,\*): Refined orthogonal basis
@@ -25,6 +26,9 @@ function Q = refine_unitaryMediumScale(rep, Q, innerIterations, maxIterations)
         dProj = norm(Foverline-Ftilde, 'fro');
         for j = 1:innerIterations
             Q1 = Foverline * Q;
+            if ~isempty(Qo)
+                Q1 = Q1 - Qo * (Qo' * Q1);
+            end
             [Q1, R] = qr(Q1, 0);
             dSpan = norm(Q'*Q1*Q1'*Q - speye(dsub), 'fro')*2;
             replab.log(3, ' (inner)          %6.2E', dSpan);

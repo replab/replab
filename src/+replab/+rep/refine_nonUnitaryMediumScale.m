@@ -1,12 +1,14 @@
-function [I, P] = refine_nonUnitaryMediumScale(rep, I0, P0, innerIterations, maxIterations)
+function [I, P] = refine_nonUnitaryMediumScale(rep, I0, P0, innerIterations, maxIterations, Ibo, Pbo)
 % Refines an injection/projection pair for subrepresentation of a possibly non-unitary representation
 %
 % Args:
 %   rep (`+replab.Rep`): Parent representation
-%   I0 (double(\*,\*)): Injection map matrix
-%   P0 (double(\*,\*)): Projection map matrix
+%   I0 (double(D,d)): Injection map matrix
+%   P0 (double(d,D)): Projection map matrix
 %   nInnerIterations (integer): See `+replab.SubRep.refine`
 %   maxIterations (integer): See `+replab.SubRep.refine`
+%   Ibo (double(D,do)): Injection map matrix prescribing biorthogonality
+%   Pbo (double(do,D)): Projection map matrix prescribing biorthogonality
 %
 % Returns
 % -------
@@ -37,6 +39,10 @@ function [I, P] = refine_nonUnitaryMediumScale(rep, I0, P0, innerIterations, max
         for j = 1:innerIterations
             I1 = Foverline * I;
             P1 = P * Foverline;
+            if ~isempty(Ibo) && ~isempty(Pbo)
+                I1 = I1 - Ibo * (Pbo * I1);
+                P1 = P1 - (P1 * Ibo) * Pbo;
+            end
             I1 = I1 / (P0 * I1);
             P1 = (P1 * I1) \ P1;
             [U1, ~] = qr(I1, 0);

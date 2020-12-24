@@ -1,4 +1,4 @@
-function Q = refine_unitaryLargeScale(rep, Q, numNonImproving, nSamples, maxIterations)
+function Q = refine_unitaryLargeScale(rep, Q, numNonImproving, nSamples, maxIterations, Qo)
 % Refines an orthogonal basis for subrepresentation of a unitary representation
 %
 % Args:
@@ -7,6 +7,7 @@ function Q = refine_unitaryLargeScale(rep, Q, numNonImproving, nSamples, maxIter
 %   numNonImproving (integer): See `+replab.SubRep.refine`
 %   nSamples (integer): See `+replab.SubRep.refine`
 %   maxIterations (integer): See `+replab.SubRep.refine`
+%   Qo (double(D,do)): Basis matrix prescribing orthogonality, used in isotypic components
 %
 % Returns:
 %   double(\*,\*): Refined orthogonal basis
@@ -26,6 +27,9 @@ function Q = refine_unitaryLargeScale(rep, Q, numNonImproving, nSamples, maxIter
             Q1 = Q1 + rep.matrixRowAction(g, Q) * (rep.matrixColAction(g, Q') * Q);
         end
         Q1 = Q1/nSamples;
+        if ~isempty(Qo)
+            Q1 = Q1 - Qo * (Qo' * Q1);
+        end
         [Q1, R] = qr(Q1, 0);
         ortho = norm(R - speye(dsub), 'fro');
         dSpan = norm(Q1'*Q*Q'*Q1 - speye(dsub), 'fro')*2;
