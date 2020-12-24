@@ -343,16 +343,16 @@ classdef SubRep < replab.Rep
                     [I, ~] = qr(I, 0);
                 end
                 if args.largeScale
-                    I1 = replab.rep.refine_unitaryLargeScale(self.parent, I, args.numNonImproving, args.nSamples, args.maxIterations);
+                    I1 = replab.rep.refine_unitaryLargeScale(self.parent, I, args.numNonImproving, args.nSamples, args.maxIterations, []);
                 else
-                    I1 = replab.rep.refine_unitaryMediumScale(self.parent, I, args.nInnerIterations, args.maxIterations);
+                    I1 = replab.rep.refine_unitaryMediumScale(self.parent, I, args.nInnerIterations, args.maxIterations, []);
                 end
                 sub1 = self.parent.subRep(I1, 'projection', I1', 'isUnitary', true);
             else
                 if args.largeScale
-                    [I1, P1] = replab.rep.refine_nonUnitaryLargeScale(self.parent, I, P, args.numNonImproving, args.nSamples, args.maxIterations);
+                    [I1, P1] = replab.rep.refine_nonUnitaryLargeScale(self.parent, I, P, args.numNonImproving, args.nSamples, args.maxIterations, [], []);
                 else
-                    [I1, P1] = replab.rep.refine_nonUnitaryMediumScale(self.parent, I, P, args.nInnerIterations, args.maxIterations);
+                    [I1, P1] = replab.rep.refine_nonUnitaryMediumScale(self.parent, I, P, args.nInnerIterations, args.maxIterations, [], []);
                 end
                 sub1 = self.parent.subRep(I1, 'projection', P1);
             end
@@ -514,23 +514,6 @@ classdef SubRep < replab.Rep
 % $$$             % Estimate the probability of a false negative given the above
 % $$$             % (run experimental experiments?)
 % $$$         end
-
-% $$$         function [s better] = nice(self)
-% $$$         % Returns a representation similar to the current subrepresentation, with a nicer basis
-% $$$         %
-% $$$         % The "niceness" of the basis is implementation dependent. As of the first implementation
-% $$$         % of this feature, RepLAB tries to make the basis real, and then with small integer
-% $$$         % coefficients.
-% $$$         %
-% $$$         % The returned subrepresentation is not necessarily unitary.
-% $$$         %
-% $$$         % In the case no improvement could be made, the original subrepresentation is returned.
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `+replab.SubRep`: A subrepresentation of ``self.parent``
-% $$$             s = replab.nice.niceSubRep(self);
-% $$$         end
-
 
     methods % Implementations
 
