@@ -719,6 +719,22 @@ classdef Rep < replab.Obj
             b = self.cached('isUnitary', @() self.computeIsUnitary);
         end
 
+        function b = knownIrreducible(self)
+        % Returns whether this representation is known to be irreducible; only a true result is significant
+        %
+        % Returns:
+        %   logical: True if `.isIrreducible` is known and is true
+            b = self.cachedOrDefault('isIrreducible', false);
+        end
+
+        function b = knownReducible(self)
+        % Returns whether this representation is known to be reducible; only a true result is significant
+        %
+        % Returns:
+        %   logical: True if `.isIrreducible` is known and is false
+            b = ~self.cachedOrDefault('isIrreducible', true);
+        end
+
         function b = knownUnitary(self)
         % Returns whether this representation is known to be unitary; only a true result is significant
         %
