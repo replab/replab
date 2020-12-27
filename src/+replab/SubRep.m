@@ -70,8 +70,6 @@ classdef SubRep < replab.Rep
             self@replab.Rep(parent.group, parent.field, d, restArgs{:});
             if isa(injection_internal, 'replab.cyclotomic') && isa(projection_internal, 'replab.cyclotomic')
                 hasExactMaps = true;
-                assert(isempty(args.projectorErrorBound) || args.projectorErrorBound == 0);
-                args.projectorErrorBound = 0;
             elseif replab.numerical.isExact(injection_internal) && replab.numerical.isExact(projection_internal) && ...
                     ~isempty(args.projectorErrorBound) && args.projectorErrorBound == 0
                 hasExactMaps = true;
