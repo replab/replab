@@ -2,30 +2,19 @@ classdef RepLaws < replab.Laws
 
     properties
         rep
-        G % group of which rep is a representation
-          %C % commutant algebra
-          %U % Unitary/orthonormal matrices on R or C
-          %M % n x n matrices over R, or C
+        G % Group of which rep is a representation
+        C % Commutant algebra
+        M % Matrices o
     end
 
     methods
 
         function self = RepLaws(rep)
             self.rep = rep;
-            d = self.rep.dimension;
             self.G = rep.group;
-            % self.C = rep.commutant;
-% $$$             self.M = replab.domain.Matrices(rep.field, d, d);
-% $$$             if rep.isUnitary
-% $$$                 switch rep.field
-% $$$                   case 'R'
-% $$$                     self.U = replab.OrthogonalGroup(d);
-% $$$                   case 'C'
-% $$$                     self.U = replab.UnitaryGroup(d);
-% $$$                 end
-% $$$             else
-% $$$                 self.U = replab.GeneralLinearGroup(rep.field, d);
-% $$$             end
+            self.C = rep.commutant;
+            d = self.rep.dimension;
+            self.M = replab.domain.Matrices(rep.field, d, d);
         end
 
         function law_identity_(self)
@@ -54,32 +43,35 @@ classdef RepLaws < replab.Laws
             self.assert(norm(rho1rho2 - rho12, 'fro') <= tol);
         end
 
-        %        function morphismLaws = laws_asGroupHomomorphism(self)
-        %            morphismLaws = replab.laws.GroupMorphismLaws(@(g) self.rep.image(g), self.G, self.U);
-        %        end
+        function law_commutes_with_commutant_algebra_GM(self, g, M)
+            [X, errX] = self.C.project(M);
+            condX = norm(X, 2);
+            I = self.rep.image(g);
+            errI = self.rep.errorBound;
+            condI = self.rep.conditionNumberEstimate;
+            % (X + dX)(I + dI) - (I + dI)(X + dX) = XI - IX + dX I + X dI - dX I - dI X + dX dI - dI dX
+            % 2 * norm(dX, 'fro') * norm(I, 2) + 2 * norm(dI, 'fro') * norm(X, 2)
+            tol = 2*errI*condI + 2*errX*condX;
+            self.assert(norm(X * I - I * X, 'fro') <= tol);
+        end
 
-% $$$         function law_commutes_with_commutant_algebra_GC(self, g, c)
-% $$$             rho = self.rep.image(g);
-% $$$             self.M.assertEqv(rho*c, c*rho);
-% $$$         end
-% $$$
-% $$$         function law_respects_division_algebra_G(self, g)
-% $$$             if isequal(self.rep.field, 'R') && isequal(self.rep.isIrreducible, true) && ~isempty(self.rep.frobeniusSchurIndicator)
-% $$$                 rho = self.rep.image(g);
-% $$$                 switch self.rep.frobeniusSchurIndicator
-% $$$                   case 0
-% $$$                     rho1 = replab.domain.ComplexTypeMatrices.project(rho);
-% $$$                     self.M.assertEqv(rho, rho1);
-% $$$                   case -2
-% $$$                     rho1 = replab.domain.QuaternionTypeMatrices.project(rho);
-% $$$                     self.M.assertEqv(rho, rho1);
-% $$$                   case 1
-% $$$                     % do nothing
-% $$$                   otherwise
-% $$$                     error('Wrong Frobenius Schur indicator');
-% $$$                 end
-% $$$             end
-% $$$         end
+        function law_respects_division_algebra_G(self, g)
+            if self.rep.overR && self.rep.knownIrreducible
+                rho = self.rep.image(g);
+                switch self.rep.frobeniusSchurIndicator
+                    case 0
+                      rho1 = replab.domain.ComplexTypeMatrices.project(rho);
+                  case -2
+                    rho1 = replab.domain.QuaternionTypeMatrices.project(rho);
+                  case 1
+                    rho1 = rho;
+                    % do nothing
+                  otherwise
+                    error('Wrong Frobenius Schur indicator');
+                end
+                self.assert(norm(rho - rho1, 'fro') <= self.rep.errorBound);
+            end
+        end
 
     end
 
