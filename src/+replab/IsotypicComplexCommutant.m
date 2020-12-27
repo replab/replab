@@ -6,73 +6,97 @@ classdef IsotypicComplexCommutant < replab.IsotypicCommutant
             self = self@replab.IsotypicCommutant(isotypic, 2);
         end
 
-        function [A B] = block(self, X)
-        % Returns the block of a matrix projected in the commutant algebra
-        %
-        % Args:
-        %   X (double(\*,\*)): Matrix to project on this commutant algebra
-        %
-        % Returns
-        % -------
-        %   A:
-        %    double(\*,\*): The real part of the projected block
-        %   B:
-        %    double(\*,\*): The imaginary part of the projected block
-            m = self.repR.multiplicity;
-            id = self.repR.irrepDimension;
-            A = zeros(m, m);
-            B = zeros(m, m);
-            for i = 1:2:id
-                r = i:id:m*id;
-                A = A + X(r, r) + X(r+1, r+1);
-                B = B + X(r+1, r) - X(r, r+1);
-            end
-            A = A/id;
-            B = B/id;
+    end
+
+    methods (Static)
+
+        function X = basisA
+            X = eye(2);
         end
 
-        function [A B] = blockFromParent(self, X)
+        function X = basisB
+            X = [0 -1; 1 0];
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function [A, B] = blockFromParent(self, X, type)
         % Changes the basis and projects a block on this isotypic component
         %
         % Args:
-        %   X (double(\*,\*)): Matrix to project on this commutant algebra in the basis of the original representation
+        %   X (double(\*,\*) or `.cyclotomic`(\*,\*)): Matrix to project on this commutant algebra in the basis of the original representation
+        %   type ('double', 'double/sparse' or 'exact'): Type
         %
         % Returns
         % -------
         %   A:
-        %    double(\*,\*): The real part of the projected block
+        %    double(\*,\*) or `.cyclotomic`(\*,\*): The real part of the projected block
         %   B:
-        %    double(\*,\*): The imaginary part of the projected block
+        %    double(\*,\*) or `.cyclotomic`(\*,\*): The imaginary part of the projected block
             m = self.repR.multiplicity;
             id = self.repR.irrepDimension;
-            Er = self.repR.E_internal;
-            Br = self.repR.B_internal;
-            A = zeros(m, m);
-            B = zeros(m, m);
-            for i = 1:2:id
-                range = shift+(i:id:m*id);
-                A = A + Er(range,:)*X*Br(:,range) + Er(range+1,:)*X*Br(:,range+1);
-                B = B + Er(range+1,:)*X*Br(:,range) - Er(range,:)*X*Br(:,range+1);
+            P = self.repR.projection(type);
+            I = self.repR.injection(type);
+            range = 1:id:m*id;
+            A = P(range,:)*X*I(:,range) + P(range+1,:)*X*I(:,range+1);
+            B = P(range+1,:)*X*I(:,range) - P(range,:)*X*I(:,range+1);
+            for i = 3:2:id
+                range = i:id:m*id;
+                A = A + P(range,:)*X*I(:,range) + P(range+1,:)*X*I(:,range+1);
+                B = B + P(range+1,:)*X*I(:,range) - P(range,:)*X*I(:,range+1);
             end
             A = A/id;
             B = B/id;
         end
 
-        function X1 = projectAndReduceFromParent(self, X)
-            [A B] = self.blockFromParent(X);
+        function [A, B] = block(self, X)
+        % Returns the block of a matrix projected in the commutant algebra
+        %
+        % Args:
+        %   X (double(\*,\*) or `.cyclotomic`(\*,\*)): Matrix to project on this commutant algebra
+        %
+        % Returns
+        % -------
+        %   A:
+        %    double(\*,\*) or `.cyclotomic`(\*,\*): The real part of the projected block
+        %   B:
+        %    double(\*,\*) or `.cyclotomic`(\*,\*): The imaginary part of the projected block
+            m = self.repR.multiplicity;
+            id = self.repR.irrepDimension;
+            range = 1:id:m*id;
+            A = X(range, range) + X(range+1, range+1);
+            B = X(range+1, range) - X(range, range+1);
+            for i = 3:2:id
+                r = i:id:m*id;
+                A = A + X(range, range) + X(range+1, range+1);
+                B = B + X(range+1, range) - X(range, range+1);
+            end
+            A = A/id;
+            B = B/id;
+        end
+
+        function X1 = projectAndReduceFromParent_exact(self, X)
+            [A, B] = self.blockFromParent(X, 'exact');
+            X1 = kron(A, eye(2)) + kron(B, [0 -1; 1 0]);
+        end
+
+        function X1 = projectAndReduceFromParent_double_sparse(self, X)
+            [A, B] = self.blockFromParent(X, 'double/sparse');
             X1 = kron(A, eye(2)) + kron(B, [0 -1; 1 0]);
         end
 
         function X1 = projectAndReduce(self, X)
-            [A B] = self.block(X);
+            [A, B] = self.block(X);
             X1 = kron(A, eye(2)) + kron(B, [0 -1; 1 0]);
         end
 
-        function [X1 err] = project(self, X)
+        function [X1, err] = project(self, X)
             id = self.repR.irrepDimension;
-            [A B] = self.block(X);
+            [A, B] = self.block(X);
             X1 = kron(A, eye(id)) + kron(B, kron(eye(id/2), [0 -1; 1 0]));
-            err = NaN;
+            err = inf;
         end
 
     end

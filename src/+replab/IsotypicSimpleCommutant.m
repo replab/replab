@@ -1,15 +1,24 @@
 classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
 
+    methods
+
+        function self = IsotypicSimpleCommutant(isotypic)
+            self = self@replab.IsotypicCommutant(isotypic, 1);
+        end
+
+    end
+
     methods (Access = protected)
 
         function X1 = blockFromParent(self, X, type)
         % Changes the basis and projects a block on this isotypic component
         %
         % Args:
-        %   X (double(\*,\*)): Matrix to project on this commutant algebra in the basis of the original representation
+        %   X (double(\*,\*) or `.cyclotomic`(\*,\*)): Matrix to project on this commutant algebra in the basis of the original representation
+        %   type ('double', 'double/sparse' or 'exact'): Type
         %
         % Returns:
-        %   double(\*,\*): Block corresponding to the isotypic component
+        %   double(\*,\*) or `.cyclotomic`(\*,\*): Block corresponding to the isotypic component
             m = self.repR.multiplicity;
             id = self.repR.irrepDimension;
             P = self.repR.projection(type);
@@ -46,7 +55,7 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
 
         function [part1, err] = projectAndFactorFromParent_double_sparse(self, X)
             part1 = self.blockFromParent(X, 'double/sparse');
-            err = NaN;
+            err = inf;
         end
 
         function part1 = projectAndFactor_exact(self, X)
@@ -55,7 +64,7 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
 
         function [part1, err] = projectAndFactor_double_sparse(self, X)
             part1 = self.block(X);
-            err = NaN;
+            err = inf;
         end
 
         function X1 = project_exact(self, X)
@@ -64,14 +73,7 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
 
         function [X1, err] = project_double_sparse(self, X)
             X1 = kron(self.block(X), speye(self.repR.irrepDimension));
-        end
-
-    end
-
-    methods
-
-        function self = IsotypicSimpleCommutant(isotypic)
-            self = self@replab.IsotypicCommutant(isotypic, 1);
+            err = inf;
         end
 
     end

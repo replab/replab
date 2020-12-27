@@ -40,6 +40,22 @@ classdef IsotypicCommutant < replab.Equivariant
             self.divisionAlgebraDimension = divisionAlgebraDimension;
         end
 
+    end
+
+    methods % Implementations
+
+        % Equivariant
+
+        function [X, err] = project(self, X, type)
+            [part1, part2, err] = self.projectAndFactor(X, type)
+            X = kron(part1, part2);
+            err = inf;
+        end
+
+    end
+
+    methods
+
         function s = reducedBlockSize(self)
         % Returns the size of a commutant algebra element block, without repetition
         %

@@ -74,7 +74,7 @@ classdef Equivariant < replab.Domain
 
     methods % Projection
 
-        function [X1 err] = project(self, X, type)
+        function [X1, err] = project(self, X, type)
         % Projects any ``nR x nC`` matrix in the equivariant subspace
         %
         % Performs the integration
