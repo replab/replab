@@ -123,7 +123,7 @@ classdef Isotypic < replab.SubRep
             if all(cellfun(@(irrep) irrep.inCache('isDivisionAlgebraCanonical'), irreps))
                 dac = all(cellfun(@(irrep) irrep.isDivisionAlgebraCanonical, irreps));
             end
-            args = horzcat(args, {'isIrreducible', m > 1});
+            args = horzcat(args, {'isIrreducible', m <= 1});
             injections = cellfun(@(irrep) irrep.injection_internal, irreps, 'uniform', 0);
             if m == 0
                 injection = zeros(parent.dimension, 0);
