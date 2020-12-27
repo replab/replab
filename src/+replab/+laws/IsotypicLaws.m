@@ -26,7 +26,6 @@ classdef IsotypicLaws < replab.laws.SubRepLaws
             end
         end
 
-
     end
 
 end
