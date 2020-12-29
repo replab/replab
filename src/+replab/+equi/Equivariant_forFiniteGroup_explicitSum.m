@@ -11,8 +11,12 @@ classdef Equivariant_forFiniteGroup_explicitSum < replab.Equivariant
 
     methods (Access = protected)
 
+        function E = groupElements(self)
+            E = self.cached('groupElements', @() self.group.elements.toCell);
+        end
+
         function X1 = project_exact(self, X)
-            E = self.group.elements.toCell;
+            E = self.groupElements;
             g = E{1};
             X1 = self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X, 'exact'), 'exact');
             for i = 2:length(E)
@@ -32,7 +36,7 @@ classdef Equivariant_forFiniteGroup_explicitSum < replab.Equivariant
                 cR = self.repR.conditionNumberEstimate; % condition number of repR
                 cC = self.repC.conditionNumberEstimate; % condition number of repC
             end
-            E = self.group.elements.toCell;
+            E = self.groupElements;
             g = E{1};
             X1 = self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X, 'double'), 'double');
             for i = 2:length(E)
