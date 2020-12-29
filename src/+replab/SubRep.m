@@ -476,6 +476,24 @@ classdef SubRep < replab.Rep
             e = e1 + e2;
         end
 
+        function c = computeCommutant(self)
+            c = replab.equi.Equivariant_forSubRep(self.parent.commutant, self, self, 'commutant');
+        end
+
+        function h = computeHermitianInvariant(self)
+            h = replab.equi.Equivariant_forSubRep(self.parent.hermitianInvariant, self, self.dual.conj, 'hermitian');
+        end
+
+        function t = computeTrivialRowSpace(self)
+            tRep = self.group.trivialRep(self.field, self.dimension);
+            t = replab.equi.Equivariant_forSubRep(self.parent.trivialRowSpace, tRep, self, 'trivialRows');
+        end
+
+        function t = computeTrivialColSpace(self)
+            tRep = self.group.trivialRep(self.field, self.dimension);
+            t = replab.equi.Equivariant_forSubRep(self.parent.trivialColSpace, self, tRep, 'trivialCols');
+        end
+
         function [A Ainv] = unitaryChangeOfBasis(self)
             if self.parent.knownUnitary
                 P = self.projection('double/sparse');
@@ -566,6 +584,18 @@ classdef SubRep < replab.Rep
 
         function b = isExact(self)
             b = self.mapsAreExact && self.parent.isExact;
+        end
+
+        function rep = complexification(self)
+            rep = self.parent.complexification.subRep(self.injection_internal, 'projection', self.projection_internal);
+        end
+
+        function rep = dual(self)
+            rep = self.parent.dual.subRep(self.projection_internal.', 'projection', self.injection_internal.');
+        end
+
+        function rep = conj(self)
+            rep = self.parent.conj.subRep(conj(self.injection_internal), 'projection', conj(self.projection_internal));
         end
 
     end

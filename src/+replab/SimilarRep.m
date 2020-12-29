@@ -206,6 +206,14 @@ classdef SimilarRep < replab.Rep
             end
         end
 
+        function res = toSubRep(self)
+        % Returns a subrepresentation of the parent representation equivalent to this representation
+        %
+        % Returns:
+        %   `.SubRep`: A subrepresentation of `.parent`
+            res = self.parent.subRep(self.Ainv_internal, 'projection', self.A_internal);
+        end
+
     end
 
     methods % Implementations
@@ -220,6 +228,18 @@ classdef SimilarRep < replab.Rep
 
         function b = isExact(self)
             b = self.basisIsExact && self.parent.isExact;
+        end
+
+        function rep = complexification(self)
+            rep = self.parent.complexification.similarRep(self.A_internal, 'inverse', self.Ainv_internal);
+        end
+
+        function rep = dual(self)
+            rep = self.parent.dual.similarRep(self.Ainv_internal.', 'inverse', self.A_internal.');
+        end
+
+        function rep = conj(self)
+            rep = self.parent.conj.similarRep(conj(self.A_internal), 'inverse', conj(self.Ainv_internal));
         end
 
     end
@@ -287,6 +307,24 @@ classdef SimilarRep < replab.Rep
                 % the condition number of A*B is cond(A) * cond(B)
                 c = self.basisConditionNumberEstimate * self.parent.conditionNumberEstimate;
             end
+        end
+
+        function c = computeCommutant(self)
+            c = replab.equi.Equivariant_forSimilarRep(self.parent.commutant, self, self, 'commutant');
+        end
+
+        function h = computeHermitianInvariant(self)
+            h = replab.equi.Equivariant_forSimilarRep(self.parent.hermitianInvariant, self, self.dual.conj, 'hermitian');
+        end
+
+        function t = computeTrivialRowSpace(self)
+            tRep = self.group.trivialRep(self.field, self.dimension);
+            t = replab.equi.Equivariant_forSimilarRep(self.parent.trivialRowSpace, tRep, self, 'trivialRows');
+        end
+
+        function t = computeTrivialColSpace(self)
+            tRep = self.group.trivialRep(self.field, self.dimension);
+            t = replab.equi.Equivariant_forSimilarRep(self.parent.trivialColSpace, self, tRep, 'trivialCols');
         end
 
     end

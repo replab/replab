@@ -12,20 +12,20 @@ classdef Equivariant_forSubRep < replab.Equivariant
 
     methods
 
-        function self = Equivariant_forSubRep(parent, subRepR, subRepC, special)
+        function self = Equivariant_forSubRep(parent, repR, repC, special)
         % Constructs an equivariant space similar to another equivariant space
         %
         % Args:
         %   parent (`+replab.Equivariant`): Equivariant space of ``subRepR.parent`` and ``subRepC.parent``
-        %   subRepR (`+replab.SubRep`): A subrepresentation of ``parent.repR``
-        %   subRepC (`+replab.SubRep`): A subrepresentation of ``parent.repC``
+        %   repR (`+replab.SubRep`): A subrepresentation of ``parent.repR``
+        %   repC (`+replab.SubRep`): A subrepresentation of ``parent.repC``
         %   special (charstring): Whether the equivariant subspace has special structure
-            self@replab.Equivariant(subRepR, subRepC, special);
+            self@replab.Equivariant(repR, repC, special);
             assert(isa(parent, 'replab.Equivariant'));
-            assert(isa(subRepR, 'replab.SubRep'));
-            assert(isa(subRepC, 'replab.SubRep'));
-            assert(subRepR.parent == parent.repR);
-            assert(subRepC.parent == parent.repC);
+            assert(isa(repR, 'replab.SubRep'));
+            assert(isa(repC, 'replab.SubRep'));
+            assert(repR.parent == parent.repR);
+            assert(repC.parent == parent.repC);
             self.parent = parent;
         end
 

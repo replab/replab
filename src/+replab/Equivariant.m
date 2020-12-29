@@ -296,37 +296,16 @@ classdef Equivariant < replab.Domain
         %
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
-            if isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SimilarRep')
-                switch special
-                  case 'commutant'
-                    parent = repR.parent.commutant;
-                  case 'hermitian'
-                    parent = repR.parent.hermitianInvariant;
-                  case 'trivialRows'
-                    parent = repC.parent.trivialRowSpace;
-                  case 'trivialCols'
-                    parent = repR.parent.trivialColSpace;
-                  case ''
-                    parent = repR.parent.equivariantFrom(repC.parent);
-                  otherwise
-                    error('Unknown special structure %s', special);
-                end
+
+            if     isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SimilarRep')
+                parent = repR.parent.equivariantFrom(repC.parent);
                 E = replab.equi.Equivariant_forSimilarRep(parent, repR, repC, special);
+            elseif isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SubRep')
+                E = replab.Equivariant.make(repR.toSubRep, repC, special);
+            elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SimilarRep')
+                E = replab.Equivariant.make(repR, repC.toSubRep, special);
             elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SubRep')
-                switch special
-                  case 'commutant'
-                    parent = repR.parent.commutant;
-                  case 'hermitian'
-                    parent = repR.parent.hermitianInvariant;
-                  case 'trivialRows'
-                    parent = repC.parent.trivialRowSpace;
-                  case 'trivialCols'
-                    parent = repR.parent.trivialColSpace;
-                  case ''
-                    parent = repR.parent.equivariantFrom(repC.parent);
-                  otherwise
-                    error('Unknown special structure %s', special);
-                end
+                parent = repR.parent.equivariantFrom(repC.parent);
                 E = replab.equi.Equivariant_forSubRep(parent, repR, repC, special);
             elseif isa(repR.group, 'replab.FiniteGroup')
                 if repR.group.order < 65536 && (~repR.isExact || ~repC.isExact)
