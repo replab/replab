@@ -1,9 +1,10 @@
-classdef Equivariant_forFiniteGroup < replab.Equivariant
+classdef Equivariant_forFiniteGroup_relativeReynolds < replab.Equivariant
+% Equivariant space of representations of a finite group, whose projection is computed using relative Reynolds summation
 
     methods
 
-        function self = Equivariant_forFiniteGroup(repC, repR, special)
-            self@replab.Equivariant(repC, repR, special);
+        function self = Equivariant_forFiniteGroup_relativeReynolds(repR, repC, special)
+            self@replab.Equivariant(repR, repC, special);
         end
 
     end
@@ -25,7 +26,7 @@ classdef Equivariant_forFiniteGroup < replab.Equivariant
             end
         end
 
-        function [X eX] = project_double_sparse(self, X)
+        function [X, eX] = project_double_sparse(self, X)
             if nargout > 1
                 sX = replab.numerical.norm2UpperBound(X); % estimate of largest singular value on X
                                                           % we assume this decreases under averaging
@@ -48,9 +49,6 @@ classdef Equivariant_forFiniteGroup < replab.Equivariant
                 X = S/nEls;
                 if nargout > 1
                     eX = nEls*(eR*cC*sX + cR*eC*sX + eX*cR*cC);
-                    if eR == 0 && eC == 0
-                        eX = eX + norm(eps(X), 'fro');
-                    end
                 end
             end
         end

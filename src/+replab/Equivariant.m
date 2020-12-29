@@ -120,6 +120,10 @@ classdef Equivariant < replab.Domain
             end
         end
 
+    end
+
+    methods
+
         function b = isExact(self)
         % Returns whether this equivariant space can compute exact projection
         %
@@ -132,7 +136,7 @@ classdef Equivariant < replab.Domain
 
     methods
 
-        function self = Equivariant(repC, repR, special)
+        function self = Equivariant(repR, repC, special)
         % Constructor; use `+replab.Equivariant.make` in user code
         %
         % That function selects an optimized implementation depending on the use case.
@@ -153,6 +157,9 @@ classdef Equivariant < replab.Domain
             self.cachedErrors_ = struct;
         end
 
+    end
+
+    methods % Cached samples
 
         function clearCache(self, context)
         % Clears the samples cached for the given context
@@ -206,19 +213,19 @@ classdef Equivariant < replab.Domain
 
     methods % Implementations
 
-% $$$         function E1 = subEquivariant(self, subC, subR, special)
-% $$$         % Constructs a invariant subspace of an equivariant space
-% $$$         %
-% $$$         % Args:
-% $$$         %   subC (`+replab.SubRep`): A subrepresentation of ``self.repC``
-% $$$         %   subR (`+replab.SubRep`): A subrepresentation of ``self.repR``
-% $$$         %   special (charstring): Whether the equivariant subspace has special structure
-% $$$             assert(isa(subC, 'replab.SubRep'));
-% $$$             assert(isa(subR, 'replab.SubRep'));
-% $$$             assert(subC.parent == self.repC);
-% $$$             assert(subR.parent == self.repR);
-% $$$             E1 = replab.equi.ForSubReps(subC, subR, special, self);
-% $$$         end
+         function E1 = subEquivariant(self, subR, subC, special)
+         % Constructs a invariant subspace of an equivariant space
+        %
+        % Args:
+        %   subC (`+replab.SubRep`): A subrepresentation of ``self.repC``
+        %   subR (`+replab.SubRep`): A subrepresentation of ``self.repR``
+        %   special (charstring): Whether the equivariant subspace has special structure
+            assert(isa(subC, 'replab.SubRep'));
+            assert(isa(subR, 'replab.SubRep'));
+            assert(subC.parent == self.repC);
+            assert(subR.parent == self.repR);
+            E1 = replab.equi.ForSubReps(subC, subR, special, self);
+        end
 
         % Str
 
@@ -275,7 +282,7 @@ classdef Equivariant < replab.Domain
 
     methods (Static)
 
-        function E = make(repC, repR, special)
+        function E = make(repR, repC, special)
         % Returns the space of equivariant linear maps between two representations
         %
         % The equivariant vector space contains the matrices X such that
@@ -283,16 +290,50 @@ classdef Equivariant < replab.Domain
         % ``repC.image(g) * X = X * repR.image(g)``
         %
         % Args:
-        %   repC (`+replab.Rep`): Representation on the source/column space
         %   repR (`+replab.Rep`): Representation on the target/row space
+        %   repC (`+replab.Rep`): Representation on the source/column space
         %   special (charstring): Special structure see help on `+replab.Equivariant.special`
         %
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
-            if isa(repR, 'replab.SimilarRep') || isa(repC, 'replab.SimilarRep')
-                E = replab.equi.Equivariant_forSimilarRep(repC, repR, special);
+            if isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SimilarRep')
+                switch special
+                  case 'commutant'
+                    parent = repR.parent.commutant;
+                  case 'hermitian'
+                    parent = repR.parent.hermitianInvariant;
+                  case 'trivialRows'
+                    parent = repC.parent.trivialRowSpace;
+                  case 'trivialCols'
+                    parent = repR.parent.trivialColSpace;
+                  case ''
+                    parent = repR.parent.equivariantFrom(repC.parent);
+                  otherwise
+                    error('Unknown special structure %s', special);
+                end
+                E = replab.equi.Equivariant_forSimilarRep(parent, repR, repC, special);
+            elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SubRep')
+                switch special
+                  case 'commutant'
+                    parent = repR.parent.commutant;
+                  case 'hermitian'
+                    parent = repR.parent.hermitianInvariant;
+                  case 'trivialRows'
+                    parent = repC.parent.trivialRowSpace;
+                  case 'trivialCols'
+                    parent = repR.parent.trivialColSpace;
+                  case ''
+                    parent = repR.parent.equivariantFrom(repC.parent);
+                  otherwise
+                    error('Unknown special structure %s', special);
+                end
+                E = replab.equi.Equivariant_forSubRep(parent, repR, repC, special);
             elseif isa(repR.group, 'replab.FiniteGroup')
-                E = replab.equi.Equivariant_forFiniteGroup(repC, repR, special);
+                if repR.group.order < 65536 && (~repR.isExact || ~repC.isExact)
+                    E = replab.equi.Equivariant_forFiniteGroup_explicitSum(repR, repC, special);
+                else
+                    E = replab.equi.Equivariant_forFiniteGroup_relativeReynolds(repR, repC, special);
+                end
             else
                 error('Unimplemented');
             end

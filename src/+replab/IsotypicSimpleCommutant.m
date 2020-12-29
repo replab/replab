@@ -49,30 +49,29 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
             X1 = X1/id;
         end
 
-        function part1 = projectAndFactorFromParent_exact(self, X)
-            part1 = self.blockFromParent(X, 'exact');
+        function [M, D, A] = projectAndFactorFromParent_exact(self, X)
+            M = {self.blockFromParent(X, 'exact')};
+            D = {replab.cyclotomic.eye(self.repR.irrepDimension)};
+            A = {replab.cyclotomic.eye(1)};
         end
 
-        function [part1, err] = projectAndFactorFromParent_double_sparse(self, X)
-            part1 = self.blockFromParent(X, 'double/sparse');
+        function [M, D, A, err] = projectAndFactorFromParent_double_sparse(self, X)
+            M = {self.blockFromParent(X, 'double/sparse')};
+            D = {speye(self.repR.irrepDimension)};
+            A = {1};
             err = inf;
         end
 
-        function part1 = projectAndFactor_exact(self, X)
-            part1 = self.block(X);
+        function [M, D, A] = projectAndFactor_exact(self, X)
+            M = {self.block(X)};
+            D = {replab.cyclotomic.eye(self.repR.irrepDimension)};
+            A = {replab.cyclotomic.eye(1)};
         end
 
-        function [part1, err] = projectAndFactor_double_sparse(self, X)
-            part1 = self.block(X);
-            err = inf;
-        end
-
-        function X1 = project_exact(self, X)
-            X1 = kron(self.block(X), replab.cyclotomic.eye(self.repR.irrepDimension));
-        end
-
-        function [X1, err] = project_double_sparse(self, X)
-            X1 = kron(self.block(X), speye(self.repR.irrepDimension));
+        function [M, D, A, err] = projectAndFactor_double_sparse(self, X)
+            M = {self.block(X)};
+            D = {speye(self.repR.irrepDimension)};
+            A = {1};
             err = inf;
         end
 

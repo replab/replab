@@ -1,69 +1,60 @@
 classdef Equivariant_forSimilarRep < replab.Equivariant
+% Describes an equivariant space induced by similarity transformations on the source and target space.
+%
+% This equivariant space (this object) relates to a parent equivariant space as follows.
+%
+% - ``self.repR`` must be a `~+replab.SimilarRep` of ``parent.repR``,
+% - ``self.repC`` must be a `~+replab.SimilarRep` of ``parent.repC``.
 
     properties (SetAccess = protected)
         parent % (`+replab.Equivariant`): Parent equivariant space
     end
 
-    properties (Access = protected)
-        repC_internal % (`+replab.SimilarRep`): Representation of row space as a similar representation
-        repR_internal % (`+replab.SimilarRep`): Representation of row space as a similar representation
-    end
-
     methods
 
-        function self = Equivariant_forSimilarRep(repC, repR, special)
-            self@replab.Equivariant(repC, repR, special);
-            repC_internal = repC.simplify;
-            repR_internal = repR.simplify;
-            if ~isa(repC_internal, 'replab.SimilarRep')
-                repC_internal = replab.SimilarRep.identical(repC_internal);
-            end
-            if ~isa(repR_internal, 'replab.SimilarRep')
-                repR_internal = replab.SimilarRep.identical(repR_internal);
-            end
-            switch special
-              case 'hermitian'
-                parent = repR_internal.parent.hermitianInvariant;
-              case 'commutant'
-                parent = repR_internal.parent.commutant;
-              case 'trivialRows'
-                parent = repC_internal.parent.trivialRowSpace;
-              case 'trivialCols'
-                parent = repR_internal.parent.trivialColSpace;
-              otherwise
-                parent = repC_internal.parent.equivariantTo(repR_internal.parent);
-            end
-            self.parent = parent;
-            self.repR_internal = repR_internal;
-            self.repC_internal = repC_internal;
-        end
+        function self = Equivariant_forSimilarRep(parent, similarRepR, similarRepC, special)
+        % Constructs an equivariant space similar to another equivariant space
+        %
+        % Args:
+        %   parent (`+replab.Equivariant`): Equivariant space of ``similarRepR.parent`` and ``similarRepC.parent``
+        %   similarRepR (`+replab.SimilarRep`): A similar representation to ``parent.repR``
+        %   similarRepC (`+replab.SimilarRep`): A similar representation to ``parent.repC``
+        %   special (charstring): Whether the equivariant subspace has special structure
+             assert(isa(parent, 'replab.Equivariant'));
+             assert(isa(similarRepR, 'replab.SimilarRep'));
+             assert(isa(similarRepC, 'replab.SimilarRep'));
+             assert(similarRepR.parent == parent.repR);
+             assert(similarRepC.parent == parent.repC);
+             self@replab.Equivariant(similarRepR, similarRepC, special);
+             self.parent = parent;
+         end
 
     end
 
     methods (Access = protected)
 
-        function X = project_exact(self, X)
-            parentX = self.repR_internal.Ainv('exact') * X * self.repC_internal.A('exact');
-            X = self.repR_internal.A('exact') * self.parent.project(parentX) * self.repC_internal.Ainv('exact');
+        function X1 = project_exact(self, X)
+            parentX = self.repR.Ainv('exact') * X * self.repC.A('exact');
+            X1 = self.repR.A('exact') * self.parent.project(parentX) * self.repC.Ainv('exact');
         end
 
-        function [X1 eX] = project_double_sparse(self, X)
-            parentX = self.repR_internal.Ainv('double/sparse') * X * self.repC_internal.A('double/sparse');
+        function [X1, err] = project_double_sparse(self, X)
+            parentX = self.repR.Ainv('double/sparse') * X * self.repC.A('double/sparse');
             if nargout > 1
-                [parentX1 eParent] = self.parent.project(parentX, 'double/sparse');
+                [parentX1, eParent] = self.parent.project(parentX, 'double/sparse');
             else
                 parentX1 = self.parent.project(parentX, 'double/sparse');
             end
-            X1 = self.repR_internal.A('double/sparse') * parentX1 * self.repC_internal.Ainv('double/sparse');
+            X1 = self.repR.A('double/sparse') * parentX1 * self.repC.Ainv('double/sparse');
             if nargout > 1
-                c = self.repR_internal.basisConditionNumberEstimate * self.repC_internal.basisConditionNumberEstimate;
+                c = self.repR.basisConditionNumberEstimate * self.repC.basisConditionNumberEstimate;
                 % error in the first conversion
-                e1 = replab.numerical.norm2UpperBound(parentX) * self.repR_internal.A_Ainv_error * c;
+                e1 = replab.numerical.norm2UpperBound(parentX) * self.repR.A_Ainv_error * c;
                 % error in the projection
                 e2 = eParent * c;
                 % error in the second conversion
-                e3 = replab.numerical.norm2UpperBound(X1) * self.repC_internal.A_Ainv_error;
-                eX = e1 + e2 + e3;
+                e3 = replab.numerical.norm2UpperBound(X1) * self.repC.A_Ainv_error;
+                err = e1 + e2 + e3;
             end
         end
 

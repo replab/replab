@@ -569,17 +569,17 @@ classdef Rep < replab.Obj
         end
 
         function h = computeHermitianInvariant(self)
-            h = replab.Equivariant.make(self.dual.conj, self, 'hermitian');
+            h = replab.Equivariant.make(self, self.dual.conj, 'hermitian');
         end
 
         function t = computeTrivialRowSpace(self)
             tRep = self.group.trivialRep(self.field, self.dimension);
-            t = replab.Equivariant.make(self, tRep, 'trivialRows');
+            t = replab.Equivariant.make(tRep, self, 'trivialRows');
         end
 
         function t = computeTrivialColSpace(self)
             tRep = self.group.trivialRep(self.field, self.dimension);
-            t = replab.Equivariant.make(tRep, self, 'trivialCols');
+            t = replab.Equivariant.make(self, tRep, 'trivialCols');
         end
 
         function b = computeIsDivisionAlgebraCanonical(self)
@@ -790,6 +790,22 @@ classdef Rep < replab.Obj
 
     methods % Derived vector spaces/algebras
 
+        function e = equivariantFrom(self, repC)
+        % Returns the space of equivariant linear maps from another rep to this rep
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``X * repC.image(g) = self.image(g) * X``
+        %
+        %
+        % Args:
+        %   repC (`+replab.Rep`): Representation on the source/column space
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The equivariant vector space
+            e = replab.Equivariant.make(self, repC, '');
+        end
+
         function e = equivariantTo(self, repR)
         % Returns the space of equivariant linear maps from this rep to another rep
         %
@@ -803,7 +819,7 @@ classdef Rep < replab.Obj
         %
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
-            e = replab.Equivariant.make(self, repR, '');
+            e = replab.Equivariant.make(repR, self, '');
         end
 
         function c = commutant(self)

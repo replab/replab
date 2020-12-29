@@ -77,25 +77,37 @@ classdef IsotypicComplexCommutant < replab.IsotypicCommutant
             B = B/id;
         end
 
-        function X1 = projectAndReduceFromParent_exact(self, X)
-            [A, B] = self.blockFromParent(X, 'exact');
-            X1 = kron(A, eye(2)) + kron(B, [0 -1; 1 0]);
+        function [M, D, A] = projectAndFactorFromParent_exact(self, X)
+            [A, B] = self.blockFromParent(X);
+            M = {A B};
+            I = replab.cyclotomic.eye(self.repR.irrepDimension/2);
+            D = {I I};
+            A = {replab.cyclotomic.eye(2) replab.fromDoubles([0 -1; 1 0])};
         end
 
-        function X1 = projectAndReduceFromParent_double_sparse(self, X)
-            [A, B] = self.blockFromParent(X, 'double/sparse');
-            X1 = kron(A, eye(2)) + kron(B, [0 -1; 1 0]);
+        function [M, D, A, err] = projectAndFactorFromParent_double_sparse(self, X)
+            [A, B] = self.blockFromParent(X);
+            M = {A B};
+            I = speye(self.repR.irrepDimension/2);
+            D = {I I};
+            A = {speye(2) [0 -1; 1 0]};
+            err = inf;
         end
 
-        function X1 = projectAndReduce(self, X)
+        function [M, D, A] = projectAndFactor_exact(self, X)
             [A, B] = self.block(X);
-            X1 = kron(A, eye(2)) + kron(B, [0 -1; 1 0]);
+            M = {A B};
+            I = replab.cyclotomic.eye(self.repR.irrepDimension/2);
+            D = {I I};
+            A = {replab.cyclotomic.eye(2) replab.fromDoubles([0 -1; 1 0])};
         end
 
-        function [X1, err] = project(self, X)
-            id = self.repR.irrepDimension;
+        function [M, D, A, err] = projectAndFactor_double_sparse(self, X)
             [A, B] = self.block(X);
-            X1 = kron(A, eye(id)) + kron(B, kron(eye(id/2), [0 -1; 1 0]));
+            M = {A B};
+            I = speye(self.repR.irrepDimension/2);
+            D = {I I};
+            A = {speye(2) [0 -1; 1 0]};
             err = inf;
         end
 

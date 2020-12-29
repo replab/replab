@@ -96,59 +96,58 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
             D = D/id;
         end
 
-        function X1 = projectAndReduceFromParent_exact(self, X)
-            [A, B, C, D] = self.blockFromParent(X, 'exact');
-            X1 = kron(A, self.basisA) + kron(B, self.basisB) + kron(C, self.basisC) + kron(D, self.basisD);
+        function [M, D, A] = projectAndFactorFromParent_exact(self, X)
+            [A, B, C, D] = self.blockFromParent(X);
+            M = {A B C D};
+            I = replab.cyclotomic.eye(self.repR.irrepDimension/4);
+            D = {I I I I};
+            A = cellfun(@(M) replab.cyclotomic.fromDoubles(M), self.basis, 'uniform', 0);
         end
 
-        function X1 = projectAndReduceFromParent_double_sparse(self, X)
-            [A, B, C, D] = self.blockFromParent(X, 'double/sparse');
-            X1 = kron(A, self.basisA) + kron(B, self.basisB) + kron(C, self.basisC) + kron(D, self.basisD);
+        function [M, D, A, err] = projectAndFactorFromParent_double_sparse(self, X)
+            [A, B, C, D] = self.blockFromParent(X);
+            M = {A B C D};
+            I = speye(self.repR.irrepDimension/4);
+            D = {I I I I};
+            A = self.basis;
+            err = inf;
         end
 
-        function X1 = projectAndReduce(self, X)
+        function [M, D, A] = projectAndFactor_exact(self, X)
             [A, B, C, D] = self.block(X);
-            X1 = kron(A, self.basisA) + kron(B, self.basisB) + kron(C, self.basisC) + kron(D, self.basisD);
+            M = {A B C D};
+            I = replab.cyclotomic.eye(self.repR.irrepDimension/4);
+            D = {I I I I};
+            A = cellfun(@(M) replab.cyclotomic.fromDoubles(M), self.basis, 'uniform', 0);
         end
 
-        function [X1 err] = project(self, X)
-            id = self.repR.irrepDimension;
-            [A B C D] = self.block(X);
-            basisA = eye(id);
-            basisB = kron(eye(id/4), self.basisB);
-            basisC = kron(eye(id/4), self.basisC);
-            basisD = kron(eye(id/4), self.basisD);
-            X1 = kron(A, basisA) + kron(B, basisB) + kron(C, basisC) + kron(D, basisD);
-            err = NaN;
+        function [M, D, A, err] = projectAndFactor_double_sparse(self, X)
+            [A, B, C, D] = self.block(X);
+            M = {A B C D};
+            I = speye(self.repR.irrepDimension/4);
+            D = {I I I I};
+            A = self.basis;
+            err = inf;
         end
 
     end
 
     methods (Static)
 
-        function X = basisA
-            X = eye(4);
-        end
-
-        function X = basisB
-            X = [ 0 -1  0  0
-                  1  0  0  0
-                  0  0  0  1
-                  0  0 -1  0];
-        end
-
-        function X = basisC
-            X = [ 0  0 -1  0
-                  0  0  0 -1
-                  1  0  0  0
-                  0  1  0  0];
-        end
-
-        function X = basisD
-            X = [ 0  0  0 -1
-                  0  0  1  0
-                  0 -1  0  0
-                  1  0  0  0];
+        function B = basis
+            B = {eye(4) ...
+                 [ 0 -1  0  0
+                   1  0  0  0
+                   0  0  0  1
+                   0  0 -1  0] ...
+                 [ 0  0 -1  0
+                   0  0  0 -1
+                   1  0  0  0
+                   0  1  0  0] ...
+                 [ 0  0  0 -1
+                   0  0  1  0
+                   0 -1  0  0
+                   1  0  0  0]};
         end
 
     end

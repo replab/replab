@@ -23,7 +23,6 @@ classdef SimilarRep < replab.Rep
         Ainv_internal % (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Inverse of change of basis matrix
         A_Ainv_error % (double): Frobenius norm of ``A * Ainv - identity``
         basisConditionNumberEstimate % (double): Estimate of the condition number of `.A_internal`
-        hasExactBasis % (logical): Whether the change of basis matrices are exact
     end
 
     methods
@@ -76,18 +75,7 @@ classdef SimilarRep < replab.Rep
             end
             self@replab.Rep(parent.group, parent.field, d, restArgs{:});
             % populate SimilarRep properties
-            if isa(A_internal, 'replab.cyclotomic') && isa(Ainv_internal, 'replab.cyclotomic')
-                hasExactBasis = true;
-            elseif replab.numerical.isExact(A_internal) && replab.numerical.isExact(Ainv_internal)
-                hasExactBasis = full(all(all(A_internal*Ainv_internal - eye(d))));
-            else
-                hasExactBasis = false;
-            end
-            if hasExactBasis
-                prodError = 0;
-            else
-                prodError = norm(double(A_internal)*double(Ainv_internal) - eye(d), 'fro');
-            end
+            prodError = norm(double(A_internal)*double(Ainv_internal) - eye(d), 'fro');
             self.parent = parent;
             self.A_internal = A_internal;
             self.Ainv_internal = Ainv_internal;
@@ -100,7 +88,6 @@ classdef SimilarRep < replab.Rep
                 end
             end
             self.basisConditionNumberEstimate = basisConditionNumberEstimate;
-            self.hasExactBasis = hasExactBasis;
         end
 
     end
@@ -118,7 +105,7 @@ classdef SimilarRep < replab.Rep
         function res = rewriteTerm_similarRepOfSubRep(self, options)
             if isa(self.parent, 'replab.SubRep')
                 if self.basisIsIntegerValued || self.parent.mapsAreIntegerValued || ...
-                        (options.dense && (options.approximate || (self.hasExactBasis && self.parent.hasExactMaps)))
+                        (options.dense && (options.approximate || (self.basisIsExact && self.parent.mapsAreExact)))
                     newProjection = self.A_internal * self.parent.projection_internal;
                     newInjection = self.parent.injection_internal * self.Ainv_internal;
                     res = replab.SubRep(self.parent.parent, newInjection, newProjection);
@@ -131,7 +118,7 @@ classdef SimilarRep < replab.Rep
         function res = rewriteTerm_similarRepOfSimilarRep(self, options)
             if isa(self.parent, 'replab.SimilarRep')
                 if self.basisIsIntegerValued || self.parent.basisIsIntegerValued || ...
-                        (options.dense && (options.approximate || (self.hasExactBasis && self.parent.hasExactBasis)))
+                        (options.dense && (options.approximate || (self.basisIsExact && self.parent.basisIsExact)))
                     newA = self.A_internal * self.parent.A_internal;
                     newAinv = self.parent.Ainv_internal * self.Ainv_internal;
                     res = replab.SimilarRep(self.parent.parent, newA, newAinv);
@@ -145,6 +132,17 @@ classdef SimilarRep < replab.Rep
 
     methods
 
+        function b = basisIsExact(self)
+        % Returns whether this similarity transformation is written using a cyclotomic or Gaussian integer basis matrix
+        %
+        % Returns:
+        %   logical: True if both `.A` and `.Ainv` are cyclotomic matrices or have Gaussian integer entries
+            X = self.A_internal;
+            Y = self.Ainv_internal;
+            b = (isa(X, 'cyclotomic') || replab.numerical.isExact(X)) && ...
+                (isa(Y, 'cyclotomic') || replab.numerical.isExact(Y));
+        end
+
         function b = basisIsIntegerValued(self)
         % Returns whether this similarity transformation has Gaussian integer change of basis matrices
         %
@@ -152,7 +150,7 @@ classdef SimilarRep < replab.Rep
         %   logical: True if both `.A` and `.Ainv` have Gaussian integer entries
             A = self.A_internal;
             Ainv = self.Ainv_internal;
-            b = self.hasExactBasis && all(all(A == round(double(A)))) && all(all(Ainv == round(double(Ainv))));
+            b = self.basisIsExact && all(all(A == round(double(A)))) && all(all(Ainv == round(double(Ainv))));
         end
 
         function mat = A(self, type)
@@ -221,7 +219,7 @@ classdef SimilarRep < replab.Rep
         % Rep
 
         function b = isExact(self)
-            b = self.hasExactBasis && self.parent.isExact;
+            b = self.basisIsExact && self.parent.isExact;
         end
 
     end

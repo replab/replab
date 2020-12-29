@@ -68,18 +68,9 @@ classdef SubRep < replab.Rep
                 assert(~exists || oldValue == 0);
             end
             self@replab.Rep(parent.group, parent.field, d, restArgs{:});
-            if isa(injection_internal, 'replab.cyclotomic') && isa(projection_internal, 'replab.cyclotomic')
-                hasExactMaps = true;
-            elseif replab.numerical.isExact(injection_internal) && replab.numerical.isExact(projection_internal) && ...
-                    ~isempty(args.projectorErrorBound) && args.projectorErrorBound == 0
-                hasExactMaps = true;
-            else
-                hasExactMaps = false;
-            end
             self.parent = parent;
             self.injection_internal = injection_internal;
             self.projection_internal = projection_internal;
-            self.hasExactMaps = hasExactMaps;
             self.encodesComplexStructure = args.encodesComplexStructure;
             if ~isempty(args.projectorErrorBound)
                 self.cache('projectorErrorBound', args.projectorErrorBound, 'error');
@@ -96,7 +87,7 @@ classdef SubRep < replab.Rep
         function res = rewriteTerm_SubRepOfSubRep(self, options)
             if isa(self.parent, 'replab.SubRep')
                 if self.mapsAreIntegerValued || self.parent.mapsAreIntegerValued || ...
-                        (options.dense && (options.approximate || (self.hasExactMaps && self.parent.hasExactMaps)))
+                        (options.dense && (options.approximate || (self.mapsAreExact && self.parent.mapsAreExact)))
                     newI = self.parent.injection_internal * self.injection_internal;
                     newP = self.projection_internal & self.parent.projection_internal;
                     res = replab.SubRep(self.parent.parent, newI, newP);
@@ -109,7 +100,7 @@ classdef SubRep < replab.Rep
         function res = rewriteTerm_SubRepOfSimilarRep(self, options)
             if isa(self.parent, 'replab.SimilarRep')
                 if self.mapsAreIntegerValued || self.parent.basisIsIntegerValued || ...
-                        (options.dense && (options.approximate || (self.hasExactMaps && self.parent.hasExactBasis)))
+                        (options.dense && (options.approximate || (self.mapsAreExact && self.parent.basisIsExact)))
                     newI = self.parent.Ainv_internal * self.injection_internal;
                     newP = self.projection_internal * self.parent.A_internal;
                     res = replab.SubRep(self.parent.parent, newI, newP);
@@ -169,6 +160,17 @@ classdef SubRep < replab.Rep
             end
         end
 
+        function b = mapsAreExact(self)
+        % Returns whether both the injection map and the projection map are written either with cyclotomics or integer coefficients
+        %
+        % Returns:
+        %   logical: True if both `.injection` and `.projection` are cyclotomic matrices or have Gaussian integer entries
+            I = self.injection_internal;
+            P = self.projection_internal;
+            b = (isa(I, 'cyclotomic') || replab.numerical.isExact(I)) && ...
+                (isa(P, 'cyclotomic') || replab.numerical.isExact(P));
+        end
+
         function b = mapsAreIntegerValued(self)
         % Returns whether both the injection map and the projection map are expressed with Gaussian integer coefficients
         %
@@ -176,7 +178,7 @@ classdef SubRep < replab.Rep
         %   logical: True if both `.injection` and `.projection` have Gaussian integer entries
             I = self.injection_internal;
             P = self.projection_internal;
-            b = self.hasExactMaps && all(all(I == round(double(I)))) && all(all(P == round(double(P))));
+            b = self.mapsAreExact && all(all(I == round(double(I)))) && all(all(P == round(double(P))));
         end
 
         function e = projectorErrorBound(self)
@@ -563,7 +565,7 @@ classdef SubRep < replab.Rep
         % Rep
 
         function b = isExact(self)
-            b = self.hasExactMaps && self.parent.isExact;
+            b = self.mapsAreExact && self.parent.isExact;
         end
 
     end
@@ -600,7 +602,7 @@ classdef SubRep < replab.Rep
             Is = cellfun(@(sr) sr.injection_internal, subReps, 'uniform', 0);
             newI_internal = horzcat(Is{:});
             newP_internal = vertcat(Ps{:});
-            subRep = parent.subRep(newI_internal, newP_internal);
+            subRep = parent.subRep(newI_internal, 'projection', newP_internal);
         end
 
     end
