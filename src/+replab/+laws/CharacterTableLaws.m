@@ -25,7 +25,7 @@ classdef CharacterTableLaws < replab.Laws
                     for j = 1:self.C.nClasses
                         [c1, err1] = doubleApproximation(self.C.characters(i, j));
                         c2 = trace(irrep.image(self.C.classes.classes{j}.representative));
-                        self.assert(abs(c1 - c2) <= err1 + irrep.errorBound);
+                        self.assertApproxEqual(c1, c2, err1 + irrep.errorBound);
                     end
                 end
             end

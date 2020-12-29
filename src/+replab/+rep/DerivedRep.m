@@ -221,6 +221,14 @@ classdef DerivedRep < replab.Rep
             b = self.parent.isExact;
         end
 
+        function res = dual(self)
+            res = replab.rep.DerivedRep(self.parent, self.conjugate, ~self.inverse, ~self.transpose);
+        end
+
+        function res = conj(self)
+            res = replab.rep.DerivedRep(self.parent, ~self.conjugate, self.inverse, self.transpose);
+        end
+
     end
 
 end

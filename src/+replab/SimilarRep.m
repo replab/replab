@@ -318,13 +318,15 @@ classdef SimilarRep < replab.Rep
         end
 
         function t = computeTrivialRowSpace(self)
-            tRep = self.group.trivialRep(self.field, self.dimension);
-            t = replab.equi.Equivariant_forSimilarRep(self.parent.trivialRowSpace, tRep, self, 'trivialRows');
+            parentT = self.parent.trivialRowSpace;
+            tRep = replab.SimilarRep.identical(parentT.repR);
+            t = replab.equi.Equivariant_forSubRep(parentT, tRep, self, 'trivialRows');
         end
 
         function t = computeTrivialColSpace(self)
-            tRep = self.group.trivialRep(self.field, self.dimension);
-            t = replab.equi.Equivariant_forSimilarRep(self.parent.trivialColSpace, self, tRep, 'trivialCols');
+            parentT = self.parent.trivialColSpace;
+            tRep = replab.SimilarRep.identical(parentT.repC);
+            t = replab.equi.Equivariant_forSubRep(parentT, self, tRep, 'trivialCols');
         end
 
     end

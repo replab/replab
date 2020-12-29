@@ -245,7 +245,7 @@ classdef Rep < replab.Obj
             end
             if rep.inCache('unitarize')
                 u = rep.unitarize;
-                u1 = replab.SimilarRep(self, u.A_internal, 'inverse', u.Ainv_internal); % TODO: why?
+                u1 = replab.SimilarRep(self, u.A_internal, u.Ainv_internal);
                 self.cache('unitarize', u1, 'ignore');
             end
         end
@@ -492,7 +492,7 @@ classdef Rep < replab.Obj
         end
 
         function b = computeIsIrreducible(self)
-            b = replab.irreducible.identifyIrreps(self, {replab.SubRep.fullSubRep(self)});
+            b = replab.irreducible.identifyIrreps(self, {replab.SubRep.identical(self)});
         end
 
         function iso = computeTrivialComponent_exact(self)
@@ -1414,13 +1414,16 @@ classdef Rep < replab.Obj
             trivial = self.trivialComponent('double');
             if trivial.dimension == 0
                 irreps = cell(1, 0);
-                nontrivial = replab.SubRep.fullSubRep(self);
+                nontrivial = replab.SubRep.identical(self);
             else
                 nontrivial = self.maschke(trivial);
                 irreps = trivial.irreps;
             end
-            nontrivial.cache('trivialDimension', 0);
-            irreps = horzcat(irreps, nontrivial.splitInParent);
+            nontrivialIrreps = nontrivial.splitInParent;
+            for i = 1:length(nontrivialIrreps)
+                nontrivialIrreps{i}.cache('trivialDimension', 0, '==');
+            end
+            irreps = horzcat(irreps, nontrivialIrreps);
         end
 
         function rep1 = similarRep(self, A, varargin)
@@ -1479,10 +1482,8 @@ classdef Rep < replab.Obj
                 A = speye(self.dimension);
                 Ainv = speye(self.dimension);
             else
-                X = self.hermitianInvariant.project(speye(self.dimension), 'double');
-                for i = 1:self.dimension
-                    X(i,i) = real(X(i,i));
-                end
+                X = self.hermitianInvariant.project(eye(self.dimension), 'double');
+                X = (X + X')/2;
                 Ainv = chol(X, 'lower');
                 A = inv(Ainv);
             end

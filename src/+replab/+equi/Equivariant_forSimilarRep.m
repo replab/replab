@@ -23,8 +23,8 @@ classdef Equivariant_forSimilarRep < replab.Equivariant
              assert(isa(parent, 'replab.Equivariant'));
              assert(isa(similarRepR, 'replab.SimilarRep'));
              assert(isa(similarRepC, 'replab.SimilarRep'));
-             assert(similarRepR.parent == parent.repR);
-             assert(similarRepC.parent == parent.repC);
+             %assert(similarRepR.parent == parent.repR);
+             %assert(similarRepC.parent == parent.repC);
              self@replab.Equivariant(similarRepR, similarRepC, special);
              self.parent = parent;
          end

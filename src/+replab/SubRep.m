@@ -25,7 +25,6 @@ classdef SubRep < replab.Rep
         parent % (`+replab.Rep`): Parent representation of dimension $D$
         injection_internal % (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
         projection_internal % (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
-        hasExactMaps % (logical): Whether the injection and projection maps are exact
         encodesComplexStructure % (logical): Whether this subrepresentation encodes a complex structure
     end
 
@@ -481,29 +480,40 @@ classdef SubRep < replab.Rep
         end
 
         function h = computeHermitianInvariant(self)
-            h = replab.equi.Equivariant_forSubRep(self.parent.hermitianInvariant, self, self.dual.conj, 'hermitian');
+            parentH = self.parent.hermitianInvariant;
+            h = replab.equi.Equivariant_forSubRep(parentH, self, self.dual.conj, 'hermitian');
         end
 
         function t = computeTrivialRowSpace(self)
-            tRep = self.group.trivialRep(self.field, self.dimension);
-            t = replab.equi.Equivariant_forSubRep(self.parent.trivialRowSpace, tRep, self, 'trivialRows');
+            parentT = self.parent.trivialRowSpace;
+            d = self.dimension;
+            D = self.parent.dimension;
+            injection = sparse(1:d, 1:d, ones(1, d), D, d);
+            projection = injection';
+            tRep = parentT.repR.subRep(injection, 'projection', projection);
+            t = replab.equi.Equivariant_forSubRep(parentT, tRep, self, 'trivialRows');
         end
 
         function t = computeTrivialColSpace(self)
-            tRep = self.group.trivialRep(self.field, self.dimension);
-            t = replab.equi.Equivariant_forSubRep(self.parent.trivialColSpace, self, tRep, 'trivialCols');
+            parentT = self.parent.trivialColSpace;
+            d = self.dimension;
+            D = self.parent.dimension;
+            injection = sparse(1:d, 1:d, ones(1, d), D, d);
+            projection = injection';
+            tRep = parentT.repC.subRep(injection, 'projection', projection);
+            t = replab.equi.Equivariant_forSubRep(parentT, self, tRep, 'trivialCols');
         end
 
-        function [A Ainv] = unitaryChangeOfBasis(self)
-            if self.parent.knownUnitary
-                P = self.projection('double/sparse');
-                X = P * P';
-                A = chol(X, 'lower');
-                Ainv = inv(A);
-            else
-                [A Ainv] = unitaryChangeOfBasis@replab.Rep(self);
-            end
-        end
+        %function [A Ainv] = unitaryChangeOfBasis(self) TODO restore
+        %    if self.parent.knownUnitary
+        %        P = self.projection('double/sparse');
+        %        X = P * P';
+        %        A = chol(X, 'lower');
+        %        Ainv = inv(A);
+        %    else
+        %        [A Ainv] = unitaryChangeOfBasis@replab.Rep(self);
+        %    end
+        %end
 
     end
 % $$$         function verifyInvariance(self)
@@ -602,7 +612,7 @@ classdef SubRep < replab.Rep
 
     methods (Static)
 
-        function sub = fullSubRep(parent)
+        function sub = identical(parent)
         % Creates a full subrepresentation of the given representation, with identity projection/injection maps
         %
         % Args:

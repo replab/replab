@@ -24,8 +24,8 @@ classdef Equivariant_forSubRep < replab.Equivariant
             assert(isa(parent, 'replab.Equivariant'));
             assert(isa(repR, 'replab.SubRep'));
             assert(isa(repC, 'replab.SubRep'));
-            assert(repR.parent == parent.repR);
-            assert(repC.parent == parent.repC);
+            %assert(repR.parent == parent.repR);
+            %assert(repC.parent == parent.repC);
             self.parent = parent;
         end
 
