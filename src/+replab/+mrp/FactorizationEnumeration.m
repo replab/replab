@@ -20,7 +20,9 @@ classdef FactorizationEnumeration < replab.mrp.Factorization
 
         function letters = factorize(self, g)
             ind = self.elements.find(g');
-            assert(~isempty(ind), 'The permutation %s is not a member of the group.', replab.shortStr(g));
+            if isempty(ind)
+                error('The permutation %s is not a member of the group.', replab.shortStr(g));
+            end
             letters = self.words{ind};
         end
 
