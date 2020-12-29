@@ -52,7 +52,7 @@ classdef Letters
                     word = [word sep names{l}];
                     sep = times;
                     if e ~= 1
-                        word = [word '^' num2str(e)];
+                        word = sprintf('%s^%d', word, e);
                     end
                 end
             end
