@@ -35,7 +35,6 @@ classdef Equivariant_forSubRep < replab.Equivariant
 
         % Equivariant
 
-
         function X1 = project_exact(self, X)
             parentX = self.repR.injection('exact') * X * self.repC.projection('exact');
             X1 = self.repR.projection('exact') * self.parent.project(parentX) * self.repC.injection('exact');
