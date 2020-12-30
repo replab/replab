@@ -20,7 +20,7 @@ classdef IsotypicLaws < replab.laws.SubRepLaws
                     for j = i+1:n
                         imagej = self.rep.irrep(j).image(g);
                         tol = self.rep.irrep(i).errorBound + self.rep.irrep(j).errorBound;
-                        self.assert(norm(imagei - imagej, 'fro') <= tol);
+                        self.assertApproxEqual(imagei, imagej, tol);
                     end
                 end
             end
