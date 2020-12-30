@@ -2,7 +2,7 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
 
     methods
 
-        function self = SemidirectProductGroup_finite(phi)
+        function self = SemidirectProductGroup_finite(phi, type)
             assert(isa(phi, 'replab.Action'));
             H = phi.G;
             N = phi.P;
@@ -20,18 +20,16 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
                 generators{H.nGenerators + i} = {H.identity N.generator(i)};
             end
             self.generators = generators;
-            self.type = self;
+            if isequal(type, 'self')
+                self.type = self;
+            else
+                self.type = type;
+            end
         end
 
     end
 
     methods (Access = protected)
-
-        % FiniteGroup
-
-        function o = computeOrder(self)
-            o = self.H.order * self.N.order;
-        end
 
         function g = atFun(self, ind)
             ind = ind - 1;
@@ -44,22 +42,6 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
             indH = self.H.elements.find(g{1});
             indN = self.N.elements.find(g{2});
             ind = (indH - 1)*self.N.order + indN;
-        end
-
-        function e = computeElements(self)
-            e = replab.IndexedFamily.lambda(self.order, ...
-                                            @(ind) self.atFun(ind), ...
-                                            @(g) self.findFun(g));
-        end
-
-        function gd = computeDecomposition(self)
-            TH = self.H.decomposition.T;
-            TN = self.N.decomposition.T;
-            idN = self.N.identity;
-            idH = self.H.identity;
-            TH1 = cellfun(@(t) cellfun(@(h) {h idN}, t, 'uniform', 0), TH, 'uniform', 0);
-            TN1 = cellfun(@(t) cellfun(@(n) {idH n}, t, 'uniform', 0), TN, 'uniform', 0);
-            gd = replab.FiniteGroupDecomposition(self, horzcat(TH1, TN1));
         end
 
         function s = computeSetN(self)
@@ -105,6 +87,66 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
 
     end
 
+    methods (Access = protected) % Implementations
+
+        % FiniteGroup
+
+        function o = computeOrder(self)
+            o = self.H.order * self.N.order;
+        end
+
+        function e = computeElements(self)
+            e = replab.IndexedFamily.lambda(self.order, ...
+                                            @(ind) self.atFun(ind), ...
+                                            @(g) self.findFun(g));
+        end
+
+        function gd = computeDecomposition(self)
+            TH = self.H.decomposition.T;
+            TN = self.N.decomposition.T;
+            idN = self.N.identity;
+            idH = self.H.identity;
+            TH1 = cellfun(@(t) cellfun(@(h) {h idN}, t, 'uniform', 0), TH, 'uniform', 0);
+            TN1 = cellfun(@(t) cellfun(@(n) {idH n}, t, 'uniform', 0), TN, 'uniform', 0);
+            gd = replab.FiniteGroupDecomposition(self, horzcat(TH1, TN1));
+        end
+
+    end
+
+    methods % Implementations
+
+        % Domain
+
+        function s = sample(self)
+            s = sample@replab.SemidirectProductGroup(self);
+        end
+
+        % FiniteSet
+
+        function res = hasSameTypeAs(self, rhs)
+            if isa(rhs.type, 'replab.SemidirectProduct') && isa(rhs.type, 'replab.FiniteGroup')
+                if self.type.H == rhs.type.H && self.type.N == rhs.type.N
+                    for i = 1:self.H.type.nGenerators
+                        h = self.H.type.generator(i);
+                        for j = 1:self.N.type.nGenerators;
+                            n = self.N.type.generator(j);
+                            if ~self.N.type.eqv(self.type.phi.leftAction(h, n), rhs.type.phi.leftAction(h, n))
+                                res = false;
+                                return
+                            end
+                        end
+                    end
+                    res = true;
+                else
+                    res = false;
+                end
+            else
+                res = false;
+            end
+        end
+
+    end
+
     methods
 
         function s = setN(self)
@@ -122,17 +164,12 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
             p = [p1 p2+length(p1)];
         end
 
-
         function m = regularMorphism(self)
             m = self.cached('regularMorphism', @() self.computeRegularMorphism);
         end
 
         function a = phiMorphism(self)
             a = self.cached('phiMorphism', @() self.computePhiMorphism);
-        end
-
-        function s = sample(self)
-            s = sample@replab.SemidirectProductGroup(self);
         end
 
     end

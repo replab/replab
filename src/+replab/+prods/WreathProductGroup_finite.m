@@ -8,7 +8,12 @@ classdef WreathProductGroup_finite < replab.WreathProductGroup & replab.prods.Se
             n = H.domainSize;
             base = A.directPower(n);
             phi = replab.perm.PermutationCellAction(H, base);
-            self@replab.prods.SemidirectProductGroup_finite(phi);
+            if H.type == H && A.type == A
+                type = 'self';
+            else
+                type = H.type.wreathProduct(A.type);
+            end
+            self@replab.prods.SemidirectProductGroup_finite(phi, type);
             self.n = n;
             self.A = A;
         end
@@ -46,7 +51,11 @@ classdef WreathProductGroup_finite < replab.WreathProductGroup & replab.prods.Se
         end
 
         function res = hasSameTypeAs(self, rhs)
-            res = isa(rhs, 'replab.WreathProductGroup') && self.n == rhs.n && self.A.hasSameTypeAs(rhs.A);
+            if isa(rhs.type, 'replab.WreathProductGroup') && isa(rhs.type, 'replab.FiniteGroup')
+                res = (self.type.H == rhs.type.H) && (self.type.A == rhs.type.A);
+            else
+                res = false;
+            end
         end
 
     end
