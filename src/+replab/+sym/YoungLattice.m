@@ -71,8 +71,6 @@ classdef YoungLattice < replab.Obj
 
     methods
 
-
-
         function self = YoungLattice(part,n)
             self.domainSize = n;
             if sum(part) == n &&(part(1) ~= n || numel(part) == 1)
@@ -83,9 +81,9 @@ classdef YoungLattice < replab.Obj
             self.createLattice(part);
         end
 
-        function self = createLattice(self,part)
+        function self = createLattice(self, part)
             n = self.domainSize;
-            self.sets = cell(1,n);
+            self.sets = cell(1, n);
             for m = 1:n
                 self.sets{m} = replab.perm.Set(n);
             end
@@ -94,38 +92,38 @@ classdef YoungLattice < replab.Obj
             self.above = cell(1,n-1);
             self.below(1:(n-1)) = {zeros(n,3)};
             count = 1;
-            subPartitions(part,n);
+            count = self.subPartitions(count, part, n);
             for k = 1:(n-1)
                 in = @(n) nonzeros(self.below{k}(:,n));
                 self.below{k} = sparse(in(1),in(2),in(3));
                 self.above{k} = self.below{k}';
             end
-            function subPartitions(sup,k)
-                if k ==1
-                    return
+        end
+
+        function count = subPartitions(self, count, sup, k)
+            n = self.domainSize;
+            if k == 1
+                return
+            end
+            for i = find(sup)
+                sup2 = sup;
+                switch i
+                  case 1
+                    sup2(i) = sup2(i)-1;
+                  otherwise
+                    sup2([i-1 i]) =  sup2([i-1 i])+[1 -1];
                 end
-                for i = find(sup)
-                    sup2 = sup;
-                    switch i
-                        case 1
-                            sup2(i) = sup2(i)-1;
-                        otherwise
-                            sup2([i-1 i]) =  sup2([i-1 i])+[1 -1];
-                    end
-                    row = self.sets{k-1}.find(sup2');
-                    col = self.sets{k}.find(sup');
-                    val = self.labels(sum(sup(i:n)),i);
-                    if ~row
-                        row = self.sets{k-1}.insert(sup2');
-                        self.below{k-1}(count,:) = [row col val];
-                        count = count + 1;
-                        subPartitions(sup2,k-1);
-                    else
-                        self.below{k-1}(count,:) = [row col val];
-                        count = count+1;
-                    end
-                end
-                for j = 1:(n-1)
+                row = self.sets{k-1}.find(sup2');
+                col = self.sets{k}.find(sup');
+                val = self.labels(sum(sup(i:n)),i);
+                if ~row
+                    row = self.sets{k-1}.insert(sup2');
+                    self.below{k-1}(count,:) = [row col val];
+                    count = count + 1;
+                    count = self.subPartitions(count, sup2, k-1);
+                else
+                    self.below{k-1}(count,:) = [row col val];
+                    count = count+1;
                 end
             end
         end
