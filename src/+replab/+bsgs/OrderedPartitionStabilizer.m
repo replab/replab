@@ -22,6 +22,9 @@ classdef OrderedPartitionStabilizer < replab.bsgs.Backtrack
             blocks = partition.blocks;
             lengths = cellfun(@length, blocks);
             mask = lengths > 1; % filter singleton blocks
+            points = blocks(~mask);
+            points = [points{:}];
+            group = group.pointwiseStabilizer(points);
             blocks = blocks(mask);
             lengths = lengths(mask);
             [~, I] = sort(cellfun(@length, blocks));
