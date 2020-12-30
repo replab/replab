@@ -144,25 +144,17 @@ classdef Irreducible < replab.SubRep
             l = replab.laws.IrreducibleLaws(self);
         end
 
-% $$$         % Rep
-% $$$
-% $$$         function rho = image_internal(self, g)
-% $$$             blocks = cellfun(@(iso) iso.image_internal(g), self.components, 'uniform', 0);
-% $$$             % Construct the blocks in the block diagonal image
-% $$$             rho = blkdiag(blocks{:});
-% $$$         end
+         % SubRep
 
-% $$$         % SubRep
-% $$$
-% $$$         function irr = nice(self)
-% $$$             components1 = cellfun(@(c) c.nice, self.components, 'uniform', 0);
-% $$$             irr = replab.Irreducible(self.parent, components1);
-% $$$         end
-% $$$
-% $$$         function irr = refine(self)
-% $$$             components1 = cellfun(@(c) c.refine, self.components, 'uniform', 0);
-% $$$             irr = replab.Irreducible(self.parent, components1);
-% $$$         end
+        function irr = nice(self)
+            components1 = cellfun(@(c) c.nice, self.components, 'uniform', 0);
+            irr = replab.Irreducible(self.parent, components1);
+        end
+
+        function irr = refine(self)
+            components1 = cellfun(@(c) c.refine, self.components, 'uniform', 0);
+            irr = replab.Irreducible(self.parent, components1);
+        end
 
     end
 
