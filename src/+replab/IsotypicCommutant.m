@@ -1,13 +1,13 @@
 classdef IsotypicCommutant < replab.Equivariant
 % Commutant of a harmonized isotypic component
 %
-% Subclasses of this class implement specialized projection methods that take advantage of Schur's lemma. In the real case, specializations
-% are provided for the three real division algebras, corresponding to real-type, complex-type and quaternion-type representations.
-%
 % Matrices in this commutant space have the following form:
 % $ X = \sum_i M_i \otimes D_i \otimes A_i $
 % where $M_i$ represents the multiplicity space, $D_i$ is a constant representing the representation space,
 % and $A_i$ encodes the division algebra (in the case of representation over C, it is trivial).
+%
+% Subclasses of this class implement specialized projection methods that take advantage of Schur's lemma. In the real case, specializations
+% are provided for the three real division algebras, corresponding to real-type, complex-type and quaternion-type representations.
 
     properties (SetAccess = protected)
         divisionAlgebraDimension % (integer): Size of a block in the division algebra encoding

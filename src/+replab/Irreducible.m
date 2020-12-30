@@ -34,6 +34,14 @@ classdef Irreducible < replab.SubRep
             %end
         end
 
+        function b = isHarmonized(self)
+        % Returns whether all the isotypic components in this irreducible decomposition have been harmonized
+        %
+        % Returns:
+        %   logical: True if all isotypic components are harmonized
+            b = all(cellfun(@(c) c.isHarmonized, self.components));
+        end
+
         function r = asSimilarRep(self)
         % Returns the block-diagonal similar representation corresponding to the decomposition
         %
@@ -82,6 +90,37 @@ classdef Irreducible < replab.SubRep
 
     end
 
+    methods (Access = protected) % Implementations
+
+
+        function rho = image_double_sparse(self, g)
+            if self.isHarmonized
+                blocks = cellfun(@(c) c.image(g, 'double/sparse'), self.components, 'uniform', 0);
+                rho = blkdiag(blocks{:});
+            else
+                rho = image_double_sparse@replab.SubRep(self, g);
+            end
+        end
+
+        function rho = image_exact(self, g)
+            if self.isHarmonized
+                blocks = cellfun(@(c) c.image(g, 'exact'), self.components, 'uniform', 0);
+                rho = blkdiag(blocks{:});
+            else
+                rho = image_exact@replab.SubRep(self, g);
+            end
+        end
+
+        function c = computeCommutant(self)
+            if self.isHarmonized
+                c = replab.IrreducibleCommutant(self);
+            else
+                c = computeCommutant@replab.SubRep(self);
+            end
+        end
+
+    end
+
     methods % Implementations
 
         % Str
@@ -113,10 +152,6 @@ classdef Irreducible < replab.SubRep
 % $$$             rho = blkdiag(blocks{:});
 % $$$         end
 
-% $$$         function c = computeCommutant(self)
-% $$$             c = replab.IrreducibleCommutant(self);
-% $$$         end
-
 % $$$         % SubRep
 % $$$
 % $$$         function irr = nice(self)
@@ -128,11 +163,6 @@ classdef Irreducible < replab.SubRep
 % $$$             components1 = cellfun(@(c) c.refine, self.components, 'uniform', 0);
 % $$$             irr = replab.Irreducible(self.parent, components1);
 % $$$         end
-
-    end
-
-
-    methods (Access = protected)
 
     end
 

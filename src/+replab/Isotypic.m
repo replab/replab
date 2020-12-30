@@ -248,6 +248,7 @@ classdef Isotypic < replab.SubRep
                 c = computeCommutant@replab.SubRep(self);
             end
         end
+
     end
 
     methods % Implementations
