@@ -714,9 +714,13 @@ classdef PermutationGroup < replab.FiniteGroup
             c = self.chain.mutableCopy;
             c.baseChange(set, true);
             l = find(~ismember(c.base, set), 1); % find the first base point that is not in set
-            immutable = true;
-            c = c.chainFromLevel(l, immutable);
-            s = replab.PermutationGroup.fromChain(c, self.type);
+            if isempty(l)
+                s = self.trivialSubgroup;
+            else
+                immutable = true;
+                c = c.chainFromLevel(l, immutable)
+                s = replab.PermutationGroup.fromChain(c, self.type);
+            end
         end
 
         function o = orbits(self)
