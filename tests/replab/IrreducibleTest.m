@@ -20,4 +20,5 @@ function test_irreducible_commutant
     C = dec.commutant;
     X = randn(d, d);
     X1 = C.projectAndReduceFromParent(X);
+    % TODO: add test
 end
