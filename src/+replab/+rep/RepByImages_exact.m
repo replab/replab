@@ -27,7 +27,7 @@ classdef RepByImages_exact < replab.RepByImages
             isUnitary = all(arrayfun(@(i) full(all(all(images{i} == inverseImages{i}'))), 1:length(preimages)));
             [args, exists, oldValue] = replab.util.keyValuePairsUpdate(varargin, 'isUnitary', isUnitary);
             assert(~exists || isempty(oldValue) || isequal(oldValue, isUnitary), 'Wrong isUnitary keyword argument value');
-            self@replab.RepByImages(group, field, dimension, preimages, images, imagesErrorBound, args{:})
+            self@replab.RepByImages(group, field, dimension, preimages, images, imagesErrorBound, args{:});
             self.inverseImages = inverseImages;
         end
 
