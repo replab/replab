@@ -26,24 +26,21 @@ classdef DirectProductGroup_finite <  replab.DirectProductGroup & replab.NiceFin
                 end
             end
             self.generators = generators;
-            self.type = self;
+            if all(cellfun(@(f) f.type == f, factors))
+                self.type = self;
+            else
+                self.type = replab.prods.DirectProductGroup_finite(cellfun(@(f) f.type, factors, 'uniform', 0));
+            end
         end
 
         function res = hasSameTypeAs(self, rhs)
-            res = false;
             lhs = self.type;
             rhs = rhs.type;
-            if ~isa(rhs, 'replab.prods.DirectProductOfFiniteGroups') || lhs.nFactors ~= rhs.nFactors
-                return
+            if isa(rhs, 'replab.DirectProductGroup') && isa(rhs, 'replab.FiniteGroup') && lhs.nFactors == rhs.nFactors
+                res = all(arrayfun(@(i) lhs.factor(i) == rhs.factor(i), 1:self.nFactors));
+            else
+                res = false;
             end
-            for i = 1:lhs.nFactors
-                f1 = lhs.factor(i);
-                f2 = rhs.factor(i);
-                if ~f1.hasSameTypeAs(f2)
-                    return
-                end
-            end
-            res = true;
         end
 
     end

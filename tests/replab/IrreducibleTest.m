@@ -19,6 +19,6 @@ function test_irreducible_commutant
     assertEqual(dec.irrep(1,1).dimension, 1);
     C = dec.commutant;
     X = randn(d, d);
-    X1 = C.projectAndReduceFromParent(X);
+    X1 = C.project(X);
     % TODO: add test
 end

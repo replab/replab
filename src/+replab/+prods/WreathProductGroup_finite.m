@@ -51,8 +51,10 @@ classdef WreathProductGroup_finite < replab.WreathProductGroup & replab.prods.Se
         end
 
         function res = hasSameTypeAs(self, rhs)
-            if isa(rhs.type, 'replab.WreathProductGroup') && isa(rhs.type, 'replab.FiniteGroup')
-                res = (self.type.H == rhs.type.H) && (self.type.A == rhs.type.A);
+            lhs = self.type;
+            rhs = rhs.type;
+            if isa(rhs, 'replab.WreathProductGroup') && isa(rhs, 'replab.FiniteGroup')
+                res = (lhs.H == rhs.H) && (lhs.A == rhs.A);
             else
                 res = false;
             end
