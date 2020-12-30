@@ -45,17 +45,6 @@ classdef WreathProductGroup_Rep < replab.Rep
             self.baseRep = baseRep;
         end
 
-        function rho = image_internal(self, g)
-            h = g{1};
-            base = g{2};
-            n = length(h);
-            rhos = arrayfun(@(i) self.Arep.image_internal(base{i}), 1:n, 'uniform', 0);
-            rho = blkdiag(rhos{:});
-            dA = self.Arep.dimension;
-            rho = kron(sparse(h, 1:n, ones(1,n), n, n), speye(dA)) * rho;
-            rho = full(rho);
-        end
-
     end
 
     methods (Access = protected) % Implementations
