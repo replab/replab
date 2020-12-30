@@ -41,7 +41,7 @@ image3 = [1  0  0  0  0  0  0  0  0
 % line 7 PB(0|1) -> PB(1|1) = 1 - PB(0|1)
 % line 8 P(00|01) -> P(01|11) = PA(0|1) - P(00|11)
 % line 9 P(00|11) -> P(01|01) = PA(0|0) - P(00|01)
-rep = G.repByImages('R', 9, {image1 image2 image3});
+rep = G.repByImages('R', 9, 'preimages', generators, 'images', {image1 image2 image3});
 D = rep.decomposition;
 indexMatrix = [  1     2     3     6     7     8    11    12    13
                  2     2     4     7     7     9    12    12    14
@@ -64,8 +64,8 @@ X = zeros(9, 9);% We formulate the non-symmetrized SDP:
 %tmp = sparse(1:numel(indexMatrix), reshape(1+indexMatrix,1,numel(indexMatrix)), true);
 %sdpMatrix = reshape(tmp*vars, size(indexMatrix));
 %obj1 = (sqrt(2)-1)/2;
-%evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -obj, sdpsettings(''verbose'', 0))');
-%obj2 = value(obj);
+%evalc('solvesdp([sdpMatrix >= 0, sdpMatrix(1,1) == 1], -objective*sdpMatrix(:,1), sdpsettings(''verbose'', 0))');
+%obj2 = value(objective*sdpMatrix(:,1));
 
 Xsym = zeros(9, 9);
 for i = 1:m

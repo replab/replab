@@ -1272,6 +1272,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % If the images are exact, the ``isUnitary`` keyword parameter can be omitted.
         %
+        % Example:
+        %   >>> S4 = replab.S(4);
+        %   >>> m = S4.repByImages('R', 1, 'images', {-1 -1});
+        %   >>> m.laws.checkSilent
+        %       1
+        %
         % Args:
         %   field ({'R', 'C'}): Whether the representation is real (R) or complex (C)
         %   dimension (integer): Representation dimension
@@ -1288,6 +1294,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % Returns:
         %   `+replab.RepByImages`: The constructed group representation
+            args = struct('preimages', {self.generators}, 'images', {{}});
             if length(varargin) == 1 && iscell(varargin{1})
                 warning('Deprecated call convention');
                 rho = replab.rep.repByImages(self, field, dimension, 'images', varargin{1});
