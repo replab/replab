@@ -126,7 +126,10 @@ classdef cyclotomic
         %
         % Returns:
         %    `.cyclotomic`: The constructed matrix
-            c = replab.cyclotomic.fromJavaArray(javaMethod('fromDouble', 'cyclo.Lab', doubles(:)), size(doubles));
+            c = replab.cyclotomic.fromJavaArray(javaMethod('fromDouble', 'cyclo.Lab', real(doubles(:))), size(doubles));
+            if ~isreal(doubles)
+                c = c + replab.cyclotomic.E(4) * replab.cyclotomic.fromJavaArray(javaMethod('fromDouble', 'cyclo.Lab', imag(doubles(:))), size(doubles));
+            end
         end
 
         function c = approximate(lowerBounds, upperBounds)
