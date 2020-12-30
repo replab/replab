@@ -2,7 +2,7 @@ classdef DirectedGraph < replab.graph.Graph
 % Describes an immutable directed graphs
 
     methods (Access = protected)
-        
+
         function self = DirectedGraph(nVertices, edges, colors, weights)
         % Construct a directed graph
         %
@@ -13,11 +13,11 @@ classdef DirectedGraph < replab.graph.Graph
         %   `.fromBlocks`
         %   `.check`
 
-            self@replab.graph.Graph(nVertices, edges, colors, weights)
+            self@replab.graph.Graph(nVertices, edges, colors, weights);
         end
 
     end
-    
+
     methods (Static) % Constructors
 
         function self = fromAdjacencyMatrix(adj, colors)
@@ -38,15 +38,15 @@ classdef DirectedGraph < replab.graph.Graph
         %   >>> replab.DirectedGraph.fromAdjacencyMatrix([0 1 1; 1 0 1; 1 1 0])
         %     Directed graph with 3 vertices and 6 edges
         %     edges: [2, 1; 3, 1; 1, 2; 3, 2; 1, 3; 2, 3]
-            
+
             assert(size(adj,1) == size(adj,2), 'Adjacency matrix should be square');
-            
+
             [edges, nVertices, weights] = replab.graph.adj2edge(adj);
 
             if nargin < 2
                 colors = 0;
             end
-            
+
             self = replab.DirectedGraph(nVertices, edges, colors, weights);
         end
 
@@ -77,15 +77,15 @@ classdef DirectedGraph < replab.graph.Graph
                     nVertices = max(max(edges));
                 end
             end
-            
+
             if (nargin < 3)
                 colors = [];
             end
-            
+
             if (nargin < 4)
                 weights = [];
             end
-            
+
             % Remove duplicated edges
             if (numel(weights) > 1) && (numel(weights) == size(edges,1))
                 % We add up the weights associated to identical edges
@@ -95,7 +95,7 @@ classdef DirectedGraph < replab.graph.Graph
                 % The edge weight remains uniform
                 edges = unique(edges, 'rows');
             end
-            
+
             self = replab.DirectedGraph(nVertices, edges, colors, weights);
         end
 
@@ -111,7 +111,7 @@ classdef DirectedGraph < replab.graph.Graph
         % directed bipartite graph iff vertex i of the first set of
         % verices is linked to vertex j in the second set of vertices.
         % Alternatively, the value of the matrix element is the weight
-        % associated to this edge. 
+        % associated to this edge.
         %
         % Args:
         %   biadj(double (\*,\*)): array of vertices linked by an edge
@@ -127,7 +127,7 @@ classdef DirectedGraph < replab.graph.Graph
             % Construct the associated full adjacency matrix
             adj = [zeros(size(biadj,1)*[1 1]), biadj;
                    zeros(size(biadj,2), sum(size(biadj)))];
-            
+
             self = replab.DirectedGraph.fromAdjacencyMatrix(adj);
         end
 
@@ -144,7 +144,7 @@ classdef DirectedGraph < replab.graph.Graph
         %   graph (`.DirectedGraph`)
 
             assert(isa(graph, 'replab.UndirectedGraph'), 'Input is not an undirected graph');
-            
+
             % We duplicate edges
             edges = graph.edges;
             sel = (diff(edges,1,2) ~= 0); % only duplicate links to distinct vertices
@@ -153,10 +153,10 @@ classdef DirectedGraph < replab.graph.Graph
             if numel(weights) ~= 1
                 weights = [weights; weights(sel)];
             end
-            
+
             self = replab.DirectedGraph.fromEdges(edges, graph.nVertices, graph.colors, weights);
         end
-        
+
         function self = fromFile(fileName)
         % Loads a graph from a Bliss file
         %
@@ -168,16 +168,16 @@ classdef DirectedGraph < replab.graph.Graph
         %
         % Returns:
         %   graph (`.UndirectedGraph`)
-            
+
             [nVertices, edges, colors] = replab. graph.parseBlissFile(fileName);
-            
+
             self = replab.DirectedGraph.fromEdges(edges, nVertices, colors);
         end
-        
+
     end
 
     methods
-        
+
         function s = headerStr(self)
         % Header string representing the object
         %
@@ -186,11 +186,11 @@ classdef DirectedGraph < replab.graph.Graph
 
             s = sprintf('Directed graph with %d vertices and %d edges', self.nVertices, size(self.edges,1));
         end
-        
+
     end
-    
+
     methods % Methods
-        
+
         function graph = toUndirectedGraph(self)
         % Removes the graph directionality
         %
@@ -202,17 +202,17 @@ classdef DirectedGraph < replab.graph.Graph
         %
         % Returns:
         %   graph (`.UndirectedGraph`)
-            
+
             graph = replab.UndirectedGraph.fromDirectedGraph(self);
         end
-        
+
         function adj = computeAdjacencyMatrix(self)
         % Computes the adjacency matrix
 
             adj = replab.graph.edge2adj(self.edges, self.nVertices, self.weights);
             adj = full(adj);
         end
-        
+
         function deg = degrees(self)
         % Returns the degrees of all vertices
         %
@@ -225,10 +225,10 @@ classdef DirectedGraph < replab.graph.Graph
         % Example:
         %   >>> replab.DirectedGraph.fromEdges([1 3]).degrees
         %     1     0     1
-        
+
             deg = sum(self.adjacencyMatrix()) + sum(self.adjacencyMatrix().');
         end
-        
+
         function deg = degree(self, v)
         % Returns the degrees of vertex v
         %
@@ -243,14 +243,14 @@ classdef DirectedGraph < replab.graph.Graph
         %   >>> graph = replab.DirectedGraph.fromEdges([1 3; 1 4]);
         %   >>> graph.degree(1)
         %     2
-            
+
             assert(all(v >= 0) && all(v <= self.nVertices) && isequal(v, round(v)), ...
                 ['No vertex number ', num2str(v)]);
-            
+
             adj = self.adjacencyMatrix();
             deg = sum(adj(v,:)) + sum(adj(:,v).');
         end
-        
+
         function deg2 = secondOrderDegree(self, v)
         % Returns the number of vertices at a distance 2 of all vertices
         %
@@ -272,13 +272,13 @@ classdef DirectedGraph < replab.graph.Graph
             sel = (adj(v,:) ~= 0) | (adj(:,v).' ~= 0);
             deg2 = sum(sum(adj(sel,:) + adj(:,sel).') ~=0);
         end
-        
+
         function L = computeLaplacian(self)
         % Computes the graph Laplacian
         %
         % The laplacian should be positive semi-definite, so we define it
         % from the equivalent un-directed graph
-        
+
 %             % Here we compute a hermitian Laplacian
 %             M = self.adjacencyMatrix;
 %             selSym = (M == M.');
@@ -287,29 +287,29 @@ classdef DirectedGraph < replab.graph.Graph
 %             MAsym = M;
 %             MAsym(selSym) = 0;
 %             MH = MSym + 1i*(MAsym - MAsym.');
-%             
+%
 %             D = diag(sum(M + M.'));
-%             
+%
 %             colors = abs(self.colors);
 %             if numel(colors) == 1
 %                 colors = colors*ones(1,self.nVertices);
 %             end
-%             
+%
 %             L = D - MH + diag(colors);
-% 
+%
 %             return;
-            
+
             M = self.toUndirectedGraph.adjacencyMatrix;
             D = diag(sum(M));
-            
+
             colors = abs(self.colors);
             if numel(colors) == 1
                 colors = colors*ones(1,self.nVertices);
             end
-            
+
             L = D - M + diag(colors);
         end
-        
+
     end
-    
+
 end
