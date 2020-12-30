@@ -18,7 +18,7 @@ classdef RepLaws < replab.Laws
         end
 
         function law_identity_(self)
-            self.assert(norm(self.rep.image(self.G.identity) - speye(self.rep.dimension), 'fro') <= self.rep.errorBound);
+            self.assertApproxEqual(self.rep.image(self.G.identity), speye(self.rep.dimension), self.rep.errorBound);
         end
 
         function law_composition_GG(self, g1, g2)
@@ -40,7 +40,7 @@ classdef RepLaws < replab.Laws
             % A1~ * A2~ - A12~ = (A1 + dA1)(A2 + dA2) - A12 - dA12 =~ (A1A2 - A12) + dA1 A2 + A1 dA2 - dA12
             % norm( . , 'fro') <= norm(dA1 A2, 'fro') + norm(A1 dA2, 'fro') + norm(dA12, 'fro')
             tol = 2*c*b + b;
-            self.assert(norm(rho1rho2 - rho12, 'fro') <= tol);
+            self.assertApproxEqual(rho1rho2, rho12, tol);
         end
 
         function law_commutes_with_commutant_algebra_GM(self, g, M)
@@ -52,7 +52,7 @@ classdef RepLaws < replab.Laws
             % (X + dX)(I + dI) - (I + dI)(X + dX) = XI - IX + dX I + X dI - dX I - dI X + dX dI - dI dX
             % 2 * norm(dX, 'fro') * norm(I, 2) + 2 * norm(dI, 'fro') * norm(X, 2)
             tol = 2*errI*condI + 2*errX*condX;
-            self.assert(norm(X * I - I * X, 'fro') <= tol);
+            self.assertApproxEqual(X * I, I * X, tol);
         end
 
         function law_respects_division_algebra_G(self, g)
@@ -69,7 +69,7 @@ classdef RepLaws < replab.Laws
                   otherwise
                     error('Wrong Frobenius Schur indicator');
                 end
-                self.assert(norm(rho - rho1, 'fro') <= self.rep.errorBound);
+                self.assertApproxEqual(rho, rho1, self.rep.errorBound);
             end
         end
 
