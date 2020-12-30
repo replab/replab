@@ -29,7 +29,7 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
             m = self.repR.multiplicity;
             id = self.repR.irrepDimension;
             r1 = 1:id:m*id;
-            r2 = r1+1
+            r2 = r1+1;
             r3 = r1+2;
             r4 = r1+3;
             A = X(r1,r1) + X(r2,r2) + X(r3,r3) + X(r4,r4);
