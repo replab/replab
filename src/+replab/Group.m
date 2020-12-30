@@ -134,7 +134,7 @@ classdef Group < replab.Monoid
         %
         % Args:
         %   target (`replab.Group`):
-            m = replab.Morphism.lambda(self, target, imageElementFun)
+            m = replab.Morphism.lambda(self, target, imageElementFun);
 
         end
 
