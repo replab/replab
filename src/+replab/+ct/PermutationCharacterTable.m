@@ -4,6 +4,9 @@ function ct = PermutationCharacterTable(group)
 % From Dixon, John. “Computing Irreducible Representations of Groups.”
 % Mathematics of Computation, Volume 24, Number 111, American Mathematical Society, 1970
 %
+% Note:
+%   This code hangs on Octave, and needs further debugging.
+%
 % Args:
 %   group (`+replab.PermutationGroup`): permutation group
 %
@@ -45,6 +48,7 @@ function ct = PermutationCharacterTable(group)
     chars = cell2mat(chars);
     start_irreps = 1;
     while nirreps ~= k
+        nirreps
         for i = start_irreps:nirreps
             for j = start_irreps:nirreps
                 new_rep = irreps{i}.kron(irreps{j});

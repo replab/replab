@@ -14,7 +14,7 @@ function test_quaternion_representations
     rep2 = rep1.decomposition;
     rep3 = rep2.asSimilarRep;
     X = randn(rep1.dimension, rep1.dimension);
-    X1 = rep2.E_internal*rep1.commutant.project(rep2.B_internal*X*rep2.E_internal)*rep2.B_internal;
+    X1 = rep2.projection*rep1.commutant.project(rep2.injection*X*rep2.projection)*rep2.injection;
     X2 = rep2.commutant.project(X);
     X3 = rep3.commutant.project(X);
     assert(norm(X1 - X2) < replab.Parameters.doubleEigTol);

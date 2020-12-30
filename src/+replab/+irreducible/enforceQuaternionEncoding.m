@@ -4,23 +4,29 @@ function res = enforceQuaternionEncoding(rep, context)
 % See `+replab.+domain.QuaternionTypeMatrices`
 %
 % Args:
-%   rep (`+replab.Rep`): Real representation with ``rep.frobeniusSchurIndicator == -2``
+%   rep (`+replab.Rep`): Real irreducible representation with ``rep.frobeniusSchurIndicator == -2``
 %   context (`replab.Context`): Sampling context
 %
 % Returns:
 %   `+replab.SimilarRep`: Similar representation that has the proper encoding
     assert(isa(rep, 'replab.Rep'));
-    assert(rep.overR);
-    assert(isequal(rep.frobeniusSchurIndicator, -2));
-    if isequal(rep.isDivisionAlgebraCanonical, true)
+    assert(rep.overR && rep.isIrreducible && rep.frobeniusSchurIndicator == -2);
+    assert(isa(context, 'replab.Context'));
+
+    if rep.inCache('isDivisionAlgebraCanonical') && rep.isDivisionAlgebraCanonical
+        % trivial case, already enforced
         res = replab.SimilarRep.identical(rep);
         return
     end
-    if ~isequal(rep.isUnitary, true)
-        res = replab.irreducible.enforceQuaternionEncoding(rep.unitarize, context);
-        res = replab.rep.collapse(res);
+
+    if ~rep.knownUnitary
+        % force the unitary case
+        repU = rep.unitarize;
+        resU = replab.irreducible.enforceQuaternionEncoding(repU, context);
+        res = resU.collapse;
         return
     end
+
     d = rep.dimension;
     S1 = rep.commutant.sampleInContext(context, 1);
     S2 = rep.commutant.sampleInContext(context, 2);
@@ -86,6 +92,5 @@ function res = enforceQuaternionEncoding(rep, context)
             W = [W X];
         end
     end
-    res = rep.similarRep(W', W);
-    res.isDivisionAlgebraCanonical = true;
+    res = rep.similarRep(W', 'inverse', W, 'isIrreducible', true, 'frobeniusSchurIndicator', -2, 'isDivisionAlgebraCanonical', true);
 end

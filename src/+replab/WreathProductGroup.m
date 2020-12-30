@@ -21,22 +21,13 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
         % Returns:
         %   `.WreathProductGroup`: A specialized instance of `.WreathProductGroup`
             if isa(A, 'replab.FiniteGroup')
-                w = replab.prods.WreathProductOfFiniteGroups(H, A);
+                w = replab.prods.WreathProductGroup_finite(H, A);
             else
-                w = replab.prods.WreathProductOfCompactGroups(H, A);
+                w = replab.prods.WreathProductGroup_compact(H, A);
             end
         end
 
     end
-
-    methods
-
-        function self = WreathProductGroup(phi)
-            self@replab.SemidirectProductGroup(phi);
-        end
-
-    end
-
 
     methods % Permutation actions
 
@@ -72,7 +63,8 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
             ip = reshape(1:n*d, [d n]);
             ip = ip(:,h);
             ip = ip(:)';
-            p = replab.SymmetricGroup.make(d*n).compose(ip, basePerm);
+            S = replab.SymmetricGroup.make(d*n);
+            p = S.compose(ip, basePerm);
         end
 
         function p = primitivePermutation(self, w, phiA)
@@ -107,26 +99,38 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
             ip = reshape(1:prod(dims), dims);
             ip = permute(ip, fliplr(n + 1 - h));
             ip = ip(:)';
-            p = replab.SymmetricGroup.make(prod(dims)).compose(ip, p);
+            S = replab.SymmetricGroup.make(prod(dims));
+            p = S.compose(ip, p);
         end
 
     end
 
     methods % Representations
 
-        function rep = imprimitiveRep(self, Arep)
+        function rep = imprimitiveRep(self, factorRep)
         % Returns an imprimitive representation of this wreath product
         %
-        % It acts on a space of dimension ``self.n * Arep.dimension``, which
-        % is a direct sum of copies of ``Arep``. The permutation group acts
+        % It acts on a space of dimension ``self.n * factorRep.dimension``, which
+        % is a direct sum of copies of ``factorRep``. The permutation group acts
         % by permuting the blocks.
         %
         % Args:
-        %   Arep (`.Rep`): A representation of `.A`
+        %   factorRep (`.Rep`): A representation of the base factor group `.A`
         %
         % Returns:
         %   `.Rep`: The corresponding imprimitive representation
-            rep = replab.prods.WreathProductImprimitiveRep(self, Arep);
+            n = self.n;
+            dfr = factorRep.dimension;
+            baseRep = self.N.directSumFactorRep(factorRep.field, repmat({factorRep}, 1, n));
+            images = cell(1, self.H.nGenerators);
+            for i = 1:self.H.nGenerators
+                h = self.H.generator(i);
+                images{i} = kron(sparse(h, 1:n, ones(1,n), n, n), speye(dfr));
+            end
+            actingRep = self.H.repByImages(factorRep.field, n*dfr, ...
+                                           'preimages', self.H.generators, ...
+                                           'images', images);
+            rep = replab.prods.WreathProductGroup_Rep(self, 'imprimitive', factorRep, actingRep, baseRep);
         end
 
         function rep = imprimitiveRepFun(self, fun)
@@ -143,19 +147,34 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
             rep = self.imprimitiveRep(fun(self.A));
         end
 
-        function rep = primitiveRep(self, Arep)
+        function rep = primitiveRep(self, factorRep)
         % Returns a primitive representation of this wreath product
         %
-        % It acts on a space of dimension ``Arep.dimension^self.n``, which
-        % is a tensor product of copies of ``Arep``. The permutation group acts
+        % It acts on a space of dimension ``factorRep.dimension^self.n``, which
+        % is a tensor product of copies of ``factorRep``. The permutation group acts
         % by permuting tensor indices.
         %
         % Args:
-        %   Arep (`.Rep`): A representation of `.A`
+        %   factorRep (`.Rep`): A representation of the base factor group `.A`
         %
         % Returns:
         %   `.Rep`: The corresponding primitive representation
-            rep = replab.prods.WreathProductPrimitiveRep(self, Arep);
+            n = self.n;
+            dfr = factorRep.dimension;
+            dims = repmat(dfr, 1, n);
+            d = prod(dims);
+            baseRep = self.N.tensorFactorRep(factorRep.field, repmat({factorRep}, 1, n));
+            images = cell(1, self.H.nGenerators);
+            for i = 1:self.H.nGenerators
+                h = self.H.generator(i);
+                I = permute(reshape(1:d, dims), fliplr(n + 1 - h));
+                I = I(:)';
+                images{i} = sparse(I, 1:d, ones(1, d), d, d);
+            end
+            actingRep = self.H.repByImages(factorRep.field, dfr^n, ...
+                                           'preimages', self.H.generators, ...
+                                           'images', images);
+            rep = replab.prods.WreathProductGroup_Rep(self, 'primitive', factorRep, actingRep, baseRep);
         end
 
         function rep = primitiveRepFun(self, fun)

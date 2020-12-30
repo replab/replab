@@ -35,7 +35,7 @@ function test_stays_sparse
     M2 = sparse([0 1 0; 1 0 0; 0 0 1]);
     rep = S3.repByImages('R', 3, {M1 M2});
     for i = 1:5
-        I = rep.image_internal(S3.sample);
+        I = rep.image(S3.sample, 'double/sparse');
         assert(issparse(I));
     end
 end

@@ -236,7 +236,7 @@ classdef CommutantVar < replab.Str
                 end
                 for j = 1:component.multiplicity
                     copy = component.irrep(j);
-                    U = [U copy.B_internal];
+                    U = [U copy.injection_internal];
                 end
             end
 

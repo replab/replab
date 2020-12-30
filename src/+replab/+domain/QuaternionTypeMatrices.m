@@ -4,7 +4,7 @@ classdef QuaternionTypeMatrices < replab.domain.VectorSpace
 % A quaternion is written q = a + b*i + c*j + d*k, with
 %     i^2 = j^2 = k^2 = ijk = -1.
 %
-% Such a quaternion q can be encoded in a matrix algebra as such: 
+% Such a quaternion q can be encoded in a matrix algebra as such:
 %
 % [a -b -c -d
 %  b  a -d  c
@@ -40,7 +40,7 @@ classdef QuaternionTypeMatrices < replab.domain.VectorSpace
         %% Domain methods
 
         function b = eqv(self, X, Y)
-            b = ~replab.isNonZeroMatrix(X - Y, replab.Parameters.doubleEigTol);
+            b = all(all(X == Y));
         end
 
         function X = sample(self)

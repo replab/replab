@@ -25,6 +25,46 @@ classdef Character < replab.Obj
 
     methods (Static)
 
+        function c = fromRep(rep)
+        % Computes an exact character from a representation (approximate or not)
+        %
+        % Args:
+        %   rep (`.Rep`): Representation, may be approximate or exact
+        %
+        % Returns:
+        %   `.Character`: Character
+            if rep.isExact
+                c = replab.Character.fromExactRep(rep);
+            else
+                c = replab.Character.fromApproximateRep(rep);
+            end
+        end
+
+        function c = fromExactRep(rep)
+        % Computes an exact character from an approximate representation using Dixon's trick
+        %
+        % See J. D. Dixon, "Computing irreducible representations of groups", Math. Comp., vol. 24, no. 111, pp. 707–712, 1970
+        % `<https://www.ams.org/mcom/1970-24-111/S0025-5718-1970-0280611-6/>`_
+        %
+        % Note that the function has complexity in $O(N e^2)$ where $N$ is the number of conjugacy classes and $e$ is the group
+        % exponent.
+        %
+        % Args:
+        %   rep (`.Rep`): Approximate representation
+        %
+        % Returns:
+        %   `.Character`: Exact character
+            group = rep.group;
+            classes = group.conjugacyClasses;
+            values = replab.cyclotomic.zeros(1, N);
+            N = classes.nClasses;
+            for i = 1:N
+                r = classes.classes{i}.representative;
+                values(i) = trace(rep.image(r));
+            end
+            c = replab.Character(classes, values);
+        end
+
         function c = fromApproximateRep(rep)
         % Computes an exact character from an approximate representation using Dixon's trick
         %

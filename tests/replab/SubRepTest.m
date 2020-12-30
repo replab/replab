@@ -11,6 +11,6 @@ function test_suite = SubRepTest()
     G = [2 -1 -1
          0  3 -3]/6;
     S3 = replab.S(3);
-    rep = S3.naturalRep.subRep(F, G);
+    rep = S3.naturalRep.subRep(F, 'projection', G);
     test_suite = rep.laws.addTestCases(test_suite);
 end

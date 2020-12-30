@@ -1,25 +1,26 @@
 classdef SelfAdjointMatrices < replab.domain.VectorSpace
-% Describes the vector space of n x n symmetric/Hermitian matrices
-    
-    properties
-        n % integer: Matrix size
+% Describes the vector space of ``n x n`` symmetric/Hermitian matrices
+
+    properties (SetAccess = protected)
+        n % (integer): Matrix size
     end
-    
+
     properties (Access = protected)
-        parent;
+        parent % (`.Matrices`): General domain of ``n x n`` matrices
     end
-    
+
     methods
-        
+
         %% Own methods
-        
+
         function self = SelfAdjointMatrices(field, n)
             self.n = n;
             self.parent = replab.domain.Matrices(field, n, n);
+            self.field = field;
         end
 
         %% Str methods
-        
+
         function s = headerStr(self)
             if self.overR
                 s = sprintf('%d x %d symmetric real matrices', self.n, self.n);
@@ -27,14 +28,15 @@ classdef SelfAdjointMatrices < replab.domain.VectorSpace
                 s = sprintf('%d x %d Hermitian complex matrices', self.n, self.n);
             end
         end
-        
-        % Domain
-        
+
+         % Domain
+
         function b = eqv(self, X, Y)
             b = self.parent.eqv(X, Y);
         end
-        
+
         function X = sample(self)
+            n = self.n;
             if self.overR
                 % Generates a symmetric matrix with measure invariant under orthogonal transformations,
                 % sampled from the Gaussian Orthogonal Ensemble, see
@@ -51,7 +53,6 @@ classdef SelfAdjointMatrices < replab.domain.VectorSpace
                 % Generates a Hermitian matrix with measure invariant under unitary transformations,
                 % sampled from the Gaussian Unitary Ensemble, see
                 % http://staff.math.su.se/shapiro/UIUC/random_matrices.pdf
-                n = self.n;
                 X = zeros(n, n);
                 for r = 1:n
                     X(r, r) = randn;
@@ -60,7 +61,7 @@ classdef SelfAdjointMatrices < replab.domain.VectorSpace
                 end
             end
         end
-        
+
     end
 
 end

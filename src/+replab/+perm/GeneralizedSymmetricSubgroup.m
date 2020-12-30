@@ -74,7 +74,12 @@ classdef GeneralizedSymmetricSubgroup < replab.NiceFiniteGroup
         %
         % Returns:
         %   double(\*,\*): Double sparse matrix
-            M = sparse(x(1,:), 1:self.n, exp(2i*pi*x(2,:)/self.m), self.n, self.n);
+            V = exp(2i*pi*x(2,:)/self.m);
+            V(x(2,:) == 0) = 1;
+            V(2*x(2,:) == self.m) = -1;
+            V(4*x(2,:) == self.m) = 1i;
+            V(4*x(2,:) == 3*self.m) = -1i;
+            M = sparse(x(1,:), 1:self.n, V, self.n, self.n);
         end
 
         function M = toMatrix(self, x)

@@ -17,7 +17,7 @@ classdef SymmetricGroup < replab.PermutationGroup
         % Args:
         %   domainSize (integer): Domain size, must be > 0
         %
-        % Returns;
+        % Returns:
         %   `.SymmetricGroup`: The constructed or cached symmetric group
             persistent cache
             if isempty(cache)
@@ -138,7 +138,7 @@ classdef SymmetricGroup < replab.PermutationGroup
 
     methods % Representations
 
-        function rep = irrep(self, partition,form)
+        function [rep data] = irrep(self, partition, form)
         % Returns the irreducible representation of this symmetric group corresponding the given Young Diagram
         %
         % Example:
@@ -170,15 +170,16 @@ classdef SymmetricGroup < replab.PermutationGroup
             end
             partition = sort(partition,'descend');
             switch form
-                case 'specht'
-                rep = replab.sym.SymmetricSpechtIrrep(self, partition);
+              case 'specht'
+                data = replab.sym.SymmetricSpechtIrrep(self, partition);
               case 'seminormal'
-                rep = replab.sym.SymmetricYoungIrrep(self, partition, 'semi');
+                data = replab.sym.SymmetricYoungIrrep(self, partition, 'seminormal');
               case 'orthogonal'
-                rep = replab.sym.SymmetricYoungIrrep(self, partition, 'orth');
+                data = replab.sym.SymmetricYoungIrrep(self, partition, 'orthogonal');
               otherwise
                 error('That is not a valid irreducible representation form')
             end
+            rep = data.rep;
         end
 
     end

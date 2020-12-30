@@ -28,6 +28,16 @@ classdef cyclotomic
 
     methods (Static)
 
+        function c = sparse(I, J, K, nR, nC)
+            if isa(K, 'double')
+                K = replab.cyclotomic.fromDoubles(K);
+            end
+            c = replab.cyclotomic.zeros(nR, nC);
+            for i = 1:length(I)
+                c.mat{I(i), J(i)} = K.mat{i};
+            end
+        end
+
         function c = eye(n)
         % Constructs the ``n x n`` identity matrix
         %
@@ -116,7 +126,10 @@ classdef cyclotomic
         %
         % Returns:
         %    `.cyclotomic`: The constructed matrix
-            c = replab.cyclotomic.fromJavaArray(javaMethod('fromDouble', 'cyclo.Lab', doubles(:)), size(doubles));
+            c = replab.cyclotomic.fromJavaArray(javaMethod('fromDouble', 'cyclo.Lab', real(doubles(:))), size(doubles));
+            if ~isreal(doubles)
+                c = c + replab.cyclotomic.E(4) * replab.cyclotomic.fromJavaArray(javaMethod('fromDouble', 'cyclo.Lab', imag(doubles(:))), size(doubles));
+            end
         end
 
         function c = approximate(lowerBounds, upperBounds)
@@ -261,9 +274,8 @@ classdef cyclotomic
 
     methods
 
-        function res = intval(self)
-            d = double(self);
-            res = intval(d, eps(d)*10); % TODO: compute a proper interval
+        function res = isreal(self)
+            res = all(all(self == conj(self)));
         end
 
         function res = isvector(self)
@@ -365,6 +377,12 @@ classdef cyclotomic
             res = replab.cyclotomic.fromJavaArray(javaMethod('minus', 'cyclo.Lab', lhs.matArray, rhs.matArray), size(lhs));
         end
 
+        function res = rdivide(lhs, rhs)
+        % Pointwise ``/`` operator
+            [lhs rhs] = replab.cyclotomic.shapeArgs(lhs, rhs);
+            res = replab.cyclotomic.fromJavaArray(javaMethod('pw_divide', 'cyclo.Lab', lhs.matArray, rhs.matArray), size(lhs));
+        end
+
         function res = times(lhs, rhs)
         % Pointwise ``*`` operator
             [lhs rhs] = replab.cyclotomic.shapeArgs(lhs, rhs);
@@ -411,6 +429,39 @@ classdef cyclotomic
             res = replab.cyclotomic.fromJavaArray(javaMethod('nullSpace', rr), [rows cols]);
         end
 
+        function [L, U, p] = lu(self)
+            m = size(self, 1);
+            n = size(self, 2);
+            res = javaMethod('lu', 'cyclo.Lab', self.matArray, m, n);
+            L = javaMethod('L', res);
+            U = javaMethod('U', res);
+            p = javaMethod('pivots', res);
+            p = double(p(:)') + 1;
+            if m >= n
+                L = replab.cyclotomic.fromJavaArray(L, [m n]);
+                U = replab.cyclotomic.fromJavaArray(U, [n n]);
+            else
+                L = replab.cyclotomic.fromJavaArray(L, [m m]);
+                U = replab.cyclotomic.fromJavaArray(U, [m n]);
+            end
+        end
+
+        function res = blkdiag(lhs, rhs)
+            if isa(lhs, 'double')
+                lhs = replab.cyclotomic.fromDoubles(lhs);
+            end
+            if isa(rhs, 'double')
+                rhs = replab.cyclotomic.fromDoubles(rhs);
+            end
+            s1 = size(lhs);
+            s2 = size(rhs);
+            M = replab.cyclotomic.zeros(s1(1) + s2(1), s1(2) + s2(2));
+            mat = M.mat;
+            mat(1:s1(1),1:s1(2)) = lhs.mat;
+            mat(s2(1)+1:end,s2(2)+1:end) = rhs.mat;
+            res = replab.cyclotomic(mat);
+        end
+
         function res = kron(lhs, rhs)
             if isa(lhs, 'double')
                 lhs = replab.cyclotomic.fromDoubles(lhs);
@@ -444,7 +495,7 @@ classdef cyclotomic
             end
             l = size(lhs.mat, 1);
             m = size(lhs.mat, 2);
-            assert(m == size(lhs.mat, 1));
+            assert(m == size(rhs.mat, 1));
             n = size(rhs.mat, 2);
             res = replab.cyclotomic.fromJavaArray(javaMethod('times', 'cyclo.Lab', l, m, n, lhs.matArray, rhs.matArray), [l n]);
         end

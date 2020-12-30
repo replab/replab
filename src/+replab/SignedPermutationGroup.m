@@ -14,8 +14,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
         %   domainSize (integer): Size of the domain
         %   generators (cell(1,\*) of permutation): Group generators
         %   order (vpi, optional): Order of the group
-        %   type (`+replab.SignedPermutationGroup`, optional): Type of this group if known,
-        %                                                      or ``'self'`` if this group is its own type
+        %   type (`+replab.SignedPermutationGroup`, optional): Type of this group if known, or ``'self'`` if this group is its own type
             self.domainSize = domainSize;
             self.identity = 1:domainSize;
             self.generators = generators;
@@ -47,7 +46,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
         % Domain
 
         function b = eqv(self, x, y)
-            b = isequal(x, y);
+            b = all(x == y);
         end
 
         % Monoid
@@ -163,16 +162,12 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
 
         function rho = naturalRep(self)
         % Natural representation on R^d of signed permutations on integers -d..-1, 1..d
-            rho = self.signedPermutationRep(self.domainSize, self.generators);
+            rho = self.signedPermutationRep(self.domainSize, 'preimages', self.generators, 'images', self.generators);
         end
 
     end
 
     methods (Static)
-
-        function G = trivial(n)
-        % Returns
-        end
 
         function G = of(varargin)
         % Constructs a nontrivial signed permutation group from the given generators

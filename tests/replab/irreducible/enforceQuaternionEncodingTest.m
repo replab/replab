@@ -76,9 +76,7 @@ function testHasCorrectForm
              0 -1 -1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0
              0 0 0 0 -1 0 0 0 1 0 0 0 1 0 0 0 0 0 1 -1 0 0 1 0 1 0 0 0 0 0 0 0
              0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];
-    sub = rep.subRep(basis);
-    sub.isIrreducible = true;
-    sub.frobeniusSchurIndicator = -2;
+    sub = rep.subRep(basis, 'isIrreducible', true, 'frobeniusSchurIndicator', -2);
     ctx = replab.Context.make;
     res = replab.irreducible.enforceQuaternionEncoding(sub, ctx);
     ctx.close;

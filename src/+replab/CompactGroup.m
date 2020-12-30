@@ -1,9 +1,7 @@
 classdef CompactGroup < replab.Group
 % A group equipped with a Haar measure
 
-    methods
-
-        %% Group construction
+    methods % Group construction
 
         function prd = directProduct(varargin)
         % Returns the direct product of groups
@@ -73,7 +71,9 @@ classdef CompactGroup < replab.Group
             sd = replab.SemidirectProductGroup.make(action);
         end
 
-        %% Representations
+    end
+
+    methods % Representations
 
         function rep = trivialRep(self, field, dimension)
         % Returns the trivial representation of this group on a finite dimensional vector space
@@ -120,7 +120,7 @@ classdef CompactGroup < replab.Group
 
     end
 
-    methods (Static)
+    methods (Static) % Group construction
 
         function group = lambda(header, eqvFun, sampleFun, composeFun, identity, inverseFun)
         % Constructs a compact group from function handles

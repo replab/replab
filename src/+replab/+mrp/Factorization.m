@@ -20,6 +20,14 @@ classdef Factorization < replab.Obj
             error('Abstract');
         end
 
+        function n = maximumWordLength(self)
+        % Returns the maximal length of a word returned by `.factorize`
+        %
+        % Returns:
+        %   integer: Maximal length
+            error('Abstract');
+        end
+
     end
 
     methods (Static)

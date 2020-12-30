@@ -6,7 +6,7 @@ classdef Irreducible < replab.SubRep
 % The irreducible decomposition of ``parent`` contains isotypic components in the cell vector ``components``.
 % Each isotypic component corresponds to a set of equivalent irreducible representations.
 
-    properties
+    properties (SetAccess = protected)
         components % (cell(1,\*) of `+replab.Isotypic`): Isotypic components
     end
 
@@ -14,38 +14,43 @@ classdef Irreducible < replab.SubRep
 
         function self = Irreducible(parent, components)
             n = length(components);
-            Bs = cell(1, n);
-            Es = cell(n, 1);
+            injections = cell(1, n);
+            projections = cell(1, n);
             for i = 1:n
                 c = components{i};
                 assert(isa(c, 'replab.Isotypic'));
-                Bs{1,i} = c.B_internal;
-                Es{i,1} = c.E_internal;
+                injections{i} = c.injection_internal;
+                projections{i} = c.projection_internal;
             end
-            B_internal = [Bs{:}];
-            E_internal = vertcat(Es{:});
-            self = self@replab.SubRep(parent, B_internal, E_internal);
+            injection = horzcat(injections{:});
+            projection = vertcat(projections{:});
+            self = self@replab.SubRep(parent, injection, projection);
             self.components = components;
             if length(components) == 1 && components{1}.multiplicity == 1
-                self.isIrreducible = true;
-                if isequal(self.basis, eye(self.dimension))
-                    replab.rep.copyProperties(self.components{1}.irreps{1}, self);
-                end
+                self.cache('isIrreducible', true, '==');
             end
+            %if isequal(self.basis, eye(self.dimension))
+            %    replab.rep.copyProperties(self.components{1}.irreps{1}, self);
+            %end
+        end
+
+        function b = isHarmonized(self)
+        % Returns whether all the isotypic components in this irreducible decomposition have been harmonized
+        %
+        % Returns:
+        %   logical: True if all isotypic components are harmonized
+            b = all(cellfun(@(c) c.isHarmonized, self.components));
         end
 
         function r = asSimilarRep(self)
-        % Returns the block-diagonal representation corresponding to the decomposition
-        %
-        % Up to the change of basis matrix `U`, it corresponds to the representation ``parent``.
-        % Indeed, we have ``self.image(g) = U * self.parent.image(g) * U'``.
+        % Returns the block-diagonal similar representation corresponding to the decomposition
         %
         % The returned representation is the parent representation with an explicit change of basis, so it does
         % not look as clean as ``self``. For efficiency and numerical stability, use ``self``.
         %
         % Returns:
         %   `+replab.Rep`: The block-diagonal representation as a representation similar to this rep. parent
-            r = self.parent.similarRep(self.E_internal, self.B_internal);
+            r = self.parent.similarRep(self.projection_internal, 'inverse', self.injection_internal);
         end
 
         function n = nComponents(self)
@@ -85,6 +90,37 @@ classdef Irreducible < replab.SubRep
 
     end
 
+    methods (Access = protected) % Implementations
+
+
+        function rho = image_double_sparse(self, g)
+            if self.isHarmonized
+                blocks = cellfun(@(c) c.image(g, 'double/sparse'), self.components, 'uniform', 0);
+                rho = blkdiag(blocks{:});
+            else
+                rho = image_double_sparse@replab.SubRep(self, g);
+            end
+        end
+
+        function rho = image_exact(self, g)
+            if self.isHarmonized
+                blocks = cellfun(@(c) c.image(g, 'exact'), self.components, 'uniform', 0);
+                rho = blkdiag(blocks{:});
+            else
+                rho = image_exact@replab.SubRep(self, g);
+            end
+        end
+
+        function c = computeCommutant(self)
+            if self.isHarmonized
+                c = replab.IrreducibleCommutant(self);
+            else
+                c = computeCommutant@replab.SubRep(self);
+            end
+        end
+
+    end
+
     methods % Implementations
 
         % Str
@@ -108,19 +144,7 @@ classdef Irreducible < replab.SubRep
             l = replab.laws.IrreducibleLaws(self);
         end
 
-        % Rep
-
-        function rho = image_internal(self, g)
-            blocks = cellfun(@(iso) iso.image_internal(g), self.components, 'uniform', 0);
-            % Construct the blocks in the block diagonal image
-            rho = blkdiag(blocks{:});
-        end
-
-        function c = computeCommutant(self)
-            c = replab.IrreducibleCommutant(self);
-        end
-
-        % SubRep
+         % SubRep
 
         function irr = nice(self)
             components1 = cellfun(@(c) c.nice, self.components, 'uniform', 0);

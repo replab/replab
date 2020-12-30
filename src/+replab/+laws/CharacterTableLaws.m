@@ -15,16 +15,18 @@ classdef CharacterTableLaws < replab.Laws
             laws = replab.laws.Collection({self.C.classes.laws});
         end
 
-        function law_irrep_(self)
-            if self.C.group.order > 100
+        function law_irrep_traces_match_character_values_(self)
+            if self.C.group.order > 4096
                 return
             end
-            % TODO: use the approximation error estimation
             for i = 1:self.C.nIrreps
                 irrep = self.C.irreps{i};
                 if ~isempty(irrep)
-                    charI = replab.Character.fromApproximateRep(irrep);
-                    self.assert(charI == self.C.character(i));
+                    for j = 1:self.C.nClasses
+                        [c1, err1] = doubleApproximation(self.C.characters(i, j));
+                        c2 = trace(irrep.image(self.C.classes.classes{j}.representative));
+                        self.assertApproxEqual(c1, c2, err1 + irrep.errorBound);
+                    end
                 end
             end
         end

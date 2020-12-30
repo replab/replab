@@ -22,18 +22,18 @@ classdef SedumiData
 % The representation must be unitary.
 
     properties
-        At % double: Data matrix of size n x m
+        At % (double): Data matrix of size n x m
            %
-           %         Where n is the number of primal scalar variables,
-           %         and m the nubmer of primal constraints (Sedumi data)
-        b % double: Constraint right hand side (Sedumi data)
-        c % double: Primal objective (Sedumi data)
-        K % struct: Cone specification (Sedumi data)
-        m % number of dual variables
-        s % size of single SDP block present
-        G % cell array of generators as permutations
-        rho % cell array of generator images defining the representation
-        rep % `.Rep`: group representation commuting with the SDP block
+           %           Where n is the number of primal scalar variables,
+           %           and m the nubmer of primal constraints (Sedumi data)
+        b % (double): Constraint right hand side (Sedumi data)
+        c % (double): Primal objective (Sedumi data)
+        K % (struct): Cone specification (Sedumi data)
+        m % (integer): Number of dual variables
+        s % (integer): Size of single SDP block present
+        G % (cell(1,\*) of permutation): cell array of generators as permutations
+        rho % (cell(1,\*) of double(\*,\*)): Cell array of generator images defining the representation
+        rep % (`.Rep`): group representation commuting with the SDP block
     end
 
     methods
@@ -75,11 +75,15 @@ classdef SedumiData
             nc1 = sum(s1.^2);
             vec1 = zeros(nc1, 1);
             shift = 0;
-            M = reshape(vec, [s s]);
+            mat = reshape(vec, [s s]);
             for r = 1:nb1 % iterate over representations
                           % apply Reynolds
                 C = I.component(r).commutant;
-                block = C.projectAndReduceFromParent(M);
+                [M, D, A] = C.projectAndFactorFromParent(mat);
+                block = kron(M{1}, A{1});
+                for i = 2:length(M)
+                    block = block + kron(M{i}, A{i});
+                end
                 % store block flattened
                 nels = prod(size(block));
                 vec1(shift+(1:nels)) = block(:);

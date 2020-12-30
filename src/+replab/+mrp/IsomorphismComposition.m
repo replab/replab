@@ -3,7 +3,7 @@ classdef IsomorphismComposition < replab.Isomorphism & replab.mrp.Composition
     methods
 
         function self = IsomorphismComposition(second, first)
-            self@replab.mrp.Composition(second, first)
+            self@replab.mrp.Composition(second, first);
         end
 
     end

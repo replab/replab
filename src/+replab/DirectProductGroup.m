@@ -1,34 +1,25 @@
-classdef DirectProductGroup < replab.Group
-% Describes an external direct product of groups
+classdef DirectProductGroup < replab.CompactGroup
+% Describes an external direct product of compact groups
 %
 % This is an abstract base class. Use `.DirectProductGroup.make` or `.CompactGroup.directProduct` to construct an instance.
+%
+% Constructors are defined in subclasses, as for other group products.
 
     properties (SetAccess = protected)
-        factors % (cell(1,\*) of subclass of `.Group`): Factor groups
+        factors % (cell(1,\*) of subclass of `.CompactGroup`): Factor groups
     end
 
     methods (Static)
 
         function prd = make(factors)
-            isFinite = all(cellfun(@(g) isa(g, 'replab.FiniteGroup'), factors));
+            isCompact = cellfun(@(g) isa(g, 'replab.CompactGroup'), factors);
+            assert(all(isCompact), 'All factors must be compact');
+            isFinite = cellfun(@(g) isa(g, 'replab.FiniteGroup'), factors);
             if isFinite
-                prd = replab.prods.DirectProductOfFiniteGroups(factors);
+                prd = replab.prods.DirectProductGroup_finite(factors);
             else
-                prd = replab.prods.DirectProductOfCompactGroups(factors);
+                prd = replab.prods.DirectProductGroup_compact(factors);
             end
-        end
-
-    end
-
-    methods
-
-        function self = DirectProductGroup(factors)
-        % Constructs a direct product of groups
-        %
-        % Args:
-        %   factors (cell(1,\*) of `.Group`): Factor groups
-            self.factors = factors;
-            self.identity = cellfun(@(f) f.identity, factors, 'uniform', 0);
         end
 
     end
@@ -58,54 +49,60 @@ classdef DirectProductGroup < replab.Group
 
     methods % Representations
 
-        function rep = directSumFactorRep(self, factorReps)
+        function rep = directSumFactorRep(self, field, factorReps)
         % Constructs a direct sum representation
         %
         % Args:
+        %   field ({'R', 'C'}): Field
         %   factorReps (row cell array): Representations for each of the factor groups
         %                                i.e. factorReps{i} is a representation of factor(i)
         %
         % Returns:
         %   `+replab.Rep`: A direct sum representation
-            rep = replab.directproduct.SumRep(self, factorReps);
+            factors = arrayfun(@(i) self.projection(i).andThen(factorReps{i}), 1:self.nFactors, 'uniform', 0);
+            rep = self.directSumRep(field, factors);
         end
 
-        function rep = directSumFactorRepFun(self, fun)
+        function rep = directSumFactorRepFun(self, field, fun)
         % Constructs a direct sum representation from a function that maps factors to representations
         %
         % Args:
+        %   field ({'R', 'C'}): Field
         %   fun (function_handle): A function valid for each factor group that maps the group and its index
         %                          to one of its representations
         %
         % Returns:
-        %   replab.Rep: A direct sum representation
+        %   `+replab.Rep`: A direct sum representation
             reps = arrayfun(@(i) fun(self.factor(i), i), 1:self.nFactors, 'uniform', 0);
-            rep = self.directSumFactorRep(reps);
+            rep = self.directSumFactorRep(field, reps);
         end
 
-        function rep = tensorFactorRep(self, factorReps)
+        function rep = tensorFactorRep(self, field, factorReps)
         % Constructs a tensor product representation
         %
         % Args:
+        %   field ({'R', 'C'}): Field
         %   factorReps (row cell array): Representations for each of the factor groups
         %                                i.e. factorReps{i} is a representation of factor(i)
         %
         % Returns:
-        %   replab.Rep: A tensor representation
-            rep = replab.directproduct.TensorRep(self, factorReps);
+        %   `+replab.Rep`: A tensor representation
+            factors = arrayfun(@(i) self.projection(i).andThen(factorReps{i}), 1:self.nFactors, 'uniform', 0);
+            rep = self.tensorRep(field, factors);
         end
 
-        function rep = tensorFactorRepFun(self, fun)
+        function rep = tensorFactorRepFun(self, field, fun)
         % Constructs a direct sum representation from a function that maps factors to representations
         %
         % Args:
+        %   field ({'R', 'C'}): Field
         %   fun (function_handle): A function valid for each factor group that maps the group and its index
         %                          to one of its representations
         %
         % Returns:
         %   replab.Rep: A tensor representation
             reps = arrayfun(@(i) fun(self.factor(i), i), 1:self.nFactors, 'uniform', 0);
-            rep = self.tensorFactorRep(reps);
+            rep = self.tensorFactorRep(field, reps);
         end
 
     end
@@ -175,7 +172,7 @@ classdef DirectProductGroup < replab.Group
                 values{1, end+1} = self.factor(i);
             end
         end
-        
+
         function s = headerStr(self)
             if self.inCache('order')
                 s = sprintf('Direct product group with %d factors of order %s', self.nFactors, strtrim(num2str(self.order)));

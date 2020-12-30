@@ -862,7 +862,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %
         % Returns:
         %   replab.Rep: The (real) natural permutation representation
-            rho = self.permutationRep(self.domainSize, self.generators);
+            rho = self.permutationRep(self.domainSize, 'preimages', self.generators, 'images', self.generators);
         end
 
         function rho = standardRep(self)
@@ -873,18 +873,25 @@ classdef PermutationGroup < replab.FiniteGroup
         % acting on $n$ elements; but we can reuse that subrepresentation on
         % subgroups of the symmetric group.
         %
-        % It corresponds to the representation orthogonal to the
-        % trivial representation with basis ``[1, 1, ..., 1]'/sqrt(d)``
+        % It corresponds to the representation complementary to the
+        % trivial representation with basis ``[1, 1, ..., 1]'``
         %
         % Returns:
-        %   `+replab.Rep`: The (real) standard representation
-            [B_internal E_internal] = replab.sym.sageSpechtStandardBasis(self.domainSize);
-            rho = self.naturalRep.subRep(B_internal, E_internal);
+        %   `+replab.SubRep`: The (real) standard representation
+            d = self.domainSize;
+            [injectiond projection] = replab.sym.sageSpechtStandardBasis(d);
+            rho = self.naturalRep.subRep(replab.cyclotomic.fromDoubles(injectiond)/d, ...
+                                         'projection', replab.cyclotomic.fromDoubles(projection));
         end
 
         function rho = signRep(self)
-        % Returns the sign representation of this permutation
-            rho = replab.RepByImages.fromImageFunction(self, 'R', 1, @(g) replab.Permutation.sign(g));
+        % Returns the sign representation of this permutation group
+        %
+        % Returns:
+        %   `+replab.Rep`: One dimensional sign representation of this group
+            preimages = self.generators;
+            images = cellfun(@(g) replab.Permutation.sign(g), preimages, 'uniform', 0);
+            rho = self.signedPermutationRep(1, 'preimages', preimages, 'images', images);
         end
 
     end

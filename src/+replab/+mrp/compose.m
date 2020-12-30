@@ -9,6 +9,10 @@ function m = compose(second, first)
 %
 % Returns:
 %   `+replab.Morphism`: The composition of the two morphisms
+    if isa(second, 'replab.Rep')
+        m = second.compose(first);
+        return
+    end
     assert(second.source.isSubgroupOf(first.target));
     if isa(first, 'replab.mrp.Identity')
         m = second;
@@ -16,10 +20,6 @@ function m = compose(second, first)
     end
     if isa(second, 'replab.mrp.Identity')
         m = first;
-        return
-    end
-    if isa(second, 'replab.Rep')
-        m = second.compose(first);
         return
     end
     areIsomorphisms = isa(first, 'replab.Isomorphism') && isa(second, 'replab.Isomorphism');

@@ -62,7 +62,7 @@ classdef CodeTokens < replab.Str
                                             data.name, self.sourceIdentifier);
                 end
               otherwise
-                replab.infra.parseError(self, pos, 'Invalid token at start of file %s.m', self.sourceIdentifier);
+                replab.infra.parseError(self, 1, 'Invalid token at start of file %s.m', self.sourceIdentifier);
             end
         end
 

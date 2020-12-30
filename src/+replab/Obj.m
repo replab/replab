@@ -81,23 +81,35 @@ classdef Obj < replab.Str
             end
         end
 
+        function res = cachedOrDefault(self, name, defaultValue)
+        % Returns the cached property if it exists, or the provided default value if it is unknown yet
+        %
+        % See `.cached` and `.cachedOrEmpty`.
+        %
+        % Args:
+        %   name (charstring): Name of the property
+        %   defaultValue: Value returned in case the property is unknown
+        %
+        % Returns
+        %   The property value if known, otherwise ``defaultValue``
+            if self.inCache(name)
+                res = self.cache_.(name);
+            else
+                res = defaultValue;
+            end
+        end
+
         function res = cachedOrEmpty(self, name)
         % Returns the cached property if it exists, or ``[]`` if it is unknown yet
         %
-        % See `.cached`.
+        % See `.cached` and `.cachedOrDefault`.
+        %
         % Args:
         %   name (charstring): Name of the property
         %
         % Returns:
         %   The property value if known, otherwise ``[]``
-            if isempty(self.cache_)
-                self.cache_ = struct;
-            end
-            if isfield(self.cache_, name)
-                res = self.cache_.(name);
-            else
-                res = [];
-            end
+            res = self.cachedOrDefault(name, []);
         end
 
         function res = cached(self, name, fun)

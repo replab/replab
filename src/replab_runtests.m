@@ -7,7 +7,7 @@ function result = replab_runtests(withCoverage, onlyFastTests)
 %
 % Args:
 %     withCoverage (logical): Enable code coverage (optional, default value is false)
-%     onlyFastTests (logical): Run only a selection of fast tests (optional, default value if false)
+%     onlyFastTests (logical): Run only a selection of fast tests (optional, default value is false)
 %
 % Results:
 %     logical: True if all tests passed.
