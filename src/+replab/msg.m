@@ -1,4 +1,4 @@
-function log(level, message, varargin)
+function msg(level, message, varargin)
 % Displays a diagnostic message on the console output
 %
 % Additional arguments can be function handles, to be evaluated only when the message is actually displayed.

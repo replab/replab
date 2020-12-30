@@ -11,11 +11,11 @@ function Q = refine_unitaryLargeScale(rep, Q, numNonImproving, nSamples, maxIter
 %
 % Returns:
 %   double(\*,\*): Refined orthogonal basis
-    replab.log(1, 'Unitary refinement: dim(parent) = %d, dim(subrep) = %d', size(Q, 1), size(Q, 2));
-    replab.log(1, 'Large-scale algorithm with %d samples/iteration', nSamples);
-    replab.log(1, '');
-    replab.log(2, ' #iter   dSpan    ortho');
-    replab.log(2, '--------------------------');
+    replab.msg(1, 'Unitary refinement: dim(parent) = %d, dim(subrep) = %d', size(Q, 1), size(Q, 2));
+    replab.msg(1, 'Large-scale algorithm with %d samples/iteration', nSamples);
+    replab.msg(1, '');
+    replab.msg(2, ' #iter   dSpan    ortho');
+    replab.msg(2, '--------------------------');
     iter = 1;
     dsub = size(Q, 2);
     min_dSpan = inf;
@@ -35,16 +35,16 @@ function Q = refine_unitaryLargeScale(rep, Q, numNonImproving, nSamples, maxIter
         dSpan = norm(Q1'*Q*Q'*Q1 - speye(dsub), 'fro')*2;
         if dSpan > min_dSpan
             ni = ni + 1;
-            replab.log(2, '%6d   %6.2E %6.2E (#%d non improving)', iter, dSpan, ortho, ni);
+            replab.msg(2, '%6d   %6.2E %6.2E (#%d non improving)', iter, dSpan, ortho, ni);
             if ni > numNonImproving
                 break
             end
         else
             min_dSpan = dSpan;
-            replab.log(2, '%6d   %6.2E %6.2E', iter, dSpan, ortho);
+            replab.msg(2, '%6d   %6.2E %6.2E', iter, dSpan, ortho);
         end
         Q = Q1;
         iter = iter + 1;
     end
-    replab.log(1, 'Stopped after %d iterations with span delta %6.2E', iter, dSpan);
+    replab.msg(1, 'Stopped after %d iterations with span delta %6.2E', iter, dSpan);
 end

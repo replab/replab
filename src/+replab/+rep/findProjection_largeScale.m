@@ -12,11 +12,11 @@ function P = findProjection_largeScale(rep, I, numNonImproving, nSamples, maxIte
 %   double(\*,\*): Projection map
     d = rep.dimension;
     dsub = size(I, 2);
-    replab.log(1, 'Projection map search: dim(parent) = %d, dim(subrep) = %d', d, dsub);
-    replab.log(1, 'Large-scale algorithm with %d samples/iteration', nSamples);
-    replab.log(1, '');
-    replab.log(2, ' #iter   dSpan    ortho');
-    replab.log(2, '--------------------------');
+    replab.msg(1, 'Projection map search: dim(parent) = %d, dim(subrep) = %d', d, dsub);
+    replab.msg(1, 'Large-scale algorithm with %d samples/iteration', nSamples);
+    replab.msg(1, '');
+    replab.msg(2, ' #iter   dSpan    ortho');
+    replab.msg(2, '--------------------------');
     iter = 1;
     min_dSpan = inf;
     P = I';
@@ -36,15 +36,15 @@ function P = findProjection_largeScale(rep, I, numNonImproving, nSamples, maxIte
         ortho = norm(P * I - speye(dsub), 'fro');
         if dSpan > min_dSpan
             ni = ni + 1;
-            replab.log(2, '%6d   %6.2E %6.2E (#%d non improving)', iter, dSpan, ortho, ni);
+            replab.msg(2, '%6d   %6.2E %6.2E (#%d non improving)', iter, dSpan, ortho, ni);
             if ni > numNonImproving
                 break
             end
         else
             min_dSpan = dSpan;
-            replab.log(2, '%6d   %6.2E %6.2E', iter, dSpan, ortho);
+            replab.msg(2, '%6d   %6.2E %6.2E', iter, dSpan, ortho);
         end
         iter = iter + 1;
     end
-    replab.log(1, 'Stopped after %d iterations with span delta %6.2E', iter, dSpan);
+    replab.msg(1, 'Stopped after %d iterations with span delta %6.2E', iter, dSpan);
 end

@@ -13,7 +13,7 @@ function subs = split(rep, sub, safetyFactor)
     if nargin < 3 || isempty(safetyFactor)
         safetyFactor = 100;
     end
-    replab.log(1, '*** Split subspace using commutant sample: dim(parent) = %d, dim(subspace) = %d', rep.dimension, sub.dimension);
+    replab.msg(1, '*** Split subspace using commutant sample: dim(parent) = %d, dim(subspace) = %d', rep.dimension, sub.dimension);
     d0 = rep.dimension;
     d1 = sub.dimension;
     I = sub.injection;
@@ -56,7 +56,7 @@ function subs = split(rep, sub, safetyFactor)
         evError(i) = max(norm(S(i,:)), norm(R(:,i)))/abs(W(i,:)*V(:,i));
         evError(i) = max(evError(i), eps(D(i)));
     end
-    replab.log(2, 'Estimated error on eigenvalues: min %e mean %e max %e', min(evError), mean(evError), max(evError));
+    replab.msg(2, 'Estimated error on eigenvalues: min %e mean %e max %e', min(evError), mean(evError), max(evError));
     % Identify clusters of eigenvalues
     start = 1;
     blocks = cell(1, 0);
@@ -81,8 +81,8 @@ function subs = split(rep, sub, safetyFactor)
         blockError(1,end+1) = max(real(D(block))) - min(real(D(block)));
         start = next;
     end
-    replab.log(1, 'Identified %d invariant subspaces', length(blocks));
-    replab.log(2, 'Eigenvalue spread in clusters: min %e mean %e max %e', min(blockError), mean(blockError), max(blockError));
+    replab.msg(1, 'Identified %d invariant subspaces', length(blocks));
+    replab.msg(2, 'Eigenvalue spread in clusters: min %e mean %e max %e', min(blockError), mean(blockError), max(blockError));
     % Create subrepresentations
     subs = cell(1, length(blocks));
     for i = 1:length(blocks)

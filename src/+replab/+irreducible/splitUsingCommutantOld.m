@@ -1,4 +1,4 @@
-function irreps = splitUsingCommutant(rep, sub, samples, ind, failureProb, errorMargin)
+function irreps = splitUsingCommutantOld(rep, sub, samples, ind, failureProb, errorMargin)
 % Splits a representation into irreducible representations by using a commutant sample
 %
 % Decomposes a possibly non-irreducible subrepresentation ``rep`` into irreducible subrepresentations.

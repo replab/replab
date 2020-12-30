@@ -328,7 +328,7 @@ classdef Isotypic < replab.SubRep
         %
         % Returns:
         %   `.Isotypic`: Isotypic component with refined subspace (injection/projection maps)
-            replab.log(1, 'Refining isotypic component');
+            replab.msg(1, 'Refining isotypic component');
             args = struct('numNonImproving', 20, 'largeScale', self.parent.dimension > 1000, 'nSamples', 5, 'nInnerIterations', 10, 'maxIterations', 1000);
             args = replab.util.populateStruct(args, varargin);
             D = self.parent.dimension;

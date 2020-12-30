@@ -185,7 +185,6 @@ classdef DirectSumRep < replab.Rep
             if all(cellfun(@(rep) rep.isExact, srs))
                 As = cellfun(@(sr) sr.A('exact'), srs, 'uniform', 0);
                 Ainvs = cellfun(@(sr) sr.Ainv('exact'), srs, 'uniform', 0);
-                Ainv = replab.numerical.kron(Ainvs, 'exact');
             else
                 As = cellfun(@(sr) sr.A('double/sparse'), srs, 'uniform', 0);
                 Ainvs = cellfun(@(sr) sr.Ainv('double/sparse'), srs, 'uniform', 0);

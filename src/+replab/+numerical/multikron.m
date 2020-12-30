@@ -1,4 +1,4 @@
-function res = kron(factors, type)
+function res = multikron(factors, type)
 % Computes the Kronecker product of multiple factors with a given type
 %
 % Args:
