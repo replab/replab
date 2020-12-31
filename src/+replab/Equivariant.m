@@ -297,14 +297,15 @@ classdef Equivariant < replab.Domain
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
 
-            if     isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SimilarRep')
+            if isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SimilarRep')
                 parent = repR.parent.equivariantFrom(repC.parent);
                 E = replab.equi.Equivariant_forSimilarRep(parent, repR, repC, special);
             elseif isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SubRep')
                 E = replab.Equivariant.make(repR.toSubRep, repC, special);
             elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SimilarRep')
                 E = replab.Equivariant.make(repR, repC.toSubRep, special);
-            elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SubRep')
+            elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SubRep') && (~repR.isExact || ~repC.isExact)
+                % TODO: when proper error estimation is there, use this also for exact reps
                 parent = repR.parent.equivariantFrom(repC.parent);
                 E = replab.equi.Equivariant_forSubRep(parent, repR, repC, special);
             elseif isa(repR.group, 'replab.FiniteGroup')
