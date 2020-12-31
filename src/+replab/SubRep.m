@@ -446,13 +446,13 @@ classdef SubRep < replab.Rep
             if self.isExact
                 rho = double(self.image_exact(g));
             else
-                rho = self.projection_internal * self.parent.image(g, 'double/sparse') * self.injection_internal;
+                rho = self.projection('double/sparse') * self.parent.image(g, 'double/sparse') * self.injection('double/sparse');
             end
         end
 
         function rho = image_exact(self, g)
             assert(self.isExact);
-            rho = self.projection_internal * self.parent.image(g, 'exact') * self.injection_internal;
+            rho = self.projection('exact') * self.parent.image(g, 'exact') * self.injection('exact');
         end
 
         function b = computeIsIrreducible(self)
