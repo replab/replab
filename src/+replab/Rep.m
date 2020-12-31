@@ -430,12 +430,27 @@ classdef Rep < replab.Obj
 
         function f = computeFrobeniusSchurIndicator(self)
         % Computes the Frobenius-Schur indicator
-            if self.inCache('isIrreducible') && self.overR && self.isIrreducible
-                % special case: irreducible real representations
-                c = replab.Context.make;
-                f = replab.irreducible.frobeniusSchurIndicator(self, c);
-                c.close;
-                return
+            if self.inCache('isIrreducible') && self.isIrreducible
+                if self.overR
+                    % special case: irreducible real representations
+                    c = replab.Context.make;
+                    f = replab.irreducible.frobeniusSchurIndicator(self, c);
+                    c.close;
+                    return
+                else
+                    altTrivDim = self.alternatingSquare.trivialDimension;
+                    symTrivDim = self.symmetricSquare.trivialDimension;
+                    if symTrivDim == 1 && altTrivDim == 0
+                        f = 1;
+                    elseif symTrivDim == 0 && altTrivDim == 1
+                        f = -1;
+                    elseif symTrivDim == 0 && altTrivDim == 0
+                        f = 0;
+                    else
+                        error('Unknown situation');
+                    end
+                    return
+                end
             end
             if isa(self.group, 'replab.FiniteGroup')
                 % for a finite group, use conjugacy classes
@@ -462,9 +477,14 @@ classdef Rep < replab.Obj
                     end
                     f = round(f);
                 end
-            else
-                error('Does not work with continuous groups.');
-                % TODO: if this representation has a decomposition, use it
+                return
+            end
+            % Use decomposition
+            dec = self.decomposition;
+            f = 0;
+            for i = 1:dec.nComponents
+                c = dec.component(i);
+                f = f + c.multiplicity * c.irrep(1).frobeniusSchurIndicator;
             end
         end
 
@@ -1240,6 +1260,58 @@ classdef Rep < replab.Obj
         %   `+replab.Rep`: The tensor power representation
             reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
             rep = self.group.tensorRep(self.field, reps);
+        end
+
+        function sub = symmetricSquare(self)
+        % Returns the symmetric square of this representation
+        %
+        % Let $V$ be the vector space corresponding to this representation, and $V \otimes V$ be
+        % its second tensor power. Let $T$ be the linear map such that $T(v_1 \otimes v_2) = v_2 \otimes v_1$.
+        %
+        % Then the symmetric square $S$ is the subspace $S subset V \otimes V$ such that $T(s) = s$ for
+        % all $s \in S$.
+        %
+        % Returns:
+        %   `.SubRep`: A subrepresentation of the second tensor power of this representation
+            d = self.dimension;
+            D = d*(d+1)/2;
+            ind = 1;
+            injection = zeros(d*d, D);
+            for i = 1:d
+                injection(i+(i-1)*d, ind) = 1;
+                ind = ind + 1;
+                for j = i+1:d
+                    injection(j+(i-1)*d, ind) = 1;
+                    injection(i+(j-1)*d, ind) = 1;
+                    ind = ind + 1;
+                end
+            end
+            sub = self.tensorPower(2).subRep(replab.cyclotomic.fromDoubles(injection));
+        end
+
+        function sub = alternatingSquare(self)
+        % Returns the alternating square of this representation
+        %
+        % Let $V$ be the vector space corresponding to this representation, and $V \otimes V$ be
+        % its second tensor power. Let $T$ be the linear map such that $T(v_1 \otimes v_2) = v_2 \otimes v_1$.
+        %
+        % Then the alternating square $A$ is the subspace $A subset V \otimes V$ such that $T(a) = -a$ for
+        % all $a \in A$.
+        %
+        % Returns:
+        %   `.SubRep`: A subrepresentation of the second tensor power of this representation
+            d = self.dimension;
+            D = d*(d-1)/2;
+            ind = 1;
+            injection = zeros(d*d, D);
+            for i = 1:d
+                for j = i+1:d
+                    injection(j+(i-1)*d, ind) = 1;
+                    injection(i+(j-1)*d, ind) = -1;
+                    ind = ind + 1;
+                end
+            end
+            sub = self.tensorPower(2).subRep(replab.cyclotomic.fromDoubles(injection));
         end
 
         function rep = directSumOfCopies(self, n)
