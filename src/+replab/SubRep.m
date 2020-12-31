@@ -20,6 +20,9 @@ classdef SubRep < replab.Rep
 %
 % Note that often, only approximations $\tilde{P}$ and $\tilde{I}$ are known by RepLAB. We thus
 % store a measure of the error associated with those maps in `.projectorErrorBound`.
+%
+% Note:
+%   The terminology of "injection" and "projection" linear maps was inspired by https://arxiv.org/pdf/0812.4969.pdf
 
     properties (SetAccess = protected)
         parent % (`+replab.Rep`): Parent representation of dimension $D$
