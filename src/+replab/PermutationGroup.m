@@ -718,7 +718,7 @@ classdef PermutationGroup < replab.FiniteGroup
                 s = self.trivialSubgroup;
             else
                 immutable = true;
-                c = c.chainFromLevel(l, immutable)
+                c = c.chainFromLevel(l, immutable);
                 s = replab.PermutationGroup.fromChain(c, self.type);
             end
         end
