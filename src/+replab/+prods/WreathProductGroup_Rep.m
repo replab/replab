@@ -26,11 +26,11 @@ classdef WreathProductGroup_Rep < replab.Rep
             assert(ismember(type, {'primitive', 'imprimitive'}));
             assert(strcmp(factorRep.field, actingRep.field));
             assert(strcmp(factorRep.field, baseRep.field));
-            % assert(isa(factorRep, 'replab.Rep') && factorRep.group == group.A); TODO
-            % assert(isa(actingRep, 'replab.Rep') && actingRep.group == group.H); TODO
+            assert(isa(factorRep, 'replab.Rep') && factorRep.group == group.A);
+            assert(isa(actingRep, 'replab.Rep') && actingRep.group == group.H);
             assert(actingRep.isExact && actingRep.isUnitary);
             assert(actingRep.dimension == baseRep.dimension);
-            % assert(isa(baseRep, 'replab.Rep') && baseRep.group == group.N); TODO
+            assert(isa(baseRep, 'replab.Rep') && baseRep.group == group.N);
             if baseRep.knownUnitary
                 args = {'isUnitary' true};
             elseif baseRep.knownNonUnitary
@@ -67,15 +67,9 @@ classdef WreathProductGroup_Rep < replab.Rep
             c = self.baseRep.conditionNumberEstimate;
         end
 
-        % TODO: computeKernel
-
         function b = computeIsUnitary(self)
             b = self.dimension <= 1 || self.factorRep.isUnitary;
         end
-
-        % TODO: compute Unitarize, can be optimized
-
-        % TODO: various matrix actions
 
     end
 
