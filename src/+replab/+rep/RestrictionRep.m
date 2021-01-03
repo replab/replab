@@ -15,7 +15,6 @@ classdef RestrictionRep < replab.Rep
             else
                 args = {};
             end
-            % TODO: propagate more properties
             self@replab.Rep(group, parent.field, parent.dimension, args{:});
         end
 
