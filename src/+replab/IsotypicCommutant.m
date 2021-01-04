@@ -40,6 +40,7 @@ classdef IsotypicCommutant < replab.SubEquivariant
     methods
 
         function self = IsotypicCommutant(isotypic, divisionAlgebraDimension)
+            assert(isotypic.isHarmonized);
             self@replab.SubEquivariant(isotypic.parent.commutant, isotypic, isotypic, 'commutant');
             self.divisionAlgebraDimension = divisionAlgebraDimension;
         end
