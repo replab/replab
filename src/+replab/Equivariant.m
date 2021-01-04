@@ -102,14 +102,14 @@ classdef Equivariant < replab.Domain
             switch type
               case 'double'
                 if nargout > 1
-                    [X1 err] = self.project_double_sparse(X);
+                    [X1, err] = self.project_double_sparse(X);
                 else
                     X1 = self.project_double_sparse(X);
                 end
                 X1 = full(X1);
               case 'double/sparse'
                 if nargout > 1
-                    [X1 err] = self.project_double_sparse(X);
+                    [X1, err] = self.project_double_sparse(X);
                 else
                     X1 = self.project_double_sparse(X);
                 end
@@ -296,7 +296,6 @@ classdef Equivariant < replab.Domain
         %
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
-
             if isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SimilarRep')
                 parent = repR.parent.equivariantFrom(repC.parent);
                 E = replab.equi.Equivariant_forSimilarRep(parent, repR, repC, special);
@@ -304,10 +303,8 @@ classdef Equivariant < replab.Domain
                 E = replab.Equivariant.make(repR.toSubRep, repC, special);
             elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SimilarRep')
                 E = replab.Equivariant.make(repR, repC.toSubRep, special);
-            elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SubRep') && (~repR.isExact || ~repC.isExact)
-                % TODO: when proper error estimation is there, use this also for exact reps
-                parent = repR.parent.equivariantFrom(repC.parent);
-                E = replab.equi.Equivariant_forSubRep(parent, repR, repC, special);
+            elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SubRep')
+                E = replab.SubEquivariant.make(repR, repC, special);
             elseif isa(repR.group, 'replab.FiniteGroup')
                 if repR.group.order < 65536 && (~repR.isExact || ~repC.isExact)
                     E = replab.equi.Equivariant_forFiniteGroup_explicitSum(repR, repC, special);

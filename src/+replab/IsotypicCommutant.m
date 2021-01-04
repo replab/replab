@@ -1,4 +1,4 @@
-classdef IsotypicCommutant < replab.Equivariant
+classdef IsotypicCommutant < replab.SubEquivariant
 % Commutant of a harmonized isotypic component
 %
 % Matrices in this commutant space have the following form:
@@ -40,7 +40,7 @@ classdef IsotypicCommutant < replab.Equivariant
     methods
 
         function self = IsotypicCommutant(isotypic, divisionAlgebraDimension)
-            self = self@replab.Equivariant(isotypic, isotypic, 'commutant');
+            self@replab.SubEquivariant(isotypic.parent.commutant, isotypic, isotypic, 'commutant');
             self.divisionAlgebraDimension = divisionAlgebraDimension;
         end
 

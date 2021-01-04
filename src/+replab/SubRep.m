@@ -409,6 +409,66 @@ classdef SubRep < replab.Rep
 
     end
 
+    methods % Equivariant spaces
+
+        function E = subEquivariantFrom(self, repC)
+        % Returns the space of equivariant linear maps from another subrepresentation to this subrepresentation
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``X * repC.image(g) = self.image(g) * X``
+        %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> rep = S3.naturalRep;
+        %   >>> Xrep = randn(3, 3);
+        %   >>> triv = rep.subRep([1;1;1]);
+        %   >>> std = rep.maschke(triv);
+        %   >>> E = triv.subEquivariantFrom(std);
+        %   >>> Xsub = E.projectFromParent(Xrep);
+        %   >>> isequal(size(Xsub), [1 2]) % map to trivial (dim=1) from std (dim=2)
+        %       1
+        %   >>> norm(Xsub) <= 1e-15
+        %       1
+        %
+        % Args:
+        %   repC (`+replab.SubRep`): Subrepresentation on the source/column space
+        %
+        % Returns:
+        %   `+replab.SubEquivariant`: The equivariant vector space
+            E = replab.SubEquivariant.make(self, repC, '');
+        end
+
+        function E = subEquivariantTo(self, repR)
+        % Returns the space of equivariant linear maps from this subrepresentation to another subrepresentation
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``X * self.image(g) = repR.image(g) * X``
+        %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> rep = S3.naturalRep;
+        %   >>> Xrep = randn(3, 3);
+        %   >>> triv = rep.subRep([1;1;1]);
+        %   >>> std = rep.maschke(triv);
+        %   >>> E = triv.subEquivariantTo(std);
+        %   >>> Xsub = E.projectFromParent(Xrep);
+        %   >>> isequal(size(Xsub), [2 1]) % map to std (dim=1) from triv (dim=1)
+        %       1
+        %   >>> norm(Xsub) <= 1e-15
+        %       1
+        %
+        % Args:
+        %   repR (`+replab.SubRep`): Subrepresentation on the target/row space
+        %
+        % Returns:
+        %   `+replab.SubEquivariant`: The equivariant vector space
+            E = replab.SubEquivariant.make(repR, self, '');
+        end
+
+    end
+
     methods (Access = protected)
 
         function c = computeInjectionConditionNumberEstimate(self)
@@ -479,12 +539,11 @@ classdef SubRep < replab.Rep
         end
 
         function c = computeCommutant(self)
-            c = replab.equi.Equivariant_forSubRep(self.parent.commutant, self, self, 'commutant');
+            c = replab.SubEquivariant(self.parent.commutant, self, self, 'commutant');
         end
 
         function h = computeHermitianInvariant(self)
-            parentH = self.parent.hermitianInvariant;
-            h = replab.equi.Equivariant_forSubRep(parentH, self, self.dual.conj, 'hermitian');
+            h = replab.SubEquivariant(self.parent.hermitianInvariant, self, self.dual.conj, 'hermitian');
         end
 
         function t = computeTrivialRowSpace(self)
@@ -494,7 +553,7 @@ classdef SubRep < replab.Rep
             injection = sparse(1:d, 1:d, ones(1, d), D, d);
             projection = injection';
             tRep = parentT.repR.subRep(injection, 'projection', projection);
-            t = replab.equi.Equivariant_forSubRep(parentT, tRep, self, 'trivialRows');
+            t = replab.SubEquivariant(parentT, tRep, self, 'trivialRows');
         end
 
         function t = computeTrivialColSpace(self)
@@ -504,7 +563,7 @@ classdef SubRep < replab.Rep
             injection = sparse(1:d, 1:d, ones(1, d), D, d);
             projection = injection';
             tRep = parentT.repC.subRep(injection, 'projection', projection);
-            t = replab.equi.Equivariant_forSubRep(parentT, self, tRep, 'trivialCols');
+            t = replab.SubEquivariant(parentT, self, tRep, 'trivialCols');
         end
 
         %function [A Ainv] = unitaryChangeOfBasis(self) TODO restore

@@ -808,7 +808,7 @@ classdef Rep < replab.Obj
 
     end
 
-    methods % Derived vector spaces/algebras
+    methods % Equivariant spaces
 
         function e = equivariantFrom(self, repC)
         % Returns the space of equivariant linear maps from another rep to this rep
@@ -889,7 +889,6 @@ classdef Rep < replab.Obj
         %   `+replab.Equivariant`: The equivariant space
             t = self.cached('trivialColSpace', @() self.computeTrivialColSpace);
         end
-
 
     end
 

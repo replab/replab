@@ -36,5 +36,7 @@ replab.globals.fastChainOrder(10000); % only attempt for groups of order <= valu
 % Read additional JSON atlas entries
 replab.Atlas.readFolder(fullfile(replab.globals.replabPath, 'atlas'));
 
+% Set YOLO mode on
+replab.globals.yolo(true);
 % If you have GAP 4 installed, set the path below
 % replab.globals.gapBinaryPath('/opt/gap4/bin/gap.sh');
