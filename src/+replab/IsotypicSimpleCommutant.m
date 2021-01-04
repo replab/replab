@@ -55,11 +55,10 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
             A = {replab.cyclotomic.eye(1)};
         end
 
-        function [M, D, A, err] = projectAndFactorFromParent_double_sparse(self, X)
+        function [M, D, A] = projectAndFactorFromParent_double_sparse(self, X)
             M = {self.blockFromParent(X, 'double/sparse')};
             D = {speye(self.repR.irrepDimension)};
             A = {1};
-            err = inf;
         end
 
         function [M, D, A] = projectAndFactor_exact(self, X)
@@ -68,11 +67,10 @@ classdef IsotypicSimpleCommutant < replab.IsotypicCommutant
             A = {replab.cyclotomic.eye(1)};
         end
 
-        function [M, D, A, err] = projectAndFactor_double_sparse(self, X)
+        function [M, D, A] = projectAndFactor_double_sparse(self, X)
             M = {self.block(X)};
             D = {speye(self.repR.irrepDimension)};
             A = {1};
-            err = inf;
         end
 
     end

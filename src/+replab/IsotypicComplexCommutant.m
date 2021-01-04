@@ -85,13 +85,12 @@ classdef IsotypicComplexCommutant < replab.IsotypicCommutant
             A = {replab.cyclotomic.eye(2) replab.fromDoubles([0 -1; 1 0])};
         end
 
-        function [M, D, A, err] = projectAndFactorFromParent_double_sparse(self, X)
+        function [M, D, A] = projectAndFactorFromParent_double_sparse(self, X)
             [A, B] = self.blockFromParent(X);
             M = {A B};
             I = speye(self.repR.irrepDimension/2);
             D = {I I};
             A = {speye(2) [0 -1; 1 0]};
-            err = inf;
         end
 
         function [M, D, A] = projectAndFactor_exact(self, X)
@@ -102,13 +101,12 @@ classdef IsotypicComplexCommutant < replab.IsotypicCommutant
             A = {replab.cyclotomic.eye(2) replab.fromDoubles([0 -1; 1 0])};
         end
 
-        function [M, D, A, err] = projectAndFactor_double_sparse(self, X)
+        function [M, D, A] = projectAndFactor_double_sparse(self, X)
             [A, B] = self.block(X);
             M = {A B};
             I = speye(self.repR.irrepDimension/2);
             D = {I I};
             A = {speye(2) [0 -1; 1 0]};
-            err = inf;
         end
 
     end

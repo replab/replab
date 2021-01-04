@@ -47,7 +47,7 @@ classdef SubEquivariant < replab.Equivariant
                 eC = self.repC.errorBound;
                 cR = self.repR.conditionNumberEstimate; % condition number of repR
                 cC = self.repC.conditionNumberEstimate; % condition number of repC
-                sX = replab.numerical.norm2UpperBound(X1);
+                sX = replab.numerical.norm2UpperBound(X);
                 err = sX*(eR*cC + cR*eC);
             end
         end

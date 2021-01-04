@@ -104,13 +104,12 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
             A = cellfun(@(M) replab.cyclotomic.fromDoubles(M), self.basis, 'uniform', 0);
         end
 
-        function [M, D, A, err] = projectAndFactorFromParent_double_sparse(self, X)
+        function [M, D, A] = projectAndFactorFromParent_double_sparse(self, X)
             [A, B, C, D] = self.blockFromParent(X);
             M = {A B C D};
             I = speye(self.repR.irrepDimension/4);
             D = {I I I I};
             A = self.basis;
-            err = inf;
         end
 
         function [M, D, A] = projectAndFactor_exact(self, X)
@@ -121,13 +120,12 @@ classdef IsotypicQuaternionCommutant < replab.IsotypicCommutant
             A = cellfun(@(M) replab.cyclotomic.fromDoubles(M), self.basis, 'uniform', 0);
         end
 
-        function [M, D, A, err] = projectAndFactor_double_sparse(self, X)
+        function [M, D, A] = projectAndFactor_double_sparse(self, X)
             [A, B, C, D] = self.block(X);
             M = {A B C D};
             I = speye(self.repR.irrepDimension/4);
             D = {I I I I};
             A = self.basis;
-            err = inf;
         end
 
     end

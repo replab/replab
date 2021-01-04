@@ -21,17 +21,17 @@ classdef IsotypicCommutant < replab.SubEquivariant
             [M, D, A] = self.projectAndFactor_exact(P * X * I);
         end
 
-        function [M, D, A, err] = projectAndFactorFromParent_double_sparse(self, X)
+        function [M, D, A] = projectAndFactorFromParent_double_sparse(self, X)
             P = self.repR.projection(type, 'double/sparse');
             I = self.repR.injection(type, 'double/sparse');
-            [M, D, A, err] = self.projectAndFactor_double_sparse(P * X * I);
+            [M, D, A] = self.projectAndFactor_double_sparse(P * X * I);
         end
 
         function [M, D, A] = projectAndFactor_exact(self, X)
             error('Exact projection not implemented');
         end
 
-        function [M, D, A, err] = projectAndFactor_double_sparse(self, X)
+        function [M, D, A] = projectAndFactor_double_sparse(self, X)
             error('Abstract');
         end
 
@@ -124,14 +124,23 @@ classdef IsotypicCommutant < replab.SubEquivariant
                   [M, D, A] = self.projectAndFactor_exact(X);
                   err = 0;
               case 'double'
-                [M, D, A, err] = self.projectAndFactor_double_sparse(X);
+                [M, D, A] = self.projectAndFactor_double_sparse(X);
                 M = cellfun(@full, M, 'uniform', 0);
                 D = cellfun(@full, D, 'uniform', 0);
                 A = cellfun(@full, A, 'uniform', 0);
               case 'double/sparse'
-                [M, D, A, err] = self.projectAndFactor_double_sparse(X);
+                [M, D, A] = self.projectAndFactor_double_sparse(X);
               otherwise
                 error('Unknown type %s', type);
+            end
+            if nargout > 1
+                assert(replab.globals.yolo);
+                eR = self.repR.errorBound;
+                eC = self.repC.errorBound;
+                cR = self.repR.conditionNumberEstimate; % condition number of repR
+                cC = self.repC.conditionNumberEstimate; % condition number of repC
+                sX = replab.numerical.norm2UpperBound(X);
+                err = sX*(eR*cC + cR*eC);
             end
         end
 
@@ -162,14 +171,27 @@ classdef IsotypicCommutant < replab.SubEquivariant
                   [M, D, A] = self.projectAndFactorFromParent_exact(X);
                   err = 0;
               case 'double'
-                [M, D, A, err] = self.projectAndFactorFromParent_double_sparse(X);
+                [M, D, A] = self.projectAndFactorFromParent_double_sparse(X);
                 M = cellfun(@full, M, 'uniform', 0);
                 D = cellfun(@full, D, 'uniform', 0);
                 A = cellfun(@full, A, 'uniform', 0);
               case 'double/sparse'
-                [M, D, A, err] = self.projectAndFactorFromParent_double_sparse(X);
+                [M, D, A] = self.projectAndFactorFromParent_double_sparse(X);
               otherwise
                 error('Unknown type %s', type);
+            end
+            if nargout > 1
+                assert(replab.globals.yolo);
+                eR = self.repR.errorBound;
+                eC = self.repC.errorBound;
+                cR = self.repR.conditionNumberEstimate; % condition number of repR
+                cC = self.repC.conditionNumberEstimate; % condition number of repC
+                sX = 0;
+                X1 = kron(M{1}, kron(D{1}, A{1}));
+                for i = 1:length(M)
+                    sX = sX + replab.numerical.norm2UpperBound(M{i}) * replab.numerical.norm2UpperBound(D{i}) * replab.numerical.norm2UpperBound(A{i});
+                end
+                err = sX*(eR*cC + cR*eC);
             end
         end
 
