@@ -1,7 +1,21 @@
 classdef VectorPermutationTo < replab.bsgs.Backtrack
-% Computes the permutation that sends a vector to another vector
+% Computes the permutation from the group that sends a vector to another vector
 %
 % We find one ``p`` such that ``t == s(inverse(p))`` or ``s == t(p)``.
+%
+% Example:
+% >>> s = [1 3 2 4 5];
+% >>> t = [1 4 5 2 3];
+% >>> S5 = replab.S(5);
+% >>> bktrk = replab.bsgs.VectorPermutationTo(S5, s, t);
+% >>> p = bktrk.find
+%     1     3     2     4     5
+% >>> s = [1 3 3 3 1];
+% >>> t = [3 3 3 1 1];
+% >>> grp = S5.subgroup({[4 3 2 1 5]});
+% >>> bktrk = replab.bsgs.VectorPermutationTo(S5, s, t);
+% >>> p = bktrk.find
+%     4     3     2     1     5
 
     properties
         s % (double(1,domainSize)): Source vector
