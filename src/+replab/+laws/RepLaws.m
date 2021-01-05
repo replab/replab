@@ -62,7 +62,7 @@ classdef RepLaws < replab.Laws
                     case 0
                       rho1 = replab.domain.ComplexTypeMatrices.project(rho);
                   case -2
-                    rho1 = replab.domain.QuaternionTypeMatrices.project(rho);
+                    rho1 = replab.domain.QuaternionTypeMatrices.project(rho, 'group');
                   case 1
                     rho1 = rho;
                     % do nothing
