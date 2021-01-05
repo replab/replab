@@ -72,7 +72,15 @@ classdef SubEquivariant < replab.Equivariant
 
     end
 
-    methods
+    methods % Implementations
+
+        function b = isExact(self)
+            b = self.repR.isExact && self.repC.isExact && self.parent.isExact;
+        end
+
+    end
+
+    methods % Projection from parent space
 
         function [X1, err] = projectFromParent(self, X, type)
         % Projects the given matrix, written in the parent representation space, into the equivariant space of the subrepresentation
