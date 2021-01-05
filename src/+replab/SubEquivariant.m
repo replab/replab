@@ -140,7 +140,7 @@ classdef SubEquivariant < replab.Equivariant
         %   special (charstring): Special structure see help on `+replab.Equivariant.special`
         %
         % Returns:
-        %   `+replab.Equivariant`: The equivariant vector space
+        %   `+replab.SubEquivariant`: The equivariant vector space
             parent = repR.parent.equivariantFrom(repC.parent);
             E = replab.SubEquivariant(parent, repR, repC, special);
         end
