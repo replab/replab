@@ -24,8 +24,12 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 %       1
 %   >>> R = E.R('double');
 %   >>> A = E.A('double');
-%   >>> norm(kron(M{1}, kron(R{1}, A{1})) - X, 'fro') <= 1e-14
+%   >>> tol = 1e-14;
+%   >>> norm(kron(M{1}, kron(R{1}, A{1})) - X, 'fro') <= tol
 %       1
+%   >>> norm(E.reconstruct(M) - X, 'fro') <= tol
+%       1
+
     properties (SetAccess = protected)
         R_internal % (cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)): Representation space basis
         A_internal % (cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)): Division algebra basis
