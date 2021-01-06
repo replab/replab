@@ -53,6 +53,16 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 
     methods
 
+        function d = divisionAlgebraDimension(self)
+        % Returns the dimension of the division algebra encoded in this block
+        %
+        % As a special case, if the block is zero, the returned size is zero.
+        %
+        % Returns:
+        %   integer: Dimension of the division algebra
+            d = length(self.A_internal);
+        end
+
         function b = isZero(self)
         % Returns whether this equivariant space contains only the zero matrix
         %
