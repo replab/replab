@@ -90,6 +90,40 @@ classdef Irreducible < replab.SubRep
 
     end
 
+    methods % Equivariant spaces
+
+        function E = irreducibleEquivariantFrom(self, repC)
+        % Returns the space of equivariant linear maps from another irreducible decomposition to this irreducible decomposition
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``X * repC.image(g) = self.image(g) * X``
+        %
+        % Args:
+        %   repC (`+replab.Irreducible`): Irreducible decomposition, representation on the source/column space
+        %
+        % Returns:
+        %   `+replab.IrreducibleEquivariant` or ``[]``: The equivariant vector space, or ``[]`` if the space has dimension zero or contains only the zero matrix
+            E = replab.IrreducibleEquivariant.make(self, repC, '');
+        end
+
+        function E = irreducibleEquivariantTo(self, repR)
+        % Returns the space of equivariant linear maps from this irreducible decomposition to another irreducible decomposition
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``X * self.image(g) = repR.image(g) * X``
+        %
+        % Args:
+        %   repR (`+replab.Irreducible`): Irreducible decomposition, representation on the target/row space
+        %
+        % Returns:
+        %   `+replab.IrreducibleEquivariant` or ``[]``: The equivariant vector space, or ``[]`` if the space has dimension zero or contains only the zero matrix
+            E = replab.IrreducibleEquivariant.make(repR, self, '');
+        end
+
+    end
+
     methods (Access = protected) % Implementations
 
 
