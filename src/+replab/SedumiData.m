@@ -85,6 +85,7 @@ classdef SedumiData
                 for i = 2:length(M)
                     block = block + kron(M{i}, A{i});
                 end
+                % TODO: force a symmetric matrix
                 % store block flattened
                 nels = prod(size(block));
                 vec1(shift+(1:nels)) = block(:);

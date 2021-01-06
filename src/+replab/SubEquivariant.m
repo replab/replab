@@ -29,6 +29,21 @@ classdef SubEquivariant < replab.Equivariant
 
     end
 
+    methods % Implementations
+
+        % Domains
+
+        function l = laws(self)
+            l = replab.laws.SubEquivariantLaws(self);
+        end
+
+        % Equivariant
+                function b = isExact(self)
+            b = self.repR.isExact && self.repC.isExact && self.parent.isExact;
+        end
+
+    end
+
     methods (Access = protected) % Implementations
 
         % Equivariant
@@ -68,14 +83,6 @@ classdef SubEquivariant < replab.Equivariant
                 sX = replab.numerical.norm2UpperBound(X1);
                 err = sX*(eR*cC + cR*eC);
             end
-        end
-
-    end
-
-    methods % Implementations
-
-        function b = isExact(self)
-            b = self.repR.isExact && self.repC.isExact && self.parent.isExact;
         end
 
     end

@@ -1,8 +1,8 @@
 classdef MonoidLaws < replab.laws.DomainLaws
 % Laws obeyed by a monoid
 
-    properties
-        N10 % Integer between 1 and 10
+    properties (SetAccess = protected)
+        N10 % (`+replab.Domain`): Integer between 1 and 10
     end
 
     methods

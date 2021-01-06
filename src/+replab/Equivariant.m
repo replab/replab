@@ -78,7 +78,7 @@ classdef Equivariant < replab.Domain
             error('Exact projection not implemented');
         end
 
-        function [X1 err] = project_double_sparse(self, X)
+        function [X1, err] = project_double_sparse(self, X)
         % Projects any ``nR x nC`` matrix in the equivariant subspace
         %
         % Implementation of `.project`
@@ -157,6 +157,23 @@ classdef Equivariant < replab.Domain
             b = false;
         end
 
+        function E1 = subEquivariant(self, subR, subC, varargin)
+        % Constructs a invariant subspace of an equivariant space
+        %
+        % Args:
+        %   subC (`+replab.SubRep`): A subrepresentation of ``self.repC``
+        %   subR (`+replab.SubRep`): A subrepresentation of ``self.repR``
+        %
+        % Keyword Args:
+        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+            assert(isa(subC, 'replab.SubRep'));
+            assert(isa(subR, 'replab.SubRep'));
+            assert(subC.parent == self.repC);
+            assert(subR.parent == self.repR);
+            E = subR.subEquivariantFrom(subC, 'parent', self, varargin{:});
+        end
+
     end
 
     methods % Cached samples
@@ -213,20 +230,6 @@ classdef Equivariant < replab.Domain
 
     methods % Implementations
 
-         function E1 = subEquivariant(self, subR, subC, special)
-         % Constructs a invariant subspace of an equivariant space
-        %
-        % Args:
-        %   subC (`+replab.SubRep`): A subrepresentation of ``self.repC``
-        %   subR (`+replab.SubRep`): A subrepresentation of ``self.repR``
-        %   special (charstring): Whether the equivariant subspace has special structure
-            assert(isa(subC, 'replab.SubRep'));
-            assert(isa(subR, 'replab.SubRep'));
-            assert(subC.parent == self.repC);
-            assert(subR.parent == self.repR);
-            E1 = replab.equi.ForSubReps(subC, subR, special, self);
-        end
-
         % Str
 
         function s = headerStr(self)
@@ -243,6 +246,10 @@ classdef Equivariant < replab.Domain
         end
 
         % Domain
+
+        function l = laws(self)
+            l = replab.laws.EquivariantLaws(self);
+        end
 
         function b = eqv(self, X, Y)
             b = self.domain.eqv(X, Y);
