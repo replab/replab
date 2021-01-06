@@ -51,6 +51,16 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 
     end
 
+    methods % Implementations
+
+        % Domain
+
+        function l = laws(self)
+            l = replab.laws.IsotypicEquivariantLaws(self);
+        end
+
+    end
+
     methods
 
         function d = divisionAlgebraDimension(self)

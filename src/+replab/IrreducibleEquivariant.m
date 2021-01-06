@@ -31,6 +31,16 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
 
     end
 
+    methods % Implementations
+
+        % Domain
+
+        function l = laws(self)
+            l = replab.laws.IrreducibleEquivariantLaws(self);
+        end
+
+    end
+
     methods % Factorization
 
         function X = reconstruct(self, M, type)
@@ -91,7 +101,7 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
             for i = 1:self.repR.nComponents
                 for j = 1:self.repC.nComponents
                     if self.nonZeroBlocks(i, j)
-                        M{i, j} = self.blocks{i, j}.projectAndFactorFromParent(X, 'exact');
+                        M{i, j} = self.blocks{i, j}.projectAndFactorFromParent(parentX, 'exact');
                     end
                 end
             end
@@ -102,7 +112,7 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
             for i = 1:self.repR.nComponents
                 for j = 1:self.repC.nComponents
                     if self.nonZeroBlocks(i, j)
-                        M{i, j} = self.blocks{i, j}.projectAndFactorFromParent(X, 'double/sparse');
+                        M{i, j} = self.blocks{i, j}.projectAndFactorFromParent(parentX, 'double/sparse');
                     end
                 end
             end
@@ -193,13 +203,7 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
                 eC = self.repC.errorBound;
                 cR = self.repR.conditionNumberEstimate; % condition number of repR
                 cC = self.repC.conditionNumberEstimate; % condition number of repC
-                sX = 0;
-                R = self.R;
-                A = self.A;
-                X1 = kron(M{1}, kron(R{1}, A{1}));
-                for i = 1:length(M)
-                    sX = sX + replab.numerical.norm2UpperBound(M{i}) * replab.numerical.norm2UpperBound(R{i}) * replab.numerical.norm2UpperBound(A{i});
-                end
+                sX = replab.numerical.norm2UpperBound(self.reconstruct(M));
                 err = sX*(eR*cC + cR*eC);
             end
         end
