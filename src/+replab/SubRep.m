@@ -691,74 +691,20 @@ classdef SubRep < replab.Rep
         end
 
         function c = commutant(self, type)
-        % Returns the commutant of this representation
-        %
-        % This is the algebra of matrices that commute with the representation,
-        % i.e. the vector space isomorphism to the equivariant space from this rep to this rep.
-        %
-        % For any ``g in G``, we have ``rho(g) * X = X * rho(g)``.
-        %
-        % The computation is cached.
-        %
-        % Args:
-        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
-        %
-        % Returns:
-        %   `+replab.Equivariant`: The commutant algebra represented as an equivariant space
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            switch type
-              case 'double'
-                c = self.cached('commutant_double', @() self.subEquivariantFrom(self, 'parent', self.parent.commutant(type), 'special', 'commutant', 'type', type));
-              case 'exact'
-                c = self.cached('commutant_exact', @() self.subEquivariantFrom(self, 'parent', self.parent.commutant(type), 'special', 'commutant', 'type', type));
-              otherwise
-                error('Invalid type');
-            end
+            c = self.cached(['commutant_' type], @() self.subEquivariantFrom(self,  'special', 'commutant', 'type', type));
         end
 
         function h = hermitianInvariant(self, type)
-        % Returns the Hermitian invariant space of this representation
-        %
-        % This is the space of Hermitian matrices that are invariant under this representation
-        % i.e.
-        %
-        % for any g in G, we have ``X = rho(g) * X * rho(g^-1)'``
-        %
-        % The computation is cached.
-        %
-        % Args:
-        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
-        %
-        % Returns:
-        %   `+replab.Equivariant`: The equivariant space of Hermitian invariant matrices
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            switch type
-              case 'double'
-                h = self.cached('hermitianInvariant_double', @() self.subEquivariantFrom(self.dual.conj), 'parent', self.parent.hermitianInvariant(type), 'special', 'hermitian', 'type', 'double');
-              case 'exact'
-                h = self.cached('hermitianInvariant_exact', @() self.subEquivariantFrom(self.dual.conj), 'parent', self.parent.hermitianInvariant(type), 'special', 'hermitian', 'type', 'exact');
-              otherwise
-                error('Invalid type');
-            end
+            h = self.cached(['hermitianInvariant_' type], @() self.subEquivariantFrom(self.dual.conj,  'special', 'hermitian', 'type', type));
         end
 
         function t = trivialRowSpace(self, type)
-        % Returns an equivariant space to a trivial representation from this representation
-        %
-        % The trivial representation has the same dimension as this representation
-        %
-        % The computation is cached.
-        %
-        % Args:
-        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
-        %
-        %
-        % Returns:
-        %   `+replab.Equivariant`: The equivariant space
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
@@ -773,17 +719,6 @@ classdef SubRep < replab.Rep
         end
 
         function t = trivialColSpace(self, type)
-        % Returns an equivariant space to this representation from a trivial representation
-        %
-        % The trivial representation has the same dimension as this representation
-        %
-        % The computation is cached.
-        %
-        % Args:
-        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
-        %
-        % Returns:
-        %   `+replab.Equivariant`: The equivariant space
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
@@ -796,7 +731,6 @@ classdef SubRep < replab.Rep
                 error('Invalid type');
             end
         end
-
 
     end
 

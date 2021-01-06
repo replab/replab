@@ -209,7 +209,7 @@ classdef Isotypic < replab.SubRep
 
     methods % Equivariant spaces
 
-        function E = isotypicEquivariantFrom(self, repC)
+        function E = isotypicEquivariantFrom(self, repC, varargin)
         % Returns the space of equivariant linear maps from another isotypic component to this isotypic component
         %
         % The equivariant vector space contains the matrices X such that
@@ -221,12 +221,16 @@ classdef Isotypic < replab.SubRep
         % Args:
         %   repC (`+replab.Isotypic`): Isotypic component, representation on the source/column space
         %
+        % Keyword Args:
+        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %
         % Returns:
         %   `+replab.IsotypicEquivariant` or ``[]``: The equivariant vector space, or ``[]`` if the space has dimension zero or contains only the zero matrix
-            E = replab.IsotypicEquivariant.make(self, repC, '');
+            E = replab.IsotypicEquivariant.make(self, repC, varargin{:});
         end
 
-        function E = isotypicEquivariantTo(self, repR)
+        function E = isotypicEquivariantTo(self, repR, varargin)
         % Returns the space of equivariant linear maps from this isotypic component to another isotypic component
         %
         % The equivariant vector space contains the matrices X such that
@@ -238,9 +242,13 @@ classdef Isotypic < replab.SubRep
         % Args:
         %   repR (`+replab.Isotypic`): Isotypic component, representation on the target/row space
         %
+        % Keyword Args:
+        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %
         % Returns:
         %   `+replab.IsotypicEquivariant` or ``[]``: The equivariant vector space, or ``[]`` if the space has dimension zero or contains only the zero matrix
-            E = replab.IsotypicEquivariant.make(repR, self, '');
+            E = replab.IsotypicEquivariant.make(repR, self, varargin{:});
         end
 
     end
@@ -271,14 +279,6 @@ classdef Isotypic < replab.SubRep
                 rho = kron(replab.cyclotomic.eye(self.nIrreps), rho);
             else
                 rho = image_exact@replab.SubRep(self, g);
-            end
-        end
-
-        function c = computeCommutant(self)
-            if self.isHarmonized
-                c = replab.IsotypicEquivariant.make(self, self, 'commutant');
-            else
-                c = computeCommutant@replab.SubRep(self);
             end
         end
 
@@ -340,6 +340,19 @@ classdef Isotypic < replab.SubRep
 
         function l = laws(self)
             l = replab.laws.IsotypicLaws(self);
+        end
+
+        % Rep
+
+        function c = commutant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            if self.isHarmonized
+                c = self.cached(['commutant_' type], @() self.isotypicEquivariantFrom(self,  'special', 'commutant', 'type', type));
+            else
+                c = commutant@replab.SubRep(self, type);
+            end
         end
 
         % SubRep

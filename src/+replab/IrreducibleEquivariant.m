@@ -14,7 +14,7 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
     properties (SetAccess = protected)
         blockRowSize % (integer(1,\*)): Row sizes of blocks
         blockColSize % (integer(1,\*)): Column sizes of blocks
-        blocks % (cell(\*,\*) of `.IsotypicEquivariant` or ``[]``): Isotypic equivariant spaces
+        blocks % (cell(\*,\*) of `.IsotypicEquivariant`): Isotypic equivariant spaces
         nonZeroBlocks % (logical(\*,\*)): True when the corresponding block can be nonzero
     end
 
@@ -26,7 +26,7 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
             self.blocks = blocks;
             self.blockRowSize = cellfun(@(c) c.dimension, repR.components);
             self.blockColSize = cellfun(@(c) c.dimension, repC.components);
-            self.nonZeroBlocks = cellfun(@(b) ~isempty(b), blocks);
+            self.nonZeroBlocks = cellfun(@(b) ~b.isZero, blocks);
         end
 
     end
@@ -49,15 +49,7 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
             for i = 1:self.repR.nComponents
                 cols = cell(1, self.repC.nComponents);
                 for j = 1:self.repC.nComponents
-                    if self.nonZeroBlocks(i, j)
-                        cols{j} = self.blocks{i, j}.reconstruct(M{i, j}, type);
-                    else
-                        if strcmp(type, 'exact')
-                            cols{j} = replab.cyclotomic.zeros(self.blockRowSize(i), self.blockColSize(j));
-                        else
-                            cols{j} = zeros(self.blockRowSize(i), self.blockColSize(j));
-                        end
-                    end
+                    cols{j} = self.blocks{i, j}.reconstruct(M{i, j}, type);
                 end
                 rows{i} = horzcat(cols{:});
             end
@@ -226,23 +218,19 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
                 parentSample = parent.sample;
             end
             blocks = cell(repR.nComponents, repC.nComponents);
-            todo = true(repR.nComponents, repC.nComponents);
             for i = 1:repR.nComponents
                 for j = 1:repC.nComponents
-                    if todo(i, j)
-                        E = replab.IsotypicEquivariant.make(repR.component(i), repC.component(j), '', 'parent', parent, 'parentSample', parentSample, 'type', 'double');
+                    if isempty(blocks{i, j})
+                        E = replab.IsotypicEquivariant.make(repR.component(i), repC.component(j), 'parent', parent, 'parentSample', parentSample, 'type', 'double');
                         blocks{i, j} = E;
-                        if ~isempty(E)
-                            todo(i, :) = false;
-                            todo(:, j) = false;
-                        end
+                        % TODO: optimize other blocks on row/col
                     end
                 end
             end
             E = replab.IrreducibleEquivariant(parent, repR, repC, special, blocks);
         end
 
-        function E = make(repR, repC, special, varargin)
+        function E = make(repR, repC, varargin)
         % Returns the space of equivariant linear maps between two harmonized irreducible decompositions
         %
         % The equivariant vector space contains the matrices X such that
@@ -250,11 +238,11 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
         % ``repC.image(g) * X = X * repR.image(g)``
         %
         % Args:
-        %   repR (`+replab.Irreducible`): Irreducible decomposition acting on the target/row space
-        %   repC (`+replab.Irreducible`): Irreducible decompositoin acting on the source/column space
-        %   special (charstring): Special structure see help on `+replab.Equivariant.special`
+        %   repR (`+replab.Irreducible`): Harmonized irreducible decomposition acting on the target/row space
+        %   repC (`+replab.Irreducible`): Harmonized irreducible decompositoin acting on the source/column space
         %
         % Keyword Args:
+        %   special (charstring): Special structure, see help on `.Equivariant`
         %   type ('exact', 'double' or 'double/sparse'): Whether to obtain an exact equivariant space ('double' and 'double/sparse' are equivalent)
         %   parent (`.Equivariant`, optional): Equivariant space from ``repC.parent`` to ``repR.parent``
         %   parentSample (double(\*,\*), optional): A generic sample from the parent space
@@ -266,19 +254,32 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
             assert(repR.isHarmonized);
             assert(repC.isHarmonized);
             assert(repR.field == repC.field);
-            args = struct('parent', [], 'type', 'double', 'parentSample', []);
+            args = struct('special', '', 'parent', [], 'type', 'double', 'parentSample', []);
             args = replab.util.populateStruct(args, varargin);
             parent = args.parent;
             if isempty(parent)
-                parent = repR.parent.equivariantFrom(repC.parent);
+                switch args.special
+                  case 'commutant'
+                    parent = repR.parent.commutant(args.type);
+                  case 'hermitian'
+                    parent = repR.parent.hermitianInvariant(args.type);
+                  case 'trivialRows'
+                    parent = repC.parent.trivialRowSpace(args.type);
+                  case 'trivialCols'
+                    parent = repR.parent.trivialColSpace(args.type);
+                  case ''
+                    parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
+                  otherwise
+                    error('Invalid special structure');
+                end
             end
             if strcmp(args.type, 'exact')
                 assert(repR.isExact);
                 assert(repC.isExact);
                 assert(parent.isExact);
-                E = replab.IrreducibleEquivariant.make_exact(parent, repR, repC, special);
+                E = replab.IrreducibleEquivariant.make_exact(parent, repR, repC, args.special);
             elseif strcmp(args.type, 'double') || strcmp(args.type, 'double/sparse')
-                E = replab.IrreducibleEquivariant.make_double(parent, repR, repC, special, args.parentSample);
+                E = replab.IrreducibleEquivariant.make_double(parent, repR, repC, args.special, args.parentSample);
             else
                 error('Wrong type value');
             end

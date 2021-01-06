@@ -92,7 +92,7 @@ classdef Irreducible < replab.SubRep
 
     methods % Equivariant spaces
 
-        function E = irreducibleEquivariantFrom(self, repC)
+        function E = irreducibleEquivariantFrom(self, repC, varargin)
         % Returns the space of equivariant linear maps from another irreducible decomposition to this irreducible decomposition
         %
         % The equivariant vector space contains the matrices X such that
@@ -104,12 +104,16 @@ classdef Irreducible < replab.SubRep
         % Args:
         %   repC (`+replab.Irreducible`): Irreducible decomposition, representation on the source/column space
         %
+        % Keyword Args:
+        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %
         % Returns:
         %   `+replab.IrreducibleEquivariant` or ``[]``: The equivariant vector space, or ``[]`` if the space has dimension zero or contains only the zero matrix
-            E = replab.IrreducibleEquivariant.make(self, repC, '');
+            E = replab.IrreducibleEquivariant.make(self, repC, varargin{:});
         end
 
-        function E = irreducibleEquivariantTo(self, repR)
+        function E = irreducibleEquivariantTo(self, repR, varargin)
         % Returns the space of equivariant linear maps from this irreducible decomposition to another irreducible decomposition
         %
         % The equivariant vector space contains the matrices X such that
@@ -121,9 +125,13 @@ classdef Irreducible < replab.SubRep
         % Args:
         %   repR (`+replab.Irreducible`): Irreducible decomposition, representation on the target/row space
         %
+        % Keyword Args:
+        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %
         % Returns:
         %   `+replab.IrreducibleEquivariant` or ``[]``: The equivariant vector space, or ``[]`` if the space has dimension zero or contains only the zero matrix
-            E = replab.IrreducibleEquivariant.make(repR, self, '');
+            E = replab.IrreducibleEquivariant.make(repR, self, varargin{:});
         end
 
     end
@@ -146,14 +154,6 @@ classdef Irreducible < replab.SubRep
                 rho = blkdiag(blocks{:});
             else
                 rho = image_exact@replab.SubRep(self, g);
-            end
-        end
-
-        function c = computeCommutant(self)
-            if self.isHarmonized
-                c = replab.IrreducibleCommutant(self);
-            else
-                c = computeCommutant@replab.SubRep(self);
             end
         end
 
@@ -180,6 +180,20 @@ classdef Irreducible < replab.SubRep
 
         function l = laws(self)
             l = replab.laws.IrreducibleLaws(self);
+        end
+
+        % Rep
+
+
+        function c = commutant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            if self.isHarmonized
+                c = self.cached(['commutant_' type], @() self.irreducibleEquivariantFrom(self,  'special', 'commutant', 'type', type));
+            else
+                c = commutant@replab.SubRep(self, type);
+            end
         end
 
          % SubRep
