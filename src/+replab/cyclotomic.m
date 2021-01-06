@@ -446,6 +446,19 @@ classdef cyclotomic
             end
         end
 
+        function [L, D, p] = ldl(self)
+            m = size(self, 1);
+            n = size(self, 2);
+            assert(m == n);
+            res = javaMethod('ldl', 'cyclo.Lab', self.matArray, m, n);
+            L = javaMethod('L', res);
+            D = javaMethod('D', res);
+            p = javaMethod('pivots', res);
+            p = double(p(:)') + 1;
+            L = replab.cyclotomic.fromJavaArray(L, [n n]);
+            D = replab.cyclotomic.fromJavaArray(D, [n n]);
+        end
+
         function res = blkdiag(lhs, rhs)
             if isa(lhs, 'double')
                 lhs = replab.cyclotomic.fromDoubles(lhs);
