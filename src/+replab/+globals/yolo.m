@@ -5,7 +5,7 @@ function value = yolo(newValue)
         storedValue = newValue;
     end
     if isempty(storedValue)
-        storedValue = false;
+        storedValue = true;
     end
     value = storedValue;
 end

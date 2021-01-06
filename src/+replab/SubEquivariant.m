@@ -38,7 +38,7 @@ classdef SubEquivariant < replab.Equivariant
         end
 
         % Equivariant
-                function b = isExact(self)
+        function b = isExact(self)
             b = self.repR.isExact && self.repC.isExact && self.parent.isExact;
         end
 
