@@ -2,21 +2,41 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 % Equivariant space between two harmonized isotypic components containing equivalent representations
 %
 % Matrices in this equivariant space have the following form:
-% $ X = \sum_i M_i \otimes D_i \otimes A_i $
-% where $M_i$ represents the multiplicity space, $D_i$ is a constant representing the representation space,
-% and $A_i$ encodes the division algebra.
-
+%
+% $ X = \sum_i M_i \otimes R_i \otimes A_i $
+%
+% where
+%
+% - $M_i$ represents the multiplicity space,
+% - $R_i$ is a constant matrix representing the representation space,
+% - $A_i$ is a constant matrix encoding the division algebra.
+%
+% Example:
+%   >>> S3 = replab.S(3);
+%   >>> natDec = S3.naturalRep.decomposition;
+%   >>> std1 = natDec.component(2);
+%   >>> nat2Dec = S3.naturalRep.tensorPower(2).decomposition;
+%   >>> std2 = nat2Dec.component(3);
+%   >>> E = std1.isotypicEquivariantFrom(std2);
+%   >>> X = E.sample;
+%   >>> M = E.projectAndFactor(X);
+%   >>> length(M)
+%       1
+%   >>> R = E.R('double');
+%   >>> A = E.A('double');
+%   >>> norm(kron(M{1}, kron(R{1}, A{1})) - X, 'fro') <= 1e-14
+%       1
     properties (SetAccess = protected)
-        D_internal % (cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)): Irrep dimension space
-        A_internal % (cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)): Division algebra space
+        R_internal % (cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)): Representation space basis
+        A_internal % (cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)): Division algebra basis
     end
 
 
     methods (Access = protected)
 
-        function self = IsotypicEquivariant(parent, repR, repC, special, D_internal, A_internal)
+        function self = IsotypicEquivariant(parent, repR, repC, special, R_internal, A_internal)
             self@replab.SubEquivariant(parent, repR, repC, special);
-            self.D_internal = D_internal;
+            self.R_internal = R_internal;
             self.A_internal = A_internal;
         end
 
@@ -24,28 +44,28 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 
     methods % Factorization
 
-        function res = D(self, type)
-        % Returns the "dimension space" basis of this equivariant space
+        function res = R(self, type)
+        % Returns the representation space basis
         %
         % Args:
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*): The dimension space basis
+        %   cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*): The representation space basis
             if nargin < 2 || isempty(type)
                 type = 'double';
             end
-            res = cellfun(@(X) replab.numerical.convert(X, type), self.D_internal, 'uniform', 0);
+            res = cellfun(@(X) replab.numerical.convert(X, type), self.R_internal, 'uniform', 0);
         end
 
         function res = A(self, type)
-        % Returns the "division algebra space" basis of this equivariant space
+        % Returns the division algebra basis
         %
         % Args:
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*): The division algebra space basis
+        %   cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*): The division algebra basis
             if nargin < 2 || isempty(type)
                 type = 'double';
             end
@@ -64,11 +84,11 @@ classdef IsotypicEquivariant < replab.SubEquivariant
             if nargin < 3 || isempty(type)
                 type = 'double';
             end
-            D = self.D(type);
+            R = self.R(type);
             A = self.A(type);
-            X = kron(M{1}, kron(D{1}, A{1}));
+            X = kron(M{1}, kron(R{1}, A{1}));
             for i = 2:length(M)
-                X = X + kron(M{i}, kron(D{i}, A{i}));
+                X = X + kron(M{i}, kron(R{i}, A{i}));
             end
         end
     end
@@ -87,43 +107,43 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 
         function M = projectAndFactorFromParent_exact(self, parentX)
             X = self.projectFromParent(parentX, 'exact');
-            D = self.D('exact');
+            R = self.R('exact');
             if self.repR.overR || self.repR.irrep(1).frobeniusSchurIndicator == 1
                 M = cell(1, 1);
-                M{1} = replab.IsotypicEquivariant.kronFirstFactor(X, D{1});
+                M{1} = replab.IsotypicEquivariant.kronFirstFactor(X, R{1});
             elseif repR.irrep(1).frobeniusSchurIndicator == -2 % quaternion-type
                 [X1, X2, X3, X4] = replab.domain.QuaternionTypeMatrices.fromMatrix(X, 'commutant');
                 M = cell(1, 4);
-                M{1} = replab.IsotypicEquivariant.kronFirstFactor(X1, D{1});
-                M{2} = replab.IsotypicEquivariant.kronFirstFactor(X2, D{2});
-                M{3} = replab.IsotypicEquivariant.kronFirstFactor(X3, D{3});
-                M{4} = replab.IsotypicEquivariant.kronFirstFactor(X4, D{4});
+                M{1} = replab.IsotypicEquivariant.kronFirstFactor(X1, R{1});
+                M{2} = replab.IsotypicEquivariant.kronFirstFactor(X2, R{2});
+                M{3} = replab.IsotypicEquivariant.kronFirstFactor(X3, R{3});
+                M{4} = replab.IsotypicEquivariant.kronFirstFactor(X4, R{4});
             elseif repR.irrep(1).frobeniusSchurIndicator == 0 % complex-type
                 [X1, X2] = replab.domain.ComplexTypeMatrices.fromMatrix(X);
                 M = cell(1, 2);
-                M{1} = replab.IsotypicEquivariant.kronFirstFactor(X1, D{1});
-                M{2} = replab.IsotypicEquivariant.kronFirstFactor(X2, D{2});
+                M{1} = replab.IsotypicEquivariant.kronFirstFactor(X1, R{1});
+                M{2} = replab.IsotypicEquivariant.kronFirstFactor(X2, R{2});
             end
         end
 
         function M = projectAndFactorFromParent_double_sparse(self, parentX)
             X = self.projectFromParent(parentX, 'double/sparse');
-            D = self.D('double/sparse');
+            R = self.R('double/sparse');
             if self.repR.overR || self.repR.irrep(1).frobeniusSchurIndicator == 1
                 M = cell(1, 1);
-                M{1} = replab.IsotypicEquivariant.kronFirstFactor(X, D{1});
+                M{1} = replab.IsotypicEquivariant.kronFirstFactor(X, R{1});
             elseif repR.irrep(1).frobeniusSchurIndicator == -2 % quaternion-type
                 [X1, X2, X3, X4] = replab.domain.QuaternionTypeMatrices.fromMatrix(X, 'commutant');
                 M = cell(1, 4);
-                M{1} = replab.IsotypicEquivariant.kronFirstFactor(X1, D{1});
-                M{2} = replab.IsotypicEquivariant.kronFirstFactor(X2, D{2});
-                M{3} = replab.IsotypicEquivariant.kronFirstFactor(X3, D{3});
-                M{4} = replab.IsotypicEquivariant.kronFirstFactor(X4, D{4});
+                M{1} = replab.IsotypicEquivariant.kronFirstFactor(X1, R{1});
+                M{2} = replab.IsotypicEquivariant.kronFirstFactor(X2, R{2});
+                M{3} = replab.IsotypicEquivariant.kronFirstFactor(X3, R{3});
+                M{4} = replab.IsotypicEquivariant.kronFirstFactor(X4, R{4});
             elseif repR.irrep(1).frobeniusSchurIndicator == 0 % complex-type
                 [X1, X2] = replab.domain.ComplexTypeMatrices.fromMatrix(X);
                 M = cell(1, 2);
-                M{1} = replab.IsotypicEquivariant.kronFirstFactor(X1, D{1});
-                M{2} = replab.IsotypicEquivariant.kronFirstFactor(X2, D{2});
+                M{1} = replab.IsotypicEquivariant.kronFirstFactor(X1, R{1});
+                M{2} = replab.IsotypicEquivariant.kronFirstFactor(X2, R{2});
             end
         end
 
@@ -189,7 +209,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         % -------
         %   M: cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)
         %     The part containing the degrees of freedom of the commutant algebra
-        %   D: cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)
+        %   R: cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)
         %     The constant part that only depends on the isotypic component structure
         %   A: cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)
         %     The part that encodes the division algebra
@@ -217,11 +237,11 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                 cR = self.repR.conditionNumberEstimate; % condition number of repR
                 cC = self.repC.conditionNumberEstimate; % condition number of repC
                 sX = 0;
-                D = self.D;
+                R = self.R;
                 A = self.A;
-                X1 = kron(M{1}, kron(D{1}, A{1}));
+                X1 = kron(M{1}, kron(R{1}, A{1}));
                 for i = 1:length(M)
-                    sX = sX + replab.numerical.norm2UpperBound(M{i}) * replab.numerical.norm2UpperBound(D{i}) * replab.numerical.norm2UpperBound(A{i});
+                    sX = sX + replab.numerical.norm2UpperBound(M{i}) * replab.numerical.norm2UpperBound(R{i}) * replab.numerical.norm2UpperBound(A{i});
                 end
                 err = sX*(eR*cC + cR*eC);
             end
@@ -296,37 +316,37 @@ classdef IsotypicEquivariant < replab.SubEquivariant
             end
             if repR.overR || repR.irrep(1).frobeniusSchurIndicator == 1
                 ird = repR.irrepDimension;
-                D = replab.IsotypicEquivariant.kronSecondFactor(X, ird, ird);
-                D_internal = {D};
+                R = replab.IsotypicEquivariant.kronSecondFactor(X, ird, ird);
+                R_internal = {R};
                 A_internal = {1};
             elseif repR.irrep(1).frobeniusSchurIndicator == -2 % quaternion-type
                 ird = repR.irrepDimension;
                 [A1, A2, A3, A4] = replab.domain.QuaternionTypeMatrices.basis('commutant');
                 [X1, X2, X3, X4] = replab.domain.QuaternionTypeMatrices.fromMatrix(X, 'commutant');
-                D1 = replab.IsotypicEquivariant.kronSecondFactor(X1, ird, ird);
-                D2 = replab.IsotypicEquivariant.kronSecondFactor(X2, ird, ird);
-                D3 = replab.IsotypicEquivariant.kronSecondFactor(X3, ird, ird);
-                D4 = replab.IsotypicEquivariant.kronSecondFactor(X4, ird, ird);
-                D1 = D1/norm(D1,'fro')*sqrt(ird);
-                D2 = D2/norm(D2,'fro')*sqrt(ird);
-                D3 = D3/norm(D3,'fro')*sqrt(ird);
-                D4 = D4/norm(D4,'fro')*sqrt(ird);
+                R1 = replab.IsotypicEquivariant.kronSecondFactor(X1, ird, ird);
+                R2 = replab.IsotypicEquivariant.kronSecondFactor(X2, ird, ird);
+                R3 = replab.IsotypicEquivariant.kronSecondFactor(X3, ird, ird);
+                R4 = replab.IsotypicEquivariant.kronSecondFactor(X4, ird, ird);
+                R1 = R1/norm(R1,'fro')*sqrt(ird);
+                R2 = R2/norm(R2,'fro')*sqrt(ird);
+                R3 = R3/norm(R3,'fro')*sqrt(ird);
+                R4 = R4/norm(R4,'fro')*sqrt(ird);
                 A_internal = {A1 A2 A3 A4};
-                D_internal = {D1 D2 D3 D4};
+                R_internal = {R1 R2 R3 R4};
             elseif repR.irrep(1).frobeniusSchurIndicator == 0 % complex-type
                 ird = repR.irrepDimension;
                 [A1, A2] = replab.domain.ComplexTypeMatrices.basis;
                 [X1, X2] = replab.domain.ComplexTypeMatrices.fromMatrix(X);
-                D1 = replab.IsotypicEquivariant.kronSecondFactor(X1, ird, ird);
-                D2 = replab.IsotypicEquivariant.kronSecondFactor(X2, ird, ird);
-                D1 = D1/norm(D1,'fro')*sqrt(ird);
-                D2 = D2/norm(D2,'fro')*sqrt(ird);
+                R1 = replab.IsotypicEquivariant.kronSecondFactor(X1, ird, ird);
+                R2 = replab.IsotypicEquivariant.kronSecondFactor(X2, ird, ird);
+                R1 = R1/norm(R1,'fro')*sqrt(ird);
+                R2 = R2/norm(R2,'fro')*sqrt(ird);
                 A_internal = {A1 A2};
-                D_internal = {D1 D2};
+                R_internal = {R1 R2};
             else
                 error('Unknown type');
             end
-            E = replab.IsotypicEquivariant(parent, repR, repC, special, D_internal, A_internal);
+            E = replab.IsotypicEquivariant(parent, repR, repC, special, R_internal, A_internal);
         end
 
         function E = make(repR, repC, special, varargin)
