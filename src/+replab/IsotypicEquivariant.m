@@ -84,7 +84,6 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         %
         % Returns:
         %   cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*): The representation space basis
-            error('Abstract');
             if nargin < 2 || isempty(type)
                 type = 'double';
             end
@@ -316,9 +315,9 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                   case 'hermitian'
                     parent = repR.parent.hermitianInvariant(args.type);
                   case 'trivialRows'
-                    parent = repC.parent.trivialRowSpace(args.type);
+                    parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
                   case 'trivialCols'
-                    parent = repR.parent.trivialColSpace(args.type);
+                    parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
                   case ''
                     parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
                   otherwise

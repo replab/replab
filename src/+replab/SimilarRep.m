@@ -309,26 +309,6 @@ classdef SimilarRep < replab.Rep
             end
         end
 
-        function c = computeCommutant(self)
-            c = replab.equi.Equivariant_forSimilarRep(self.parent.commutant, self, self, 'commutant');
-        end
-
-        function h = computeHermitianInvariant(self)
-            h = replab.equi.Equivariant_forSimilarRep(self.parent.hermitianInvariant, self, self.dual.conj, 'hermitian');
-        end
-
-        function t = computeTrivialRowSpace(self)
-            parentT = self.parent.trivialRowSpace;
-            tRep = replab.SimilarRep.identical(parentT.repR);
-            t = replab.equi.Equivariant_forSubRep(parentT, tRep, self, 'trivialRows');
-        end
-
-        function t = computeTrivialColSpace(self)
-            parentT = self.parent.trivialColSpace;
-            tRep = replab.SimilarRep.identical(parentT.repC);
-            t = replab.equi.Equivariant_forSubRep(parentT, self, tRep, 'trivialCols');
-        end
-
     end
 
     methods (Static)

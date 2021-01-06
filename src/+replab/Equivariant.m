@@ -302,7 +302,7 @@ classdef Equivariant < replab.Domain
             args = struct('special', '', 'type', 'double');
             args = replab.util.populateStruct(args, varargin);
             if isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SimilarRep')
-                E = replab.equi.Equivariant_forSimilarRep.make(repR, repC, varargin{:})
+                E = replab.equi.Equivariant_forSimilarRep.make(repR, repC, varargin{:});
             elseif isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SubRep')
                 E = replab.Equivariant.make(repR.toSubRep, repC, varargin{:});
             elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SimilarRep')

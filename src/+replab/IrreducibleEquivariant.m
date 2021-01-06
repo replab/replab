@@ -264,9 +264,9 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
                   case 'hermitian'
                     parent = repR.parent.hermitianInvariant(args.type);
                   case 'trivialRows'
-                    parent = repC.parent.trivialRowSpace(args.type);
+                    parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
                   case 'trivialCols'
-                    parent = repR.parent.trivialColSpace(args.type);
+                    parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
                   case ''
                     parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
                   otherwise

@@ -902,14 +902,9 @@ classdef Rep < replab.Obj
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            switch type
-              case 'double'
-                t = self.cached('trivialRowSpace_double', @() self.equivariantTo(self.group.trivialRep(self.field, self.dimension), 'special', 'trivialRows', 'type', type));
-              case 'exact'
-                t = self.cached('trivialRowSpace_exact', @() self.equivariantTo(self.group.trivialRep(self.field, self.dimension), 'special', 'trivialRows', 'type', type));
-              otherwise
-                error('Invalid type');
-            end
+            t = self.cached(['trivialRowSpace_' type], @() self.equivariantTo(...
+                self.group.trivialRep(self.field, self.dimension), ...
+                'special', 'trivialRows', 'type', type));
         end
 
         function t = trivialColSpace(self, type)
@@ -927,14 +922,9 @@ classdef Rep < replab.Obj
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            switch type
-              case 'double'
-                t = self.cached('trivialColSpace_double', @() self.equivariantFrom(self.group.trivialRep(self.field, self.dimension), 'special', 'trivialCols', 'type', type));
-              case 'exact'
-                t = self.cached('trivialColSpace_exact', @() self.equivariantFrom(self.group.trivialRep(self.field, self.dimension), 'special', 'trivialCols', 'type', type));
-              otherwise
-                error('Invalid type');
-            end
+            t = self.cached(['trivialColSpace_' type], @() self.equivariantFrom(...
+                self.group.trivialRep(self.field, self.dimension), ...
+                'special', 'trivialCols', 'type', type));
         end
 
     end

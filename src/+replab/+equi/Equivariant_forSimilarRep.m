@@ -90,8 +90,10 @@ classdef Equivariant_forSimilarRep < replab.Equivariant
                     parent = repR.parent.hermitianInvariant(args.type);
                   case 'trivialRows'
                     parent = repC.parent.trivialRowSpace(args.type);
+                    repR = replab.SimilarRep.identical(parent.repR);
                   case 'trivialCols'
                     parent = repR.parent.trivialColSpace(args.type);
+                    repC = replab.SimilarRep.identical(parent.repC);
                   case ''
                     parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
                   otherwise

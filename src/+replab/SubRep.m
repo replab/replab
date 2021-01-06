@@ -546,46 +546,6 @@ classdef SubRep < replab.Rep
             e = e1 + e2;
         end
 
-        function t = computeTrivialRowSpace_exact(self)
-            parentT = self.parent.trivialRowSpace;
-            d = self.dimension;
-            D = self.parent.dimension;
-            injection = replab.cyclotomic.fromDoubles(sparse(1:d, 1:d, ones(1, d), D, d));
-            projection = injection';
-            tRep = parentT.repR.subRep(injection, 'projection', projection);
-            t = self.subEquivariantTo(tRep, 'special', 'trivialRows', 'type', 'exact');
-        end
-
-        function t = computeTrivialRowSpace_double(self)
-            parentT = self.parent.trivialRowSpace;
-            d = self.dimension;
-            D = self.parent.dimension;
-            injection = sparse(1:d, 1:d, ones(1, d), D, d);
-            projection = injection';
-            tRep = parentT.repR.subRep(injection, 'projection', projection);
-            t = self.subEquivariantTo(tRep, 'special', 'trivialRows', 'type', 'double');
-        end
-
-        function t = computeTrivialColSpace_exact(self)
-            parentT = self.parent.trivialColSpace;
-            d = self.dimension;
-            D = self.parent.dimension;
-            injection = replab.cyclotomic.fromDoubles(sparse(1:d, 1:d, ones(1, d), D, d));
-            projection = injection';
-            tRep = parentT.repC.subRep(injection, 'projection', projection);
-            t = self.subEquivariantFrom(tRep, 'special', 'trivialCols', 'type', 'exact');
-        end
-
-        function t = computeTrivialColSpace_double(self)
-            parentT = self.parent.trivialColSpace;
-            d = self.dimension;
-            D = self.parent.dimension;
-            injection = sparse(1:d, 1:d, ones(1, d), D, d);
-            projection = injection';
-            tRep = parentT.repC.subRep(injection, 'projection', projection);
-            t = self.subEquivariantFrom(tRep, 'special', 'trivialCols', 'type', 'double');
-        end
-
         %function [A Ainv] = unitaryChangeOfBasis(self) TODO restore
         %    if self.parent.knownUnitary
         %        P = self.projection('double/sparse');
@@ -708,28 +668,18 @@ classdef SubRep < replab.Rep
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            switch type
-              case 'double'
-                t = self.cached('trivialRowSpace_double', @() self.computeTrivialRowSpace_double);
-              case 'exact'
-                t = self.cached('trivialRowSpace_exact', @() self.computeTrivialRowSpace_exact);
-              otherwise
-                error('Invalid type');
-            end
+            h = self.cached(['trivialRowSpace_' type], @() self.subEquivariantTo(...
+                replab.SubRep.identical(self.group.trivialRep(self.field, self.dimension)), ...
+                'special', 'trivialRows', 'type', type));
         end
 
         function t = trivialColSpace(self, type)
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            switch type
-              case 'double'
-                t = self.cached('trivialColSpace_double', @() self.computeTrivialColSpace_double);
-              case 'exact'
-                t = self.cached('trivialColSpace_exact', @() self.computeTrivialColSpace_exact);
-              otherwise
-                error('Invalid type');
-            end
+            t = self.cached(['trivialColSpace_' type], @() self.equivariantFrom(...
+                replab.SubRep.identical(self.group.trivialRep(self.field, self.dimension)), ...
+                'special', 'trivialCols', 'type', type));
         end
 
     end

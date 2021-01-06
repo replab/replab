@@ -156,8 +156,24 @@ classdef SubEquivariant < replab.Equivariant
                     parent = repR.parent.hermitianInvariant(args.type);
                   case 'trivialRows'
                     parent = repC.parent.trivialRowSpace(args.type);
+                    d = repC.dimension;
+                    D = repC.parent.dimension;
+                    injection = sparse(1:d, 1:d, ones(1, d), D, d);
+                    if strcmp('type', 'exact')
+                        injection = replab.cyclotomic.fromDoubles(injection);
+                    end
+                    projection = injection';
+                    repR = parent.repR.subRep(injection, 'projection', projection);
                   case 'trivialCols'
                     parent = repR.parent.trivialColSpace(args.type);
+                    d = repR.dimension;
+                    D = repR.parent.dimension;
+                    injection = sparse(1:d, 1:d, ones(1, d), D, d);
+                    if strcmp('type', 'exact')
+                        injection = replab.cyclotomic.fromDoubles(injection);
+                    end
+                    projection = injection';
+                    repC = parent.repC.subRep(injection, 'projection', projection);
                   case ''
                     parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
                   otherwise
