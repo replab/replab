@@ -47,6 +47,13 @@ classdef ComplexTypeMatrices < replab.domain.VectorSpace
 
     methods (Static)
 
+        function [basisA, basisB] = basis
+            basisA = [ 1  0
+                       0  1];
+            basisB = [ 0 -1
+                       1  0];
+        end
+
         function M = project(M)
         % Projects a generic matrix
             [A B] = replab.domain.ComplexTypeMatrices.fromMatrix(M);
@@ -84,10 +91,7 @@ classdef ComplexTypeMatrices < replab.domain.VectorSpace
         %
         % Returns:
         %   double(\*,\*): The matrix encoding the complex coefficient blocks
-            basisA = [ 1  0
-                       0  1];
-            basisB = [ 0 -1
-                       1  0];
+            [basisA, basisB] = replab.domain.ComplexTypeMatrices.basis;
             if issparse(A) && issparse(B)
                 basisA = sparse(basisA);
                 basisB = sparse(basisB);
