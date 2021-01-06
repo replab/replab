@@ -9,7 +9,11 @@ Directories
 
 -  ``external``: external libraries, either included as a Git submodule
    (if available on a public repository such as Github), or vendored
-   (like ``vpi``),
+   (like ``vpi``). Here is the procedure to update a git submodule names `project`:
+    1. Enter the submodule directory with `cd external/project`
+    2. Pull the latest version of the project with `git pull origin master`
+    3. Go back to the `external` folder with `cd ..` and update the commit number in the file `submodules.ini` so that it matches the new status of the submodule (this is needed for the autoinstall feature).
+    4. Commit these changes in the main RepLAB repository: `git add project submodules.ini`, `git commit -m "submodule project updated"`
 
 -  ``sphinx``: source files for the executable documentation, to be
    compiled by ``replab_generate.m``,
