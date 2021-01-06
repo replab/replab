@@ -136,6 +136,10 @@ classdef Isotypic < replab.SubRep
             self.isHarmonized = isHarmonized;
         end
 
+    end
+
+    methods
+
         function m = multiplicity(self)
         % Number of equivalent irreducible representations in this isotypic component
         %
@@ -172,6 +176,10 @@ classdef Isotypic < replab.SubRep
             c = self.irreps{i};
         end
 
+    end
+
+    methods % Harmonization
+
         function iso = harmonize(self, context)
         % Harmonizes the isotypic component
         %
@@ -195,6 +203,40 @@ classdef Isotypic < replab.SubRep
                     c.close;
                 end
             end
+        end
+
+    end
+
+    methods % Equivariant spaces
+
+        function E = isotypicEquivariantFrom(self, repC)
+        % Returns the space of equivariant linear maps from another isotypic component to this isotypic component
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``X * repC.image(g) = self.image(g) * X``
+        %
+        % Args:
+        %   repC (`+replab.Isotypic`): Isotypic component, representation on the source/column space
+        %
+        % Returns:
+        %   `+replab.IsotypicEquivariant` or ``[]``: The equivariant vector space, or ``[]`` if the space has dimension zero or contains only the zero matrix
+            E = replab.IsotypicEquivariant.make(self, repC, '');
+        end
+
+        function E = isotypicEquivariantTo(self, repR)
+        % Returns the space of equivariant linear maps from this isotypic component to another isotypic component
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``X * self.image(g) = repR.image(g) * X``
+        %
+        % Args:
+        %   repR (`+replab.Isotypic`): Isotypic component, representation on the target/row space
+        %
+        % Returns:
+        %   `+replab.IsotypicEquivariant` or ``[]``: The equivariant vector space, or ``[]`` if the space has dimension zero or contains only the zero matrix
+            E = replab.IsotypicEquivariant.make(repR, self, '');
         end
 
     end

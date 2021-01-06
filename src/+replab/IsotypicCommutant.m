@@ -17,13 +17,13 @@ classdef IsotypicCommutant < replab.SubEquivariant
 
         function [M, D, A] = projectAndFactorFromParent_exact(self, X)
             P = self.repR.projection(type, 'exact');
-            I = self.repR.injection(type, 'exact');
+            I = self.repC.injection(type, 'exact');
             [M, D, A] = self.projectAndFactor_exact(P * X * I);
         end
 
         function [M, D, A] = projectAndFactorFromParent_double_sparse(self, X)
             P = self.repR.projection(type, 'double/sparse');
-            I = self.repR.injection(type, 'double/sparse');
+            I = self.repC.injection(type, 'double/sparse');
             [M, D, A] = self.projectAndFactor_double_sparse(P * X * I);
         end
 
