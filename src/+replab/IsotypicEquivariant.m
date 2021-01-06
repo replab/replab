@@ -213,10 +213,6 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         % -------
         %   M: cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)
         %     The part containing the degrees of freedom of the commutant algebra
-        %   R: cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)
-        %     The constant part that only depends on the isotypic component structure
-        %   A: cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)
-        %     The part that encodes the division algebra
         %   err: double
         %     Estimation of the numerical error, expressed as the distance of the returned projection to the invariant subspace in Frobenius norm
             if nargin < 3 || isempty(type)
@@ -310,10 +306,25 @@ classdef IsotypicEquivariant < replab.SubEquivariant
             end
         end
 
-        function E = make_double(parent, repR, repC, special)
-            sub = replab.SubEquivariant(parent, repR, repC, special);
-            [X, err] = sub.sample; % TODO: proper error estimation here
-            assert(err < 1e-12, 'Error to big');
+        function E = make_exact(parent, repR, repC, special)
+            error('Not implemented'); % TODO
+        end
+
+        function E = make_double(parent, repR, repC, special, parentSample)
+            if isempty(parentSample)
+                sub = replab.SubEquivariant(parent, repR, repC, special);
+                [X, err] = sub.sample; % TODO: proper error estimation here
+            else
+                X = repR.projection('double/sparse') * parentSample * repC.injection('double/sparse');
+                assert(replab.globals.yolo);
+                eR = repR.errorBound;
+                eC = repC.errorBound;
+                cR = repR.conditionNumberEstimate; % condition number of repR
+                cC = repC.conditionNumberEstimate; % condition number of repC
+                sX = replab.numerical.norm2UpperBound(X);
+                err = sX*(eR*cC + cR*eC);
+            end
+            assert(err < 1e-10, 'Error to big');
             if norm(X, 'fro') < err
                 E = [];
                 return
@@ -366,7 +377,9 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         %   special (charstring): Special structure see help on `+replab.Equivariant.special`
         %
         % Keyword Args:
+        %   type ('exact', 'double' or 'double/sparse'): Whether to obtain an exact equivariant space ('double' and 'double/sparse' are equivalent)
         %   parent (`.Equivariant`, optional): Equivariant space from ``repC.parent`` to ``repR.parent``
+        %   parentSample (double(\*,\*), optional): A generic sample from the parent space
         %
         % Returns:
         %   `+replab.IsotypicEquivariant` or ``[]``: The equivariant vector space, or ``[]`` if the equivariant space is trivial
@@ -387,16 +400,21 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                 E = [];
                 return
             end
-            args = struct('parent', []);
+            args = struct('parent', [], 'type', 'double', 'parentSample', []);
             args = replab.util.populateStruct(args, varargin);
             parent = args.parent;
             if isempty(parent)
                 parent = repR.parent.equivariantFrom(repC.parent);
             end
-            if repR.isExact && repC.isExact && parent.isExact && false % TODO
+            if strcmp(args.type, 'exact')
+                assert(repR.isExact);
+                assert(repC.isExact);
+                assert(parent.isExact);
                 E = replab.IsotypicEquivariant.make_exact(parent, repR, repC, special);
+            elseif strcmp(args.type, 'double') || strcmp(args.type, 'double/sparse')
+                E = replab.IsotypicEquivariant.make_double(parent, repR, repC, special, args.parentSample);
             else
-                E = replab.IsotypicEquivariant.make_double(parent, repR, repC, special);
+                error('Wrong type value');
             end
         end
 
