@@ -1,7 +1,8 @@
 classdef IsotypicEquivariant < replab.SubEquivariant
 % Equivariant space between two harmonized isotypic components containing equivalent representations
 %
-% Matrices in this equivariant space have the following form:
+% If the two isotypic components contains equivalent irreducible representations, the matrices in this equivariant
+% space have the following form:
 %
 % $ X = \sum_i M_i \otimes R_i \otimes A_i $
 %
@@ -10,6 +11,11 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 % - $M_i$ represents the multiplicity space,
 % - $R_i$ is a constant matrix representing the representation space,
 % - $A_i$ is a constant matrix encoding the division algebra.
+%
+% and `.isZero` is false.
+%
+% Otherwise, when the irreducible representations in both components are inequivalent,
+% ``M`` is always empty, and the equivariant space contains a single element, the zero matrix; then `.isZero` is true.
 %
 % Example:
 %   >>> S3 = replab.S(3);
@@ -51,6 +57,15 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         % Returns whether this equivariant space contains only the zero matrix
         %
         % This happens when the isotypic components `.repR` and `.repC` correspond to inequivalent irreducible representations
+        %
+        % Example:
+        %   >>> S3 = replab.S(3);
+        %   >>> rep = S3.naturalRep;
+        %   >>> triv = rep.decomposition.component(1);
+        %   >>> std = rep.decomposition.component(2);
+        %   >>> E = triv.isotypicEquivariantFrom(std);
+        %   >>> E.isZero
+        %       1
         %
         % Returns:
         %   logical: True if the equivariant space is trivial
