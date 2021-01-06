@@ -584,24 +584,6 @@ classdef Rep < replab.Obj
             d = c.dimension;
         end
 
-        function c = computeCommutant(self)
-            c = replab.Equivariant.make(self, self, 'commutant');
-        end
-
-        function h = computeHermitianInvariant(self)
-            h = replab.Equivariant.make(self, self.dual.conj, 'hermitian');
-        end
-
-        function t = computeTrivialRowSpace(self)
-            tRep = self.group.trivialRep(self.field, self.dimension);
-            t = replab.Equivariant.make(tRep, self, 'trivialRows');
-        end
-
-        function t = computeTrivialColSpace(self)
-            tRep = self.group.trivialRep(self.field, self.dimension);
-            t = replab.Equivariant.make(self, tRep, 'trivialCols');
-        end
-
         function b = computeIsDivisionAlgebraCanonical(self)
             if self.overC || (self.overR && self.frobeniusSchurIndicator == 1)
                 b = true;
@@ -675,7 +657,7 @@ classdef Rep < replab.Obj
         % Returns the trivial isotypic component present in this representation
         %
         % Args:
-        %   type ('double' or 'exact', optional): Type of the returned value, default: 'double'
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
         %   `.Isotypic`: The trivial isotypic component
@@ -810,39 +792,45 @@ classdef Rep < replab.Obj
 
     methods % Equivariant spaces
 
-        function e = equivariantFrom(self, repC)
+        function e = equivariantFrom(self, repC, varargin)
         % Returns the space of equivariant linear maps from another rep to this rep
         %
         % The equivariant vector space contains the matrices X such that
         %
         % ``X * repC.image(g) = self.image(g) * X``
         %
-        %
         % Args:
         %   repC (`+replab.Rep`): Representation on the source/column space
         %
+        % Keyword Args:
+        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
-            e = replab.Equivariant.make(self, repC, '');
+            e = replab.Equivariant.make(self, repC, varargin{:});
         end
 
-        function e = equivariantTo(self, repR)
+        function e = equivariantTo(self, repR, varargin)
         % Returns the space of equivariant linear maps from this rep to another rep
         %
         % The equivariant vector space contains the matrices X such that
         %
         % ``X * self.image(g) = repR.image(g) * X``
         %
-        %
         % Args:
         %   repR (`+replab.Rep`): Representation on the target/row space
         %
+        % Keyword Args:
+        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
-            e = replab.Equivariant.make(repR, self, '');
+            e = replab.Equivariant.make(repR, self, varargin{:});
         end
 
-        function c = commutant(self)
+        function c = commutant(self, type)
         % Returns the commutant of this representation
         %
         % This is the algebra of matrices that commute with the representation,
@@ -852,12 +840,25 @@ classdef Rep < replab.Obj
         %
         % The computation is cached.
         %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
         % Returns:
         %   `+replab.Equivariant`: The commutant algebra represented as an equivariant space
-            c = self.cached('commutant', @() self.computeCommutant);
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            switch type
+              case 'double'
+                c = self.cached('commutant_double', @() self.equivariantFrom(self, 'special', 'commutant', 'type', type));
+              case 'exact'
+                c = self.cached('commutant_exact', @() self.equivariantFrom(self, 'special', 'commutant', 'type', type));
+              otherwise
+                error('Invalid type');
+            end
         end
 
-        function h = hermitianInvariant(self)
+        function h = hermitianInvariant(self, type)
         % Returns the Hermitian invariant space of this representation
         %
         % This is the space of Hermitian matrices that are invariant under this representation
@@ -865,29 +866,75 @@ classdef Rep < replab.Obj
         %
         % for any g in G, we have ``X = rho(g) * X * rho(g^-1)'``
         %
+        % The computation is cached.
+        %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
         % Returns:
-        %   `+replab.Equivariant`: The space of Hermitian invariant matrices
-            h = self.cached('hermitianInvariant', @() self.computeHermitianInvariant);
+        %   `+replab.Equivariant`: The equivariant space of Hermitian invariant matrices
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            switch type
+              case 'double'
+                h = self.cached('hermitianInvariant_double', @() self.equivariantFrom(self.dual.conj, 'special', 'hermitian', 'type', type));
+              case 'exact'
+                h = self.cached('hermitianInvariant_exact', @() self.equivariantFrom(self.dual.conj, 'special', 'hermitian', 'type', type));
+              otherwise
+                error('Invalid type');
+            end
         end
 
-        function t = trivialRowSpace(self)
-        % Returns an equivariant space from a trivial representation to this representation
+        function t = trivialRowSpace(self, type)
+        % Returns an equivariant space to a trivial representation from this representation
         %
         % The trivial representation has the same dimension as this representation
         %
+        % The computation is cached.
+        %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
+        %
         % Returns:
         %   `+replab.Equivariant`: The equivariant space
-            t = self.cached('trivialRowSpace', @() self.computeTrivialRowSpace);
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            switch type
+              case 'double'
+                t = self.cached('trivialRowSpace_double', @() self.equivariantTo(self.group.trivialRep(self.field, self.dimension), 'special', 'trivialRows', 'type', type));
+              case 'exact'
+                t = self.cached('trivialRowSpace_exact', @() self.equivariantTo(self.group.trivialRep(self.field, self.dimension), 'special', 'trivialRows', 'type', type));
+              otherwise
+                error('Invalid type');
+            end
         end
 
-        function t = trivialColSpace(self)
-        % Returns an equivariant space from this representation to a trivial representation
+        function t = trivialColSpace(self, type)
+        % Returns an equivariant space to this representation from a trivial representation
         %
         % The trivial representation has the same dimension as this representation
         %
+        % The computation is cached.
+        %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
         % Returns:
         %   `+replab.Equivariant`: The equivariant space
-            t = self.cached('trivialColSpace', @() self.computeTrivialColSpace);
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            switch type
+              case 'double'
+                t = self.cached('trivialColSpace_double', @() self.equivariantFrom(self.group.trivialRep(self.field, self.dimension), 'special', 'trivialCols', 'type', type));
+              case 'exact'
+                t = self.cached('trivialColSpace_exact', @() self.equivariantFrom(self.group.trivialRep(self.field, self.dimension), 'special', 'trivialCols', 'type', type));
+              otherwise
+                error('Invalid type');
+            end
         end
 
     end

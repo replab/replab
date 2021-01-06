@@ -99,6 +99,8 @@ classdef Irreducible < replab.SubRep
         %
         % ``X * repC.image(g) = self.image(g) * X``
         %
+        % Both irreducible decompositions must be harmonized.
+        %
         % Args:
         %   repC (`+replab.Irreducible`): Irreducible decomposition, representation on the source/column space
         %
@@ -113,6 +115,8 @@ classdef Irreducible < replab.SubRep
         % The equivariant vector space contains the matrices X such that
         %
         % ``X * self.image(g) = repR.image(g) * X``
+        %
+        % Both irreducible decompositions must be harmonized.
         %
         % Args:
         %   repR (`+replab.Irreducible`): Irreducible decomposition, representation on the target/row space

@@ -216,6 +216,8 @@ classdef Isotypic < replab.SubRep
         %
         % ``X * repC.image(g) = self.image(g) * X``
         %
+        % Both isotypic components must be harmonized.
+        %
         % Args:
         %   repC (`+replab.Isotypic`): Isotypic component, representation on the source/column space
         %
@@ -230,6 +232,8 @@ classdef Isotypic < replab.SubRep
         % The equivariant vector space contains the matrices X such that
         %
         % ``X * self.image(g) = repR.image(g) * X``
+        %
+        % Both isotypic components must be harmonized.
         %
         % Args:
         %   repR (`+replab.Isotypic`): Isotypic component, representation on the target/row space
@@ -272,20 +276,7 @@ classdef Isotypic < replab.SubRep
 
         function c = computeCommutant(self)
             if self.isHarmonized
-                if self.overC
-                    c = replab.IsotypicSimpleCommutant(self);
-                else
-                    switch self.irrep(1).frobeniusSchurIndicator
-                      case 1
-                        c = replab.IsotypicSimpleCommutant(self);
-                      case 0
-                        c = replab.IsotypicComplexCommutant(self);
-                      case -2
-                        c = replab.IsotypicQuaternionCommutant(self);
-                      otherwise
-                        error('Unknown indicator');
-                    end
-                end
+                c = replab.IsotypicEquivariant.make(self, self, 'commutant');
             else
                 c = computeCommutant@replab.SubRep(self);
             end
