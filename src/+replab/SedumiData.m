@@ -71,7 +71,7 @@ classdef SedumiData
             s = self.s;
             nc = s*s;
             nb1 = I.nComponents; % number of blocks
-            s1 = cellfun(@(iso) iso.commutant.reducedBlockSize, I.components);
+            s1 = cellfun(@(iso) iso.multiplicity * iso.commutant.divisionAlgebraDimension, I.components);
             nc1 = sum(s1.^2);
             vec1 = zeros(nc1, 1);
             shift = 0;
@@ -79,11 +79,13 @@ classdef SedumiData
             for r = 1:nb1 % iterate over representations
                           % apply Reynolds
                 C = I.component(r).commutant;
-                [M, D, A] = C.projectAndFactorFromParent(mat);
+                A = C.A;
+                M = C.projectAndFactorFromParent(mat);
                 block = kron(M{1}, A{1});
                 for i = 2:length(M)
                     block = block + kron(M{i}, A{i});
                 end
+                % TODO: force a symmetric matrix
                 % store block flattened
                 nels = prod(size(block));
                 vec1(shift+(1:nels)) = block(:);
@@ -96,7 +98,7 @@ classdef SedumiData
             rep = self.rep;
             I = rep.decomposition;
             m = self.m; % number of dual variables
-            s1 = cellfun(@(iso) iso.commutant.reducedBlockSize, I.components);
+            s1 = cellfun(@(iso) iso.multiplicity * iso.commutant.divisionAlgebraDimension, I.components);
             nc1 = sum(s1.^2);
             b1 = self.b;
             c1 = self.project(self.c);

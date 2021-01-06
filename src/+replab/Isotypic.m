@@ -136,6 +136,10 @@ classdef Isotypic < replab.SubRep
             self.isHarmonized = isHarmonized;
         end
 
+    end
+
+    methods
+
         function m = multiplicity(self)
         % Number of equivalent irreducible representations in this isotypic component
         %
@@ -172,6 +176,10 @@ classdef Isotypic < replab.SubRep
             c = self.irreps{i};
         end
 
+    end
+
+    methods % Harmonization
+
         function iso = harmonize(self, context)
         % Harmonizes the isotypic component
         %
@@ -195,6 +203,52 @@ classdef Isotypic < replab.SubRep
                     c.close;
                 end
             end
+        end
+
+    end
+
+    methods % Equivariant spaces
+
+        function E = isotypicEquivariantFrom(self, repC, varargin)
+        % Returns the space of equivariant linear maps from another isotypic component to this isotypic component
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``X * repC.image(g) = self.image(g) * X``
+        %
+        % Both isotypic components must be harmonized.
+        %
+        % Args:
+        %   repC (`+replab.Isotypic`): Isotypic component, representation on the source/column space
+        %
+        % Keyword Args:
+        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %
+        % Returns:
+        %   `+replab.IsotypicEquivariant` or ``[]``: The equivariant vector space, or ``[]`` if the space has dimension zero or contains only the zero matrix
+            E = replab.IsotypicEquivariant.make(self, repC, varargin{:});
+        end
+
+        function E = isotypicEquivariantTo(self, repR, varargin)
+        % Returns the space of equivariant linear maps from this isotypic component to another isotypic component
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``X * self.image(g) = repR.image(g) * X``
+        %
+        % Both isotypic components must be harmonized.
+        %
+        % Args:
+        %   repR (`+replab.Isotypic`): Isotypic component, representation on the target/row space
+        %
+        % Keyword Args:
+        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %
+        % Returns:
+        %   `+replab.IsotypicEquivariant` or ``[]``: The equivariant vector space, or ``[]`` if the space has dimension zero or contains only the zero matrix
+            E = replab.IsotypicEquivariant.make(repR, self, varargin{:});
         end
 
     end
@@ -225,27 +279,6 @@ classdef Isotypic < replab.SubRep
                 rho = kron(replab.cyclotomic.eye(self.nIrreps), rho);
             else
                 rho = image_exact@replab.SubRep(self, g);
-            end
-        end
-
-        function c = computeCommutant(self)
-            if self.isHarmonized
-                if self.overC
-                    c = replab.IsotypicSimpleCommutant(self);
-                else
-                    switch self.irrep(1).frobeniusSchurIndicator
-                      case 1
-                        c = replab.IsotypicSimpleCommutant(self);
-                      case 0
-                        c = replab.IsotypicComplexCommutant(self);
-                      case -2
-                        c = replab.IsotypicQuaternionCommutant(self);
-                      otherwise
-                        error('Unknown indicator');
-                    end
-                end
-            else
-                c = computeCommutant@replab.SubRep(self);
             end
         end
 
@@ -307,6 +340,19 @@ classdef Isotypic < replab.SubRep
 
         function l = laws(self)
             l = replab.laws.IsotypicLaws(self);
+        end
+
+        % Rep
+
+        function c = commutant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            if self.isHarmonized
+                c = self.cached(['commutant_' type], @() self.isotypicEquivariantFrom(self,  'special', 'commutant', 'type', type));
+            else
+                c = commutant@replab.SubRep(self, type);
+            end
         end
 
         % SubRep

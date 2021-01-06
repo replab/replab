@@ -2,18 +2,17 @@ classdef ComplexTypeMatrices < replab.domain.VectorSpace
 % Represents a vector space of real matrices that encode complex entries
 %
 % A complex number is written ``c = a + b * 1i``, and can be represented
-% by a matrix
+% by a matrix::
 %
-% ::
-%   [ a -b
-%     b  a]
+%   [a -b
+%    b  a]
 %
 % There is an alternative complex encoding obtained by changing the sign of ``b``,
 % corresponding to the complex conjugation.
 
-    properties
-        nR % integer: Row size, must be a multiple of 2
-        nC % integer: Column size, must be a multiple of 2
+    properties (SetAccess = protected)
+        nR % (integer): Row size, must be a multiple of 2
+        nC % (integer): Column size, must be a multiple of 2
     end
 
     methods
@@ -48,13 +47,20 @@ classdef ComplexTypeMatrices < replab.domain.VectorSpace
 
     methods (Static)
 
+        function [basisA, basisB] = basis
+            basisA = [ 1  0
+                       0  1];
+            basisB = [ 0 -1
+                       1  0];
+        end
+
         function M = project(M)
         % Projects a generic matrix
             [A B] = replab.domain.ComplexTypeMatrices.fromMatrix(M);
             M = replab.domain.ComplexTypeMatrices.toMatrix(A, B);
         end
 
-        function [A B] = fromMatrix(M)
+        function [A, B] = fromMatrix(M)
         % Given a matrix encoding complex blocks, returns the complex elements
         %
         % Args:
@@ -85,10 +91,7 @@ classdef ComplexTypeMatrices < replab.domain.VectorSpace
         %
         % Returns:
         %   double(\*,\*): The matrix encoding the complex coefficient blocks
-            basisA = [ 1  0
-                       0  1];
-            basisB = [ 0 -1
-                       1  0];
+            [basisA, basisB] = replab.domain.ComplexTypeMatrices.basis;
             if issparse(A) && issparse(B)
                 basisA = sparse(basisA);
                 basisB = sparse(basisB);

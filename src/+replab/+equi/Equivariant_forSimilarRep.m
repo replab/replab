@@ -10,7 +10,7 @@ classdef Equivariant_forSimilarRep < replab.Equivariant
         parent % (`+replab.Equivariant`): Parent equivariant space
     end
 
-    methods
+    methods (Access = protected)
 
         function self = Equivariant_forSimilarRep(parent, similarRepR, similarRepC, special)
         % Constructs an equivariant space similar to another equivariant space
@@ -56,6 +56,51 @@ classdef Equivariant_forSimilarRep < replab.Equivariant
                 e3 = replab.numerical.norm2UpperBound(X1) * self.repC.A_Ainv_error;
                 err = e1 + e2 + e3;
             end
+        end
+
+    end
+
+    methods (Static)
+
+        function E = make(repR, repC, varargin)
+        % Returns the space of equivariant linear maps between two representations, each with a similarity transform
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``repC.image(g) * X = X * repR.image(g)``
+        %
+        % Args:
+        %   repR (`+replab.SimilarRep`): Representation on the target/row space
+        %   repC (`+replab.SimilarRep`): Representation on the source/column space
+        %
+        % Keyword Args:
+        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The equivariant vector space
+            args = struct('special', '', 'type', 'double', 'parent', []);
+            args = replab.util.populateStruct(args, varargin);
+            parent = args.parent;
+            if isempty(parent)
+                switch args.special
+                  case 'commutant'
+                    parent = repR.parent.commutant(args.type);
+                  case 'hermitian'
+                    parent = repR.parent.hermitianInvariant(args.type);
+                  case 'trivialRows'
+                    parent = repC.parent.trivialRowSpace(args.type);
+                    repR = replab.SimilarRep.identical(parent.repR);
+                  case 'trivialCols'
+                    parent = repR.parent.trivialColSpace(args.type);
+                    repC = replab.SimilarRep.identical(parent.repC);
+                  case ''
+                    parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
+                  otherwise
+                    error('Invalid special structure');
+                end
+            end
+            E = replab.equi.Equivariant_forSimilarRep(parent, repR, repC, args.special);
         end
 
     end

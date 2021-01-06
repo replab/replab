@@ -33,6 +33,31 @@ classdef Equivariant < replab.Domain
         cachedErrors_ % (struct of double(1,\*)): Error information
     end
 
+    methods (Access = protected)
+
+        function self = Equivariant(repR, repC, special)
+        % Constructor; use `+replab.Equivariant.make` in user code
+        %
+        % That function selects an optimized implementation depending on the use case.
+            self.repR = repR;
+            self.nR = repR.dimension;
+            self.repC = repC;
+            self.nC = repC.dimension;
+            assert(isequal(repR.field, repC.field), ...
+                   'Both representations must have be defined on the same field');
+            assert(isempty(special) || ismember(special, {'hermitian', 'commutant', 'trivialRows', 'trivialCols'}));
+            self.field = repR.field;
+            assert(repR.group == repC.group, ...
+                   'Both representations must be defined on the same group');
+            self.group = repR.group;
+            self.domain = replab.domain.Matrices(self.field, self.nR, self.nC);
+            self.special = special;
+            self.cachedSamples_ = struct;
+            self.cachedErrors_ = struct;
+        end
+
+    end
+
     methods (Access = protected) % Protected methods
 
         function X1 = project_exact(self, X)
@@ -53,7 +78,7 @@ classdef Equivariant < replab.Domain
             error('Exact projection not implemented');
         end
 
-        function [X1 err] = project_double_sparse(self, X)
+        function [X1, err] = project_double_sparse(self, X)
         % Projects any ``nR x nC`` matrix in the equivariant subspace
         %
         % Implementation of `.project`
@@ -102,14 +127,14 @@ classdef Equivariant < replab.Domain
             switch type
               case 'double'
                 if nargout > 1
-                    [X1 err] = self.project_double_sparse(X);
+                    [X1, err] = self.project_double_sparse(X);
                 else
                     X1 = self.project_double_sparse(X);
                 end
                 X1 = full(X1);
               case 'double/sparse'
                 if nargout > 1
-                    [X1 err] = self.project_double_sparse(X);
+                    [X1, err] = self.project_double_sparse(X);
                 else
                     X1 = self.project_double_sparse(X);
                 end
@@ -132,29 +157,21 @@ classdef Equivariant < replab.Domain
             b = false;
         end
 
-    end
-
-    methods
-
-        function self = Equivariant(repR, repC, special)
-        % Constructor; use `+replab.Equivariant.make` in user code
+        function E1 = subEquivariant(self, subR, subC, varargin)
+        % Constructs a invariant subspace of an equivariant space
         %
-        % That function selects an optimized implementation depending on the use case.
-            self.repR = repR;
-            self.nR = repR.dimension;
-            self.repC = repC;
-            self.nC = repC.dimension;
-            assert(isequal(repR.field, repC.field), ...
-                   'Both representations must have be defined on the same field');
-            assert(isempty(special) || ismember(special, {'hermitian', 'commutant', 'trivialRows', 'trivialCols'}));
-            self.field = repR.field;
-            assert(repR.group == repC.group, ...
-                   'Both representations must be defined on the same group');
-            self.group = repR.group;
-            self.domain = replab.domain.Matrices(self.field, self.nR, self.nC);
-            self.special = special;
-            self.cachedSamples_ = struct;
-            self.cachedErrors_ = struct;
+        % Args:
+        %   subC (`+replab.SubRep`): A subrepresentation of ``self.repC``
+        %   subR (`+replab.SubRep`): A subrepresentation of ``self.repR``
+        %
+        % Keyword Args:
+        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+            assert(isa(subC, 'replab.SubRep'));
+            assert(isa(subR, 'replab.SubRep'));
+            assert(subC.parent == self.repC);
+            assert(subR.parent == self.repR);
+            E = subR.subEquivariantFrom(subC, 'parent', self, varargin{:});
         end
 
     end
@@ -213,20 +230,6 @@ classdef Equivariant < replab.Domain
 
     methods % Implementations
 
-         function E1 = subEquivariant(self, subR, subC, special)
-         % Constructs a invariant subspace of an equivariant space
-        %
-        % Args:
-        %   subC (`+replab.SubRep`): A subrepresentation of ``self.repC``
-        %   subR (`+replab.SubRep`): A subrepresentation of ``self.repR``
-        %   special (charstring): Whether the equivariant subspace has special structure
-            assert(isa(subC, 'replab.SubRep'));
-            assert(isa(subR, 'replab.SubRep'));
-            assert(subC.parent == self.repC);
-            assert(subR.parent == self.repR);
-            E1 = replab.equi.ForSubReps(subC, subR, special, self);
-        end
-
         % Str
 
         function s = headerStr(self)
@@ -243,6 +246,10 @@ classdef Equivariant < replab.Domain
         end
 
         % Domain
+
+        function l = laws(self)
+            l = replab.laws.EquivariantLaws(self);
+        end
 
         function b = eqv(self, X, Y)
             b = self.domain.eqv(X, Y);
@@ -282,7 +289,7 @@ classdef Equivariant < replab.Domain
 
     methods (Static)
 
-        function E = make(repR, repC, special)
+        function E = make(repR, repC, varargin)
         % Returns the space of equivariant linear maps between two representations
         %
         % The equivariant vector space contains the matrices X such that
@@ -292,27 +299,28 @@ classdef Equivariant < replab.Domain
         % Args:
         %   repR (`+replab.Rep`): Representation on the target/row space
         %   repC (`+replab.Rep`): Representation on the source/column space
-        %   special (charstring): Special structure see help on `+replab.Equivariant.special`
+        %
+        % Keyword Args:
+        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
         %
         % Returns:
         %   `+replab.Equivariant`: The equivariant vector space
-
+            args = struct('special', '', 'type', 'double');
+            args = replab.util.populateStruct(args, varargin);
             if isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SimilarRep')
-                parent = repR.parent.equivariantFrom(repC.parent);
-                E = replab.equi.Equivariant_forSimilarRep(parent, repR, repC, special);
+                E = replab.equi.Equivariant_forSimilarRep.make(repR, repC, varargin{:});
             elseif isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SubRep')
-                E = replab.Equivariant.make(repR.toSubRep, repC, special);
+                E = replab.Equivariant.make(repR.toSubRep, repC, varargin{:});
             elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SimilarRep')
-                E = replab.Equivariant.make(repR, repC.toSubRep, special);
-            elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SubRep') && (~repR.isExact || ~repC.isExact)
-                % TODO: when proper error estimation is there, use this also for exact reps
-                parent = repR.parent.equivariantFrom(repC.parent);
-                E = replab.equi.Equivariant_forSubRep(parent, repR, repC, special);
+                E = replab.Equivariant.make(repR, repC.toSubRep, varargin{:});
+            elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SubRep')
+                E = replab.SubEquivariant.make(repR, repC, varargin{:});
             elseif isa(repR.group, 'replab.FiniteGroup')
                 if repR.group.order < 65536 && (~repR.isExact || ~repC.isExact)
-                    E = replab.equi.Equivariant_forFiniteGroup_explicitSum(repR, repC, special);
+                    E = replab.equi.Equivariant_forFiniteGroup_explicitSum(repR, repC, args.special);
                 else
-                    E = replab.equi.Equivariant_forFiniteGroup_relativeReynolds(repR, repC, special);
+                    E = replab.equi.Equivariant_forFiniteGroup_relativeReynolds(repR, repC, args.special);
                 end
             else
                 error('Unimplemented');

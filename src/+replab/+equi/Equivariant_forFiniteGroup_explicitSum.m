@@ -30,7 +30,6 @@ classdef Equivariant_forFiniteGroup_explicitSum < replab.Equivariant
             if nargout > 1
                 sX = replab.numerical.norm2UpperBound(X); % estimate of largest singular value on X
                                                           % we assume this decreases under averaging
-                eX = 0; % starting error on X
                 eR = self.repR.errorBound; % Frobenius error on repR
                 eC = self.repC.errorBound; % Frebenius error on repC
                 cR = self.repR.conditionNumberEstimate; % condition number of repR
@@ -45,7 +44,7 @@ classdef Equivariant_forFiniteGroup_explicitSum < replab.Equivariant
             end
             X1 = X1/length(E);
             if nargout > 1
-                err = eR*cC*sX + cR*eC*sX + eX*cR*cC; % *nEls/nEls
+                err = sX*(eR*cC*sX + cR*eC);
             end
         end
 
