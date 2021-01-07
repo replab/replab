@@ -13,7 +13,10 @@ replab.init.initHelp;
 
 % Support for the convex modeling framework and SDP solvers
 replab.init.YALMIP().require;
-replab.init.sdpt3().require;
+if ~replab.init.existingSdpSolver().works
+    replab.init.log_(2, 'Trying to use the embedded solver');
+    replab.init.sdpt3().require;
+end
 
 % This can be commented out if you're not decomposing representations of compact groups
 replab.init.nlinfit().require;
