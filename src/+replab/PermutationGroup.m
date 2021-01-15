@@ -354,9 +354,9 @@ classdef PermutationGroup < replab.FiniteGroup
             z(x) = x(y);
         end
 
-        % Group properties
+    end
 
-        % Group elements
+    methods % Group elements
 
         function b = contains(self, g)
         % Tests whether this group contains the given element
@@ -391,7 +391,9 @@ classdef PermutationGroup < replab.FiniteGroup
             l = self.factorization.factorize(element);
         end
 
-        % Construction of groups
+    end
+
+    methods % Construction of groups
 
         function res = closure(self, rhs)
             if isa(rhs, 'replab.PermutationGroup')
