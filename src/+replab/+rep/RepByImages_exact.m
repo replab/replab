@@ -73,9 +73,9 @@ classdef RepByImages_exact < replab.RepByImages
             if self.isUnitary
                 % for unitary/orthogonal representations, we don't need to compute inverses explicitly
                 if self.overR
-                    target = replab.OrthogonalGroup(d, true);
+                    target = replab.OrthogonalGroup(d, speye(d));
                 else
-                    target = replab.UnitaryGroup(d, true);
+                    target = replab.UnitaryGroup(d, speye(d));
                 end
                 res = replab.bsgs.ChainWithImages.make(n, target, nicePreimages, images, base, order);
             else
