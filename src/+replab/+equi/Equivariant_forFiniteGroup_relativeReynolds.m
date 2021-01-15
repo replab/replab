@@ -9,7 +9,18 @@ classdef Equivariant_forFiniteGroup_relativeReynolds < replab.Equivariant
 
     end
 
-    methods (Access = protected)
+    methods % Implementations
+
+        % Equivariant
+
+        function b = isExact(self)
+            b = self.repR.isExact && self.repC.isExact;
+        end
+
+    end
+
+
+    methods (Access = protected) % Implementations
 
         function X = project_exact(self, X)
             T = self.group.decomposition.T;

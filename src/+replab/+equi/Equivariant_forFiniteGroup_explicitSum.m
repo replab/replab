@@ -9,7 +9,17 @@ classdef Equivariant_forFiniteGroup_explicitSum < replab.Equivariant
 
     end
 
-    methods (Access = protected)
+    methods % Implementations
+
+        % Equivariant
+
+        function b = isExact(self)
+            b = self.repR.isExact && self.repC.isExact;
+        end
+
+    end
+
+    methods (Access = protected) % Implementations
 
         function E = groupElements(self)
             E = self.cached('groupElements', @() self.group.elements.toCell);
