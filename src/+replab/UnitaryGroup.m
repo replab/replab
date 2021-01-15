@@ -3,16 +3,15 @@ classdef UnitaryGroup < replab.CompactGroup
 
     properties
         n % (integer): Dimension of the unitary group
-        sparse % (logical): Whether to preserve sparse matrices
     end
 
     properties (Access = protected)
-        parent % replab.domain.Matrices: Domain of square complex matrices
+        parent % (`+replab.+domain.Matrices`): Domain of square complex matrices
     end
 
     methods
 
-        function self = UnitaryGroup(n, sparse)
+        function self = UnitaryGroup(n, identity)
         % Constructs the unitary group
         %
         % Args:
@@ -21,53 +20,61 @@ classdef UnitaryGroup < replab.CompactGroup
             self.n = n;
             self.parent = replab.domain.Matrices('C', n, n);
             if nargin < 2
-                sparse = false;
-            end
-            if sparse
-                self.identity = speye(n);
-            else
-                self.identity = eye(n);
+                identity = eye(n);
             end
         end
 
-        %% Str methods
+    end
+
+    methods % Implementations
+
+        % Str
 
         function s = headerStr(self)
             s = sprintf('%d x %d unitary matrices', self.n, self.n);
         end
 
-        %% Domain methods
+        % Domain
 
         function b = eqv(self, X, Y)
             b = self.parent.eqv(X, Y);
         end
 
-        %% Monoid methods
+        % Monoid
 
         function Z = compose(self, X, Y)
             Z = X * Y;
         end
 
-        %% Group methods
+        % Group
 
         function XInv = inverse(self, X)
             XInv = X';
         end
 
-        %% CompactGroup methods
+        % CompactGroup
 
         function X = sample(self)
         % see http://home.lu.lv/~sd20008/papers/essays/Random%20unitary%20[paper].pdf
-            X = self.parent.sample;
+            realPart = randn(self.n, self.n);
+            imagPart = randn(self.n, self.n);
+            X = (realPart + 1i * imagPart)/sqrt(2);
             [Q, R] = qr(X);
             R = diag(diag(R)./abs(diag(R)));
             X = Q*R;
         end
 
-        %% Representation methods
+    end
+
+    methods % Representations
 
         function rep = definingRep(self)
-        % Returns the natural representation of this unitary group
+        % Returns the defining representation of this unitary group
+        %
+        % The defining representation of $U(d)$ corresponds to a ``d x d`` unitary matrix.
+        %
+        % Returns:
+        %   `.Rep`: Defining representation
             rep = replab.rep.DefiningRep(self);
         end
 
