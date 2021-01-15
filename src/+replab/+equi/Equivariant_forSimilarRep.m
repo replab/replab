@@ -31,7 +31,17 @@ classdef Equivariant_forSimilarRep < replab.Equivariant
 
     end
 
-    methods (Access = protected)
+    methods % Implementations
+
+        % Equivariant
+
+        function b = isExact(self)
+            b = self.repR.isExact && self.repC.isExact;
+        end
+
+    end
+
+    methods (Access = protected) % Implementations
 
         function X1 = project_exact(self, X)
             parentX = self.repR.Ainv('exact') * X * self.repC.A('exact');
