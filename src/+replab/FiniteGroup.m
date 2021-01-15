@@ -141,8 +141,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % See `.characterTable`
             r = self.recognize;
             assert(~isempty(r), 'This group has not been recognized.');
-            c = r.atlasEntry.characterTable.imap(r.isomorphism);
+            c = r.atlasEntry.characterTable;
             assert(~isempty(c), 'This group does not have a stored character table.');
+            c = c.imap(r.isomorphism);
         end
 
         function c = computeConjugacyClasses(self)
