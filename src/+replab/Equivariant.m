@@ -323,7 +323,7 @@ classdef Equivariant < replab.Domain
                     E = replab.equi.Equivariant_forFiniteGroup_relativeReynolds(repR, repC, args.special);
                 end
             else
-                error('Unimplemented');
+                E = replab.equi.Equivariant_forCompactGroup(repR, repC, args.special);
             end
         end
 
