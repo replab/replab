@@ -5,7 +5,7 @@ classdef cyclotomic
 %
 % The implementation below is incomplete:
 %
-% * Only some binary operatoins convert one of the arguments from double to cyclotomic if necessary.
+% * Only some binary operations convert one of the arguments from double to cyclotomic if necessary.
 %
 % * Broadcasting when using binary operations is incomplete (i.e. ``matrix op scalar`` or ``scalar op matrix``)
 %
