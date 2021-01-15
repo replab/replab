@@ -1,21 +1,17 @@
-classdef ForCompactGroup < replab.Equivariant
+classdef Equivariant_forCompactGroup < replab.Equivariant
 
-    methods (Static)
+    methods
 
-        function e = make(repC, repR, special)
-            e = replab.equi.ForCompactGroup(repC, repR, special);
+        function self = Equivariant_forCompactGroup(repR, repC, special)
+            assert(ismember(exist('nlinfit'), [2 6]), 'Computations on compact groups require nonlinear curve fit.');
+            self@replab.Equivariant(repR, repC, special);
         end
 
     end
 
-    methods
+    methods (Access = protected)
 
-        function self = ForCompactGroup(repC, repR, special)
-            assert(ismember(exist('nlinfit'), [2 6]), 'Computations on compact groups require nonlinear curve fit.');
-            self@replab.Equivariant(repC, repR, special);
-        end
-
-        function [X, err] = project(self, X)
+        function [X, err] = project_double_sparse(self, X)
             X = full(X);
             hasNewFigure = false;
             % Parameters
@@ -123,7 +119,7 @@ classdef ForCompactGroup < replab.Equivariant
 
                         % Before possibly exiting we eventually produce
                         % some plots
-                        if (replab.equi.plotConvergence && ((mod(iter, 20) == 1)  || exitCondition)) || (iter == maxIters)
+                        if (replab.globals.equivariantPlotConvergence && ((mod(iter, 20) == 1)  || exitCondition)) || (iter == maxIters)
                             if ~hasNewFigure
                                 figure
                                 hasNewFigure = true;

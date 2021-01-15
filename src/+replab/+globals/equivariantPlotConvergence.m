@@ -1,4 +1,4 @@
-function flag = plotConvergence(newValue)
+function flag = equivariantPlotConvergence(newValue)
 % Whether to plot the convergence of equivariant samples
     persistent flagValue
     if nargin == 1
