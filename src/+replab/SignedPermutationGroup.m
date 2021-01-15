@@ -66,7 +66,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
             y(invFlip) = -y(invFlip);
         end
 
-        % NiceFiniteGroup methods
+        % NiceFiniteGroup
 
         function res = hasSameTypeAs(self, rhs)
             res = isa(rhs, 'replab.SignedPermutationGroup') && (self.type.domainSize == rhs.type.domainSize);

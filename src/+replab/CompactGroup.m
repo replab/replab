@@ -16,7 +16,7 @@ classdef CompactGroup < replab.Group
         %   varargin: Variable number of arguments of type `+replab.CompactGroup`
         %
         % Returns:
-        %   `+replab.DirectProductGroup`: The direct product group
+        %   `.DirectProductGroup`: The direct product group
         %                                 If all groups are of type `+replab.NiceFiniteGroup`, the return type
         %                                 is `+replab.NiceFiniteGroup` as well.
         %                                 If all groups are of type `+replab.FiniteGroup`, the return type
@@ -31,8 +31,8 @@ classdef CompactGroup < replab.Group
         %   n (integer): Number of copies
         %
         % Returns:
-        %   replab.CompactGroup: The direct product self x ...(n times)... x self
-        %                        The return type is specialized as in `+replab.CompactGroup.directProduct`.
+        %   `.CompactGroup`: The direct product self ``x ...(n times)... x self``
+        %                    The return type is specialized as in `+replab.CompactGroup.directProduct`.
             factors = arrayfun(@(x) self, 1:n, 'uniform', 0);
             prd = replab.DirectProductGroup.make(factors);
         end
@@ -62,11 +62,11 @@ classdef CompactGroup < replab.Group
         % of the type of ``self`` and ``N``, with possible types CompactGroup/FiniteGroup/NiceFiniteGroup.
         %
         % Args:
-        %   N (replab.CompactGroup): Group acted upon
+        %   N (`.CompactGroup`): Group acted upon
         %   phi (function_handle): Function describing a homomorphism as described above
         %
         % Returns:
-        %   replab.CompactGroup: Semidirect product group
+        %   `.CompactGroup`: Semidirect product group
             action = replab.Action.lambda('Semidirect homomorphism', self, N, phi);
             sd = replab.SemidirectProductGroup.make(action);
         end
@@ -88,7 +88,7 @@ classdef CompactGroup < replab.Group
         %                                  Default value 1
         %
         % Returns:
-        %   replab.Rep: An instance of the trivial representation
+        %   `.Rep`: An instance of the trivial representation
             if nargin < 2
                 dimension = 1;
             end
@@ -100,10 +100,10 @@ classdef CompactGroup < replab.Group
         %
         % Args:
         %   field ({'R', 'C'}): Field
-        %   reps (cell(1,\*) of `+replab.Rep`): Representation of this group over the given field
+        %   reps (cell(1,\*) of `.Rep`): Representation of this group over the given field
         %
         % Returns:
-        %   `+replab.Rep`: Direct sum of the representations
+        %   `.Rep`: Direct sum of the representations
             rep = replab.rep.DirectSumRep(self, field, reps);
         end
 
@@ -111,10 +111,10 @@ classdef CompactGroup < replab.Group
         % Computes the tensor product of representations
         %
         % Args:
-        %   reps (cell(1,\*) of `+replab.Rep`): Representation of the same group over the same field
+        %   reps (cell(1,\*) of `.Rep`): Representation of the same group over the same field
         %
         % Returns:
-        %   `+replab.Rep`: Tensor product of the representations
+        %   `.Rep`: Tensor product of the representations
             rep = replab.rep.TensorRep(self, field, reps);
         end
 
