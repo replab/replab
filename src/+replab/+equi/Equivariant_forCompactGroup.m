@@ -86,10 +86,10 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
 
                         % compute approximate uncertainty on these
                         % parameters due to finite sampling
-                        delta = sqrt(diag(CovB)) * tinv(1-uncertaintiesConfidenceLevel, iter - 3);
+                        delta = sqrt(diag(CovB)) * replab.numerical.tinv(1-uncertaintiesConfidenceLevel, iter - 3);
                         jacobian = [-1/slope; -(logfloor - offset)/slope^2; 1/slope];
                         variance = jacobian'*CovB*jacobian;
-                        crossingDeltaCov = sqrt(variance)*tinv(1-uncertaintiesConfidenceLevel, iter - 3);
+                        crossingDeltaCov = sqrt(variance)*replab.numerical.tinv(1-uncertaintiesConfidenceLevel, iter - 3);
 
                         % We monitor the errors
                         modelRelativeErrors(iter,:) = abs([delta(1:2)'./beta(1:2) crossingDeltaCov/crossing]);
