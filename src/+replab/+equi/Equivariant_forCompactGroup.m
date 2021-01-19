@@ -3,7 +3,7 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
     methods
 
         function self = Equivariant_forCompactGroup(repR, repC, special)
-            assert(ismember(exist('nlinfit'), [2 6]), 'Computations on compact groups require nonlinear curve fit.');
+            assert(any(exist('nlinfit') == [2 6]), 'Computations on compact groups require nonlinear curve fit.');
             self@replab.Equivariant(repR, repC, special);
         end
 

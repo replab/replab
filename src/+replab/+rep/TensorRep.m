@@ -193,6 +193,19 @@ classdef TensorRep < replab.Rep
             end
         end
 
+        function rho = image_intval(self, g)
+            if self.dimension == 0
+                rho = intval([]);
+            elseif isempty(self.factors)
+                rho = intval(1);
+            else
+                rho = self.factors{1}.image(g, 'intval');
+                for i = 2:self.nFactors
+                    rho = kron(rho, self.factors{i}.image(g, 'intval'));
+                end
+            end
+        end
+
         function rho = image_double_sparse(self, g)
             if self.dimension == 0
                 rho = [];

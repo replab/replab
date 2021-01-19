@@ -66,6 +66,23 @@ classdef GeneralizedSymmetricSubgroup < replab.NiceFiniteGroup
             end
         end
 
+        function M = toIntvalMatrix(self, x)
+        % Returns the generalized permutation matrix corresponding to the given element
+        %
+        % Args:
+        %   x (group element): Element to compute the matrix representation of
+        %
+        % Returns:
+        %   `+replab.cyclotomic`: Cyclotomic matrix
+            M = replab.cyclotomic.zeros(self.n, self.n);
+            V = exp(2i*intval('pi')*intval(x(2,:))/intval(self.m));
+            V(x(2,:) == 0) = intval(1);
+            V(2*x(2,:) == self.m) = intval(-1);
+            V(4*x(2,:) == self.m) = intval(1i);
+            V(4*x(2,:) == 3*self.m) = intval(-1i);
+            M = sparse(x(1,:), 1:self.n, V, self.n, self.n);
+        end
+
         function M = toSparseMatrix(self, x)
         % Returns the generalized permutation matrix corresponding to the given element
         %

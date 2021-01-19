@@ -170,6 +170,19 @@ classdef DerivedRep < replab.Rep
             end
         end
 
+        function rho = image_intval(self, g)
+            if self.inverse
+                g = self.group.inverse(g);
+            end
+            rho = self.parent.image(g, 'intval');
+            if self.conjugate
+                rho = conj(rho);
+            end
+            if self.transpose
+                rho = rho.';
+            end
+        end
+
         function rho = image_exact(self, g)
             if self.inverse
                 g = self.group.inverse(g);

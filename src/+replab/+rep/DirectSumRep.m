@@ -148,6 +148,15 @@ classdef DirectSumRep < replab.Rep
             end
         end
 
+        function rho = image_intval(self, g)
+            if self.dimension == 0
+                rho = intval(zeros(0, 0));
+            else
+                rhos = cellfun(@(rep) rep.image(g, 'intval'), self.factors, 'uniform', 0);
+                rho = blkdiag(rhos{:});
+            end
+        end
+
         function rho = image_double_sparse(self, g)
             rhos = cellfun(@(rep) rep.image(g, 'double/sparse'), self.factors, 'uniform', 0);
             rho = blkdiag(rhos{:});

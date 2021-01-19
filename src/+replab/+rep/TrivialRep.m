@@ -38,6 +38,10 @@ classdef TrivialRep < replab.Rep
             rho = replab.cyclotomic.eye(self.dimension);
         end
 
+        function rho = image_intval(self, g)
+            rho = intval(speye(self.dimension));
+        end
+
         function rho = image_double_sparse(self, g)
             rho = speye(self.dimension);
         end

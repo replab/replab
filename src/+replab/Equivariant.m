@@ -69,13 +69,31 @@ classdef Equivariant < replab.Domain
         %   An error if `.isExact` is false.
         %
         % Args:
-        %   X (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix to project; if double, should be converted to `.cyclotomic`
+        %   X (`.cyclotomic`(\*,\*)): Matrix to project
         %
         % Returns
         % -------
         %   X1: `.cyclotomic`(\*,\*)
         %     Projected matrix
             error('Exact projection not implemented');
+        end
+
+        function X1 = project_intval(self, X)
+        % Projects any ``nR x nC`` matrix in the equivariant subspace
+        %
+        % Implementation of `.project`
+        %
+        % Raises:
+        %   An error if `.isExact` is false.
+        %
+        % Args:
+        %   X (intval(\*,\*)): Matrix to project
+        %
+        % Returns
+        % -------
+        %   X1: `.intval`(\*,\*)
+        %     Projected matrix
+            error('Projection in interval arithmetic not implemented');
         end
 
         function [X1, err] = project_double_sparse(self, X)
@@ -138,7 +156,15 @@ classdef Equivariant < replab.Domain
                 else
                     X1 = self.project_double_sparse(X);
                 end
+              case 'intval'
+                if ~isa(X, 'intval')
+                    X = intval(X);
+                end
+                X1 = self.project_intval(X);
               case 'exact'
+                if isa(X, 'double')
+                    X = replab.cyclotomic.fromDoubles(X);
+                end
                 X1 = self.project_exact(X);
               otherwise
                 error('Type must be either double, double/sparse or exact');
@@ -154,6 +180,14 @@ classdef Equivariant < replab.Domain
         %
         % Returns:
         %   logical: True if the call ``self.projection(X, 'exact')`` always succeeds
+            b = false;
+        end
+
+        function b = hasIntval(self)
+        % Returns whether this equivariant space can compute projection in interval arithmetic
+        %
+        % Returns:
+        %   logical: True if the call ``self.projection(X, 'intval')`` always succeeds
             b = false;
         end
 

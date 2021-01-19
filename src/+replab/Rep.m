@@ -86,6 +86,17 @@ classdef Rep < replab.Obj
             error('Abstract');
         end
 
+        function rho = image_intlab(self, g)
+        % Returns the image of a group element
+        %
+        % Args:
+        %   g (element of `.group`): Element being represented
+        %
+        % Returns:
+        %   intval(\*,\*): Element image
+            rho = intval(self.image_exact(g));
+        end
+
         function rho = image_double_sparse(self, g)
         % Returns the image of a group element
         %
@@ -135,11 +146,21 @@ classdef Rep < replab.Obj
                 rho = full(self.image_double_sparse(g));
               case 'double/sparse'
                 rho = self.image_double_sparse(g);
+              case 'intval'
+                rho = self.image_intlab(g);
               case 'exact'
                 rho = self.image_exact(g);
               otherwise
                 error('Type must be either double, double/sparse or exact');
             end
+        end
+
+        function b = hasIntval(self)
+        % Returns whether this representation can compute images in interval arithmetic
+        %
+        % Returns:
+        %   logical: True if the call ``self.image(g, 'intval')`` always succeeds
+            b = self.isExact;
         end
 
         function b = isExact(self)
@@ -170,7 +191,7 @@ classdef Rep < replab.Obj
             end
         end
 
-        function [rho rhoInverse] = sample(self, type)
+        function [rho, rhoInverse] = sample(self, type)
         % Samples an element from the group and returns its image under the representation
         %
         % Raises:
@@ -1093,24 +1114,17 @@ classdef Rep < replab.Obj
         % Args:
         %   g (`group` element): Group element acting
         %   M (double(\*,\*) or `.cyclotomic`(\*,\*)): Matrix acted upon
-        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'.
+        %   type ('double', 'double/sparse', 'intval' or 'exact', optional): Type of the returned value, default: 'double'.
         %
         % Returns:
-        %   double(\*,\*) or `.cyclotomic`(\*,\*): The matrix ``self.image(g) * M``
+        %   double(\*,\*) or intval(\*,\*) or `.cyclotomic`(\*,\*): The matrix ``self.image(g) * M``
             if nargin < 4
                 type = 'double';
             end
-            if strcmp(type, 'exact')
-                if isa(M, 'double')
-                    M = replab.cyclotomic.fromDoubles(M);
-                end
-                M = self.image(g, 'exact') * M;
-            else
-                M = self.image(g, 'double/sparse') * M;
-                if strcmp(type, 'double')
-                    M = full(M);
-                end
-            end
+            % Adapt input type
+            M = replab.numerical.convert(M, type);
+            % Apply
+            M = self.image(g, type) * M;
         end
 
         function M = matrixColAction(self, g, M, type)
@@ -1127,25 +1141,17 @@ classdef Rep < replab.Obj
         % Args:
         %   g (`group` element): Group element acting
         %   M (double(\*,\*)): Matrix acted upon
-        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'.
+        %   type ('double', 'double/sparse', 'intval' or 'exact', optional): Type of the returned value, default: 'double'.
         %
         % Returns:
-        %   double(\*,\*): The matrix ``M * self.image(inverse(g))``
+        %   double(\*,\*) or intval(\*,\*) or `.cyclotomic`(\*,\*): The matrix ``M * self.inverseImage(g)``
             if nargin < 4
                 type = 'double';
             end
-            gInv = self.group.inverse(g);
-            if strcmp(type, 'exact')
-                if isa(M, 'double')
-                    M = replab.cyclotomic.fromDoubles(M);
-                end
-                M = M * self.inverseImage(g, 'exact');
-            else
-                M = M * self.inverseImage(g, 'double/sparse');
-                if strcmp(type, 'double')
-                    M = full(M);
-                end
-            end
+            % Adapt input type
+            M = replab.numerical.convert(M, type);
+            % Apply
+            M = M * self.inverseImage(g, type);
         end
 
     end

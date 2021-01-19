@@ -33,25 +33,29 @@ classdef RepByImages_monomial < replab.RepByImages
 
     end
 
+    methods (Access = protected)
+
+        function rho = image_intlab(self, g)
+            gp = self.morphism.imageElement(g);
+            rho = self.morphism.target.toIntvalMatrix(gp);
+        end
+
+        function rho = image_double_sparse(self, g)
+            gp = self.morphism.imageElement(g);
+            rho = self.morphism.target.toSparseMatrix(gp);
+        end
+
+        function rho = image_exact(self, g)
+            gp = self.morphism.imageElement(g);
+            rho = self.morphism.target.toCyclotomicMatrix(gp);
+        end
+
+    end
+
     methods % Implementations
 
         function b = isExact(self)
             b = true;
-        end
-
-        function rho = image(self, g, type)
-            if nargin < 3 || isempty(type)
-                type = 'double';
-            end
-            gp = self.morphism.imageElement(g);
-            switch type
-              case 'exact'
-                rho = self.morphism.target.toCyclotomicMatrix(gp);
-              case 'double'
-                rho = self.morphism.target.toMatrix(gp);
-              case 'double/sparse'
-                rho = self.morphism.target.toSparseMatrix(gp);
-            end
         end
 
     end

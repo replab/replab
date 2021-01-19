@@ -17,6 +17,11 @@ classdef Equivariant_forFiniteGroup_relativeReynolds < replab.Equivariant
             b = self.repR.isExact && self.repC.isExact;
         end
 
+        function b = hasIntval(self)
+            b = self.repR.hasIntval && self.repC.hasIntval;
+        end
+
+
     end
 
 
@@ -31,6 +36,21 @@ classdef Equivariant_forFiniteGroup_relativeReynolds < replab.Equivariant
                 for j = 2:nEls
                     g = els{j};
                     gX = self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X, 'exact'), 'exact');
+                    S = S + gX;
+                end
+                X = S/nEls;
+            end
+        end
+
+        function X = project_intval(self, X)
+            T = self.group.decomposition.T;
+            for i = length(T):-1:1
+                els = T{i};
+                nEls = length(els);
+                S = X;
+                for j = 2:nEls
+                    g = els{j};
+                    gX = self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X, 'intval'), 'intval');
                     S = S + gX;
                 end
                 X = S/nEls;
