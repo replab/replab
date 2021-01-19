@@ -18,9 +18,6 @@ if ~replab.init.existingSdpSolver().works
     replab.init.sdpt3().require;
 end
 
-% This can be commented out if you're not decomposing representations of compact groups
-replab.init.nlinfit().require;
-
 % This can be commented out if you're not running tests
 replab.init.MOcov().require;
 replab.init.MOxUnit().require;

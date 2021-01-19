@@ -3,7 +3,6 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
     methods
 
         function self = Equivariant_forCompactGroup(repR, repC, special)
-            assert(ismember(exist('nlinfit'), [2 6]), 'Computations on compact groups require nonlinear curve fit.');
             self@replab.Equivariant(repR, repC, special);
         end
 
@@ -64,11 +63,11 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                     logfloor0 = log10(min(errs));
                     slope0 = (log10(errs(1)) - log10(errs(nWarmUpIters)))/nWarmUpIters;
                     offset0 = log10(errs(1));
-                    beta0 = [logfloor0 slope0 offset0];
+                    beta0 = [logfloor0;slope0;offset0];
                     w = warning('off');
                     errored = false;
                     try
-                        [beta, R, J, CovB, MSE] = nlinfit(1:iter, y, modelfun, beta0);
+                        [beta, R, J, CovB, MSE] = replab.numerical.nlinfit((1:iter)', y(:), modelfun, beta0);
                         beta = beta(:).';
                     catch
                         errored = true;
