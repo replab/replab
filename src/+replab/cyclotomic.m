@@ -607,7 +607,13 @@ classdef cyclotomic
             res = reshape(R, size(self.mat)) + 1i * reshape(I, size(self.mat));
         end
 
-        function [res error] = doubleApproximation(self)
+        function res = intval(self)
+        % Conversion to interval matrix
+            [mid, rad] = self.doubleApproximation;
+            res = midrad(mid, rad);
+        end
+
+        function [res, error] = doubleApproximation(self)
         % Conversion to floating-point double
             data = javaMethod('toDoubleApproximation', 'cyclo.Lab', self.matArray);
             res = reshape(data.real, size(self.mat)) + 1i * reshape(data.imag, size(self.mat));
