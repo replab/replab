@@ -1,7 +1,7 @@
 classdef GeneralizedSymmetricSubgroup < replab.NiceFiniteGroup
 % Describes a subgroup of the wreath product of the symmetric group acting on copies of the cyclic group
 
-    properties
+    properties (SetAccess = protected)
         n % (integer): Number of copies of the cyclic group
         m % (integer): Order of each cyclic group
     end
@@ -121,7 +121,7 @@ classdef GeneralizedSymmetricSubgroup < replab.NiceFiniteGroup
             y(2,x(1,:)) = mod(self.m - x(2,:), self.m);
         end
 
-        % NiceFiniteGroup methods
+        % NiceFiniteGroup
 
         function res = hasSameTypeAs(self, rhs)
             res = isa(rhs, 'replab.perm.GeneralizedSymmetricSubgroup') && (self.type.n == rhs.type.n) && (self.type.m == rhs.type.m);
