@@ -36,6 +36,15 @@ classdef PhasedMatrixPartition < replab.Obj
 
         function res = fromGeneralizedSymmetricSubgroup(group, mR, mC)
         % Creates a phased matrix partition from the action of monomial representations
+        %
+        %
+        % Example:
+        %   >>> g1 = [1 -2 -3 -4 -5];
+        %   >>> g2 = [1 4 5 2 3];
+        %   >>> g3 = [1 3 2 4 -5];
+        %   >>> G = replab.SignedPermutationGroup.of(g1,g2,g3);
+        %   >>> mu = replab.perm.GeneralizedSymmetricGroup.morphismFromSignedPermutationGroup(G);
+        %   >>> pmp = replab.equi.PhasedMatrixPartition.fromGeneralizedSymmetricSubgroup(G, mu, mu);
             if mR.target.m ~= mC.target.m
                 % if the phase order is not the same, then harmonize and restart
                 nR = mR.target.n;
