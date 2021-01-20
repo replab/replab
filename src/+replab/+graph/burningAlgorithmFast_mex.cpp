@@ -5,9 +5,14 @@
 #include <algorithm>
 #include <functional>
 
+#define DEBUG
+#ifdef DEBUG
+  #include <chrono>
+#endif
+
 /*
   This files is part of the RepLAB library. It provides a faster
-  implementation of the algorithm contained in burning.m.
+  implementation of the algorithm contained in burningAlgorithm.m.
 
   For optimal efficiency, the edges are not checked for redundency.
   Hence, it is best to provide each edge only once (in particular, the
@@ -24,7 +29,7 @@ using namespace std;
 
 
 // The data type we use for indices of vertices
-typedef unsigned long int Index;
+typedef unsigned long long int Index;
 
 
 // This class comparator compares the first elements of pairs
@@ -50,13 +55,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   // We check that the parameters are correct
   if (nrhs != 1)
-    mexErrMsgTxt("burningAlgorithm_mex: Unexpected number of arguments.");
+    mexErrMsgTxt("burningAlgorithmFast_mex: Unexpected number of arguments.");
   if (nlhs != 1)
-    mexErrMsgTxt("burningAlgorithm_mex: Unexpected number of outputs.");
+    mexErrMsgTxt("burningAlgorithmFast_mex: Unexpected number of outputs.");
 
   // The matlab object is supposed to be an array
   if (!mxIsDouble(prhs[0]))
-    mexErrMsgTxt("burningAlgorithm_mex: The argument should be an array of double.");
+    mexErrMsgTxt("burningAlgorithmFast_mex: The argument should be an array of double.");
 
   // Get the size and pointers to input data
   mwSize m(mxGetM(prhs[0]));
@@ -67,15 +72,18 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   // The input should be real
   if (isComplex != 0)
-    mexErrMsgTxt("burningAlgorithm_mex: The argument should not be complex.");
+    mexErrMsgTxt("burningAlgorithmFast_mex: The argument should not be complex.");
 
   // Second dimension should be 2
   if (n != 2)
-    mexErrMsgTxt("burningAlgorithm_mex: The input should be of dimension m x 2.");
+    mexErrMsgTxt("burningAlgorithmFast_mex: The input should be of dimension m x 2.");
 
 
 
   //-//-// Data initialization //-//-//
+#ifdef DEBUG
+    auto t0 = std::chrono::system_clock::now();
+#endif
 
   // First, we quickly list the vertices numbers in a compact vector
   set < Index > uniqueVertices(pr, pr + m*n); // This efficiently removes duplicates
@@ -89,10 +97,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   // This function is such that verticesInverse(vertices[i]) gives back i
   function < Index (Index) > verticesInverse = [=](Index i){ return (*initialIndex.find(pair < Index, Index >(i,0))).second; };
-  /*for (unsigned int i = 0; i < nbVertices; ++i)
-  {
-    cout << i << " == " << verticesInverse(vertices[i]) << endl;
-  }*/
+#ifdef DEBUG
+    cout << "Number of vertices : " << nbVertices << endl << flush;
+    for (unsigned int i = 0; i < std::min((int) nbVertices, 5); ++i)
+    {
+      cout << i << " == " << verticesInverse(vertices[i]) << endl << flush;
+    }
+#endif
 
   // We initialize the graph data structure
   vector < vector < Index > > graphData(nbVertices);
@@ -109,7 +120,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     graphData[newB].push_back(newA);
   }
 
-
+#ifdef DEBUG
+    auto t1 = std::chrono::system_clock::now();
+    std::chrono::duration<double> delta01 = t1 - t0;
+    cout << "Initialization finished (" << delta01.count() << " s)" << endl << flush;
+#endif
 
   //-//-// Algorithm //-//-//
 
@@ -123,11 +138,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   vector < vector < Index > > allSets(0); // We keep track of which vertex ends up in which set, here with the original numbering
 
-  /*// For debugging purpose
-  Index nbTouchedVertices(0);
-  Index lastPercentage(0);*/
+#ifdef DEBUG
+    // For debugging purpose
+    Index nbTouchedVertices(0);
+    Index lastPercentage(0);
+#endif
 
-  // Let's "burn" all the sites that touch a reached site recursively until there is no left.
+  // Let's "burn" all the sites that touch a reached site recursively until there none is left.
   do {
     ++nbSets;
     allSets.push_back(vector < Index >(0));
@@ -146,12 +163,14 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     } while (neighbors[ptr].size() > 0);
 
 
-    /*// Update on advancement, for debugging purpose
-    nbTouchedVertices += allSets[nbSets-1].size();
-    if (nbTouchedVertices*100/nbVertices > lastPercentage) {
-      ++lastPercentage;
-      cout << lastPercentage << "% : " << nbTouchedVertices << "/" << nbVertices << endl << flush;
-    }*/
+#ifdef DEBUG
+      // Update on advancement, for debugging purpose
+      nbTouchedVertices += allSets[nbSets-1].size();
+      if (nbTouchedVertices*100/nbVertices > lastPercentage) {
+        lastPercentage = nbTouchedVertices*100/nbVertices;
+        cout << lastPercentage << "% : " << nbTouchedVertices << "/" << nbVertices << endl << flush;
+      }
+#endif
 
     // We look for the next un-attained vertex
     for (Index i(lastStart+1); i < nbVertices; ++i) {
@@ -163,7 +182,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     }
   } while (neighbors[ptr].size() > 0);
 
-
+#ifdef DEBUG
+    auto t2 = std::chrono::system_clock::now();
+    std::chrono::duration<double> delta12 = t2 - t1;
+    cout << "Orbits identified (" << delta12.count() << " s)" << endl << flush;
+#endif
 
   //-//-// Preparing output fields //-//-//
   plhs[0] = mxCreateCellMatrix(1, nbSets);
