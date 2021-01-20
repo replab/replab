@@ -37,6 +37,10 @@ classdef PhasedMatrixPartition < replab.Obj
         function res = fromGeneralizedSymmetricSubgroup(group, mR, mC)
         % Creates a phased matrix partition from the action of monomial representations
         %
+        % Args:
+        %   group (`+replab.FiniteGroup`): Finite group
+        %   mR (`+replab.Morphism`): Morphism to a generalized symmetric group that describes a monomial representation
+        %   mC (`+replab.Morphism`): Morphism to a generalized symmetric group that describes a monomial representation
         %
         % Example:
         %   >>> g1 = [1 -2 -3 -4 -5];
@@ -49,23 +53,29 @@ classdef PhasedMatrixPartition < replab.Obj
                 % if the phase order is not the same, then harmonize and restart
                 nR = mR.target.n;
                 nC = mC.target.n;
+                % common phase order
                 m = lcm(mR.target.m, mC.target.m);
+                % target row and column generalized symmetric groups
                 targetR1 = replab.perm.GeneralizedSymmetricGroup(nR, m);
                 targetC1 = replab.perm.GeneralizedSymmetricGroup(nC, m);
+                % perform the conversion of the morphisms
                 mR1 = mR.andThen(mR.target.type.naturalMorphism(targetR1));
                 mC1 = mC.andThen(mC.target.type.naturalMorphism(targetC1));
+                % call me again
                 res = replab.equi.PhasedMatrixPartition(group, mR1, mC1);
             else
                 m = mR.target.m; % Phase order
                 nR = mR.target.n; % nRows
                 nC = mC.target.n; % nCols
                 nG = group.nGenerators;
-                piR = zeros(nG, nR);
-                phiR = zeros(nG, nR);
-                piC = zeros(nG, nC);
-                phiC = zeros(nG, nC);
+                % expand the images of the generators
+                piR = zeros(nG, nR); % permutation part, rows
+                phiR = zeros(nG, nR); % phase part, rows
+                piC = zeros(nG, nC); % permutation part, cols
+                phiC = zeros(nG, nC); % phase part, cols
                 for i = 1:nG
                     g = group.generator(i);
+                    % populate row and column images
                     gR = mR.imageElement(g);
                     piR(i, :) = gR(1, :);
                     phiR(i, :) = gR(2, :);
@@ -74,16 +84,18 @@ classdef PhasedMatrixPartition < replab.Obj
                     phiC(i, :) = gC(2, :);
                 end
                 phase = zeros(nR, nC);
+                % block(i,j) = -1 is interpreted as "not yet visited"
                 block = -ones(nR, nC);
-                blocks = cell(1, 0);
+                blocks = cell(1, 0); % no blocks yet
                 zeroBlock = zeros(2, 0);
-                next = 1;
-                todo = zeros(2, 16);
-                Ntodo = 0;
+                next = 1; % next block index
+                todo = zeros(2, 16); % stack of row/column coordinates
+                Ntodo = 0; % the stack is included in column indices (1:Ntodo)
                 for i = 1:nR
                     for j = 1:nC
                         if block(i, j) == -1
                             current = [i; j];
+                            % for speed, we do not resize the "todo" stack, but store the index to the last element
                             todo(:, 1) = [i; j];
                             Ntodo = 1;
                             assert(phase(i, j) == 0);
