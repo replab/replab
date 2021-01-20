@@ -24,7 +24,7 @@ function subsets = burningAlgorithmFast(edges)
     
     persistent compiledInterface;
     if isempty(compiledInterface)
-        compiledInterface = replab.dialects.Compiled('cpp');
+        compiledInterface = replab.dialects.Compiled('cpp', 1);
     end
 
     subsets = compiledInterface.call(edges);

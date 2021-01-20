@@ -17,11 +17,12 @@ classdef Compiled < handle
         package % (charstring) name of the package containing the function
         triedBefore % (boolean) whether the compiled binary was called before in the current session
         isWorking % (boolean) whether the compiled binary works
+        nargout % (integer) number of output arguments to use when calling the compiled function
     end
 
     methods
 
-        function self = Compiled(extension)
+        function self = Compiled(extension, nargout)
         % Constructor
         %
         % Constructs an interfact to a code written in another language
@@ -29,6 +30,8 @@ classdef Compiled < handle
         %
         % Args:
         %   extension (charstring) : extension of the source code file
+        %   nargout (integer) : number of output arguments
+        
             [ST, I] = dbstack('-completenames');
             
             self.path = fileparts(ST(2).file);
@@ -48,9 +51,12 @@ classdef Compiled < handle
 
             self.triedBefore = false;
             self.isWorking = false;
+            
+            assert((nargout >= 0) && (nargout <= 2) && isscalar(nargout) && isequal(round(nargout), nargout));
+            self.nargout = nargout;
         end
         
-        function results = call(self, varargin)
+        function varargout = call(self, varargin)
         % Calls the compiled function
         %
         % This function checks if the corresponding function is
@@ -110,7 +116,7 @@ classdef Compiled < handle
                     try
                         command = {self.package, '.', self.fileName, '_mex(varargin{:});'};
                         command = cat(2, command{:});
-                        results = eval(command);
+                        [varargout{1:self.nargout}] = eval(command);
                     catch
                         self.isWorking = false;
                     end
@@ -121,7 +127,7 @@ classdef Compiled < handle
 
             if ~self.isWorking
                 % Inform that the method did not succeed
-                results = replab.DispatchNext;
+                varargout = {replab.DispatchNext};
             end
         end
         
