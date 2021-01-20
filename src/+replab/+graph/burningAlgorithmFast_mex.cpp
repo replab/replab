@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <functional>
 
-#define DEBUG
+#undef DEBUG
 #ifdef DEBUG
   #include <chrono>
 #endif
@@ -82,7 +82,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   //-//-// Data initialization //-//-//
 #ifdef DEBUG
-    auto t0 = std::chrono::system_clock::now();
+  auto t0 = std::chrono::system_clock::now();
 #endif
 
   // First, we quickly list the vertices numbers in a compact vector
@@ -98,11 +98,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   // This function is such that verticesInverse(vertices[i]) gives back i
   function < Index (Index) > verticesInverse = [=](Index i){ return (*initialIndex.find(pair < Index, Index >(i,0))).second; };
 #ifdef DEBUG
-    cout << "Number of vertices : " << nbVertices << endl << flush;
-    for (unsigned int i = 0; i < std::min((int) nbVertices, 5); ++i)
-    {
-      cout << i << " == " << verticesInverse(vertices[i]) << endl << flush;
-    }
+  cout << "Number of vertices : " << nbVertices << endl << flush;
+  for (unsigned int i = 0; i < std::min((int) nbVertices, 5); ++i)
+  {
+    cout << i << " == " << verticesInverse(vertices[i]) << endl << flush;
+  }
 #endif
 
   // We initialize the graph data structure
@@ -121,9 +121,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   }
 
 #ifdef DEBUG
-    auto t1 = std::chrono::system_clock::now();
-    std::chrono::duration<double> delta01 = t1 - t0;
-    cout << "Initialization finished (" << delta01.count() << " s)" << endl << flush;
+  auto t1 = std::chrono::system_clock::now();
+  std::chrono::duration<double> delta01 = t1 - t0;
+  cout << "Initialization finished (" << delta01.count() << " s)" << endl << flush;
 #endif
 
   //-//-// Algorithm //-//-//
@@ -139,9 +139,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   vector < vector < Index > > allSets(0); // We keep track of which vertex ends up in which set, here with the original numbering
 
 #ifdef DEBUG
-    // For debugging purpose
-    Index nbTouchedVertices(0);
-    Index lastPercentage(0);
+  // For debugging purpose
+  Index nbTouchedVertices(0);
+  Index lastPercentage(0);
 #endif
 
   // Let's "burn" all the sites that touch a reached site recursively until there none is left.
@@ -164,12 +164,12 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
 
 #ifdef DEBUG
-      // Update on advancement, for debugging purpose
-      nbTouchedVertices += allSets[nbSets-1].size();
-      if (nbTouchedVertices*100/nbVertices > lastPercentage) {
-        lastPercentage = nbTouchedVertices*100/nbVertices;
-        cout << lastPercentage << "% : " << nbTouchedVertices << "/" << nbVertices << endl << flush;
-      }
+    // Update on advancement, for debugging purpose
+    nbTouchedVertices += allSets[nbSets-1].size();
+    if (nbTouchedVertices*100/nbVertices > lastPercentage) {
+      lastPercentage = nbTouchedVertices*100/nbVertices;
+      cout << lastPercentage << "% : " << nbTouchedVertices << "/" << nbVertices << endl << flush;
+    }
 #endif
 
     // We look for the next un-attained vertex
@@ -183,9 +183,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   } while (neighbors[ptr].size() > 0);
 
 #ifdef DEBUG
-    auto t2 = std::chrono::system_clock::now();
-    std::chrono::duration<double> delta12 = t2 - t1;
-    cout << "Orbits identified (" << delta12.count() << " s)" << endl << flush;
+  auto t2 = std::chrono::system_clock::now();
+  std::chrono::duration<double> delta12 = t2 - t1;
+  cout << "Orbits identified (" << delta12.count() << " s)" << endl << flush;
 #endif
 
   //-//-// Preparing output fields //-//-//
