@@ -100,7 +100,6 @@ classdef Equivariant_forMonomialRep < replab.Equivariant
             if mod(po, 2) == 0
                 phases(po/2+1) = -1;
             end
-            phases
             nR = self.nR;
             nC = self.nC;
             for i = 1:P.nBlocks
