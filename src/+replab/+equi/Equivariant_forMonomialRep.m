@@ -7,7 +7,7 @@ classdef Equivariant_forMonomialRep < replab.Equivariant
 %   >>> g3 = [1 3 2 4 -5];
 %   >>> G = replab.SignedPermutationGroup.of(g1,g2,g3);
 %   >>> rep = G.naturalRep;
-%   >>> isa(rep.commutant, 'replab.equi.Equivariant_forMonomialRep');
+%   >>> isa(rep.commutant, 'replab.equi.Equivariant_forMonomialRep')
 %       1
 
     properties (SetAccess = protected)
@@ -62,11 +62,11 @@ classdef Equivariant_forMonomialRep < replab.Equivariant
             if isempty(preimages)
                 preimages = {group.identity};
             end
-            [GR, imagesR] = replab.rep.monomialImages(repR, group.generators);
+            [GR, imagesR] = replab.rep.monomialImages(repR, preimages);
             if isempty(GR)
                 return
             end
-            [GC, imagesC] = replab.rep.monomialImages(repC, group.generators);
+            [GC, imagesC] = replab.rep.monomialImages(repC, preimages);
             if isempty(GC)
                 return
             end
