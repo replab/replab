@@ -232,7 +232,7 @@ classdef SubRep < replab.Rep
             if nargin < 3 || isempty(type)
                 type = 'double';
             end
-            if isempty(indices)
+            if nargin < 2 || isempty(indices)
                 indices = 1:self.dimension;
             end
             mat = self.injection(type);
