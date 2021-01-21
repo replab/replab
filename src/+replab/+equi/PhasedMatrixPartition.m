@@ -222,6 +222,10 @@ classdef PhasedMatrixPartition < replab.Obj
         function res = fromGeneralizedPermutations(phaseOrder, imagesR, imagesC)
         % Creates a phased matrix partition from the action of monomial representations
         %
+        % It assumes that ``imagesR`` and ``imagesC`` describe generalized permutations coming from a
+        % `+replab.+perm.GeneralizedSymmetricGroup` of the given ``phaseOrder``, which leave the
+        % phased matrix partition we compute invariant under joint action on the rows and columns.
+        %
         % Args:
         %   phaseOrder (integer): Phase order
         %   imagesR (cell(1,\*) of generalized permutations): Generalized permutations acting on the row space (non-empty)
