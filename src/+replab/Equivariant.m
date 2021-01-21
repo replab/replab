@@ -297,17 +297,23 @@ classdef Equivariant < replab.Domain
         % ``repC.image(g) * X = X * repR.image(g)``
         %
         % Args:
-        %   repR (`+replab.Rep`): Representation on the target/row space
-        %   repC (`+replab.Rep`): Representation on the source/column space
+        %   repR (`.Rep`): Representation on the target/row space
+        %   repC (`.Rep`): Representation on the source/column space
         %
         % Keyword Args:
         %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
         %
         % Returns:
-        %   `+replab.Equivariant`: The equivariant vector space
+        %   `.Equivariant`: The equivariant vector space
             args = struct('special', '', 'type', 'double');
             args = replab.util.populateStruct(args, varargin);
+            if isa(repR.group, 'replab.FiniteGroup')
+                E = replab.equi.Equivariant_forMonomialRep.make(repR, repC, args.special);
+                if ~isempty(E)
+                    return
+                end
+            end
             if isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SimilarRep')
                 E = replab.equi.Equivariant_forSimilarRep.make(repR, repC, varargin{:});
             elseif isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SubRep')

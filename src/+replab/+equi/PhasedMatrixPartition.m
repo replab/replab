@@ -16,20 +16,20 @@ classdef PhasedMatrixPartition < replab.Obj
 % During construction, we assume that blocks are non-empty.
 
     properties (SetAccess = protected)
-        nRows % (integer): Number of rows in the matrix
-        nCols % (integer): Number of columns in the matrix
+        nR % (integer): Number of rows in the matrix
+        nC % (integer): Number of columns in the matrix
         phaseOrder % (integer): Common order of the phases
-        phase % (integer(nRows,nCols)): Phase
-        block % (integer(nRows,nCols)): Block index
+        phase % (integer(nR,nC)): Phase
+        block % (integer(nR,nC)): Block index
         zeroBlock % (integer(2,\*)): Coordinate of zero coefficients
         blocks % (cell(1,nBlocks) of integer(2,\*)): Coordinates of each block
     end
 
     methods
 
-        function self = PhasedMatrixPartition(nRows, nCols, phaseOrder, phase, block, zeroBlock, blocks)
-            self.nRows = nRows;
-            self.nCols = nCols;
+        function self = PhasedMatrixPartition(nR, nC, phaseOrder, phase, block, zeroBlock, blocks)
+            self.nR = nR;
+            self.nC = nC;
             self.phaseOrder = phaseOrder;
             self.phase = phase;
             self.block = block;
@@ -70,10 +70,10 @@ classdef PhasedMatrixPartition < replab.Obj
         %
         % Returns:
         %   `.PhasedMatrixPartition`: Intersection
-            assert(P1.nRows == P2.nRows);
-            assert(P1.nCols == P2.nCols);
-            nR = P1.nRows;
-            nC = P1.nCols;
+            assert(P1.nR == P2.nR);
+            assert(P1.nC == P2.nC);
+            nR = P1.nR;
+            nC = P1.nC;
             if P1.phaseOrder ~= P2.phaseOrder
                 % if the phase order is not the same, then harmonize and restart
                 po = lcm(P1.phaseOrder, P2.phaseOrder);
@@ -219,13 +219,13 @@ classdef PhasedMatrixPartition < replab.Obj
             res = replab.equi.PhasedMatrixPartition(nR, nC, phaseOrder, phase, block, zeroBlock, blocks);
         end
 
-        function res = fromGeneralizedSymmetricSubgroup(group, mR, mC)
+        function res = fromGeneralizedPermutations(phaseOrder, imagesR, imagesC)
         % Creates a phased matrix partition from the action of monomial representations
         %
         % Args:
-        %   group (`+replab.FiniteGroup`): Finite group
-        %   mR (`+replab.Morphism`): Morphism to a generalized symmetric group that describes a monomial representation
-        %   mC (`+replab.Morphism`): Morphism to a generalized symmetric group that describes a monomial representation
+        %   phaseOrder (integer): Phase order
+        %   imagesR (cell(1,\*) of generalized permutations): Generalized permutations acting on the row space (non-empty)
+        %   imagesC (cell(1,\*) of generalized permutations): Generalized permutatioms acting on the column space (non-empty)
         %
         % Example:
         %   >>> g1 = [1 -2 -3 -4 -5];
@@ -233,41 +233,25 @@ classdef PhasedMatrixPartition < replab.Obj
         %   >>> g3 = [1 3 2 4 -5];
         %   >>> G = replab.SignedPermutationGroup.of(g1,g2,g3);
         %   >>> mu = replab.perm.GeneralizedSymmetricGroup.morphismFromSignedPermutationGroup(G);
-        %   >>> pmp = replab.equi.PhasedMatrixPartition.fromGeneralizedSymmetricSubgroup(G, mu, mu);
-            if mR.target.m ~= mC.target.m
-                % if the phase order is not the same, then harmonize and restart
-                nR = mR.target.n;
-                nC = mC.target.n;
-                % common phase order
-                m = lcm(mR.target.m, mC.target.m);
-                % target row and column generalized symmetric groups
-                targetR1 = replab.perm.GeneralizedSymmetricGroup(nR, m);
-                targetC1 = replab.perm.GeneralizedSymmetricGroup(nC, m);
-                % perform the conversion of the morphisms
-                mR1 = mR.andThen(mR.target.type.naturalMorphism(targetR1));
-                mC1 = mC.andThen(mC.target.type.naturalMorphism(targetC1));
-                % call me again
-                res = replab.equi.PhasedMatrixPartition(group, mR1, mC1);
-                return
-            end
-            m = mR.target.m; % Phase order
-            nR = mR.target.n; % nRows
-            nC = mC.target.n; % nCols
-            nG = group.nGenerators;
+        %   >>> h1 = mu.imageElement(g1); h2 = mu.imageElement(g2); h3 = mu.imageElement(g3);
+        %   >>> pmp = replab.equi.PhasedMatrixPartition.fromGeneralizedPermutations(2, {h1 h2 h3}, {h1 h2 h3});
+            m = phaseOrder; % Phase order
+            nR = size(imagesR{1}, 2);
+            nC = size(imagesC{1}, 2);
+            nG = length(imagesR);
+            assert(nG == length(imagesC));
             % expand the images of the generators
             piR = zeros(nG, nR); % permutation part, rows
             phiR = zeros(nG, nR); % phase part, rows
             piC = zeros(nG, nC); % permutation part, cols
             phiC = zeros(nG, nC); % phase part, cols
             for i = 1:nG
-                g = group.generator(i);
-                % populate row and column images
-                gR = mR.imageElement(g);
-                piR(i, :) = gR(1, :);
-                phiR(i, :) = gR(2, :);
-                gC = mC.imageElement(g);
-                piC(i, :) = gC(1, :);
-                phiC(i, :) = gC(2, :);
+                iR = imagesR{i};
+                iC = imagesC{i};
+                piR(i,:) = iR(1,:);
+                phiR(i,:) = iR(2,:);
+                piC(i,:) = iC(1,:);
+                phiC(i,:) = iC(2,:);
             end
             phase = zeros(nR, nC);
             % block(i,j) = -1 is interpreted as "not yet visited"
