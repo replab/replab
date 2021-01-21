@@ -64,6 +64,9 @@ classdef PhasedMatrixPartition < replab.Obj
         function res = intersection(P1, P2)
         % Returns the partition that corresponds to the intersection of two phased matrix partitions
         %
+        % "Intersection" is to be understood as the intersection of the vector spaces of matrices
+        % described by ``P1`` and ``P2``.
+        %
         % Args:
         %   P1 (`.PhasedMatrixPartition`): First partition
         %   P2 (`.PhasedMatrixPartition`): Second partition
