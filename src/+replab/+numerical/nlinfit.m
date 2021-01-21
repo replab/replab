@@ -23,18 +23,10 @@ function [beta, R, J, covB, mse] = nlinfit(x, y, modelfun, beta0)
 %     Estimated mean squared error
     p = length(beta0);
     n = length(y);
-    beta = replab.numerical.LMFnlsq2(@(b) modelfun(b, x) - y, beta0);
+    [beta, ~, exitFlag, J] = replab.numerical.fsolve(@(b) modelfun(b, x) - y, beta0);
+    assert(exitFlag >= 0);
     yy = modelfun(beta, x);
     R = y - yy;
-    % Compute Jacobian (again)
-    J = zeros(n, p);
-    for k = 1:p
-        delta = eps^(1/3);
-        beta1 = beta;
-        beta1(k) = beta1(k) + delta;
-        yy1 = modelfun(beta1, x);
-        J(:,k) = (yy1 - yy)/delta;
-    end
     mse = sum(abs(R).^2)/(n-p);
     covB = mse*inv(J'*J);
 end
