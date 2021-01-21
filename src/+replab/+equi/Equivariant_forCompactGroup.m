@@ -64,7 +64,6 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                     slope0 = (log10(errs(1)) - log10(errs(nWarmUpIters)))/nWarmUpIters;
                     offset0 = log10(errs(1));
                     beta0 = [logfloor0;slope0;offset0];
-                    w = warning('off');
                     errored = false;
                     try
                         [beta, R, J, CovB, MSE] = replab.numerical.nlinfit((1:iter)', y(:), modelfun, beta0);
@@ -72,7 +71,6 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                     catch
                         errored = true;
                     end
-                    warning(w);
 
                     if errored || (rank(J) < 3)
                         % the rank is deficient, usually because the curve didn't flatten
