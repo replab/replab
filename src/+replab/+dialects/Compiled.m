@@ -66,9 +66,13 @@ classdef Compiled < handle
         % returned value is `+replab.DisplatchNext`.
         %
         % Args:
-        %   varargin : all the arguments that need to be passed to the
-        %     compiled function
-        
+        %   varargin : the number of expected outputs, followed by all the
+        %     arguments that need to be passed to the compiled function
+            
+            assert(isscalar(varargin{1}), 'The first argument should be the number of expected output variables');
+            varargout = cell(1, varargin{1});
+            varargin = varargin(2:end);
+            
             % We try to use the compiled code
             if (~self.triedBefore) || self.isWorking
                 firstPartWorks = true;
@@ -127,7 +131,7 @@ classdef Compiled < handle
 
             if ~self.isWorking
                 % Inform that the method did not succeed
-                varargout = {replab.DispatchNext};
+                varargout{1} = replab.DispatchNext;
             end
         end
         
