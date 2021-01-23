@@ -47,11 +47,105 @@ classdef PhasedMatrixPartition < replab.Obj
             n = length(self.blocks);
         end
 
+        function res = normalForm(self)
+            res = self.cached('normalForm', @() self.computeNormalForm);
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function res = computeNormalForm(self)
+            n = self.nBlocks;
+            nR = self.nR;
+            nC = self.nC;
+            ind = self.block(:);
+            po = self.phaseOrder;
+            changed = false;
+            % ordering of blocks: the sequence given by the first occurence of each block index must be increasing
+            [sorted, sortedToUnsorted] = unique(self.block(:)');
+            sortedToUnsorted = self.block(sortedToUnsorted);
+            if sorted(1) == 0 % we do not care about 0
+                sorted = sorted(2:end);
+                sortedToUnsorted = sortedToUnsorted(2:end);
+            end
+            assert(all(sorted == 1:n));
+            phase = self.phase;
+            block = self.block;
+            blocks = self.blocks;
+            if any(sortedToUnsorted(:)' ~= 1:n)
+                changed = true;
+                unsortedToSorted = zeros(1, n);
+                unsortedToSorted(sortedToUnsorted) = 1:n;
+                block(block > 0) = unsortedToSorted(block(block > 0));
+                blocks = blocks(sortedToUnsorted);
+            end
+            % check that the phase order is minimal
+            p = self.phase(:);
+            p = unique(p(p > 0));
+            if ~isempty(p)
+                d = p(1);
+                for i = 2:length(p)
+                    d = gcd(d, p(i));
+                end
+                if d ~= 1
+                    changed = true;
+                    phase = phase/d;
+                    po = po/d;
+                end
+            end
+            % check block by block
+            for i = 1:n
+                % check that the indices of blocks are sorted by their linear index
+                blk = blocks{i};
+                m = size(blk, 2);
+                [blk1, I] = sortrows(blocks{i}', [2 1]);
+                if any(I(:)' ~= 1:m)
+                    changed = true;
+                    blk = blk1';
+                    blocks{i} = blk;
+                end
+                r1 = blk(1,1);
+                c1 = blk(2,1);
+                % check that the phase of the first block element is zero
+                p1 = phase(r1, c1);
+                if p1 ~= 0
+                    changed = true;
+                    ind = blk(1,:) + (blk(2,:)-1)*nR;
+                    phase(ind) = mod(po + phase(ind) - p1, po);
+                end
+            end
+            if changed
+                res = replab.equi.PhasedMatrixPartition(nR, nC, po, phase, block, self.zeroBlock, blocks);
+            else
+                res = self;
+            end
+        end
+
     end
 
     methods % Implementations
 
         % Obj
+
+        function res = ne(self, rhs)
+            res = ~(self == rhs);
+        end
+
+        function res = isequal(self, rhs)
+            res = self == rhs;
+        end
+
+        function res = eq(self, rhs)
+            if ~isa(rhs, 'replab.equi.PhasedMatrixPartition')
+                res = false;
+                return
+            end
+            lhs = self.normalForm;
+            rhs = rhs.normalForm;
+            res = lhs.nR == rhs.nR && lhs.nC == lhs.nR && lhs.phaseOrder == rhs.phaseOrder && ...
+                  all(all(lhs.phase == rhs.phase)) && all(all(lhs.block == rhs.block));
+        end
 
         function l = laws(self)
             l = replab.equi.PhasedMatrixPartitionLaws(self);
@@ -80,8 +174,8 @@ classdef PhasedMatrixPartition < replab.Obj
             if P1.phaseOrder ~= P2.phaseOrder
                 % if the phase order is not the same, then harmonize and restart
                 po = lcm(P1.phaseOrder, P2.phaseOrder);
-                Q1 = replab.equi.PhasedMatrixPartition(nR, nC, P1.nBlocks, po, P1.phase*(po/P1.phaseOrder), P1.block, P1.zeroBlock, P1.blocks);
-                Q2 = replab.equi.PhasedMatrixPartition(nR, nC, P2.nBlocks, po, P2.phase*(po/P2.phaseOrder), P2.block, P2.zeroBlock, P2.blocks);
+                Q1 = replab.equi.PhasedMatrixPartition(nR, nC, po, P1.phase*(po/P1.phaseOrder), P1.block, P1.zeroBlock, P1.blocks);
+                Q2 = replab.equi.PhasedMatrixPartition(nR, nC, po, P2.phase*(po/P2.phaseOrder), P2.block, P2.zeroBlock, P2.blocks);
                 res = replab.equi.PhasedMatrixPartition.intersection(Q1, Q2);
                 return
             end
@@ -138,23 +232,23 @@ classdef PhasedMatrixPartition < replab.Obj
                 end
                 if isZero
                     % it is all zero
-                    for blkInd1 = blkInds1
-                        blk = blocks{blkInd1};
-                        blocks{blkInd1} = zeros(2, 0);
+                    for blkInd = blkInds
+                        blk = blocks{blkInd};
+                        blocks{blkInd} = zeros(2, 0);
                         zeroBlock = horzcat(zeroBlock, blk);
-                        ind1 = blk(1,:) + nR*(blk(2,:)-1);
-                        block(ind1) = 0;
-                        phase(ind1) = 0;
+                        ind = blk(1,:) + nR*(blk(2,:)-1);
+                        block(ind) = 0;
+                        phase(ind) = 0;
                     end
                 else
                     % not zero
                     remain = blkInds(1);
-                    for blkInd1 = blkInds(2:end)
-                        blk = blocks{blkInd1};
-                        blocks{blkInd1} = zeros(2, 0);
+                    for blkInd = blkInds(2:end)
+                        blk = blocks{blkInd};
+                        blocks{blkInd} = zeros(2, 0);
                         blocks{remain} = horzcat(blocks{remain}, blk);
-                        ind1 = blk(1,:) + nR*(blk(2,:)-1);
-                        block(ind1) = remain;
+                        ind = blk(1,:) + nR*(blk(2,:)-1);
+                        block(ind) = remain;
                     end
                 end
             end
@@ -166,6 +260,22 @@ classdef PhasedMatrixPartition < replab.Obj
             blocks = blocks(fromIndex);
             block(block>0) = toIndex(block(block>0));
             res = replab.equi.PhasedMatrixPartition(nR, nC, m, phase, block, zeroBlock, blocks);
+        end
+
+        function res = fromPhaseAndBlockIndexMatrices(phaseOrder, phase, block)
+        % Creates a phased matrix partition from a matrix of phases and a matrix of block indices
+            nR = size(phase, 1);
+            nC = size(phase, 2);
+            n = max(block(:));
+            assert(all(unique([0;block(:)])' == 0:n));
+            [I, J] = find(block == 0);
+            zeroBlock = [I(:)'; J(:)'];
+            blocks = cell(1, n);
+            for i = 1:n
+                [I, J] = find(block == i);
+                blocks{i} = [I(:)'; J(:)'];
+            end
+            res = replab.equi.PhasedMatrixPartition(nR, nC, phaseOrder, phase, block, zeroBlock, blocks);
         end
 
         function [res, I] = fromIndexMatrix(indexMatrix)
