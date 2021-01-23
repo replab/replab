@@ -28,7 +28,7 @@ classdef Partition < replab.Str
         % See also:
         %   `.fromBlocks`
         %   `.check`
-            
+
             self.n = length(blockIndex);
             self.blockIndex = blockIndex;
             self.blocks = blocks;
@@ -66,6 +66,10 @@ classdef Partition < replab.Str
         %
         % Returns:
         %   logical: True is both partitions are equal
+            if ~isa(rhs, 'replab.Partition')
+                l = false;
+                return
+            end
             l = isequal(self.blockIndex, rhs.blockIndex);
         end
 
@@ -238,7 +242,7 @@ classdef Partition < replab.Str
         %   permutations (integer(nG, d)): Permutations given as rows in a matrix
             d = size(permutations, 2);
             nG = size(permutations, 1);
-            
+
             % We list the edges of the graph
             edges = permutations.';
             edges = [kron(ones(nG,1), (1:d)'), edges(:)];

@@ -206,6 +206,10 @@ classdef Character < replab.Obj
         end
 
         function res = eq(lhs, rhs)
+            if ~isa(rhs, 'replab.Character')
+                res = false;
+                return
+            end
             if lhs.conjugacyClasses.id ~= rhs.conjugacyClasses.id
                 rhs = rhs.forClasses(lhs.conjugacyClasses);
             end

@@ -110,7 +110,6 @@ function replab_init(varargin)
         end
     end
 
-
     %% Memorizing RepLAB root folder if not done before
     rgrp = replab.globals.replabPath;
     if isempty(rgrp)
@@ -121,13 +120,11 @@ function replab_init(varargin)
         % path already memorized
     end
 
-    %% Sets the initialization verbosity level
-
+    %% Memorizing the options
     replab.globals.verboseInit(verbose);
     replab.globals.autoInstall(autoinstall);
 
     %% Run the config script
-
     if showurls
         replab.init.showUrls;
     else
@@ -174,7 +171,7 @@ function alreadyInPath = isInPath(functionName, subfolder, basePath, verbose)
                 end
             end
         else
-            error(['Another instance of RepLAB in folder ' fileparts(fileparts(candidate)) ...
+            error(['Another instance of RepLAB in folder ' fileparts(fileparts(candidate)) ' ' ...
                    'is already in the path' char(10) ...
                    'Use this one or remove it from the path.']);
         end

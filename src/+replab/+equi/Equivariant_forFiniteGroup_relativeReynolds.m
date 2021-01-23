@@ -21,7 +21,6 @@ classdef Equivariant_forFiniteGroup_relativeReynolds < replab.Equivariant
             b = self.repR.hasIntval && self.repC.hasIntval;
         end
 
-
     end
 
 

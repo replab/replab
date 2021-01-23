@@ -3,7 +3,6 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
     methods
 
         function self = Equivariant_forCompactGroup(repR, repC, special)
-            assert(any(exist('nlinfit') == [2 6]), 'Computations on compact groups require nonlinear curve fit.');
             self@replab.Equivariant(repR, repC, special);
         end
 
@@ -64,16 +63,11 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                     logfloor0 = log10(min(errs));
                     slope0 = (log10(errs(1)) - log10(errs(nWarmUpIters)))/nWarmUpIters;
                     offset0 = log10(errs(1));
-                    beta0 = [logfloor0 slope0 offset0];
-                    w = warning('off');
-                    errored = false;
-                    try
-                        [beta, R, J, CovB, MSE] = nlinfit(1:iter, y, modelfun, beta0);
-                        beta = beta(:).';
-                    catch
+                    beta0 = [logfloor0;slope0;offset0];
+                    [beta, R, J, CovB, MSE] = replab.numerical.nlinfit((1:iter)', y(:), modelfun, beta0);
+                    if isempty(beta)
                         errored = true;
                     end
-                    warning(w);
 
                     if errored || (rank(J) < 3)
                         % the rank is deficient, usually because the curve didn't flatten
@@ -87,10 +81,10 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
 
                         % compute approximate uncertainty on these
                         % parameters due to finite sampling
-                        delta = sqrt(diag(CovB)) * tinv(1-uncertaintiesConfidenceLevel, iter - 3);
+                        delta = sqrt(diag(CovB)) * replab.numerical.tinv(1-uncertaintiesConfidenceLevel, iter - 3);
                         jacobian = [-1/slope; -(logfloor - offset)/slope^2; 1/slope];
                         variance = jacobian'*CovB*jacobian;
-                        crossingDeltaCov = sqrt(variance)*tinv(1-uncertaintiesConfidenceLevel, iter - 3);
+                        crossingDeltaCov = sqrt(variance)*replab.numerical.tinv(1-uncertaintiesConfidenceLevel, iter - 3);
 
                         % We monitor the errors
                         modelRelativeErrors(iter,:) = abs([delta(1:2)'./beta(1:2) crossingDeltaCov/crossing]);

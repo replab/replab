@@ -22,6 +22,7 @@ classdef UnitaryGroup < replab.CompactGroup
             if nargin < 2
                 identity = eye(n);
             end
+            self.identity = identity;
         end
 
     end
