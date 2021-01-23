@@ -83,33 +83,50 @@ classdef Equivariant_forMonomialRep < replab.Equivariant
 
     methods (Access = protected) % Implementations
 
-        function X = project_exact(self, X)
-            error('Not implemented'); % TODO
-        end
+        % Equivariant
 
-        function [X1, eX1] = project_double_sparse(self, X)
+        function X1 = project_exact(self, X)
             P = self.phasedMatrixPartition;
-            X1 = zeros(self.nR, self.nC);
-            E = zeros(self.nR, self.nC);
-            po = P.phaseOrder;
-            % compute roots of unity
-            phases = [1 exp(2i*(1:po-1)*pi/po)];
-            % compute phases
-            phases = phases - phases .* (1 - phases.^(-po))/po;
-            % force -1
-            if mod(po, 2) == 0
-                phases(po/2+1) = -1;
-            end
             nR = self.nR;
             nC = self.nC;
+            X1 = replab.cyclotomic.zeros(nR, nC);
+            po = P.phaseOrder;
+            phases = replab.cyclotomic.zeros(1, po);
+            for i = 1:po
+                phases(i) = replab.cyclotomic.E(po)^(i-1);
+            end
             for i = 1:P.nBlocks
                 blk = P.blocks{i};
                 n = size(blk, 2);
                 ind = blk(1,:) + nR*(blk(2,:)-1);
                 ph = P.phase(ind);
-                conjph = ph;
-                conjph(ph>0) = po-ph(ph>0);
-                coeffs = X(ind).*phases(conjph+1); % multiply by conjugate phases
+                coeffs = X(ind).*conj(phases(ph+1)); % multiply by conjugate phases
+                s = sum(coeffs)/n;
+                X1(ind) = s * phases(ph+1); % set the coefficients
+            end
+        end
+
+        function [X1, eX1] = project_double_sparse(self, X)
+            P = self.phasedMatrixPartition;
+            nR = self.nR;
+            nC = self.nC;
+            X1 = zeros(nR, nC);
+            E = zeros(nR, nC);
+            po = P.phaseOrder;
+            % compute roots of unity
+            phases = [1 exp(2i*(1:po-1)*pi/po)];
+            % one round of Newton iteration for additional precision
+            phases = phases - phases .* (1 - phases.^(-po))/po;
+            % force -1 when it's there
+            if mod(po, 2) == 0
+                phases(po/2+1) = -1;
+            end
+            for i = 1:P.nBlocks
+                blk = P.blocks{i};
+                n = size(blk, 2);
+                ind = blk(1,:) + nR*(blk(2,:)-1);
+                ph = P.phase(ind);
+                coeffs = X(ind).*conj(phases(ph+1)); % multiply by conjugate phases
                 [s, e] = replab.numerical.sum2(coeffs);
                 e = abs(e);
                 if any(ph ~= 0 & ph ~= po/2 & ph ~= po/4 & ph ~= 3*po/4)
@@ -117,8 +134,8 @@ classdef Equivariant_forMonomialRep < replab.Equivariant
                     % n+1 because there is an error before computing the mean, and error after multiplication of the mean
                     e = e + 1e-15*abs(s)*(n+1);
                 end
-                s = s/n; % we neglect the error there
-                e = e/n + abs(s)*eps(1/n);
+                s = s/n;
+                e = e/n + abs(s)*eps(1/n); % error on 1/n
                 E(ind) = e;
                 X1(ind) = s * phases(ph+1); % set the coefficients
             end
