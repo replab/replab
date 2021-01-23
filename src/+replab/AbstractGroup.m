@@ -293,11 +293,15 @@ classdef AbstractGroup < replab.NiceFiniteGroup
     methods % Implementations
 
         function res = eq(self, rhs)
+            if ~isa(rhs, 'replab.AbstractGroup')
+                res = false;
+                return
+            end
             res = (self.type.groupId == rhs.type.groupId) && self.niceGroup == rhs.niceGroup;
         end
 
         function res = ne(self, rhs)
-            res = self.groupId ~= rhs.groupId;
+            res = ~(self == rhs);
         end
 
         % Str
