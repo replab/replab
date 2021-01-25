@@ -25,7 +25,7 @@ function test_chsh
     pmp3 = replab.equi.PhasedMatrixPartition.intersection(pmp1, pmp2);
     phase = [0 0 0 0 0; 0 0 0 0 0; 0 0 0 0 1; 0 0 0 0 0; 0 0 1 0 0];
     block = [1 0 0 0 0; 0 1 0 2 2; 0 0 1 2 2; 0 2 2 1 0; 0 2 2 0 1];
-    pmp4 = replab.equi.PhasedMatrixPartition.fromPhaseAndBlockIndexMatrices(2, phase, block);
+    pmp4 = replab.equi.PhasedMatrixPartition.fromPhaseAndSubsetIndexMatrices(2, phase, block);
     assert(pmp3 == pmp4);
 end
 function test_intersection

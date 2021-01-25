@@ -29,7 +29,7 @@ classdef PhasedMatrixPartition < replab.Obj
         phase % (integer(nR,nC)): Phase
         subsetIndex % (integer(nR,nC)): Subset index for each matrix cell
         zeroSubset % (integer(2,\*)): Coordinate of zero coefficients
-        subsets % (cell(1,nSubsets) of integer(2,\*)): Coordinates of each block
+        subsets % (cell(1,nSubsets) of integer(2,\*)): Coordinates of each subset
     end
 
     methods
@@ -69,7 +69,7 @@ classdef PhasedMatrixPartition < replab.Obj
             ind = self.subsetIndex(:);
             po = self.phaseOrder;
             changed = false;
-            % ordering of subsets: the sequence given by the first occurence of each block index must be increasing
+            % ordering of subsets: the sequence given by the first occurence of each subset index must be increasing
             [sorted, sortedToUnsorted] = unique(self.subsetIndex(:)');
             sortedToUnsorted = self.subsetIndex(sortedToUnsorted);
             if sorted(1) == 0 % we do not care about 0
@@ -106,7 +106,7 @@ classdef PhasedMatrixPartition < replab.Obj
             for i = 1:n
                 % check that the indices of subsets are sorted by their linear index
                 ss = subsets{i};
-                m = size(blk, 2);
+                m = size(ss, 2);
                 [ss1, I] = sortrows(ss', [2 1]);
                 if any(I(:)' ~= 1:m)
                     changed = true;
@@ -115,7 +115,7 @@ classdef PhasedMatrixPartition < replab.Obj
                 end
                 r1 = ss(1,1);
                 c1 = ss(2,1);
-                % check that the phase of the first block element is zero
+                % check that the phase of the first subset element is zero
                 p1 = phase(r1, c1);
                 if p1 ~= 0
                     changed = true;
@@ -182,8 +182,8 @@ classdef PhasedMatrixPartition < replab.Obj
             if P1.phaseOrder ~= P2.phaseOrder
                 % if the phase order is not the same, then harmonize and restart
                 po = lcm(P1.phaseOrder, P2.phaseOrder);
-                Q1 = replab.equi.PhasedMatrixPartition(nR, nC, po, P1.phase*(po/P1.phaseOrder), P1.block, P1.zeroBlock, P1.subsets);
-                Q2 = replab.equi.PhasedMatrixPartition(nR, nC, po, P2.phase*(po/P2.phaseOrder), P2.block, P2.zeroBlock, P2.subsets);
+                Q1 = replab.equi.PhasedMatrixPartition(nR, nC, po, P1.phase*(po/P1.phaseOrder), P1.subsetIndex, P1.zeroSubset, P1.subsets);
+                Q2 = replab.equi.PhasedMatrixPartition(nR, nC, po, P2.phase*(po/P2.phaseOrder), P2.subsetIndex, P2.zeroSubset, P2.subsets);
                 res = replab.equi.PhasedMatrixPartition.intersection(Q1, Q2);
                 return
             end
@@ -199,7 +199,7 @@ classdef PhasedMatrixPartition < replab.Obj
 
             % We compute the linear indices of the zero subset in the second PMP
             ind2 = P2.zeroSubset(1,:) + nR*(P2.zeroSubset(2,:)-1);
-            % We compute the block indices in the first PMP corresponding to those coordinates
+            % We compute the subset indices in the first PMP corresponding to those coordinates
             ssInds = unique(subsetIndex(ind2));
             for ssInd = ssInds(ssInds>0)
                 % then all these subsets need to be set to zero
@@ -212,21 +212,21 @@ classdef PhasedMatrixPartition < replab.Obj
 
             % Then we merge the nonzero subsets of P2
             for ssInd2 = 1:length(P2.subsets)
-                % get the corresponding block
+                % get the corresponding subset
                 ss2 = P2.subsets{ssInd2};
                 % compute the linear indices
                 ind2 = ss2(1,:) + nR*(ss2(2,:)-1);
-                % compute the block indices in the first PMP
+                % compute the subset indices in the first PMP
                 ssInds = unique(subsetIndex(ind2)); % this is sorted
                 isZero = false; % not yet proven to be zero
                 if ssInds(1) == 0
-                    % if the indices overlap the zero block, everything is set to zero
+                    % if the indices overlap the zero subset, everything is set to zero
                     isZero = true;
                     ssInds = ssInds(2:end);
                 else
-                    % we iterate over all subsets in the first PMP that overlap the block of the second PMP
+                    % we iterate over all subsets in the first PMP that overlap the subset of the second PMP
                     % and harmonize the phases, checking then that we do not have an inconsistency
-                    % if we have an inconsistency, the block is zero
+                    % if we have an inconsistency, the subset is zero
                     for ssInd = ssInds
                         ss = subsets{ssInd};
                         ind = ss(1,:) + nR*(ss(2,:)-1);
@@ -241,7 +241,7 @@ classdef PhasedMatrixPartition < replab.Obj
                 if isZero
                     % it is all zero
                     for ssInd = ssInds
-                        blk = subsets{ssInd};
+                        ss = subsets{ssInd};
                         subsets{ssInd} = zeros(2, 0);
                         zeroSubset = horzcat(zeroSubset, ss);
                         ind = ss(1,:) + nR*(ss(2,:)-1);
@@ -380,7 +380,7 @@ classdef PhasedMatrixPartition < replab.Obj
             subsetIndex = -ones(nR, nC);
             subsets = cell(1, 0); % no subsets yet
             zeroSubset = zeros(2, 0);
-            next = 1; % next block index
+            next = 1; % next subset index
             todo = zeros(2, 16); % stack of row/column coordinates
             Ntodo = 0; % the stack is included in column indices (1:Ntodo)
             for i = 1:nR
@@ -422,9 +422,9 @@ classdef PhasedMatrixPartition < replab.Obj
                             zeroSubset = horzcat(zeroSubset, current);
                             subsetIndex(current(1,:)+(current(2,:)-1)*nR) = 0;
                             phase(current(1,:)+(current(2,:)-1)*nR) = 0;
-                            % next still points to the next free block index
+                            % next still points to the next free subset index
                         else
-                            % add the nonzero block
+                            % add the nonzero subset
                             subsets{1,end+1} = current;
                             next = next + 1; % next free index
                         end
