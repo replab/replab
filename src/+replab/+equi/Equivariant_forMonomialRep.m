@@ -106,6 +106,27 @@ classdef Equivariant_forMonomialRep < replab.Equivariant
             end
         end
 
+        function X1 = project_intval(self, X)
+            P = self.phasedMatrixPartition;
+            nR = self.nR;
+            nC = self.nC;
+            X1 = intval(zeros(nR, nC));
+            po = P.phaseOrder;
+            phases = intval(zeros(1, po));
+            for i = 1:po
+                phases(i) = intval(replab.cyclotomic.E(po)^(i-1));
+            end
+            for i = 1:P.nBlocks
+                blk = P.blocks{i};
+                n = size(blk, 2);
+                ind = blk(1,:) + nR*(blk(2,:)-1);
+                ph = P.phase(ind);
+                coeffs = intval(X(ind)).*conj(phases(ph+1)); % multiply by conjugate phases
+                s = sum(coeffs)/n;
+                X1(ind) = s * phases(ph+1); % set the coefficients
+            end
+        end
+
         function [X1, eX1] = project_double_sparse(self, X)
             P = self.phasedMatrixPartition;
             nR = self.nR;

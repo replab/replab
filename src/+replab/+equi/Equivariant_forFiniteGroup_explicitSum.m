@@ -36,6 +36,17 @@ classdef Equivariant_forFiniteGroup_explicitSum < replab.Equivariant
             X1 = X1/length(E);
         end
 
+        function X1 = project_intval(self, X)
+            E = self.groupElements;
+            g = E{1};
+            X1 = self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X, 'intval'), 'intval');
+            for i = 2:length(E)
+                g = E{i};
+                X1 = X1 + self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X, 'intval'), 'intval');
+            end
+            X1 = X1/length(E);
+        end
+
         function [X1, err] = project_double_sparse(self, X)
             if nargout > 1
                 sX = replab.numerical.norm2UpperBound(X); % estimate of largest singular value on X
