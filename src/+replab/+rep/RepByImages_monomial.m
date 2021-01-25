@@ -7,6 +7,7 @@ classdef RepByImages_monomial < replab.RepByImages
 
     properties (SetAccess = protected)
         morphism % (`+replab.Morphism`): Morphism to a generalized permutation group that provides the images
+        conjugated % (logical): Whether the images are conjugated
     end
 
     methods

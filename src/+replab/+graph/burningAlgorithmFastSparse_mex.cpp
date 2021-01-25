@@ -21,8 +21,20 @@
   structure should be changed from vector < vector < long int > > to
   vector < set < long int > >.
 
+<<<<<<< HEAD:src/+replab/+graph/burningAlgorithmFast2_mex.cpp
+  This implementation is optimized for dense inputs: inputs like
+  [1 2; 2 n] will trigger the creation of n vertices.
+
+  Moreover, this implementation directly encodes the result into a
+  matlab array. This is possible only for the list of orbits. The
+  corresponding cell array still needs to be copied at the end (matlab
+  does not support dynamic arrays).
+
+  Note: all vertices appearing in no edge are given the orbit number 0
+=======
   This implementation supports sparse inputs, such as [1 2; 1 n] with n
   very large; with an overhead in memory and time much smaller than n.
+>>>>>>> develop:src/+replab/+graph/burningAlgorithmFastSparse_mex.cpp
 */
 
 using namespace std;
@@ -105,6 +117,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   }
 #endif
 
+  // This will contain the result of the algorithm
+  plhs[0] = mxCreateNumericMatrix(1, nbVertices, mxDOUBLE_CLASS, mxREAL); // We directly save this info in matlab format
+  double* reached(mxGetPr(plhs[0]));
+
   // We initialize the graph data structure
   vector < vector < Index > > graphData(nbVertices);
   for (mwIndex i = 0; i < m; ++i) {
@@ -118,6 +134,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     // We save the link in both directions
     graphData[newA].push_back(newB);
     graphData[newB].push_back(newA);
+
+    // We only want to explore edges which are linked
+    reached[newA] = -1;
+    reached[newB] = -1;
   }
 
 #ifdef DEBUG
@@ -129,7 +149,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   //-//-// Algorithm //-//-//
 
   // Now we perform the actual burning algorithm
+<<<<<<< HEAD:src/+replab/+graph/burningAlgorithmFast2_mex.cpp
+=======
   vector < Index > reached(nbVertices, 0);
+>>>>>>> develop:src/+replab/+graph/burningAlgorithmFastSparse_mex.cpp
   vector < Index > neighbors [2];
   short int ptr(0);
   Index lastStart(0);    // We monitor the last starting point and begin the algorithm by reaching the first site 0.
@@ -151,11 +174,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     do {
       neighbors[1-ptr].clear();
       for (Index i(0); i < neighbors[ptr].size(); ++i) {
-        if (reached[neighbors[ptr][i]] == 0) {
+        if (reached[neighbors[ptr][i]] == -1) {
           reached[neighbors[ptr][i]] = nbSets;
           allSets[nbSets-1].push_back(vertices[neighbors[ptr][i]]);
           for (Index j(0); j < graphData[neighbors[ptr][i]].size(); ++j)
-            if (reached[graphData[neighbors[ptr][i]][j]] == 0)
+            if (reached[graphData[neighbors[ptr][i]][j]] == -1)
               neighbors[1-ptr].push_back(graphData[neighbors[ptr][i]][j]);
         }
       }
@@ -174,7 +197,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
     // We look for the next un-attained vertex
     for (Index i(lastStart+1); i < nbVertices; ++i) {
-      if (reached[i] == 0) {
+      if (reached[i] == -1) {
         lastStart = i;
         neighbors[ptr].push_back(i);
         break;
