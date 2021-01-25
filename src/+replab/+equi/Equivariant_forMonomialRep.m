@@ -95,10 +95,10 @@ classdef Equivariant_forMonomialRep < replab.Equivariant
             for i = 1:po
                 phases(i) = replab.cyclotomic.E(po)^(i-1);
             end
-            for i = 1:P.nBlocks
-                blk = P.blocks{i};
-                n = size(blk, 2);
-                ind = blk(1,:) + nR*(blk(2,:)-1);
+            for i = 1:P.nSubsets
+                ss = P.subsets{i};
+                n = size(ss, 2);
+                ind = ss(1,:) + nR*(ss(2,:)-1);
                 ph = P.phase(ind);
                 coeffs = X(ind).*conj(phases(ph+1)); % multiply by conjugate phases
                 s = sum(coeffs)/n;
@@ -121,10 +121,10 @@ classdef Equivariant_forMonomialRep < replab.Equivariant
             if mod(po, 2) == 0
                 phases(po/2+1) = -1;
             end
-            for i = 1:P.nBlocks
-                blk = P.blocks{i};
-                n = size(blk, 2);
-                ind = blk(1,:) + nR*(blk(2,:)-1);
+            for i = 1:P.nSubsets
+                ss = P.subsets{i};
+                n = size(ss, 2);
+                ind = ss(1,:) + nR*(ss(2,:)-1);
                 ph = P.phase(ind);
                 coeffs = X(ind).*conj(phases(ph+1)); % multiply by conjugate phases
                 [s, e] = replab.numerical.sum2(coeffs);
