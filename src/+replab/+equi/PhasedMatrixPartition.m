@@ -55,6 +55,13 @@ classdef PhasedMatrixPartition < replab.Obj
         end
 
         function res = normalForm(self)
+        % Computes a standardized form of this phased matrix partition
+        %
+        % In particular, it standardizes:
+        %
+        % * The numbering of subsets, by asking that they appear for the first time in order in `.subsetIndex`
+        % * The ordering of cells in `.subsets`, by asking that their linear index to be increasing
+        % * The phase by asking that the first cell in a subset to have phase ``1``.
             res = self.cached('normalForm', @() self.computeNormalForm);
         end
 
@@ -70,16 +77,17 @@ classdef PhasedMatrixPartition < replab.Obj
             po = self.phaseOrder;
             changed = false;
             % ordering of subsets: the sequence given by the first occurence of each subset index must be increasing
-            [sorted, sortedToUnsorted] = unique(self.subsetIndex(:)');
-            sortedToUnsorted = self.subsetIndex(sortedToUnsorted);
+            [sorted, I] = unique(self.subsetIndex(:)');
             if sorted(1) == 0 % we do not care about 0
                 sorted = sorted(2:end);
-                sortedToUnsorted = sortedToUnsorted(2:end);
+                I = I(2:end);
             end
+            [~, sortedToUnsorted] = sort(I);
             assert(all(sorted == 1:n));
             phase = self.phase;
             subsetIndex = self.subsetIndex;
             subsets = self.subsets;
+            zeroSubset = self.zeroSubset;
             if any(sortedToUnsorted(:)' ~= 1:n)
                 changed = true;
                 unsortedToSorted = zeros(1, n);
@@ -102,13 +110,18 @@ classdef PhasedMatrixPartition < replab.Obj
                     po = po/d;
                 end
             end
+            % check zero subset
+            [ss1, I] = sortrows(zeroSubset', [2 1]);
+            if any(I(:)' ~= 1:length(I))
+                changed = true;
+                zeroSubset = ss1';
+            end
             % check subset by subset
             for i = 1:n
                 % check that the indices of subsets are sorted by their linear index
                 ss = subsets{i};
-                m = size(ss, 2);
                 [ss1, I] = sortrows(ss', [2 1]);
-                if any(I(:)' ~= 1:m)
+                if any(I(:)' ~= 1:length(I))
                     changed = true;
                     ss = ss1';
                     subsets{i} = ss;
