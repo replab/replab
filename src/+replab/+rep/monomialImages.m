@@ -11,7 +11,10 @@ function [G, images] = monomialImages(rep, preimages)
 %   images: cell(1,\*) of elements of ``G``
 %     Requested images
     if isa(rep, 'replab.rep.DerivedRep')
-        [G, images] = rep.parent;
+        [G, images] = replab.rep.monomialImages(rep.parent, preimages);
+        if isempty(G)
+            return
+        end
         if xor(rep.conjugate, rep.transpose)
             m = G.m;
             % apply conjugate

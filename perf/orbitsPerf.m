@@ -5,13 +5,13 @@
 % The test case consists in the symmetrization of a N x N matrix under the
 % joint action of S(N) on the lines and columns.
 
-replab_init;
 
 % The functions to be compared:
-functions = {@(pairs) replab.graph.burningAlgorithm(pairs), ...
-             @(pairs) replab.graph.burningAlgorithmFast(pairs), ...
-             @(pairs) replab.graph.burningAlgorithmFast2(max(pairs, [], 'all'), pairs), ...
-             @(pairs) replab.graph.burningAlgorithmFastLessMemory(max(pairs, [], 'all'), pairs)};
+functions = {@(nbVertices, pairs) replab.graph.burningAlgorithm(nbVertices, pairs), ...
+             @(nbVertices, pairs) replab.graph.burningAlgorithmFast(nbVertices, pairs), ...
+             @(nbVertices, pairs) replab.graph.burningAlgorithmFastSparse(pairs), ...
+             @(nbVertices, pairs) replab.graph.burningAlgorithmFastLessMemory(nbVertices, pairs)};
+
 
 nbFunctions = length(functions);
 functionsName = cell(1, nbFunctions);
@@ -52,7 +52,7 @@ for N = Ns
         timings(:,1:co)
         if (co == 1) || (max(timings(i, 1:co-1)) < 7)
             tic;
-            subsets = functions{i}(pairs); 
+            out = functions{i}(N^2, pairs); 
             timings(i, co) = toc;
         end    
     end

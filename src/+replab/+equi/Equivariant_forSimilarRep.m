@@ -45,7 +45,7 @@ classdef Equivariant_forSimilarRep < replab.Equivariant
 
         function X1 = project_exact(self, X)
             parentX = self.repR.Ainv('exact') * X * self.repC.A('exact');
-            X1 = self.repR.A('exact') * self.parent.project(parentX) * self.repC.Ainv('exact');
+            X1 = self.repR.A('exact') * self.parent.project(parentX, 'exact') * self.repC.Ainv('exact');
         end
 
         function [X1, err] = project_double_sparse(self, X)
