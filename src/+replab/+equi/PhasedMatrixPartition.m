@@ -304,6 +304,10 @@ classdef PhasedMatrixPartition < replab.Obj
         % argument ``I`` gives, for each index in ``indexMatrix``, either the index in the returned `.PhasedMatrix`
         % or ``0`` if the index does not appear in ``indexMatrix``.
         %
+        % Example:
+        %   >>> im = [0 1 2; -1 0 3; -2 -3 0]; % index matrix for a generic skew symmetric matrix
+        %   >>> genSkewSymmetric = replab.equi.PhasedMatrixPartition.fromIndexMatrix(im);
+        %
         % Args:
         %   indexMatrix (integer(\*,\*)): Matrix of coefficient indices, possibly signed
         %
@@ -330,7 +334,7 @@ classdef PhasedMatrixPartition < replab.Obj
             phase = zeros(nR, nC);
             phase(indexMatrix < 0) = 1;
             phaseOrder = 1 + any(phase(:) == 1);
-            res = replab.equi.PhasedMatrixPartition(phaseOrder, phase, subsetIndex);
+            res = replab.equi.PhasedMatrixPartition.fromPhaseAndSubsetIndexMatrices(phaseOrder, phase, subsetIndex);
         end
 
         function res = fromGeneralizedPermutations(phaseOrder, imagesR, imagesC)
