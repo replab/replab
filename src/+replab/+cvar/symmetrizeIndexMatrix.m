@@ -69,14 +69,9 @@ function indexMatrix = symmetrizeIndexMatrix(indexMatrix, generators, matrixType
     end
     pairs = unique(sort(pairs, 2), 'rows');
 
-    % We identify all connected subsets
-    subsets = replab.graph.connectedComponents(pairs);
-
-    % We attribute the number to each element of each class
-    images = zeros(max(unique(pairs)), 1);
-    for i = 1:length(subsets)
-        images(subsets{i}) = i;
-    end
+    % We identify all connected subsets and attribute a distinct number to
+    % their respective elements
+    images = replab.graph.connectedComponents(max(pairs, [], 'all'), pairs).';
 
     % First we identify the index for each element
     % We substitute just one index per class of indices

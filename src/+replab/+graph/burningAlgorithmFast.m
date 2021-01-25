@@ -1,4 +1,4 @@
-function subsets = burningAlgorithmFast(edges)
+function [componentIndex, subsets] = burningAlgorithmFast(nbVertices, edges)
 % Fast implementation of the burning algorithm
 %
 % Performs the burning algorithm on the network described by the
@@ -6,15 +6,19 @@ function subsets = burningAlgorithmFast(edges)
 % returns `+replab.DispatchNext` if it didn't manage to do so.
 %
 % Args:
+%     nbVertices (integer): Number of vertices
 %     edges (integer(n,2)): Array of vertices linked by an edge
 %
 % Returns
 % -------
-% subsets:
-%   Cell array with connex components, or `+replab.DispatchNext` if unsuccessful
+%     componentIndex: integer (1,\n)
+%         the index of the component to which each vertex belongs, or
+%         `+replab.DispatchNext` if unsuccessful
+%     subsets: cell array
+%         connex components
 %
 % Example:
-%     >>> % replab.graph.burningAlgorithmFast([1 2; 2 6; 3 4]); % a graph with 5 nodes labelled 1, 2, 3, 4, 6
+%     >>> % replab.graph.burningAlgorithmFast(6, [1 2; 2 6; 3 4]); % a graph with 6 nodes labelled 1, 2, 3, 4, 5, 6
 %
 % See also:
 %     replab.UndirectedGraph.connectedComponents
@@ -24,8 +28,12 @@ function subsets = burningAlgorithmFast(edges)
     
     persistent compiledInterface;
     if isempty(compiledInterface)
-        compiledInterface = replab.dialects.Compiled('cpp', 1);
+        compiledInterface = replab.dialects.Compiled('cpp', 2);
     end
 
-    subsets = compiledInterface.call(edges);
+    if nargout == 1
+        componentIndex = compiledInterface.call(1, nbVertices, edges);
+    else
+        [componentIndex, subsets] = compiledInterface.call(2, nbVertices, edges);
+    end
 end

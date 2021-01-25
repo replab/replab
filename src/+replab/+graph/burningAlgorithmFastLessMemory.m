@@ -1,15 +1,22 @@
-function orbits = burningAlgorithmFastLessMemory(nbVertices, edges)
+function componentIndex = burningAlgorithmFastLessMemory(nbVertices, edges)
 % Fast implementation of the burning algorithm using a bit less memory
 %
 % Performs the burning algorithm on the network described by the
 % edges given in pairs. This tries to call the fast C++ implementation and
 % returns `+replab.DispatchNext` if it didn't manage to do so.
 %
-% Note that this function only returns the list of orbits.
+% This implementation is optimized for using less memory, it only returns
+% the list of orbits.
 %
 % Args:
 %     nbVertices (integer): Number of vertices
 %     edges (integer(n,2)): Array of vertices linked by an edge
+%
+% Returns
+% -------
+%     componentIndex: integer (1,\n)
+%         the index of the component to which each vertex belongs, or
+%         `+replab.DispatchNext` if unsuccessful
 %
 % Returns
 % -------
@@ -30,5 +37,5 @@ function orbits = burningAlgorithmFastLessMemory(nbVertices, edges)
         compiledInterface = replab.dialects.Compiled('cpp', 1);
     end
 
-    orbits = compiledInterface.call(nbVertices, edges);
+    componentIndex = compiledInterface.call(1, nbVertices, edges);
 end

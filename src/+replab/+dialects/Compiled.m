@@ -2,13 +2,19 @@ classdef Compiled < handle
 % Describes compiled code
 %
 % This class provides an interface to code written in another language than 
-% Matlab/Octave that needs to be compiled.
+% Matlab/Octave that needs to be compiled. It it meant to be used with a 
+% pair of files which should be in the same folder as each other and named
+% [aFunction, '.m'] and [aFunction, '_mex., extension] respectively.
 %
-% To make the function coded in 'aFunction_mex.cpp' available through this 
-% interface, a matlab funciton called 'aFunction.m' should be available in 
-% the same directory as 'aFunction_mex.cpp'. This file should contain a 
-% function, which instantiates the class `+replab.+dialect.Compiled` with 
-% the extension '.cpp'.
+% For instance, to make the function coded in 'aFunction_mex.cpp' available
+% through this interface, a matlab function called 'aFunction.m' should be
+% available in the same directory as 'aFunction_mex.cpp'. This file should
+% contain a function, which instantiates the class `+replab.+dialect.Compiled`
+% with the 'extension' argument should be set to '.cpp'. Other native codes
+% supported by the mex compiler should work seemingly as well.
+%
+% See also
+%   `+replab.+graph.burningAlgorithmFast`
 
     properties (SetAccess = protected)
         path % (charstring) directory of the source code
@@ -66,9 +72,13 @@ classdef Compiled < handle
         % returned value is `+replab.DisplatchNext`.
         %
         % Args:
-        %   varargin : all the arguments that need to be passed to the
-        %     compiled function
-        
+        %   varargin : the number of expected outputs, followed by all the
+        %     arguments that need to be passed to the compiled function
+            
+            assert(isscalar(varargin{1}), 'The first argument should be the number of expected output variables');
+            varargout = cell(1, varargin{1});
+            varargin = varargin(2:end);
+            
             % We try to use the compiled code
             if (~self.triedBefore) || self.isWorking
                 firstPartWorks = true;
@@ -127,7 +137,7 @@ classdef Compiled < handle
 
             if ~self.isWorking
                 % Inform that the method did not succeed
-                varargout = {replab.DispatchNext};
+                varargout{1} = replab.DispatchNext;
             end
         end
         
