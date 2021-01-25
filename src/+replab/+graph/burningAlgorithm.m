@@ -1,17 +1,22 @@
-function subsets = burningAlgorithm(edges)
+function [componentIndex, subsets] = burningAlgorithm(nbVertices, edges)
 % burning algorithm on a graph
 %
 % Performs the burning algorithm on the network described by the
 % edges given in pairs. This is the matlab fallback implementation.
 %
 % Args:
+%     nbVertices (integer) : number of vertices in the graph
 %     edges: nx2 array of vertices linked by an edge
 %
 % Returns:
-%     subsets: cell array with connex components
+% --------
+%     componentIndex: integer (1,\n)
+%         the index of the component to which each vertex belongs
+%     subsets: cell array
+%         connex components
 %
 % Example:
-%     >>> replab.graph.burningAlgorithm([1 2; 2 6; 3 4]); % a graph with 5 nodes labelled 1, 2, 3, 4, 6
+%     >>> replab.graph.burningAlgorithm(6, [1 2; 2 6; 3 4]); % a graph with 6 nodes labelled 1, 2, 3, 4, 5, 6
 %
 % See also:
 %     replab.UndirectedGraph.connectedComponents
@@ -19,8 +24,8 @@ function subsets = burningAlgorithm(edges)
 %     replab.graph.burningAlgorithmFast
 
     uniquesLeft = unique(edges);
-    nbVertices = length(uniquesLeft);
     subsets = {};
+    componentIndex = zeros(1, nbVertices);
     co1 = 0;
     while ~isempty(uniquesLeft)
         co1 = co1 + 1;
@@ -41,6 +46,6 @@ function subsets = burningAlgorithm(edges)
         end
         subsets{co1} = sort(set);
         uniquesLeft = setdiff(uniquesLeft, set);
+        componentIndex(set) = co1;
     end
-    %subsets{:} % To see the result
 end

@@ -258,7 +258,7 @@ classdef Graph < replab.Obj
                 blockIndex = 1:self.nVertices;
                 blocks = num2cell(1:self.nVertices, 1);
             else
-                [blocks, blockIndex] = replab.graph.connectedComponents(self.edges);
+                [blockIndex, blocks] = replab.graph.connectedComponents(self.nVertices, self.edges);
 
                 % If some elements are isolated, we add them
                 connectedVertices = [blocks{:}];

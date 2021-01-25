@@ -25,9 +25,8 @@
   [1 2; 2 n] will trigger the creation of n vertices.
 
   Moreover, this implementation directly encodes the result into a
-  matlab array. This is possible only for the list of orbits. The
-  corresponding cell array still needs to be copied at the end (matlab
-  does not support dynamic arrays).
+  matlab array. This is possible only for the list of orbits. To reduce
+  memory usage, this is the only form under which the output is computed.
 
   Note: all vertices appearing in no edge are given the orbit number 0
 */
@@ -58,21 +57,21 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   // We check that the parameters are correct
   if (nrhs != 2)
-    mexErrMsgTxt("burningAlgorithmFast_mex: Unexpected number of arguments.");
-  if ((nlhs != 1) && (nlhs != 2))
-    mexErrMsgTxt("burningAlgorithmFast_mex: Unexpected number of outputs.");
+    mexErrMsgTxt("burningAlgorithmFastLessMemory_mex: Unexpected number of arguments.");
+  if (nlhs != 1)
+    mexErrMsgTxt("burningAlgorithmFastLessMemory_mex: Unexpected number of outputs.");
 
   // First, we get the number of vertices
   // It should be a scalar
   if ((mxGetM(prhs[0]) != 1) || (mxGetN(prhs[0]) != 1))
-    mexErrMsgTxt("burningAlgorithmFast_mex: Number of vertices should be a scalar.");
+    mexErrMsgTxt("burningAlgorithmFastLessMemory_mex: Number of vertices should be a scalar.");
   double* pr0(mxGetPr(prhs[0]));
   double* pi0(mxGetPi(prhs[0]));
   bool isComplex0 = (pi0==NULL ? 0 : 1);
 
   // The input should be real
   if (isComplex0 != 0)
-    mexErrMsgTxt("burningAlgorithmFast_mex: The second argument should not be complex.");
+    mexErrMsgTxt("burningAlgorithmFastLessMemory_mex: The second argument should not be complex.");
 
   // The number of vertices
   Index nbVertices(*pr0);
@@ -81,7 +80,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   // Second, the list of edges
   // The matlab object is supposed to be an array
   if (!mxIsDouble(prhs[1]))
-    mexErrMsgTxt("burningAlgorithmFast_mex: The argument should be an array of double.");
+    mexErrMsgTxt("burningAlgorithmFastLessMemory_mex: The argument should be an array of double.");
 
   // Get the size and pointers to input data
   mwSize m(mxGetM(prhs[1]));
@@ -92,11 +91,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   // The input should be real
   if (isComplex != 0)
-    mexErrMsgTxt("burningAlgorithmFast_mex: The argument should not be complex.");
+    mexErrMsgTxt("burningAlgorithmFastLessMemory_mex: The argument should not be complex.");
 
   // Second dimension should be 2
   if (n != 2)
-    mexErrMsgTxt("burningAlgorithmFast_mex: The number of input should be of dimension m x 2.");
+    mexErrMsgTxt("burningAlgorithmFastLessMemory_mex: The number of input should be of dimension m x 2.");
 
 
 
@@ -146,24 +145,14 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   neighbors[ptr].push_back(lastStart);
   Index nbSets(0);       // The same set number is assigned to each vertices belonging to a connex group
 
-  vector < vector < Index > > allSets(0); // We keep track of which vertex ends up in which set, with a numbering of vertices starting at 1
-
-#ifdef DEBUG
-  // For debugging purpose
-  Index nbTouchedVertices(0);
-  Index lastPercentage(0);
-#endif
-
   // Let's "burn" all the sites that touch a reached site recursively until there none is left.
   do {
     ++nbSets;
-    allSets.push_back(vector < Index >(0));
     do {
       neighbors[1-ptr].clear();
       for (Index i(0); i < neighbors[ptr].size(); ++i) {
         if (reached[neighbors[ptr][i]] == -1) {
           reached[neighbors[ptr][i]] = nbSets;
-          allSets[nbSets-1].push_back(1+neighbors[ptr][i]);
           for (Index j(0); j < graphData[neighbors[ptr][i]].size(); ++j)
             if (reached[graphData[neighbors[ptr][i]][j]] == -1)
               neighbors[1-ptr].push_back(graphData[neighbors[ptr][i]][j]);
@@ -171,15 +160,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
       }
       ptr = 1-ptr;
     } while (neighbors[ptr].size() > 0);
-
-#ifdef DEBUG
-    // Update on advancement, for debugging purpose
-    nbTouchedVertices += allSets[nbSets-1].size();
-    if (nbTouchedVertices*100/nbVertices > lastPercentage) {
-      lastPercentage = nbTouchedVertices*100/nbVertices;
-      cout << lastPercentage << "% : " << nbTouchedVertices << "/" << nbVertices << endl << flush;
-    }
-#endif
 
     // We look for the next un-attained vertex
     for (Index i(lastStart+1); i < nbVertices; ++i) {
@@ -196,19 +176,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   std::chrono::duration<double> delta12 = t2 - t1;
   cout << "Orbits identified (" << delta12.count() << " s)" << endl << flush;
 #endif
-
-  if (nlhs == 2)
-  {
-    //-//-// Preparing additional output field //-//-//
-    plhs[1] = mxCreateCellMatrix(1, nbSets);
-
-    // Now we iterate on all the elements of the cell array
-    for (Index i = 0; i < nbSets; ++i) {
-      mxArray* oneFamily(mxCreateNumericMatrix(1, allSets[i].size(), mxDOUBLE_CLASS, mxREAL));
-      copy(allSets[i].begin(), allSets[i].end(), mxGetPr(oneFamily)); // copy the data
-      mxSetCell(plhs[1], i, oneFamily); // Assign the data to the cell element
-    }
-  }
 
   return;
 }

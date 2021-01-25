@@ -1,9 +1,12 @@
-function [componentIndex, subsets] = burningAlgorithmFast(nbVertices, edges)
-% Fast implementation of the burning algorithm
+function componentIndex = burningAlgorithmFastLessMemory(nbVertices, edges)
+% Fast implementation of the burning algorithm using a bit less memory
 %
 % Performs the burning algorithm on the network described by the
 % edges given in pairs. This tries to call the fast C++ implementation and
 % returns `+replab.DispatchNext` if it didn't manage to do so.
+%
+% This implementation is optimized for using less memory, it only returns
+% the list of orbits.
 %
 % Args:
 %     nbVertices (integer): Number of vertices
@@ -14,11 +17,14 @@ function [componentIndex, subsets] = burningAlgorithmFast(nbVertices, edges)
 %     componentIndex: integer (1,\n)
 %         the index of the component to which each vertex belongs, or
 %         `+replab.DispatchNext` if unsuccessful
-%     subsets: cell array
-%         connex components
+%
+% Returns
+% -------
+% orbits:
+%   vector with orbit index for each vertex, or `+replab.DispatchNext` if unsuccessful
 %
 % Example:
-%     >>> % replab.graph.burningAlgorithmFast(6, [1 2; 2 6; 3 4]); % a graph with 6 nodes labelled 1, 2, 3, 4, 5, 6
+%     >>> % replab.graph.burningAlgorithmFastLessMemory(6, [1 2; 2 6; 3 4]); % a graph with 6 nodes labelled 1, 2, 3, 4, 5, 6
 %
 % See also:
 %     replab.UndirectedGraph.connectedComponents
@@ -28,12 +34,8 @@ function [componentIndex, subsets] = burningAlgorithmFast(nbVertices, edges)
     
     persistent compiledInterface;
     if isempty(compiledInterface)
-        compiledInterface = replab.dialects.Compiled('cpp', 2);
+        compiledInterface = replab.dialects.Compiled('cpp', 1);
     end
 
-    if nargout == 1
-        componentIndex = compiledInterface.call(1, nbVertices, edges);
-    else
-        [componentIndex, subsets] = compiledInterface.call(2, nbVertices, edges);
-    end
+    componentIndex = compiledInterface.call(1, nbVertices, edges);
 end
