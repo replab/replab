@@ -24,7 +24,7 @@ replab.init.MOxUnit().require;
 
 replab.init.cyclolab().require;
 
-% replab.init.intlab().require;
+replab.init.intlab().require;
 
 % Default values for coset enumeration parameters
 replab.globals.cosetEnumerationMethod('R'); % try 'C' if the method doesn't work
@@ -35,9 +35,9 @@ replab.globals.maxDeductions(100);
 replab.globals.fastChainDomainSize(1000); % only attempt for permutation realizations of domain size <= value
 replab.globals.fastChainOrder(10000); % only attempt for groups of order <= value
 
-% Set YOLO mode on and verified arithmetic off
-replab.globals.yolo(true);
-replab.globals.verifiedArithmetic(false);
+% Set YOLO mode off and verified arithmetic on
+replab.globals.yolo(false);
+replab.globals.verifiedArithmetic(true);
 
 % Read additional JSON atlas entries
 replab.Atlas.readFolder(fullfile(replab.globals.replabPath, 'atlas'));
