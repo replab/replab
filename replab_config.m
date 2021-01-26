@@ -33,8 +33,9 @@ replab.globals.maxDeductions(100);
 replab.globals.fastChainDomainSize(1000); % only attempt for permutation realizations of domain size <= value
 replab.globals.fastChainOrder(10000); % only attempt for groups of order <= value
 
-% Set YOLO mode on
+% Set YOLO mode on and verified arithmetic off
 replab.globals.yolo(true);
+replab.globals.verifiedArithmetic(false);
 
 % Read additional JSON atlas entries
 replab.Atlas.readFolder(fullfile(replab.globals.replabPath, 'atlas'));
