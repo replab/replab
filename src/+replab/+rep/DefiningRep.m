@@ -25,6 +25,10 @@ classdef DefiningRep < replab.Rep
             e = inf;
         end
 
+        function rho = image_intval(self, g)
+            rho = replab.rep.findEnclosingUnitary(g);
+        end
+
         function rho = image_double_sparse(self, g)
             rho = g;
         end
