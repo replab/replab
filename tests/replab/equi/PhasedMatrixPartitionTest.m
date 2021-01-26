@@ -37,3 +37,17 @@ function test_intersection
         assert(pmp12 == pmp21);
     end
 end
+function test_bug_marie
+    subsetIndex = [0 2 1
+                   1 3 0
+                   2 0 4];
+    phase = zeros(3, 3);
+    pmp1 = replab.equi.PhasedMatrixPartition.fromIndexMatrix(subsetIndex);
+    pmp2 = replab.equi.PhasedMatrixPartition.antisymmetric(3);
+    pmp12 = replab.equi.PhasedMatrixPartition.intersection(pmp1, pmp2)
+    subsetIndex_res = [0  1 -1
+                       -1 0  0
+                        1 0  0];
+    pmp12_res = replab.equi.PhasedMatrixPartition.fromIndexMatrix(subsetIndex_res);
+    assert(pmp12 == pmp12_res);
+end

@@ -305,7 +305,6 @@ classdef PhasedMatrixPartition < replab.Obj
                 ind = ss(1,:) + nR*(ss(2,:)-1);
                 subsetIndex(ind) = 0;
             end
-
             % Then we merge the nonzero subsets of P2
             for ssInd2 = 1:length(P2.subsets)
                 % get the corresponding subset
@@ -329,7 +328,7 @@ classdef PhasedMatrixPartition < replab.Obj
                         common = intersect(ind, ind2);
                         delta = mod(m + P2.phase(common(1)) - phase(common(1)), m);
                         % harmonize
-                        phase(common) = mod(phase(common) + P2.phase(common(1)) - phase(common(1)), m);
+                        phase(ind) = mod(phase(ind) + P2.phase(common(1)) - phase(common(1)), m);
                         % if there is a mismatch, all the subsets are zero
                         isZero = isZero | any(phase(common) ~= P2.phase(common));
                     end
