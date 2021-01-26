@@ -86,7 +86,7 @@ classdef Rep < replab.Obj
             error('Abstract');
         end
 
-        function rho = image_intlab(self, g)
+        function rho = image_intval(self, g)
         % Returns the image of a group element
         %
         % Args:
@@ -147,7 +147,7 @@ classdef Rep < replab.Obj
               case 'double/sparse'
                 rho = self.image_double_sparse(g);
               case 'intval'
-                rho = self.image_intlab(g);
+                rho = self.image_intval(g);
               case 'exact'
                 rho = self.image_exact(g);
               otherwise
