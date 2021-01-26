@@ -176,6 +176,89 @@ classdef PhasedMatrixPartition < replab.Obj
 
     methods (Static)
 
+        function res = symmetric(n)
+        % Constructs the partition corresponding to a generic square symmetric matrix
+        %
+        % It returns a ``n x n`` partition with $n(n+1)/2$ subsets.
+        %
+        % Example:
+        %   >>> pmp = replab.equi.PhasedMatrixPartition.symmetric(3);
+        %   >>> pmp.nSubsets == 6
+        %       1
+        %   >>> all(all(pmp.subsetIndex == [1 2 3; 2 4 5; 3 5 6]))
+        %       1
+        %   >>> all(all(pmp.subsetIndex == pmp.normalForm.subsetIndex))
+        %       1
+        %
+        % Args:
+        %   n (integer): Row and column size of the matrix
+        %
+        % Returns:
+        %   `.PhasedMatrixPartition`: The partition of a symmetrix matrix
+            phaseOrder = 1;
+            phase = zeros(n, n);
+            subsetIndex = zeros(n, n);
+            subsets = cell(1, n*(n+1)/2);
+            ind = 1; % subset index
+                     %        function self = PhasedMatrixPartition(nR, nC, phaseOrder, phase, subsetIndex, zeroSubset, subsets)
+            for c = 1:n
+                for r = c:n
+                    if r == c
+                        subsetIndex(r, c) = ind;
+                        subsets{ind} = [r;c];
+                    else
+                        subsetIndex(r, c) = ind;
+                        subsetIndex(c, r) = ind;
+                        subsets{ind} = [c r; r c];
+                    end
+                    ind = ind + 1;
+                end
+            end
+            zeroSubset = zeros(2, 0);
+            res = replab.equi.PhasedMatrixPartition(n, n, phaseOrder, phase, subsetIndex, zeroSubset, subsets);
+        end
+
+        function res = antisymmetric(n)
+        % Constructs the partition corresponding to a generic square symmetric matrix
+        %
+        % It returns a ``n x n`` partition with $n(n-1)/2$ subsets.
+        %
+        % Example:
+        %   >>> pmp = replab.equi.PhasedMatrixPartition.antisymmetric(3);
+        %   >>> pmp.nSubsets == 3
+        %       1
+        %   >>> all(all(pmp.subsetIndex == [0 1 2; 1 0 3; 2 3 0]))
+        %       1
+        %   >>> all(all(pmp.subsetIndex == pmp.normalForm.subsetIndex))
+        %       1
+        %
+        % Args:
+        %   n (integer): Row and column size of the matrix
+        %
+        % Returns:
+        %   `.PhasedMatrixPartition`: The partition of a symmetrix matrix
+            if n == 1
+                % trivial case with phaseOrder = 1
+                res = replab.equi.PhasedMatrixPartition(1, 1, 1, 0, 0, [1;1], cell(1, 0));
+                return
+            end
+            phaseOrder = 2;
+            phase = triu(ones(n, n), 1); % upper triangle without diagonal
+            subsetIndex = zeros(n, n);
+            subsets = cell(1, n*(n-1)/2);
+            ind = 1; % subset index
+            for c = 1:n
+                for r = 1:c-1
+                    subsetIndex(r, c) = ind;
+                    subsetIndex(c, r) = ind;
+                    subsets{ind} = [c r; r c];
+                    ind = ind + 1;
+                end
+            end
+            zeroSubset = [1:n; 1:n];
+            res = replab.equi.PhasedMatrixPartition(n, n, phaseOrder, phase, subsetIndex, zeroSubset, subsets);
+        end
+
         function res = intersection(P1, P2)
         % Returns the partition that corresponds to the intersection of two phased matrix partitions
         %
