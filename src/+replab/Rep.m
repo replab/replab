@@ -983,7 +983,7 @@ classdef Rep < replab.Obj
             irreps = self.split;
             mask = cellfun(@(r) r.trivialDimension == 0, irreps);
             nontrivial = irreps(mask);
-            trivialIsotypic = self.trivialComponent('double');
+            trivialIsotypic = replab.Isotypic.fromBiorthogonalTrivialIrreps(self, irreps(~mask));
             % regroup equivalent representations
             context = replab.Context.make;
             C = self.commutant.sampleInContext(context, 1);
@@ -1541,10 +1541,8 @@ classdef Rep < replab.Obj
         function irreps = split(self)
         % Decomposes fully the given representation into subrepresentations
         %
-        % Returns a list of irreducible representations, where trivial subrepresentations
-        % have been identified
-        %
-        % If this representation is irreducible, it will set its `~+replab.Rep.isIrreducible`.
+        % Returns a list of irreducible representations, where trivial and nontrivial subrepresentations
+        % have been identified. Also, all the injection and projection maps are biorthogonal.
         %
         % Returns:
         %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to this representation

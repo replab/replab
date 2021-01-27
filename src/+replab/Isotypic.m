@@ -21,6 +21,36 @@ classdef Isotypic < replab.SubRep
 
     methods (Static)
 
+        function iso = fromBiorthogonalTrivialIrreps(parent, irreps)
+        % Creates a trivial isotypic component from trivial irreducible representations
+        %
+        % Assumes that the injection/projection maps of these irreps are biorthogonal.
+        %
+        % Args:
+        %   parent (`.Rep`): Parent representation
+        %   irreps (cell(1,\*) of `.SubRep`): Irreducible trivial subrepresentations
+        %
+        % Returns:
+        %   `.Isotypic`: Trivial isotypic component
+            if isempty(irreps)
+                P = zeros(0, parent.dimension);
+            else
+                P = irreps{1}.projection_internal;
+                for i = 2:length(irreps)
+                    P = [P; irreps{i}.projection_internal];
+                end
+                for i = 1:length(irreps)
+                    irreps{i}.cache('isIrreducible', true, '==');
+                    irreps{i}.cache('frobeniusSchurIndicator', 1, '==');
+                    irreps{i}.cache('trivialDimension', 1, '==');
+                    irreps{i}.cache('isUnitary', true, '==');
+                end
+            end
+            isHarmonized = true;
+            irrepDimension = 1;
+            iso = replab.Isotypic(parent, irreps, P, irrepDimension, isHarmonized);
+        end
+
         function iso = fromTrivialSubRep(trivial)
         % Builds an isotypic component from the (full) trivial subrepresentation
         %
