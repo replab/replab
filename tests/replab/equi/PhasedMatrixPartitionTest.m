@@ -44,7 +44,7 @@ function test_bug_marie
     phase = zeros(3, 3);
     pmp1 = replab.equi.PhasedMatrixPartition.fromIndexMatrix(subsetIndex);
     pmp2 = replab.equi.PhasedMatrixPartition.antisymmetric(3);
-    pmp12 = replab.equi.PhasedMatrixPartition.intersection(pmp1, pmp2)
+    pmp12 = replab.equi.PhasedMatrixPartition.intersection(pmp1, pmp2);
     subsetIndex_res = [0  1 -1
                        -1 0  0
                         1 0  0];
