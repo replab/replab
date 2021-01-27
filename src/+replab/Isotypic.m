@@ -66,7 +66,7 @@ classdef Isotypic < replab.SubRep
                 iso = replab.Isotypic(parent, irreps, irreps{1}.projection_internal, irrepDimension, isHarmonized);
                 return
             end
-            mapsAreUnitary = cellfun(@(s) all(all(s.injection_internal == s.projection_internal')), irreps);
+            mapsAreUnitary = cellfun(@(s) full(all(all(s.injection_internal == s.projection_internal'))), irreps);
             if parent.knownUnitary && all(mapsAreUnitary)
                 % all maps are unitary, parent is unitary, we use orthogonality
                 projections = cell(1, m);
