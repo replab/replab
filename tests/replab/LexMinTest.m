@@ -17,8 +17,8 @@ function test_lexmin
         [smin1, P1] = G.vectorFindLexMinimal(s1);
         [smin2, P2] = G.vectorFindLexMinimal(s2);
         assert(all(smin1 == smin2));
-        assert(all(smin1(P1.representative) == s1));
-        assert(all(smin2(P2.representative) == s2));
+        assert(all(smin1(P1.sample) == s1));
+        assert(all(smin2(P2.sample) == s2));
     end
 end
 function test_symmetric_group
