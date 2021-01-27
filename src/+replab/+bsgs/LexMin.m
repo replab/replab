@@ -6,17 +6,17 @@ classdef LexMin < replab.Obj
         lexChain % (`+replab.+bsgs.Chain`): BSGS chain with base in lexicographic order
         G % (`.PermutationGroup`): Group to search in
         vec % (double(1,\*)): Vector to find the minimal representative of
-        K % (`.PermutationGroup`): Subgroup of `.G` that stabilizes `.vec`
+        vecStabilizer % (`.PermutationGroup`): Subgroup of `.G` that stabilizes `.vec`
     end
 
     methods
 
-        function self = LexMin(G, vec, K)
+        function self = LexMin(G, vec, vecStabilizer)
             assert(G.domainSize == length(vec));
             self.G = G;
             self.lexChain = G.lexChain;
             self.vec = vec;
-            self.K = K;
+            self.vecStabilizer = vecStabilizer;
             self.degree = G.domainSize;
         end
 
@@ -25,7 +25,7 @@ classdef LexMin < replab.Obj
             self.minimalCorrectBefore = 1;
             self.minimalG = 1:self.degree;
             for level = 1:length(self.lexChain.B)
-                self.rec(1, level, 1:self.degree);
+                self.rec(1, level, 1:self.degree, self.vecStabilizer.chain.mutableCopy, 1);
             end
             g = self.G.inverse(self.minimalG);
             minimal = self.minimal;
@@ -41,7 +41,7 @@ classdef LexMin < replab.Obj
 
     methods (Access = protected)
 
-        function rec(self, level, toLevel, curG)
+        function rec(self, level, toLevel, curG, stab, stabLevel)
             if level <= toLevel
                 chain = self.lexChain;
                 candidates = [];
@@ -79,11 +79,36 @@ classdef LexMin < replab.Obj
                         candidates(end+1) = oi;
                     end
                 end
+                if isempty(stab)
+                    mask = true(1, self.degree);
+                else
+                    mask = replab.bsgs.minimalMaskInOrbit(self.degree, stab.S(:,stab.Sind(stabLevel):end));
+                end
                 for oi = candidates
                     b = orbit(oi);
                     bg = curG(b);
-                    nextG = curG(chain.U{level}(:,oi));
-                    self.rec(level + 1, toLevel, nextG);
+                    if mask(bg)
+                        if isempty(stab)
+                            stab1 = stab;
+                            stabLevel1 = 0;
+                        elseif stab.stabilizes(stabLevel, bg)
+                            % if it already stabilizes, pass it on unchanged
+                            stab1 = stab;
+                            stabLevel1 = stabLevel;
+                        else
+                            % otherwise stabilize
+                            stab.changeBasePointAt(stabLevel, bg);
+                            stabLevel1 = stabLevel + 1;
+                            os = stab.orbitSizes;
+                            if all(os(stabLevel1:end) == 1)
+                                stab1 = [];
+                            else
+                                stab1 = stab;
+                            end
+                        end
+                        nextG = curG(chain.U{level}(:,oi));
+                        self.rec(level + 1, toLevel, nextG, stab1, stabLevel1);
+                    end
                 end
             end
         end
