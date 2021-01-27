@@ -3,7 +3,7 @@ classdef TensorRep < replab.Rep
 %
 % All factor representations must be defined on the same group
 
-    properties
+    properties (SetAccess = protected)
         factors % (cell(1,\*) of `+replab.Rep`): Factor representations
     end
 
@@ -268,6 +268,33 @@ classdef TensorRep < replab.Rep
 
         function b = isExact(self)
             b = all(cellfun(@(f) f.isExact, self.factors));
+        end
+
+        function p = invariantBlocks(self)
+            if self.nFactors == 0
+                p = replab.Partition.fromBlocks({[1]});
+            else
+                dimL = self.factor(1).dimension;
+                blocksL = self.factor(1).invariantBlocks.blocks;
+                for i = 2:self.nFactors
+                    dimR = self.factor(i).dimension;
+                    blocksR = self.factor(i).invariantBlocks.blocks;
+                    res = cell(1, 0);
+                    for l = 1:length(blocksL)
+                        blkL = blocksL{l};
+                        maskL = zeros(1, dimL);
+                        maskL(blkL) = 1;
+                        for r = 1:length(blocksR)
+                            blkR = blocksR{r};
+                            maskR = zeros(1, dimR);
+                            maskR(blkR) = 1;
+                            res{1,end+1} = find(kron(maskL, maskR));
+                        end
+                    end
+                    blocksL = res;
+                end
+                p = replab.Partition.fromBlocks(blocksL);
+            end
         end
 
     end

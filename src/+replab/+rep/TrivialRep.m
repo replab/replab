@@ -66,6 +66,12 @@ classdef TrivialRep < replab.Rep
             b = self.isExactValue;
         end
 
+        function p = invariantBlocks(self)
+            blocks = arrayfun(@(i) {i}, 1:self.dimension, 'uniform', 0);
+            % each coordinate in its own block
+            p = replab.Partition.fromBlocks(blocks);
+        end
+
         function complexRep = complexification(self)
             assert(self.overR, 'Representation should be real to start with');
             complexRep = replab.rep.TrivialRep(self.group, 'C', self.dimension);

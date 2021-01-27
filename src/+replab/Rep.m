@@ -596,6 +596,35 @@ classdef Rep < replab.Obj
 
     methods % Representation properties
 
+        function p = invariantBlocks(self)
+        % Returns a partition of the set ``1:self.dimension`` such that the subsets of coordinates correspond to invariant spaces
+        %
+        % This method does not guarantee that the finest partition is returned.
+        %
+        % Example:
+        %   >>> G = replab.SignedPermutationGroup.of([1 4 7 2 5 8 3 6 9], [1 -2 -3 -4 5 6 -7 8 9], [1 3 2 4 6 5 -7 -9 -8]);
+        %   >>> rep = G.naturalRep;
+        %   >>> p = rep.invariantBlocks;
+        %   >>> isequal(p.blocks, {[1] [2 3 4 7] [5 6 8 9]})
+        %       1
+        %
+        % Returns:
+        %   `.Partition`: Partition of coarse invariant blocks
+            if isa(self.group, 'replab.FiniteGroup') && self.group.isTrivial
+                blocks = arrayfun(@(i) {i}, 1:self.dimension, 'uniform', 0);
+                % each coordinate in its own block
+                p = replab.Partition.fromBlocks(blocks);
+            elseif isa(self.group, 'replab.FiniteGroup')
+                mask = (self.image(self.group.generator(1)) ~= 0);
+                for i = 2:self.group.nGenerators
+                    mask = mask | (self.image(self.group.generator(i)) ~= 0);
+                end
+                p = replab.UndirectedGraph.fromAdjacencyMatrix(mask).connectedComponents;
+            else
+                p = replab.Partition.fromBlocks({1:self.dimension}); % by default returns one block
+            end
+        end
+
         function kv = knownProperties(self, keys)
         % Returns the known properties among the set of given keys as a key-value cell array
         %
@@ -1519,19 +1548,82 @@ classdef Rep < replab.Obj
         %
         % Returns:
         %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to this representation
-            trivial = self.trivialComponent('double');
-            if trivial.dimension == 0
-                irreps = cell(1, 0);
-                nontrivial = replab.SubRep.identical(self);
+            partition = self.invariantBlocks;
+            if partition.nBlocks == 1
+                trivial = self.trivialComponent('double');
+                if trivial.dimension == 0
+                    irreps = cell(1, 0);
+                    nontrivial = replab.SubRep.identical(self);
+                else
+                    nontrivial = self.maschke(trivial);
+                    irreps = trivial.irreps;
+                end
+                nontrivialIrreps = nontrivial.splitInParent;
+                for i = 1:length(nontrivialIrreps)
+                    nontrivialIrreps{i}.cache('trivialDimension', 0, '==');
+                end
+                irreps = horzcat(irreps, nontrivialIrreps);
             else
-                nontrivial = self.maschke(trivial);
-                irreps = trivial.irreps;
+                t = cputime;
+                P = speye(self.dimension);
+                [P1, E1] = self.trivialRowSpace.project(P, 'double');
+                [P2, E2] = self.trivialColSpace.project(P1, 'double');
+                replab.msg(2, 'Time (trivial subspace projection): %2.2f s', cputime - t);
+                if E1 + E2 >= 1
+                    error('Representation is not precise enough to compute the trivial dimension.');
+                end
+                D = self.dimension;
+                Itriv = sparse(D, 0);
+                Ptriv = sparse(0, D);
+                nontrivialIrreps = cell(1, 0);
+                for i = 1:partition.nBlocks
+                    blk = partition.block(i);
+                    d = length(blk);
+                    % projectors on trivial and nontrivial space
+                    projT = P2(blk, blk);
+                    projN = eye(d) - projT;
+                    % dimensions
+                    dT = round(trace(projT));
+                    dN = round(trace(projN));
+                    [IT, PT, pT] = replab.numerical.sRRQR_rank(projT, 1.5, dT);
+                    [IN, PN, pN] = replab.numerical.sRRQR_rank(projN, 1.5, dN);
+                    % regularize or apply corrections
+                    if self.knownUnitary
+                        PT = IT';
+                        PN = IN';
+                    else
+                        PT(:,pT) = PT;
+                        PT = (PT*IT)\PT;
+                        PN(:,pN) = PN;
+                        PN = (PN*IN)\PN;
+                    end
+                    ITnew = sparse(D, dT);
+                    PTnew = sparse(dT, D);
+                    ITnew(blk, :) = IT;
+                    PTnew(:, blk) = PT;
+                    % update basis of trivial space
+                    Itriv = [Itriv ITnew];
+                    Ptriv = [Ptriv; PTnew];
+                    INnew = sparse(D, dN);
+                    PNnew = sparse(dN, D);
+
+                    INnew(blk, :) = IN;
+                    PNnew(:, blk) = PN;
+                    if self.knownUnitary
+                        subN = self.subRep(INnew, 'projection', PNnew, 'isUnitary', true, 'trivialDimension', 0);
+                    else
+                        subN = self.subRep(INnew, 'projection', PNnew, 'trivialDimension', 0);
+                    end
+                    nontrivialIrreps = horzcat(nontrivialIrreps, subN.splitInParent);
+                end
+                if self.knownUnitary
+                    subT = self.subRep(Itriv, 'projection', Ptriv, 'isUnitary', true);
+                else
+                    subT = self.subRep(Itriv, 'projection', Ptriv);
+                end
+                trivialIrreps = replab.Isotypic.fromTrivialSubRep(subT).irreps;
+                irreps = horzcat(trivialIrreps, nontrivialIrreps);
             end
-            nontrivialIrreps = nontrivial.splitInParent;
-            for i = 1:length(nontrivialIrreps)
-                nontrivialIrreps{i}.cache('trivialDimension', 0, '==');
-            end
-            irreps = horzcat(irreps, nontrivialIrreps);
         end
 
         function rep1 = similarRep(self, A, varargin)

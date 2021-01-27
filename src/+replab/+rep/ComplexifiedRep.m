@@ -99,6 +99,10 @@ classdef ComplexifiedRep < replab.Rep
             b = self.parent.isExact;
         end
 
+        function p = invariantBlocks(self)
+            p = self.parent.invariantBlocks;
+        end
+
     end
 
 end
