@@ -21,10 +21,12 @@ classdef LexMin < replab.Obj
         end
 
         function [minimal, g] = search(self)
-            self.minimal = zeros(1, self.degree);
+        % Performs the backtrack search
+            self.minimal = zeros(1, self.degree); % initialize the variables
             self.minimalCorrectBefore = 1;
             self.minimalG = 1:self.degree;
             for level = 1:length(self.lexChain.B)
+                % find lex-minimal prefix of length "level"
                 self.rec(1, level, 1:self.degree, self.vecStabilizer.chain.mutableCopy, 1);
             end
             g = self.G.inverse(self.minimalG);
@@ -42,6 +44,17 @@ classdef LexMin < replab.Obj
     methods (Access = protected)
 
         function rec(self, level, toLevel, curG, stab, stabLevel)
+        % Implements breath-first in the cosets ``G / vecStabilizer``
+        %
+        % It filters elements that do not lead to a minimal lexicographic representative at each step in the stabilizer chain.
+        % It also searchs only one element per coset.
+        %
+        % Args:
+        %   level (integer): Current level
+        %   toLevel (integer): Maximum level to explore
+        %   curG (permutation): Current product of transversals
+        %   stab (`.Chain`): Mutable chain of stabilizers, with changed base
+        %   stabLevel (integer): Current level in the stabilizer chain
             if level <= toLevel
                 chain = self.lexChain;
                 candidates = [];
