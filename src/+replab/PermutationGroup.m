@@ -594,7 +594,7 @@ classdef PermutationGroup < replab.FiniteGroup
         %   >>> [sml, P] = G.vectorFindLexMinimal(s);
         %   >>> all(sml == sort(s)) % lexmin using the symmetric group is simply a sort
         %       1
-        %   >>> all(slm(P.representative) == s)
+        %   >>> all(sml(P.representative) == s)
         %       1
         %
         % Args:
