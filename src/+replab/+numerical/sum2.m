@@ -16,6 +16,16 @@ function [res, err] = sum2(p)
 %   err: double
 %     Residual error
 
+    if length(p) == 0
+        res = 0;
+        err = 0;
+        return
+    elseif length(p) == 1
+        res = p;
+        err = 0;
+        return
+    end
+
     e = 1e-20;
     if 1+e ~= 1-e
         warning('Rounding mode is not round to nearest, results may be inaccurate');
