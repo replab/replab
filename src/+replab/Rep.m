@@ -596,6 +596,35 @@ classdef Rep < replab.Obj
 
     methods % Representation properties
 
+        function p = invariantBlocks(self)
+        % Returns a partition of the set ``1:self.dimension`` such that the subsets of coordinates correspond to invariant spaces
+        %
+        % This method does not guarantee that the finest partition is returned.
+        %
+        % Example:
+        %   >>> G = replab.SignedPermutationGroup.of([1 4 7 2 5 8 3 6 9], [1 -2 -3 -4 5 6 -7 8 9], [1 3 2 4 6 5 -7 -9 -8]);
+        %   >>> rep = G.naturalRep;
+        %   >>> p = rep.invariantBlocks;
+        %   >>> isequal(p.blocks, {[1] [2 3 4 7] [5 6 8 9]})
+        %       1
+        %
+        % Returns:
+        %   `.Partition`: Partition of coarse invariant blocks
+            if isa(self.group, 'replab.FiniteGroup') && self.group.isTrivial
+                blocks = arrayfun(@(i) {i}, 1:self.dimension, 'uniform', 0);
+                % each coordinate in its own block
+                p = replab.Partition.fromBlocks(blocks);
+            elseif isa(self.group, 'replab.FiniteGroup')
+                mask = (self.image(self.group.generator(1)) ~= 0);
+                for i = 2:self.group.nGenerators
+                    mask = mask | (self.image(self.group.generator(i)) ~= 0);
+                end
+                p = replab.UndirectedGraph.fromAdjacencyMatrix(mask).connectedComponents;
+            else
+                p = replab.Partition.fromBlocks({1:self.dimension}); % by default returns one block
+            end
+        end
+
         function kv = knownProperties(self, keys)
         % Returns the known properties among the set of given keys as a key-value cell array
         %

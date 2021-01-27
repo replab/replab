@@ -33,8 +33,14 @@ classdef DefiningRep < replab.Rep
 
     methods % Implementations
 
+        % Rep
+
         function b = isExact(self)
             b = false; % Note: redundant, as parent is already false
+        end
+
+        function p = invariantBlocks(self)
+            p = replab.Partition.fromBlocks({1:self.dimension});
         end
 
     end

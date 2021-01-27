@@ -221,6 +221,10 @@ classdef DerivedRep < replab.Rep
             b = self.parent.isExact;
         end
 
+        function p = invariantBlocks(self)
+            p = self.parent.invariantBlocks; % the block structure does not change
+        end
+
         function res = dual(self)
             res = replab.rep.DerivedRep(self.parent, self.conjugate, ~self.inverse, ~self.transpose);
         end

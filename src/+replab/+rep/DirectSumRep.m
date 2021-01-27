@@ -1,7 +1,7 @@
 classdef DirectSumRep < replab.Rep
 % A direct sum of representations, such that images are diagonal by blocks
 
-    properties
+    properties (SetAccess = protected)
         factors % (cell(1,\*) of `+replab.Rep`): Contained subrepresentations
     end
 
@@ -221,6 +221,20 @@ classdef DirectSumRep < replab.Rep
 
         function b = isExact(self)
             b = all(cellfun(@(f) f.isExact, self.factors));
+        end
+
+        function p = invariantBlocks(self)
+            if self.nFactors == 0
+                p = replab.Partition(zeros(1, 0), cell(1, 0));
+            else
+                blocks = self.factor(1).invariantBlocks.blocks;
+                shift = self.factor(1).dimension;
+                for i = 2:self.nFactors
+                    newBlocks = cellfun(@(b) b + shift, self.factor(i).invariantBlocks.blocks, 'uniform', 0);
+                    blocks = horzcat(blocks, newBlocks);
+                end
+                p = replab.Partition.fromBlocks(blocks);
+            end
         end
 
     end
