@@ -305,6 +305,11 @@ classdef SubRep < replab.Rep
                     irreps{i} = self.parent.subRep(I, 'projection', P, 'isUnitary', true, 'isIrreducible', true);
                 end
             end
+            if self.inCache('trivialDimension') && self.trivialDimension == 0
+                for i = 1:length(irreps)
+                    irreps{i}.cache('trivialDimension', 0, '==');
+                end
+            end
         end
 
 % $$$             todo = {self};
