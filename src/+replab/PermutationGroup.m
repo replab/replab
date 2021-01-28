@@ -584,6 +584,37 @@ classdef PermutationGroup < replab.FiniteGroup
             sub = replab.bsgs.OrderedPartitionStabilizer(self, partition).subgroup;
         end
 
+        function [sMinLex, P] = vectorFindLexMinimal(self, s, sStabilizer)
+        % Finds the lexicographic minimal vector under permutation of its coefficients by this group
+        %
+        % Example:
+        %   >>> n = 10;
+        %   >>> s = randi([-3 3], 1, n);
+        %   >>> G = replab.S(n);
+        %   >>> [sml, P] = G.vectorFindLexMinimal(s);
+        %   >>> all(sml == sort(s)) % lexmin using the symmetric group is simply a sort
+        %       1
+        %   >>> all(sml(P.representative) == s)
+        %       1
+        %
+        % Args:
+        %   s (double(1,domainSize)): Vector to permute
+        %   sStabilizer (`.PermutationGroup` or ``[]``, optional): Stabilzier of ``s``
+        %
+        % Returns
+        % -------
+        %   sMinLex: double(1,domainSize):
+        %     Minimal lexicographic representative of ``s`` under permutation by this group
+        %   g: `.LeftCoset`
+        %     Set of permutations ``p`` such that ``sMinLex == s(inverse(p))`` or ``s == sMinLex(p)``
+            if nargin < 3 || isempty(sStabilizer)
+                sStabilizer = self.vectorStabilizer(s);
+            end
+            lm = replab.bsgs.LexMin(self, s, sStabilizer);
+            [sMinLex, p] = lm.search;
+            P = sStabilizer.leftCoset(p, self);
+        end
+
         function P = vectorFindPermutationsTo(self, s, t, sStabilizer, tStabilizer)
         % Finds the permutations that send a vector to another vector
         %
