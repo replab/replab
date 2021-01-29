@@ -43,6 +43,7 @@ function initHelp
         end
     end
     myHelpPath = fullfile(replab.globals.replabPath, 'src', 'help_overload', 'help.m');
+    myHelpPath = strrep(myHelpPath, '\', '/');
 
     if ~isempty(replabHelpPath) && ~isequal(replabHelpPath, myHelpPath)
         error('Another version %s of the RepLAB help overload %s already exists in the path.', ...
