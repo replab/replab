@@ -17,9 +17,9 @@ function test_quaternion_representations
     X1 = rep2.projection*rep1.commutant.project(rep2.injection*X*rep2.projection)*rep2.injection;
     X2 = rep2.commutant.project(X);
     X3 = rep3.commutant.project(X);
-    assert(norm(X1 - X2) < replab.Parameters.doubleEigTol);
-    assert(norm(X1 - X3) < replab.Parameters.doubleEigTol);
-    assert(norm(X2 - X3) < replab.Parameters.doubleEigTol);
+    assert(norm(X1 - X2) < replab.globals.doubleEigTol);
+    assert(norm(X1 - X3) < replab.globals.doubleEigTol);
+    assert(norm(X2 - X3) < replab.globals.doubleEigTol);
 end
 
 function test_complex_representations
@@ -32,5 +32,5 @@ function test_complex_representations
     X = randn(d, d);
     X1 = rep1.commutant.project(X);
     X2 = rep2.commutant.project(X);
-    assert(norm(X1 - X2) < replab.Parameters.doubleEigTol);
+    assert(norm(X1 - X2) < replab.globals.doubleEigTol);
 end

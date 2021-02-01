@@ -83,5 +83,5 @@ function testHasCorrectForm
     assert(res.parent == sub);
     X = res.sample;
     X1 = replab.domain.QuaternionTypeMatrices(32, 32, 'group').project(X);
-    assert(norm(X - X1) < replab.Parameters.doubleEigTol);
+    assert(norm(X - X1) < replab.globals.doubleEigTol);
 end

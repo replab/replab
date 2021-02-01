@@ -40,7 +40,7 @@ function res = enforceComplexEncoding(rep, context)
     w2p = A*v2;
     alpha2 = real(w2p'*v2);
     w2 = w2p - alpha2*v2 - beta2*v1;
-    assert(norm(w2) < replab.Parameters.doubleEigTol);
+    assert(norm(w2) < replab.globals.doubleEigTol);
     T = [alpha1 beta2
          beta2 alpha2];
     V = [v1 v2];
@@ -51,7 +51,7 @@ function res = enforceComplexEncoding(rep, context)
     w1 = w1/norm(w1);
     w2 = w2/norm(w2);
     W = [w1 w2];
-    tol = replab.Parameters.doubleEigTol;
+    tol = replab.globals.doubleEigTol;
     while size(W, 2) < d
         g = rep.group.sample;
         x1 = rep.matrixRowAction(g, w1);

@@ -98,7 +98,7 @@ classdef GHZBase < replab.CompactGroup
 
         function b = eqv(self, x, y)
             diff = mod(2*pi + pi + x - y, 2*pi) - pi;
-            b = ~replab.isNonZeroMatrix(diff, replab.Parameters.doubleEigTol);
+            b = ~replab.isNonZeroMatrix(diff, replab.globals.doubleEigTol);
         end
 
         function g = sample(self)
