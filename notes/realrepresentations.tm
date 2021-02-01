@@ -105,57 +105,57 @@
     U<rsup|-1>*X*U=<matrix|<tformat|<table|<row|<cell|\<lambda\><with|font|Bbb|1><rsub|d><rsub|>>|<cell|>>|<row|<cell|>|<cell|<wide|\<lambda\>|\<bar\>><with|font|Bbb|1><rsub|d>>>>>>,
   </equation>
 
-  and we write, with real matrices <math|A,B,Y,Z>:
+  and we write, with real matrices <math|A,B,C,D>:
 
   <\equation>
-    <matrix|<tformat|<table|<row|<cell|Y+i Z>>|<row|<cell|Y-i
-    Z>>>>>X<matrix|<tformat|<table|<row|<cell|<around*|(|A+i
-    B|)>>|<cell|<around*|(|A-i B|)>>>>>>=<matrix|<tformat|<table|<row|<cell|\<lambda\><with|font|Bbb|1><rsub|d><rsub|>>|<cell|>>|<row|<cell|>|<cell|<wide|\<lambda\>|\<bar\>><with|font|Bbb|1><rsub|d>>>>>>,
+    <matrix|<tformat|<table|<row|<cell|C+i D>>|<row|<cell|C-i
+    D>>>>>X<matrix|<tformat|<table|<row|<cell|<around*|(|C+i
+    D|)>>|<cell|<around*|(|C-i D|)>>>>>>=<matrix|<tformat|<table|<row|<cell|\<lambda\><with|font|Bbb|1><rsub|d><rsub|>>|<cell|>>|<row|<cell|>|<cell|<wide|\<lambda\>|\<bar\>><with|font|Bbb|1><rsub|d>>>>>>,
   </equation>
 
   with
 
   <\equation>
-    <matrix|<tformat|<table|<row|<cell|Y>>|<row|<cell|Z>>>>><matrix|<tformat|<table|<row|<cell|A>|<cell|B>>>>>=<frac|1|2><matrix|<tformat|<table|<row|<cell|<with|font|Bbb|1>>|<cell|>>|<row|<cell|>|<cell|-<with|font|Bbb|1>>>>>>.
+    <matrix|<tformat|<table|<row|<cell|C>>|<row|<cell|D>>>>><matrix|<tformat|<table|<row|<cell|A>|<cell|B>>>>>=<frac|1|2><matrix|<tformat|<table|<row|<cell|<with|font|Bbb|1>>|<cell|>>|<row|<cell|>|<cell|-<with|font|Bbb|1>>>>>>.
   </equation>
 
   We have two subrepresentations
 
   <\equation>
-    \<sigma\><rsub|g>=<around*|(|Y+i*Z|)>\<rho\><rsub|g><around*|(|A+i
-    B|)>=<around*|(|Y\<rho\><rsub|g>A-Z\<rho\><rsub|g>B|)>+i<around*|(|Y\<rho\><rsub|g>B+Z*\<rho\><rsub|g>A|)>,
+    \<sigma\><rsub|g>=<around*|(|C+i*D|)>\<rho\><rsub|g><around*|(|A+i
+    B|)>=<around*|(|C\<rho\><rsub|g>A-D\<rho\><rsub|g>B|)>+i<around*|(|C\<rho\><rsub|g>B+D*\<rho\><rsub|g>A|)>,
   </equation>
 
   and
 
   <\equation>
-    \<tau\><rsub|g>=<around*|(|Y-i*Z|)>\<rho\><rsub|g><around*|(|A-i
-    B|)>=<around*|(|Y\<rho\><rsub|g>A-Z\<rho\><rsub|g>B|)>-i<around*|(|Y\<rho\><rsub|g>B+Z*\<rho\><rsub|g>A|)>,
+    \<tau\><rsub|g>=<around*|(|C-i*D|)>\<rho\><rsub|g><around*|(|A-i
+    B|)>=<around*|(|C\<rho\><rsub|g>A-D\<rho\><rsub|g>B|)>-i<around*|(|C\<rho\><rsub|g>B+D*\<rho\><rsub|g>A|)>,
   </equation>
 
   and we see that <math|\<tau\><rsub|g>=<wide|\<sigma\>|\<bar\>><rsub|g>>.
   Now, given a generic <math|X<rprime|'>>, we define <math|F> as:
 
   <\equation>
-    F=<around*|(|Y+i Z|)>X<rprime|'><around*|(|A-i*B|)>,
+    F=<around*|(|C+i D|)>X<rprime|'><around*|(|A-i*B|)>,
   </equation>
 
   and remark that
 
   <\eqnarray>
-    <tformat|<table|<row|<cell|\<sigma\><rsub|g>F>|<cell|=>|<cell|<around*|(|Y+i*Z|)>\<rho\><rsub|g><around*|(|A+i
-    B|)><around*|(|Y+i Z|)>X<rprime|'><around*|(|A-i*B|)>>>|<row|<cell|>|<cell|=>|<cell|<around*|(|Y+i*Z|)><around*|(|A+i
-    B|)><around*|(|Y+i Z|)>\<rho\><rsub|g>X<rprime|'><around*|(|A-i*B|)>>>|<row|<cell|>|<cell|=>|<cell|<around*|(|Y+i
-    Z|)>\<rho\><rsub|g>X<rprime|'><around*|(|A-i*B|)>>>|<row|<cell|>|<cell|=>|<cell|<around*|(|Y+i
-    Z|)>X<rprime|'>\<rho\><rsub|g><around*|(|A-i*B|)>>>|<row|<cell|>|<cell|=>|<cell|<around*|(|Y+i
-    Z|)>X<rprime|'>\<rho\><rsub|g><around*|(|A-i*B|)><around*|(|Y-i*Z|)><around*|(|A-i*B|)>>>|<row|<cell|>|<cell|=>|<cell|<around*|(|Y+i
-    Z|)>X<rprime|'><around*|(|A-i*B|)><around*|(|Y-i*Z|)>\<rho\><rsub|g><around*|(|A-i*B|)>>>|<row|<cell|>|<cell|=>|<cell|<around*|(|Y+i
-    Z|)>X<rprime|'><around*|(|A-i*B|)>\<tau\><rsub|g>>>|<row|<cell|>|<cell|=>|<cell|F*\<tau\><rsub|g>,>>>>
+    <tformat|<table|<row|<cell|\<sigma\><rsub|g>F>|<cell|=>|<cell|<around*|(|C+i*D|)>\<rho\><rsub|g><around*|(|A+i
+    B|)><around*|(|C+i D|)>X<rprime|'><around*|(|A-i*B|)>>>|<row|<cell|>|<cell|=>|<cell|<around*|(|C+i*D|)><around*|(|A+i
+    B|)><around*|(|C+i D|)>\<rho\><rsub|g>X<rprime|'><around*|(|A-i*B|)>>>|<row|<cell|>|<cell|=>|<cell|<around*|(|C+i
+    D|)>\<rho\><rsub|g>X<rprime|'><around*|(|A-i*B|)>>>|<row|<cell|>|<cell|=>|<cell|<around*|(|C+i
+    D|)>X<rprime|'>\<rho\><rsub|g><around*|(|A-i*B|)>>>|<row|<cell|>|<cell|=>|<cell|<around*|(|C+i
+    D|)>X<rprime|'>\<rho\><rsub|g><around*|(|A-i*B|)><around*|(|C-i*D|)><around*|(|A-i*B|)>>>|<row|<cell|>|<cell|=>|<cell|<around*|(|C+i
+    D|)>X<rprime|'><around*|(|A-i*B|)><around*|(|C-i*D|)>\<rho\><rsub|g><around*|(|A-i*B|)>>>|<row|<cell|>|<cell|=>|<cell|<around*|(|C+i
+    D|)>X<rprime|'><around*|(|A-i*B|)>\<tau\><rsub|g>>>|<row|<cell|>|<cell|=>|<cell|F*\<tau\><rsub|g>,>>>>
   </eqnarray>
 
-  as <math|<around*|(|Y\<pm\>i*Z|)><around*|(|A\<pm\>i
+  as <math|<around*|(|C\<pm\>i*D|)><around*|(|A\<pm\>i
   B|)>=<with|font|Bbb|1>>, while <math|\<Pi\><rsub|\<pm\>>\<equiv\><around*|(|A\<pm\>i
-  B|)><around*|(|Y\<pm\>i*Z|)>> is a projector on an invariant subspace of
+  B|)><around*|(|C\<pm\>i*D|)>> is a projector on an invariant subspace of
   <math|\<rho\><rsub|g>> and thus commutes with <math|\<rho\>>. Thus <math|F>
   is an equivariant map from <math|\<tau\>> to <math|\<sigma\>>. As we know
   that <math|\<tau\>=<wide|\<sigma\>|\<bar\>>>, <math|F> also describes an
@@ -171,17 +171,19 @@
   Using real arithmetic only:
 
   <\equation>
-    F=<around*|(|Y+i Z|)>X<rprime|'><around*|(|A-i*B|)>=Y X<rprime|'> A+Z
-    X<rprime|'>B+i<around*|(|Z X<rprime|'> A-Y X<rprime|'> B|)>,
+    F=<around*|(|C+i D|)>X<rprime|'><around*|(|A-i*B|)>=C X<rprime|'> A+D
+    X<rprime|'>B+i<around*|(|D X<rprime|'> A-C X<rprime|'> B|)>,
   </equation>
 
   and
 
   <\equation>
-    <wide|F|\<bar\>>F=<around*|(|Y X<rprime|'> A+Z
-    X<rprime|'>B|)><rsup|2>+<around*|(|Z X<rprime|'> A-Y X<rprime|'>
+    <wide|F|\<bar\>>F=<around*|(|C X<rprime|'> A+D
+    X<rprime|'>B|)><rsup|2>+<around*|(|D X<rprime|'> A-C X<rprime|'>
     B|)><rsup|2>.
   </equation>
+
+  \;
 </body>
 
 <\initial>
@@ -195,9 +197,9 @@
 
 <\references>
   <\collection>
-    <associate|auto-1|<tuple|1|1|../../.TeXmacs/texts/scratch/no_name_8.tm>>
-    <associate|auto-2|<tuple|2|?|../../.TeXmacs/texts/scratch/no_name_8.tm>>
-    <associate|auto-3|<tuple|3|?|../../.TeXmacs/texts/scratch/no_name_8.tm>>
+    <associate|auto-1|<tuple|1|1>>
+    <associate|auto-2|<tuple|2|1>>
+    <associate|auto-3|<tuple|3|2>>
   </collection>
 </references>
 
@@ -207,6 +209,15 @@
       <vspace*|1fn><with|font-series|<quote|bold>|math-font-series|<quote|bold>|1<space|2spc>Definitions>
       <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
       <no-break><pageref|auto-1><vspace|0.5fn>
+
+      <vspace*|1fn><with|font-series|<quote|bold>|math-font-series|<quote|bold>|2<space|2spc>Interpreting
+      the result of EV decomposition> <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <no-break><pageref|auto-2><vspace|0.5fn>
+
+      <vspace*|1fn><with|font-series|<quote|bold>|math-font-series|<quote|bold>|3<space|2spc>Complex
+      EV, distinguishing the three cases>
+      <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <no-break><pageref|auto-3><vspace|0.5fn>
     </associate>
   </collection>
 </auxiliary>
