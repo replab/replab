@@ -1090,8 +1090,8 @@ classdef Chain < replab.Str
         function randomizedSchreierSims(self, order)
         % Runs the randomized Schreier-Sims algorithm
         %
-        % Failure probability can be tuned using replab.Parameters.randomizedSchreierSimsTries
-            nTries = replab.Parameters.randomizedSchreierSimsTries;
+        % Failure probability can be tuned using replab.globals.randomizedSchreierSimsTries
+            nTries = replab.globals.randomizedSchreierSimsTries;
             R = replab.bsgs.RandomBag(self.n, self.S, [], []);
             c = 0;
             if isempty(order)

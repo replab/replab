@@ -989,7 +989,7 @@ classdef Rep < replab.Obj
             C = self.commutant.sampleInContext(context, 1);
             nNT = length(nontrivial);
             mask = logical(zeros(nNT, nNT));
-            tol = replab.Parameters.doubleEigTol;
+            tol = replab.globals.doubleEigTol;
             for i = 1:nNT
                 subI = nontrivial{i};
                 CI = subI.projection('double/sparse') * C;

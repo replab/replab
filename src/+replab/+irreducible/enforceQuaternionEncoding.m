@@ -56,7 +56,7 @@ function res = enforceQuaternionEncoding(rep, context)
     w4p = A*v4;
     alpha4 = real(w4p'*v4);
     w4 = w4p - alpha4*v4 - beta4*v3;
-    assert(norm(w4) < replab.Parameters.doubleEigTol);
+    assert(norm(w4) < replab.globals.doubleEigTol);
     T = [alpha1 beta2 0     0
          beta2 alpha2 beta3 0
          0     beta3  alpha3 beta4
@@ -75,7 +75,7 @@ function res = enforceQuaternionEncoding(rep, context)
     w4 = w4/norm(w4);
     W = [w1 w2 w4 w3]; % switch to force basis (TODO: prove)
     % W is orthonormal
-    tol = replab.Parameters.doubleEigTol;
+    tol = replab.globals.doubleEigTol;
     while size(W, 2) < d
         g = rep.group.sample;
         x1 = rep.matrixRowAction(g, w1);

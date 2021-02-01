@@ -33,7 +33,7 @@ function fsi = frobeniusSchurIndicator(irrep, context)
     v = replab.domain.Vectors('C', d).sample;
     v1 = C*v;
     v2 = C*v1;
-    tol = replab.Parameters.doubleEigTol;
+    tol = replab.globals.doubleEigTol;
     switch rank([v v1 v2], tol)
       case 1
         fsi = 1;

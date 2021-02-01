@@ -12,7 +12,7 @@ function res = niceSubRepRecoverReal(sub)
     d = size(basis, 2);
     v = replab.domain.Vectors('C', d).sample;
     v1 = conj(basis*v);
-    if norm(v1 - basis * (basis \ v1)) < replab.Parameters.doubleEigTol
+    if norm(v1 - basis * (basis \ v1)) < replab.globals.doubleEigTol
         % TODO: do we really need that sample? It's there to be sure
         % that generically, the real component is present
         basis1 = orth(real(basis * replab.UnitaryGroup(d).sample));

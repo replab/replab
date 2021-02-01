@@ -32,7 +32,7 @@ classdef Vectors < replab.domain.VectorSpace
         %% Domain methods
 
         function b = eqv(self, X, Y)
-            b = ~replab.isNonZeroMatrix(X - Y, replab.Parameters.doubleEigTol);
+            b = ~replab.isNonZeroMatrix(X - Y, replab.globals.doubleEigTol);
         end
 
         function X = sample(self)

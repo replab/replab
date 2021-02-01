@@ -281,7 +281,7 @@ classdef SubRep < replab.Rep
                 subU1 = self.parent.subRep(I, 'projection', P, 'isUnitary', true);
                 irreps = subU1.splitInParent;
             end
-            tol = replab.Parameters.doubleEigTol;
+            tol = replab.globals.doubleEigTol;
             % extract nontrivial representations by sampling the commutant
             C = full(self.projection('double/sparse') * self.parent.commutant.sample('double') * self.injection('double/sparse'));
             % the eigenspace decomposition is the basis of the numerical decomposition
