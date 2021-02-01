@@ -28,7 +28,7 @@ classdef SubRep < replab.Rep
         parent % (`+replab.Rep`): Parent representation of dimension $D$
         injection_internal % (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
         projection_internal % (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
-        encodesComplexStructure % (logical): Whether this subrepresentation encodes a complex structure
+        isComplexIrreducible % (logical): Whether this subrepresentation encodes a pair of irreducible complex subrepresentations
     end
 
     methods
@@ -47,7 +47,7 @@ classdef SubRep < replab.Rep
         %   projection_internal (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map $P$
         %
         % Keyword Args:
-        %   encodesComplexStructure (logical, optional): Whether the representation encodes a complex structure, default: false
+        %   isComplexIrreducible (logical, optional): Whether this is a real representation encoding two complex irreducible subrepresentations, default: false
         %   isUnitary (logical, optional): Whether the resulting representation is unitary, may be omitted (see above)
         %   projectorErrorBound (double, optional): Upper bound on || I P - \tilde{I} \tilde{P} ||_F
         %   injectionConditionNumberEstimate (double, optional): Upper bound of the condition number of $\tilde{I}$ (and thus $\tilde{P}$)
@@ -59,7 +59,7 @@ classdef SubRep < replab.Rep
             if parent.overR
                 assert(isreal(injection_internal) && isreal(projection_internal), 'A real Rep can only have real subrepresentations.');
             end
-            args = struct('injectionConditionNumberEstimate', [], 'projectorErrorBound', [], 'encodesComplexStructure', false);
+            args = struct('injectionConditionNumberEstimate', [], 'projectorErrorBound', [], 'isComplexIrreducible', false);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             IP_unitary = all(all(injection_internal == projection_internal'));
             if IP_unitary && parent.knownUnitary
@@ -73,7 +73,7 @@ classdef SubRep < replab.Rep
             self.parent = parent;
             self.injection_internal = injection_internal;
             self.projection_internal = projection_internal;
-            self.encodesComplexStructure = args.encodesComplexStructure;
+            self.isComplexIrreducible = args.isComplexIrreducible;
             if ~isempty(args.projectorErrorBound)
                 self.cache('projectorErrorBound', args.projectorErrorBound, 'error');
             end
@@ -268,11 +268,26 @@ classdef SubRep < replab.Rep
             mat = self.injection(type) * self.projection(type);
         end
 
-        function irreps = splitInParent(self)
-        % Decomposes fully this subrepresentation into irreducible subrepresentations of its parent
+        function irreps = complexSplitInParent(self, iterator)
+        % Decomposes fully this subrepresentation into complex irreducible subrepresentations of its parent
+        %
+        % When the representation is over C, the returned subrepresentations are irreducible.
+        %
+        % When the representation is over R, the returned subrepresentations are of one of these types:
+        %
+        % * an irreducible real-type subrepresentation with `.isIrreducible` set to true, and the Frobenius-Schur indicator set to ``1``,
+        % * a real subrepresentation whose injection/projection map encode a split into two subrepresentations over the complex numbers, with `.isComplexIrreducible` set to true.
+        %
+        % Args:
+        %   iterator (`.SamplesIterator`): Iterator into samples of the parent commutant
         %
         % Returns:
-        %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to the `.parent` of this subrepresentation
+        %   cell(1,\*) of `.SubRep`: Subrepresentations with their ``.parent`` set to the `.parent` of this subrepresentation
+            if nargin < 2
+                iterator = self.parent.commutant.samples.iterator;
+            end
+            if self.knownUnitary
+                irreps = replab.rep.splitInParent_unitary(
             if ~self.knownUnitary
                 % If not unitary, make the subrepresentation unitary
                 subU = self.unitarize;
