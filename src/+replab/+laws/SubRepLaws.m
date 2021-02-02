@@ -37,6 +37,14 @@ classdef SubRepLaws < replab.laws.RepLaws
             end
         end
 
+        function law_encodesIrreducibleComplexPair_G(self, g)
+            if self.rep.encodesIrreducibleComplexPair
+                X = self.rep.image(g);
+                ref = replab.domain.ComplexTypeMatrices.project(X);
+                self.assertApproxEqual(ref, X, self.rep.errorBound);
+            end
+        end
+
     end
 
 end
