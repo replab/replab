@@ -293,7 +293,11 @@ classdef SubRep < replab.Rep
                     irreps = replab.rep.complexSplitInParent_real_unitary(self, iterator);
                 end
             else
-                error('Not implemented');
+                if self.overC
+                    irreps = replab.rep.complexSplitInParent_complex_nonunitary(self, iterator);
+                else
+                    irreps = replab.rep.complexSplitInParent_real_nonunitary(self, iterator);
+                end
             end
         end
 

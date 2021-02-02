@@ -1,5 +1,5 @@
 function irreps = complexSplitInParent_real_unitary(sub, iterator)
-% Decomposes fully a real subrepresentation into irreducible subrepresentations
+% Decomposes fully a real unitary subrepresentation into irreducible subrepresentations
 %
 % Args:
 %   sub (`+replab.SubRep`): Unitary subrepresentation to split further
@@ -17,9 +17,7 @@ function irreps = complexSplitInParent_real_unitary(sub, iterator)
     % and the decomposition is real
     X = (S + S')/2;
     [U, D] = eig(X);
-    assert(isreal(D));
-    D = diag(D);
-    D = D(:).';
+    D = reshape(diag(D), [1 d]);
     P = replab.Partition.fromApproximateVector(D, tol);
     blocks = P.blocks;
     n = length(blocks);
