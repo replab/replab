@@ -1,0 +1,91 @@
+function irreps = complexSplitInParent_real_unitary(sub, iterator)
+% Decomposes fully a real subrepresentation into irreducible subrepresentations
+%
+% Args:
+%   sub (`+replab.SubRep`): Unitary subrepresentation to split further
+%   iterator (`+replab.+domain.SamplesIterator`): Iterator in the sequence of parent commutant samples
+%x
+% Returns:
+%   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to the ``.parent`` of ``sub``
+    assert(sub.isUnitary);
+    assert(sub.overR);
+    tol = replab.globals.doubleEigTol;
+    d = sub.dimension;
+    % force a dense matrix to have eig behave well
+    S = full(sub.projection('double/sparse') * iterator.next * sub.injection('double/sparse'));
+    % make a symmetric matrix so that the eigenvectors are orthogonal
+    % and the decomposition is real
+    X = (S + S')/2;
+    [U, D] = eig(X);
+    assert(isreal(D));
+    D = diag(D);
+    D = D(:).';
+    P = replab.Partition.fromApproximateVector(D, tol);
+    blocks = P.blocks;
+    n = length(blocks);
+    irreps = cell(1, n);
+    for i = 1:n
+        realType = [];
+        blk = blocks{i};
+        dblk = length(blk);
+        % now sample from the skew symmetric space to see if the representation is of
+        % complex-type or quaternion-type
+        Y = U(:, blk)'*S*U(:, blk);
+        Y = (Y - Y')/2;
+        isAbsolutelyIrreducible = [];
+        if mod(dblk, 2) == 1
+            % if the dimension is odd, the irrep has to be of real-type
+            basis = U(:, blk);
+            assert(norm(Y, 'fro') <= tol); % TODO: put a real epsilon
+            realType = true;
+        else
+            % otherwise we do not know
+            % real eigenvalue decomposition of a skew-symmetric matrix,
+            % we use the real Schur that returns an orthogonal basis
+            % this could be more efficient with a real skew-symmetric EV algo
+            [U1, T1] = schur(Y);
+            % enforce a standard form on the imaginary EV
+            for j = 1:2:dblk
+                if T1(j+1,j) < T1(j,j+1)
+                    % enforces the [0 -a; a 0] block structure with a > 0
+                    U1(:,[j+1 j]) = U1(:,[j j+1]);
+                    T1(:,[j+1 j]) = T1(:,[j j+1]);
+                    T1([j+1 j],:) = T1([j j+1],:);
+                end
+            end
+            % enforce the form we are looking for
+            diagm = diag(T1, 1);
+            diagp = diag(T1, -1);
+            lambda = sum(diagp(1:2:end) - diagm(1:2:end))/dblk;
+            diag1 = zeros(1, dblk-1);
+            diag1(1:2:end) = lambda;
+            % this is the 2x2-block-diagonal matrix after clean up
+            D1 = diag(diag1, -1) - diag(diag1, 1);
+            % and the associated error
+            E1 = T1 - D1;
+            % check that the error is reasonable, TODO: make this robust
+            assert(norm(E1, 'fro') <= tol);
+            if norm(D1, 'fro') > tol
+                % there is content in the diagonal component
+                basis = U(:, blk) * U1;
+                realType = false;
+            else
+                % the diagonal component is noise
+                basis = U(:, blk);
+                realType = true;
+            end
+        end
+        I = sub.injection('double/sparse') * basis;
+        P = basis' * sub.projection('double/sparse');
+        if realType
+            irreps{i} = sub.parent.subRep(I, 'projection', P, 'isUnitary', true, 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
+        else
+            irreps{i} = sub.parent.subRep(I, 'projection', P, 'isUnitary', true, 'isIrreducible', true, 'encodesIrreducibleComplexPair', true);
+        end
+    end
+    if sub.inCache('trivialDimension') && sub.trivialDimension == 0
+        for i = 1:length(irreps)
+            irreps{i}.cache('trivialDimension', 0, '==');
+        end
+    end
+end

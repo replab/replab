@@ -1559,6 +1559,14 @@ classdef Rep < replab.Obj
             end
         end
 
+        function irreps = complexSplit(self)
+        % Decomposes fully the given representation into complex subrepresentations
+        %
+        % Returns:
+        %   cell(1,\*) of `.SubRep`: Subrepresentations with their ``.parent`` set to this representation
+            irreps = replab.rep.complexSplitUsingInvariantBlocks(self);
+        end
+
         function irreps = split(self)
         % Decomposes fully the given representation into subrepresentations
         %

@@ -28,7 +28,7 @@ classdef SubRep < replab.Rep
         parent % (`+replab.Rep`): Parent representation of dimension $D$
         injection_internal % (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
         projection_internal % (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
-        isComplexIrreducible % (logical): Whether this subrepresentation encodes a pair of irreducible complex subrepresentations
+        encodesIrreducibleComplexPair % (logical): True if this encodes a pair of irreducible complex subreps. using the canonical complex encoding
     end
 
     methods
@@ -47,7 +47,7 @@ classdef SubRep < replab.Rep
         %   projection_internal (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map $P$
         %
         % Keyword Args:
-        %   isComplexIrreducible (logical, optional): Whether this is a real representation encoding two complex irreducible subrepresentations, default: false
+        %   encodesIrreducibleComplexPair (logical, optional): True if this encodes a pair of irreducible complex subreps. using the canonical complex encoding, default: false
         %   isUnitary (logical, optional): Whether the resulting representation is unitary, may be omitted (see above)
         %   projectorErrorBound (double, optional): Upper bound on || I P - \tilde{I} \tilde{P} ||_F
         %   injectionConditionNumberEstimate (double, optional): Upper bound of the condition number of $\tilde{I}$ (and thus $\tilde{P}$)
@@ -59,7 +59,7 @@ classdef SubRep < replab.Rep
             if parent.overR
                 assert(isreal(injection_internal) && isreal(projection_internal), 'A real Rep can only have real subrepresentations.');
             end
-            args = struct('injectionConditionNumberEstimate', [], 'projectorErrorBound', [], 'isComplexIrreducible', false);
+            args = struct('injectionConditionNumberEstimate', [], 'projectorErrorBound', [], 'encodesIrreducibleComplexPair', false);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             IP_unitary = all(all(injection_internal == projection_internal'));
             if IP_unitary && parent.knownUnitary
@@ -73,7 +73,7 @@ classdef SubRep < replab.Rep
             self.parent = parent;
             self.injection_internal = injection_internal;
             self.projection_internal = projection_internal;
-            self.isComplexIrreducible = args.isComplexIrreducible;
+            self.encodesIrreducibleComplexPair = args.encodesIrreducibleComplexPair;
             if ~isempty(args.projectorErrorBound)
                 self.cache('projectorErrorBound', args.projectorErrorBound, 'error');
             end
@@ -276,7 +276,7 @@ classdef SubRep < replab.Rep
         % When the representation is over R, the returned subrepresentations are of one of these types:
         %
         % * an irreducible real-type subrepresentation with `.isIrreducible` set to true, and the Frobenius-Schur indicator set to ``1``,
-        % * a real subrepresentation whose injection/projection map encode a split into two subrepresentations over the complex numbers, with `.isComplexIrreducible` set to true.
+        % * a real subrepresentation whose injection/projection map encode a split into two subrepresentations over the complex numbers, with `.encodesIrreducibleComplexPair` set to true.
         %
         % Args:
         %   iterator (`.SamplesIterator`): Iterator into samples of the parent commutant
@@ -287,57 +287,15 @@ classdef SubRep < replab.Rep
                 iterator = self.parent.commutant.samples.iterator;
             end
             if self.knownUnitary
-                irreps = replab.rep.splitInParent_unitary(
-            if ~self.knownUnitary
-                % If not unitary, make the subrepresentation unitary
-                subU = self.unitarize;
-                P = subU.A('double/sparse') * self.projection('double/sparse');
-                I = self.injection('double/sparse') * subU.Ainv('double/sparse');
-                subU1 = self.parent.subRep(I, 'projection', P, 'isUnitary', true);
-                irreps = subU1.splitInParent;
-            end
-            tol = replab.globals.doubleEigTol;
-            % extract nontrivial representations by sampling the commutant
-            C = full(self.projection('double/sparse') * self.parent.commutant.sample('double') * self.injection('double/sparse'));
-            % the eigenspace decomposition is the basis of the numerical decomposition
-            % V'*C*V = D
-            [U1 D] = replab.numerical.sortedEig((C + C')/2, 'ascend', false);
-            D = diag(D);
-            D = D(:)';
-            mask = bsxfun(@(x,y) abs(x-y)<tol, D, D');
-            % find repeated eigenvalues
-            runs = replab.UndirectedGraph.fromAdjacencyMatrix(mask).connectedComponents.blocks;
-            n = length(runs);
-            if n == 1
-                self.cache('isIrreducible', true, '==');
-                irreps = {self};
+                if self.overC
+                    irreps = replab.rep.complexSplitInParent_complex_unitary(self, iterator);
+                else
+                    irreps = replab.rep.complexSplitInParent_real_unitary(self, iterator);
+                end
             else
-                irreps = cell(1, n);
-                for i = 1:n
-                    basis = U1(:, runs{i});
-                    I = self.injection('double/sparse') * basis;
-                    P = basis' * self.projection('double/sparse');
-                    irreps{i} = self.parent.subRep(I, 'projection', P, 'isUnitary', true, 'isIrreducible', true);
-                end
-            end
-            if self.inCache('trivialDimension') && self.trivialDimension == 0
-                for i = 1:length(irreps)
-                    irreps{i}.cache('trivialDimension', 0, '==');
-                end
+                error('Not implemented');
             end
         end
-
-% $$$             todo = {self};
-% $$$             irreps = cell(1, 0);
-% $$$             while ~isempty(todo)
-% $$$                 subs = cell(1, 0);
-% $$$                 for i = 1:length(todo)
-% $$$                     subs = horzcat(subs, replab.irreducible.coarseSplitUsingCommutant(self.parent, todo{i}));
-% $$$                 end
-% $$$                 isIrrep = replab.irreducible.identifyIrreps(self.parent, subs);
-% $$$                 irreps = horzcat(irreps, subs(isIrrep));
-% $$$                 todo = subs(~isIrrep);
-% $$$             end
 
         function [s better] = nice(self)
         % Returns a representation similar to the current subrepresentation, with a nicer basis
