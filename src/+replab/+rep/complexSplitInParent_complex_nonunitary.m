@@ -25,8 +25,9 @@ function irreps = complexSplitInParent_complex_nonunitary(sub, iterator)
     else
         irreps = cell(1, n);
         for i = 1:n
-            inj1 = U(:, blocks{i});
-            prj1 = V(blocks{i}, :);
+            blk = blocks{i};
+            inj1 = U(:, blk);
+            prj1 = V(blk, :);
             prj1 = (prj1*inj1)\prj1;
             I = sub.injection('double/sparse') * inj1;
             P = prj1 * sub.projection('double/sparse');
