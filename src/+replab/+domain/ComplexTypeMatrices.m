@@ -25,13 +25,17 @@ classdef ComplexTypeMatrices < replab.domain.VectorSpace
             self.field = 'R';
         end
 
-        %% Str methods
+    end
+
+    methods % Implementations
+
+        % Str
 
         function s = headerStr(self)
             s = sprintf('%d x %d real matrices encoding complex coefficient blocks', self.nR, self.nC);
         end
 
-        %% Domain methods
+        % Domain
 
         function b = eqv(self, X, Y)
             b = all(all(X == Y));
