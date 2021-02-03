@@ -1575,11 +1575,17 @@ classdef Rep < replab.Obj
         %
         % Returns:
         %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to this representation
-            partition = self.invariantBlocks;
-            if partition.nBlocks == 1
-                irreps = replab.rep.split(self);
-            else
-                irreps = replab.rep.splitUsingInvariantBlocks(self);
+            step1 = self.complexSplit;
+            irreps = cell(1, 0);
+            samples = self.commutant.samples;
+            for i = 1:length(step1)
+                sub = step1{i};
+                if sub.encodesIrreducibleComplexPair
+                    irreps = horzcat(irreps, replab.rep.canonicalEncoding_nonunitary(sub, samples.iterator));
+                else
+                    assert(sub.isIrreducible && sub.frobeniusSchurIndicator == 1);
+                    irreps{1,end+1} = sub;
+                end
             end
         end
 

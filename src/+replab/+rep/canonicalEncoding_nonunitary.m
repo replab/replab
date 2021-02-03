@@ -35,7 +35,22 @@ function subs = canonicalEncoding_nonunitary(sub, iterator)
         subs = {sub};
     elseif lambda > 0
         % pair of real-type representations
-        error('Not supported');
+        f = trace(conj(J)*J)/(d/2);
+        J = J / sqrt(f);
+        sJ = sqrtm(J);
+        U1 = blkdiag(sJ, conj(sJ));
+        V1 = blkdiag(conj(sJ), sJ);
+        UU = U*U1;
+        VV = V1*V;
+        UU = UU(:,1:d/2);
+        VV = VV(1:d/2,:);
+        inj1 = real(UU);
+        inj2 = imag(UU);
+        prj1 = real(VV);
+        prj2 = imag(VV);
+        sub1 = sub.parent.subRep(inj1, 'projection', prj1, 'isIrreducible', true, 'frobeniusSchurIndicator', 1, 'isDivisionAlgebraCanonical', true);
+        sub2 = sub.parent.subRep(inj2, 'projection', prj2, 'isIrreducible', true, 'frobeniusSchurIndicator', 1, 'isDivisionAlgebraCanonical', true);
+        subs = {sub1 sub1};
     else % lambda < 0
          % quaternion-type representation
         assert(mod(d, 4) == 0);
@@ -76,8 +91,6 @@ function subs = canonicalEncoding_nonunitary(sub, iterator)
         assert(norm(imag(prj)) <= tol);
         inj = real(inj)/sqrt(2);
         prj = real(prj)/sqrt(2);
-        XX = prj*S*inj;
-        XX1 = prj*iterator.next*inj;
         subs = {sub.parent.subRep(inj, 'projection', prj, 'isIrreducible', true, 'frobeniusSchurIndicator', -2, 'isDivisionAlgebraCanonical', true)};
     end
 end

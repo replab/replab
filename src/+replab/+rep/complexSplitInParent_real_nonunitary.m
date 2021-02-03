@@ -26,7 +26,7 @@ function irreps = complexSplitInParent_real_nonunitary(sub, iterator)
         prj1 = (prj1*inj1)\prj1;
         I = sub.injection('double/sparse') * inj1;
         P = prj1 * sub.projection('double/sparse');
-        isReal = all(abs(diag(D(blk,blk), 1)) <= tol);
+        isReal = all(abs(diag(D(blk(1:end-1),blk(2:end)))) <= tol);
         if isReal
             irreps{i} = sub.parent.subRep(I, 'projection', P, 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
         else
