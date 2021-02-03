@@ -59,8 +59,8 @@ classdef RepLaws < replab.Laws
             if self.rep.overR && self.rep.knownIrreducible
                 rho = self.rep.image(g);
                 switch self.rep.frobeniusSchurIndicator
-                    case 0
-                      rho1 = replab.domain.ComplexTypeMatrices.project(rho);
+                  case 0
+                    rho1 = replab.domain.ComplexTypeMatrices.project(rho);
                   case -2
                     rho1 = replab.domain.QuaternionTypeMatrices.project(rho, 'group');
                   case 1
