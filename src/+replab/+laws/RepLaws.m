@@ -56,19 +56,10 @@ classdef RepLaws < replab.Laws
         end
 
         function law_respects_division_algebra_G(self, g)
-            if self.rep.overR && self.rep.knownIrreducible
+            if ~isempty(self.rep.divisionAlgebraName)
+                da = replab.DivisionAlgebra(self.rep.divisionAlgebraName);
                 rho = self.rep.image(g);
-                switch self.rep.frobeniusSchurIndicator
-                  case 0
-                    rho1 = replab.domain.ComplexTypeMatrices.project(rho);
-                  case -2
-                    rho1 = replab.domain.QuaternionTypeMatrices.projectType(rho, 'group');
-                  case 1
-                    rho1 = rho;
-                    % do nothing
-                  otherwise
-                    error('Wrong Frobenius Schur indicator');
-                end
+                rho1 = da.project(rho);
                 self.assertApproxEqual(rho, rho1, self.rep.errorBound);
             end
         end

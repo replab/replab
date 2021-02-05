@@ -1,14 +1,14 @@
-function subs = canonicalEncoding_nonunitary(sub, iterator)
-% Identifies the real representation(s) present in a real subrepresentation encoding a pair of conjugate irreps
+function irreps = identifyIrrepsInParent_complexDivisionAlgebra_nonunitary(sub, iterator)
+% Identifies the irreducible representation(s) present in a real subrepresentation encoding a pair of conjugate irreps
 %
 % Args:
-%   sub (`+replab.SubRep`): Subrepresentation with `+replab.SubRep.encodesIrreducibleComplexPair` set to true
+%   sub (`+replab.SubRep`): Subrepresentation with `+replab.Rep.divisionAlgebraName` set to ``'complex'``
 %   iterator (`+replab.+domain.SamplesIterator`): Iterator in the sequence of parent commutant samples
 %
 % Returns:
 %   cell(1,\*) of `+replab.SubRep`: Real irreps with `+replab.Rep.frobeniusSchurIndicator` computed and `+replab.Rep.isDivisionAlgebraCanonical` set to true
     assert(sub.overR);
-    assert(sub.encodesIrreducibleComplexPair);
+    assert(strcmp(sub.divisionAlgebraName, 'complex'));
     d = sub.dimension;
     I = sub.injection('double/sparse');
     P = sub.projection('double/sparse');
@@ -29,10 +29,9 @@ function subs = canonicalEncoding_nonunitary(sub, iterator)
     tol = replab.globals.doubleEigTol;
     if abs(lambda) < tol
         % complex-type representation
-        fs = 0;
         sub.cache('frobeniusSchurIndicator', 0, '==');
-        sub.cache('isDivisionAlgebraCanonical', true, '==');
-        subs = {sub};
+        sub.cache('isIrreducible', true, '==');
+        irreps = {sub};
     elseif lambda > 0
         % pair of real-type representations
         f = trace(conj(J)*J)/(d/2);
@@ -48,9 +47,9 @@ function subs = canonicalEncoding_nonunitary(sub, iterator)
         inj2 = imag(UU);
         prj1 = real(VV);
         prj2 = imag(VV);
-        sub1 = sub.parent.subRep(inj1, 'projection', prj1, 'isIrreducible', true, 'frobeniusSchurIndicator', 1, 'isDivisionAlgebraCanonical', true);
-        sub2 = sub.parent.subRep(inj2, 'projection', prj2, 'isIrreducible', true, 'frobeniusSchurIndicator', 1, 'isDivisionAlgebraCanonical', true);
-        subs = {sub1 sub1};
+        sub1 = sub.parent.subRep(inj1, 'projection', prj1, 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
+        sub2 = sub.parent.subRep(inj2, 'projection', prj2, 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
+        irreps = {sub1 sub1};
     else % lambda < 0
          % quaternion-type representation
         assert(mod(d, 4) == 0);
@@ -91,6 +90,6 @@ function subs = canonicalEncoding_nonunitary(sub, iterator)
         assert(norm(imag(prj)) <= tol);
         inj = real(inj)/sqrt(2);
         prj = real(prj)/sqrt(2);
-        subs = {sub.parent.subRep(inj, 'projection', prj, 'isIrreducible', true, 'frobeniusSchurIndicator', -2, 'isDivisionAlgebraCanonical', true)};
+        irreps = {sub.parent.subRep(inj, 'projection', prj, 'isIrreducible', true, 'frobeniusSchurIndicator', -2, 'divisionAlgebraName', 'quaternion.rep')};
     end
 end

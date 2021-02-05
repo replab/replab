@@ -1,5 +1,7 @@
-function irreps = complexSplitUsingInvariantBlocks(rep)
-% Splits a representation into irreducible subrepresentations using existing block structure
+function irreps = absoluteSplit_usingInvariantBlocks(rep)
+% Splits a representation using existing block structure
+%
+% See `+replab.Rep.absoluteSplit`
 %
 % First extracts the trivial subrepresentations before splitting the nontrivial invariant subspace;
 % this is done block by block.
@@ -8,7 +10,7 @@ function irreps = complexSplitUsingInvariantBlocks(rep)
 %   rep (`+replab.Rep`): Representation to decompose
 %
 % Returns:
-%   cell(1,\*) of `+replab.SubRep`: Irreducible subrepresentations of ``rep``
+%   cell(1,\*) of `+replab.SubRep`: Subrepresentations of ``rep``
     partition = rep.invariantBlocks;
     t = cputime;
     D = rep.dimension;
@@ -52,7 +54,6 @@ function irreps = complexSplitUsingInvariantBlocks(rep)
         Ptriv = [Ptriv; PTnew];
         INnew = sparse(D, dN);
         PNnew = sparse(dN, D);
-
         INnew(blk, :) = IN;
         PNnew(:, blk) = PN;
         if rep.knownUnitary
@@ -60,7 +61,7 @@ function irreps = complexSplitUsingInvariantBlocks(rep)
         else
             subN = rep.subRep(INnew, 'projection', PNnew, 'trivialDimension', 0);
         end
-        nontrivialIrreps = horzcat(nontrivialIrreps, subN.complexSplitInParent);
+        nontrivialIrreps = horzcat(nontrivialIrreps, subN.absoluteSplitInParent);
     end
     if rep.knownUnitary
         subT = rep.subRep(Itriv, 'projection', Ptriv, 'isUnitary', true);

@@ -1,4 +1,4 @@
-function irreps = complexSplitInParent_real_nonunitary(sub, iterator)
+function irreps = absoluteSplitInParent_real_nonunitary(sub, iterator)
 % Decomposes fully a real subrepresentation into irreducible subrepresentations
 %
 % Args:
@@ -30,7 +30,7 @@ function irreps = complexSplitInParent_real_nonunitary(sub, iterator)
         if isReal
             irreps{i} = sub.parent.subRep(I, 'projection', P, 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
         else
-            irreps{i} = sub.parent.subRep(I, 'projection', P, 'encodesIrreducibleComplexPair', true);
+            irreps{i} = sub.parent.subRep(I, 'projection', P, 'divisionAlgebraName', 'complex');
         end
     end
     if sub.inCache('trivialDimension') && sub.trivialDimension == 0

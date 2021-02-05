@@ -1,7 +1,9 @@
 classdef Rep < replab.Obj
 % Describes a finite dimensional representation of a compact group
 %
-% This class has mutable properties that correspond to information that can be computed and cached
+%
+%
+% This class has properties that correspond to information that can be computed and cached
 % after the `+replab.Rep` instance is constructed, for example `.isUnitary` or `.trivialDimension`.
 %
 % Notes:
@@ -24,6 +26,7 @@ classdef Rep < replab.Obj
         group     % (`+replab.CompactGroup`): Group being represented
         field     % ({'R', 'C'}): Vector space defined on real (R) or complex (C) field
         dimension % (integer): Representation dimension
+        divisionAlgebraName % ('complex', 'quaternion.rep', ''): Name of the division algebra encoding this representation respects
     end
 
     methods
@@ -42,17 +45,19 @@ classdef Rep < replab.Obj
         %   isUnitary (logical or ``[]``, optional): Whether the representation is unitary, default ``[]``
         %   isIrreducible (logical or ``[]``, optional): Whether this representation is irreducible, default ``[]``
         %   trivialDimension (integer or ``[]``, optional): Dimension of the trivial subrepresentation, default ``[]``
-        %   frobeniusSchurIndicator % (integer or ``[]``, optional): Exact value of the Frobenius-Schur indicator, default ``[]``
-        %   isDivisionAlgebraCanonical % (logical or ``[]``): If the representation is real and irreducible and the Frobenius-Schur indicator is not 1, means that the images encode the complex or quaternion division algebras in the RepLAB canonical form
+        %   frobeniusSchurIndicator (integer or ``[]``, optional): Exact value of the Frobenius-Schur indicator, default ``[]``
+        %   divisionAlgebraName % ('complex', 'quaternion.rep', '', optional): Name of the division algebra encoding this representation respects, default ``''``
             self.group = group;
             self.field = field;
             self.dimension = dimension;
-            args = struct('isUnitary', [], 'knownUnitary', false, 'isIrreducible', [], 'trivialDimension', [], 'frobeniusSchurIndicator', [], 'isDivisionAlgebraCanonical', []);
+            args = struct('isUnitary', [], 'knownUnitary', false, 'isIrreducible', [], 'trivialDimension', [], 'frobeniusSchurIndicator', [], 'divisionAlgebraName', '');
             args = replab.util.populateStruct(args, varargin);
             if isequal(args.knownUnitary, true)
                 assert(isempty(args.isUnitary) || args.isUnitary, 'This representation is actually unitary.');
                 args.isUnitary = true;
             end
+            % fill properties
+            self.divisionAlgebraName = args.divisionAlgebraName;
             if ~isempty(args.isUnitary)
                 self.cache('isUnitary', logical(args.isUnitary), 'error');
             end
@@ -64,9 +69,6 @@ classdef Rep < replab.Obj
             end
             if ~isempty(args.frobeniusSchurIndicator)
                 self.cache('frobeniusSchurIndicator', args.frobeniusSchurIndicator, 'error');
-            end
-            if ~isempty(args.isDivisionAlgebraCanonical)
-                self.cache('isDivisionAlgebraCanonical', logical(args.isDivisionAlgebraCanonical), 'error');
             end
         end
 
@@ -237,8 +239,8 @@ classdef Rep < replab.Obj
             if rep.inCache('frobeniusSchurIndicator')
                 self.cache('frobeniusSchurIndicator', rep.frobeniusSchurIndicator, '==');
             end
-            if rep.inCache('isDivisionAlgebraCanonical')
-                self.cache('isDivisionAlgebraCanonical', rep.isDivisionAlgebraCanonical, '==');
+            if rep.inCache('divisionAlgebraName')
+                self.cache('divisionAlgebraName', rep.divisionAlgebraName, 'isequal');
             end
             if rep.inCache('kernel')
                 self.cache('kernel', rep.kernel, '==');
@@ -584,14 +586,6 @@ classdef Rep < replab.Obj
             d = c.dimension;
         end
 
-        function b = computeIsDivisionAlgebraCanonical(self)
-            if self.overC || (self.overR && self.frobeniusSchurIndicator == 1)
-                b = true;
-            else
-                error('TODO');
-            end
-        end
-
     end
 
     methods % Representation properties
@@ -799,22 +793,6 @@ classdef Rep < replab.Obj
         % Returns:
         %   `+replab.FiniteGroup`: The group ``K`` such that ``rho.image(k) == id`` for all ``k`` in ``K``
             K = self.cached('kernel', @() self.computeKernel);
-        end
-
-        function b = isDivisionAlgebraCanonical(self)
-        % Returns whether the division algebra of this representation is in the RepLAB canonical form
-        %
-        % This is relevant only for irreducible representations, and is always true for representation over the
-        % complex numbers.
-        %
-        % For irreducible representations over the real numbers, if the Frobenius-Schur indicator is
-        %
-        % Raises:
-        %   An error if this representation is not irreducible.
-        %
-        % Returns:
-        %   logical: Whether the division algebra is canonical
-            b = self.cached('isDivisionAlgebraCanonical', @() self.computeIsDivisionAlgebraCanonical);
         end
 
     end
@@ -1232,8 +1210,8 @@ classdef Rep < replab.Obj
                 if self.inCache('frobeniusSchurIndicator')
                     approx.cache('frobeniusSchurIndicator', self.frobeniusSchurIndicator, '==');
                 end
-                if self.inCache('isDivisionAlgebraCanonical')
-                    approx.cache('isDivisionAlgebraCanonical', self.isDivisionAlgebraCanonical, '==');
+                if self.inCache('divisionAlgebraName')
+                    approx.cache('divisionAlgebraName', self.divisionAlgebraName, '==');
                 end
                 if self.inCache('kernel')
                     approx.cache('kernel', self.kernel, '==');
@@ -1559,35 +1537,64 @@ classdef Rep < replab.Obj
             end
         end
 
-        function irreps = complexSplit(self)
-        % Decomposes fully the given representation into complex subrepresentations
+        function irreps = absoluteSplit(self)
+        % Decomposes the given representation into absolutely irreducible representations
+        %
+        % As part of the process, it identifies the trivial and nontrivial subrepresentations.
+        %
+        % If this representation is complex (`.overC` true), it returns a list of irreducible subrepresentations
+        % with their `.isIrreducible` true. The irreducible subrepresentations do not have their Frobenius-Schur indicator
+        % computed, and they do not encode a specific division algebra.
+        %
+        % On the other hand, if the representation is real (`.overR` true), this returns a list of subrepresentations.
+        % Each subrepresentation corresponds to one of four cases. In the first three cases, the subrepresentation
+        % would split further into two irreducible subrepresentations, but over the complex field. This fact is represented
+        % as an encoding of the complex division algebra in a real subrepresentation (its `.divisionAlgebraName` set to ``'complex'``).
+        % In the result returned, one can only know if the subrepresentation is in one of the first three cases (`.divisionAlgebraName` complex)
+        % or the last case (`.isIrreducible` true and `.frobeniusSchurIndicator` equal to 1).
+        %
+        % * The subrepresentation encodes a pair of conjugate complex subrepresentations which are equivalent.
+        %   Nevertheless, there is a change of basis (with real coefficients) that splits the subrepresentation in
+        %   two irreducible real-type subrepresentations. The complex encoding is understood as a temporary artifact of
+        %   the decomposition method.
+        %
+        % * The subrepresentation encodes a pair of conjugate complex subrepresentations which are inequivalent.
+        %   The subrepresentation is thus actually irreducible, and already exhibits the relevant division algebra encoding.
+        %
+        % * The subrepresentation encodes a pair of conjugate complex subrepresentations which are equivalent,
+        %   but there is no change of basis (with real coefficients) that splits it further over the reals. Instead,
+        %   the subrepresentation is quaternionic-type, but the quaternion division algebra has only been partly revealed
+        %   (`.divisionAlgebraName` is set to ``'complex'`` and not ``'quaternion.rep'``).
+        %
+        % * The subrepresentation is irreducible (`.isIrreducible` true), even absolutely irreducible. Thus the
+        %   subrepresentation is of real-type, and its Frobenius-Schur (`.frobeniusSchurIndicator`) indicator is set to ``1``.
         %
         % Returns:
         %   cell(1,\*) of `.SubRep`: Subrepresentations with their ``.parent`` set to this representation
-            irreps = replab.rep.complexSplitUsingInvariantBlocks(self);
+            irreps = replab.rep.absoluteSplit_usingInvariantBlocks(self);
         end
 
-        function irreps = split(self)
-        % Decomposes fully the given representation into subrepresentations
-        %
-        % Returns a list of irreducible representations, where trivial and nontrivial subrepresentations
-        % have been identified. Also, all the injection and projection maps are biorthogonal.
-        %
-        % Returns:
-        %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to this representation
-            step1 = self.complexSplit;
-            irreps = cell(1, 0);
-            samples = self.commutant.samples;
-            for i = 1:length(step1)
-                sub = step1{i};
-                if sub.encodesIrreducibleComplexPair
-                    irreps = horzcat(irreps, replab.rep.canonicalEncoding_nonunitary(sub, samples.iterator));
-                else
-                    assert(sub.isIrreducible && sub.frobeniusSchurIndicator == 1);
-                    irreps{1,end+1} = sub;
-                end
-            end
-        end
+% $$$         function irreps = split(self)
+% $$$         % Decomposes fully the given representation into subrepresentations
+% $$$         %
+% $$$         % Returns a list of irreducible representations, where trivial and nontrivial subrepresentations
+% $$$         % have been identified. Also, all the injection and projection maps are biorthogonal.
+% $$$         %
+% $$$         % Returns:
+% $$$         %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to this representation
+% $$$             step1 = self.complexSplit;
+% $$$             irreps = cell(1, 0);
+% $$$             samples = self.commutant.samples;
+% $$$             for i = 1:length(step1)
+% $$$                 sub = step1{i};
+% $$$                 if sub.encodesIrreducibleComplexPair
+% $$$                     irreps = horzcat(irreps, replab.rep.canonicalEncoding_nonunitary(sub, samples.iterator));
+% $$$                 else
+% $$$                     assert(sub.isIrreducible && sub.frobeniusSchurIndicator == 1);
+% $$$                     irreps{1,end+1} = sub;
+% $$$                 end
+% $$$             end
+% $$$         end
 
         function rep1 = similarRep(self, A, varargin)
         % Returns a similar representation under a change of basis

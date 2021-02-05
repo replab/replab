@@ -28,7 +28,6 @@ classdef SubRep < replab.Rep
         parent % (`+replab.Rep`): Parent representation of dimension $D$
         injection_internal % (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
         projection_internal % (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
-        encodesIrreducibleComplexPair % (logical): True if this encodes a pair of irreducible complex subreps. using the canonical complex encoding
     end
 
     methods
@@ -47,7 +46,6 @@ classdef SubRep < replab.Rep
         %   projection_internal (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map $P$
         %
         % Keyword Args:
-        %   encodesIrreducibleComplexPair (logical, optional): True if this encodes a pair of irreducible complex subreps. using the canonical complex encoding, default: false
         %   isUnitary (logical, optional): Whether the resulting representation is unitary, may be omitted (see above)
         %   projectorErrorBound (double, optional): Upper bound on || I P - \tilde{I} \tilde{P} ||_F
         %   injectionConditionNumberEstimate (double, optional): Upper bound of the condition number of $\tilde{I}$ (and thus $\tilde{P}$)
@@ -59,7 +57,7 @@ classdef SubRep < replab.Rep
             if parent.overR
                 assert(isreal(injection_internal) && isreal(projection_internal), 'A real Rep can only have real subrepresentations.');
             end
-            args = struct('injectionConditionNumberEstimate', [], 'projectorErrorBound', [], 'encodesIrreducibleComplexPair', false);
+            args = struct('injectionConditionNumberEstimate', [], 'projectorErrorBound', []);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             IP_unitary = all(all(injection_internal == projection_internal'));
             if IP_unitary && parent.knownUnitary
@@ -73,7 +71,6 @@ classdef SubRep < replab.Rep
             self.parent = parent;
             self.injection_internal = injection_internal;
             self.projection_internal = projection_internal;
-            self.encodesIrreducibleComplexPair = args.encodesIrreducibleComplexPair;
             if ~isempty(args.projectorErrorBound)
                 self.cache('projectorErrorBound', args.projectorErrorBound, 'error');
             end
@@ -268,18 +265,13 @@ classdef SubRep < replab.Rep
             mat = self.injection(type) * self.projection(type);
         end
 
-        function irreps = complexSplitInParent(self, iterator)
-        % Decomposes fully this subrepresentation into complex irreducible subrepresentations of its parent
+        function irreps = absoluteSplitInParent(self, iterator)
+        % Decomposes this subrepresentation into absolutely irreducible subrepresentations of its parent
         %
-        % When the representation is over C, the returned subrepresentations are irreducible.
-        %
-        % When the representation is over R, the returned subrepresentations are of one of these types:
-        %
-        % * an irreducible real-type subrepresentation with `.isIrreducible` set to true, and the Frobenius-Schur indicator set to ``1``,
-        % * a real subrepresentation whose injection/projection map encode a split into two subrepresentations over the complex numbers, with `.encodesIrreducibleComplexPair` set to true.
+        % See `.Rep.absoluteSplit` for the constraints obeyed by the returned subrepresentations.
         %
         % Args:
-        %   iterator (`.SamplesIterator`): Iterator into samples of the parent commutant
+        %   iterator (`.SamplesIterator`, optional): Iterator into samples of the commutant of `.parent`
         %
         % Returns:
         %   cell(1,\*) of `.SubRep`: Subrepresentations with their ``.parent`` set to the `.parent` of this subrepresentation
@@ -288,16 +280,60 @@ classdef SubRep < replab.Rep
             end
             if self.knownUnitary
                 if self.overC
-                    irreps = replab.rep.complexSplitInParent_complex_unitary(self, iterator);
+                    irreps = replab.rep.absoluteSplitInParent_complex_unitary(self, iterator);
                 else
-                    irreps = replab.rep.complexSplitInParent_real_unitary(self, iterator);
+                    irreps = replab.rep.absoluteSplitInParent_real_unitary(self, iterator);
                 end
             else
                 if self.overC
-                    irreps = replab.rep.complexSplitInParent_complex_nonunitary(self, iterator);
+                    irreps = replab.rep.absoluteSplitInParent_complex_nonunitary(self, iterator);
                 else
-                    irreps = replab.rep.complexSplitInParent_real_nonunitary(self, iterator);
+                    irreps = replab.rep.absoluteSplitInParent_real_nonunitary(self, iterator);
                 end
+            end
+        end
+
+        function irreps = identifyIrrepsInParent(self, iterator)
+        % Identifies the irreducible subrepresentations present in this representation
+        %
+        % If this subrepresentation should be first split further, it returns an empty array. Otherwise,
+        % it returns an array of one or two irreducible subrepresentations of `.parent`.
+        %
+        % Over the complex field (`.overC` true), this merely checks that this subrepresentation is irreducible.
+        % If so, we set this subrepresentation `.isIrreducible` property to true, and we return it in
+        % a singleton cell array.
+        %
+        % Over the real field (`.overR` true), three cases are possible:
+        %
+        % * This subrepresentation should be processed further by `.absoluteSplitInParent`. In that case,
+        %   we return an empty cell array.
+        %
+        % * The subrepresentation does not encode a complex division algebra (`.divisionAlgebraName` empty),
+        %   and we verify that this subrepresentation is irreducible. If so, we set this subrepresentation
+        %   `.isIrreducible` to true, and we return it in a singleton cell array.
+        %
+        % * The subrepresentation does encode a complex division algebra (`.divisionAlgebraName` set to ``'complex'``),
+        %   and moreover it splits into two complex conjugate subrepresentations. This method then identifies
+        %   the type of the irreducible subrepresentations (real-type, complex-type, quaternionic-type);
+        %   in the case of real-type subrepresentations, it splits them; in the case of quaternionic-type
+        %   subrepresentations, it identifies the canonical form of quaternion division algebra present.
+        %   It returns irreducible subrepresentations with `.isIrreducible`, `.divisionAlgebraName`
+        %   and `.frobeniusSchurIndicator` set to the relevant value.
+        %
+        % With respect to sampling, this method uses one sample from the given iterator.
+        %
+        % Args:
+        %   iterator (`.SamplesIterator`, optional): Iterator into samples of the commutant of `.parent`
+        %
+        % Returns:
+        %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their division algebra identified
+            if nargin < 2
+                iterator = self.parent.commutant.samples.iterator;
+            end
+            if self.overR && strcmp(self.divisionAlgebraName, 'complex')
+                irreps = replab.rep.identifyIrrepsInParent_complexDivisionAlgebra_nonunitary(self, iterator);
+            else
+                irreps = replab.rep.identifyIrrepsInParent_trivialDivisionAlgebra_nonunitary(self, iterator);
             end
         end
 
