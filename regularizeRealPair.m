@@ -1,4 +1,4 @@
-function s1 = regularizeRealPair(s)
+function subs = regularizeRealPair(s)
 % Regularizes the given pair of real representations, whose complex algebra has been revealed
     X = s.parent.commutant.sample;
     X1 = s.parent.commutant.sample;
@@ -61,15 +61,25 @@ function s1 = regularizeRealPair(s)
     K2 = diag(K(n1+1:n1+n23,n1+n23+1:end));
     K3 = diag(K(n1+n23+1:end,n1+1:n1+n23));
     % correct eigenvalues
-    Tev = diag([conj(sqrt(K1));inv(sqrt(K3));conj(sqrt(K3))]);
+    s1 = sqrt(K1);
+    s3 = sqrt(K3);
+    Tev = diag([conj(s1);inv(s3);conj(s3)]);
+    Tiev = diag([s1;s3;inv(conj(s3))]);
     % put in diagonal form
-    C =
-    Tform = blkdiag(eye(n1), conj(kron([-1+1i -1-1i; -1-1i -1+1i], eye(n23))));
+    C = [1+1i 1-1i; 1-1i 1+1i]/2;
+    Ci = conj(C);
+    Tform = blkdiag(eye(n1), kron(C, eye(n23)));
+    Tiform = blkdiag(eye(n1), kron(Ci, eye(n23)));
     T = blkdiag(conj(Tev*Tform), Tev*Tform);
-    inv(T)*Y*T
-    error('asd')
-    %y12 = sqrt(diag(Y12));
-    %T = diag([y12(1:length(I1)); ones(d/2-length(I1), 1); conj(y12(1:length(I1))); ones(d/2-length(I1), 1)]);
-    %Y =  inv(T)*Wi*Ui*X*U*W*T/sqrt(f);
-    %Y1 =  inv(T)*Wi*Ui*X1*U*W*T/sqrt(f);
+    Ti = blkdiag(conj(Tiform*Tiev), Tiform*Tiev);
+    inj = U*W*T*kron([1 1i; 1 -1i], eye(d/2))/sqrt(2);
+    prj = kron([1 1; -1i 1i], eye(d/2))*Ti*Wi*Ui/sqrt(2);
+    tol = 1e-10;
+    assert(norm(imag(inj)) < tol);
+    assert(norm(imag(prj)) < tol);
+    inj = real(inj);
+    prj = real(prj);
+    s1 = s.parent.subRep(inj(:,1:d/2), 'projection', prj(1:d/2,:), 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
+    s2 = s.parent.subRep(inj(:,d/2+1:end), 'projection', prj(d/2+1:end,:), 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
+    subs = {s1, s2};
 end
