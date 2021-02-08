@@ -72,7 +72,7 @@ classdef Laws < replab.Str
                 values{i} = evalin('caller', names{i});
             end
             errorId = 'assertTrue:falseCondition';
-            message = replab.laws.message('%e = norm(X1 - X2) > tol = %e', context, {delta, tol + e1 + e2}, names, values);
+            message = replab.laws.message('%s = norm(X1 - X2) > tol = %s', context, {delta, tol + e1 + e2}, names, values);
             if replab.compat.isOctave
                 error(errorId, '%s', message);
             else
