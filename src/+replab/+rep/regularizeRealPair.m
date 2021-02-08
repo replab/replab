@@ -1,10 +1,19 @@
-function subs = regularizeRealPair(s)
-% Regularizes the given pair of real representations, whose complex algebra has been revealed
-    X = s.parent.commutant.sample;
-    X1 = s.parent.commutant.sample;
-    d = s.dimension;
-    I = s.injection;
-    P = s.projection;
+function [sub1, sub2] = regularizeRealPair(sub)
+% Splits a subrepresentation encoding, using a complex division algebra, a pair of real subrepresentations
+%
+% Args:
+%   sub (`+replab.SubRep`): Subrepresentation with its ``divisionAlgebraName`` set to ``'complex'``
+%
+% Returns
+% -------
+%   sub1: `+replab.SubRep`
+%     First real-type irreducible subrepresentation
+%   sub2: `+replab.SubRep`
+%     Second real-type irreducible subrepresentation
+    X = sub.parent.commutant.sample;
+    d = sub.dimension;
+    I = sub.injection;
+    P = sub.projection;
     % get the real and imaginary parts for both the injection and projection maps
     A = I(:,1:2:d);
     B = I(:,2:2:d);
@@ -79,7 +88,6 @@ function subs = regularizeRealPair(s)
     assert(norm(imag(prj)) < tol);
     inj = real(inj);
     prj = real(prj);
-    s1 = s.parent.subRep(inj(:,1:d/2), 'projection', prj(1:d/2,:), 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
-    s2 = s.parent.subRep(inj(:,d/2+1:end), 'projection', prj(d/2+1:end,:), 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
-    subs = {s1, s2};
+    sub1 = sub.parent.subRep(inj(:,1:d/2), 'projection', prj(1:d/2,:), 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
+    sub2 = sub.parent.subRep(inj(:,d/2+1:end), 'projection', prj(d/2+1:end,:), 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
 end

@@ -1574,27 +1574,21 @@ classdef Rep < replab.Obj
             irreps = replab.rep.absoluteSplit_usingInvariantBlocks(self);
         end
 
-% $$$         function irreps = split(self)
-% $$$         % Decomposes fully the given representation into subrepresentations
-% $$$         %
-% $$$         % Returns a list of irreducible representations, where trivial and nontrivial subrepresentations
-% $$$         % have been identified. Also, all the injection and projection maps are biorthogonal.
-% $$$         %
-% $$$         % Returns:
-% $$$         %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to this representation
-% $$$             step1 = self.complexSplit;
-% $$$             irreps = cell(1, 0);
-% $$$             samples = self.commutant.samples;
-% $$$             for i = 1:length(step1)
-% $$$                 sub = step1{i};
-% $$$                 if sub.encodesIrreducibleComplexPair
-% $$$                     irreps = horzcat(irreps, replab.rep.canonicalEncoding_nonunitary(sub, samples.iterator));
-% $$$                 else
-% $$$                     assert(sub.isIrreducible && sub.frobeniusSchurIndicator == 1);
-% $$$                     irreps{1,end+1} = sub;
-% $$$                 end
-% $$$             end
-% $$$         end
+        function irreps = split(self)
+        % Decomposes the given representation into irreducible representations
+            irreps = cell(1, 0);
+            todo = self.absoluteSplit;
+            while ~isempty(todo)
+                h = todo{1};
+                todo = todo(2:end);
+                res = h.identifyIrrepsInParent;
+                if isempty(res)
+                    todo = horzcat(todo, h.absoluteSplitInParent);
+                else
+                    irreps = horzcat(irreps, res);
+                end
+            end
+        end
 
         function rep1 = similarRep(self, A, varargin)
         % Returns a similar representation under a change of basis

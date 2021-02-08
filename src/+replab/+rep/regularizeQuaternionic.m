@@ -1,10 +1,16 @@
-function s1 = regularizeQuaternion(s)
-% Regularizes the given quaternion representation, whose complex algebra has been revealed
-    X = s.parent.commutant.sample;
-    X1 = s.parent.commutant.sample;
-    d = s.dimension;
-    I = s.injection;
-    P = s.projection;
+function irrep = regularizeQuaternionic(sub)
+% Finds the basis in which a quaternionic-type subrepresentation exhibit the "canonical" quatnerion division algebra
+%
+% Args:
+%   sub (`+replab.SubRep`): Subrepresentation with its ``divisionAlgebraName`` set to ``'complex'``
+%
+% Returns:
+%   `+replab.SubRep`: Subrepresentation with ``divisionAlgebraName`` set to ``'quaternionic.rep'``
+    X = sub.parent.commutant.sample;
+    X1 = sub.parent.commutant.sample;
+    d = sub.dimension;
+    I = sub.injection;
+    P = sub.projection;
     % get the real and imaginary parts for both the injection and projection maps
     A = I(:,1:2:d);
     B = I(:,2:2:d);
@@ -48,8 +54,17 @@ function s1 = regularizeQuaternion(s)
     W = blkdiag(conj(V),V);
     Wi = blkdiag(conj(Vi),Vi);
     Y1 =  Wi*Ui*X*U*W/sqrt(f);
-    L = Y1(1:d/4,d/2+d/4+1:end);
-    K = Y1(d/4+1:d/2,d/2+1:d/2+d/4);
+    r1 = 1:d/4;
+    r2 = d/4+1:d/2;
+    r3 = d/2+1:d/2+d/4;
+    r4 = d/2+d/4+1:d;
+    L = Y1(r1,r4);
+    K = Y1(r2,r3);
+    Lc = Y1(r3,r2);
+    Kc = Y1(r4,r1);
+    tol = 1e-10;
+    assert(norm(L-conj(Lc)) < tol);
+    assert(norm(K-conj(Kc)) < tol);
     L = diag(diag(L));
     T = blkdiag(L, eye(d/4), conj(L), eye(d/4));
     Ti = blkdiag(inv(L), eye(d/4), conj(inv(L)), eye(d/4));
@@ -64,8 +79,8 @@ function s1 = regularizeQuaternion(s)
     %
     % [      x*I          0         0       y*I
     %          0        x*I      -y*I         0
-    %          0 conj(-y*I) conj(x)*I         0
-    %  conj(y*I)          0         0 conj(x)*I  ]
+    %          0  conj(y*I) conj(x)*I         0
+    % conj(-y*I)          0         0 conj(x)*I  ]
     %
     %
     % computing inv(diag(E,F,conj(E),conj(F))) * Z * diag(E,F,conj(E),conj(F))
@@ -77,18 +92,38 @@ function s1 = regularizeQuaternion(s)
     %   conj(inv(F)*K)*E                  ]  + blkdiag(x*I, x*I, conj(x)*I, conj(x)*I)
     %
     % so we set F = I, E = L
+    Y = Ti*Wi*Ui*X1*U*W*T;
+    Y11 = Y(r1,r1);
+    Y22 = Y(r2,r2);
+    Y33 = Y(r3,r3);
+    Y44 = Y(r4,r4);
+    Y14 = Y(r1,r4);
+    Y23 = Y(r2,r3);
+    Y32 = Y(r3,r2);
+    Y41 = Y(r4,r1);
+    Y0 = zeros(d/4,d/4);
+    assert(norm(Y11-Y22) < tol);
+    assert(norm(Y11-conj(Y33)) < tol);
+    assert(norm(Y11-conj(Y44)) < tol);
+    assert(norm(Y14 + Y23) < tol);
+    assert(norm(Y14 - conj(Y32)) < tol);
+    assert(norm(Y14 + conj(Y41)) < tol);
+    Yrec = [Y11 Y0 Y0 Y14
+            Y0 Y22 Y23 Y0
+            Y0 Y32 Y33 Y0
+            Y41 Y0 Y0 Y44];
+    assert(norm(Y - Yrec) < tol);
     s1 = [1 0; 0 1];
     sy = [0 -1i; 1i 0];
     S = 1i*kron([s1-sy 1i*(s1+sy); -s1-sy 1i*(s1-sy)], eye(d/4))/2;
-    S = reshape(permute(reshape(S, [d 4 d/4]), [1 3 2]), [d d]);
+    S = reshape(permute(reshape(S, [d d/4 4]), [1 3 2]), [d d]);
     Si = S';
     Y = Si*Ti*Wi*Ui*X*U*W*T*S;
     inj = U*W*T*S;
     prj = Si*Ti*Wi*Ui;
-    tol = 1e-10;
     assert(norm(imag(inj)) < tol);
     assert(norm(imag(prj)) < tol);
     inj = real(inj);
     prj = real(prj);
-    s1 = s.parent.subRep(inj, 'projection', prj, 'divisionAlgebraName', 'quaternion.rep', 'isIrreducible', true, 'frobeniusSchurIndicator', -2);
+    irrep = sub.parent.subRep(inj, 'projection', prj, 'divisionAlgebraName', 'quaternion.rep', 'isIrreducible', true, 'frobeniusSchurIndicator', -2);
 end

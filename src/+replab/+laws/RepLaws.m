@@ -18,7 +18,9 @@ classdef RepLaws < replab.Laws
         end
 
         function law_identity_(self)
-            self.assertApproxEqual(self.rep.image(self.G.identity), speye(self.rep.dimension), self.rep.errorBound);
+            rho = self.rep.image(self.G.identity);
+            rho1 = speye(self.rep.dimension);
+            self.assertApproxEqual(rho, rho1, self.rep.errorBound);
         end
 
         function law_composition_GG(self, g1, g2)
@@ -61,6 +63,14 @@ classdef RepLaws < replab.Laws
                 rho = self.rep.image(g);
                 rho1 = da.project(rho);
                 self.assertApproxEqual(rho, rho1, self.rep.errorBound);
+            end
+        end
+
+        function law_unitary_G(self, g)
+            if self.rep.knownUnitary
+                rho = self.rep.image(g);
+                rhoI = self.rep.inverseImage(g);
+                self.assertApproxEqual(rho, rhoI', 2*self.rep.errorBound);
             end
         end
 
