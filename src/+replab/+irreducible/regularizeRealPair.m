@@ -1,8 +1,9 @@
-function [sub1, sub2] = regularizeRealPair(sub)
+function [sub1, sub2] = regularizeRealPair(sub, sample)
 % Splits a subrepresentation encoding, using a complex division algebra, a pair of real subrepresentations
 %
 % Args:
 %   sub (`+replab.SubRep`): Subrepresentation with its ``divisionAlgebraName`` set to ``'complex'``
+%   sample (double(\*,\*)): Sample of ``sub.parent.commutant``
 %
 % Returns
 % -------
@@ -10,7 +11,7 @@ function [sub1, sub2] = regularizeRealPair(sub)
 %     First real-type irreducible subrepresentation
 %   sub2: `+replab.SubRep`
 %     Second real-type irreducible subrepresentation
-    X = sub.parent.commutant.sample;
+    X = sample;
     d = sub.dimension;
     I = sub.injection;
     P = sub.projection;

@@ -1,41 +1,38 @@
-function irreps = absoluteSplitInParent_real_unitary(sub, iterator)
-% Decomposes fully a real unitary subrepresentation into irreducible subrepresentations
+function subs = absoluteSplitInParent_real_unitary(sub, sample)
+% Decomposes a real unitary subrepresentation into subrepresentations
 %
 % Args:
 %   sub (`+replab.SubRep`): Unitary subrepresentation to split further
-%   iterator (`+replab.+domain.SamplesIterator`): Iterator in the sequence of parent commutant samples
-%x
+%   sample (double(\*,\*)): Sample of ``sub.parent.commutant``
+%
 % Returns:
-%   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to the ``.parent`` of ``sub``
+%   cell(1,\*) of `+replab.SubRep`: Subrepresentations with their ``.parent`` set to the ``.parent`` of ``sub``
     assert(sub.isUnitary);
     assert(sub.overR);
     tol = replab.globals.doubleEigTol;
     d = sub.dimension;
     % force a dense matrix to have eig behave well
-    S = full(sub.projection('double/sparse') * iterator.next * sub.injection('double/sparse'));
-    % make a symmetric matrix so that the eigenvectors are orthogonal
-    % and the decomposition is real
+    S = full(sub.projection('double/sparse') * sample * sub.injection('double/sparse'));
+    % make a symmetric matrix so that the eigenvectors are orthogonal and the decomposition is real
     X = (S + S')/2;
     [U, D] = eig(X);
     D = reshape(diag(D), [1 d]);
     P = replab.Partition.fromApproximateVector(D, tol);
     blocks = P.blocks;
     n = length(blocks);
-    irreps = cell(1, n);
+    subs = cell(1, n);
     for i = 1:n
-        realType = [];
+        divisionAlgebraName = '';
         blk = blocks{i};
         dblk = length(blk);
         % now sample from the skew symmetric space to see if the representation is of
         % complex-type or quaternion-type
         Y = U(:, blk)'*S*U(:, blk);
         Y = (Y - Y')/2;
-        isAbsolutelyIrreducible = [];
         if mod(dblk, 2) == 1
             % if the dimension is odd, the irrep has to be of real-type
             basis = U(:, blk);
             assert(norm(Y, 'fro') <= tol); % TODO: put a real epsilon
-            realType = true;
         else
             % otherwise we do not know
             % real eigenvalue decomposition of a skew-symmetric matrix,
@@ -66,24 +63,14 @@ function irreps = absoluteSplitInParent_real_unitary(sub, iterator)
             if norm(D1, 'fro') > tol
                 % there is content in the diagonal component
                 basis = U(:, blk) * U1;
-                realType = false;
+                divisionAlgebraName = 'complex';
             else
                 % the diagonal component is noise
                 basis = U(:, blk);
-                realType = true;
             end
         end
         I = sub.injection('double/sparse') * basis;
         P = basis' * sub.projection('double/sparse');
-        if realType
-            irreps{i} = sub.parent.subRep(I, 'projection', P, 'isUnitary', true, 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
-        else
-            irreps{i} = sub.parent.subRep(I, 'projection', P, 'isUnitary', true, 'isIrreducible', true, 'divisionAlgebraName', 'complex');
-        end
-    end
-    if sub.inCache('trivialDimension') && sub.trivialDimension == 0
-        for i = 1:length(irreps)
-            irreps{i}.cache('trivialDimension', 0, '==');
-        end
+        subs{i} = sub.parent.subRep(I, 'projection', P, 'isUnitary', true, 'divisionAlgebraName', divisionAlgebraName);
     end
 end

@@ -1,13 +1,13 @@
-function irrep = regularizeQuaternionic(sub)
+function irrep = regularizeQuaternionic(sub, sample)
 % Finds the basis in which a quaternionic-type subrepresentation exhibit the "canonical" quatnerion division algebra
 %
 % Args:
 %   sub (`+replab.SubRep`): Subrepresentation with its ``divisionAlgebraName`` set to ``'complex'``
+%   sample (double(\*,\*)): Sample of ``sub.parent.commutant``
 %
 % Returns:
 %   `+replab.SubRep`: Subrepresentation with ``divisionAlgebraName`` set to ``'quaternionic.rep'``
-    X = sub.parent.commutant.sample;
-    X1 = sub.parent.commutant.sample;
+    X = sample;
     d = sub.dimension;
     I = sub.injection;
     P = sub.projection;
@@ -92,7 +92,7 @@ function irrep = regularizeQuaternionic(sub)
     %   conj(inv(F)*K)*E                  ]  + blkdiag(x*I, x*I, conj(x)*I, conj(x)*I)
     %
     % so we set F = I, E = L
-    Y = Ti*Wi*Ui*X1*U*W*T;
+    Y = Ti*Wi*Ui*X*U*W*T;
     Y11 = Y(r1,r1);
     Y22 = Y(r2,r2);
     Y33 = Y(r3,r3);

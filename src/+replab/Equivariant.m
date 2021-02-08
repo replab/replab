@@ -29,8 +29,6 @@ classdef Equivariant < replab.Domain
 
     properties (Access = protected)
         domain % (`+replab.Domain`): Domain, real or complex matrices
-        cachedSamples_ % (struct of cell(1,\*) of domain elements): Samples
-        cachedErrors_ % (struct of double(1,\*)): Error information
     end
 
     methods (Access = protected)

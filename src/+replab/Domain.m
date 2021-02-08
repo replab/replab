@@ -26,14 +26,6 @@ classdef Domain < replab.Obj
             error('Abstract');
         end
 
-        function s = samples(self)
-        % Returns a sequence of random samples
-        %
-        % Returns:
-        %   `.Samples`: Sequence of random samples
-            s = replab.Samples(self);
-        end
-
         function b = eqv(self, t, u)
         % Tests domain elements for equality/equivalence
         %

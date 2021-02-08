@@ -1,9 +1,9 @@
-function irreps = identifyIrrepsInParent_trivialDivisionAlgebra_nonunitary(sub, iterator)
+function irreps = identifyIrrepsInParent_trivialDivisionAlgebra_nonunitary(sub, sample)
 % Identifies the irreducible representation(s) directly present in a real or complex subrepresentation
 %
 % Args:
 %   sub (`+replab.SubRep`): Subrepresentation with `+replab.Rep.divisionAlgebraName` set to ``''``
-%   iterator (`+replab.+domain.SamplesIterator`): Iterator in the sequence of parent commutant samples
+%   sample (double(\*,\*)): Sample of ``sub.parent.commutant``
 %
 % Returns:
 %   cell(1,\*) of `+replab.SubRep`: A singleton cell array containing the argument ``sub`` with `+replab.Rep.isIrreducible` updated to true, or an empty array
@@ -12,7 +12,7 @@ function irreps = identifyIrrepsInParent_trivialDivisionAlgebra_nonunitary(sub, 
     I = sub.injection('double/sparse');
     P = sub.projection('double/sparse');
     % the 2-norm is dominated by the fro-norm
-    S = P*iterator.next*I;
+    S = P*sample*I;
     f = trace(S)/d;
     delta = norm(S - f*eye(d), 'fro');
     tol = replab.globals.doubleEigTol; % TODO: better tolerance test

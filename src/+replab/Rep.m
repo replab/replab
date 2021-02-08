@@ -524,11 +524,7 @@ classdef Rep < replab.Obj
         %   `.Isotypic`: Subrepresentation as isotypic component
             assert(self.isExact);
             replab.msg(1, '*** Computing trivial component (exact) of representation of dim = %d', self.dimension);
-            P = replab.cyclotomic.eye(self.dimension);
-            t = cputime;
-            P1 = self.trivialRowSpace.project(P, 'exact');
-            P2 = self.trivialColSpace.project(P1, 'exact');
-            replab.msg(2, 'Time (trivial subspace projection): %2.2f s', cputime - t);
+            P2 = self.trivialProjector('exact');
             d = trace(P2);
             assert(d.isWhole);
             d = double(d);
@@ -558,12 +554,8 @@ classdef Rep < replab.Obj
         % Returns:
         %   `.Isotypic`: Subrepresentation as isotypic component
             replab.msg(1, '*** Computing trivial component (double) of representation of dim = %d', self.dimension);
-            P = speye(self.dimension);
-            t = cputime;
-            [P1 E1] = self.trivialRowSpace.project(P, 'double');
-            [P2 E2] = self.trivialColSpace.project(P1, 'double');
-            replab.msg(2, 'Time (trivial subspace projection): %2.2f s', cputime - t);
-            if E1 + E2 >= 1
+            [P2, err] = self.trivialProjector('double');
+            if err >= 1
                 error('Representation is not precise enough to compute the trivial dimension.');
             end
             d = round(trace(P2));
@@ -579,6 +571,42 @@ classdef Rep < replab.Obj
                 sub = self.subRep(I, 'projection', P);
             end
             iso = replab.Isotypic.fromTrivialSubRep(sub);
+        end
+
+        function proj = computeTrivialProjector_exact(self)
+        % Computes the projector into the trivial subrepresentation of this representation
+        %
+        % Returns:
+        %   `.cyclotomic`(\*,\*): Exact projector
+            assert(self.isExact);
+            replab.msg(1, '*** Computing trivial projector (exact) of representation of dim = %d', self.dimension);
+            P = replab.cyclotomic.eye(self.dimension);
+            t = cputime;
+            P1 = self.trivialRowSpace.project(P, 'exact');
+            proj = self.trivialColSpace.project(P1, 'exact');
+            replab.msg(2, 'Time (trivial projection): %2.2f s', cputime - t);
+        end
+
+        function res = computeTrivialProjector_double(self)
+        % Computes the projector into the trivial subrepresentation of this representation
+        %
+        % Returns:
+        %   {double(\*,\*), double}: Approximate projector and estimated error in Frobenius norm
+            replab.msg(1, '*** Computing trivial projector (double) of representation of dim = %d', self.dimension);
+            if self.inCache('trivialProjector_exact')
+                % Shortcut: if an exact trivial projector is available, use it instead
+                P = self.trivialProjector('exact');
+                [proj, E] = P.doubleApproximation;
+                res = {proj, norm(E, 'fro')};
+                return
+            end
+            t = cputime;
+            P = speye(self.dimension);
+            [P1, E1] = self.trivialRowSpace.project(P, 'double');
+            [proj, E2] = self.trivialColSpace.project(P1, 'double');
+            err = E1 + E2;
+            replab.msg(2, 'Time in projection: %2.2f s', cputime - t);
+            res = {proj, err};
         end
 
         function d = computeTrivialDimension(self)
@@ -707,6 +735,34 @@ classdef Rep < replab.Obj
             end
         end
 
+        function [proj, err] = trivialProjector(self, type)
+        % Returns the projector into the trivial component present in this representation
+        %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
+        % Returns
+        % -------
+        %   proj: double(\*,\*) or `.cyclotomic`(\*,\*)
+        %     Projector
+        %   err: double
+        %     Estimated error in Frobenius norm
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            switch type
+              case 'double'
+                res = self.cached('trivialProjector_double', @() self.computeTrivialProjector_double);
+                proj = res{1};
+                err = res{2};
+              case 'exact'
+                proj = self.cached('trivialProjector_exact', @() self.computeTrivialProjector_exact);
+                err = 0;
+              otherwise
+                error('Unknown type');
+            end
+        end
+
         function f = frobeniusSchurIndicator(self)
         % Returns the Frobenius-Schur indicator of this representation
         %
@@ -720,7 +776,7 @@ classdef Rep < replab.Obj
         % * ``-2`` if the representation is of quaternion-type.
         %
         % Returns:
-        %   integer: Value of the indicator
+        %   integer: Value of the indicato
             f = self.cached('frobeniusSchurIndicator', @() self.computeFrobeniusSchurIndicator);
         end
 
@@ -957,45 +1013,18 @@ classdef Rep < replab.Obj
         % First it splits the representation into irreducibles, before recognizing which
         % irreducible representations are part of the same isotypic component.
         %
-        % TODO: exact/double
-            irreps = self.split;
-            mask = cellfun(@(r) r.trivialDimension == 0, irreps);
-            nontrivial = irreps(mask);
-            trivialIsotypic = replab.Isotypic.fromBiorthogonalTrivialIrreps(self, irreps(~mask));
-            % regroup equivalent representations
-            context = replab.Context.make;
-            C = self.commutant.sampleInContext(context, 1);
-            nNT = length(nontrivial);
-            mask = logical(zeros(nNT, nNT));
-            tol = replab.globals.doubleEigTol;
-            for i = 1:nNT
-                subI = nontrivial{i};
-                CI = subI.projection('double/sparse') * C;
-                for j = 1:nNT
-                    subJ = nontrivial{j};
-                    mask(i,j) = replab.isNonZeroMatrix(CI * subJ.injection('double/sparse'), tol);
-                end
-            end
-            cc = replab.UndirectedGraph.fromAdjacencyMatrix(mask).connectedComponents.blocks;
-            % the blocks of the partition cc represent isotypic components
-            nNT = length(cc);
-            NT = cell(1, nNT);
-            for i = 1:nNT
-                subreps = nontrivial(cc{i});
-                iso = replab.Isotypic.fromIrreps(self, subreps, subreps{1}.dimension, false);
-                NT{i} = iso.harmonize(context);
-            end
-            % Sort by dimension first and then multiplicity
-            dims = cellfun(@(iso) iso.irrepDimension, NT);
-            muls = cellfun(@(iso) iso.multiplicity, NT);
-            [~, I] = sortrows([dims(:) muls(:)]);
-            NT = NT(I);
-            if trivialIsotypic.dimension > 0
-                components = horzcat({trivialIsotypic}, NT);
+            sample1 = self.commutant.sample;
+            sample2 = self.commutant.sample;
+            forceNonUnitaryAlgorithms = false;
+            [trivial, nonTrivialIrreps] = replab.irreducible.split(self, sample1, sample2, forceNonUnitaryAlgorithms);
+            tiso = replab.Isotypic.fromTrivialSubRep(trivial);
+            [iso, zeroErrors, nonZeroErrors] = replab.irreducible.findIsotypic(self, nonTrivialIrreps, sample2);
+            if tiso.dimension > 0
+                dec = replab.Irreducible(self, horzcat({tiso}, iso));
             else
-                components = NT;
+                dec = replab.Irreducible(self, iso);
             end
-            dec = replab.Irreducible(self, components);
+
         end
 
     end
@@ -1537,57 +1566,18 @@ classdef Rep < replab.Obj
             end
         end
 
-        function irreps = absoluteSplit(self)
-        % Decomposes the given representation into absolutely irreducible representations
+        function irreps = split(self, varargin)
+        % Splits this representation into irreducible subrepresentations
         %
-        % As part of the process, it identifies the trivial and nontrivial subrepresentations.
-        %
-        % If this representation is complex (`.overC` true), it returns a list of irreducible subrepresentations
-        % with their `.isIrreducible` true. The irreducible subrepresentations do not have their Frobenius-Schur indicator
-        % computed, and they do not encode a specific division algebra.
-        %
-        % On the other hand, if the representation is real (`.overR` true), this returns a list of subrepresentations.
-        % Each subrepresentation corresponds to one of four cases. In the first three cases, the subrepresentation
-        % would split further into two irreducible subrepresentations, but over the complex field. This fact is represented
-        % as an encoding of the complex division algebra in a real subrepresentation (its `.divisionAlgebraName` set to ``'complex'``).
-        % In the result returned, one can only know if the subrepresentation is in one of the first three cases (`.divisionAlgebraName` complex)
-        % or the last case (`.isIrreducible` true and `.frobeniusSchurIndicator` equal to 1).
-        %
-        % * The subrepresentation encodes a pair of conjugate complex subrepresentations which are equivalent.
-        %   Nevertheless, there is a change of basis (with real coefficients) that splits the subrepresentation in
-        %   two irreducible real-type subrepresentations. The complex encoding is understood as a temporary artifact of
-        %   the decomposition method.
-        %
-        % * The subrepresentation encodes a pair of conjugate complex subrepresentations which are inequivalent.
-        %   The subrepresentation is thus actually irreducible, and already exhibits the relevant division algebra encoding.
-        %
-        % * The subrepresentation encodes a pair of conjugate complex subrepresentations which are equivalent,
-        %   but there is no change of basis (with real coefficients) that splits it further over the reals. Instead,
-        %   the subrepresentation is quaternionic-type, but the quaternion division algebra has only been partly revealed
-        %   (`.divisionAlgebraName` is set to ``'complex'`` and not ``'quaternion.rep'``).
-        %
-        % * The subrepresentation is irreducible (`.isIrreducible` true), even absolutely irreducible. Thus the
-        %   subrepresentation is of real-type, and its Frobenius-Schur (`.frobeniusSchurIndicator`) indicator is set to ``1``.
-        %
-        % Returns:
-        %   cell(1,\*) of `.SubRep`: Subrepresentations with their ``.parent`` set to this representation
-            irreps = replab.rep.absoluteSplit_usingInvariantBlocks(self);
-        end
-
-        function irreps = split(self)
-        % Decomposes the given representation into irreducible representations
-            irreps = cell(1, 0);
-            todo = self.absoluteSplit;
-            while ~isempty(todo)
-                h = todo{1};
-                todo = todo(2:end);
-                res = h.identifyIrrepsInParent;
-                if isempty(res)
-                    todo = horzcat(todo, h.absoluteSplitInParent);
-                else
-                    irreps = horzcat(irreps, res);
-                end
-            end
+        % Keyword Args:
+        %   forceNonUnitaryAlgorithms (logical, optional): Whether to force the use of algorithms for not necessarily unitary representations, default: false
+            args = struct('forceNonUnitaryAlgorithms', false);
+            args = replab.util.populateStruct(args, varargin);
+            sample1 = self.commutant.sample;
+            sample1 = self.commutant.sample;
+            [trivial, nonTrivialIrreps] = replab.irreducible.split(self, sample1, sample2, args.forceNonUnitaryAlgorithms);
+            tiso = replab.Isotypic.fromTrivialSubRep(trivial);
+            irreps = horzcat(tiso.irreps, nonTrivialIrreps);
         end
 
         function rep1 = similarRep(self, A, varargin)

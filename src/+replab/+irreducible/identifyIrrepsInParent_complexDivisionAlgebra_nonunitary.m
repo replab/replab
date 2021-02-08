@@ -1,12 +1,12 @@
-function irreps = identifyIrrepsInParent_complexDivisionAlgebra_nonunitary(sub, iterator)
+function irreps = identifyIrrepsInParent_complexDivisionAlgebra_nonunitary(sub, sample)
 % Identifies the irreducible representation(s) present in a real subrepresentation encoding a pair of conjugate irreps
 %
 % Args:
 %   sub (`+replab.SubRep`): Subrepresentation with `+replab.Rep.divisionAlgebraName` set to ``'complex'``
-%   iterator (`+replab.+domain.SamplesIterator`): Iterator in the sequence of parent commutant samples
+%   sample (double(\*,\*)): Sample of ``sub.parent.commutant``
 %
 % Returns:
-%   cell(1,\*) of `+replab.SubRep`: Real irreps with `+replab.Rep.frobeniusSchurIndicator` computed and `+replab.Rep.isDivisionAlgebraCanonical` set to true
+%   cell(1,\*) of `+replab.SubRep`: Real irreps with `+replab.Rep.frobeniusSchurIndicator` computed and `+replab.Rep.divisionAlgebraName` set
     assert(sub.overR);
     assert(strcmp(sub.divisionAlgebraName, 'complex'));
     d = sub.dimension;
@@ -19,7 +19,7 @@ function irreps = identifyIrrepsInParent_complexDivisionAlgebra_nonunitary(sub, 
     D = P(2:2:d, :);
     U = [A+1i*B A-1i*B];
     V = [C-1i*D;C+1i*D];
-    S = iterator.next;
+    S = sample;
     X = V*S*U;
     E = diag(X);
     tol = 1e-10;
@@ -39,11 +39,11 @@ function irreps = identifyIrrepsInParent_complexDivisionAlgebra_nonunitary(sub, 
         sub.cache('isIrreducible', true, '==');
         irreps = {sub};
     elseif lambda > 0
-        [sub1, sub2] = replab.rep.regularizeRealPair(sub);
+        [sub1, sub2] = replab.irreducible.regularizeRealPair(sub, sample);
         irreps = {sub1, sub2};
     else % lambda < 0
          % quaternion-type representation
         assert(mod(d, 4) == 0);
-        irreps = {replab.rep.regularizeQuaternionic(sub)};
+        irreps = {replab.irreducible.regularizeQuaternionic(sub, sample)};
     end
 end

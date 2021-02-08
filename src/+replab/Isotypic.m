@@ -21,6 +21,30 @@ classdef Isotypic < replab.SubRep
 
     methods (Static)
 
+        function iso = fromBiorthogonalIrreps(parent, irreps, irrepDimension, isHarmonized)
+        % Creates an isotypic component from equivalent irreducible representations
+        %
+        % Assumes that the injection/projection maps of these irreps are biorthogonal.
+        %
+        % Args:
+        %   parent (`.Rep`): Parent representation
+        %   irreps (cell(1,\*) of `.SubRep`): Irreducible equivalent subrepresentations
+        %   irrepDimension (integer): Irrep dimension
+        %   isHarmonized (logical): Whether the irreps are in the same basis
+        %
+        % Returns:
+        %   `.Isotypic`: Isotypic component
+            if isempty(irreps)
+                P = zeros(0, parent.dimension);
+            else
+                P = irreps{1}.projection_internal;
+                for i = 2:length(irreps)
+                    P = [P; irreps{i}.projection_internal];
+                end
+            end
+            iso = replab.Isotypic(parent, irreps, P, irrepDimension, isHarmonized);
+        end
+
         function iso = fromBiorthogonalTrivialIrreps(parent, irreps)
         % Creates a trivial isotypic component from trivial irreducible representations
         %
@@ -75,8 +99,7 @@ classdef Isotypic < replab.SubRep
         function iso = fromIrreps(parent, irreps, irrepDimension, isHarmonized)
         % Builds an isotypic component from equivalent subrepresentations
         %
-        % All irreps of the isotypic component must be provided, and their injection maps must be linearly
-        % independent.
+        % All irreps of the isotypic component must be provided, and their injection maps must be linearly independent.
         %
         % Args:
         %   parent (`+replab.Rep`): Representation being decomposed
