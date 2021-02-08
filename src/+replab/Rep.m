@@ -1574,7 +1574,7 @@ classdef Rep < replab.Obj
             args = struct('forceNonUnitaryAlgorithms', false);
             args = replab.util.populateStruct(args, varargin);
             sample1 = self.commutant.sample;
-            sample1 = self.commutant.sample;
+            sample2 = self.commutant.sample;
             [trivial, nonTrivialIrreps] = replab.irreducible.split(self, sample1, sample2, args.forceNonUnitaryAlgorithms);
             tiso = replab.Isotypic.fromTrivialSubRep(trivial);
             irreps = horzcat(tiso.irreps, nonTrivialIrreps);

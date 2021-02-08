@@ -50,8 +50,6 @@ classdef Equivariant < replab.Domain
             self.group = repR.group;
             self.domain = replab.domain.Matrices(self.field, self.nR, self.nC);
             self.special = special;
-            self.cachedSamples_ = struct;
-            self.cachedErrors_ = struct;
         end
 
     end
