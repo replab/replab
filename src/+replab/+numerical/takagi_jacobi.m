@@ -1,4 +1,4 @@
-function [U, D] = takagi_jacobi(A, maxSweeps)
+function [U, D] = takagi_jacobi(A, U, maxSweeps)
 % Returns the Takagi factorization of the given complex symmetric matrix
 %
 % It returns a unitary matrix ``U`` and a real diagonal matrix ``D`` such that
@@ -18,6 +18,8 @@ function [U, D] = takagi_jacobi(A, maxSweeps)
 % RepLAB routines, as to respect the spirit and letter of the LGPL.
 %
 % Args:
+%   A (double(\*,\*)): Matrix to factorize
+%   U (double(\*,\*) or ``[]``): Approximate unitary basis or ``[]``
 %   maxSweeps (integer, optional): Maximal number of sweeps across the matrix, default: 50
 %
 % Returns
@@ -36,14 +38,26 @@ function [U, D] = takagi_jacobi(A, maxSweeps)
         return
     end
 
-    if nargin < 2 || isempty(maxSweeps)
+    if nargin < 3 || isempty(maxSweeps)
         maxSweeps = 50;
+    end
+
+    if nargin < 2 || isempty(U)
+        U = eye(n);
+    else
+        if ~all(all(U == eye(n)))
+            % A = U.'*D*U
+            % D = inv(U.')*A*inv(U)
+            % D = conj(U)*A*U'
+            A = conj(U)*A*U';
+            A = (A+A.')/2;
+        end
     end
 
     d = zeros(1, n);
     ev = zeros(2, n);
+
     ev(2, :) = diag(A);
-    U = eye(n);
 
     red = 0.04/n^4;
 
@@ -88,7 +102,8 @@ function [U, D] = takagi_jacobi(A, maxSweeps)
                         end
                     end
 
-                    t = t + sqrt(t^2 + conj(f)*f);
+                    %t = t + sqrt(t^2 + conj(f)*f);
+                    t = t + hypot(t, f); % provides slightly better precision
                     f = f / t;
 
                     ev(1,p) = ev(1,p) + A(p,q)*conj(f);
@@ -101,10 +116,12 @@ function [U, D] = takagi_jacobi(A, maxSweeps)
                     f = f / ci;
                     t = t / (ci*(ci+1));
 
+                    %res = A(1:p-1,[p q]) + A(1:p-1, [p q]) * [-t -f; conj(f) -t];
                     x = A(1:p-1,p);
                     y = A(1:p-1,q);
                     A(1:p-1,p) = x + (conj(f)*y - t*x);
                     A(1:p-1,q) = y - (f*x + t*y);
+                    %norm(res - A(1:p-1,[p q]))
 
                     x = A(p,p+1:q-1);
                     y = A(p+1:q-1,q).';
@@ -143,9 +160,7 @@ function [U, D] = takagi_jacobi(A, maxSweeps)
         d(p) = abs(A(p,p));
         if d(p) > eps && d(p) ~= real(A(p,p))
             f = sqrt(A(p,p)/d(p));
-            for q = 1:n
-                U(p,q) = U(p,q) * f;
-            end
+            U(p,:) = U(p,:) * f;
         end
     end
 
