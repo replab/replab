@@ -1,4 +1,4 @@
-function irreps = identifyIrrepsInParent_trivialDivisionAlgebra_nonunitary(sub, sample)
+function irreps = identifyIrrepsInParent_trivialDivisionAlgebra(sub, sample)
 % Identifies the irreducible representation(s) directly present in a real or complex subrepresentation
 %
 % Args:

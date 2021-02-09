@@ -1,4 +1,4 @@
-function irreps = identifyIrrepsInParent_complexDivisionAlgebra_nonunitary(sub, sample)
+function irreps = identifyIrrepsInParent_complexDivisionAlgebra_unitary(sub, sample)
 % Identifies the irreducible representation(s) present in a real subrepresentation encoding a pair of conjugate irreps
 %
 % Args:
@@ -44,6 +44,6 @@ function irreps = identifyIrrepsInParent_complexDivisionAlgebra_nonunitary(sub, 
     else % lambda < 0
          % quaternion-type representation
         assert(mod(d, 4) == 0);
-        irreps = {replab.irreducible.regularizeQuaternionic_nonunitary(sub, sample)};
+        irreps = {replab.irreducible.regularizeQuaternionic_unitary(sub, sample)};
     end
 end
