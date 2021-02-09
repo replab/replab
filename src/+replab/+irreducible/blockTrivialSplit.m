@@ -41,11 +41,19 @@ function [trivial, nontrivial] = blockTrivialSplit(rep, block, forceNonUnitaryAl
     % trivial injection/projection maps
     Itrivial = sparse(D, dT);
     Ptrivial = sparse(dT, D);
+    if length(block) > D/2
+        Itrivial = full(Itrivial);
+        Ptrivial = full(Ptrivial);
+    end
     Itrivial(block, :) = IT;
     Ptrivial(:, block) = PT;
     % nontrivial injection/projection maps
     Inontrivial = sparse(D, dN);
     Pnontrivial = sparse(dN, D);
+    if length(block) > D/2
+        Inontrivial = full(Inontrivial);
+        Pnontrivial = full(Pnontrivial);
+    end
     Inontrivial(block, :) = IN;
     Pnontrivial(:, block) = PN;
     if ~forceNonUnitaryAlgorithms && rep.knownUnitary

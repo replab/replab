@@ -12,7 +12,9 @@ function subs = absoluteSplitInParent_real_unitary(sub, sample)
     tol = replab.globals.doubleEigTol;
     d = sub.dimension;
     % force a dense matrix to have eig behave well
-    S = full(sub.projection('double/sparse') * sample * sub.injection('double/sparse'));
+    subI = sub.injection('double/sparse');
+    subP = sub.projection('double/sparse');
+    S = full(subP * sample * subI);
     % make a symmetric matrix so that the eigenvectors are orthogonal and the decomposition is real
     X = (S + S')/2;
     [U, D] = eig(X);
@@ -69,8 +71,12 @@ function subs = absoluteSplitInParent_real_unitary(sub, sample)
                 basis = U(:, blk);
             end
         end
-        I = sub.injection('double/sparse') * basis;
-        P = basis' * sub.projection('double/sparse');
+        I = subI * basis;
+        if all(all(subI == subP'))
+            P = I';
+        else
+            P = basis' * subP;
+        end
         subs{i} = sub.parent.subRep(I, 'projection', P, 'isUnitary', true, 'divisionAlgebraName', divisionAlgebraName);
     end
 end

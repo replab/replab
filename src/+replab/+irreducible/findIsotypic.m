@@ -16,14 +16,16 @@ function [iso, zeroErrors, nonZeroErrors] = findIsotypic(parent, irreps, sample)
         n = length(inds);
         adj = zeros(n, n);
         for i = 1:n
+            ri = irreps{inds(i)};
+            rip_sample = ri.projection*sample;
+            sample_rii = sample*ri.injection;
             for j = 1:n
-                ri = irreps{inds(i)};
                 rj = irreps{inds(j)};
-                Eij = ri.projection*sample*rj.injection;
-                Eji = rj.projection*sample*ri.injection;
+                Eij = rip_sample*rj.injection;
+                Eji = rj.projection*sample_rii;
                 S = Eij*Eji;
                 tol = 1e-10;
-                if norm(S) > tol
+                if norm(S, 'fro') > tol
                     assert(strcmp(ri.divisionAlgebraName, rj.divisionAlgebraName));
                     if strcmp(ri.divisionAlgebraName, 'quaternion.rep')
                         S1 = replab.irreducible.projectScalar(S, 'quaternion.equivariant');

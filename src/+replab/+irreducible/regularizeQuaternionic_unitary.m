@@ -9,15 +9,18 @@ function irrep = regularizeQuaternionic_unitary(sub, sample)
 %   `+replab.SubRep`: Subrepresentation with ``divisionAlgebraName`` set to ``'quaternionic.rep'``
     X = sample;
     d = sub.dimension;
-    I = sub.injection;
-    P = sub.projection;
+    subI = sub.injection;
+    subP = sub.projection;
     % get the real and imaginary parts for both the injection and projection maps
-    A = I(:,1:2:d);
-    B = I(:,2:2:d);
+    A = subI(:,1:2:d);
+    B = subI(:,2:2:d);
+    C = subP(1:2:d,:);
+    D = subP(2:2:d,:);
     % construct the complex change of basis
     U = [A+1i*B A-1i*B]/sqrt(2);
+    Ui = [C-1i*D; C+1i*D]/sqrt(2);
     % and express the sample in that basis
-    Y = U'*X*U;
+    Y = Ui*X*U;
     % the sample has the shape, in that basis
     % [x*I     J
     %  conj(J) conj(x)*I] where I is the identity matrix of the relevant size
@@ -49,7 +52,7 @@ function irrep = regularizeQuaternionic_unitary(sub, sample)
     V = V(:,I);
     Vi = V';
     W = blkdiag(conj(V),V);
-    Y1 =  W'*U'*X*U*W/sqrt(f);
+    Y1 =  W'*Ui*X*U*W/sqrt(f);
     r1 = 1:d/4;
     r2 = d/4+1:d/2;
     r3 = d/2+1:d/2+d/4;
@@ -63,7 +66,7 @@ function irrep = regularizeQuaternionic_unitary(sub, sample)
     assert(norm(K-conj(Kc)) < tol);
     L = diag(diag(L));
     T = blkdiag(L, eye(d/4), conj(L), eye(d/4));
-    % now Wi*U'*X*U*W/sqrt(f) has the shape
+    % now Wi*Ui*X*U*W/sqrt(f) has the shape
     %
     % [    x*I       0         0         L
     %        0     x*I         K         0
@@ -87,7 +90,7 @@ function irrep = regularizeQuaternionic_unitary(sub, sample)
     %   conj(inv(F)*K)*E                  ]  + blkdiag(x*I, x*I, conj(x)*I, conj(x)*I)
     %
     % so we set F = I, E = L
-    Y = T'*W'*U'*X*U*W*T;
+    Y = T'*W'*Ui*X*U*W*T;
     Y11 = Y(r1,r1);
     Y22 = Y(r2,r2);
     Y33 = Y(r3,r3);
@@ -112,11 +115,16 @@ function irrep = regularizeQuaternionic_unitary(sub, sample)
     sy = [0 -1i; 1i 0];
     S = 1i*kron([s1-sy 1i*(s1+sy); -s1-sy 1i*(s1-sy)], eye(d/4))/2;
     S = reshape(permute(reshape(S, [d d/4 4]), [1 3 2]), [d d]);
-    Y = S'*T'*W'*U'*X*U*W*T*S;
+    Y = S'*T'*W'*Ui*X*U*W*T*S;
     inj = U*W*T*S;
-    prj = S'*T'*W'*U';
     assert(norm(imag(inj)) < tol);
-    assert(norm(imag(prj)) < tol);
     inj = real(inj);
-    irrep = sub.parent.subRep(inj, 'projection', inj', 'divisionAlgebraName', 'quaternion.rep', 'isUnitary', true, 'isIrreducible', true, 'frobeniusSchurIndicator', -2);
+    if all(all(subI == subP'))
+        prj = inj';
+    else
+        prj = S'*T'*W'*Ui;
+        assert(norm(imag(prj)) < tol);
+        prj = real(prj);
+    end
+    irrep = sub.parent.subRep(inj, 'projection', prj, 'divisionAlgebraName', 'quaternion.rep', 'isUnitary', true, 'isIrreducible', true, 'frobeniusSchurIndicator', -2);
 end

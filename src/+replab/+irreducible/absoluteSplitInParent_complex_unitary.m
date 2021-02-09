@@ -12,7 +12,9 @@ function subs = absoluteSplitInParent_complex_unitary(sub, sample)
     tol = replab.globals.doubleEigTol;
     d = sub.dimension;
     % force a dense matrix to have eig behave well
-    S = full(sub.projection('double/sparse') * sample * sub.injection('double/sparse'));
+    subI = sub.injection('double/sparse');
+    subP = sub.projection('double/sparse');
+    S = full(subP * sample * subI);
     X = (S + S')/2;
     [U, D] = eig(X);
     D = reshape(diag(D), [1 d]);
@@ -26,8 +28,12 @@ function subs = absoluteSplitInParent_complex_unitary(sub, sample)
         subs = cell(1, n);
         for i = 1:n
             basis = U(:, blocks{i});
-            I = sub.injection('double/sparse') * basis;
-            P = basis' * sub.projection('double/sparse');
+            I = subI * basis;
+            if all(I == P')
+                P = I';
+            else
+                P = basis' * subP;
+            end
             subs{i} = sub.parent.subRep(I, 'projection', P, 'isUnitary', true);
         end
     end

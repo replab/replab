@@ -38,6 +38,6 @@ function irreps = identifyIrrepsInParent(sub, sample)
             irreps = replab.irreducible.identifyIrrepsInParent_complexDivisionAlgebra_nonunitary(sub, sample);
         end
     else
-        irreps = replab.irreducible.identifyIrrepsInParent_trivialDivisionAlgebra_nonunitary(sub, sample);
+        irreps = replab.irreducible.identifyIrrepsInParent_trivialDivisionAlgebra(sub, sample);
     end
 end
