@@ -38,7 +38,7 @@ function [U, D] = takagi(A, varargin)
         return
     end
     assert(n >= 2, 'A must be at least 2x2');
-    assert(all(all(A == A.'))); % A is symmetric
+    assert(all(all(A == A.')), 'A must be symmetric'); % A is symmetric
     args = struct('algorithm', 'hybrid', 'maxSweeps', 50);
     args = replab.util.populateStruct(args, varargin);
     switch args.algorithm
