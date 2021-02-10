@@ -21,20 +21,22 @@ function [iso, zeroErrors, nonZeroErrors] = findIsotypic(parent, irreps, sample)
     nonZeroErrors = zeros(1, 0);
     iso = cell(1, 0);
     for d = unique(dims)
-        inds = find(dims == d);
-        n = length(inds);
-        adj = zeros(n, n);
-        for i = 1:n
-            ri = irreps{inds(i)};
+        todo = reshape(find(dims == d), 1, []);
+        while ~isempty(todo)
+            i = todo(1);
+            todo = todo(2:end);
+            ri = irreps{i};
             rip_sample = ri.projection*sample;
             sample_rii = sample*ri.injection;
-            for j = 1:n
-                rj = irreps{inds(j)};
+            comp = {irreps{i}};
+            for j = todo
+                rj = irreps{j};
                 Eij = rip_sample*rj.injection;
                 Eji = rj.projection*sample_rii;
                 S = Eij*Eji;
                 tol = 1e-10;
                 if norm(S, 'fro') > tol
+                    todo = todo(todo ~= j);
                     assert(strcmp(ri.divisionAlgebraName, rj.divisionAlgebraName));
                     if strcmp(ri.divisionAlgebraName, 'quaternion.rep')
                         S1 = replab.irreducible.projectScalar(S, 'quaternion.equivariant');
@@ -43,19 +45,14 @@ function [iso, zeroErrors, nonZeroErrors] = findIsotypic(parent, irreps, sample)
                     end
                     err = norm(S - S1, 'fro');
                     nonZeroErrors(1,end+1) = err;
-                    adj(i,j) = 1;
-                    adj(j,i) = 1;
+
+                    comp{1,end+1} = replab.irreducible.changeBasis(ri, rj, Eij, Eji);
                 else
                     err = norm(S, 'fro');
                     zeroErrors(1,end+1) = err;
                 end
             end
-        end
-        G = replab.UndirectedGraph.fromAdjacencyMatrix(adj);
-        P = G.connectedComponents;
-        for i = 1:P.nBlocks
-            blk = P.block(i);
-            iso{1,end+1} = replab.Isotypic.fromBiorthogonalIrreps(parent, irreps(inds(blk)), d, false);
+            iso{1,end+1} = replab.Isotypic.fromBiorthogonalIrreps(parent, comp, d, true);
         end
     end
 end
