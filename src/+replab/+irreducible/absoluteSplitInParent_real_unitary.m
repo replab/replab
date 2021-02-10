@@ -27,16 +27,16 @@ function subs = absoluteSplitInParent_real_unitary(sub, sample)
         divisionAlgebraName = '';
         blk = blocks{i};
         dblk = length(blk);
-        % now sample from the skew symmetric space to see if the representation is of
-        % complex-type or quaternion-type
-        Y = U(:, blk)'*S*U(:, blk);
-        Y = (Y - Y')/2;
         if mod(dblk, 2) == 1
             % if the dimension is odd, the irrep has to be of real-type
             basis = U(:, blk);
-            assert(norm(Y, 'fro') <= tol); % TODO: put a real epsilon
+            % assert(norm(Y, 'fro') <= tol); % TODO: put a real epsilon
         else
             % otherwise we do not know
+            % now sample from the skew symmetric space to see if the representation is of
+            % complex-type or quaternion-type
+            Y = U(:, blk)'*S*U(:, blk);
+            Y = (Y - Y')/2;
             % real eigenvalue decomposition of a skew-symmetric matrix,
             % we use the real Schur that returns an orthogonal basis
             % this could be more efficient with a real skew-symmetric EV algo
@@ -72,11 +72,11 @@ function subs = absoluteSplitInParent_real_unitary(sub, sample)
             end
         end
         I = subI * basis;
-        if all(all(subI == subP'))
-            P = I';
-        else
+        %if all(all(subI == subP'))
+        %    P = I';
+        %else
             P = basis' * subP;
-        end
+            %end
         subs{i} = sub.parent.subRep(I, 'projection', P, 'isUnitary', true, 'divisionAlgebraName', divisionAlgebraName);
     end
 end
