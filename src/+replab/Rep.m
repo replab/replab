@@ -432,62 +432,7 @@ classdef Rep < replab.Obj
 
         function f = computeFrobeniusSchurIndicator(self)
         % Computes the Frobenius-Schur indicator
-            if self.inCache('isIrreducible') && self.isIrreducible
-                if self.overR
-                    % special case: irreducible real representations
-                    c = replab.Context.make;
-                    f = replab.irreducible.frobeniusSchurIndicator(self, c);
-                    c.close;
-                    return
-                else
-                    altTrivDim = self.alternatingSquare.trivialDimension;
-                    symTrivDim = self.symmetricSquare.trivialDimension;
-                    if symTrivDim == 1 && altTrivDim == 0
-                        f = 1;
-                    elseif symTrivDim == 0 && altTrivDim == 1
-                        f = -1;
-                    elseif symTrivDim == 0 && altTrivDim == 0
-                        f = 0;
-                    else
-                        error('Unknown situation');
-                    end
-                    return
-                end
-            end
-            if isa(self.group, 'replab.FiniteGroup')
-                % for a finite group, use conjugacy classes
-                f = 0;
-                C = self.group.conjugacyClasses.classes;
-                n = length(C);
-                g2 = cellfun(@(c) self.group.composeN(c.representative, 2), C, 'uniform', 0);
-                factor = cellfun(@(c) self.group.order/c.nElements, C, 'uniform', 0);
-                if self.isExact
-                    f = replab.cyclotomic.zeros(1, 1);
-                    for i = 1:n
-                        f = f + trace(self.image(g2{i}, 'exact'))/replab.cyclotomic.fromVPIs(factor{i});
-                    end
-                    f = double(f);
-                    assert(isreal(f) && round(f) == f);
-                    f = round(f);
-                else
-                    if self.errorBound >= 1
-                        error('Error on this representation is too big to compute the Frobenius-Schur indicator');
-                    end
-                    f = 0;
-                    for i = 1:n
-                        f = f + trace(self.image(g2{i}, 'double/sparse'))/double(factor{i});
-                    end
-                    f = round(f);
-                end
-                return
-            end
-            % Use decomposition
-            dec = self.decomposition;
-            f = 0;
-            for i = 1:dec.nComponents
-                c = dec.component(i);
-                f = f + c.multiplicity * c.irrep(1).frobeniusSchurIndicator;
-            end
+            f = replab.rep.frobeniusSchurIndicator(self);
         end
 
         function b = computeIsUnitary(self)
@@ -766,8 +711,9 @@ classdef Rep < replab.Obj
         function f = frobeniusSchurIndicator(self)
         % Returns the Frobenius-Schur indicator of this representation
         %
-        % It corresponds to the value $\iota = \int_{g \in G} tr[\rho_g^2] d \mu$ or
+        % It is an integer corresponding to the value $\iota = \int_{g \in G} tr[\rho_g^2] d \mu$ or
         % $\iota = \frac{1}{|G|} \sum_{g \in G} tr[\rho_g^2]$.
+        %
         %
         % For real irreducible representations, the Frobenius-Schur indicator can take values:
         % * ``1`` if the representation is of real-type; its complexification is then also irreducible
@@ -775,8 +721,13 @@ classdef Rep < replab.Obj
         %   representations over the complex numbers
         % * ``-2`` if the representation is of quaternion-type.
         %
+        % For complex irreducible representations, it can take the values:
+        % * ``1`` if the representation is of real-type,
+        % * ``0`` if the representation is of complex-type, i.e. is not equivalent to its conjugate,
+        % * ``-1`` if the representation is of quaternion-type.
+        %
         % Returns:
-        %   integer: Value of the indicato
+        %   integer: Value of the indicator
             f = self.cached('frobeniusSchurIndicator', @() self.computeFrobeniusSchurIndicator);
         end
 
