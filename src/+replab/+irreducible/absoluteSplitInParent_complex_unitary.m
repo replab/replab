@@ -29,7 +29,7 @@ function subs = absoluteSplitInParent_complex_unitary(sub, sample)
         for i = 1:n
             basis = U(:, blocks{i});
             I = subI * basis;
-            if all(I == P')
+            if all(subI == subP')
                 P = I';
             else
                 P = basis' * subP;
