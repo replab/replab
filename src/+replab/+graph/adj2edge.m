@@ -14,11 +14,11 @@ function [edges, n, weights] = adj2edge(adj)
     assert(length(size(adj)) <= 2);
 
     n = max(size(adj));
-    
+
     [a, b, weights] = find(adj);
     edges = [a, b];
-    
-    if (n > 0) && (norm(weights - weights(1)) == 0)
+
+    if (n > 0) && (length(weights) > 0) && (norm(weights - weights(1)) == 0)
         weights = weights(1);
     end
 end
