@@ -36,7 +36,9 @@ function [trivial, nonTrivialIrreps] = split(rep, sample1, sample2, forceNonUnit
         % concatenate the trivial subspaces
         Itriv = horzcat(Itriv, trivial.injection('double/sparse'));
         Ptriv = vertcat(Ptriv, trivial.projection('double/sparse'));
-        candidates = horzcat(candidates, replab.irreducible.absoluteSplitInParent(nontrivial, sample1, fnua));
+        if nontrivial.dimension > 0
+            candidates = horzcat(candidates, replab.irreducible.absoluteSplitInParent(nontrivial, sample1, fnua));
+        end
     end
     nonTrivialIrreps = cell(1, 0);
     while ~isempty(candidates)

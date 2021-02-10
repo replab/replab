@@ -24,6 +24,10 @@ function subs = absoluteSplitInParent(sub, sample, forceNonUnitaryAlgorithms)
 %
 % Returns:
 %   cell(1,\*) of `.SubRep`: Subrepresentations with their ``.parent`` set to the `.parent` of this subrepresentation
+    if sub.dimension <= 1
+        subs = {sub};
+        return
+    end
     if sub.knownUnitary && ~forceNonUnitaryAlgorithms
         if sub.overC
             subs = replab.irreducible.absoluteSplitInParent_complex_unitary(sub, sample);
