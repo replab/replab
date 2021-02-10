@@ -7,6 +7,15 @@ function [iso, zeroErrors, nonZeroErrors] = findIsotypic(parent, irreps, sample)
 %   parent (`+replab.Rep`): Parent representation of which the irreps have been computed
 %   irreps (cell(1,\*) of `+replab.SubRep`): Biorthogonal irreducible subrepresentations with their division algebra in canonical form
 %   sample (double(\*,\*)): Sample of ``parent.commutant``
+%
+% Returns
+% -------
+%   iso: cell(1,\*) of `+replab.Isotypic`
+%     Isotypic components
+%   zeroErrors: double(1,\*)
+%     Errors in the blocks determined to be zero
+%   nonZeroErrors: double(1,\*)
+%     Residual error in product scalar maps
     dims = cellfun(@(r) r.dimension, irreps);
     zeroErrors = zeros(1, 0);
     nonZeroErrors = zeros(1, 0);
