@@ -63,9 +63,15 @@ classdef SubRep < replab.Rep
             if IP_unitary && parent.knownUnitary
                 restArgs = replab.util.keyValuePairsUpdate(restArgs, 'knownUnitary', true);
             end
-            if parent.inCache('trivialDimension') && parent.trivialDimension == 0
-                [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'trivialDimension', 0);
-                assert(~exists || oldValue == 0);
+            if parent.inCache('trivialDimension')
+                if parent.trivialDimension == 0
+                    [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'trivialDimension', 0);
+                    assert(~exists || oldValue == 0);
+                end
+                if parent.trivialDimension == parent.dimension
+                    [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'trivialDimension', d);
+                    assert(~exists || oldValue == d);
+                end
             end
             self@replab.Rep(parent.group, parent.field, d, restArgs{:});
             self.parent = parent;
