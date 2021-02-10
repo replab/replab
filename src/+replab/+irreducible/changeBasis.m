@@ -6,24 +6,25 @@ function newIrrep2 = changeBasis(irrep1, irrep2, F, G)
 %   irrep2 (`+replab.SubRep`): Second irreducible subrepresentation
 %   F (double(\*,\*)): Equivariant sample ``irrep1.image(g) * F == F * irrep2.image(g)``
 %   G (double(\*,\*)): Equivariant sample ``irrep2.image(g) * G == G * irrep1.image(g)``
-    g = irrep1.group.sample;
-    tol = replab.globals.doubleEigTol;
-    assert(norm(irrep1.image(g) * F - F * irrep2.image(g), 'fro') <= tol);
-    assert(norm(irrep2.image(g) * G - G * irrep1.image(g), 'fro') <= tol);
     d = irrep1.dimension;
     assert(irrep2.dimension == d);
+    % force F*G ~ eye(n)
     t = trace(F*G);
     F = F * sqrt(abs(d/t));
     G = sign(t) * G * sqrt(abs(d/t));
+    % now approxiate F*G = eye(n) better
     FG = F*G;
-    norm(FG-eye(d),'fro')
-    S = eye(d); % compute the inverse matrix square root of FG
-    for i = 1:6
+    % Compute the inverse matrix square root of F*G
+    % We use the Newton-type iteration given in:
+    % N. Sherif, "On the computation of a matrix inverse square root"
+    % Computing, vol. 46, no. 4, pp. 295–305, Dec. 1991, doi: 10.1007/BF02257775.
+    nIterations = 6;
+    S = eye(d);
+    for i = 1:nIterations
         S = 2*S/(eye(d)+FG*S*S);
     end
     F = S*F;
     G = G*S;
-    norm(F*G-eye(d),'fro')
     newI = irrep2.injection*G;
     newP = F*irrep2.projection;
     newIrrep2 = irrep2.parent.subRep(newI, 'projection', newP, 'isIrreducible', true, 'frobeniusSchurIndicator', irrep2.frobeniusSchurIndicator, 'divisionAlgebraName', irrep2.divisionAlgebraName, 'isUnitary', irrep2.isUnitary);
