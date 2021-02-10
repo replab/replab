@@ -41,4 +41,9 @@ function subs = absoluteSplitInParent(sub, sample, forceNonUnitaryAlgorithms)
             subs = replab.irreducible.absoluteSplitInParent_real_nonunitary(sub, sample);
         end
     end
+    if sub.inCache('trivialDimension') && sub.trivialDimension == 0
+        for i = 1:length(subs)
+            subs{i}.cache('trivialDimension', 0, '==');
+        end
+    end
 end

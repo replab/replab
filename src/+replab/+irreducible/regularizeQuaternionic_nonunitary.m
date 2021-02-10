@@ -128,4 +128,7 @@ function irrep = regularizeQuaternionic_nonunitary(sub, sample)
     inj = real(inj);
     prj = real(prj);
     irrep = sub.parent.subRep(inj, 'projection', prj, 'divisionAlgebraName', 'quaternion.rep', 'isIrreducible', true, 'frobeniusSchurIndicator', -2);
+    if sub.inCache('trivialDimension') && sub.trivialDimension == 0
+        irrep.cache('trivialDimension', 0, '==');
+    end
 end

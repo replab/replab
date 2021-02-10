@@ -91,4 +91,8 @@ function [sub1, sub2] = regularizeRealPair(sub, sample)
     prj = real(prj);
     sub1 = sub.parent.subRep(inj(:,1:d/2), 'projection', prj(1:d/2,:), 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
     sub2 = sub.parent.subRep(inj(:,d/2+1:end), 'projection', prj(d/2+1:end,:), 'isIrreducible', true, 'frobeniusSchurIndicator', 1);
+    if sub.inCache('trivialDimension') && sub.trivialDimension == 0
+        sub1.cache('trivialDimension', 0, '==');
+        sub2.cache('trivialDimension', 0, '==');
+    end
 end

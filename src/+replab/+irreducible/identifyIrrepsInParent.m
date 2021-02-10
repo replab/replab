@@ -40,4 +40,9 @@ function irreps = identifyIrrepsInParent(sub, sample)
     else
         irreps = replab.irreducible.identifyIrrepsInParent_trivialDivisionAlgebra(sub, sample);
     end
+    if sub.inCache('trivialDimension') && sub.trivialDimension == 0
+        for i = 1:length(irreps)
+            irreps{i}.cache('trivialDimension', 0, '==');
+        end
+    end
 end
