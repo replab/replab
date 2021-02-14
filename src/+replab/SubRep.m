@@ -193,8 +193,8 @@ classdef SubRep < replab.Rep
                     injection1 = self.injection('double') + (randn(D, d) + 1i*rand(D, d))*injectionMapNoise/sqrt(2);
                     projection1 = self.projection('double') + (randn(d, D) + 1i*rand(d, D))*projectionMapNoise/sqrt(2);
                 end
-                projection1 = inv(projection1 * injection1) * projection1;
-                sub1 = self.parent.subRep(injection1, 'projection', projection1);
+                projection1 = (projection1 * injection1) \ projection1;
+                sub1 = self.parent.subRep(injection1, 'projection', projection1, 'divisionAlgebraName', self.divisionAlgebraName);
               otherwise
                 error('Wrong calling convention');
             end
@@ -345,28 +345,17 @@ classdef SubRep < replab.Rep
         % -------
         %   sub1: `.SubRep`
         %     Subrepresentation with refined subspace (injection/projection maps)
-            args = struct('numNonImproving', 20, 'largeScale', self.parent.dimension > 1000, 'nSamples', 5, 'nInnerIterations', 10, 'maxIterations', 1000);
-            args = replab.util.populateStruct(args, varargin);
-            I = self.injection;
-            P = self.projection;
-            if self.parent.knownUnitary
-                if ~self.mapsAreAdjoint
-                    [I, ~] = qr(I, 0);
-                end
-                if args.largeScale
-                    I1 = replab.rep.refine_unitaryLargeScale(self.parent, I, args.numNonImproving, args.nSamples, args.maxIterations, []);
-                else
-                    I1 = replab.rep.refine_unitaryMediumScale(self.parent, I, args.nInnerIterations, args.maxIterations, []);
-                end
-                sub1 = self.parent.subRep(I1, 'projection', I1', 'isUnitary', true);
-            else
-                if args.largeScale
-                    [I1, P1] = replab.rep.refine_nonUnitaryLargeScale(self.parent, I, P, args.numNonImproving, args.nSamples, args.maxIterations, [], []);
-                else
-                    [I1, P1] = replab.rep.refine_nonUnitaryMediumScale(self.parent, I, P, args.nInnerIterations, args.maxIterations, [], []);
-                end
-                sub1 = self.parent.subRep(I1, 'projection', P1);
+            switch self.divisionAlgebraName
+              case 'complex'
+                gen = replab.rep.GenSubRep.fromComplexTypeSubRep(self);
+              case 'quaternion.rep'
+                gen = replab.rep.GenSubRep.fromQuaternionTypeSubRep(self);
+              otherwise
+                gen = replab.rep.GenSubRep.fromSubRep(self);
             end
+            gen1 = gen.refine(varargin{:});
+            res = gen1.toSubRep;
+            sub1 = self.withUpdatedMaps(res.injection, res.projection, 'isUnitary', res.isUnitary, 'divisionAlgebraName', self.divisionAlgebraName);
         end
 
         function res = collapse(self)

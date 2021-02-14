@@ -4,6 +4,8 @@ classdef GenSubRep < replab.Obj
 % The subrepresentation is generic in the sense it can be defined over a division ring. For example, a quaternionic-type subrepresentation
 % is defined using quaternion injection and projection maps.
 %
+% This class is present mostly to cater for the different cases present when refining subrepresentations.
+%
 % Note that this class is unrelated to `.Rep` in the inheritance hierarchy, but it follows the naming conventions of `.SubRep` and
 % implements a subset of its methods/properties.
 %
@@ -14,8 +16,8 @@ classdef GenSubRep < replab.Obj
 % * The matrices returned are possibly sparse
 
     properties (SetAccess = protected)
-        parent % (`.Rep`): Parent representation of dimension $D$
-        group % (`.CompactGroup`): Group being represented
+        parent % (`+replab.Rep`): Parent representation of dimension $D$
+        group % (`+replab.CompactGroup`): Group being represented
         dimension % (integer): Representation dimension
         divisionRing % ('R', 'C', 'H'): Division ring over which the subrepresentation is defined
         isUnitary % (logical): Whether this subrepresentation is unitary
@@ -26,40 +28,72 @@ classdef GenSubRep < replab.Obj
 
     methods (Static, Access = protected)
 
-        function [I, P] = correctQuaternionPair(I, P)
+        function P = correctQuaternionPair(I, P)
+        % Corrects a pair of injection/projection map after conversion from a quaternionic rep
+        %
+        % The pairs should diverge mostly up to a quaternion scalar, such that ``P * I`` is a block matrix
+        % with mostly identical 4x4 blocks on the diagonal.
+        %
+        % This function will correct the projection map by inverting the average 4x4 block,
+        % and additionally perform one Newton-Raphson iteration.
+        %
+        % Args:
+        %   I (double(\*,\*)): Injection map
+        %   P (double(\*,\*)): Projection map
+        %
+        % Returns:
+        %   double(\*,\*): Corrected projection map
             replab.msg(2, 'Converting GenSubRep to SubRep, correcting scalar factor');
             replab.msg(2, '--------------------------------------------------------');
             d = size(I, 2);
             PI = P * I;
             replab.msg(2, 'Before correction, error = %6.2E', norm(PI - eye(d), 'fro'));
+            % Compute the quaternion scalar block by averaging over the diagonal blocks
             block = PI(1:4,1:4);
             for i = 2:d/4
                 range = (i-1)*4+(1:4);
                 block = block + PI(range, range);
             end
             block = block/(d/4);
+            % invert and correct
             P = kron(eye(d/4), inv(block)) * P;
             replab.msg(2, 'After block correction, error = %6.2E', norm(P*I - eye(d), 'fro'));
-            % one Newton-Raphson iteration
+            % apply one Newton-Raphson iteration for increased precision
             P = 2*P - P*I*P;
             replab.msg(2, 'After Newton iteration, error = %6.2E', norm(P*I - eye(d), 'fro'));
         end
 
-        function [I, P] = correctComplexPair(I, P)
+        function P = correctComplexPair(I, P)
+        % Corrects a pair of injection/projection map after conversion from a complex rep
+        %
+        % The pairs should diverge mostly up to a complex scalar, such that ``P * I`` is a block matrix
+        % with mostly identical 2x2 blocks on the diagonal.
+        %
+        % This function will correct the projection map by inverting the average 2x2 block,
+        % and additionally perform one Newton-Raphson iteration.
+        %
+        % Args:
+        %   I (double(\*,\*)): Injection map
+        %   P (double(\*,\*)): Projection map
+        %
+        % Returns:
+        %   double(\*,\*): Corrected projection map
             replab.msg(2, 'Converting GenSubRep to SubRep, correcting scalar factor');
             replab.msg(2, '--------------------------------------------------------');
             d = size(I, 2);
             PI = P * I;
             replab.msg(2, 'Before correction, error = %6.2E', norm(PI - eye(d), 'fro'));
+            % Compute the complex scalar block by averaging over the diagonal blocks
             block = PI(1:2,1:2);
             for i = 2:d/2
                 range = (i-1)*2+(1:2);
                 block = block + PI(range, range);
             end
             block = block/(d/2);
+            % invert and correct
             P = kron(eye(d/2), inv(block)) * P;
             replab.msg(2, 'After block correction, error = %6.2E', norm(P*I - eye(d), 'fro'));
-            % one Newton-Raphson iteration
+            % apply one Newton-Raphson iteration for increased precision
             P = 2*P - P*I*P;
             replab.msg(2, 'After Newton iteration, error = %6.2E', norm(P*I - eye(d), 'fro'));
         end
@@ -69,9 +103,15 @@ classdef GenSubRep < replab.Obj
     methods (Access = protected)
 
         function sub = computeToSubRep(self)
-        % Converts back the generic subrepresentation to a subrepresentation over the original field
             d = self.dimension;
-            switch [self.divisionRing '->' self.parent.field]
+            type = [self.divisionRing '->' self.parent.field]
+            switch type
+              case {'R->R', 'C->C'}
+                if self.mapsAreAdjoint
+                    sub = self.parent.subRep(self.injection, 'projection', self.projection, 'isUnitary', true);
+                else
+                    sub = self.parent.subRep(self.injection, 'projection', self.projection, 'isUnitary', false);
+                end
               case 'C->R'
                 A = real(self.injection);
                 B = imag(self.injection);
@@ -85,7 +125,7 @@ classdef GenSubRep < replab.Obj
                     F = imag(self.projection);
                     subP = [E; -F]*sqrt(2);
                     subP = subP(p, :);
-                    [subI, subP] = replab.GenSubRep.correctComplexPair(subI, subP);
+                    subP = replab.rep.GenSubRep.correctComplexPair(subI, subP);
                     sub = self.parent.subRep(subI, 'projection', subP, 'divisionAlgebraName', 'complex', 'isUnitary', false);
                 end
               case 'H->R'
@@ -106,7 +146,7 @@ classdef GenSubRep < replab.Obj
                     H = self.projection.partk;
                     subP = [E-F-G-H; E+F+G-H; E-F+G+H; E+F-G+H];
                     subP = subP(p, :);
-                    [subI, subP] = replab.GenSubRep.correctQuaternionPair(subI, subP);
+                    subP = replab.rep.GenSubRep.correctQuaternionPair(subI, subP);
                     sub = self.parent.subRep(subI, 'projection', subP, 'divisionAlgebraName', 'quaternion.rep', 'isUnitary', false);
                 end
             end
@@ -119,6 +159,13 @@ classdef GenSubRep < replab.Obj
 
         function self = GenSubRep(parent, divisionRing, isUnitary, injection, projection)
         % Constructs a generic subrepresentation
+        %
+        % Args:
+        %   parent (`+replab.Rep`): Parent representation of dimension $D$
+        %   divisionRing ('R', 'C', 'H'): Division ring over which the subrepresentation is defined
+        %   isUnitary (logical): Whether this subrepresentation is unitary
+        %   injection (double(D,d) or `.H`(D,d), may be sparse): Injection map
+        %   projection (double(d,D) or `.H`(d,D), may be sparse): Projection map
             D = size(injection, 1);
             d = size(injection, 2);
             self.parent = parent;
@@ -132,23 +179,62 @@ classdef GenSubRep < replab.Obj
         end
 
         function sub = toSubRep(self)
+        % Converts back the generic subrepresentation to a subrepresentation over the original field
+        %
+        % Returns:
+        %   `+replab.SubRep`: Subrepresentation
             sub = self.cached('toSubRep', @() self.computeToSubRep);
         end
 
         function rho = image(self, g)
+        % Computes the image of the given group element
+        %
+        % See `+replab.Rep.image`
             rho = self.projection * self.parent.image(g, 'double/sparse') * self.injection;
         end
 
         function rho = inverseImage(self, g)
+        % Computes the image of the inverse of the given group element
+        %
+        % See `+replab.Rep.inverseImage`
             rho = self.projection * self.parent.inverseImage(g, 'double/sparse') * self.injection;
         end
 
         function rho = sample(self)
+        % Returns a random image of this subrepresentation
+        %
+        % See `+replab.Rep.sample`
             rho = self.image(self.group.sample);
         end
 
         function mat = projector(self)
+        % Returns a projector on the subspace of this subrepresentation
+        %
+        % Note: the projector can be complex/quaternion-valued.
+        %
+        % See `+replab.SubRep.projector`
             mat = self.injection * self.projection;
+        end
+
+        function gen1 = refine(self, varargin)
+        % Refines a generic subrepresentation
+        %
+        % See `+replab.SubRep.refine`
+            args = struct('numNonImproving', 20, 'largeScale', self.parent.dimension > 1000, 'nSamples', 5, 'nInnerIterations', 3, 'maxIterations', 1000);
+            args = replab.util.populateStruct(args, varargin);
+            if self.parent.knownUnitary
+                if args.largeScale
+                    gen1 = replab.rep.refine_unitary_largeScale(self, args.numNonImproving, args.nSamples, args.maxIterations, []);
+                else
+                    gen1 = replab.rep.refine_unitary_mediumScale(self, args.nInnerIterations, args.maxIterations, []);
+                end
+            else
+                if args.largeScale
+                    gen1 = replab.rep.refine_nonUnitaryLargeScale(self, args.numNonImproving, args.nSamples, args.maxIterations, [], []);
+                else
+                    gen1 = replab.rep.refine_nonUnitaryMediumScale(self, args.nInnerIterations, args.maxIterations, [], []);
+                end
+            end
         end
 
     end
@@ -156,16 +242,39 @@ classdef GenSubRep < replab.Obj
     methods % Implementations
 
         function l = laws(self)
-            l = replab.laws.GenSubRepLaws(self);
+            l = replab.rep.GenSubRepLaws(self);
         end
 
     end
 
     methods (Static)
 
+        function gen = fromSubRep(sub)
+        % Creates a generic subrepresentation from a subrepresentation
+        %
+        % Does not exploit any division algebra structure present.
+        %
+        % Args:
+        %   sub (`+replab.SubRep`): Subrepresentation
+        %
+        % Returns:
+        %   `.GenSubRep`: Generic subrepresentation over the same field
+            if sub.overR
+                gen = replab.rep.GenSubRep(sub.parent, 'R', sub.knownUnitary, sub.injection, sub.projection);
+            else
+                gen = replab.rep.GenSubRep(sub.parent, 'C', sub.knownUnitary, sub.injection, sub.projection);
+            end
+        end
+
         function gen = fromQuaternionTypeSubRep(sub)
+        % Creates a generic subrepresentation from a real subrepresentation encoding a quaternion division algebra
+        %
+        % Args:
+        %   sub (`+replab.SubRep`): Real subrepresentation
+        %
+        % Returns:
+        %   `.GenSubRep`: Generic subrepresentation over the quaternions
             assert(sub.overR);
-            %assert(strcmp(sub.divisionAlgebraName, 'quaternion.rep'));
             i = replab.H.i;
             j = replab.H.j;
             k = replab.H.k;
@@ -174,25 +283,31 @@ classdef GenSubRep < replab.Obj
             injection = sub.injection('double/sparse') * kron(eye(d/4), U);
             if sub.mapsAreAdjoint
                 projection = injection';
-                gen = replab.GenSubRep(sub.parent, 'H', true, injection, projection);
+                gen = replab.rep.GenSubRep(sub.parent, 'H', true, injection, projection);
             else
                 projection = kron(eye(d/4), U)' * sub.projection('double/sparse');
-                gen = replab.GenSubRep(sub.parent, 'H', false, injection, projection);
+                gen = replab.rep.GenSubRep(sub.parent, 'H', false, injection, projection);
             end
         end
 
         function gen = fromComplexTypeSubRep(sub)
+        % Creates a generic subrepresentation from a real subrepresentation encoding a complex division algebra
+        %
+        % Args:
+        %   sub (`+replab.SubRep`): Real subrepresentation
+        %
+        % Returns:
+        %   `.GenSubRep`: Generic subrepresentation over the complex field
             assert(sub.overR);
-            %assert(strcmp(sub.divisionAlgebraName, 'complex'));
             U = [1; 1i]/sqrt(2);
             d = sub.dimension;
             injection = sub.injection('double/sparse') * kron(eye(d/2), U);
             if sub.mapsAreAdjoint
                 projection = injection';
-                gen = replab.GenSubRep(sub.parent, 'C', true, injection, projection);
+                gen = replab.rep.GenSubRep(sub.parent, 'C', true, injection, projection);
             else
                 projection = kron(eye(d/2), U)' * sub.projection('double/sparse');
-                gen = replab.GenSubRep(sub.parent, 'C', false, injection, projection);
+                gen = replab.rep.GenSubRep(sub.parent, 'C', false, injection, projection);
             end
         end
 

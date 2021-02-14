@@ -1,7 +1,7 @@
 classdef GenSubRepLaws < replab.Laws
 
     properties (SetAccess = protected)
-        sub % (`+replab.GenSubRep`)
+        sub % (`+replab.rep.GenSubRep`)
         G % Group of which rep is a representation
     end
 
