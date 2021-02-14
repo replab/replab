@@ -1,10 +1,10 @@
 classdef RepLaws < replab.Laws
 
-    properties
-        rep
-        G % Group of which rep is a representation
-        C % Commutant algebra
-        M % Matrices o
+    properties (SetAccess = protected)
+        rep % (`+replab.Rep`): Rep being checked
+        G % (`+replab.CompactGroup`): Group of which rep is a representation
+        C % (`+replab.Equivariant`): Commutant algebra
+        M % (`+replab.Domain`): Matrices
     end
 
     methods
