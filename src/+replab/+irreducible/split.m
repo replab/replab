@@ -62,4 +62,5 @@ function [trivial, nonTrivialIrreps] = split(rep, sample1, sample2, forceNonUnit
             end
         end
     end
+    trivial = rep.subRep(Itriv, 'projection', Ptriv, 'trivialDimension', size(Itriv, 2), 'isUnitary', true);
 end

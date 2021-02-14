@@ -28,6 +28,7 @@ classdef SubRep < replab.Rep
         parent % (`+replab.Rep`): Parent representation of dimension $D$
         injection_internal % (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
         projection_internal % (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
+        mapsAreAdjoint % (logical): True if `.parent` is known to be unitary and `.injection` is the conjugate transpose of `.projection`
     end
 
     methods
@@ -59,8 +60,8 @@ classdef SubRep < replab.Rep
             end
             args = struct('injectionConditionNumberEstimate', [], 'projectorErrorBound', []);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
-            IP_unitary = all(all(injection_internal == projection_internal'));
-            if IP_unitary && parent.knownUnitary
+            mapsAreAdjoint = parent.knownUnitary && all(all(injection_internal == projection_internal'));
+            if mapsAreAdjoint
                 restArgs = replab.util.keyValuePairsUpdate(restArgs, 'knownUnitary', true);
             end
             if parent.inCache('trivialDimension')
@@ -77,6 +78,7 @@ classdef SubRep < replab.Rep
             self.parent = parent;
             self.injection_internal = injection_internal;
             self.projection_internal = projection_internal;
+            self.mapsAreAdjoint = mapsAreAdjoint;
             if ~isempty(args.projectorErrorBound)
                 self.cache('projectorErrorBound', args.projectorErrorBound, 'error');
             end
@@ -118,6 +120,39 @@ classdef SubRep < replab.Rep
     end
 
     methods
+
+        function sub1 = withUpdatedMaps(self, injection, projection, varargin)
+        % Returns a copy of this subrepresentation with updated injection and projection maps
+        %
+        % The following properties are copied from the original subrepresentation:
+        %
+        % * `.isIrreducible`
+        % * `.frobeniusSchurIndicator`
+        % * `.kernel`
+        % * `.trivialDimension`
+        %
+        % Additional keywords arguments are passed to the `.subRep` method of `.parent`.
+        %
+        % Args:
+        %   injection (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
+        %   projection (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
+        %
+        % Returns:
+        %   `.SubRep`: The updated subrepresentation
+            sub1 = self.parent.subRep(injection, 'projection', projection, varargin{:});
+            if self.inCache('isIrreducible')
+                sub1.cache('isIrreducible', self.isIrreducible, '==');
+            end
+            if self.inCache('frobeniusSchurIndicator')
+                sub1.cache('frobeniusSchurIndicator', self.frobeniusSchurIndicator, '==');
+            end
+            if self.inCache('kernel')
+                sub1.cache('kernel', self.kernel, '==');
+            end
+            if self.inCache('trivialDimension')
+                sub1.cache('trivialDimension', self.trivialDimension, '==');
+            end
+        end
 
         function sub1 = withNoise(self, injectionMapNoise, projectionMapNoise)
         % Adds Gaussian noise to the injection/projection maps
@@ -315,7 +350,7 @@ classdef SubRep < replab.Rep
             I = self.injection;
             P = self.projection;
             if self.parent.knownUnitary
-                if ~all(all(self.injection == self.projection'))
+                if ~self.mapsAreAdjoint
                     [I, ~] = qr(I, 0);
                 end
                 if args.largeScale

@@ -32,7 +32,7 @@ classdef DivisionAlgebra < replab.domain.VectorSpace
 %
 %   Quaternion equivariant encoding (quaternion.equivariant)
 %
-%     [  a -b -c -d
+%     [  a -b  c -d
 %        b  a  d  c
 %       -c -d  a  b
 %        d -c -b  a  ]
@@ -85,6 +85,54 @@ classdef DivisionAlgebra < replab.domain.VectorSpace
             self.dualBasis = dualBasis;
             self.dimension = dimension;
             self.matrixSize = matrixSize;
+        end
+
+        function X1 = decode(self, X)
+        % Decodes the division algebra elements present in a matrix encoding
+        %
+        % This method accepts a matrix of size ``(ms*d1) x (ms*d2)`` as argument, where
+        % ``ms`` is `.matrixSize` and ``d1``, ``d2`` are integers.
+        %
+        % Args:
+        %   X (double(ms*d1,ms*d2)): (Block) matrix to decode
+        %
+        % Returns:
+        %   double(d1,d2,d): Decoded elements where ``d`` is `.dimension`
+            ms = self.matrixSize;
+            d = self.dimension;
+            D = self.dualBasis;
+            B = self.basis;
+            d1 = size(X, 1)/ms;
+            d2 = size(X, 2)/ms;
+            X1 = zeros(d1, d2, d);
+            X = reshape(permute(reshape(X, [ms d1 ms d2]), [1 3 2 4]), [ms*ms d1*d2]);
+            for i = 1:d
+                X1(:,:,i) = reshape(reshape(D(:,:,i), [1 ms*ms])*X, [d1 d2]);
+            end
+        end
+
+        function X1 = encode(self, X)
+        % Takes a matrix of division algebra elements and encodes them in a matrix
+        %
+        % This method accepts a tensor of size ``d1 x d2 x d`` as argument, where
+        % ``d`` is `.dimension` and ``d1``, ``d2`` are integers.
+        %
+        % Args:
+        %   X (double(d1,d2,d)): Tensor encoding the matrix
+        %
+        % Returns:
+        %   double(ms*d1, ms*d2): Encoded matrix
+            ms = self.matrixSize;
+            d = self.dimension;
+            D = self.dualBasis;
+            B = self.basis;
+            d1 = size(X, 1)/ms;
+            d2 = size(X, 2)/ms;
+            X1 = zeros(ms*ms, d1*d2);
+            for i = 1:d
+                X1 = X1 + reshape(B(:,:,i), [ms*ms 1])*reshape(X(:,:,i), [1 d1*d2]);
+            end
+            X1 = reshape(permute(reshape(X1, [ms ms d1 d2]), [1 3 2 4]), [ms*d1 ms*d2]);
         end
 
         function X1 = project(self, X)

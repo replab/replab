@@ -1,4 +1,4 @@
-function [I, P] = refine_nonUnitaryLargeScale(rep, I0, P0, numNonImproving, nSamples, maxIterations, Ibo, Pbo)
+function [I, P] = refine_nonUnitary_largeScale(rep, I0, P0, numNonImproving, nSamples, maxIterations, Ibo, Pbo)
 % Refines an injection/projection pair for subrepresentation of a possibly non-unitary representation
 %
 % Args:
@@ -38,8 +38,10 @@ function [I, P] = refine_nonUnitaryLargeScale(rep, I0, P0, numNonImproving, nSam
         P = zeros(size(Pprev));
         for j = 1:nSamples
             g = rep.group.sample;
-            I = I + rep.matrixRowAction(g, Iprev) * (rep.matrixColAction(g, Pprev) * Iprev);
-            P = P + (Pprev * rep.matrixRowAction(g, Iprev)) * rep.matrixColAction(g, Pprev);
+            Prho = rep.matrixColAction(g, Pprev);
+            rhoI = rep.matrixRowAction(g, Iprev);
+            I = I + rhoI * (Prho * Iprev);
+            P = P + (Pprev * rhoI) * Prho;
         end
         if ~isempty(Ibo) && ~isempty(Pbo)
             I = I - Ibo * (Pbo * I);
