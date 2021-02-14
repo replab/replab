@@ -6,16 +6,21 @@ classdef PermutationGroupRightCosetsLaws < replab.laws.RightCosetsLaws
 % G and H are `+replab.PermutationGroup`
 
     methods
+
         function self = PermutationGroupRightCosetsLaws(R)
             assert(isa(R, 'replab.PermutationGroupRightCosets'));
             self@replab.laws.RightCosetsLaws(R);
         end
+
     end
+
     methods
+
         function law_transversal_is_ordered_(self)
             T = self.R.transversalAsMatrix;
             assertEqual(T, sortrows(T));
         end
+
         function law_representative_is_minimal_(self)
             T = self.R.transversalAsMatrix;
             Hels = self.R.subgroup.elements.toCell;
@@ -30,6 +35,7 @@ classdef PermutationGroupRightCosetsLaws < replab.laws.RightCosetsLaws
                 assertEqual(tel, C(1,:));
             end
         end
+
         function law_transversal_is_complete_(self)
             n = self.R.group.domainSize;
             T = self.R.transversalAsMatrix;
@@ -46,5 +52,7 @@ classdef PermutationGroupRightCosetsLaws < replab.laws.RightCosetsLaws
             els = unique(els, 'rows');
             assert(size(els, 1) == self.G.order);
         end
+
     end
+
 end
