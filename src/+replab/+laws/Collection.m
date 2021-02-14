@@ -1,6 +1,6 @@
 classdef Collection < replab.Laws
 
-    properties
+    properties (SetAccess = protected)
         children % (cell(1,\*) of `+replab.Laws`): Laws instances in the collection
     end
 
