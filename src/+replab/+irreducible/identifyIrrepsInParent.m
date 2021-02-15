@@ -32,7 +32,7 @@ function irreps = identifyIrrepsInParent(sub, sample)
 % Returns:
 %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their division algebra identified or ``[]``
     if sub.overR && strcmp(sub.divisionAlgebraName, 'complex')
-        if sub.knownUnitary
+        if sub.isUnitary
             irreps = replab.irreducible.identifyIrrepsInParent_complexDivisionAlgebra_unitary(sub, sample);
         else
             irreps = replab.irreducible.identifyIrrepsInParent_complexDivisionAlgebra_nonunitary(sub, sample);

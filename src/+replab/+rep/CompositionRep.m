@@ -11,13 +11,8 @@ classdef CompositionRep < replab.Rep
         function self = CompositionRep(first, second)
             assert(isa(first, 'replab.Morphism'));
             assert(isa(second, 'replab.Rep'));
-            if second.knownUnitary
-                args = {'isUnitary' true};
-            else
-                args = {};
-            end
             % TODO: propagate more properties
-            self@replab.Rep(first.source, second.field, second.dimension, args{:});
+            self@replab.Rep(first.source, second.field, second.dimension, 'isUnitary', second.isUnitary);
             self.first = first;
             self.second = second;
             self.group = first.source;
@@ -55,10 +50,6 @@ classdef CompositionRep < replab.Rep
 
         function e = computeErrorBound(self)
             e = self.second.errorBound;
-        end
-
-        function rep = computeDouble(self)
-            rep = replab.rep.CompositionRep(self.first, double(self.second));
         end
 
         function c = decomposeTerm(self)

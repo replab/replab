@@ -22,7 +22,7 @@ function [A Ainv] = Isotypic_changeOfBasis(iso, i, j, context)
     C = iso.parent.commutant.sampleInContext(context, 1);
     A = iso.irrep(i).projection_internal * C * iso.irrep(j).injection_internal;
     A = A * sqrt(iso.irrepDimension/real(trace(A*A'))) * sign(A(1,1));
-    if iso.irrep(i).knownUnitary && iso.irrep(j).knownUnitary
+    if iso.irrep(i).isUnitary && iso.irrep(j).isUnitary
         Ainv = A';
     elseif iso.overC || isequal(iso.irrep(1).frobeniusSchurIndicator, 1)
         Ainv = iso.irrep(j).projection_internal * C * iso.irrep(i).injection_internal;

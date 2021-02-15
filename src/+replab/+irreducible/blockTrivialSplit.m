@@ -29,7 +29,7 @@ function [trivial, nontrivial] = blockTrivialSplit(rep, block, forceNonUnitaryAl
     [IT, PT, pT] = replab.numerical.sRRQR_rank(projT, 1.5, dT);
     [IN, PN, pN] = replab.numerical.sRRQR_rank(projN, 1.5, dN);
     % regularize or apply corrections
-    if ~forceNonUnitaryAlgorithms && rep.knownUnitary
+    if ~forceNonUnitaryAlgorithms && rep.isUnitary
         PT = IT';
         PN = IN';
     else
@@ -56,7 +56,7 @@ function [trivial, nontrivial] = blockTrivialSplit(rep, block, forceNonUnitaryAl
     end
     Inontrivial(block, :) = IN;
     Pnontrivial(:, block) = PN;
-    if ~forceNonUnitaryAlgorithms && rep.knownUnitary
+    if ~forceNonUnitaryAlgorithms && rep.isUnitary
         nontrivial = rep.subRep(Inontrivial, 'projection', Pnontrivial, 'isUnitary', true, 'trivialDimension', 0);
         trivial = rep.subRep(Itrivial, 'projection', Ptrivial, 'isUnitary', true, 'trivialDimension', dT);
     else

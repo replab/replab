@@ -29,10 +29,6 @@ classdef TrivialRep < replab.Rep
             b = true;
         end
 
-        function r = computeDouble(self)
-            r = replab.rep.TrivialRep(self.group, self.field, self.dimension, false);
-        end
-
         function rho = image_exact(self, g)
             assert(self.isExact);
             rho = replab.cyclotomic.eye(self.dimension);

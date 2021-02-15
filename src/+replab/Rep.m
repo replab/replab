@@ -1,8 +1,6 @@
 classdef Rep < replab.Obj
 % Describes a finite dimensional representation of a compact group
 %
-%
-%
 % This class has properties that correspond to information that can be computed and cached
 % after the `+replab.Rep` instance is constructed, for example `.isUnitary` or `.trivialDimension`.
 %
@@ -26,6 +24,7 @@ classdef Rep < replab.Obj
         group     % (`+replab.CompactGroup`): Group being represented
         field     % ({'R', 'C'}): Vector space defined on real (R) or complex (C) field
         dimension % (integer): Representation dimension
+        isUnitary % (logical): Whether the representation is unitary
         divisionAlgebraName % ('complex', 'quaternion.rep', ''): Name of the division algebra encoding this representation respects
     end
 
@@ -40,27 +39,19 @@ classdef Rep < replab.Obj
         %   dimension (integer): Representation dimension
         %
         % Keyword Args:
-        %   knownUnitary (logical or ``[]``, optional): Whether the representation is known to be unitary.
-        %                                               Only a true value has an effect, default ``false``.
-        %   isUnitary (logical or ``[]``, optional): Whether the representation is unitary, default ``[]``
+        %   isUnitary (logical, optional): Whether the representation is unitary, default: false
+        %   divisionAlgebraName % ('complex', 'quaternion.rep', '', optional): Name of the division algebra encoding this representation respects, default ``''``
         %   isIrreducible (logical or ``[]``, optional): Whether this representation is irreducible, default ``[]``
         %   trivialDimension (integer or ``[]``, optional): Dimension of the trivial subrepresentation, default ``[]``
         %   frobeniusSchurIndicator (integer or ``[]``, optional): Exact value of the Frobenius-Schur indicator, default ``[]``
-        %   divisionAlgebraName % ('complex', 'quaternion.rep', '', optional): Name of the division algebra encoding this representation respects, default ``''``
             self.group = group;
             self.field = field;
             self.dimension = dimension;
-            args = struct('isUnitary', [], 'knownUnitary', false, 'isIrreducible', [], 'trivialDimension', [], 'frobeniusSchurIndicator', [], 'divisionAlgebraName', '');
+            args = struct('isUnitary', false, 'isIrreducible', [], 'trivialDimension', [], 'frobeniusSchurIndicator', [], 'divisionAlgebraName', '');
             args = replab.util.populateStruct(args, varargin);
-            if isequal(args.knownUnitary, true)
-                assert(isempty(args.isUnitary) || args.isUnitary, 'This representation is actually unitary.');
-                args.isUnitary = true;
-            end
             % fill properties
+            self.isUnitary = args.isUnitary;
             self.divisionAlgebraName = args.divisionAlgebraName;
-            if ~isempty(args.isUnitary)
-                self.cache('isUnitary', logical(args.isUnitary), 'error');
-            end
             if ~isempty(args.trivialDimension)
                 self.cache('trivialDimension', args.trivialDimension, 'error');
             end
@@ -75,14 +66,6 @@ classdef Rep < replab.Obj
     end
 
     methods (Access = protected) % Protected methods
-
-        function d = computeDouble(self)
-        % Returns a double approximation of this representation, removing the exact data
-        %
-        % Returns:
-        %   `.Rep`: Approximate representation
-            error('Abstract');
-        end
 
         function e = computeErrorBound(self)
             error('Abstract');
@@ -164,7 +147,7 @@ classdef Rep < replab.Obj
             if nargin < 3
                 type = 'double';
             end
-            if self.knownUnitary
+            if self.isUnitary
                 rho = self.image(g, type);
                 rho = rho';
             else
@@ -227,9 +210,6 @@ classdef Rep < replab.Obj
         %
         % Args:
         %   rep (`.Rep`): Representation equal to the current representation
-            if rep.inCache('isUnitary')
-                self.cache('isUnitary', rep.isUnitary, '==');
-            end
             if rep.inCache('trivialDimension')
                 self.cache('trivialDimension', rep.trivialDimension, '==');
             end
@@ -508,7 +488,7 @@ classdef Rep < replab.Obj
             t = cputime;
             [I, P, p] = replab.numerical.sRRQR_rank(P2, 1.5, d);
             replab.msg(2, 'Time (RRQR decomposition): %2.2f s', cputime - t);
-            if self.knownUnitary
+            if self.isUnitary
                 sub = self.subRep(I, 'projection', I', 'isUnitary', true);
             else
                 P(:,p) = P; % apply permutation
@@ -664,11 +644,7 @@ classdef Rep < replab.Obj
               case 'double'
                 if self.inCache('trivialComponent_exact')
                     T = self.trivialComponent('exact');
-                    if self.knownUnitary
-                        sub = self.subRep(T.injection('double'), 'isUnitary', true);
-                    else
-                        sub = self.subRep(T.injection('double'), 'projection', T.projection('double'));
-                    end
+                    sub = self.subRep(T.injection('double'), 'projection', T.projection('double'), 'isUnitary', true);
                     c = replab.Isotypic.fromTrivialSubRep(sub);
                 else
                     c = self.cached('trivialComponent_double', @() self.computeTrivialComponent_double);
@@ -741,16 +717,6 @@ classdef Rep < replab.Obj
             b = self.cached('isIrreducible', @() self.computeIsIrreducible);
         end
 
-        function b = isUnitary(self)
-        % Returns whether this representation is unitary
-        %
-        % In the case of approximate representations, we default to ``false``.
-        %
-        % Returns:
-        %   logical: True if this representation is unitary
-            b = self.cached('isUnitary', @() self.computeIsUnitary);
-        end
-
         function b = knownIrreducible(self)
         % Returns whether this representation is known to be irreducible; only a true result is significant
         %
@@ -765,22 +731,6 @@ classdef Rep < replab.Obj
         % Returns:
         %   logical: True if `.isIrreducible` is known and is false
             b = ~self.cachedOrDefault('isIrreducible', true);
-        end
-
-        function b = knownUnitary(self)
-        % Returns whether this representation is known to be unitary; only a true result is significant
-        %
-        % Returns:
-        %   logical: True if `.isUnitary` is known and is true
-            b = self.cachedOrDefault('isUnitary', false);
-        end
-
-        function b = knownNonUnitary(self)
-        % Returns whether this representation is known to be non-unitary; only a true result is significant
-        %
-        % Returns:
-        %   logical: True if `.isUnitary` is known and is false
-            b = ~self.cachedOrDefault('isUnitary', true);
         end
 
         function K = kernel(self)
@@ -986,7 +936,7 @@ classdef Rep < replab.Obj
 
         function s = headerStr(self)
             p = {};
-            if self.knownUnitary
+            if self.isUnitary
                 if self.overR
                     p{1,end+1} = 'orthogonal';
                 else
@@ -1168,36 +1118,6 @@ classdef Rep < replab.Obj
     end
 
     methods % Derived representations
-
-        function approx = double(self)
-        % Returns the approximate representation corresponding to this representation
-        %
-        % Returns:
-        %   `.Rep`: Representation equivalent to this representation with `.isExact` false
-            if ~self.isExact
-                approx = self;
-            else
-                approx = self.computeDouble;
-                if self.inCache('isUnitary')
-                    approx.cache('isUnitary', self.isUnitary, '==');
-                end
-                if self.inCache('trivialDimension')
-                    approx.cache('trivialDimension', self.trivialDimension, '==');
-                end
-                if self.inCache('isIrreducible')
-                    approx.cache('isIrreducible', self.isIrreducible, '==');
-                end
-                if self.inCache('frobeniusSchurIndicator')
-                    approx.cache('frobeniusSchurIndicator', self.frobeniusSchurIndicator, '==');
-                end
-                if self.inCache('divisionAlgebraName')
-                    approx.cache('divisionAlgebraName', self.divisionAlgebraName, '==');
-                end
-                if self.inCache('kernel')
-                    approx.cache('kernel', self.kernel, '==');
-                end
-            end
-        end
 
         function rep1 = contramap(self, morphism)
         % Returns the representation composed with the given morphism applied first
@@ -1396,7 +1316,7 @@ classdef Rep < replab.Obj
             proj1 = sub1.projector;
             proj2 = speye(D) - proj1;
             [I, P, p] = replab.numerical.sRRQR_rank(proj2, 1.5, d2);
-            if self.knownUnitary && sub1.knownUnitary
+            if self.isUnitary && sub1.isUnitary
                 sub2 = self.subRep(I, 'projection', I', 'isUnitary', true);
             else
                 P(:,p) = P;
@@ -1466,7 +1386,7 @@ classdef Rep < replab.Obj
             isExact = isa(injection, 'replab.cyclotomic') && (isempty(projection) || isa(projection, 'replab.cyclotomic'));
             if isempty(projection)
                 if isExact
-                    if self.knownUnitary
+                    if self.isUnitary
                         % slower because cyclotomic doesn't implement \ or /
                         projection = inv(injection'*injection)*injection';
                     else
@@ -1480,7 +1400,7 @@ classdef Rep < replab.Obj
                         projection = inv(injection'*injection)*injection'*P2;
                     end
                 else % non exact
-                    if self.knownUnitary
+                    if self.isUnitary
                         projection = (injection'*injection)\injection';
                     else
                         if args.largeScale
@@ -1510,11 +1430,7 @@ classdef Rep < replab.Obj
             d = length(block);
             injection = sparse(block, 1:d, ones(1, d), self.dimension, d);
             projection = injection';
-            if self.knownUnitary
-                sub = self.subRep(injection, 'projection', projection, 'isUnitary', true);
-            else
-                sub = self.subRep(injection, 'projection', projection);
-            end
+            sub = self.subRep(injection, 'projection', projection, 'isUnitary', self.isUnitary);
         end
 
         function irreps = split(self, varargin)
@@ -1564,7 +1480,7 @@ classdef Rep < replab.Obj
     methods (Access = protected)
 
         function res = computeUnitarize(self)
-            if self.knownUnitary
+            if self.isUnitary
                 res = replab.SimilarRep.identical(self);
             else
                 [A Ainv] = self.unitaryChangeOfBasis;
@@ -1583,7 +1499,7 @@ classdef Rep < replab.Obj
         %     Change of basis matrix
         %   Ainv: double(\*,\*), may be sparse
         %     Inverse of change of basis matrix
-            if self.knownUnitary
+            if self.isUnitary
                 A = speye(self.dimension);
                 Ainv = speye(self.dimension);
             else

@@ -67,7 +67,7 @@ classdef RepLaws < replab.Laws
         end
 
         function law_unitary_G(self, g)
-            if self.rep.knownUnitary
+            if self.rep.isUnitary
                 rho = self.rep.image(g);
                 rhoI = self.rep.inverseImage(g);
                 self.assertApproxEqual(rho, rhoI', 2*self.rep.errorBound);

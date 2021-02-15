@@ -31,14 +31,7 @@ classdef WreathProductGroup_Rep < replab.Rep
             assert(actingRep.isExact && actingRep.isUnitary);
             assert(actingRep.dimension == baseRep.dimension);
             assert(isa(baseRep, 'replab.Rep') && baseRep.group == group.N);
-            if baseRep.knownUnitary
-                args = {'isUnitary' true};
-            elseif baseRep.knownNonUnitary
-                args = {'isUnitary' false};
-            else
-                args = cell(1, 0);
-            end
-            self@replab.Rep(group, baseRep.field, baseRep.dimension, args{:});
+            self@replab.Rep(group, baseRep.field, baseRep.dimension, 'isUnitary', baseRep.isUnitary);
             self.type = type;
             self.factorRep = factorRep;
             self.actingRep = actingRep;

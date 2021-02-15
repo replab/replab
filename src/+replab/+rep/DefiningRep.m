@@ -17,10 +17,6 @@ classdef DefiningRep < replab.Rep
 
     methods (Access = protected) % Implementations
 
-        function d = computeDouble(self)
-            d = self;
-        end
-
         function e = computeErrorBound(self)
             e = inf;
         end

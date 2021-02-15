@@ -28,7 +28,7 @@ function subs = absoluteSplitInParent(sub, sample, forceNonUnitaryAlgorithms)
         subs = {sub};
         return
     end
-    if sub.knownUnitary && ~forceNonUnitaryAlgorithms
+    if sub.isUnitary && ~forceNonUnitaryAlgorithms
         if sub.overC
             subs = replab.irreducible.absoluteSplitInParent_complex_unitary(sub, sample);
         else

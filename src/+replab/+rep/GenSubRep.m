@@ -175,7 +175,7 @@ classdef GenSubRep < replab.Obj
             self.isUnitary = isUnitary;
             self.injection = injection;
             self.projection = projection;
-            self.mapsAreAdjoint = parent.knownUnitary && all(all(injection == projection'));
+            self.mapsAreAdjoint = parent.isUnitary && all(all(injection == projection'));
         end
 
         function sub = toSubRep(self)
@@ -222,7 +222,7 @@ classdef GenSubRep < replab.Obj
         % See `+replab.SubRep.refine`
             args = struct('numNonImproving', 20, 'largeScale', self.parent.dimension > 1000, 'nSamples', 5, 'nInnerIterations', 3, 'maxIterations', 1000, 'injectionBiortho', [], 'projectionBiortho', []);
             args = replab.util.populateStruct(args, varargin);
-            if self.parent.knownUnitary
+            if self.parent.isUnitary
                 if args.largeScale
                     gen1 = replab.rep.refine_unitary_largeScale(self, args.numNonImproving, args.nSamples, args.maxIterations, []);
                 else
@@ -265,14 +265,14 @@ classdef GenSubRep < replab.Obj
             if sub.overR
                 switch sub.divisionAlgebraName
                   case ''
-                    gen = replab.rep.GenSubRep(sub.parent, 'R', sub.knownUnitary, sub.injection, sub.projection);
+                    gen = replab.rep.GenSubRep(sub.parent, 'R', sub.isUnitary, sub.injection, sub.projection);
                   case 'complex'
                     gen = replab.rep.GenSubRep.fromComplexTypeSubRep(sub);
                   case 'quaternion.rep'
                     gen = replab.rep.GenSubRep.fromQuaternionTypeSubRep(sub);
                 end
             else
-                gen = replab.rep.GenSubRep(sub.parent, 'C', sub.knownUnitary, sub.injection, sub.projection);
+                gen = replab.rep.GenSubRep(sub.parent, 'C', sub.isUnitary, sub.injection, sub.projection);
             end
         end
 

@@ -390,11 +390,11 @@ classdef ChainWithImages < replab.Str
             i = k + 1; % marker that we striped through the chain
         end
 
-        function [res, errorBound] = double(self, knownUnitary)
+        function [res, errorBound] = double(self, isUnitary)
         % Returns a new BSGS chain with the images approximated
         %
         % Args:
-        %   knownUnitary (logical): Whether the representation described by the chain is known to be unitary
+        %   isUnitary (logical): Whether the representation described by the chain is unitary
         %
         % Returns
         % -------
@@ -403,7 +403,7 @@ classdef ChainWithImages < replab.Str
         %   errorBound: double
         %     Bound on the computed images
             if nargin < 2
-                knownUnitary = false;
+                isUnitary = false;
             end
             k = self.length;
             newT = cellfun(@(t) double(t), self.T, 'uniform', 0);
@@ -428,7 +428,7 @@ classdef ChainWithImages < replab.Str
                     end
                     newVi{j} = replab.numerical.bestStorage(approx);
                     maxError = max(maxError, norm(err, 'fro'));
-                    if knownUnitary
+                    if isUnitary
                         newVinv{j} = newVi{j}';
                     else
                         if isa(Vinvi{j}, 'replab.cyclotomic')

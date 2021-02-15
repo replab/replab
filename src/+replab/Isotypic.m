@@ -67,7 +67,6 @@ classdef Isotypic < replab.SubRep
                     irreps{i}.cache('isIrreducible', true, '==');
                     irreps{i}.cache('frobeniusSchurIndicator', 1, '==');
                     irreps{i}.cache('trivialDimension', 1, '==');
-                    irreps{i}.cache('isUnitary', true, '==');
                 end
             end
             isHarmonized = true;
@@ -166,7 +165,7 @@ classdef Isotypic < replab.SubRep
             assert(all(cellfun(@(irrep) isa(irrep, 'replab.SubRep'), irreps)));
             assert(all(cellfun(@(irrep) irrep.isIrreducible, irreps)));
             args = {};
-            if all(cellfun(@(irrep) irrep.knownUnitary, irreps))
+            if all(cellfun(@(irrep) irrep.isUnitary, irreps))
                 args = horzcat(args, {'isUnitary', true});
             end
             if all(cellfun(@(irrep) irrep.inCache('trivialDimension'), irreps))
@@ -420,13 +419,9 @@ classdef Isotypic < replab.SubRep
         % Assumes that the isotypic component is already close to an exact isotypic component, and refines its subspace
         % by an iterative procedure applied on its `.injection` and `.projection` maps.
         %
-        % This procedure preserves biorthogonality of the irreducible representations, but not necessarily harmonization.
-        %
         % Keyword Args:
-        %   largeScale (logical or ``[]``, optional): Whether to use the large-scale version of the algorithm, default ``[]`` (automatic selection)
         %   numNonImproving (integer, optional): Number of non-improving steps before stopping the large-scale algorithm, default ``20``
         %   nSamples (integer, optional): Number of samples to use in the large-scale version of the algorithm, default ``5``
-        %   nInnerIterations (integer, optional): Number of inner iterations in the medium-scale version of the algorithm, default ``10``
         %   maxIterations (integer, optional): Maximum number of (outer) iterations, default ``1000``
         %
         % Returns:

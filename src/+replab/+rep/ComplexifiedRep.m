@@ -10,16 +10,13 @@ classdef ComplexifiedRep < replab.Rep
         function self = ComplexifiedRep(parent)
             assert(isequal(parent.field, 'R'), 'Only a real representation can be complexified.');
             args = cell(1, 0);
-            if parent.inCache('isUnitary')
-                args = horzcat(args, {'isUnitary' parent.isUnitary});
-            end
             if parent.inCache('trivialDimension')
                 args = horzcat(args, {'trivialDimension' parent.trivialDimension});
             end
             if parent.inCache('frobeniusSchurIndicator')
                 args = horzcat(args, {'frobeniusSchurIndicator' parent.frobeniusSchurIndicator});
             end
-            self@replab.Rep(parent.group, 'C', parent.dimension, args{:});
+            self@replab.Rep(parent.group, 'C', parent.dimension, 'isUnitary', parent.isUnitary, args{:});
             self.parent = parent;
         end
 
@@ -41,10 +38,6 @@ classdef ComplexifiedRep < replab.Rep
     methods (Access = protected)
 
         % Rep
-
-        function rep = computeDouble(self)
-            rep = replab.rep.ComplexifiedRep(double(self.parent));
-        end
 
         function c = decomposeTerm(self)
             c = {self.parent};

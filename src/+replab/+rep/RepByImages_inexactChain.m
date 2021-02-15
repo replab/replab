@@ -31,9 +31,9 @@ classdef RepByImages_inexactChain < replab.RepByImages
                     imagesErrorBound(i) = 0;
                 end
             end
-            args = rep.knownProperties({'isUnitary', 'trivialDimension', 'frobeniusSchurIndicator', 'isDivisionAlgebraCanonical', 'kernel'});
-            self@replab.RepByImages(rep.group, rep.field, rep.dimension, preimages, images, imagesErrorBound, args{:});
-            [self.chain, errorBound] = rep.chain.double(rep.knownUnitary);
+            args = rep.knownProperties({'trivialDimension', 'frobeniusSchurIndicator', 'isDivisionAlgebraCanonical', 'kernel'});
+            self@replab.RepByImages(rep.group, rep.field, rep.dimension, preimages, images, imagesErrorBound, 'isUnitary', rep.isUnitary, args{:});
+            [self.chain, errorBound] = rep.chain.double(rep.isUnitary);
             self.cache('errorBound', errorBound, 'error');
         end
 
@@ -52,10 +52,6 @@ classdef RepByImages_inexactChain < replab.RepByImages
     methods (Access = protected) % Implementations
 
         % Rep
-
-        function rho = computeDouble(self)
-            rho = self;
-        end
 
         function rho = image_double_sparse(self, g)
             perm = self.group.niceMorphism.imageElement(g);

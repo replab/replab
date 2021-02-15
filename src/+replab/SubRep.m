@@ -28,7 +28,7 @@ classdef SubRep < replab.Rep
         parent % (`+replab.Rep`): Parent representation of dimension $D$
         injection_internal % (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
         projection_internal % (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
-        mapsAreAdjoint % (logical): True if `.parent` is known to be unitary and `.injection` is the conjugate transpose of `.projection`
+        mapsAreAdjoint % (logical): True if `.parent` is unitary (so the Hermitian adjoint makes sense)  and `.injection` is the conjugate transpose of `.projection`
     end
 
     methods
@@ -60,9 +60,9 @@ classdef SubRep < replab.Rep
             end
             args = struct('injectionConditionNumberEstimate', [], 'projectorErrorBound', []);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
-            mapsAreAdjoint = parent.knownUnitary && all(all(injection_internal == projection_internal'));
+            mapsAreAdjoint = parent.isUnitary && all(all(injection_internal == projection_internal'));
             if mapsAreAdjoint
-                restArgs = replab.util.keyValuePairsUpdate(restArgs, 'knownUnitary', true);
+                restArgs = replab.util.keyValuePairsUpdate(restArgs, 'isUnitary', true);
             end
             if parent.inCache('trivialDimension')
                 if parent.trivialDimension == 0
@@ -470,11 +470,6 @@ classdef SubRep < replab.Rep
 
     methods (Access = protected) % Implementations
 
-        function r = computeDouble(self)
-            args = self.knownProperties({'injectionConditionNumberEstimate'});
-            r = replab.SubRep(double(self.parent), self.injection('double/sparse'), self.projection('double/sparse'), args{:});
-        end
-
         function c = decomposeTerm(self)
             c = {self.parent};
         end
@@ -501,7 +496,7 @@ classdef SubRep < replab.Rep
         end
 
         function c = computeConditionNumberEstimate(self)
-            if self.cachedOrDefault('isUnitary', false)
+            if self.isUnitary
                 c = 1;
             else
                 % rho = parent

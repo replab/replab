@@ -18,16 +18,8 @@ classdef DirectSumRep < replab.Rep
         %   blocks (cell(1,\*) of `+replab.Rep`): Subrepresentations
             replab.rep.assertCompatibleFactors(group, field, factors);
             d = sum(cellfun(@(f) f.dimension, factors));
-            factorsAllUnitary = cellfun(@(x) x.knownUnitary, factors);
-            factorsAllNonUnitary = cellfun(@(x) x.knownNonUnitary, factors);
-            if all(factorsAllUnitary)
-                args = {'isUnitary' true};
-            elseif all(factorsAllNonUnitary)
-                args = {'isUnitary' false};
-            else
-                args = cell(1, 0);
-            end
-            self@replab.Rep(group, field, d, args{:});
+            factorsAreUnitary = cellfun(@(x) x.isUnitary, factors);
+            self@replab.Rep(group, field, d, 'isUnitary', all(factorsAreUnitary), args{:});
             self.factors = factors;
         end
 
@@ -126,10 +118,6 @@ classdef DirectSumRep < replab.Rep
     methods (Access = protected) % Implementations
 
         % Rep
-
-        function rep = computeDouble(self)
-            rep = replab.rep.DirectSumRep(self.group, self.field, cellfun(@(f) double(f), self.factors));
-        end
 
         function c = decomposeTerm(self)
             c = self.factors;

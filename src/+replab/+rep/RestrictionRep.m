@@ -10,12 +10,7 @@ classdef RestrictionRep < replab.Rep
         function self = RestrictionRep(parent, group)
             assert(isa(parent, 'replab.Rep'));
             assert(isa(group, 'replab.CompactGroup'));
-            if second.knownUnitary
-                args = {'isUnitary' true};
-            else
-                args = {};
-            end
-            self@replab.Rep(group, parent.field, parent.dimension, args{:});
+            self@replab.Rep(group, parent.field, parent.dimension, 'isUnitary', parent.isUnitary);
         end
 
     end
