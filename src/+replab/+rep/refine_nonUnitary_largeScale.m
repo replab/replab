@@ -13,6 +13,8 @@ function gen1 = refine_nonUnitary_largeScale(gen, numNonImproving, nSamples, max
 %   `+replab.GenSubRep`: Refined generic subrepresentation
     d = gen.parent.dimension;
     dsub = gen.dimension;
+    rep = gen.parent;
+    type = [gen.divisionRing '/' rep.field];
     replab.msg(1, 'Nonunitary refinement over %s: dim(parent) = %d, dim(subrep) = %d', gen.divisionRing, d, dsub);
     replab.msg(1, 'Large-scale algorithm with %d samples/iteration', nSamples);
     replab.msg(1, '');
@@ -20,7 +22,6 @@ function gen1 = refine_nonUnitary_largeScale(gen, numNonImproving, nSamples, max
     replab.msg(2, '--------------------------');
     iter = 1;
     min_dSpan = inf;
-    rep = gen.parent;
     I0 = gen.injection;
     P0 = gen.projection;
     I = I0;
@@ -35,16 +36,16 @@ function gen1 = refine_nonUnitary_largeScale(gen, numNonImproving, nSamples, max
         P = zeros(size(Pprev));
         for j = 1:nSamples
             g = rep.group.sample;
-            switch gen.divisionRing
-              case 'R'
+            switch type
+              case {'R/R', 'C/C'}
                 Prho = rep.matrixColAction(g, Pprev);
                 rhoI = rep.matrixRowAction(g, Iprev);
-              case 'C'
+              case 'C/R'
                 Prho = rep.matrixColAction(g, real(Pprev)) + ...
                        rep.matrixColAction(g, imag(Pprev)) * 1i;
                 rhoI = rep.matrixRowAction(g, real(Iprev)) + ...
                        rep.matrixRowAction(g, imag(Iprev)) * 1i;
-              case 'H'
+              case 'H/R'
                 Prho = rep.matrixColAction(g, Pprev.part1) + ...
                        rep.matrixColAction(g, Pprev.parti) * replab.H.i + ...
                        rep.matrixColAction(g, Pprev.partj) * replab.H.j + ...

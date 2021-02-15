@@ -13,6 +13,8 @@ function gen1 = refine_unitary_largeScale(gen, numNonImproving, nSamples, maxIte
 %   `+replab.GenSubRep`: Refined generic subrepresentation
     d = gen.parent.dimension;
     dsub = gen.dimension;
+    rep = gen.parent;
+    type = [gen.divisionRing '/' rep.field];
     replab.msg(1, 'Unitary refinement over %s: dim(parent) = %d, dim(subrep) = %d', gen.divisionRing, d, dsub);
     replab.msg(1, 'Large-scale algorithm with %d samples/iteration', nSamples);
     replab.msg(1, '');
@@ -20,8 +22,8 @@ function gen1 = refine_unitary_largeScale(gen, numNonImproving, nSamples, maxIte
     replab.msg(2, '--------------------------');
     iter = 1;
     min_dSpan = inf;
-    rep = gen.parent;
     Q0 = gen.injection;
+    assert(rep.isUnitary);
     if ~gen.mapsAreAdjoint
         [Q0, ~] = replab.numerical.qr(Q0);
     end
@@ -31,26 +33,19 @@ function gen1 = refine_unitary_largeScale(gen, numNonImproving, nSamples, maxIte
         Q1 = zeros(size(Q));
         for j = 1:nSamples
             g = rep.group.sample;
-            switch gen.divisionRing
-              case 'R'
-                Qrho = rep.matrixColAction(g, Q');
+            switch type
+              case {'R/R', 'C/C'}
                 rhoQ = rep.matrixRowAction(g, Q);
-              case 'C'
-                Qrho = rep.matrixColAction(g, real(Q)') + ...
-                       rep.matrixColAction(g, -imag(Q)') * 1i;
+              case 'C/R'
                 rhoQ = rep.matrixRowAction(g, real(Q)) + ...
                        rep.matrixRowAction(g, imag(Q)) * 1i;
-              case 'H'
-                Qrho = replab.H(rep.matrixColAction(g, Q.part1'), ...
-                                rep.matrixColAction(g, -Q.parti'), ...
-                                rep.matrixColAction(g, -Q.partj'), ...
-                                rep.matrixColAction(g, -Q.partk'));
+              case 'H/R'
                 rhoQ = replab.H(rep.matrixRowAction(g, Q.part1), ...
                                 rep.matrixRowAction(g, Q.parti), ...
                                 rep.matrixRowAction(g, Q.partj), ...
                                 rep.matrixRowAction(g, Q.partk));
             end
-            Q1 = Q1 + rhoQ * (Qrho * Q);
+            Q1 = Q1 + rhoQ * (rhoQ' * Q);
         end
         Q1 = Q1/nSamples;
         if ~isempty(Qo)

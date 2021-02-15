@@ -12,6 +12,7 @@ function gen1 = refine_unitary_mediumScale(gen, innerIterations, maxIterations, 
     d = gen.parent.dimension;
     dsub = gen.dimension;
     rep = gen.parent;
+    type = [gen.divisionRing '/' rep.field];
     replab.msg(1, 'Unitary refinement over %s: dim(parent) = %d, dim(subrep) = %d', gen.divisionRing, d, dsub);
     replab.msg(1, 'Full commutant projection algorithm');
     replab.msg(1, '');
@@ -27,15 +28,15 @@ function gen1 = refine_unitary_mediumScale(gen, innerIterations, maxIterations, 
     while iter <= maxIterations
         Qprev = Q;
         Ftilde = Q*Q';
-        switch gen.divisionRing
-          case 'R'
+        switch type
+          case {'R/R', 'C/C'}
             [Foverline, err] = rep.commutant.project(Ftilde);
-          case 'C'
+          case 'C/R'
             [F1, e1] = rep.commutant.project(real(Ftilde));
             [Fi, ei] = rep.commutant.project(imag(Ftilde));
             Foverline = F1 + Fi*1i;
             err = sqrt(e1^2 + ei^2);
-          case 'H'
+          case 'H/R'
             [F1, e1] = rep.commutant.project(Ftilde.part1);
             [Fi, ei] = rep.commutant.project(Ftilde.parti);
             [Fj, ej] = rep.commutant.project(Ftilde.partj);
