@@ -370,6 +370,46 @@ classdef H
             s = size(self.X, varargin{:});
         end
 
+        function res = sqrt(self)
+        % Quaternion element-by-element square root
+        %
+        % See `<https://math.stackexchange.com/questions/382431/square-roots-of-quaternions>_`
+            T = self.part1;
+            X = self.parti;
+            Y = self.partj;
+            Z = self.partk;
+            T = T(:);
+            X = X(:);
+            Y = Y(:);
+            Z = Z(:);
+            for i = 1:length(T)
+                % q = t + v u
+                % where t, v are real and u is a unit quaternion vector
+                % so that u^2 = -1
+                t = T(i);
+                u = [X(i) Y(i) Z(i)];
+                v = norm(u);
+                if v ~= 0
+                    u = u/v;
+                else
+                    u = [1 0 0];
+                end
+                s = sqrt(t + 1i*v);
+                t = real(s);
+                v = imag(s);
+                T(i) = t;
+                X(i) = v*u(1);
+                Y(i) = v*u(2);
+                Z(i) = v*u(3);
+            end
+            T = reshape(T, self.size);
+            X = reshape(X, self.size);
+            Y = reshape(Y, self.size);
+            Z = reshape(Z, self.size);
+            res = replab.H(T, X, Y, Z);
+        end
+
+
         function varargout = subsasgn(self, s, p)
             if length(s) == 1 && isequal(s.type, '()')
                 [qX, qY] = replab.H.decompose(self);
