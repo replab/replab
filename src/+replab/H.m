@@ -43,6 +43,10 @@ classdef H
             res = replab.H(0,0,0,1);
         end
 
+        function res = randn(varargin)
+            res = replab.H(randn(varargin{:}), randn(varargin{:}), randn(varargin{:}), randn(varargin{:}));
+        end
+
         function [X, Y] = decompose(Q)
         % Decomposes the first and second part from the given matrix, interpreted as a quaternion matrix
         %
