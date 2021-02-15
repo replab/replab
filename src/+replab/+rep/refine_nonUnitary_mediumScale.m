@@ -73,5 +73,5 @@ function gen1 = refine_nonUnitary_mediumScale(gen, innerIterations, maxIteration
         iter = iter + 1;
     end
     replab.msg(1, 'Stopped after %d iterations with projector error %6.2E', iter, dProj);
-    gen1 = replab.rep.GenSubRep(rep, gen.divisionRing, false, I0, P0);
+    gen1 = replab.rep.GenSubRep(rep, gen.divisionRing, false, I, P);
 end
