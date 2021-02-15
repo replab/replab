@@ -51,17 +51,8 @@ function gen1 = refine_unitary_largeScale(gen, numNonImproving, nSamples, maxIte
         if ~isempty(Qo)
             Q1 = Q1 - Qo * (Qo' * Q1);
         end
-        Qbefore = Q1;
-        [Q1, ~] = replab.numerical.qr(Q1);
-        %nIters = 1;
-        %for j = 1:nIters
-        %    N = Q1'*Q1;
-        %    P = Q1*N/2;
-        %    Q1 = 2*Q1 + P*N - 3*P;
-        %end
-        %Q2'*Q1
-        ortho = norm(Qbefore'*Q1 - speye(dsub), 'fro');
-        dSpan = norm(Q1'*Q*Q'*Q1 - speye(dsub), 'fro');
+        ortho = norm(Q1'*Q - speye(dsub), 'fro');
+        dSpan = norm(Q1'*Q1 - speye(dsub), 'fro');
         if dSpan >= min_dSpan
             ni = ni + 1;
             replab.msg(2, '%6d   %6.2E %6.2E (#%d non improving)', iter, dSpan, ortho, ni);
@@ -72,6 +63,12 @@ function gen1 = refine_unitary_largeScale(gen, numNonImproving, nSamples, maxIte
             min_dSpan = dSpan;
             replab.msg(2, '%6d   %6.2E %6.2E', iter, dSpan, ortho);
         end
+        f = trace(Q1*Q1')/dsub;
+        Q1 = Q1/sqrt(f);
+        % Force Q1 to be unitary using a single Newton iteration
+        N = Q1'*Q1;
+        P = Q1*N/2;
+        Q1 = 2*Q1 + P*N - 3*P;
         Q = Q1;
         iter = iter + 1;
     end
