@@ -233,30 +233,30 @@ classdef Isotypic < replab.SubRep
 
     methods % Harmonization
 
-        function iso = harmonize(self, context)
-        % Harmonizes the isotypic component
-        %
-        % Returns:
-        %   `.Isotypic`: Isotypic component with `.isHarmonized` true
-            if self.isHarmonized
-                iso = self;
-            elseif self.trivialDimension == self.dimension
-                isHarmonized = true;
-                iso = replab.Isotypic(self.parent, self.irreps, self.projection, self.irrepDimension, isHarmonized);
-            else
-                if nargin < 2 || isempty(context)
-                    close = true;
-                    c = replab.Context.make;
-                else
-                    close = false;
-                    c = context;
-                end
-                iso = replab.irreducible.Isotypic_harmonize(self, c);
-                if close
-                    c.close;
-                end
-            end
-        end
+% $$$         function iso = harmonize(self, context)
+% $$$         % Harmonizes the isotypic component
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `.Isotypic`: Isotypic component with `.isHarmonized` true
+% $$$             if self.isHarmonized
+% $$$                 iso = self;
+% $$$             elseif self.trivialDimension == self.dimension
+% $$$                 isHarmonized = true;
+% $$$                 iso = replab.Isotypic(self.parent, self.irreps, self.projection, self.irrepDimension, isHarmonized);
+% $$$             else
+% $$$                 if nargin < 2 || isempty(context)
+% $$$                     close = true;
+% $$$                     c = replab.Context.make;
+% $$$                 else
+% $$$                     close = false;
+% $$$                     c = context;
+% $$$                 end
+% $$$                 iso = replab.irreducible.Isotypic_harmonize(self, c);
+% $$$                 if close
+% $$$                     c.close;
+% $$$                 end
+% $$$             end
+% $$$         end
 
     end
 
@@ -439,39 +439,30 @@ classdef Isotypic < replab.SubRep
             irreps = cell(1, m);
             if self.parent.knownUnitary
                 Q0 = self.injection;
-                if ~all(all(Q0 == self.projection'))
-                    [Q0, ~] = qr(Q0, 0);
-                end
                 Qo = zeros(D, 0);
                 for i = 1:m
-                    Q = Q0(:, self.irrepRange(i));
-                    if args.largeScale
-                        Q1 = replab.rep.refine_unitaryLargeScale(self.parent, Q, args.numNonImproving, args.nSamples, args.maxIterations, Qo);
-                    else
-                        Q1 = replab.rep.refine_unitaryMediumScale(self.parent, Q, args.nInnerIterations, args.maxIterations, Qo);
-                    end
-                    irreps{i} = self.parent.subRep(Q1, 'projection', Q1', 'isUnitary', true, 'isIrreducible', true);
-                    Qo = [Qo Q1];
+                    irr = self.irrep(i);
+                    irr = irr.refine('injectionBiortho', Qo, 'projectionBiortho', Qo', varargin{:});
+                    irreps{i} = irr;
+                    Qo = [Qo, irreps{i}.injection];
                 end
                 isHarmonized = false;
                 iso1 = replab.Isotypic(self.parent, irreps, Qo', self.irrepDimension, isHarmonized);
             else
-                I0 = self.injection;
-                P0 = self.projection;
+                I = self.injection;
+                P = self.projection;
                 Io = zeros(D, 0);
                 Po = zeros(0, D);
                 for i = 1:m
-                    I = I(:, self.irrepRange(i));
-                    P = P(self.irrepRange(i), :);
-                    if args.largeScale
-                        [I1, P1] = replab.rep.refine_nonUnitaryLargeScale(self.parent, I, P, args.numNonImproving, args.nSamples, args.maxIterations, Io, Po);
-                    else
-                        [I1, P1] = replab.rep.refine_nonUnitaryMediumScale(self.parent, I, P, args.nInnerIterations, args.maxIterations, Io, Po);
-                    end
-                    irreps{i} = self.parent.subRep(I1, 'projection', P1, 'isIrreducible', true);
-                    Io = [Io I1];
-                    Po = [Po; P1];
+                    irr = self.irrep(i);
+                    irr = irr.withUpdatedMaps(I(:, self.irrepRange(i)), P(self.irrepRange(i), :));
+                    irr = irr.refine('injectionBiortho', Io, 'projectionBiortho', Po, varargin{:});
+                    irreps{i} = irr;
+                    Io = [Io, irr.injection];
+                    Po = [Po; irr.projection];
                 end
+                % apply one Newton-Raphson iteration for increased precision
+                Po = 2*Po - Po*Io*Po;
                 isHarmonized = false;
                 iso1 = replab.Isotypic(self.parent, irreps, Po, self.irrepDimension, isHarmonized);
             end

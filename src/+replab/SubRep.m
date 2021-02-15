@@ -340,19 +340,14 @@ classdef SubRep < replab.Rep
         %   nSamples (integer, optional): Number of samples to use in the large-scale version of the algorithm, default ``5``
         %   nInnerIterations (integer, optional): Number of inner iterations in the medium-scale version of the algorithm, default ``10``
         %   maxIterations (integer, optional): Maximum number of (outer) iterations, default ``1000``
+        %   injectionBiortho (double(\*,\*), may be sparse): Injection map of known multiplicity space to remove from this subrepresentation
+        %   projectionBiortho (double(\*,\*), may be sparse): Projection map of known multiplicity space to remove from this subrepresentation
         %
         % Returns
         % -------
         %   sub1: `.SubRep`
         %     Subrepresentation with refined subspace (injection/projection maps)
-            switch self.divisionAlgebraName
-              case 'complex'
-                gen = replab.rep.GenSubRep.fromComplexTypeSubRep(self);
-              case 'quaternion.rep'
-                gen = replab.rep.GenSubRep.fromQuaternionTypeSubRep(self);
-              otherwise
-                gen = replab.rep.GenSubRep.fromSubRep(self);
-            end
+            gen = replab.rep.GenSubRep.fromSubRep(self);
             gen1 = gen.refine(varargin{:});
             res = gen1.toSubRep;
             sub1 = self.withUpdatedMaps(res.injection, res.projection, 'isUnitary', res.isUnitary, 'divisionAlgebraName', self.divisionAlgebraName);

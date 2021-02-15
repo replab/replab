@@ -220,7 +220,7 @@ classdef GenSubRep < replab.Obj
         % Refines a generic subrepresentation
         %
         % See `+replab.SubRep.refine`
-            args = struct('numNonImproving', 20, 'largeScale', self.parent.dimension > 1000, 'nSamples', 5, 'nInnerIterations', 3, 'maxIterations', 1000);
+            args = struct('numNonImproving', 20, 'largeScale', self.parent.dimension > 1000, 'nSamples', 5, 'nInnerIterations', 3, 'maxIterations', 1000, 'injectionBiortho', [], 'projectionBiortho', []);
             args = replab.util.populateStruct(args, varargin);
             if self.parent.knownUnitary
                 if args.largeScale
@@ -252,7 +252,10 @@ classdef GenSubRep < replab.Obj
         function gen = fromSubRep(sub)
         % Creates a generic subrepresentation from a subrepresentation
         %
-        % Does not exploit any division algebra structure present.
+        % Exploits a division algebra if present (delegates to `.fromComplexTypeSubRep` or `.fromQuaternionTypeSubRep`).
+        %
+        % Guarantees that the roundtrip ``gen = replab.rep.GenSubRep.fromSubRep(sub); sub1 = gen.toSubRep`` preserves
+        % the division algebra structure if present.
         %
         % Args:
         %   sub (`+replab.SubRep`): Subrepresentation
@@ -260,7 +263,14 @@ classdef GenSubRep < replab.Obj
         % Returns:
         %   `.GenSubRep`: Generic subrepresentation over the same field
             if sub.overR
-                gen = replab.rep.GenSubRep(sub.parent, 'R', sub.knownUnitary, sub.injection, sub.projection);
+                switch sub.divisionAlgebraName
+                  case ''
+                    gen = replab.rep.GenSubRep(sub.parent, 'R', sub.knownUnitary, sub.injection, sub.projection);
+                  case 'complex'
+                    gen = replab.rep.GenSubRep.fromComplexTypeSubRep(sub);
+                  case 'quaternion.rep'
+                    gen = replab.rep.GenSubRep.fromQuaternionTypeSubRep(sub);
+                end
             else
                 gen = replab.rep.GenSubRep(sub.parent, 'C', sub.knownUnitary, sub.injection, sub.projection);
             end
