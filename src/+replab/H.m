@@ -440,6 +440,11 @@ classdef H
             res = replab.H(X, [], Y);
         end
 
+        function res = trace(self)
+            [X, Y] = replab.H.decompose(self);
+            res = replab.H(trace(X), [], trace(Y));
+        end
+
         function res = transpose(self)
             res = replab.H(self.X.', [], self.Y.');
         end
