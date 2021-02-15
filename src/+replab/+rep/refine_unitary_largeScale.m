@@ -22,6 +22,9 @@ function gen1 = refine_unitary_largeScale(gen, numNonImproving, nSamples, maxIte
     min_dSpan = inf;
     rep = gen.parent;
     Q0 = gen.injection;
+    if ~gen.mapsAreAdjoint
+        [Q0, ~] = replab.numerical.qr(Q0);
+    end
     Q = Q0;
     ni = 0;
     while iter <= maxIterations
@@ -54,7 +57,7 @@ function gen1 = refine_unitary_largeScale(gen, numNonImproving, nSamples, maxIte
             Q1 = Q1 - Qo * (Qo' * Q1);
         end
         Qbefore = Q1;
-        [Q1, ~] = qr(Q1, 0);
+        [Q1, ~] = replab.numerical.qr(Q1);
         %nIters = 1;
         %for j = 1:nIters
         %    N = Q1'*Q1;

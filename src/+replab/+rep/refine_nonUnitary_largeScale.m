@@ -26,7 +26,7 @@ function gen1 = refine_nonUnitary_largeScale(gen, numNonImproving, nSamples, max
     I = I0;
     P = P0;
     ni = 0;
-    [U, ~] = qr(I, 0);
+    [U, ~] = replab.numerical.qr(I);
     while iter <= maxIterations
         Iprev = I;
         Pprev = P;
@@ -63,7 +63,7 @@ function gen1 = refine_nonUnitary_largeScale(gen, numNonImproving, nSamples, max
         end
         I = I / (P0 * I);
         P = (P * I) \ P;
-        [U, ~] = qr(I, 0);
+        [U, ~] = replab.numerical.qr(I);
         dSpan = norm(U'*Uprev*Uprev'*U - speye(dsub), 'fro');
         ortho = norm(P * Iprev - speye(dsub), 'fro');
         if dSpan >= min_dSpan

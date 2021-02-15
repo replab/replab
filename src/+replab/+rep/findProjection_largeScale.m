@@ -21,7 +21,7 @@ function P = findProjection_largeScale(rep, I, numNonImproving, nSamples, maxIte
     min_dSpan = inf;
     P = I';
     ni = 0;
-    [U, ~] = qr(P', 0);
+    [U, ~] = replab.numerical.qr(P');
     while iter <= maxIterations
         Pprev = P;
         Uprev = U;
@@ -31,7 +31,7 @@ function P = findProjection_largeScale(rep, I, numNonImproving, nSamples, maxIte
             P = P + (Pprev * rep.matrixRowAction(g, I)) * rep.matrixColAction(g, Pprev);
         end
         P = (P * I) \ P;
-        [U, ~] = qr(P', 0);
+        [U, ~] = replab.numerical.qr(P');
         dSpan = norm(U'*Uprev*Uprev'*U - speye(dsub), 'fro')*2;
         ortho = norm(P * I - speye(dsub), 'fro');
         if dSpan > min_dSpan

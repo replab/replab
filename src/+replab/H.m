@@ -346,27 +346,6 @@ classdef H
             res = replab.H(X1 + X2, [], Y1 + Y2);
         end
 
-        function [Q, R] = qr(self, varargin)
-            X = self.X;
-            % TODO: better handle all the calling conventions of the stdlib qr function
-            Y = self.Y;
-            if nnz(Y) == 0
-                [Q, R] = qr(full(X), varargin{:});
-                Q = replab.H(Q);
-                R = replab.H(R);
-            else
-                Z = full(replab.H.encode(self));
-                [Q, R] = qr(Z, varargin{:});
-                Q = replab.H.decode(Q);
-                R = replab.H.decode(R);
-                for i = 1:min(size(R))
-                    R.X(i,i) = real(R.X(i,i));
-                    R.Y(i,i) = 0;
-                end
-            end
-        end
-
-
         function res = real(self)
         %
         % Returns: double
@@ -387,17 +366,20 @@ classdef H
             s = size(self.X, varargin{:});
         end
 
-        function res = subsasgn(q, s, p)
-            [qX, qY] = replab.H.decompose(q);
-            [pX, pY] = replab.H.decompose(p);
-            qX(s.subs{:}) = pX;
-            qY(s.subs{:}) = pY;
-            res = replab.H(qX, [], qY);
+        function varargout = subsasgn(self, s, p)
+            if length(s) == 1 && isequal(s.type, '()')
+                [qX, qY] = replab.H.decompose(self);
+                [pX, pY] = replab.H.decompose(p);
+                qX(s.subs{:}) = pX;
+                qY(s.subs{:}) = pY;
+                varargout{1} = replab.H(qX, [], qY);
+            else
+                [varargout{1:nargout}] = builtin('subsasgn', self, s, p);
+            end
         end
 
         function varargout = subsref(self, s)
-            assert(length(s) == 1);
-            if isequal(s.type, '()')
+            if length(s) == 1 && isequal(s.type, '()')
                 X = self.X(s.subs{:});
                 Y = self.Y(s.subs{:});
                 varargout{1} = replab.H(X, [], Y);

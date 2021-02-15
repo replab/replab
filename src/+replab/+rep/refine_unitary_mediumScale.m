@@ -19,6 +19,9 @@ function gen1 = refine_unitary_mediumScale(gen, innerIterations, maxIterations, 
     replab.msg(2, '-----------------------------------');
     iter = 1;
     Q0 = gen.injection;
+    if ~gen.mapsAreAdjoint
+        [Q0, ~] = replab.numerical.qr(Q0);
+    end
     Q = Q0;
     dProj = inf;
     while iter <= maxIterations
@@ -47,7 +50,7 @@ function gen1 = refine_unitary_mediumScale(gen, innerIterations, maxIterations, 
             if ~isempty(Qo)
                 Q1 = Q1 - Qo * (Qo' * Q1);
             end
-            [Q1, R] = qr(Q1, 0);
+            [Q1, R] = replab.numerical.qr(Q1);
             dSpan = norm(Q'*Q1*Q1'*Q - speye(dsub), 'fro')*2;
             replab.msg(3, ' (inner)          %6.2E', dSpan);
             Q = Q1;

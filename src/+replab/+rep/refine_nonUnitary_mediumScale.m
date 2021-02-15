@@ -24,7 +24,7 @@ function gen1 = refine_nonUnitary_mediumScale(gen, innerIterations, maxIteration
     P0 = gen.projection;
     I = I0;
     P = P0;
-    [U, ~] = qr(I, 0);
+    [U, ~] = replab.numerical.qr(I);
     while iter <= maxIterations
         Iprev = I;
         Pprev = P;
@@ -57,7 +57,7 @@ function gen1 = refine_nonUnitary_mediumScale(gen, innerIterations, maxIteration
             end
             I1 = I1 / (P0 * I1);
             P1 = (P1 * I1) \ P1;
-            [U1, ~] = qr(I1, 0);
+            [U1, ~] = replab.numerical.qr(I1);
             ortho = norm(P1 * I0 - speye(dsub), 'fro');
             dSpan = norm(U'*U1*U1'*U - speye(dsub), 'fro')*2;
             replab.msg(3, ' (inner)          %6.2E %6.2E', dSpan, ortho);
