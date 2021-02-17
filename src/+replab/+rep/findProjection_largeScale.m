@@ -15,36 +15,34 @@ function P = findProjection_largeScale(rep, I, numNonImproving, nSamples, maxIte
     replab.msg(1, 'Projection map search: dim(parent) = %d, dim(subrep) = %d', d, dsub);
     replab.msg(1, 'Large-scale algorithm with %d samples/iteration', nSamples);
     replab.msg(1, '');
-    replab.msg(2, ' #iter   dSpan    ortho');
-    replab.msg(2, '--------------------------');
+    replab.msg(2, ' #iter   ortho    delta');
+    replab.msg(2, '-----------------------');
     iter = 1;
-    min_dSpan = inf;
-    P = I';
+    P = I'; % as good as a guess as anything else
+    [P, min_ortho] = replab.rep.biorthoStepP(I, P);
     ni = 0;
-    [U, ~] = replab.numerical.qr(P');
     while iter <= maxIterations
         Pprev = P;
-        Uprev = U;
         P = zeros(size(Pprev));
         for j = 1:nSamples
             g = rep.group.sample;
             P = P + (Pprev * rep.matrixRowAction(g, I)) * rep.matrixColAction(g, Pprev);
         end
-        P = (P * I) \ P;
-        [U, ~] = replab.numerical.qr(P');
-        dSpan = norm(U'*Uprev*Uprev'*U - speye(dsub), 'fro')*2;
-        ortho = norm(P * I - speye(dsub), 'fro');
-        if dSpan > min_dSpan
+        f = trace(P*I)/dsub;
+        P = P/f;
+        delta = norm(P - Pprev, 'fro');
+        [P, ortho] = replab.rep.biorthoStepP(I, P);
+        if ortho > min_ortho
             ni = ni + 1;
-            replab.msg(2, '%6d   %6.2E %6.2E (#%d non improving)', iter, dSpan, ortho, ni);
+            replab.msg(2, '%6d   %6.2E %6.2E (#%d non improving)', iter, ortho, delta, ni);
             if ni > numNonImproving
                 break
             end
         else
-            min_dSpan = dSpan;
-            replab.msg(2, '%6d   %6.2E %6.2E', iter, dSpan, ortho);
+            min_ortho = ortho;
+            replab.msg(2, '%6d   %6.2E %6.2E', iter, ortho, delta);
         end
         iter = iter + 1;
     end
-    replab.msg(1, 'Stopped after %d iterations with span delta %6.2E', iter, dSpan);
+    replab.msg(1, 'Stopped after %d iterations with ortho %6.2E', iter, ortho);
 end
