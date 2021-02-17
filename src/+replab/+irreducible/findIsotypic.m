@@ -45,7 +45,6 @@ function [iso, zeroErrors, nonZeroErrors] = findIsotypic(parent, irreps, sample)
                     end
                     err = norm(S - S1, 'fro');
                     nonZeroErrors(1,end+1) = err;
-
                     comp{1,end+1} = replab.irreducible.changeBasis(ri, rj, Eij, Eji);
                 else
                     err = norm(S, 'fro');
