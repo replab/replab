@@ -215,6 +215,18 @@ classdef H
             r1 = real(self.X).^2 + imag(self.X).^2 + real(self.Y).^2 + imag(self.Y).^2;
         end
 
+        function res = blkdiag(varargin)
+            n = length(varargin);
+            X = cell(1, n);
+            Y = cell(1, n);
+            for i = 1:n
+                [X{i}, Y{i}] = replab.H.decompose(varargin{i});
+            end
+            X = blkdiag(X{:});
+            Y = blkdiag(Y{:});
+            res = replab.H(X, [], Y);
+        end
+
         function res = conj(self)
             res = replab.H(conj(self.X), [], -self.Y);
         end
