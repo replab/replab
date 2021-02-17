@@ -152,7 +152,7 @@ classdef QuaternionTypeMatrices < replab.domain.VectorSpace
               case 'commutant'
                 A = (M(1:4:nR, 1:4:nC) + M(2:4:nR, 2:4:nC) + M(3:4:nR, 3:4:nC) + M(4:4:nR, 4:4:nC))/4;
                 B = (M(2:4:nR, 1:4:nC) - M(1:4:nR, 2:4:nC) - M(4:4:nR, 3:4:nC) + M(3:4:nR, 4:4:nC))/4;
-                C = -(M(3:4:nR, 1:4:nC) + M(1:4:nR, 3:4:nC) + M(2:4:nR, 4:4:nC) - M(4:4:nR, 2:4:nC))/4;
+                C = (-M(3:4:nR, 1:4:nC) + M(1:4:nR, 3:4:nC) + M(2:4:nR, 4:4:nC) - M(4:4:nR, 2:4:nC))/4;
                 D = (M(4:4:nR, 1:4:nC) - M(3:4:nR, 2:4:nC) + M(2:4:nR, 3:4:nC) - M(1:4:nR, 4:4:nC))/4;
               otherwise
                 error('Unknown type');
