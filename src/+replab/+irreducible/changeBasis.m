@@ -1,6 +1,8 @@
 function newIrrep2 = changeBasis(irrep1, irrep2, F, G)
 % Given two equivalent irreducible subrepresentations, updates the basis of the second one to make them identical
 %
+% Note the different calling convention with respect to ``harmonize_*``
+%
 % Args:
 %   irrep1 (`+replab.SubRep`): First irreducible subrepresentation
 %   irrep2 (`+replab.SubRep`): Second irreducible subrepresentation
@@ -26,6 +28,11 @@ function newIrrep2 = changeBasis(irrep1, irrep2, F, G)
     F = S*F;
     G = G*S;
     newI = irrep2.injection*G;
-    newP = F*irrep2.projection;
-    newIrrep2 = irrep2.parent.subRep(newI, 'projection', newP, 'isIrreducible', true, 'frobeniusSchurIndicator', irrep2.frobeniusSchurIndicator, 'divisionAlgebraName', irrep2.divisionAlgebraName, 'isUnitary', irrep2.isUnitary);
+    if irrep2.mapsAreAdjoint
+        newI = newI / sqrt(trace(newI'*newI)/d);
+        newP = newI';
+    else
+        newP = F*irrep2.projection;
+    end
+    newIrrep2 = irrep2.withUpdatedMaps(newI, newP, 'divisionAlgebraName', irrep1.divisionAlgebraName, 'isUnitary', irrep1.isUnitary);
 end
