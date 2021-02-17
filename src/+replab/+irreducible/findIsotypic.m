@@ -52,7 +52,7 @@ function [iso, zeroErrors, nonZeroErrors] = findIsotypic(parent, irreps, sample)
                     zeroErrors(1,end+1) = err;
                 end
             end
-            iso{1,end+1} = replab.Isotypic.fromBiorthogonalIrreps(parent, comp, d, true);
+            iso{1,end+1} = replab.Isotypic.fromIrreps(parent, comp, comp{1}, 'irrepsAreBiorthogonal', true, 'irrepsAreHarmonized', true);
         end
     end
 end

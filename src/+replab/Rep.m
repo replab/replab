@@ -717,6 +717,34 @@ classdef Rep < replab.Obj
             b = self.cached('isIrreducible', @() self.computeIsIrreducible);
         end
 
+        function b = isIrreducibleAndCanonical(self)
+        % Returns whether this representation is irreducible, and has its division algebra in the canonical encoding
+        %
+        % This is always true for complex irreps (though we may decide to canonicalize quaternion-type
+        % complex representations later). For real irreps, it is true if the Frobenius-Schur indicator is known
+        % and matches the encoded `.divisionAlgebraName`.
+        %
+        % Returns:
+        %   logical: True if the representation is irreducible and has its division algebra in the canonical encoding
+            if ~self.isIrreducible
+                b = false;
+            elseif self.overC
+                b = true;
+            else
+                % self.overR
+                switch self.frobeniusSchurIndicator
+                  case 1
+                    b = true; % nothing needs to be done for real-type representations
+                  case 0
+                    b = strcmp(self.divisionAlgebraName, 'complex');
+                  case -2
+                    b = strcmp(self.divisionAlgebraName, 'quaternion.rep');
+                  otherwise
+                    error('Real irreps must have frobeniusSchurIndicator equal to -2,0,1. Here = %d', self.frobeniusSchurIndicator);
+                end
+            end
+        end
+
         function b = knownIrreducible(self)
         % Returns whether this representation is known to be irreducible; only a true result is significant
         %

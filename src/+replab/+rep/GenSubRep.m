@@ -104,7 +104,7 @@ classdef GenSubRep < replab.Obj
 
         function sub = computeToSubRep(self)
             d = self.dimension;
-            type = [self.divisionRing '->' self.parent.field]
+            type = [self.divisionRing '->' self.parent.field];
             switch type
               case {'R->R', 'C->C'}
                 if self.mapsAreAdjoint
@@ -190,14 +190,47 @@ classdef GenSubRep < replab.Obj
         % Computes the image of the given group element
         %
         % See `+replab.Rep.image`
-            rho = self.projection * self.parent.image(g, 'double/sparse') * self.injection;
+            rep = self.parent;
+            P = self.projection;
+            I = self.injection;
+            switch [self.divisionRing '/' rep.field]
+              case {'R/R', 'C/C'}
+                rho = P * rep.matrixRowAction(g, I);
+              case 'C/R'
+                rho = P * (...
+                    rep.matrixRowAction(g, real(I)) + ...
+                    rep.matrixRowAction(g, imag(I)) * 1i ...
+                    );
+              case 'H/R'
+                rho = P * replab.H(...
+                    rep.matrixRowAction(g, part1(I)), ...
+                    rep.matrixRowAction(g, parti(I)), ...
+                    rep.matrixRowAction(g, partj(I)), ...
+                    rep.matrixRowAction(g, partk(I)));
+            end
         end
 
         function rho = inverseImage(self, g)
         % Computes the image of the inverse of the given group element
         %
         % See `+replab.Rep.inverseImage`
-            rho = self.projection * self.parent.inverseImage(g, 'double/sparse') * self.injection;
+            rep = self.parent;
+            P = self.projection;
+            I = self.injection;
+            switch [self.divisionRing '/' rep.field]
+              case {'R/R', 'C/C'}
+                rho = rep.matrixColAction(g, P) * I;
+              case 'C/R'
+                rho = (rep.matrixColAction(g, real(P)) + ...
+                       rep.matrixColAction(g, imag(P)) * 1i ...
+                       ) * I;
+              case 'H/R'
+                rho = replab.H(...
+                    rep.matrixColAction(g, part1(P)), ...
+                    rep.matrixColAction(g, parti(P)), ...
+                    rep.matrixColAction(g, partj(P)), ...
+                    rep.matrixColAction(g, partk(P))) * I;
+            end
         end
 
         function rho = sample(self)
@@ -214,6 +247,29 @@ classdef GenSubRep < replab.Obj
         %
         % See `+replab.SubRep.projector`
             mat = self.injection * self.projection;
+        end
+
+        function gen1 = harmonize(self, model, varargin)
+        % Harmonizes the basis of this generic subrepresentation to match the given model
+        %
+        % Args:
+        %   model (`.GenSubRep`): Subrepresentation to match
+        %   numNonImproving (integer, optional): Number of non-improving steps before stopping, default ``20``
+        %   nSamples (integer, optional): Number of samples to use per iteration, default ``5``
+        %   maxIterations (integer, optional): Maximum number of iterations, default ``1000``
+        %   injectionBiortho (double(\*,\*), may be sparse): Injection map to remove from this subrepresentation
+        %   projectionBiortho (double(\*,\*), may be sparse): Projection map to remove from this subrepresentation
+        %
+        % Returns:
+        %   `.GenSubRep`: Harmonized generic subrepresentation
+            args = struct('numNonImproving', 10, 'nSamples', 5, 'maxIterations', 1000, 'injectionBiortho', [], 'projectionBiortho', []);
+            args = replab.util.populateStruct(args, varargin);
+            biorthoAreAdjoint = all(all(args.injectionBiortho == args.projectionBiortho'));
+            if model.isUnitary && self.parent.isUnitary && biorthoAreAdjoint
+                gen1 = replab.rep.harmonize_unitary_largeScale(self, model, args.numNonImproving, args.nSamples, args.maxIterations, args.injectionBiortho);
+            else
+                gen1 = replab.rep.harmonize_nonUnitary_largeScale(self, model, args.numNonImproving, args.nSamples, args.maxIterations, args.injectionBiortho, args.projectionBiortho);
+            end
         end
 
         function gen1 = refine(self, varargin)
@@ -248,6 +304,25 @@ classdef GenSubRep < replab.Obj
     end
 
     methods (Static)
+
+        function gen = fromRep(rep)
+        % Creates a generic subrepresentation from a representation
+        %
+        % This method differs from `.fromSubRep` as it creates trivial injection and projection maps
+        % in the case ``rep`` is not a `+replab.SubRep` already.
+        %
+        % Args:
+        %   rep (`+replab.Rep`): Representation to wrap
+        %
+        % Returns:
+        %   `.GenSubRep`: Generic subrepresentation
+            if isa(rep, 'replab.SubRep')
+                gen = replab.rep.GenSubRep.fromSubRep(rep);
+            else
+                sub = replab.SubRep.identical(rep);
+                gen = replab.rep.GenSubRep.fromSubRep(sub);
+            end
+        end
 
         function gen = fromSubRep(sub)
         % Creates a generic subrepresentation from a subrepresentation

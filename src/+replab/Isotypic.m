@@ -1,149 +1,113 @@
 classdef Isotypic < replab.SubRep
 % Describes an isotypic component in the decomposition of a representation
 %
-% It is expressed as a subrepresentation of the representation being decomposed, however
-% key methods are implemented more efficiently as more structure is available. In particular
-% the computation of images is done in a way that minimizes numerical error and returns
-% true block diagonal matrices.
+% It is expressed as a subrepresentation of the representation being decomposed, however key methods are implemented
+% more efficiently as more structure is available. In particular the computation of images is done in a way that
+% minimizes numerical error and returns true block diagonal matrices.
 %
-% An isotypic component regroups equivalent irreducible representations, however not necessarily
-% expressed in the same basis (that would be `.HarmonizedIsotypic`).
-% Note that if the multiplicity is not one, there is a degeneracy in the basis of the copies, and
-% the particular basis chosen is not deterministic.
+% An isotypic component regroups equivalent irreducible representations expressed in the same basis
+% Note that if the multiplicity is not one, there is a degeneracy in the picking of a basis of of the multiplicity
+% space, and the basis is not necessarily chosen in a deterministic way.
 %
 % However the subspace spanned by an isotypic component as a whole is unique.
+%
+% To cater for empty isotypic components, the isotypic component stores a "model" of the irreducible representation.
+%
+% The isotypic stores its own projection map, as the following equation is not necessarily satisfied for individual
+% irreps:
+%
+% `` irreps{i}.projection * irrep{j}.injection = (i == j) * eye(d) ``
 
     properties (SetAccess = protected)
         irreps % (cell(1,\*) of `.SubRep`): Equivalent irreducible subrepresentations in this isotypic component
-        irrepDimension % (integer): Dimension of every single irreducible representation in this component
-        isHarmonized % (logical): Whether all irreducible subrepresentations are expressed in the same basis
+        modelIrrep % (`.Rep`): Irreducible representation identical to the subrepresentations present in this isotypic component
     end
 
     methods (Static)
 
-        function iso = fromBiorthogonalIrreps(parent, irreps, irrepDimension, isHarmonized)
-        % Creates an isotypic component from equivalent irreducible representations
+        function iso = fromTrivialSubRep(trivial)
+        % Builds an isotypic component from the trivial subrepresentation
         %
-        % Assumes that the injection/projection maps of these irreps are biorthogonal.
+        % The trivial subrepresentation must be complete, i.e. represent the space of all vectors that are fixed by the
+        % action of the representation.
+        %
+        % Args:
+        %   trivial (`.SubRep`): Maximal trivial subrepresentation of ``parent``
+        %
+        % Returns:
+        %   `.Isotypic`: The corresponding trivial isotypic component
+            parent = trivial.parent;
+            dT = trivial.dimension;
+            if dT == 0
+                group = trivial.group;
+                irreps = cell(1, 0);
+                modelIrrep = group.trivialRep(trivial.field, 1);
+                iso = replab.Isotypic.fromIrreps(parent, irreps, modelIrrep, 'irrepsAreBiorthogonal', true, 'irrepsAreHarmonized', true);
+            else
+                irreps = cell(1, dT);
+                I = trivial.injection_internal;
+                P = trivial.projection_internal;
+                for i = 1:dT
+                    irreps{i} = parent.subRep(I(:,i), 'projection', P(i,:), 'isIrreducible', true, 'frobeniusSchurIndicator', 1, 'trivialDimension', 1, 'isUnitary', true);
+                end
+                iso = replab.Isotypic.fromIrreps(parent, irreps, [], 'irrepsAreBiorthogonal', true, 'irrepsAreHarmonized', true);
+            end
+        end
+
+        function iso = fromIrreps(parent, irreps, modelIrrep, varargin)
+        % Creates an isotypic component from linearly independent equivalent irreducible subrepresentations
         %
         % Args:
         %   parent (`.Rep`): Parent representation
-        %   irreps (cell(1,\*) of `.SubRep`): Irreducible equivalent subrepresentations
-        %   irrepDimension (integer): Irrep dimension
-        %   isHarmonized (logical): Whether the irreps are in the same basis
+        %   irreps (cell(1,\*) of `.SubRep`): Irreducible equivalent subrepresentations of ``parent``
+        %   modelIrrep (`.Rep` or ``[]``): Model of the irreducible representation in this component (can be empty, and is then set to ``irreps{1}``)
+        %
+        % Keyword Args:
+        %   irrepsAreBiorthogonal (logical, optional): True if the irreps injection/projection are biorthogonal, default: false
+        %   irrepsAreHarmonized (logical, optional): True if the irreps are in the same basis as ``modelIrrep``, default: false
         %
         % Returns:
         %   `.Isotypic`: Isotypic component
             if isempty(irreps)
-                P = zeros(0, parent.dimension);
+                assert(~isempty(modelIrrep), 'modelIrrep must be provided if the isotypic component is empty');
+                iso = replab.Isotypic(parent, cell(1, 0), modelIrrep, zeros(0, parent.dimension));
+                return
+            end
+            n = length(irreps);
+            % from now on, assume that the isotypic component is not empty
+            args = struct('irrepsAreBiorthogonal', false, 'irrepsAreHarmonized', false);
+            args = replab.util.populateStruct(args, varargin);
+            if isempty(modelIrrep)
+                harmonizeFrom = 2; % if harmonization is needed, skip first irrep
+                modelIrrep = irreps{1};
             else
-                P = irreps{1}.projection_internal;
-                for i = 2:length(irreps)
-                    P = [P; irreps{i}.projection_internal];
+                harmonizeFrom = 1;
+            end
+            if ~args.irrepsAreHarmonized
+                genModel = replab.rep.GenSubRep.fromRep(modelIrrep);
+                for i = harmonizeFrom:n
+                    gen = replab.rep.GenSubRep.fromSubRep(irreps{i});
+                    gen1 = gen.harmonize(genModel);
+                    sub1 = gen1.toSubRep;
+                    irreps{i} = irreps{i}.withUpdatedMaps(sub1.injection, sub1.projection);
                 end
             end
-            iso = replab.Isotypic(parent, irreps, P, irrepDimension, isHarmonized);
-        end
-
-        function iso = fromBiorthogonalTrivialIrreps(parent, irreps)
-        % Creates a trivial isotypic component from trivial irreducible representations
-        %
-        % Assumes that the injection/projection maps of these irreps are biorthogonal.
-        %
-        % Args:
-        %   parent (`.Rep`): Parent representation
-        %   irreps (cell(1,\*) of `.SubRep`): Irreducible trivial subrepresentations
-        %
-        % Returns:
-        %   `.Isotypic`: Trivial isotypic component
-            if isempty(irreps)
-                P = zeros(0, parent.dimension);
+            if ~args.irrepsAreBiorthogonal || ~args.irrepsAreHarmonized
+                injections = cellfun(@(irrep) irrep.injection_internal, irreps, 'uniform', 0);
+                I = horzcat(injections{:});
+                P = replab.rep.findProjection_largeScale(parent, I, 20, 5, 100);
             else
-                P = irreps{1}.projection_internal;
-                for i = 2:length(irreps)
-                    P = [P; irreps{i}.projection_internal];
-                end
-                for i = 1:length(irreps)
-                    irreps{i}.cache('isIrreducible', true, '==');
-                    irreps{i}.cache('frobeniusSchurIndicator', 1, '==');
-                    irreps{i}.cache('trivialDimension', 1, '==');
-                end
+                projections = cellfun(@(irrep) irrep.projection_internal, irreps, 'uniform', 0);
+                P = vertcat(projections{:});
             end
-            isHarmonized = true;
-            irrepDimension = 1;
-            iso = replab.Isotypic(parent, irreps, P, irrepDimension, isHarmonized);
-        end
-
-        function iso = fromTrivialSubRep(trivial)
-        % Builds an isotypic component from the (full) trivial subrepresentation
-        %
-        % Args:
-        %   trivial (`+replab.SubRep`): Maximal trivial subrepresentation of ``parent``
-        %
-        % Returns:
-        %   `+replab.Isotypic`: The corresponding trivial isotypic component
-            parent = trivial.parent;
-            dT = trivial.dimension;
-            irreps = cell(1, dT);
-            I = trivial.injection_internal;
-            P = trivial.projection_internal;
-            for i = 1:dT
-                irreps{i} = parent.subRep(I(:,i), 'projection', P(i,:), 'isIrreducible', true, 'frobeniusSchurIndicator', 1, 'trivialDimension', 1, 'isUnitary', true);
-            end
-            isHarmonized = true;
-            irrepDimension = 1;
-            iso = replab.Isotypic(parent, irreps, P, irrepDimension, isHarmonized);
-        end
-
-        function iso = fromIrreps(parent, irreps, irrepDimension, isHarmonized)
-        % Builds an isotypic component from equivalent subrepresentations
-        %
-        % All irreps of the isotypic component must be provided, and their injection maps must be linearly independent.
-        %
-        % Args:
-        %   parent (`+replab.Rep`): Representation being decomposed
-        %   irreps (cell(1,\*) of `+replab.SubRep`): Equivalent irreducible subrepresentations of ``parent``
-        %   irrepDimension (integer): Dimension of a single irreducible representation
-        %   isHarmonized (logical): Whether all irreps are expressed in the same basis
-        %
-        % Returns:
-        %   `+replab.Isotypic`: The corresponding isotypic component
-            if isempty(irreps)
-                iso = replab.Isotypic(parent, irreps, zeros(0, parent.dimension), irrepDimension, true);
-                return
-            end
-            m = length(irreps);
-            if m == 1
-                % Single multiplicity? Reuse projection
-                iso = replab.Isotypic(parent, irreps, irreps{1}.projection_internal, irrepDimension, isHarmonized);
-                return
-            end
-            mapsAreUnitary = cellfun(@(s) full(all(all(s.injection_internal == s.projection_internal'))), irreps);
-            if parent.knownUnitary && all(mapsAreUnitary)
-                % all maps are unitary, parent is unitary, we use orthogonality
-                projections = cell(1, m);
-                for i = 1:m
-                    projections{i} = irreps{i}.projection_internal;
-                end
-                projection = vertcat(projections{:});
-                iso = replab.Isotypic(parent, irreps, projection, irrepDimension, isHarmonized);
-                return
-            end
-            % non unitary case
-            injections = cell(1, m);
-            for i = 1:m
-                injections{i} = irreps{i}.injection_internal;
-            end
-            injection = horzcat(injections{:});
-            sub = parent.subRep(injection);
-            iso = replab.Isotypic(parent, irreps, sub.projection, irrepDimension, isHarmonized);
+            iso = replab.Isotypic(parent, irreps, modelIrrep, P);
         end
 
     end
 
     methods
 
-        function self = Isotypic(parent, irreps, projection, irrepDimension, isHarmonized)
+        function self = Isotypic(parent, irreps, modelIrrep, projection)
         % Constructs an isotypic component of a parent representation
         %
         % The injection map of the isotypic component comes from the sum of the injection maps of the irreps,
@@ -156,36 +120,25 @@ classdef Isotypic < replab.SubRep
         % Args:
         %   parent (`+replab.Rep`): Parent representation of which we construct a subrepresentation
         %   irreps (cell(1,\*) of `+replab.SubRep`): Irreducible subrepresentations
+        %   modelIrrep (`+replab.Rep`): Canonical model of the irreducible representation contained in this component
         %   projection (double(\*,\*), may be sparse): Embedding map of the isotypic component
-        %   irrepDimension (integer): Dimension of a single irreducible representation
-        %   isHarmonized (logical): Whether all irreps are expressed in the same basis
             m = length(irreps);
             assert(isa(parent, 'replab.Rep'));
-            assert(all(cellfun(@(irrep) irrep.parent == parent, irreps)));
             assert(all(cellfun(@(irrep) isa(irrep, 'replab.SubRep'), irreps)));
-            assert(all(cellfun(@(irrep) irrep.isIrreducible, irreps)));
-            args = {};
-            if all(cellfun(@(irrep) irrep.isUnitary, irreps))
-                args = horzcat(args, {'isUnitary', true});
-            end
-            if all(cellfun(@(irrep) irrep.inCache('trivialDimension'), irreps))
-                td = sum(cellfun(@(irrep) irrep.trivialDimension, irreps));
-                args = horzcat(args, {'trivialDimension', td});
-            end
-            if all(cellfun(@(irrep) irrep.inCache('isDivisionAlgebraCanonical'), irreps))
-                dac = all(cellfun(@(irrep) irrep.isDivisionAlgebraCanonical, irreps));
-            end
-            args = horzcat(args, {'isIrreducible', m <= 1});
+            assert(all(cellfun(@(irrep) irrep.isIrreducibleAndCanonical, irreps)));
             injections = cellfun(@(irrep) irrep.injection_internal, irreps, 'uniform', 0);
             if m == 0
                 injection = zeros(parent.dimension, 0);
             else
-                injection = [injections{:}];
+                injection = horzcat(injections{:});
             end
-            self = self@replab.SubRep(parent, injection, projection, args{:});
+            self = self@replab.SubRep(parent, injection, projection, ...
+                                      'isUnitary', modelIrrep.isUnitary, ...
+                                      'isIrreducible', m <= 1, ...
+                                      'trivialDimension', modelIrrep.trivialDimension * m, ...
+                                      'divisionAlgebraName', modelIrrep.divisionAlgebraName);
             self.irreps = irreps;
-            self.irrepDimension = irrepDimension;
-            self.isHarmonized = isHarmonized;
+            self.modelIrrep = modelIrrep;
         end
 
     end
@@ -198,6 +151,14 @@ classdef Isotypic < replab.SubRep
         % Returns:
         %   integer: Multiplicity
             m = length(self.irreps);
+        end
+
+        function d = irrepDimension(self)
+        % Returns the dimension of a single irreducible representation contained in this component
+        %
+        % Returns:
+        %   integer: Irrep dimension
+            d = self.modelIrrep.dimension;
         end
 
         function r = irrepRange(self, i)
@@ -227,35 +188,6 @@ classdef Isotypic < replab.SubRep
         %   `.SubRep`: Irreducible subrepresentation of `.parent`
             c = self.irreps{i};
         end
-
-    end
-
-    methods % Harmonization
-
-% $$$         function iso = harmonize(self, context)
-% $$$         % Harmonizes the isotypic component
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.Isotypic`: Isotypic component with `.isHarmonized` true
-% $$$             if self.isHarmonized
-% $$$                 iso = self;
-% $$$             elseif self.trivialDimension == self.dimension
-% $$$                 isHarmonized = true;
-% $$$                 iso = replab.Isotypic(self.parent, self.irreps, self.projection, self.irrepDimension, isHarmonized);
-% $$$             else
-% $$$                 if nargin < 2 || isempty(context)
-% $$$                     close = true;
-% $$$                     c = replab.Context.make;
-% $$$                 else
-% $$$                     close = false;
-% $$$                     c = context;
-% $$$                 end
-% $$$                 iso = replab.irreducible.Isotypic_harmonize(self, c);
-% $$$                 if close
-% $$$                     c.close;
-% $$$                 end
-% $$$             end
-% $$$         end
 
     end
 
@@ -308,7 +240,7 @@ classdef Isotypic < replab.SubRep
     methods (Access = protected) % Implementations
 
         function rho = image_double_sparse(self, g)
-            if self.isHarmonized && self.multiplicity > 1
+            if self.multiplicity > 1
                 p = self.parent.image(g, 'double/sparse');
                 I = self.irrep(1).injection;
                 P = self.irrep(1).projection;
@@ -326,7 +258,7 @@ classdef Isotypic < replab.SubRep
         end
 
         function rho = image_exact(self, g)
-            if self.isHarmonized && self.multiplicity > 1
+            if self.multiplicity > 1
                 rho = self.irrep(1).image(g, 'exact');
                 rho = kron(replab.cyclotomic.eye(self.nIrreps), rho);
             else
@@ -354,11 +286,7 @@ classdef Isotypic < replab.SubRep
         end
 
         function s = headerStr(self)
-            if isa(self, 'replab.HarmonizedIsotypic')
-                s = 'Isotypic component (harmonized)';
-            else
-                s = 'Isotypic component';
-            end
+            s = 'Isotypic component';
             if self.overC
                 rt = 'C';
             else
@@ -404,16 +332,12 @@ classdef Isotypic < replab.SubRep
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            if self.isHarmonized
-                c = self.cached(['commutant_' type], @() self.isotypicEquivariantFrom(self,  'special', 'commutant', 'type', type));
-            else
-                c = commutant@replab.SubRep(self, type);
-            end
+            c = self.cached(['commutant_' type], @() self.isotypicEquivariantFrom(self,  'special', 'commutant', 'type', type));
         end
 
         % SubRep
 
-        function iso1 = refine(self, varargin)
+        function iso = refine(self, varargin)
         % Refines this isotypic component
         %
         % Assumes that the isotypic component is already close to an exact isotypic component, and refines its subspace
@@ -426,40 +350,54 @@ classdef Isotypic < replab.SubRep
         %
         % Returns:
         %   `.Isotypic`: Isotypic component with refined subspace (injection/projection maps)
+            if self.multiplicity == 0
+                iso1 = self;
+                return
+            end
             replab.msg(1, 'Refining isotypic component');
             args = struct('numNonImproving', 20, 'largeScale', self.parent.dimension > 1000, 'nSamples', 5, 'nInnerIterations', 10, 'maxIterations', 1000);
             args = replab.util.populateStruct(args, varargin);
             D = self.parent.dimension;
             m = self.multiplicity;
-            irreps = cell(1, m);
-            if self.parent.knownUnitary
-                Q0 = self.injection;
+            irreps = self.irreps;
+            parent = self.parent;
+            modelIrrep = self.modelIrrep;
+            if ~modelIrrep.isExact
+                modelIrrep = modelIrrep.refine;
+            end
+            genM = replab.rep.GenSubRep.fromSubRep(modelIrrep);
+            if parent.isUnitary && modelIrrep.isUnitary
                 Qo = zeros(D, 0);
                 for i = 1:m
-                    irr = self.irrep(i);
-                    irr = irr.refine('injectionBiortho', Qo, 'projectionBiortho', Qo', varargin{:});
+                    irr = irreps{i};
+                    gen = replab.rep.GenSubRep.fromSubRep(irr);
+                    gen = replab.rep.harmonize_unitary_largeScale(gen, genM, 20, 5, 100, Qo);
+                    sub = gen.toSubRep;
+                    irr = irr.withUpdatedMaps(sub.injection, sub.projection);
+                    Qo = horzcat(Qo, irr.injection);
                     irreps{i} = irr;
-                    Qo = [Qo, irreps{i}.injection];
                 end
-                isHarmonized = false;
-                iso1 = replab.Isotypic(self.parent, irreps, Qo', self.irrepDimension, isHarmonized);
+                iso = replab.Isotypic(parent, irreps, modelIrrep, Qo');
             else
                 I = self.injection;
                 P = self.projection;
                 Io = zeros(D, 0);
                 Po = zeros(0, D);
                 for i = 1:m
-                    irr = self.irrep(i);
-                    irr = irr.withUpdatedMaps(I(:, self.irrepRange(i)), P(self.irrepRange(i), :));
-                    irr = irr.refine('injectionBiortho', Io, 'projectionBiortho', Po, varargin{:});
-                    irreps{i} = irr;
+                    irr = irreps{i};
+                    range = self.irrepRange(i);
+                    irr = irr.withUpdatedMaps(I(:, range), P(range, :));
+                    gen = replab.rep.GenSubRep.fromSubRep(irr);
+                    gen = replab.rep.harmonize_nonUnitary_largeScale(gen, genM, 20, 5, 100, Io, Po);
+                    sub = gen.toSubRep;
+                    irr = irr.withUpdatedMaps(sub.injection, sub.projection);
                     Io = [Io, irr.injection];
                     Po = [Po; irr.projection];
+                    irreps{i} = irr;
                 end
                 % apply one Newton-Raphson iteration for increased precision
                 Po = 2*Po - Po*Io*Po;
-                isHarmonized = false;
-                iso1 = replab.Isotypic(self.parent, irreps, Po, self.irrepDimension, isHarmonized);
+                iso = replab.Isotypic(parent, irreps, modelIrrep, Po);
             end
         end
 
