@@ -12,7 +12,7 @@ classdef H
 %
 % The class supports sparse components for efficiency.
 
-    properties
+    properties (SetAccess = protected)
         X % First part
         Y % Second part
     end
@@ -44,6 +44,13 @@ classdef H
         end
 
         function res = randn(varargin)
+        % Returns a normally distributed quaternion multidimensional array
+        %
+        % Args:
+        %   varargin: Arguments passed to ``randn``
+        %
+        % Returns:
+        %   `.H`: Quaternion multidimensional array
             res = replab.H(randn(varargin{:}), randn(varargin{:}), randn(varargin{:}), randn(varargin{:}));
         end
 
@@ -152,22 +159,42 @@ classdef H
         end
 
         function res = part1(self)
+        % Returns the real part of the quaternion
+        %
+        % Returns:
+        %   double(...): Real part
             res = real(self.X);
         end
 
         function res = parti(self)
+        % Returns the ``i`` part of the quaternion
+        %
+        % Returns:
+        %   double(...): Part
             res = imag(self.X);
         end
 
         function res = partj(self)
+        % Returns the ``j`` part of the quaternion
+        %
+        % Returns:
+        %   double(...): Part
             res = real(self.Y);
         end
 
         function res = partk(self)
+        % Returns the ``k`` part of the quaternion
+        %
+        % Returns:
+        %   double(...): Part
             res = imag(self.Y);
         end
 
         function C = toStringCell(self)
+        % Computes a string representation of the elements of the array
+        %
+        % Returns:
+        %   cell(...) of charstring: String representation
             X = self.X(:);
             Y = self.Y(:);
             C = cell(length(X), 1);
@@ -203,14 +230,18 @@ classdef H
     methods % Implementations
 
         function r1 = abs(self)
+        % Computes the absolute value, array coefficient by coefficient
         %
-        % Returns: double
+        % Returns:
+        %   double: Magnitude of each quaternion coefficient
             r1 = sqrt(abs2(self));
         end
 
         function r1 = abs2(self)
+        % Computes the square of the absolute value, array coefficient by coefficient
         %
-        % Returns: double
+        % Returns:
+        %   double: Square of the magnitude of each quaternion coefficient
 
             r1 = real(self.X).^2 + imag(self.X).^2 + real(self.Y).^2 + imag(self.Y).^2;
         end
@@ -363,8 +394,6 @@ classdef H
         end
 
         function res = real(self)
-        %
-        % Returns: double
             res = real(self.X);
         end
 
@@ -376,6 +405,10 @@ classdef H
                 f = abs2(Q2);
             end
             res = replab.H(X./f, [], Y./f);
+        end
+
+        function res = sign(self)
+            res = self ./ abs(self);
         end
 
         function s = size(self, varargin)
@@ -420,7 +453,6 @@ classdef H
             Z = reshape(Z, self.size);
             res = replab.H(T, X, Y, Z);
         end
-
 
         function varargout = subsasgn(self, s, p)
             if length(s) == 1 && isequal(s.type, '()')
