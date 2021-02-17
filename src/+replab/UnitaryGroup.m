@@ -56,27 +56,27 @@ classdef UnitaryGroup < replab.CompactGroup
         % CompactGroup
 
         function X = sample(self)
-        % see http://home.lu.lv/~sd20008/papers/essays/Random%20unitary%20[paper].pdf
-            realPart = randn(self.n, self.n);
-            imagPart = randn(self.n, self.n);
-            X = (realPart + 1i * imagPart)/sqrt(2);
-            [Q, R] = qr(X);
-            R = diag(diag(R)./abs(diag(R)));
-            X = Q*R;
+            X = replab.numerical.randomUnitaryOver(self.n, 'C');
         end
 
     end
 
     methods % Representations
 
-        function rep = definingRep(self)
+        function rep = definingRep(self, field)
         % Returns the defining representation of this unitary group
         %
         % The defining representation of $U(d)$ corresponds to a ``d x d`` unitary matrix.
         %
+        % Args:
+        %   field ('R', 'C', optional): Field over which to define the matrices, default: C
+        %
         % Returns:
         %   `.Rep`: Defining representation
-            rep = replab.rep.DefiningRep(self);
+            if nargin < 2 || isempty(field)
+                field = 'C';
+            end
+            rep = replab.rep.DefiningRep(self, field);
         end
 
     end
