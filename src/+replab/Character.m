@@ -54,8 +54,8 @@ classdef Character < replab.Obj
         %   `.Character`: Exact character
             group = rep.group;
             classes = group.conjugacyClasses;
-            values = replab.cyclotomic.zeros(1, N);
             N = classes.nClasses;
+            values = replab.cyclotomic.zeros(1, N);
             for i = 1:N
                 r = classes.classes{i}.representative;
                 values(i) = trace(rep.image(r));
