@@ -71,12 +71,14 @@ function subs = absoluteSplitInParent_real_unitary(sub, sample)
                 basis = U(:, blk);
             end
         end
+
         I = subI * basis;
-        %if all(all(subI == subP'))
-        %    P = I';
-        %else
+        if sub.mapsAreAdjoint
+            % subP = subI'
+            P = I';
+        else
             P = basis' * subP;
-            %end
+        end
         subs{i} = sub.parent.subRep(I, 'projection', P, 'isUnitary', true, 'divisionAlgebraName', divisionAlgebraName);
     end
 end
