@@ -226,6 +226,7 @@ classdef QuaternionTypeMatrices < replab.domain.VectorSpace
         %   B (double(\*,\*)): Pure quaternion 'i' part
         %   C (double(\*,\*)): Pure quaternion 'j' part
         %   D (double(\*,\*)): Pure quaternion 'k' part
+        %   type ('group' or 'commutant'): Encoding type
         %
         % Returns:
         %   double(\*,\*): The matrix encoding the quaternion coefficient blocks
