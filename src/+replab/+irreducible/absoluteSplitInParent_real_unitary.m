@@ -74,7 +74,7 @@ function subs = absoluteSplitInParent_real_unitary(sub, sample)
 
         I = subI * basis;
         if sub.mapsAreAdjoint
-            % subP = subI'
+            % as subP = subI'
             P = I';
         else
             P = basis' * subP;

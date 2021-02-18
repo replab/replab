@@ -29,7 +29,7 @@ function subs = absoluteSplitInParent_complex_unitary(sub, sample)
         for i = 1:n
             basis = U(:, blocks{i});
             I = subI * basis;
-            if all(subI == subP')
+            if sub.mapsAreAdjoint
                 P = I';
             else
                 P = basis' * subP;
