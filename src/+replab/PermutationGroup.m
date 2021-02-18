@@ -39,12 +39,6 @@ classdef PermutationGroup < replab.FiniteGroup
                 self.type = type;
             end
             if nargin > 4 && ~isempty(chain)
-                base = chain.base;
-                if any(base(2:end) < base(1:end-1))
-                    chain = chain.mutableCopy;
-                    chain.baseChange(1:domainSize, true);
-                    chain.makeImmutable;
-                end
                 self.cache('chain', chain, 'ignore');
             end
         end
