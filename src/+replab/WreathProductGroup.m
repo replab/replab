@@ -91,7 +91,7 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
             dims = ones(1, n) * d;
             p = reshape(1:prod(dims), dims);
             subs = cell(1, n);
-            for i = 1:ng
+            for i = 1:n
                 subs{n+1-i} = phiA(base{i});
             end
             p = p(subs{:});

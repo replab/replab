@@ -605,7 +605,7 @@ classdef PermutationGroup < replab.FiniteGroup
         % -------
         %   sMinLex: double(1,domainSize):
         %     Minimal lexicographic representative of ``s`` under permutation by this group
-        %   g: `.LeftCoset`
+        %   P: `.LeftCoset`
         %     Set of permutations ``p`` such that ``sMinLex == s(inverse(p))`` or ``s == sMinLex(p)``
             if nargin < 3 || isempty(sStabilizer)
                 sStabilizer = self.vectorStabilizer(s);
