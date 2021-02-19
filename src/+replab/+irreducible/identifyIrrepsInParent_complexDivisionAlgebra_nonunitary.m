@@ -38,7 +38,7 @@ function irreps = identifyIrrepsInParent_complexDivisionAlgebra_nonunitary(sub, 
         sub.cache('frobeniusSchurIndicator', 0, '==');
         sub.cache('isIrreducible', true, '==');
         irreps = {sub};
-    elseif lambda > 0
+    elseif real(lambda) > 0
         [sub1, sub2] = replab.irreducible.regularizeRealPair(sub, sample);
         irreps = {sub1, sub2};
     else % lambda < 0
