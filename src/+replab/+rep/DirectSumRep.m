@@ -179,7 +179,7 @@ classdef DirectSumRep < replab.Rep
             end
             A = blkdiag(As{:});
             Ainv = blkdiag(Ainvs{:});
-            rep = replab.SimilarRep(self, A, AInv);
+            rep = replab.SimilarRep(self, A, AInv, 'isUnitary', true);
         end
 
     end

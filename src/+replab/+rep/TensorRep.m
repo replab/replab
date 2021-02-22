@@ -226,7 +226,7 @@ classdef TensorRep < replab.Rep
                 A = replab.numerical.multikron(As, 'double/sparse');
                 Ainv = replab.numerical.multikron(Ainvs, 'double/sparse');
             end
-            rep = replab.SimilarRep(self, A, Ainv);
+            rep = replab.SimilarRep(self, A, Ainv, 'isUnitary', true);
         end
 
     end
