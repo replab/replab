@@ -32,7 +32,7 @@ function gen = refine_unitary_mediumScale(gen0, nInnerIterations, tolerances, Ip
     k = 1;
     I0 = gen0.injection;
     if ~gen0.mapsAreAdjoint
-        [I0, ~] = replab.numerical.qr(I0);
+        [I0, ~] = replab.numerical.econqr(I0);
     end
     I = I0;
     iter = 1;
@@ -60,7 +60,7 @@ function gen = refine_unitary_mediumScale(gen0, nInnerIterations, tolerances, Ip
             if ~isempty(Ip)
                 I1 = I1 - Ip * (Ip' * I1);
             end
-            [I1, ~] = replab.numerical.qr(I1);
+            [I1, ~] = replab.numerical.econqr(I1);
         end
         omega(k) = norm(Ftilde - Foverline, 'fro');
         delta(k) = norm(I1 - I, 'fro')/norm(I, 'fro');

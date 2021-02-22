@@ -30,7 +30,7 @@ function [gen, exitFlag] = refine_unitary_largeScale(gen0, nSamples, tolerances,
     I = I0;
     assert(rho.isUnitary);
     %if ~gen.mapsAreAdjoint
-    %    [I0, ~] = replab.numerical.qr(I0);
+    %    [I0, ~] = replab.numerical.econqr(I0);
     %end
     k = 1;
     delta = zeros(1, tolerances.maxIterations);

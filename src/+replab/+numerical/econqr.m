@@ -1,15 +1,15 @@
-function [Q, R] = qr(A)
+function [Q, R] = econqr(A)
 % Economy-size QR decomposition
 %
 % Provides similar results to ``[Q, R] = qr(A, 0)``, but corrects for diagonal signs
     if isa(A, 'replab.H')
         if nnz(A.Y) == 0
-            [Q, R] = replab.numerical.qr(full(A.X));
+            [Q, R] = replab.numerical.econqr(full(A.X));
             Q = replab.H(Q);
             R = replab.H(R);
         else
             Z = full(replab.H.encode(A));
-            [Q, R] = replab.numerical.qr(Z);
+            [Q, R] = replab.numerical.econqr(Z);
             Q = replab.H.decode(Q);
             R = replab.H.decode(R);
             for i = 1:min(size(R))
