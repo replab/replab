@@ -45,7 +45,7 @@ function mu = relabelings(n, m, k)
     Soutputs = replab.S(k);
     W1 = Sinputs.wreathProduct(Soutputs); % single party
     W = Sparties.wreathProduct(W1);
-    mu = W.isomorphismByFunction(replab.S(d), [], @(w) Sd.leftConjugate(ind, W.primitivePermutation(w, @(w1) W1.imprimitivePermutation(w1))));
+    mu = W.isomorphismByFunction(replab.S(d), @(w) Sd.leftConjugate(ind, W.primitivePermutation(w, @(w1) W1.imprimitivePermutation(w1))));
 end
 
 function test_relabelings

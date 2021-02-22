@@ -58,7 +58,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             m = self.morphismByImages(target, 'preimages', self.generators, 'images', imgs);
         end
 
-        function m = isomorphismByFunction(self, target, preimageElementFun, imageElementFun)
+        function m = isomorphismByFunction(self, target, imageElementFun)
             imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
             m = self.isomorphismByImages(target, 'preimages', self.generators, 'images', imgs);
         end
