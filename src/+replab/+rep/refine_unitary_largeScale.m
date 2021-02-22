@@ -1,77 +1,75 @@
-function gen1 = refine_unitary_largeScale(gen, numNonImproving, nSamples, maxIterations, Qo)
+function [gen, exitFlag] = refine_unitary_largeScale(gen0, nSamples, tolerances, Ip)
 % Refines a generic unitary subrepresentation
 %
+% Example:
+%   >>> G = replab.S(3);
+%   >>> rep = G.standardRep.unitarize.collapse.withNoise(0.1);
+%   >>> rep.projectorErrorBound > 1e-3
+%       1
+%   >>> gen1 = replab.rep.refine_unitary_largeScale(replab.rep.GenSubRep.fromSubRep(rep), 5, replab.rep.Tolerances, []);
+%   >>> gen1.toSubRep.projectorErrorBound < 1e-10
+%       1
+%
 % Args:
-%   gen (`+replab.GenSubRep`): Generic subrepresentation to refine
-%   numNonImproving (integer): See `+replab.SubRep.refine`
-%   nSamples (integer): See `+replab.SubRep.refine`
-%   maxIterations (integer): See `+replab.SubRep.refine`
-%   Ibo (double(D,do)): Injection map matrix prescribing biorthogonality
-%   Pbo (double(do,D)): Projection map matrix prescribing biorthogonality
+%   gen0 (`+replab.GenSubRep`): Generic subrepresentation to refine
+%   nSamples (integer): Number of samples per averaging iteration
+%   tolerances (`.Tolerances`): Termination criteria
+%   Ip (double(D,e)): Injection map matrix prescribing orthogonality
 %
 % Returns:
 %   `+replab.GenSubRep`: Refined generic subrepresentation
-    d = gen.parent.dimension;
-    dsub = gen.dimension;
-    rep = gen.parent;
-    type = [gen.divisionRing '/' rep.field];
-    replab.msg(1, 'Unitary refinement over %s: dim(parent) = %d, dim(subrep) = %d', gen.divisionRing, d, dsub);
+    D = gen0.parent.dimension;
+    d = gen0.dimension;
+    e = size(Ip, 2);
+    rho = gen0.parent;
+    type = [gen0.divisionRing '/' rho.field];
+    replab.msg(1, 'Unitary refinement over %s: dim(parent) = %d, dim(subrep) = %d', gen0.divisionRing, D, d);
     replab.msg(1, 'Large-scale algorithm with %d samples/iteration', nSamples);
     replab.msg(1, '');
-    replab.msg(2, ' #iter   dSpan    ortho');
-    replab.msg(2, '--------------------------');
-    iter = 1;
-    min_dSpan = inf;
-    Q0 = gen.injection;
-    assert(rep.isUnitary);
-    if ~gen.mapsAreAdjoint
-        [Q0, ~] = replab.numerical.qr(Q0);
-    end
-    Q = Q0;
-    ni = 0;
-    while iter <= maxIterations
-        Q1 = zeros(size(Q));
+    I0 = gen0.injection;
+    I = I0;
+    assert(rho.isUnitary);
+    %if ~gen.mapsAreAdjoint
+    %    [I0, ~] = replab.numerical.qr(I0);
+    %end
+    k = 1;
+    delta = zeros(1, tolerances.maxIterations);
+    omega = zeros(1, tolerances.maxIterations);
+    exitFlag = 0;
+    tolerances.logHeader;
+    while exitFlag == 0
+        I1 = zeros(size(I));
         for j = 1:nSamples
-            g = rep.group.sample;
+            g = rho.group.sample;
             switch type
               case {'R/R', 'C/C'}
-                rhoQ = rep.matrixRowAction(g, Q);
+                rhoI = rho.matrixRowAction(g, I);
               case 'C/R'
-                rhoQ = rep.matrixRowAction(g, real(Q)) + ...
-                       rep.matrixRowAction(g, imag(Q)) * 1i;
+                rhoI = rho.matrixRowAction(g, real(I)) + ...
+                       rho.matrixRowAction(g, imag(I)) * 1i;
               case 'H/R'
-                rhoQ = replab.H(rep.matrixRowAction(g, Q.part1), ...
-                                rep.matrixRowAction(g, Q.parti), ...
-                                rep.matrixRowAction(g, Q.partj), ...
-                                rep.matrixRowAction(g, Q.partk));
+                rhoI = replab.H(rho.matrixRowAction(g, part1(I)), ...
+                                rho.matrixRowAction(g, parti(I)), ...
+                                rho.matrixRowAction(g, partj(I)), ...
+                                rho.matrixRowAction(g, partk(I)));
             end
-            Q1 = Q1 + rhoQ * (rhoQ' * Q);
+            I1 = I1 + rhoI * (rhoI' * I);
         end
-        Q1 = Q1/nSamples;
-        if ~isempty(Qo)
-            Q1 = Q1 - Qo * (Qo' * Q1);
+        I1 = I1/nSamples;
+        if e > 0
+            I1 = I1 - Ip * (Ip' * I1);
         end
-        ortho = norm(Q1'*Q - speye(dsub), 'fro');
-        dSpan = norm(Q1'*Q1 - speye(dsub), 'fro');
-        if dSpan >= min_dSpan
-            ni = ni + 1;
-            replab.msg(2, '%6d   %6.2E %6.2E (#%d non improving)', iter, dSpan, ortho, ni);
-            if ni > numNonImproving
-                break
-            end
-        else
-            min_dSpan = dSpan;
-            replab.msg(2, '%6d   %6.2E %6.2E', iter, dSpan, ortho);
-        end
-        f = trace(Q1*Q1')/dsub;
-        Q1 = Q1/sqrt(f);
-        % Force Q1 to be unitary using a single Newton iteration
-        N = Q1'*Q1;
-        P = Q1*N/2;
-        Q1 = 2*Q1 + P*N - 3*P;
-        Q = Q1;
-        iter = iter + 1;
+        f = trace(I1*I1')/d;
+        I1 = I1/sqrt(f);
+        delta(k) = norm(I1 - I, 'fro')/norm(I1, 'fro');
+        omega(k) = norm(I1'*I1 - eye(d), 'fro');
+        exitFlag = tolerances.test(omega, delta, k);
+        % Force I1 to be orthogonal using a single Newton iteration
+        N = I1'*I1;
+        P = I1*N/2;
+        I1 = 2*I1 + P*N - 3*P;
+        I = I1;
+        k = k + 1;
     end
-    replab.msg(1, 'Stopped after %d iterations with span delta %6.2E', iter, dSpan);
-    gen1 = replab.rep.GenSubRep(rep, gen.divisionRing, true, Q, Q');
+    gen = replab.rep.GenSubRep(rho, gen0.divisionRing, true, I, I');
 end

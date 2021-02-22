@@ -1,108 +1,107 @@
-function gen1 = harmonize_nonUnitary_largeScale(gen, gen0, numNonImproving, nSamples, maxIterations, Ibo, Pbo)
+function gen = harmonize_nonUnitary_largeScale(gen0, genM, nSamples, tolerances, Ip, Pp)
 % Refines a generic non-unitary subrepresentation
+%
+% Example:
+%   >>> G = replab.S(3);
+%   >>> genM = replab.rep.GenSubRep.fromSubRep(G.standardRep);
+%   >>> gen0 = replab.rep.GenSubRep.fromSubRep(G.standardRep.unitarize.collapse.withNoise(0.1));
+%   >>> gen = replab.rep.harmonize_nonUnitary_largeScale(gen0, genM, 5, replab.rep.Tolerances, [], []);
+%   >>> g = [3 2 1];
+%   >>> norm(genM.image(g) - gen.image(g)) < 1e-10
+%       1
 %
 % Args:
 %   gen (`+replab.GenSubRep`): Generic subrepresentation to harmonize
-%   gen0 (`+replab.GenSubRep`): Reference generic subrepresentation
-%   numNonImproving (integer): See `+replab.SubRep.refine`
-%   nSamples (integer): See `+replab.SubRep.refine`
-%   maxIterations (integer): See `+replab.SubRep.refine`
-%   Ibo (double(D,do)): Injection map matrix prescribing biorthogonality
-%   Pbo (double(do,D)): Projection map matrix prescribing biorthogonality
+%   genM (`+replab.GenSubRep`): Model generic subrepresentation
+%   nSamples (integer): Number of samples per averaging iteration
+%   tolerances (`.Tolerances`): Termination criteria
+%   Ip (double(D,e)): Injection map matrix prescribing biorthogonality
+%   Pp (double(e,D)): Projection map matrix prescribing biorthogonality
 %
 % Returns:
 %   `+replab.GenSubRep`: Refined generic subrepresentation
-    d = gen.parent.dimension;
-    dsub = gen.dimension;
-    rep = gen.parent;
-    rep0 = gen0.parent;
-    type = [gen.divisionRing '/' rep.field];
-    replab.msg(1, 'Nonunitary harmonization over %s: dim(parent) = %d, dim(subrep) = %d', gen.divisionRing, d, dsub);
+    D = gen0.parent.dimension;
+    d = gen0.dimension;
+    e = size(Ip, 2);
+    rho = gen0.parent;
+    mu = genM.parent;
+    type = [gen0.divisionRing '/' rho.field];
+    replab.msg(1, 'Nonunitary harmonization over %s: dim(parent) = %d, dim(subrep) = %d', gen0.divisionRing, D, d);
     replab.msg(1, 'Large-scale algorithm with %d samples/iteration', nSamples);
     replab.msg(1, '');
-    replab.msg(2, ' #iter   dSpan    ortho');
-    replab.msg(2, '--------------------------');
-    iter = 1;
-    min_ortho = inf;
-    I0 = gen0.injection;
-    P0 = gen0.projection;
-    I = gen.injection;
-    P = gen.projection;
-    ni = 0;
-    while iter <= maxIterations
-        Iprev = I;
-        Pprev = P;
-        I = zeros(size(Iprev));
+    tolerances.logHeader;
+    delta = zeros(1, tolerances.maxIterations);
+    omega = zeros(1, tolerances.maxIterations);
+    exitFlag = 0;
+    k = 1;
+    Im = genM.injection;
+    Pm = genM.projection;
+    I = gen0.injection;
+    P = gen0.projection;
+    while exitFlag == 0
+        I1 = zeros(D, d);
         for j = 1:nSamples
-            g = rep.group.sample;
+            g = rho.group.sample;
             switch type
               case {'R/R', 'C/C'}
-                P0rho = rep0.matrixColAction(g, P0);
-                rhoI = rep.matrixRowAction(g, Iprev);
+                Pmmu = mu.matrixColAction(g, Pm);
+                rhoI = rho.matrixRowAction(g, I);
               case 'C/R'
-                P0rho = rep0.matrixColAction(g, real(P0)) + ...
-                        rep0.matrixColAction(g, imag(P0)) * 1i;
-                rhoI = rep.matrixRowAction(g, real(Iprev)) + ...
-                       rep.matrixRowAction(g, imag(Iprev)) * 1i;
+                Pmmu = mu.matrixColAction(g, real(Pm)) + ...
+                       mu.matrixColAction(g, imag(Pm)) * 1i;
+                rhoI = rho.matrixRowAction(g, real(I)) + ...
+                       rho.matrixRowAction(g, imag(I)) * 1i;
               case 'H/R'
-                P0rho = rep0.matrixColAction(g, P0.part1) + ...
-                        rep0.matrixColAction(g, P0.parti) * replab.H.i + ...
-                        rep0.matrixColAction(g, P0.partj) * replab.H.j + ...
-                        rep0.matrixColAction(g, P0.partk) * replab.H.k;
-                rhoI = rep.matrixRowAction(g, Iprev.part1) + ...
-                       rep.matrixRowAction(g, Iprev.parti) * replab.H.i + ...
-                       rep.matrixRowAction(g, Iprev.partj) * replab.H.j + ...
-                       rep.matrixRowAction(g, Iprev.partk) * replab.H.k;
+                Pmmu = replab.H(mu.matrixColAction(g, part1(Pm)), ...
+                                mu.matrixColAction(g, parti(Pm)), ...
+                                mu.matrixColAction(g, partj(Pm)), ...
+                                mu.matrixColAction(g, partk(Pm)));
+                rhoI = replab.H(rho.matrixRowAction(g, part1(I)), ...
+                                rho.matrixRowAction(g, parti(I)), ...
+                                rho.matrixRowAction(g, partj(I)), ...
+                                rho.matrixRowAction(g, partk(I)));
             end
-            I = I + rhoI * (P0rho * I0);
+            I1 = I1 + rhoI * (Pmmu * Im);
         end
-        P = zeros(size(Pprev));
+        P1 = zeros(d, D);
         for j = 1:nSamples
-            g = rep.group.sample;
+            g = rho.group.sample;
             switch type
               case {'R/R', 'C/C'}
-                rhoI0 = rep0.matrixRowAction(g, I0);
-                Prho = rep.matrixColAction(g, Pprev);
+                muIm = mu.matrixRowAction(g, Im);
+                Prho = rho.matrixColAction(g, P);
               case 'C/R'
-                rhoI0 = rep0.matrixRowAction(g, real(I0)) + ...
-                        rep0.matrixRowAction(g, imag(I0)) * 1i;
-                Prho = rep.matrixColAction(g, real(Pprev)) + ...
-                       rep.matrixColAction(g, imag(Pprev)) * 1i;
+                muIm = mu.matrixRowAction(g, real(Im)) + ...
+                       mu.matrixRowAction(g, imag(Im)) * 1i;
+                Prho = rho.matrixColAction(g, real(P)) + ...
+                       rho.matrixColAction(g, imag(P)) * 1i;
               case 'H/R'
-                rhoI0 = rep0.matrixRowAction(g, I0.part1) + ...
-                        rep0.matrixRowAction(g, I0.parti) * replab.H.i + ...
-                        rep0.matrixRowAction(g, I0.partj) * replab.H.j + ...
-                        rep0.matrixRowAction(g, I0.partk) * replab.H.k;
-                Prho = rep.matrixColAction(g, Pprev.part1) + ...
-                       rep.matrixColAction(g, Pprev.parti) * replab.H.i + ...
-                       rep.matrixColAction(g, Pprev.partj) * replab.H.j + ...
-                       rep.matrixColAction(g, Pprev.partk) * replab.H.k;
+                muIm = replab.H(mu.matrixRowAction(g, part1(Im)), ...
+                                mu.matrixRowAction(g, parti(Im)), ...
+                                mu.matrixRowAction(g, partj(Im)), ...
+                                mu.matrixRowAction(g, partk(Im)));
+                Prho = replab.H(rho.matrixColAction(g, part1(P)), ...
+                                rho.matrixColAction(g, parti(P)), ...
+                                rho.matrixColAction(g, partj(P)), ...
+                                rho.matrixColAction(g, partk(P)));
             end
-            P = P + (P0 * rhoI0) * Prho;
+            P1 = P1 + (Pm * muIm) * Prho;
         end
-        if ~isempty(Ibo) && ~isempty(Pbo)
-            I = I - Ibo * (Pbo * I);
-            P = P - (P * Ibo) * Pbo;
+        if ~isempty(Ip) && ~isempty(Pp)
+            I1 = I1 - Ip * (Pp * I);
+            P1 = P1 - (P * Ip) * Pp;
         end
-        f = trace(P*I)/dsub;
-        sf = abs(sqrt(f));
-        I = I/sf;
-        P = P/sf;
-        P = P/sign(f);
-        dSpan = norm(P * Iprev - speye(dsub), 'fro');
-        ortho = norm(P*I - eye(dsub), 'fro');
-        if ortho >= min_ortho && ortho < 1
-            ni = ni + 1;
-            replab.msg(2, '%6d   %6.2E %6.2E (#%d non improving)', iter, dSpan, ortho, ni);
-            if ni > numNonImproving
-                break
-            end
-        else
-            min_ortho = ortho;
-            replab.msg(2, '%6d   %6.2E %6.2E', iter, dSpan, ortho);
-        end
-        iter = iter + 1;
+        f = trace(P1*I1)/d;
+        sf = sqrt(abs(f));
+        I1 = I1/sf;
+        P1 = P1/sf;
+        P1 = P1/sign(f);
+        delta(k) = norm(I1 - I, 'fro');
+        omega(k) = norm(P1*I1 - eye(d), 'fro');
+        exitFlag = tolerances.test(omega, delta, k);
+        k = k + 1;
+        I = I1;
+        P = P1;
     end
-    replab.msg(1, 'Stopped after %d iterations with span delta %6.2E', iter, dSpan);
-    gen1 = replab.rep.GenSubRep(rep, gen.divisionRing, gen0.isUnitary, I, P);
+    gen = replab.rep.GenSubRep(rho, gen0.divisionRing, genM.isUnitary, I, P);
 end
