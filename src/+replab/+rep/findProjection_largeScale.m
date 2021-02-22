@@ -1,4 +1,4 @@
-function [P, exitFlag] = findProjection_largeScale(rep, I, divisionRing, nSamples, tolerances, Ip, Pp)
+function [P, exitFlag] = findProjection_largeScale(rep, I, nSamples, tolerances, Ip, Pp)
 % Finds a projection map for a subrepresentation defined by an injection map
 %
 % Args:
@@ -19,7 +19,7 @@ function [P, exitFlag] = findProjection_largeScale(rep, I, divisionRing, nSample
     replab.msg(1, '');
     replab.msg(2, ' #iter   ortho    delta');
     replab.msg(2, '-----------------------');
-    P = replab.numerical.randomUnitaryOver(d, divisionRing) * I'; % as good as a guess as anything else
+    P = replab.numerical.randomUnitaryOver(d, rep.field) * I'; % as good as a guess as anything else
     [P, ~] = replab.rep.biorthoStepP(I, P);
     delta = zeros(1, tolerances.maxIterations);
     omega = zeros(1, tolerances.maxIterations);
@@ -27,17 +27,21 @@ function [P, exitFlag] = findProjection_largeScale(rep, I, divisionRing, nSample
     k = 1;
     tolerances.logHeader;
     while exitFlag == 0
-        P
+        I1 = zeros(D, d);
         P1 = zeros(d, D);
         for j = 1:nSamples
             g = rep.group.sample;
-            P1 = P1 + (P * rep.matrixRowAction(g, I)) * rep.matrixColAction(g, P);
+            rhoI = rep.matrixRowAction(g, I);
+            Prho = rep.matrixColAction(g, P);
+            P1 = P1 + (P * rhoI) * Prho;
         end
         if e > 0
             P1 = P1 - (P1 * Ip) * Pp;
         end
-        [P1, omega(k)] = replab.rep.biorthoStepP(I, P1);
+        P1 = P1/nSamples;
+        P1 = replab.rep.biorthoStepP(I, P1);
         delta(k) = norm(P1 - P, 'fro');
+        omega(k) = delta(k);
         exitFlag = tolerances.test(omega, delta, k);
         k = k + 1;
         P = P1;

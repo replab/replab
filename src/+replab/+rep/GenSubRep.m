@@ -254,41 +254,51 @@ classdef GenSubRep < replab.Obj
         %
         % Args:
         %   model (`.GenSubRep`): Subrepresentation to match
-        %   numNonImproving (integer, optional): Number of non-improving steps before stopping, default ``20``
+        %
+        % Keyword Args:
+        %   tolerances (`.Tolerances`): Termination criteria
         %   nSamples (integer, optional): Number of samples to use per iteration, default ``5``
-        %   maxIterations (integer, optional): Maximum number of iterations, default ``1000``
         %   injectionBiortho (double(\*,\*), may be sparse): Injection map to remove from this subrepresentation
         %   projectionBiortho (double(\*,\*), may be sparse): Projection map to remove from this subrepresentation
         %
         % Returns:
         %   `.GenSubRep`: Harmonized generic subrepresentation
-            args = struct('numNonImproving', 10, 'nSamples', 5, 'maxIterations', 1000, 'injectionBiortho', [], 'projectionBiortho', []);
+            args = struct('tolerances', replab.rep.Tolerances, 'nSamples', 5, 'injectionBiortho', [], 'projectionBiortho', []);
             args = replab.util.populateStruct(args, varargin);
             biorthoAreAdjoint = all(all(args.injectionBiortho == args.projectionBiortho'));
             if model.isUnitary && self.parent.isUnitary && biorthoAreAdjoint
-                gen1 = replab.rep.harmonize_unitary_largeScale(self, model, args.numNonImproving, args.nSamples, args.maxIterations, args.injectionBiortho);
+                gen1 = replab.rep.harmonize_unitary_largeScale(self, model, args.nSamples, arg.tolerances, args.injectionBiortho);
             else
-                gen1 = replab.rep.harmonize_nonUnitary_largeScale(self, model, args.numNonImproving, args.nSamples, args.maxIterations, args.injectionBiortho, args.projectionBiortho);
+                gen1 = replab.rep.harmonize_nonUnitary_largeScale(self, model, args.nSamples, args.tolerances, args.injectionBiortho, args.projectionBiortho);
             end
         end
 
         function gen1 = refine(self, varargin)
         % Refines a generic subrepresentation
         %
-        % See `+replab.SubRep.refine`
-            args = struct('tolerances', replab.rep.Tolerances, 'largeScale', self.parent.dimension > 1000, 'nSamples', 5, 'injectionBiortho', [], 'projectionBiortho', []);
+        % Keyword Args:
+        %   tolerances (`.Tolerances`): Termination criteria
+        %   largeScale (logical, optional): Whether to use the large-scale version of the algorithm, default automatic choice
+        %   nSamples (integer, optional): Number of samples to use per iteration (large scale), default ``5``
+        %   nInnerIterations (integer, optional): Number of inner iterations (medium scale), default ``3``
+        %   injectionBiortho (double(\*,\*), may be sparse, optional): Injection map to remove from this subrepresentation
+        %   projectionBiortho (double(\*,\*), may be sparse, optional): Projection map to remove from this subrepresentation
+        %
+        % Returns:
+        %   `.GenSubRep`: Refined generic subrepresentation
+            args = struct('tolerances', replab.rep.Tolerances, 'largeScale', self.parent.dimension > 1000, 'nInnerIterations', 5, 'nSamples', 5, 'injectionBiortho', [], 'projectionBiortho', []);
             args = replab.util.populateStruct(args, varargin);
             if self.parent.isUnitary
                 if args.largeScale
                     gen1 = replab.rep.refine_unitary_largeScale(self, args.nSamples, args.tolerances, []);
                 else
-                    gen1 = replab.rep.refine_unitary_mediumScale(self, args.nInnerIterations, args.maxIterations, []);
+                    gen1 = replab.rep.refine_unitary_mediumScale(self, args.nInnerIterations, args.tolerances, []);
                 end
             else
                 if args.largeScale
                     gen1 = replab.rep.refine_nonUnitary_largeScale(self, args.nSamples, args.tolerances, [], []);
                 else
-                    gen1 = replab.rep.refine_nonUnitary_mediumScale(self, args.nInnerIterations, args.maxIterations, [], []);
+                    gen1 = replab.rep.refine_nonUnitary_mediumScale(self, args.nInnerIterations, args.tolerances, [], []);
                 end
             end
         end

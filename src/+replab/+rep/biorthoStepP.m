@@ -31,7 +31,7 @@ function [P, omega] = biorthoStepP(I, P)
     if omega < 0.9
         P = P + Delta*P;
     else
-        replab.msg(2, 'Newton biortho, deviation=%6.2E => taking full inversion step', omega);
+        replab.msg(2, 'Newton biortho, deviation=%6.2E => taking corrective step', omega);
         P = PI\P;
         return
     end

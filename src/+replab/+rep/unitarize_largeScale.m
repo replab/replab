@@ -7,6 +7,7 @@ function gen = unitarize_largeScale(gen0, nSamples, tolerances, Ip, Pp)
 %   >>> gen = replab.rep.unitarize_largeScale(gen0, 5, replab.rep.Tolerances, [], []);
 %   >>> g = G.sample;
 %   >>> norm(gen.image(g) - gen.inverseImage(g)') < 1e-10
+%       1
 %
 % Args:
 %   gen (`+replab.GenSubRep`): Generic subrepresentation to unitarize

@@ -1,78 +1,77 @@
-function gen1 = refine_nonUnitary_mediumScale(gen, innerIterations, maxIterations, Ibo, Pbo)
+function gen = refine_nonUnitary_mediumScale(gen0, nInnerIterations, tolerances, Ip, Pp)
 % Refines a generic non-unitary representation
 %
+% Example:
+%   >>> G = replab.S(3);
+%   >>> rep = G.standardRep.withNoise(0.1);
+%   >>> rep.projectorErrorBound > 1e-3
+%       1
+%   >>> gen1 = replab.rep.refine_nonUnitary_mediumScale(replab.rep.GenSubRep.fromSubRep(rep), 5, replab.rep.Tolerances, []);
+%   >>> gen1.toSubRep.projectorErrorBound < 1e-10
+%       1
+%
 % Args:
-%   gen (`+replab.GenSubRep`): Generic subrepresentation to refine
-%   nInnerIterations (integer): See `+replab.SubRep.refine`
-%   maxIterations (integer): See `+replab.SubRep.refine`
-%   Ibo (double(D,do)): Injection map matrix prescribing biorthogonality (in the parent representation field)
-%   Pbo (double(do,D)): Projection map matrix prescribing biorthogonality (in the parent representation field)
+%   gen0 (`+replab.GenSubRep`): Generic subrepresentation to refine
+%   nInnerIterations (integer): Number of inner iterations
+%   tolerances (`.Tolerances`): Termination criteria
+%   Ip (double(D,e)): Injection map matrix prescribing biorthogonality
+%   Pp (double(e,D)): Projection map matrix prescribing biorthogonality
 %
 % Returns:
 %   `+replab.GenSubRep`: Refined generic subrepresentation
-    d = gen.parent.dimension;
-    dsub = gen.dimension;
-    rep = gen.parent;
-    type = [gen.divisionRing '/' rep.field];
-    replab.msg(1, 'Nonunitary refinement over %s: dim(parent) = %d, dim(subrep) = %d', gen.divisionRing, d, dsub);
+    D = gen0.parent.dimension;
+    d = gen0.dimension;
+    e = size(Ip, 2);
+    rho = gen0.parent;
+    type = [gen0.divisionRing '/' rho.field];
+    replab.msg(1, 'Nonunitary refinement over %s: dim(parent) = %d, dim(subrep) = %d', gen0.divisionRing, D, d);
     replab.msg(1, 'Using the full commutant projection algorithm');
     replab.msg(1, '');
-    replab.msg(2, ' #iter   dProj    dSpan    ortho');
-    replab.msg(2, '-----------------------------------');
-    iter = 1;
-    dProj = inf;
-    I0 = gen.injection;
-    P0 = gen.projection;
+    tolerances.logHeader;
+    delta = zeros(1, tolerances.maxIterations);
+    omega = zeros(1, tolerances.maxIterations);
+    exitFlag = 0;
+    k = 1;
+    I0 = gen0.injection;
+    P0 = gen0.projection;
     I = I0;
     P = P0;
-    [U, ~] = replab.numerical.qr(I);
-    while iter <= maxIterations
-        Iprev = I;
-        Pprev = P;
-        Uprev = U;
+    while exitFlag == 0
         Ftilde = I*P;
         switch type
           case {'R/R', 'C/C'}
-            [Foverline, err] = rep.commutant.project(Ftilde);
+            [Foverline, err] = rho.commutant.project(Ftilde);
           case 'C/R'
-            [F1, e1] = rep.commutant.project(real(Ftilde));
-            [Fi, ei] = rep.commutant.project(imag(Ftilde));
+            [F1, e1] = rho.commutant.project(real(Ftilde));
+            [Fi, ei] = rho.commutant.project(imag(Ftilde));
             Foverline = F1 + Fi*1i;
             err = sqrt(e1^2 + ei^2);
           case 'H/R'
-            [F1, e1] = rep.commutant.project(Ftilde.part1);
-            [Fi, ei] = rep.commutant.project(Ftilde.parti);
-            [Fj, ej] = rep.commutant.project(Ftilde.partj);
-            [Fk, ek] = rep.commutant.project(Ftilde.partk);
+            [F1, e1] = rho.commutant.project(Ftilde.part1);
+            [Fi, ei] = rho.commutant.project(Ftilde.parti);
+            [Fj, ej] = rho.commutant.project(Ftilde.partj);
+            [Fk, ek] = rho.commutant.project(Ftilde.partk);
             Foverline = replab.H(F1, Fi, Fj, Fk);
             err = sqrt(e1^2 + ei^2 + ej^2 + ek^2);
         end
-        dProjPrev = dProj;
-        dProj = norm(Foverline-Ftilde, 'fro');
-        for j = 1:innerIterations
-            I1 = Foverline * I;
-            P1 = P * Foverline;
-            if ~isempty(Ibo) && ~isempty(Pbo)
-                I1 = I1 - Ibo * (Pbo * I1);
-                P1 = P1 - (P1 * Ibo) * Pbo;
+        I1 = I;
+        P1 = P;
+        for j = 1:nInnerIterations
+            I1 = Foverline * I1;
+            P1 = P1 * Foverline;
+            if ~isempty(Ip) && ~isempty(Pp)
+                I1 = I1 - Ip * (Pp * I1);
+                P1 = P1 - (P1 * Ip) * Pp;
             end
             I1 = I1 / (P0 * I1);
             P1 = (P1 * I1) \ P1;
-            [U1, ~] = replab.numerical.qr(I1);
-            ortho = norm(P1 * I0 - speye(dsub), 'fro');
-            dSpan = norm(U'*U1*U1'*U - speye(dsub), 'fro')*2;
-            replab.msg(3, ' (inner)          %6.2E %6.2E', dSpan, ortho);
-            U = U1;
-            I = I1;
-            P = P1;
         end
-        dSpan = norm(U'*Uprev*Uprev'*U - speye(dsub), 'fro')*2;
-        replab.msg(2, '%6d   %6.2E %6.2E %6.2E', iter, dProj, dSpan, ortho);
-        if dProj >= dProjPrev && iter > 3
-            break
-        end
-        iter = iter + 1;
+        omega(k) = norm(Ftilde - Foverline, 'fro');
+        delta(k) = norm(I1 - I, 'fro')/norm(I, 'fro');
+        exitFlag = tolerances.test(omega, delta, k);
+        k = k + 1;
+        I = I1;
+        P = P1;
     end
-    replab.msg(1, 'Stopped after %d iterations with projector error %6.2E', iter, dProj);
-    gen1 = replab.rep.GenSubRep(rep, gen.divisionRing, false, I, P);
+    gen = replab.rep.GenSubRep(rho, gen0.divisionRing, false, I, P);
 end

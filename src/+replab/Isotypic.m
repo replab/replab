@@ -95,7 +95,7 @@ classdef Isotypic < replab.SubRep
             if ~args.irrepsAreBiorthogonal || ~args.irrepsAreHarmonized
                 injections = cellfun(@(irrep) irrep.injection_internal, irreps, 'uniform', 0);
                 I = horzcat(injections{:});
-                P = replab.rep.findProjection_largeScale(parent, I, 20, 5, 100);
+                P = replab.rep.findProjection_largeScale(parent, I, 5, replab.rep.Tolerances, [], []);
             else
                 projections = cellfun(@(irrep) irrep.projection_internal, irreps, 'uniform', 0);
                 P = vertcat(projections{:});

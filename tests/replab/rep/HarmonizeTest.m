@@ -19,9 +19,10 @@ function test_harmonize_quaternion
     s2 = irreps{inds(2)};
     g1 = replab.rep.GenSubRep.fromSubRep(s1);
     g2 = replab.rep.GenSubRep.fromSubRep(s2);
-    g2a = replab.rep.harmonize_nonUnitary_largeScale(g2, g1, 5, 3, 100, s1.injection, s1.projection);
-    g2b = replab.rep.harmonize_nonUnitary_largeScale(g2, g1, 5, 3, 100, [], []);
-    g2c = replab.rep.harmonize_unitary_largeScale(g2, g1, 5, 3, 100, []);
+    tol = replab.rep.Tolerances;
+    g2a = replab.rep.harmonize_nonUnitary_largeScale(g2, g1, 5, tol, s1.injection, s1.projection);
+    g2b = replab.rep.harmonize_nonUnitary_largeScale(g2, g1, 5, tol, [], []);
+    g2c = replab.rep.harmonize_unitary_largeScale(g2, g1, 5, tol, []);
     w = W.sample;
     img1 = g1.image(w);
     img2a = g2a.image(w);

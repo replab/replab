@@ -335,11 +335,10 @@ classdef SubRep < replab.Rep
         % by an iterative procedure applied on its `.injection` and `.projection` maps.
         %
         % Keyword Args:
-        %   largeScale (logical or ``[]``, optional): Whether to use the large-scale version of the algorithm, default ``[]`` (automatic selection)
-        %   numNonImproving (integer, optional): Number of non-improving steps before stopping the large-scale algorithm, default ``20``
+        %   tolerances (`.Tolerances`): Termination criteria
+        %   largeScale (logical, optional): Whether to use the large-scale version of the algorithm, default automatic choice
         %   nSamples (integer, optional): Number of samples to use in the large-scale version of the algorithm, default ``5``
-        %   nInnerIterations (integer, optional): Number of inner iterations in the medium-scale version of the algorithm, default ``10``
-        %   maxIterations (integer, optional): Maximum number of (outer) iterations, default ``1000``
+        %   nInnerIterations (integer, optional): Number of inner iterations in the medium-scale version of the algorithm, default ``3``
         %   injectionBiortho (double(\*,\*), may be sparse): Injection map of known multiplicity space to remove from this subrepresentation
         %   projectionBiortho (double(\*,\*), may be sparse): Projection map of known multiplicity space to remove from this subrepresentation
         %

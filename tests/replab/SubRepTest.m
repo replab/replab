@@ -25,16 +25,18 @@ function test_quaterion_refine
     subN = sub.withNoise(0.001, 0.001);
     gen = replab.rep.GenSubRep.fromQuaternionTypeSubRep(subN);
 
-    gen1 = replab.rep.refine_nonUnitary_largeScale(gen, 20, 5, 100, [], []);
+    tol = replab.rep.Tolerances;
+
+    gen1 = replab.rep.refine_nonUnitary_largeScale(gen, 5, tol, [], []);
     sub1 = gen1.toSubRep;
 
-    gen2 = replab.rep.refine_unitary_largeScale(gen, 20, 5, 100, []);
+    gen2 = replab.rep.refine_unitary_largeScale(gen, 5, tol, []);
     sub2 = gen2.toSubRep;
 
-    gen3 = replab.rep.refine_unitary_mediumScale(gen, 3, 10, []);
+    gen3 = replab.rep.refine_unitary_mediumScale(gen, 5, tol, []);
     sub3 = gen3.toSubRep;
 
-    gen4 = replab.rep.refine_nonUnitary_mediumScale(gen, 3, 10, []);
+    gen4 = replab.rep.refine_nonUnitary_mediumScale(gen, 3, tol, [], []);
     sub4 = gen4.toSubRep;
 
     gen1.check
@@ -63,16 +65,18 @@ function test_complex_refine
     subN = sub.withNoise(0.01);
     gen = replab.rep.GenSubRep.fromComplexTypeSubRep(subN);
 
-    gen1 = replab.rep.refine_nonUnitary_largeScale(gen, 20, 5, 100, [], []);
+    tol = replab.rep.Tolerances;
+
+    gen1 = replab.rep.refine_nonUnitary_largeScale(gen, 5, tol, [], []);
     sub1 = gen1.toSubRep;
 
-    gen2 = replab.rep.refine_unitary_largeScale(gen, 20, 5, 100, []);
+    gen2 = replab.rep.refine_unitary_largeScale(gen, 5, tol, []);
     sub2 = gen2.toSubRep;
 
-    gen3 = replab.rep.refine_unitary_mediumScale(gen, 3, 10, []);
+    gen3 = replab.rep.refine_unitary_mediumScale(gen, 5, tol, []);
     sub3 = gen3.toSubRep;
 
-    gen4 = replab.rep.refine_nonUnitary_mediumScale(gen, 3, 10, []);
+    gen4 = replab.rep.refine_nonUnitary_mediumScale(gen, 5, tol, [], []);
     sub4 = gen4.toSubRep;
 
     assert(sub1.projectorErrorBound < 1e-14);
