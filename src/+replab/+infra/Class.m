@@ -7,7 +7,7 @@ classdef Class < replab.infra.SourceElement
         propertyLines % integer(1,\*): Line numbers of properties
     end
 
-    properties (Access = protected)
+    properties % (Access = protected) % changed to make Octave happy
         ownDocumentationElements_
         inheritedDocumentationElements_
         inheritedElementsStruct_
