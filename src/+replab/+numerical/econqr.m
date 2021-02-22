@@ -11,11 +11,12 @@ function [Q, R] = econqr(A)
             Z = full(replab.H.encode(A));
             [Q, R] = replab.numerical.econqr(Z);
             Q = replab.H.decode(Q);
-            R = replab.H.decode(R);
-            for i = 1:min(size(R))
-                R.X(i,i) = real(R.X(i,i));
-                R.Y(i,i) = 0;
+            [RX, RY] = replab.H.decompose(replab.H.decode(R));
+            for i = 1:min(size(RX))
+                RX(i,i) = real(RX(i,i));
+                RY(i,i) = 0;
             end
+            R = replab.H(RX, [], RY);
         end
     else
         [Q, R] = qr(full(A), 0);
