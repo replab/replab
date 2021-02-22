@@ -68,7 +68,7 @@ function gen = unitarize_largeScale(gen0, nSamples, tolerances, Ip, Pp)
         else
             I1 = 2*I1 - I1*P1*I1;
         end
-        delta(k) = norm(I1 - I, 'fro');
+        delta(k) = norm(I1 - I, 'fro')/norm(I, 'fro');
         exitFlag = tolerances.test(omega, delta, k);
         k = k + 1;
         I = I1;

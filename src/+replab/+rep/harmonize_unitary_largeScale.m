@@ -64,7 +64,7 @@ function gen = harmonize_unitary_largeScale(gen0, genM, nSamples, tolerances, Ip
         end
         f = trace(I1*I1')/d;
         I1 = I1/sqrt(f);
-        delta(k) = norm(I1 - I, 'fro');
+        delta(k) = norm(I1 - I, 'fro')/norm(I, 'fro');
         omega(k) = norm(I1'*I1 - eye(d), 'fro');
         exitFlag = tolerances.test(omega, delta, k);
         k = k + 1;

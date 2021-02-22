@@ -40,7 +40,7 @@ function [P, exitFlag] = findProjection_largeScale(rep, I, nSamples, tolerances,
         end
         P1 = P1/nSamples;
         P1 = replab.rep.biorthoStepP(I, P1);
-        delta(k) = norm(P1 - P, 'fro');
+        delta(k) = norm(P1 - P, 'fro')/norm(P, 'fro');
         omega(k) = delta(k);
         exitFlag = tolerances.test(omega, delta, k);
         k = k + 1;

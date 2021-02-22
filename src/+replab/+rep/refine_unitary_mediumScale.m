@@ -63,7 +63,7 @@ function gen = refine_unitary_mediumScale(gen0, nInnerIterations, tolerances, Ip
             [I1, ~] = replab.numerical.qr(I1);
         end
         omega(k) = norm(Ftilde - Foverline, 'fro');
-        delta(k) = norm(I1 - I, 'fro');
+        delta(k) = norm(I1 - I, 'fro')/norm(I, 'fro');
         exitFlag = tolerances.test(omega, delta, k);
         k = k + 1;
         I = I1;
