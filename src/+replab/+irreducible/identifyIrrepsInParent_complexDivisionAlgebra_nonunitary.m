@@ -30,7 +30,7 @@ function irreps = identifyIrrepsInParent_complexDivisionAlgebra_nonunitary(sub, 
     J = X(1:d/2, d/2+1:d);
     cJ = X(d/2+1:d, 1:d/2);
     cJJ = conj(J)*J;
-    lambda = trace(cJJ)/(d/2);
+    lambda = real(trace(cJJ)/(d/2));
     err = cJJ - lambda*eye(d/2);
     tol = replab.globals.doubleEigTol;
     if abs(lambda) < tol
