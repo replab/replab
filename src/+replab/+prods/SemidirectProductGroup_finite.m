@@ -12,6 +12,7 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
             self.H = H;
             self.N = N;
             self.identity = {H.identity N.identity};
+            self.representative = self.identity;
             generators = cell(1, H.nGenerators + N.nGenerators);
             for i = 1:length(H.generators)
                 generators{i} = {H.generator(i) N.identity};

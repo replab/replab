@@ -13,6 +13,7 @@ classdef DirectProductGroup_finite <  replab.DirectProductGroup & replab.NiceFin
             assert(all(cellfun(@(x) isa(x, 'replab.FiniteGroup'), factors)));
             self.factors = factors;
             self.identity = cellfun(@(f) f.identity, factors, 'uniform', 0);
+            self.representative = self.identity;
             % the generators of a direct product of finite groups is
             % the union of the generators of the factors, lifted into the
             % proper tuples
