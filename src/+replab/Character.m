@@ -3,10 +3,8 @@ classdef Character < replab.Obj
 %
 % Example:
 %   >>> D = replab.PermutationGroup.dihedral(6);
-%   >>> rep = D.naturalRep.tensorPower(2);
-%   >>> dec = rep.decomposition;
-%   >>> irr = dec.irrep(4);
-%   >>> c = replab.Character.fromApproximateRep(irr);
+%   >>> rep = D.repByImages('R', 1, 'preimages', {[6 5 4 3 2 1], [2 3 4 5 6 1]}, 'images', {1 -1});
+%   >>> c = replab.Character.fromRep(rep);
 %   >>> g = [2 3 4 5 6 1];
 %   >>> c.value(g)
 %       -1
@@ -56,8 +54,8 @@ classdef Character < replab.Obj
         %   `.Character`: Exact character
             group = rep.group;
             classes = group.conjugacyClasses;
-            values = replab.cyclotomic.zeros(1, N);
             N = classes.nClasses;
+            values = replab.cyclotomic.zeros(1, N);
             for i = 1:N
                 r = classes.classes{i}.representative;
                 values(i) = trace(rep.image(r));

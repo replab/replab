@@ -14,16 +14,13 @@ classdef DerivedRep < replab.Rep
             assert(inverse == transpose, ...
                    'Cannot use inverse & transpose independently, as our representations are left modules');
             args = cell(1, 0);
-            if parent.inCache('isUnitary')
-                args = horzcat(args, {'isUnitary' parent.isUnitary});
-            end
             if parent.inCache('trivialDimension')
                 args = horzcat(args, {'trivialDimension' parent.trivialDimension});
             end
             if parent.inCache('frobeniusSchurIndicator')
                 args = horzcat(args, {'frobeniusSchurIndicator' parent.frobeniusSchurIndicator});
             end
-            self@replab.Rep(parent.group, parent.field, parent.dimension, args{:});
+            self@replab.Rep(parent.group, parent.field, parent.dimension, 'isUnitary', parent.isUnitary, args{:});
             self.parent = parent;
             self.conjugate = conjugate;
             self.inverse = inverse;
@@ -78,7 +75,7 @@ classdef DerivedRep < replab.Rep
 
         function res = rewriteTerm_dualIsConjugateWhenUnitary(self, options)
         % rho_{g^-1}.' = conj(rho) if rho is unitary
-            if self.parent.knownUnitary && self.inverse && self.transpose
+            if self.parent.isUnitary && self.inverse && self.transpose
                 res = replab.rep.DerivedRep(self.parent, ~self.conjugate, false, false);
             else
                 res = [];
@@ -144,10 +141,6 @@ classdef DerivedRep < replab.Rep
     methods (Access = protected) % Implementations
 
         % Rep
-
-        function rep = computeDouble(self)
-            rep = replab.rep.DerivedRep(double(self.parent), self.conjugate, self.inverse, self.transpose);
-        end
 
         function c = decomposeTerm(self)
             c = {self.parent};

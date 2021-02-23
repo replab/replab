@@ -20,10 +20,10 @@ classdef QuaternionTypeMatrices < replab.domain.VectorSpace
 % Commutant spaces, however, obey a different algebra, which commutes with the group algebra::
 %
 %   Commutant algebra
-%   [a -b -c -d
-%    b  a  d -c
-%    c -d  a  b
-%    d  c -b  a]
+%   [ a -b  c -d
+%     b  a  d  c
+%    -c -d  a  b
+%     d -c -b  a]
 %
 %
 % Example:
@@ -152,7 +152,7 @@ classdef QuaternionTypeMatrices < replab.domain.VectorSpace
               case 'commutant'
                 A = (M(1:4:nR, 1:4:nC) + M(2:4:nR, 2:4:nC) + M(3:4:nR, 3:4:nC) + M(4:4:nR, 4:4:nC))/4;
                 B = (M(2:4:nR, 1:4:nC) - M(1:4:nR, 2:4:nC) - M(4:4:nR, 3:4:nC) + M(3:4:nR, 4:4:nC))/4;
-                C = (M(3:4:nR, 1:4:nC) - M(1:4:nR, 3:4:nC) - M(2:4:nR, 4:4:nC) + M(4:4:nR, 2:4:nC))/4;
+                C = (-M(3:4:nR, 1:4:nC) + M(1:4:nR, 3:4:nC) + M(2:4:nR, 4:4:nC) - M(4:4:nR, 2:4:nC))/4;
                 D = (M(4:4:nR, 1:4:nC) - M(3:4:nR, 2:4:nC) + M(2:4:nR, 3:4:nC) - M(1:4:nR, 4:4:nC))/4;
               otherwise
                 error('Unknown type');
@@ -202,10 +202,10 @@ classdef QuaternionTypeMatrices < replab.domain.VectorSpace
                            1  0  0  0
                            0  0  0  1
                            0  0 -1  0];
-                basisC = [ 0  0 -1  0
-                           0  0  0 -1
-                           1  0  0  0
-                           0  1  0  0];
+                basisC = [ 0  0  1  0
+                           0  0  0  1
+                          -1  0  0  0
+                           0 -1  0  0];
                 basisD = [ 0  0  0 -1
                            0  0  1  0
                            0 -1  0  0
@@ -226,6 +226,7 @@ classdef QuaternionTypeMatrices < replab.domain.VectorSpace
         %   B (double(\*,\*)): Pure quaternion 'i' part
         %   C (double(\*,\*)): Pure quaternion 'j' part
         %   D (double(\*,\*)): Pure quaternion 'k' part
+        %   type ('group' or 'commutant'): Encoding type
         %
         % Returns:
         %   double(\*,\*): The matrix encoding the quaternion coefficient blocks

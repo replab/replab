@@ -11,6 +11,7 @@ classdef NiceFiniteSubgroup < replab.NiceFiniteGroup
         %   generators (cell(1,\*) of `.type` elements): Group generators
         %   order (vpi, optional): Order of the group
             self.type = type;
+            self.representative = type.identity;
             self.identity = type.identity;
             % own stuff
             if nargin > 2 && ~isempty(order)

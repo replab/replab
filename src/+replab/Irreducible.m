@@ -14,32 +14,15 @@ classdef Irreducible < replab.SubRep
 
         function self = Irreducible(parent, components)
             n = length(components);
-            injections = cell(1, n);
-            projections = cell(1, n);
-            for i = 1:n
-                c = components{i};
-                assert(isa(c, 'replab.Isotypic'));
-                injections{i} = c.injection_internal;
-                projections{i} = c.projection_internal;
-            end
+            injections = cellfun(@(c) c.injection_internal, components, 'uniform', 0);
+            projections = cellfun(@(c) c.projection_internal, components, 'uniform', 0);
+            isUnitary = cellfun(@(c) c.isUnitary, components);
+            assert(all(cellfun(@(c) isa(c, 'replab.Isotypic'), components)), 'All components must be isotypic');
             injection = horzcat(injections{:});
             projection = vertcat(projections{:});
-            self = self@replab.SubRep(parent, injection, projection);
+            isIrreducible = length(components) == 1 && components{1}.multiplicity == 1;
+            self = self@replab.SubRep(parent, injection, projection, 'isUnitary', all(isUnitary), 'isIrreducible', isIrreducible);
             self.components = components;
-            if length(components) == 1 && components{1}.multiplicity == 1
-                self.cache('isIrreducible', true, '==');
-            end
-            %if isequal(self.basis, eye(self.dimension))
-            %    replab.rep.copyProperties(self.components{1}.irreps{1}, self);
-            %end
-        end
-
-        function b = isHarmonized(self)
-        % Returns whether all the isotypic components in this irreducible decomposition have been harmonized
-        %
-        % Returns:
-        %   logical: True if all isotypic components are harmonized
-            b = all(cellfun(@(c) c.isHarmonized, self.components));
         end
 
         function r = asSimilarRep(self)
@@ -140,21 +123,13 @@ classdef Irreducible < replab.SubRep
 
 
         function rho = image_double_sparse(self, g)
-            if self.isHarmonized
-                blocks = cellfun(@(c) c.image(g, 'double/sparse'), self.components, 'uniform', 0);
-                rho = blkdiag(blocks{:});
-            else
-                rho = image_double_sparse@replab.SubRep(self, g);
-            end
+            blocks = cellfun(@(c) c.image(g, 'double/sparse'), self.components, 'uniform', 0);
+            rho = blkdiag(blocks{:});
         end
 
         function rho = image_exact(self, g)
-            if self.isHarmonized
-                blocks = cellfun(@(c) c.image(g, 'exact'), self.components, 'uniform', 0);
-                rho = blkdiag(blocks{:});
-            else
-                rho = image_exact@replab.SubRep(self, g);
-            end
+            blocks = cellfun(@(c) c.image(g, 'exact'), self.components, 'uniform', 0);
+            rho = blkdiag(blocks{:});
         end
 
     end
@@ -189,11 +164,7 @@ classdef Irreducible < replab.SubRep
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            if self.isHarmonized
-                c = self.cached(['commutant_' type], @() self.irreducibleEquivariantFrom(self,  'special', 'commutant', 'type', type));
-            else
-                c = commutant@replab.SubRep(self, type);
-            end
+            c = self.cached(['commutant_' type], @() self.irreducibleEquivariantFrom(self,  'special', 'commutant', 'type', type));
         end
 
          % SubRep

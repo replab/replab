@@ -1,10 +1,10 @@
 classdef RepLaws < replab.Laws
 
-    properties
-        rep
-        G % Group of which rep is a representation
-        C % Commutant algebra
-        M % Matrices o
+    properties (SetAccess = protected)
+        rep % (`+replab.Rep`): Rep being checked
+        G % (`+replab.CompactGroup`): Group of which rep is a representation
+        C % (`+replab.Equivariant`): Commutant algebra
+        M % (`+replab.Domain`): Matrices
     end
 
     methods
@@ -18,7 +18,9 @@ classdef RepLaws < replab.Laws
         end
 
         function law_identity_(self)
-            self.assertApproxEqual(self.rep.image(self.G.identity), speye(self.rep.dimension), self.rep.errorBound);
+            rho = self.rep.image(self.G.identity);
+            rho1 = speye(self.rep.dimension);
+            self.assertApproxEqual(rho, rho1, self.rep.errorBound);
         end
 
         function law_composition_GG(self, g1, g2)
@@ -56,20 +58,19 @@ classdef RepLaws < replab.Laws
         end
 
         function law_respects_division_algebra_G(self, g)
-            if self.rep.overR && self.rep.knownIrreducible
+            if ~isempty(self.rep.divisionAlgebraName)
+                da = replab.DivisionAlgebra(self.rep.divisionAlgebraName);
                 rho = self.rep.image(g);
-                switch self.rep.frobeniusSchurIndicator
-                    case 0
-                      rho1 = replab.domain.ComplexTypeMatrices.project(rho);
-                  case -2
-                    rho1 = replab.domain.QuaternionTypeMatrices.project(rho, 'group');
-                  case 1
-                    rho1 = rho;
-                    % do nothing
-                  otherwise
-                    error('Wrong Frobenius Schur indicator');
-                end
+                rho1 = da.project(rho);
                 self.assertApproxEqual(rho, rho1, self.rep.errorBound);
+            end
+        end
+
+        function law_unitary_G(self, g)
+            if self.rep.isUnitary
+                rho = self.rep.image(g);
+                rhoI = self.rep.inverseImage(g);
+                self.assertApproxEqual(rho, rhoI', 2*self.rep.errorBound);
             end
         end
 

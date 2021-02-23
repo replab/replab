@@ -322,8 +322,6 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         %   `+replab.IsotypicEquivariant`: The equivariant vector space
             assert(isa(repR, 'replab.Isotypic'));
             assert(isa(repC, 'replab.Isotypic'));
-            assert(repR.isHarmonized);
-            assert(repC.isHarmonized);
             assert(repR.field == repC.field);
             args = struct('special', '', 'parent', [], 'type', 'double', 'parentSample', []);
             args = replab.util.populateStruct(args, varargin);

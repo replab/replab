@@ -23,10 +23,6 @@ classdef IndexRelabelingRep < replab.Rep
             b = true;
         end
 
-        function rep = computeDouble(self)
-            rep = double(replab.RepByImages.fromExactRep(self));
-        end
-
         function rho = image_double_sparse(self, g)
             n = self.group.domainSize;
             d = self.dimension;

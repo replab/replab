@@ -51,25 +51,27 @@ classdef OrthogonalGroup < replab.CompactGroup
         % CompactGroup
 
         function X = sample(self)
-        % see http://home.lu.lv/~sd20008/papers/essays/Random%20unitary%20[paper].pdf
-            X = randn(self.n, self.n);
-            [Q, R] = qr(X);
-            R = diag(diag(R)./abs(diag(R)));
-            X = Q*R;
+            X = replab.numerical.randomUnitaryOver(self.n, 'R');
         end
 
     end
 
     methods % Representations
 
-        function rep = definingRep(self)
+        function rep = definingRep(self, field)
         % Returns the defining representation of this orthogonal group
         %
         % The defining representation of $O(d)$ corresponds to a ``d x d`` orthogonal matrix.
         %
+        % Args:
+        %   field ('R', 'C'): Field over which to define the representation
+        %
         % Returns:
         %   `.Rep`: Defining representation
-            rep = replab.rep.DefiningRep(self);
+            if nargin < 2 || isempty(field)
+                field = 'R';
+            end
+            rep = replab.rep.DefiningRep(self, field);
         end
 
     end

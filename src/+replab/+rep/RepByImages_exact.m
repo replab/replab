@@ -96,10 +96,6 @@ classdef RepByImages_exact < replab.RepByImages
 
         % Rep
 
-        function rho = computeDouble(self)
-            rho = replab.rep.RepByImages_inexactChain(self);
-        end
-
         function rho = image_double_sparse(self, g)
             perm = self.group.niceMorphism.imageElement(g);
             rho = self.chain.image(perm);

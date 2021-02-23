@@ -1,7 +1,7 @@
 classdef Rep < replab.Obj
 % Describes a finite dimensional representation of a compact group
 %
-% This class has mutable properties that correspond to information that can be computed and cached
+% This class has properties that correspond to information that can be computed and cached
 % after the `+replab.Rep` instance is constructed, for example `.isUnitary` or `.trivialDimension`.
 %
 % Notes:
@@ -24,6 +24,8 @@ classdef Rep < replab.Obj
         group     % (`+replab.CompactGroup`): Group being represented
         field     % ({'R', 'C'}): Vector space defined on real (R) or complex (C) field
         dimension % (integer): Representation dimension
+        isUnitary % (logical): Whether the representation is unitary
+        divisionAlgebraName % ('complex', 'quaternion.rep', ''): Name of the division algebra encoding this representation respects
     end
 
     methods
@@ -37,25 +39,19 @@ classdef Rep < replab.Obj
         %   dimension (integer): Representation dimension
         %
         % Keyword Args:
-        %   knownUnitary (logical or ``[]``, optional): Whether the representation is known to be unitary.
-        %                                               Only a true value has an effect, default ``false``.
-        %   isUnitary (logical or ``[]``, optional): Whether the representation is unitary, default ``[]``
+        %   isUnitary (logical, optional): Whether the representation is unitary, default: false
+        %   divisionAlgebraName % ('complex', 'quaternion.rep', '', optional): Name of the division algebra encoding this representation respects, default ``''``
         %   isIrreducible (logical or ``[]``, optional): Whether this representation is irreducible, default ``[]``
         %   trivialDimension (integer or ``[]``, optional): Dimension of the trivial subrepresentation, default ``[]``
-        %   frobeniusSchurIndicator % (integer or ``[]``, optional): Exact value of the Frobenius-Schur indicator, default ``[]``
-        %   isDivisionAlgebraCanonical % (logical or ``[]``): If the representation is real and irreducible and the Frobenius-Schur indicator is not 1, means that the images encode the complex or quaternion division algebras in the RepLAB canonical form
+        %   frobeniusSchurIndicator (integer or ``[]``, optional): Exact value of the Frobenius-Schur indicator, default ``[]``
             self.group = group;
             self.field = field;
             self.dimension = dimension;
-            args = struct('isUnitary', [], 'knownUnitary', false, 'isIrreducible', [], 'trivialDimension', [], 'frobeniusSchurIndicator', [], 'isDivisionAlgebraCanonical', []);
+            args = struct('isUnitary', false, 'isIrreducible', [], 'trivialDimension', [], 'frobeniusSchurIndicator', [], 'divisionAlgebraName', '');
             args = replab.util.populateStruct(args, varargin);
-            if isequal(args.knownUnitary, true)
-                assert(isempty(args.isUnitary) || args.isUnitary, 'This representation is actually unitary.');
-                args.isUnitary = true;
-            end
-            if ~isempty(args.isUnitary)
-                self.cache('isUnitary', logical(args.isUnitary), 'error');
-            end
+            % fill properties
+            self.isUnitary = args.isUnitary;
+            self.divisionAlgebraName = args.divisionAlgebraName;
             if ~isempty(args.trivialDimension)
                 self.cache('trivialDimension', args.trivialDimension, 'error');
             end
@@ -65,22 +61,11 @@ classdef Rep < replab.Obj
             if ~isempty(args.frobeniusSchurIndicator)
                 self.cache('frobeniusSchurIndicator', args.frobeniusSchurIndicator, 'error');
             end
-            if ~isempty(args.isDivisionAlgebraCanonical)
-                self.cache('isDivisionAlgebraCanonical', logical(args.isDivisionAlgebraCanonical), 'error');
-            end
         end
 
     end
 
     methods (Access = protected) % Protected methods
-
-        function d = computeDouble(self)
-        % Returns a double approximation of this representation, removing the exact data
-        %
-        % Returns:
-        %   `.Rep`: Approximate representation
-            error('Abstract');
-        end
 
         function e = computeErrorBound(self)
             error('Abstract');
@@ -162,7 +147,7 @@ classdef Rep < replab.Obj
             if nargin < 3
                 type = 'double';
             end
-            if self.knownUnitary
+            if self.isUnitary
                 rho = self.image(g, type);
                 rho = rho';
             else
@@ -225,9 +210,6 @@ classdef Rep < replab.Obj
         %
         % Args:
         %   rep (`.Rep`): Representation equal to the current representation
-            if rep.inCache('isUnitary')
-                self.cache('isUnitary', rep.isUnitary, '==');
-            end
             if rep.inCache('trivialDimension')
                 self.cache('trivialDimension', rep.trivialDimension, '==');
             end
@@ -237,8 +219,8 @@ classdef Rep < replab.Obj
             if rep.inCache('frobeniusSchurIndicator')
                 self.cache('frobeniusSchurIndicator', rep.frobeniusSchurIndicator, '==');
             end
-            if rep.inCache('isDivisionAlgebraCanonical')
-                self.cache('isDivisionAlgebraCanonical', rep.isDivisionAlgebraCanonical, '==');
+            if rep.inCache('divisionAlgebraName')
+                self.cache('divisionAlgebraName', rep.divisionAlgebraName, 'isequal');
             end
             if rep.inCache('kernel')
                 self.cache('kernel', rep.kernel, '==');
@@ -430,62 +412,7 @@ classdef Rep < replab.Obj
 
         function f = computeFrobeniusSchurIndicator(self)
         % Computes the Frobenius-Schur indicator
-            if self.inCache('isIrreducible') && self.isIrreducible
-                if self.overR
-                    % special case: irreducible real representations
-                    c = replab.Context.make;
-                    f = replab.irreducible.frobeniusSchurIndicator(self, c);
-                    c.close;
-                    return
-                else
-                    altTrivDim = self.alternatingSquare.trivialDimension;
-                    symTrivDim = self.symmetricSquare.trivialDimension;
-                    if symTrivDim == 1 && altTrivDim == 0
-                        f = 1;
-                    elseif symTrivDim == 0 && altTrivDim == 1
-                        f = -1;
-                    elseif symTrivDim == 0 && altTrivDim == 0
-                        f = 0;
-                    else
-                        error('Unknown situation');
-                    end
-                    return
-                end
-            end
-            if isa(self.group, 'replab.FiniteGroup')
-                % for a finite group, use conjugacy classes
-                f = 0;
-                C = self.group.conjugacyClasses.classes;
-                n = length(C);
-                g2 = cellfun(@(c) self.group.composeN(c.representative, 2), C, 'uniform', 0);
-                factor = cellfun(@(c) self.group.order/c.nElements, C, 'uniform', 0);
-                if self.isExact
-                    f = replab.cyclotomic.zeros(1, 1);
-                    for i = 1:n
-                        f = f + trace(self.image(g2{i}, 'exact'))/replab.cyclotomic.fromVPIs(factor{i});
-                    end
-                    f = double(f);
-                    assert(isreal(f) && round(f) == f);
-                    f = round(f);
-                else
-                    if self.errorBound >= 1
-                        error('Error on this representation is too big to compute the Frobenius-Schur indicator');
-                    end
-                    f = 0;
-                    for i = 1:n
-                        f = f + trace(self.image(g2{i}, 'double/sparse'))/double(factor{i});
-                    end
-                    f = round(f);
-                end
-                return
-            end
-            % Use decomposition
-            dec = self.decomposition;
-            f = 0;
-            for i = 1:dec.nComponents
-                c = dec.component(i);
-                f = f + c.multiplicity * c.irrep(1).frobeniusSchurIndicator;
-            end
+            f = replab.rep.frobeniusSchurIndicator(self);
         end
 
         function b = computeIsUnitary(self)
@@ -522,11 +449,7 @@ classdef Rep < replab.Obj
         %   `.Isotypic`: Subrepresentation as isotypic component
             assert(self.isExact);
             replab.msg(1, '*** Computing trivial component (exact) of representation of dim = %d', self.dimension);
-            P = replab.cyclotomic.eye(self.dimension);
-            t = cputime;
-            P1 = self.trivialRowSpace.project(P, 'exact');
-            P2 = self.trivialColSpace.project(P1, 'exact');
-            replab.msg(2, 'Time (trivial subspace projection): %2.2f s', cputime - t);
+            P2 = self.trivialProjector('exact');
             d = trace(P2);
             assert(d.isWhole);
             d = double(d);
@@ -556,12 +479,8 @@ classdef Rep < replab.Obj
         % Returns:
         %   `.Isotypic`: Subrepresentation as isotypic component
             replab.msg(1, '*** Computing trivial component (double) of representation of dim = %d', self.dimension);
-            P = speye(self.dimension);
-            t = cputime;
-            [P1 E1] = self.trivialRowSpace.project(P, 'double');
-            [P2 E2] = self.trivialColSpace.project(P1, 'double');
-            replab.msg(2, 'Time (trivial subspace projection): %2.2f s', cputime - t);
-            if E1 + E2 >= 1
+            [P2, err] = self.trivialProjector('double');
+            if err >= 1
                 error('Representation is not precise enough to compute the trivial dimension.');
             end
             d = round(trace(P2));
@@ -569,7 +488,7 @@ classdef Rep < replab.Obj
             t = cputime;
             [I, P, p] = replab.numerical.sRRQR_rank(P2, 1.5, d);
             replab.msg(2, 'Time (RRQR decomposition): %2.2f s', cputime - t);
-            if self.knownUnitary
+            if self.isUnitary
                 sub = self.subRep(I, 'projection', I', 'isUnitary', true);
             else
                 P(:,p) = P; % apply permutation
@@ -579,17 +498,45 @@ classdef Rep < replab.Obj
             iso = replab.Isotypic.fromTrivialSubRep(sub);
         end
 
+        function proj = computeTrivialProjector_exact(self)
+        % Computes the projector into the trivial subrepresentation of this representation
+        %
+        % Returns:
+        %   `.cyclotomic`(\*,\*): Exact projector
+            assert(self.isExact);
+            replab.msg(1, '*** Computing trivial projector (exact) of representation of dim = %d', self.dimension);
+            P = replab.cyclotomic.eye(self.dimension);
+            t = cputime;
+            P1 = self.trivialRowSpace.project(P, 'exact');
+            proj = self.trivialColSpace.project(P1, 'exact');
+            replab.msg(2, 'Time (trivial projection): %2.2f s', cputime - t);
+        end
+
+        function res = computeTrivialProjector_double(self)
+        % Computes the projector into the trivial subrepresentation of this representation
+        %
+        % Returns:
+        %   {double(\*,\*), double}: Approximate projector and estimated error in Frobenius norm
+            replab.msg(1, '*** Computing trivial projector (double) of representation of dim = %d', self.dimension);
+            if self.inCache('trivialProjector_exact')
+                % Shortcut: if an exact trivial projector is available, use it instead
+                P = self.trivialProjector('exact');
+                [proj, E] = P.doubleApproximation;
+                res = {proj, norm(E, 'fro')};
+                return
+            end
+            t = cputime;
+            P = speye(self.dimension);
+            [P1, E1] = self.trivialRowSpace.project(P, 'double');
+            [proj, E2] = self.trivialColSpace.project(P1, 'double');
+            err = E1 + E2;
+            replab.msg(2, 'Time in projection: %2.2f s', cputime - t);
+            res = {proj, err};
+        end
+
         function d = computeTrivialDimension(self)
             c = self.trivialComponent('double');
             d = c.dimension;
-        end
-
-        function b = computeIsDivisionAlgebraCanonical(self)
-            if self.overC || (self.overR && self.frobeniusSchurIndicator == 1)
-                b = true;
-            else
-                error('TODO');
-            end
         end
 
     end
@@ -697,11 +644,7 @@ classdef Rep < replab.Obj
               case 'double'
                 if self.inCache('trivialComponent_exact')
                     T = self.trivialComponent('exact');
-                    if self.knownUnitary
-                        sub = self.subRep(T.injection('double'), 'isUnitary', true);
-                    else
-                        sub = self.subRep(T.injection('double'), 'projection', T.projection('double'));
-                    end
+                    sub = self.subRep(T.injection('double'), 'projection', T.projection('double'), 'isUnitary', true);
                     c = replab.Isotypic.fromTrivialSubRep(sub);
                 else
                     c = self.cached('trivialComponent_double', @() self.computeTrivialComponent_double);
@@ -713,17 +656,51 @@ classdef Rep < replab.Obj
             end
         end
 
+        function [proj, err] = trivialProjector(self, type)
+        % Returns the projector into the trivial component present in this representation
+        %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
+        % Returns
+        % -------
+        %   proj: double(\*,\*) or `.cyclotomic`(\*,\*)
+        %     Projector
+        %   err: double
+        %     Estimated error in Frobenius norm
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            switch type
+              case 'double'
+                res = self.cached('trivialProjector_double', @() self.computeTrivialProjector_double);
+                proj = res{1};
+                err = res{2};
+              case 'exact'
+                proj = self.cached('trivialProjector_exact', @() self.computeTrivialProjector_exact);
+                err = 0;
+              otherwise
+                error('Unknown type');
+            end
+        end
+
         function f = frobeniusSchurIndicator(self)
         % Returns the Frobenius-Schur indicator of this representation
         %
-        % It corresponds to the value $\iota = \int_{g \in G} tr[\rho_g^2] d \mu$ or
+        % It is an integer corresponding to the value $\iota = \int_{g \in G} tr[\rho_g^2] d \mu$ or
         % $\iota = \frac{1}{|G|} \sum_{g \in G} tr[\rho_g^2]$.
+        %
         %
         % For real irreducible representations, the Frobenius-Schur indicator can take values:
         % * ``1`` if the representation is of real-type; its complexification is then also irreducible
         % * ``0`` if the representation is of complex-type; it decomposes into two conjugate irreducible
         %   representations over the complex numbers
         % * ``-2`` if the representation is of quaternion-type.
+        %
+        % For complex irreducible representations, it can take the values:
+        % * ``1`` if the representation is of real-type,
+        % * ``0`` if the representation is of complex-type, i.e. is not equivalent to its conjugate,
+        % * ``-1`` if the representation is of quaternion-type.
         %
         % Returns:
         %   integer: Value of the indicator
@@ -740,14 +717,32 @@ classdef Rep < replab.Obj
             b = self.cached('isIrreducible', @() self.computeIsIrreducible);
         end
 
-        function b = isUnitary(self)
-        % Returns whether this representation is unitary
+        function b = isIrreducibleAndCanonical(self)
+        % Returns whether this representation is irreducible, and has its division algebra in the canonical encoding
         %
-        % In the case of approximate representations, we default to ``false``.
+        % This is always true for complex irreps (though we may decide to canonicalize quaternion-type
+        % complex representations later). For real irreps, it is true if the Frobenius-Schur indicator is known
+        % and matches the encoded `.divisionAlgebraName`.
         %
         % Returns:
-        %   logical: True if this representation is unitary
-            b = self.cached('isUnitary', @() self.computeIsUnitary);
+        %   logical: True if the representation is irreducible and has its division algebra in the canonical encoding
+            if ~self.isIrreducible
+                b = false;
+            elseif self.overC
+                b = true;
+            else
+                % self.overR
+                switch self.frobeniusSchurIndicator
+                  case 1
+                    b = true; % nothing needs to be done for real-type representations
+                  case 0
+                    b = strcmp(self.divisionAlgebraName, 'complex');
+                  case -2
+                    b = strcmp(self.divisionAlgebraName, 'quaternion.rep');
+                  otherwise
+                    error('Real irreps must have frobeniusSchurIndicator equal to -2,0,1. Here = %d', self.frobeniusSchurIndicator);
+                end
+            end
         end
 
         function b = knownIrreducible(self)
@@ -764,22 +759,6 @@ classdef Rep < replab.Obj
         % Returns:
         %   logical: True if `.isIrreducible` is known and is false
             b = ~self.cachedOrDefault('isIrreducible', true);
-        end
-
-        function b = knownUnitary(self)
-        % Returns whether this representation is known to be unitary; only a true result is significant
-        %
-        % Returns:
-        %   logical: True if `.isUnitary` is known and is true
-            b = self.cachedOrDefault('isUnitary', false);
-        end
-
-        function b = knownNonUnitary(self)
-        % Returns whether this representation is known to be non-unitary; only a true result is significant
-        %
-        % Returns:
-        %   logical: True if `.isUnitary` is known and is false
-            b = ~self.cachedOrDefault('isUnitary', true);
         end
 
         function K = kernel(self)
@@ -799,22 +778,6 @@ classdef Rep < replab.Obj
         % Returns:
         %   `+replab.FiniteGroup`: The group ``K`` such that ``rho.image(k) == id`` for all ``k`` in ``K``
             K = self.cached('kernel', @() self.computeKernel);
-        end
-
-        function b = isDivisionAlgebraCanonical(self)
-        % Returns whether the division algebra of this representation is in the RepLAB canonical form
-        %
-        % This is relevant only for irreducible representations, and is always true for representation over the
-        % complex numbers.
-        %
-        % For irreducible representations over the real numbers, if the Frobenius-Schur indicator is
-        %
-        % Raises:
-        %   An error if this representation is not irreducible.
-        %
-        % Returns:
-        %   logical: Whether the division algebra is canonical
-            b = self.cached('isDivisionAlgebraCanonical', @() self.computeIsDivisionAlgebraCanonical);
         end
 
     end
@@ -979,45 +942,18 @@ classdef Rep < replab.Obj
         % First it splits the representation into irreducibles, before recognizing which
         % irreducible representations are part of the same isotypic component.
         %
-        % TODO: exact/double
-            irreps = self.split;
-            mask = cellfun(@(r) r.trivialDimension == 0, irreps);
-            nontrivial = irreps(mask);
-            trivialIsotypic = replab.Isotypic.fromBiorthogonalTrivialIrreps(self, irreps(~mask));
-            % regroup equivalent representations
-            context = replab.Context.make;
-            C = self.commutant.sampleInContext(context, 1);
-            nNT = length(nontrivial);
-            mask = logical(zeros(nNT, nNT));
-            tol = replab.globals.doubleEigTol;
-            for i = 1:nNT
-                subI = nontrivial{i};
-                CI = subI.projection('double/sparse') * C;
-                for j = 1:nNT
-                    subJ = nontrivial{j};
-                    mask(i,j) = replab.isNonZeroMatrix(CI * subJ.injection('double/sparse'), tol);
-                end
-            end
-            cc = replab.UndirectedGraph.fromAdjacencyMatrix(mask).connectedComponents.blocks;
-            % the blocks of the partition cc represent isotypic components
-            nNT = length(cc);
-            NT = cell(1, nNT);
-            for i = 1:nNT
-                subreps = nontrivial(cc{i});
-                iso = replab.Isotypic.fromIrreps(self, subreps, subreps{1}.dimension, false);
-                NT{i} = iso.harmonize(context);
-            end
-            % Sort by dimension first and then multiplicity
-            dims = cellfun(@(iso) iso.irrepDimension, NT);
-            muls = cellfun(@(iso) iso.multiplicity, NT);
-            [~, I] = sortrows([dims(:) muls(:)]);
-            NT = NT(I);
-            if trivialIsotypic.dimension > 0
-                components = horzcat({trivialIsotypic}, NT);
+            sample1 = self.commutant.sample;
+            sample2 = self.commutant.sample;
+            forceNonUnitaryAlgorithms = false;
+            [trivial, nonTrivialIrreps] = replab.irreducible.split(self, sample1, sample2, forceNonUnitaryAlgorithms);
+            tiso = replab.Isotypic.fromTrivialSubRep(trivial);
+            [iso, zeroErrors, nonZeroErrors] = replab.irreducible.findIsotypic(self, nonTrivialIrreps, sample2);
+            if tiso.dimension > 0
+                dec = replab.Irreducible(self, horzcat({tiso}, iso));
             else
-                components = NT;
+                dec = replab.Irreducible(self, iso);
             end
-            dec = replab.Irreducible(self, components);
+
         end
 
     end
@@ -1028,7 +964,7 @@ classdef Rep < replab.Obj
 
         function s = headerStr(self)
             p = {};
-            if self.knownUnitary
+            if self.isUnitary
                 if self.overR
                     p{1,end+1} = 'orthogonal';
                 else
@@ -1210,36 +1146,6 @@ classdef Rep < replab.Obj
     end
 
     methods % Derived representations
-
-        function approx = double(self)
-        % Returns the approximate representation corresponding to this representation
-        %
-        % Returns:
-        %   `.Rep`: Representation equivalent to this representation with `.isExact` false
-            if ~self.isExact
-                approx = self;
-            else
-                approx = self.computeDouble;
-                if self.inCache('isUnitary')
-                    approx.cache('isUnitary', self.isUnitary, '==');
-                end
-                if self.inCache('trivialDimension')
-                    approx.cache('trivialDimension', self.trivialDimension, '==');
-                end
-                if self.inCache('isIrreducible')
-                    approx.cache('isIrreducible', self.isIrreducible, '==');
-                end
-                if self.inCache('frobeniusSchurIndicator')
-                    approx.cache('frobeniusSchurIndicator', self.frobeniusSchurIndicator, '==');
-                end
-                if self.inCache('isDivisionAlgebraCanonical')
-                    approx.cache('isDivisionAlgebraCanonical', self.isDivisionAlgebraCanonical, '==');
-                end
-                if self.inCache('kernel')
-                    approx.cache('kernel', self.kernel, '==');
-                end
-            end
-        end
 
         function rep1 = contramap(self, morphism)
         % Returns the representation composed with the given morphism applied first
@@ -1438,7 +1344,7 @@ classdef Rep < replab.Obj
             proj1 = sub1.projector;
             proj2 = speye(D) - proj1;
             [I, P, p] = replab.numerical.sRRQR_rank(proj2, 1.5, d2);
-            if self.knownUnitary && sub1.knownUnitary
+            if self.isUnitary && sub1.isUnitary
                 sub2 = self.subRep(I, 'projection', I', 'isUnitary', true);
             else
                 P(:,p) = P;
@@ -1495,20 +1401,19 @@ classdef Rep < replab.Obj
         %   mapErrorBound (double, optional): Upper bound as described above
         %   mapConditionNumberEstimate (double, optional): Upper bound on the condition number of both $P$ and $I$
         %   isUnitary (logical, optional): Whether the resulting representation is unitary, may be omitted
-        %   largeScale (logical or ``[]``, optional): Whether to use the large-scale version of the algorithm, default ``[]`` (automatic selection)
-        %   numNonImproving (integer, optional): Number of non-improving steps before stopping the large-scale algorithm, default ``20``
+        %   largeScale (logical, optional): Whether to use the large-scale version of the algorithm, default automatic selection
+        %   tolerances (`.Tolerances`): Termination criteria
         %   nSamples (integer, optional): Number of samples to use in the large-scale version of the algorithm, default ``5``
-        %   maxIterations (integer, optional): Maximum number of iterations, default ``1000``
         %
         % Returns:
         %   `+replab.SubRep`: Subrepresentation
-            args = struct('projection', [], 'largeScale', self.dimension > 1000, 'numNonImproving', 20, 'nSamples', 5, 'maxIterations', 1000);
+            args = struct('projection', [], 'largeScale', self.dimension > 1000, 'tolerances', replab.rep.Tolerances, 'nSamples', 5);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             projection = args.projection;
             isExact = isa(injection, 'replab.cyclotomic') && (isempty(projection) || isa(projection, 'replab.cyclotomic'));
             if isempty(projection)
                 if isExact
-                    if self.knownUnitary
+                    if self.isUnitary
                         % slower because cyclotomic doesn't implement \ or /
                         projection = inv(injection'*injection)*injection';
                     else
@@ -1522,11 +1427,11 @@ classdef Rep < replab.Obj
                         projection = inv(injection'*injection)*injection'*P2;
                     end
                 else % non exact
-                    if self.knownUnitary
+                    if self.isUnitary
                         projection = (injection'*injection)\injection';
                     else
                         if args.largeScale
-                            projection = replab.rep.findProjection_largeScale(self, injection, args.numNonImproving, args.nSamples, args.maxIterations);
+                            projection = replab.rep.findProjection_largeScale(self, injection, args.nSamples, args.tolerances, [], []);
                         else
                             P1 = injection*inv(injection'*injection)*injection';
                             P2 = self.commutant.project(P1);
@@ -1538,90 +1443,35 @@ classdef Rep < replab.Obj
             sub = replab.SubRep(self, injection, projection, restArgs{:});
         end
 
-        function irreps = split(self)
-        % Decomposes fully the given representation into subrepresentations
+        function sub = blockSubRep(self, block)
+        % Constructs a subrepresentation from a subset of Euclidean coordinates
         %
-        % Returns a list of irreducible representations, where trivial and nontrivial subrepresentations
-        % have been identified. Also, all the injection and projection maps are biorthogonal.
+        % The ``block`` argument can be obtained from `.invariantBlocks`, and this method
+        % constructs the sparse injection and projection maps with which to call `.subRep`.
+        %
+        % Args:
+        %   block (integer(1,\*)): Euclidean coordinates of the block
         %
         % Returns:
-        %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to this representation
-            partition = self.invariantBlocks;
-            if partition.nBlocks == 1
-                trivial = self.trivialComponent('double');
-                if trivial.dimension == 0
-                    irreps = cell(1, 0);
-                    nontrivial = replab.SubRep.identical(self);
-                else
-                    nontrivial = self.maschke(trivial);
-                    irreps = trivial.irreps;
-                end
-                nontrivialIrreps = nontrivial.splitInParent;
-                for i = 1:length(nontrivialIrreps)
-                    nontrivialIrreps{i}.cache('trivialDimension', 0, '==');
-                end
-                irreps = horzcat(irreps, nontrivialIrreps);
-            else
-                t = cputime;
-                P = speye(self.dimension);
-                [P1, E1] = self.trivialRowSpace.project(P, 'double');
-                [P2, E2] = self.trivialColSpace.project(P1, 'double');
-                replab.msg(2, 'Time (trivial subspace projection): %2.2f s', cputime - t);
-                if E1 + E2 >= 1
-                    error('Representation is not precise enough to compute the trivial dimension.');
-                end
-                D = self.dimension;
-                Itriv = sparse(D, 0);
-                Ptriv = sparse(0, D);
-                nontrivialIrreps = cell(1, 0);
-                for i = 1:partition.nBlocks
-                    blk = partition.block(i);
-                    d = length(blk);
-                    % projectors on trivial and nontrivial space
-                    projT = P2(blk, blk);
-                    projN = eye(d) - projT;
-                    % dimensions
-                    dT = round(trace(projT));
-                    dN = round(trace(projN));
-                    [IT, PT, pT] = replab.numerical.sRRQR_rank(projT, 1.5, dT);
-                    [IN, PN, pN] = replab.numerical.sRRQR_rank(projN, 1.5, dN);
-                    % regularize or apply corrections
-                    if self.knownUnitary
-                        PT = IT';
-                        PN = IN';
-                    else
-                        PT(:,pT) = PT;
-                        PT = (PT*IT)\PT;
-                        PN(:,pN) = PN;
-                        PN = (PN*IN)\PN;
-                    end
-                    ITnew = sparse(D, dT);
-                    PTnew = sparse(dT, D);
-                    ITnew(blk, :) = IT;
-                    PTnew(:, blk) = PT;
-                    % update basis of trivial space
-                    Itriv = [Itriv ITnew];
-                    Ptriv = [Ptriv; PTnew];
-                    INnew = sparse(D, dN);
-                    PNnew = sparse(dN, D);
+        %   `.SubRep`: Subrepresentation
+            d = length(block);
+            injection = sparse(block, 1:d, ones(1, d), self.dimension, d);
+            projection = injection';
+            sub = self.subRep(injection, 'projection', projection, 'isUnitary', self.isUnitary);
+        end
 
-                    INnew(blk, :) = IN;
-                    PNnew(:, blk) = PN;
-                    if self.knownUnitary
-                        subN = self.subRep(INnew, 'projection', PNnew, 'isUnitary', true, 'trivialDimension', 0);
-                    else
-                        subN = self.subRep(INnew, 'projection', PNnew, 'trivialDimension', 0);
-                    end
-                    nontrivialIrreps = horzcat(nontrivialIrreps, subN.splitInParent);
-                end
-                if self.knownUnitary
-                    subT = self.subRep(Itriv, 'projection', Ptriv, 'isUnitary', true);
-                else
-                    subT = self.subRep(Itriv, 'projection', Ptriv);
-                end
-                trivialIrreps = replab.Isotypic.fromTrivialSubRep(subT).irreps;
-                irreps = horzcat(trivialIrreps, nontrivialIrreps);
-            end
+        function irreps = split(self, varargin)
+        % Splits this representation into irreducible subrepresentations
+        %
+        % Keyword Args:
+        %   forceNonUnitaryAlgorithms (logical, optional): Whether to force the use of algorithms for not necessarily unitary representations, default: false
+            args = struct('forceNonUnitaryAlgorithms', false);
+            args = replab.util.populateStruct(args, varargin);
+            sample1 = self.commutant.sample;
+            sample2 = self.commutant.sample;
+            [trivial, nonTrivialIrreps] = replab.irreducible.split(self, sample1, sample2, args.forceNonUnitaryAlgorithms);
+            tiso = replab.Isotypic.fromTrivialSubRep(trivial);
+            irreps = horzcat(tiso.irreps, nonTrivialIrreps);
         end
 
         function rep1 = similarRep(self, A, varargin)
@@ -1657,7 +1507,7 @@ classdef Rep < replab.Obj
     methods (Access = protected)
 
         function res = computeUnitarize(self)
-            if self.knownUnitary
+            if self.isUnitary
                 res = replab.SimilarRep.identical(self);
             else
                 [A Ainv] = self.unitaryChangeOfBasis;
@@ -1676,7 +1526,7 @@ classdef Rep < replab.Obj
         %     Change of basis matrix
         %   Ainv: double(\*,\*), may be sparse
         %     Inverse of change of basis matrix
-            if self.knownUnitary
+            if self.isUnitary
                 A = speye(self.dimension);
                 Ainv = speye(self.dimension);
             else

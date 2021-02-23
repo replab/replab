@@ -61,11 +61,6 @@ classdef RepByImages_monomial < replab.RepByImages
 
         % Rep
 
-        function rep = computeDouble(self)
-            exact = replab.rep.RepByImages_exact(self.group, self.field, self.dimension, self.preimages, self.images);
-            rep = double(exact);
-        end
-
         function e = computeErrorBound(self)
             if any(self.morphism.target.m == [1 2 4])
                 e = 0;

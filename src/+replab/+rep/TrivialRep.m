@@ -12,12 +12,7 @@ classdef TrivialRep < replab.Rep
                 isExactValue = true;
             end
             assert(isa(group, 'replab.CompactGroup'));
-            args = {'isUnitary', true, 'isIrreducible', dimension == 1, ...
-                            'trivialDimension', dimension, 'frobeniusSchurIndicator', dimension};
-            if strcmp(field, 'R') && dimension == 1
-                args = horzcat(args, {'isDivisionAlgebraCanonical' true});
-            end
-            self@replab.Rep(group, field, dimension, args{:});
+            self@replab.Rep(group, field, dimension, 'isUnitary', true, 'isIrreducible', dimension == 1, 'trivialDimension', dimension, 'frobeniusSchurIndicator', dimension);
             self.isExactValue = isExactValue;
         end
 
@@ -27,10 +22,6 @@ classdef TrivialRep < replab.Rep
 
         function b = computeIsUnitary(self)
             b = true;
-        end
-
-        function r = computeDouble(self)
-            r = replab.rep.TrivialRep(self.group, self.field, self.dimension, false);
         end
 
         function rho = image_exact(self, g)

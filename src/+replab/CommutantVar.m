@@ -218,6 +218,8 @@ classdef CommutantVar < replab.Str
             % Representation decomposition
             group = replab.SignedSymmetricGroup(n).subgroup(generators);
             irrDecomp = group.naturalRep.decomposition;
+            assert(irrDecomp.isUnitary);
+            assert(irrDecomp.mapsAreAdjoint);
             U = zeros(n, 0);
             dimensions1 = zeros(1,irrDecomp.nComponents);
             multiplicities = zeros(1,irrDecomp.nComponents);
@@ -274,11 +276,14 @@ classdef CommutantVar < replab.Str
                             end
 
                         case 'C'
-                            basis1 = [1  0   % from replab.domain.ComplexTypeMatrices.toMatrix(1,0);
+                            basis1 = [1  0
                                       0  1];
-                            basis2 = [0 -1   % from replab.domain.ComplexTypeMatrices.toMatrix(0,1);
+                            basis2 = [0 -1
                                       1  0];
 
+                            % The code below is valid under the following condition
+                            assert(isequal(cat(3, basis1, basis2), replab.DivisionAlgebra('complex').basis));
+                            
                             if isequal(matrixType, 'full') && isequal(field, 'real')
                                 vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'real');
                                 vars2 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'real');
@@ -303,22 +308,25 @@ classdef CommutantVar < replab.Str
                             self.blocks{i} = kron(vars1, basis1) + kron(vars2, basis2);
 
                         case 'H'
-                            basis1 = [1  0  0  0   % from replab.domain.QuaternionTypeMatrices.toMatrix(1,0,0,0);
+                            basis1 = [1  0  0  0
                                       0  1  0  0
                                       0  0  1  0
                                       0  0  0  1];
-                            basis2 = [0 -1  0  0   % from replab.domain.QuaternionTypeMatrices.toMatrix(0,1,0,0);
+                            basis2 = [0 -1  0  0
                                       1  0  0  0
-                                      0  0  0 -1
-                                      0  0  1  0];
-                            basis3 = [0  0 -1  0   % from replab.domain.QuaternionTypeMatrices.toMatrix(0,0,1,0);
                                       0  0  0  1
-                                      1  0  0  0
+                                      0  0 -1  0];
+                            basis3 = [0  0  1  0
+                                      0  0  0  1
+                                     -1  0  0  0
                                       0 -1  0  0];
-                            basis4 = [0  0  0 -1   % from replab.domain.QuaternionTypeMatrices.toMatrix(0,0,0,1);
-                                      0  0 -1  0
-                                      0  1  0  0
+                            basis4 = [0  0  0 -1
+                                      0  0  1  0
+                                      0 -1  0  0
                                       1  0  0  0];
+
+                            % The code below is valid under the following condition
+                            assert(isequal(cat(3, basis1, basis2, basis3, basis4), replab.DivisionAlgebra('quaternion.equivariant').basis));
 
                             if isequal(matrixType, 'full') && isequal(field, 'real')
                                 vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'real');
@@ -339,23 +347,23 @@ classdef CommutantVar < replab.Str
                                 vars3 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'complex');
                                 vars4 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'complex');
                             elseif isequal(matrixType, 'symmetric') && isequal(field, 'complex')
-                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'symmetric', 'real');
-                                vars2R = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
-                                vars2I = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'symmetric', 'complex');
+                                vars2R = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
+                                vars2I = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
                                 vars2 = imag(vars2R) + 1i*imag(vars2I); % this part should be fully antisymmetric
-                                vars3R = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
-                                vars3I = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars3R = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
+                                vars3I = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
                                 vars3 = imag(vars3R) + 1i*imag(vars3I); % this part should be fully antisymmetric
-                                vars4R = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
-                                vars4I = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars4R = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
+                                vars4I = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
                                 vars4 = imag(vars4R) + 1i*imag(vars4I); % this part should be fully antisymmetric
                             elseif isequal(matrixType, 'hermitian') && isequal(field, 'complex')
-                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'symmetric', 'real');
-                                vars2 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
+                                vars2 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'copmlex');
                                 vars2 = 1i*vars2; % Real part should be antisymmetric, and imaginary part symmetric
-                                vars3 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars3 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
                                 vars3 = 1i*vars3; % Real part should be antisymmetric, and imaginary part symmetric
-                                vars4 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'real');
+                                vars4 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'hermitian', 'complex');
                                 vars4 = 1i*vars4; % Real part should be antisymmetric, and imaginary part symmetric
                             end
 
@@ -447,12 +455,17 @@ classdef CommutantVar < replab.Str
                     % quaternionic representations
                     if (sdpMatrixIsSym == 1) && ~isequal(self.types(i), 'R')
                         if isequal(self.types(i), 'C')
+                            assert(isequal([1 -2; 2 1], replab.DivisionAlgebra('complex').indexMatrix));
                             checkbases = {[1 0; 0 -1], [0 1; 1 0]};
                         elseif isequal(self.types(i), 'H')
-                            checkbases = {[1 0 0 0; 0 -1 0 0; 0 0 0 0], [1 0 0 0; 0 0 0 0; 0 0 -1 0; 0 0 0 0], [1 0 0 0; 0 0 0 0; 0 0 0 0; 0 0 0 -1], ...
-                                [0 1 0 0; 1 0 0 0; 0 0 0 0; 0 0 0 0], [0 1 0 0; 0 0 0 0; 0 0 0 -1; 0 0 0 0], [0 1 0 0; 0 0 0 0; 0 0 0 0; 0 0 1 0], ...
-                                [0 0 1 0; 0 0 0 1; 0 0 0 0; 0 0 0 0], [0 0 1 0; 0 0 0 0; 1 0 0 0; 0 0 0 0], [0 0 1 0; 0 0 0 0; 0 0 0 0; 0 -1 0 0], ...
-                                [0 0 0 1; 0 0 -1 0; 0 0 0 0; 0 0 0 0], [0 0 0 1; 0 0 0 0; 0 1 0 0; 0 0 0 0], [0 0 0 1; 0 0 0 0; 0 0 0 0; 1 0 0 0]};
+                            checkbases = {};
+                            for j = 1:4
+                                basisj = replab.DivisionAlgebra('quaternion.equivariant').basis(:,:,j);
+                                [tmpa, tmpb, tmpc] = find(basisj);
+                                for k = 1:numel(tmpa)-1
+                                    checkbases{end+1} = full(sparse(tmpa(k:k+1), tmpb(k:k+1), [1;-1].*tmpc(k:k+1), 4, 4));
+                                end
+                            end
                         end
                         for j = 1:length(checkbases)
                             % We just need to check the first element

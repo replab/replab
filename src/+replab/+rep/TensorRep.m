@@ -20,16 +20,8 @@ classdef TensorRep < replab.Rep
         %   blocks (cell(1,\*) of `+replab.Rep`): Factor representations
             replab.rep.assertCompatibleFactors(group, field, factors);
             d = prod(cellfun(@(f) f.dimension, factors));
-            factorsAllUnitary = cellfun(@(x) x.knownUnitary, factors);
-            factorsAllNonUnitary = cellfun(@(x) x.knownNonUnitary, factors);
-            if all(factorsAllUnitary)
-                args = {'isUnitary' true};
-            elseif all(factorsAllNonUnitary)
-                args = {'isUnitary' false};
-            else
-                args = cell(1, 0);
-            end
-            self@replab.Rep(group, field, d, args{:});
+            factorsAreUnitary = cellfun(@(x) x.isUnitary, factors);
+            self@replab.Rep(group, field, d, 'isUnitary', all(factorsAreUnitary));
             self.factors = factors;
         end
 
@@ -168,10 +160,6 @@ classdef TensorRep < replab.Rep
 
         % Rep
 
-        function rep = computeDouble(self)
-            rep = replab.rep.TensorRep(self.group, self.field, cellfun(@(f) double(f), self.factors));
-        end
-
         function c = decomposeTerm(self)
             c = self.factors;
         end
@@ -238,7 +226,7 @@ classdef TensorRep < replab.Rep
                 A = replab.numerical.multikron(As, 'double/sparse');
                 Ainv = replab.numerical.multikron(Ainvs, 'double/sparse');
             end
-            rep = replab.SimilarRep(self, A, Ainv);
+            rep = replab.SimilarRep(self, A, Ainv, 'isUnitary', true);
         end
 
     end

@@ -255,8 +255,6 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
         %   `+replab.IrreducibleEquivariant`: The equivariant vector space
             assert(isa(repR, 'replab.Irreducible'));
             assert(isa(repC, 'replab.Irreducible'));
-            assert(repR.isHarmonized);
-            assert(repC.isHarmonized);
             assert(repR.field == repC.field);
             args = struct('special', '', 'parent', [], 'type', 'double', 'parentSample', []);
             args = replab.util.populateStruct(args, varargin);

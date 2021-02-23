@@ -58,9 +58,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             m = self.morphismByImages(target, 'preimages', self.generators, 'images', imgs);
         end
 
-        function m = isomorphismByFunction(self, target, preimageElementFun, imageElementFun)
-            imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
-            m = self.isomorphismByImages(target, 'preimages', self.generators, 'images', imgs);
+        function m = isomorphismByFunctions(self, target, preimageElementFun, imageElementFun)
+        % Constructs a group isomorphism using preimage/image functions
+        %
+        % Args:
+        %   target (`replab.Group`): Target group
+        %   preimageElementFun (function_handle): Returns the source element for a target element
+        %   imageElementFun (function_handle): Returns the target element for a source element
+            m = self.isomorphismByFunction(self, target, imageElementFun);
         end
 
         function m = innerAutomorphism(self, by)
@@ -1206,6 +1211,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function m = isomorphismByImages(self, target, varargin)
         % Constructs an isomorphism to a group using images of generators
             m = self.morphismByImages(target, varargin{:}).toIsomorphism;
+        end
+
+        function m = isomorphismByFunction(self, target, imageElementFun)
+        % Constructs an isomorphism to a group using an image function
+            imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
+            m = self.isomorphismByImages(target, 'preimages', self.generators, 'images', imgs);
         end
 
         function g1 = imap(self, f)

@@ -1,113 +1,66 @@
-function subs = split(rep, sub, safetyFactor)
-% Splits a representation into subrepresentations by using a commutant sample
+function [trivial, nonTrivialIrreps] = split(rep, sample1, sample2, forceNonUnitaryAlgorithms)
+% Splits a representation into irreducible subrepresentations
 %
-% Decomposes a possibly non-irreducible subrepresentation ``rep`` into subrepresentations.
+% First extracts the trivial subrepresentations before splitting the nontrivial invariant subspace.
+%
+% It uses the first sample to establish a basis, and the second sample to
+%
+% 1) validate irreducibility, and
+% 2) find and fix the form of real representations.
+%
+% The second sample can be reused later to find equivalent subrepresentations and harmonize their bases.
 %
 % Args:
-%   rep (`+replab.Rep`): Representation of which to decompose a subspace
-%   sub (`+replab.SubRep`): Subspace to decompose further
-%   safetyFactor (double, optional): Factor on the error estimation using eigendecomposition residuals, default: 100
+%   rep (`+replab.Rep`): Representation to decompose
+%   sample1 (double(\*,\*)): First sample of ``rep.commutant``
+%   sample2 (double(\*,\*)): Second sample of ``rep.commutant``
+%   forceNonUnitaryAlgorithms (logical): Whether to force the use of algorithms for not necessarily unitary representations
 %
-% Returns:
-%   cell(1,\*) of `+replab.SubRep`: Subrepresentations in ``sub`` with their ``.parent`` set to ``rep``
-    if nargin < 3 || isempty(safetyFactor)
-        safetyFactor = 100;
-    end
-    replab.msg(1, '*** Split subspace using commutant sample: dim(parent) = %d, dim(subspace) = %d', rep.dimension, sub.dimension);
-    d0 = rep.dimension;
-    d1 = sub.dimension;
-    I = sub.injection;
-    P = sub.projection;
-    % Get a sample from the parent representation commutant
-    % Sample from the subrepresentation space
-    dom = replab.domain.Matrices(sub.field, sub.dimension, sub.dimension);
-    X = I * dom.sample * P;
-    t = cputime;
-    [X, projErr] = rep.commutant.project(X);
-    % Sample in the subrepresentation
-    A = P * X * I;
-    % Find the eigendecomposition
-    t = cputime;
-    [V, D, W] = eig(A, 'vector');
-    blocks = cell(1, 0);
-    values = zeros(1, 0);
-    i = 1;
-    while i <= d1
-        values(1, end+1) = real(D(i));
-        if i < d1 && real(D(i)) == real(D(i+1))
-            blocks{1, end+1} = [i i+1];
-            i = i + 2;
-        else
-            blocks{1, end+1} = i;
-            i = i + 1;
+% Returns
+% -------
+%   trivial: `+replab.Isotypic`
+%     Trivial component
+%   nontrivialIrreps: cell(1,\*) of `+replab.SubRep`
+%     cell(1,\*) of `+replab.SubRep`: Irreducible subrepresentations of ``rep``
+    fnua = forceNonUnitaryAlgorithms;
+    partition = rep.invariantBlocks;
+    D = rep.dimension;
+    Itriv = zeros(D, 0);
+    Ptriv = zeros(0, D);
+    nontrivialIrreps = cell(1, 0);
+    candidates = cell(1, 0);
+    for i = 1:partition.nBlocks
+        block = partition.block(i);
+        d = length(block);
+        [trivial, nontrivial] = replab.irreducible.blockTrivialSplit(rep, block, forceNonUnitaryAlgorithms);
+        % concatenate the trivial subspaces
+        Itriv = horzcat(Itriv, trivial.injection('double/sparse'));
+        Ptriv = vertcat(Ptriv, trivial.projection('double/sparse'));
+        if nontrivial.dimension > 0
+            candidates = horzcat(candidates, replab.irreducible.absoluteSplitInParent(nontrivial, sample1, fnua));
         end
     end
-    [~, I] = sort(values, 'ascend');
-    blocks = blocks(I);
-    ind = [blocks{:}];
-    V = sub.injection * V(:,ind);
-    W = W(:,ind)' * sub.projection;
-    D = D(ind);
-    % Compute residuals according to http://www.netlib.org/utk/people/JackDongarra/etemplates/node278.html
-    R = X * V - V * diag(sparse(D)); % column vectors are residuals for right eigenvectors
-    S = W * X - diag(sparse(D)) * W; % row vectors are residuals for left eigenvectors
-    evError = zeros(1, d1); % Error estimates
-    for i = 1:d1
-        evError(i) = max(norm(S(i,:)), norm(R(:,i)))/abs(W(i,:)*V(:,i));
-        evError(i) = max(evError(i), eps(D(i)));
-    end
-    replab.msg(2, 'Estimated error on eigenvalues: min %e mean %e max %e', min(evError), mean(evError), max(evError));
-    % Identify clusters of eigenvalues
-    start = 1;
-    blocks = cell(1, 0);
-    blockError = zeros(1, 0);
-    while start <= d1
-        next = start + 1;
-        maxEVE = evError(start);
-        % Identify close eigenvalues forwards
-        while next <= d1 && real(D(next) - D(next-1)) < safetyFactor*(maxEVE + max(maxEVE, evError(next))) + projErr
-            maxEVE = max(maxEVE, evError(next));
-            next = next + 1;
+    nonTrivialIrreps = cell(1, 0);
+    while ~isempty(candidates)
+        splitFurther = cell(1, 0);
+        for i = 1:length(candidates)
+            c = candidates{i};
+            irreps = replab.irreducible.identifyIrrepsInParent(c, sample2);
+            if isempty(irreps)
+                splitFurther{1,end+1} = c;
+            else
+                nonTrivialIrreps = horzcat(nonTrivialIrreps, irreps);
+            end
         end
-        % Identify close eigenvalues backwards, in case the max. error estimate of EV so far is bigger
-        while start > 1 && real(D(start) - D(start-1)) < safetyFactor*(maxEVE + max(maxEVE, evError(start-1))) + projErr
-            lastBlock = blocks{end};
-            maxEVE = max(maxEVE, evError(lastBlock));
-            start = lastBlock(1);
-            blocks = blocks(1:end-1);
+        candidates = cell(1, 0);
+        if ~isempty(splitFurther)
+            % we need fresh samples
+            X = rep.commutant.sample;
+            for i = 1:length(splitFurther)
+                sub = splitFurther{i};
+                candidates = horzcat(candidates, replab.irreducible.absoluteSplitInParent(sub, X, fnua));
+            end
         end
-        block = start:(next-1);
-        blocks{1,end+1} = block;
-        blockError(1,end+1) = max(real(D(block))) - min(real(D(block)));
-        start = next;
     end
-    replab.msg(1, 'Identified %d invariant subspaces', length(blocks));
-    replab.msg(2, 'Eigenvalue spread in clusters: min %e mean %e max %e', min(blockError), mean(blockError), max(blockError));
-    % Create subrepresentations
-    subs = cell(1, length(blocks));
-    for i = 1:length(blocks)
-        block = blocks{i};
-        injection = V(:, block);
-        projection = W(block, :);
-        assert(isreal(D(block)) == isreal(injection));
-        assert(isreal(D(block)) == isreal(projection));
-        if ~isreal(D(block))
-            i1 = injection(:, 1:2:end);
-            i2 = injection(:, 2:2:end);
-            p1 = projection(1:2:end, :);
-            p2 = projection(2:2:end, :);
-            i3 = i1 + i2;
-            p3 = p1 + p2;
-            i4 = 1i*(i1 - i2);
-            p4 = 1i*(p1 - p2);
-            assert(isreal(i3) && isreal(i4) && isreal(p3) && isreal(p4));
-            injection = [i3 i4];
-            projection = [p3; p4];
-            projection = (projection*injection)\projection;
-            encodesComplexStructure = true;
-        else
-            encodesComplexStructure = false;
-        end
-        subs{i} = rep.subRep(injection, 'projection', projection, 'encodesComplexStructure', encodesComplexStructure);
-    end
+    trivial = rep.subRep(Itriv, 'projection', Ptriv, 'trivialDimension', size(Itriv, 2), 'isUnitary', true);
 end

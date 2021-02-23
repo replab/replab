@@ -23,6 +23,7 @@ classdef SimilarRep < replab.Rep
         Ainv_internal % (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Inverse of change of basis matrix
         A_Ainv_error % (double): Frobenius norm of ``A * Ainv - identity``
         basisConditionNumberEstimate % (double): Estimate of the condition number of `.A_internal`
+        mapsAreAdjoint % (logical): True if `.parent` is known to be unitary and `.A_internal` is the conjugate transpose of `.Ainv_internal`
     end
 
     methods
@@ -57,9 +58,9 @@ classdef SimilarRep < replab.Rep
             args = struct('basisConditionNumberEstimate', []);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             basisConditionNumberEstimate = args.basisConditionNumberEstimate;
-            A_unitary = all(all(A_internal' == Ainv_internal));
-            if A_unitary && parent.knownUnitary
-                restArgs = replab.util.keyValuePairsUpdate(restArgs, 'knownUnitary', true);
+            mapsAreAdjoint = all(all(A_internal' == Ainv_internal));
+            if mapsAreAdjoint && parent.isUnitary
+                restArgs = replab.util.keyValuePairsUpdate(restArgs, 'isUnitary', true);
             end
             if parent.inCache('trivialDimension')
                 [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'trivialDimension', parent.trivialDimension);
@@ -80,8 +81,9 @@ classdef SimilarRep < replab.Rep
             self.A_internal = A_internal;
             self.Ainv_internal = Ainv_internal;
             self.A_Ainv_error = prodError;
+            self.mapsAreAdjoint = mapsAreAdjoint;
             if isempty(basisConditionNumberEstimate)
-                if A_unitary
+                if mapsAreAdjoint
                     basisConditionNumberEstimate = 1;
                 else
                     basisConditionNumberEstimate = replab.numerical.condUpperBound(A_internal, Ainv_internal);
@@ -249,10 +251,6 @@ classdef SimilarRep < replab.Rep
 
         % Rep
 
-        function r = computeDouble(self)
-            r = replab.SimilarRep(double(self.parent), self.A('double/sparse'), self.Ainv('double/sparse'), 'basisConditionNumberEstimate', self.basisConditionNumberEstimate);
-        end
-
         function c = decomposeTerm(self)
             c = {self.parent};
         end
@@ -294,7 +292,7 @@ classdef SimilarRep < replab.Rep
         end
 
         function c = computeConditionNumberEstimate(self)
-            if self.knownUnitary
+            if self.isUnitary
                 c = 1;
             else
                 % rho = parent
@@ -322,12 +320,7 @@ classdef SimilarRep < replab.Rep
         % Returns:
         %   `.SimilarRep`: Identical representation to ``rep``
             d = rep.dimension;
-            if rep.inCache('isDivisionAlgebraCanonical')
-                args = {'isDivisionAlgebraCanonical', rep.isDivisionAlgebraCanonical};
-            else
-                args = {};
-            end
-            res = replab.SimilarRep(rep, speye(d), speye(d), 'knownUnitary', rep.knownUnitary, args{:});
+            res = replab.SimilarRep(rep, speye(d), speye(d), 'isUnitary', rep.isUnitary, 'divisionAlgebraName', rep.divisionAlgebraName, args{:});
         end
 
     end

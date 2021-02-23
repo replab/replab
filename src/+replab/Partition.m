@@ -183,6 +183,8 @@ classdef Partition < replab.Str
         function P = fromBlocks(blocks)
         % Constructs a partition from disjoint blocks
         %
+        % The blocks will be sorted and reorganized.
+        %
         % Example:
         %   >>> replab.Partition.fromBlocks({[1 2 5] [3 4]})
         %     Partition '125|34'
@@ -211,6 +213,35 @@ classdef Partition < replab.Str
             P = replab.Partition(blockIndex, blocks);
         end
 
+        function P = fromApproximateVector(vec, tol)
+        % Returns the partition that groups approximately equal coefficients of a vector
+        %
+        % Example:
+        %   >>> replab.Partition.fromApproximateVector([0.1 0.2 0.9 1 0.3], 0.11)
+        %     Partition '125|34'
+        %     blockIndex: [1, 1, 2, 2, 1]
+        %         blocks: {[1, 2, 5], [3, 4]}
+        %              n: 5
+        %
+        % Args:
+        %   vec (double(1,\*), real): Vector to group the coefficients of
+        %   tol (double): Tolerance
+        %
+        % Returns:
+        %   `.Partition`: Partition of blocks with approximately equal coefficients
+            assert(isreal(vec));
+            [v1, I] = sort(vec);
+            close = [(v1(2:end) - v1(1:end-1) <= tol) false];
+            next = 1;
+            blocks = cell(1, 0);
+            while next <= length(vec)
+                current = next;
+                next = find(~close(current:end), 1) + current; % + 1 - 1
+                blocks{1,end+1} = I(current:next-1);
+            end
+            P = replab.Partition.fromBlocks(blocks);
+        end
+
         function P = fromVector(vec)
         % Returns the partition that groups equal coefficients of a vector
         %
@@ -225,7 +256,7 @@ classdef Partition < replab.Str
         %   vec (double(1,\*)): Vector to group the coefficients of
         %
         % Returns:
-        %   `.replab.Partition`: Partition of blocks with equal coefficients
+        %   `.Partition`: Partition of blocks with equal coefficients
             assert(isvector(vec));
             v = unique(vec);
             blocks = {};
@@ -240,6 +271,9 @@ classdef Partition < replab.Str
         %
         % Args:
         %   permutations (integer(nG, d)): Permutations given as rows in a matrix
+        %
+        % Returns:
+        %   `.Partition`: Partition containing the orbits
             d = size(permutations, 2);
             nG = size(permutations, 1);
 

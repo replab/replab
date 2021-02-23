@@ -28,7 +28,7 @@ classdef SubRep < replab.Rep
         parent % (`+replab.Rep`): Parent representation of dimension $D$
         injection_internal % (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
         projection_internal % (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
-        encodesComplexStructure % (logical): Whether this subrepresentation encodes a complex structure
+        mapsAreAdjoint % (logical): True if `.parent` is unitary (so the Hermitian adjoint makes sense)  and `.injection` is the conjugate transpose of `.projection`
     end
 
     methods
@@ -47,7 +47,6 @@ classdef SubRep < replab.Rep
         %   projection_internal (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map $P$
         %
         % Keyword Args:
-        %   encodesComplexStructure (logical, optional): Whether the representation encodes a complex structure, default: false
         %   isUnitary (logical, optional): Whether the resulting representation is unitary, may be omitted (see above)
         %   projectorErrorBound (double, optional): Upper bound on || I P - \tilde{I} \tilde{P} ||_F
         %   injectionConditionNumberEstimate (double, optional): Upper bound of the condition number of $\tilde{I}$ (and thus $\tilde{P}$)
@@ -59,21 +58,27 @@ classdef SubRep < replab.Rep
             if parent.overR
                 assert(isreal(injection_internal) && isreal(projection_internal), 'A real Rep can only have real subrepresentations.');
             end
-            args = struct('injectionConditionNumberEstimate', [], 'projectorErrorBound', [], 'encodesComplexStructure', false);
+            args = struct('injectionConditionNumberEstimate', [], 'projectorErrorBound', []);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
-            IP_unitary = all(all(injection_internal == projection_internal'));
-            if IP_unitary && parent.knownUnitary
-                restArgs = replab.util.keyValuePairsUpdate(restArgs, 'knownUnitary', true);
+            mapsAreAdjoint = parent.isUnitary && all(all(injection_internal == projection_internal'));
+            if mapsAreAdjoint
+                restArgs = replab.util.keyValuePairsUpdate(restArgs, 'isUnitary', true);
             end
-            if parent.inCache('trivialDimension') && parent.trivialDimension == 0
-                [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'trivialDimension', 0);
-                assert(~exists || oldValue == 0);
+            if parent.inCache('trivialDimension')
+                if parent.trivialDimension == 0
+                    [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'trivialDimension', 0);
+                    assert(~exists || oldValue == 0);
+                end
+                if parent.trivialDimension == parent.dimension
+                    [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'trivialDimension', d);
+                    assert(~exists || oldValue == d);
+                end
             end
             self@replab.Rep(parent.group, parent.field, d, restArgs{:});
             self.parent = parent;
             self.injection_internal = injection_internal;
             self.projection_internal = projection_internal;
-            self.encodesComplexStructure = args.encodesComplexStructure;
+            self.mapsAreAdjoint = mapsAreAdjoint;
             if ~isempty(args.projectorErrorBound)
                 self.cache('projectorErrorBound', args.projectorErrorBound, 'error');
             end
@@ -116,6 +121,39 @@ classdef SubRep < replab.Rep
 
     methods
 
+        function sub1 = withUpdatedMaps(self, injection, projection, varargin)
+        % Returns a copy of this subrepresentation with updated injection and projection maps
+        %
+        % The following properties are copied from the original subrepresentation:
+        %
+        % * `.isIrreducible`
+        % * `.frobeniusSchurIndicator`
+        % * `.kernel`
+        % * `.trivialDimension`
+        %
+        % Additional keywords arguments are passed to the `.subRep` method of `.parent`.
+        %
+        % Args:
+        %   injection (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
+        %   projection (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
+        %
+        % Returns:
+        %   `.SubRep`: The updated subrepresentation
+            sub1 = self.parent.subRep(injection, 'projection', projection, varargin{:});
+            if self.inCache('isIrreducible')
+                sub1.cache('isIrreducible', self.isIrreducible, '==');
+            end
+            if self.inCache('frobeniusSchurIndicator')
+                sub1.cache('frobeniusSchurIndicator', self.frobeniusSchurIndicator, '==');
+            end
+            if self.inCache('kernel')
+                sub1.cache('kernel', self.kernel, '==');
+            end
+            if self.inCache('trivialDimension')
+                sub1.cache('trivialDimension', self.trivialDimension, '==');
+            end
+        end
+
         function sub1 = withNoise(self, injectionMapNoise, projectionMapNoise)
         % Adds Gaussian noise to the injection/projection maps
         %
@@ -155,8 +193,8 @@ classdef SubRep < replab.Rep
                     injection1 = self.injection('double') + (randn(D, d) + 1i*rand(D, d))*injectionMapNoise/sqrt(2);
                     projection1 = self.projection('double') + (randn(d, D) + 1i*rand(d, D))*projectionMapNoise/sqrt(2);
                 end
-                projection1 = inv(projection1 * injection1) * projection1;
-                sub1 = self.parent.subRep(injection1, 'projection', projection1);
+                projection1 = (projection1 * injection1) \ projection1;
+                sub1 = self.parent.subRep(injection1, 'projection', projection1, 'divisionAlgebraName', self.divisionAlgebraName);
               otherwise
                 error('Wrong calling convention');
             end
@@ -268,62 +306,6 @@ classdef SubRep < replab.Rep
             mat = self.injection(type) * self.projection(type);
         end
 
-        function irreps = splitInParent(self)
-        % Decomposes fully this subrepresentation into irreducible subrepresentations of its parent
-        %
-        % Returns:
-        %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their ``.parent`` set to the `.parent` of this subrepresentation
-            if ~self.knownUnitary
-                % If not unitary, make the subrepresentation unitary
-                subU = self.unitarize;
-                P = subU.A('double/sparse') * self.projection('double/sparse');
-                I = self.injection('double/sparse') * subU.Ainv('double/sparse');
-                subU1 = self.parent.subRep(I, 'projection', P, 'isUnitary', true);
-                irreps = subU1.splitInParent;
-            end
-            tol = replab.globals.doubleEigTol;
-            % extract nontrivial representations by sampling the commutant
-            C = full(self.projection('double/sparse') * self.parent.commutant.sample('double') * self.injection('double/sparse'));
-            % the eigenspace decomposition is the basis of the numerical decomposition
-            % V'*C*V = D
-            [U1 D] = replab.numerical.sortedEig((C + C')/2, 'ascend', false);
-            D = diag(D);
-            D = D(:)';
-            mask = bsxfun(@(x,y) abs(x-y)<tol, D, D');
-            % find repeated eigenvalues
-            runs = replab.UndirectedGraph.fromAdjacencyMatrix(mask).connectedComponents.blocks;
-            n = length(runs);
-            if n == 1
-                self.cache('isIrreducible', true, '==');
-                irreps = {self};
-            else
-                irreps = cell(1, n);
-                for i = 1:n
-                    basis = U1(:, runs{i});
-                    I = self.injection('double/sparse') * basis;
-                    P = basis' * self.projection('double/sparse');
-                    irreps{i} = self.parent.subRep(I, 'projection', P, 'isUnitary', true, 'isIrreducible', true);
-                end
-            end
-            if self.inCache('trivialDimension') && self.trivialDimension == 0
-                for i = 1:length(irreps)
-                    irreps{i}.cache('trivialDimension', 0, '==');
-                end
-            end
-        end
-
-% $$$             todo = {self};
-% $$$             irreps = cell(1, 0);
-% $$$             while ~isempty(todo)
-% $$$                 subs = cell(1, 0);
-% $$$                 for i = 1:length(todo)
-% $$$                     subs = horzcat(subs, replab.irreducible.coarseSplitUsingCommutant(self.parent, todo{i}));
-% $$$                 end
-% $$$                 isIrrep = replab.irreducible.identifyIrreps(self.parent, subs);
-% $$$                 irreps = horzcat(irreps, subs(isIrrep));
-% $$$                 todo = subs(~isIrrep);
-% $$$             end
-
         function [s better] = nice(self)
         % Returns a representation similar to the current subrepresentation, with a nicer basis
         %
@@ -353,38 +335,21 @@ classdef SubRep < replab.Rep
         % by an iterative procedure applied on its `.injection` and `.projection` maps.
         %
         % Keyword Args:
-        %   largeScale (logical or ``[]``, optional): Whether to use the large-scale version of the algorithm, default ``[]`` (automatic selection)
-        %   numNonImproving (integer, optional): Number of non-improving steps before stopping the large-scale algorithm, default ``20``
+        %   tolerances (`.Tolerances`): Termination criteria
+        %   largeScale (logical, optional): Whether to use the large-scale version of the algorithm, default automatic choice
         %   nSamples (integer, optional): Number of samples to use in the large-scale version of the algorithm, default ``5``
-        %   nInnerIterations (integer, optional): Number of inner iterations in the medium-scale version of the algorithm, default ``10``
-        %   maxIterations (integer, optional): Maximum number of (outer) iterations, default ``1000``
+        %   nInnerIterations (integer, optional): Number of inner iterations in the medium-scale version of the algorithm, default ``3``
+        %   injectionBiortho (double(\*,\*), may be sparse): Injection map of known multiplicity space to remove from this subrepresentation
+        %   projectionBiortho (double(\*,\*), may be sparse): Projection map of known multiplicity space to remove from this subrepresentation
         %
         % Returns
         % -------
         %   sub1: `.SubRep`
         %     Subrepresentation with refined subspace (injection/projection maps)
-            args = struct('numNonImproving', 20, 'largeScale', self.parent.dimension > 1000, 'nSamples', 5, 'nInnerIterations', 10, 'maxIterations', 1000);
-            args = replab.util.populateStruct(args, varargin);
-            I = self.injection;
-            P = self.projection;
-            if self.parent.knownUnitary
-                if ~all(all(self.injection == self.projection'))
-                    [I, ~] = qr(I, 0);
-                end
-                if args.largeScale
-                    I1 = replab.rep.refine_unitaryLargeScale(self.parent, I, args.numNonImproving, args.nSamples, args.maxIterations, []);
-                else
-                    I1 = replab.rep.refine_unitaryMediumScale(self.parent, I, args.nInnerIterations, args.maxIterations, []);
-                end
-                sub1 = self.parent.subRep(I1, 'projection', I1', 'isUnitary', true);
-            else
-                if args.largeScale
-                    [I1, P1] = replab.rep.refine_nonUnitaryLargeScale(self.parent, I, P, args.numNonImproving, args.nSamples, args.maxIterations, [], []);
-                else
-                    [I1, P1] = replab.rep.refine_nonUnitaryMediumScale(self.parent, I, P, args.nInnerIterations, args.maxIterations, [], []);
-                end
-                sub1 = self.parent.subRep(I1, 'projection', P1);
-            end
+            gen = replab.rep.GenSubRep.fromSubRep(self);
+            gen1 = gen.refine(varargin{:});
+            res = gen1.toSubRep;
+            sub1 = self.withUpdatedMaps(res.injection, res.projection, 'isUnitary', res.isUnitary, 'divisionAlgebraName', self.divisionAlgebraName);
         end
 
         function res = collapse(self)
@@ -504,11 +469,6 @@ classdef SubRep < replab.Rep
 
     methods (Access = protected) % Implementations
 
-        function r = computeDouble(self)
-            args = self.knownProperties({'injectionConditionNumberEstimate'});
-            r = replab.SubRep(double(self.parent), self.injection('double/sparse'), self.projection('double/sparse'), args{:});
-        end
-
         function c = decomposeTerm(self)
             c = {self.parent};
         end
@@ -535,7 +495,7 @@ classdef SubRep < replab.Rep
         end
 
         function c = computeConditionNumberEstimate(self)
-            if self.cachedOrDefault('isUnitary', false)
+            if self.isUnitary
                 c = 1;
             else
                 % rho = parent

@@ -130,15 +130,22 @@ classdef Group < replab.Monoid
         end
 
         function m = morphismByFunction(self, target, imageElementFun)
-        % Constructs a group morphism by function
+        % Constructs a group morphism using an image function
         %
         % Args:
-        %   target (`replab.Group`):
+        %   target (`replab.Group`): Target group
+        %   imageElementFun (function_handle): Returns the target element for a source element
             m = replab.Morphism.lambda(self, target, imageElementFun);
 
         end
 
-        function m = isomorphismByFunction(self, target, preimageElementFun, imageElementFun)
+        function m = isomorphismByFunctions(self, target, preimageElementFun, imageElementFun)
+        % Constructs a group isomorphism using preimage/image functions
+        %
+        % Args:
+        %   target (`replab.Group`): Target group
+        %   preimageElementFun (function_handle): Returns the source element for a target element
+        %   imageElementFun (function_handle): Returns the target element for a source element
             m = replab.Isomorphism.lambda(self, target, preimageElementFun, imageElementFun);
         end
 

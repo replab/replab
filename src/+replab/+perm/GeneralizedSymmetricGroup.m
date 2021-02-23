@@ -8,7 +8,7 @@ classdef GeneralizedSymmetricGroup < replab.perm.GeneralizedSymmetricSubgroup
         % Args:
         %   n (integer): Number of copies of the cyclic group
         %   m (integer): Order of each cyclic group
-            o = factorial(vpi(n))*vpi(m)^n;
+            o = replab.util.multiplyIntegers(1:n)*replab.util.multiplyIntegers(ones(1,n)*m);
             if n < 2
                 generators = cell(1, 0);
             elseif n == 2
