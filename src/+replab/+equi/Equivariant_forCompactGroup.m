@@ -24,8 +24,8 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
             dC = self.repC.dimension;
             replab.msg(1, 'Equivariant projection, %d x %d', dR, dC);
             replab.msg(1, '');
-            replab.msg(2, ' #iter   delta    (slp)');
-            replab.msg(2, '------------------------');
+            replab.msg(2, ' #iter   delta    (slp)  norm');
+            replab.msg(2, '---------------------------------');
             delta = zeros(1, maxIterations);
             exitFlag = 0;
             k = 1;
@@ -53,6 +53,7 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                 if useInverses
                     X1 = X1/2;
                 end
+                nX1 = norm(X1, 'fro');
                 delta(k) = norm(X1 - X, 'fro')/nX;
                 if k >= windowSize && k >= minIterations
                     window = delta(k-windowSize+1:k);
@@ -62,8 +63,8 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                     iterDiff = comb(2,:) - comb(1,:);
                     deltaDiff = deltaLog(comb(2,:)) - deltaLog(comb(1,:));
                     slope = median(deltaDiff./iterDiff);
-                    replab.msg(2, '%6d   %6.2E (%+1.1f)', k, delta(k), slope);
-                    if norm(X1, 'fro')/nX <= relZero
+                    replab.msg(2, '%6d   %6.2E (%+1.1f) %6.2E', k, delta(k), slope, nX1/nX);
+                    if nX1/nX <= relZero
                         exitFlag = 3;
                     end
                     if all(window == 1e-100)
@@ -73,7 +74,7 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                         exitFlag = 1;
                     end
                 else
-                    replab.msg(2, '%6d   %6.2E', k, delta(k));
+                    replab.msg(2, '%6d   %6.2E        %6.2E', k, delta(k), nX1/nX);
                 end
                 if k >= maxIterations
                     exitFlag = -1;
