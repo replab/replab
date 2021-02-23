@@ -17,9 +17,12 @@ function U = randomUnitaryOver(d, divisionRing)
     [q, u] = replab.numerical.randomHouseholderMatrix(1, divisionRing);
     U = conj(q); % -conj(q)*(eye(d) - 2*u*u') = -conj(q)*(1 - 2) = conj(q)
     for i = 2:d
-        U = [1, zeros(1, i-1); zeros(i-1, 1), U];
         [q, u] = replab.numerical.randomHouseholderMatrix(i, divisionRing);
-        U = -conj(q)*(U - 2*u*(u'*U)); % -conj(q)*(eye(d) - 2*u*u')*U
+        %U = [1, zeros(1, i-1); zeros(i-1, 1), U];
+        %U = -conj(q)*(U - 2*u*(u'*U));
+        %or U = -conj(q)*(eye(d) - 2*u*u')*U
+        uU = u(2:end)'*U;
+        U = -conj(q)*[1-2*conj(u(1))*u(1), -2*u(1)*uU; -2*conj(u(1))*u(2:end), U - 2*u(2:end)*uU];
     end
     % One step of Newton iteration to force unitary (helps!)
     N = U'*U;
