@@ -28,7 +28,7 @@ function test_harmonize_quaternion
     img2a = g2a.image(w);
     img2b = g2b.image(w);
     img2c = g2c.image(w);
-    assert(norm(img1 - img2a, 'fro') < 1e-14);
-    assert(norm(img1 - img2b, 'fro') < 1e-14);
-    assert(norm(img1 - img2c, 'fro') < 1e-14);
+    assert(norm(img1 - img2a, 'fro') < 1e-13);
+    assert(norm(img1 - img2b, 'fro') < 1e-13);
+    assert(norm(img1 - img2c, 'fro') < 1e-13);
 end
