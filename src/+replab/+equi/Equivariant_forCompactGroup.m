@@ -66,12 +66,15 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                     replab.msg(2, '%6d   %6.2E (%+1.1f) %6.2E', k, delta(k), slope, nX1/nX);
                     if nX1/nX <= relZero
                         exitFlag = 3;
+                        replab.msg(1, 'Stop: relative norm of iterate is below %6.2E', relZero);
                     end
                     if all(window == 1e-100)
                         exitFlag = 2;
+                        replab.msg(1, 'Stop: complete stall over the regularization window');
                     end
-                    if slope >= 0 && deltaMax <= relTol
+                    if slope >= -1/maxIterations && deltaMax <= relTol
                         exitFlag = 1;
+                        replab.msg(1, 'Stop: estimated slope=%6.2E, and max delta over window=%6.2E', slope, deltaMax);
                     end
                 else
                     replab.msg(2, '%6d   %6.2E        %6.2E', k, delta(k), nX1/nX);
