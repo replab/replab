@@ -68,6 +68,28 @@ classdef TrivialRep < replab.Rep
             complexRep = replab.rep.TrivialRep(self.group, 'C', self.dimension);
         end
 
+        function M = matrixRowAction(self, g, M, type)
+            M = M;
+        end
+
+        function M = matrixColAction(self, g, M, type)
+            M = M;
+        end
+
+        function b = hasMaximalTorusExponents(self)
+            b = self.group.hasReconstruction;
+        end
+
+        function [powers, partition] = maximalTorusExponents(self)
+            [~, mu] = self.group.reconstruction;
+            powers = zeros(self.dimension, mu.source.n);
+            if self.overR
+                partition = replab.Partition.fromVector(1:self.dimension);
+            else
+                partition = [];
+            end
+        end
+
     end
 
 end
