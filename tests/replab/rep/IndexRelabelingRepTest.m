@@ -5,6 +5,7 @@ function test_suite = IndexRelabelingRepTest()
     catch
     end
     initTestSuite;
-    rep = replab.S(3).indexRelabelingRep(2);
+    S3 = replab.S(3);
+    rep = S3.indexRelabelingRep(2);
     test_suite = rep.laws.addTestCases(test_suite);
 end
