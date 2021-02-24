@@ -64,6 +64,34 @@ classdef RepByImages_monomial < replab.RepByImages
             rho = self.morphism.target.toCyclotomicMatrix(gp);
         end
 
+        function M = matrixRowAction_double_sparse(self, g, M)
+            gp = self.morphism.imageElement(g);
+            prm = gp(1,:);
+            md = gp(2,:);
+            m = self.morphism.target.m;
+            ph = exp(2i*pi*md/m);
+            ph(m == 0) = 1;
+            ph(2*md == m) = -1;
+            ph(4*md == m) = 1i;
+            ph(4*md == 3*m) == -1i;
+            M = bsxfun(@times, ph(:), M);
+            M(gp(1,:), :) = M;
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            gp = self.morphism.imageElement(g);
+            prm = gp(1,:);
+            md = gp(2,:);
+            m = self.morphism.target.m;
+            ph = exp(2i*pi*md/m);
+            ph(m == 0) = 1;
+            ph(2*md == m) = -1;
+            ph(4*md == m) = 1i;
+            ph(4*md == 3*m) == -1i;
+            M = bsxfun(@times, conj(ph(:).'), M);
+            M(:, gp(1,:)) = M;
+        end
+
     end
 
 end
