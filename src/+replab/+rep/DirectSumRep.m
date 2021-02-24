@@ -184,6 +184,32 @@ classdef DirectSumRep < replab.Rep
 
     end
 
+    methods (Access = protected) % Implementations
+
+        % Rep
+
+        function M = matrixRowAction_double_sparse(self, g, M)
+            shift = 0;
+            for i = 1:self.nFactors
+                f = self.factor(i);
+                d = f.dimension;
+                M(shift+(1:d),:) = f.matrixRowAction(g, M(shift+(1:d),:));
+                shift = shift + d;
+            end
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            shift = 0;
+            for i = 1:self.nFactors
+                f = self.factor(i);
+                d = f.dimension;
+                M(:,shift+(1:d)) = f.matrixColAction(g, M(:,shift+(1:d)));
+                shift = shift + d;
+            end
+        end
+
+    end
+
     methods % Implementations
 
         % Str

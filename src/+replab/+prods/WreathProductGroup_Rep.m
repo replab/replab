@@ -52,6 +52,16 @@ classdef WreathProductGroup_Rep < replab.Rep
             rho = self.actingRep.image(g{1}, 'double/sparse') * self.baseRep.image(g{2}, 'double/sparse');
         end
 
+        function M = matrixRowAction_double_sparse(self, g, M)
+            M = self.baseRep.matrixRowAction(g{2}, M, 'double/sparse');
+            M = self.actingRep.matrixRowAction(g{1}, M, 'double/sparse');
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            M = self.actingRep.matrixColAction(g{1}, M, 'double/sparse');
+            M = self.baseRep.matrixColAction(g{2}, M, 'double/sparse');
+        end
+
         function e = computeErrorBound(self)
             e = self.baseRep.errorBound;
         end

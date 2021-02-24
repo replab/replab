@@ -39,6 +39,14 @@ classdef RestrictionRep < replab.Rep
             rho = self.parent.image(g, 'double/sparse');
         end
 
+        function M = matrixRowAction_double_sparse(self, g, M)
+            M = self.parent.matrixRowAction(g, M, 'double/sparse');
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            M = self.parent.matrixColAction(g, M, 'double/sparse');
+        end
+
     end
 
     methods % Implementations

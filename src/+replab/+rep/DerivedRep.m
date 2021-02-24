@@ -150,6 +150,36 @@ classdef DerivedRep < replab.Rep
             r = replab.rep.DerivedRep(newParents{1}, self.conjugate, self.inverse, self.transpose);
         end
 
+        function M = matrixRowAction_double_sparse(self, g, M)
+            if self.conjugate
+                M = conj(M);
+            end
+            if self.inverse
+                assert(self.transpose);
+                M = self.parent.matrixColAction(g, M.').';
+            else
+                M = self.parent.matrixRowAction(g, M);
+            end
+            if self.conjugate
+                M = conj(M);
+            end
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            if self.conjugate
+                M = conj(M);
+            end
+            if self.inverse
+                assert(self.transpose);
+                M = self.parent.matrixRowAction(g, M.').';
+            else
+                M = self.parent.matrixColAction(g, M);
+            end
+            if self.conjugate
+                M = conj(M);
+            end
+        end
+
         function rho = image_double_sparse(self, g)
             if self.inverse
                 g = self.group.inverse(g);
