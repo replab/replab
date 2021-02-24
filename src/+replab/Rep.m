@@ -11,8 +11,6 @@ classdef Rep < replab.Obj
 %   Either the override the `.image_double_sparse` method if the user implementation provides floating-point
 %   images, or both the `.isExact` and `.image_exact` methods.
 %
-%   Override also the `.double` method to speed up approximate computations.
-%
 %   The method `.computeErrorBound` must also be overriden (or the value cached at construction).
 %
 %   This class implements also extra methods about the action of the representation on matrices,

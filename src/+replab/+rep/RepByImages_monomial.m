@@ -40,21 +40,6 @@ classdef RepByImages_monomial < replab.RepByImages
             b = true;
         end
 
-        function rho = image(self, g, type)
-            if nargin < 3 || isempty(type)
-                type = 'double';
-            end
-            gp = self.morphism.imageElement(g);
-            switch type
-              case 'exact'
-                rho = self.morphism.target.toCyclotomicMatrix(gp);
-              case 'double'
-                rho = self.morphism.target.toMatrix(gp);
-              case 'double/sparse'
-                rho = self.morphism.target.toSparseMatrix(gp);
-            end
-        end
-
     end
 
     methods (Access = protected) % Implementations
@@ -67,6 +52,16 @@ classdef RepByImages_monomial < replab.RepByImages
             else
                 e = eps(1)*sqrt(2*self.dimension); % max "dimension" non-zero elements can have an error
             end
+        end
+
+        function rho = image_double_sparse(self, g)
+            gp = self.morphism.imageElement(g);
+            rho = self.morphism.target.toSparseMatrix(gp);
+        end
+
+        function rho = image_exact(self, g)
+            gp = self.morphism.imageElement(g);
+            rho = self.morphism.target.toCyclotomicMatrix(gp);
         end
 
     end

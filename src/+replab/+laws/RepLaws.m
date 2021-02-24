@@ -74,6 +74,20 @@ classdef RepLaws < replab.Laws
             end
         end
 
+        function law_matrixRowAction_GM(self, g, M)
+            c = cond(M);
+            M1 = self.rep.image(g) * M;
+            M2 = self.rep.matrixRowAction(g, M);
+            self.assertApproxEqual(M1, M2, c * self.rep.errorBound);
+        end
+
+        function law_matrixColAction_GM(self, g, M)
+            c = cond(M);
+            M1 = M * self.rep.inverseImage(g);
+            M2 = self.rep.matrixColAction(g, M);
+            self.assertApproxEqual(M1, M2, c * self.rep.errorBound);
+        end
+
     end
 
 end
