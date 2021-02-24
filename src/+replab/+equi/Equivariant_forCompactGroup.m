@@ -36,6 +36,10 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                 end
             end
             nX = norm(X, 'fro');
+            if nX == 0
+                err = 0;
+                return
+            end
             while exitFlag == 0
                 X1 = zeros(dR, dC);
                 for j = 1:nSamples
