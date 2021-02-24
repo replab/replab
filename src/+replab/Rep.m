@@ -919,6 +919,35 @@ classdef Rep < replab.Obj
                 'special', 'trivialCols', 'type', type));
         end
 
+        function b = hasMaximalTorusExponents(self)
+        % Returns whether a simple description of the representation of the group maximal torus is available
+        %
+        % This description is used internally in RepLAB to speed up the group averaging process when computing equivariants.
+        %
+        % Returns:
+        %   logical: True if the call to `.maximalTorusExponents` succeeds
+            b = false;
+        end
+
+        function [powers, partition] = maximalTorusExponents(self)
+        % Returns a simple description of the representation of the group maximal torus
+        %
+        % When the representation is complex (`.overC` true), ``partition`` is empty.
+        %
+        % When the representation is real (`.overR` true), ``partition`` provides the coordinates of the
+        % diagonal ``1x1`` and ``2x2`` blocks. The coordinates ``i`` with ``1x1`` blocks must have ``powers(:,i) == 0``,
+        % while, for a block ``[i, j]``, we need ``powers(:,i) == powers(:,j)``, and the 2x2 block ``rho([i j], [i j])``
+        % represents the corresponding phase ``u`` as ``[real(u) -imag(u); imag(u) real(u)]``.
+        %
+        % Returns
+        % -------
+        %   powers: integer(r, self.dimension)
+        %     Exponents, with ``r`` the torus rank and ``d`` the representation dimension
+        %   partition: `.Partition` or ``[]``
+        %     Partition of the Euclidean space into ``2x2`` and ``1x1`` blocks.
+            error('Maximal torus exponents not available');
+        end
+
     end
 
     methods % Irreducible decomposition
