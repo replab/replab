@@ -19,7 +19,7 @@ classdef DirectSumRep < replab.Rep
             replab.rep.assertCompatibleFactors(group, field, factors);
             d = sum(cellfun(@(f) f.dimension, factors));
             factorsAreUnitary = cellfun(@(x) x.isUnitary, factors);
-            self@replab.Rep(group, field, d, 'isUnitary', all(factorsAreUnitary), args{:});
+            self@replab.Rep(group, field, d, 'isUnitary', all(factorsAreUnitary));
             self.factors = factors;
         end
 
@@ -180,6 +180,32 @@ classdef DirectSumRep < replab.Rep
             A = blkdiag(As{:});
             Ainv = blkdiag(Ainvs{:});
             rep = replab.SimilarRep(self, A, AInv, 'isUnitary', true);
+        end
+
+    end
+
+    methods (Access = protected) % Implementations
+
+        % Rep
+
+        function M = matrixRowAction_double_sparse(self, g, M)
+            shift = 0;
+            for i = 1:self.nFactors
+                f = self.factor(i);
+                d = f.dimension;
+                M(shift+(1:d),:) = f.matrixRowAction(g, M(shift+(1:d),:));
+                shift = shift + d;
+            end
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            shift = 0;
+            for i = 1:self.nFactors
+                f = self.factor(i);
+                d = f.dimension;
+                M(:,shift+(1:d)) = f.matrixColAction(g, M(:,shift+(1:d)));
+                shift = shift + d;
+            end
         end
 
     end

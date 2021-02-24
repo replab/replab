@@ -17,10 +17,45 @@ classdef IndexRelabelingRep < replab.Rep
 
     end
 
+    methods % Implementations
+
+        function b = isExact(self)
+            b = true;
+        end
+
+    end
+
     methods (Access = protected)
 
-        function b = computeIsUnitary(self)
-            b = true;
+        function e = computeErrorBound(self)
+            e = 0;
+        end
+
+        function M = matrixRowAction_double_sparse(self, g, M)
+            if issparse(M)
+                M = self.image_double_sparse(g) * M;
+            else
+                n = self.group.domainSize;
+                d = self.dimension;
+                d2 = size(M, 2);
+                dims = [self.localDimension*ones(1, n) d2];
+                M = reshape(M, dims);
+                M = reshape(ipermute(reshape(M, dims), [g n+1]), [d d2]);
+            end
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            if issparse(M)
+                gI = self.group.inverse(g);
+                M = M * self.image_double_sparse(gI);
+            else
+                n = self.group.domainSize;
+                d = self.dimension;
+                d1 = size(M, 1);
+                dims = [d1 self.localDimension*ones(1, n)];
+                M = reshape(M, dims);
+                M = reshape(ipermute(reshape(M, dims), [1 g+1]), [d1 d]);
+            end
         end
 
         function rho = image_double_sparse(self, g)
@@ -33,7 +68,7 @@ classdef IndexRelabelingRep < replab.Rep
         end
 
         function rho = image_exact(self, g)
-            rho = replab.cyclotomic.fromDoubles(self.image_double(g));
+            rho = replab.cyclotomic.fromDoubles(self.image_double_sparse(g));
         end
 
     end

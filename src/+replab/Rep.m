@@ -11,8 +11,6 @@ classdef Rep < replab.Obj
 %   Either the override the `.image_double_sparse` method if the user implementation provides floating-point
 %   images, or both the `.isExact` and `.image_exact` methods.
 %
-%   Override also the `.double` method to speed up approximate computations.
-%
 %   The method `.computeErrorBound` must also be overriden (or the value cached at construction).
 %
 %   This class implements also extra methods about the action of the representation on matrices,
@@ -1071,6 +1069,26 @@ classdef Rep < replab.Obj
 
     end
 
+    methods (Access = protected) % Implementations
+
+        function M = matrixRowAction_double_sparse(self, g, M)
+            M = self.image(g, 'double/sparse') * M;
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            M = M * self.inverseImage(g, 'double/sparse');
+        end
+
+        function M = matrixRowAction_exact(self, g, M)
+            M = self.image(g, 'exact') * M;
+        end
+
+        function M = matrixColAction_exact(self, g, M)
+            M = M * self.inverseImage(g, 'exact');
+        end
+
+    end
+
     methods % Derived actions
 
         function M = matrixRowAction(self, g, M, type)
@@ -1098,9 +1116,12 @@ classdef Rep < replab.Obj
                 if isa(M, 'double')
                     M = replab.cyclotomic.fromDoubles(M);
                 end
-                M = self.image(g, 'exact') * M;
+                M = self.matrixRowAction_exact(g, M);
             else
-                M = self.image(g, 'double/sparse') * M;
+                if isa(M, 'replab.cyclotomic')
+                    M = double(M);
+                end
+                M = self.matrixRowAction_double_sparse(g, M);
                 if strcmp(type, 'double')
                     M = full(M);
                 end
@@ -1128,14 +1149,19 @@ classdef Rep < replab.Obj
             if nargin < 4
                 type = 'double';
             end
-            gInv = self.group.inverse(g);
+            if nargin < 4
+                type = 'double';
+            end
             if strcmp(type, 'exact')
                 if isa(M, 'double')
                     M = replab.cyclotomic.fromDoubles(M);
                 end
-                M = M * self.inverseImage(g, 'exact');
+                M = self.matrixColAction_exact(g, M);
             else
-                M = M * self.inverseImage(g, 'double/sparse');
+                if isa(M, 'replab.cyclotomic')
+                    M = double(M);
+                end
+                M = self.matrixColAction_double_sparse(g, M);
                 if strcmp(type, 'double')
                     M = full(M);
                 end

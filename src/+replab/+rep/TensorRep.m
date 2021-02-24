@@ -194,6 +194,56 @@ classdef TensorRep < replab.Rep
             end
         end
 
+        function M = matrixRowAction_double_sparse(self, g, M)
+            if issparse(M)
+                M = full(M);
+            end
+            d2 = size(M, 2);
+            n = self.nFactors;
+            dimsF = cellfun(@(f) f.dimension, self.factors);
+            dims = [fliplr(dimsF) d2];
+            for i = 1:self.nFactors
+                id = n-i+1;
+                F = self.factor(i);
+                if id ~= 1
+                    M = reshape(M, dims);
+                    M = permute(M, [id 2:id-1 1 id+1:n+1]);
+                end
+                M = reshape(M, [F.dimension (self.dimension/F.dimension)*d2]);
+                M = F.matrixRowAction(g, M);
+                if id ~= 1
+                    M = reshape(M, dims);
+                    M = permute(M, [id 2:id-1 1 id+1:n+1]);
+                end
+            end
+            M = reshape(M, [self.dimension d2]);
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            if issparse(M)
+                M = full(M);
+            end
+            d1 = size(M, 1);
+            n = self.nFactors;
+            dimsF = cellfun(@(f) f.dimension, self.factors);
+            dims = [d1 fliplr(dimsF)];
+            for i = 1:self.nFactors
+                id = n-i+2;
+                F = self.factor(i);
+                if id ~= n+1
+                    M = reshape(M, dims);
+                    M = permute(M, [1:id-1 n+1 id+1:n id]);
+                end
+                M = reshape(M, [(self.dimension/F.dimension)*d1 F.dimension]);
+                M = F.matrixColAction(g, M);
+                if id ~= n+1
+                    M = reshape(M, dims);
+                    M = permute(M, [1:id-1 n+1 id+1:n id]);
+                end
+            end
+            M = reshape(M, [d1 self.dimension]);
+        end
+
         function e = computeErrorBound(self)
             E = cellfun(@(rep) rep.errorBound, self.factors);
             C = cellfun(@(rep) rep.conditionNumberEstimate, self.factors);

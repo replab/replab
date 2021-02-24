@@ -78,6 +78,22 @@ classdef ComplexifiedRep < replab.Rep
 
     end
 
+    methods (Access = protected) % Implementations
+
+        % Rep
+
+        function M = matrixRowAction_double_sparse(self, g, M)
+            M = self.parent.matrixRowAction(g, real(M)) + ...
+                self.parent.matrixRowAction(g, imag(M)) * 1i;
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            M = self.parent.matrixColAction(g, real(M)) + ...
+                self.parent.matrixColAction(g, imag(M)) * 1i;
+        end
+
+    end
+
     methods % Implementations
 
         % Str

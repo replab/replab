@@ -1,7 +1,7 @@
 classdef UnitaryGroup < replab.CompactGroup
 % Describes the group of n x n unitary (complex) matrices
 
-    properties
+    properties (SetAccess = protected)
         n % (integer): Dimension of the unitary group
     end
 

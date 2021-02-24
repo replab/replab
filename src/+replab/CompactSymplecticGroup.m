@@ -1,7 +1,7 @@
 classdef CompactSymplecticGroup < replab.CompactGroup
 % Describes the group Sp(n) of n x n unitary quaternion matrices
 
-    properties
+    properties (SetAccess = protected)
         n % (integer): Dimension of group
     end
 

@@ -63,6 +63,10 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                 useTorus = false;
             end
             nX = norm(X, 'fro');
+            if nX == 0
+                err = 0;
+                return
+            end
             while exitFlag == 0
                 if useTorus
                     X0 = zeros(dR, dC);

@@ -3,7 +3,7 @@ classdef WreathProductGroup_compact < replab.WreathProductGroup & replab.prods.S
 
     methods
 
-        function self = WreathProductOfCompactGroups(H, A)
+        function self = WreathProductGroup_compact(H, A)
             assert(isa(H, 'replab.PermutationGroup'));
             n = H.domainSize;
             base = A.directPower(n);
