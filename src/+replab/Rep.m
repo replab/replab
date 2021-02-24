@@ -941,8 +941,8 @@ classdef Rep < replab.Obj
         %
         % Returns
         % -------
-        %   powers: integer(r, self.dimension)
-        %     Exponents, with ``r`` the torus rank and ``d`` the representation dimension
+        %   powers: integer(d, r)
+        %     Exponents, with ``d`` the representation dimension `.dimension` and ``r`` the torus rank
         %   partition: `.Partition` or ``[]``
         %     Partition of the Euclidean space into ``2x2`` and ``1x1`` blocks.
             error('Maximal torus exponents not available');

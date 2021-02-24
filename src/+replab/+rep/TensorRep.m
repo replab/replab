@@ -285,6 +285,31 @@ classdef TensorRep < replab.Rep
             end
         end
 
+        function b = hasMaximalTorusExponents(self)
+            b = all(cellfun(@(f) f.hasMaximalTorusExponents, self.factors));
+            b = b & self.overC; % TODO: provide real stuff as well
+        end
+
+        function [powers, partition] = maximalTorusExponents(self)
+            [~, mu] = self.group.reconstruction;
+            r = mu.source.n; % torus rank
+            powers = zeros(1, r);
+            d = 1;
+            for i = 1:self.nFactors
+                f = self.factor(i);
+                [powersi, ~] = f.maximalTorusExponents;
+                di = f.dimension;
+                powers1 = zeros(d * di, r);
+                for j = 1:r
+                    col = bsxfun(@plus, powers(:,j)', powersi(:,j)); % respects the kron convention
+                    powers1(:, j) = col(:);
+                end
+                powers = powers1;
+                d = d * di;
+            end
+            partition = [];
+        end
+
     end
 
 end

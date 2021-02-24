@@ -35,15 +35,52 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                     comb(:, end+1) = [i;j];
                 end
             end
+            group = self.group;
+            repR = self.repR;
+            repC = self.repC;
+            if replab.globals.useReconstruction && repR.overC && repC.overC && repR.hasMaximalTorusExponents && repC.hasMaximalTorusExponents
+                powersR = repR.maximalTorusExponents;
+                powersC = repC.maximalTorusExponents;
+                bR = find(all(powersR == 0, 2));
+                bC = find(all(powersC == 0, 2));
+                if ~isempty(bR) && ~isempty(bC)
+                    blocks = {bR; bC};
+                else
+                    blocks = cell(2, 0);
+                end
+                r = 1;
+                while r <= repR.dimension
+                    row = powersR(r, :);
+                    if any(row ~= 0)
+                        bR = find(all(bsxfun(@eq, powersR, row), 2));
+                        bC = find(all(bsxfun(@eq, powersC, row), 2));
+                        blocks = horzcat(blocks, {bR; bC});
+                    end
+                    r = r + 1;
+                end
+                useTorus = true;
+            else
+                useTorus = false;
+            end
             nX = norm(X, 'fro');
             while exitFlag == 0
+                if useTorus
+                    X0 = zeros(dR, dC);
+                    for i = 1:size(blocks, 2)
+                        bR = blocks{1, i};
+                        bC = blocks{2, i};
+                        X0(bR, bC) = X(bR, bC);
+                    end
+                else
+                    X0 = X;
+                end
                 X1 = zeros(dR, dC);
                 for j = 1:nSamples
-                    g = self.group.sample;
-                    S1 = self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X));
+                    g = group.sample;
+                    S1 = repR.matrixRowAction(g, repC.matrixColAction(g, X0));
                     if useInverses
-                        ginv = self.group.inverse(g);
-                        S2 = self.repR.matrixRowAction(ginv, self.repC.matrixColAction(ginv, X));
+                        ginv = group.inverse(g);
+                        S2 = repR.matrixRowAction(ginv, repC.matrixColAction(ginv, X0));
                         X1 = X1 + S1 + S2;
                     else
                         X1 = X1 + S1;
