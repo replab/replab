@@ -56,7 +56,7 @@ classdef CompactGroup < replab.Group
         % Here, we describe this homomorphism by a function handle with parameters of type
         % ``H x N``.
         %
-        % We write each semidirect group element {h n}.
+        % We write each semidirect group element ``{h n}``.
         %
         % The type of the return value depends on the most refined type at the intersection
         % of the type of ``self`` and ``N``, with possible types CompactGroup/FiniteGroup/NiceFiniteGroup.

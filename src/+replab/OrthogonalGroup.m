@@ -1,7 +1,7 @@
 classdef OrthogonalGroup < replab.CompactGroup
 % Describes the group of n x n orthonormal (real) matrices
 
-    properties
+    properties (SetAccess = protected)
         n % (integer): Dimension of the orthogonal group
     end
 

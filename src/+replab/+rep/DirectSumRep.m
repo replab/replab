@@ -19,7 +19,7 @@ classdef DirectSumRep < replab.Rep
             replab.rep.assertCompatibleFactors(group, field, factors);
             d = sum(cellfun(@(f) f.dimension, factors));
             factorsAreUnitary = cellfun(@(x) x.isUnitary, factors);
-            self@replab.Rep(group, field, d, 'isUnitary', all(factorsAreUnitary), args{:});
+            self@replab.Rep(group, field, d, 'isUnitary', all(factorsAreUnitary));
             self.factors = factors;
         end
 
