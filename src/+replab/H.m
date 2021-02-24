@@ -229,6 +229,11 @@ classdef H
 
     methods % Implementations
 
+        function r1 = eps(self)
+        % Computes the spacing of floating point numbers
+            r1 = eps(abs(self));
+        end
+
         function r1 = abs(self)
         % Computes the absolute value, array coefficient by coefficient
         %
