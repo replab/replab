@@ -5,19 +5,11 @@ classdef CompactSymplecticGroup < replab.CompactGroup
         n % (integer): Dimension of group
     end
 
-    properties (Access = protected)
-        parent % (`+replab.+domain.Matrices`): Domain of square complex matrices
-    end
-
     methods
 
-        function self = CompactSymplecticGroup(n, identity)
+        function self = CompactSymplecticGroup(n)
             self.n = n;
-            self.parent = replab.domain.Matrices('C', 2*n, 2*n);
-            if nargin < 2
-                identity = eye(2*n);
-            end
-            self.identity = identity;
+            self.identity = replab.H(eye(n));
         end
 
     end
@@ -33,7 +25,7 @@ classdef CompactSymplecticGroup < replab.CompactGroup
         % Domain
 
         function b = eqv(self, X, Y)
-            b = self.parent.eqv(X, Y);
+            b = full(all(all(X == Y)));
         end
 
         % Monoid
