@@ -4,11 +4,11 @@ classdef TorusGroup < replab.CompactGroup
 % Its elements are row vectors in the space ``[0,1[^n``, i.e. floating point numbers "modulo 1"; the group binary operation
 % is addition.
 %
-% Though it is not enforced, those numbers should be of the form ``m * 2^-50`` where ``m`` is a 50-bit unsigned integer, so
-% that composition can be computed
+% Though it is not enforced, those numbers should be of the form ``m * 2^-50`` where ``m`` is a 50-bit unsigned integer,
+% so that composition can be computed exactly.
 %
-% Let ``g = [g(1), g(2), ..., g(n)]`` be a group element. There is an isomorphism with the group ``U(1)^n``, whose image ``u``
-% has coefficients: ``u(i) = exp(2i*pi*g(i))``.
+% Let ``g = [g(1), g(2), ..., g(n)]`` be a group element.
+% There is an isomorphism with the group ``U(1)^n``, whose image ``u`` has coefficients: ``u(i) = exp(2i*pi*g(i))``.
 
     properties (SetAccess = protected)
         n % (integer): Torus dimension
