@@ -79,13 +79,25 @@ classdef DefiningRep < replab.Rep
         end
 
         function b = hasMaximalTorusExponents(self)
-            b = self.fromDivisionRing == 'C' && self.field == 'C';
+            b = false;
+            switch [self.fromDivisionRing '/' self.field]
+              case 'C/C'
+                b = true;
+              case 'H/C'
+                b = true;
+            end
         end
 
         function [powers, blockIndex] = maximalTorusExponents(self)
             assert(self.hasMaximalTorusExponents);
-            powers = eye(self.dimension);
-            blockIndex = 1:self.dimension;
+            switch [self.fromDivisionRing '/' self.field]
+              case 'C/C'
+                powers = eye(self.dimension);
+                blockIndex = 1:self.dimension;
+              case 'H/C'
+                powers = kron(eye(self.dimension/2), [1;-1]);
+                blockIndex = 1:self.dimension;
+            end
         end
 
     end
