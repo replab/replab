@@ -72,7 +72,7 @@ classdef PermutationGroup < replab.FiniteGroup
 
         function c = computeLexChain(self)
             c = self.chain;
-            if ~c.hasSortedBase
+            if ~c.isLex
                 c = c.mutableCopy;
                 c.baseChange(1:self.domainSize, true);
                 c.makeImmutable;

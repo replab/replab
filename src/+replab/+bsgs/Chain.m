@@ -100,12 +100,25 @@ classdef Chain < replab.Str
             end
         end
 
-        function l = hasSortedBase(self)
-        % Returns true if the points in this base are monotonically increasing
+        function l = isLex(self)
+        % Returns true if the points in this base are monotonically increasing, and stabilize the points before them
         %
         % Returns:
-        %   logical: True if ``base(l) < base(l+1)`` holds for all ``l``.
-            l = all(self.B(2:end) > self.B(1:end-1));
+        %   logical: True if ``base(l) < base(l+1)`` holds for all ``l`` and transversals ``U{l}`` all stabilize ``1:base(l)-1``
+            l = false;
+            prev = 0;
+            for i = 1:length(self.B)
+                beta = self.B(i);
+                if i > 1 && beta < prev
+                    return
+                end
+                U = self.U{i};
+                if ~all(all(bsxfun(@eq, U(1:beta-1,:), (1:beta-1)')))
+                    return
+                end
+                prev = beta;
+            end
+            l = true;
         end
 
         function b = base(self)
