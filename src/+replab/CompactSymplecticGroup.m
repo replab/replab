@@ -54,6 +54,16 @@ classdef CompactSymplecticGroup < replab.CompactGroup
             X = replab.numerical.randomUnitaryOver(self.n, 'H');
         end
 
+        function b = hasReconstruction(self)
+            b = true;
+        end
+
+        function [R, mu] = reconstruction(self)
+            R = replab.SetProduct.identity(self);
+            T = replab.TorusGroup(self.n);
+            mu = T.morphismByFunction(self, @(x) replab.H(T.toMatrix(x)));
+        end
+
     end
 
     methods % Representations
