@@ -18,7 +18,7 @@ classdef TrivialRep < replab.Rep
 
     end
 
-    methods (Access = protected)
+    methods (Access = protected) % Implementations
 
         function b = computeIsUnitary(self)
             b = true;
@@ -39,6 +39,24 @@ classdef TrivialRep < replab.Rep
 
         function c = computeConditionNumberEstimate(self)
             c = 1;
+        end
+
+        % Rep
+
+        function M = matrixRowAction_double_sparse(self, g, M)
+            ; % do nothing
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            ; % do nothing
+        end
+
+        function M = matrixRowAction_exact(self, g, M)
+            ; % do nothing
+        end
+
+        function M = matrixColction_exact(self, g, M)
+            ; % do nothing
         end
 
     end

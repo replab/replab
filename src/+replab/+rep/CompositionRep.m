@@ -70,6 +70,22 @@ classdef CompositionRep < replab.Rep
 
     end
 
+    methods (Access = protected) % Implementations
+
+        % Rep
+
+        function M = matrixRowAction_double_sparse(self, g, M)
+            h = self.first.imageElement(g);
+            M = self.second.matrixRowAction(h, M);
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            h = self.first.imageElement(g);
+            M = self.second.matrixColAction(h, M);
+        end
+
+    end
+
     methods % Implementations
 
         % Rep

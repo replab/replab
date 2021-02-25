@@ -40,21 +40,6 @@ classdef RepByImages_monomial < replab.RepByImages
             b = true;
         end
 
-        function rho = image(self, g, type)
-            if nargin < 3 || isempty(type)
-                type = 'double';
-            end
-            gp = self.morphism.imageElement(g);
-            switch type
-              case 'exact'
-                rho = self.morphism.target.toCyclotomicMatrix(gp);
-              case 'double'
-                rho = self.morphism.target.toMatrix(gp);
-              case 'double/sparse'
-                rho = self.morphism.target.toSparseMatrix(gp);
-            end
-        end
-
     end
 
     methods (Access = protected) % Implementations
@@ -67,6 +52,44 @@ classdef RepByImages_monomial < replab.RepByImages
             else
                 e = eps(1)*sqrt(2*self.dimension); % max "dimension" non-zero elements can have an error
             end
+        end
+
+        function rho = image_double_sparse(self, g)
+            gp = self.morphism.imageElement(g);
+            rho = self.morphism.target.toSparseMatrix(gp);
+        end
+
+        function rho = image_exact(self, g)
+            gp = self.morphism.imageElement(g);
+            rho = self.morphism.target.toCyclotomicMatrix(gp);
+        end
+
+        function M = matrixRowAction_double_sparse(self, g, M)
+            gp = self.morphism.imageElement(g);
+            prm = gp(1,:);
+            md = gp(2,:);
+            m = self.morphism.target.m;
+            ph = exp(2i*pi*md/m);
+            ph(m == 0) = 1;
+            ph(2*md == m) = -1;
+            ph(4*md == m) = 1i;
+            ph(4*md == 3*m) == -1i;
+            M = bsxfun(@times, ph(:), M);
+            M(gp(1,:), :) = M;
+        end
+
+        function M = matrixColAction_double_sparse(self, g, M)
+            gp = self.morphism.imageElement(g);
+            prm = gp(1,:);
+            md = gp(2,:);
+            m = self.morphism.target.m;
+            ph = exp(2i*pi*md/m);
+            ph(m == 0) = 1;
+            ph(2*md == m) = -1;
+            ph(4*md == m) = 1i;
+            ph(4*md == 3*m) == -1i;
+            M = bsxfun(@times, conj(ph(:).'), M);
+            M(:, gp(1,:)) = M;
         end
 
     end
