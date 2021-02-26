@@ -22,9 +22,10 @@ classdef DirectProductGroup_compact < replab.DirectProductGroup & replab.Compact
 
         function [mu, R] = reconstruction(self)
             blocks = self.torusBlocks;
+            N = sum(cellfun(@length, blocks));
             n = self.nFactors;
             f = @(t) arrayfun(@(i) self.factor(i).reconstruction.imageElement(t(blocks{i})), 1:n, 'uniform', 0);
-            T = replab.TorusGroup(p.n);
+            T = replab.TorusGroup(N);
             sets = cell(1, 0);
             for i = 1:n
                 [~, Ri] = self.factor(i).reconstruction;
