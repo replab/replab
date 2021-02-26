@@ -67,10 +67,6 @@ classdef ComplexifiedRep < replab.Rep
             k = self.parent.kernel;
         end
 
-        function b = computeIsUnitary(self)
-            b = self.parent.isUnitary;
-        end
-
         function rep = computeUnitarize(self)
             sr = self.parent.unitarize;
             rep = replab.SimilarRep(self, sr.A_internal, sr.Ainv_internal);

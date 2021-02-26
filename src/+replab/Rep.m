@@ -413,29 +413,6 @@ classdef Rep < replab.Obj
             f = replab.rep.frobeniusSchurIndicator(self);
         end
 
-        function b = computeIsUnitary(self)
-            if self.isExact && isa(self.group, 'replab.FiniteGroup')
-                for i = 1:self.group.nGenerators
-                    g = self.group.generator(i);
-                    I1 = self.image(g, 'exact');
-                    I2 = self.inverseImage(g, 'exact');
-                    if any(any(I1 ~= I2'))
-                        b = false;
-                        return
-                    end
-                end
-                b = true
-            else
-                [X err] = self.hermitianInvariant.project(speye(self.dimension), 'double');
-                if norm(X - speye(self.dimension), 'fro') > err
-                    b = false;
-                else
-                    warning('Setting isUnitary to false as a fallback value; it may be that a unitary exact representation is close enough too.');
-                    b = false;
-                end
-            end
-        end
-
         function b = computeIsIrreducible(self)
             b = replab.irreducible.identifyIrreps(self, {replab.SubRep.identical(self)});
         end

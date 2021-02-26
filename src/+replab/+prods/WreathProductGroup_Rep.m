@@ -70,10 +70,6 @@ classdef WreathProductGroup_Rep < replab.Rep
             c = self.baseRep.conditionNumberEstimate;
         end
 
-        function b = computeIsUnitary(self)
-            b = self.dimension <= 1 || self.factorRep.isUnitary;
-        end
-
     end
 
     methods % Implementations

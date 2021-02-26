@@ -20,10 +20,6 @@ classdef TrivialRep < replab.Rep
 
     methods (Access = protected) % Implementations
 
-        function b = computeIsUnitary(self)
-            b = true;
-        end
-
         function rho = image_exact(self, g)
             assert(self.isExact);
             rho = replab.cyclotomic.eye(self.dimension);

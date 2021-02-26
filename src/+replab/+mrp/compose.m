@@ -13,7 +13,9 @@ function m = compose(second, first)
         m = second.compose(first);
         return
     end
-    assert(second.source.isSubgroupOf(first.target));
+    if isa(first, 'replab.FiniteGroup') && isa(second, 'replab.FiniteGroup')
+        assert(second.source.isSubgroupOf(first.target));
+    end
     if isa(first, 'replab.mrp.Identity')
         m = second;
         return

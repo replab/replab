@@ -40,14 +40,6 @@ classdef CompositionRep < replab.Rep
 
         % Rep
 
-        function b = computeIsUnitary(self)
-            if isa(self.first, 'replab.Isomorphism')
-                b = self.parent.isUnitary;
-            else
-                b = computeIsUnitary@replab.Rep(self);
-            end
-        end
-
         function e = computeErrorBound(self)
             e = self.second.errorBound;
         end

@@ -1041,7 +1041,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Keyword Args:
         %   upToConjugation (logical, optional): Whether to list morphisms up to conjugation of the image group, default: false
         %   surjective (logical, optional): Whether to consider only surjective morphisms (or epimorphisms), whose image span ``to``, default: false
-        %   single (logical, optoinal): Whether to return maximum a single result, default: false
+        %   single (logical, optional): Whether to return maximum a single result, default: false
         %
         % Returns:
         %   cell(1,\*) of `.FiniteMorphism`: The morphisms

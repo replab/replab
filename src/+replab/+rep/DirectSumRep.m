@@ -160,10 +160,6 @@ classdef DirectSumRep < replab.Rep
             end
         end
 
-        function b = computeIsUnitary(self)
-            b = all(cellfun(@(r) r.isUnitary, self.factors));
-        end
-
         function rep = computeUnitarize(self)
             srs = cellfun(@(rep) rep.unitarize, self.factors, 'uniform', 0);
             if self.nFactors == 0

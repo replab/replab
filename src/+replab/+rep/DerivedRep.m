@@ -218,10 +218,6 @@ classdef DerivedRep < replab.Rep
             k = self.parent.kernel;
         end
 
-        function b = computeIsUnitary(self)
-            b = self.parent.isUnitary;
-        end
-
         %TODO: optimize this
         %function rep = computeUnitarize(self)
         %    sr = self.parent.unitarize;
