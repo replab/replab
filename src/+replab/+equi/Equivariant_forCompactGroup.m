@@ -22,10 +22,6 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
             useInverses = true; % use inverses of samples as well
             dR = self.repR.dimension;
             dC = self.repC.dimension;
-            replab.msg(1, 'Equivariant projection, %d x %d', dR, dC);
-            replab.msg(1, '');
-            replab.msg(2, ' #iter   delta    (slp)  norm');
-            replab.msg(2, '---------------------------------');
             delta = zeros(1, maxIterations);
             exitFlag = 0;
             k = 1;
@@ -62,6 +58,15 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
             else
                 useTorus = false;
             end
+            replab.msg(1, 'Equivariant projection, %d x %d', dR, dC);
+            if useTorus
+                replab.msg(1, 'Using maximal torus block projection');
+            else
+                replab.msg(1, 'Using standard group averaging');
+            end
+            replab.msg(1, '');
+            replab.msg(2, ' #iter   delta    (slp)  norm');
+            replab.msg(2, '---------------------------------');
             nX = norm(X, 'fro');
             if nX == 0
                 err = 0;
