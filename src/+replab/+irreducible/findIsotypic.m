@@ -54,4 +54,8 @@ function [iso, zeroErrors, nonZeroErrors] = findIsotypic(parent, irreps, sample)
             iso{1,end+1} = replab.Isotypic.fromIrreps(parent, comp, comp{1}, 'irrepsAreBiorthogonal', true, 'irrepsAreHarmonized', true);
         end
     end
+    dims = cellfun(@(c) c.irrepDimension, iso);
+    muls = cellfun(@(c) c.multiplicity, iso);
+    [~, ind] = sortrows([dims(:) muls(:)]);
+    iso = iso(ind);
 end
