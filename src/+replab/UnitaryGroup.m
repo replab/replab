@@ -63,7 +63,7 @@ classdef UnitaryGroup < replab.CompactGroup
             b = true;
         end
 
-        function [R, mu] = reconstruction(self)
+        function [mu, R] = reconstruction(self)
             R = replab.SetProduct.identity(self);
             T = replab.TorusGroup(self.n);
             mu = T.morphismByFunction(self, @(x) T.toMatrix(x));

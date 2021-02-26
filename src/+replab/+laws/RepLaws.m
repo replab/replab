@@ -90,7 +90,7 @@ classdef RepLaws < replab.Laws
 
         function law_maximalTorusExponents_(self)
             if self.rep.hasMaximalTorusExponents && self.rep.overC % TODO
-                [R, mu] = self.rep.group.reconstruction;
+                [mu, R] = self.rep.group.reconstruction;
                 [powers, partition] = self.rep.maximalTorusExponents;
                 t = mu.source.sample; % torus element
                 rho1 = self.rep.image(mu.imageElement(t));

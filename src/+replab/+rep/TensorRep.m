@@ -337,8 +337,7 @@ classdef TensorRep < replab.Rep
         end
 
         function [powers, partition] = maximalTorusExponents(self)
-            [~, mu] = self.group.reconstruction;
-            r = mu.source.n; % torus rank
+            r = self.group.reconstruction.source.n; % torus rank
             powers = zeros(1, r);
             d = 1;
             for i = 1:self.nFactors

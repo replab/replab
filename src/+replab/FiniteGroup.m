@@ -80,6 +80,19 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             m = self.isomorphismByImages(self, 'preimages', self.generators, 'images', generatorImages);
         end
 
+        % CompactGroup
+
+        function b = hasReconstruction(self)
+            b = true;
+        end
+
+        function [mu, R] = reconstruction(self)
+            T = replab.TorusGroup(0);
+            mu = T.morphismByFunction(self, @(t) self.identity);
+            D = self.decomposition;
+            R = replab.SetProduct(self, D.T, true);
+        end
+
     end
 
     methods (Access = protected)

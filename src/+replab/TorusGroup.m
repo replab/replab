@@ -51,6 +51,17 @@ classdef TorusGroup < replab.CompactGroup
             xInv = mod(-x, 1);
         end
 
+        % CompactGroup
+
+        function b = hasReconstruction(self)
+            b = true;
+        end
+
+        function [mu, R] = reconstruction(self)
+            R = replab.SetProduct.identity(self);
+            mu = replab.TorusMorphism.identity(self);
+        end
+
     end
 
 end

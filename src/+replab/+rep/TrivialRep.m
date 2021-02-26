@@ -95,8 +95,7 @@ classdef TrivialRep < replab.Rep
         end
 
         function [powers, partition] = maximalTorusExponents(self)
-            [~, mu] = self.group.reconstruction;
-            powers = zeros(self.dimension, mu.source.n);
+            powers = zeros(self.dimension, self.group.reconstruction.source.n);
             if self.overR
                 partition = replab.Partition.fromVector(1:self.dimension);
             else

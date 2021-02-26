@@ -124,7 +124,10 @@ classdef DirectProductGroup < replab.CompactGroup
         %
         % Returns:
         %   `.Morphism`: The embedding
-            m = self.factor(i).morphismByFunction(self, @(g) replab.DirectProductGroup.updateCellArray(self.identity, i, g));
+            p = self.torusBlocks;
+            b = p.block(i);
+            tm = full(sparse(1:length(b), b, ones(1, length(b)), length(b), p.n));
+            m = self.factor(i).morphismByFunction(self, @(g) replab.DirectProductGroup.updateCellArray(self.identity, i, g), tm);
         end
 
         function m = projection(self, i)
@@ -142,7 +145,10 @@ classdef DirectProductGroup < replab.CompactGroup
         %
         % Returns:
         %   `.Morphism`: The projection
-            m = self.morphismByFunction(self.factor(i), @(g) g{i});
+            p = self.torusBlocks;
+            b = p.block(i);
+            tm = full(sparse(b, 1:length(b), ones(1, length(b)), p.n, length(b)));
+            m = self.morphismByFunction(self.factor(i), @(g) g{i}, tm);
         end
 
     end
@@ -216,6 +222,44 @@ classdef DirectProductGroup < replab.CompactGroup
             for i = 1:self.nFactors
                 xInv{i} = self.factor(i).inverse(x{i});
             end
+        end
+
+        % Compact group
+
+        function p = torusBlocks(self)
+            b = all(cellfun(@(f) f.hasReconstruction, self.factors));
+            if ~b
+                p = [];
+                return
+            end
+            n = self.nFactors;
+            dims = cellfun(@(f) f.reconstruction.source.n, self.factors);
+            blocks = cell(1, n);
+            shift = 0;
+            for i = 1:n
+                blocks{1,i} = shift+(1:dims(i));
+                shift = shift + dims(i);
+            end
+            p = replab.Partition.fromBlocks(blocks);
+        end
+
+        function b = hasReconstruction(self)
+            b = ~isempty(self.torusBlocks);
+        end
+
+        function [mu, R] = reconstruction(self)
+            p = self.torusBlocks;
+            n = self.nFactors;
+            f = @(t) arrayfun(@(i) self.factor(i).reconstruction.imageElement(t(p.block(i))), 1:n, 'uniform', 0);
+            T = replab.TorusGroup(p.n);
+            sets = cell(1, 0);
+            for i = 1:n
+                [~, Ri] = self.factor(i).reconstruction;
+                e = self.embedding(i);
+                sets = horzcat(sets, cellfun(@(S) cellfun(@(s) e.imageElement(s), S, 'uniform', 0), Ri.sets, 'uniform', 0));
+            end
+            R = replab.SetProduct(self, sets, true);
+            mu = T.morphismByFunction(self, f);
         end
 
     end

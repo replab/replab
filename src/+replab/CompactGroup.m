@@ -11,7 +11,7 @@ classdef CompactGroup < replab.Group
             b = false;
         end
 
-        function [R, mu] = reconstruction(self)
+        function [mu, R] = reconstruction(self)
         % Returns a reconstruction of the group used to speed up group averaging
         %
         % When ``G`` is a compact Lie group, we consider the chain of subgroups ``G >= G0 >= T``, where:
