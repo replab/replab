@@ -1,9 +1,14 @@
 classdef Morphism < replab.Obj
 % Describes a morphism between groups
-
+%
+% If both groups are compact groups with a `+replab.CompactGroup.reconstruction` available, the `.torusMap` linear map
+% expresses the relationship between elements of the torus of the source and the target. More specifically, let ``s``
+% be an element of the torus ``.source.reconstruction.source``, there is a corresponding element ``t`` of the torus
+% ``.target.reconstruction.source`` such that ``t = s * torusMap``.
     properties (SetAccess = protected)
         source % (`.Group`): Source group
         target % (`.Group`): Target group
+        torusMap % (integer(\*,\*) or ``[]``): Relation between the tori of source and target if known
     end
 
     methods % Implementations
@@ -27,6 +32,18 @@ classdef Morphism < replab.Obj
         % Returns:
         %   element of `.target`: Image
             error('Abstract');
+        end
+
+        function t = imageTorusElement(self, s)
+        % Returns the image of an element of the source torus (used in optimizations)
+        %
+        % Args:
+        %   s (element of ``source.reconstruction.source``): Torus element of source
+        %
+        % Returns:
+        %   element of ``target.reconstruction.source``): Torus element of target
+            assert(self.source.hasReconstruction && self.target.hasReconstruction);
+            t = mod(s * self.torusMap, 1);
         end
 
     end
@@ -67,17 +84,21 @@ classdef Morphism < replab.Obj
 
     methods (Static) % Morphism creation
 
-        function m = lambda(source, target, imageElementFun)
+        function m = lambda(source, target, imageElementFun, torusMap)
         % Creates a morphism from an image function
         %
         % Args:
         %   source (`.Group`): Source group
         %   target (`.Group`): Target group
         %   imageElementFun (function_handle): Function computing images of elements
+        %   torusMap (integer(\*,\*)): Torus map to use in the morphism construction
         %
         % Returns:
         %   `+replab.Morphism`: Constructed morphism
-            m = replab.mrp.Lambda(source, target, imageElementFun);
+            if nargin < 4
+                torusMap = [];
+            end
+            m = replab.mrp.Lambda(source, target, imageElementFun, torusMap);
         end
 
     end

@@ -3,6 +3,7 @@ classdef PermToPerm < replab.FiniteMorphism
     properties (SetAccess = protected)
         preimages % (cell(1,\*) of permutation): Preimages in the source group
         images % (cell(1,\*) of permutation): Images in the target group
+        imageElementFun % (function_handle or ``[]``): Optional function_handle that implements `.imageElement`
     end
 
     methods (Access = protected)
@@ -62,13 +63,14 @@ classdef PermToPerm < replab.FiniteMorphism
 
     methods
 
-        function self = PermToPerm(source, target, preimages, images)
+        function self = PermToPerm(source, target, preimages, images, imageElementFun)
             assert(isa(source, 'replab.PermutationGroup'));
             assert(isa(target, 'replab.PermutationGroup'));
             self.source = source;
             self.target = target;
             self.preimages = preimages;
             self.images = images;
+            self.imageElementFun = imageElementFun;
         end
 
         function c = inverseChain(self)
@@ -95,6 +97,11 @@ classdef PermToPerm < replab.FiniteMorphism
         end
 
         function t = imageElement(self, s)
+            if ~isempty(self.imageElementFun)
+                f = self.imageElementFun;
+                t = f(s);
+                return
+            end
             n1 = self.source.domainSize;
             n2 = self.target.domainSize;
             chain = self.chain;

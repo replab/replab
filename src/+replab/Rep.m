@@ -413,29 +413,6 @@ classdef Rep < replab.Obj
             f = replab.rep.frobeniusSchurIndicator(self);
         end
 
-        function b = computeIsUnitary(self)
-            if self.isExact && isa(self.group, 'replab.FiniteGroup')
-                for i = 1:self.group.nGenerators
-                    g = self.group.generator(i);
-                    I1 = self.image(g, 'exact');
-                    I2 = self.inverseImage(g, 'exact');
-                    if any(any(I1 ~= I2'))
-                        b = false;
-                        return
-                    end
-                end
-                b = true
-            else
-                [X err] = self.hermitianInvariant.project(speye(self.dimension), 'double');
-                if norm(X - speye(self.dimension), 'fro') > err
-                    b = false;
-                else
-                    warning('Setting isUnitary to false as a fallback value; it may be that a unitary exact representation is close enough too.');
-                    b = false;
-                end
-            end
-        end
-
         function b = computeIsIrreducible(self)
             b = replab.irreducible.identifyIrreps(self, {replab.SubRep.identical(self)});
         end
@@ -915,6 +892,35 @@ classdef Rep < replab.Obj
             t = self.cached(['trivialColSpace_' type], @() self.equivariantFrom(...
                 self.group.trivialRep(self.field, self.dimension), ...
                 'special', 'trivialCols', 'type', type));
+        end
+
+        function b = hasMaximalTorusExponents(self)
+        % Returns whether a simple description of the representation of the group maximal torus is available
+        %
+        % This description is used internally in RepLAB to speed up the group averaging process when computing equivariants.
+        %
+        % Returns:
+        %   logical: True if the call to `.maximalTorusExponents` succeeds
+            b = false;
+        end
+
+        function [powers, partition] = maximalTorusExponents(self)
+        % Returns a simple description of the representation of the group maximal torus
+        %
+        % When the representation is complex (`.overC` true), ``partition`` is empty.
+        %
+        % When the representation is real (`.overR` true), ``partition`` provides the coordinates of the
+        % diagonal ``1x1`` and ``2x2`` blocks. The coordinates ``i`` with ``1x1`` blocks must have ``powers(:,i) == 0``,
+        % while, for a block ``[i, j]``, we need ``powers(:,i) == powers(:,j)``, and the 2x2 block ``rho([i j], [i j])``
+        % represents the corresponding phase ``u`` as ``[real(u) -imag(u); imag(u) real(u)]``.
+        %
+        % Returns
+        % -------
+        %   powers: integer(d, r)
+        %     Exponents, with ``d`` the representation dimension `.dimension` and ``r`` the torus rank
+        %   partition: `.Partition` or ``[]``
+        %     Partition of the Euclidean space into ``2x2`` and ``1x1`` blocks.
+            error('Maximal torus exponents not available');
         end
 
     end

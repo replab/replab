@@ -160,10 +160,6 @@ classdef DirectSumRep < replab.Rep
             end
         end
 
-        function b = computeIsUnitary(self)
-            b = all(cellfun(@(r) r.isUnitary, self.factors));
-        end
-
         function rep = computeUnitarize(self)
             srs = cellfun(@(rep) rep.unitarize, self.factors, 'uniform', 0);
             if self.nFactors == 0
@@ -250,6 +246,21 @@ classdef DirectSumRep < replab.Rep
                 p = replab.Partition.fromBlocks(blocks);
             end
         end
+
+        function b = hasMaximalTorusExponents(self)
+            b = all(cellfun(@(f) f.hasMaximalTorusExponents, self.factors));
+            b = b & self.overC; % TODO: provide real stuff as well
+        end
+
+        function [powers, partition] = maximalTorusExponents(self)
+            r = self.group.reconstruction.source.n; % torus rank
+            powers = zeros(0, r);
+            for i = 1:self.nFactors
+                powers = vertcat(powers, self.factor(i).maximalTorusExponents);
+            end
+            partition = [];
+        end
+
 
     end
 

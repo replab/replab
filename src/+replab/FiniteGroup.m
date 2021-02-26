@@ -53,9 +53,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         % Group
 
-        function m = morphismByFunction(self, target, imageElementFun)
+        function m = morphismByFunction(self, target, imageElementFun, torusMap)
             imgs = cellfun(imageElementFun, self.generators, 'uniform', 0);
-            m = self.morphismByImages(target, 'preimages', self.generators, 'images', imgs);
+            m = self.morphismByImages(target, 'preimages', self.generators, 'images', imgs, 'imageElementFun', imageElementFun);
         end
 
         function m = isomorphismByFunctions(self, target, preimageElementFun, imageElementFun)
@@ -78,6 +78,19 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   `+replab.FiniteMorphism`: Conjugation morphism
             generatorImages = cellfun(@(g) self.leftConjugate(by, g), self.generators, 'uniform', 0);
             m = self.isomorphismByImages(self, 'preimages', self.generators, 'images', generatorImages);
+        end
+
+        % CompactGroup
+
+        function b = hasReconstruction(self)
+            b = true;
+        end
+
+        function [mu, R] = reconstruction(self)
+            T = replab.TorusGroup(0);
+            mu = T.morphismByFunction(self, @(t) self.identity);
+            D = self.decomposition;
+            R = replab.SetProduct(self, D.T, true);
         end
 
     end
@@ -1041,7 +1054,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Keyword Args:
         %   upToConjugation (logical, optional): Whether to list morphisms up to conjugation of the image group, default: false
         %   surjective (logical, optional): Whether to consider only surjective morphisms (or epimorphisms), whose image span ``to``, default: false
-        %   single (logical, optoinal): Whether to return maximum a single result, default: false
+        %   single (logical, optional): Whether to return maximum a single result, default: false
         %
         % Returns:
         %   cell(1,\*) of `.FiniteMorphism`: The morphisms
@@ -1168,11 +1181,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Keyword Args:
         %   preimages (cell(1, \*) of ``self`` elements): Preimages of the morphism which generate ``self``, defaults to ``self.generators``
         %   images (cell(1, \*) of ``target`` elements): Images of the given preimages, defaults to ``target.generators`` if ``target`` is a `.FiniteGroup`
+        %   imageElementFun (function_handle or ``[]``, optional): Image function, default: ``[]``
         %   nChecks (integer or ``inf``): Number of randomized image checks to perform, if ``inf`` computes and verifies a presentation of ``self``
         %
         % Returns:
         %   `.Morphism` or `.FiniteMorphism`: The constructed morphism
-            args = struct('nChecks', replab.globals.morphismNChecks, 'preimages', {self.generators});
+            args = struct('nChecks', replab.globals.morphismNChecks, 'preimages', {self.generators}, 'imageElementFun', []);
             if length(varargin) == 1 && iscell(varargin{1})
                 warning('Old call style deprecated, add a ''images'' keyword argument');
                 args.images = varargin{1};
@@ -1193,7 +1207,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             if isinf(args.nChecks)
                 assert(self.isMorphismByImages_(target, args.preimages, args.images), 'The given images do not define a morphism');
             end
-            m = self.morphismByImages_(target, args.preimages(~preId), args.images(~preId));
+            m = self.morphismByImages_(target, args.preimages(~preId), args.images(~preId), args.imageElementFun);
             if isfinite(args.nChecks) && args.nChecks > 0
                 for i = 1:args.nChecks
                     s1 = self.sample;
@@ -1231,7 +1245,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
     methods (Access = protected)
 
-        function m = morphismByImages_(self, target, preimages, images)
+        function m = morphismByImages_(self, target, preimages, images, imageElementFun)
         % Implements the `.morphismByImages` method
         %
         % Does not perform checks; preimages must not contain the identity

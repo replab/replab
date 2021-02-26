@@ -218,10 +218,6 @@ classdef DerivedRep < replab.Rep
             k = self.parent.kernel;
         end
 
-        function b = computeIsUnitary(self)
-            b = self.parent.isUnitary;
-        end
-
         %TODO: optimize this
         %function rep = computeUnitarize(self)
         %    sr = self.parent.unitarize;
@@ -254,6 +250,17 @@ classdef DerivedRep < replab.Rep
 
         function res = conj(self)
             res = replab.rep.DerivedRep(self.parent, ~self.conjugate, self.inverse, self.transpose);
+        end
+
+        function b = hasMaximalTorusExponents(self)
+            b = self.parent.hasMaximalTorusExponents && self.overC; % TODO
+        end
+
+        function [powers, partition] = maximalTorusExponents(self)
+            [powers, partition] = self.parent.maximalTorusExponents;
+            if self.inverse ~= self.conjugate
+                powers = -powers;
+            end
         end
 
     end

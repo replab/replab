@@ -180,6 +180,28 @@ classdef Partition < replab.Str
 
     methods (Static)
 
+        function P = trivial(n)
+        % Constructs the trivial partition with a single block of given cardinality
+        %
+        % Args:
+        %   n (integer): Size of the partition and single block
+        %
+        % Returns:
+        %   `.Partition`: Trivial partition
+            P = replab.Partition.fromBlocks({1:n});
+        end
+
+        function P = finest(n)
+        % Constructs the partition of ``n`` singleton blocks
+        %
+        % Args:
+        %   n (integer): Size of the partition and number of blocks
+        %
+        % Returns:
+        %   `.Partition`: Partition
+            P = replab.Partition.fromBlocks(num2cell(1:n));
+        end
+
         function P = fromBlocks(blocks)
         % Constructs a partition from disjoint blocks
         %

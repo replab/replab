@@ -39,6 +39,14 @@ classdef MorphismLaws < replab.Laws
             self.T.assertEqv(self.T.identity, self.morphism.imageElement(self.S.identity));
         end
 
+        function L = laws_torusMap(self)
+            if ~isempty(self.morphism.torusMap)
+                L = replab.laws.TorusMorphismLaws(self.morphism);
+            else
+                L = replab.Laws.empty;
+            end
+        end
+
     end
 
 end

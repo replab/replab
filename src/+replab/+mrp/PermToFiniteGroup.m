@@ -6,11 +6,12 @@ classdef PermToFiniteGroup < replab.FiniteMorphism
 
     properties (SetAccess = protected)
         fastMorphism % (`+replab.+mrp.PermToGroup`): Fast morphism that only computes images of elements
+        imageElementFun % (function_handle or ``[]``): Optional function_handle that implements `.imageElement`
     end
 
     methods
 
-        function self = PermToFiniteGroup(source, target, preimages, images)
+        function self = PermToFiniteGroup(source, target, preimages, images, imageElementFun)
         % Constructs a morphism from a permutation group to a finite group
         %
         % Args:
@@ -20,7 +21,8 @@ classdef PermToFiniteGroup < replab.FiniteMorphism
         %   images (cell(1,n) of `.target` elements): Images
             self.source = source;
             self.target = target;
-            self.fastMorphism = replab.mrp.PermToGroup(source, target, preimages, images);
+            self.fastMorphism = replab.mrp.PermToGroup(source, target, preimages, images, imageElementFun);
+            self.imageElementFun = imageElementFun;
         end
 
         function m = slowFiniteMorphism(self)
@@ -75,6 +77,11 @@ classdef PermToFiniteGroup < replab.FiniteMorphism
         end
 
         function t = imageElement(self, s)
+            if ~isempty(self.imageElementFun)
+                f = self.imageElementFun;
+                t = f(s);
+                return
+            end
             t = self.fastMorphism.imageElement(s);
         end
 

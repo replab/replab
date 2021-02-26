@@ -129,24 +129,31 @@ classdef Group < replab.Monoid
             m = replab.Isomorphism.lambda(self, self, @(h) self.leftConjugate(byInv, h), @(h) self.leftConjugate(by, h));
         end
 
-        function m = morphismByFunction(self, target, imageElementFun)
+        function m = morphismByFunction(self, target, imageElementFun, torusMap)
         % Constructs a group morphism using an image function
         %
         % Args:
         %   target (`replab.Group`): Target group
         %   imageElementFun (function_handle): Returns the target element for a source element
-            m = replab.Morphism.lambda(self, target, imageElementFun);
-
+        %   torusMap (integer(\*,\*) or ``[]``, optional): Torus map used in the `.Morphism` construction, default: ``[]``
+            if nargin < 4
+                torusMap = [];
+            end
+            m = replab.Morphism.lambda(self, target, imageElementFun, torusMap);
         end
 
-        function m = isomorphismByFunctions(self, target, preimageElementFun, imageElementFun)
+        function m = isomorphismByFunctions(self, target, preimageElementFun, imageElementFun, torusMap)
         % Constructs a group isomorphism using preimage/image functions
         %
         % Args:
         %   target (`replab.Group`): Target group
         %   preimageElementFun (function_handle): Returns the source element for a target element
         %   imageElementFun (function_handle): Returns the target element for a source element
-            m = replab.Isomorphism.lambda(self, target, preimageElementFun, imageElementFun);
+        %   torusMap (integer(\*,\*) or ``[]``, optional): Torus map used in the `.Morphism` construction, default: ``[]``
+            if nargin < 5
+                torusMap = [];
+            end
+            m = replab.Isomorphism.lambda(self, target, preimageElementFun, imageElementFun, torusMap);
         end
 
     end

@@ -78,6 +78,28 @@ classdef DefiningRep < replab.Rep
             p = replab.Partition.fromBlocks({1:self.dimension});
         end
 
+        function b = hasMaximalTorusExponents(self)
+            b = false;
+            switch [self.fromDivisionRing '/' self.field]
+              case 'C/C'
+                b = true;
+              case 'H/C'
+                b = true;
+            end
+        end
+
+        function [powers, blockIndex] = maximalTorusExponents(self)
+            assert(self.hasMaximalTorusExponents);
+            switch [self.fromDivisionRing '/' self.field]
+              case 'C/C'
+                powers = eye(self.dimension);
+                blockIndex = 1:self.dimension;
+              case 'H/C'
+                powers = kron(eye(self.dimension/2), [1;-1]);
+                blockIndex = 1:self.dimension;
+            end
+        end
+
     end
 
 end

@@ -59,6 +59,16 @@ classdef UnitaryGroup < replab.CompactGroup
             X = replab.numerical.randomUnitaryOver(self.n, 'C');
         end
 
+        function b = hasReconstruction(self)
+            b = true;
+        end
+
+        function [mu, R] = reconstruction(self)
+            R = replab.SetProduct.identity(self);
+            T = replab.TorusGroup(self.n);
+            mu = T.morphismByFunction(self, @(x) T.toMatrix(x));
+        end
+
     end
 
     methods % Representations

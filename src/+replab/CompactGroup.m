@@ -1,6 +1,44 @@
 classdef CompactGroup < replab.Group
 % A group equipped with a Haar measure
 
+    methods % Group properties
+
+        function b = hasReconstruction(self)
+        % Returns whether the group has a "reconstruction"
+        %
+        % Returns:
+        %   logical: True if the call to `.reconstruction` would succeed
+            b = false;
+        end
+
+        function [mu, R] = reconstruction(self)
+        % Returns a reconstruction of the group used to speed up group averaging
+        %
+        % When ``G`` is a compact Lie group, we consider the chain of subgroups ``G >= G0 >= T``, where:
+        %
+        % - ``G0`` is the connected component of the group around the identity; we also know that the number of left cosets
+        %   of ``G0`` in ``G`` is finite; see the group of components, or, for example:
+        %   `<https://mathoverflow.net/questions/378160/improved-classification-of-compact-lie-groups>_` .
+        %
+        %   We write ``R`` a (finite) set of left coset representatives. Thus any element ``g`` of ``G`` can be written ``g = r g0``
+        %   where ``r \in R`` and ``g0 \in G0``.
+        %
+        % - ``G0`` contains a maximal torus ``T``.
+        %
+        % To average over the action of a representation ``rho`` of ``G`` on ``x``, we write ``x1 = \int_G d\mu(g) \rho(g) x``.
+        %
+        % However, this is equivalent to ``x1 = 1/|R| \sum_{r \in R} \int_G0 d\mu(g) \rho(g) x``.
+        %
+        % We finally write ``x1 = 1/{R} \sum_{r \in R} \int_G0 d\mu(g) \rho(g) \int_T d\mu(t) \rho(t) x``; again, the fact that we integrate
+        % first over the maximal torus subgroup does not affect the result. However, integration over the maximal torus can often be done
+        % very quickly, and the reconstruction speeds up the computation of various equivariant subspaces dramatically.
+        %
+        % This method returns ``R`` as a `.SetProduct`, and ``T`` as a `.Morphism` from ``T`` to ``G``.
+            error('Reconstruction not available');
+        end
+
+    end
+
     methods % Group construction
 
         function prd = directProduct(varargin)

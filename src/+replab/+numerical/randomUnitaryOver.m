@@ -22,7 +22,7 @@ function U = randomUnitaryOver(d, divisionRing)
         %U = -conj(q)*(U - 2*u*(u'*U));
         %or U = -conj(q)*(eye(d) - 2*u*u')*U
         uU = u(2:end)'*U;
-        U = -conj(q)*[1-2*conj(u(1))*u(1), -2*u(1)*uU; -2*conj(u(1))*u(2:end), U - 2*u(2:end)*uU];
+        U = -conj(q)*[1-2*u(1)*conj(u(1)), -2*u(1)*uU; -2*u(2:end)*conj(u(1)), U - 2*u(2:end)*uU];
     end
     % One step of Newton iteration to force unitary (helps!)
     N = U'*U;

@@ -232,11 +232,15 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         % Morphisms
 
-        function m = morphismByImages_(self, target, preimages, images)
+        function m = morphismByImages_(self, target, preimages, images, imageElementFun)
             first = self.niceMorphism; % maps this to the perm group
             preimagesNG = cellfun(@(g) self.niceMorphism.imageElement(g), preimages, 'uniform', 0);
-            second = self.niceGroup.morphismByImages(target, 'preimages', preimagesNG, 'images', images); % from the perm group to the images
-            m = first.andThen(second);
+            second = self.niceGroup.morphismByImages(target, 'preimages', preimagesNG, 'images', images, 'nChecks', 0); % from the perm group to the images
+            if isa(second, 'replab.FiniteMorphism')
+                m = replab.mrp.FiniteComposition(second, first, imageElementFun);
+            else
+                m = replab.mpr.Composition(second, first, imageElementFun);
+            end
         end
 
     end

@@ -2,9 +2,9 @@ classdef FiniteIsomorphismComposition < replab.FiniteIsomorphism & replab.mrp.Fi
 
     methods
 
-        function self = FiniteIsomorphismComposition(second, first)
-            self@replab.mrp.FiniteComposition(second, first);
-            self@replab.mrp.IsomorphismComposition(second, first);
+        function self = FiniteIsomorphismComposition(second, first, imageElementFun)
+            self@replab.mrp.FiniteComposition(second, first, imageElementFun);
+            self@replab.mrp.IsomorphismComposition(second, first, imageElementFun);
         end
 
         function s = preimageElement(self, t)

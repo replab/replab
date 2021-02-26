@@ -40,14 +40,6 @@ classdef CompositionRep < replab.Rep
 
         % Rep
 
-        function b = computeIsUnitary(self)
-            if isa(self.first, 'replab.Isomorphism')
-                b = self.parent.isUnitary;
-            else
-                b = computeIsUnitary@replab.Rep(self);
-            end
-        end
-
         function e = computeErrorBound(self)
             e = self.second.errorBound;
         end
@@ -92,6 +84,16 @@ classdef CompositionRep < replab.Rep
 
         function b = isExact(self)
             b = self.second.isExact;
+        end
+
+        function b = hasMaximalTorusExponents(self)
+            b = ~isempty(self.first.torusMap) && self.second.hasMaximalTorusExponents && self.overC; % TODO
+        end
+
+        function [powers, partition] = maximalTorusExponents(self)
+            [powers0, ~] = self.second.maximalTorusExponents;
+            powers = powers0 * self.first.torusMap';
+            partition = [];
         end
 
     end

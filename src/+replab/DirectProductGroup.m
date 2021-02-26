@@ -124,7 +124,11 @@ classdef DirectProductGroup < replab.CompactGroup
         %
         % Returns:
         %   `.Morphism`: The embedding
-            m = self.factor(i).morphismByFunction(self, @(g) replab.DirectProductGroup.updateCellArray(self.identity, i, g));
+            blocks = self.torusBlocks;
+            n = sum(cellfun(@length, blocks));
+            b = blocks{i};
+            tm = full(sparse(1:length(b), b, ones(1, length(b)), length(b), n));
+            m = self.factor(i).morphismByFunction(self, @(g) replab.DirectProductGroup.updateCellArray(self.identity, i, g), tm);
         end
 
         function m = projection(self, i)
@@ -142,7 +146,11 @@ classdef DirectProductGroup < replab.CompactGroup
         %
         % Returns:
         %   `.Morphism`: The projection
-            m = self.morphismByFunction(self.factor(i), @(g) g{i});
+            blocks = self.torusBlocks;
+            n = sum(cellfun(@length, blocks));
+            b = blocks{i};
+            tm = full(sparse(b, 1:length(b), ones(1, length(b)), n, length(b)));
+            m = self.morphismByFunction(self.factor(i), @(g) g{i}, tm);
         end
 
     end
@@ -215,6 +223,24 @@ classdef DirectProductGroup < replab.CompactGroup
             xInv = cell(1, self.nFactors);
             for i = 1:self.nFactors
                 xInv{i} = self.factor(i).inverse(x{i});
+            end
+        end
+
+        % CompactGroup
+
+        function blocks = torusBlocks(self)
+            b = all(cellfun(@(f) f.hasReconstruction, self.factors));
+            if ~b
+                p = [];
+                return
+            end
+            n = self.nFactors;
+            dims = cellfun(@(f) f.reconstruction.source.n, self.factors);
+            blocks = cell(1, n);
+            shift = 0;
+            for i = 1:n
+                blocks{1,i} = shift+(1:dims(i));
+                shift = shift + dims(i);
             end
         end
 

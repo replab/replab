@@ -20,10 +20,6 @@ classdef TrivialRep < replab.Rep
 
     methods (Access = protected) % Implementations
 
-        function b = computeIsUnitary(self)
-            b = true;
-        end
-
         function rho = image_exact(self, g)
             assert(self.isExact);
             rho = replab.cyclotomic.eye(self.dimension);
@@ -84,6 +80,27 @@ classdef TrivialRep < replab.Rep
         function complexRep = complexification(self)
             assert(self.overR, 'Representation should be real to start with');
             complexRep = replab.rep.TrivialRep(self.group, 'C', self.dimension);
+        end
+
+        function M = matrixRowAction(self, g, M, type)
+            M = M;
+        end
+
+        function M = matrixColAction(self, g, M, type)
+            M = M;
+        end
+
+        function b = hasMaximalTorusExponents(self)
+            b = self.group.hasReconstruction;
+        end
+
+        function [powers, partition] = maximalTorusExponents(self)
+            powers = zeros(self.dimension, self.group.reconstruction.source.n);
+            if self.overR
+                partition = replab.Partition.fromVector(1:self.dimension);
+            else
+                partition = [];
+            end
         end
 
     end

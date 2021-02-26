@@ -2,8 +2,8 @@ classdef IsomorphismComposition < replab.Isomorphism & replab.mrp.Composition
 
     methods
 
-        function self = IsomorphismComposition(second, first)
-            self@replab.mrp.Composition(second, first);
+        function self = IsomorphismComposition(second, first, imageElementFun)
+            self@replab.mrp.Composition(second, first, imageElementFun);
         end
 
     end

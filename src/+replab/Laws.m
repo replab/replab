@@ -211,6 +211,14 @@ classdef Laws < replab.Str
 
     methods (Static)
 
+        function L = empty
+        % Returns an empty set of laws
+        %
+        % Returns:
+        %   `.Laws`: Empty set of laws
+            L = replab.laws.Collection(cell(1, 0));
+        end
+
         function skip
             errorId = 'replab:skip';
             msg = 'Skipping slow test';

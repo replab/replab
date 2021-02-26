@@ -13,7 +13,9 @@ function m = compose(second, first)
         m = second.compose(first);
         return
     end
-    assert(second.source.isSubgroupOf(first.target));
+    if isa(first, 'replab.FiniteGroup') && isa(second, 'replab.FiniteGroup')
+        assert(second.source.isSubgroupOf(first.target));
+    end
     if isa(first, 'replab.mrp.Identity')
         m = second;
         return
@@ -26,15 +28,15 @@ function m = compose(second, first)
     areFinite = isa(first, 'replab.FiniteMorphism') && isa(second, 'replab.FiniteMorphism');
     if areIsomorphisms
         if areFinite
-            m = replab.mrp.FiniteIsomorphismComposition(second, first);
+            m = replab.mrp.FiniteIsomorphismComposition(second, first, []);
         else
-            m = replab.mrp.IsomorphismComposition(second, first);
+            m = replab.mrp.IsomorphismComposition(second, first, []);
         end
     else
         if areFinite
-            m = replab.mrp.FiniteComposition(second, first);
+            m = replab.mrp.FiniteComposition(second, first, []);
         else
-            m = replab.mrp.Composition(second, first);
+            m = replab.mrp.Composition(second, first, []);
         end
     end
 end

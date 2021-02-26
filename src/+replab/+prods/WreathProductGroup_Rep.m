@@ -58,8 +58,8 @@ classdef WreathProductGroup_Rep < replab.Rep
         end
 
         function M = matrixColAction_double_sparse(self, g, M)
-            M = self.actingRep.matrixColAction(g{1}, M, 'double/sparse');
             M = self.baseRep.matrixColAction(g{2}, M, 'double/sparse');
+            M = self.actingRep.matrixColAction(g{1}, M, 'double/sparse');
         end
 
         function e = computeErrorBound(self)
@@ -70,10 +70,6 @@ classdef WreathProductGroup_Rep < replab.Rep
             c = self.baseRep.conditionNumberEstimate;
         end
 
-        function b = computeIsUnitary(self)
-            b = self.dimension <= 1 || self.factorRep.isUnitary;
-        end
-
     end
 
     methods % Implementations
@@ -82,6 +78,14 @@ classdef WreathProductGroup_Rep < replab.Rep
 
         function b = isExact(self)
             b = self.factorRep.isExact;
+        end
+
+        function b = hasMaximalTorusExponents(self)
+            b = self.group.hasReconstruction && self.baseRep.hasMaximalTorusExponents; % base group has reconstruction only when the acting torus is empty
+        end
+
+        function [powers, partition] = maximalTorusExponents(self)
+            [powers, partition] = self.baseRep.maximalTorusExponents;
         end
 
     end
