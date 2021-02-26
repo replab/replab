@@ -195,53 +195,56 @@ classdef TensorRep < replab.Rep
         end
 
         function M = matrixRowAction_double_sparse(self, g, M)
-            if issparse(M)
-                M = full(M);
-            end
-            d2 = size(M, 2);
+            e = size(M, 2);
             n = self.nFactors;
-            dimsF = cellfun(@(f) f.dimension, self.factors);
-            dims = [fliplr(dimsF) d2];
-            for i = 1:self.nFactors
-                id = n-i+1;
+            D = self.dimension;
+            d = cellfun(@(f) f.dimension, self.factors);
+            % in the Matlab convention, we would have a tensor
+            % dn dn-1 ... d1 e
+            % first step, we multiply (upper case when has been *)
+            % Dn dn-1 ... d1 e
+            % then we transpose
+            % dn-1 ... d1 e Dn
+            % Dn-1 Dn-2 ... d1 e Dn
+            % we transpose
+            % Dn-2 ... d1 e Dn Dn-1
+            % ...
+            % d1 e Dn ... D2
+            % D1 e Dn ... D2
+            % e Dn ... D1
+            % last transpose
+
+            % first transpose across Dn | dn-1 ... e
+            % second transpose across
+            for i = n:-1:1
                 F = self.factor(i);
-                if id ~= 1
-                    M = reshape(M, dims);
-                    M = permute(M, [id 2:id-1 1 id+1:n+1]);
-                end
-                M = reshape(M, [F.dimension (self.dimension/F.dimension)*d2]);
+                M = reshape(M, [d(i) e*D/d(i)]);
                 M = F.matrixRowAction(g, M);
-                if id ~= 1
-                    M = reshape(M, dims);
-                    M = permute(M, [id 2:id-1 1 id+1:n+1]);
-                end
+                M = M.';
             end
-            M = reshape(M, [self.dimension d2]);
+            M = reshape(M, [e D]).';
         end
 
         function M = matrixColAction_double_sparse(self, g, M)
-            if issparse(M)
-                M = full(M);
-            end
-            d1 = size(M, 1);
+            e = size(M, 1);
             n = self.nFactors;
-            dimsF = cellfun(@(f) f.dimension, self.factors);
-            dims = [d1 fliplr(dimsF)];
-            for i = 1:self.nFactors
-                id = n-i+2;
+            D = self.dimension;
+            dims = cellfun(@(f) f.dimension, self.factors);
+            % in the Matlab convention, we would have a tensor
+            % e dn ... d2 d1
+            % first step, we multiply (upper case when has been *)
+            % e dn ... d2 D1
+            % then we transpose
+            % D1 e dn ... d2
+            %
+            % Dn .. D1 e
+            for i = 1:n
                 F = self.factor(i);
-                if id ~= n+1
-                    M = reshape(M, dims);
-                    M = permute(M, [1:id-1 n+1 id+1:n id]);
-                end
-                M = reshape(M, [(self.dimension/F.dimension)*d1 F.dimension]);
+                M = reshape(M, [e*D/dims(i) dims(i)]);
                 M = F.matrixColAction(g, M);
-                if id ~= n+1
-                    M = reshape(M, dims);
-                    M = permute(M, [1:id-1 n+1 id+1:n id]);
-                end
+                M = M.';
             end
-            M = reshape(M, [d1 self.dimension]);
+            M = reshape(M, [D e]).';
         end
 
         function e = computeErrorBound(self)

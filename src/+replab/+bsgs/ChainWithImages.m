@@ -120,9 +120,10 @@ classdef ChainWithImages < replab.Str
         %
         % Returns:
         %   vpi: Size of the group stored in the chain
-            o = vpi(1);
-            for i = 1:self.length
-                o = o * vpi(length(self.Delta{i}));
+            if self.length == 0
+                o = vpi(1);
+            else
+                o = replab.util.multiplyIntegers(self.orbitSizes);
             end
         end
 

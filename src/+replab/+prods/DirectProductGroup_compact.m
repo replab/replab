@@ -14,4 +14,27 @@ classdef DirectProductGroup_compact < replab.DirectProductGroup & replab.Compact
 
     end
 
+    methods % Implementations
+
+        function b = hasReconstruction(self)
+            b = ~isempty(self.torusBlocks);
+        end
+
+        function [mu, R] = reconstruction(self)
+            blocks = self.torusBlocks;
+            n = self.nFactors;
+            f = @(t) arrayfun(@(i) self.factor(i).reconstruction.imageElement(t(blocks{i})), 1:n, 'uniform', 0);
+            T = replab.TorusGroup(p.n);
+            sets = cell(1, 0);
+            for i = 1:n
+                [~, Ri] = self.factor(i).reconstruction;
+                e = self.embedding(i);
+                sets = horzcat(sets, cellfun(@(S) cellfun(@(s) e.imageElement(s), S, 'uniform', 0), Ri.sets, 'uniform', 0));
+            end
+            R = replab.SetProduct(self, sets, true);
+            mu = T.morphismByFunction(self, f);
+        end
+
+    end
+
 end
