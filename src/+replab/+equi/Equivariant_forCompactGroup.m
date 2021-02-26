@@ -54,6 +54,7 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                     end
                     r = r + 1;
                 end
+                [~, R] = group.reconstruction;
                 useTorus = true;
             else
                 useTorus = false;
@@ -98,6 +99,17 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                 X1 = X1/nSamples;
                 if useInverses
                     X1 = X1/2;
+                end
+                if useTorus
+                    for i = length(R.sets):-1:1
+                        S = R.sets{i};
+                        X2 = X1;
+                        for j = 2:length(S)
+                            g = S{j};
+                            X2 = X2 + repR.matrixRowAction(g, repC.matrixColAction(g, X1));
+                        end
+                        X1 = X2/length(S);
+                    end
                 end
                 nX1 = norm(X1, 'fro');
                 delta(k) = norm(X1 - X, 'fro')/nX;
