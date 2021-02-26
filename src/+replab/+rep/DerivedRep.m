@@ -252,6 +252,17 @@ classdef DerivedRep < replab.Rep
             res = replab.rep.DerivedRep(self.parent, ~self.conjugate, self.inverse, self.transpose);
         end
 
+        function b = hasMaximalTorusExponents(self)
+            b = self.parent.hasMaximalTorusExponents && self.overC; % TODO
+        end
+
+        function [powers, partition] = maximalTorusExponents(self)
+            [powers, partition] = self.parent.maximalTorusExponents;
+            if self.inverse ~= self.conjugate
+                powers = -powers;
+            end
+        end
+
     end
 
 end
