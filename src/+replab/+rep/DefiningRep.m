@@ -1,24 +1,10 @@
 classdef DefiningRep < replab.Rep
-% Defining representation of a unitary or orthogonal group
-
-    properties (SetAccess = protected)
-        fromDivisionRing % ('R', 'C', 'H'): Division ring over which the group element matrices are defined
-    end
+% Defining representation of a `+replab.ClassicalCompactGroup`
 
     methods
 
         function self = DefiningRep(group, field)
-            switch class(group)
-              case 'replab.OrthogonalGroup'
-                fromDivisionRing = 'R';
-              case 'replab.UnitaryGroup'
-                fromDivisionRing = 'C';
-              case 'replab.CompactSymplecticGroup'
-                fromDivisionRing = 'H';
-              otherwise
-                error('Unknown group type %s', class(group));
-            end
-            switch [fromDivisionRing '/' field]
+            switch [group.algebra '/' field]
               case {'R/R', 'C/C', 'R/C'}
                 d = group.n;
                 divisionAlgebraName = '';
@@ -32,8 +18,7 @@ classdef DefiningRep < replab.Rep
                 d = group.n*2;
                 divisionAlgebraName = 'complex';
             end
-            self@replab.Rep(group, field, d, 'isUnitary', true, 'trivialDimension', 0, 'isIrreducible', true);
-            self.fromDivisionRing = fromDivisionRing;
+            self@replab.Rep(group, field, d, 'isUnitary', true, 'trivialDimension', 0, 'isIrreducible', true, 'divisionAlgebraName', divisionAlgebraName);
         end
 
     end
@@ -45,7 +30,7 @@ classdef DefiningRep < replab.Rep
         end
 
         function rho = image_double_sparse(self, g)
-            switch [self.fromDivisionRing '/' self.field]
+            switch [self.group.algebra '/' self.field]
               case {'R/R', 'C/C', 'R/C'}
                 rho = g;
               case 'H/C'
@@ -80,7 +65,10 @@ classdef DefiningRep < replab.Rep
 
         function b = hasMaximalTorusExponents(self)
             b = false;
-            switch [self.fromDivisionRing '/' self.field]
+            if ~self.group.hasReconstruction
+                return
+            end
+            switch [self.group.algebra '/' self.field]
               case 'C/C'
                 b = true;
               case 'H/C'
@@ -90,7 +78,7 @@ classdef DefiningRep < replab.Rep
 
         function [powers, blockIndex] = maximalTorusExponents(self)
             assert(self.hasMaximalTorusExponents);
-            switch [self.fromDivisionRing '/' self.field]
+            switch [self.group.algebra '/' self.field]
               case 'C/C'
                 powers = eye(self.dimension);
                 blockIndex = 1:self.dimension;
