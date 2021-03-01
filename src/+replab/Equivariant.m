@@ -258,13 +258,7 @@ classdef Equivariant < replab.Domain
                     return
                 end
             end
-            if isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SimilarRep')
-                E = replab.equi.Equivariant_forSimilarRep.make(repR, repC, varargin{:});
-            elseif isa(repR, 'replab.SimilarRep') && isa(repC, 'replab.SubRep')
-                E = replab.Equivariant.make(repR.toSubRep, repC, varargin{:});
-            elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SimilarRep')
-                E = replab.Equivariant.make(repR, repC.toSubRep, varargin{:});
-            elseif isa(repR, 'replab.SubRep') && isa(repC, 'replab.SubRep')
+            if isa(repR, 'replab.SubRep') && isa(repC, 'replab.SubRep')
                 E = replab.SubEquivariant.make(repR, repC, varargin{:});
             elseif isa(repR.group, 'replab.FiniteGroup')
                 if repR.group.order < 65536 && (~repR.isExact || ~repC.isExact)

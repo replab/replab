@@ -218,11 +218,7 @@ classdef DerivedRep < replab.Rep
             k = self.parent.kernel;
         end
 
-        %TODO: optimize this
-        %function rep = computeUnitarize(self)
-        %    sr = self.parent.unitarize;
-        %    rep = replab.SimilarRep(self, sr.A_internal, sr.Ainv_internal);
-        %end
+        % TODO: computeUnitarize
 
     end
 
