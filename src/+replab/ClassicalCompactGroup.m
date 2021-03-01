@@ -92,7 +92,7 @@ classdef ClassicalCompactGroup < replab.CompactGroup
         end
 
         function b = hasReconstruction(self)
-            if any(self.algebra == 'CH') && ~self.isSpecial
+            if any(self.algebra == 'CH')
                 b = true;
             else
                 b = false;
@@ -100,14 +100,22 @@ classdef ClassicalCompactGroup < replab.CompactGroup
         end
 
         function [mu, R] = reconstruction(self)
-            assert(self.hasReconstruction);
             R = replab.SetProduct.identity(self);
-            T = replab.TorusGroup(self.n);
-            if self.algebra == 'C'
+            n = self.n;
+            if self.algebra == 'C' && self.isSpecial
+                T = replab.TorusGroup(n-1);
+                T1 = replab.TorusGroup(n);
+                mu = T.morphismByFunction(self, @(x) T1.toMatrix(mod([x -sum(x)], 1)));
+            elseif self.algebra == 'C' && ~self.isSpecial
+                T = replab.TorusGroup(n);
                 mu = T.morphismByFunction(self, @(x) T.toMatrix(x));
-            else
+            elseif self.algebra == 'H'
+                T = replab.TorusGroup(n);
                 mu = T.morphismByFunction(self, @(x) replab.H(T.toMatrix(x)));
+            else
+                error('Unsupported');
             end
+
         end
 
     end

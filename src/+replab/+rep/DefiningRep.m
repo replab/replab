@@ -80,7 +80,12 @@ classdef DefiningRep < replab.Rep
             assert(self.hasMaximalTorusExponents);
             switch [self.group.algebra '/' self.field]
               case 'C/C'
-                powers = eye(self.dimension);
+                if self.group.isSpecial
+                    powers = [eye(self.dimension-1)
+                              -ones(1, self.dimension-1)];
+                else
+                    powers = eye(self.dimension);
+                end
                 blockIndex = 1:self.dimension;
               case 'H/C'
                 powers = kron(eye(self.dimension/2), [1;-1]);

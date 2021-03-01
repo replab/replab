@@ -22,6 +22,7 @@ classdef TorusGroup < replab.CompactGroup
         end
 
         function X = toMatrix(self, x)
+            assert(length(x) == self.n);
             X = diag(exp(2i*pi*x));
         end
 
@@ -59,7 +60,7 @@ classdef TorusGroup < replab.CompactGroup
 
         function [mu, R] = reconstruction(self)
             R = replab.SetProduct.identity(self);
-            mu = replab.TorusMorphism.identity(self);
+            mu = replab.Isomorphism.identity(self);
         end
 
     end

@@ -28,7 +28,7 @@ classdef TorusMorphismLaws < replab.Laws
             self.muT = muT;
         end
 
-        function law_tensorMap_U(self, u)
+        function law_torusMap_U(self, u)
             s = self.muS.imageElement(u);
             t1 = self.morphism.imageElement(s);
             v = self.morphism.imageTorusElement(u);

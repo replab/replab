@@ -6,7 +6,9 @@ classdef Identity < replab.Isomorphism
         function self = Identity(group)
             self.source = group;
             self.target = group;
-            if isa(group, 'replab.CompactGroup') && group.hasReconstruction
+            if isa(group, 'replab.TorusGroup')
+                self.torusMap = eye(group.n);
+            elseif isa(group, 'replab.CompactGroup') && group.hasReconstruction
                 n = group.reconstruction.source.n;
                 self.torusMap = eye(n);
             end

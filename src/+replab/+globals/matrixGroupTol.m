@@ -8,10 +8,11 @@ function value = matrixGroupTol(newValue)
 %
 % Returns:
 %   double: Stored integer value
-    persistent value
+    persistent storedValue
     if nargin == 1
-        value = newValue;
-    elseif isempty(value)
-        value = 1e-10;
+        storedValue = newValue;
+    elseif isempty(storedValue)
+        storedValue = 1e-10;
     end
+    value = storedValue;
 end
