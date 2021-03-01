@@ -128,19 +128,6 @@ classdef SubRep < replab.Rep
             res = [];
         end
 
-        function res = rewriteTerm_SubRepOfSimilarRep(self, options)
-            if isa(self.parent, 'replab.SimilarRep')
-                if self.mapsAreIntegerValued || self.parent.basisIsIntegerValued || ...
-                        (options.dense && (options.approximate || (self.mapsAreExact && self.parent.basisIsExact)))
-                    newI = self.parent.Ainv_internal * self.injection_internal;
-                    newP = self.projection_internal * self.parent.A_internal;
-                    res = replab.SubRep(self.parent.parent, newI, newP);
-                    return
-                end
-            end
-            res = [];
-        end
-
     end
 
     methods
@@ -392,11 +379,6 @@ classdef SubRep < replab.Rep
               case 'replab.SubRep'
                 newI_internal = parent.injection_internal * self.injection_internal;
                 newP_internal = self.projection_internal * parent.projection_internal;
-                res = parent.parent.subRep(newI_internal, 'projection', newP_internal);
-                res.copyProperties(self);
-              case 'replab.SimilarRep'
-                newI_internal = parent.Ainv_internal * self.injection_internal;
-                newP_internal = self.projection_internal * parent.A_internal;
                 res = parent.parent.subRep(newI_internal, 'projection', newP_internal);
                 res.copyProperties(self);
               otherwise

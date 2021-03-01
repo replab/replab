@@ -25,14 +25,18 @@ classdef Irreducible < replab.SubRep
             self.components = components;
         end
 
-        function r = asSimilarRep(self)
-        % Returns the block-diagonal similar representation corresponding to the decomposition
+        function r = toSubRep(self)
+        % Returns the block-diagonal similar representation corresponding to this decomposition
+        %
+        % Both this `.Irreducible` object and the returned representation will be instances of `.SubRep`.
+        % This method helps us test the implementation of `.Irreducible` as the returned `.SubRep` loses
+        % its particular structure.
         %
         % The returned representation is the parent representation with an explicit change of basis, so it does
-        % not look as clean as ``self``. For efficiency and numerical stability, use ``self``.
+        % not look as clean as this `.Irreducible`.
         %
         % Returns:
-        %   `+replab.Rep`: The block-diagonal representation as a representation similar to this rep. parent
+        %   `+replab.SubRep`: The block-diagonal representation as a representation similar to `.parent`
             r = self.parent.similarRep(self.projection_internal, 'inverse', self.injection_internal);
         end
 

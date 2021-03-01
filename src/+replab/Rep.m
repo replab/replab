@@ -300,7 +300,7 @@ classdef Rep < replab.Obj
         function newRep = simplify(self, varargin)
         % Returns a representation identical to this, but possibly with its structure simplified
         %
-        % It pushes `.SimilarRep` to the outer level, and `.DerivedRep` to the inner levels;
+        % It pushes `.SubRep` to the outer level, and `.DerivedRep` to the inner levels;
         % expands tensor products.
         %
         % Additional keyword arguments can be provided as key-value pairs.
@@ -1524,7 +1524,7 @@ classdef Rep < replab.Obj
             if isempty(inverse)
                 inverse = inv(A);
             end
-            rep1 = replab.SimilarRep(self, A, inverse, restArgs{:});
+            rep1 = self.subRep(inverse, 'projection', A, restArgs{:});
         end
 
     end
