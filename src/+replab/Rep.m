@@ -223,11 +223,6 @@ classdef Rep < replab.Obj
             if rep.inCache('kernel')
                 self.cache('kernel', rep.kernel, '==');
             end
-            if rep.inCache('unitarize')
-                u = rep.unitarize;
-                u1 = replab.SimilarRep(self, u.A_internal, u.Ainv_internal);
-                self.cache('unitarize', u1, 'ignore');
-            end
         end
 
         function [newRep changed] = innermostTerm(self, options)
@@ -305,7 +300,7 @@ classdef Rep < replab.Obj
         function newRep = simplify(self, varargin)
         % Returns a representation identical to this, but possibly with its structure simplified
         %
-        % It pushes `.SimilarRep` to the outer level, and `.DerivedRep` to the inner levels;
+        % It pushes `.SubRep` to the outer level, and `.DerivedRep` to the inner levels;
         % expands tensor products.
         %
         % Additional keyword arguments can be provided as key-value pairs.
@@ -333,7 +328,7 @@ classdef Rep < replab.Obj
                 c = 1;
             else
                 simRep = self.unitarize;
-                c = cond(simRep.A_internal);
+                c = cond(simRep.injection_internal);
             end
         end
 
@@ -1161,7 +1156,6 @@ classdef Rep < replab.Obj
                 f = f.restrictedSource(self.group);
             end
             res = replab.rep.CompositionRep(f.inverse, self);
-            res.copyProperties(self);
         end
 
         function res = compose(self, applyFirst)
@@ -1336,11 +1330,11 @@ classdef Rep < replab.Obj
         function res = unitarize(self)
         % Returns a unitary representation equivalent to this representation
         %
-        % The returned representation is of type `.SimilarRep`, from which
-        % the change of basis matrix can be obtained.
+        % The returned representation is of type `.SubRep`, from which the change of basis matrix
+        % can be obtained.
         %
-        % If the representation is already unitary, the returned `.SimilarRep`
-        % has the identity matrix as a change of basis.
+        % If the representation is already unitary, the returned `.SubRep` has the identity matrix as
+        % injection/projection maps;
         %
         % Example:
         %   >>> S3 = replab.S(3);
@@ -1354,9 +1348,8 @@ classdef Rep < replab.Obj
         %       logical
         %       1
         %
-        %
         % Returns:
-        %   `+replab.SimilarRep`: Unitary similar representation
+        %   `+replab.SubRep`: Unitary similar representation
             res = self.cached('unitarize', @() self.computeUnitarize);
         end
 
@@ -1531,7 +1524,7 @@ classdef Rep < replab.Obj
             if isempty(inverse)
                 inverse = inv(A);
             end
-            rep1 = replab.SimilarRep(self, A, inverse, restArgs{:});
+            rep1 = self.subRep(inverse, 'projection', A, restArgs{:});
         end
 
     end
@@ -1540,14 +1533,14 @@ classdef Rep < replab.Obj
 
         function res = computeUnitarize(self)
             if self.isUnitary
-                res = replab.SimilarRep.identical(self);
+                res = replab.SubRep.identical(self);
             else
-                [A Ainv] = self.unitaryChangeOfBasis;
-                res = self.similarRep(A, 'inverse', Ainv, 'isUnitary', true);
+                [A, Ainv] = self.unitaryChangeOfBasis;
+                res = self.subRep(Ainv, 'projection', A, 'isUnitary', true);
             end
         end
 
-        function [A Ainv] = unitaryChangeOfBasis(self)
+        function [A, Ainv] = unitaryChangeOfBasis(self)
         % Returns the change of basis to a unitary representation
         %
         % Returns ``A`` and ``Ainv`` so that ``A * self.image(g) * Ainv`` is unitary.

@@ -29,30 +29,31 @@ classdef TensorRep < replab.Rep
 
     methods % Simplification rules
 
-        function res = rewriteTerm_someFactorsArePermutationSimilarReps(self, options)
-            isPermSimilar = cellfun(@(f) isa(f, 'replab.SimilarRep') && f.isPermutation, self.factors);
-            if any(isPermSimilar)
-                A = speye(1);
-                Ainv = speye(1);
-                n = self.nFactors;
-                newFactors = cell(1, n);
-                for i = 1:n
-                    f = self.factor(i);
-                    if isPermSimilar(i)
-                        A = kron(A, f.A_internal);
-                        Ainv = kron(Ainv, f.Ainv_internal);
-                        newFactors{i} = f.parent;
-                    else
-                        A = kron(A, speye(f.dimension));
-                        Ainv = kron(Ainv, speye(f.dimension));
-                        newFactors{i} = f;
-                    end
-                end
-                res = replab.SimilarRep(replab.rep.TensorRep(self.group, self.field, newFactors), A, Ainv);
-            else
-                res = [];
-            end
-        end
+        % TODO
+% $$$         function res = rewriteTerm_someFactorsArePermutationSimilarReps(self, options)
+% $$$             isPermSimilar = cellfun(@(f) isa(f, 'replab.SimilarRep') && f.isPermutation, self.factors);
+% $$$             if any(isPermSimilar)
+% $$$                 A = speye(1);
+% $$$                 Ainv = speye(1);
+% $$$                 n = self.nFactors;
+% $$$                 newFactors = cell(1, n);
+% $$$                 for i = 1:n
+% $$$                     f = self.factor(i);
+% $$$                     if isPermSimilar(i)
+% $$$                         A = kron(A, f.A_internal);
+% $$$                         Ainv = kron(Ainv, f.Ainv_internal);
+% $$$                         newFactors{i} = f.parent;
+% $$$                     else
+% $$$                         A = kron(A, speye(f.dimension));
+% $$$                         Ainv = kron(Ainv, speye(f.dimension));
+% $$$                         newFactors{i} = f;
+% $$$                     end
+% $$$                 end
+% $$$                 res = replab.SimilarRep(replab.rep.TensorRep(self.group, self.field, newFactors), A, Ainv);
+% $$$             else
+% $$$                 res = [];
+% $$$             end
+% $$$         end
 
         function res = rewriteTerm_moveDirectSumToFirstFactor(self, options)
         % If a factor is a direct sum, move it as the first factor
@@ -275,7 +276,7 @@ classdef TensorRep < replab.Rep
                 A = replab.numerical.multikron(As, 'double/sparse');
                 Ainv = replab.numerical.multikron(Ainvs, 'double/sparse');
             end
-            rep = replab.SimilarRep(self, A, Ainv, 'isUnitary', true);
+            rep = self.subRep(Ainv, 'projection', A, 'isUnitary', true);
         end
 
     end

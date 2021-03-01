@@ -27,31 +27,32 @@ classdef DirectSumRep < replab.Rep
 
     methods % Simplification rules
 
-        function res = rewriteTerm_someFactorsArePermutationSimilarReps(self, options)
-        % Rewrite rule: move permutation similarity transforms before performing the direct sum
-            isPermSimilar = cellfun(@(f) isa(f, 'replab.SimilarRep') && f.isPermutation, self.factors);
-            if any(isPermSimilar)
-                A = sparse(0, 0);
-                Ainv = sparse(0, 0);
-                n = self.nFactors;
-                newFactors = cell(1, n);
-                for i = 1:n
-                    f = self.factor(i);
-                    if isPermSimilar(i)
-                        A = blkdiag(A, f.A_internal);
-                        Ainv = blkdiag(Ainv, f.Ainv_internal);
-                        newFactors{i} = f.parent;
-                    else
-                        A = blkdiag(A, speye(f.dimension));
-                        Ainv = blkdiag(Ainv, speye(f.dimension));
-                        newFactors{i} = f;
-                    end
-                end
-                res = replab.SimilarRep(replab.rep.DirectSumRep(self.group, self.field, newFactors), A, Ainv);
-            else
-                res = [];
-            end
-        end
+        % TODO
+% $$$         function res = rewriteTerm_someFactorsArePermutationSimilarReps(self, options)
+% $$$         % Rewrite rule: move permutation similarity transforms before performing the direct sum
+% $$$             isPermSimilar = cellfun(@(f) isa(f, 'replab.SimilarRep') && f.isPermutation, self.factors);
+% $$$             if any(isPermSimilar)
+% $$$                 A = sparse(0, 0);
+% $$$                 Ainv = sparse(0, 0);
+% $$$                 n = self.nFactors;
+% $$$                 newFactors = cell(1, n);
+% $$$                 for i = 1:n
+% $$$                     f = self.factor(i);
+% $$$                     if isPermSimilar(i)
+% $$$                         A = blkdiag(A, f.A_internal);
+% $$$                         Ainv = blkdiag(Ainv, f.Ainv_internal);
+% $$$                         newFactors{i} = f.parent;
+% $$$                     else
+% $$$                         A = blkdiag(A, speye(f.dimension));
+% $$$                         Ainv = blkdiag(Ainv, speye(f.dimension));
+% $$$                         newFactors{i} = f;
+% $$$                     end
+% $$$                 end
+% $$$                 res = replab.SimilarRep(replab.rep.DirectSumRep(self.group, self.field, newFactors), A, Ainv);
+% $$$             else
+% $$$                 res = [];
+% $$$             end
+% $$$         end
 
         function res = rewriteTerm_removeTrivialFactors(self, options)
         % Rewrite rule: remove trivial factors
@@ -175,7 +176,7 @@ classdef DirectSumRep < replab.Rep
             end
             A = blkdiag(As{:});
             Ainv = blkdiag(Ainvs{:});
-            rep = replab.SimilarRep(self, A, AInv, 'isUnitary', true);
+            rep = self.subRep(AInv, 'projection', A, 'isUnitary', true);
         end
 
     end

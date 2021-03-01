@@ -29,6 +29,7 @@ classdef SubRep < replab.Rep
         injection_internal % (double(D,d) or `.cyclotomic`(D,d), may be sparse): Injection map
         projection_internal % (double(d,D) or `.cyclotomic`(d,D), may be sparse): Projection map
         mapsAreAdjoint % (logical): True if `.parent` is unitary (so the Hermitian adjoint makes sense)  and `.injection` is the conjugate transpose of `.projection`
+        isSimilarRep % (logical): True if this `.SubRep` encodes a similarity transformation
     end
 
     methods
@@ -52,6 +53,7 @@ classdef SubRep < replab.Rep
         %   injectionConditionNumberEstimate (double, optional): Upper bound of the condition number of $\tilde{I}$ (and thus $\tilde{P}$)
             D = size(injection_internal, 1);
             d = size(injection_internal, 2);
+            isSimilarRep = (d == D);
             assert(size(projection_internal, 1) == d);
             assert(size(projection_internal, 2) == D);
             assert(parent.dimension == D, 'Incorrect dimension');
@@ -65,7 +67,10 @@ classdef SubRep < replab.Rep
                 restArgs = replab.util.keyValuePairsUpdate(restArgs, 'isUnitary', true);
             end
             if parent.inCache('trivialDimension')
-                if parent.trivialDimension == 0
+                if isSimilarRep
+                    [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'trivialDimension', parent.trivialDimension);
+                    assert(~exists || oldValue == parent.trivialDimension);
+                elseif parent.trivialDimension == 0
                     [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'trivialDimension', 0);
                     assert(~exists || oldValue == 0);
                 end
@@ -74,11 +79,22 @@ classdef SubRep < replab.Rep
                     assert(~exists || oldValue == d);
                 end
             end
+            if isSimilarRep
+                if parent.inCache('isIrreducible')
+                    [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'isIrreducible', parent.isIrreducible);
+                    assert(~exists || oldValue == parent.isIrreducible);
+                end
+                if parent.inCache('frobeniusSchurIndicator')
+                    [restArgs, exists, oldValue] = replab.util.keyValuePairsUpdate(restArgs, 'frobeniusSchurIndicator', parent.frobeniusSchurIndicator);
+                    assert(~exists || oldValue == parent.frobeniusSchurIndicator);
+                end
+            end
             self@replab.Rep(parent.group, parent.field, d, restArgs{:});
             self.parent = parent;
             self.injection_internal = injection_internal;
             self.projection_internal = projection_internal;
             self.mapsAreAdjoint = mapsAreAdjoint;
+            self.isSimilarRep = isSimilarRep;
             if ~isempty(args.projectorErrorBound)
                 self.cache('projectorErrorBound', args.projectorErrorBound, 'error');
             end
@@ -91,25 +107,20 @@ classdef SubRep < replab.Rep
 
     methods % Simplification rules
 
+        function res = rewriteTerm_isIdentity(self, options)
+            if self.mapsAreIntegerValued && all(all(self.injection_internal == speye(self.dimension))) && all(all(self.projection_internal == speye(self.dimension)))
+                res = self.parent;
+            else
+                res = [];
+            end
+        end
+
         function res = rewriteTerm_SubRepOfSubRep(self, options)
             if isa(self.parent, 'replab.SubRep')
                 if self.mapsAreIntegerValued || self.parent.mapsAreIntegerValued || ...
                         (options.dense && (options.approximate || (self.mapsAreExact && self.parent.mapsAreExact)))
                     newI = self.parent.injection_internal * self.injection_internal;
                     newP = self.projection_internal & self.parent.projection_internal;
-                    res = replab.SubRep(self.parent.parent, newI, newP);
-                    return
-                end
-            end
-            res = [];
-        end
-
-        function res = rewriteTerm_SubRepOfSimilarRep(self, options)
-            if isa(self.parent, 'replab.SimilarRep')
-                if self.mapsAreIntegerValued || self.parent.basisIsIntegerValued || ...
-                        (options.dense && (options.approximate || (self.mapsAreExact && self.parent.basisIsExact)))
-                    newI = self.parent.Ainv_internal * self.injection_internal;
-                    newP = self.projection_internal * self.parent.A_internal;
                     res = replab.SubRep(self.parent.parent, newI, newP);
                     return
                 end
@@ -219,6 +230,9 @@ classdef SubRep < replab.Rep
             I = self.injection_internal;
             P = self.projection_internal;
             b = self.mapsAreExact && all(all(I == round(double(I)))) && all(all(P == round(double(P))));
+        end
+
+        function b = mapsArePermutationMatrices(self)
         end
 
         function e = projectorErrorBound(self)
@@ -367,11 +381,6 @@ classdef SubRep < replab.Rep
                 newP_internal = self.projection_internal * parent.projection_internal;
                 res = parent.parent.subRep(newI_internal, 'projection', newP_internal);
                 res.copyProperties(self);
-              case 'replab.SimilarRep'
-                newI_internal = parent.Ainv_internal * self.injection_internal;
-                newP_internal = self.projection_internal * parent.A_internal;
-                res = parent.parent.subRep(newI_internal, 'projection', newP_internal);
-                res.copyProperties(self);
               otherwise
                 error('Not supported');
             end
@@ -506,11 +515,28 @@ classdef SubRep < replab.Rep
         end
 
         function e = computeErrorBound(self)
-            eU = self.parent.conditionNumberEstimate * self.projectorErrorBound;
-            dU = pi*sqrt(self.dimension/2)*eU/(1-eU);
-            e1 = self.injectionConditionNumberEstimate * self.parent.errorBound; % parent error
-            e2 = self.injectionConditionNumberEstimate * self.parent.conditionNumberEstimate * (2*dU + dU^2);
-            e = e1 + e2;
+            if self.isSimilarRep
+                I = self.injection('double/sparse');
+                P = self.projection('double/sparse');
+                prodError = norm(P*I - eye(d), 'fro'); % || dP I ||F
+                % let P = I^-1
+                % we assume I is exact, and P~ = projection_internal, with P~ = P + dP and dP the error
+                % || P rho I - P~ rho~ I ||F =~ || P drho I ||F + || P~ rho I ||F =
+                % = ||P||2 ||drho||F ||I||2 + || dP I P rho I||F
+                %
+                % now || dP I P rho I||F = || dP I ||F ||P rho I||2
+                %
+                % thus e = cond(injection) * parent.errorBound + self.conditionNumberEstimate*prodError
+                term1 = self.injectionConditionNumberEstimate * self.parent.errorBound; % ||P||2 ||I||2 * ||drho||F
+                term2 = self.conditionNumberEstimate * prodError;
+                e = term1 + term2;
+            else
+                eU = self.parent.conditionNumberEstimate * self.projectorErrorBound;
+                dU = pi*sqrt(self.dimension/2)*eU/(1-eU);
+                e1 = self.injectionConditionNumberEstimate * self.parent.errorBound; % parent error
+                e2 = self.injectionConditionNumberEstimate * self.parent.conditionNumberEstimate * (2*dU + dU^2);
+                e = e1 + e2;
+            end
         end
 
         %function [A Ainv] = unitaryChangeOfBasis(self) TODO restore

@@ -69,7 +69,7 @@ classdef ComplexifiedRep < replab.Rep
 
         function rep = computeUnitarize(self)
             sr = self.parent.unitarize;
-            rep = replab.SimilarRep(self, sr.A_internal, sr.Ainv_internal);
+            rep = self.subRep(sr.injection, 'projection', sr.projection);
         end
 
     end

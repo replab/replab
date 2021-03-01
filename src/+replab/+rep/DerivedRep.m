@@ -113,28 +113,29 @@ classdef DerivedRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_parentIsSimilarRep(self, options)
-            if isa(self.parent, 'replab.SimilarRep')
-                A = self.parent.A_internal;
-                Ainv = self.parent.Ainv_internal;
-                if self.conjugate
-                    A = conj(A);
-                    Ainv = conj(Ainv);
-                end
-                swap = false;
-                if self.transpose
-                    A0 = A;
-                    Ainv0 = Ainv;
-                    A = Ainv0.';
-                    Ainv = A0.';
-                end
-                res = replab.SimilarRep(replab.rep.DerivedRep(self.parent.parent, ...
-                                                              self.conjugate, self.inverse, self.transpose), ...
-                                        A, Ainv);
-            else
-                res = [];
-            end
-        end
+        % TODO for SubRep
+% $$$         function res = rewriteTerm_parentIsSimilarRep(self, options)
+% $$$             if isa(self.parent, 'replab.SimilarRep')
+% $$$                 A = self.parent.A_internal;
+% $$$                 Ainv = self.parent.Ainv_internal;
+% $$$                 if self.conjugate
+% $$$                     A = conj(A);
+% $$$                     Ainv = conj(Ainv);
+% $$$                 end
+% $$$                 swap = false;
+% $$$                 if self.transpose
+% $$$                     A0 = A;
+% $$$                     Ainv0 = Ainv;
+% $$$                     A = Ainv0.';
+% $$$                     Ainv = A0.';
+% $$$                 end
+% $$$                 res = replab.SimilarRep(replab.rep.DerivedRep(self.parent.parent, ...
+% $$$                                                               self.conjugate, self.inverse, self.transpose), ...
+% $$$                                         A, Ainv);
+% $$$             else
+% $$$                 res = [];
+% $$$             end
+% $$$         end
 
     end
 
@@ -218,11 +219,7 @@ classdef DerivedRep < replab.Rep
             k = self.parent.kernel;
         end
 
-        %TODO: optimize this
-        %function rep = computeUnitarize(self)
-        %    sr = self.parent.unitarize;
-        %    rep = replab.SimilarRep(self, sr.A_internal, sr.Ainv_internal);
-        %end
+        % TODO: computeUnitarize
 
     end
 
