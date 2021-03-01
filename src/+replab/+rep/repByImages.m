@@ -26,7 +26,7 @@ function rep = repByImages(group, field, dimension, varargin)
           case 'double'
             isInteger(i) = full(all(all(round(img) == img)));
           case 'replab.cyclotomic'
-            isInteger(i) = all(all(img.isWhole));
+            isInteger(i) = all(all(img.iswhole));
         end
     end
     if any(isDouble & ~isInteger) || (~isempty(imagesErrorBound) && any(imagesErrorBound > 0))

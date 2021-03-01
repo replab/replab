@@ -421,7 +421,7 @@ classdef Rep < replab.Obj
             replab.msg(1, '*** Computing trivial component (exact) of representation of dim = %d', self.dimension);
             P2 = self.trivialProjector('exact');
             d = trace(P2);
-            assert(d.isWhole);
+            assert(iswhole(d));
             d = double(d);
             replab.msg(2, 'Starting exact LU decomposition');
             t = cputime;
