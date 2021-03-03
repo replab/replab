@@ -93,6 +93,40 @@ classdef cyclotomic
             c = replab.cyclotomic.fromJavaArray(ja, size(orders));
         end
 
+        function c = fromCell(mat)
+        % Constructs a cyclotomic matrix from a cell array of mixed items
+        %
+        % Example:
+        %   >>> replab.cyclotomic.fromCell({1 '1/2'; '1/2' 1})
+        %         1   1/2
+        %        1/2   1
+        %
+        % Args:
+        %   mat (cell(\*,\*) of integer, charstring, cyclotomic): Mixed cell array of coefficients
+        %
+        % Returns:
+        %   `.cyclotomic`: The constructed matrix
+            els = cell(size(mat));
+            for i = 1:size(mat, 1)
+                for j = 1:size(mat, 2)
+                    e = mat{i,j};
+                    if isa(e, 'replab.cyclotomic')
+                        assert(isscalar(e));
+                        els(i,j) = e.mat;
+                    elseif isa(e, 'char')
+                        e1 = replab.cyclotomic.fromStrings(mat(i,j));
+                        els(i,j) = e1.mat;
+                    elseif isa(e, 'double')
+                        e1 = replab.cyclotomic.fromDoubles(mat{i,j});
+                        els(i,j) = e1.mat;
+                    else
+                        error('Unsupported type %s', class(e));
+                    end
+                end
+            end
+            c = replab.cyclotomic(els);
+        end
+
         function c = fromStrings(strings)
         % Constructs a cyclotomic matrix from its string representation
         %
@@ -107,6 +141,11 @@ classdef cyclotomic
         % Returns:
         %    `.cyclotomic`: The constructed matrix
             ja = javaMethod('parse', 'cyclo.Lab', strings(:));
+            for i = 1:length(ja)
+                if isempty(ja(i))
+                    error('Cannot parse ''%s''', strings{i});
+                end
+            end
             c = replab.cyclotomic.fromJavaArray(ja, size(strings));
         end
 
@@ -220,7 +259,7 @@ classdef cyclotomic
 
     end
 
-    methods
+    methods (Access = protected)
 
         function self = cyclotomic(mat)
         % Constructs a cyclotomic matrix from a cell array of coefficients
