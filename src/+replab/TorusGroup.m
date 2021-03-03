@@ -97,4 +97,34 @@ classdef TorusGroup < replab.CompactGroup
 
     end
 
+    methods (Static)
+
+        function S = semidirectProductFromRep(rep)
+        % Returns the semidirect of a finite group on the torus elements using one of its integer representations
+        %
+        % Invertible integer matrices represent automorphisms of a torus group of the same dimension; thus, given a
+        % group ``G``, a representation of ``G`` with integer images defines a morphism from ``G`` to the automorphism
+        % group of a torus ``T``.
+        %
+        % One can then use this morphism to construct an outer semidirect product of ``G`` acting on ``T``.
+        %
+        % Args:
+        %   rep (`.Rep`): Group representation with integer coefficients
+        %
+        % Returns:
+        %   `.SemidirectProduct`: Semidirect product of ``rep.group`` and the torus group
+            H = rep.group;
+            n = rep.dimension;
+            assert(isa(H, 'replab.FiniteGroup'));
+            for i = 1:H.nGenerators
+                h = H.generator(i);
+                img = rep.image(h);
+                assert(all(all(round(img) == img)), 'The representation must have integer coefficients');
+            end
+            T = replab.TorusGroup(n);
+            S = H.semidirectProduct(T, @(g, p) mod(rep.image(g)*p, 1));
+        end
+
+    end
+
 end
