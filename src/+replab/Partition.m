@@ -96,11 +96,7 @@ classdef Partition < replab.Str
 
     end
 
-    methods % Binary operations
-
-    end
-
-    methods % Implementations
+    methods % Comparison
 
         function l = ne(self, rhs)
         % Checks if this partition differs to another partition
@@ -127,6 +123,110 @@ classdef Partition < replab.Str
             end
             l = isequal(self.blockIndex, rhs.blockIndex);
         end
+
+        function b = le(self, rhs)
+        % Returns whether the given partition is coarser than this partition
+        %
+        % Args:
+        %   rhs (`.Partition`): Partition to compare this one with
+        %
+        % Returns:
+        %   logical: True if every block of this partition is a subset of a block of the given partition
+            inSameRhsBlock = cellfun(@(b) all(rhs.blockIndex(b) == rhs.blockIndex(b(1))), self.blocks, 'uniform', 1);
+            b = all(inSameRhsBlock);
+        end
+
+        function b = ge(self, rhs)
+        % Returns whether the given partition is finer than this partition
+        %
+        % Args:
+        %   rhs (`.Partition`): Partition to compare this one with
+        %
+        % Returns:
+        %   logical: True if every block of the given partition is a subset of a block of this partition
+            b = rhs <= self;
+        end
+
+        function b = lt(self, rhs)
+        % Returns whether the given partition is strictly coarser than this partition
+        %
+        % This is a strict version of `.le`
+        %
+        % Args:
+        %   rhs (`.Partition`): Partition to compare this one with
+        %
+        % Returns:
+        %   logical: True if ``self <= rhs`` and ``self ~= rhs``
+            b = (self <= rhs) && (self ~= rhs);
+        end
+
+        function b = gt(self, rhs)
+        % Returns whether the given partition is strictly finer than this partition
+        %
+        % Args:
+        %   rhs (`.Partition`): Partition to compare this one with
+        %
+        % Returns:
+        %   logical: True if ``self >= rhs`` and ``self ~= rhs``
+            b = (self >= rhs) && (self ~= rhs);
+        end
+
+        function res = join(lhs, rhs)
+        % Returns the finest common coarsening of two partitions
+        %
+        % Args:
+        %   rhs (`.Partition`): Other partition
+        %
+        % Returns:
+        %   `.Partition`: The coarsening of the two partitions
+            lhsDone = false(1, lhs.nBlocks);
+            rhsDone = false(1, rhs.nBlocks);
+            blocks = cell(1, 0);
+            while ~all(lhsDone)
+                block = zeros(1, 0); % new block to add
+                todo = find(~lhsDone, 1);
+                while ~isempty(todo)
+                    lhsBlkInd = todo(end);
+                    todo = todo(1:end-1);
+                    if ~lhsDone(lhsBlkInd)
+                        lhsBlk = lhs.blocks{lhsBlkInd};
+                        block = horzcat(block, lhsBlk);
+                        lhsDone(lhsBlkInd) = true;
+                        rhsBlkInds = unique(rhs.blockIndex(lhsBlk));
+                        rhsBlkInds = rhsBlkInds(~rhsDone(rhsBlkInds));
+                        rhsBlks = rhs.blocks(rhsBlkInds);
+                        rhsBlk = horzcat(rhsBlks{:});
+                        rhsDone(rhsBlkInds) = true;
+                        lhsBlkInds = unique(lhs.blockIndex(rhsBlk));
+                        lhsBlkInds = lhsBlkInds(~lhsDone(lhsBlkInds));
+                        todo = horzcat(todo, lhsBlkInds);
+                    end
+                end
+                blocks{1,end+1} = block;
+            end
+            res = replab.Partition.fromBlocks(blocks);
+        end
+
+        function res = meet(self, rhs)
+        % Returns the common refinement of two partitions
+        %
+        % Args:
+        %   rhs (`.Partition`): Other partition
+        %
+        % Returns:
+        %   `.Partition`: The refinement of both partitions
+            blocks = cell(1, 0);
+            for i = 1:self.nBlocks
+                lb = self.blocks{i};
+                inP = replab.Partition.fromVector(rhs.blockIndex(lb));
+                blocks = horzcat(blocks, cellfun(@(b) lb(b), inP.blocks, 'uniform', 0));
+            end
+            res = replab.Partition.fromBlocks(blocks);
+        end
+
+    end
+
+    methods % Implementations
 
         % Str
 
