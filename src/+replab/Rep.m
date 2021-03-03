@@ -1435,6 +1435,13 @@ classdef Rep < replab.Obj
             args = struct('projection', [], 'largeScale', self.dimension > 1000, 'tolerances', replab.rep.Tolerances, 'nSamples', 5);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             projection = args.projection;
+            % convert cell-encoded cyclotomic matrices, when relevant
+            if iscell(injection)
+                injection = replab.cyclotomic.make(injection);
+            end
+            if iscell(projection)
+                projection = replab.cyclotomic.make(projection);
+            end
             isExact = isa(injection, 'replab.cyclotomic') && (isempty(projection) || isa(projection, 'replab.cyclotomic'));
             if isempty(projection)
                 if isExact

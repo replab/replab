@@ -17,6 +17,14 @@ function rep = repByImages(group, field, dimension, varargin)
     end
     assert(length(preimages) == length(images), 'Number of images does not match the number of preimages');
 
+    % Convert images to cyclotomics when relevant
+
+    for i = 1:length(images)
+        if iscell(images{i})
+            images{i} = replab.cyclotomic.make(images{i});
+        end
+    end
+
     % Detect inexact representations
     isDouble = cellfun(@(m) isa(m, 'double'), images);
     isInteger = zeros(1, length(images));
