@@ -43,7 +43,7 @@ classdef Morphism < replab.Obj
         % Returns:
         %   element of ``target.reconstruction.source``): Torus element of target
             assert(self.source.hasReconstruction && self.target.hasReconstruction);
-            t = mod(s * self.torusMap, 1);
+            t = mod(self.torusMap * s, 1);
         end
 
     end

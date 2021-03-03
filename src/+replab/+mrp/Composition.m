@@ -15,7 +15,7 @@ classdef Composition < replab.Morphism
             self.first = first;
             self.second = second;
             if ~isempty(first.torusMap) && ~isempty(second.torusMap)
-                self.torusMap = first.torusMap * second.torusMap;
+                self.torusMap = second.torusMap * first.torusMap;
             end
             self.imageElementFun = imageElementFun;
         end
