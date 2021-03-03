@@ -56,3 +56,9 @@ function test_pauli_group_is_not_unitary_2_design
     rep = G.repByImages('C', 4, 'preimages', {'x' 'y' 'z' 'i'}, 'images', images2);
     assert(rep.decomposition.nComponents == 4);
 end
+
+function test_cell_images
+    G = replab.S(3);
+    rep = G.repByImages('R', 2, 'preimages', {[2 1 3] [1 3 2]}, 'images', {[1 0; 0 -1] {'-1/2' '3/4'; '1' '1/2'}});
+    assert(all(all(rep.image([3 2 1], 'exact') == replab.cyclotomic.make({'-1/2' '-3/4'; '-1' '1/2'}))));
+end

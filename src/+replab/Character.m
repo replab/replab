@@ -113,6 +113,9 @@ classdef Character < replab.Obj
         function self = Character(conjugacyClasses, values)
             self.group = conjugacyClasses.group;
             self.conjugacyClasses = conjugacyClasses;
+            if iscell(values)
+                values = replab.cyclotomic.make(values);
+            end
             self.values = values;
         end
 

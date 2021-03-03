@@ -38,7 +38,7 @@ classdef CyclotomicTable < replab.Str
                         self.strings{i,j} = 'i ';
                     elseif c == mE4
                         self.strings{i,j} = '-i ';
-                    elseif c.isWhole
+                    elseif c.iswhole
                         self.strings{i,j} = sprintf('%d ', double(c));
                     else
                         [ind negate conjugate] = self.find(matrix(i, j));
