@@ -93,6 +93,29 @@ classdef cyclotomic
             c = replab.cyclotomic.fromJavaArray(ja, size(orders));
         end
 
+        function c = make(mat)
+        % Constructs a cyclotomic matrix from a variety of array types
+        %
+        % * The argument can be a cell array, in which case it will be passed to `.fromCell`
+        % * The argument can be a cyclotomic matrix, in which case it will be returned unchanged
+        % * The argument can be a floating-point matrix, in which case it will be passed to `.fromDoubles`
+        %
+        % Args:
+        %   mat: Array to convert to a cyclotomic matrix
+        %
+        % Returns:
+        %   `.cyclotomic`: The constructed matrix
+            if isa(mat, 'double')
+                c = replab.cyclotomic.fromDoubles(mat);
+            elseif isa(mat, 'replab.cyclotomic')
+                c = mat;
+            elseif iscell(mat)
+                c = replab.cyclotomic.fromCell(mat);
+            else
+                error('Unsupported type %s', class(mat));
+            end
+        end
+
         function c = fromCell(mat)
         % Constructs a cyclotomic matrix from a cell array of mixed items
         %
