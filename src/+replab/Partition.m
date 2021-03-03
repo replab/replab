@@ -34,6 +34,10 @@ classdef Partition < replab.Str
             self.blocks = blocks;
         end
 
+    end
+
+    methods
+
         function check(self)
         % Verifies the sanity of this partition
             m = cellfun(@min, self.blocks); % blocks are ordered
@@ -47,59 +51,9 @@ classdef Partition < replab.Str
             end
         end
 
-        function l = ne(self, rhs)
-        % Checks if this partition differs to another partition
-        %
-        % Args:
-        %   rhs (`.Partition`): Another partition
-        %
-        % Returns:
-        %   logical: True is both partitions differ
-            l = ~(self == rhs);
-        end
+    end
 
-        function l = eq(self, rhs)
-        % Checks if this partition is equal to another partition
-        %
-        % Args:
-        %   rhs (`.Partition`): Another partition
-        %
-        % Returns:
-        %   logical: True is both partitions are equal
-            if ~isa(rhs, 'replab.Partition')
-                l = false;
-                return
-            end
-            l = isequal(self.blockIndex, rhs.blockIndex);
-        end
-
-        function s = shortStr(self, maxColumns)
-            s = '';
-            for i = 1:min(self.nBlocks, maxColumns)
-                if i > 1
-                    s = [s '|'];
-                end
-                b = self.block(i);
-                for j = 1:min(length(b), maxColumns)
-                    if j > 1 && self.n > 9
-                        s = sprintf('%s %d', s, b(j));
-                    else
-                        s = sprintf('%s%d', s, b(j));
-                    end
-                end
-                if length(b) > maxColumns
-                    s = sprintf('%s...', s);
-                end
-            end
-            if self.nBlocks > maxColumns
-                s = sprintf('%s...', s);
-            end
-        end
-
-        function lines = longStr(self, maxRows, maxColumns)
-            lines = replab.str.longStr(self, maxRows, maxColumns);
-            lines{1} = ['Partition ''' self.shortStr(maxColumns) ''''];
-        end
+    methods % Properties
 
         function n = nBlocks(self)
         % Returns the number of subsets/blocks in this partition
@@ -139,6 +93,74 @@ classdef Partition < replab.Str
         %   integer: Size of the ``i``-th block in this partition
             sz = length(self.block{i});
         end
+
+    end
+
+    methods % Binary operations
+
+    end
+
+    methods % Implementations
+
+        function l = ne(self, rhs)
+        % Checks if this partition differs to another partition
+        %
+        % Args:
+        %   rhs (`.Partition`): Another partition
+        %
+        % Returns:
+        %   logical: True is both partitions differ
+            l = ~(self == rhs);
+        end
+
+        function l = eq(self, rhs)
+        % Checks if this partition is equal to another partition
+        %
+        % Args:
+        %   rhs (`.Partition`): Another partition
+        %
+        % Returns:
+        %   logical: True is both partitions are equal
+            if ~isa(rhs, 'replab.Partition')
+                l = false;
+                return
+            end
+            l = isequal(self.blockIndex, rhs.blockIndex);
+        end
+
+        % Str
+
+        function s = shortStr(self, maxColumns)
+            s = '';
+            for i = 1:min(self.nBlocks, maxColumns)
+                if i > 1
+                    s = [s '|'];
+                end
+                b = self.block(i);
+                for j = 1:min(length(b), maxColumns)
+                    if j > 1 && self.n > 9
+                        s = sprintf('%s %d', s, b(j));
+                    else
+                        s = sprintf('%s%d', s, b(j));
+                    end
+                end
+                if length(b) > maxColumns
+                    s = sprintf('%s...', s);
+                end
+            end
+            if self.nBlocks > maxColumns
+                s = sprintf('%s...', s);
+            end
+        end
+
+        function lines = longStr(self, maxRows, maxColumns)
+            lines = replab.str.longStr(self, maxRows, maxColumns);
+            lines{1} = ['Partition ''' self.shortStr(maxColumns) ''''];
+        end
+
+    end
+
+    methods
 
         function [P1 pind] = restrictedToBlocks(self, selBlocks)
         % Returns the partition containing only the given blocks
