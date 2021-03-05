@@ -17,6 +17,8 @@ classdef DefiningRep < replab.Rep
               case 'C/R'
                 d = group.n*2;
                 divisionAlgebraName = 'complex';
+              otherwise
+                error('Invalid');
             end
             self@replab.Rep(group, field, d, 'isUnitary', true, 'trivialDimension', 0, 'isIrreducible', true, 'divisionAlgebraName', divisionAlgebraName);
         end
@@ -63,33 +65,44 @@ classdef DefiningRep < replab.Rep
             p = replab.Partition.fromBlocks({1:self.dimension});
         end
 
-        function b = hasMaximalTorusExponents(self)
-            b = false;
-            if ~self.group.hasReconstruction
-                return
-            end
-            switch [self.group.algebra '/' self.field]
-              case 'C/C'
-                b = true;
-              case 'H/C'
-                b = true;
-            end
+        function b = hasTorusImage(self)
+            b = true;
         end
 
-        function [powers, blockIndex] = maximalTorusExponents(self)
-            assert(self.hasMaximalTorusExponents);
+        function [torusMap, torusInjection, torusProjection] = torusImage(self)
+            n = self.group.n;
+            W = [1 1i; 1 -1i]/sqrt(2);
             switch [self.group.algebra '/' self.field]
-              case 'C/C'
-                if self.group.isSpecial
-                    powers = [eye(self.dimension-1)
-                              -ones(1, self.dimension-1)];
+              case {'R/R', 'R/C'}
+                if mod(n, 2) == 0
+                    torusMap = kron(eye(n/2), [1;-1]);
+                    torusInjection = kron(speye(n/2), W');
+                    torusProjection = kron(speye(n/2), W);
                 else
-                    powers = eye(self.dimension);
+                    torusMap = [kron(eye((n-1)/2), [1;-1]); zeros(1, (n-1)/2)];
+                    torusInjection = blkdiag(kron(speye((n-1)/2), W'), 1);
+                    torusProjection = blkdiag(kron(speye((n-1)/2), W), 1);
                 end
-                blockIndex = 1:self.dimension;
+              case {'C/C', 'C/R'}
+                if self.group.isSpecial
+                    torusMap = [eye(n-1); -ones(1,n-1)];
+                else
+                    torusMap = eye(n);
+                end
+                d = size(torusMap, 1);
+                if self.field == 'C'
+                    torusInjection = speye(d);
+                    torusProjection = speye(d);
+                else
+                    torusMap = kron(torusMap, [1;-1]);
+                    torusInjection = kron(speye(d), W');
+                    torusProjection = kron(speye(d), W);
+                end
               case 'H/C'
-                powers = kron(eye(self.dimension/2), [1;-1]);
-                blockIndex = 1:self.dimension;
+                torusMap = kron(eye(n), [1;-1]);
+                d = size(torusMap, 1);
+                torusInjection = speye(d);
+                torusProjection = speye(d);
             end
         end
 

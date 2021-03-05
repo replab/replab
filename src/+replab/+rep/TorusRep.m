@@ -23,7 +23,7 @@ classdef TorusRep < replab.Rep
         end
 
         function rho = image_double_sparse(self, g)
-            rho = sparse(1:self.dimension, 1:self.dimension, exp(2i*pi*mod(self.torusMap*g, 1)));
+            rho = replab.TorusGroup.torusRepImage(self.torusMap*g);
         end
 
     end
@@ -40,13 +40,58 @@ classdef TorusRep < replab.Rep
             p = replab.Partition.finest(self.dimension);
         end
 
-        function b = hasMaximalTorusExponents(self)
+        function b = hasTorusImage(self)
             b = true;
         end
 
-        function [powers, blockIndex] = maximalTorusExponents(self)
-            powers = self.torusMap;
-            blockIndex = 1:self.dimension;
+        function [torusMap, torusInjection, torusProjection] = torusImage(self)
+            d = size(self.torusMap, 1);
+            torusMap = self.torusMap;
+            torusInjection = speye(d);
+            torusProjection = speye(d);
+        end
+
+    end
+
+    methods (Static)
+
+        function [blocks1, blocks2] = matchTorusMaps(torusMap1, torusMap2)
+        % Given two torus maps, matches the rows of both
+        %
+        % We have ``all(torusMap1(i1,:) == torusMap2(i2,:))`` for ``i1`` in ``blocks1(k)`` and ``i2`` in ``blocks2(k)``.
+        %
+        % Args:
+        %   torusMap1 (integer(\*,n)): First torus map
+        %   torusMap2 (itneger(\*,n)): Second torus map
+        %
+        % Returns
+        % -------
+        %   blocks1: cell(1,\*) of integer(1,\*)
+        %     Blocks of row indices in ``torusMap1``
+        %   blocks2: cell(1,\*) of integer(1,\*)
+        %     Blocks of row indices in ``torusMap2``
+            b1 = find(all(torusMap1 == 0, 2));
+            b2 = find(all(torusMap2 == 0, 2));
+            if ~isempty(b1) && ~isempty(b2)
+                blocks1 = {b1};
+                blocks2 = {b2};
+            else
+                blocks1 = cell(1, 0);
+                blocks2 = cell(1, 0);
+            end
+            r = 1;
+            while r <= size(torusMap1, 1)
+                row = torusMap1(r, :);
+                if any(row ~= 0)
+                    b1 = find(all(bsxfun(@eq, torusMap1, row), 2));
+                    b2 = find(all(bsxfun(@eq, torusMap2, row), 2));
+                    blocks1{1,end+1} = b1;
+                    blocks2{1,end+1} = b2;
+                    torusMap1(b1, :) = 0;
+                    torusMap2(b2, :) = 0;
+                end
+                r = r + 1;
+            end
         end
 
     end

@@ -21,10 +21,28 @@ classdef TorusGroup < replab.CompactGroup
             self.identity = zeros(n, 1);
         end
 
-        function X = toMatrix(self, x)
-            assert(length(x) == self.n);
-            X = diag(exp(2i*pi*x));
+    end
+
+    methods % Morphisms
+
+        function mu = torusMorphism(self, torusMap)
+        % Constructs a morphism from this torus group to another torus group from an integer matrix
+        %
+        % Args:
+        %   torusMap (integer(n1,n)): Integer matrix describing the action on the torus elements
+        %
+        % Returns:
+        %   `.Morphism`: A morphism from this torus group to a torus group of dimension ``n1``
+            n = size(torusMap, 2);
+            n1 = size(torusMap, 1);
+            assert(self.n == n);
+            T1 = replab.TorusGroup(n1);
+            mu = self.morphismByFunction(T1, @(t) torusMap*t, torusMap);
         end
+
+    end
+
+    methods % Representations
 
         function rep = definingRep(self)
         % Returns the defining representation of this torus group
@@ -98,6 +116,36 @@ classdef TorusGroup < replab.CompactGroup
     end
 
     methods (Static)
+
+        function rho = torusRepRealImage(t)
+        % Returns the sparse block-diagonal matrix corresponding to the given torus element
+        %
+        % The element ``t(i)`` will correspond to a 2x2 block: ``[c s; -s c]`` where
+        % ``c = cos(2*pi*t(i))`` and ``s = sin(2*pi*t(i))``.
+        %
+        % Args:
+        %   t (double(n,1)): Torus group element
+        %
+        % Returns:
+        %   double(2*n,2*n): Block diagonal matrix of 2x2 real matrices
+            n = length(t);
+            blocks = arrayfun(@(ti) sparse([cos(2*pi*ti) -sin(2*pi*ti); sin(2*pi*ti) cos(2*pi*ti)]), t, 'uniform', false);
+            rho = blkdiag(blocks{:});
+        end
+
+        function rho = torusRepImage(t)
+        % Returns the sparse diagonal matrix corresponding to the given torus element
+        %
+        % Equivalent to ``torusGroup.definingRep.image(t)``, without constructing additional objects.
+        %
+        % Args:
+        %   t (double(n,1)): Torus group element
+        %
+        % Returns:
+        %   double(n,n), sparse: Diagonal matrix corresponding to the torus element
+            n = length(t);
+            rho = sparse(1:n, 1:n, exp(2i*pi*mod(t', 1)));
+        end
 
         function S = semidirectProductFromRep(rep)
         % Returns the semidirect of a finite group on the torus elements using one of its integer representations

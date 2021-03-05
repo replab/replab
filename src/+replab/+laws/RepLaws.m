@@ -88,15 +88,11 @@ classdef RepLaws < replab.Laws
             self.assertApproxEqual(M1, M2, c * self.rep.errorBound);
         end
 
-        function law_maximalTorusExponents_(self)
-            if self.rep.hasMaximalTorusExponents && self.rep.overC % TODO
-                [mu, R] = self.rep.group.reconstruction;
-                [powers, partition] = self.rep.maximalTorusExponents;
-                t = mu.source.sample; % torus element
-                rho1 = self.rep.image(mu.imageElement(t));
-                rho2 = diag(prod(bsxfun(@power, exp(2i*pi*t), powers), 2));
-                tol = 1e-15*sqrt(self.rep.dimension); % assumption: error on each phase is max 1e-15
-                self.assertApproxEqual(rho1, rho2, tol);
+        function laws = laws_withTorusImage(self)
+            if self.rep.hasTorusImage
+                laws = replab.laws.RepWithTorusImageLaws(self.rep);
+            else
+                laws = replab.Laws.empty;
             end
         end
 

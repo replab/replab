@@ -248,20 +248,22 @@ classdef DirectSumRep < replab.Rep
             end
         end
 
-        function b = hasMaximalTorusExponents(self)
-            b = all(cellfun(@(f) f.hasMaximalTorusExponents, self.factors));
-            b = b & self.overC; % TODO: provide real stuff as well
+        function b = hasTorusImage(self)
+            b = all(cellfun(@(f) f.hasTorusImage, self.factors));
         end
 
-        function [powers, partition] = maximalTorusExponents(self)
+        function [torusMap, torusInjection, torusProjection] = torusImage(self)
             r = self.group.reconstruction.source.n; % torus rank
-            powers = zeros(0, r);
+            torusMap = zeros(0, r);
+            torusInjection = sparse(0, 0);
+            torusProjection = sparse(0, 0);
             for i = 1:self.nFactors
-                powers = vertcat(powers, self.factor(i).maximalTorusExponents);
+                [tm, ti, tp] = self.factor(i).torusImage;
+                torusMap = [torusMap; tm];
+                torusInjection = blkdiag(torusInjection, ti);
+                torusProjection = blkdiag(torusProjection, tp);
             end
-            partition = [];
         end
-
 
     end
 

@@ -6,41 +6,10 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
             self@replab.Equivariant(repR, repC, special);
         end
 
-        function B = blocks(self)
-            B = self.cached('blocks', @() self.computeBlocks);
-        end
 
     end
 
     methods (Access = protected)
-
-        function B = computeBlocks(self)
-            if ~self.repR.hasMaximalTorusExponents || ~self.repC.hasMaximalTorusExponents
-                B = {1:self.repR.dimension; 1:self.repC.dimension};
-                return
-            end
-            powersR = self.repR.maximalTorusExponents;
-            powersC = self.repC.maximalTorusExponents;
-            bR = find(all(powersR == 0, 2));
-            bC = find(all(powersC == 0, 2));
-            if ~isempty(bR) && ~isempty(bC)
-                B = {bR; bC};
-            else
-                B = cell(2, 0);
-            end
-            r = 1;
-            while r <= self.repR.dimension
-                row = powersR(r, :);
-                if any(row ~= 0)
-                    bR = find(all(bsxfun(@eq, powersR, row), 2));
-                    bC = find(all(bsxfun(@eq, powersC, row), 2));
-                    B = horzcat(B, {bR; bC});
-                    powersR(bR, :) = 0;
-                    powersC(bC, :) = 0;
-                end
-                r = r + 1;
-            end
-        end
 
         function [X, err] = project_double_sparse(self, X)
             X = full(X);
@@ -66,8 +35,10 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
             group = self.group;
             repR = self.repR;
             repC = self.repC;
-            if replab.globals.useReconstruction && repR.overC && repC.overC && repR.hasMaximalTorusExponents && repC.hasMaximalTorusExponents
-                blocks = self.blocks;
+            if replab.globals.useReconstruction && repR.hasTorusImage && repC.hasTorusImage
+                [torusMapR, torusInjectionR, torusProjectionR] = repR.torusImage;
+                [torusMapC, torusInjectionC, torusProjectionC] = repC.torusImage;
+                [blocksR, blocksC] = replab.rep.TorusRep.matchTorusMaps(torusMapR, torusMapC);
                 [~, R] = group.reconstruction;
                 useTorus = true;
             else
@@ -90,10 +61,13 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
             while exitFlag == 0
                 if useTorus
                     X0 = zeros(dR, dC);
-                    for i = 1:size(blocks, 2)
-                        bR = blocks{1, i};
-                        bC = blocks{2, i};
-                        X0(bR, bC) = X(bR, bC);
+                    for i = 1:length(blocksR)
+                        bR = blocksR{i};
+                        bC = blocksC{i};
+                        X0 = X0 + torusInjectionR(:,bR)*(torusProjectionR(bR,:)*X*torusInjectionC(:,bC))*torusProjectionC(bC,:);
+                    end
+                    if self.field == 'R'
+                        X0 = real(X0);
                     end
                 else
                     X0 = X;
