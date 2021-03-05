@@ -125,13 +125,18 @@ classdef ClassicalCompactGroup < replab.CompactGroup
         function rep = definingRep(self, field)
         % Returns the defining representation of this unitary group
         %
-        % The defining representation of classical compact group over 'R' or 'C' is a real/complex
-        % real/complex ``n x n`` orthogonal or unitary matrix. The defining representation of a
-        % classical group over 'H' corresponds to a complex matrix encoding the quaternion division
-        % algebra.
+        % "Defining representation" is a loosely defined term designing the smallest faithful representation of a
+        % group. In our case, the defining representation of ``O(n)`` or ``SO(n)`` is a n-dimensional real representation,
+        % the defining representation of ``U(n)`` or ``SU(n)`` is a n-dimension complex representation, while
+        % the defining representation of ``Sp(n)`` is a 2n-dimension complex representation.
+        %
+        % All these representations are unitary. By specifying the field, one can encode the representation in a
+        % different field: if the natural field is real (``O(n)``, ``SO(n)``), the representation can be complexified
+        % into a representation of the same dimension. If the natural field is complex (``U(n)``, ``SU(n)``, ``Sp(n)``),
+        % the complex representation can be encoded into a real representation, doubling its dimension.
         %
         % Args:
-        %   field ('R', 'C', optional): Field over which to define the matrices, default: C
+        %   field ('R', 'C', optional): Field over which to define the matrices, default: group dependent, see above
         %
         % Returns:
         %   `.Rep`: Defining representation

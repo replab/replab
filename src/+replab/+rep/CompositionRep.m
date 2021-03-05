@@ -92,7 +92,7 @@ classdef CompositionRep < replab.Rep
 
         function [powers, partition] = maximalTorusExponents(self)
             [powers0, ~] = self.second.maximalTorusExponents;
-            powers = powers0 * self.first.torusMap';
+            powers = powers0 * self.first.torusMap;
             partition = [];
         end
 

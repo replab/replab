@@ -17,7 +17,7 @@ classdef TensorRep < replab.Rep
         % Args:
         %   group (`+replab.CompactGroup`): Common group
         %   field ({'R', 'C'}): Real or complex field
-        %   blocks (cell(1,\*) of `+replab.Rep`): Factor representations
+        %   factors (cell(1,\*) of `+replab.Rep`): Factor representations
             replab.rep.assertCompatibleFactors(group, field, factors);
             d = prod(cellfun(@(f) f.dimension, factors));
             factorsAreUnitary = cellfun(@(x) x.isUnitary, factors);
