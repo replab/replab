@@ -32,8 +32,6 @@ classdef ProgressBar < handle
         %
         % This method should be called at the beginning of the ``i``-th step.
         %
-        % It should not be called twice for the same step.
-        %
         % Args:
         %   i (integer): Current step
         %   txt (integer, optional): Text corresponding to the current step
@@ -41,6 +39,12 @@ classdef ProgressBar < handle
                 txt = '';
             end
             elapsed = etime(clock, self.startTime);
+            if (length(self.steps) >= 1) && (self.steps(end) >= i)
+                % Remove progresses larger than current one
+                lastSmaller = find(self.steps >= i, 1, 'first') - 1;
+                self.steps = self.steps(1:lastSmaller);
+                self.times = self.times(1:lastSmaller);
+            end
             self.steps = [self.steps i];
             self.times(1,end+1) = elapsed;
             if length(self.steps) > 1
