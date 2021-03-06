@@ -98,8 +98,13 @@ classdef ProgressBar < handle
             if ~isempty(txt)
                 txt = sprintf('   %s', txt);
             end
-            str = sprintf('[%s%s] %s/%s  %s%s%s', repmat('#', 1, barFull), repmat('.', 1, barEmpty), ...
-                          strtrim(num2str(i)), strtrim(num2str(self.n)), timeEst, timeEstPad, txt);
+            if isempty(txt)
+                str = sprintf('[%s%s] %s/%s', repmat('#', 1, barFull), repmat('.', 1, barEmpty), ...
+                              strtrim(num2str(i)), strtrim(num2str(self.n)));
+            else
+                str = sprintf('[%s%s] %s/%s, %s%s', repmat('#', 1, barFull), repmat('.', 1, barEmpty), ...
+                              strtrim(num2str(i)), strtrim(num2str(self.n)), timeEstPad, txt);
+            end
             self.consoleLine.update(str);
         end
 
