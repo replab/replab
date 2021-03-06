@@ -1,5 +1,5 @@
 n = 3;
-d = 2;
+d = 3;
 Sn = replab.S(n);
 Sd = replab.S(d);
 % full torus is reshape of phases(n, d)
@@ -15,3 +15,18 @@ Sn_rep = Sn.repByImages('R', n-1, 'preimages', Sn.generators, 'images', Sn_image
 G = Sd.directProduct(Sn);
 torusRep = G.tensorFactorRep('R', {Sd.naturalRep Sn_rep});
 ghzGroup = replab.TorusGroup.semidirectProductFromRep(torusRep);
+stateFiniteRep = G.commutingProductFactorRep('R', d^n, {Sd.naturalRep.tensorPower(n), Sn.indexRelabelingRep(d)});
+tm = zeros(d^n, n-1, d);
+for i = 1:n-1
+    tm = reshape(tm, [d^(i-1) d d^(n-i) n-1 d]);
+    for j = 1:d
+        tm(:,j,:,i,j) = tm(:,j,:,i,j) + 1;
+    end
+end
+tm = reshape(tm, [d^(n-1) d n-1 d]);
+for j = 1:d
+    tm(:,j,:,j) = tm(:,j,:,j) - 1;
+end
+tm = reshape(tm, [d^n (n-1)*d]);
+contRep = ghzGroup.N.mapRep(tm);
+rep = ghzGroup.productRep(stateFiniteRep.complexification, contRep);
