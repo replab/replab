@@ -60,7 +60,7 @@ classdef Isomorphism < replab.Morphism
         %   torusMap (integer(\*,\*)): Torus map to use in the morphism construction
         %
         % Returns:
-        %   `+replab.Isoorphism`: Constructed isomorphism
+        %   `+replab.Isomorphism`: Constructed isomorphism
             if nargin < 5
                 torusMap = [];
             end
