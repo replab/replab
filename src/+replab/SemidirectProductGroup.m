@@ -86,4 +86,54 @@ classdef SemidirectProductGroup < replab.Group
 
     end
 
+    methods % Morphisms
+
+        function m = Hembedding(self)
+            m = self.H.morphismByFunction(self, @(g) {g, self.N.identity});
+        end
+
+        function m = Hprojection(self)
+            m = self.morphismByFunction(self.H, @(g) g{1});
+        end
+
+        function m = Nembedding(self)
+            if self.hasReconstruction
+                r = self.N.reconstruction.source.n;
+                tm = eye(r);
+            else
+                tm = [];
+            end
+            m = self.N.morphismByFunction(self, @(g) {self.H.identity, g}, tm);
+        end
+
+        function m = Nprojection(self)
+            if self.hasReconstruction
+                r = self.N.reconstruction.source.n;
+                tm = eye(r);
+            else
+                tm = [];
+            end
+            m = self.morphismByFunction(self.N, @(g) g{2}, tm);
+        end
+
+    end
+
+    methods % Representations
+
+        function rep = productRep(self, Hrep, Nrep)
+        % Constructs a representation by a product of representations of the two groups in the semidirect product construction
+        %
+        % Args:
+        %   Hrep (`.Rep`): Representation of `.H`
+        %   Nrep (`.Rep`): Representation of `.N`
+        %
+        % Returns:
+        %   `.Rep`: Group representation
+            assert(Hrep.dimension == Nrep.dimension);
+            assert(Hrep.field == Nrep.field);
+            rep = replab.rep.SequentialRep(self, Hrep.field, Hrep.dimension, {self.Hprojection.andThen(Hrep), self.Nprojection.andThen(Nrep)});
+        end
+
+    end
+
 end

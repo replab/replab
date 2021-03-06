@@ -49,13 +49,40 @@ classdef DirectProductGroup < replab.CompactGroup
 
     methods % Representations
 
+        function rep = commutingProductFactorRep(self, field, dimension, factorReps)
+        % Constructs a representation from commuting representations of the factors
+        %
+        % Args:
+        %   field ({'R', 'C'}): Field
+        %   dimension (integer): Dimension of the representation
+        %   factorReps (cell(1,\*) of `.Rep`): Representations for each of the factor groups (factorReps{i} is a representation of factor(i))
+        %
+        % Returns:
+        %   `+replab.Rep`: A representation computed from the product of representations
+            reps = arrayfun(@(i) self.projection(i).andThen(factorReps{i}), 1:self.nFactors, 'uniform', 0);
+            rep = self.commutingProductRep(field, dimension, reps);
+        end
+
+        function rep = commutingProductFactorRepFun(self, field, dimension, fun)
+        % Constructs a representation from commuting representations of the factors (function version)
+        %
+        % Args:
+        %   field ({'R', 'C'}): Field
+        %   dimension (integer): Dimension of the representation
+        %   fun (function_handle): A function valid for each factor group that maps the group and its index to one of its representations
+        %
+        % Returns:
+        %   `+replab.Rep`: A representation computed from the product of representations
+            reps = arrayfun(@(i) fun(self.factor(i), i), 1:self.nFactors, 'uniform', 0);
+            rep = self.commutingProductFactorRep(field, dimension, reps);
+        end
+
         function rep = directSumFactorRep(self, field, factorReps)
         % Constructs a direct sum representation
         %
         % Args:
         %   field ({'R', 'C'}): Field
-        %   factorReps (row cell array): Representations for each of the factor groups
-        %                                i.e. factorReps{i} is a representation of factor(i)
+        %   factorReps (cell(1,\*) of `.Rep`): Representations for each of the factor groups (factorReps{i} is a representation of factor(i))
         %
         % Returns:
         %   `+replab.Rep`: A direct sum representation
@@ -68,8 +95,7 @@ classdef DirectProductGroup < replab.CompactGroup
         %
         % Args:
         %   field ({'R', 'C'}): Field
-        %   fun (function_handle): A function valid for each factor group that maps the group and its index
-        %                          to one of its representations
+        %   fun (function_handle): A function valid for each factor group that maps the group and its index to one of its representations
         %
         % Returns:
         %   `+replab.Rep`: A direct sum representation
@@ -82,8 +108,7 @@ classdef DirectProductGroup < replab.CompactGroup
         %
         % Args:
         %   field ({'R', 'C'}): Field
-        %   factorReps (row cell array): Representations for each of the factor groups
-        %                                i.e. factorReps{i} is a representation of factor(i)
+        %   factorReps (cell(1,\*) of `.Rep`)): Representations for each of the factor groups (factorReps{i} is a representation of factor(i))
         %
         % Returns:
         %   `+replab.Rep`: A tensor representation
@@ -127,7 +152,7 @@ classdef DirectProductGroup < replab.CompactGroup
             blocks = self.torusBlocks;
             n = sum(cellfun(@length, blocks));
             b = blocks{i};
-            tm = full(sparse(1:length(b), b, ones(1, length(b)), length(b), n));
+            tm = full(sparse(b, 1:length(b), ones(1, length(b)), n, length(b)));
             m = self.factor(i).morphismByFunction(self, @(g) replab.DirectProductGroup.updateCellArray(self.identity, i, g), tm);
         end
 
@@ -149,7 +174,7 @@ classdef DirectProductGroup < replab.CompactGroup
             blocks = self.torusBlocks;
             n = sum(cellfun(@length, blocks));
             b = blocks{i};
-            tm = full(sparse(b, 1:length(b), ones(1, length(b)), n, length(b)));
+            tm = full(sparse(1:length(b), b, ones(1, length(b)), length(b), n));
             m = self.morphismByFunction(self.factor(i), @(g) g{i}, tm);
         end
 

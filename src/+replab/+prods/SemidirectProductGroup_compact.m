@@ -31,9 +31,9 @@ classdef SemidirectProductGroup_compact < replab.SemidirectProductGroup & replab
             assert(muH.source.n == 0);
             idH = self.H.identity;
             idN = self.N.identity;
-            mu = muN.andThen(self.N.morphismByFunction(self, @(n) {idH n}));
-            setsH = cellfun(@(S) cellfun(@(s) {s idN}, S, 'uniform', 0), RH.sets, 'uniform', 0);
-            setsN = cellfun(@(S) cellfun(@(s) {idH s}, S, 'uniform', 0), RN.sets, 'uniform', 0);
+            mu = muN.andThen(self.Nembedding);
+            setsH = cellfun(@(S) cellfun(@(s) {s, idN}, S, 'uniform', 0), RH.sets, 'uniform', 0);
+            setsN = cellfun(@(S) cellfun(@(s) {idH, s}, S, 'uniform', 0), RN.sets, 'uniform', 0);
             R = replab.SetProduct(self, horzcat(setsH, setsN), true);
         end
 

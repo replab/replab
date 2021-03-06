@@ -80,14 +80,6 @@ classdef WreathProductGroup_Rep < replab.Rep
             b = self.factorRep.isExact;
         end
 
-        function b = hasMaximalTorusExponents(self)
-            b = self.group.hasReconstruction && self.baseRep.hasMaximalTorusExponents; % base group has reconstruction only when the acting torus is empty
-        end
-
-        function [powers, partition] = maximalTorusExponents(self)
-            [powers, partition] = self.baseRep.maximalTorusExponents;
-        end
-
     end
 
 end

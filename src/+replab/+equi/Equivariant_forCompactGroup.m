@@ -15,8 +15,9 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
             X = full(X);
             % Parameters
             minIterations = 10;
-            maxIterations = 200;
+            maxIterations = 2000;
             relTol = 1e-6;
+            relStopTol = 1e-20;
             relZero = 1e-15;
             windowSize = 8;
             nSamples = 3; % number of samples per iteration
@@ -117,6 +118,10 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                     if all(window == 1e-100)
                         exitFlag = 2;
                         replab.msg(1, 'Stop: complete stall over the regularization window');
+                    end
+                    if deltaMax <= relStopTol
+                        exitFlag = 3;
+                        replab.msg(3, 'Stop: maximum delta over maximum=%6.2E', deltaMax);
                     end
                     if slope >= -1/maxIterations && deltaMax <= relTol
                         exitFlag = 1;

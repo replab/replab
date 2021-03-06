@@ -133,6 +133,19 @@ classdef CompactGroup < replab.Group
             rep = replab.rep.TrivialRep(self, field, dimension);
         end
 
+        function rep = commutingProductRep(self, field, dimension, reps)
+        % Constructs a representation from commuting representations
+        %
+        % Args:
+        %   field ({'R', 'C'}): Field
+        %   dimension (integer): Dimension of the representation
+        %   reps (cell(1,\*) of `.Rep`): Commuting representations with the given field and dimension
+        %
+        % Returns:
+        %   `+replab.Rep`: A representation computed from the product of representations
+            rep = replab.rep.SequentialRep(self, field, dimension, reps);
+        end
+
         function rep = directSumRep(self, field, reps)
         % Computes the direct sum of representations on this group
         %
