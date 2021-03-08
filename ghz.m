@@ -1,5 +1,5 @@
 n = 3; % number of subsystems
-d = 3; % subsystem dimension
+d = 2; % subsystem dimension
 % the symmetry group of the GHZ states had three parts:
 %
 % 1. A continuous part given by phases (i.e. copies of U(1)). For the n-1 subsystems, each of the d
@@ -47,7 +47,7 @@ ghzGroup = replab.TorusGroup.semidirectProductFromRep(torusRep);
 % * S(d) acts as a tensor product of dxd permutation matrices
 % * S(n) acts by relabeling the subsystems.
 % RepLAB has support for both representations.
-stateFiniteRep = G.commutingProductFactorRep('R', d^n, {Sd.naturalRep.tensorPower(n), Sn.indexRelabelingRep(d)});
+stateFiniteRep = G.commutingProductFactorRep('R', d^n, {Sd.naturalRep.tensorPower(n) Sn.indexRelabelingRep(d)});
 
 % Now the action of the continuous part is trickier.
 % Basically, we write a map between two torus groups.
@@ -58,26 +58,26 @@ stateFiniteRep = G.commutingProductFactorRep('R', d^n, {Sd.naturalRep.tensorPowe
 % Note that, as torus elements are written additively, morphisms between tori can be written
 % using matrices with integer entries. We construct such a map below.
 
-% d^n is the target space, and we split the source space
-tm = zeros(d^n, n-1, d);
-% we iterate over the first n-1 subsystem whose phase is readily available
+maps = cell(1, n);
+lastmap = zeros(d, n-1, d);
 for i = 1:n-1
-    % we split the target space into the ``d^(i-1), d^(n-i)`` that we leave aside, and the
-    % d-dimensional subsystem that we target specifically
-    tm = reshape(tm, [d^(i-1) d d^(n-i) n-1 d]);
-    for j = 1:d
-        % we apply each phase
-        tm(:,j,:,i,j) = tm(:,j,:,i,j) + 1;
-    end
+    map = zeros(d, n-1, d);
+    map(:,i,:) = eye(d);
+    lastmap = lastmap - map;
+    maps{i} = reshape(map, [d (n-1)*d]);
 end
-% now, we address the last subsystem
-tm = reshape(tm, [d^(n-1) d n-1 d]);
-for j = 1:d
-    tm(:,j,:,j) = tm(:,j,:,j) - 1;
-end
-% put it back as a torus morphism coefficient matrix
-tm = reshape(tm, [d^n (n-1)*d]);
-% construct the representation
-contRep = ghzGroup.N.mapRep(tm);
+maps{n} = reshape(lastmap, [d (n-1)*d]);
+mu = ghzGroup.N.splitMorphism('maps', maps);
+rep1 = mu.target.tensorFactorRepFun('C', @(T, i) T.definingRep);
+contRep = mu.andThen(rep1);
 % finally, "concatenate" the compatible representations of the components of the semidirect product
-rep = ghzGroup.productRep(stateFiniteRep.complexification, contRep);
+rep = ghzGroup.semidirectProductRep(stateFiniteRep.complexification, contRep);
+
+g1 = ghzGroup.sample;
+g2 = ghzGroup.sample;
+g1{1}{1} = [1 2];
+g2{1}{1} = [1 2];
+g12 = ghzGroup.compose(g1, g2);
+r1 = rep.image(g1);
+r2 = rep.image(g2);
+r12 = rep.image(g12);
