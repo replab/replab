@@ -1,9 +1,7 @@
-classdef SequentialRep < replab.Rep
-% A representation which consists of the sequential action of representations
+classdef CommutingProductRep < replab.Rep
+% A representation which consists of the product of commuting representations
 %
-% We write ``image(g) = reps{1}.image(g) * ... * reps{n}.image(g)``. The representations applied in sequence should be
-% constructed in a way the product is a representation. For example, the construction works if the representations in
-% the sequence commute.
+% We write ``image(g) = reps{1}.image(g) * ... * reps{n}.image(g)``.
 
     properties (SetAccess = protected)
         reps % (cell(1,\*) of `+replab.Rep`): Representations
@@ -11,8 +9,8 @@ classdef SequentialRep < replab.Rep
 
     methods
 
-        function self = SequentialRep(group, field, dimension, reps)
-        % Constructs a representation from a sequence of representations
+        function self = CommutingProductRep(group, field, dimension, reps)
+        % Constructs a representation from commuting representations
         %
         % All the representations in the sequence should be defined on the same group, and on the same field.
         %
@@ -62,7 +60,7 @@ classdef SequentialRep < replab.Rep
         end
 
         function r = composeTerm(self, newFactors)
-            r = replab.rep.SequentialRep(self.group, self.field, self.dimension, newFactors);
+            r = replab.rep.CommutingProductRep(self.group, self.field, self.dimension, newFactors);
         end
 
         function rho = image_exact(self, g)
@@ -102,14 +100,8 @@ classdef SequentialRep < replab.Rep
             c = prod(cellfun(@(r) r.conditionNumberEstimate, self.reps));
         end
 
-    end
-
-    methods (Access = protected) % Implementations
-
-        % Rep
-
         function M = matrixRowAction_double_sparse(self, g, M)
-            for i = self.nReps:-1:1
+            for i = 1:self.nReps
                 M = self.rep(i).matrixRowAction(g, M, 'double/sparse');
             end
         end
@@ -183,7 +175,7 @@ classdef SequentialRep < replab.Rep
 
         function [torusMap, torusInjection, torusProjection] = torusImage(self)
             nonTrivial = find(cellfun(@(r) any(any(r.torusImage ~= 0)), self.reps));
-            r = self.group.reconstruction.source.n; % torus rank
+            r = self.group.maximalTorusDimension; % torus rank
             if isempty(nonTrivial)
                 torusMap = zeros(self.dimension, r);
                 torusInjection = speye(self.dimension);

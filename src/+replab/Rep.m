@@ -896,7 +896,7 @@ classdef Rep < replab.Obj
         %
         % Returns:
         %   logical: True if the call to `.torusImage` succeeds
-            b = self.group.hasReconstruction && self.group.reconstruction.source.n == 0; % we have defaults for trivial torus
+            b = self.group.hasReconstruction && self.group.maximalTorusDimension == 0; % we have defaults for trivial torus
         end
 
         function [torusMap, torusInjection, torusProjection] = torusImage(self)
@@ -920,7 +920,7 @@ classdef Rep < replab.Obj
         %   torusProjection: double(d, d) may be sparse
         %     Projection from this representation to the torus representation
             assert(self.group.hasReconstruction);
-            assert(self.group.reconstruction.source.n == 0);
+            assert(self.group.maximalTorusDimension == 0);
             torusMap = zeros(self.dimension, 0);
             torusInjection = speye(self.dimension);
             torusProjection = speye(self.dimension);

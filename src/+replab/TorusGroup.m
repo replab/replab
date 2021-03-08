@@ -37,7 +37,30 @@ classdef TorusGroup < replab.CompactGroup
             n1 = size(torusMap, 1);
             assert(self.n == n);
             T1 = replab.TorusGroup(n1);
-            mu = self.morphismByFunction(T1, @(t) torusMap*t, torusMap);
+            mu = self.morphismByFunction(T1, @(t) mod(torusMap*t, 1), torusMap);
+        end
+
+        function mu = splitMorphism(self, varargin)
+        % Constructs a morphism from this torus group to a direct product of torus groups
+        %
+        % Can be constructed either using ``blocks`` of indices, or by ``maps``; one of the arguments must be given.
+        %
+        % Keyword Args:
+        %   blocks (cell(1,\*) of integer(1,\*)): An array of subset of indices describing which elements are mapped to which factor
+        %   maps (cell(1,\*) of integer(\*,\*)): An array of torus maps describing a morphism between this torus and each of the factors
+            args = struct('blocks', [], 'maps', []);
+            args = replab.util.populateStruct(args, varargin);
+            if iscell(args.blocks)
+                assert(~iscell(args.maps), 'Only one of the ''blocks'' and ''maps'' keyword arguments must be provided');
+                maps = cellfun(@(b) full(sparse(1:length(b), b, ones(1, length(b)), length(b), self.n)), args.blocks, 'uniform', 0);
+            else
+                assert(iscell(args.maps), 'One of ''blocks'' and ''maps'' keyword arguments must be provided');
+                maps = args.maps;
+            end
+            dims = cellfun(@(m) size(m, 1), maps);
+            torusMap = vertcat(maps{:});
+            G = replab.DirectProductGroup.make(arrayfun(@(d) replab.TorusGroup(d), dims, 'uniform', 0));
+            mu = self.morphismByFunction(G, @(t) cellfun(@(m) mod(m*t, 1), maps, 'uniform', 0), torusMap);
         end
 
     end

@@ -95,7 +95,7 @@ classdef TrivialRep < replab.Rep
         end
 
         function [torusMap, torusInjection, torusProjection] = torusImage(self)
-            torusMap = zeros(self.dimension, self.group.reconstruction.source.n);
+            torusMap = zeros(self.dimension, self.group.maximalTorusDimension);
             torusInjection = speye(self.dimension);
             torusProjection = speye(self.dimension);
         end

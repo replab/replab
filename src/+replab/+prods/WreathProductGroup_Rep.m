@@ -14,7 +14,7 @@ classdef WreathProductGroup_Rep < replab.Rep
     methods
 
         function self = WreathProductGroup_Rep(group, type, factorRep, actingRep, baseRep)
-        % Constructs an imprimitive representation of a wreath product group
+        % Constructs a primitive or imprimitive representation of a wreath product group
         %
         % Args:
         %   group (`+replab.WreathProductGroup`): Wreath product group

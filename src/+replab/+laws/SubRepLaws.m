@@ -7,7 +7,7 @@ classdef SubRepLaws < replab.laws.RepLaws
             self = self@replab.laws.RepLaws(rep);
         end
 
-        function law_basis_and_internal_embedding_(self)
+        function law_injection_and_projection_(self)
             if self.rep.isExact
                 self.assert(all(all(self.rep.projection('exact') * self.rep.injection('exact') == eye(self.rep.dimension))));
             end

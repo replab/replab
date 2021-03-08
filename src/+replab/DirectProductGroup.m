@@ -134,13 +134,13 @@ classdef DirectProductGroup < replab.CompactGroup
 
     methods % Morphisms
 
-        function m = embedding(self, i)
+        function m = injection(self, i)
         % Returns the morphism embedding the i-th factor into the direct product
         %
         % Example:
         %   >>> S2 = replab.S(2);
         %   >>> D = S2.directProduct(S2);
-        %   >>> m = D.embedding(1);
+        %   >>> m = D.injection(1);
         %   >>> D.eqv({[2 1] [1 2]}, m.imageElement([2 1]))
         %       1
         %
@@ -148,7 +148,7 @@ classdef DirectProductGroup < replab.CompactGroup
         %   i (integer): Factor index
         %
         % Returns:
-        %   `.Morphism`: The embedding
+        %   `.Morphism`: The injection morphism
             blocks = self.torusBlocks;
             n = sum(cellfun(@length, blocks));
             b = blocks{i};
@@ -260,7 +260,7 @@ classdef DirectProductGroup < replab.CompactGroup
                 return
             end
             n = self.nFactors;
-            dims = cellfun(@(f) f.reconstruction.source.n, self.factors);
+            dims = cellfun(@(f) f.maximalTorusDimension, self.factors);
             blocks = cell(1, n);
             shift = 0;
             for i = 1:n

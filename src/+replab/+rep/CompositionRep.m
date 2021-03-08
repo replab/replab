@@ -87,15 +87,15 @@ classdef CompositionRep < replab.Rep
         end
 
         function b = hasTorusImage(self)
-            b = self.group.hasReconstruction && (~isempty(self.first.torusMap) || self.group.reconstruction.source.n == 0);
+            b = self.group.hasReconstruction && (~isempty(self.first.torusMap) || self.group.maximalTorusDimension == 0);
             b = b && self.second.hasTorusImage;
         end
 
         function [torusMap, torusInjection, torusProjection] = torusImage(self)
             if isempty(self.first.torusMap)
-                n1 = self.group.reconstruction.source.n;
+                n1 = self.group.maximalTorusDimension;
                 assert(n1 == 0);
-                n2 = self.second.group.reconstruction.source.n;
+                n2 = self.second.group.maximalTorusDimension;
                 torusMap1 = zeros(n2, n1);
             else
                 torusMap1 = self.first.torusMap;
