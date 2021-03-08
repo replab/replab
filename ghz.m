@@ -70,19 +70,20 @@ mu = ghzGroup.N.splitMorphism('maps', maps);
 rep1 = mu.target.tensorFactorRepFun('C', @(T, i) T.definingRep);
 contRep = mu.andThen(rep1);
 
-% $$$ tm = zeros(d^n, n-1, d);
-% $$$ for i = 1:n-1
-% $$$     tm = reshape(tm, [d^(n-i) d d^(i-1) n-1 d]);
-% $$$     for j = 1:d
-% $$$         tm(:,j,:,i,j) = tm(:,j,:,i,j) + 1;
-% $$$     end
-% $$$ end
-% $$$ tm = reshape(tm, [d d^(n-1) n-1 d]);
-% $$$ for j = 1:d
-% $$$     tm(j,:,:,j) = tm(j,:,:,j) - 1;
-% $$$ end
-% $$$ tm = reshape(tm, [d^n (n-1)*d]);
-% $$$ contRep = ghzGroup.N.mapRep(tm);
+% Variant:
+% tm = zeros(d^n, n-1, d);
+% for i = 1:n-1
+%     tm = reshape(tm, [d^(n-i) d d^(i-1) n-1 d]);
+%     for j = 1:d
+%         tm(:,j,:,i,j) = tm(:,j,:,i,j) + 1;
+%     end
+% end
+% tm = reshape(tm, [d d^(n-1) n-1 d]);
+% for j = 1:d
+%     tm(j,:,:,j) = tm(j,:,:,j) - 1;
+% end
+% tm = reshape(tm, [d^n (n-1)*d]);
+% contRep = ghzGroup.N.mapRep(tm);
 
 % finally, "concatenate" the compatible representations of the components of the semidirect product
 rep = ghzGroup.semidirectProductRep(stateFiniteRep.complexification, contRep);
