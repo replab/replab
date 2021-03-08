@@ -8,9 +8,6 @@ function test_suite = QuantumTest()
     if ReplabTestParameters.onlyFastTests
         return
     end
-    G = replab.quantum.GHZ(3,2);
-    test_suite = G.laws.addTestCases(test_suite);
-    %test_suite = replab.RepLaws(G.definingRep).addTestCases(test_suite); % slow test with Octave
     if exist('syms') && ~replab.compat.isOctave
         %        G = replab.quantum.GeneralizedPauli(3);
         %test_suite = replab.FiniteGroupLaws(G).addTestCases(test_suite);
