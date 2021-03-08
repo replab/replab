@@ -71,7 +71,6 @@ classdef IndexRelabelingRep < replab.Rep
         end
 
         function rho = image_exact(self, g)
-            g = fliplr(n+1-g); % correct for the order of subsystems
             rho = replab.cyclotomic.fromDoubles(self.image_double_sparse(g));
         end
 
