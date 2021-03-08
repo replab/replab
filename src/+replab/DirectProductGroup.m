@@ -150,9 +150,13 @@ classdef DirectProductGroup < replab.CompactGroup
         % Returns:
         %   `.Morphism`: The injection morphism
             blocks = self.torusBlocks;
-            n = sum(cellfun(@length, blocks));
-            b = blocks{i};
-            tm = full(sparse(b, 1:length(b), ones(1, length(b)), n, length(b)));
+            if ~isempty(blocks)
+                n = sum(cellfun(@length, blocks));
+                b = blocks{i};
+                tm = full(sparse(b, 1:length(b), ones(1, length(b)), n, length(b)));
+            else
+                tm = [];
+            end
             m = self.factor(i).morphismByFunction(self, @(g) replab.DirectProductGroup.updateCellArray(self.identity, i, g), tm);
         end
 
@@ -172,9 +176,13 @@ classdef DirectProductGroup < replab.CompactGroup
         % Returns:
         %   `.Morphism`: The projection
             blocks = self.torusBlocks;
-            n = sum(cellfun(@length, blocks));
-            b = blocks{i};
-            tm = full(sparse(1:length(b), b, ones(1, length(b)), length(b), n));
+            if ~isempty(blocks)
+                n = sum(cellfun(@length, blocks));
+                b = blocks{i};
+                tm = full(sparse(1:length(b), b, ones(1, length(b)), length(b), n));
+            else
+                tm = [];
+            end
             m = self.morphismByFunction(self.factor(i), @(g) g{i}, tm);
         end
 
@@ -256,7 +264,7 @@ classdef DirectProductGroup < replab.CompactGroup
         function blocks = torusBlocks(self)
             b = all(cellfun(@(f) f.hasReconstruction, self.factors));
             if ~b
-                p = [];
+                blocks = [];
                 return
             end
             n = self.nFactors;

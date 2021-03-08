@@ -107,7 +107,7 @@ classdef CommutingProductRep < replab.Rep
         end
 
         function M = matrixColAction_double_sparse(self, g, M)
-            for i = 1:self.nReps
+            for i = self.nReps:-1:1
                 M = self.rep(i).matrixColAction(g, M, 'double/sparse');
             end
         end
