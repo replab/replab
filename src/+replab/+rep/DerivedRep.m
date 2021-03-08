@@ -249,14 +249,23 @@ classdef DerivedRep < replab.Rep
             res = replab.rep.DerivedRep(self.parent, ~self.conjugate, self.inverse, self.transpose);
         end
 
-        function b = hasMaximalTorusExponents(self)
-            b = self.parent.hasMaximalTorusExponents && self.overC; % TODO
+        function b = hasTorusImage(self)
+            b = self.parent.hasTorusImage;
         end
 
-        function [powers, partition] = maximalTorusExponents(self)
-            [powers, partition] = self.parent.maximalTorusExponents;
-            if self.inverse ~= self.conjugate
-                powers = -powers;
+        function [torusMap, torusInjection, torusProjection] = torusImage(self)
+            [torusMap, torusInjection, torusProjection] = self.parent.torusImage;
+            if self.conjugate
+                torusMap = -torusMap;
+                torusInjection = conj(torusInjection);
+                torusProjection = conj(torusProjection);
+            end
+            if self.inverse
+                torusMap = -torusMap;
+                ti = torusInjection;
+                tp = torusProjection;
+                torusInjection = tp.';
+                torusProjection = ti.';
             end
         end
 

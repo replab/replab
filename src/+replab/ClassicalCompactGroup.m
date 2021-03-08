@@ -92,30 +92,45 @@ classdef ClassicalCompactGroup < replab.CompactGroup
         end
 
         function b = hasReconstruction(self)
-            if any(self.algebra == 'CH')
-                b = true;
-            else
-                b = false;
-            end
+            b = true;
         end
 
         function [mu, R] = reconstruction(self)
-            R = replab.SetProduct.identity(self);
             n = self.n;
-            if self.algebra == 'C' && self.isSpecial
-                T = replab.TorusGroup(n-1);
-                T1 = replab.TorusGroup(n);
-                mu = T.morphismByFunction(self, @(x) T1.toMatrix(mod([x -sum(x)], 1)));
-            elseif self.algebra == 'C' && ~self.isSpecial
-                T = replab.TorusGroup(n);
-                mu = T.morphismByFunction(self, @(x) T.toMatrix(x));
-            elseif self.algebra == 'H'
-                T = replab.TorusGroup(n);
-                mu = T.morphismByFunction(self, @(x) replab.H(T.toMatrix(x)));
+            if self.algebra == 'R' && ~self.isSpecial
+                % O(n) has two connected components
+                n1 = round((n+1)/2);
+                if mod(n1, 2) == 0
+                    n1 = n1 - 1;
+                end
+                flip = diag([ones(1, n1) -ones(1, n-n1)]);
+                R = replab.SetProduct(self, {{self.identity flip}}, true);
             else
-                error('Unsupported');
+                % U(n), SU(n), SO(n), Sp(n) have one connected component
+                R = replab.SetProduct.identity(self);
             end
-
+            switch self.algebra
+              case 'R'
+                if mod(n, 2) == 0
+                    T = replab.TorusGroup(n/2);
+                    mu = T.morphismByFunction(self, @(t) replab.TorusGroup.torusRepRealImage(t), eye(n/2));
+                else
+                    T = replab.TorusGroup((n-1)/2);
+                    mu = T.morphismByFunction(self, @(t) blkdiag(replab.TorusGroup.torusRepRealImage(t), sparse(1)) , eye((n-1)/2));
+                end
+              case 'C'
+                if self.isSpecial
+                    T = replab.TorusGroup(n-1);
+                    torusMap = [eye(n-1); -ones(1, n-1)];
+                    mu = T.morphismByFunction(self, @(t) replab.TorusGroup.torusRepImage(torusMap * t), eye(n-1));
+                else
+                    T = replab.TorusGroup(n);
+                    mu = T.morphismByFunction(self, @(t) replab.TorusGroup.torusRepImage(t), eye(n));
+                end
+              case 'H'
+                T = replab.TorusGroup(n);
+                mu = T.morphismByFunction(self, @(t) replab.H(replab.TorusGroup.torusRepImage(t)), eye(n));
+            end
         end
 
     end

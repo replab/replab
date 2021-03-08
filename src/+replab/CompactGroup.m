@@ -37,6 +37,19 @@ classdef CompactGroup < replab.Group
             error('Reconstruction not available');
         end
 
+        function d = maximalTorusDimension(self)
+        % Returns, if available, the dimension of the maximal torus contained in the connected component of this group
+        %
+        % Returns:
+        %   integer or ``[]``: Maximal torus dimension if available, or ``[]`` if no reconstruction is available
+            if ~self.hasReconstruction
+                d = [];
+            else
+                tm = self.reconstruction;
+                d = tm.source.n;
+            end
+        end
+
     end
 
     methods % Group construction
@@ -131,6 +144,19 @@ classdef CompactGroup < replab.Group
                 dimension = 1;
             end
             rep = replab.rep.TrivialRep(self, field, dimension);
+        end
+
+        function rep = commutingProductRep(self, field, dimension, reps)
+        % Constructs a representation from commuting representations
+        %
+        % Args:
+        %   field ({'R', 'C'}): Field
+        %   dimension (integer): Dimension of the representation
+        %   reps (cell(1,\*) of `.Rep`): Commuting representations with the given field and dimension
+        %
+        % Returns:
+        %   `+replab.Rep`: A representation computed from the product of representations
+            rep = replab.rep.CommutingProductRep(self, field, dimension, reps);
         end
 
         function rep = directSumRep(self, field, reps)

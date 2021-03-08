@@ -40,6 +40,7 @@ classdef IndexRelabelingRep < replab.Rep
                 d2 = size(M, 2);
                 dims = [self.localDimension*ones(1, n) d2];
                 M = reshape(M, dims);
+                g = fliplr(n+1-g); % correct for the order of subsystems
                 M = reshape(ipermute(reshape(M, dims), [g n+1]), [d d2]);
             end
         end
@@ -54,6 +55,7 @@ classdef IndexRelabelingRep < replab.Rep
                 d1 = size(M, 1);
                 dims = [d1 self.localDimension*ones(1, n)];
                 M = reshape(M, dims);
+                g = fliplr(n+1-g); % correct for the order of subsystems
                 M = reshape(ipermute(reshape(M, dims), [1 g+1]), [d1 d]);
             end
         end
@@ -62,6 +64,7 @@ classdef IndexRelabelingRep < replab.Rep
             n = self.group.domainSize;
             d = self.dimension;
             dims = self.localDimension*ones(1, n);
+            g = fliplr(n+1-g); % correct for the order of subsystems
             I = permute(reshape(1:d, dims), g);
             I = I(:)';
             rho = sparse(I, 1:d, ones(1, d), d, d);

@@ -108,6 +108,14 @@ classdef ComplexifiedRep < replab.Rep
             p = self.parent.invariantBlocks;
         end
 
+        function b = hasTorusImage(self)
+            b = self.parent.hasTorusImage;
+        end
+
+        function [torusMap, torusInjection, torusProjection] = torusImage(self)
+            [torusMap, torusInjection, torusProjection] = self.parent.torusImage;
+        end
+
     end
 
 end

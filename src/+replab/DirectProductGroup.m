@@ -49,13 +49,40 @@ classdef DirectProductGroup < replab.CompactGroup
 
     methods % Representations
 
+        function rep = commutingProductFactorRep(self, field, dimension, factorReps)
+        % Constructs a representation from commuting representations of the factors
+        %
+        % Args:
+        %   field ({'R', 'C'}): Field
+        %   dimension (integer): Dimension of the representation
+        %   factorReps (cell(1,\*) of `.Rep`): Representations for each of the factor groups (factorReps{i} is a representation of factor(i))
+        %
+        % Returns:
+        %   `+replab.Rep`: A representation computed from the product of representations
+            reps = arrayfun(@(i) self.projection(i).andThen(factorReps{i}), 1:self.nFactors, 'uniform', 0);
+            rep = self.commutingProductRep(field, dimension, reps);
+        end
+
+        function rep = commutingProductFactorRepFun(self, field, dimension, fun)
+        % Constructs a representation from commuting representations of the factors (function version)
+        %
+        % Args:
+        %   field ({'R', 'C'}): Field
+        %   dimension (integer): Dimension of the representation
+        %   fun (function_handle): A function valid for each factor group that maps the group and its index to one of its representations
+        %
+        % Returns:
+        %   `+replab.Rep`: A representation computed from the product of representations
+            reps = arrayfun(@(i) fun(self.factor(i), i), 1:self.nFactors, 'uniform', 0);
+            rep = self.commutingProductFactorRep(field, dimension, reps);
+        end
+
         function rep = directSumFactorRep(self, field, factorReps)
         % Constructs a direct sum representation
         %
         % Args:
         %   field ({'R', 'C'}): Field
-        %   factorReps (row cell array): Representations for each of the factor groups
-        %                                i.e. factorReps{i} is a representation of factor(i)
+        %   factorReps (cell(1,\*) of `.Rep`): Representations for each of the factor groups (factorReps{i} is a representation of factor(i))
         %
         % Returns:
         %   `+replab.Rep`: A direct sum representation
@@ -68,8 +95,7 @@ classdef DirectProductGroup < replab.CompactGroup
         %
         % Args:
         %   field ({'R', 'C'}): Field
-        %   fun (function_handle): A function valid for each factor group that maps the group and its index
-        %                          to one of its representations
+        %   fun (function_handle): A function valid for each factor group that maps the group and its index to one of its representations
         %
         % Returns:
         %   `+replab.Rep`: A direct sum representation
@@ -82,8 +108,7 @@ classdef DirectProductGroup < replab.CompactGroup
         %
         % Args:
         %   field ({'R', 'C'}): Field
-        %   factorReps (row cell array): Representations for each of the factor groups
-        %                                i.e. factorReps{i} is a representation of factor(i)
+        %   factorReps (cell(1,\*) of `.Rep`)): Representations for each of the factor groups (factorReps{i} is a representation of factor(i))
         %
         % Returns:
         %   `+replab.Rep`: A tensor representation
@@ -109,13 +134,13 @@ classdef DirectProductGroup < replab.CompactGroup
 
     methods % Morphisms
 
-        function m = embedding(self, i)
+        function m = injection(self, i)
         % Returns the morphism embedding the i-th factor into the direct product
         %
         % Example:
         %   >>> S2 = replab.S(2);
         %   >>> D = S2.directProduct(S2);
-        %   >>> m = D.embedding(1);
+        %   >>> m = D.injection(1);
         %   >>> D.eqv({[2 1] [1 2]}, m.imageElement([2 1]))
         %       1
         %
@@ -123,11 +148,15 @@ classdef DirectProductGroup < replab.CompactGroup
         %   i (integer): Factor index
         %
         % Returns:
-        %   `.Morphism`: The embedding
+        %   `.Morphism`: The injection morphism
             blocks = self.torusBlocks;
-            n = sum(cellfun(@length, blocks));
-            b = blocks{i};
-            tm = full(sparse(1:length(b), b, ones(1, length(b)), length(b), n));
+            if ~isempty(blocks)
+                n = sum(cellfun(@length, blocks));
+                b = blocks{i};
+                tm = full(sparse(b, 1:length(b), ones(1, length(b)), n, length(b)));
+            else
+                tm = [];
+            end
             m = self.factor(i).morphismByFunction(self, @(g) replab.DirectProductGroup.updateCellArray(self.identity, i, g), tm);
         end
 
@@ -147,9 +176,13 @@ classdef DirectProductGroup < replab.CompactGroup
         % Returns:
         %   `.Morphism`: The projection
             blocks = self.torusBlocks;
-            n = sum(cellfun(@length, blocks));
-            b = blocks{i};
-            tm = full(sparse(b, 1:length(b), ones(1, length(b)), n, length(b)));
+            if ~isempty(blocks)
+                n = sum(cellfun(@length, blocks));
+                b = blocks{i};
+                tm = full(sparse(1:length(b), b, ones(1, length(b)), length(b), n));
+            else
+                tm = [];
+            end
             m = self.morphismByFunction(self.factor(i), @(g) g{i}, tm);
         end
 
@@ -231,11 +264,11 @@ classdef DirectProductGroup < replab.CompactGroup
         function blocks = torusBlocks(self)
             b = all(cellfun(@(f) f.hasReconstruction, self.factors));
             if ~b
-                p = [];
+                blocks = [];
                 return
             end
             n = self.nFactors;
-            dims = cellfun(@(f) f.reconstruction.source.n, self.factors);
+            dims = cellfun(@(f) f.maximalTorusDimension, self.factors);
             blocks = cell(1, n);
             shift = 0;
             for i = 1:n

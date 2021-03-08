@@ -86,14 +86,22 @@ classdef CompositionRep < replab.Rep
             b = self.second.isExact;
         end
 
-        function b = hasMaximalTorusExponents(self)
-            b = ~isempty(self.first.torusMap) && self.second.hasMaximalTorusExponents && self.overC; % TODO
+        function b = hasTorusImage(self)
+            b = self.group.hasReconstruction && (~isempty(self.first.torusMap) || self.group.maximalTorusDimension == 0);
+            b = b && self.second.hasTorusImage;
         end
 
-        function [powers, partition] = maximalTorusExponents(self)
-            [powers0, ~] = self.second.maximalTorusExponents;
-            powers = powers0 * self.first.torusMap;
-            partition = [];
+        function [torusMap, torusInjection, torusProjection] = torusImage(self)
+            if isempty(self.first.torusMap)
+                n1 = self.group.maximalTorusDimension;
+                assert(n1 == 0);
+                n2 = self.second.group.maximalTorusDimension;
+                torusMap1 = zeros(n2, n1);
+            else
+                torusMap1 = self.first.torusMap;
+            end
+            [torusMap2, torusInjection, torusProjection] = self.second.torusImage;
+            torusMap = torusMap2 * torusMap1;
         end
 
     end

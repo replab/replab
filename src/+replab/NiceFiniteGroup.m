@@ -239,7 +239,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             if isa(second, 'replab.FiniteMorphism')
                 m = replab.mrp.FiniteComposition(second, first, imageElementFun);
             else
-                m = replab.mpr.Composition(second, first, imageElementFun);
+                m = replab.mrp.Composition(second, first, imageElementFun);
             end
         end
 

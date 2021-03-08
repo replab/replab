@@ -37,4 +37,5 @@ classdef TorusMorphismLaws < replab.Laws
         end
 
     end
+
 end

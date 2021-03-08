@@ -14,7 +14,7 @@ classdef WreathProductGroup_Rep < replab.Rep
     methods
 
         function self = WreathProductGroup_Rep(group, type, factorRep, actingRep, baseRep)
-        % Constructs an imprimitive representation of a wreath product group
+        % Constructs a primitive or imprimitive representation of a wreath product group
         %
         % Args:
         %   group (`+replab.WreathProductGroup`): Wreath product group
@@ -78,14 +78,6 @@ classdef WreathProductGroup_Rep < replab.Rep
 
         function b = isExact(self)
             b = self.factorRep.isExact;
-        end
-
-        function b = hasMaximalTorusExponents(self)
-            b = self.group.hasReconstruction && self.baseRep.hasMaximalTorusExponents; % base group has reconstruction only when the acting torus is empty
-        end
-
-        function [powers, partition] = maximalTorusExponents(self)
-            [powers, partition] = self.baseRep.maximalTorusExponents;
         end
 
     end

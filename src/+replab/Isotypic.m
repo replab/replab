@@ -113,7 +113,7 @@ classdef Isotypic < replab.SubRep
         % The injection map of the isotypic component comes from the sum of the injection maps of the irreps,
         % while its projection map is supplied as an argument.
         %
-        % The static method `.fromIrreps` computes this embedding map if necessary.
+        % The static method `.fromIrreps` computes this projection map if necessary.
         %
         % Additional keyword arguments are passed to the `.Rep` constructor.
         %

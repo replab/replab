@@ -335,28 +335,30 @@ classdef TensorRep < replab.Rep
             end
         end
 
-        function b = hasMaximalTorusExponents(self)
-            b = all(cellfun(@(f) f.hasMaximalTorusExponents, self.factors));
-            b = b & self.overC; % TODO: provide real stuff as well
+        function b = hasTorusImage(self)
+            b = all(cellfun(@(f) f.hasTorusImage, self.factors));
         end
 
-        function [powers, partition] = maximalTorusExponents(self)
+        function [torusMap, torusInjection, torusProjection] = torusImage(self)
             r = self.group.reconstruction.source.n; % torus rank
-            powers = zeros(1, r);
+            torusMap = zeros(1, r);
+            torusInjection = 1;
+            torusProjection = 1;
             d = 1;
             for i = 1:self.nFactors
                 f = self.factor(i);
-                [powersi, ~] = f.maximalTorusExponents;
+                [tm, ti, tp] = f.torusImage;
+                torusInjection = kron(torusInjection, ti);
+                torusProjection = kron(torusProjection, tp);
                 di = f.dimension;
-                powers1 = zeros(d * di, r);
+                torusMap1 = zeros(d * di, r);
                 for j = 1:r
-                    col = bsxfun(@plus, powers(:,j)', powersi(:,j)); % respects the kron convention
-                    powers1(:, j) = col(:);
+                    col = bsxfun(@plus, torusMap(:,j)', tm(:,j)); % respects the kron convention
+                    torusMap1(:, j) = col(:);
                 end
-                powers = powers1;
+                torusMap = torusMap1;
                 d = d * di;
             end
-            partition = [];
         end
 
     end

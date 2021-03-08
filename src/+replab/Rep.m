@@ -889,33 +889,41 @@ classdef Rep < replab.Obj
                 'special', 'trivialCols', 'type', type));
         end
 
-        function b = hasMaximalTorusExponents(self)
-        % Returns whether a simple description of the representation of the group maximal torus is available
+        function b = hasTorusImage(self)
+        % Returns whether a description of representation of the maximal torus subgroup is available
         %
         % This description is used internally in RepLAB to speed up the group averaging process when computing equivariants.
         %
         % Returns:
-        %   logical: True if the call to `.maximalTorusExponents` succeeds
-            b = false;
+        %   logical: True if the call to `.torusImage` succeeds
+            b = self.group.hasReconstruction && self.group.maximalTorusDimension == 0; % we have defaults for trivial torus
         end
 
-        function [powers, partition] = maximalTorusExponents(self)
+        function [torusMap, torusInjection, torusProjection] = torusImage(self)
         % Returns a simple description of the representation of the group maximal torus
         %
-        % When the representation is complex (`.overC` true), ``partition`` is empty.
+        % Let:
+        % * ``t`` be an element of the maximal torus ``T`` of `.group`,
+        % * ``mu`` be the morphism from ``T`` to `.group`,
+        % * ``torusMap`` be the integer matrix representing the morphism from ``T`` to ``T1`` (a torus of dimension `.dimension`).
         %
-        % When the representation is real (`.overR` true), ``partition`` provides the coordinates of the
-        % diagonal ``1x1`` and ``2x2`` blocks. The coordinates ``i`` with ``1x1`` blocks must have ``powers(:,i) == 0``,
-        % while, for a block ``[i, j]``, we need ``powers(:,i) == powers(:,j)``, and the 2x2 block ``rho([i j], [i j])``
-        % represents the corresponding phase ``u`` as ``[real(u) -imag(u); imag(u) real(u)]``.
+        % We have equality between
+        % * ``self.image(mu.imageElement(t))`` and
+        % * ``torusInjection * T1.definingRep.image(torusMap * t) * torusProjection``
         %
         % Returns
         % -------
-        %   powers: integer(d, r)
+        %   torusMap: integer(d, r)
         %     Exponents, with ``d`` the representation dimension `.dimension` and ``r`` the torus rank
-        %   partition: `.Partition` or ``[]``
-        %     Partition of the Euclidean space into ``2x2`` and ``1x1`` blocks.
-            error('Maximal torus exponents not available');
+        %   torusInjection: double(d, d), may be sparse
+        %     Injection from the torus representation to this representation
+        %   torusProjection: double(d, d) may be sparse
+        %     Projection from this representation to the torus representation
+            assert(self.group.hasReconstruction);
+            assert(self.group.maximalTorusDimension == 0);
+            torusMap = zeros(self.dimension, 0);
+            torusInjection = speye(self.dimension);
+            torusProjection = speye(self.dimension);
         end
 
     end

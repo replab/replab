@@ -90,17 +90,14 @@ classdef TrivialRep < replab.Rep
             M = M;
         end
 
-        function b = hasMaximalTorusExponents(self)
+        function b = hasTorusImage(self)
             b = self.group.hasReconstruction;
         end
 
-        function [powers, partition] = maximalTorusExponents(self)
-            powers = zeros(self.dimension, self.group.reconstruction.source.n);
-            if self.overR
-                partition = replab.Partition.fromVector(1:self.dimension);
-            else
-                partition = [];
-            end
+        function [torusMap, torusInjection, torusProjection] = torusImage(self)
+            torusMap = zeros(self.dimension, self.group.maximalTorusDimension);
+            torusInjection = speye(self.dimension);
+            torusProjection = speye(self.dimension);
         end
 
     end

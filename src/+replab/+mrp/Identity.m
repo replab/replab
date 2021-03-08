@@ -9,7 +9,7 @@ classdef Identity < replab.Isomorphism
             if isa(group, 'replab.TorusGroup')
                 self.torusMap = eye(group.n);
             elseif isa(group, 'replab.CompactGroup') && group.hasReconstruction
-                n = group.reconstruction.source.n;
+                n = group.maximalTorusDimension;
                 self.torusMap = eye(n);
             end
         end
