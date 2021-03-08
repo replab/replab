@@ -27,7 +27,7 @@ classdef RepWithTorusImageLaws < replab.Laws
             else
                 c = cond(full(torusInjection));
             end
-            tol = 1e-15*c*sqrt(self.rep.dimension); % assumption: error on each phase is max 1e-15
+            tol = 1e-14*c*sqrt(self.rep.dimension); % assumption: error on each phase is max 1e-15
             self.assertApproxEqual(img1, img2, tol);
         end
 
