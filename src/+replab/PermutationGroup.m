@@ -828,10 +828,10 @@ classdef PermutationGroup < replab.FiniteGroup
         function perm = indexRelabelingPermutation(self, g, indexRange)
         % Returns the permutation that acts by permuting tensor coefficients
         %
-        % Let I = (i1, ..., id) be a sequence of indices, where d = self.domainSize
-        % and 1 <= i1,...,id <= indexRange
+        % Let ``I = (i_1, ..., i_d)`` be a sequence of indices, where ``d = self.domainSize``
+        % and ``1 <= i_1,...,i_d <= indexRange``
         %
-        % We enumerate elements of I by first incrementing id, then i_(d-1), etc...
+        % We enumerate elements of ``I`` by first incrementing ``i_d``, then ``i_{d-1}``, etc...
         %
         % We compute the permutation of domain size ``indexRange^domainSize`` that acts on the
         % indices of I according to the argument ``g``.
@@ -844,15 +844,19 @@ classdef PermutationGroup < replab.FiniteGroup
         %   permutation: The permutation on the enumeration of indices
             n = self.domainSize;
             dims = indexRange * ones(1, n);
-            perm = permute(reshape(1:prod(dims), dims), fliplr(n +  1 - g));
+            perm = permute(reshape(1:prod(dims), dims), fliplr(n+1-g));
             perm = perm(:)';
         end
 
         function phi = indexRelabelingMorphism(self, indexRange)
         % Returns the morphism the permutation action of this group on tensor coefficients
         %
-        % The tensor coefficients correspond to R^ir x R^ir ... (domainSize times)
-        % where ir = indexRange
+        % The tensor coefficients correspond to ``R^ir x R^ir ... (domainSize times)``
+        % where ``ir = indexRange``.
+        %
+        % The enumeration of indices is done in the same order as in `.indexRelabelingPermutation`:
+        % if ``I = (i1, ..., id)`` is a sequence of indices, we increment first ``id``, then
+        % ``i_{d-1}`` and so on.
         %
         % See also:
         %   `+replab.PermutationGroup.indexRelabelingPermutation`
