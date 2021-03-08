@@ -57,7 +57,6 @@ stateFiniteRep = G.commutingProductFactorRep('R', d^n, {Sd.naturalRep.tensorPowe
 %
 % Note that, as torus elements are written additively, morphisms between tori can be written
 % using matrices with integer entries. We construct such a map below.
-
 maps = cell(1, n);
 lastmap = zeros(d, n-1, d);
 for i = 1:n-1
@@ -70,14 +69,6 @@ maps{n} = reshape(lastmap, [d (n-1)*d]);
 mu = ghzGroup.N.splitMorphism('maps', maps);
 rep1 = mu.target.tensorFactorRepFun('C', @(T, i) T.definingRep);
 contRep = mu.andThen(rep1);
+
 % finally, "concatenate" the compatible representations of the components of the semidirect product
 rep = ghzGroup.semidirectProductRep(stateFiniteRep.complexification, contRep);
-
-g1 = ghzGroup.sample;
-g2 = ghzGroup.sample;
-g1{1}{1} = [1 2];
-g2{1}{1} = [1 2];
-g12 = ghzGroup.compose(g1, g2);
-r1 = rep.image(g1);
-r2 = rep.image(g2);
-r12 = rep.image(g12);
