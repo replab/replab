@@ -499,10 +499,6 @@ classdef SubRep < replab.Rep
             rho = self.projection('exact') * self.parent.image(g, 'exact') * self.injection('exact');
         end
 
-        function b = computeIsIrreducible(self)
-            b = replab.irreducible.identifyIrreps(self.parent, {self});
-        end
-
         function c = computeConditionNumberEstimate(self)
             if self.isUnitary
                 c = 1;

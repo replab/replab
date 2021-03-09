@@ -409,7 +409,7 @@ classdef Rep < replab.Obj
         end
 
         function b = computeIsIrreducible(self)
-            b = replab.irreducible.identifyIrreps(self, {replab.SubRep.identical(self)});
+            b = length(self.split) == 1;
         end
 
         function iso = computeTrivialComponent_exact(self)
