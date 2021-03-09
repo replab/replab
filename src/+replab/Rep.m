@@ -933,13 +933,8 @@ classdef Rep < replab.Obj
         function I = decomposition(self)
         % Returns the irreducible decomposition of this representation
         %
-        % Requires this representation to be unitary
-        %
         % Returns:
         %   `+replab.Irreducible`: The irreducible decomposition
-        %
-        % Raises:
-        %   An error is this representation is not unitary.
             I = self.cached('decomposition', @() self.computeDecomposition);
         end
 
