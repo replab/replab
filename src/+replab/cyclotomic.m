@@ -797,13 +797,13 @@ classdef cyclotomic
                 self = builtin('subsasgn', self, s, val);
               case '()'
                 if length(s) == 1
-                    ind = reshape(1:prod(self.size_), self.size_);
+                    ind = reshape(1:prod(size(self)), size(self));
                     ind = subsref(ind, s(1));
-                    c = self.data_;
+                    c = data(self);
                     val = replab.cyclotomic(val);
                     val = replab.cyclotomic.broadcast(val, size(ind));
                     ind = ind(:);
-                    val = val.data;
+                    val = data(val);
                     for i = 1:length(ind)
                         c(ind(i)) = val(i);
                     end
