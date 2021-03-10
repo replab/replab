@@ -183,6 +183,22 @@ classdef CharacterTable < replab.Obj
             r = arrayfun(@(i) self.irrep(i), 1:self.nIrreps, 'uniform', 0);
         end
 
+        function b = hasIrreps(self)
+        % Returns whether explicit constructions are available for all irreducible representations
+            b = ~any(cellfun(@isempty, self.irreps_));
+        end
+
+        function b = hasIrrep(self, ind)
+        % Returns whether the irreducible representation that corresponds to the character of given index is available
+        %
+        % Args:
+        %   ind (integer): Index of the character
+        %
+        % Returns:
+        %   logical: Whether the irreducible representation is available
+            b = ~isempty(self.irreps_{ind});
+        end
+
         function r = irrep(self, ind)
         % Returns the irreducible representation that corresponds to the character of given index
         %
@@ -191,10 +207,8 @@ classdef CharacterTable < replab.Obj
         %
         % Returns:
         %   `.RepByImages`: An irreducible representation with coefficients in the cyclotomic field
+            assert(self.hasIrrep(ind), 'I do not know how to compute the %d-th irrep of this group', ind);
             r = self.irreps_{ind};
-            if isempty(r)
-                error('I do not know how to compute the %d-th irrep of this group', ind);
-            end
         end
 
     end

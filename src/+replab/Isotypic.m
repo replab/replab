@@ -306,13 +306,15 @@ classdef Isotypic < replab.SubRep
                     end
                 end
             end
-            if self.multiplicity > 1
-                s = sprintf('%s I(%d)x%s(%d)', s, self.multiplicity, rt, self.irrepDimension);
-            else
+            if self.multiplicity == 0
+                s = sprintf('%s 0 x %s(%d)', s, rt, self.irrepDimension);
+            elseif self.multiplicity == 1
                 s = sprintf('%s %s(%d)', s, rt, self.irrepDimension);
+            else
+                s = sprintf('%s I(%d)x%s(%d)', s, self.multiplicity, rt, self.irrepDimension);
             end
-            if self.inCache('trivialDimension')
-                if self.trivialDimension == self.dimension
+            if self.modelIrrep.inCache('trivialDimension')
+                if self.modelIrrep.trivialDimension == self.modelIrrep.dimension
                     s = [s ' (trivial)'];
                 elseif self.trivialDimension == 0
                     s = [s ' (nontrivial)'];
