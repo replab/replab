@@ -1537,7 +1537,25 @@ classdef Rep < replab.Obj
     methods (Access = protected)
 
         function dec = computeDecomposition_exact(self)
-
+        % Computes the representation decomposition, exact variant, only available for finite groups
+            assert(isa(self.group, 'replab.FiniteGroup'));
+            c = self.group.characterTable;
+            assert(c.hasIrreps, 'All irreps must have explicit constructions available');
+            irreps = c.irreps;
+            assert(all(cellfun(@(ir) ir.isExact, irreps)), 'All irreps must be available in exact form');
+            if self.overR
+                assert(all(cellfun(@(ir) ir.frobeniusSchurIndicator == 1, irreps)));
+                for i = 1:self.group.nGenerators
+                    g = self.group.generator(i);
+                    for j = 1:length(irreps)
+                        img = irreps{j}.image(g, 'exact');
+                        assert(isreal(img), 'All representations must have real images');
+                    end
+                end
+                irreps = cellfun(@(ir) replab.rep.EncodedRep(ir, 'C^d -> R^d'), irreps, 'uniform', 0);
+            end
+            components = cellfun(@(irrep) replab.irreducible.isotypicComponent(self, irrep, 'exact'), irreps, 'uniform', 0);
+            dec = replab.Irreducible(self, components);
         end
 
         function dec = computeDecomposition_double(self)

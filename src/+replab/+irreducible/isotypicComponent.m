@@ -13,20 +13,27 @@ function iso = isotypicComponent(rep, irrep, type)
     if nargin < 3 || isempty(type)
         type = 'double';
     end
-    assert(rep.overC); % can we relax this?
-    T = replab.irreducible.serreTensor(rep, irrep, type);
-    proj1 = T(:,:,1,1);
-    [~, pivot] = rref(double(proj1).');
-    m = length(pivot);
+    assert(rep.field == irrep.field);
+    if irrep.overR
+        assert(irrep.frobeniusSchurIndicator ~= -2, 'isotypicComponent does not support real quaternion-type representations');
+    end
     D = rep.dimension;
     d = irrep.dimension;
+    T = replab.irreducible.serreTensor(rep, irrep, type);
+    proj1 = T(:,:,1,1);
+    % find a linear basis of the range of proj1
+    % we use the row reduced echelon form, which finds indices of linearly independent columns
+    [~, pivot] = rref(double(proj1).');
+    m = length(pivot);
     if strcmp(type, 'exact')
         I = replab.cyclotomic.zeros(D, m, d);
     else
         I = zeros(D, m, d);
     end
+    % we create the first element of the injection map
     I(:,:,1) = T(:,pivot,1,1);
     for i = 2:d
+        % and compute the others using Serre's trick
         I(:,:,i) = T(:,:,i,1) * T(:,pivot,1,1);
     end
     I = permute(I, [1 3 2]);
