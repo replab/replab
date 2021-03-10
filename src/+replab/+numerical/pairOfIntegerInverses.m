@@ -1,6 +1,11 @@
 function [A, B] = pairOfIntegerInverses(d, ct)
 % Returns a pair of integer matrices that are inverse of each other
 %
+% Based on the definitions of page 1 of
+% W. S. Ericksen, Inverse Pairs of Matrices with Integer Elements
+% SIAM Journal on Numerical Analysis, vol. 17, no. 3, pp. 474–477, 1980.
+% https://www.jstor.org/stable/2156889
+%
 % Args:
 %   d (integer): Dimension of the matrix
 %   ct (integer): Constant integer factor parameterizing invertible matrices
