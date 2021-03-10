@@ -20,9 +20,9 @@ function [G rep] = clifford_qudit(d)
           E8 = replab.cyclotomic.E(8);
           E4 = replab.cyclotomic.E(4);
 
-          W = replab.cyclotomic.fromStrings({'E(8)', '0'; '0', 'E(8)'});
+          W = replab.cyclotomic({'E(8)', '0'; '0', 'E(8)'});
           H = replab.cyclotomic.sqrtRational(1,2)*[1 1; 1 -1];
-          S = replab.cyclotomic.fromStrings({'1', '0'; '0', 'E(4)'});
+          S = replab.cyclotomic({'1', '0'; '0', 'E(4)'});
           rep = G.repByImages('C', 2, {W H S});
       case 3
         % Generators computed using the following in GAP 4

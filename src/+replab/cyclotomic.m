@@ -19,19 +19,19 @@ classdef cyclotomic
 
     methods (Static, Access = protected)
 
-        function [lhs, rhs] = shape(lhs, rhs)
-            lhs = replab.cyclotomic(lhs);
-            rhs = replab.cyclotomic(rhs);
-            if isscalar(lhs)
-                if ~isscalar(rhs)
-                    lhs = replab.cyclotomic.broadcast(lhs, size(rhs));
+        function [lhs1, rhs1] = shape(lhs, rhs)
+            lhs1 = replab.cyclotomic(lhs);
+            rhs1 = replab.cyclotomic(rhs);
+            if isscalar(lhs1)
+                if ~isscalar(rhs1)
+                    lhs1 = replab.cyclotomic.broadcast(lhs1, size(rhs1));
                 end
             else
-                if isscalar(rhs)
-                    rhs = replab.cyclotomic.broadcast(rhs, size(lhs));
+                if isscalar(rhs1)
+                    rhs1 = replab.cyclotomic.broadcast(rhs1, size(lhs1));
                 end
             end
-            assert(isequal(size(lhs), size(rhs)));
+            assert(isequal(size(lhs1), size(rhs1)));
         end
 
         function res = broadcast(array, shape)
@@ -50,7 +50,6 @@ classdef cyclotomic
 
     methods (Static) % Standard MATLAB methods
 
-
         function c = sparse(I, J, K, nR, nC)
         % Constructs a 2D cyclotomic array using sparse matrix syntax (incomplete)
         %
@@ -62,9 +61,11 @@ classdef cyclotomic
                 K = replab.cyclotomic(K);
             end
             c = replab.cyclotomic.zeros(nR, nC);
+            c = c.data;
             for i = 1:length(I)
-                c(I(i), J(i)) = K(i);
+                c(I(i) + (J(i) - 1)*nR) = K.cyclo(i);
             end
+            c = replab.cyclotomic(c, [nR nC]);
         end
 
         function c = eye(n)
@@ -191,7 +192,7 @@ classdef cyclotomic
 
         function c = convertVpi(vec)
             vec = vec(:);
-            s = arrayfun(@(i) strtrim(num2str(v(i))), 1:length(v), 'uniform', 0);
+            s = arrayfun(@(i) strtrim(num2str(vec(i))), 1:length(vec), 'uniform', 0);
             c = javaMethod('parse', 'cyclo.Lab', s);
         end
 
@@ -206,7 +207,7 @@ classdef cyclotomic
             vec = vec(:);
             realMask = cellfun(@(v) isa(v, 'double') && isreal(v), vec);
             complexMask = cellfun(@(v) isa(v, 'double') && ~isreal(v), vec);
-            charMask = cellfun(@iscell, vec);
+            charMask = cellfun(@ischar, vec);
             vpiMask = cellfun(@(v) isa(v, 'vpi'), vec);
             cyclotomicMask = cellfun(@(v) isa(v, 'replab.cyclotomic'), vec);
             cycloMask = cellfun(@(v) isa(v, 'cyclo.Cyclo'), vec);
@@ -219,19 +220,31 @@ classdef cyclotomic
             c = javaArray('cyclo.Cyclo', length(vec));
             ind = find(realMask);
             if ~isempty(ind)
-                c(ind) = javaMethod('fromDouble', 'cyclo.Lab', [vec{ind}]);
+                a = javaMethod('fromDouble', 'cyclo.Lab', [vec{ind}]);
+                for i = 1:length(ind)
+                    c(ind(i)) = a(i);
+                end
             end
             ind = find(complexMask);
             if ~isempty(ind)
-                c(ind) = javaMethod('fromDouble', 'cyclo.Lab', real([vec{ind}]), imag([vec{ind}]));
+                a = javaMethod('fromDouble', 'cyclo.Lab', real([vec{ind}]), imag([vec{ind}]));
+                for i = 1:length(ind)
+                    c(ind(i)) = a(i);
+                end
             end
             ind = find(charMask);
             if ~isempty(ind)
-                c(ind) = javaMethod('parse', 'cyclo.Lab', vec(ind));
+                a = javaMethod('parse', 'cyclo.Lab', vec(ind));
+                for i = 1:length(ind)
+                    c(ind(i)) = a(i);
+                end
             end
             ind = find(vpiMask);
             if ~isempty(ind)
-                c(ind) = javaMethod('parse', 'cyclo.Lab', cellfun(@(v) strtrim(num2str(v)), vec(ind), 'uniform', 0));
+                a = javaMethod('parse', 'cyclo.Lab', cellfun(@(v) strtrim(num2str(v)), vec(ind), 'uniform', 0));
+                for i = 1:length(ind)
+                    c(ind(i)) = a(i);
+                end
             end
             ind = find(cyclotomicMask);
             if ~isempty(ind)
@@ -264,6 +277,7 @@ classdef cyclotomic
 
         function c = convert(vec)
         % Converts a vector to a Java array
+        %
         % Args:
         %    vec (double(\*,1) or vpi(\*,1) or cell(\*,1)): Vector to convert
         %
@@ -321,6 +335,9 @@ classdef cyclotomic
             else
                 error('Incorrect constructor call');
             end
+            for i = 1:length(self.data_)
+                assert(isa(self.data_(i), 'cyclo.Cyclo'));
+            end
         end
 
         function c = cyclo(self, varargin)
@@ -369,28 +386,32 @@ classdef cyclotomic
 
     methods % Standard MATLAB properties
 
-% $$$         function res = isrational(self)
-% $$$         % Returns which coefficients are rational
-% $$$             res = reshape(javaMethod('isRational', 'cyclo.Lab', self.matArray), self.size);
-% $$$         end
-% $$$
-% $$$         function res = isreal(self)
-% $$$             res = all(all(self == conj(self)));
-% $$$         end
-% $$$
-% $$$         function res = isscalar(self)
-% $$$             res = isscalar(self.mat);
-% $$$         end
-% $$$
-% $$$         function res = isvector(self)
-% $$$             res = isvector(self.mat);
-% $$$         end
-% $$$
-% $$$         function res = iswhole(self)
-% $$$         % Returns which coefficients are integers
-% $$$             res = reshape(javaMethod('isWhole', 'cyclo.Lab', self.matArray), self.size);
-% $$$         end
-% $$$
+        function res = isempty(self)
+            res = prod(self.size_) == 0;
+        end
+
+        function res = isrational(self)
+        % Returns which coefficients are rational
+            res = reshape(javaMethod('isRational', 'cyclo.Lab', self.data_), self.size_);
+        end
+
+        function res = isreal(self)
+            res = all(all(self == conj(self)));
+        end
+
+        function res = isscalar(self)
+            res = length(self) == 1;
+        end
+
+        function res = isvector(self)
+            res = sum(self.size_ ~= 1) <= 1;
+        end
+
+        function res = iswhole(self)
+        % Returns which coefficients are integers
+            res = reshape(javaMethod('isWhole', 'cyclo.Lab', self.data_), self.size_);
+        end
+
         function l = length(self)
         % Length of vector
         %
@@ -405,7 +426,7 @@ classdef cyclotomic
             if isempty(self)
                 l = 0;
             else
-                l = max(size(self));
+                l = max(self.size_);
             end
         end
 
@@ -414,7 +435,7 @@ classdef cyclotomic
         %
         % Returns:
         %   integer: Number of dimensions
-            n = length(size(self));
+            n = length(self.size_);
         end
 
         function n = numel(self)
@@ -422,7 +443,11 @@ classdef cyclotomic
         %
         % Returns:
         %   integer: Number of elements
-            n = prod(size(self));
+            n = prod(self.size_);
+        end
+
+        function n = numArgumentsFromSubscript(self, s, indexingContext)
+            n = 1;
         end
 
         function s = size(self, dim)
@@ -484,7 +509,7 @@ classdef cyclotomic
             assert(ndims(self) == 2);
             n = size(self, 1);
             assert(size(self, 2) == n);
-            res = replab.cyclotomic.fromJavaArray(javaMethod('power', 'cyclo.Lab', n, self.data, e), [n n]);
+            res = replab.cyclotomic(javaMethod('power', 'cyclo.Lab', n, self.data, e), [n n]);
         end
 
         function res = mrdivide(lhs, rhs)
@@ -497,35 +522,31 @@ classdef cyclotomic
             rd = rhs.data;
             res = replab.cyclotomic(javaMethod('divideScalar', 'cyclo.Lab', lhs.data, rd(1)), size(lhs));
         end
-% $$$
-% $$$         function res = mtimes(lhs, rhs)
-% $$$         % Matrix multiplication
-% $$$         %
-% $$$         % Support both ``m x n`` by ``n x p`` matrix multiplication, and the case where one of the arguments is a scalar
-% $$$             if isa(lhs, 'double')
-% $$$                 lhs = replab.cyclotomic.fromDoubles(lhs);
-% $$$             end
-% $$$             if isa(rhs, 'double')
-% $$$                 rhs = replab.cyclotomic.fromDoubles(rhs);
-% $$$             end
-% $$$             if ~isscalar(rhs.mat) && isscalar(lhs.mat)
-% $$$                 res = rhs * lhs;
-% $$$                 return
-% $$$             end
-% $$$             if isscalar(rhs.mat)
-% $$$                 l = size(lhs.mat, 1);
-% $$$                 m = size(lhs.mat, 2);
-% $$$                 rm = rhs.mat;
-% $$$                 res = replab.cyclotomic.fromJavaArray(javaMethod('timesScalar', 'cyclo.Lab', lhs.matArray, rm{1,1}), size(lhs));
-% $$$                 return
-% $$$             end
-% $$$             l = size(lhs.mat, 1);
-% $$$             m = size(lhs.mat, 2);
-% $$$             assert(m == size(rhs.mat, 1));
-% $$$             n = size(rhs.mat, 2);
-% $$$             res = replab.cyclotomic.fromJavaArray(javaMethod('times', 'cyclo.Lab', l, m, n, lhs.matArray, rhs.matArray), [l n]);
-% $$$         end
-% $$$
+
+        function res = mtimes(lhs, rhs)
+        % Matrix multiplication
+        %
+        % Support both ``m x n`` by ``n x p`` matrix multiplication, and the case where one of the arguments is a scalar
+            lhs = replab.cyclotomic(lhs);
+            rhs = replab.cyclotomic(rhs);
+            if ~isscalar(rhs) && isscalar(lhs)
+                res = rhs * lhs;
+                return
+            end
+            if isscalar(rhs)
+                l = size(lhs, 1);
+                m = size(lhs, 2);
+                rval = rhs.cyclo(1);
+                res = replab.cyclotomic(javaMethod('timesScalar', 'cyclo.Lab', lhs.data_, rval), size(lhs));
+                return
+            end
+            l = size(lhs, 1);
+            m = size(lhs, 2);
+            assert(m == size(rhs, 1));
+            n = size(rhs, 2);
+            res = replab.cyclotomic(javaMethod('times', 'cyclo.Lab', l, m, n, lhs.data, rhs.data), [l n]);
+        end
+
         function res = ne(self, rhs)
         % (Non-)equality test
             res = ~(self == rhs);
@@ -537,15 +558,15 @@ classdef cyclotomic
             res = replab.cyclotomic(javaMethod('plus', 'cyclo.Lab', lhs.data, rhs.data), size(lhs));
         end
 
-        function res = rdivide(lhs, rhs)
+        function res = rdivide(lhs0, rhs0)
         % Pointwise ``/`` operator
-            [lhs, rhs] = replab.cyclotomic.shape(lhs, rhs);
+            [lhs, rhs] = replab.cyclotomic.shape(lhs0, rhs0);
             res = replab.cyclotomic(javaMethod('pw_divide', 'cyclo.Lab', lhs.data, rhs.data), size(lhs));
         end
 
-        function res = times(lhs, rhs)
+        function res = times(lhs0, rhs0)
         % Pointwise ``*`` operator
-            [lhs, rhs] = replab.cyclotomic.shape(lhs, rhs);
+            [lhs, rhs] = replab.cyclotomic.shape(lhs0, rhs0);
             res = replab.cyclotomic(javaMethod('pw_times', 'cyclo.Lab', lhs.data, rhs.data), size(lhs));
         end
 
@@ -653,35 +674,52 @@ classdef cyclotomic
 
     methods % Matrix decompositions
 
-% $$$         function [L, U, p] = lu(self)
-% $$$             m = size(self, 1);
-% $$$             n = size(self, 2);
-% $$$             res = javaMethod('lu', 'cyclo.Lab', self.matArray, m, n);
-% $$$             L = javaMethod('L', res);
-% $$$             U = javaMethod('U', res);
-% $$$             p = javaMethod('pivots', res);
-% $$$             p = double(p(:)') + 1;
-% $$$             if m >= n
-% $$$                 L = replab.cyclotomic.fromJavaArray(L, [m n]);
-% $$$                 U = replab.cyclotomic.fromJavaArray(U, [n n]);
-% $$$             else
-% $$$                 L = replab.cyclotomic.fromJavaArray(L, [m m]);
-% $$$                 U = replab.cyclotomic.fromJavaArray(U, [m n]);
-% $$$             end
-% $$$         end
-% $$$
-% $$$         function [L, D, p] = ldl(self)
-% $$$             m = size(self, 1);
-% $$$             n = size(self, 2);
-% $$$             assert(m == n);
-% $$$             res = javaMethod('ldl', 'cyclo.Lab', self.matArray, m, n);
-% $$$             L = javaMethod('L', res);
-% $$$             D = javaMethod('D', res);
-% $$$             p = javaMethod('pivots', res);
-% $$$             p = double(p(:)') + 1;
-% $$$             L = replab.cyclotomic.fromJavaArray(L, [n n]);
-% $$$             D = replab.cyclotomic.fromJavaArray(D, [n n]);
-% $$$         end
+        function res = null(self)
+        % Computes the null space of a cyclotomic matrix
+        %
+        % Example:
+        %   >>> M = replab.cyclotomic([1 3 0; -2 -6 0; 3 9 6]);
+        %   >>> null(M)'
+        %       -3  1  0
+        %
+        % Returns:
+        %   `.cyclotomic`: The matrix null space
+            rr = javaMethod('rref', 'cyclo.Lab', self.data, size(self, 1), size(self, 2));
+            rank = double(javaMethod('rank', rr));
+            rows = size(self, 2);
+            cols = size(self, 2) - rank;
+            res = replab.cyclotomic(javaMethod('nullSpace', rr), [rows cols]);
+        end
+
+        function [L, U, p] = lu(self)
+            m = size(self, 1);
+            n = size(self, 2);
+            res = javaMethod('lu', 'cyclo.Lab', self.data, m, n);
+            L = javaMethod('L', res);
+            U = javaMethod('U', res);
+            p = javaMethod('pivots', res);
+            p = double(p(:)') + 1;
+            if m >= n
+                L = replab.cyclotomic(L, [m n]);
+                U = replab.cyclotomic(U, [n n]);
+            else
+                L = replab.cyclotomic(L, [m m]);
+                U = replab.cyclotomic(U, [m n]);
+            end
+        end
+
+        function [L, D, p] = ldl(self)
+            m = size(self, 1);
+            n = size(self, 2);
+            assert(m == n);
+            res = javaMethod('ldl', 'cyclo.Lab', self.data, m, n);
+            L = javaMethod('L', res);
+            D = javaMethod('D', res);
+            p = javaMethod('pivots', res);
+            p = double(p(:)') + 1;
+            L = replab.cyclotomic(L, [n n]);
+            D = replab.cyclotomic(D, [n n]);
+        end
 
     end
 
@@ -692,7 +730,20 @@ classdef cyclotomic
         %
         % Compatible with MATLAB's find
             mask = self ~= 0;
-            varargout{:} = find(mask, varargin{:});
+            if nargout == 3
+                [I, J] = find(mask, varargin{:});
+                c = javaArray('cyclo.Cyclo', length(I));
+                nr = size(self, 1);
+                for i = 1:length(I)
+                    c(i) = self.data_(I(i) + (J(i)-1)*nr);
+                end
+                V = replab.cyclotomic(c, size(I));
+                varargout{1} = I;
+                varargout{2} = J;
+                varargout{3} = V;
+            else
+                [varargout{:}] = find(mask, varargin{:});
+            end
         end
 
         function varargout = subsref(self, s)
@@ -771,8 +822,8 @@ classdef cyclotomic
         % Returns a multidimensional array of hash codes
         %
         % Example:
-        %   >>> num2str(replab.cyclotomic.zeros(1))
-        %       '-1579025880'
+        %   >>> hash(replab.cyclotomic.zeros(1)) == -1579025880
+        %       1
         %
         % Returns:
         %   integer(...): Integer array of hash codes
@@ -864,31 +915,6 @@ classdef cyclotomic
             v = sum(diag(self));
         end
 
-% $$$
-% $$$         function res = null(self)
-% $$$         % Computes the null space of a cyclotomic matrix
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> M = replab.cyclotomic.fromDoubles([1 3 0; -2 -6 0; 3 9 6]);
-% $$$         %   >>> null(M)'
-% $$$         %       -3  1  0
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.cyclotomic`: The matrix null space
-% $$$             rr = javaMethod('rref', 'cyclo.Lab', self.matArray, size(self, 1), size(self, 2));
-% $$$             rank = double(rr.rank);
-% $$$             rows = size(self, 2);
-% $$$             cols = size(self, 2) - rank;
-% $$$             res = replab.cyclotomic.fromJavaArray(javaMethod('nullSpace', rr), [rows cols]);
-% $$$         end
-% $$$
-% $$$
-% $$$
-% $$$
-% $$$
-% $$$
-% $$$
-% $$$
     end
 
     methods % Matrix concatenation
@@ -928,8 +954,12 @@ classdef cyclotomic
             lhs = replab.cyclotomic(lhs);
             rhs = cellfun(@(a) replab.cyclotomic(a), varargin, 'uniform', 0);
             rhs = cellfun(@(a) a.data, rhs, 'uniform', 0);
-            res = horzcat(lhs.data, rhs{:});
-            res = replab.cyclotomic(res, [size(lhs, 1) sum(dims)]);
+            m = size(lhs, 1);
+            res = lhs.data;
+            for i = 1:length(rhs)
+                res = javaMethod('cat', 'cyclo.Lab', res, rhs{i});
+            end
+            res = replab.cyclotomic(res, [m sum(dims)]);
         end
 
         function res = vertcat(lhs, varargin)

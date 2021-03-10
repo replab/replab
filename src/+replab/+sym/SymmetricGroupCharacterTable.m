@@ -19,7 +19,7 @@ classdef SymmetricGroupCharacterTable < replab.CharacterTable
                     chars(r, c) = trace(irreps{r}.image(classes{c}.representative));
                 end
             end
-            chars = replab.cyclotomic.fromDoubles(round(chars));
+            chars = replab.cyclotomic(round(chars));
             self@replab.CharacterTable(permGroup, replab.ConjugacyClasses(permGroup, classes), chars, 'irrepNames', irrepNames, 'classNames', classNames, 'irreps', irreps);
 
         end

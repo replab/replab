@@ -71,7 +71,7 @@ classdef IndexRelabelingRep < replab.Rep
         end
 
         function rho = image_exact(self, g)
-            rho = replab.cyclotomic.fromDoubles(self.image_double_sparse(g));
+            rho = replab.cyclotomic(self.image_double_sparse(g));
         end
 
     end

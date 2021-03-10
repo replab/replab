@@ -21,7 +21,7 @@ function rep = repByImages(group, field, dimension, varargin)
 
     for i = 1:length(images)
         if iscell(images{i})
-            images{i} = replab.cyclotomic.make(images{i});
+            images{i} = replab.cyclotomic(images{i});
         end
     end
 

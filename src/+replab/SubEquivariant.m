@@ -167,7 +167,7 @@ classdef SubEquivariant < replab.Equivariant
                     D = repC.parent.dimension;
                     injection = sparse(1:d, 1:d, ones(1, d), D, d);
                     if strcmp('type', 'exact')
-                        injection = replab.cyclotomic.fromDoubles(injection);
+                        injection = replab.cyclotomic(injection);
                     end
                     projection = injection';
                     repR = parent.repR.subRep(injection, 'projection', projection);
@@ -177,7 +177,7 @@ classdef SubEquivariant < replab.Equivariant
                     D = repR.parent.dimension;
                     injection = sparse(1:d, 1:d, ones(1, d), D, d);
                     if strcmp('type', 'exact')
-                        injection = replab.cyclotomic.fromDoubles(injection);
+                        injection = replab.cyclotomic(injection);
                     end
                     projection = injection';
                     repC = parent.repC.subRep(injection, 'projection', projection);

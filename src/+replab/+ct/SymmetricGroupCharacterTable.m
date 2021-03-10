@@ -5,7 +5,7 @@ function permCT = SymmetricGroupCharacterTable(n)
     irrepNames = cellfun(@(part) strrep(replab.shortStr(replab.sym.findPartitions.conjugatePart(part)), ' ', ''),nData.partitionList,'UniformOutput', false);
     [classes partCell] = replab.sym.findConjClasses(permGroup);
     classNames = cellfun(@(c) strrep(replab.shortStr(c), ' ', ''), partCell, 'uniform', 0);
-    chars = replab.cyclotomic.fromDoubles(permCTValues(n));
+    chars = replab.cyclotomic(permCTValues(n));
     permCT = replab.CharacterTable(permGroup, replab.ConjugacyClasses(permGroup, classes), chars, 'irrepNames', irrepNames, 'classNames', classNames);
 
     function CT = permCTValues(n)

@@ -113,10 +113,7 @@ classdef Character < replab.Obj
         function self = Character(conjugacyClasses, values)
             self.group = conjugacyClasses.group;
             self.conjugacyClasses = conjugacyClasses;
-            if iscell(values)
-                values = replab.cyclotomic.make(values);
-            end
-            self.values = values;
+            self.values = replab.cyclotomic(values);
         end
 
         function res = forClasses(self, newConjugacyClasses)
@@ -188,8 +185,8 @@ classdef Character < replab.Obj
             end
             sizes = self.conjugacyClasses.classSizes;
             sizes = [sizes{:}];
-            v = sum(conj(self.values) .* rhs.values .* replab.cyclotomic.fromVPIs(sizes));
-            v = v / replab.cyclotomic.fromVPIs(self.group.order);
+            v = sum(conj(self.values) .* rhs.values .* replab.cyclotomic(sizes));
+            v = v / replab.cyclotomic(self.group.order);
         end
 
         function res = plus(lhs, rhs)

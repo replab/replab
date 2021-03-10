@@ -52,7 +52,7 @@ classdef CharacterTableLaws < replab.Laws
                     if i1 ~= i2
                         self.assert(r == 0);
                     else
-                        self.assert(r == replab.cyclotomic.fromVPIs(self.C.classes.classes{i1}.representativeCentralizer.order));
+                        self.assert(r == replab.cyclotomic(self.C.classes.classes{i1}.representativeCentralizer.order));
                     end
                 end
             end
@@ -61,7 +61,7 @@ classdef CharacterTableLaws < replab.Laws
         function law_group_order_(self)
             col = self.C.characters(:, self.C.identityConjugacyClassIndex);
             order1 = sum(col.*col);
-            order2 = replab.cyclotomic.fromVPIs(self.C.group.order);
+            order2 = replab.cyclotomic(self.C.group.order);
             self.assert(order1 == order2);
         end
 

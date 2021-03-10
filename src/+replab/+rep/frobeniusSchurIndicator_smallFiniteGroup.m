@@ -14,7 +14,7 @@ function f = frobeniusSchurIndicator_smallFiniteGroup(rep)
     if rep.isExact
         f = replab.cyclotomic.zeros(1, 1);
         for i = 1:n
-            f = f + trace(rep.image(g2{i}, 'exact'))/replab.cyclotomic.fromVPIs(factor{i});
+            f = f + trace(rep.image(g2{i}, 'exact'))/replab.cyclotomic(factor{i});
         end
         f = double(f);
         assert(isreal(f) && round(f) == f);

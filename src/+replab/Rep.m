@@ -930,32 +930,27 @@ classdef Rep < replab.Obj
 
     methods % Irreducible decomposition
 
-        function I = decomposition(self)
+        function I = decomposition(self, type)
         % Returns the irreducible decomposition of this representation
+        %
+        % The type ``'double/sparse'`` is the same as ``double``.
+        %
+        % Exact decomposition depends on the availability of an algorithm: for example, we decompose finite groups
+        % with an available character table using the Serre projection formulas.
+        %
+        % Args:
+        %   type ('double', 'double/sparse', 'exact', optional): Decomposition type, default: double
         %
         % Returns:
         %   `+replab.Irreducible`: The irreducible decomposition
-            I = self.cached('decomposition', @() self.computeDecomposition);
-        end
-
-        function dec = computeDecomposition(self)
-        % Computes the representation decomposition
-        %
-        % First it splits the representation into irreducibles, before recognizing which
-        % irreducible representations are part of the same isotypic component.
-        %
-            sample1 = self.commutant.sample;
-            sample2 = self.commutant.sample;
-            forceNonUnitaryAlgorithms = false;
-            [trivial, nonTrivialIrreps] = replab.irreducible.split(self, sample1, sample2, forceNonUnitaryAlgorithms);
-            tiso = replab.Isotypic.fromTrivialSubRep(trivial);
-            [iso, zeroErrors, nonZeroErrors] = replab.irreducible.findIsotypic(self, nonTrivialIrreps, sample2);
-            if tiso.dimension > 0
-                dec = replab.Irreducible(self, horzcat({tiso}, iso));
-            else
-                dec = replab.Irreducible(self, iso);
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
             end
-
+            if strcmp(type, 'double')
+                I = self.cached('decomposition_double', @() self.computeDecomposition_double);
+            else
+                I = self.cached('decomposition_exact', @() self.computeDecomposition_exact);
+            end
         end
 
     end
@@ -1089,7 +1084,7 @@ classdef Rep < replab.Obj
             end
             if strcmp(type, 'exact')
                 if isa(M, 'double')
-                    M = replab.cyclotomic.fromDoubles(M);
+                    M = replab.cyclotomic(M);
                 end
                 M = self.matrixRowAction_exact(g, M);
             else
@@ -1129,7 +1124,7 @@ classdef Rep < replab.Obj
             end
             if strcmp(type, 'exact')
                 if isa(M, 'double')
-                    M = replab.cyclotomic.fromDoubles(M);
+                    M = replab.cyclotomic(M);
                 end
                 M = self.matrixColAction_exact(g, M);
             else
@@ -1286,7 +1281,7 @@ classdef Rep < replab.Obj
                     ind = ind + 1;
                 end
             end
-            sub = self.tensorPower(2).subRep(replab.cyclotomic.fromDoubles(injection));
+            sub = self.tensorPower(2).subRep(replab.cyclotomic(injection));
         end
 
         function sub = alternatingSquare(self)
@@ -1311,7 +1306,7 @@ classdef Rep < replab.Obj
                     ind = ind + 1;
                 end
             end
-            sub = self.tensorPower(2).subRep(replab.cyclotomic.fromDoubles(injection));
+            sub = self.tensorPower(2).subRep(replab.cyclotomic(injection));
         end
 
         function rep = directSumOfCopies(self, n)
@@ -1440,10 +1435,10 @@ classdef Rep < replab.Obj
             projection = args.projection;
             % convert cell-encoded cyclotomic matrices, when relevant
             if iscell(injection)
-                injection = replab.cyclotomic.make(injection);
+                injection = replab.cyclotomic(injection);
             end
             if iscell(projection)
-                projection = replab.cyclotomic.make(projection);
+                projection = replab.cyclotomic(projection);
             end
             isExact = isa(injection, 'replab.cyclotomic') && (isempty(projection) || isa(projection, 'replab.cyclotomic'));
             if isempty(projection)
@@ -1540,6 +1535,28 @@ classdef Rep < replab.Obj
     end
 
     methods (Access = protected)
+
+        function dec = computeDecomposition_exact(self)
+
+        end
+
+        function dec = computeDecomposition_double(self)
+        % Computes the representation decomposition
+        %
+        % First it splits the representation into irreducibles, before recognizing which
+        % irreducible representations are part of the same isotypic component.
+            sample1 = self.commutant.sample;
+            sample2 = self.commutant.sample;
+            forceNonUnitaryAlgorithms = false;
+            [trivial, nonTrivialIrreps] = replab.irreducible.split(self, sample1, sample2, forceNonUnitaryAlgorithms);
+            tiso = replab.Isotypic.fromTrivialSubRep(trivial);
+            [iso, zeroErrors, nonZeroErrors] = replab.irreducible.findIsotypic(self, nonTrivialIrreps, sample2);
+            if tiso.dimension > 0
+                dec = replab.Irreducible(self, horzcat({tiso}, iso));
+            else
+                dec = replab.Irreducible(self, iso);
+            end
+        end
 
         function res = computeUnitarize(self)
             if self.isUnitary

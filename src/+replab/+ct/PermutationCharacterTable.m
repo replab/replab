@@ -75,6 +75,6 @@ function ct = PermutationCharacterTable(group)
             end
         end
     end
-    chars = replab.cyclotomic.fromDoubles(round(chars));
+    chars = replab.cyclotomic(round(chars));
     ct = replab.CharacterTable(group, classes, chars, 'irreps', irreps);
 end
