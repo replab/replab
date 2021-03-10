@@ -3,23 +3,23 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isSymb)
     %
     % Args:
     %     group (replab.SymmetricGroup): Group being represented
-    %     
+    %
     %     part1 (integer(*\)): Partition of first irrep in tensor product
-    %     
+    %
     %     part2 (integer(*\)): Partition of second irrep in tensor product
-    %     
+    %
     %     isSymb (boolean): Do we want a symbolic result? Note that
     %         the result will be rational. Use seminormalToOrthogonal to
     %         help find the change of basis vectors to the orthogonal form.
-    %     
+    %
     % Returns:
     %     basis (cell(1,*\) of double(*\,*\)): Bases of one multiplicity space,
     %         from each irrep
-    %     
+    %
     %     irreps: (cell(1,*\) of replab.sym.IntegerPartition):
     %         Partitions corresponding to the irreducible components of the
     %         tensor product
-    
+
     n = rep.group.domainSize;
     parts = replab.sym.IntegerPartitions(n);
     mults =  replab.CharacterTable.forPermutationGroup(rep.group).multiplicities(rep);
@@ -27,7 +27,7 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isSymb)
     irreps = parts.list(irrepInds);
     lat1 = replab.sym.YoungLattice(part1,n);
     s1 = lat1.symAndAntiSym; % This is an array [k1 k2]
-    % The first 
+    % The first
     s2 = replab.sym.YoungLattice(part2,n).symAndAntiSym;
     subMatrixDim = s1(1)*s2(1)+s1(2)*s2(2);
     subMatInds = subMatrixIndices;
@@ -42,8 +42,8 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isSymb)
         stack = vertcat(matList{:});
         bases = arrayfun(@(index) getSymbCGCoeffs(index),1:nIrreps,'UniformOutput',false);
     end
-    
-    
+
+
     function cgs = getCGCoeffs(ind)
         mult = mults(irrepInds(ind));
         cgs = zeros(rep.dimension,mult);
@@ -61,7 +61,7 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isSymb)
             subCG = reducedClebschGordan(i,splitEigs(i),subCG);
         end
         cgs(subMatInds,:) = subCG;
-        
+
         function coeffs= oneDimCoeffs(isTrivial)
             if isTrivial
                 dim = sum(s1);
@@ -91,7 +91,7 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isSymb)
                repelem(eigenVals(ind,:),subMatrixDim));
             subCG = nullOfRationalFloat(stack-identityMatStack); %You would do cyclotomic stuff here
             cgs(subMatInds,:) = subCG;
-            
+
             function coeffs= oneDimCoeffs(isTrivial)
                 if isTrivial
                     dim = sum(s1);
@@ -113,7 +113,7 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isSymb)
         reducedCG= V(:,round(D)==eigenvalue);
         iso = oldIso*reducedCG;
     end
-    
+
     function inds = subMatrixIndices
         a = logical( [ ones(1,s1(1)) , zeros(1,s1(2)) ] );
         b = logical( [ ones(1,s2(1)) , zeros(1,s2(2)) ] );

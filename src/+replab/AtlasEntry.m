@@ -103,7 +103,7 @@ classdef AtlasEntry < replab.Obj
             conjugacyClasses = replab.ConjugacyClasses(group, classes);
             characters = cellfun(@(m) m.', J.characterTable.characters, 'uniform', 0);
             characters = [characters{:}].';
-            characters = replab.cyclotomic.fromStrings(characters);
+            characters = replab.cyclotomic(characters);
             args = cell(1, 0);
             if isfield(J.characterTable, 'irreps')
                 n = size(characters, 1);
@@ -115,7 +115,7 @@ classdef AtlasEntry < replab.Obj
                         img = images{j};
                         img = cellfun(@(m) m.', img, 'uniform', 0);
                         img = [img{:}].';
-                        images{j} = replab.cyclotomic.fromStrings(img);
+                        images{j} = replab.cyclotomic(img);
                     end
                     irreps{i} = group.repByImages('C', size(images{1}, 1), 'images', images);
                 end
@@ -195,13 +195,13 @@ classdef AtlasEntry < replab.Obj
             relators = {'a^2' 'x^2' 'x a x^-1 a'};
             ag = replab.AbstractGroup({'x' 'a'}, prmGroup, relators, name);
             classes = replab.ConjugacyClasses(ag, cellfun(@(g) ag.conjugacyClass(g), {'1' 'x' 'a' 'x a'}, 'uniform', 0));
-            chars = replab.cyclotomic.fromDoubles([1 1 1 1; 1 1 -1 -1; 1 -1 1 -1; 1 -1 -1 1]);
+            chars = replab.cyclotomic([1 1 1 1; 1 1 -1 -1; 1 -1 1 -1; 1 -1 -1 1]);
             classNames = {'1' 'x' 'a' 'xa'};
             irrepNames = {'trivial' 'ker x' 'ker a' 'ker xa'};
-            irreps = {ag.repByImages('C', 1, 'images', {replab.cyclotomic.fromDoubles(1) replab.cyclotomic.fromDoubles(1)}) ...
-                      ag.repByImages('C', 1, 'images', {replab.cyclotomic.fromDoubles(1) replab.cyclotomic.fromDoubles(-1)}) ...
-                      ag.repByImages('C', 1, 'images', {replab.cyclotomic.fromDoubles(-1) replab.cyclotomic.fromDoubles(1)}) ...
-                      ag.repByImages('C', 1, 'images', {replab.cyclotomic.fromDoubles(-1) replab.cyclotomic.fromDoubles(-1)})};
+            irreps = {ag.repByImages('C', 1, 'images', {replab.cyclotomic(1) replab.cyclotomic(1)}) ...
+                      ag.repByImages('C', 1, 'images', {replab.cyclotomic(1) replab.cyclotomic(-1)}) ...
+                      ag.repByImages('C', 1, 'images', {replab.cyclotomic(-1) replab.cyclotomic(1)}) ...
+                      ag.repByImages('C', 1, 'images', {replab.cyclotomic(-1) replab.cyclotomic(-1)})};
             ct = replab.CharacterTable(ag, classes, chars, 'classNames', classNames, 'irrepNames', irrepNames, 'irreps', irreps);
             A = replab.AtlasEntry(ag, ct);
         end

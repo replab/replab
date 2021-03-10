@@ -12,7 +12,7 @@ function X = convert(X, type)
 %   double(\*,\*) or cyclotomic(\*,\*): Converted matrix
     if strcmp(type, 'exact')
         if isa(X, 'double')
-            X = replab.cyclotomic.fromDoubles(X);
+            X = replab.cyclotomic(X);
         end
         return
     end

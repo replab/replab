@@ -108,7 +108,7 @@ classdef RepByImages_exact < replab.RepByImages
             perm = self.group.niceMorphism.imageElement(g);
             rho = self.chain.image(perm);
             if isa(rho, 'double')
-                rho = replab.cyclotomic.fromDoubles(rho);
+                rho = replab.cyclotomic(rho);
             end
         end
 

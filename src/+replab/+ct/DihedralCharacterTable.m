@@ -73,39 +73,39 @@ function ct = DihedralCharacterTable(n)
 
     % Characters can be assigned to rotations then reflections
     chars = replab.cyclotomic.zeros(nclasses, nclasses);
-    chars(1, :) = replab.cyclotomic.fromDoubles(1);
-    chars(1:n1D, 1) = replab.cyclotomic.fromDoubles(1);
+    chars(1, :) = replab.cyclotomic(1);
+    chars(1:n1D, 1) = replab.cyclotomic(1);
     if nclasses > n1D
-        chars(n1D+1:nclasses, 1) = replab.cyclotomic.fromDoubles(2);
+        chars(n1D+1:nclasses, 1) = replab.cyclotomic(2);
     end
     if even(n)
         for k = 1:nclasses - 3
-            chars(2, k+1) = replab.cyclotomic.fromDoubles(1);
-            chars(3:4, k+1) = replab.cyclotomic.fromDoubles((-1)^k);
+            chars(2, k+1) = replab.cyclotomic(1);
+            chars(3:4, k+1) = replab.cyclotomic((-1)^k);
             for j = 1:stop
                 pow = mod(j*k, ord);
                 chars(n1D+j, k+1) = w^pow + w^(-pow);
             end
         end
         for k = 0:1
-            chars(2, nclasses - 1 + k) = replab.cyclotomic.fromDoubles(-1);
-            chars(3, nclasses - 1 + k) = replab.cyclotomic.fromDoubles((-1)^k);
-            chars(4, nclasses - 1 + k) = replab.cyclotomic.fromDoubles((-1)^(k+1));
+            chars(2, nclasses - 1 + k) = replab.cyclotomic(-1);
+            chars(3, nclasses - 1 + k) = replab.cyclotomic((-1)^k);
+            chars(4, nclasses - 1 + k) = replab.cyclotomic((-1)^(k+1));
             for j = 1:stop
-                chars(n1D+j, nclasses - 1 + k) = replab.cyclotomic.fromDoubles(0);
+                chars(n1D+j, nclasses - 1 + k) = replab.cyclotomic(0);
             end
         end
     else
         for k = 1:nclasses - 2
-            chars(2, k+1) = replab.cyclotomic.fromDoubles(1);
+            chars(2, k+1) = replab.cyclotomic(1);
             for j = 1:stop
                 pow = mod(j*k, ord);
                 chars(n1D+j, k+1) = w^pow + w^(-pow);
             end
         end
-        chars(2, nclasses) = replab.cyclotomic.fromDoubles(-1);
+        chars(2, nclasses) = replab.cyclotomic(-1);
         for j = 1:stop
-            chars(n1D+j, nclasses) = replab.cyclotomic.fromDoubles(0);
+            chars(n1D+j, nclasses) = replab.cyclotomic(0);
         end
     end
     ct = replab.CharacterTable(group, classes, chars, 'irreps', irreps);

@@ -8,8 +8,8 @@ function test_suite = cyclotomicTest()
 end
 
 function test_parse_print
-    c = replab.cyclotomic.fromStrings({'E(4) + E(7)'});
+    c = replab.cyclotomic({'E(4) + E(7)'});
     s = strtrim(num2str(c));
-    c1 = replab.cyclotomic.fromStrings({s});
+    c1 = replab.cyclotomic({s});
     assert(c == c1);
 end
