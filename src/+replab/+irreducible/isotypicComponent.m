@@ -30,7 +30,7 @@ function iso = isotypicComponent(rep, irrep, type)
         I(:,:,i) = T(:,:,i,1) * T(:,pivot,1,1);
     end
     I = permute(I, [1 3 2]);
-    sub = rep.subRep(I);
+    sub = rep.subRep(reshape(I, [D m*d]));
     Piso = sub.projection(type);
     P = permute(reshape(Piso, [d m D]), [1 3 2]);
     irreps = cell(1, m);
