@@ -1,6 +1,10 @@
 function [d, X] = xgcd(A)
 % Returns the greatest common divisor of an integer array and the coefficients of Bezout's identity
 %
+% A better approach with smaller coefficients would be given in:
+% B. S. Majewski and G. Havas, "The complexity of greatest common divisor computations"
+% in Algorithmic Number Theory, Berlin, Heidelberg, 1994, pp. 184–193, doi: 10.1007/3-540-58691-1_56.
+%
 % Args:
 %   A (integer(1,\*)): Integer array, elements can be negative or zero as well
 %
