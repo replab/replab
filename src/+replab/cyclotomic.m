@@ -363,15 +363,37 @@ classdef cyclotomic
 
     methods % Display
 
+        function display(self, name)
+            n = ndims(self);
+            if n > 2
+                d = size(self);
+                sub = cell(1, ndims(self) - 2);
+                for ind = 1:prod(d(3:end))
+                    [sub{:}] = ind2sub(d(3:end), ind);
+                    s = struct('type', {'()'}, 'subs', {horzcat({':' ':'}, sub)});
+                    disp([name '(:,:,' strjoin(cellfun(@num2str, sub, 'uniform', 0), ',') ') =']);
+                    slice = self.subsref(s);
+                    t = replab.compat.javaArrayToCell(javaMethod('print', 'cyclo.Lab', slice.data_));
+                    t = replab.str.Table(reshape(t, size(slice)), 'uniform', 0);
+                    disp(t);
+                end
+            else
+                disp([name ' =']);
+                t = replab.compat.javaArrayToCell(javaMethod('print', 'cyclo.Lab', self.data_));
+                t = replab.str.Table(reshape(t, size(self)), 'uniform', 0);
+                disp(t);
+            end
+        end
+
         function disp(self)
         % Standard display method
-            t = replab.compat.javaArrayToCell(javaMethod('print', 'cyclo.Lab', self.data_));
-            t = replab.str.Table(reshape(t, size(self)), 'uniform', 0);
-            disp(t);
+            self.display('ans');
         end
 
         function s = num2str(self)
         % Conversion to string (incomplete)
+        %
+        % Only supports matrices or vectors.
         %
         % Does not support format specifiers or a specified precision.
         %
