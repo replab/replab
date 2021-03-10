@@ -1020,8 +1020,8 @@ classdef Rep < replab.Obj
                 p{1,end+1} = 'direct sum representation';
               case 'replab.rep.TensorRep'
                 p{1,end+1} = 'tensor representation';
-              case 'replab.rep.ComplexifiedRep'
-                p{1,end+1} = 'complexified representation';
+              case 'replab.rep.EncodingRep'
+                p{1,end+1} = ['encoded representation (' self.type ')'];
               case 'replab.RepByImages'
                 p{1,end+1} = 'representation by images';
               otherwise
@@ -1200,7 +1200,7 @@ classdef Rep < replab.Obj
         % Raises:
         %   An error if this representation is already complex.
             assert(self.overR, 'Representation should be real to start with');
-            complexRep = replab.rep.ComplexifiedRep(self);
+            complexRep = replab.rep.EncodedRep(self, 'R^d -> C^d');
         end
 
         function rep = conj(self)

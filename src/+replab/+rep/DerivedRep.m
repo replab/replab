@@ -91,11 +91,12 @@ classdef DerivedRep < replab.Rep
             end
         end
 
-        function res = rewriteTerm_parentIsComplexifiedRep(self, options)
+
+        function res = rewriteTerm_parentIsComplexified(self, options)
         % Move DerivedRep inside ComplexifiedRep where it can be simplified
-            if isa(self.parent, 'replab.rep.ComplexifiedRep')
-                res = replab.rep.ComplexifiedRep(replab.rep.DerivedRep(self.parent.parent, ...
-                                                                  self.conjugate, self.inverse, self.transpose));
+            if isa(self.parent, 'replab.rep.EncodedRep') && strcmp(self.parent.type, 'R^d -> C^d')
+                parpar = replab.rep.DerivedRep(self.parent.parent, self.conjugate, self.inverse, self.transpose);
+                res = replab.rep.Encoded(parpar, 'R^d -> C^d');
             else
                 res = [];
             end
