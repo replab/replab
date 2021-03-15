@@ -514,6 +514,7 @@ classdef SubRep < replab.Rep
             if self.isSimilarRep
                 I = self.injection('double/sparse');
                 P = self.projection('double/sparse');
+                d = self.dimension;
                 prodError = norm(P*I - eye(d), 'fro'); % || dP I ||F
                 % let P = I^-1
                 % we assume I is exact, and P~ = projection_internal, with P~ = P + dP and dP the error
