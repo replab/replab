@@ -408,6 +408,11 @@ classdef cyclotomic
 
     methods % Standard MATLAB properties
 
+        function res = imag(self)
+        % Returns the imaginary part
+            res = (self - conj(self))/2;
+        end
+
         function res = isempty(self)
             res = prod(self.size_) == 0;
         end
@@ -470,6 +475,11 @@ classdef cyclotomic
 
         function n = numArgumentsFromSubscript(self, s, indexingContext)
             n = 1;
+        end
+
+        function res = real(self)
+        % Returns the real part
+            res = (self + conj(self))/2;
         end
 
         function s = size(self, dim)
@@ -856,7 +866,7 @@ classdef cyclotomic
         function res = sqrt(self)
         % Square root
         %
-        % Requires that the argument contains rational coefficients, otherwise compatible with MATLAB's sqrtx
+        % Requires that the argument contains rational coefficients, otherwise compatible with MATLAB's sqrt
             res = replab.cyclotomic(javaMethod('sqrt', 'cyclo.Lab', self.data_), self.size_);
         end
 
