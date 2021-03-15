@@ -3,10 +3,10 @@ function X1 = projectScalar(X, divisionAlgebraName)
     if isempty(divisionAlgebraName)
         X1 = trace(X)/D*speye(D);
     else
-        if strcmp(divisionAlgebraName, 'complex')
+        if strcmp(divisionAlgebraName, 'C->R')
             d = 2;
         else
-            assert(strcmp(divisionAlgebraName, 'quaternion.equivariant'));
+            assert(strcmp(divisionAlgebraName, 'H->R:equivariant'));
             d = 4;
         end
         blk = X(1:d,1:d);

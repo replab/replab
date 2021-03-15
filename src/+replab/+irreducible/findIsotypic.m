@@ -38,8 +38,8 @@ function [iso, zeroErrors, nonZeroErrors] = findIsotypic(parent, irreps, sample)
                 if norm(S, 'fro') > tol
                     todo = todo(todo ~= j);
                     assert(strcmp(ri.divisionAlgebraName, rj.divisionAlgebraName));
-                    if strcmp(ri.divisionAlgebraName, 'quaternion.rep')
-                        S1 = replab.irreducible.projectScalar(S, 'quaternion.equivariant');
+                    if strcmp(ri.divisionAlgebraName, 'H->R:rep')
+                        S1 = replab.irreducible.projectScalar(S, 'H->R:equivariant');
                     else
                         S1 = replab.irreducible.projectScalar(S, ri.divisionAlgebraName);
                     end

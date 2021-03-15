@@ -17,7 +17,7 @@ function irreps = identifyIrrepsInParent(sub, sample)
 %   and we verify that this subrepresentation is irreducible. If so, we set this subrepresentation
 %   `.isIrreducible` to true, and we return it in a singleton cell array.
 %
-% * The subrepresentation does encode a complex division algebra (`.divisionAlgebraName` set to ``'complex'``),
+% * The subrepresentation does encode a complex division algebra (`.divisionAlgebraName` set to ``'C->R'``),
 %   and moreover it splits into two complex conjugate subrepresentations. This method then identifies
 %   the type of the irreducible subrepresentations (real-type, complex-type, quaternionic-type);
 %   in the case of real-type subrepresentations, it splits them; in the case of quaternionic-type
@@ -31,7 +31,7 @@ function irreps = identifyIrrepsInParent(sub, sample)
 %
 % Returns:
 %   cell(1,\*) of `.SubRep`: Irreducible subrepresentations with their division algebra identified or ``[]``
-    if sub.overR && strcmp(sub.divisionAlgebraName, 'complex')
+    if sub.overR && strcmp(sub.divisionAlgebraName, 'C->R')
         if sub.isUnitary
             irreps = replab.irreducible.identifyIrrepsInParent_complexDivisionAlgebra_unitary(sub, sample);
         else

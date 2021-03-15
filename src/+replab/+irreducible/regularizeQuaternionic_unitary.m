@@ -2,11 +2,12 @@ function irrep = regularizeQuaternionic_unitary(sub, sample)
 % Finds the basis in which a quaternionic-type subrepresentation exhibit the "canonical" quatnerion division algebra
 %
 % Args:
-%   sub (`+replab.SubRep`): Subrepresentation with its ``divisionAlgebraName`` set to ``'complex'``
+%   sub (`+replab.SubRep`): Subrepresentation with its ``divisionAlgebraName`` set to ``'C->R'``
 %   sample (double(\*,\*)): Sample of ``sub.parent.commutant``
 %
 % Returns:
-%   `+replab.SubRep`: Subrepresentation with ``divisionAlgebraName`` set to ``'quaternionic.rep'``
+%   `+replab.SubRep`: Subrepresentation with ``divisionAlgebraName`` set to ``'H->R:rep'``
+    assert(strcmp(sub.divisionAlgebraName, 'C->R'));
     X = sample;
     d = sub.dimension;
     subI = sub.injection;
@@ -126,7 +127,7 @@ function irrep = regularizeQuaternionic_unitary(sub, sample)
         assert(norm(imag(prj)) < tol);
         prj = real(prj);
     end
-    irrep = sub.parent.subRep(inj, 'projection', prj, 'divisionAlgebraName', 'quaternion.rep', 'isUnitary', true, 'isIrreducible', true, 'frobeniusSchurIndicator', -2);
+    irrep = sub.parent.subRep(inj, 'projection', prj, 'divisionAlgebraName', 'H->R:rep', 'isUnitary', true, 'isIrreducible', true, 'frobeniusSchurIndicator', -2);
     if sub.inCache('trivialDimension') && sub.trivialDimension == 0
         irrep.cache('trivialDimension', 0, '==');
     end

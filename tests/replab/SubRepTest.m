@@ -49,8 +49,8 @@ function test_quaterion_refine
     sub3.check
     sub4.check
 
-    assert(strcmp(sub1.divisionAlgebraName, 'quaternion.rep'));
-    assert(strcmp(sub2.divisionAlgebraName, 'quaternion.rep'));
+    assert(strcmp(sub1.divisionAlgebraName, 'H->R:rep'));
+    assert(strcmp(sub2.divisionAlgebraName, 'H->R:rep'));
 
 end
 
@@ -93,10 +93,10 @@ function test_complex_refine
     sub3.check
     sub4.check
 
-    assert(strcmp(sub1.divisionAlgebraName, 'complex'));
-    assert(strcmp(sub2.divisionAlgebraName, 'complex'));
-    assert(strcmp(sub3.divisionAlgebraName, 'complex'));
-    assert(strcmp(sub4.divisionAlgebraName, 'complex'));
+    assert(strcmp(sub1.divisionAlgebraName, 'C->R'));
+    assert(strcmp(sub2.divisionAlgebraName, 'C->R'));
+    assert(strcmp(sub3.divisionAlgebraName, 'C->R'));
+    assert(strcmp(sub4.divisionAlgebraName, 'C->R'));
 end
 
 function test_real_refine
