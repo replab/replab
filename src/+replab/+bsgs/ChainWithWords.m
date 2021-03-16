@@ -88,6 +88,90 @@ classdef ChainWithWords < replab.Str
             end
         end
 
+        function w = wordForCoset(self, co)
+        % Returns a word corresponding to an element of the given coset
+        %
+        % Notes: If the coset basis leads to another stabilization order
+        % than the chain's basis, the coset chain is reconstructed to match
+        % the same basis. Also, an effort is made to identify a short word
+        % within the coset, but without optimality guarantees.
+        %
+        % Args:
+        %   co (coset): Element of `.Coset`
+        %
+        % Returns:
+        %   integer(1,\*): Letters of the word representing an element of ``co``
+        
+            assert(self.completed);
+
+            if co.group.order == vpi(1)
+                % coset contains a single element, use a simpler method
+                w = self.word(co.representative);
+                return;
+            end
+
+            % First, we check whether the coset basis follows the same
+            % order as the chain basis. For this, we find out the order in
+            % which the elements are stabilized in the chain and in the
+            % coset's chain.
+            stabilizedOrderChain = [];
+            for i = 1:length(self.chain.B)
+                stabilizedOrderChain = [stabilizedOrderChain, self.chain.B(i)];
+                if length(self.chain.Delta{i}) == 2
+                    stabilizedOrderChain = [stabilizedOrderChain, self.chain.Delta{i}(2)];
+                end
+            end
+            stabilizedOrderCoset = [];
+            for i = 1:length(co.groupChain.B)
+                stabilizedOrderCoset = [stabilizedOrderCoset, co.groupChain.B(i)];
+                if length(co.groupChain.Delta{i}) == 2
+                    stabilizedOrderCoset = [stabilizedOrderCoset, co.groupChain.Delta{i}(2)];
+                end
+            end
+            if isequal(stabilizedOrderChain, stabilizedOrderCoset)
+                % We can use the coset's chain as it is
+                cosetChain = co.groupChain;
+            else
+                % We reconstruct the coset chain to make sure it follows the
+                % same basis structure as the chain with words
+                cosetChain = replab.bsgs.Chain.make(co.group.domainSize, co.group.generators, self.B);
+            end
+            
+            % Now we do the job
+            w = [];
+            g = co.representative;
+            for i = 1:self.k
+                beta = self.B(i);
+                j = find(cosetChain.B == beta);
+                if isempty(j) || (length(cosetChain.Delta{j}) == 1)
+                    % No freedom in the permutation at this stage
+                    b = g(beta);
+                else
+                    wordLengths = zeros(1, length(cosetChain.Delta{j}));
+                    for it = 1:length(cosetChain.Delta{j})
+                        b = g(cosetChain.Delta{j}(it));
+                        ind = self.iOrbit(b,i);
+                        assert(ind > 0, 'Permutation not contained in the group');
+                        nuw = self.nuw{i}{ind};
+                        wordLengths(it) = length(replab.fp.Letters.compose(w, -fliplr(nuw)));
+                    end
+                    % Apply a permutation that stays in the coset but
+                    % yields a shorter word at this stage
+                    bestIt = find(wordLengths == min(wordLengths), 1);
+                    cyclePerm = 1:length(g);
+                    cyclePerm(cosetChain.Delta{j}) = cosetChain.Delta{j}([bestIt:end, 1:bestIt-1]);
+                    g = g(cyclePerm);
+                    b = g(beta);
+                end
+                ind = self.iOrbit(b,i);
+                assert(ind > 0, 'Permutation not contained in the group');
+                nu = self.nu{i}(:,ind)';
+                nuw = self.nuw{i}{ind};
+                g = nu(g);
+                w = replab.fp.Letters.compose(w, -fliplr(nuw));
+            end
+        end
+
         function l = maximumWordLength(self)
         % Returns the maximal length of a word stored in this chain
         %
