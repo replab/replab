@@ -88,7 +88,7 @@ classdef ChainWithWords < replab.Str
             end
         end
 
-        function w = wordForCoset(self, co)
+        function [w, rep] = wordForLeftCoset(self, coset)
         % Returns a word corresponding to an element of the given coset
         %
         % Notes: If the coset basis leads to another stabilization order
@@ -97,23 +97,26 @@ classdef ChainWithWords < replab.Str
         % within the coset, but without optimality guarantees.
         %
         % Args:
-        %   co (coset): Element of `.Coset`
+        %   coset (left coset): Element of `.LeftCoset`
         %
         % Returns:
+        % --------
         %   integer(1,\*): Letters of the word representing an element of ``co``
+        %   integer(1,\*): The member of the coset corresponding to the
+        %       word returned
         
             assert(self.completed);
+            assert(isa(coset, 'replab.LeftCoset') || isa(coset, 'replab.NormalCoset'));
 
-            if co.group.order == vpi(1)
+            if coset.group.order == vpi(1)
                 % coset contains a single element, use a simpler method
-                w = self.word(co.representative);
+                w = self.word(coset.representative);
+                rep = coset.representative;
                 return;
             end
 
-            % First, we check whether the coset basis follows the same
-            % order as the chain basis. For this, we find out the order in
-            % which the elements are stabilized in the chain and in the
-            % coset's chain.
+            % Make sure the elements stabilized in the chain and in the
+            % coset follow the same order
             stabilizedOrderChain = [];
             for i = 1:length(self.chain.B)
                 stabilizedOrderChain = [stabilizedOrderChain, self.chain.B(i)];
@@ -122,31 +125,33 @@ classdef ChainWithWords < replab.Str
                 end
             end
             stabilizedOrderCoset = [];
-            for i = 1:length(co.groupChain.B)
-                stabilizedOrderCoset = [stabilizedOrderCoset, co.groupChain.B(i)];
-                if length(co.groupChain.Delta{i}) == 2
-                    stabilizedOrderCoset = [stabilizedOrderCoset, co.groupChain.Delta{i}(2)];
+            for i = 1:length(coset.groupChain.B)
+                stabilizedOrderCoset = [stabilizedOrderCoset, coset.groupChain.B(i)];
+                if length(coset.groupChain.Delta{i}) == 2
+                    stabilizedOrderCoset = [stabilizedOrderCoset, coset.groupChain.Delta{i}(2)];
                 end
             end
             if isequal(stabilizedOrderChain, stabilizedOrderCoset)
                 % We can use the coset's chain as it is
-                cosetChain = co.groupChain;
+                cosetChain = coset.groupChain;
             else
                 % We reconstruct the coset chain to make sure it follows the
                 % same basis structure as the chain with words
-                cosetChain = replab.bsgs.Chain.make(co.group.domainSize, co.group.generators, self.B);
+                cosetChain = replab.bsgs.Chain.make(coset.group.domainSize, coset.group.generators, stabilizedOrderChain);
             end
             
             % Now we do the job
             w = [];
-            g = co.representative;
+            g = coset.representative;
+            rep = g;
             for i = 1:self.k
                 beta = self.B(i);
-                j = find(cosetChain.B == beta);
+                j = find(cosetChain.B == beta, 1);
                 if isempty(j) || (length(cosetChain.Delta{j}) == 1)
                     % No freedom in the permutation at this stage
                     b = g(beta);
                 else
+                    % Explore the coset group
                     wordLengths = zeros(1, length(cosetChain.Delta{j}));
                     for it = 1:length(cosetChain.Delta{j})
                         b = g(cosetChain.Delta{j}(it));
@@ -161,6 +166,7 @@ classdef ChainWithWords < replab.Str
                     cyclePerm = 1:length(g);
                     cyclePerm(cosetChain.Delta{j}) = cosetChain.Delta{j}([bestIt:end, 1:bestIt-1]);
                     g = g(cyclePerm);
+                    rep = rep(cyclePerm);
                     b = g(beta);
                 end
                 ind = self.iOrbit(b,i);
