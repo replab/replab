@@ -176,7 +176,6 @@ classdef ChainWithWords < replab.Str
                         g = g(u);
                         rep = rep(u);
                     end
-                    self.word(rep);
                     b = g(beta);
                 end
                 ind = self.iOrbit(b,i);
