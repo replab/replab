@@ -8,8 +8,6 @@ function test_suite = ChainWithWordsTest()
 end
 
 function test_leftCosetWord
-    global passedHere
-    passedHere = passedHere + 1;
     gens2 = {[2 3 4 5 1 6 7 8], [1 2 6 4 7 5 8 3]};
     G2 = replab.PermutationGroup.of(gens2{:});
     chain2 = replab.bsgs.ChainWithWords(G2, gens2);

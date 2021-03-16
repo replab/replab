@@ -124,6 +124,7 @@ classdef ChainWithWords < replab.Str
                     stabilizedOrderChain = [stabilizedOrderChain, self.chain.Delta{i}(2)];
                 end
             end
+            stabilizedOrderChain = unique(stabilizedOrderChain, 'stable');
             stabilizedOrderCoset = [];
             for i = 1:length(coset.groupChain.B)
                 stabilizedOrderCoset = [stabilizedOrderCoset, coset.groupChain.B(i)];
@@ -131,6 +132,7 @@ classdef ChainWithWords < replab.Str
                     stabilizedOrderCoset = [stabilizedOrderCoset, coset.groupChain.Delta{i}(2)];
                 end
             end
+            stabilizedOrderCoset = unique(stabilizedOrderCoset, 'stable');
             if isequal(stabilizedOrderChain, stabilizedOrderCoset)
                 % We can use the coset's chain as it is
                 cosetChain = coset.groupChain;
@@ -160,13 +162,14 @@ classdef ChainWithWords < replab.Str
                         nuw = self.nuw{i}{ind};
                         wordLengths(it) = length(replab.fp.Letters.compose(w, -fliplr(nuw)));
                     end
-                    % Apply a permutation that stays in the coset but
+                    % Apply a permutation so as to stays in the coset but
                     % yields a shorter word at this stage
                     bestIt = find(wordLengths == min(wordLengths), 1);
-                    cyclePerm = 1:length(g);
-                    cyclePerm(cosetChain.Delta{j}) = cosetChain.Delta{j}([bestIt:end, 1:bestIt-1]);
-                    g = g(cyclePerm);
-                    rep = rep(cyclePerm);
+                    Uj = cosetChain.U{j};
+                    u = Uj(:, bestIt)';
+                    g = g(u);
+                    rep = rep(u);
+                    self.word(rep);
                     b = g(beta);
                 end
                 ind = self.iOrbit(b,i);
