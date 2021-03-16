@@ -754,49 +754,35 @@ classdef Rep < replab.Obj
 
     methods % Equivariant spaces
 
-        function e = equivariantFrom(self, repC, varargin)
-        % Returns the space of equivariant linear maps from another rep to this rep
+        function c = antilinearInvariant(self, type)
+        % Returns the equivariant space of matrices representing equivariant antilinear maps
         %
-        % The equivariant vector space contains the matrices X such that
+        % Let ``F`` be an antilinear map such that ``F(alpha * x) = conj(alpha) * F(x)`` for any scalar ``alpha``
+        % and vector ``x`. We describe ``F`` using a matrix ``J`` such that ``F(x) = J * conj(x)``.
         %
-        % ``X * repC.image(g) = self.image(g) * X``
+        % The following conditions are equivalent.
         %
-        % Args:
-        %   repC (`+replab.Rep`): Representation on the source/column space
+        % * ``F`` is an equivariant map: ``F(rho.image(g) * x) == rho.image(g) * F(x)``
+        % * ``J`` is an equivariant matrix: ``rho.image(g) * J == J * conj(rho.image(g))``
         %
-        % Keyword Args:
-        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
-        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
-        %
-        % Returns:
-        %   `+replab.Equivariant`: The equivariant vector space
-            e = replab.Equivariant.make(self, repC, varargin{:});
-        end
-
-        function e = equivariantTo(self, repR, varargin)
-        % Returns the space of equivariant linear maps from this rep to another rep
-        %
-        % The equivariant vector space contains the matrices X such that
-        %
-        % ``X * self.image(g) = repR.image(g) * X``
+        % The computation is cached.
         %
         % Args:
-        %   repR (`+replab.Rep`): Representation on the target/row space
-        %
-        % Keyword Args:
-        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
-        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   `+replab.Equivariant`: The equivariant vector space
-            e = replab.Equivariant.make(repR, self, varargin{:});
+        %   `+replab.Equivariant`: The space of equivariant antilinear maps described by an equivariant space of matrices
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            c = self.cached(['antilinearInvariant_' type], @() self.equivariantFrom(conj(self), 'special', 'antilinear', 'type', type));
         end
 
         function c = commutant(self, type)
         % Returns the commutant of this representation
         %
-        % This is the algebra of matrices that commute with the representation,
-        % i.e. the vector space isomorphism to the equivariant space from this rep to this rep.
+        % This is the algebra of matrices that commute with the representation, i.e. the vector space isomorphism to
+        % the equivariant space from this rep to this rep.
         %
         % For any ``g in G``, we have ``rho(g) * X = X * rho(g)``.
         %
@@ -810,18 +796,49 @@ classdef Rep < replab.Obj
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            switch type
-              case 'double'
-                c = self.cached('commutant_double', @() self.equivariantFrom(self, 'special', 'commutant', 'type', type));
-              case 'exact'
-                c = self.cached('commutant_exact', @() self.equivariantFrom(self, 'special', 'commutant', 'type', type));
-              otherwise
-                error('Invalid type');
-            end
+            c = self.cached(['commutant_' type], @() self.equivariantFrom(self, 'special', 'commutant', 'type', type));
+        end
+
+        function e = equivariantFrom(self, repC, varargin)
+        % Returns the space of equivariant linear maps from another rep to this rep
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``self.image(g) * X == X * repC.image(g)``
+        %
+        % Args:
+        %   repC (`+replab.Rep`): Representation on the source/column space
+        %
+        % Keyword Args:
+        %   special (charstring or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The equivariant vector space
+            e = replab.Equivariant.make(self, repC, varargin{:});
+        end
+
+        function e = equivariantTo(self, repR, varargin)
+        % Returns the space of equivariant linear maps from this rep to another rep
+        %
+        % The equivariant vector space contains the matrices X such that
+        %
+        % ``repR.image(g) * X == X * self.image(g)``
+        %
+        % Args:
+        %   repR (`+replab.Rep`): Representation on the target/row space
+        %
+        % Keyword Args:
+        %   special (charstring or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The equivariant vector space
+            e = replab.Equivariant.make(repR, self, varargin{:});
         end
 
         function h = hermitianInvariant(self, type)
-        % Returns the Hermitian invariant space of this representation
+        % Returns the Hermitian invariant space of this representation (deprecated)
         %
         % This is the space of Hermitian matrices that are invariant under this representation
         % i.e.
@@ -838,14 +855,30 @@ classdef Rep < replab.Obj
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            switch type
-              case 'double'
-                h = self.cached('hermitianInvariant_double', @() self.equivariantFrom(self.dual.conj, 'special', 'hermitian', 'type', type));
-              case 'exact'
-                h = self.cached('hermitianInvariant_exact', @() self.equivariantFrom(self.dual.conj, 'special', 'hermitian', 'type', type));
-              otherwise
-                error('Invalid type');
+            repC = dual(conj(self));
+            h = self.cached(['hermitianInvariant_' type], @() self.equivariantFrom(repC, 'special', 'hermitian', 'type', type));
+        end
+
+        function h = sesquilinearInvariant(self, type)
+        % Returns the Hermitian invariant space of this representation (deprecated)
+        %
+        % This is the space of Hermitian matrices that are invariant under this representation
+        % i.e.
+        %
+        % for any g in G, we have ``rho(g) * X = X * rho(g^-1)'``
+        %
+        % The computation is cached.
+        %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The equivariant space of Hermitian invariant matrices
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
             end
+            repR = dual(conj(self));
+            h = self.cached(['sesquilinearInvariant_' type], @() self.equivariantTo(repR, 'special', 'sesquilinear', 'type', type));
         end
 
         function t = trivialRowSpace(self, type)
@@ -864,9 +897,9 @@ classdef Rep < replab.Obj
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            t = self.cached(['trivialRowSpace_' type], @() self.equivariantTo(...
-                self.group.trivialRep(self.field, self.dimension), ...
-                'special', 'trivialRows', 'type', type));
+            repR = self.group.trivialRep(self.field, self.dimension);
+            t = self.cached(['trivialRowSpace_' type], ...
+                            @() self.equivariantTo(repR, 'special', 'trivialRows', 'type', type));
         end
 
         function t = trivialColSpace(self, type)
@@ -884,10 +917,14 @@ classdef Rep < replab.Obj
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            t = self.cached(['trivialColSpace_' type], @() self.equivariantFrom(...
-                self.group.trivialRep(self.field, self.dimension), ...
-                'special', 'trivialCols', 'type', type));
+            repC = self.group.trivialRep(self.field, self.dimension);
+            t = self.cached(['trivialColSpace_' type], ...
+                            @() self.equivariantFrom(repC, 'special', 'trivialCols', 'type', type));
         end
+
+    end
+
+    methods % Image of maximal torus
 
         function b = hasTorusImage(self)
         % Returns whether a description of representation of the maximal torus subgroup is available

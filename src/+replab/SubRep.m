@@ -640,6 +640,15 @@ classdef SubRep < replab.Rep
             rep = self.parent.conj.subRep(conj(self.injection_internal), 'projection', conj(self.projection_internal));
         end
 
+        % Rep: Equivariant spaces
+
+        function c = antilinearInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            c = self.cached(['antilinearInvariant_' type], @() self.subEquivariantFrom(conj(self),  'special', 'antilinear', 'type', type));
+        end
+
         function c = commutant(self, type)
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
@@ -652,6 +661,13 @@ classdef SubRep < replab.Rep
                 type = 'double';
             end
             h = self.cached(['hermitianInvariant_' type], @() self.subEquivariantFrom(self.dual.conj,  'special', 'hermitian', 'type', type));
+        end
+
+        function h = sesquilinearInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            h = self.cached(['sesquilinearInvariant_' type], @() self.subEquivariantTo(self.dual.conj,  'special', 'hermitian', 'type', type));
         end
 
         function t = trivialRowSpace(self, type)

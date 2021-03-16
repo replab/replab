@@ -8,14 +8,30 @@ classdef Equivariant < replab.Domain
 % See Proposition 4 of
 % J.-P. Serre, Linear Representations of Finite Groups (Springer, 1977).
 %
-% There are two special cases of equivariant spaces.
+% There are several special cases of equivariant spaces which RepLAB uses extensively; these are parameterized
+% by a single representation ``rho`` from which the equivariant space is constructed.
+% They are distinguished by the `.special` property.
 %
-% - ``commutant`` equivariant spaces have ``repC == repR``,
-% - ``hermitian`` equivariant spaces have ``repC == repR.conjugate.dual``.
-% - ``trivialRows`` equivariant spaces have ``repR == repC.group.trivialRep(field, repR.dimension)``
-% - ``trivialCols`` equivariant spaces have ``repC == repR.group.trivialRep(field, repC.dimension)``
+% +----------------+--------------------------------+--------------------------------------+
+% | Special name   | repR                           | repC                                 |
+% +================+================================+======================================+
+% | commutant      | rho                            | rho                                  |
+% +----------------+--------------------------------+--------------------------------------+
+% | hermitian (*)  | rho                            | conj(dual(rho))                      |
+% +----------------+--------------------------------+--------------------------------------+
+% | sesquilinear   | conj(dual(rho))                | rho                                  |
+% +----------------+--------------------------------+--------------------------------------+
+% | antilinear     | rho                            | dual(rho)                            |
+% +----------------+--------------------------------+--------------------------------------+
+% | trivialRows    | trivial: d = rho.dimension     | rho                                  |
+% +----------------+--------------------------------+--------------------------------------+
+% | trivialCols    | rho                            | trivial: d = rho.dimension           |
+% +----------------+--------------------------------+--------------------------------------+
 %
-% When ``repR`` is unitary, the ``commutant`` and ``hermitian`` cases are identical.
+% The ``hermitian`` space is deprecated and will be phased out in favour of ``sesquilinear``.
+%
+% When ``rho`` is unitary, the ``commutant``, ``hermitian``, ``sesquilinear`` cases are identical.
+% When ``rho`` is real, the ``commutant`` and ``antilinear`` cases are identical.
 
     properties (SetAccess = protected)
         field % ({'R', 'C'}): Field of the vector space real (R) or complex x(C)
@@ -43,7 +59,7 @@ classdef Equivariant < replab.Domain
             self.nC = repC.dimension;
             assert(isequal(repR.field, repC.field), ...
                    'Both representations must have be defined on the same field');
-            assert(isempty(special) || ismember(special, {'hermitian', 'commutant', 'trivialRows', 'trivialCols'}));
+            assert(isempty(special) || ismember(special, {'hermitian', 'commutant', 'antilinear', 'sesquilinear', 'trivialRows', 'trivialCols'}));
             self.field = repR.field;
             assert(repR.group == repC.group, ...
                    'Both representations must be defined on the same group');
