@@ -88,7 +88,7 @@ classdef ChainWithWords < replab.Str
             end
         end
 
-        function [w, rep] = wordForLeftCoset(self, coset)
+        function [w, rep] = wordCoset(self, coset)
         % Returns a word corresponding to an element of the given coset
         %
         % Notes: If the coset basis leads to another stabilization order
@@ -97,16 +97,18 @@ classdef ChainWithWords < replab.Str
         % within the coset, but without optimality guarantees.
         %
         % Args:
-        %   coset (left coset): Element of `.LeftCoset`
+        %   coset (coset): Element of `.LeftCoset`, `.RightCoset` or `.NormalCoset`
         %
         % Returns:
         % --------
-        %   integer(1,\*): Letters of the word representing an element of ``co``
+        %   integer(1,\*): Letters of the word representing an element
+        %       of ``coset``
         %   integer(1,\*): The member of the coset corresponding to the
         %       word returned
         
             assert(self.completed);
-            assert(isa(coset, 'replab.LeftCoset') || isa(coset, 'replab.NormalCoset'));
+            assert(isa(coset, 'replab.LeftCoset') || isa(coset, 'replab.RightCoset') || isa(coset, 'replab.NormalCoset'));
+            isRightCoset = isa(coset, 'replab.RightCoset');
 
             if coset.group.order == vpi(1)
                 % coset contains a single element, use a simpler method
@@ -162,13 +164,18 @@ classdef ChainWithWords < replab.Str
                         nuw = self.nuw{i}{ind};
                         wordLengths(it) = length(replab.fp.Letters.compose(w, -fliplr(nuw)));
                     end
-                    % Apply a permutation so as to stays in the coset but
+                    % Apply a permutation so as to stay in the coset but
                     % yields a shorter word at this stage
                     bestIt = find(wordLengths == min(wordLengths), 1);
                     Uj = cosetChain.U{j};
                     u = Uj(:, bestIt)';
-                    g = g(u);
-                    rep = rep(u);
+                    if isRightCoset
+                        g = u(g);
+                        rep = u(rep);
+                    else
+                        g = g(u);
+                        rep = rep(u);
+                    end
                     self.word(rep);
                     b = g(beta);
                 end

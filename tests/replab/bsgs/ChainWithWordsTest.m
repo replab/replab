@@ -18,7 +18,7 @@ function test_leftCosetWord
     w2 = [1 2 1 1 2 1 2 2];
     P2 = G2.vectorFindPermutationsTo(v2, w2);
     a2long = chain2.word(P2.representative);
-    [a2, b2] = chain2.wordForLeftCoset(P2);
+    [a2, b2] = chain2.wordCoset(P2);
     assert(length(a2long) > length(a2))
     assert(isequal(v2, w2(b2)))
 end
