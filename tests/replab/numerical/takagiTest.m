@@ -15,7 +15,7 @@ function test_random
     [U1,D1] = replab.numerical.takagi(J, 'svd');
     [U2,D2] = replab.numerical.takagi(J, 'hybrid');
     [U3,D3] = replab.numerical.takagi(J, 'jacobi');
-    tol = 1e-13;
+    tol = 1e-10;
     assert(norm(U1.'*D1*U1 - J, 'fro') < tol);
     assert(norm(U2.'*D2*U2 - J, 'fro') < tol);
     assert(norm(U3.'*D3*U3 - J, 'fro') < tol);

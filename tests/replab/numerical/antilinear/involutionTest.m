@@ -10,6 +10,6 @@ function test_random
     A = randn(7,7) + 1i*randn(7,7);
     A = conj(A)*inv(A);
     [V, D, n] = replab.numerical.antilinear.decomposeInvolution(A);
-    tol = 1e-13;
+    tol = 1e-12;
     assert(norm(A*V - V*D) < tol);
 end
