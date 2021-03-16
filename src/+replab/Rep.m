@@ -826,7 +826,7 @@ classdef Rep < replab.Obj
         % This is the space of Hermitian matrices that are invariant under this representation
         % i.e.
         %
-        % for any g in G, we have ``X = rho(g) * X * rho(g^-1)'``
+        % for any g in G, we have ``rho(g) * X = X * rho(g^-1)'``
         %
         % The computation is cached.
         %
