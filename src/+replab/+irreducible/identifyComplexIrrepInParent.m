@@ -40,12 +40,14 @@ function sub1 = identifyComplexIrrepInParent(sub, sample)
             J = (J + J.')/2; % make sure J is symmetric
             [U,~] = replab.numerical.takagi(J);
             A = U.';
+            Ainv = conj(U);
             % now inv(A)*U.'*U*conj(A) = (inv(U.')*U.')*U*conj(U.') = eye(d)*U*U' = eye(d)
             % as U' = inv(U) by construction of the Takagi decomposition
         else
+            A = replab.numerical.antilinear.decomposeInvolution(J);
+            Ainv = inv(A);
         end
-
-        sub1 = sub.withUpdatedMaps(sub.injection('double/sparse') * A, A \ sub.projection('double/sparse'), 'frobeniusSchurIndicator', 1, 'divisionAlgebraName', 'R->C');
+        sub1 = sub.withUpdatedMaps(sub.injection('double/sparse') * A, Ainv * sub.projection('double/sparse'), 'frobeniusSchurIndicator', 1, 'divisionAlgebraName', 'R->C');
     else % lambda < 0
         error('Unsupported');
     end
