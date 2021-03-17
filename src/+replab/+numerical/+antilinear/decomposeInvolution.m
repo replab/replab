@@ -1,53 +1,31 @@
-function [V, D, n] = decomposeInvolution(J)
-% Decomposes a matrix representing an antilinear involution
+function [A, B] = decomposeInvolution(J)
+% Returns a decomposition of the matrix representing an antilinear involution
 %
-% Let F be an antilinear involution described by a matrix J such that ``F(x) = J * conj(x)``.
-% As we have ``F(F(x)) = x``, we have ``F(J*conj(x)) = J*conj(J)*x = x`` and thus
-% ``J*conj(J) = conj(J)*J = eye(d)``.
-%
-% Let ``v`` be an eigenvector of ``J`` with eigenvalue ``l``: ``J*v = l*v``.
-% Then we have ``conj(J)*J*v = v`` and ``conj(J)*l*v = v``, thus ``conj(J)*v = (1/l)*v``, which
-% means ``J*conj(v) = conj(1/l)*conj(v)``.
-%
-% Thus, for every eigenvector ``v`` with associated eigenvalue ``l``, there is an eigenvector
-% ``conj(v)`` with associated eigenvector ``conj(1/l)``.
-%
-% For each eigenvalue, there are two cases:
-%
-% - The eigenvector is real, ``v == conj(v)`` and thus ``l == conj(1/l)`` so that ``abs(l) == 1``.
-% - The eigenvector is complex, ``v ~= conj(v)`` and thus there is an associated pair of eigenvectors.
-%
-% We return an eigenvalue decomposition such that ``V(:,1:2:2*n)`` and ``V(:,2:2:2*n)`` are conjugate, and
-% ``V(:,2*n+1:end)`` is real, and with ``DD = diag(D)``, ``DD(1:2:2*n) = 1./conj(DD(2:2:2*n))``,
-% while ``abs(DD(2*n+1:end)) = 1``
+% The matrices ``A``, ``B`` obey ``B = inv(conj(A))`` and ``J = A * B``.
 %
 % Args:
-%   J (double(d,d)): Matrix such that J*conj(J) = eye(d)
+%   J (double(d,d)): Matrix such that ``J*conj(J) = eye(d)``
 %
 % Returns
 % -------
-%   V: double(d,d)
-%     Eigenvectors
-%   D: double(d,d)
-%     Diagonal matrix of eigenvalues
-%   n: integer
-%     Number of conjugate eigenvectors
-    [V, D] = eig(J);
-    %  J*V = V*D
+%   A: (double(d,d))
+%     First matrix in the product
+%   B: (double(d,d))
+%     Second matrix in the product
+    if all(all(J == J.'))
+        B = replab.numerical.takagi(J);
+        A = B.';
+        return
+    end
+    d = size(J, 1);
+    [V,D,n] = replab.numerical.antilinear.eigInvolution(J);
     D = diag(D);
-    [~, ind1] = sort(real(D));
-    [~, ind2] = sort(real(1./conj(D)));
-    realInd = ind1(ind1 == ind2);
-    conjInd1 = ind1(ind1 < ind2);
-    conjInd2 = ind1(ind1 > ind2);
-    realInd = realInd(:)';
-    conjInd1 = conjInd1(:)';
-    conjInd2 = conjInd2(:)';
-    ind = [conjInd1; conjInd2]; % interlace
-    ind = [ind(:)' realInd];
-    V = V(:,ind);
-    D = diag(D(ind));
-    n = length(conjInd1);
-    V(:,2*n+1:end) = real(V(:,2*n+1:end));
-    V(:,2:2:2*n) = conj(V(:,1:2:2*n));
+    s = sqrt(D(1:n));
+    s0 = sqrt(D(2*n+1:end));
+    s = s(:).'; % to be sure of the shape
+    s0 = s0(:).';
+    U = conj(V)*diag([conj(s) 1./s 1./s0])*blkdiag(kron([1 1i; 1 -1i]/sqrt(2),eye(n)), eye(d-2*n));
+    % we have conj(inv(U))*J*U = eye(d)
+    A = conj(U);
+    B = inv(U);
 end
