@@ -23,7 +23,7 @@ function iso = isotypicComponent(rep, irrep, type)
     proj1 = T(:,:,1,1);
     % find a linear basis of the range of proj1
     % we use the row reduced echelon form, which finds indices of linearly independent columns
-    [~, pivot] = rref(double(proj1).');
+    [~, pivot] = rref(double(proj1));
     m = length(pivot);
     if strcmp(type, 'exact')
         I = replab.cyclotomic.zeros(D, m, d);
