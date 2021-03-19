@@ -38,7 +38,7 @@ function sub1 = identifyComplexIrrepInParent(sub, sample)
             % and thus J is unitary
             % We have then have a Takagi decomposition J = U.'*D*U with D = eye(d)
             J = (J + J.')/2; % make sure J is symmetric
-            [U,~] = replab.numerical.takagi(J);
+            [U, ~] = replab.numerical.takagi(J);
             A = U.';
             Ainv = conj(U);
             % now inv(A)*U.'*U*conj(A) = (inv(U.')*U.')*U*conj(U.') = eye(d)*U*U' = eye(d)
@@ -49,6 +49,17 @@ function sub1 = identifyComplexIrrepInParent(sub, sample)
         end
         sub1 = sub.withUpdatedMaps(sub.injection('double/sparse') * A, Ainv * sub.projection('double/sparse'), 'frobeniusSchurIndicator', 1, 'divisionAlgebraName', 'R->C');
     else % lambda < 0
-        error('Unsupported');
+        J = J / sqrt(-lambda);
+        % now we have conj(J)*J = -eye(d) represents an antilinear skew-involution
+        if sub.isUnitary
+            % J = -J.'
+            J = (J - J.')/2;
+        end
+        [A, ~, B] = replab.numerical.antilinear.decomposeSkewInvolution(J);
+        Ainv = conj(B);
+        ind = reshape([1:d/2; d/2+1:d], 1, d);
+        A = A(:,ind);
+        Ainv = Ainv(ind,:);
+        sub1 = sub.withUpdatedMaps(sub.injection('double/sparse') * A, Ainv * sub.projection('double/sparse'), 'frobeniusSchurIndicator', -1, 'divisionAlgebraName', 'H->C');
     end
 end
