@@ -282,8 +282,8 @@ classdef CommutantVar < replab.Str
                                       1  0];
 
                             % The code below is valid under the following condition
-                            assert(isequal(cat(3, basis1, basis2), replab.DivisionAlgebra('complex').basis));
-                            
+                            assert(isequal(cat(3, basis1, basis2), replab.DivisionAlgebra('C->R').basis));
+
                             if isequal(matrixType, 'full') && isequal(field, 'real')
                                 vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'real');
                                 vars2 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'real');
@@ -326,7 +326,7 @@ classdef CommutantVar < replab.Str
                                       1  0  0  0];
 
                             % The code below is valid under the following condition
-                            assert(isequal(cat(3, basis1, basis2, basis3, basis4), replab.DivisionAlgebra('quaternion.equivariant').basis));
+                            assert(isequal(cat(3, basis1, basis2, basis3, basis4), replab.DivisionAlgebra('H->R:equivariant').basis));
 
                             if isequal(matrixType, 'full') && isequal(field, 'real')
                                 vars1 = sdpvar(self.multiplicities(i), self.multiplicities(i), 'full', 'real');
@@ -455,12 +455,12 @@ classdef CommutantVar < replab.Str
                     % quaternionic representations
                     if (sdpMatrixIsSym == 1) && ~isequal(self.types(i), 'R')
                         if isequal(self.types(i), 'C')
-                            assert(isequal([1 -2; 2 1], replab.DivisionAlgebra('complex').indexMatrix));
+                            assert(isequal([1 -2; 2 1], replab.DivisionAlgebra('C->R').indexMatrix));
                             checkbases = {[1 0; 0 -1], [0 1; 1 0]};
                         elseif isequal(self.types(i), 'H')
                             checkbases = {};
                             for j = 1:4
-                                basisj = replab.DivisionAlgebra('quaternion.equivariant').basis(:,:,j);
+                                basisj = replab.DivisionAlgebra('H->R:equivariant').basis(:,:,j);
                                 [tmpa, tmpb, tmpc] = find(basisj);
                                 for k = 1:numel(tmpa)-1
                                     checkbases{end+1} = full(sparse(tmpa(k:k+1), tmpb(k:k+1), [1;-1].*tmpc(k:k+1), 4, 4));
