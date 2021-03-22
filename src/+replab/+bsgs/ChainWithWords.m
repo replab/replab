@@ -88,8 +88,10 @@ classdef ChainWithWords < replab.Str
             end
         end
 
-        function [w, r] = wordLeftCoset(self, leftCoset)
+        function [w, r] = wordLeftCoset(self, representative, subgroup)
         % Returns a tentatively short word corresponding to an element of the given left coset
+        %
+        % The left coset is given by a chain describing a subgroup and a representative.
         %
         % An effort is made to identify a short word within the coset, but without optimality guarantees.
         %
@@ -97,7 +99,8 @@ classdef ChainWithWords < replab.Str
         % the coset chain is reconstructed to match the same basis.
         %
         % Args:
-        %   coset (`.LeftCoset`): Coset
+        %   representative (permutation): Coset representative
+        %   subgroup (`+replab.PermutationGroup`): Subgroup defining the coset
         %
         % Returns
         % -------

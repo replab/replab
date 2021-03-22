@@ -26,6 +26,34 @@ classdef FactorizationEnumeration < replab.mrp.Factorization
             letters = self.words{ind};
         end
 
+        function [l, r] = factorizeRepresentativeOfLeftCoset(self, leftCoset)
+        % Returns a tentatively short word corresponding to an element of the given coset
+        %
+        % Args:
+        %   leftCoset (`+replab.LeftCoset`): Left coset subset of `.group`
+        %
+        % Returns
+        % -------
+        %   l: integer(1,\*)
+        %     Word expressed in letters
+        %   r: group element
+        %     Chosen coset representative
+            leftCosetElements = leftCoset.elements.toCell;
+            % go through coset representatives one by one
+            bestR = leftCosetElements{1};
+            bestL = self.factorize(bestR);
+            for i = 2:length(leftCosetElements)
+                candidateR = leftCosetElements{i};
+                candidateL = self.factorize(candidateR);
+                if length(candidateL) < length(bestL)
+                    bestL = candidateL;
+                    bestR = candidateR;
+                end
+            end
+            l = bestL;
+            r = bestR;
+        end
+
         function n = maximumWordLength(self)
             n = max(cellfun(@length, self.words));
         end

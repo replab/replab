@@ -100,8 +100,14 @@ classdef LeftCoset < replab.Coset
         %     Letters of the word representing an element of ``self``
         %   r: element of `.group`
         %     Represented coset element
-            error('WIP');
+            if isa(self.group, 'replab.PermutationGroup')
+                permCoset = self;
+            else
+                permCoset = self.niceGroup.leftCoset(self.isomorphism.imageElement(self.representative), self.parent.niceGroup);
+            end
+            [l, r] = self.parent.factorization.factorizeRepresentativeOfLeftCoset(permCoset);
         end
+
     end
 
 end

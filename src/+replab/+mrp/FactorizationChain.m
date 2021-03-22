@@ -81,6 +81,21 @@ classdef FactorizationChain < replab.mrp.Factorization
             end
         end
 
+        function [l, r] = factorizeRepresentativeOfLeftCoset(self, leftCoset)
+        % Returns a tentatively short word corresponding to an element of the given coset
+        %
+        % Args:
+        %   leftCoset (`+replab.LeftCoset`): Left coset subset of `.group`
+        %
+        % Returns
+        % -------
+        %   l: integer(1,\*)
+        %     Word expressed in letters
+        %   r: group element
+        %     Chosen coset representative
+            [l, r] = self.chain.wordLeftCoset(leftCoset.representative, leftCoset.group);
+        end
+
         function n = maximumWordLength(self)
             c = self.chain;
             n = 0;

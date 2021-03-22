@@ -58,14 +58,6 @@ classdef PermutationGroup < replab.FiniteGroup
 
     methods (Access = protected)
 
-        function f = factorization(self)
-        % Returns an object able to compute factorizations in the group generators
-        %
-        % Returns:
-        %   `+replab.+mrp.Factorization`: A factorization instance
-            f = self.cached('factorization', @() self.computeFactorization);
-        end
-
         function f = computeFactorization(self)
             f = replab.mrp.Factorization.make(self);
         end
@@ -253,6 +245,22 @@ classdef PermutationGroup < replab.FiniteGroup
 
     methods % Group internal description
 
+        function c = chain(self)
+        % Returns the stabilizer chain corresponding to this permutation group.
+        %
+        % Returns:
+        %   `+replab.+bsgs.Chain`: Stabilizer chain
+            c = self.cached('chain', @() self.computeChain);
+        end
+
+        function f = factorization(self)
+        % Returns an object able to compute factorizations in the group generators
+        %
+        % Returns:
+        %   `+replab.+mrp.Factorization`: A factorization instance
+            f = self.cached('factorization', @() self.computeFactorization);
+        end
+
         function c = lexChain(self)
         % Returns the reduced stabilizer chain corresponding to this permutation group in lexicographic order
         %
@@ -261,14 +269,6 @@ classdef PermutationGroup < replab.FiniteGroup
         % Returns:
         %   `+replab.+bsgs.Chain`: Stabilizer chain
             c = self.cached('lexChain', @() self.computeLexChain);
-        end
-
-        function c = chain(self)
-        % Returns the stabilizer chain corresponding to this permutation group.
-        %
-        % Returns:
-        %   `+replab.+bsgs.Chain`: Stabilizer chain
-            c = self.cached('chain', @() self.computeChain);
         end
 
         function c = partialChain(self)
