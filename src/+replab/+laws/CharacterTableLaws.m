@@ -23,7 +23,7 @@ classdef CharacterTableLaws < replab.Laws
                 irrep = self.C.irreps{i};
                 if ~isempty(irrep)
                     for j = 1:self.C.nClasses
-                        [c1, err1] = doubleApproximation(self.C.characters(i, j));
+                        [c1, err1] = doubleApproximation(self.C.values(i, j));
                         c2 = trace(irrep.image(self.C.classes.classes{j}.representative));
                         self.assertApproxEqual(c1, c2, err1 + irrep.errorBound);
                     end
@@ -48,7 +48,7 @@ classdef CharacterTableLaws < replab.Laws
             n = self.C.nClasses;
             for i1 = 1:n
                 for i2 = 1:n
-                    r = dot(self.C.characters(:, i1), self.C.characters(:, i2));
+                    r = dot(self.C.values(:, i1), self.C.values(:, i2));
                     if i1 ~= i2
                         self.assert(r == 0);
                     else
@@ -59,7 +59,7 @@ classdef CharacterTableLaws < replab.Laws
         end
 
         function law_group_order_(self)
-            col = self.C.characters(:, self.C.identityConjugacyClassIndex);
+            col = self.C.values(:, self.C.identityConjugacyClassIndex);
             order1 = sum(col.*col);
             order2 = replab.cyclotomic(self.C.group.order);
             self.assert(order1 == order2);
