@@ -163,12 +163,19 @@ classdef Irreducible < replab.SubRep
 
         % Rep
 
-
+        % TODO: add other equivariant spaces
         function c = commutant(self, type)
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
             c = self.cached(['commutant_' type], @() self.irreducibleEquivariantFrom(self,  'special', 'commutant', 'type', type));
+        end
+
+        function c = sesquilinearInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            c = self.cached(['sesquilinearInvariant_' type], @() self.irreducibleEquivariantFrom(self,  'special', 'sesquilinear', 'type', type));
         end
 
          % SubRep
