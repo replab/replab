@@ -196,6 +196,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
+        function s = computeSetProduct(self)
+            error('Abstract');
+        end
+
     end
 
     methods % Group properties
@@ -284,6 +288,15 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   `+replab.AtlasResult` or []: A result in case the group is identified; or ``[]`` if unrecognized.
             R = self.cached('recognize', @() self.computeRecognize);
         end
+
+        function D = setProduct(self)
+        % Returns a decomposition of this group as a product of sets
+        %
+        % Returns:
+        %   `.SetProduct`: The group decomposition
+            D = self.cached('setProduct', @() self.computeSetProduct);
+        end
+
 
         function b = isTrivial(self)
         % Tests whether this group is trivial

@@ -112,6 +112,16 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
             gd = replab.FiniteGroupDecomposition(self, horzcat(TH1, TN1));
         end
 
+        function s = computeSetProduct(self)
+            TH = self.H.setProduct.sets;
+            TN = self.N.setProduct.sets;
+            idN = self.N.identity;
+            idH = self.H.identity;
+            TH1 = cellfun(@(t) cellfun(@(h) {h idN}, t, 'uniform', 0), TH, 'uniform', 0);
+            TN1 = cellfun(@(t) cellfun(@(n) {idH n}, t, 'uniform', 0), TN, 'uniform', 0);
+            s = replab.SetProduct(self, horzcat(TH1, TN1), true);
+        end
+
     end
 
     methods % Implementations

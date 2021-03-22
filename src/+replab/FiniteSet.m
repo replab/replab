@@ -23,14 +23,6 @@ classdef FiniteSet < replab.Domain
 
     methods
 
-        function s = nElements(self)
-        % Returns the size of this set
-        %
-        % Returns:
-        %   vpi: Set cardinality
-            error('Abstract');
-        end
-
         function b = contains(self, el)
         % Tests whether this set contains the given element
         %
@@ -50,6 +42,22 @@ classdef FiniteSet < replab.Domain
         % Returns:
         %   `.IndexedFamily`: An enumeration of the set elements
             E = self.cached('elements', @() self.computeElements);
+        end
+
+        function s = nElements(self)
+        % Returns the size of this set
+        %
+        % Returns:
+        %   vpi: Set cardinality
+            error('Abstract');
+        end
+
+        function s = setProduct(self)
+        % Returns a description of this set as a product of sets
+        %
+        % Returns:
+        %   `.SetProduct`: Generic description of the elements of this set
+            error('Abstract');
         end
 
     end

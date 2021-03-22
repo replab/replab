@@ -56,6 +56,10 @@ classdef RightCoset < replab.Coset
             E = replab.indf.FiniteGroupIndexedFamily(matrix, self.isomorphism);
         end
 
+        function s = computeSetProduct(self)
+            s = replab.SetProduct(self.parent, horzcat(self.group.setProduct.sets, {{self.representative}}), false);
+        end
+
     end
 
     methods % Implementations

@@ -47,7 +47,7 @@ classdef Equivariant_forFiniteGroup_relativeReynolds < replab.Equivariant
                 cR = self.repR.conditionNumberEstimate; % condition number of repR
                 cC = self.repC.conditionNumberEstimate; % condition number of repC
             end
-            T = self.group.decomposition.T;
+            T = self.group.setProduct.sets;
             for i = length(T):-1:1
                 S = X;
                 els = T{i};

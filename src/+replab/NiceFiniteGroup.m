@@ -85,6 +85,12 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
         end
 
+        function dec = computeSetProduct(self)
+            prmD = self.niceGroup.setProduct;
+            sets1 = cellfun(@(T) cellfun(@(t) self.niceMorphism.preimageElement(t), T, 'uniform', 0), prmD.sets, 'uniform', 0);
+            dec = replab.SetProduct(self, sets1, true);
+        end
+
         function sub = computeDerivedSubgroup(self)
             sub = self.niceMorphism.preimageGroup(self.niceGroup.derivedSubgroup);
         end
