@@ -88,33 +88,31 @@ classdef ChainWithWords < replab.Str
             end
         end
 
-        function [w, rep] = wordCoset(self, coset)
-        % Returns a word corresponding to an element of the given coset
+        function [w, r] = wordLeftCoset(self, leftCoset)
+        % Returns a tentatively short word corresponding to an element of the given left coset
         %
-        % Notes: If the coset basis leads to another stabilization order
-        % than the chain's basis, the coset chain is reconstructed to match
-        % the same basis. Also, an effort is made to identify a short word
-        % within the coset, but without optimality guarantees.
+        % An effort is made to identify a short word within the coset, but without optimality guarantees.
+        %
+        % Notes: If the coset basis leads to another stabilization order than the chain's basis,
+        % the coset chain is reconstructed to match the same basis.
         %
         % Args:
-        %   coset (coset): Element of `.LeftCoset`, `.RightCoset` or `.NormalCoset`
+        %   coset (`.LeftCoset`): Coset
         %
-        % Returns:
-        % --------
-        %   integer(1,\*): Letters of the word representing an element
-        %       of ``coset``
-        %   integer(1,\*): The member of the coset corresponding to the
-        %       word returned
-        
+        % Returns
+        % -------
+        %   w: integer(1,\*)
+        %     Letters of the word representing an element of ``coset``
+        %   r: permutation
+        %     The member of the coset corresponding to the word returned
             assert(self.completed);
-            assert(isa(coset, 'replab.LeftCoset') || isa(coset, 'replab.RightCoset') || isa(coset, 'replab.NormalCoset'));
-            isRightCoset = isa(coset, 'replab.RightCoset');
+            assert(isa(coset, 'replab.LeftCoset'));
 
-            if coset.group.order == vpi(1)
+            if coset.group.isTrivial
                 % coset contains a single element, use a simpler method
                 w = self.word(coset.representative);
-                rep = coset.representative;
-                return;
+                r = coset.representative;
+                return
             end
 
             % Make sure the elements stabilized in the chain and in the
@@ -143,11 +141,11 @@ classdef ChainWithWords < replab.Str
                 % same basis structure as the chain with words
                 cosetChain = replab.bsgs.Chain.make(coset.group.domainSize, coset.group.generators, stabilizedOrderChain);
             end
-            
+
             % Now we do the job
             w = [];
             g = coset.representative;
-            rep = g;
+            r = g;
             for i = 1:self.k
                 beta = self.B(i);
                 j = find(cosetChain.B == beta, 1);
@@ -169,13 +167,8 @@ classdef ChainWithWords < replab.Str
                     bestIt = find(wordLengths == min(wordLengths), 1);
                     Uj = cosetChain.U{j};
                     u = Uj(:, bestIt)';
-                    if isRightCoset
-                        g = u(g);
-                        rep = u(rep);
-                    else
-                        g = g(u);
-                        rep = rep(u);
-                    end
+                    g = g(u);
+                    r = r(u);
                     b = g(beta);
                 end
                 ind = self.iOrbit(b,i);

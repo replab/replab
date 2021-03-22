@@ -91,6 +91,24 @@ classdef RightCoset < replab.Coset
             b = isequal(self.representative, el);
         end
 
+        % Coset
+
+        function [l, r] = factorizeShortRepresentativeLetters(self)
+        % Returns a tentatively short word corresponding to an element of this coset
+        %
+        % An effort is made to identify a short word, but without optimality guarantees.
+        %
+        % Returns
+        % -------
+        %   l: integer(1,\*)
+        %     Letters of the word representing an element of ``self``
+        %   r: element of `.group`
+        %     Represented coset element
+            [linv, rinv] = self.group.leftCoset(self.group.inverse(self.representative), self.parent).factorizeShortRepresentativeLetters;
+            l = replab.fp.Letters.inverse(linv);
+            r = self.group.inverse(rinv);
+        end
+
     end
 
 end
