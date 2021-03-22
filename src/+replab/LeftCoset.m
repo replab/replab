@@ -103,9 +103,10 @@ classdef LeftCoset < replab.Coset
             if isa(self.group, 'replab.PermutationGroup')
                 permCoset = self;
             else
-                permCoset = self.niceGroup.leftCoset(self.isomorphism.imageElement(self.representative), self.parent.niceGroup);
+                permCoset = self.parent.niceGroup.leftCoset(self.isomorphism.imageElement(self.representative), self.parent.niceGroup);
             end
-            [l, r] = self.parent.factorization.factorizeRepresentativeOfLeftCoset(permCoset);
+            [l, r] = self.parent.niceGroup.factorization.factorizeRepresentativeOfLeftCoset(permCoset);
+            r = self.isomorphism.preimageElement(r);
         end
 
     end

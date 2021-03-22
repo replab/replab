@@ -37,7 +37,7 @@ classdef RightCosetsLaws < replab.Laws
         end
 
         function law_transversal_size_(self)
-            self.assertEqual(length(self.R.transversal), double(self.G.order/self.H.order));
+            assertEqual(length(self.R.transversal), double(self.G.order/self.H.order));
         end
 
     end
