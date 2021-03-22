@@ -89,8 +89,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function [mu, R] = reconstruction(self)
             T = replab.TorusGroup(0);
             mu = T.morphismByFunction(self, @(t) self.identity);
-            D = self.decomposition;
-            R = replab.SetProduct(self, D.T, true);
+            R = self.setProduct;
         end
 
     end
@@ -99,11 +98,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function o = computeOrder(self)
         % See `.order`
-            error('Abstract');
-        end
-
-        function D = computeDecomposition(self)
-        % See `.decomposition`
             error('Abstract');
         end
 
@@ -214,14 +208,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   vpi: The group order
             o = self.cached('order', @() self.computeOrder);
-        end
-
-        function D = decomposition(self)
-        % Returns a decomposition of this group as a product of sets
-        %
-        % Returns:
-        %   `.FiniteGroupDecomposition`: The group decomposition
-            D = self.cached('decomposition', @() self.computeDecomposition);
         end
 
         function e = exponent(self)

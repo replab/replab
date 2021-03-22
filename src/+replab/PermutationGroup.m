@@ -107,22 +107,6 @@ classdef PermutationGroup < replab.FiniteGroup
             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
         end
 
-        function dec = computeDecomposition(self)
-            c = self.chain;
-            k = c.length;
-            T = cell(1, k);
-            for i = 1:k
-                Ui = c.U{i};
-                m = size(Ui, 2);
-                Ti = cell(1, m);
-                for j = 1:m
-                    Ti{j} = Ui(:,j)';
-                end
-                T{i} = Ti;
-            end
-            dec = replab.FiniteGroupDecomposition(self, T);
-        end
-
         function classes = computeConjugacyClasses(self)
             if self.order < 100000
                 C = replab.perm.conjugacyClassesByOrbits(self);
