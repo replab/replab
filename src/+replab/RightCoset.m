@@ -26,7 +26,7 @@ classdef RightCoset < replab.Coset
                 parent = group.closure(element);
             end
             if group.isNormalizedBy(element)
-                r = replab.NormalCoset(group, element, parent);
+                r = replab.NormalCoset.make(group, element, parent);
                 return
             end
             chain = parent.niceMorphism.imageGroup(group).lexChain;
@@ -88,7 +88,10 @@ classdef RightCoset < replab.Coset
                 el = self.isomorphism.imageElement(el);
             end
             el = replab.bsgs.Cosets.rightRepresentative(self.groupChain, el);
-            b = isequal(self.representative, el);
+            if ~isempty(self.isomorphism)
+                el = self.isomorphism.preimageElement(el);
+            end
+            b = self.parent.eqv(self.representative, el);
         end
 
         % Coset
