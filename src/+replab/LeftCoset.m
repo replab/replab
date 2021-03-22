@@ -26,7 +26,7 @@ classdef LeftCoset < replab.Coset
                 parent = group.closure(element);
             end
             if group.isNormalizedBy(element)
-                l = replab.NormalCoset(group, element, parent);
+                l = replab.NormalCoset.make(group, element, parent);
                 return
             end
             chain = parent.niceMorphism.imageGroup(group).lexChain;
@@ -84,7 +84,10 @@ classdef LeftCoset < replab.Coset
                 el = self.isomorphism.imageElement(el);
             end
             el = replab.bsgs.Cosets.leftRepresentative(self.groupChain, el);
-            b = isequal(self.representative, el);
+            if ~isempty(self.isomorphism)
+                el = self.isomorphism.preimageElement(el);
+            end
+            b = self.parent.eqv(self.representative, el);
         end
 
         % Coset
@@ -103,7 +106,7 @@ classdef LeftCoset < replab.Coset
             if isa(self.group, 'replab.PermutationGroup')
                 permCoset = self;
             else
-                permCoset = self.parent.niceGroup.leftCoset(self.isomorphism.imageElement(self.representative), self.parent.niceGroup);
+                permCoset = self.group.niceGroup.leftCoset(self.isomorphism.imageElement(self.representative), self.parent.niceGroup);
             end
             [l, r] = self.parent.niceGroup.factorization.factorizeRepresentativeOfLeftCoset(permCoset);
             r = self.isomorphism.preimageElement(r);

@@ -18,6 +18,12 @@ classdef LeftCosetsLaws < replab.Laws
 
     methods
 
+        function l = laws_random_coset(self)
+            g = self.G.sample;
+            lc = self.H.leftCoset(g);
+            l = lc.laws;
+        end
+
         function law_transversal_representatives_are_canonical_(self)
             T = self.L.transversal;
             for i = 1:length(T)
@@ -29,13 +35,6 @@ classdef LeftCosetsLaws < replab.Laws
             r1 = self.L.cosetRepresentative(g);
             r2 = self.L.cosetRepresentative(r1);
             self.G.assertEqv(r1, r2);
-        end
-
-        function law_factorize_coset_representative_G(self, g)
-            c = self.H.leftCoset(g, self.G);
-            [l, r] = c.factorizeShortRepresentativeLetters;
-            self.G.assertEqv(self.G.imageLetters(l), r);
-            assertTrue(c.contains(r));
         end
 
         function law_coset_representatives_are_unique_GH(self, g, h)

@@ -18,6 +18,12 @@ classdef RightCosetsLaws < replab.Laws
 
     methods
 
+        function l = laws_random_coset(self)
+            g = self.G.sample;
+            rc = self.H.rightCoset(g);
+            l = rc.laws;
+        end
+
         function law_transversal_representatives_are_canonical_(self)
             T = self.R.transversal;
             for i = 1:length(T)

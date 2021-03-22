@@ -40,4 +40,18 @@ classdef Coset < replab.FiniteSet
 
     end
 
+    methods % Implementations
+
+        % Domain
+
+        function l = laws(self)
+            l = replab.laws.CosetLaws(self);
+        end
+
+        function b = eqv(self, lhs, rhs)
+            b = self.parent.eqv(lhs, rhs);
+        end
+
+    end
+
 end
