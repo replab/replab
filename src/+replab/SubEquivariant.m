@@ -157,10 +157,14 @@ classdef SubEquivariant < replab.Equivariant
             parent = args.parent;
             if isempty(parent)
                 switch args.special
+                  case 'antilinear'
+                    parent = repR.parent.antilinearInvariant(args.type);
                   case 'commutant'
                     parent = repR.parent.commutant(args.type);
                   case 'hermitian'
                     parent = repR.parent.hermitianInvariant(args.type);
+                  case 'sesquilinear'
+                    parent = repC.parent.sesquilinearInvariant(args.type);
                   case 'trivialRows'
                     parent = repC.parent.trivialRowSpace(args.type);
                     d = repC.dimension;
