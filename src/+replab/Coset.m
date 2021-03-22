@@ -49,7 +49,7 @@ classdef Coset < replab.FiniteSet
         end
 
         function b = eqv(self, lhs, rhs)
-            b = self.parent.eqv(lhs, rhs);
+            b = self.type.eqv(lhs, rhs);
         end
 
     end
