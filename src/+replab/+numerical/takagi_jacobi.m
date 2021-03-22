@@ -13,6 +13,8 @@ function [U, D] = takagi_jacobi(A, U, maxSweeps)
 %
 % The relevant publication/draft is `<https://arxiv.org/abs/physics/0607103>_`.
 %
+% To respect the LGPL, this method can be used independently of the rest of the RepLAB code.
+%
 % Args:
 %   A (double(\*,\*)): Matrix to factorize
 %   U (double(\*,\*) or ``[]``): Approximate unitary basis or ``[]``
