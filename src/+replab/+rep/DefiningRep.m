@@ -5,18 +5,21 @@ classdef DefiningRep < replab.Rep
 
         function self = DefiningRep(group, field)
             switch [group.algebra '/' field]
-              case {'R/R', 'C/C', 'R/C'}
+              case {'R/R', 'C/C'}
                 d = group.n;
                 divisionAlgebraName = '';
+              case 'R/C'
+                d = group.n;
+                divisionAlgebraName = 'R->C';
               case 'H/C'
                 d = group.n*2;
-                divisionAlgebraName = '';
+                divisionAlgebraName = 'H->C';
               case 'H/R'
                 d = group.n*4;
-                divisionAlgebraName = 'quaternion.rep';
+                divisionAlgebraName = 'H->R:rep';
               case 'C/R'
                 d = group.n*2;
-                divisionAlgebraName = 'complex';
+                divisionAlgebraName = 'C->R';
               otherwise
                 error('Invalid');
             end

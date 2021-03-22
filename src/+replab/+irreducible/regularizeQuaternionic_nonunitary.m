@@ -4,11 +4,11 @@ function irrep = regularizeQuaternionic_nonunitary(sub, sample)
 % Version for representations without unitary structure
 %
 % Args:
-%   sub (`+replab.SubRep`): Subrepresentation with its ``divisionAlgebraName`` set to ``'complex'``
+%   sub (`+replab.SubRep`): Subrepresentation with its ``divisionAlgebraName`` set to ``'C->R'``
 %   sample (double(\*,\*)): Sample of ``sub.parent.commutant``
 %
 % Returns:
-%   `+replab.SubRep`: Subrepresentation with ``divisionAlgebraName`` set to ``'quaternionic.rep'``
+%   `+replab.SubRep`: Subrepresentation with ``divisionAlgebraName`` set to ``'H->R:rep'``
     X = sample;
     d = sub.dimension;
     I = sub.injection;
@@ -127,7 +127,7 @@ function irrep = regularizeQuaternionic_nonunitary(sub, sample)
     assert(norm(imag(prj)) < tol);
     inj = real(inj);
     prj = real(prj);
-    irrep = sub.parent.subRep(inj, 'projection', prj, 'divisionAlgebraName', 'quaternion.rep', 'isIrreducible', true, 'frobeniusSchurIndicator', -2);
+    irrep = sub.parent.subRep(inj, 'projection', prj, 'divisionAlgebraName', 'H->R:rep', 'isIrreducible', true, 'frobeniusSchurIndicator', -2);
     if sub.inCache('trivialDimension') && sub.trivialDimension == 0
         irrep.cache('trivialDimension', 0, '==');
     end

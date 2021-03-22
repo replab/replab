@@ -31,7 +31,7 @@ classdef EncodedRep < replab.Rep
                 divisionAlgebraName = '';
               case 'R^2d -> C^d'
                 assert(parent.overR);
-                assert(strcmp(parent.divisionAlgebraName, 'complex'));
+                assert(strcmp(parent.divisionAlgebraName, 'R->C'));
                 field = 'C';
                 dimension = parent.dimension/2;
                 divisionAlgebraName = '';
@@ -40,11 +40,11 @@ classdef EncodedRep < replab.Rep
                 assert(parent.overC);
                 field = 'R';
                 dimension = parent.dimension*2;
-                divisionAlgebraName = 'complex';
+                divisionAlgebraName = 'C->R';
                 error('TODO');
               case 'R^4d -> C^2d'
                 assert(parent.overR);
-                assert(strcmp(parent.divisionAlgebraName, 'quaternion.rep'));
+                assert(strcmp(parent.divisionAlgebraName, 'H->R:rep'));
                 field = 'C';
                 dimension = parent.dimension/2;
                 divisionAlgebraName = '';
@@ -53,7 +53,7 @@ classdef EncodedRep < replab.Rep
                 assert(parent.overC);
                 field = 'R';
                 dimension = parent.dimension*2;
-                divisionAlgebraName = 'quaternion.rep';
+                divisionAlgebraName = 'H->R:rep';
                 error('TODO');
             end
             self@replab.Rep(parent.group, field, dimension, 'isUnitary', parent.isUnitary, 'divisionAlgebraName', divisionAlgebraName);

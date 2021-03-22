@@ -408,6 +408,11 @@ classdef cyclotomic
 
     methods % Standard MATLAB properties
 
+        function res = imag(self)
+        % Returns the imaginary part
+            res = replab.cyclotomic(-1i)*(self - conj(self))/2;
+        end
+
         function res = isempty(self)
             res = prod(self.size_) == 0;
         end
@@ -470,6 +475,11 @@ classdef cyclotomic
 
         function n = numArgumentsFromSubscript(self, s, indexingContext)
             n = 1;
+        end
+
+        function res = real(self)
+        % Returns the real part
+            res = (self + conj(self))/2;
         end
 
         function s = size(self, dim)
@@ -714,20 +724,30 @@ classdef cyclotomic
         end
 
         function [L, U, p] = lu(self)
+        % Returns the LU decomposition of this matrix
+        %
+        % The ``m x n`` matrix must have ``m >= n``.
+        %
+        % It returns triangular matrices ``L``, ``U`` and a permutation vector ``p`` such that ``L*U == self(:,p)``
+        %
+        % Returns
+        % -------
+        %   L: `.cyclotomic`(\*,\*)
+        %     Lower triangular matrix
+        %   U: `.cyclotomic`(\*,\*)
+        %     Upper triangular matrix
+        %   p: integer(1,\*)
+        %     Permutation vector
             m = size(self, 1);
             n = size(self, 2);
+            assert(m >= n, 'LU decomposition only works for m x n matrices with m >= n');
             res = javaMethod('lu', 'cyclo.Lab', self.data, m, n);
             L = javaMethod('L', res);
             U = javaMethod('U', res);
             p = javaMethod('pivots', res);
             p = double(p(:)') + 1;
-            if m >= n
-                L = replab.cyclotomic(L, [m n]);
-                U = replab.cyclotomic(U, [n n]);
-            else
-                L = replab.cyclotomic(L, [m m]);
-                U = replab.cyclotomic(U, [m n]);
-            end
+            L = replab.cyclotomic(L, [m n]);
+            U = replab.cyclotomic(U, [n n]);
         end
 
         function [L, D, p] = ldl(self)
@@ -856,7 +876,7 @@ classdef cyclotomic
         function res = sqrt(self)
         % Square root
         %
-        % Requires that the argument contains rational coefficients, otherwise compatible with MATLAB's sqrtx
+        % Requires that the argument contains rational coefficients, otherwise compatible with MATLAB's sqrt
             res = replab.cyclotomic(javaMethod('sqrt', 'cyclo.Lab', self.data_), self.size_);
         end
 

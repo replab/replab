@@ -23,7 +23,7 @@ classdef Rep < replab.Obj
         field     % ({'R', 'C'}): Vector space defined on real (R) or complex (C) field
         dimension % (integer): Representation dimension
         isUnitary % (logical): Whether the representation is unitary
-        divisionAlgebraName % ('complex', 'quaternion.rep', ''): Name of the division algebra encoding this representation respects
+        divisionAlgebraName % ('R->C', 'C->R', 'H->C', 'H->R:rep', ''): Name of the division algebra encoded by this representation (see `.DivisionAlgebra`)
     end
 
     methods
@@ -38,7 +38,7 @@ classdef Rep < replab.Obj
         %
         % Keyword Args:
         %   isUnitary (logical, optional): Whether the representation is unitary, default: false
-        %   divisionAlgebraName % ('complex', 'quaternion.rep', '', optional): Name of the division algebra encoding this representation respects, default ``''``
+        %   divisionAlgebraName % ('R->C', 'C->R', 'H->C', 'H->R:rep', '', optional): Name of the division algebra encoding this representation respects, default ``''``
         %   isIrreducible (logical or ``[]``, optional): Whether this representation is irreducible, default ``[]``
         %   trivialDimension (integer or ``[]``, optional): Dimension of the trivial subrepresentation, default ``[]``
         %   frobeniusSchurIndicator (integer or ``[]``, optional): Exact value of the Frobenius-Schur indicator, default ``[]``
@@ -706,9 +706,9 @@ classdef Rep < replab.Obj
                   case 1
                     b = true; % nothing needs to be done for real-type representations
                   case 0
-                    b = strcmp(self.divisionAlgebraName, 'complex');
+                    b = strcmp(self.divisionAlgebraName, 'C->R');
                   case -2
-                    b = strcmp(self.divisionAlgebraName, 'quaternion.rep');
+                    b = strcmp(self.divisionAlgebraName, 'H->R:rep');
                   otherwise
                     error('Real irreps must have frobeniusSchurIndicator equal to -2,0,1. Here = %d', self.frobeniusSchurIndicator);
                 end
@@ -1522,7 +1522,7 @@ classdef Rep < replab.Obj
         %   inverse (double(\*,\*) or `.cyclotomic`(\*,\*)): Inverse of the change of basis matrix
         %
         % Returns:
-        %   `+replab.SimilarRep`: The similar representation
+        %   `+replab.SubRep`: The similar representation
             args = struct('inverse', []);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             inverse = args.inverse;

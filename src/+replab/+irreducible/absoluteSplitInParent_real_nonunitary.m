@@ -30,7 +30,7 @@ function subs = absoluteSplitInParent_real_nonunitary(sub, sample)
         if isReal
             subs{i} = sub.parent.subRep(I, 'projection', P);
         else
-            subs{i} = sub.parent.subRep(I, 'projection', P, 'divisionAlgebraName', 'complex');
+            subs{i} = sub.parent.subRep(I, 'projection', P, 'divisionAlgebraName', 'C->R');
         end
     end
 end

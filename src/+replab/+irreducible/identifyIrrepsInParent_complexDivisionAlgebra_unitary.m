@@ -2,13 +2,13 @@ function irreps = identifyIrrepsInParent_complexDivisionAlgebra_unitary(sub, sam
 % Identifies the irreducible representation(s) present in a real subrepresentation encoding a pair of conjugate irreps
 %
 % Args:
-%   sub (`+replab.SubRep`): Subrepresentation with `+replab.Rep.divisionAlgebraName` set to ``'complex'``
+%   sub (`+replab.SubRep`): Subrepresentation with `+replab.Rep.divisionAlgebraName` set to ``'C->R'``
 %   sample (double(\*,\*)): Sample of ``sub.parent.commutant``
 %
 % Returns:
 %   cell(1,\*) of `+replab.SubRep`: Real irreps with `+replab.Rep.frobeniusSchurIndicator` computed and `+replab.Rep.divisionAlgebraName` set
     assert(sub.overR);
-    assert(strcmp(sub.divisionAlgebraName, 'complex'));
+    assert(strcmp(sub.divisionAlgebraName, 'C->R'));
     d = sub.dimension;
     I = sub.injection('double/sparse');
     P = sub.projection('double/sparse');

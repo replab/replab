@@ -367,10 +367,10 @@ classdef SubRep < replab.Rep
         end
 
         function res = collapse(self)
-        % Simplifies a SubRep of a SubRep/SimilarRep
+        % Simplifies a SubRep of a SubRep
         %
         % Raises:
-        %   An error if `.parent` is not of type `.SubRep` or `.SimilarRep`
+        %   An error if `.parent` is not of type `.SubRep`
         %
         % Returns:
         %   `.SubRep`: A subrepresentation of ``.parent.parent``
@@ -514,6 +514,7 @@ classdef SubRep < replab.Rep
             if self.isSimilarRep
                 I = self.injection('double/sparse');
                 P = self.projection('double/sparse');
+                d = self.dimension;
                 prodError = norm(P*I - eye(d), 'fro'); % || dP I ||F
                 % let P = I^-1
                 % we assume I is exact, and P~ = projection_internal, with P~ = P + dP and dP the error

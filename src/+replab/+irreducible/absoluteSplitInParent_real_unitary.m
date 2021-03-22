@@ -65,13 +65,12 @@ function subs = absoluteSplitInParent_real_unitary(sub, sample)
             if norm(D1, 'fro') > tol
                 % there is content in the diagonal component
                 basis = U(:, blk) * U1;
-                divisionAlgebraName = 'complex';
+                divisionAlgebraName = 'C->R';
             else
                 % the diagonal component is noise
                 basis = U(:, blk);
             end
         end
-
         I = subI * basis;
         if sub.mapsAreAdjoint
             % as subP = subI'

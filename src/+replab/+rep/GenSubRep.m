@@ -119,14 +119,14 @@ classdef GenSubRep < replab.Obj
                 p = reshape(reshape(1:2*d, [d 2])', [1 d*2]);
                 subI = subI(:, p);
                 if self.mapsAreAdjoint
-                    sub = self.parent.subRep(subI, 'projection', subI', 'divisionAlgebraName', 'complex', 'isUnitary', true);
+                    sub = self.parent.subRep(subI, 'projection', subI', 'divisionAlgebraName', 'C->R', 'isUnitary', true);
                 else
                     E = real(self.projection);
                     F = imag(self.projection);
                     subP = [E; -F]*sqrt(2);
                     subP = subP(p, :);
                     subP = replab.rep.GenSubRep.correctComplexPair(subI, subP);
-                    sub = self.parent.subRep(subI, 'projection', subP, 'divisionAlgebraName', 'complex', 'isUnitary', false);
+                    sub = self.parent.subRep(subI, 'projection', subP, 'divisionAlgebraName', 'C->R', 'isUnitary', false);
                 end
               case 'H->R'
                 A = self.injection.part1;
@@ -138,7 +138,7 @@ classdef GenSubRep < replab.Obj
                 subI = [A+B+C+D, A-B-C+D, A+B-C-D, A-B+C-D];
                 subI = subI(:, p);
                 if self.mapsAreAdjoint
-                    sub = self.parent.subRep(subI, 'projection', subI', 'divisionAlgebraName', 'quaternion.rep', 'isUnitary', true);
+                    sub = self.parent.subRep(subI, 'projection', subI', 'divisionAlgebraName', 'H->R:rep', 'isUnitary', true);
                 else
                     E = self.projection.part1;
                     F = self.projection.parti;
@@ -147,7 +147,7 @@ classdef GenSubRep < replab.Obj
                     subP = [E-F-G-H; E+F+G-H; E-F+G+H; E+F-G+H];
                     subP = subP(p, :);
                     subP = replab.rep.GenSubRep.correctQuaternionPair(subI, subP);
-                    sub = self.parent.subRep(subI, 'projection', subP, 'divisionAlgebraName', 'quaternion.rep', 'isUnitary', false);
+                    sub = self.parent.subRep(subI, 'projection', subP, 'divisionAlgebraName', 'H->R:rep', 'isUnitary', false);
                 end
             end
         end
@@ -351,9 +351,9 @@ classdef GenSubRep < replab.Obj
                 switch sub.divisionAlgebraName
                   case ''
                     gen = replab.rep.GenSubRep(sub.parent, 'R', sub.isUnitary, sub.injection, sub.projection);
-                  case 'complex'
+                  case 'C->R'
                     gen = replab.rep.GenSubRep.fromComplexTypeSubRep(sub);
-                  case 'quaternion.rep'
+                  case 'H->R:rep'
                     gen = replab.rep.GenSubRep.fromQuaternionTypeSubRep(sub);
                 end
             else
