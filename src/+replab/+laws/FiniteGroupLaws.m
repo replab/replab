@@ -52,9 +52,9 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws
             elementsLaws = self.T.elements.laws;
         end
 
-        function law_decomposition_size_(self)
+        function law_setProduct_size_(self)
         % Checks that the cartesian product set decomposition has the correct size
-            D = self.T.decomposition.T;
+            D = self.T.setProduct.sets;
             o = vpi(1);
             for i = 1:length(D)
                 o = o * length(D{i});
