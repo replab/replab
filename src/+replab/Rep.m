@@ -1362,6 +1362,33 @@ classdef Rep < replab.Obj
 
     methods % Manipulation of representation space
 
+        function res = identifyIrrep(self)
+        % Identifies the irrep type and returns an equivalent representation with explicit structure
+        %
+        % This representation must be irreducible.
+        %
+        % Example:
+        %   >>> Q = replab.QuaternionGroup();
+        %   >>> rep = Q.naturalRep.complexification;
+        %   >>> irreps = rep.split;
+        %   >>> assert(length(irreps) == 2); % splits in two equivalent irreps
+        %   >>> sub = irreps{1};
+        %   >>> sub1 = sub.identifyIrrep;
+        %   >>> strcmp(sub1.divisionAlgebraName, 'H->C')
+        %       1
+        %
+        % Returns:
+        %   `+replab.SubRep`: Similar representation with the canonical division algebra encoding
+            assert(self.isIrreducible, 'This method only applies to irreducible representations');
+            if self.overR
+                irreps = replab.irreducible.identifyIrrepsInParent(replab.SubRep.identical(self), self.commutant.sample);
+                assert(length(irreps) == 1);
+                res = irreps{1};
+            else
+                res = replab.irreducible.identifyComplexIrrepInParent(replab.SubRep.identical(self), self.antilinearInvariant.sample);
+            end
+        end
+
         function res = unitarize(self)
         % Returns a unitary representation equivalent to this representation
         %
@@ -1576,11 +1603,16 @@ classdef Rep < replab.Obj
         function dec = computeDecomposition_exact(self)
         % Computes the representation decomposition, exact variant, only available for finite groups
             assert(isa(self.group, 'replab.FiniteGroup'));
-            c = self.group.characterTable;
-            assert(c.hasIrreps, 'All irreps must have explicit constructions available');
-            irreps = c.irreps;
+            ct = self.group.characterTable;
+            assert(ct.hasIrreps, 'All irreps must have explicit constructions available');
+            irreps = ct.irreps;
             assert(all(cellfun(@(ir) ir.isExact, irreps)), 'All irreps must be available in exact form');
-            if self.overR
+            if self.overC
+                % easy case, use Serre's projection formulas
+                components = cellfun(@(irrep) replab.irreducible.isotypicComponent(self, irrep, 'exact'), irreps, 'uniform', 0);
+                dec = replab.Irreducible(self, components);
+            else
+                % over the reals, we first compute the complex decomposition
                 assert(all(cellfun(@(ir) ir.frobeniusSchurIndicator == 1, irreps)));
                 for i = 1:self.group.nGenerators
                     g = self.group.generator(i);
@@ -1591,8 +1623,6 @@ classdef Rep < replab.Obj
                 end
                 irreps = cellfun(@(ir) replab.rep.EncodedRep(ir, 'C^d -> R^d'), irreps, 'uniform', 0);
             end
-            components = cellfun(@(irrep) replab.irreducible.isotypicComponent(self, irrep, 'exact'), irreps, 'uniform', 0);
-            dec = replab.Irreducible(self, components);
         end
 
         function dec = computeDecomposition_double(self)

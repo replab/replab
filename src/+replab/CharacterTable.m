@@ -21,7 +21,7 @@ classdef CharacterTable < replab.Obj
         classes % (`.ConjugacyClasses`): Conjugacy classes of `.group`
         classNames % (cell(1,nClasses) of charstring): Names of conjugacy classes
         irrepNames % (cell(1,nIrreps) of charstring): Names of the irreducible representations/characters
-        characters % (`.cyclotomic` (nIrreps,nClasses)): Character values
+        values % (`.cyclotomic` (nIrreps,nClasses)): Character values
     end
 
     properties (Access = protected)
@@ -55,22 +55,22 @@ classdef CharacterTable < replab.Obj
 
     methods
 
-        function self = CharacterTable(group, classes, characters, varargin)
+        function self = CharacterTable(group, classes, values, varargin)
         % Constructs a character table
         %
         % Args:
         %   group (`.FiniteGroup`): Group represented by character table
         %   classes (`.ConjugacyClasses`): Conjugacy classes of `.group`
-        %   characters (`.cyclotomic` (nClasses, nClasses)): Character values
+        %   values (`.cyclotomic` (nClasses, nClasses)): Character values
         %
         % Keyword Args:
         %   irreps (cell(1,\*) of ``[]`` or `+replab.RepByImages`, optional): Explicit matrix representations (can contain empty values)
         %   classNames (cell(1,\*) of charstring, optional): Names of conjugacy classes
         %   irrepNames (cell(1,\*) of charstring, optional): Names of irreducible representations
         %   kronecker (integer(\*,\*,\*), optional): Kronecker coefficients
-            nIrreps = size(characters, 1);
+            nIrreps = size(values, 1);
             nClasses = classes.nClasses;
-            assert(size(characters, 2) == nClasses);
+            assert(size(values, 2) == nClasses);
             assert(nIrreps == nClasses);
             args = struct('irrepNames', {replab.CharacterTable.defaultIrrepNames(nIrreps)}, ...
                           'classNames', {replab.CharacterTable.defaultClassNames(classes.classElementOrders)}, ...
@@ -81,10 +81,47 @@ classdef CharacterTable < replab.Obj
             end
             self.group = group;
             self.classes = classes;
-            self.characters = characters;
+            self.values = values;
             self.irrepNames = args.irrepNames;
             self.classNames = args.classNames;
             self.irreps_ = args.irreps;
+        end
+
+        function [R, C, H] = types(self)
+        % Returns the indices of the real/complex/quaternion-type irreducible representations
+        %
+        % Returns
+        % -------
+        %   R: integer(1,\*)
+        %     Indices of the real-type representations
+        %   C: integer(2,\*)
+        %     Indices of the conjugate complex-type representations
+        %   H: integer(1,\*)
+        %     Indices of the quaternion-type representations
+            F = cellfun(@(C) C.frobeniusSchurIndicator, self.characters);
+            R = find(F == 1);
+            R = R(:)';
+            H = find(F == -1);
+            H = H(:)';
+            inds = find(F == 0);
+            C = zeros(2, 0);
+            while ~isempty(inds)
+                ind = inds(1);
+                inds = inds(2:end);
+                v = self.values(ind,:);
+                indC = [];
+                for i = inds
+                    if self.values(i,:) == conj(v)
+                        indC = i;
+                        break
+                    end
+                end
+                if isempty(indC)
+                    error('Inconsistent character table');
+                end
+                C = [C [ind; indC]];
+                inds = setdiff(inds, indC);
+            end
         end
 
         function dec = decomposition(self, rep)
@@ -131,7 +168,7 @@ classdef CharacterTable < replab.Obj
         % Returns the row index of the trivial character
             ind = 1:self.nIrreps;
             for i = 1:self.nClasses
-                ind = ind(self.characters(ind, i) == 1);
+                ind = ind(self.values(ind, i) == 1);
             end
             assert(length(ind) == 1);
         end
@@ -148,12 +185,17 @@ classdef CharacterTable < replab.Obj
         %
         % Returns:
         %   integer(1,\*): Indices of the linear characters
-            ind = find(self.characters(:, self.identityConjugacyClassIndex) == 1);
+            ind = find(self.values(:, self.identityConjugacyClassIndex) == 1);
+        end
+
+        function C = characters(self)
+        % Returns the characters in this table
+            C = arrayfun(@(i) self.character(i), 1:self.nCharacters, 'uniform', 0);
         end
 
         function c = character(self, ind)
         % Returns an irreducible character in this character table
-            c = replab.Character(self.classes, self.characters(ind, :));
+            c = replab.Character(self.classes, self.values(ind, :));
         end
 
         function ct = directProduct(self, ct2)
@@ -169,6 +211,10 @@ classdef CharacterTable < replab.Obj
 
         function n = nClasses(self)
             n = self.classes.nClasses;
+        end
+
+        function n = nCharacters(self)
+            n = self.nClasses;
         end
 
         function n = nIrreps(self)
@@ -309,7 +355,7 @@ classdef CharacterTable < replab.Obj
         end
 
         function lines = gapLongStr(self, maxRows, maxColumns)
-            ct = replab.str.CyclotomicTable(self.characters);
+            ct = replab.str.CyclotomicTable(self.values);
             pp = self.classes.powerMapDefaultPrimes;
             m = self.classes.powerMaps(pp);
             nC = self.classes.nClasses;
@@ -332,7 +378,7 @@ classdef CharacterTable < replab.Obj
         end
 
         function lines = plainLongStr(self, maxRows, maxColumns)
-            ct = replab.str.CyclotomicTable(self.characters);
+            ct = replab.str.CyclotomicTable(self.values);
             nC = self.classes.nClasses;
             header = cell(2, nC + 1);
             header{1,1} = 'Class';
@@ -434,14 +480,14 @@ classdef CharacterTable < replab.Obj
             end
             classes1 = self.classes.imap(f);
             group1 = f.target;
-            characters1 = self.characters;
+            values1 = self.values;
             irreps1 = cell(1, self.nIrreps);
             for i = 1:self.nIrreps
                 if ~isempty(self.irreps{i})
                     irreps1{i} = self.irreps{i}.imap(f);
                 end
             end
-            res = replab.CharacterTable(group1, classes1, characters1, 'irreps', irreps1, 'classNames', self.classNames, 'irrepNames', self.irrepNames);
+            res = replab.CharacterTable(group1, classes1, values1, 'irreps', irreps1, 'classNames', self.classNames, 'irrepNames', self.irrepNames);
             if self.inCache('kronecker')
                 res.cache('kronecker', self.kronecker, 'error');
             end
