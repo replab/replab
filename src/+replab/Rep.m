@@ -1522,7 +1522,7 @@ classdef Rep < replab.Obj
         %   inverse (double(\*,\*) or `.cyclotomic`(\*,\*)): Inverse of the change of basis matrix
         %
         % Returns:
-        %   `+replab.SimilarRep`: The similar representation
+        %   `+replab.SubRep`: The similar representation
             args = struct('inverse', []);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             inverse = args.inverse;

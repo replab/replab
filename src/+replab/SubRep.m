@@ -367,10 +367,10 @@ classdef SubRep < replab.Rep
         end
 
         function res = collapse(self)
-        % Simplifies a SubRep of a SubRep/SimilarRep
+        % Simplifies a SubRep of a SubRep
         %
         % Raises:
-        %   An error if `.parent` is not of type `.SubRep` or `.SimilarRep`
+        %   An error if `.parent` is not of type `.SubRep`
         %
         % Returns:
         %   `.SubRep`: A subrepresentation of ``.parent.parent``
