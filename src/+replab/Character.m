@@ -140,6 +140,19 @@ classdef Character < replab.Obj
             v = self.values(ind);
         end
 
+        function f = frobeniusSchurIndicator(self)
+        % Returns the Frobenius-Schur indicator corresponding to this character
+            m = self.conjugacyClasses.powerMap(2);
+            f = replab.cyclotomic(0);
+            factor = cellfun(@(c) self.group.order/c.nElements, self.conjugacyClasses.classes, 'uniform', 0);
+            for i = 1:self.conjugacyClasses.nClasses
+                f = f + self.values(m(i))/replab.cyclotomic(factor{i});
+            end
+            f = double(f);
+            assert(isreal(f) && round(f) == f);
+            f = round(f);
+        end
+
         function K = kernel(self)
         % Returns the kernel of this character
         %

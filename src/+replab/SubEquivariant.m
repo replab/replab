@@ -68,7 +68,7 @@ classdef SubEquivariant < replab.Equivariant
         end
 
         function X1 = projectFromParent_exact(self, parentX)
-            X1 = self.repR.projection('exact') * self.parent.project(parentX) * self.repC.injection('exact');
+            X1 = self.repR.projection('exact') * self.parent.project(parentX, 'exact') * self.repC.injection('exact');
         end
 
         function [X1, err] = projectFromParent_double_sparse(self, parentX)
