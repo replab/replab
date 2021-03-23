@@ -513,6 +513,16 @@ classdef Rep < replab.Obj
 
     methods % Representation properties
 
+        function c = character(self)
+        % Returns the character corresponding to this representation, provided the group represented is finite
+        %
+        % If this representation is approximate, a trick from Dixon is used to compute the corresponding exact character.
+        %
+        % Returns:
+        %   `.Character`: Character corresponding to this representation
+            c = replab.Character.fromRep(self);
+        end
+
         function p = invariantBlocks(self)
         % Returns a partition of the set ``1:self.dimension`` such that the subsets of coordinates correspond to invariant spaces
         %
