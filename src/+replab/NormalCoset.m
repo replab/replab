@@ -48,6 +48,10 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
             b = contains@replab.LeftCoset(self, el);
         end
 
+        function [l, r] = factorizeShortRepresentativeLetters(self)
+            [l, r] = factorizeShortRepresentativeLetters@replab.LeftCoset(self);
+        end
+
     end
 
 end

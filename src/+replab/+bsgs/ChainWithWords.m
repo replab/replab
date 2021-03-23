@@ -88,77 +88,56 @@ classdef ChainWithWords < replab.Str
             end
         end
 
-        function [w, rep] = wordCoset(self, coset)
-        % Returns a word corresponding to an element of the given coset
+        function [w, r] = wordLeftCoset(self, representative, subgroupChain)
+        % Returns a tentatively short word corresponding to an element of the given left coset
         %
-        % Notes: If the coset basis leads to another stabilization order
-        % than the chain's basis, the coset chain is reconstructed to match
-        % the same basis. Also, an effort is made to identify a short word
-        % within the coset, but without optimality guarantees.
+        % The left coset is given by a chain describing a subgroup and a representative.
+        %
+        % An effort is made to identify a short word within the coset, but without optimality guarantees.
+        %
+        % Notes: If the coset basis leads to another stabilization order than the chain's basis,
+        % the coset chain is reconstructed to match the same basis.
         %
         % Args:
-        %   coset (coset): Element of `.LeftCoset`, `.RightCoset` or `.NormalCoset`
+        %   representative (permutation): Coset representative
+        %   subgroupChain (`+replab.+bsgs.Chain`): Chain describing the coset group factor
         %
-        % Returns:
-        % --------
-        %   integer(1,\*): Letters of the word representing an element
-        %       of ``coset``
-        %   integer(1,\*): The member of the coset corresponding to the
-        %       word returned
-        
+        % Returns
+        % -------
+        %   w: integer(1,\*)
+        %     Letters of the word representing an element of ``coset``
+        %   r: permutation
+        %     The member of the coset corresponding to the word returned
             assert(self.completed);
-            assert(isa(coset, 'replab.LeftCoset') || isa(coset, 'replab.RightCoset') || isa(coset, 'replab.NormalCoset'));
-            isRightCoset = isa(coset, 'replab.RightCoset');
 
-            if coset.group.order == vpi(1)
+            if length(subgroupChain.B) == 0
                 % coset contains a single element, use a simpler method
-                w = self.word(coset.representative);
-                rep = coset.representative;
-                return;
+                w = self.word(representative);
+                r = representative;
+                return
             end
 
-            % Make sure the elements stabilized in the chain and in the
-            % coset follow the same order
-            stabilizedOrderChain = [];
-            for i = 1:length(self.chain.B)
-                stabilizedOrderChain = [stabilizedOrderChain, self.chain.B(i)];
-                if length(self.chain.Delta{i}) == 2
-                    stabilizedOrderChain = [stabilizedOrderChain, self.chain.Delta{i}(2)];
-                end
+            if ~isequal(self.B, subgroupChain.B)
+                subgroupChain = subgroupChain.mutableCopy;
+                subgroupChain.baseChange(self.B, false);
+                subgroupChain.makeImmutable;
             end
-            stabilizedOrderChain = unique(stabilizedOrderChain, 'stable');
-            stabilizedOrderCoset = [];
-            for i = 1:length(coset.groupChain.B)
-                stabilizedOrderCoset = [stabilizedOrderCoset, coset.groupChain.B(i)];
-                if length(coset.groupChain.Delta{i}) == 2
-                    stabilizedOrderCoset = [stabilizedOrderCoset, coset.groupChain.Delta{i}(2)];
-                end
-            end
-            stabilizedOrderCoset = unique(stabilizedOrderCoset, 'stable');
-            if isequal(stabilizedOrderChain, stabilizedOrderCoset)
-                % We can use the coset's chain as it is
-                cosetChain = coset.groupChain;
-            else
-                % We reconstruct the coset chain to make sure it follows the
-                % same basis structure as the chain with words
-                cosetChain = replab.bsgs.Chain.make(coset.group.domainSize, coset.group.generators, stabilizedOrderChain);
-            end
-            
+
             % Now we do the job
             w = [];
-            g = coset.representative;
-            rep = g;
+            g = representative;
+            r = g;
             for i = 1:self.k
                 beta = self.B(i);
-                j = find(cosetChain.B == beta, 1);
-                if isempty(j) || (length(cosetChain.Delta{j}) == 1)
+                j = find(subgroupChain.B == beta, 1);
+                if isempty(j) || (length(subgroupChain.Delta{j}) == 1)
                     % No freedom in the permutation at this stage
                     b = g(beta);
                 else
                     % Explore the coset group
-                    wordLengths = zeros(1, length(cosetChain.Delta{j}));
-                    for it = 1:length(cosetChain.Delta{j})
-                        b = g(cosetChain.Delta{j}(it));
+                    wordLengths = zeros(1, length(subgroupChain.Delta{j}));
+                    for it = 1:length(subgroupChain.Delta{j})
+                        b = g(subgroupChain.Delta{j}(it));
                         ind = self.iOrbit(b,i);
                         assert(ind > 0, 'Permutation not contained in the group');
                         nuw = self.nuw{i}{ind};
@@ -167,15 +146,10 @@ classdef ChainWithWords < replab.Str
                     % Apply a permutation so as to stay in the coset but
                     % yields a shorter word at this stage
                     bestIt = find(wordLengths == min(wordLengths), 1);
-                    Uj = cosetChain.U{j};
+                    Uj = subgroupChain.U{j};
                     u = Uj(:, bestIt)';
-                    if isRightCoset
-                        g = u(g);
-                        rep = u(rep);
-                    else
-                        g = g(u);
-                        rep = rep(u);
-                    end
+                    g = g(u);
+                    r = r(u);
                     b = g(beta);
                 end
                 ind = self.iOrbit(b,i);
