@@ -9,6 +9,21 @@ classdef Factorization < replab.Obj
 
     methods
 
+        function [l, r] = factorizeRepresentativeOfLeftCoset(self, leftCoset)
+        % Returns a tentatively short word corresponding to an element of the given coset
+        %
+        % Args:
+        %   leftCoset (`+replab.LeftCoset`): Left coset subset of `.group`
+        %
+        % Returns
+        % -------
+        %   l: integer(1,\*)
+        %     Word expressed in letters
+        %   r: group element
+        %     Chosen coset representative
+            error('Abstract');
+        end
+
         function letters = factorize(self, g)
         % Returns the letters that compose the word with the given image
         %

@@ -18,22 +18,28 @@ classdef RightCosetsLaws < replab.Laws
 
     methods
 
+        function l = laws_random_coset(self)
+            g = self.G.sample;
+            rc = self.H.rightCoset(g);
+            l = rc.laws;
+        end
+
         function law_transversal_representatives_are_canonical_(self)
             T = self.R.transversal;
             for i = 1:length(T)
-                assertEqual(T{i}, self.R.cosetRepresentative(T{i}));
+                self.G.assertEqv(T{i}, self.R.cosetRepresentative(T{i}));
             end
         end
 
         function law_canonical_representative_is_stable_G(self, g)
             r1 = self.R.cosetRepresentative(g);
             r2 = self.R.cosetRepresentative(r1);
-            assertEqual(r1, r2);
+            self.G.assertEqv(r1, r2);
         end
 
         function law_canonical_representatives_are_unique_HG(self, h, g)
             hg = self.G.compose(h, g);
-            assertEqual(self.R.cosetRepresentative(g), self.R.cosetRepresentative(hg));
+            self.G.assertEqv(self.R.cosetRepresentative(g), self.R.cosetRepresentative(hg));
         end
 
         function law_transversal_size_(self)

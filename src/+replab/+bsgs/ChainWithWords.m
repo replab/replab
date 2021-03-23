@@ -88,6 +88,79 @@ classdef ChainWithWords < replab.Str
             end
         end
 
+        function [w, r] = wordLeftCoset(self, representative, subgroupChain)
+        % Returns a tentatively short word corresponding to an element of the given left coset
+        %
+        % The left coset is given by a chain describing a subgroup and a representative.
+        %
+        % An effort is made to identify a short word within the coset, but without optimality guarantees.
+        %
+        % Notes: If the coset basis leads to another stabilization order than the chain's basis,
+        % the coset chain is reconstructed to match the same basis.
+        %
+        % Args:
+        %   representative (permutation): Coset representative
+        %   subgroupChain (`+replab.+bsgs.Chain`): Chain describing the coset group factor
+        %
+        % Returns
+        % -------
+        %   w: integer(1,\*)
+        %     Letters of the word representing an element of ``coset``
+        %   r: permutation
+        %     The member of the coset corresponding to the word returned
+            assert(self.completed);
+
+            if length(subgroupChain.B) == 0
+                % coset contains a single element, use a simpler method
+                w = self.word(representative);
+                r = representative;
+                return
+            end
+
+            if ~isequal(self.B, subgroupChain.B)
+                subgroupChain = subgroupChain.mutableCopy;
+                subgroupChain.baseChange(self.B, false);
+                subgroupChain.makeImmutable;
+            end
+
+            % Now we do the job
+            w = [];
+            g = representative;
+            r = g;
+            for i = 1:self.k
+                beta = self.B(i);
+                j = find(subgroupChain.B == beta, 1);
+                if isempty(j) || (length(subgroupChain.Delta{j}) == 1)
+                    % No freedom in the permutation at this stage
+                    b = g(beta);
+                else
+                    % Explore the coset group
+                    wordLengths = zeros(1, length(subgroupChain.Delta{j}));
+                    for it = 1:length(subgroupChain.Delta{j})
+                        b = g(subgroupChain.Delta{j}(it));
+                        ind = self.iOrbit(b,i);
+                        assert(ind > 0, 'Permutation not contained in the group');
+                        nuw = self.nuw{i}{ind};
+                        wordLengths(it) = length(replab.fp.Letters.compose(w, -fliplr(nuw)));
+                    end
+                    % Apply a permutation so as to stay in the coset but
+                    % yields a shorter word at this stage
+                    bestIt = find(wordLengths == min(wordLengths), 1);
+                    Uj = subgroupChain.U{j};
+                    u = Uj(:, bestIt)';
+                    g = g(u);
+                    r = r(u);
+                    b = g(beta);
+                end
+                ind = self.iOrbit(b,i);
+                assert(ind > 0, 'Permutation not contained in the group');
+                nu = self.nu{i}(:,ind)';
+                nuw = self.nuw{i}{ind};
+                g = nu(g);
+                w = replab.fp.Letters.compose(w, -fliplr(nuw));
+            end
+        end
+
         function l = maximumWordLength(self)
         % Returns the maximal length of a word stored in this chain
         %
