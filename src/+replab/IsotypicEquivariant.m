@@ -202,6 +202,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                 sX = replab.numerical.norm2UpperBound(X);
                 err = sX*(eR*cC + cR*eC);
             end
+            err = max(err, 10*sqrt(repR.dimension*repC.dimension)*eps);
             assert(err < 1e-10, 'Error to big');
             if norm(X, 'fro') < err
                 E = [];
@@ -240,6 +241,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                 error('Unknown type');
             end
             E = replab.equi.IsotypicEquivariant_nontrivial(parent, repR, repC, special, R_internal, A_internal);
+            E
         end
 
     end

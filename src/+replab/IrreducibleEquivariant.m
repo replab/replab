@@ -224,6 +224,7 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
             blocks = cell(repR.nComponents, repC.nComponents);
             for i = 1:repR.nComponents
                 for j = 1:repC.nComponents
+                    [i j]
                     if isempty(blocks{i, j})
                         E = replab.IsotypicEquivariant.make(repR.component(i), repC.component(j), 'parent', parent, 'parentSample', parentSample, 'type', 'double');
                         blocks{i, j} = E;
