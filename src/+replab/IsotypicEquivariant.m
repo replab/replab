@@ -1,21 +1,29 @@
 classdef IsotypicEquivariant < replab.SubEquivariant
 % Equivariant space between two harmonized isotypic components containing equivalent representations
 %
-% If the two isotypic components contains equivalent irreducible representations, the matrices in this equivariant
-% space have the following form:
+% We consider two cases.
 %
-% $ X = \sum_i M_i \otimes R_i \otimes A_i $
+% If the two isotypic components contain equivalent irreducible representations, then `.isZero` is false and
+% the matrices in this equivariant space have the following form:
+%
+% $ X = \sum_i M(:,:,i) \otimes R(:,:,i) \otimes A(:,:,i) $
 %
 % where
 %
-% - $M_i$ represents the multiplicity space,
-% - $R_i$ is a constant matrix representing the representation space,
-% - $A_i$ is a constant matrix encoding the division algebra.
+% - $M$ represents the multiplicity space,
+% - $R$ is a constant matrix representing the representation space,
+% - $A$ is a constant matrix encoding the division algebra.
 %
-% and `.isZero` is false.
+% The division algebra matrix $A$ is given by:
 %
-% Otherwise, when the irreducible representations in both components are inequivalent,
-% ``M`` is always empty, and the equivariant space contains a single element, the zero matrix; then `.isZero` is true.
+% - ``A = 1`` if `.divisionAlgebraName` is ``''``
+% - ``A(:,:,1) = [1 0; 0 1]``, ``A(:,:,2) = [0 -1; 1 0]`` if `.divisionAlgebraName` is ``'C->R'``
+% - ``A(:,:,1) = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1]``, ``A(:,:,2) = [0 -1 0 0; 1 0 0 0; 0 0 0 1; 0 0 -1 0]``,
+%   ``A(:,:,3) = [0 0 1 0; 0 0 0 1; -1 0 0 0; 0 -1 0 0]``, ``A(:,:,4) = [0 0 0 -1; 0 0 1 0; 0 -1 0 0; 1 0 0 0]``
+%   if `.divisionAlgebraName` is ``'H->R:equivariant'``.
+%
+% If the two isotypic components contain inequivalent irreps, then `.isZero` is true. `.divisionAlgebraName` is ``'0'``,
+% and ``R`` has size ``[m n 0]``.
 %
 % Example:
 %   >>> S3 = replab.S(3);
@@ -37,16 +45,38 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 %       1
 
     properties (SetAccess = protected)
-        R_internal % (cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)): Representation space basis
-        A_internal % (cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)): Division algebra basis
+        R_internal % (double(\*,\*,\*) or `.cyclotomic`(\*,\*,\*)): Representation space basis
+        divisionAlgebraName % ('', 'C->R', 'H->R:equivariant'): Division algebra
     end
 
     methods
 
-        function self = IsotypicEquivariant(parent, repR, repC, special, R_internal, A_internal)
+        function self = IsotypicEquivariant(parent, repR, repC, special, R_internal, divisionAlgebraName)
+            assert(isa(repR, 'replab.Isotypic'));
+            assert(isa(repC, 'replab.Isotypic'));
+            switch divisionAlgebraName
+              case '0'
+                d = 0; % division algebra dimension
+                ms = 1;
+              case ''
+                d = 1;
+                ms = 1;
+              case 'C->R'
+                d = 2;
+                ms = 2;
+              case 'H->R:equivariant'
+                d = 4;
+                ms = 4;
+            end
+            r1 = repR.irrepDimension / ms;
+            r2 = repC.irrepDimension / ms;
+            assert(size(R_internal, 1) == r1);
+            assert(size(R_internal, 2) == r2);
+            assert(size(R_internal, 3) == d);
+            assert(ismember(divisionAlgebraName, {'0' '' 'C->R' 'H->R:equivariant'}));
             self@replab.SubEquivariant(parent, repR, repC, special);
             self.R_internal = R_internal;
-            self.A_internal = A_internal;
+            self.divisionAlgebraName = divisionAlgebraName;
         end
 
     end
@@ -63,14 +93,42 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 
     methods
 
+        function d = divisionAlgebraBlockSize(self)
+        % Returns the dimension of the matrix block encoding the division algebra
+        %
+        % As a special case, if the block is zero, the returned value is one.
+        %
+        % Returns:
+        %   integer: Dimension of the matrix block
+            switch self.divisionAlgebraName
+              case '0'
+                d = 1;
+              case ''
+                d = 1;
+              case 'C->R'
+                d = 2;
+              case 'H->R:equivariant'
+                d = 4;
+            end
+        end
+
         function d = divisionAlgebraDimension(self)
         % Returns the dimension of the division algebra encoded in this block
         %
-        % As a special case, if the block is zero, the returned size is zero.
+        % As a special case, if the block is zero, the returned value is zero.
         %
         % Returns:
         %   integer: Dimension of the division algebra
-            d = length(self.A_internal);
+            switch self.divisionAlgebraName
+              case '0'
+                d = 0;
+              case ''
+                d = 1;
+              case 'C->R'
+                d = 2;
+              case 'H->R:equivariant'
+                d = 4;
+            end
         end
 
         function b = isZero(self)
@@ -89,7 +147,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         %
         % Returns:
         %   logical: True if the equivariant space is trivial
-            error('Abstract');
+            b = strcmp(self.divisionAlgebraName, '0');
         end
 
     end
@@ -103,11 +161,11 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*): The representation space basis
+        %   double(\*,\*,\*) or `.cyclotomic`(\*,\*,\*): The representation space basis
             if nargin < 2 || isempty(type)
                 type = 'double';
             end
-            res = cellfun(@(X) replab.numerical.convert(X, type), self.R_internal, 'uniform', 0);
+            res = replab.numerical.convert(self.R_internal, type);
         end
 
         function res = A(self, type)
@@ -117,23 +175,53 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*): The division algebra basis
+        %  double(\*,\*) or `.cyclotomic`(\*,\*): The division algebra basis
             if nargin < 2 || isempty(type)
                 type = 'double';
             end
-            res = cellfun(@(X) replab.numerical.convert(X, type), self.A_internal, 'uniform', 0);
+            switch self.divisionAlgebraName
+              case '0'
+                A = zeros(1, 1, 0);
+              case ''
+                A = ones(1, 1, 1);
+              case 'C->R'
+                A = zeros(2, 2, 2);
+                A(:,:,1) = [1 0; 0 1];
+                A(:,:,2) = [0 -1; 1 0];
+              case 'H->R:equivariant'
+                A(:,:,1) = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1];
+                A(:,:,2) = [0 -1 0 0; 1 0 0 0; 0 0 0 1; 0 0 -1 0];
+                A(:,:,3) = [0 0 1 0; 0 0 0 1; -1 0 0 0; 0 -1 0 0];
+                A(:,:,4) = [0 0 0 -1; 0 0 1 0; 0 -1 0 0; 1 0 0 0];
+            end
+            res = replab.numerical.convert(A, type);
         end
 
         function X = reconstruct(self, M, type)
         % Reconstructs an equivariant space element returned by a factorization method
         %
         % Args:
-        %   M (cell(1,\*) of double(\*,\*) or cyclotomic(\*,\*)): Factorized element
+        %   M (double(\*,\*,\*) or cyclotomic(\*,\*,\*)): Factorized element
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
         %   double(\*,\*) or cyclotomic(\*,\*): Equivariant matrix
-            error('Abstract');
+            if nargin < 3 || isempty(type)
+                type = 'double';
+            end
+            if self.isZero
+                X = zeros(self.repR.dimension, self.repC.dimension);
+                if strcmp(type, 'exact')
+                    X = replab.cyclotomic(X);
+                end
+            else
+                R = self.R(type);
+                A = self.A(type);
+                X = kron(M(:,:,1), kron(R(:,:,1), A(:,:,1)));
+                for i = 2:size(M, 3)
+                    X = X + kron(M(:,:,1), kron(R(:,:,1), A(:,:,1)));
+                end
+            end
         end
 
     end
@@ -151,33 +239,109 @@ classdef IsotypicEquivariant < replab.SubEquivariant
         %
         % Returns
         % -------
-        %   M: cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)
+        %   M: double(\*,\*,\*) or `.cyclotomic`(\*,\*,\*)
         %     The part containing the degrees of freedom of the commutant algebra
         %   err: double
         %     Estimation of the numerical error, expressed as the distance of the returned projection to the invariant subspace in Frobenius norm
-            error('Abstract');
+            if nargin < 3 || isempty(type)
+                type = 'double';
+            end
+            if self.isZero
+                M = zeros(self.repR.multiplicity, self.repC.multiplicity, 0);
+                if strcmp(type, 'exact')
+                    M = replab.cyclotomic(M);
+                end
+            else
+                switch type
+                  case 'exact'
+                    parentX = self.repR.injection('exact') * X * self.repC.projection('exact');
+                    M = self.projectAndFactorFromParent(parentX, 'exact');
+                    err = 0;
+                  case {'double', 'double/sparse'}
+                    parentX = full(self.repR.injection('double/sparse') * X * self.repC.projection('double/sparse'));
+                    M = self.projectAndFactorFromParent(parentX, 'double');
+                  otherwise
+                    error('Unknown type %s', type);
+                end
+                if nargout > 1
+                    assert(replab.globals.yolo);
+                    eR = self.repR.errorBound;
+                    eC = self.repC.errorBound;
+                    cR = self.repR.conditionNumberEstimate; % condition number of repR
+                    cC = self.repC.conditionNumberEstimate; % condition number of repC
+                    sX = replab.numerical.norm2UpperBound(X);
+                    err = sX*(eR*cC + cR*eC);
+                end
+            end
         end
 
     end
 
     methods % Projection from parent space
 
-        function [M, err] = projectAndFactorFromParent(self, X, type)
+        function [M, err] = projectAndFactorFromParent(self, parentX, type)
         % Projects the given matrix in the parent representation space into the commutant algebra and factors it
         %
         % It returns the decomposition of the projection.
         %
         % Args:
-        %   X (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix in the parent representation space to project
+        %   parentX (double(\*,\*) or `.cyclotomic`(\*,\*), may be sparse): Matrix in the parent representation space to project
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns
         % -------
-        %   M: cell(1,\*) of double(\*,\*) or `.cyclotomic`(\*,\*)
+        %   M: double(\*,\*,\*) or `.cyclotomic`(\*,\*,\*)
         %     The part containing the degrees of freedom of the commutant algebra
         %   err: double
         %     Estimation of the numerical error, expressed as the distance of the returned projection to the invariant subspace in Frobenius norm
-            error('Abstract');
+            if nargin < 3 || isempty(type)
+                type = 'double';
+            end
+            if self.isZero
+                M = zeros(self.repR.multiplicity, self.repC.multiplicity, 0);
+                if strcmp(type, 'exact')
+                    M = replab.cyclotomic(M);
+                end
+                err = 0;
+            else
+                X = self.projectFromParent(parentX, type);
+                R = self.R(type);
+                M = zeros(self.repR.multiplicity, self.repC.multiplicity, self.divisionAlgebraDimension);
+                if strcmp(type, 'exact')
+                    M = replab.cyclotomic(M);
+                end
+                if self.field == 'C' || self.repR.irrep(1).frobeniusSchurIndicator == 1
+                    M(:,:,1) = replab.IsotypicEquivariant.kronFirstFactor(X, R(:,:,1));
+                elseif repR.irrep(1).frobeniusSchurIndicator == -2 % quaternion-type
+                    [X1, X2, X3, X4] = replab.domain.QuaternionTypeMatrices.fromMatrix(X, 'commutant');
+                    M(:,:,1) = replab.IsotypicEquivariant.kronFirstFactor(X1, R(:,:,1));
+                    M(:,:,2) = replab.IsotypicEquivariant.kronFirstFactor(X2, R(:,:,2));
+                    M(:,:,3) = replab.IsotypicEquivariant.kronFirstFactor(X3, R(:,:,3));
+                    M(:,:,4) = replab.IsotypicEquivariant.kronFirstFactor(X4, R(:,:,4));
+                elseif repR.irrep(1).frobeniusSchurIndicator == 0 % complex-type
+                    [X1, X2] = replab.domain.ComplexTypeMatrices.fromMatrix(X);
+                    M(:,:,1) = replab.IsotypicEquivariant.kronFirstFactor(X1, R(:,:,1));
+                    M(:,:,2) = replab.IsotypicEquivariant.kronFirstFactor(X2, R(:,:,2));
+                end
+                if nargout > 1
+                    if strcmp(type, 'exact')
+                        err = 0;
+                    else
+                        assert(replab.globals.yolo);
+                        eR = self.repR.errorBound;
+                        eC = self.repC.errorBound;
+                        cR = self.repR.conditionNumberEstimate; % condition number of repR
+                        cC = self.repC.conditionNumberEstimate; % condition number of repC
+                        sX = 0;
+                        R = self.R;
+                        A = self.A;
+                        for i = 1:self.divisionAlgebraDimension
+                            sX = sX + replab.numerical.norm2UpperBound(M(:,:,i)) * replab.numerical.norm2UpperBound(R(:,:,i)) * replab.numerical.norm2UpperBound(A(:,:,i));
+                        end
+                        err = sX*(eR*cC + cR*eC);
+                    end
+                end
+            end
         end
 
     end
@@ -208,39 +372,44 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                 E = [];
                 return
             end
-            if repR.overR || repR.irrep(1).frobeniusSchurIndicator == 1
+            if repR.overC || repR.irrep(1).frobeniusSchurIndicator == 1
                 ird = repR.irrepDimension;
                 R = replab.IsotypicEquivariant.kronSecondFactor(X, ird, ird);
-                R_internal = {R};
-                A_internal = {1};
+                R = R/(trace(R)/ird);
+                R_internal = R;
+                divisionAlgebraName = '';
             elseif repR.irrep(1).frobeniusSchurIndicator == -2 % quaternion-type
-                ird = repR.irrepDimension;
-                [A1, A2, A3, A4] = replab.domain.QuaternionTypeMatrices.basis('commutant');
+                d = repR.irrepDimension/4;
                 [X1, X2, X3, X4] = replab.domain.QuaternionTypeMatrices.fromMatrix(X, 'commutant');
-                R1 = replab.IsotypicEquivariant.kronSecondFactor(X1, ird, ird);
-                R2 = replab.IsotypicEquivariant.kronSecondFactor(X2, ird, ird);
-                R3 = replab.IsotypicEquivariant.kronSecondFactor(X3, ird, ird);
-                R4 = replab.IsotypicEquivariant.kronSecondFactor(X4, ird, ird);
+                R1 = replab.IsotypicEquivariant.kronSecondFactor(X1, d, d);
+                R2 = replab.IsotypicEquivariant.kronSecondFactor(X2, d, d);
+                R3 = replab.IsotypicEquivariant.kronSecondFactor(X3, d, d);
+                R4 = replab.IsotypicEquivariant.kronSecondFactor(X4, d, d);
                 R1 = R1/norm(R1,'fro')*sqrt(ird);
                 R2 = R2/norm(R2,'fro')*sqrt(ird);
                 R3 = R3/norm(R3,'fro')*sqrt(ird);
                 R4 = R4/norm(R4,'fro')*sqrt(ird);
-                A_internal = {A1 A2 A3 A4};
-                R_internal = {R1 R2 R3 R4};
+                R = zeros(size(R1, 1), size(R1, 2), 4);
+                R(:,:,1) = R1;
+                R(:,:,2) = R2;
+                R(:,:,3) = R3;
+                R(:,:,4) = R4;
+                divisionAlgebraName = 'H->R:equivariant';
             elseif repR.irrep(1).frobeniusSchurIndicator == 0 % complex-type
-                ird = repR.irrepDimension;
-                [A1, A2] = replab.domain.ComplexTypeMatrices.basis;
+                d = repR.irrepDimension/2;
                 [X1, X2] = replab.domain.ComplexTypeMatrices.fromMatrix(X);
-                R1 = replab.IsotypicEquivariant.kronSecondFactor(X1, ird, ird);
-                R2 = replab.IsotypicEquivariant.kronSecondFactor(X2, ird, ird);
-                R1 = R1/norm(R1,'fro')*sqrt(ird);
-                R2 = R2/norm(R2,'fro')*sqrt(ird);
-                A_internal = {A1 A2};
-                R_internal = {R1 R2};
+                R1 = replab.IsotypicEquivariant.kronSecondFactor(X1, d, d);
+                R2 = replab.IsotypicEquivariant.kronSecondFactor(X2, d, d);
+                R1 = R1/norm(R1,'fro')*sqrt(d);
+                R2 = R2/norm(R2,'fro')*sqrt(d);
+                R = zeros(size(R1, 1), size(R1, 2), 2);
+                R(:,:,1) = R1;
+                R(:,:,2) = R2;
+                divisionAlgebraName = 'C->R';
             else
                 error('Unknown type');
             end
-            E = replab.equi.IsotypicEquivariant_nontrivial(parent, repR, repC, special, R_internal, A_internal);
+            E = replab.IsotypicEquivariant(parent, repR, repC, special, R, divisionAlgebraName);
         end
 
     end
@@ -362,7 +531,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                 end
             end
             if isempty(E)
-                E = replab.equi.IsotypicEquivariant_trivial(parent, repR, repC, args.special);
+                E = replab.IsotypicEquivariant(parent, repR, repC, args.special, zeros(repR.irrepDimension, repC.irrepDimension, 0), '0');
             end
         end
 
