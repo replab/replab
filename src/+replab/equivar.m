@@ -7,21 +7,25 @@ classdef equivar < replab.Str
         repC % (`.Rep`): Column representation
         special % ('', 'symmetric', 'hermitian'): Type of equivariant variable
         equivariant % (`.IrreducibleEquivariant`): Irreducible equivariant space
-        blocks % (cell(\*,\*) of cell(1,\*) of sdpvar(\*,\*)): Matrix blocks
+        blocks % (cell(\*,\*) of sdpvar(\*,\*,\*)): Matrix blocks
     end
 
-    methods
+    methods (Static)
 
-        function self = equivar(repR, repC, special, equivariant, blocks)
-            if nargin < 3
-                special = '';
-            end
-            if nargin < 4
-                blocks = [];
-            end
-            if nargin < 5
-                equivariant = [];
-            end
+        function [repR, repC] = validateReps(repR, repC, special)
+        % Validate and complete constructor arguments
+        %
+        % Args:
+        %   repR (`.Rep` or ``[]``): Representation acting on rows
+        %   repC (`.Rep` or ``[]``): Representation acting on columns
+        %   special ('', 'symmetric', 'hermitian'): Matrix type
+        %
+        % Returns
+        % -------
+        %   repR: `.Rep`
+        %     Row representation
+        %   repC: `.Rep`
+        %     Column representation
             assert(ismember(special, {'' 'symmetric' 'hermitian'}), 'Special must be empty, ''symmetric'' or ''hermitian''.');
             assert(~isempty(repR) || ~isempty(repC), 'One of repR or repC must be provided');
             if isempty(repR)
@@ -50,6 +54,34 @@ classdef equivar < replab.Str
             end
             assert(repR.group == repC.group, 'Both representations must be defined over the same group');
             assert(repR.field == repC.field, 'Both representations must be defined over the same field');
+        end
+
+    end
+
+    methods
+
+        function self = equivar(repR, repC, special, equivariant, blocks)
+        % Constructs an equivariant YALMIP matrix variable
+        %
+        % If a symmetric or hermitian matrix is requested, then one of the representation can be omitted and will
+        % be deduced.
+        %
+        % Args:
+        %   repR (`.Rep` or ``[]``): Representation acting on rows
+        %   repC (`.Rep` or ``[]``): Representation acting on columns
+        %   special ('', 'symmetric', 'hermitian'): Matrix type
+        %   equivariant (`.IrreducibleEquivariant` or ``[]``): Equivariant space from ``repC.decomposition`` to ``repR.decomposition``, may be omitted
+        %   blocks (cell(\*,\*) of sdpvar(\*,\*,\*)): Data present in each block
+            if nargin < 3
+                special = '';
+            end
+            if nargin < 4
+                blocks = [];
+            end
+            if nargin < 5
+                equivariant = [];
+            end
+            [repR, repC] = replab.equivar.validateReps(repR, repC, special);
             field = repR.field;
             if isempty(equivariant)
                 switch special
@@ -66,30 +98,11 @@ classdef equivar < replab.Str
                 n1 = size(B, 1);
                 n2 = size(B, 2);
                 blocks = cell(n1, n2);
-                if isempty(special)
-                    if field == 'R'
-                        args = {'full'};
-                    else
-                        args = {'full' 'complex'};
-                    end
-                    for i = 1:size(B, 1)
-                        for j = 1:size(B, 2)
-                            b = B{i,j};
-                            blocks{i,j} = sdpvar(b.repR.multiplicity, b.repC.multiplicity, args{:});
+                for i = 1:size(B, 1)
+                    for j = 1:size(B, 2)
+                        if equivariant.nonZeroBlocks(i, j)
+                            blocks{i,j} = equivariant.blocks{i,j}.makeSdpvar(special);
                         end
-                    end
-                else
-                    if field == 'R'
-                        args = {'symmetric'};
-                    else
-                        args = {'hermitian' 'complex'};
-                    end
-                    assert(n1 == n2);
-                    assert(all(all(equivariant.nonZeroBlocks == logical(eye(n1)))));
-                    for i = 1:n1
-                        b = B{i,i};
-                        m = b.repR.multiplicity;
-                        blocks{i,i} = sdpvar(m, m, args{:});
                     end
                 end
             end
@@ -123,6 +136,21 @@ classdef equivar < replab.Str
             end
             values = vertcat(values{:});
             s = self.repR.decomposition.injection * values * self.repC.decomposition.projection;
+        end
+
+        function c = linearEqualityConstraint(self, F, Y)
+        % Constructs a linear equality constraint taking in account the symmetries
+        %
+        % Returns a YALMIP linear equality constraint corresponding to the equation:
+        % ``F(self.sdpvar) == Y.sdpvar``
+        %
+        % Args:
+        %   F (function_handle): Linear map given as a generic function
+        %   Y (`.equivar`): Right-hand side
+        %
+        % Returns:
+        %   YALMIP constraint object: The constraint
+            error('TODO');
         end
 
     end

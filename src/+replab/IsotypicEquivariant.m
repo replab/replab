@@ -91,7 +91,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 
     end
 
-    methods
+    methods % Properties
 
         function d = divisionAlgebraBlockSize(self)
         % Returns the dimension of the matrix block encoding the division algebra
@@ -220,6 +220,49 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                 X = kron(M(:,:,1), kron(R(:,:,1), A(:,:,1)));
                 for i = 2:size(M, 3)
                     X = X + kron(M(:,:,1), kron(R(:,:,1), A(:,:,1)));
+                end
+            end
+        end
+
+    end
+
+    methods % YALMIP helpers
+
+        function M = makeSdpvar(self, special)
+            if nargin < 2 || isempty(special)
+                special = '';
+            end
+            d1 = self.repR.multiplicity;
+            d2 = self.repC.multiplicity;
+            if self.isZero
+                M = zeros(d1, d2, 0);
+                return
+            end
+            switch special
+              case ''
+                if self.field == 'R'
+                    M = sdpvar(d1, d2, self.divisionAlgebraDimension, 'full');
+                else
+                    assert(strcmp(self.divisionAlgebraName, ''));
+                    M = sdpvar(d1, d2, 1, 'full', 'complex');
+                end
+              case 'hermitian'
+                assert(self.field == 'C' && strcmp(self.divisionAlgebraName, ''));
+                M = sdpvar(d1, d2, 1, 'hermitian', 'complex');
+              case 'symmetric'
+                assert(self.field == 'R');
+                M = sdpvar(d1, d2, 1, 'symmetric');
+                switch self.divisionAlgebraName
+                  case ''
+                    M = reshape(M, [d1, d2, 1]);
+                  case 'C->R'
+                    M = reshape(M, [d1*d2, 1]);
+                    M = horzcat(M, zeros(d1*d2, 1));
+                    M = reshape(M, [d1, d2, 2]);
+                  case 'H->R'
+                    M = reshape(M, [d1*d2, 4]);
+                    M = horzcat(M, zeros(d1*d2, 3));
+                    M = reshape(M, [d1, d2, 4]);
                 end
             end
         end
