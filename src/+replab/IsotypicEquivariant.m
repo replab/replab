@@ -241,7 +241,6 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                 error('Unknown type');
             end
             E = replab.equi.IsotypicEquivariant_nontrivial(parent, repR, repC, special, R_internal, A_internal);
-            E
         end
 
     end

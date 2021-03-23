@@ -214,7 +214,11 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
     methods (Static)
 
         function E = make_exact(parent, repR, repC, special)
-            error('Not implemented'); % TODO
+            if isa(parent.group, 'replab.FiniteGroup')
+                error('Not implemented'); % TODO
+            else
+                error('Not implemented'); % TODO
+            end
         end
 
         function E = make_double(parent, repR, repC, special, parentSample)
@@ -224,7 +228,6 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
             blocks = cell(repR.nComponents, repC.nComponents);
             for i = 1:repR.nComponents
                 for j = 1:repC.nComponents
-                    [i j]
                     if isempty(blocks{i, j})
                         E = replab.IsotypicEquivariant.make(repR.component(i), repC.component(j), 'parent', parent, 'parentSample', parentSample, 'type', 'double');
                         blocks{i, j} = E;
