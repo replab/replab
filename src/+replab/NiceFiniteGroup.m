@@ -60,12 +60,6 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             order = self.niceGroup.order;
         end
 
-        function dec = computeDecomposition(self)
-            prmD = self.niceGroup.decomposition;
-            T1 = cellfun(@(T) cellfun(@(t) self.niceMorphism.preimageElement(t), T, 'uniform', 0), prmD.T, 'uniform', 0);
-            dec = replab.FiniteGroupDecomposition(self, T1);
-        end
-
         function C = computeConjugacyClasses(self)
             nc = self.niceGroup.conjugacyClasses;
             C = nc.imap(self.niceMorphism.inverse);
@@ -83,6 +77,12 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             atFun = @(ind) self.niceMorphism.preimageElement(self.niceGroup.elements.at(ind));
             findFun = @(el) self.niceGroup.elements.find(self.niceImage(el));
             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
+        end
+
+        function dec = computeSetProduct(self)
+            prmD = self.niceGroup.setProduct;
+            sets1 = cellfun(@(T) cellfun(@(t) self.niceMorphism.preimageElement(t), T, 'uniform', 0), prmD.sets, 'uniform', 0);
+            dec = replab.SetProduct(self, sets1, true);
         end
 
         function sub = computeDerivedSubgroup(self)

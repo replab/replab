@@ -92,28 +92,28 @@ classdef DirectProductGroup_finite <  replab.DirectProductGroup & replab.NiceFin
             % TODO: verify ordering
         end
 
-        function gd = computeDecomposition(self)
+        function s = computeSetProduct(self)
             T = {};
             % The decomposition of a direct product into sets
             % is simply the concatenation of the sequence of sets
             % corresponding to each factor
             for i = 1:self.nFactors
-                D = self.factor(i).decomposition.T;
+                D = self.factor(i).setProduct.sets;
                 Ti = cell(1, length(D));
                 for j = 1:length(D)
                     Dj = D{j};
                     Tij = cell(1, length(Dj));
                     for k = 1:length(Dj)
-                       Djk = Dj{k};
-                       Tijk = self.identity;
-                       Tijk{i} = Djk;
-                       Tij{k} = Tijk;
+                        Djk = Dj{k};
+                        Tijk = self.identity;
+                        Tijk{i} = Djk;
+                        Tij{k} = Tijk;
                     end
                     Ti{j} = Tij;
                 end
                 T = horzcat(T, Ti);
             end
-            gd = replab.FiniteGroupDecomposition(self, T);
+            s = replab.SetProduct(self, T, true);
         end
 
     end

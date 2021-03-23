@@ -89,8 +89,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function [mu, R] = reconstruction(self)
             T = replab.TorusGroup(0);
             mu = T.morphismByFunction(self, @(t) self.identity);
-            D = self.decomposition;
-            R = replab.SetProduct(self, D.T, true);
+            R = self.setProduct;
         end
 
     end
@@ -99,11 +98,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function o = computeOrder(self)
         % See `.order`
-            error('Abstract');
-        end
-
-        function D = computeDecomposition(self)
-        % See `.decomposition`
             error('Abstract');
         end
 
@@ -196,6 +190,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
+        function s = computeSetProduct(self)
+            error('Abstract');
+        end
+
     end
 
     methods % Group properties
@@ -210,14 +208,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   vpi: The group order
             o = self.cached('order', @() self.computeOrder);
-        end
-
-        function D = decomposition(self)
-        % Returns a decomposition of this group as a product of sets
-        %
-        % Returns:
-        %   `.FiniteGroupDecomposition`: The group decomposition
-            D = self.cached('decomposition', @() self.computeDecomposition);
         end
 
         function e = exponent(self)
@@ -284,6 +274,15 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   `+replab.AtlasResult` or []: A result in case the group is identified; or ``[]`` if unrecognized.
             R = self.cached('recognize', @() self.computeRecognize);
         end
+
+        function D = setProduct(self)
+        % Returns a decomposition of this group as a product of sets
+        %
+        % Returns:
+        %   `.SetProduct`: The group decomposition
+            D = self.cached('setProduct', @() self.computeSetProduct);
+        end
+
 
         function b = isTrivial(self)
         % Tests whether this group is trivial

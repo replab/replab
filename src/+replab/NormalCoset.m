@@ -32,6 +32,10 @@ classdef NormalCoset < replab.LeftCoset & replab.RightCoset
             E = computeElements@replab.LeftCoset(self);
         end
 
+        function s = computeSetProduct(self)
+            s = computeSetProduct@replab.LeftCoset(self);
+        end
+
     end
 
     methods
