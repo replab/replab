@@ -7,7 +7,7 @@ classdef equivar < replab.Str
         repC % (`.Rep`): Column representation
         special % ('', 'symmetric', 'hermitian'): Type of equivariant variable
         equivariant % (`.IrreducibleEquivariant`): Irreducible equivariant space
-        blocks % (cell(\*,\*) of sdpvar(\*,\*)): Matrix blocks
+        blocks % (cell(\*,\*) of cell(1,\*) of sdpvar(\*,\*)): Matrix blocks
     end
 
     methods
@@ -42,7 +42,7 @@ classdef equivar < replab.Str
                     assert(repR.overR, 'Symmetric equivariant matrices must be defined using real reps.');
                     repC = repR.';
                   case 'hermitian'
-                    assert(repC.overC, 'Hermitian equivariant matrices must be defined using complex reps.');
+                    assert(repR.overC, 'Hermitian equivariant matrices must be defined using complex reps.');
                     repC = repR';
                   otherwise
                     error('If one rep argument is omitted, the matrix must be symmetric or hermitian');
@@ -111,7 +111,18 @@ classdef equivar < replab.Str
 
         function s = sdpvar(self)
         % Returns the matrix corresponding to this equivar, in the original basis
-            error('TODO');
+            nR = size(self.blocks, 1);
+            nC = size(self.blocks, 2);
+            values = cell(nR, 1);
+            for i = 1:nR
+                row = cell(1, nC);
+                for j = 1:nC
+                    row{j} = self.equivariant.blocks{i,j}.reconstruct(self.blocks{i,j});
+                end
+                values{i} = horzcat(row{:});
+            end
+            values = vertcat(values{:});
+            s = self.repR.decomposition.injection * values * self.repC.decomposition.projection;
         end
 
     end
