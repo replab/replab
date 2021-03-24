@@ -12,7 +12,7 @@ H = rep.hermitianInvariant;
 HT = repT.hermitianInvariant;
 
 % The partial transpose linear map
-pptFun = @(X) reshape(permute(reshape(full(X), [2 2 2 2]), [3 2 1 4]), [4 4]);
+pptFun = @(X) reshape(permute(reshape(X, [2 2 2 2]), [3 2 1 4]), [4 4]);
 % Upgraded as an equivariant super operator from the space H to the space HT
 ppt = replab.equiop(H, HT, pptFun);
 
