@@ -77,6 +77,29 @@ classdef Equivariant < replab.Domain
 
     methods (Access = protected) % Protected methods
 
+        function D = computeDecomposition(self)
+            switch self.special
+              case 'antilinear'
+                D = self.repR.decomposition.antilinearInvariant;
+              case 'bilinear'
+                D = self.repC.decomposition.bilinearInvariant;
+              case 'commutant'
+                D = self.repR.decomposition.commutant;
+              case 'hermitian'
+                D = self.repC.decomposition.hermitianInvariant;
+              case 'sesquilinear'
+                D = self.repC.decomposition.sesquilinearInvariant;
+              case 'symmetric'
+                D = self.repC.decomposition.symmetricInvariant;
+              case 'trivialRows'
+                D = self.repC.decomposition.trivialRowSpace;
+              case 'trivialCols'
+                D = self.repR.decomposition.trivialColSpace;
+              case ''
+                D = self.repR.decomposition.irreducibleEquivariantFrom(self.repC.decomposition);
+            end
+        end
+
         function X1 = project_exact(self, X)
         % Projects any ``nR x nC`` matrix in the equivariant subspace
         %
@@ -193,6 +216,14 @@ classdef Equivariant < replab.Domain
             assert(subC.parent == self.repC);
             assert(subR.parent == self.repR);
             E = subR.subEquivariantFrom(subC, 'parent', self, varargin{:});
+        end
+
+        function D = decomposition(self)
+        % Returns the decomposition of this equivariant space
+        %
+        % Returns:
+        %   `.IrreducibleEquivariant`: The equivariant space
+            D = self.cached('decomposition', @() self.computeDecomposition);
         end
 
     end
