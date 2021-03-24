@@ -11,8 +11,35 @@ classdef equivar < replab.Str
 
     properties (SetAccess = protected)
         equivariant % (`.Equivariant`): Equivariant space corresponding to this matrix
-        symmetryAdaptedEquivariant % (`.Equivariant`): Equivariant space in the symmetry adapted basis
         blocks % (cell(\*,\*) of double(\*,\*,\*) or sdpvar(\*,\*,\*)): Matrix blocks
+    end
+
+    methods (Static)
+
+        function [lhs, rhs, E] = shapeArgs(lhs, rhs)
+            if isa(lhs, 'replab.equivar') && isa(rhs, 'replab.equivar')
+                assert(lhs.equivariant == rhs.equivariant);
+                E = lhs.equivariant;
+            elseif isa(lhs, 'replab.equivar')
+                E = lhs.equivariant;
+            elseif isa(rhs, 'replab.equivar')
+                E = rhs.equivariant;
+            end
+            if isa(lhs, 'double')
+                if isscalar(lhs) && lhs == 0
+                    lhs = zeros(E.repR.dimension, E.repC.dimension);
+                end
+                lhs = replab.equivar(E, 'value', lhs);
+            end
+            if isa(rhs, 'double')
+                if isscalar(rhs) && rhs == 0
+                    rhs = zeros(E.repR.dimension, E.repC.dimension);
+                end
+                rhs = replab.equivar(E, 'value', rhs);
+            end
+            assert(isa(lhs, 'replab.equivar') && isa(rhs, 'replab.equivar'));
+        end
+
     end
 
     methods
@@ -27,8 +54,6 @@ classdef equivar < replab.Str
         % * if none of these keyword arguments is provided, the variable is free, and all its degrees of freedom will be
         %   initialized using YALMIP variables.
         %
-        % If the `.symmetryAdaptedEquivariant` space has already been computed, it can be provided as well.
-        %
         % Args:
         %   equivariant (`.Equivariant`): Equivariant space over which this variable is defined
         %
@@ -36,40 +61,15 @@ classdef equivar < replab.Str
         %   value (double(\*,\*) or sdpvar(\*,\*)): Variable value (in the original space)
         %   symmetryAdaptedValue (double(\*,\*) or sdpvar(\*,\*)): Variable value (in the space of `.symmetryAdaptedEquivariant`)
         %   blocks (cell(\*,\*) of double(\*,\*) or sdpvar(\*,\*)): Variable value in the minimal parameter space
-        %   symmetryAdaptedEquivariant (`.IrreducibleEquivariant`): Symmetry adapted equivariant space, see `.equivar`
             repR = equivariant.repR;
             repC = equivariant.repC;
-            args = struct('value', [], 'symmetryAdaptedValue', [], 'blocks', [], 'symmetryAdaptedEquivariant', []);
+            args = struct('value', [], 'symmetryAdaptedValue', [], 'blocks', []);
             args = replab.util.populateStruct(args, varargin);
-            symmetryAdaptedEquivariant = args.symmetryAdaptedEquivariant;
-            if isempty(symmetryAdaptedEquivariant)
-                switch equivariant.special
-                  case 'antilinear'
-                    symmetryAdaptedEquivariant = repR.decomposition.antilinearInvariant;
-                  case 'bilinear'
-                    symmetryAdaptedEquivariant = repC.decomposition.bilinearInvariant;
-                  case 'commutant'
-                    symmetryAdaptedEquivariant = repR.decomposition.commutant;
-                  case 'hermitian'
-                    symmetryAdaptedEquivariant = repC.decomposition.hermitianInvariant;
-                  case 'sesquilinear'
-                    symmetryAdaptedEquivariant = repC.decomposition.sesquilinearInvariant;
-                  case 'symmetric'
-                    symmetryAdaptedEquivariant = repC.decomposition.symmetricInvariant;
-                  case 'trivialRows'
-                    symmetryAdaptedEquivariant = repC.decomposition.trivialRowSpace;
-                  case 'trivialCols'
-                    symmetryAdaptedEquivariant = repR.decomposition.trivialColSpace;
-                  case ''
-                    symmetryAdaptedEquivariant = repR.decomposition.irreducibleEquivariantFrom(repC.decomposition);
-                end
-            else
-                assert(strcmp(equivariant.special, symmetryAdaptedEquivariant.special));
-            end
             nProvided = ~isempty(args.value) + ~isempty(args.symmetryAdaptedValue) + ~isempty(args.blocks);
             assert(nProvided <= 1, 'Provide at most one of the following keyword arguments: value, symmetryAdaptedValue, blocks');
+            dec = equivariant.decomposition;
             if nProvided == 0
-                blocks = symmetryAdaptedEquivariant.makeSdpvarBlocks;
+                blocks = dec.makeSdpvarBlocks;
             elseif ~isempty(args.blocks) % the value is known and in the internal format
                 blocks = args.blocks;
             else
@@ -80,7 +80,7 @@ classdef equivar < replab.Str
                     value = args.value;
                     for i = 1:n1
                         for j = 1:n2
-                            [M, err] = symmetryAdaptedEquivariant.blocks{i,j}.projectAndFactorFromParent(value);
+                            [M, err] = dec.blocks{i,j}.projectAndFactorFromParent(value);
                             blocks{i,j} = M;
                             err
                         end
@@ -95,16 +95,14 @@ classdef equivar < replab.Str
                             range1 = shift1+(1:repR.decomposition.component(i).dimension);
                             range2 = shift2+(1:repC.decomposition.component(j).dimension);
                             B = symmetryAdaptedValue(range1, range2);
-                            [M, err] = symmetryAdaptedEquivariant.projectAndFactor(symmetryAdaptedValue(range1, range2));
+                            [M, err] = dec.projectAndFactor(symmetryAdaptedValue(range1, range2));
                             blocks{i,j} = M;
                             err
                         end
                     end
                 end
             end
-
             self.equivariant = equivariant;
-            self.symmetryAdaptedEquivariant = symmetryAdaptedEquivariant;
             self.blocks = blocks;
         end
 
@@ -116,28 +114,16 @@ classdef equivar < replab.Str
             rep = self.equivariant.repC;
         end
 
-        function C = sdp(self)
-        % Returns the YALMIP constraint that this equivar is semidefinite positive
-        %
-        % This expands the SDP constraint in the block-diagonal basis
-            if self.equivariant.field == 'R'
-                assert(ismember(self.equivariant.special, {'symmetric' 'hermitian'}));
-            else % self.equivariant.field == 'C'
-                assert(strcmp(self.equivariant.special, 'hermitian'));
-            end
-            C = arrayfun(@(i) self.blocks{i,i} >= 0, 1:size(self.blocks, 1), 'uniform', 0);
-            C = horzcat(C{:});
-        end
-
         function s = sdpvar(self)
         % Returns the matrix corresponding to this equivar, in the original basis
             nR = size(self.blocks, 1);
             nC = size(self.blocks, 2);
+            dec = self.equivariant.decomposition;
             values = cell(nR, 1);
             for i = 1:nR
                 row = cell(1, nC);
                 for j = 1:nC
-                    row{j} = self.symmetryAdaptedEquivariant.blocks{i,j}.reconstruct(self.blocks{i,j});
+                    row{j} = dec.blocks{i,j}.reconstruct(self.blocks{i,j});
                 end
                 values{i} = horzcat(row{:});
             end
@@ -145,19 +131,118 @@ classdef equivar < replab.Str
             s = self.repR.decomposition.injection * values * self.repC.decomposition.projection;
         end
 
-        function c = linearEqualityConstraint(self, F, Y)
-        % Constructs a linear equality constraint taking in account the symmetries
+    end
+
+    methods % Arithmetic
+
+        function res = plus(lhs, rhs)
+            [lhs, rhs] = replab.equivar.shapeArgs(lhs, rhs);
+            n1 = size(lhs.blocks, 1);
+            n2 = size(lhs.blocks, 2);
+            blocks = cell(n1, n2);
+            for i = 1:n1
+                for j = 1:n2
+                    blocks{i,j} = lhs.blocks{i,j} + rhs.blocks{i,j};
+                end
+            end
+            res = replab.equivar(lhs.equivariant, 'blocks', blocks);
+        end
+
+        function res = uminus(self)
+            n1 = size(self.blocks, 1);
+            n2 = size(self.blocks, 2);
+            blocks = cell(n1, n2);
+            for i = 1:n1
+                for j = 1:n2
+                    blocks{i,j} = -self.blocks{i,j};
+                end
+            end
+            res = replab.equivar(self.equivariant, 'blocks', blocks);
+        end
+
+        function res = minus(lhs, rhs)
+            res = lhs + (-rhs);
+        end
+
+        function res = mtimes(lhs, rhs)
+            if isa(lhs, 'double') && isscalar(lhs) && isa(rhs, 'replab.equivar')
+                n1 = size(rhs.blocks, 1);
+                n2 = size(rhs.blocks, 2);
+                blocks = cell(n1, n2);
+                for i = 1:n1
+                    for j = 1:n2
+                        blocks{i,j} = lhs * rhs.blocks{i,j};
+                    end
+                end
+                res = replab.equivar(rhs.equivariant, 'blocks', blocks);
+            elseif isa(lhs, 'replab.equivar') && isa(rhs, 'double') && isscalar(rhs)
+                res = rhs * lhs;
+            else
+                error('Invalid syntax');
+            end
+        end
+
+    end
+
+    methods % Constraint construction
+
+        function C = eq(lhs, rhs)
+            [lhs, rhs, E] = replab.equivar.shapeArgs(lhs, rhs);
+            dec = E.decomposition;
+            n1 = dec.repR.nComponents;
+            n2 = dec.repC.nComponents;
+            C = {};
+            for i = 1:n1
+                for j = 1:n2
+                    if dec.nonZeroBlock(i,j)
+                        L = lhs.blocks{i,j};
+                        R = rhs.blocks{i,j};
+                        diff = L - R;
+                        if isa(diff, 'double')
+                            err = 0;
+                            for i = 1:size(L, 3)
+                                err = err + norm(diff(:,:,i), 'fro');
+                            end
+                            tol = replab.globals.doubleEigTol;
+                            if err > tol
+                                error('Equality constraint infeasible at construction error %6.2f  > tol %6.2f', err, tol);
+                            end
+                            replab.msg(1, 'Equality constraint involving constant terms is satisfied up to norm %6.2f', err);
+                        else
+                            for i = 1:size(L, 3)
+                                C{1,end+1} = (L(:,:,i) == R(:,:,i));
+                            end
+                        end
+                    end
+                end
+            end
+            C = vertcat(C{:});
+        end
+
+        function C = sdp(self)
+        % Returns the YALMIP constraint that this equivar is semidefinite positive
         %
-        % Returns a YALMIP linear equality constraint corresponding to the equation:
-        % ``F(self.sdpvar) == Y.sdpvar``
-        %
-        % Args:
-        %   F (function_handle): Linear map given as a generic function
-        %   Y (`.equivar`): Right-hand side
-        %
-        % Returns:
-        %   YALMIP constraint object: The constraint
-            error('TODO');
+        % This expands the SDP constraint in the block-diagonal basis
+            if self.equivariant.field == 'R'
+                assert(ismember(self.equivariant.special, {'hermitian' 'symmetric'}));
+            else
+                assert(strcmp(self.equivariant.special, 'hermitian'));
+            end
+            dec = self.equivariant.decomposition;
+            n1 = dec.repR.nComponents;
+            n2 = dec.repC.nComponents;
+            C = cell(1, n1);
+            for i = 1:n1
+                M = self.block(i,i);
+                A = dec.blocks{i,i}.A;
+                B = kron(M(:,:,1), A(:,:,1));
+                for j = 2:size(M, 3)
+                    B = B + kron(M(:,:,i), A(:,:,i));
+                end
+                B = (B + B')/2;
+                C{i} = B >= 0;
+            end
+            C = vertcat(C{:});
         end
 
     end
