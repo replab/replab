@@ -51,12 +51,34 @@ classdef SubEquivariant < replab.Equivariant
         function X1 = project_exact(self, X)
             parentX = self.repR.injection('exact') * X * self.repC.projection('exact');
             X1 = self.projectFromParent(parentX, 'exact');
+            switch self.special
+              case 'hermitian'
+                X1 = (X1 + X1')/2;
+              case 'symmetric'
+                X1 = (X1 + X1.')/2;
+            end
         end
 
         function [X1, err] = project_double_sparse(self, X)
             parentX = self.repR.injection('double/sparse') * X * self.repC.projection('double/sparse');
             X1 = self.projectFromParent(parentX, 'double/sparse');
+            switch self.special
+              case 'hermitian'
+                X1 = (X1 + X1')/2;
+              case 'symmetric'
+                X1 = (X1 + X1.')/2;
+            end
             if nargout > 1
+                %if self.repR.isSimilarRep && self.repC.isSimilarRep
+                %    c = self.repR.injectionConditionNumberEstimate * self.repC.injectionConditionNumberEstimate;
+                %    % error in the first conversion
+                %    e1 = replab.numerical.norm2UpperBound(parentX) * self.repR.biorthogonalityErrorBound * c;
+                %    % error in the projection
+                %    e2 = eParent * c;
+                %    % error in the second conversion
+                %    e3 = replab.numerical.norm2UpperBound(X1) * self.repC.biorthogonalityErrorBound;
+                %    err = e1 + e2 + e3;
+                %else
                 assert(replab.globals.yolo);
                 eR = self.repR.errorBound;
                 eC = self.repC.errorBound;
@@ -64,11 +86,18 @@ classdef SubEquivariant < replab.Equivariant
                 cC = self.repC.conditionNumberEstimate; % condition number of repC
                 sX = replab.numerical.norm2UpperBound(X);
                 err = sX*(eR*cC + cR*eC);
+                %end
             end
         end
 
         function X1 = projectFromParent_exact(self, parentX)
             X1 = self.repR.projection('exact') * self.parent.project(parentX, 'exact') * self.repC.injection('exact');
+            switch self.special
+              case 'hermitian'
+                X1 = (X1 + X1')/2;
+              case 'symmetric'
+                X1 = (X1 + X1.')/2;
+            end
         end
 
         function [X1, err] = projectFromParent_double_sparse(self, parentX)
@@ -82,6 +111,12 @@ classdef SubEquivariant < replab.Equivariant
                 cC = self.repC.conditionNumberEstimate; % condition number of repC
                 sX = replab.numerical.norm2UpperBound(X1);
                 err = sX*(eR*cC + cR*eC);
+            end
+            switch self.special
+              case 'hermitian'
+                X1 = (X1 + X1')/2;
+              case 'symmetric'
+                X1 = (X1 + X1.')/2;
             end
         end
 
@@ -146,7 +181,7 @@ classdef SubEquivariant < replab.Equivariant
         %   repC (`+replab.SubRep`): Representation on the source/column space
         %
         % Keyword Args:
-        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   special (charstring, optional): Special structure if applicable, see `.Equivariant`, default: ''
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double'
         %   parent (`.Equivariant`, optional): Equivariant space of ``repR.parent`` and ``repC.parent``, default: ``[]``
         %
@@ -159,12 +194,16 @@ classdef SubEquivariant < replab.Equivariant
                 switch args.special
                   case 'antilinear'
                     parent = repR.parent.antilinearInvariant(args.type);
+                  case 'bilinear'
+                    parent = repC.parent.bilinearInvariant(args.type);
                   case 'commutant'
                     parent = repR.parent.commutant(args.type);
                   case 'hermitian'
-                    parent = repR.parent.hermitianInvariant(args.type);
+                    parent = repC.parent.hermitianInvariant(args.type);
                   case 'sesquilinear'
                     parent = repC.parent.sesquilinearInvariant(args.type);
+                  case 'symmetric'
+                    parent = repC.parent.symmetricInvariant(args.type);
                   case 'trivialRows'
                     parent = repC.parent.trivialRowSpace(args.type);
                     d = repC.dimension;
@@ -188,7 +227,7 @@ classdef SubEquivariant < replab.Equivariant
                   case ''
                     parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
                   otherwise
-                    error('Invalid special structure');
+                    error('Invalid special structure %s', args.special);
                 end
             end
             E = replab.SubEquivariant(parent, repR, repC, args.special);

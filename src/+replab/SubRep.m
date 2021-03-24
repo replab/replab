@@ -248,6 +248,14 @@ classdef SubRep < replab.Rep
             e = self.cached('projectorErrorBound', @() self.computeProjectorErrorBound);
         end
 
+        function e = biorthogonalityErrorBound(self)
+        % Returns an upper bound on the biorthogonality of the injection/projection maps
+        %
+        % This returns an upper bound on ``norm(self.projection*self.injection - eye(d), 'fro')``, where
+        % ``d == self.dimension``.
+            e = self.cached('biorthogonalityErrorBound', @() norm(self.projection*self.injection - eye(self.dimension), 'fro'));
+        end
+
         function c = injectionConditionNumberEstimate(self)
         % Returns an upper bound on the condition number of both the injection and the projection map
         %
@@ -414,7 +422,7 @@ classdef SubRep < replab.Rep
         %   repC (`+replab.SubRep`): Subrepresentation on the source/column space
         %
         % Keyword Args:
-        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   special (charstring, optional): Special structure if applicable, see `.Equivariant`, default: ''
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
         %   parent (`.Equivariant`, optional): Equivariant space of ``self.parent`` and ``repC.parent``, default: ``[]``
         %
@@ -447,7 +455,7 @@ classdef SubRep < replab.Rep
         %   repR (`+replab.SubRep`): Subrepresentation on the target/row space
         %
         % Keyword Args:
-        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   special (charstring, optional): Special structure if applicable, see `.Equivariant`, default: ''
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
         %   parent (`.Equivariant`, optional): Equivariant space of ``repR.parent`` and ``self.parent``, default: ``[]``
         %
@@ -515,7 +523,7 @@ classdef SubRep < replab.Rep
                 I = self.injection('double/sparse');
                 P = self.projection('double/sparse');
                 d = self.dimension;
-                prodError = norm(P*I - eye(d), 'fro'); % || dP I ||F
+                prodError = self.biorthogonalityErrorBound; % || dP I ||F
                 % let P = I^-1
                 % we assume I is exact, and P~ = projection_internal, with P~ = P + dP and dP the error
                 % || P rho I - P~ rho~ I ||F =~ || P drho I ||F + || P~ rho I ||F =
@@ -649,6 +657,13 @@ classdef SubRep < replab.Rep
             c = self.cached(['antilinearInvariant_' type], @() self.subEquivariantFrom(conj(self),  'special', 'antilinear', 'type', type));
         end
 
+        function b = bilinearInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            b = self.cached(['bilinearInvariant_' type], @() self.subEquivariantTo(dual(self),  'special', 'bilinear', 'type', type));
+        end
+
         function c = commutant(self, type)
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
@@ -660,14 +675,21 @@ classdef SubRep < replab.Rep
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            h = self.cached(['hermitianInvariant_' type], @() self.subEquivariantFrom(self.dual.conj,  'special', 'hermitian', 'type', type));
+            h = self.cached(['hermitianInvariant_' type], @() self.subEquivariantTo(conj(dual(self)),  'special', 'hermitian', 'type', type));
         end
 
         function h = sesquilinearInvariant(self, type)
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            h = self.cached(['sesquilinearInvariant_' type], @() self.subEquivariantTo(self.dual.conj,  'special', 'hermitian', 'type', type));
+            h = self.cached(['sesquilinearInvariant_' type], @() self.subEquivariantTo(conj(dual(self)),  'special', 'sesquilinear', 'type', type));
+        end
+
+        function h = symmetricInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            h = self.cached(['symmetricInvariant_' type], @() self.subEquivariantTo(dual(self),  'special', 'symmetric', 'type', type));
         end
 
         function t = trivialRowSpace(self, type)

@@ -140,6 +140,12 @@ classdef Equivariant_forCompactGroup < replab.Equivariant
                 error('replab:equivariantConvergence', 'Cannot satisfy convergence criterion in equivariant projection after %d iterations', k);
             end
             err = max(delta(k-windowSize+1:k));
+            switch self.special
+              case 'hermitian'
+                X = (X + X')/2;
+              case 'symmetric'
+                X = (X + X.')/2;
+            end
         end
 
     end

@@ -764,7 +764,7 @@ classdef Rep < replab.Obj
 
     methods % Equivariant spaces
 
-        function c = antilinearInvariant(self, type)
+        function a = antilinearInvariant(self, type)
         % Returns the equivariant space of matrices representing equivariant antilinear maps
         %
         % Let ``F`` be an antilinear map such that ``F(alpha * x) = conj(alpha) * F(x)`` for any scalar ``alpha``
@@ -781,11 +781,32 @@ classdef Rep < replab.Obj
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   `+replab.Equivariant`: The space of equivariant antilinear maps described by an equivariant space of matrices
+        %   `+replab.Equivariant`: The space of matrices describing equivariant antilinear maps
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            c = self.cached(['antilinearInvariant_' type], @() self.equivariantFrom(conj(self), 'special', 'antilinear', 'type', type));
+            a = self.cached(['antilinearInvariant_' type], @() self.equivariantFrom(conj(self), 'special', 'antilinear', 'type', type));
+        end
+
+        function b = bilinearInvariant(self, type)
+        % Returns the equivariant space of matrices representing equivariant bilinear maps
+        %
+        % Let ``F`` be an equivariant bilinear map, i.e. ``F(x,y) = F(rho(g) x, rho(g) y)``. We describe
+        % this map by a matrix ``X`` such that ``F(x,y) = x.' * X * y``. When the map ``F`` is equivariant,
+        % ``x.' * X * y = x' * rho(g).' * X * rho(g) * y`` for all vectors, so that ``rho(g).' * X = X * rho(g)``.
+        %
+        % The computation is cached.
+        %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The space of matrices describing equivariant bilinear maps
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            repR = dual(self);
+            b = self.cached(['bilinearInvariant_' type], @() self.equivariantTo(repR, 'special', 'bilinear', 'type', type));
         end
 
         function c = commutant(self, type)
@@ -824,7 +845,7 @@ classdef Rep < replab.Obj
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
         %
         % Returns:
-        %   `+replab.Equivariant`: The equivariant vector space
+        %   `+replab.Equivariant`: The equivariant space
             e = replab.Equivariant.make(self, repC, varargin{:});
         end
 
@@ -843,17 +864,14 @@ classdef Rep < replab.Obj
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
         %
         % Returns:
-        %   `+replab.Equivariant`: The equivariant vector space
+        %   `+replab.Equivariant`: The equivariant space
             e = replab.Equivariant.make(repR, self, varargin{:});
         end
 
         function h = hermitianInvariant(self, type)
-        % Returns the Hermitian invariant space of this representation (deprecated)
+        % Returns the equivariant space of matrices representing equivariant Hermitian sesquilinear maps
         %
-        % This is the space of Hermitian matrices that are invariant under this representation
-        % i.e.
-        %
-        % for any g in G, we have ``rho(g) * X = X * rho(g^-1)'``
+        % Similar `.sesquilinearInvariant` with the additional constraint that the matrix ``X == X'``.
         %
         % The computation is cached.
         %
@@ -861,34 +879,53 @@ classdef Rep < replab.Obj
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   `+replab.Equivariant`: The equivariant space of Hermitian invariant matrices
-            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
-                type = 'double';
-            end
-            repC = dual(conj(self));
-            h = self.cached(['hermitianInvariant_' type], @() self.equivariantFrom(repC, 'special', 'hermitian', 'type', type));
-        end
-
-        function h = sesquilinearInvariant(self, type)
-        % Returns the Hermitian invariant space of this representation (deprecated)
-        %
-        % This is the space of Hermitian matrices that are invariant under this representation
-        % i.e.
-        %
-        % for any g in G, we have ``rho(g) * X = X * rho(g^-1)'``
-        %
-        % The computation is cached.
-        %
-        % Args:
-        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
-        %
-        % Returns:
-        %   `+replab.Equivariant`: The equivariant space of Hermitian invariant matrices
+        %   `+replab.Equivariant`: The space of matrices describing equivariant Hermitian sesquilinear maps
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
             repR = dual(conj(self));
-            h = self.cached(['sesquilinearInvariant_' type], @() self.equivariantTo(repR, 'special', 'sesquilinear', 'type', type));
+            h = self.cached(['hermitianInvariant_' type], @() self.equivariantTo(repR, 'special', 'hermitian', 'type', type));
+        end
+
+
+        function s = sesquilinearInvariant(self, type)
+        % Returns the space of matrices representing equivariant sesquilinear maps
+        %
+        % Let ``F`` be an equivariant sesquilinear map, i.e. ``F(x,y) = F(rho(g) x, rho(g) y)``. We describe
+        % this map by a matrix ``X`` such that ``F(x,y) = x' * X * y``. When the map ``F`` is equivariant,
+        % ``x' * X * y = x' * rho(g)' * X * rho(g) * y`` for all vectors, so that ``rho(g)' * X = X * rho(g)``.
+        %
+        % The computation is cached.
+        %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The equivariant space
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            repR = dual(conj(self));
+            s = self.cached(['sesquilinearInvariant_' type], @() self.equivariantTo(repR, 'special', 'sesquilinear', 'type', type));
+        end
+
+        function s = symmetricInvariant(self, type)
+        % Returns the equivariant space of matrices representing equivariant symmetric bilinear maps
+        %
+        % Similar `.bilinearInvariant` with the additional constraint that the matrix ``X == X.'``.
+        %
+        % The computation is cached.
+        %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The space of matrices describing equivariant symmetric bilinear maps
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            repR = dual(self);
+            s = self.cached(['symmetricInvariant_' type], @() self.equivariantTo(repR, 'special', 'symmetric', 'type', type));
         end
 
         function t = trivialRowSpace(self, type)
@@ -1677,10 +1714,10 @@ classdef Rep < replab.Obj
                 A = speye(self.dimension);
                 Ainv = speye(self.dimension);
             else
-                X = self.hermitianInvariant.project(eye(self.dimension), 'double');
+                X = self.sesquilinearInvariant.project(eye(self.dimension), 'double');
                 X = (X + X')/2;
-                Ainv = chol(X, 'lower');
-                A = inv(Ainv);
+                A = chol(X);
+                Ainv = inv(A);
             end
         end
 

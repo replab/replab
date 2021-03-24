@@ -95,8 +95,8 @@ classdef ChainWithWords < replab.Str
         %
         % An effort is made to identify a short word within the coset, but without optimality guarantees.
         %
-        % Notes: If the coset basis leads to another stabilization order than the chain's basis,
-        % the coset chain is reconstructed to match the same basis.
+        % Notes: If the coset basis is different than the chain's basis,
+        % the coset chain basis is readjusted to match the same basis.
         %
         % Args:
         %   representative (permutation): Coset representative
