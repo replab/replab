@@ -17,8 +17,6 @@ classdef Equivariant < replab.Domain
 % +================+================================+======================================+
 % | commutant      | rho                            | rho                                  |
 % +----------------+--------------------------------+--------------------------------------+
-% | hermitian (*)  | rho                            | conj(dual(rho))                      |
-% +----------------+--------------------------------+--------------------------------------+
 % | sesquilinear   | conj(dual(rho))                | rho                                  |
 % +----------------+--------------------------------+--------------------------------------+
 % | antilinear     | rho                            | conj(rho)                            |
@@ -28,9 +26,7 @@ classdef Equivariant < replab.Domain
 % | trivialCols    | rho                            | trivial: d = rho.dimension           |
 % +----------------+--------------------------------+--------------------------------------+
 %
-% The ``hermitian`` space is deprecated and will be phased out in favour of ``sesquilinear``.
-%
-% When ``rho`` is unitary, the ``commutant``, ``hermitian``, ``sesquilinear`` cases are identical.
+% When ``rho`` is unitary, the ``commutant``, ``sesquilinear`` cases are identical.
 % When ``rho`` is real, the ``commutant`` and ``antilinear`` cases are identical.
 
     properties (SetAccess = protected)

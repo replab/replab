@@ -664,18 +664,11 @@ classdef SubRep < replab.Rep
             c = self.cached(['commutant_' type], @() self.subEquivariantFrom(self,  'special', 'commutant', 'type', type));
         end
 
-        function h = hermitianInvariant(self, type)
-            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
-                type = 'double';
-            end
-            h = self.cached(['hermitianInvariant_' type], @() self.subEquivariantFrom(self.dual.conj,  'special', 'hermitian', 'type', type));
-        end
-
         function h = sesquilinearInvariant(self, type)
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            h = self.cached(['sesquilinearInvariant_' type], @() self.subEquivariantTo(self.dual.conj,  'special', 'hermitian', 'type', type));
+            h = self.cached(['sesquilinearInvariant_' type], @() self.subEquivariantTo(self.dual.conj,  'special', 'sesquilinear', 'type', type));
         end
 
         function t = trivialRowSpace(self, type)
