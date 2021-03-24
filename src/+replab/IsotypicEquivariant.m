@@ -62,9 +62,11 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                 d = 1;
                 ms = 1;
               case 'C->R'
+                assert(repR.overR);
                 d = 2;
                 ms = 2;
               case 'H->R:equivariant'
+                assert(repR.overR);
                 d = 4;
                 ms = 4;
             end
@@ -229,40 +231,46 @@ classdef IsotypicEquivariant < replab.SubEquivariant
     methods % YALMIP helpers
 
         function M = makeSdpvar(self)
-            if nargin < 2 || isempty(special)
-                special = '';
-            end
+        % Returns a parameterization of the multiplicity space using YALMIP variables
+        %
+        % Returns:
+        %   sdpvar(\*,\*,\*): Parameterization
             d1 = self.repR.multiplicity;
             d2 = self.repC.multiplicity;
+            da = self.divisionAlgebraDimension;
             if self.isZero
                 M = zeros(d1, d2, 0);
                 return
             end
-            switch special
-              case ''
-                if self.field == 'R'
+            if self.field == 'R'
+                switch self.special
+                  case {'hermitian', 'symmetric'}
+                    M = sdpvar(d1, d2, 1, 'symmetric');
+                    switch self.divisionAlgebraName
+                      case ''
+                      case 'C->R'
+                        M = reshape(M, [d1*d2, 1]);
+                        M = horzcat(M, zeros(d1*d2, 1));
+                        M = reshape(M, [d1, d2, 2]);
+                      case 'H->R:equivariant'
+                        M = reshape(M, [d1*d2, 1]);
+                        M = horzcat(M, zeros(d1*d2, 3));
+                        M = reshape(M, [d1, d2, 4]);
+                    end
+                  otherwise
                     M = sdpvar(d1, d2, self.divisionAlgebraDimension, 'full');
-                else
-                    assert(strcmp(self.divisionAlgebraName, ''));
-                    M = sdpvar(d1, d2, 1, 'full', 'complex');
                 end
-              case 'hermitian'
-                assert(self.field == 'C' && strcmp(self.divisionAlgebraName, ''));
-                M = sdpvar(d1, d2, 1, 'hermitian', 'complex');
-              case 'symmetric'
-                assert(self.field == 'R');
-                M = sdpvar(d1, d2, 1, 'symmetric');
-                switch self.divisionAlgebraName
-                  case ''
-                    M = reshape(M, [d1, d2, 1]);
-                  case 'C->R'
-                    M = reshape(M, [d1*d2, 1]);
-                    M = horzcat(M, zeros(d1*d2, 1));
-                    M = reshape(M, [d1, d2, 2]);
-                  case 'H->R'
-                    M = reshape(M, [d1*d2, 4]);
-                    M = horzcat(M, zeros(d1*d2, 3));
-                    M = reshape(M, [d1, d2, 4]);
+            else % self.field == 'C'
+                switch self.special
+                  case 'hermitian'
+                    M = sdpvar(d1, d2, 'hermitian', 'complex');
+                    M = reshape(M, [d1 d2 1]);
+                  case 'symmetric'
+                    warning('Is that case correct? please be extra careful');
+                    M = sdpvar(d1, d2, 'symmetric', 'complex');
+                    M = reshape(M, [d1 d2 1]);
+                  otherwise
+                    M = sdpvar(d1, d2, 1, 'full', 'complex');
                 end
             end
         end

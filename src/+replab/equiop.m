@@ -18,21 +18,4 @@ classdef equiop < replab.Str
 
     end
 
-    methods % Affine map composition
-
-        function res = andThen(self, applyLast)
-        end
-
-        function res = compose(self, applyFirst)
-        end
-
-    end
-
-    methods % Multiplication
-
-        function mtimes(lhs, rhs)
-        end
-
-    end
-
 end

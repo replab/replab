@@ -176,12 +176,6 @@ classdef Equivariant < replab.Domain
 
     end
 
-    methods % YALMIP support
-
-
-
-    end
-
     methods % Subspaces
 
         function E1 = subEquivariant(self, subR, subC, varargin)

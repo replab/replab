@@ -650,11 +650,11 @@ classdef SubRep < replab.Rep
 
         % Rep: Equivariant spaces
 
-        function c = antilinearInvariant(self, type)
+        function a = antilinearInvariant(self, type)
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            c = self.cached(['antilinearInvariant_' type], @() self.subEquivariantFrom(conj(self),  'special', 'antilinear', 'type', type));
+            a = self.cached(['antilinearInvariant_' type], @() self.subEquivariantFrom(conj(self),  'special', 'antilinear', 'type', type));
         end
 
         function b = bilinearInvariant(self, type)

@@ -15,7 +15,7 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
         blockRowSize % (integer(1,\*)): Row sizes of blocks
         blockColSize % (integer(1,\*)): Column sizes of blocks
         blocks % (cell(\*,\*) of `.IsotypicEquivariant`): Isotypic equivariant spaces
-        nonZeroBlocks % (logical(\*,\*)): True when the corresponding block can be nonzero
+        nonZeroBlock % (logical(\*,\*)): True when the corresponding block can be nonzero
     end
 
 
@@ -26,7 +26,7 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
             self.blocks = blocks;
             self.blockRowSize = cellfun(@(c) c.dimension, repR.components);
             self.blockColSize = cellfun(@(c) c.dimension, repC.components);
-            self.nonZeroBlocks = cellfun(@(b) ~b.isZero, blocks);
+            self.nonZeroBlock = cellfun(@(b) ~b.isZero, blocks);
         end
 
     end
@@ -74,7 +74,7 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
             M = cell(self.repR.nComponents, self.repC.nComponents);
             for i = 1:self.repR.nComponents
                 for j = 1:self.repC.nComponents
-                    if self.nonZeroBlocks(i, j)
+                    if self.nonZeroBlock(i, j)
                         rangeR = sum(self.blockRowSize(1:i-1)) + (1:self.blockRowSize(i));
                         rangeC = sum(self.blockColSize(1:j-1)) + (1:self.blockRowSize(j));
                         M{i, j} = self.blocks{i, j}.projectAndFactor(X(rangeR, rangeC), 'exact');
@@ -87,7 +87,7 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
             M = cell(self.repR.nComponents, self.repC.nComponents);
             for i = 1:self.repR.nComponents
                 for j = 1:self.repC.nComponents
-                    if self.nonZeroBlocks(i, j)
+                    if self.nonZeroBlock(i, j)
                         rangeR = sum(self.blockRowSize(1:i-1)) + (1:self.blockRowSize(i));
                         rangeC = sum(self.blockColSize(1:j-1)) + (1:self.blockRowSize(j));
                         M{i, j} = self.blocks{i, j}.projectAndFactor(X(rangeR, rangeC), 'double/sparse');
@@ -100,7 +100,7 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
             M = cell(self.repR.nComponents, self.repC.nComponents);
             for i = 1:self.repR.nComponents
                 for j = 1:self.repC.nComponents
-                    if self.nonZeroBlocks(i, j)
+                    if self.nonZeroBlock(i, j)
                         M{i, j} = self.blocks{i, j}.projectAndFactorFromParent(parentX, 'exact');
                     end
                 end
@@ -111,7 +111,7 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
             M = cell(self.repR.nComponents, self.repC.nComponents);
             for i = 1:self.repR.nComponents
                 for j = 1:self.repC.nComponents
-                    if self.nonZeroBlocks(i, j)
+                    if self.nonZeroBlock(i, j)
                         M{i, j} = self.blocks{i, j}.projectAndFactorFromParent(parentX, 'double/sparse');
                     end
                 end
@@ -205,6 +205,25 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
                 cC = self.repC.conditionNumberEstimate; % condition number of repC
                 sX = replab.numerical.norm2UpperBound(self.reconstruct(M));
                 err = sX*(eR*cC + cR*eC);
+            end
+        end
+
+    end
+
+    methods % YALMIP helpers
+
+        function blocks = makeSdpvarBlocks(self)
+        % Returns a parameterization of the equivariant subspace using YALMIP variables
+        %
+        % Returns:
+        %   cell(1,\*) of sdpvar(\*,\*,\*): Parameterization using blocks
+            n1 = size(self.blocks, 1);
+            n2 = size(self.blocks, 2);
+            blocks = cell(n1, n2);
+            for i = 1:n1
+                for j = 1:n2
+                    blocks{i,j} = self.blocks{i,j}.makeSdpvar;
+                end
             end
         end
 
