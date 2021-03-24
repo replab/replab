@@ -36,7 +36,7 @@ classdef Equivariant < replab.Domain
         group % (`+replab.CompactGroup`): Group being represented
         repR % (`+replab.Rep`): Representation of row space
         repC % (`+replab.Rep`): Representation of column space
-        special % ({'hermitian', 'commutant', 'trivialRows', 'trivialCols', []}): Whether the equivariant space has special structure
+        special % (charstring): Whether the equivariant space has special structure, see comment in `.Equivariant`
     end
 
     properties (Access = protected)
