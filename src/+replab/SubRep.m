@@ -422,7 +422,7 @@ classdef SubRep < replab.Rep
         %   repC (`+replab.SubRep`): Subrepresentation on the source/column space
         %
         % Keyword Args:
-        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   special (charstring, optional): Special structure if applicable, see `.Equivariant`, default: ''
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
         %   parent (`.Equivariant`, optional): Equivariant space of ``self.parent`` and ``repC.parent``, default: ``[]``
         %
@@ -455,7 +455,7 @@ classdef SubRep < replab.Rep
         %   repR (`+replab.SubRep`): Subrepresentation on the target/row space
         %
         % Keyword Args:
-        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   special (charstring, optional): Special structure if applicable, see `.Equivariant`, default: ''
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
         %   parent (`.Equivariant`, optional): Equivariant space of ``repR.parent`` and ``self.parent``, default: ``[]``
         %

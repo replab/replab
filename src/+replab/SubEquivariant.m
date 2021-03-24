@@ -157,7 +157,7 @@ classdef SubEquivariant < replab.Equivariant
         %   repC (`+replab.SubRep`): Representation on the source/column space
         %
         % Keyword Args:
-        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   special (charstring, optional): Special structure if applicable, see `.Equivariant`, default: ''
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double'
         %   parent (`.Equivariant`, optional): Equivariant space of ``repR.parent`` and ``repC.parent``, default: ``[]``
         %
