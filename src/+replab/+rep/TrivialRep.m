@@ -72,7 +72,7 @@ classdef TrivialRep < replab.Rep
         end
 
         function p = invariantBlocks(self)
-            blocks = arrayfun(@(i) {i}, 1:self.dimension, 'uniform', 0);
+            blocks = arrayfun(@(i) i, 1:self.dimension, 'uniform', 0);
             % each coordinate in its own block
             p = replab.Partition.fromBlocks(blocks);
         end
