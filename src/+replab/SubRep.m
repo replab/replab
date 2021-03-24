@@ -657,6 +657,13 @@ classdef SubRep < replab.Rep
             c = self.cached(['antilinearInvariant_' type], @() self.subEquivariantFrom(conj(self),  'special', 'antilinear', 'type', type));
         end
 
+        function b = bilinearInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            b = self.cached(['bilinearInvariant_' type], @() self.subEquivariantTo(dual(self),  'special', 'bilinear', 'type', type));
+        end
+
         function c = commutant(self, type)
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
@@ -668,7 +675,7 @@ classdef SubRep < replab.Rep
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            h = self.cached(['sesquilinearInvariant_' type], @() self.subEquivariantTo(self.dual.conj,  'special', 'sesquilinear', 'type', type));
+            h = self.cached(['sesquilinearInvariant_' type], @() self.subEquivariantTo(conj(dual(self)),  'special', 'sesquilinear', 'type', type));
         end
 
         function t = trivialRowSpace(self, type)

@@ -170,6 +170,8 @@ classdef SubEquivariant < replab.Equivariant
                 switch args.special
                   case 'antilinear'
                     parent = repR.parent.antilinearInvariant(args.type);
+                  case 'bilinear'
+                    parent = repC.parent.bilinearInvariant(args.type);
                   case 'commutant'
                     parent = repR.parent.commutant(args.type);
                   case 'sesquilinear'
