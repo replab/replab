@@ -35,6 +35,12 @@ classdef Equivariant_forFiniteGroup_relativeReynolds < replab.Equivariant
                 end
                 X = S/nEls;
             end
+            switch self.special
+              case 'hermitian'
+                X = (X + X')/2;
+              case 'symmetric'
+                X = (X + X.')/2;
+            end
         end
 
         function [X, eX] = project_double_sparse(self, X)
@@ -61,6 +67,12 @@ classdef Equivariant_forFiniteGroup_relativeReynolds < replab.Equivariant
                 if nargout > 1
                     eX = nEls*(eR*cC*sX + cR*eC*sX + eX*cR*cC);
                 end
+            end
+            switch self.special
+              case 'hermitian'
+                X = (X + X')/2;
+              case 'symmetric'
+                X = (X + X.')/2;
             end
         end
 

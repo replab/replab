@@ -40,7 +40,8 @@ classdef Equivariant < replab.Domain
 % When ``rho`` is real:
 %
 % * ``antilinear`` and ``commutant`` spaces are identical,
-% * ``bilinear`` and ``sesquilinear`` spaces are identical.
+% * ``bilinear`` and ``sesquilinear`` spaces are identical,
+% * ``hermitian`` and ``symmetric`` spaces are identical.
 
     properties (SetAccess = protected)
         field % ({'R', 'C'}): Field of the vector space real (R) or complex x(C)
@@ -206,8 +207,14 @@ classdef Equivariant < replab.Domain
                               self.nR, self.nC, self.field);
               case 'commutant'
                 s = sprintf('%d x %d commutant matrices over %s', self.nR, self.nC, self.field);
+              case 'hermitian'
+                  s = sprintf('%d x %d matrices representing an equivariant Hermitian form over %s', ...
+                              self.nR, self.nC, self.field);
               case 'sesquilinear'
                   s = sprintf('%d x %d matrices representing an equivariant sesquilinear form over %s', ...
+                              self.nR, self.nC, self.field);
+              case 'symmetric'
+                  s = sprintf('%d x %d matrices representing an equivariant symmetric form over %s', ...
                               self.nR, self.nC, self.field);
               otherwise
                 s = sprintf('%d x %d equivariant matrices over %s', self.nR, self.nC, self.field);

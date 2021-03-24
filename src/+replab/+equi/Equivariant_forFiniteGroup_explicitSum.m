@@ -34,6 +34,12 @@ classdef Equivariant_forFiniteGroup_explicitSum < replab.Equivariant
                 X1 = X1 + self.repR.matrixRowAction(g, self.repC.matrixColAction(g, X, 'exact'), 'exact');
             end
             X1 = X1/length(E);
+            switch self.special
+              case 'hermitian'
+                X1 = (X1 + X1')/2;
+              case 'symmetric'
+                X1 = (X1 + X1.')/2;
+            end
         end
 
         function [X1, err] = project_double_sparse(self, X)
@@ -55,6 +61,12 @@ classdef Equivariant_forFiniteGroup_explicitSum < replab.Equivariant
             X1 = X1/length(E);
             if nargout > 1
                 err = sX*(eR*cC*sX + cR*eC);
+            end
+            switch self.special
+              case 'hermitian'
+                X1 = (X1 + X1')/2;
+              case 'symmetric'
+                X1 = (X1 + X1.')/2;
             end
         end
 
