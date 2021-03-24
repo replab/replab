@@ -15,19 +15,28 @@ classdef Equivariant < replab.Domain
 % +----------------+--------------------------------+--------------------------------------+
 % | Special name   | repR                           | repC                                 |
 % +================+================================+======================================+
+% | antilinear     | rho                            | conj(rho)                            |
+% +----------------+--------------------------------+--------------------------------------+
+% | bilinear       | dual(rho)                      | rho                                  |
+% +----------------+--------------------------------+--------------------------------------+
 % | commutant      | rho                            | rho                                  |
 % +----------------+--------------------------------+--------------------------------------+
 % | sesquilinear   | conj(dual(rho))                | rho                                  |
-% +----------------+--------------------------------+--------------------------------------+
-% | antilinear     | rho                            | conj(rho)                            |
 % +----------------+--------------------------------+--------------------------------------+
 % | trivialRows    | trivial: d = rho.dimension     | rho                                  |
 % +----------------+--------------------------------+--------------------------------------+
 % | trivialCols    | rho                            | trivial: d = rho.dimension           |
 % +----------------+--------------------------------+--------------------------------------+
 %
-% When ``rho`` is unitary, the ``commutant``, ``sesquilinear`` cases are identical.
-% When ``rho`` is real, the ``commutant`` and ``antilinear`` cases are identical.
+% When ``rho`` is unitary:
+%
+% * ``commutant`` and ``sesquilinear`` spaces are identical,
+% * ``antilinear`` and ``bilinear`` space are identical.
+%
+% When ``rho`` is real:
+%
+% * ``antilinear`` and ``commutant`` spaces are identical,
+% * ``bilinear`` and ``sesquilinear`` spaces are identical.
 
     properties (SetAccess = protected)
         field % ({'R', 'C'}): Field of the vector space real (R) or complex x(C)
@@ -191,17 +200,18 @@ classdef Equivariant < replab.Domain
         function s = headerStr(self)
             switch self.special
               case 'antilinear'
-                  s = sprintf('%d x %d matrices representing an equivariant antilinear form over %s', ...
+                  s = sprintf('%d x %d matrices representing an equivariant antilinear map over %s', ...
+                              self.nR, self.nC, self.field);
+              case 'bilinear'
+                  s = sprintf('%d x %d matrices representing an equivariant bilinear form over %s', ...
                               self.nR, self.nC, self.field);
               case 'commutant'
-                s = sprintf('%d x %d commutant matrices over %s', ...
-                            self.nR, self.nC, self.field);
+                s = sprintf('%d x %d commutant matrices over %s', self.nR, self.nC, self.field);
               case 'sesquilinear'
                   s = sprintf('%d x %d matrices representing an equivariant sesquilinear form over %s', ...
                               self.nR, self.nC, self.field);
               otherwise
-                s = sprintf('%d x %d equivariant matrices over %s', ...
-                            self.nR, self.nC, self.field);
+                s = sprintf('%d x %d equivariant matrices over %s', self.nR, self.nC, self.field);
             end
         end
 

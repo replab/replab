@@ -771,11 +771,32 @@ classdef Rep < replab.Obj
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   `+replab.Equivariant`: The space of equivariant antilinear maps described by an equivariant space of matrices
+        %   `+replab.Equivariant`: The space of matrices describing equivariant antilinear maps
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
             c = self.cached(['antilinearInvariant_' type], @() self.equivariantFrom(conj(self), 'special', 'antilinear', 'type', type));
+        end
+
+        function c = bilinearInvariant(self, type)
+        % Returns the equivariant space of matrices representing equivariant bilinear maps
+        %
+        % Let ``F`` be an equivariant bilinear map, i.e. ``F(x,y) = F(rho(g) x, rho(g) y)``. We describe
+        % this map by a matrix ``X`` such that ``F(x,y) = x.' * X * y``. When the map ``F`` is equivariant,
+        % ``x.' * X * y = x' * rho(g).' * X * rho(g) * y`` for all vectors, so that ``rho(g).' * X = X * rho(g)``.
+        %
+        % The computation is cached.
+        %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The space of matrices describing equivariant bilinear maps
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            repR = dual(self);
+            c = self.cached(['bilinearInvariant_' type], @() self.equivariantTo(repR, 'special', 'antilinear', 'type', type));
         end
 
         function c = commutant(self, type)
@@ -814,7 +835,7 @@ classdef Rep < replab.Obj
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
         %
         % Returns:
-        %   `+replab.Equivariant`: The equivariant vector space
+        %   `+replab.Equivariant`: The equivariant space
             e = replab.Equivariant.make(self, repC, varargin{:});
         end
 
@@ -833,17 +854,16 @@ classdef Rep < replab.Obj
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
         %
         % Returns:
-        %   `+replab.Equivariant`: The equivariant vector space
+        %   `+replab.Equivariant`: The equivariant space
             e = replab.Equivariant.make(repR, self, varargin{:});
         end
 
         function h = sesquilinearInvariant(self, type)
-        % Returns the Hermitian invariant space of this representation (deprecated)
+        % Returns the space of matrices representing equivariant sesquilinear maps
         %
-        % This is the space of Hermitian matrices that are invariant under this representation
-        % i.e.
-        %
-        % for any g in G, we have ``rho(g) * X = X * rho(g^-1)'``
+        % Let ``F`` be an equivariant sesquilinear map, i.e. ``F(x,y) = F(rho(g) x, rho(g) y)``. We describe
+        % this map by a matrix ``X`` such that ``F(x,y) = x' * X * y``. When the map ``F`` is equivariant,
+        % ``x' * X * y = x' * rho(g)' * X * rho(g) * y`` for all vectors, so that ``rho(g)' * X = X * rho(g)``.
         %
         % The computation is cached.
         %
@@ -851,7 +871,7 @@ classdef Rep < replab.Obj
         %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
         %
         % Returns:
-        %   `+replab.Equivariant`: The equivariant space of Hermitian invariant matrices
+        %   `+replab.Equivariant`: The equivariant space
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
