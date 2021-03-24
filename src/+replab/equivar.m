@@ -115,7 +115,13 @@ classdef equivar < replab.Str
                 values{i} = horzcat(row{:});
             end
             values = vertcat(values{:});
-            s = self.repR.decomposition.injection * values * self.repC.decomposition.projection;
+            s = self.equivariant.decomposition.repR.injection * values * self.equivariant.decomposition.repC.projection;
+            switch self.equivariant.special
+              case 'symmetric'
+                s = (s + s.')/2;
+              case 'hermitian'
+                s = (s + s')/2;
+            end
         end
 
     end
