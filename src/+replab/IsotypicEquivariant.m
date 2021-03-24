@@ -330,8 +330,6 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                 switch args.special
                   case 'commutant'
                     parent = repR.parent.commutant(args.type);
-                  case 'hermitian'
-                    parent = repR.parent.hermitianInvariant(args.type);
                   case 'trivialRows'
                     parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
                   case 'trivialCols'

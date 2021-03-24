@@ -837,28 +837,6 @@ classdef Rep < replab.Obj
             e = replab.Equivariant.make(repR, self, varargin{:});
         end
 
-        function h = hermitianInvariant(self, type)
-        % Returns the Hermitian invariant space of this representation (deprecated)
-        %
-        % This is the space of Hermitian matrices that are invariant under this representation
-        % i.e.
-        %
-        % for any g in G, we have ``rho(g) * X = X * rho(g^-1)'``
-        %
-        % The computation is cached.
-        %
-        % Args:
-        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
-        %
-        % Returns:
-        %   `+replab.Equivariant`: The equivariant space of Hermitian invariant matrices
-            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
-                type = 'double';
-            end
-            repC = dual(conj(self));
-            h = self.cached(['hermitianInvariant_' type], @() self.equivariantFrom(repC, 'special', 'hermitian', 'type', type));
-        end
-
         function h = sesquilinearInvariant(self, type)
         % Returns the Hermitian invariant space of this representation (deprecated)
         %
@@ -1667,10 +1645,10 @@ classdef Rep < replab.Obj
                 A = speye(self.dimension);
                 Ainv = speye(self.dimension);
             else
-                X = self.hermitianInvariant.project(eye(self.dimension), 'double');
+                X = self.sesquilinearInvariant.project(eye(self.dimension), 'double');
                 X = (X + X')/2;
-                Ainv = chol(X, 'lower');
-                A = inv(Ainv);
+                A = chol(X);
+                Ainv = inv(A);
             end
         end
 

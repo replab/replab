@@ -17,8 +17,6 @@ classdef Equivariant < replab.Domain
 % +================+================================+======================================+
 % | commutant      | rho                            | rho                                  |
 % +----------------+--------------------------------+--------------------------------------+
-% | hermitian (*)  | rho                            | conj(dual(rho))                      |
-% +----------------+--------------------------------+--------------------------------------+
 % | sesquilinear   | conj(dual(rho))                | rho                                  |
 % +----------------+--------------------------------+--------------------------------------+
 % | antilinear     | rho                            | conj(rho)                            |
@@ -28,9 +26,7 @@ classdef Equivariant < replab.Domain
 % | trivialCols    | rho                            | trivial: d = rho.dimension           |
 % +----------------+--------------------------------+--------------------------------------+
 %
-% The ``hermitian`` space is deprecated and will be phased out in favour of ``sesquilinear``.
-%
-% When ``rho`` is unitary, the ``commutant``, ``hermitian``, ``sesquilinear`` cases are identical.
+% When ``rho`` is unitary, the ``commutant``, ``sesquilinear`` cases are identical.
 % When ``rho`` is real, the ``commutant`` and ``antilinear`` cases are identical.
 
     properties (SetAccess = protected)
@@ -40,7 +36,7 @@ classdef Equivariant < replab.Domain
         group % (`+replab.CompactGroup`): Group being represented
         repR % (`+replab.Rep`): Representation of row space
         repC % (`+replab.Rep`): Representation of column space
-        special % ({'hermitian', 'commutant', 'trivialRows', 'trivialCols', []}): Whether the equivariant space has special structure
+        special % (charstring): Whether the equivariant space has special structure, see comment in `.Equivariant`
     end
 
     properties (Access = protected)
@@ -59,7 +55,7 @@ classdef Equivariant < replab.Domain
             self.nC = repC.dimension;
             assert(isequal(repR.field, repC.field), ...
                    'Both representations must have be defined on the same field');
-            assert(isempty(special) || ismember(special, {'hermitian', 'commutant', 'antilinear', 'sesquilinear', 'trivialRows', 'trivialCols'}));
+            assert(isempty(special) || ismember(special, {'antilinear', 'commutant', 'sesquilinear', 'trivialRows', 'trivialCols'}));
             self.field = repR.field;
             assert(repR.group == repC.group, ...
                    'Both representations must be defined on the same group');
@@ -177,7 +173,7 @@ classdef Equivariant < replab.Domain
         %   subR (`+replab.SubRep`): A subrepresentation of ``self.repR``
         %
         % Keyword Args:
-        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   special (charstring, optional): Special structure if applicable, see `.Equivariant`, default: ''
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
             assert(isa(subC, 'replab.SubRep'));
             assert(isa(subR, 'replab.SubRep'));
@@ -193,13 +189,17 @@ classdef Equivariant < replab.Domain
         % Str
 
         function s = headerStr(self)
-            if isequal(self.special, 'hermitian')
-                s = sprintf('%d x %d invariant Hermitian matrices over %s', ...
-                            self.nR, self.nC, self.field);
-            elseif isequal(self.special, 'commutant')
+            switch self.special
+              case 'antilinear'
+                  s = sprintf('%d x %d matrices representing an equivariant antilinear form over %s', ...
+                              self.nR, self.nC, self.field);
+              case 'commutant'
                 s = sprintf('%d x %d commutant matrices over %s', ...
                             self.nR, self.nC, self.field);
-            else
+              case 'sesquilinear'
+                  s = sprintf('%d x %d matrices representing an equivariant sesquilinear form over %s', ...
+                              self.nR, self.nC, self.field);
+              otherwise
                 s = sprintf('%d x %d equivariant matrices over %s', ...
                             self.nR, self.nC, self.field);
             end
@@ -261,7 +261,7 @@ classdef Equivariant < replab.Domain
         %   repC (`.Rep`): Representation on the source/column space
         %
         % Keyword Args:
-        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   special (charstring, optional): Special structure if applicable, see `.Equivariant`, default: ''
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
         %
         % Returns:

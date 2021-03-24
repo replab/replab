@@ -157,7 +157,7 @@ classdef SubEquivariant < replab.Equivariant
         %   repC (`+replab.SubRep`): Representation on the source/column space
         %
         % Keyword Args:
-        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   special (charstring, optional): Special structure if applicable, see `.Equivariant`, default: ''
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double'
         %   parent (`.Equivariant`, optional): Equivariant space of ``repR.parent`` and ``repC.parent``, default: ``[]``
         %
@@ -172,8 +172,6 @@ classdef SubEquivariant < replab.Equivariant
                     parent = repR.parent.antilinearInvariant(args.type);
                   case 'commutant'
                     parent = repR.parent.commutant(args.type);
-                  case 'hermitian'
-                    parent = repR.parent.hermitianInvariant(args.type);
                   case 'sesquilinear'
                     parent = repC.parent.sesquilinearInvariant(args.type);
                   case 'trivialRows'
@@ -199,7 +197,7 @@ classdef SubEquivariant < replab.Equivariant
                   case ''
                     parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
                   otherwise
-                    error('Invalid special structure');
+                    error('Invalid special structure %s', args.special);
                 end
             end
             E = replab.SubEquivariant(parent, repR, repC, args.special);

@@ -92,7 +92,7 @@ classdef Irreducible < replab.SubRep
         %   repC (`+replab.Irreducible`): Irreducible decomposition, representation on the source/column space
         %
         % Keyword Args:
-        %   special ('commutant', 'hermitian', 'trivialRows', 'trivialCols' or '', optional): Special structure if applicable, see `.Equivariant`, default: ''
+        %   special (charstring, optional): Special structure if applicable, see `.Equivariant`, default: ''
         %   type ('exact', 'double' or 'double/sparse', optional): Whether to obtain an exact equivariant space, default 'double' ('double' and 'double/sparse' are equivalent)
         %
         % Returns:
