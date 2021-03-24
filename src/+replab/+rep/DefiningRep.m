@@ -31,7 +31,7 @@ classdef DefiningRep < replab.Rep
     methods (Access = protected) % Implementations
 
         function e = computeErrorBound(self)
-            e = inf;
+            e = 10 * self.dimension * eps; % TODO: better framework here
         end
 
         function rho = image_double_sparse(self, g)

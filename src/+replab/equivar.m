@@ -49,8 +49,7 @@ classdef equivar < replab.Str
         %
         % There are two possibilities:
         %
-        % * if one of the ``value``, ``symmetryAdaptedValue``, ``blocks`` keyword arguments is provided,
-        %   the variable is initialized using the argument contents,
+        % * if one of the ``value`` or ``blocks`` arguments is given, this is initialized using the argument contents,
         % * if none of these keyword arguments is provided, the variable is free, and all its degrees of freedom will be
         %   initialized using YALMIP variables.
         %
@@ -59,13 +58,12 @@ classdef equivar < replab.Str
         %
         % Keyword Args:
         %   value (double(\*,\*) or sdpvar(\*,\*)): Variable value (in the original space)
-        %   symmetryAdaptedValue (double(\*,\*) or sdpvar(\*,\*)): Variable value (in the space of `.symmetryAdaptedEquivariant`)
         %   blocks (cell(\*,\*) of double(\*,\*) or sdpvar(\*,\*)): Variable value in the minimal parameter space
             repR = equivariant.repR;
             repC = equivariant.repC;
-            args = struct('value', [], 'symmetryAdaptedValue', [], 'blocks', []);
+            args = struct('value', [], 'blocks', []);
             args = replab.util.populateStruct(args, varargin);
-            nProvided = ~isempty(args.value) + ~isempty(args.symmetryAdaptedValue) + ~isempty(args.blocks);
+            nProvided = ~isempty(args.value) + ~isempty(args.blocks);
             assert(nProvided <= 1, 'Provide at most one of the following keyword arguments: value, symmetryAdaptedValue, blocks');
             dec = equivariant.decomposition;
             if nProvided == 0
@@ -73,31 +71,20 @@ classdef equivar < replab.Str
             elseif ~isempty(args.blocks) % the value is known and in the internal format
                 blocks = args.blocks;
             else
-                n1 = repR.decomposition.nComponents;
-                n2 = repC.decomposition.nComponents;
+                n1 = dec.nRowBlocks;
+                n2 = dec.nColBlocks;
                 blocks = cell(n1, n2);
                 if ~isempty(args.value)
                     value = args.value;
                     for i = 1:n1
                         for j = 1:n2
-                            [M, err] = dec.blocks{i,j}.projectAndFactorFromParent(value);
+                            if isa(value, 'double')
+                                [M, err] = dec.blocks{i,j}.projectAndFactorFromParent(value);
+                            else
+                                [M, err] = replab.evar.projectAndFactorFromParent_sdpvar(dec.blocks{i,j}, value);
+                            end
                             blocks{i,j} = M;
-                            err
-                        end
-                    end
-                else % ~isempty(args.symmetryAdaptedValue)
-                    symmetryAdaptedValue = args.symmetryAdaptedValue;
-                    for i = 1:n1
-                        for j = 1:n2
-                            IE = symmetryAdaptedEquivariant.blocks{i,j};
-                            shift1 = sum(cellfun(@(iso) iso.dimension, repR.decomposition.components(1:n1-1)));
-                            shift2 = sum(cellfun(@(iso) iso.dimension, repC.decomposition.components(1:n2-1)));
-                            range1 = shift1+(1:repR.decomposition.component(i).dimension);
-                            range2 = shift2+(1:repC.decomposition.component(j).dimension);
-                            B = symmetryAdaptedValue(range1, range2);
-                            [M, err] = dec.projectAndFactor(symmetryAdaptedValue(range1, range2));
-                            blocks{i,j} = M;
-                            err
+                            replab.msg(2, 'equivar construction, block (%d,%d): maximum error %6.2f', i, j, max(err));
                         end
                     end
                 end
@@ -114,7 +101,7 @@ classdef equivar < replab.Str
             rep = self.equivariant.repC;
         end
 
-        function s = sdpvar(self)
+        function [s, values] = sdpvar(self)
         % Returns the matrix corresponding to this equivar, in the original basis
             nR = size(self.blocks, 1);
             nC = size(self.blocks, 2);
@@ -165,17 +152,20 @@ classdef equivar < replab.Str
         end
 
         function res = mtimes(lhs, rhs)
-            if isa(lhs, 'double') && isscalar(lhs) && isa(rhs, 'replab.equivar')
-                n1 = size(rhs.blocks, 1);
-                n2 = size(rhs.blocks, 2);
+            lhs_scalar = (isa(lhs, 'double') || isa(lhs, 'sdpvar')) && isscalar(lhs);
+            rhs_scalar = (isa(rhs, 'double') || isa(rhs, 'sdpvar')) && isscalar(rhs);
+
+            if isa(lhs, 'replab.equivar') && rhs_scalar
+                n1 = size(lhs.blocks, 1);
+                n2 = size(lhs.blocks, 2);
                 blocks = cell(n1, n2);
                 for i = 1:n1
                     for j = 1:n2
-                        blocks{i,j} = lhs * rhs.blocks{i,j};
+                        blocks{i,j} = lhs.blocks{i,j} * rhs;
                     end
                 end
-                res = replab.equivar(rhs.equivariant, 'blocks', blocks);
-            elseif isa(lhs, 'replab.equivar') && isa(rhs, 'double') && isscalar(rhs)
+                res = replab.equivar(lhs.equivariant, 'blocks', blocks);
+            elseif lhs_scalar && isa(rhs, 'replab.equivar')
                 res = rhs * lhs;
             else
                 error('Invalid syntax');
@@ -233,7 +223,7 @@ classdef equivar < replab.Str
             n2 = dec.repC.nComponents;
             C = cell(1, n1);
             for i = 1:n1
-                M = self.block(i,i);
+                M = self.blocks{i,i};
                 A = dec.blocks{i,i}.A;
                 B = kron(M(:,:,1), A(:,:,1));
                 for j = 2:size(M, 3)

@@ -641,11 +641,21 @@ classdef SubRep < replab.Rep
         end
 
         function rep = dual(self)
-            rep = self.parent.dual.subRep(self.projection_internal.', 'projection', self.injection_internal.');
+            if self.knownIrreducible
+                args = {'isIrreducible', true};
+            else
+                args = {};
+            end
+            rep = self.parent.dual.subRep(self.projection_internal.', 'projection', self.injection_internal.', args{:});
         end
 
         function rep = conj(self)
-            rep = self.parent.conj.subRep(conj(self.injection_internal), 'projection', conj(self.projection_internal));
+            if self.knownIrreducible
+                args = {'isIrreducible', true};
+            else
+                args = {};
+            end
+            rep = self.parent.conj.subRep(conj(self.injection_internal), 'projection', conj(self.projection_internal), args{:});
         end
 
         % Rep: Equivariant spaces

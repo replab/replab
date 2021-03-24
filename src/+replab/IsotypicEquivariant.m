@@ -427,9 +427,17 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                 ird = repR.irrepDimension;
                 R = replab.IsotypicEquivariant.kronSecondFactor(X, ird, ird);
                 R = R/(trace(R)/ird);
-                R_internal = R;
                 divisionAlgebraName = '';
+                switch special
+                  case 'symmetric'
+                    R = (R+R.')/2;
+                  case 'hermitian'
+                    R = (R+R')/2;
+                end
+                R = reshape(R, [size(R, 1) size(R, 2) 1]);
             elseif repR.irrep(1).frobeniusSchurIndicator == -2 % quaternion-type
+
+                % TODO: symmetric/hermitian support
                 d = repR.irrepDimension/4;
                 [X1, X2, X3, X4] = replab.domain.QuaternionTypeMatrices.fromMatrix(X, 'commutant');
                 R1 = replab.IsotypicEquivariant.kronSecondFactor(X1, d, d);
@@ -447,6 +455,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
                 R(:,:,4) = R4;
                 divisionAlgebraName = 'H->R:equivariant';
             elseif repR.irrep(1).frobeniusSchurIndicator == 0 % complex-type
+                % TODO: symmetric/hermitian support
                 d = repR.irrepDimension/2;
                 [X1, X2] = replab.domain.ComplexTypeMatrices.fromMatrix(X);
                 R1 = replab.IsotypicEquivariant.kronSecondFactor(X1, d, d);
