@@ -164,7 +164,7 @@ classdef Equivariant < replab.Domain
 
     end
 
-    methods
+    methods % Properties
 
         function b = isExact(self)
         % Returns whether this equivariant space can compute exact projection
@@ -173,6 +173,16 @@ classdef Equivariant < replab.Domain
         %   logical: True if the call ``self.projection(X, 'exact')`` always succeeds
             b = false;
         end
+
+    end
+
+    methods % YALMIP support
+
+
+
+    end
+
+    methods % Subspaces
 
         function E1 = subEquivariant(self, subR, subC, varargin)
         % Constructs a invariant subspace of an equivariant space

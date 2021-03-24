@@ -228,7 +228,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 
     methods % YALMIP helpers
 
-        function M = makeSdpvar(self, special)
+        function M = makeSdpvar(self)
             if nargin < 2 || isempty(special)
                 special = '';
             end
