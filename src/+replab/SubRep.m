@@ -248,6 +248,14 @@ classdef SubRep < replab.Rep
             e = self.cached('projectorErrorBound', @() self.computeProjectorErrorBound);
         end
 
+        function e = biorthogonalityErrorBound(self)
+        % Returns an upper bound on the biorthogonality of the injection/projection maps
+        %
+        % This returns an upper bound on ``norm(self.projection*self.injection - eye(d), 'fro')``, where
+        % ``d == self.dimension``.
+            e = self.cached('biorthogonalityErrorBound', @() norm(self.projection*self.injection - eye(self.dimension), 'fro'));
+        end
+
         function c = injectionConditionNumberEstimate(self)
         % Returns an upper bound on the condition number of both the injection and the projection map
         %
@@ -515,7 +523,7 @@ classdef SubRep < replab.Rep
                 I = self.injection('double/sparse');
                 P = self.projection('double/sparse');
                 d = self.dimension;
-                prodError = norm(P*I - eye(d), 'fro'); % || dP I ||F
+                prodError = self.biorthogonalityErrorBound; % || dP I ||F
                 % let P = I^-1
                 % we assume I is exact, and P~ = projection_internal, with P~ = P + dP and dP the error
                 % || P rho I - P~ rho~ I ||F =~ || P drho I ||F + || P~ rho I ||F =

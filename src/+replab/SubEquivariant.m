@@ -57,6 +57,16 @@ classdef SubEquivariant < replab.Equivariant
             parentX = self.repR.injection('double/sparse') * X * self.repC.projection('double/sparse');
             X1 = self.projectFromParent(parentX, 'double/sparse');
             if nargout > 1
+                %if self.repR.isSimilarRep && self.repC.isSimilarRep
+                %    c = self.repR.injectionConditionNumberEstimate * self.repC.injectionConditionNumberEstimate;
+                %    % error in the first conversion
+                %    e1 = replab.numerical.norm2UpperBound(parentX) * self.repR.biorthogonalityErrorBound * c;
+                %    % error in the projection
+                %    e2 = eParent * c;
+                %    % error in the second conversion
+                %    e3 = replab.numerical.norm2UpperBound(X1) * self.repC.biorthogonalityErrorBound;
+                %    err = e1 + e2 + e3;
+                %else
                 assert(replab.globals.yolo);
                 eR = self.repR.errorBound;
                 eC = self.repC.errorBound;
@@ -64,6 +74,7 @@ classdef SubEquivariant < replab.Equivariant
                 cC = self.repC.conditionNumberEstimate; % condition number of repC
                 sX = replab.numerical.norm2UpperBound(X);
                 err = sX*(eR*cC + cR*eC);
+                %end
             end
         end
 
