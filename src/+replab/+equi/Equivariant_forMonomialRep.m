@@ -28,6 +28,9 @@ classdef Equivariant_forMonomialRep < replab.Equivariant
         function P = phasedMatrixPartition(self)
         % Returns the phased matrix partition corresponding to this equivariant space
         %
+        % Note: the phased matrix partition does not apply the constraints corresponding to the
+        % ``symmetric`` or ``hermitian`` spaces.
+        %
         % Returns:
         %   `.PhasedMatrixPartition`: The corresponding phased matrix partition
             P = self.cached('phasedMatrixPartition', @() self.computePhasedMatrixPartition);
@@ -104,6 +107,12 @@ classdef Equivariant_forMonomialRep < replab.Equivariant
                 s = sum(coeffs)/n;
                 X1(ind) = s * phases(ph+1); % set the coefficients
             end
+            switch self.special
+              case 'hermitian'
+                X1 = (X1 + X1')/2;
+              case 'symmetric'
+                X1 = (X1 + X1.')/2;
+            end
         end
 
         function [X1, eX1] = project_double_sparse(self, X)
@@ -141,6 +150,12 @@ classdef Equivariant_forMonomialRep < replab.Equivariant
             end
             if nargout > 1
                 eX1 = norm(E, 'fro');
+            end
+            switch self.special
+              case 'hermitian'
+                X1 = (X1 + X1')/2;
+              case 'symmetric'
+                X1 = (X1 + X1.')/2;
             end
         end
 

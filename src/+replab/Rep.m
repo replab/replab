@@ -754,7 +754,7 @@ classdef Rep < replab.Obj
 
     methods % Equivariant spaces
 
-        function c = antilinearInvariant(self, type)
+        function a = antilinearInvariant(self, type)
         % Returns the equivariant space of matrices representing equivariant antilinear maps
         %
         % Let ``F`` be an antilinear map such that ``F(alpha * x) = conj(alpha) * F(x)`` for any scalar ``alpha``
@@ -775,10 +775,10 @@ classdef Rep < replab.Obj
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            c = self.cached(['antilinearInvariant_' type], @() self.equivariantFrom(conj(self), 'special', 'antilinear', 'type', type));
+            a = self.cached(['antilinearInvariant_' type], @() self.equivariantFrom(conj(self), 'special', 'antilinear', 'type', type));
         end
 
-        function c = bilinearInvariant(self, type)
+        function b = bilinearInvariant(self, type)
         % Returns the equivariant space of matrices representing equivariant bilinear maps
         %
         % Let ``F`` be an equivariant bilinear map, i.e. ``F(x,y) = F(rho(g) x, rho(g) y)``. We describe
@@ -796,7 +796,7 @@ classdef Rep < replab.Obj
                 type = 'double';
             end
             repR = dual(self);
-            c = self.cached(['bilinearInvariant_' type], @() self.equivariantTo(repR, 'special', 'antilinear', 'type', type));
+            b = self.cached(['bilinearInvariant_' type], @() self.equivariantTo(repR, 'special', 'bilinear', 'type', type));
         end
 
         function c = commutant(self, type)
@@ -858,7 +858,27 @@ classdef Rep < replab.Obj
             e = replab.Equivariant.make(repR, self, varargin{:});
         end
 
-        function h = sesquilinearInvariant(self, type)
+        function h = hermitianInvariant(self, type)
+        % Returns the equivariant space of matrices representing equivariant Hermitian sesquilinear maps
+        %
+        % Similar `.sesquilinearInvariant` with the additional constraint that the matrix ``X == X'``.
+        %
+        % The computation is cached.
+        %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The space of matrices describing equivariant Hermitian sesquilinear maps
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            repR = dual(conj(self));
+            h = self.cached(['hermitianInvariant_' type], @() self.equivariantTo(repR, 'special', 'hermitian', 'type', type));
+        end
+
+
+        function s = sesquilinearInvariant(self, type)
         % Returns the space of matrices representing equivariant sesquilinear maps
         %
         % Let ``F`` be an equivariant sesquilinear map, i.e. ``F(x,y) = F(rho(g) x, rho(g) y)``. We describe
@@ -876,7 +896,26 @@ classdef Rep < replab.Obj
                 type = 'double';
             end
             repR = dual(conj(self));
-            h = self.cached(['sesquilinearInvariant_' type], @() self.equivariantTo(repR, 'special', 'sesquilinear', 'type', type));
+            s = self.cached(['sesquilinearInvariant_' type], @() self.equivariantTo(repR, 'special', 'sesquilinear', 'type', type));
+        end
+
+        function s = symmetricInvariant(self, type)
+        % Returns the equivariant space of matrices representing equivariant symmetric bilinear maps
+        %
+        % Similar `.bilinearInvariant` with the additional constraint that the matrix ``X == X.'``.
+        %
+        % The computation is cached.
+        %
+        % Args:
+        %   type ('double', 'double/sparse' or 'exact', optional): Type of the returned value, default: 'double'
+        %
+        % Returns:
+        %   `+replab.Equivariant`: The space of matrices describing equivariant symmetric bilinear maps
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            repR = dual(self);
+            s = self.cached(['symmetricInvariant_' type], @() self.equivariantTo(repR, 'special', 'symmetric', 'type', type));
         end
 
         function t = trivialRowSpace(self, type)

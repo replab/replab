@@ -12,21 +12,25 @@ classdef Equivariant < replab.Domain
 % by a single representation ``rho`` from which the equivariant space is constructed.
 % They are distinguished by the `.special` property.
 %
-% +----------------+--------------------------------+--------------------------------------+
-% | Special name   | repR                           | repC                                 |
-% +================+================================+======================================+
-% | antilinear     | rho                            | conj(rho)                            |
-% +----------------+--------------------------------+--------------------------------------+
-% | bilinear       | dual(rho)                      | rho                                  |
-% +----------------+--------------------------------+--------------------------------------+
-% | commutant      | rho                            | rho                                  |
-% +----------------+--------------------------------+--------------------------------------+
-% | sesquilinear   | conj(dual(rho))                | rho                                  |
-% +----------------+--------------------------------+--------------------------------------+
-% | trivialRows    | trivial: d = rho.dimension     | rho                                  |
-% +----------------+--------------------------------+--------------------------------------+
-% | trivialCols    | rho                            | trivial: d = rho.dimension           |
-% +----------------+--------------------------------+--------------------------------------+
+% +----------------+-----------------------------+-----------------------------+-------------------------+
+% | Special name   | repR                        | repC                        | Additional constraint   |
+% +================+=============================+=============================+=========================+
+% | antilinear     | rho                         | conj(rho)                   |                         |
+% +----------------+-----------------------------+-----------------------------+-------------------------+
+% | bilinear       | dual(rho)                   | rho                         |                         |
+% +----------------+-----------------------------+-----------------------------+-------------------------+
+% | commutant      | rho                         | rho                         |                         |
+% +----------------+-----------------------------+-----------------------------+-------------------------+
+% | hermitian      | conj(dual(rho))             | rho                         | X = X'                  |
+% +----------------+-----------------------------+-----------------------------+-------------------------+
+% | sesquilinear   | conj(dual(rho))             | rho                         |                         |
+% +----------------+-----------------------------+-----------------------------+-------------------------+
+% | symmetric      | dual(rho)                   | rho                         | X = X.'                 |
+% +----------------+-----------------------------+-----------------------------+-------------------------+
+% | trivialRows    | trivial (d = rho.dimension) | rho                         |                         |
+% +----------------+-----------------------------+-----------------------------+-------------------------+
+% | trivialCols    | rho                         | trivial (d = rho.dimension) |                         |
+% +----------------+-----------------------------+-----------------------------+-------------------------+
 %
 % When ``rho`` is unitary:
 %
@@ -36,7 +40,8 @@ classdef Equivariant < replab.Domain
 % When ``rho`` is real:
 %
 % * ``antilinear`` and ``commutant`` spaces are identical,
-% * ``bilinear`` and ``sesquilinear`` spaces are identical.
+% * ``bilinear`` and ``sesquilinear`` spaces are identical,
+% * ``hermitian`` and ``symmetric`` spaces are identical.
 
     properties (SetAccess = protected)
         field % ({'R', 'C'}): Field of the vector space real (R) or complex x(C)
@@ -62,12 +67,7 @@ classdef Equivariant < replab.Domain
             self.nR = repR.dimension;
             self.repC = repC;
             self.nC = repC.dimension;
-            assert(isequal(repR.field, repC.field), ...
-                   'Both representations must have be defined on the same field');
-            assert(isempty(special) || ismember(special, {'antilinear', 'commutant', 'sesquilinear', 'trivialRows', 'trivialCols'}));
             self.field = repR.field;
-            assert(repR.group == repC.group, ...
-                   'Both representations must be defined on the same group');
             self.group = repR.group;
             self.domain = replab.domain.Matrices(self.field, self.nR, self.nC);
             self.special = special;
@@ -207,8 +207,14 @@ classdef Equivariant < replab.Domain
                               self.nR, self.nC, self.field);
               case 'commutant'
                 s = sprintf('%d x %d commutant matrices over %s', self.nR, self.nC, self.field);
+              case 'hermitian'
+                  s = sprintf('%d x %d matrices representing an equivariant Hermitian form over %s', ...
+                              self.nR, self.nC, self.field);
               case 'sesquilinear'
                   s = sprintf('%d x %d matrices representing an equivariant sesquilinear form over %s', ...
+                              self.nR, self.nC, self.field);
+              case 'symmetric'
+                  s = sprintf('%d x %d matrices representing an equivariant symmetric form over %s', ...
                               self.nR, self.nC, self.field);
               otherwise
                 s = sprintf('%d x %d equivariant matrices over %s', self.nR, self.nC, self.field);
@@ -259,6 +265,71 @@ classdef Equivariant < replab.Domain
 
     methods (Static)
 
+        function [repR, repC] = validateArguments(repR, repC, special)
+        % Validate and complete arguments used to define an equivariant space
+        %
+        % When the ``special`` argument is specified, one can omit either ``repR`` or ``repC`` and it will be completed
+        % automatically.
+        %
+        % Args:
+        %   repR (`.Rep` or ``[]``): Representation acting on rows
+        %   repC (`.Rep` or ``[]``): Representation acting on columns
+        %   special (charstring or ''): One of the equivariant types, see `.Equivariant`
+        %
+        % Returns
+        % -------
+        %   repR: `.Rep`
+        %     Row representation
+        %   repC: `.Rep`
+        %     Column representation
+            assert(repR.group == repC.group, 'Both representations must be defined on the same group');
+            assert(isequal(repR.field, repC.field), 'Both representations must have be defined on the same field');
+            if isempty(special)
+                special = '';
+            end
+            valid = {'', 'antilinear', 'commutant', 'hermitian', 'sesquilinear', 'symmetric', 'trivialRows', 'trivialCols'};
+            assert(ismember(special, valid));
+            if isempty(special)
+                assert(~isempty(repR) && ~isempty(repC), 'The row or column representation can be omitted only for structured (special) spaces.');
+            else
+                assert(~isempty(repR) || ~isempty(repC), 'Only one of the row or column representation can be omitted');
+                if isempty(repR)
+                    switch special
+                      case 'antilinear'
+                        repR = conj(repC);
+                      case {'bilinear', 'symmetric'}
+                        repR = dual(repC);
+                      case 'commutant'
+                        repR = repC;
+                      case {'sesquilinear', 'hermitian'}
+                        repR = dual(conj(repC));
+                      case 'trivialRows'
+                        repR = repC.group.trivialRep(repC.field, repC.dimension);
+                      case 'trivialCols'
+                        error('The row representation cannot be omitted for the trivialCols space');
+                    end
+                end
+                if isempty(repC)
+                    switch special
+                      case 'antilinear'
+                        repC = conj(repR);
+                      case {'bilinear', 'symmetric'}
+                        repC = dual(repR);
+                      case 'commutant'
+                        repC = repR;
+                      case {'sesquilinear', 'hermitian'}
+                        repC = dual(conj(repR));
+                      case 'trivialRows'
+                        error('The row representation cannot be omitted for the trivialCols space');
+                      case 'trivialCols'
+                        repC = repR.group.trivialRep(repR.field, repR.dimension);
+                    end
+                end
+            end
+            assert(repR.group == repC.group, 'Both representations must be defined over the same group');
+            assert(repR.field == repC.field, 'Both representations must be defined over the same field');
+        end
+
         function E = make(repR, repC, varargin)
         % Returns the space of equivariant linear maps between two representations
         %
@@ -278,6 +349,7 @@ classdef Equivariant < replab.Domain
         %   `.Equivariant`: The equivariant vector space
             args = struct('special', '', 'type', 'double');
             args = replab.util.populateStruct(args, varargin);
+            [repR, repC] = replab.Equivariant.validateArguments(repR, repC, args.special);
             if isa(repR.group, 'replab.FiniteGroup')
                 E = replab.equi.Equivariant_forMonomialRep.make(repR, repC, args.special);
                 if ~isempty(E)

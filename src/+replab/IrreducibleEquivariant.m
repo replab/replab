@@ -261,16 +261,22 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
             parent = args.parent;
             if isempty(parent)
                 switch args.special
+                  case 'antilinear'
+                    parent = repR.parent.antilinearInvariant(args.type);
+                  case 'bilinear'
+                    parent = repC.parent.bilinearInvariant(args.type);
                   case 'commutant'
                     parent = repR.parent.commutant(args.type);
-                  case 'trivialRows'
-                    parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
-                  case 'trivialCols'
-                    parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
-                  case ''
+                  case 'hermitian'
+                    parent = repC.parent.hermitianInvariant(args.type);
+                  case 'sesquilinear'
+                    parent = repC.parent.sesquilinearInvariant(args.type);
+                  case 'symmetric'
+                    parent = repC.parent.symmetricInvariant(args.type);
+                  case {'', 'trivialRows', 'trivialCols'}
                     parent = repR.parent.equivariantFrom(repC.parent, 'type', args.type);
                   otherwise
-                    error('Invalid special structure');
+                    error('Invalid special structure %s', args.special);
                 end
             end
             if strcmp(args.type, 'exact')
