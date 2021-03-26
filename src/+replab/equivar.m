@@ -59,6 +59,11 @@ classdef equivar < replab.Str
         % Keyword Args:
         %   value (double(\*,\*) or sdpvar(\*,\*)): Variable value (in the original space)
         %   blocks (cell(\*,\*) of double(\*,\*) or sdpvar(\*,\*)): Variable value in the minimal parameter space
+
+
+        % TODO: cache "sdpvar(equivar)"
+        % prefill that cache if value is provided here
+        % allow an option to *not* project before factorization
             repR = equivariant.repR;
             repC = equivariant.repC;
             args = struct('value', [], 'blocks', []);
