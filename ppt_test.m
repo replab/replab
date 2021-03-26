@@ -29,7 +29,7 @@ rho = singlet*t + noise*(1-t);
 % we use the syntax sdp(EV) to define a semidefinite positive constraint, where EV is an equivar
 % we use the syntax sdpvar(EV) to recover the sdpvar in the original (i.e. non symmetry adapted) basis
 
-C = [real(trace(sdpvar(rho))) == 1
+C = [trace(sdpvar(rho)) == 1
      sdp(rho)
      sdp(ppt(rho))];
 
