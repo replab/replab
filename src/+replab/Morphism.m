@@ -2,9 +2,10 @@ classdef Morphism < replab.Obj
 % Describes a morphism between groups
 %
 % If both groups are compact groups with a `+replab.CompactGroup.reconstruction` available, the `.torusMap` linear map
-% expresses the relationship between elements of the torus of the source and the target. More specifically, let ``s``
-% be an element of the torus ``.source.reconstruction.source``, there is a corresponding element ``t`` of the torus
-% ``.target.reconstruction.source`` such that ``t = s * torusMap``.
+% expresses the relationship between elements of the maximal torus of the source and the target.
+% More specifically, let ``s`` be an element of the torus ``.source.reconstruction.source``, there is
+% a corresponding element ``t`` of the torus ``.target.reconstruction.source`` such that ``t = s * torusMap``.
+
     properties (SetAccess = protected)
         source % (`.Group`): Source group
         target % (`.Group`): Target group

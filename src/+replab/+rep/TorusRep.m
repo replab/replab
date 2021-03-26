@@ -8,6 +8,7 @@ classdef TorusRep < replab.Rep
     methods
 
         function self = TorusRep(group, torusMap)
+            assert(isa(group, 'replab.TorusGroup'));
             d = size(torusMap, 1);
             td = sum(all(torusMap == 0), 2);
             self@replab.Rep(group, 'C', d, 'isUnitary', true, 'trivialDimension', td);
@@ -62,7 +63,7 @@ classdef TorusRep < replab.Rep
         %
         % Args:
         %   torusMap1 (integer(\*,n)): First torus map
-        %   torusMap2 (itneger(\*,n)): Second torus map
+        %   torusMap2 (integer(\*,n)): Second torus map
         %
         % Returns
         % -------

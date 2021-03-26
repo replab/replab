@@ -1,10 +1,10 @@
 function grp = T(n)
-% Returns the torus group acting of a given dimension
+% Returns the standard torus group of given rank
 %
 % Args:
-%   n (integer): Torus group dimension
+%   n (integer): Torus group rank
 %
 % Returns:
-%   `+replab.TorusGroup`: Torus group
-    grp = replab.TorusGroup(n);
+%   `+replab.StandardTorusGroup`: Torus group
+    grp = replab.StandardTorusGroup(n);
 end
