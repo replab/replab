@@ -20,7 +20,7 @@ classdef equiop_restriction < replab.equiop
         % Obj
 
         function l = laws(self)
-            l = replab.laws.equiop_restrictionLaws(self)
+            l = replab.laws.equiop_restrictionLaws(self);
         end
 
         % equiop

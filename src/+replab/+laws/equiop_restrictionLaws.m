@@ -1,4 +1,4 @@
-classdef equiop_restrictionLaws < replab.Laws
+classdef equiop_restrictionLaws < replab.laws.equiopLaws
 
     properties (SetAccess = protected)
         G % (`+replab.CompactGroup`): Target group
@@ -12,11 +12,15 @@ classdef equiop_restrictionLaws < replab.Laws
         end
 
         function law_representation_is_restriction_G(self, g)
-            [t1, d1] = self.T.repR.image(g);
-            [t2, d2] = self.T.repC.image(g);
+            d1 = self.T.repR.errorBound;
+            d2 = self.T.repC.errorBound;
+            t1 = self.T.repR.image(g);
+            t2 = self.T.repC.image(g);
             h = self.op.mu.imageElement(g);
-            [s1, e1] = self.S.repR.image(g);
-            [s2, e2] = self.S.repC.image(g);
+            e1 = self.S.repR.errorBound;
+            e2 = self.S.repC.errorBound;
+            s1 = self.S.repR.image(h);
+            s2 = self.S.repC.image(h);
             self.assertApproxEqual(s1, t1, d1+e1);
             self.assertApproxEqual(s2, t2, d2+e2);
         end
