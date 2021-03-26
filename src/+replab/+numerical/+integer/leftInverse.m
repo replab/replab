@@ -1,4 +1,4 @@
-function [Psi, ok] = integerLeftInverse(Phi)
+function [Psi, ok] = leftInverse(Phi)
 % Computes, if it exists, the integer left inverse of an integer matrix
 %
 % This function uses integer arithmetic encoded in floating-point double values,
@@ -12,9 +12,9 @@ function [Psi, ok] = integerLeftInverse(Phi)
 % `<https://doi.org/10.1016/j.laa.2014.06.038>_`
 %
 % Example:
-%   >>> A = replab.numerical.pairOfIntegerInverses(4, 1);
+%   >>> A = replab.numerical.integer.pairOfInverses(4, 1);
 %   >>> A = A(:,1:3);
-%   >>> B = replab.numerical.integerLeftInverse(A);
+%   >>> B = replab.numerical.integer.leftInverse(A);
 %   >>> all(all(B*A == eye(3)))
 %       1
 %
@@ -32,7 +32,7 @@ function [Psi, ok] = integerLeftInverse(Phi)
     K = nchoosek(1:n, m);
     N = size(K, 1);
     Delta = round(arrayfun(@(k) det(Phi(K(k,:),:)), (1:N)'));
-    [d, X] = replab.numerical.xgcd(Delta);
+    [d, X] = replab.numerical.integer.xgcd(Delta);
     if d ~= 1
         Psi = [];
         ok = false;

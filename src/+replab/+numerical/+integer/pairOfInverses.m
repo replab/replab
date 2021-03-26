@@ -1,4 +1,4 @@
-function [A, B] = pairOfIntegerInverses(d, ct)
+function [A, B] = pairOfInverses(d, ct)
 % Returns a pair of integer matrices that are inverse of each other
 %
 % Based on the definitions of page 1 of
