@@ -44,6 +44,20 @@ classdef TorusGroup < replab.CompactGroup
             self.identity = zeros(n, 1);
         end
 
+        function T1 = subgroup(self, newRelations)
+        % Returns a subgroup of this torus that obeys the given relations
+        %
+        % The relations are expressed as ``mod(newRelations * x, 1) == 0``, where ``x`` is a group element.
+        %
+        % Args:
+        %   newRelations (integer(m,n)): Relations to be satisfied by the group elements
+        %
+        % Returns:
+        %   `.TorusGroup`: Torus group satisfying the relations of this group and the ones given
+            assert(size(newRelations, 2) == self.n);
+            T1 = replab.TorusGroup([self.relations; newRelations]);
+        end
+
     end
 
     methods % Group constructions
