@@ -1,5 +1,5 @@
-classdef CommutingProductRep < replab.Rep
-% A representation which consists of the product of commuting representations
+classdef CommutingRepsRep < replab.Rep
+% A representation whose image consists of the product of images of commuting representations
 %
 % We write ``image(g) = reps{1}.image(g) * ... * reps{n}.image(g)``.
 
@@ -9,7 +9,7 @@ classdef CommutingProductRep < replab.Rep
 
     methods
 
-        function self = CommutingProductRep(group, field, dimension, reps)
+        function self = CommutingRepsRep(group, field, dimension, reps)
         % Constructs a representation from commuting representations
         %
         % All the representations in the sequence should be defined on the same group, and on the same field.
@@ -60,7 +60,7 @@ classdef CommutingProductRep < replab.Rep
         end
 
         function r = composeTerm(self, newFactors)
-            r = replab.rep.CommutingProductRep(self.group, self.field, self.dimension, newFactors);
+            r = replab.rep.CommutingRepsRep(self.group, self.field, self.dimension, newFactors);
         end
 
         function rho = image_exact(self, g)

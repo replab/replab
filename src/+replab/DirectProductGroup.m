@@ -49,7 +49,7 @@ classdef DirectProductGroup < replab.CompactGroup
 
     methods % Representations
 
-        function rep = commutingProductFactorRep(self, field, dimension, factorReps)
+        function rep = commutingFactorRepsRep(self, field, dimension, factorReps)
         % Constructs a representation from commuting representations of the factors
         %
         % Args:
@@ -60,10 +60,10 @@ classdef DirectProductGroup < replab.CompactGroup
         % Returns:
         %   `+replab.Rep`: A representation computed from the product of representations
             reps = arrayfun(@(i) self.projection(i).andThen(factorReps{i}), 1:self.nFactors, 'uniform', 0);
-            rep = self.commutingProductRep(field, dimension, reps);
+            rep = self.commutingRepsRep(field, dimension, reps);
         end
 
-        function rep = commutingProductFactorRepFun(self, field, dimension, fun)
+        function rep = commutingFactorRepsRepFun(self, field, dimension, fun)
         % Constructs a representation from commuting representations of the factors (function version)
         %
         % Args:
@@ -74,7 +74,7 @@ classdef DirectProductGroup < replab.CompactGroup
         % Returns:
         %   `+replab.Rep`: A representation computed from the product of representations
             reps = arrayfun(@(i) fun(self.factor(i), i), 1:self.nFactors, 'uniform', 0);
-            rep = self.commutingProductFactorRep(field, dimension, reps);
+            rep = self.commutingFactorRepsRep(field, dimension, reps);
         end
 
         function rep = directSumFactorRep(self, field, factorReps)
