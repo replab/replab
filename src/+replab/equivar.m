@@ -1,12 +1,9 @@
-classdef equivar < replab.Str
+classdef equivar < replab.Obj
 % Describes an equivariant YALMIP matrix variable
 %
 % The variable is defined over an equivariant space `.equivariant`. Internally, the variable will be parameterized using
-% the irreducible decomposition of both ``equivariant.repR`` and ``equivariant.repC``. Thus, we store the
-% symmetry adapted equivariant space `.symmetryAdaptedEquivariant`, which is the equivariant space from
-% ``equivariant.repC.decomposition`` to ``equivariant.repR.decomposition``.
-%
-% This symmetry adapted equivariant space is of type `.IrreducibleEquivariant`, which provides us a minimal parameterization
+% the irreducible decomposition of both ``equivariant.repR`` and ``equivariant.repC``, which is given by
+% ``.equivariant.decomposition``, of type `.IrreducibleEquivariant`, which provides us a minimal parameterization
 % of the different blocks.
 
     properties (SetAccess = protected)
@@ -80,6 +77,7 @@ classdef equivar < replab.Str
                 n2 = dec.nColBlocks;
                 blocks = cell(n1, n2);
                 if ~isempty(args.value)
+                    self.cache('value', args.value, 'error');
                     value = args.value;
                     for i = 1:n1
                         for j = 1:n2
@@ -106,8 +104,19 @@ classdef equivar < replab.Str
             rep = self.equivariant.repC;
         end
 
-        function [s, values] = sdpvar(self)
-        % Returns the matrix corresponding to this equivar, in the original basis
+        function s = value(self)
+        % Returns the explicit matrix corresponding to this equivar in the non-symmetry-adapted basis
+        %
+        % Returns:
+        %   double(\*,\*) or sdpvar(\*,\*): Matrix
+            s = self.cached('value', @() self.computeValue);
+        end
+
+    end
+
+    methods (Access = protected)
+
+        function s = computeValue(self)
             nR = size(self.blocks, 1);
             nC = size(self.blocks, 2);
             dec = self.equivariant.decomposition;
@@ -220,10 +229,13 @@ classdef equivar < replab.Str
             C = vertcat(C{:});
         end
 
-        function C = sdp(self)
+        function C = issdp(self)
         % Returns the YALMIP constraint that this equivar is semidefinite positive
         %
         % This expands the SDP constraint in the block-diagonal basis
+        %
+        % Returns:
+        %
             if self.equivariant.field == 'R'
                 assert(ismember(self.equivariant.special, {'hermitian' 'symmetric'}));
             else

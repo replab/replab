@@ -1329,14 +1329,45 @@ classdef Rep < replab.Obj
             rep = self.group.tensorRep(self.field, varargin);
         end
 
+        function rep = permutedTensorPower(self, mu)
+        % Returns a tensor power of this representation, whose factors are permuted by the group
+        %
+        % Example:
+        %   >>> U2 = replab.U(2);
+        %   >>> S3 = replab.S(3);
+        %   >>> G = U2.directProduct(S3);
+        %   >>> GtoU2 = G.projection(1); % morphism from G to U2
+        %   >>> GtoS3 = G.projection(2); % morphism from G to S3
+        %   >>> repU2 = GtoU2.andThen(U2.definingRep);
+        %   >>> rep = repU2.permutedTensorPower(GtoS3);
+        %   >>> rep.dimension
+        %       8
+        %
+        % Args:
+        %   mu (`.Morphism`): Morphism from `.group` to a `.PermutationGroup`
+        %
+        % Returns:
+        %   `.Rep`: The permuted tensor power representation
+            assert(isa(mu, 'replab.Morphism'));
+            assert(isa(mu.target, 'replab.PermutationGroup'));
+            n = mu.target.domainSize;
+            reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
+            rep1 = self.group.tensorRep(self.field, reps);
+            rep2 = mu.andThen(mu.target.indexRelabelingRep(self.dimension));
+            if self.overC
+                rep2 = rep2.complexification;
+            end
+            rep = self.group.commutingRepsRep(self.field, self.dimension^n, {rep1 rep2});
+        end
+
         function rep = tensorPower(self, n)
-        % Returns a tensor power of this representation
+        % Returns a tensor power of this representation, with the blocks permuted by the group
         %
         % Args:
         %   n (integer): Exponent of the tensor power
         %
         % Returns:
-        %   `+replab.Rep`: The tensor power representation
+        %   `.Rep`: The tensor power representation
             reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
             rep = self.group.tensorRep(self.field, reps);
         end
@@ -1393,6 +1424,37 @@ classdef Rep < replab.Obj
             sub = self.tensorPower(2).subRep(replab.cyclotomic(injection));
         end
 
+        function rep = permutedDirectSumOfCopies(self, mu)
+        % Returns a direct sum of copies of this representation
+        %
+        % Example:
+        %   >>> U2 = replab.U(2);
+        %   >>> S3 = replab.S(3);
+        %   >>> G = U2.directProduct(S3);
+        %   >>> GtoU2 = G.projection(1); % morphism from G to U2
+        %   >>> GtoS3 = G.projection(2); % morphism from G to S3
+        %   >>> repU2 = GtoU2.andThen(U2.definingRep);
+        %   >>> rep = repU2.permutedTensorPower(GtoS3);
+        %   >>> rep.dimension
+        %       6
+        %
+        % Args:
+        %   mu (`.Morphism`): Morphism from `.group` to a `.PermutationGroup`
+        %
+        % Returns:
+        %   `.Rep`: The permuted tensor power representation
+            assert(isa(mu, 'replab.Morphism'));
+            assert(isa(mu.target, 'replab.PermutationGroup'));
+            n = mu.target.domainSize;
+            reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
+            rep1 = self.directSumOfCopies(n);
+            rep2 = kron(mu.andThen(mu.target.naturalRep), self.group.trivialRep('R', self.dimension));
+            if self.overC
+                rep2 = rep2.complexification;
+            end
+            rep = self.group.commutingRepsRep(self.field, self.dimension*n, {rep1 rep2});
+        end
+
         function rep = directSumOfCopies(self, n)
         % Returns a direct sum of copies of this representation
         %
@@ -1402,7 +1464,7 @@ classdef Rep < replab.Obj
         % Returns:
         %   `+replab.Rep`: The direct sum representation
             reps = arrayfun(@(i) self, 1:n, 'uniform', 0);
-            rep = self.group.directSum(self.field, reps);
+            rep = self.group.directSumRep(self.field, reps);
         end
 
     end
