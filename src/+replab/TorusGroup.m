@@ -46,6 +46,37 @@ classdef TorusGroup < replab.CompactGroup
 
     end
 
+    methods % Group constructions
+
+        function S = semidirectProductFromRep(self, rep)
+        % Returns the semidirect of a finite group on the torus elements using one of its integer representations
+        %
+        % Invertible integer matrices represent automorphisms of a torus group of the same dimension; thus, given a
+        % group ``G``, a representation of ``G`` with integer images defines a morphism from ``G`` to the automorphism
+        % group of a torus ``T``.
+        %
+        % One can then use this morphism to construct an outer semidirect product of ``G`` acting on ``T``.
+        %
+        % Args:
+        %   rep (`.Rep`): Group representation with integer coefficients
+        %
+        % Returns:
+        %   `.SemidirectProduct`: Semidirect product of ``rep.group`` and the torus group
+            H = rep.group;
+            assert(isa(H, 'replab.FiniteGroup'));
+            n = rep.dimension;
+            assert(n == self.n);
+            for i = 1:H.nGenerators
+                h = H.generator(i);
+                img = rep.image(h);
+                assert(all(all(round(img) == img)), 'The representation must have integer coefficients');
+                assert(all(all(self.relations*img*self.injection == 0)), 'The representation must be compatible with the relations');
+            end
+            S = H.semidirectProduct(self, @(g, p) mod(rep.image(g)*p, 1));
+        end
+
+    end
+
     methods % Morphisms
 
         function mu = torusMorphism(self, target, torusMap)
@@ -66,60 +97,60 @@ classdef TorusGroup < replab.CompactGroup
         end
 
 
-% $$$         function mu = splitMorphism(self, varargin)
-% $$$         % Constructs a morphism from this torus group to a direct product of torus groups
-% $$$         %
-% $$$         % Can be constructed either using ``blocks`` of indices, or by ``maps``; one of the arguments must be given.
-% $$$         %
-% $$$         % Keyword Args:
-% $$$         %   blocks (cell(1,\*) of integer(1,\*)): An array of subset of indices describing which elements are mapped to which factor
-% $$$         %   maps (cell(1,\*) of integer(\*,\*)): An array of torus maps describing a morphism between this torus and each of the factors
-% $$$             args = struct('blocks', [], 'maps', []);
-% $$$             args = replab.util.populateStruct(args, varargin);
-% $$$             if iscell(args.blocks)
-% $$$                 assert(~iscell(args.maps), 'Only one of the ''blocks'' and ''maps'' keyword arguments must be provided');
-% $$$                 maps = cellfun(@(b) full(sparse(1:length(b), b, ones(1, length(b)), length(b), self.n)), args.blocks, 'uniform', 0);
-% $$$             else
-% $$$                 assert(iscell(args.maps), 'One of ''blocks'' and ''maps'' keyword arguments must be provided');
-% $$$                 maps = args.maps;
-% $$$             end
-% $$$             dims = cellfun(@(m) size(m, 1), maps);
-% $$$             torusMap = vertcat(maps{:});
-% $$$             G = replab.DirectProductGroup.make(arrayfun(@(d) replab.StandardTorusGroup(d), dims, 'uniform', 0));
-% $$$             mu = self.morphismByFunction(G, @(t) cellfun(@(m) mod(m*t, 1), maps, 'uniform', 0), torusMap);
-% $$$         end
+        function mu = splitMorphism(self, varargin)
+        % Constructs a morphism from this torus group to a direct product of torus groups
+        %
+        % Can be constructed either using ``blocks`` of indices, or by ``maps``; one of the arguments must be given.
+        %
+        % Keyword Args:
+        %   blocks (cell(1,\*) of integer(1,\*)): An array of subset of indices describing which elements are mapped to which factor
+        %   maps (cell(1,\*) of integer(\*,\*)): An array of torus maps describing a morphism between this torus and each of the factors
+            args = struct('blocks', [], 'maps', []);
+            args = replab.util.populateStruct(args, varargin);
+            if iscell(args.blocks)
+                assert(~iscell(args.maps), 'Only one of the ''blocks'' and ''maps'' keyword arguments must be provided');
+                maps = cellfun(@(b) full(sparse(1:length(b), b, ones(1, length(b)), length(b), self.n)), args.blocks, 'uniform', 0);
+            else
+                assert(iscell(args.maps), 'One of ''blocks'' and ''maps'' keyword arguments must be provided');
+                maps = args.maps;
+            end
+            dims = cellfun(@(m) size(m, 1), maps);
+            torusMap = vertcat(maps{:});
+            G = replab.DirectProductGroup.make(arrayfun(@(d) replab.StandardTorusGroup(d), dims, 'uniform', 0));
+            mu = self.morphismByFunction(G, @(t) cellfun(@(m) mod(m*t, 1), maps, 'uniform', 0), torusMap);
+        end
 
     end
 
-% $$$     methods % Representations
-% $$$
-% $$$         function rep = definingRep(self)
-% $$$         % Returns the defining representation of this torus group
-% $$$         %
-% $$$         % The defining representation of a torus group of dimension ``n`` is a n-dimensional representation,
-% $$$         % whose images are diagonal in the standard Euclidean basis.
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.Rep`: Representation
-% $$$             rep = self.mapRep(eye(self.n));
-% $$$         end
-% $$$
-% $$$         function rep = mapRep(self, torusMap)
-% $$$         % Returns a diagonal representation of this torus group
-% $$$         %
-% $$$         % Constructs a representation using a ``torusMap``, whose images are diagonal matrices. The diagonal
-% $$$         % elements are monomials of the phases of the torus group. Each row of ``torusMap`` corresponds to
-% $$$         % a diagonal element, and the columns give the integer exponents corresponding to every phase.
-% $$$         %
-% $$$         % Args:
-% $$$         %   torusMap (integer(d, n)): Phase exponents
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.Rep`: Representation
-% $$$             rep = replab.rep.TorusRep(self, torusMap);
-% $$$         end
-% $$$
-% $$$     end
+    methods % Representations
+
+        function rep = definingRep(self)
+        % Returns the defining representation of this torus group
+        %
+        % The defining representation of a torus group of dimension ``n`` is a n-dimensional representation,
+        % whose images are diagonal in the standard Euclidean basis.
+        %
+        % Returns:
+        %   `.Rep`: Representation
+            rep = self.mapRep(eye(self.n));
+        end
+
+        function rep = mapRep(self, torusMap)
+        % Returns a diagonal representation of this torus group
+        %
+        % Constructs a representation using a ``torusMap``, whose images are diagonal matrices. The diagonal
+        % elements are monomials of the phases of the torus group. Each row of ``torusMap`` corresponds to
+        % a diagonal element, and the columns give the integer exponents corresponding to every phase.
+        %
+        % Args:
+        %   torusMap (integer(d, n)): Phase exponents
+        %
+        % Returns:
+        %   `.Rep`: Representation
+            rep = replab.rep.TorusRep(self, torusMap);
+        end
+
+    end
 
     methods % Implementations
 
@@ -181,64 +212,38 @@ classdef TorusGroup < replab.CompactGroup
 
     end
 
-% $$$     methods (Static)
-% $$$
-% $$$         function rho = torusRepRealImage(t)
-% $$$         % Returns the sparse block-diagonal matrix corresponding to the given torus element
-% $$$         %
-% $$$         % The element ``t(i)`` will correspond to a 2x2 block: ``[c s; -s c]`` where
-% $$$         % ``c = cos(2*pi*t(i))`` and ``s = sin(2*pi*t(i))``.
-% $$$         %
-% $$$         % Args:
-% $$$         %   t (double(n,1)): Torus group element
-% $$$         %
-% $$$         % Returns:
-% $$$         %   double(2*n,2*n): Block diagonal matrix of 2x2 real matrices
-% $$$             n = length(t);
-% $$$             blocks = arrayfun(@(ti) sparse([cos(2*pi*ti) -sin(2*pi*ti); sin(2*pi*ti) cos(2*pi*ti)]), t, 'uniform', false);
-% $$$             rho = blkdiag(blocks{:});
-% $$$         end
-% $$$
-% $$$         function rho = torusRepImage(t)
-% $$$         % Returns the sparse diagonal matrix corresponding to the given torus element
-% $$$         %
-% $$$         % Equivalent to ``torusGroup.definingRep.image(t)``, without constructing additional objects.
-% $$$         %
-% $$$         % Args:
-% $$$         %   t (double(n,1)): Torus group element
-% $$$         %
-% $$$         % Returns:
-% $$$         %   double(n,n), sparse: Diagonal matrix corresponding to the torus element
-% $$$             n = length(t);
-% $$$             rho = sparse(1:n, 1:n, exp(2i*pi*mod(t', 1)));
-% $$$         end
-% $$$
-% $$$         function S = semidirectProductFromRep(rep)
-% $$$         % Returns the semidirect of a finite group on the torus elements using one of its integer representations
-% $$$         %
-% $$$         % Invertible integer matrices represent automorphisms of a torus group of the same dimension; thus, given a
-% $$$         % group ``G``, a representation of ``G`` with integer images defines a morphism from ``G`` to the automorphism
-% $$$         % group of a torus ``T``.
-% $$$         %
-% $$$         % One can then use this morphism to construct an outer semidirect product of ``G`` acting on ``T``.
-% $$$         %
-% $$$         % Args:
-% $$$         %   rep (`.Rep`): Group representation with integer coefficients
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.SemidirectProduct`: Semidirect product of ``rep.group`` and the torus group
-% $$$             H = rep.group;
-% $$$             n = rep.dimension;
-% $$$             assert(isa(H, 'replab.FiniteGroup'));
-% $$$             for i = 1:H.nGenerators
-% $$$                 h = H.generator(i);
-% $$$                 img = rep.image(h);
-% $$$                 assert(all(all(round(img) == img)), 'The representation must have integer coefficients');
-% $$$             end
-% $$$             T = replab.TorusGroup(n);
-% $$$             S = H.semidirectProduct(T, @(g, p) mod(rep.image(g)*p, 1));
-% $$$         end
-% $$$
-% $$$     end
+    methods (Static)
+
+        function rho = torusRepRealImage(t)
+        % Returns the sparse block-diagonal matrix corresponding to the given torus element
+        %
+        % The element ``t(i)`` will correspond to a 2x2 block: ``[c s; -s c]`` where
+        % ``c = cos(2*pi*t(i))`` and ``s = sin(2*pi*t(i))``.
+        %
+        % Args:
+        %   t (double(n,1)): Torus group element
+        %
+        % Returns:
+        %   double(2*n,2*n): Block diagonal matrix of 2x2 real matrices
+            n = length(t);
+            blocks = arrayfun(@(ti) sparse([cos(2*pi*ti) -sin(2*pi*ti); sin(2*pi*ti) cos(2*pi*ti)]), t, 'uniform', false);
+            rho = blkdiag(blocks{:});
+        end
+
+        function rho = torusRepImage(t)
+        % Returns the sparse diagonal matrix corresponding to the given torus element
+        %
+        % Equivalent to ``torusGroup.definingRep.image(t)``, without constructing additional objects.
+        %
+        % Args:
+        %   t (double(n,1)): Torus group element
+        %
+        % Returns:
+        %   double(n,n), sparse: Diagonal matrix corresponding to the torus element
+            n = length(t);
+            rho = sparse(1:n, 1:n, exp(2i*pi*mod(t', 1)));
+        end
+
+    end
 
 end

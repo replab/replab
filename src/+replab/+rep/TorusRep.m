@@ -47,7 +47,7 @@ classdef TorusRep < replab.Rep
 
         function [torusMap, torusInjection, torusProjection] = torusImage(self)
             d = size(self.torusMap, 1);
-            torusMap = self.torusMap;
+            torusMap = self.torusMap * self.group.injection;
             torusInjection = speye(d);
             torusProjection = speye(d);
         end
