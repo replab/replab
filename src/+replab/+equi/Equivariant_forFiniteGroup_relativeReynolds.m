@@ -23,7 +23,7 @@ classdef Equivariant_forFiniteGroup_relativeReynolds < replab.Equivariant
     methods (Access = protected) % Implementations
 
         function X = project_exact(self, X)
-            T = self.group.decomposition.T;
+            T = self.group.setProduct.sets;
             for i = length(T):-1:1
                 els = T{i};
                 nEls = length(els);
