@@ -19,6 +19,16 @@ classdef IrreducibleEquivariant < replab.SubEquivariant
     methods (Access = protected)
 
         function self = IrreducibleEquivariant(parent, repR, repC, special, blocks)
+        % Constructs an `.IrreducibleEquivariant` space
+        %
+        % Args:
+        %   parent (`.Equivariant`): Equivariant space to ``.repR.parent`` from ``.repC.parent``
+        %   repR (`.Irreducible`): Irreducible decomposition of the row representation
+        %   repC (`.Irreducible`): Irreducible decomposition of the column representation
+        %   special (charstring): Special type of this equivariant space, see `.Equivariant`
+        %   blocks (cell(\*,\*) of `.IsotypicEquivariant`): Blocks corresponding to equivariant space between irreps
+            assert(isa(repR, 'replab.Irreducible'));
+            assert(isa(repC, 'replab.Irreducible'));
             self@replab.SubEquivariant(parent, repR, repC, special);
             self.blocks = blocks;
             self.nonZeroBlock = cellfun(@(b) ~b.isZero, blocks);
