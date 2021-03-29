@@ -5,6 +5,6 @@ function grp = T(n)
 %   n (integer): Torus group rank
 %
 % Returns:
-%   `+replab.StandardTorusGroup`: Torus group
-    grp = replab.StandardTorusGroup(n);
+%   `+replab.TorusGroup`: Standard torus group
+    grp = replab.TorusGroup(zeros(0, n));
 end

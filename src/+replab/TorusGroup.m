@@ -1,32 +1,67 @@
 classdef TorusGroup < replab.CompactGroup
 % Describes a compact, connected, abelian Lie group
 %
-% Its elements are column vectors in the space ``[0,1[^n``, i.e. floating point numbers "modulo 1", where ``n`` is the
-% group dimension. The group binary operation is addition modulo 1.
+% Its elements are column vectors of angles expressed in turns (see `<https://en.wikipedia.org/wiki/Turn_(angle)>_`),
+% i.e. real numbers between 0 and 1, 1 not included. The group binary operation is addition modulo 1, the identity
+% is the turn ``0``, and the inverse operation maps any non-zero turn ``x`` to ``1-x``.
 %
-% The elements of this torus may obey specified relations; let ``g = [g(1); g(2); ..., g(n)]`` be a group element.
-% Then we would have ``mod(relations*g, 1) == 0``.
+% Let the coefficients ``[t1; t2; ...; tn]`` be the coefficients of this column vector, where ``n`` is the torus group
+% dimension. The coefficients may or may not obey equations of the form ``mod(a1*t1 + a2*t2 + ... + an*tn, 1) == 0``,
+% where the coefficients ``a1 ... an`` are integers. Those equations are collected as rows in the `.E` integer matrix.
+%The size of the null space of the `.E` matrix is the number of degrees of freedom of the torus group or its rank `.r`.
 %
-% There is a natural isomorphism with the group ``U(1)^n``, with image ``u`` of coefficients ``u(i) = exp(2i*pi*g(i))``.
+% Such a group is isomorphic to the group of column vectors whose coefficients are unit complex numbers, where
+% the identity is the number ``1``, the group binary operation is the multiplication of complex numbers and
+% inverse operation the conjugation. Such vectors are written ``[u1; u2; ...; un]`` where ``ui = exp(2i*pi*ti)``.
+% The equations are written as ``u1^a1 * u2^a2 * ... * un^an == 1`` with the same integer coefficients.
+%
+% The defining representation of this group (`.definingRep`) is the ``n x n`` matrix with diagonal elements ``u1`` ... ``un``.
+%
+% The explicit group elements (for example, the value returned by `.sample`) are written using the additive convention;
+% while the equations are written multiplicatively in symbolic form.
 
     properties (SetAccess = protected)
+        names % (cell(1,\*) of charstring): Names of coefficients in the multiplicative convention
         n % (integer): Torus dimension
         r % (integer): Torus rank
-        relations % (integer(\*,n)): Relations obeyed by the elements of this torus
+        E % (integer(\*,n)): Equations obeyed by the elements of this torus
         injection % (integer(n,r)): Injection map from maximal torus to this torus
         projection % (integer(r,n)): Projection map from this torus to a maximal torus
     end
 
+    methods (Static, Access = protected)
+
+        function names = standardNames(n)
+            persistent cache
+            m = max(n, 10);
+            if isempty(cache)
+                cache = arrayfun(@(i) sprintf('u%d', i), 1:m, 'uniform', 0);
+            else
+                cache = horzcat(cache, arrayfun(@(i) sprintf('u%d', i), length(cache)+1:m, 'uniform', 0));
+            end
+            names = cache(1:n);
+        end
+
+    end
+
     methods
 
-        function self = TorusGroup(relations)
-            n = size(relations, 2);
-            if size(relations, 1) == 0
+        function self = TorusGroup(E, names)
+            if nargin < 2 || isempty(names)
+                n = size(E, 2);
+                names = replab.TorusGroup.standardNames(n);
+            else
+                n = length(names);
+                if isempty(E)
+                    E = zeros(0, n);
+                end
+            end
+            if size(E, 1) == 0
                 r = n;
                 injection = eye(n);
                 projection = eye(n);
             else
-                [H, U] = replab.numerical.integer.hermiteNormalForm(relations');
+                [H, U] = replab.numerical.integer.hermiteNormalForm(E');
                 H = H';
                 U = U';
                 V = round(inv(U));
@@ -36,26 +71,82 @@ classdef TorusGroup < replab.CompactGroup
                 projection = V(mask,:);
                 r = sum(mask);
             end
+            self.names = names;
             self.n = n;
             self.r = r;
             self.injection = injection;
             self.projection = projection;
-            self.relations = relations;
+            self.E = E;
             self.identity = zeros(n, 1);
         end
 
-        function T1 = subgroup(self, newRelations)
-        % Returns a subgroup of this torus that obeys the given relations
-        %
-        % The relations are expressed as ``mod(newRelations * x, 1) == 0``, where ``x`` is a group element.
+        function n = nEquations(self)
+            n = size(self.E, 1);
+        end
+
+        function s = equation(self, i)
+            e = self.E(i,:);
+            l = [];
+            for i = 1:length(e)
+                if e(i) > 0
+                    l = [l ones(1, e(i))*i];
+                elseif e(i) < 0
+                    l = [l -ones(1, -e(i))*i];
+                end
+            end
+            s = replab.fp.Letters.print(l, self.names);
+        end
+
+        function T1 = subgroup(self, newE)
+        % Returns a subgroup of this torus that obeys the given equations
         %
         % Args:
-        %   newRelations (integer(m,n)): Relations to be satisfied by the group elements
+        %   E (integer(\*, n)): New equations
         %
         % Returns:
-        %   `.TorusGroup`: Torus group satisfying the relations of this group and the ones given
-            assert(size(newRelations, 2) == self.n);
-            T1 = replab.TorusGroup([self.relations; newRelations]);
+        %   `.TorusGroup`: Torus group satisfying the equations of this group and the ones given
+            assert(size(newE, 2) == self.n);
+            T1 = replab.TorusGroup([self.E; newE], self.names);
+        end
+
+        function T1 = subgroupWith(self, varargin)
+            E = zeros(0, self.n);
+            for i = 1:length(varargin)
+                v = varargin{i};
+                if isa(v, 'double')
+                    E = [E; v];
+                elseif ischar(v)
+                    [ok, tokens] = replab.fp.Parser.lex(v, self.names);
+                    assert(ok, 'Could not parse %s', v);
+                    [pos, equations] = replab.fp.Parser.equation(tokens, 1);
+                    if pos == 0 || tokens(1, pos) ~= replab.fp.Parser.types.END
+                        error('Could not parse %s', v);
+                    end
+                    for i = 1:length(equations)
+                        e = equations{i};
+                        row = zeros(1, self.n);
+                        for j = 1:length(e)
+                            row(abs(e(j))) = row(abs(e(j))) + sign(e(j));
+                        end
+                        E = [E; row];
+                    end
+                else
+                    error('Unsupported argument type %s', class(v));
+                end
+            end
+            T1 = self.subgroup(E);
+        end
+
+        function T1 = withNames(self, newNames)
+        % Returns a copy of this torus group with the names of the unit complex coefficients updated
+        %
+        % Args:
+        %   newNames (cell(1,n) of charstring): Names of the complex coefficients
+        %
+        % Returns:
+        %   `.TorusGroup`: Updated group
+            assert(length(newNames) == self.n);
+            T1 = replab.TorusGroup(self.E, newNames);
         end
 
     end
@@ -84,7 +175,7 @@ classdef TorusGroup < replab.CompactGroup
                 h = H.generator(i);
                 img = rep.image(h);
                 assert(all(all(round(img) == img)), 'The representation must have integer coefficients');
-                assert(all(all(self.relations*img*self.injection == 0)), 'The representation must be compatible with the relations');
+                assert(all(all(self.E*img*self.injection == 0)), 'The representation must be compatible with the group equations');
             end
             S = H.semidirectProduct(self, @(g, p) mod(rep.image(g)*p, 1));
         end
@@ -106,7 +197,7 @@ classdef TorusGroup < replab.CompactGroup
             assert(self.n == n);
             assert(target.n == n1);
             % double all(all(...)) to cater for the case of empty dimensions
-            assert(all(all(target.relations * torusMap * self.injection == 0)), 'The given map is not compatible with the target relations');
+            assert(all(all(target.E * torusMap * self.injection == 0)), 'The given map is not compatible with the target equations');
             mu = self.morphismByFunction(target, @(t) mod(torusMap*t, 1), target.projection * torusMap * self.injection);
         end
 
@@ -130,7 +221,7 @@ classdef TorusGroup < replab.CompactGroup
             end
             dims = cellfun(@(m) size(m, 1), maps);
             torusMap = vertcat(maps{:});
-            G = replab.DirectProductGroup.make(arrayfun(@(d) replab.StandardTorusGroup(d), dims, 'uniform', 0));
+            G = replab.DirectProductGroup.make(arrayfun(@(d) replab.T(d), dims, 'uniform', 0));
             mu = self.morphismByFunction(G, @(t) cellfun(@(m) mod(m*t, 1), maps, 'uniform', 0), torusMap);
         end
 
@@ -146,10 +237,34 @@ classdef TorusGroup < replab.CompactGroup
         %
         % Returns:
         %   `.Rep`: Representation
-            rep = self.mapRep(eye(self.n));
+            rep = self.diagonalRep(eye(self.n));
         end
 
-        function rep = mapRep(self, torusMap)
+        function rep = diagonalRepWith(self, varargin)
+        % Returns a diagonal rep of this torus group
+            torusMap = zeros(0, self.n);
+            for i = 1:length(varargin)
+                v = varargin{i};
+                if ~ischar(v)
+                    error('Unsupported argument type %s', class(v));
+                end
+                assert(ischar(v));
+                [ok, tokens] = replab.fp.Parser.lex(v, self.names);
+                assert(ok, 'Could not parse %s', v);
+                [pos, res] = replab.fp.Parser.word(tokens, 1);
+                if pos == 0 || tokens(1, pos) ~= replab.fp.Parser.types.END
+                    error('Could not parse %s', v);
+                end
+                row = zeros(1, self.n);
+                for j = 1:length(res)
+                    row(abs(res(j))) = row(abs(res(j))) + sign(res(j));
+                end
+                torusMap = [torusMap; row];
+            end
+            rep = self.diagonalRep(torusMap);
+        end
+
+        function rep = diagonalRep(self, torusMap)
         % Returns a diagonal representation of this torus group
         %
         % Constructs a representation using a ``torusMap``, whose images are diagonal matrices. The diagonal
@@ -167,6 +282,21 @@ classdef TorusGroup < replab.CompactGroup
     end
 
     methods % Implementations
+
+        % Str
+
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.CompactGroup(self);
+            names{1,end+1} = 'E';
+        end
+
+        function [names, values] = additionalFields(self)
+            [names, values] = additionalFields@replab.CompactGroup(self);
+            for i = 1:self.nEquations
+                names{1, end+1} = sprintf('equation(%d)', i);
+                values{1, end+1} = self.equation(i);
+            end
+        end
 
         % Obj
 

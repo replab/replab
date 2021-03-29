@@ -117,6 +117,18 @@ classdef Group < replab.Monoid
             G = replab.AutomorphismGroup(self);
         end
 
+        function m = commutingMorphismsMorphism(self, target, morphisms)
+        % Constructs a morphism from morphisms with commuting images
+        %
+        % Args:
+        %   target (`.Group`): Target group
+        %   morphisms (cell(1,\*) of `.Morphisms`): Morphisms whose images commute in ``target``
+        %
+        % Returns:
+        %   `.Morphism`: The computed morphism
+            m = replab.mrp.CommutingMorphismsMorphism(self, target, morphisms);
+        end
+
         function m = innerAutomorphism(self, by)
         % Returns the inner automorphism given using conjugation by the given element
         %

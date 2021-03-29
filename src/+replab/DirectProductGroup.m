@@ -134,6 +134,33 @@ classdef DirectProductGroup < replab.CompactGroup
 
     methods % Morphisms
 
+        function m = commutingFactorMorphismsMorphism(self, target, factorMorphisms)
+        % Constructs a morphism from morphisms of the factors with commuting images
+        %
+        % Args:
+        %   target (`.CompactGroup`): Target group
+        %   factorMorphisms (cell(1,\*) of `.Morphisms`): Morphisms for each of the factor groups
+        %
+        % Returns:
+        %   `.Morphism`: The computed morphism
+            morphisms = arrayfun(@(i) self.projection(i).andThen(factorMorphisms{i}), 1:self.nFactors, 'uniform', 0);
+            m = self.commutingMorphismsMorphism(target, morphisms);
+        end
+
+        function m = commutingFactorMorphismsMorphismFun(self, target, fun)
+        % Constructs a morphism from morphisms of the factors with commuting images (function version)
+        %
+        % Args:
+        %   target (`.CompactGroup`): Target group
+        %   fun (function_handle): A function valid for each factor group that maps the group and its index to one of its morphisms
+        %
+        % Returns:
+        %   `.Morphism`: The computed morphism
+            morphisms = arrayfun(@(i) fun(self.factor(i), i), 1:self.nFactors, 'uniform', 0);
+            m = self.commutingFactorMorphismsMorphism(target, morphisms);
+        end
+
+
         function m = injection(self, i)
         % Returns the morphism embedding the i-th factor into the direct product
         %
