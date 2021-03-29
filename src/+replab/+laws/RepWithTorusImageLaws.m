@@ -3,7 +3,7 @@ classdef RepWithTorusImageLaws < replab.Laws
     properties (SetAccess = protected)
         rep % (`+replab.Rep`): Representation
         mu % (`+replab.Morphism`): Morphism from maximal torus to ``rep.group``
-        T % (`+replab.StandardTorusGroup`): Maximal torus subgroup
+        T % (`+replab.TorusGroup`): Maximal torus subgroup
     end
 
     methods
