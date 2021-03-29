@@ -35,18 +35,24 @@ Trep = T.diagonalRepWith('a0 b0 c0', ...
 % We construct now the discrete part, by writing how the subsystem and level permutations affect
 % the elements of the continuous connected part.
 
+% The finite discrete group permutes the three subsystems and the two levels, independently
+F = replab.S(3).directProduct(replab.S(2));
+
 % Permutation of AB
-gAB = [2 1 3 5 4 6];
+gAB = {[2 1 3] [1 2]};
+actAB = T.automorphism('b0', 'a0', 'c0', 'b1', 'a1', 'c1');
 % Permutation of AC
-gAC = [3 2 1 6 5 4];
+gAC = {[3 2 1] [1 2]};
+actAC = T.automorphism('c0', 'b0', 'a0', 'c1', 'b1', 'a1');
 % Permutation of BC
-gBC = [1 3 2 4 6 5];
-
+gBC = {[1 3 2] [1 2]};
+actBC = T.automorphism('a0', 'c0', 'b0', 'a1', 'c1', 'b1');
 % Permutation of the two levels
-gL = [4 5 6 1 2 3];
+gL = {[1 2 3] [2 1]};
+actL = T.automorphism('a1', 'b1', 'c1', 'a0', 'b0', 'c0');
 
-% The finite, discrete group part
-F = replab.PermutationGroup.of(gAB, gAC, gBC, gL);
+% Verify that those generators generate the whole group
+assert(F.subgroup({gAB, gAC, gBC, gL}) == F);
 
 % How does this act on the state space?
 % Remember 1,2,3,4,5,6,7,8 enumerates
@@ -64,5 +70,5 @@ mu = F.morphismByImages(replab.S(8), 'preimages', {gAB, gAC, gBC, gL}, 'images',
 % and we construct a representation by composing the morphism with the permutation matrix representation of S(8)
 Frep = mu.andThen(replab.S(8).naturalRep);
 
-G = T.semidirectProductFromRep(F.naturalRep);
+G = T.semidirectProductByFiniteGroup(F, 'preimages', {gAB, gAC, gBC, gL}, 'images', {actAB, actAC, actBC, actL});
 rep = G.semidirectProductRep(Frep.complexification, Trep);
