@@ -7,13 +7,9 @@ classdef equiop_generic < replab.equiop
 
     methods
 
-        function self = equiop_generic(source, target, f, supportsSparse)
-            if nargin < 4 || isempty(supportsSparse)
-                supportsSparse = false;
-            end
+        function self = equiop_generic(group, source, target, sourceInjection, targetInjection, f, supportsSparse)
             assert(isa(f, 'function_handle'));
-            assert(source.group == target.group);
-            self@replab.equiop(source, target)
+            self@replab.equiop(group, source, target, sourceInjection, targetInjection)
             self.f = f;
             self.supportsSparse = supportsSparse;
         end
@@ -40,7 +36,6 @@ classdef equiop_generic < replab.equiop
             if ~isa(X, 'sdpvar')
                 error('Invalid parameter type %s', class(X));
             end
-            X = value(X);
             dec = self.target.decomposition;
             n1 = dec.repR.nComponents;
             n2 = dec.repC.nComponents;

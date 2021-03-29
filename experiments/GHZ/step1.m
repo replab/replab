@@ -1,3 +1,5 @@
+% In this step, we compute the family of states with the symmetry of the GHZ states.
+%
 % The GHZ state |GHZ> = |000> + |111> is invariant (U |GHZ> = |GHZ>) under a family of matrices U
 %
 %      [a0  0]      [b0  0]     [c0  0]
@@ -22,7 +24,6 @@ T = T6.subgroupWith('a0*b0*c0 = 1', 'a1*b1*c1 = 1');
 % Now, how does that group act on the state space ``C^8``?
 %
 % We construct the representation whose image is the matrix U above:
-Trep_eqs = {};
 Trep = T.diagonalRepWith('a0 b0 c0', ...
                          'a0 b0 c1', ...
                          'a0 b1 c0', ...
@@ -72,3 +73,5 @@ Frep = mu.andThen(replab.S(8).naturalRep);
 
 G = T.semidirectProductByFiniteGroup(F, 'preimages', {gAB, gAC, gBC, gL}, 'images', {actAB, actAC, actBC, actL});
 rep = G.semidirectProductRep(Frep.complexification, Trep);
+
+rep.decomposition

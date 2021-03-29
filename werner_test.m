@@ -14,7 +14,7 @@ HT = repT.hermitianInvariant;
 % The partial transpose linear map
 pptFun = @(X) reshape(permute(reshape(X, [2 2 2 2]), [3 2 1 4]), [4 4]);
 % Upgraded as an equivariant super operator from the space H to the space HT
-ppt = replab.equiop(H, HT, pptFun);
+ppt = replab.equiop.generic(H, HT, pptFun);
 
 % Define the singlet state as an equivar
 singlet = replab.equivar(H, 'value', [0 0 0 0; 0 1 -1 0; 0 -1 1 0; 0 0 0 0]/2);
@@ -29,9 +29,9 @@ rho = singlet*t + noise*(1-t);
 % we use the syntax sdp(EV) to define a semidefinite positive constraint, where EV is an equivar
 % we use the syntax sdpvar(EV) to recover the sdpvar in the original (i.e. non symmetry adapted) basis
 
-C = [trace(sdpvar(rho)) == 1
-     sdp(rho)
-     sdp(ppt(rho))];
+C = [trace(value(rho)) == 1
+     issdp(rho)
+     issdp(ppt(rho))];
 
 % note that this is a linear program now
 optimize(C, -t)

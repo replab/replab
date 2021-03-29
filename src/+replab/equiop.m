@@ -18,17 +18,26 @@ classdef equiop < replab.Obj
 % * when called on an `.equivar` matrix, it computes the corresponding sdpvar, and applies the user function on the components as well.
 
     properties (SetAccess = protected)
+        group % (`.CompactGroup`): Map equivariant group
         source % (`.Equivariant`): Source equivariant space
         target % (`.Equivariant`): Target equivariant space
+        sourceInjection % (`.Morphism`): Morphism from `.group` to ``source.group``
+        targetInjection % (`.Morphism`): Morphism from `.group` to ``target.group``
     end
 
     methods
 
-        function self = equiop(source, target)
+        function self = equiop(group, source, target, sourceInjection, targetInjection)
+            assert(isa(group, 'replab.CompactGroup'));
             assert(isa(source, 'replab.Equivariant'));
             assert(isa(target, 'replab.Equivariant'));
+            assert(isa(sourceInjection, 'replab.Morphism') && sourceInjection.target == source.group);
+            assert(isa(targetInjection, 'replab.Morphism') && targetInjection.target == target.group);
+            self.group = group;
             self.source = source;
             self.target = target;
+            self.sourceInjection = sourceInjection;
+            self.targetInjection = targetInjection;
         end
 
     end
@@ -103,7 +112,13 @@ classdef equiop < replab.Obj
         % The user-defined function may or may not support the use of sparse arguments (for example, if it uses
         % ``reshape/permute`` internally). The ``supportsSparse`` parameter may be set accordingly.
         %
-        % Both the source and the target space must be defined over the same group.
+        % The user-provided function must be equivariant over a group, and this group must be a subgroup of
+        % both ``source.group`` and ``target.group``. The subgroup inclusion is characterized by the injection
+        % maps ``sourceInjection`` and ``targetInjection``, which must satisfy
+        % ``group = sourceInjection.source = targetInjection.source``.
+        %
+        % In the case one or both of ``sourceInjection`` and ``targetInjection`` are missing, they are set to
+        % the identity isomorphism of ``source.group`` and ``target.group`` respectively.
         %
         % Args:
         %   source (`.Equivariant`): Source equivariant space
@@ -111,23 +126,27 @@ classdef equiop < replab.Obj
         %   f (function_handle): User-defined linear or affine map
         %
         % Keyword Args:
-        %   supportsSparse (logical, optional): Whether the user-defined function ``f`` may be applied on sparse matrices, default: false
+        %   sourceInjection (`.Morphism`, optional): An injection from the equiop group to ``source.group``
+        %   targetInjection (`.Morphism`, optional): An injection from the equiop group to ``target.group``
+        %   supportsSparse (logical, optional): Whether the user-defined function ``f`` may be applied on sparse matrices, default: ``false``
         %
         % Returns:
         %   `.equiop`: Super-operator between equivariant spaces
-            args = struct('supportsSparse', false);
+            args = struct('sourceInjection', [], 'targetInjection', [], 'supportsSparse', false);
             args = replab.util.populateStruct(args, varargin);
-            E = replab.evar.equiop_generic(source, target, f, args.supportsSparse);
-        end
-
-        function E = restriction(source, target, mu)
-        % Returns a linear operator that maps an equivariant space over a group to the equivariant space over a subgroup
-        %
-        % Args:
-        %   source (`.Equivariant`): Source equivariant space
-        %   target (`.Equivariant`): Target equivariant space
-        %   mu (`.Morphism`): Morphism that embeds ``target.group`` into ``source.group``
-            E = replab.evar.equiop_restriction(source, target, mu);
+            if isempty(args.sourceInjection)
+                sourceInjection = replab.Isomorphism.identity(source.group);
+            else
+                sourceInjection = args.sourceInjection;
+            end
+            if isempty(args.targetInjection)
+                targetInjection = replab.Isomorphism.identity(target.group);
+            else
+                targetInjection = args.targetInjection;
+            end
+            group = sourceInjection.source;
+            assert(targetInjection.source == group);
+            E = replab.evar.equiop_generic(group, source, target, sourceInjection, targetInjection, f, args.supportsSparse);
         end
 
     end
