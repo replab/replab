@@ -7,7 +7,7 @@ classdef LambdaIsomorphism < replab.Isomorphism
 
     methods
 
-        function self = Lambda(source, target, preimageElementFun, imageElementFun, torusMap)
+        function self = LambdaIsomorphism(source, target, preimageElementFun, imageElementFun, torusMap)
             self.source = source;
             self.target = target;
             self.preimageElementFun = preimageElementFun;
