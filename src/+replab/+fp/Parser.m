@@ -184,6 +184,7 @@ classdef Parser
             if tokens(1, pos) ~= types.EQUALITY
                 % this is already a relator, return
                 relators = {lhs};
+                return
             end
             elements = {lhs};
             while tokens(1, pos) == types.EQUALITY
