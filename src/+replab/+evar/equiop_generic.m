@@ -9,7 +9,7 @@ classdef equiop_generic < replab.equiop
 
         function self = equiop_generic(group, source, target, sourceInjection, targetInjection, f, supportsSparse)
             assert(isa(f, 'function_handle'));
-            self@replab.equiop(group, source, target, sourceInjection, targetInjection)
+            self@replab.equiop(group, source, target, sourceInjection, targetInjection);
             self.f = f;
             self.supportsSparse = supportsSparse;
         end

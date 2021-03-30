@@ -39,7 +39,8 @@ addpath(genpath('~/software/QETLAB'));
 
 % We define the groups
 
-T6 = replab.T(6).withNames({'a0' 'b0' 'c0' 'a1' 'b1' 'c1'});
+T6 = replab.T(6);
+T6 = T6.withNames({'a0' 'b0' 'c0' 'a1' 'b1' 'c1'});
 T = T6.subgroupWith('a0*b0*c0 = 1', 'a1*b1*c1 = 1');
 P = replab.S(3);
 P_AC = P.subgroup({[3 2 1]});

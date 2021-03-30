@@ -16,7 +16,8 @@
 % Let us define the continuous connected group.
 %
 % T6 is the torus group with 6 elements, that we name according to our scenario:
-T6 = replab.T(6).withNames({'a0' 'b0' 'c0' 'a1' 'b1' 'c1'});
+T6 = replab.T(6);
+T6 = T6.withNames({'a0' 'b0' 'c0' 'a1' 'b1' 'c1'});
 
 % We define the subgroup obeying the required equations
 T = T6.subgroupWith('a0*b0*c0 = 1', 'a1*b1*c1 = 1');
@@ -37,7 +38,9 @@ Trep = T.diagonalRepWith('a0 b0 c0', ...
 % the elements of the continuous connected part.
 
 % The finite discrete group permutes the three subsystems and the two levels, independently
-F = replab.S(3).directProduct(replab.S(2));
+S3 = replab.S(3);
+S2 = replab.S(2);
+F = S3.directProduct(S2);
 
 % Permutation of AB
 gAB = {[2 1 3] [1 2]};
@@ -66,12 +69,15 @@ hBC = [1 3 2 4 5 7 6 8];
 hL = [8 7 6 5 4 3 2 1];
 
 % here is the morphism
-mu = F.morphismByImages(replab.S(8), 'preimages', {gAB, gAC, gBC, gL}, 'images', {hAB, hAC, hBC, hL});
+S8 = replab.S(8);
+mu = F.morphismByImages(S8, 'preimages', {gAB, gAC, gBC, gL}, 'images', {hAB, hAC, hBC, hL});
 
 % and we construct a representation by composing the morphism with the permutation matrix representation of S(8)
-Frep = mu.andThen(replab.S(8).naturalRep);
+Frep = mu.andThen(S8.naturalRep);
 
 G = T.semidirectProductByFiniteGroup(F, 'preimages', {gAB, gAC, gBC, gL}, 'images', {actAB, actAC, actBC, actL});
 rep = G.semidirectProductRep(Frep.complexification, Trep);
 
+replab.globals.verbosity(2);
+replab.globals.useReconstruction(1);
 rep.decomposition
