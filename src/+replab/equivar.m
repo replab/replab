@@ -104,19 +104,31 @@ classdef equivar < replab.Obj
             rep = self.equivariant.repC;
         end
 
-        function s = value(self)
+        function s = double(self)
+        % Returns the explicit double floating-point matrix corresponding to this equivar
+        %
+        % Raises:
+        %   An error if the matrix is of type "sdpvar"
+        %
+        % Returns:
+        %   double(\*,\*): Matrix
+            s = self.sdpvar;
+            assert(isa(s, 'double'));
+        end
+
+        function s = sdpvar(self)
         % Returns the explicit matrix corresponding to this equivar in the non-symmetry-adapted basis
         %
         % Returns:
         %   double(\*,\*) or sdpvar(\*,\*): Matrix
-            s = self.cached('value', @() self.computeValue);
+            s = self.cached('value', @() self.computeSdpvar);
         end
 
     end
 
     methods (Access = protected)
 
-        function s = computeValue(self)
+        function s = computeSdpvar(self)
             nR = size(self.blocks, 1);
             nC = size(self.blocks, 2);
             dec = self.equivariant.decomposition;

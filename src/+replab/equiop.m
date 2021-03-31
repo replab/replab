@@ -42,7 +42,7 @@ classdef equiop < replab.Obj
 
     end
 
-    methods
+    methods % Operator application
 
         function Y = apply(self, X)
         % Computes the application of the operator to a matrix
@@ -55,6 +55,46 @@ classdef equiop < replab.Obj
         % Returns:
         %   `.equivar`: Map output
             error('Abstract');
+        end
+
+    end
+
+    methods
+
+        function res = restrict(self, injection)
+        % Restricts the equiop to be equivariant under a subgroup of its symmetry group
+        %
+        % Args:
+        %   injection (`.Morphism`): Morphism from the subgroup to `.group`
+            res = replab.equiop.generic(self.source, self.target, @(X) X, 'sourceInjection', injection.andThen(self.sourceInjection), 'targetInjection', injection.andThen(self.targetInjection), 'supportsSparse', false);
+        end
+
+    end
+
+    methods % Composition
+
+        function res = compose(self, applyFirst)
+        % Composition of equivariant operators, the argument applied first
+        %
+        % Args:
+        %   applyFirst (`.equiop`): Morphism to apply first
+        %
+        % Returns:
+        %   `.equiop`: The composition of equiops
+            assert(self.group == applyFirst.group);
+            res = replab.equiop.generic(applyFirst.source, self.target, @(X) self.apply(applyFirst.apply(X)), 'sourceInjection', applyFirst.sourceInjection, 'targetInjection', self.targetInjection, 'supportsSparse', false);
+            % TODO: sparse support
+        end
+
+        function res = andThen(self, applyLast)
+        % Composition of equivariant operators, the argument applied last
+        %
+        % Args:
+        %   applyLast (`.equiop`): Morphism to apply second
+        %
+        % Returns:
+        %   `.equiop`: The composition of equiops
+            res = applyLast.compose(self);
         end
 
     end
@@ -100,7 +140,7 @@ classdef equiop < replab.Obj
 
     end
 
-    methods (Static)
+    methods (Static) % Construction
 
         function E = generic(source, target, f, varargin)
         % Constructs an `.equiop` from a user-provided function

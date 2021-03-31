@@ -23,7 +23,7 @@ classdef equiop_generic < replab.equiop
         function Y = apply(self, X)
             f = self.f;
             if isa(X, 'replab.equivar')
-                X = value(X);
+                X = sdpvar(X);
             end
             if isa(X, 'double')
                 if ~self.supportsSparse

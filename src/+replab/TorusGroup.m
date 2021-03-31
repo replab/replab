@@ -419,9 +419,15 @@ classdef TorusGroup < replab.CompactGroup
 
         % Str
 
+        function h = headerStr(self)
+            h = sprintf('Torus group of dimension n=%d and rank r=%d', self.n, self.r);
+        end
+
         function names = hiddenFields(self)
             names = hiddenFields@replab.CompactGroup(self);
             names{1,end+1} = 'E';
+            names{1,end+1} = 'n';
+            names{1,end+1} = 'r';
         end
 
         function [names, values] = additionalFields(self)
