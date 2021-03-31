@@ -66,7 +66,7 @@ classdef equiop < replab.Obj
         %
         % Args:
         %   injection (`.Morphism`): Morphism from the subgroup to `.group`
-            res = replab.equiop.generic(self.source, self.target, @(X) X, 'sourceInjection', injection.andThen(self.sourceInjection), 'targetInjection', injection.andThen(self.targetInjection), 'supportsSparse', false);
+            res = replab.equiop.generic(self.source, self.target, @(X) X, 'sourceInjection', injection.andThen(self.sourceInjection), 'targetInjection', injection.andThen(self.targetInjection), 'supportsSparse', true);
         end
 
     end
@@ -82,8 +82,8 @@ classdef equiop < replab.Obj
         % Returns:
         %   `.equiop`: The composition of equiops
             assert(self.group == applyFirst.group);
-            res = replab.equiop.generic(applyFirst.source, self.target, @(X) self.apply(applyFirst.apply(X)), 'sourceInjection', applyFirst.sourceInjection, 'targetInjection', self.targetInjection, 'supportsSparse', false);
-            % TODO: sparse support
+            res = replab.equiop.generic(applyFirst.source, self.target, @(X) self.apply(applyFirst.apply(X)), 'sourceInjection', applyFirst.sourceInjection, 'targetInjection', self.targetInjection, 'supportsSparse', true);
+            % we put supportsSparse true because our function accepts sparse matrices (though the two equiops may convert to full)
         end
 
         function res = andThen(self, applyLast)
