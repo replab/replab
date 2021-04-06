@@ -11,11 +11,17 @@ classdef equiop < replab.Obj
 %
 % both of which must be defined over related groups, which describe the symmetries.
 %
-% The resulting `.equiop` can be called as any MATLAB function. It can work on three types of arguments:
+% This `.equiop` is equivariant over a given `.group`, and this group must be a subgroup of
+% both ``source.group`` and ``target.group``. The subgroup inclusion is characterized by the injection
+% maps ``sourceInjection`` and ``targetInjection``. These must satisfy:
 %
-% * when called on a ``double`` matrix, it applies the function and returns an `.equivar` in the target space,
-% * when called on an ``sdpvar`` matrix, it decomposes the sdpvar and applies the user function on the components of the affine combination,
-% * when called on an `.equivar` matrix, it computes the corresponding sdpvar, and applies the user function on the components as well.
+% * ``sourceInjection.source == group``
+% * ``sourceInjection.target == source.group``
+% * ``targetInjection.source == group``
+% * ``targetInjection.target == target.group``.
+%
+
+% The resulting `.equiop` can be called as any MATLAB function, or through the `.apply` method.
 
     properties (SetAccess = protected)
         group % (`.CompactGroup`): Map equivariant group
@@ -31,8 +37,10 @@ classdef equiop < replab.Obj
             assert(isa(group, 'replab.CompactGroup'));
             assert(isa(source, 'replab.Equivariant'));
             assert(isa(target, 'replab.Equivariant'));
-            assert(isa(sourceInjection, 'replab.Morphism') && sourceInjection.target == source.group);
-            assert(isa(targetInjection, 'replab.Morphism') && targetInjection.target == target.group);
+            assert(isa(sourceInjection, 'replab.Morphism'));
+            assert(isa(targetInjection, 'replab.Morphism'));
+            assert(sourceInjection.source == group && sourceInjection.target == source.group);
+            assert(targetInjection.source == group && targetInjection.target == target.group);
             self.group = group;
             self.source = source;
             self.target = target;
@@ -48,6 +56,14 @@ classdef equiop < replab.Obj
         % Computes the application of the operator to a matrix
         %
         % The syntax ``E.apply(X)`` is equivalent to the call ``E(X)``.
+        %
+        % This method works on three argument types:
+        %
+        % * when called on a ``double`` matrix, it directly applies the function and factorizes the output,
+        % * when called on an ``sdpvar`` matrix, it decomposes the sdpvar and applies the user function on the components of the affine combination,
+        % * when called on an `.equivar` matrix, it computes the corresponding ``sdpvar``, and applies the user function on the components as well.
+        %
+        % In all cases it returns an `.equivar` matrix.
         %
         % Args:
         %   X (double(\*,\*) or sdpvar(\*,\*) or `.equivar`): Input matrix
