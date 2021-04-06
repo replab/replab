@@ -16,14 +16,6 @@ classdef equiopLaws < replab.Laws
             self.T = op.target;
         end
 
-        function law_equivariant_space_map_S(self, s)
-            f = self.op;
-            t = double(f(s));
-            t1 = self.T.project(t);
-            tol = replab.globals.doubleEigTol;
-            self.assertApproxEqual(t, t1, tol);
-        end
-
         function law_map_is_equivariant_GS(self, g, s)
             gs = self.S.repR.matrixRowAction(g, self.S.repC.matrixColAction(g, s));
             f = self.op;
