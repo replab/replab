@@ -1,10 +1,13 @@
 classdef equivar < replab.Obj
 % Describes an equivariant YALMIP matrix variable
 %
-% The variable is defined over an equivariant space `.equivariant`. Internally, the variable will be parameterized using
-% the irreducible decomposition of both ``equivariant.repR`` and ``equivariant.repC``, which is given by
-% ``.equivariant.decomposition``, of type `.IrreducibleEquivariant`, which provides us a minimal parameterization
-% of the different blocks.
+% The variable is defined over an equivariant space `.equivariant`; it corresponds to a matrix ``X`` invariant
+% under the action of a representation `.repR` acting on the row space, and a representation `.repC` acting on
+% the column space: ``repR.image(g) * X == X * repC.image(g)``.
+%
+% Internally, the variable will be parameterized using the irreducible decomposition of both
+% ``equivariant.repR`` and ``equivariant.repC``, which is given by ``.equivariant.decomposition``,
+% of type `.IrreducibleEquivariant`, which provides us a minimal parameterization of the different blocks.
 
     properties (SetAccess = protected)
         equivariant % (`.Equivariant`): Equivariant space corresponding to this matrix
@@ -56,11 +59,6 @@ classdef equivar < replab.Obj
         % Keyword Args:
         %   value (double(\*,\*) or sdpvar(\*,\*)): Variable value (in the original space)
         %   blocks (cell(\*,\*) of double(\*,\*) or sdpvar(\*,\*)): Variable value in the minimal parameter space
-
-
-        % TODO: cache "sdpvar(equivar)"
-        % prefill that cache if value is provided here
-        % allow an option to *not* project before factorization
             repR = equivariant.repR;
             repC = equivariant.repC;
             args = struct('value', [], 'blocks', []);
@@ -97,10 +95,18 @@ classdef equivar < replab.Obj
         end
 
         function rep = repR(self)
+        % Returns the representation acting on the row space
+        %
+        % Returns:
+        %   `.Rep`: Representation
             rep = self.equivariant.repR;
         end
 
         function rep = repC(self)
+        % Returns the representation acting on the column space
+        %
+        % Returns:
+        %   `.Rep`: Representation
             rep = self.equivariant.repC;
         end
 
