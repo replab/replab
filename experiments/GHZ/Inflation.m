@@ -1,13 +1,30 @@
 run ~/w/replab/replab_init.m
 addpath(genpath('~/software/QETLAB'));
-% We compute the inflation stuff
+replab.globals.useReconstruction(1);
+replab.globals.verbosity(0);
+
+% ## Spaces of Hermitian matrices
 %
-% We have the following spaces.
+% * Triangle: Three qubits A B C, the state we are testing which has the symmetries of the GHZ state, see `GHZ_symmetries.ipynb`
+%
+% * Two triangles: Six qubits A1 B1 C1 A2 B2 C2
+%
+% Two triangles, PPT constraint: C^64
+% Symmetries: P+L+T, H has no action
+%
+% Ring: C^64 six qubits A1 B1 C2 A2 B2 C2
+% Symmetries: P+H+L+T, H acts by shifting the subsystems around the ring by three
+%
+% ACAC space: four qubits A1 C1 A2 C2
+% Symmetries: P_AC+H+L+T *** we use a different group here!
+%
+% ABCB space: four qubits A1 B1 C1 B2 marginal of the ring
+% Symmetries: P_AC+L+T, H has no action
 %
 % For the symmetries, we write:
 %
-% - P the symmetry group S(3) permuting the subsystems ABC, with P_AC the subgroup permuting only AC
-%   We generate P using the three transpositions (A,B), (A,C), (B,C)
+% - $P$ the symmetry group $S(3)$ permuting the subsystems ABC, with $P_{AC}$ the subgroup permuting only AC
+%   We generate $P$ using the three transpositions (A,B), (A,C), (B,C).
 %
 % - H the shift group S(2) shifting the ring by +3, or permuting the two triangles
 %
@@ -37,7 +54,7 @@ addpath(genpath('~/software/QETLAB'));
 % ABCB space: four qubits A1 B1 C1 B2 marginal of the ring
 % Symmetries: P_AC+L+T, H has no action
 
-% We define the groups
+% ## We define the groups
 
 T6 = replab.T(6);
 T6 = T6.withNames({'a0' 'b0' 'c0' 'a1' 'b1' 'c1'});
@@ -72,7 +89,9 @@ G = T.semidirectProductByFiniteGroup(D, 'preimages', {gAB, gAC, gBC, gH, gL}, 'i
 G_AC = T.semidirectProductByFiniteGroup(D_AC, 'preimages', {gAC, gH, gL}, 'images', {actAC, actH, actL});
 G_AC_inj = G_AC.morphismByFunction(G, @(x) x); % we keep the same element
 
-% Triangle equivariant space
+% ## Triangle equivariant space
+%
+
 Trep_triangle = T.diagonalRepWith('a0 b0 c0', ...
                                   'a0 b0 c1', ...
                                   'a0 b1 c0', ...
@@ -91,8 +110,15 @@ imgH_triangle = replab.Permutation.toMatrix([1 2 3 4 5 6 7 8]);
 Drep_triangle = D.repByImages('C', 8, 'preimages', {gAB, gAC, gBC, gH, gL}, 'images', {imgAB_triangle, imgAC_triangle, imgBC_triangle, imgH_triangle, imgL_triangle});
 rep_triangle = G.semidirectProductRep(Drep_triangle, Trep_triangle);
 E_triangle = rep_triangle.hermitianInvariant;
+lambda = sdpvar;
+ghz = [1 0 0 0 0 0 0 1]'*[1 0 0 0 0 0 0 1]/2;
+noise = eye(8)/8;
+X_triangle = replab.equivar(E_triangle, 'value', ghz) * (1-lambda) + replab.equivar(E_triangle, 'value', noise) * lambda;
+obj = lambda;
+C = [issdp(X_triangle)];
 
-% Two triangles equivariant space
+% ## Two triangles equivariant space
+
 Trep_twotriangles = kron(Trep_triangle, Trep_triangle);
 imgAB_twotriangles = kron(imgAB_triangle, imgAB_triangle);
 imgAC_twotriangles = kron(imgAC_triangle, imgAC_triangle);
@@ -104,16 +130,21 @@ rep_twotriangles = G.semidirectProductRep(Drep_twotriangles, Trep_twotriangles);
 E_twotriangles = rep_twotriangles.hermitianInvariant;
 
 op_mapsTriangle = replab.equiop.generic(E_twotriangles, E_triangle, @(X) PartialTrace(X, [4 5 6], [2 2 2 2 2 2]));
+X_twotriangles = replab.equivar(E_twotriangles);
+C = [C; issdp(X_twotriangles); op_mapsTriangle(X_twotriangles) == X_triangle]
 
-% PPT equivariant space
+% ## Two triangles, PPT equivariant space
+
 Trep_ppt = kron(Trep_triangle, dual(Trep_triangle)); % the second copy has a partial transpose
 Drep_ppt = D.repByImages('C', 64, 'preimages', {gAB, gAC, gBC, gH, gL}, 'images', {imgAB_twotriangles, imgAC_twotriangles, imgBC_twotriangles, eye(64), imgL_twotriangles});
 rep_ppt = G.semidirectProductRep(Drep_ppt, Trep_ppt);
 E_ppt = rep_ppt.hermitianInvariant;
 
 op_ppt = replab.equiop.generic(E_twotriangles, E_ppt, @(X) PartialTranspose(X, [4 5 6], [2 2 2 2 2 2]), 'supportsSparse', true);
+C = [C; issdp(op_ppt(X_twotriangles))]
 
-% ring equivariant space
+% ## Ring equivariant space
+
 Trep_ring = kron(Trep_triangle, Trep_triangle);
 img_ring = @(p) reshape(permute(reshape(eye(64), [2 2 2 2 2 2 64]), [fliplr(7 - p) 7]), [64 64]);
 imgAB_ring = img_ring([2 1 6 5 4 3]);
@@ -124,8 +155,11 @@ imgL_ring = kron(imgL_triangle, imgL_triangle);
 Drep_ring = D.repByImages('C', 64, 'preimages', {gAB, gAC, gBC, gH, gL}, 'images', {imgAB_ring, imgAC_ring, imgBC_ring, imgH_ring, imgL_ring});
 rep_ring = G.semidirectProductRep(Drep_ring, Trep_ring);
 E_ring = rep_ring.hermitianInvariant;
+X_ring = replab.equivar(E_ring);
+C = [C; issdp(X_ring)];
 
-% ACAC space, corresponds to A1C1A2C2 in the ring, A1C2A2C1
+% ## ACAC space, corresponds to A1C1A2C2 in the ring, A1C2A2C1 in the two triangles
+
 Trep_ACAC = T.diagonalRepWith('a0 c0 a0 c0', ...
                               'a0 c0 a0 c1', ...
                               'a0 c0 a1 c0', ...
@@ -150,9 +184,12 @@ Drep_ACAC = D_AC.repByImages('C', 16, 'preimages', {gAC, gH, gL}, 'images', {img
 rep_ACAC = G_AC.semidirectProductRep(Drep_ACAC, Trep_ACAC);
 E_ACAC = rep_ACAC.hermitianInvariant;
 
-op_ACAC = replab.equiop.generic(E_ring, E_ACAC, @(X) PartialTrace(X, [2 5], [2 2 2 2 2 2]), 'sourceInjection', G_AC_inj);
+op_ring_to_ACAC = replab.equiop.generic(E_ring, E_ACAC, @(X) PartialTrace(X, [2 5], [2 2 2 2 2 2]), 'sourceInjection', G_AC_inj);
+op_twotriangles_to_ACAC = replab.equiop.generic(E_twotriangles, E_ACAC, @(X) PartialTrace(PermuteSystems(X, [1 6 4 3 2 5], [2 2 2 2 2 2]), [5 6], [2 2 2 2 2 2]), 'sourceInjection', G_AC_inj);
+C = [C; op_ring_to_ACAC(X_ring) == op_twotriangles_to_ACAC(X_twotriangles)]
 
-% ABCB space, corresponds to A1B1C1B2 in the ring
+% ## ABCB space, corresponds to A1B1C1B2 in the ring
+
 Trep_ABCB = T.diagonalRepWith('a0 b0 c0 b0', ...
                               'a0 b0 c0 b1', ...
                               'a0 b0 c1 b0', ...
@@ -178,6 +215,7 @@ rep_ABCB = G_AC.semidirectProductRep(Drep_ABCB, Trep_ABCB);
 E_ABCB = rep_ABCB.hermitianInvariant;
 
 op_ABCB = replab.equiop.generic(E_ring, E_ABCB, @(X) PartialTrace(X, [4 6], [2 2 2 2 2 2]), 'sourceInjection', G_AC_inj);
+C = [C; issdp(op_ABCB(X_ring))];
 
 % ABCB^T space, corresponds to A1B1C1B2 in the ring, with the B2 system partial transposed
 Trep_ABCBT = T.diagonalRepWith('a0 b0 c0 b0^-1', ...
@@ -200,3 +238,10 @@ rep_ABCBT = G_AC.semidirectProductRep(Drep_ABCB, Trep_ABCBT);
 E_ABCBT = rep_ABCBT.hermitianInvariant;
 
 op_ABCBT = replab.equiop.generic(E_ABCB, E_ABCBT, @(X) PartialTranspose(X, [4], [2 2 2 2]));
+C = [C; issdp(op_ABCBT(op_ABCB(X_ring)))];
+
+optimize(C, lambda)
+
+double(lambda)
+
+

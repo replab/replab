@@ -1,9 +1,15 @@
+run ~/w/replab/replab_init
+replab.globals.verbosity(2);
+replab.globals.useReconstruction(1);
+
 % In this step, we compute the family of states with the symmetry of the GHZ states.
 %
-% The GHZ state |GHZ> = |000> + |111> is invariant (U |GHZ> = |GHZ>) under a family of matrices U
+% The GHZ state $\left|\text{GHZ}\right> = \left|000\right> + \left|111\right>$ is invariant (U |GHZ> = |GHZ>) under a family of matrices U
 %
+% ```
 %      [a0  0]      [b0  0]     [c0  0]
 % U =  [ 0 a1]  (x) [ 0 b1] (x) [ 0 c1]
+% ```
 %
 % who act on the state space ``C^8``. The eight coefficients, in order, are those of
 % ``|000>``, ``|001>``, ``|010>``, ``|011>``, ``|100>``, ``|101>``, ``|110>``, ``|111>``.
@@ -63,21 +69,18 @@ assert(F.subgroup({gAB, gAC, gBC, gL}) == F);
 % ``|000>``, ``|001>``, ``|010>``, ``|011>``, ``|100>``, ``|101>``, ``|110>``, ``|111>``.
 
 % to simplify things, we first write a morphism from F to S(8), with the following images
-hAB = [1 2 5 6 3 4 7 8];
-hAC = [1 5 3 7 2 6 4 8];
-hBC = [1 3 2 4 5 7 6 8];
-hL = [8 7 6 5 4 3 2 1];
+imgAB = replab.Permutation.toMatrix([1 2 5 6 3 4 7 8]);
+imgAC = replab.Permutation.toMatrix([1 5 3 7 2 6 4 8]);
+imgBC = replab.Permutation.toMatrix([1 3 2 4 5 7 6 8]);
+imgL = replab.Permutation.toMatrix([8 7 6 5 4 3 2 1]);
 
-% here is the morphism
-S8 = replab.S(8);
-mu = F.morphismByImages(S8, 'preimages', {gAB, gAC, gBC, gL}, 'images', {hAB, hAC, hBC, hL});
-
-% and we construct a representation by composing the morphism with the permutation matrix representation of S(8)
-Frep = mu.andThen(S8.naturalRep);
+Frep = F.repByImages('C', 8, 'preimages', {gAB, gAC, gBC, gL}, 'images', {imgAB, imgAC, imgBC, imgL});
 
 G = T.semidirectProductByFiniteGroup(F, 'preimages', {gAB, gAC, gBC, gL}, 'images', {actAB, actAC, actBC, actL});
-rep = G.semidirectProductRep(Frep.complexification, Trep);
+rep = G.semidirectProductRep(Frep, Trep);
 
 replab.globals.verbosity(2);
 replab.globals.useReconstruction(1);
 rep.decomposition
+
+
