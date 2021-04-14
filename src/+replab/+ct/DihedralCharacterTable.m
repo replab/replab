@@ -108,5 +108,5 @@ function ct = DihedralCharacterTable(n)
             chars(n1D+j, nclasses) = replab.cyclotomic(0);
         end
     end
-    ct = replab.CharacterTable(group, classes, chars, 'irreps', irreps);
+    ct = replab.CharacterTable(group, 'C', classes, chars, 'irreps', irreps);
 end

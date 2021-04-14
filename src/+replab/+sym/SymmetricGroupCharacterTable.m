@@ -20,7 +20,7 @@ classdef SymmetricGroupCharacterTable < replab.CharacterTable
                 end
             end
             chars = replab.cyclotomic(round(chars));
-            self@replab.CharacterTable(permGroup, replab.ConjugacyClasses(permGroup, classes), chars, 'irrepNames', irrepNames, 'classNames', classNames, 'irreps', irreps);
+            self@replab.CharacterTable(permGroup, 'C', replab.ConjugacyClasses(permGroup, classes), chars, 'irrepNames', irrepNames, 'classNames', classNames, 'irreps', irreps);
 
         end
 

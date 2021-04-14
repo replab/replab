@@ -18,6 +18,7 @@ classdef CharacterTable < replab.Obj
 
     properties (SetAccess = protected)
         group % (`+replab.FiniteGroup`): Group represented by character table
+        field % ({'R', 'C'}): Whether the character table is real or complex
         classes % (`.ConjugacyClasses`): Conjugacy classes of `.group`
         classNames % (cell(1,nClasses) of charstring): Names of conjugacy classes
         irrepNames % (cell(1,nIrreps) of charstring): Names of the irreducible representations/characters
@@ -55,11 +56,12 @@ classdef CharacterTable < replab.Obj
 
     methods
 
-        function self = CharacterTable(group, classes, values, varargin)
+        function self = CharacterTable(group, field, classes, values, varargin)
         % Constructs a character table
         %
         % Args:
         %   group (`.FiniteGroup`): Group represented by character table
+        %   field ({'R', 'C'}): Field over which the characters are defined
         %   classes (`.ConjugacyClasses`): Conjugacy classes of `.group`
         %   values (`.cyclotomic` (nClasses, nClasses)): Character values
         %
@@ -68,6 +70,11 @@ classdef CharacterTable < replab.Obj
         %   classNames (cell(1,\*) of charstring, optional): Names of conjugacy classes
         %   irrepNames (cell(1,\*) of charstring, optional): Names of irreducible representations
         %   kronecker (integer(\*,\*,\*), optional): Kronecker coefficients
+            assert(isa(group, 'replab.FiniteGroup'));
+            assert(strcmp(field, 'R') || strcmp(field, 'C'));
+            assert(isa(classes, 'replab.ConjugacyClasses'));
+            assert(classes.group == group);
+            values = replab.cyclotomic(values);
             nIrreps = size(values, 1);
             nClasses = classes.nClasses;
             assert(size(values, 2) == nClasses);
@@ -80,6 +87,7 @@ classdef CharacterTable < replab.Obj
                 self.cache('kronecker', args.kronecker);
             end
             self.group = group;
+            self.field = field;
             self.classes = classes;
             self.values = values;
             self.irrepNames = args.irrepNames;
@@ -94,34 +102,59 @@ classdef CharacterTable < replab.Obj
         % -------
         %   R: integer(1,\*)
         %     Indices of the real-type representations
-        %   C: integer(2,\*)
-        %     Indices of the conjugate complex-type representations
+        %   C: integer(1/2,\*)
+        %     Indices of the complex-type representations, of conjugate pairs if `.overC` is true
         %   H: integer(1,\*)
         %     Indices of the quaternion-type representations
             F = cellfun(@(C) C.frobeniusSchurIndicator, self.characters);
             R = find(F == 1);
             R = R(:)';
-            H = find(F == -1);
-            H = H(:)';
-            inds = find(F == 0);
-            C = zeros(2, 0);
-            while ~isempty(inds)
-                ind = inds(1);
-                inds = inds(2:end);
-                v = self.values(ind,:);
-                indC = [];
-                for i = inds
-                    if self.values(i,:) == conj(v)
-                        indC = i;
-                        break
-                    end
-                end
-                if isempty(indC)
-                    error('Inconsistent character table');
-                end
-                C = [C [ind; indC]];
-                inds = setdiff(inds, indC);
+            if self.overC
+                H = find(F == -1);
+                H = H(:)';
+            else
+                H = find(F == -2);
+                H = H(:)';
             end
+            inds = find(F == 0);
+            if self.overR
+                C = inds;
+            else
+                C = zeros(2, 0);
+                while ~isempty(inds)
+                    ind = inds(1);
+                    inds = inds(2:end);
+                    v = self.values(ind,:);
+                    indC = [];
+                    for i = inds
+                        if self.values(i,:) == conj(v)
+                            indC = i;
+                            break
+                        end
+                    end
+                    if isempty(indC)
+                        error('Inconsistent character table');
+                    end
+                    C = [C [ind; indC]];
+                    inds = setdiff(inds, indC);
+                end
+            end
+        end
+
+        function b = overR(self)
+        % Returns whether the character table is defined over the real field
+        %
+        % Returns:
+        %   logical: True if the character table is defined over the real field
+            b = strcmp(self.field, 'R');
+        end
+
+        function b = overC(self)
+        % Returns whether the character table is defined over the complex field
+        %
+        % Returns:
+        %   logical: True if the character table is defined over the complex field
+            b = strcmp(self.field, 'C');
         end
 
         function dec = decomposition(self, rep)
@@ -487,7 +520,7 @@ classdef CharacterTable < replab.Obj
                     irreps1{i} = self.irreps{i}.imap(f);
                 end
             end
-            res = replab.CharacterTable(group1, classes1, values1, 'irreps', irreps1, 'classNames', self.classNames, 'irrepNames', self.irrepNames);
+            res = replab.CharacterTable(group1, self.field, classes1, values1, 'irreps', irreps1, 'classNames', self.classNames, 'irrepNames', self.irrepNames);
             if self.inCache('kronecker')
                 res.cache('kronecker', self.kronecker, 'error');
             end

@@ -7,6 +7,9 @@ function ct = directProduct(ct1, ct2)
 %
 % Returns:
 %   `+replab.CharacterTable`: Character table of the product ``ct1.group.directProduct(ct2.group)``
+    assert(isa(ct1, 'replab.CharacterTable'));
+    assert(isa(ct2, 'replab.CharacterTable'));
+    assert(ct1.field == 'C' && ct2.field == 'C');
     new_group = ct1.group.directProduct(ct2.group);
     % New characters are kronecker product of character matrices
     A = ct1.characters;
@@ -70,5 +73,5 @@ function ct = directProduct(ct1, ct2)
             new_irreps{j + (i-1)*length(ct2.irreps)} = new_irrep;
         end
     end
-    ct = replab.CharacterTable(new_group, new_classes, new_chars, 'irreps', new_irreps);
+    ct = replab.CharacterTable(new_group, 'C', new_classes, new_chars, 'irreps', new_irreps);
 end
