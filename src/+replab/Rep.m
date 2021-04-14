@@ -1434,7 +1434,7 @@ classdef Rep < replab.Obj
         %   >>> GtoU2 = G.projection(1); % morphism from G to U2
         %   >>> GtoS3 = G.projection(2); % morphism from G to S3
         %   >>> repU2 = GtoU2.andThen(U2.definingRep);
-        %   >>> rep = repU2.permutedTensorPower(GtoS3);
+        %   >>> rep = repU2.permutedDirectSumOfCopies(GtoS3);
         %   >>> rep.dimension
         %       6
         %

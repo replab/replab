@@ -34,12 +34,12 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 %   >>> E = std1.isotypicEquivariantFrom(std2);
 %   >>> X = E.sample;
 %   >>> M = E.projectAndFactor(X);
-%   >>> length(M)
+%   >>> size(M, 3)
 %       1
 %   >>> R = E.R('double');
 %   >>> A = E.A('double');
 %   >>> tol = 1e-14;
-%   >>> norm(kron(M{1}, kron(R{1}, A{1})) - X, 'fro') <= tol
+%   >>> norm(kron(M(:,:,1), kron(R(:,:,1), A(:,:,1))) - X, 'fro') <= tol
 %       1
 %   >>> norm(E.reconstruct(M) - X, 'fro') <= tol
 %       1
