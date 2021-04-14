@@ -1,4 +1,4 @@
-n = 3; % number of subsystems
+n = 4; % number of subsystems
 d = 2; % subsystem dimension
 % the symmetry group of the GHZ states had three parts:
 %
@@ -39,7 +39,7 @@ Sn_rep = Sn.repByImages('R', n-1, 'preimages', Sn.generators, 'images', Sn_image
 % integer coefficients
 torusRep = G.tensorFactorRep('R', {Sd.naturalRep Sn_rep});
 % We construct the GHZ group as a semidirect product
-ghzGroup = replab.TorusGroup.semidirectProductFromRep(torusRep);
+ghzGroup = replab.TorusGroup(zeros(0, torusRep.dimension)).semidirectProductFromRep(torusRep);
 
 % Now we move to the action of the GHZ group on the GHZ state space
 
@@ -47,7 +47,7 @@ ghzGroup = replab.TorusGroup.semidirectProductFromRep(torusRep);
 % * S(d) acts as a tensor product of dxd permutation matrices
 % * S(n) acts by relabeling the subsystems.
 % RepLAB has support for both representations.
-stateFiniteRep = G.commutingProductFactorRep('R', d^n, {Sd.naturalRep.tensorPower(n) Sn.indexRelabelingRep(d)});
+stateFiniteRep = G.commutingFactorRepsRep('R', d^n, {Sd.naturalRep.tensorPower(n) Sn.indexRelabelingRep(d)});
 
 % Now the action of the continuous part is trickier.
 % Basically, we write a map between two torus groups.
@@ -66,9 +66,11 @@ for i = 1:n-1
     maps{i} = reshape(map, [d (n-1)*d]);
 end
 maps{n} = reshape(lastmap, [d (n-1)*d]);
-mu = ghzGroup.N.splitMorphism('maps', maps);
-rep1 = mu.target.tensorFactorRepFun('C', @(T, i) T.definingRep);
-contRep = mu.andThen(rep1);
+subSysReps = cell(1, n);
+for i = 1:n
+    subSysReps{i} = ghzGroup.N.diagonalRep(maps{i});
+end
+contRep = kron(subSysReps{:});
 
 % Variant:
 % tm = zeros(d^n, n-1, d);
