@@ -112,23 +112,23 @@ classdef ClassicalCompactGroup < replab.CompactGroup
             switch self.algebra
               case 'R'
                 if mod(n, 2) == 0
-                    T = replab.TorusGroup(n/2);
+                    T = replab.T(n/2);
                     mu = T.morphismByFunction(self, @(t) replab.TorusGroup.torusRepRealImage(t), eye(n/2));
                 else
-                    T = replab.TorusGroup((n-1)/2);
+                    T = replab.T((n-1)/2);
                     mu = T.morphismByFunction(self, @(t) blkdiag(replab.TorusGroup.torusRepRealImage(t), sparse(1)) , eye((n-1)/2));
                 end
               case 'C'
                 if self.isSpecial
-                    T = replab.TorusGroup(n-1);
+                    T = replab.T(n-1);
                     torusMap = [eye(n-1); -ones(1, n-1)];
                     mu = T.morphismByFunction(self, @(t) replab.TorusGroup.torusRepImage(torusMap * t), eye(n-1));
                 else
-                    T = replab.TorusGroup(n);
+                    T = replab.T(n);
                     mu = T.morphismByFunction(self, @(t) replab.TorusGroup.torusRepImage(t), eye(n));
                 end
               case 'H'
-                T = replab.TorusGroup(n);
+                T = replab.T(n);
                 mu = T.morphismByFunction(self, @(t) replab.H(replab.TorusGroup.torusRepImage(t)), eye(n));
             end
         end

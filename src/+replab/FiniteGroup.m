@@ -87,7 +87,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         end
 
         function [mu, R] = reconstruction(self)
-            T = replab.TorusGroup(0);
+            T = replab.T(0);
             mu = T.morphismByFunction(self, @(t) self.identity);
             R = self.setProduct;
         end

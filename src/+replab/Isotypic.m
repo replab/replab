@@ -330,11 +330,58 @@ classdef Isotypic < replab.SubRep
 
         % Rep
 
+        function rep = conj(self)
+            irreps = cellfun(@(irrep) conj(irrep), self.irreps, 'uniform', 0);
+            rep = replab.Isotypic(dual(self.parent), irreps, dual(self.modelIrrep), self.injection_internal.');
+        end
+
+        function rep = dual(self)
+            irreps = cellfun(@(irrep) dual(irrep), self.irreps, 'uniform', 0);
+            rep = replab.Isotypic(conj(self.parent), irreps, conj(self.modelIrrep), conj(self.projection_internal));
+        end
+
+        % Rep: Equivariant spaces
+
+        function a = antilinearInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            a = self.cached(['antilinearInvariant_' type], @() self.isotypicEquivariantFrom(conj(self),  'special', 'antilinear', 'type', type));
+        end
+
+        function b = bilinearInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            b = self.cached(['bilinearInvariant_' type], @() self.isotypicEquivariantTo(dual(self),  'special', 'bilinear', 'type', type));
+        end
+
         function c = commutant(self, type)
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
             c = self.cached(['commutant_' type], @() self.isotypicEquivariantFrom(self,  'special', 'commutant', 'type', type));
+        end
+
+        function h = hermitianInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            h = self.cached(['hermitianInvariant_' type], @() self.isotypicEquivariantTo(conj(dual(self)),  'special', 'hermitian', 'type', type));
+        end
+
+        function s = sesquilinearInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            s = self.cached(['sesquilinearInvariant_' type], @() self.isotypicEquivariantTo(conj(dual(self)),  'special', 'sesquilinear', 'type', type));
+        end
+
+        function b = symmetricInvariant(self, type)
+            if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
+                type = 'double';
+            end
+            b = self.cached(['symmetricInvariant_' type], @() self.isotypicEquivariantTo(dual(self),  'special', 'symmetric', 'type', type));
         end
 
         % SubRep

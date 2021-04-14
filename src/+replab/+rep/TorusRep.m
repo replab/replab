@@ -8,9 +8,9 @@ classdef TorusRep < replab.Rep
     methods
 
         function self = TorusRep(group, torusMap)
+            assert(isa(group, 'replab.TorusGroup'));
             d = size(torusMap, 1);
-            td = sum(all(torusMap == 0), 2);
-            self@replab.Rep(group, 'C', d, 'isUnitary', true, 'trivialDimension', td);
+            self@replab.Rep(group, 'C', d, 'isUnitary', true);
             self.torusMap = torusMap;
         end
 
@@ -46,7 +46,7 @@ classdef TorusRep < replab.Rep
 
         function [torusMap, torusInjection, torusProjection] = torusImage(self)
             d = size(self.torusMap, 1);
-            torusMap = self.torusMap;
+            torusMap = self.torusMap * self.group.injection;
             torusInjection = speye(d);
             torusProjection = speye(d);
         end
@@ -62,7 +62,7 @@ classdef TorusRep < replab.Rep
         %
         % Args:
         %   torusMap1 (integer(\*,n)): First torus map
-        %   torusMap2 (itneger(\*,n)): Second torus map
+        %   torusMap2 (integer(\*,n)): Second torus map
         %
         % Returns
         % -------

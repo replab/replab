@@ -641,20 +641,30 @@ classdef SubRep < replab.Rep
         end
 
         function rep = dual(self)
-            rep = self.parent.dual.subRep(self.projection_internal.', 'projection', self.injection_internal.');
+            if self.knownIrreducible
+                args = {'isIrreducible', true};
+            else
+                args = {};
+            end
+            rep = self.parent.dual.subRep(self.projection_internal.', 'projection', self.injection_internal.', args{:});
         end
 
         function rep = conj(self)
-            rep = self.parent.conj.subRep(conj(self.injection_internal), 'projection', conj(self.projection_internal));
+            if self.knownIrreducible
+                args = {'isIrreducible', true};
+            else
+                args = {};
+            end
+            rep = self.parent.conj.subRep(conj(self.injection_internal), 'projection', conj(self.projection_internal), args{:});
         end
 
         % Rep: Equivariant spaces
 
-        function c = antilinearInvariant(self, type)
+        function a = antilinearInvariant(self, type)
             if nargin < 2 || isempty(type) || strcmp(type, 'double/sparse')
                 type = 'double';
             end
-            c = self.cached(['antilinearInvariant_' type], @() self.subEquivariantFrom(conj(self),  'special', 'antilinear', 'type', type));
+            a = self.cached(['antilinearInvariant_' type], @() self.subEquivariantFrom(conj(self),  'special', 'antilinear', 'type', type));
         end
 
         function b = bilinearInvariant(self, type)

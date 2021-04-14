@@ -8,29 +8,28 @@ function test_suite = GHZTest()
 end
 
 function test_ghz_3_2
-    n = 3; % number of subsystems
+    n = 4; % number of subsystems
     d = 2; % subsystem dimension
-
-    % the symmetry group of the GHZ states had three parts:
-    %
-    % 1. A continuous part given by phases (i.e. copies of U(1)). For the n-1 subsystems, each of the d
-    %    levels has a phase as an independent degree of freedom; the phase applied on the d-th level
-    %    of last n-th subsystem is equal to the inverse of the product of the phases of the d-th level
-    %    of the other subsystem.
-    %
-    %    We represent that symmetry using a torus group U(1)^((n-1)*d), as seen below. The torus
-    %    elements are stored by enumerating first i=1...n-1, and then j=1...d, so that, for a torus
-    %    element ``t``, the information can be accessed by performing ``reshape(t, [n-1 d])``
-    %
-    %    The torus group U(1)^N stores phases as elements of an additive group, with values in the
-    %    interval ``[0,1[``, and addition "modulo 1" as the binary operation.
-    %
-    % 2. A copy of S(n) that permutes the n subsystems.
-    %
-    % 3. A copy of S(d) that permutes the d levels.
-    %
-    % The discrete part acts on the torus; the action of S(d) is pretty easy to write and is a permutation
-    % action, while the action of S(n) involves the "virtual" phase for the n-th subsystem.
+           % the symmetry group of the GHZ states had three parts:
+           %
+           % 1. A continuous part given by phases (i.e. copies of U(1)). For the n-1 subsystems, each of the d
+           %    levels has a phase as an independent degree of freedom; the phase applied on the d-th level
+           %    of last n-th subsystem is equal to the inverse of the product of the phases of the d-th level
+           %    of the other subsystem.
+           %
+           %    We represent that symmetry using a torus group U(1)^((n-1)*d), as seen below. The torus
+           %    elements are stored by enumerating first i=1...n-1, and then j=1...d, so that, for a torus
+           %    element ``t``, the information can be accessed by performing ``reshape(t, [n-1 d])``
+           %
+           %    The torus group U(1)^N stores phases as elements of an additive group, with values in the
+           %    interval ``[0,1[``, and addition "modulo 1" as the binary operation.
+           %
+           % 2. A copy of S(n) that permutes the n subsystems.
+           %
+           % 3. A copy of S(d) that permutes the d levels.
+           %
+           % The discrete part acts on the torus; the action of S(d) is pretty easy to write and is a permutation
+           % action, while the action of S(n) involves the "virtual" phase for the n-th subsystem.
 
     % The discrete part is a direct product of S(d) and S(n)
     Sn = replab.S(n);
@@ -50,7 +49,7 @@ function test_ghz_3_2
     % integer coefficients
     torusRep = G.tensorFactorRep('R', {Sd.naturalRep Sn_rep});
     % We construct the GHZ group as a semidirect product
-    ghzGroup = replab.TorusGroup.semidirectProductFromRep(torusRep);
+    ghzGroup = replab.TorusGroup(zeros(0, torusRep.dimension)).semidirectProductFromRep(torusRep);
 
     % Now we move to the action of the GHZ group on the GHZ state space
 
@@ -58,7 +57,7 @@ function test_ghz_3_2
     % * S(d) acts as a tensor product of dxd permutation matrices
     % * S(n) acts by relabeling the subsystems.
     % RepLAB has support for both representations.
-    stateFiniteRep = G.commutingProductFactorRep('R', d^n, {Sd.naturalRep.tensorPower(n) Sn.indexRelabelingRep(d)});
+    stateFiniteRep = G.commutingFactorRepsRep('R', d^n, {Sd.naturalRep.tensorPower(n) Sn.indexRelabelingRep(d)});
 
     % Now the action of the continuous part is trickier.
     % Basically, we write a map between two torus groups.
@@ -77,9 +76,11 @@ function test_ghz_3_2
         maps{i} = reshape(map, [d (n-1)*d]);
     end
     maps{n} = reshape(lastmap, [d (n-1)*d]);
-    mu = ghzGroup.N.splitMorphism('maps', maps);
-    rep1 = mu.target.tensorFactorRepFun('C', @(T, i) T.definingRep);
-    contRep = mu.andThen(rep1);
+    subSysReps = cell(1, n);
+    for i = 1:n
+        subSysReps{i} = ghzGroup.N.diagonalRep(maps{i});
+    end
+    contRep = kron(subSysReps{:});
 
     % Variant:
     % tm = zeros(d^n, n-1, d);
@@ -98,6 +99,5 @@ function test_ghz_3_2
 
     % finally, "concatenate" the compatible representations of the components of the semidirect product
     rep = ghzGroup.semidirectProductRep(stateFiniteRep.complexification, contRep);
-    dec = rep.decomposition;
-    assert(all([1 1 6] == cellfun(@(c) c.dimension, dec.components)));
+    rep.decomposition;
 end

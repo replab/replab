@@ -81,9 +81,9 @@ classdef SedumiData
                 C = I.component(r).commutant;
                 A = C.A;
                 M = C.projectAndFactorFromParent(mat);
-                block = kron(M{1}, A{1});
-                for i = 2:length(M)
-                    block = block + kron(M{i}, A{i});
+                block = kron(M(:,:,1), A(:,:,1));
+                for i = 2:size(M, 3)
+                    block = block + kron(M(:,:,i), A(:,:,i));
                 end
                 % TODO: force a symmetric matrix
                 % store block flattened

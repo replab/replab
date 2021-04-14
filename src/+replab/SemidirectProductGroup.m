@@ -8,6 +8,8 @@ classdef SemidirectProductGroup < replab.Group
 % the constructors are duplicated in subclasses as to keep a simple hierarchy of
 % constructor calls.
 %
+% TODO: add details about the semidirect product construction
+%
 % Example:
 %   >>> N = replab.S(3);
 %   >>> H = replab.PermutationGroup.cyclic(3);
@@ -122,6 +124,8 @@ classdef SemidirectProductGroup < replab.Group
 
         function rep = semidirectProductRep(self, Hrep, Nrep)
         % Constructs a representation by a product of representations of the two groups in the semidirect product construction
+        %
+        % TODO: add details about the constraints that Hrep and Nrep must obey
         %
         % Args:
         %   Hrep (`.Rep`): Representation of `.H`
