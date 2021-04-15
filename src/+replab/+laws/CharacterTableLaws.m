@@ -2,12 +2,12 @@ classdef CharacterTableLaws < replab.Laws
 % Law checks for character tables
 
     properties (SetAccess = protected)
-        C % (`+replab.CharacterTable`): Character table
+        C % (`+replab.ComplexCharacterTable`): Character table
     end
 
     methods
 
-        function self = CharacterTableLaws(C)
+        function self = ComplexCharacterTableLaws(C)
             self.C = C;
         end
 

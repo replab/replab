@@ -42,5 +42,5 @@ function ct = A5CharacterTable
               G.repByImages('C', 4, 'preimages', preimages, 'images', images4) ...
               G.repByImages('C', 5, 'preimages', preimages, 'images', images5)};
     classes = replab.ConjugacyClasses(G, cellfun(@(g) G.conjugacyClass(g), conjugacyClasses, 'uniform', 0));
-    ct = replab.CharacterTable(G, 'C', classes, chars, 'classNames', classNames, 'irreps', irreps);
+    ct = replab.ComplexCharacterTable(G, 'C', classes, chars, 'classNames', classNames, 'irreps', irreps);
 end

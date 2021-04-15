@@ -22,7 +22,7 @@ function [bases,irreps] = tensorBlockBasisEigAlg(rep,part1,part2,isSymb)
 
     n = rep.group.domainSize;
     parts = replab.sym.IntegerPartitions(n);
-    mults =  replab.CharacterTable.forPermutationGroup(rep.group).multiplicities(rep);
+    mults =  replab.ComplexCharacterTable.forPermutationGroup(rep.group).multiplicities(rep);
     irrepInds = find(mults);
     irreps = parts.list(irrepInds);
     lat1 = replab.sym.YoungLattice(part1,n);

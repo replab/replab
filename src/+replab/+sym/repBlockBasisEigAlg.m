@@ -3,25 +3,25 @@ function [bases,irreps] = repBlockBasisEigAlg(rep,symb)
     %
     % Args:
     %     group (replab.SymmetricGroup): Group being represented
-    %     
-    %     rep (replab.Rep): Representation to be decomposed. 
-    %     
+    %
+    %     rep (replab.Rep): Representation to be decomposed.
+    %
     %     symb (boolean): Do we want a symbolic result? Note that
     %         the result will be rational. Use seminormalToOrthogonal to
     %         help find the change of basis vectors to the orthogonal form.
-    %     
-    %     
+    %
+    %
     % Returns:
     %     basis (cell(1,*\) of double(*\,*\)): Bases of one multiplicity space,
     %         from each irrep
-    %     
+    %
     %     irreps: (cell(1,*\) of replab.sym.IntegerPartition):
     %         Partitions corresponding to the irreducible components of
     %         representation.
-    
+
     n = rep.group.domainSize;
     parts = replab.sym.IntegerPartitions(n);
-    mults = replab.CharacterTable.forPermutationGroup...
+    mults = replab.ComplexCharacterTable.forPermutationGroup...
         (rep.group).multiplicities(rep);
     irrepInds = find(mults);
     irreps = parts.list(irrepInds);
@@ -40,7 +40,7 @@ function [bases,irreps] = repBlockBasisEigAlg(rep,symb)
         stack = vertcat(matList{:});
         bases = arrayfun(@(index) getSymbCoeffs(index),1:nIrreps,'UniformOutput',false);
     end
-    
+
     function cgs = getCoeffs(ind)
         splitEigs = eigenVals(ind,:);
         nEigs = numel(splitEigs);

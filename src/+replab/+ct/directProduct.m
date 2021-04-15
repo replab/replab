@@ -2,13 +2,13 @@ function ct = directProduct(ct1, ct2)
 % Computes the character table of a direct product of two groups
 %
 % Args:
-%   ct1 (`+replab.CharacterTable`): First character table
-%   ct2 (`+replab.CharacterTable`): Second character table
+%   ct1 (`+replab.ComplexCharacterTable`): First character table
+%   ct2 (`+replab.ComplexCharacterTable`): Second character table
 %
 % Returns:
-%   `+replab.CharacterTable`: Character table of the product ``ct1.group.directProduct(ct2.group)``
-    assert(isa(ct1, 'replab.CharacterTable'));
-    assert(isa(ct2, 'replab.CharacterTable'));
+%   `+replab.ComplexCharacterTable`: Character table of the product ``ct1.group.directProduct(ct2.group)``
+    assert(isa(ct1, 'replab.ComplexCharacterTable'));
+    assert(isa(ct2, 'replab.ComplexCharacterTable'));
     assert(ct1.field == 'C' && ct2.field == 'C');
     new_group = ct1.group.directProduct(ct2.group);
     % New characters are kronecker product of character matrices
@@ -73,5 +73,5 @@ function ct = directProduct(ct1, ct2)
             new_irreps{j + (i-1)*length(ct2.irreps)} = new_irrep;
         end
     end
-    ct = replab.CharacterTable(new_group, 'C', new_classes, new_chars, 'irreps', new_irreps);
+    ct = replab.ComplexCharacterTable(new_group, 'C', new_classes, new_chars, 'irreps', new_irreps);
 end

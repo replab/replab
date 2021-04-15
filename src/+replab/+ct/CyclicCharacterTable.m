@@ -34,5 +34,5 @@ function ct = CyclicCharacterTable(n)
         end
     end
 
-    ct = replab.CharacterTable(group, 'C', classes, chars, 'irreps', irreps);
+    ct = replab.ComplexCharacterTable(group, 'C', classes, chars, 'irreps', irreps);
 end

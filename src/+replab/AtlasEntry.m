@@ -3,7 +3,7 @@ classdef AtlasEntry < replab.Obj
 
     properties (SetAccess = protected)
         group % (`.AbstractGroup`): Group
-        characterTable % (`.CharacterTable` or ``[]``): Group character table
+        characterTable % (`.ComplexCharacterTable` or ``[]``): Group character table
     end
 
     methods
@@ -127,7 +127,7 @@ classdef AtlasEntry < replab.Obj
             if isfield(J.characterTable, 'classNames')
                 args = horzcat(args, {'classNames', J.characterTable.classNames});
             end
-            C = replab.CharacterTable(group, 'C', conjugacyClasses, characters, args{:});
+            C = replab.ComplexCharacterTable(group, 'C', conjugacyClasses, characters, args{:});
         end
 
     end
@@ -147,7 +147,7 @@ classdef AtlasEntry < replab.Obj
             classNames = {'id'};
             irrepNames = {'id'};
             irreps = {ag.trivialRep('C', 1)};
-            ct = replab.CharacterTable(ag, 'C', classes, characters, 'irreps', irreps, 'classNames', classNames, 'irrepNames', irrepNames);
+            ct = replab.ComplexCharacterTable(ag, 'C', classes, characters, 'irreps', irreps, 'classNames', classNames, 'irrepNames', irrepNames);
             A = replab.AtlasEntry(ag, ct);
         end
 
@@ -202,7 +202,7 @@ classdef AtlasEntry < replab.Obj
                       ag.repByImages('C', 1, 'images', {replab.cyclotomic(1) replab.cyclotomic(-1)}) ...
                       ag.repByImages('C', 1, 'images', {replab.cyclotomic(-1) replab.cyclotomic(1)}) ...
                       ag.repByImages('C', 1, 'images', {replab.cyclotomic(-1) replab.cyclotomic(-1)})};
-            ct = replab.CharacterTable(ag, 'C', classes, chars, 'classNames', classNames, 'irrepNames', irrepNames, 'irreps', irreps);
+            ct = replab.ComplexCharacterTable(ag, 'C', classes, chars, 'classNames', classNames, 'irrepNames', irrepNames, 'irreps', irreps);
             A = replab.AtlasEntry(ag, ct);
         end
 

@@ -1,4 +1,4 @@
-classdef CharacterTable < replab.Obj
+classdef ComplexCharacterTable < replab.Obj
 % Describes the character table of a group
 %
 % Example:
@@ -14,7 +14,7 @@ classdef CharacterTable < replab.Obj
 % The character values are stored as elements of the cyclotomic field, using the `.cyclotomic` class which requires
 % external libraries and a Java Virtual Machine available.
 %
-% Instances of `.CharacterTable` are immutable.
+% Instances of `.ComplexCharacterTable` are immutable.
 
     properties (SetAccess = protected)
         group % (`+replab.FiniteGroup`): Group represented by character table
@@ -56,7 +56,7 @@ classdef CharacterTable < replab.Obj
 
     methods
 
-        function self = CharacterTable(group, field, classes, values, varargin)
+        function self = ComplexCharacterTable(group, field, classes, values, varargin)
         % Constructs a character table
         %
         % Args:
@@ -71,7 +71,8 @@ classdef CharacterTable < replab.Obj
         %   irrepNames (cell(1,\*) of charstring, optional): Names of irreducible representations
         %   kronecker (integer(\*,\*,\*), optional): Kronecker coefficients
             assert(isa(group, 'replab.FiniteGroup'));
-            assert(strcmp(field, 'R') || strcmp(field, 'C'));
+            assert(strcmp(field, 'C'));
+            % assert(strcmp(field, 'R') || strcmp(field, 'C'));
             assert(isa(classes, 'replab.ConjugacyClasses'));
             assert(classes.group == group);
             values = replab.cyclotomic(values);
@@ -79,8 +80,8 @@ classdef CharacterTable < replab.Obj
             nClasses = classes.nClasses;
             assert(size(values, 2) == nClasses);
             assert(nIrreps == nClasses);
-            args = struct('irrepNames', {replab.CharacterTable.defaultIrrepNames(nIrreps)}, ...
-                          'classNames', {replab.CharacterTable.defaultClassNames(classes.classElementOrders)}, ...
+            args = struct('irrepNames', {replab.ComplexCharacterTable.defaultIrrepNames(nIrreps)}, ...
+                          'classNames', {replab.ComplexCharacterTable.defaultClassNames(classes.classElementOrders)}, ...
                           'irreps', {cell(1, nIrreps)}, 'kronecker', []);
             args = replab.util.populateStruct(args, varargin);
             if ~isempty(args.kronecker)
@@ -235,10 +236,10 @@ classdef CharacterTable < replab.Obj
         % Returns the direct product of character tables
         %
         % Args:
-        %   ct2 (`+replab.CharacterTable`): character table with which to take direct product
+        %   ct2 (`+replab.ComplexCharacterTable`): character table with which to take direct product
         %
         % Returns:
-        %   ct (`+replab.CharacterTable`): The direct product of the character tables
+        %   ct (`+replab.ComplexCharacterTable`): The direct product of the character tables
             ct = replab.ct.directProduct(self, ct2);
         end
 
@@ -507,7 +508,7 @@ classdef CharacterTable < replab.Obj
         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
         %
         % Returns:
-        %   `.CharacterTable`: The character table of the subgroup in the image of the isomorphism
+        %   `.ComplexCharacterTable`: The character table of the subgroup in the image of the isomorphism
             if self.group.order < f.source.order
                 f = f.restrictedSource(self.group);
             end
@@ -520,7 +521,7 @@ classdef CharacterTable < replab.Obj
                     irreps1{i} = self.irreps{i}.imap(f);
                 end
             end
-            res = replab.CharacterTable(group1, self.field, classes1, values1, 'irreps', irreps1, 'classNames', self.classNames, 'irrepNames', self.irrepNames);
+            res = replab.ComplexCharacterTable(group1, self.field, classes1, values1, 'irreps', irreps1, 'classNames', self.classNames, 'irrepNames', self.irrepNames);
             if self.inCache('kronecker')
                 res.cache('kronecker', self.kronecker, 'error');
             end

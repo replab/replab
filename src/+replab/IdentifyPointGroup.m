@@ -1,25 +1,25 @@
 classdef IdentifyPointGroup < replab.Str
 % Gives information about a molecule
 %
-% References: 
-%   Beruski, O., Vidal, L. N. (2013). Algorithms for computer detection of symmetry elements 
+% References:
+%   Beruski, O., Vidal, L. N. (2013). Algorithms for computer detection of symmetry elements
 %   in molecular systems. Journal of Computational Chemistry, Volume 35, Issue 4.
 %   https://doi-org/10.1002/jcc.23493
-%   
+%
 %   Vallance, C. (2020). Symmetry Classification of Molecules: Point Groups.
 %   Chemistry LibreTexts. https://chem.libretexts.org
 
-    
+
     properties
         principalAxis % (double(3, 1)): principal axis of rotation of the molecule
         ord % (integer): highest order rotation of the molecule that preserves symmetry
         pointGroup % (charstring): characters representing the point group
-        table % (`+replab.CharacterTable`): the character table for the molecule's point group
+        table % (`+replab.ComplexCharacterTable`): the character table for the molecule's point group
         ndec % (integer): number of decimal places to check for equality
     end
-    
+
     methods (Static)
-        
+
         function ct = findCharacterTable(pointGroup)
         % Determines the character table of a molecule with a certain point group
         %
@@ -58,7 +58,7 @@ classdef IdentifyPointGroup < replab.Str
             elseif pg{1} == 'I'
                 % alternating group 5
                 if length(pg) > 1 && pg{2} == 'h'
-                    % direct product C2 and alternating group 5 
+                    % direct product C2 and alternating group 5
                     Ci = replab.ct.CyclicCharacterTable(2);
                     A5 = replab.ct.A5CharacterTable;
                     ct = Ci.directProduct(A5);
@@ -102,11 +102,11 @@ classdef IdentifyPointGroup < replab.Str
                 ct = replab.ct.CyclicCharacterTable(n);
             end
         end
-        
+
         function SEAs = groupAtoms(D, ndec)
         % Finds atoms of same type with same distances
         %
-        % Args: 
+        % Args:
         %   D (double(natoms, natoms)): distance matrix
         %   ndec (integer): number of decimal places to test equality
         %
@@ -134,11 +134,11 @@ classdef IdentifyPointGroup < replab.Str
                 end
             end
         end
-        
+
         function [I, rcm] = InertiaTensor(coords, masses)
         % calculates the inertia tensor for a group of atoms
         %
-        % Args: 
+        % Args:
         %   coords (double(3, \*)): coordinates of atoms
         %   masses (double(1, \*)): masses of atoms
         %
@@ -157,11 +157,11 @@ classdef IdentifyPointGroup < replab.Str
                 end
             end
         end
-        
+
         function [ok, inds] = Rotation(k, axis, coords, symbols, ndec)
         % Apply rotation of 2*pi/k to coords about an axis
         %
-        % Args: 
+        % Args:
         %   k (integer): number of rotations which should keep coordinates the same
         %   axis (double(1, 3)): axis about which to rotate coordinates
         %   coords (double(3, natoms)): atomic coordinates
@@ -201,11 +201,11 @@ classdef IdentifyPointGroup < replab.Str
             new_coords = sigma * coords;
             [ok, inds] = replab.IdentifyPointGroup.coordsEqual(coords, new_coords, symbols, ndec);
         end
-        
+
         function [ok, inds] = ImproperRotation(k, axis, coords, symbols, ndec)
         % Apply rotation of 2*pi/k and then reflection through rotation plane
         %
-        % Args: 
+        % Args:
         %   k (integer): number of rotations then reflection which should keep coordinates the same
         %   axis (double(1, 3)): axis about which to rotate coordinates and normal for reflection plane
         %   coords (double(3, natoms)): atomic coordinates
@@ -228,7 +228,7 @@ classdef IdentifyPointGroup < replab.Str
             new_coords = sigma * rot_coords;
             [ok, inds] = replab.IdentifyPointGroup.coordsEqual(coords, new_coords, symbols, ndec);
         end
-        
+
         function [coords, i1] = sortCoords(coords, ndec)
         % Sorts coordinates in ascending order
         %
@@ -267,7 +267,7 @@ classdef IdentifyPointGroup < replab.Str
                 end
             end
         end
-        
+
         function [ok, inds] = coordsEqual(old_coords, new_coords, symbols, ndec)
         % Checks whether a new set of coordinates is equivalent to original ones
         %
@@ -288,7 +288,7 @@ classdef IdentifyPointGroup < replab.Str
                 ok = isequal(symbols, symbols(inds));
             end
         end
-        
+
         function D = distanceMatrix(coords)
         % Determine the distance matrix of the molecules
         %
@@ -308,11 +308,11 @@ classdef IdentifyPointGroup < replab.Str
                 end
             end
         end
-        
+
     end
-    
+
     methods
-        
+
         function self = IdentifyPointGroup(coords, symbols, masses, ndec)
         % Creates a molecule object
         %
@@ -325,8 +325,8 @@ classdef IdentifyPointGroup < replab.Str
             SEAs = self.groupAtoms(self.distanceMatrix(coords), ndec);
             self.findPointGroup(coords, symbols, masses, SEAs);
         end
-        
-        
+
+
         function [order, axis] = findRotations(self, coords, symbols, masses, inds)
         % Determine the rotation order and axis for a group of atoms
         %
@@ -353,7 +353,7 @@ classdef IdentifyPointGroup < replab.Str
                 if length(u) == 2
                     % Ck rotations
                     n = k;
-                else 
+                else
                     % Ck/2 rotations or next biggest factor of Ck
                     n = floor(k/2);
                     while rem(k, n) ~= 0
@@ -423,7 +423,7 @@ classdef IdentifyPointGroup < replab.Str
                 end
             end
         end
-        
+
         function [ok, axis] = findC2Axes(self, coords, symbols, SEAs, rcm)
         % Determines whether molecule has a C2 axis and returns first one found
         %
@@ -448,7 +448,7 @@ classdef IdentifyPointGroup < replab.Str
                 if same
                     ok = true;
                     axis = rC2;
-                end 
+                end
             else
                 for i = 1:length(SEAs)
                     SEA = SEAs{i};
@@ -473,7 +473,7 @@ classdef IdentifyPointGroup < replab.Str
                             end
                         end
                     end
-                    if ~ok  
+                    if ~ok
                         rC2 = coords(:, SEA(1)) - rcm';
                         same = self.Rotation(2, rC2, coords, symbols, self.ndec);
                         if same
@@ -488,13 +488,13 @@ classdef IdentifyPointGroup < replab.Str
                 end
             end
         end
-        
+
         function ok = findCnAxes(self, n, max_rotations, coords, symbols, SEAs)
         % Find whether there are multiple higher order rotation axes
         %
         % Returns:
         %   n (integer): order of rotation
-        %   max_rotations (integer): check whether there are at least this many 
+        %   max_rotations (integer): check whether there are at least this many
         %                            rotation axes of order n
         %   coords (double(3, natoms)): atomic coordinates
         %   symbols (cell(1, natoms) of charstring): atomic symbols
@@ -533,10 +533,10 @@ classdef IdentifyPointGroup < replab.Str
                 end
             end
         end
-        
+
         function [ind, perpAxes] = findPerpendicularAxes(self, axes, ords, rcm, SEAs, coords, symbols)
         % Finds all C2 axes perpendicular to the principal axis
-        % 
+        %
         % Args:
         %   axes (double(3, \*)): any already known axes
         %   ords (integer(1, \*)): orders of known axes of rotation
@@ -588,7 +588,7 @@ classdef IdentifyPointGroup < replab.Str
                 end
             end
         end
-        
+
         function nsigmad = findDihedralMirrorPlanes(self, coords, symbols, perpAxes)
         % Determines number of dihedral mirror planes in the molecule
         %
@@ -609,7 +609,7 @@ classdef IdentifyPointGroup < replab.Str
                     if ok
                         nsigmad = nsigmad + 1;
                     end
-                    % We get a second dihedral mirror plane from the same pair 
+                    % We get a second dihedral mirror plane from the same pair
                     % of axes (checking this may be redundant)
                     mid = (perpAxes(:, p) + -1*perpAxes(:, q)) / 2;
                     sigmad = cross(self.principalAxis, mid);
@@ -623,7 +623,7 @@ classdef IdentifyPointGroup < replab.Str
                 end
             end
         end
-        
+
         function [planar, normal] = checkPlanar(self, coords)
         % Determines if molecule is planar
         %
@@ -643,7 +643,7 @@ classdef IdentifyPointGroup < replab.Str
                 end
             end
         end
-        
+
         function [horizontal, nvertical] = findReflections(self, coords, symbols, SEAs)
         % Finds reflection planes in the molecule
         %
@@ -687,7 +687,7 @@ classdef IdentifyPointGroup < replab.Str
                 end
             end
         end
-        
+
         function determineSphericalGroup(self, coords, symbols, SEAs)
         % Determine spherical group of the molecule
         %
@@ -744,7 +744,7 @@ classdef IdentifyPointGroup < replab.Str
             end
             self.pointGroup = 'T';
         end
-        
+
         function determineLowSymmetry(self, coords, symbols, SEAs)
         % Determines point group on molecules without Cn axis
         %
@@ -790,7 +790,7 @@ classdef IdentifyPointGroup < replab.Str
                 end
             end
         end
-        
+
         function findPointGroup(self, coords, symbols, masses, SEAs)
         % Determine the point group of molecule by symmetry operation flowchart
         %
@@ -830,7 +830,7 @@ classdef IdentifyPointGroup < replab.Str
                 end
                 [n, i] = max(ords);
                 if n == 1
-                    self.principalAxis = [0,0,0]; 
+                    self.principalAxis = [0,0,0];
                 else
                     self.principalAxis = Cnaxes(:, i);
                 end
@@ -843,7 +843,7 @@ classdef IdentifyPointGroup < replab.Str
                     end
                 end
                 self.ord = n;
-                if n == 1 
+                if n == 1
                 % molecule doesn't have a Cn axis so check for inversion and mirror planes
                     self.determineLowSymmetry(coords, symbols, SEAs)
                 else
@@ -896,12 +896,11 @@ classdef IdentifyPointGroup < replab.Str
                                 self.pointGroup = sprintf('C%d', n);
                             end
                         end
-                        
+
                     end
                 end
             end
         end
-        
+
     end
 end
-
