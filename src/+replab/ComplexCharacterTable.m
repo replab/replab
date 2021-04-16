@@ -1,4 +1,4 @@
-classdef ComplexCharacterTable < replab.Obj
+classdef ComplexCharacterTable < replab.CharacterTable
 % Describes the character table of a group
 %
 % Example:
@@ -16,40 +16,10 @@ classdef ComplexCharacterTable < replab.Obj
 %
 % Instances of `.ComplexCharacterTable` are immutable.
 
-    properties (SetAccess = protected)
-        group % (`+replab.FiniteGroup`): Group represented by character table
-        field % ({'R', 'C'}): Whether the character table is real or complex
-        classes % (`.ConjugacyClasses`): Conjugacy classes of `.group`
-        classNames % (cell(1,nClasses) of charstring): Names of conjugacy classes
-        irrepNames % (cell(1,nIrreps) of charstring): Names of the irreducible representations/characters
-        values % (`.cyclotomic` (nIrreps,nClasses)): Character values
-    end
-
-    properties (Access = protected)
-        irreps_ % (cell(1, nClasses) of ``[]`` or `.RepByImages`): Explicit matrix representations (can contain empty values)
-    end
-
     methods (Static)
 
         function ct = forPermutationGroup(G)
             ct = replab.sym.PermutationCharacterTable(G);
-        end
-
-    end
-
-    methods (Access = protected)
-
-        function K = computeKronecker(self)
-            n = self.classes.nClasses;
-            K = zeros(n,n,n);
-            for j = 1:n
-                cj = self.character(j);
-                for k = j:n
-                    ck = self.character(k);
-                    K(:,j,k) = self.multiplicities(cj*ck);
-                    K(:,k,j) = K(:,j,k);
-                end
-            end
         end
 
     end
@@ -70,6 +40,9 @@ classdef ComplexCharacterTable < replab.Obj
         %   classNames (cell(1,\*) of charstring, optional): Names of conjugacy classes
         %   irrepNames (cell(1,\*) of charstring, optional): Names of irreducible representations
         %   kronecker (integer(\*,\*,\*), optional): Kronecker coefficients
+            assert(nIrreps == nClasses);
+
+
             assert(isa(group, 'replab.FiniteGroup'));
             assert(strcmp(field, 'C'));
             % assert(strcmp(field, 'R') || strcmp(field, 'C'));
@@ -142,62 +115,6 @@ classdef ComplexCharacterTable < replab.Obj
             end
         end
 
-        function b = overR(self)
-        % Returns whether the character table is defined over the real field
-        %
-        % Returns:
-        %   logical: True if the character table is defined over the real field
-            b = strcmp(self.field, 'R');
-        end
-
-        function b = overC(self)
-        % Returns whether the character table is defined over the complex field
-        %
-        % Returns:
-        %   logical: True if the character table is defined over the complex field
-            b = strcmp(self.field, 'C');
-        end
-
-        function dec = decomposition(self, rep)
-        % Computes the decomposition of a representation into irreducibles using the characters
-        %
-        % Args:
-        %   rep (`.Rep`): Representation to decompose, must be complex
-        %
-        % Returns:
-        %   `.Irreducible`: Irreducible decomposition
-            assert(rep.overC, 'Can only decompose complex representations');
-            nI = self.nIrreps;
-            I = cell(1, nI);
-            for i = 1:self.nIrreps
-                irrep = self.irrep(i);
-                B = replab.irreducible.findIsotypicBasis(rep, irrep);
-                sub = rep.subRep(B);
-                E = sub.E_internal;
-                d = irrep.dimension;
-                m = size(B, 2) / d;
-                irreds = cell(1, m);
-                for j = 1:m
-                    comp = rep.subRep(B(:, (j-1)*d + (1:d)));
-                    comp.isIrreducible = true;
-                    irreds{j} = comp;
-                end
-                I{i} = replab.HarmonizedIsotypic(rep, irreds, E);
-            end
-            dec = replab.Irreducible(rep, I);
-        end
-
-        function K = kronecker(self)
-        % Returns the Kronecker coefficients corresponding to this character table
-        %
-        % This returns an integer matrix $K$ such that $K(i,j,k)$ is the multiplicity of the $i$-th irrep in
-        % the product of the $j$-th and $k$-th irrep.
-        %
-        % Returns:
-        %   integer(\*,\*,\*): Kronecker coefficients
-            K = self.cached('kronecker', @() self.computeKronecker);
-        end
-
         function ind = trivialCharacterIndex(self)
         % Returns the row index of the trivial character
             ind = 1:self.nIrreps;
@@ -205,54 +122,6 @@ classdef ComplexCharacterTable < replab.Obj
                 ind = ind(self.values(ind, i) == 1);
             end
             assert(length(ind) == 1);
-        end
-
-        function ind = identityConjugacyClassIndex(self)
-        % Returns the column index of the identity conjugacy class
-            ind = self.classes.classIndex(self.group.identity);
-        end
-
-        function ind = linearCharacterIndices(self)
-        % Returns the indices of the linear characters
-        %
-        % The linear characters correspond to representation of dimension ``1``.
-        %
-        % Returns:
-        %   integer(1,\*): Indices of the linear characters
-            ind = find(self.values(:, self.identityConjugacyClassIndex) == 1);
-        end
-
-        function C = characters(self)
-        % Returns the characters in this table
-            C = arrayfun(@(i) self.character(i), 1:self.nCharacters, 'uniform', 0);
-        end
-
-        function c = character(self, ind)
-        % Returns an irreducible character in this character table
-            c = replab.Character(self.classes, self.values(ind, :));
-        end
-
-        function ct = directProduct(self, ct2)
-        % Returns the direct product of character tables
-        %
-        % Args:
-        %   ct2 (`+replab.ComplexCharacterTable`): character table with which to take direct product
-        %
-        % Returns:
-        %   ct (`+replab.ComplexCharacterTable`): The direct product of the character tables
-            ct = replab.ct.directProduct(self, ct2);
-        end
-
-        function n = nClasses(self)
-            n = self.classes.nClasses;
-        end
-
-        function n = nCharacters(self)
-            n = self.nClasses;
-        end
-
-        function n = nIrreps(self)
-            n = self.nClasses;
         end
 
         function r = irreps(self)
@@ -360,7 +229,7 @@ classdef ComplexCharacterTable < replab.Obj
         % Obj
 
         function l = laws(self)
-            l = replab.laws.CharacterTableLaws(self);
+            l = replab.laws.ComplexCharacterTableLaws(self);
         end
 
     end
