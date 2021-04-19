@@ -107,7 +107,7 @@ classdef RepByImages < replab.Rep
     methods (Static)
 
         function rep1 = fromExactRep(rep)
-        % Constructs a `.RepByImages` from an existing representation with exact images
+        % Constructs a `+replab.RepByImages` from an existing representation with exact images
             assert(isa(rep.group, 'replab.FiniteGroup'));
             assert(rep.isExact);
             gens = rep.group.generators;

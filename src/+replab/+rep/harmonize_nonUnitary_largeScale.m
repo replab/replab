@@ -11,15 +11,15 @@ function gen = harmonize_nonUnitary_largeScale(gen0, genM, nSamples, tolerances,
 %       1
 %
 % Args:
-%   gen (`+replab.GenSubRep`): Generic subrepresentation to harmonize
-%   genM (`+replab.GenSubRep`): Model generic subrepresentation
+%   gen (`+replab.+rep.GenSubRep`): Generic subrepresentation to harmonize
+%   genM (`+replab.+rep.GenSubRep`): Model generic subrepresentation
 %   nSamples (integer): Number of samples per averaging iteration
 %   tolerances (`.Tolerances`): Termination criteria
 %   Ip (double(D,e)): Injection map matrix prescribing biorthogonality
 %   Pp (double(e,D)): Projection map matrix prescribing biorthogonality
 %
 % Returns:
-%   `+replab.GenSubRep`: Refined generic subrepresentation
+%   `+replab.+rep.GenSubRep`: Refined generic subrepresentation
     D = gen0.parent.dimension;
     d = gen0.dimension;
     e = size(Ip, 2);

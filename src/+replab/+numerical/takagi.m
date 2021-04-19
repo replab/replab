@@ -9,7 +9,7 @@ function [U, D] = takagi(A, algorithm, maxSweeps)
 % * The ``'jacobi'`` algorithm is based on Jacobi rotations, see `takagi_jacobi`.
 %
 % * The ``'svd'`` algorithm is based on the SVD decomposition and matrix square root,
-%   see `<https://doi.org/10.1016/j.amc.2014.01.170>_`.
+%   see `<https://doi.org/10.1016/j.amc.2014.01.170>`_.
 %
 % * The ``'hybrid'`` algorithm first computes a unitary using the SVD decomposition, then
 %   refines it using the Jacobi algorithm.

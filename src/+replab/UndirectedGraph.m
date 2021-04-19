@@ -213,9 +213,6 @@ classdef UndirectedGraph < replab.graph.Graph
         % This function returns an directed graph with the same
         % connectivity as the current graph.
         %
-        % Args:
-        %   graph (`.UndirectedGraph`)
-        %
         % Returns:
         %   graph (`.DirectedGraph`)
             
@@ -233,9 +230,6 @@ classdef UndirectedGraph < replab.graph.Graph
         function deg = degrees(self)
         % Returns the degrees of all vertices
         %
-        % Args:
-        %   graph (`.Graph`)
-        %
         % Returns:
         %   deg (double (1,\*)): list of degrees
         %
@@ -250,7 +244,6 @@ classdef UndirectedGraph < replab.graph.Graph
         % Returns the degrees of vertex v
         %
         % Args:
-        %   graph (`.Graph`)
         %   v (integer) : vertex number
         %
         % Returns:
@@ -272,7 +265,6 @@ classdef UndirectedGraph < replab.graph.Graph
         % Returns the number of vertices at a distance 2 of all vertices
         %
         % Args:
-        %   graph (`.Graph`)
         %   v (integer) : vertex number
         %
         % Returns:

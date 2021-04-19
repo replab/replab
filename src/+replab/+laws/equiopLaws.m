@@ -1,7 +1,7 @@
 classdef equiopLaws < replab.Laws
 
     properties (SetAccess = protected)
-        op % (`+replab.equiop)
+        op % (`+replab.equiop): Equivariant operator
         G % (`+replab.CompactGroup`): Equivariant operator group
         S % (`+replab.Equivariant`): Source equivariant space
         T % (`+replab.Equivariant`): Target equivariant space

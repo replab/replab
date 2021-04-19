@@ -6,7 +6,7 @@ function subs = absoluteSplitInParent_real_nonunitary(sub, sample)
 %   sample (double(\*,\*)): Sample of ``sub.parent.commutant``
 %x
 % Returns:
-%   cell(1,\*) of `.SubRep`: Subrepresentations with their ``.parent`` set to the ``.parent`` of ``sub``
+%   cell(1,\*) of `+replab.SubRep`: Subrepresentations with their ``.parent`` set to the ``.parent`` of ``sub``
     assert(sub.overR);
     tol = replab.globals.doubleEigTol;
     d = sub.dimension;

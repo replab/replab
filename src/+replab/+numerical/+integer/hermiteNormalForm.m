@@ -3,7 +3,7 @@ function [H, U] = hermiteNormalForm(A)
 %
 % It returns a unimodular matrix ``U`` and the Hermite Normal Form ``H``, such that ``H == U*A``.
 %
-% This code is taken from AbstractAlgebra.jl `<https://github.com/wbhart/AbstractAlgebra.jl/>_` under
+% This code is taken from AbstractAlgebra.jl `<https://github.com/wbhart/AbstractAlgebra.jl/>`_ under
 % the Simplified "2-clause" BSD License (as its individual files are).
 %
 % The code has been translated from the original Julia code.

@@ -1,7 +1,7 @@
 function irreps = absoluteSplit_usingInvariantBlocks(rep, forceNonUnitaryAlgorithms)
 % Splits a representation using existing block structure
 %
-% See `+replab.Rep.absoluteSplit`
+% See `+replab.irreducible.absoluteSplitInParent`
 %
 % First extracts the trivial subrepresentations before splitting the nontrivial invariant subspace;
 % this is done block by block.

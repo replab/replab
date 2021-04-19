@@ -2,7 +2,7 @@ classdef equiop < replab.Obj
 % Describes a linear or affine map between equivariant spaces
 %
 % Formally, in MATLAB, both scalars and vectors are matrices, with one or two dimensions equal to one.
-% Thus, `.equiop` describes maps between those different types of objects.
+% Thus, `+replab..equiop` describes maps between those different types of objects.
 %
 % The map is defined between two spaces:
 %
@@ -11,7 +11,7 @@ classdef equiop < replab.Obj
 %
 % both of which must be defined over related groups, which describe the symmetries.
 %
-% This `.equiop` is equivariant over a given `.group`, and this group must be a subgroup of
+% This `+replab.equiop` is equivariant over a given `.group`, and this group must be a subgroup of
 % both ``source.group`` and ``target.group``. The subgroup inclusion is characterized by the injection
 % maps ``sourceInjection`` and ``targetInjection``. These must satisfy:
 %
@@ -21,7 +21,7 @@ classdef equiop < replab.Obj
 % * ``targetInjection.target == target.group``.
 %
 
-% The resulting `.equiop` can be called as any MATLAB function, or through the `.apply` method.
+% The resulting `+replab.equiop` can be called as any MATLAB function, or through the `.apply` method.
 
     properties (SetAccess = protected)
         group % (`.CompactGroup`): Map equivariant group
@@ -93,10 +93,10 @@ classdef equiop < replab.Obj
         % Composition of equivariant operators, the argument applied first
         %
         % Args:
-        %   applyFirst (`.equiop`): Morphism to apply first
+        %   applyFirst (`+replab.equiop`): Morphism to apply first
         %
         % Returns:
-        %   `.equiop`: The composition of equiops
+        %   `+replab.equiop`: The composition of equiops
             assert(self.group == applyFirst.group);
             res = replab.equiop.generic(applyFirst.source, self.target, @(X) self.apply(applyFirst.apply(X)), 'sourceInjection', applyFirst.sourceInjection, 'targetInjection', self.targetInjection, 'supportsSparse', true);
             % we put supportsSparse true because our function accepts sparse matrices (though the two equiops may convert to full)
@@ -106,10 +106,10 @@ classdef equiop < replab.Obj
         % Composition of equivariant operators, the argument applied last
         %
         % Args:
-        %   applyLast (`.equiop`): Morphism to apply second
+        %   applyLast (`+replab.equiop`): Morphism to apply second
         %
         % Returns:
-        %   `.equiop`: The composition of equiops
+        %   `+replab.equiop`: The composition of equiops
             res = applyLast.compose(self);
         end
 
@@ -133,7 +133,7 @@ classdef equiop < replab.Obj
         function varargout = subsref(self, s)
         % MATLAB subscripted reference
         %
-        % Allows the use of an `.equiop` as if it were a function handle
+        % Allows the use of an `+replab.equiop` as if it were a function handle
             switch s(1).type
               case '.'
                 [varargout{1:nargout}] = builtin('subsref', self, s);
@@ -159,7 +159,7 @@ classdef equiop < replab.Obj
     methods (Static) % Construction
 
         function E = generic(source, target, f, varargin)
-        % Constructs an `.equiop` from a user-provided function
+        % Constructs an `+replab.equiop` from a user-provided function
         %
         % The user-provided function is always called on arguments of type ``double``; when it is applied on
         % variables containing sdpvars, the argument will be expanded on a linear combination of optimization
@@ -187,7 +187,7 @@ classdef equiop < replab.Obj
         %   supportsSparse (logical, optional): Whether the user-defined function ``f`` may be applied on sparse matrices, default: ``false``
         %
         % Returns:
-        %   `.equiop`: Super-operator between equivariant spaces
+        %   `+replab.equiop`: Super-operator between equivariant spaces
             args = struct('sourceInjection', [], 'targetInjection', [], 'supportsSparse', false);
             args = replab.util.populateStruct(args, varargin);
             if isempty(args.sourceInjection)

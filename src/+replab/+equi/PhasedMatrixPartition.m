@@ -6,7 +6,7 @@ classdef PhasedMatrixPartition < replab.Obj
 % is known as a coherent configuration:
 %
 % Higman, D.G. Coherent configurations. Geom Dedicata 4, 1–32 (1975)
-% `<https://doi.org/10.1007/BF00147398>_`
+% `<https://doi.org/10.1007/BF00147398>`_
 %
 % Our generalization goes in two directions:
 %
@@ -391,12 +391,12 @@ classdef PhasedMatrixPartition < replab.Obj
         %
         % If there are negative coefficients, then the result ``phaseOrder`` will be 2, otherwise it is 1.
         %
-        % Note that `.PhasedMatrixPartition` requires all indices from ``1`` to ``nSubsets` to be present
+        % Note that `.PhasedMatrixPartition` requires all indices from ``1`` to ``nSubsets`` to be present
         % in the partition, in other words, ``abs(indexMatrix)`` must contain all integers from ``1`` to
         % ``nSubsets``, where ``nSubsets = max(abs(indexMatrix(:)))``.
         %
         % If some indices are not present, this method will prune the corresponding subsets. The second output
-        % argument ``I`` gives, for each index in ``indexMatrix``, either the index in the returned `.PhasedMatrix`
+        % argument ``I`` gives, for each index in ``indexMatrix``, either the index in the returned `.PhasedMatrixPartition`
         % or ``0`` if the index does not appear in ``indexMatrix``.
         %
         % Example:

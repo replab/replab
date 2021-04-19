@@ -357,7 +357,7 @@ classdef SubRep < replab.Rep
         % by an iterative procedure applied on its `.injection` and `.projection` maps.
         %
         % Keyword Args:
-        %   tolerances (`.Tolerances`): Termination criteria
+        %   tolerances (`+replab.+rep.Tolerances`): Termination criteria
         %   largeScale (logical, optional): Whether to use the large-scale version of the algorithm, default automatic choice
         %   nSamples (integer, optional): Number of samples to use in the large-scale version of the algorithm, default ``5``
         %   nInnerIterations (integer, optional): Number of inner iterations in the medium-scale version of the algorithm, default ``3``

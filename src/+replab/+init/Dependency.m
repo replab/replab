@@ -32,7 +32,7 @@ classdef Dependency < replab.Str
         function require(self)
         % Locates, installs and initializes the library
         %
-        % The automatic installation step is only performed is the `+replab.+globals.autoinstall` flag is set
+        % The automatic installation step is only performed is the `+replab.+globals.autoInstall` flag is set
             error('Abstract');
         end
 

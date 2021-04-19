@@ -7,11 +7,11 @@ function [U, D] = takagi_jacobi(A, U, maxSweeps)
 % The algorithm employs Jacobi rotations.
 %
 % The code is a modified translation of the Julia implementation
-% `<https://github.com/JLTastet/TakagiFactorization.jl>_` under the LGPL,
-% itself based on the routines by Thomas Hahn `<http://www.feynarts.de/diag/>_`,
+% `<https://github.com/JLTastet/TakagiFactorization.jl>`_ under the LGPL,
+% itself based on the routines by Thomas Hahn `<http://www.feynarts.de/diag/>`_,
 % themselves under the LGPL.
 %
-% The relevant publication/draft is `<https://arxiv.org/abs/physics/0607103>_`.
+% The relevant publication/draft is `<https://arxiv.org/abs/physics/0607103>`_.
 %
 % To respect the LGPL, this method can be used independently of the rest of the RepLAB code.
 %

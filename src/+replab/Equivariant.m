@@ -50,7 +50,7 @@ classdef Equivariant < replab.Domain
         group % (`+replab.CompactGroup`): Group being represented
         repR % (`+replab.Rep`): Representation of row space
         repC % (`+replab.Rep`): Representation of column space
-        special % (charstring): Whether the equivariant space has special structure, see comment in `.Equivariant`
+        special % (charstring): Whether the equivariant space has special structure, see comment in `+replab.Equivariant`
     end
 
     properties (Access = protected)

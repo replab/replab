@@ -9,7 +9,7 @@ function [Psi, ok] = leftInverse(Phi)
 % M.C. Camara, L. Rodman, I.M. Spitkovsky
 % One sided invertibility of matrices over commutative rings, corona problems, and Toeplitz operators with matrix symbols
 % in Linear Algebra and its Applications, Volume 459, 2014, pp. 58-82
-% `<https://doi.org/10.1016/j.laa.2014.06.038>_`
+% `<https://doi.org/10.1016/j.laa.2014.06.038>`_
 %
 % Example:
 %   >>> A = replab.numerical.integer.pairOfInverses(4, 1);

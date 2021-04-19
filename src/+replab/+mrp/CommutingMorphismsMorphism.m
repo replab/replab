@@ -2,7 +2,7 @@ classdef CommutingMorphismsMorphism < replab.Morphism
 % A morphism whose image consists of the product of images of commuting morphisms
 
     properties (SetAccess = protected)
-        morphisms % (cell(1,\*) of `+replab.Morphism`)): Morphisms
+        morphisms % (cell(1,\*) of `+replab.Morphism`): Morphisms
     end
 
     methods
