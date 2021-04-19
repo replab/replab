@@ -1623,7 +1623,7 @@ classdef Rep < replab.Obj
                         % this is a projector on the subspace W
                         % as I*  (inv(I'*I)*I'*I) *inv(I'*I)*I' = I*inv(I'*I)*I'
                         P1 = injection*inv(injection'*injection)*injection';
-                        P2 = self.commutant.project(P1);
+                        P2 = self.commutant.project(P1, 'exact');
                         % A\B gives X which is the solution A*X=B
                         % P1 = injection * projection
                         % slower because cyclotomic doesn't implement \ or /
