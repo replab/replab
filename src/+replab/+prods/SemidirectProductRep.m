@@ -39,7 +39,7 @@ classdef SemidirectProductRep < replab.Rep
         end
 
         function r = composeTerm(self, newFactors)
-            r = replab.rep.SemidirectProductRep(self.group, newFactors{1}, newFactors{2});
+            r = replab.prods.SemidirectProductRep(self.group, newFactors{1}, newFactors{2});
         end
 
         function rho = image_exact(self, g)
@@ -73,6 +73,12 @@ classdef SemidirectProductRep < replab.Rep
     end
 
     methods % Implementations
+
+        % Domain
+
+        function l = laws(self)
+            l = replab.laws.SemidirectProductRepLaws(self);
+        end
 
         % Rep
 
