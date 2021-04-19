@@ -130,7 +130,8 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
             actingRep = self.H.repByImages(factorRep.field, n*dfr, ...
                                            'preimages', self.H.generators, ...
                                            'images', images);
-            rep = replab.prods.WreathProductGroup_Rep(self, 'imprimitive', factorRep, actingRep, baseRep);
+            rep = replab.rep.SemidirectProductRep(self, actingRep, baseRep);
+            %rep = replab.prods.WreathProductGroup_Rep(self, 'imprimitive', factorRep, actingRep, baseRep);
         end
 
         function rep = imprimitiveRepFun(self, fun)
@@ -174,7 +175,8 @@ classdef WreathProductGroup < replab.SemidirectProductGroup
             actingRep = self.H.repByImages(factorRep.field, dfr^n, ...
                                            'preimages', self.H.generators, ...
                                            'images', images);
-            rep = replab.prods.WreathProductGroup_Rep(self, 'primitive', factorRep, actingRep, baseRep);
+            rep = replab.rep.SemidirectProductRep(self, actingRep, baseRep);
+            %rep = replab.prods.WreathProductGroup_Rep(self, 'primitive', factorRep, actingRep, baseRep);
         end
 
         function rep = primitiveRepFun(self, fun)
