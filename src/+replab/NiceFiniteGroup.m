@@ -8,7 +8,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 % permutation groups can be handled by efficient BSGS algorithms, the requested computations can be
 % translated back and forth between this group and a permutation group.
 %
-% In particular, the decomposition of the finite group in a product of sets (TODENIS: Not sure what '.FiniteGroupDecomposition' should be replaced with here),
+% In particular, the decomposition of the finite group in a product of sets (`.SetProduct`),
 % the enumeration of elements using a `.IndexedFamily`, the construction of subgroups is all handled
 % by permutation group algorithms.
 %

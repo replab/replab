@@ -1315,9 +1315,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   isIrreducible (logical or ``[]``, optional): Value of the constructed `.Rep.isIrreducible`
         %   trivialDimension (integer or ``[]``, optional): Value of the constructed `.Rep.trivialDimension`
         %   frobeniusSchurIndicator (integer or ``[]``, optional): Value of the constructed `.Rep.frobeniusSchurIndicator`
-        %   isDivisionAlgebraCanonical (logical or ``[]``, optional): Value of the constructed .Rep.isDivisionAlgebraCanonical
         %   divisionAlgebraName % ('R->C', 'C->R', 'H->C', 'H->R:rep', '', optional): Name of the division algebra encoding this representation respects, default ``''``
-        %   TODENIS: Is the last line a correct replacement of the previous one?
         %
         % Returns:
         %   `+replab.RepByImages`: The constructed group representation
