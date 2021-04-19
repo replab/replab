@@ -1022,6 +1022,11 @@ classdef Rep < replab.Obj
         % Exact decomposition depends on the availability of an algorithm: for example, we decompose finite groups
         % with an available character table using the Serre projection formulas.
         %
+        % The approximate decomposition (type = 'double') is not deterministic in all aspects as it uses random
+        % samples from the commutant equivariant space. But there is also a catch with the exact decomposition
+        % algorithm: it retrieves the character table of the group from the atlas, by finding an isomorphism to
+        % this representation's `.group`. But this isomorphism is unique only up to automorphism of `.group`.
+        %
         % Args:
         %   type ('double', 'double/sparse', 'exact', optional): Decomposition type, default: double
         %

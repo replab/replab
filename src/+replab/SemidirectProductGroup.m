@@ -125,7 +125,11 @@ classdef SemidirectProductGroup < replab.Group
         function rep = semidirectProductRep(self, Hrep, Nrep)
         % Constructs a representation by a product of representations of the two groups in the semidirect product construction
         %
-        % TODO: add details about the constraints that Hrep and Nrep must obey
+        % Those representations ``Hrep`` and ``Nrep`` must obey the following law.
+        %
+        % Let ``phi`` be the semidirect product group uncurried homomorphism with ``h \in H`` and ``n \in N``:
+        %
+        % ``Nrep.image(phi(h, n)) == Hrep.image(h) * Nrep.image(n) * Hrep.inverseImage(h)``.
         %
         % Args:
         %   Hrep (`.Rep`): Representation of `.H`
@@ -135,7 +139,7 @@ classdef SemidirectProductGroup < replab.Group
         %   `.Rep`: Group representation
             assert(Hrep.dimension == Nrep.dimension);
             assert(Hrep.field == Nrep.field);
-            rep = replab.rep.SemidirectProductRep(self, Hrep, Nrep);
+            rep = replab.prods.SemidirectProductRep(self, Hrep, Nrep);
         end
 
     end
