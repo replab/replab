@@ -4,7 +4,7 @@ classdef DivisionAlgebra < replab.domain.VectorSpace
 % The three division algebras supported are the real numbers (R), complex numbers (C) and quaternions (H).
 % They can be encoded using real matrix blocks (R) or complex matrix blocks (C).
 %
-% A complex scalar is written ``s = a + i b`` where ``a`` and ``b` are reals and ``i`` is the imaginary unit.
+% A complex scalar is written ``s = a + i b`` where ``a`` and ``b`` are reals and ``i`` is the imaginary unit.
 % A quaternion scalar is written ``s = a + i b + j c + k d``, where ``i, j , k`` are the fundamental quaternion units,
 % obeying the relations ``i^2 = j^2 = k^2 = i j k = -1``.
 %

@@ -23,7 +23,7 @@ function subs = absoluteSplitInParent(sub, sample, forceNonUnitaryAlgorithms)
 %   forceNonUnitaryAlgorithms (logical): Whether to force the use of algorithms for not necessarily unitary representations
 %
 % Returns:
-%   cell(1,\*) of `.SubRep`: Subrepresentations with their ``.parent`` set to the `.parent` of this subrepresentation
+%   cell(1,\*) of `+replab.SubRep`: Subrepresentations with their ``.parent`` set to the ``.parent`` of this subrepresentation
     if sub.dimension <= 1
         subs = {sub};
         return

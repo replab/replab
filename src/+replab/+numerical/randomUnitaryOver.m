@@ -5,10 +5,10 @@ function [U, detU] = randomUnitaryOver(d, divisionRing)
 % F. Mezzadri, "How to Generate Random Matrices from the Classical Compact Groups,"
 % Notices of the AMS, vol. 54, no. 5, pp. 592–604, 2007.
 %
-% See also `<http://home.lu.lv/~sd20008/papers/essays/Random%20unitary%20[paper].pdf>_`
+% See also `<http://home.lu.lv/~sd20008/papers/essays/Random%20unitary%20[paper].pdf>`_
 %
 % An alternative algorithm would be given by:
-% `<http://home.lu.lv/~sd20008/papers/essays/Random%20unitary%20[paper].pdf>_`
+% `<http://home.lu.lv/~sd20008/papers/essays/Random%20unitary%20[paper].pdf>`_
 %
 % Args:
 %   d (integer): Dimension

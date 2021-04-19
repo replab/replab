@@ -1,8 +1,8 @@
 classdef GenSubRepLaws < replab.Laws
 
     properties (SetAccess = protected)
-        sub % (`+replab.rep.GenSubRep`)
-        G % Group of which rep is a representation
+        sub % (`+replab.rep.GenSubRep`): Generic subrepresentation
+        G % (`+replab.CompactGroup`): Group of which rep is a representation
     end
 
     methods

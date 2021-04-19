@@ -108,9 +108,6 @@ classdef Graph < replab.Obj
         function adj = adjacencyMatrix(self)
         % Returns the adjacency matrix of a graph
         %
-        % Args:
-        %   graph (`.DirectedGraph`)
-        %
         % Returns:
         %   adj (double (\*,\*)): adjacency matrix
         %
@@ -141,9 +138,6 @@ classdef Graph < replab.Obj
         function deg2 = secondOrderDegrees(self)
         % Returns the number of vertices at a distance 2 of all vertices
         %
-        % Args:
-        %   graph (`.Graph`)
-        %
         % Returns:
         %   deg (double (1,\*)): list of degrees
         %
@@ -163,9 +157,6 @@ classdef Graph < replab.Obj
         % Returns the degrees sequence for all vertices
         %
         % In each sequence, a vertex can only be counted once.
-        %
-        % Args:
-        %   graph (`.Graph`)
         %
         % Returns:
         %   degN (integer (\*,\*)): list of degrees sequences
@@ -191,9 +182,6 @@ classdef Graph < replab.Obj
         %
         % Each vertex can only be counted once. For directed graphs, this
         % corresponds to the outgoing degree sequence.
-        %
-        % Args:
-        %   graph (`.Graph`)
         %
         % Returns:
         %   degN (integer (1,\*)): sequence of degrees
@@ -223,9 +211,6 @@ classdef Graph < replab.Obj
         function ok = isBipartite(self)
         % Tests if a graph is bipartite
         %
-        % Args:
-        %   graph (`.DirectedGraph`)
-        %
         % Returns:
         %   ok (bool): true iff the graph is bipartite
             
@@ -240,11 +225,8 @@ classdef Graph < replab.Obj
         % Note: Graph connectedness does not take into account the graph
         % directionality.
         %
-        % Args:
-        %   graph (`.DirectedGraph`)
-        %
         % Returns:
-        %   P (`.Partition`): Partitioning of the vertices
+        %   P (`+replab.Partition`): Partitioning of the vertices
         %
         % Example:
         %   >>> replab.UndirectedGraph.fromEdges([1 3]).connectedComponents
@@ -293,9 +275,6 @@ classdef Graph < replab.Obj
         % graph coloring. It reduces to the standard laplacian when
         % self.color = 0. A graph laplacian is semidefinite positive
         %
-        % Args:
-        %   graph (`.UndirectedGraph`)
-        %
         % Returns:
         %   L (double (\*,\*)): Laplacian of the graph
         
@@ -315,7 +294,6 @@ classdef Graph < replab.Obj
         % kernel is computed.
         %
         % Args:
-        %   graph (`.UndirectedGraph`)
         %   nbTimes (integer, optional): the number of distinct times at 
         %     which to evaluate the kernel (default is 10)
         %
@@ -359,11 +337,8 @@ classdef Graph < replab.Obj
         function autoG = automorphismGroup(self)
         % Returns the automorphism group of the graph
         %
-        % Args:
-        %   graph (`.DirectedGraph`)
-        %
         % Returns:
-        %   autoG (`.PemutationGroup`)
+        %   autoG (`+replab.PermutationGroup`)
         
             autoG = self.cached('automorphismGroup', @() replab.bsgs.GraphAutomorphism(self).subgroup);
         end

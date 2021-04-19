@@ -18,7 +18,7 @@ classdef CompactGroup < replab.Group
         %
         % - ``G0`` is the connected component of the group around the identity; we also know that the number of left cosets
         %   of ``G0`` in ``G`` is finite; see the group of components, or, for example:
-        %   `<https://mathoverflow.net/questions/378160/improved-classification-of-compact-lie-groups>_` .
+        %   `<https://mathoverflow.net/questions/378160/improved-classification-of-compact-lie-groups>`_ .
         %
         %   We write ``R`` a (finite) set of left coset representatives. Thus any element ``g`` of ``G`` can be written ``g = r g0``
         %   where ``r \in R`` and ``g0 \in G0``.

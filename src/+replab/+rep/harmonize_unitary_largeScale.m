@@ -11,14 +11,14 @@ function gen = harmonize_unitary_largeScale(gen0, genM, nSamples, tolerances, Ip
 %       1
 %
 % Args:
-%   gen0 (`+replab.GenSubRep`): Generic subrepresentation to harmonize
-%   genM (`+replab.GenSubRep`): Model generic subrepresentation
+%   gen0 (`+replab.+rep.GenSubRep`): Generic subrepresentation to harmonize
+%   genM (`+replab.+rep.GenSubRep`): Model generic subrepresentation
 %   nSamples (integer): Number of samples per averaging iteration
 %   tolerances (`.Tolerances`): Termination criteria
 %   Ip (double(D,e)): Injection map matrix prescribing orthogonality
 %
 % Returns:
-%   `+replab.GenSubRep`: Refined generic subrepresentation
+%   `+replab.+rep.GenSubRep`: Refined generic subrepresentation
     D = gen0.parent.dimension;
     d = gen0.dimension;
     rho = gen0.parent;

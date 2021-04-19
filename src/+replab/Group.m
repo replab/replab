@@ -122,7 +122,7 @@ classdef Group < replab.Monoid
         %
         % Args:
         %   target (`.Group`): Target group
-        %   morphisms (cell(1,\*) of `.Morphisms`): Morphisms whose images commute in ``target``
+        %   morphisms (cell(1,\*) of `+replab.Morphism`): Morphisms whose images commute in ``target``
         %
         % Returns:
         %   `.Morphism`: The computed morphism

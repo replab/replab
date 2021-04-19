@@ -11,14 +11,14 @@ function gen = refine_nonUnitary_mediumScale(gen0, nInnerIterations, tolerances,
 %       1
 %
 % Args:
-%   gen0 (`+replab.GenSubRep`): Generic subrepresentation to refine
+%   gen0 (`+replab.+rep.GenSubRep`): Generic subrepresentation to refine
 %   nInnerIterations (integer): Number of inner iterations
 %   tolerances (`.Tolerances`): Termination criteria
 %   Ip (double(D,e)): Injection map matrix prescribing biorthogonality
 %   Pp (double(e,D)): Projection map matrix prescribing biorthogonality
 %
 % Returns:
-%   `+replab.GenSubRep`: Refined generic subrepresentation
+%   `+replab.+rep.GenSubRep`: Refined generic subrepresentation
     D = gen0.parent.dimension;
     d = gen0.dimension;
     e = size(Ip, 2);

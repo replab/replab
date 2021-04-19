@@ -1,16 +1,16 @@
 classdef TorusGroup < replab.CompactGroup
 % Describes a compact, connected, abelian Lie group
 %
-% Its elements are column vectors of angles expressed in turns (see `<https://en.wikipedia.org/wiki/Turn_(angle)>_`),
+% Its elements are column vectors of angles expressed in turns (see `<https://en.wikipedia.org/wiki/Turn_(angle)>`_),
 % i.e. real numbers between 0 and 1, 1 not included. The group binary operation is addition modulo 1, the identity
 % is the turn ``0``, and the inverse operation maps any non-zero turn ``x`` to ``1-x``.
 %
 % When there are no additional restrictions on the elements of a given torus group, it is the standard torus group,
 % and it can be constructed with the function `+replab.T`.
 %
-% Torus morphisms from integer matrices: `<https://math.stackexchange.com/questions/2229088/automorphisms-of-a-torus>_`.
+% Torus morphisms from integer matrices: `<https://math.stackexchange.com/questions/2229088/automorphisms-of-a-torus>`_.
 % Let ``s = [s1;...;sn]`` be the element of a (standard) torus of dimension ``n`` and ``t = [t1;...;tm]`` the element of
-% a (standard) torus of dimension ``m`. A torus morphism ``f`` is given by a ``m x n`` integer matrix ``M``, with the
+% a (standard) torus of dimension ``m``. A torus morphism ``f`` is given by a ``m x n`` integer matrix ``M``, with the
 % image of ``s`` being written ``t = f(s) = mod(M * s, 1)``.
 %
 % Let the coefficients ``[t1; t2; ...; tn]`` be the coefficients of this column vector, where ``n`` is the torus group
@@ -185,7 +185,7 @@ classdef TorusGroup < replab.CompactGroup
         %   images (cell(1, \*) of ``target`` elements): Action on the torus for the given preimages, defaults to a permutation action if ``group`` is a permutation group
         %
         % Returns:
-        %   `.SemidirectProduct`: Semidirect product of ``group`` and this torus group
+        %   `.SemidirectProductGroup`: Semidirect product of ``group`` and this torus group
             assert(isa(group, 'replab.FiniteGroup'));
             args = struct('preimages', {group.generators}, 'images', {[]});
             args = replab.util.populateStruct(args, varargin);
@@ -226,7 +226,7 @@ classdef TorusGroup < replab.CompactGroup
         %   rep (`.Rep`): Group representation with integer coefficients
         %
         % Returns:
-        %   `.SemidirectProduct`: Semidirect product of ``rep.group`` and this torus group
+        %   `.SemidirectProductGroup`: Semidirect product of ``rep.group`` and this torus group
             H = rep.group;
             assert(isa(H, 'replab.FiniteGroup'));
             assert(isa(rep, 'replab.Rep') && rep.overR);
