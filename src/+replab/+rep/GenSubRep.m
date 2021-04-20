@@ -6,10 +6,10 @@ classdef GenSubRep < replab.Obj
 %
 % This class is present mostly to cater for the different cases present when refining subrepresentations.
 %
-% Note that this class is unrelated to `.Rep` in the inheritance hierarchy, but it follows the naming conventions of `.SubRep` and
+% Note that this class is unrelated to `+replab.Rep` in the inheritance hierarchy, but it follows the naming conventions of `+replab.SubRep` and
 % implements a subset of its methods/properties.
 %
-% Main caveats, compared to `.Rep`, are:
+% Main caveats, compared to `+replab.Rep`, are:
 %
 % * No support for exact subrepresentations; injection and projection maps are of type 'double/sparse'
 %

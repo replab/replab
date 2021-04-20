@@ -9,8 +9,8 @@ classdef Compiled < handle
 % For instance, to make the function coded in 'aFunction_mex.cpp' available
 % through this interface, a matlab function called 'aFunction.m' should be
 % available in the same directory as 'aFunction_mex.cpp'. This file should
-% contain a function, which instantiates the class `+replab.+dialect.Compiled`
-% with the 'extension' argument should be set to '.cpp'. Other native codes
+% contain a function, which instantiates the class `.Compiled` with the
+% 'extension' argument should be set to '.cpp'. Other native codes
 % supported by the mex compiler should work seemingly as well.
 %
 % See also
@@ -69,7 +69,7 @@ classdef Compiled < handle
         % operational, trying to compile it if needed. It then calls the
         % function with the provided arguments and returns the (single) 
         % output of that function. If the call to the function fails, the
-        % returned value is `+replab.DisplatchNext`.
+        % returned value is `+replab.DispatchNext`.
         %
         % Args:
         %   varargin : the number of expected outputs, followed by all the

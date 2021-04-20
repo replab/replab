@@ -23,7 +23,7 @@ classdef Rep < replab.Obj
         field     % ({'R', 'C'}): Vector space defined on real (R) or complex (C) field
         dimension % (integer): Representation dimension
         isUnitary % (logical): Whether the representation is unitary
-        divisionAlgebraName % ('R->C', 'C->R', 'H->C', 'H->R:rep', ''): Name of the division algebra encoded by this representation (see `.DivisionAlgebra`)
+        divisionAlgebraName % ('R->C', 'C->R', 'H->C', 'H->R:rep', ''): Name of the division algebra encoded by this representation (see `+replab.DivisionAlgebra`)
     end
 
     methods
@@ -300,7 +300,7 @@ classdef Rep < replab.Obj
         function newRep = simplify(self, varargin)
         % Returns a representation identical to this, but possibly with its structure simplified
         %
-        % It pushes `.SubRep` to the outer level, and `.DerivedRep` to the inner levels;
+        % It pushes `.SubRep` to the outer level, and `+replab.+rep.DerivedRep` to the inner levels;
         % expands tensor products.
         %
         % Additional keyword arguments can be provided as key-value pairs.
@@ -768,7 +768,7 @@ classdef Rep < replab.Obj
         % Returns the equivariant space of matrices representing equivariant antilinear maps
         %
         % Let ``F`` be an antilinear map such that ``F(alpha * x) = conj(alpha) * F(x)`` for any scalar ``alpha``
-        % and vector ``x`. We describe ``F`` using a matrix ``J`` such that ``F(x) = J * conj(x)``.
+        % and vector ``x``. We describe ``F`` using a matrix ``J`` such that ``F(x) = J * conj(x)``.
         %
         % The following conditions are equivalent.
         %
@@ -1021,6 +1021,11 @@ classdef Rep < replab.Obj
         %
         % Exact decomposition depends on the availability of an algorithm: for example, we decompose finite groups
         % with an available character table using the Serre projection formulas.
+        %
+        % The approximate decomposition (type = 'double') is not deterministic in all aspects as it uses random
+        % samples from the commutant equivariant space. But there is also a catch with the exact decomposition
+        % algorithm: it retrieves the character table of the group from the atlas, by finding an isomorphism to
+        % this representation's `.group`. But this isomorphism is unique only up to automorphism of `.group`.
         %
         % Args:
         %   type ('double', 'double/sparse', 'exact', optional): Decomposition type, default: double
@@ -1598,7 +1603,7 @@ classdef Rep < replab.Obj
         %   mapConditionNumberEstimate (double, optional): Upper bound on the condition number of both $P$ and $I$
         %   isUnitary (logical, optional): Whether the resulting representation is unitary, may be omitted
         %   largeScale (logical, optional): Whether to use the large-scale version of the algorithm, default automatic selection
-        %   tolerances (`.Tolerances`): Termination criteria
+        %   tolerances (`+replab.+rep.Tolerances`): Termination criteria
         %   nSamples (integer, optional): Number of samples to use in the large-scale version of the algorithm, default ``5``
         %
         % Returns:
@@ -1623,7 +1628,7 @@ classdef Rep < replab.Obj
                         % this is a projector on the subspace W
                         % as I*  (inv(I'*I)*I'*I) *inv(I'*I)*I' = I*inv(I'*I)*I'
                         P1 = injection*inv(injection'*injection)*injection';
-                        P2 = self.commutant.project(P1);
+                        P2 = self.commutant.project(P1, 'exact');
                         % A\B gives X which is the solution A*X=B
                         % P1 = injection * projection
                         % slower because cyclotomic doesn't implement \ or /

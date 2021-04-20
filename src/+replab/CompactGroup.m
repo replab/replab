@@ -18,7 +18,7 @@ classdef CompactGroup < replab.Group
         %
         % - ``G0`` is the connected component of the group around the identity; we also know that the number of left cosets
         %   of ``G0`` in ``G`` is finite; see the group of components, or, for example:
-        %   `<https://mathoverflow.net/questions/378160/improved-classification-of-compact-lie-groups>_` .
+        %   `<https://mathoverflow.net/questions/378160/improved-classification-of-compact-lie-groups>`_ .
         %
         %   We write ``R`` a (finite) set of left coset representatives. Thus any element ``g`` of ``G`` can be written ``g = r g0``
         %   where ``r \in R`` and ``g0 \in G0``.
@@ -93,24 +93,27 @@ classdef CompactGroup < replab.Group
         %
         % See the construction in https://en.wikipedia.org/wiki/Semidirect_product
         %
-        %
         % Let ``H = self`` be a group, ``N`` a group.
         %
         % The semidirect product is defined using a homomorphism
         %
         % `` phi: H -> Aut(N) ``
         %
-        % which we write here
+        % which we write here in uncurried form:
         %
-        % `` phi: H x N -> N ``, ``n1 = phi(h, n)``
+        % ``phi: H x N -> N ``, ``n1 = phi(h, n)``.
         %
-        % Here, we describe this homomorphism by a function handle with parameters of type
-        % ``H x N``.
+        % We describe this homomorphism by a function handle with parameters of type ``H x N``, which returns
+        % an element of type ``N``.
         %
-        % We write each semidirect group element ``{h n}``.
+        % We write each semidirect group element as a cell array of two elements ``{h, n}``.
+        %
+        % The basic law of a semidirect product construction is the following.
+        % Let ``h \in H``, ``n \in N``, ``h1 = {h, N.identity}``, ``n1 = {H.identity, n}``. Then
+        % ``phi(h, n) == h1 n1 h1^-1``.
         %
         % The type of the return value depends on the most refined type at the intersection
-        % of the type of ``self`` and ``N``, with possible types CompactGroup/FiniteGroup/NiceFiniteGroup.
+        % of the type of ``self`` and ``N``, with possible types CompactGroup/FiniteGroup.
         %
         % Args:
         %   N (`.CompactGroup`): Group acted upon

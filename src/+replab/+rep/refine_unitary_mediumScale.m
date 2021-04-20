@@ -11,13 +11,13 @@ function gen = refine_unitary_mediumScale(gen0, nInnerIterations, tolerances, Ip
 %       1
 %
 % Args:
-%   gen (`+replab.GenSubRep`): Generic subrepresentation to refine
+%   gen (`+replab.+rep.GenSubRep`): Generic subrepresentation to refine
 %   nInnerIterations (integer): Number of inner iterations
 %   tolerances (`.Tolerances`): Termination criteria
 %   Ip (double(D,e)): Injection map matrix prescribing orthogonality
 %
 % Returns:
-%   `+replab.GenSubRep`: Refined generic subrepresentation
+%   `+replab.+rep.GenSubRep`: Refined generic subrepresentation
     D = gen0.parent.dimension;
     d = gen0.dimension;
     rho = gen0.parent;

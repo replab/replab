@@ -423,7 +423,7 @@ classdef H
         function res = sqrt(self)
         % Quaternion element-by-element square root
         %
-        % See `<https://math.stackexchange.com/questions/382431/square-roots-of-quaternions>_`
+        % See `<https://math.stackexchange.com/questions/382431/square-roots-of-quaternions>`_
             T = self.part1;
             X = self.parti;
             Y = self.partj;

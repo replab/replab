@@ -1,7 +1,7 @@
 classdef BoundedLattice < replab.Domain
 % Describes a bounded lattice
 %
-% See `<https://www.math24.net/lattices>_`
+% See `<https://www.math24.net/lattices>`_
     properties (SetAccess = protected)
         zero % Greatest lower bound
         one % Least upper bound

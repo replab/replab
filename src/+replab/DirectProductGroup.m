@@ -139,7 +139,7 @@ classdef DirectProductGroup < replab.CompactGroup
         %
         % Args:
         %   target (`.CompactGroup`): Target group
-        %   factorMorphisms (cell(1,\*) of `.Morphisms`): Morphisms for each of the factor groups
+        %   factorMorphisms (cell(1,\*) of `.Morphism`): Morphisms for each of the factor groups
         %
         % Returns:
         %   `.Morphism`: The computed morphism
