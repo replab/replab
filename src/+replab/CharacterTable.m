@@ -60,12 +60,12 @@ classdef CharacterTable < replab.Obj
             if isempty(args.kronecker)
                 args.kronecker = @() replab.ct.computeKronecker(self);
             end
-            assert(length(irrepNames) == nIrreps);
-            assert(length(classNames) == nClasses);
-            assert(all(cellfun(@(n) ischar(n), irrepNames)));
-            assert(all(cellfun(@(n) ischar(n), classNames)));
+            assert(length(args.irrepNames) == nIrreps);
+            assert(length(args.classNames) == nClasses);
+            assert(all(cellfun(@(n) ischar(n), args.irrepNames)));
+            assert(all(cellfun(@(n) ischar(n), args.classNames)));
             assert(all(cellfun(@(x) isempty(x) || isa(x, 'replab.Rep') || isa(x, 'function_handle'), args.irreps)));
-            assert(isdouble(args.kronecker) || isa(args.kronecker, 'function_handle'));
+            assert(isa(args.kronecker, 'double') || isa(args.kronecker, 'function_handle'));
             self.group = group;
             self.field = field;
             self.classes = classes;
@@ -159,12 +159,71 @@ classdef CharacterTable < replab.Obj
             ind = find(self.values(:, self.identityConjugacyClassIndex) == 1);
         end
 
+        function mults = multiplicities(self, arg)
+        % Calculate the multiplicities of the irreducible characters in this table in a given representation or character
+        %
+        % The ordering of coefficients corresponds to the order of irreducible representations in this character table.
+        %
+        % Note that this method is optimized when the representation is a tensor product.
+        %
+        % Example:
+        %   >>> G = replab.PermutationGroup.dihedral(3);
+        %   >>> ct = G.characterTable;
+        %   >>> rep2 = ct.irreps{2};
+        %   >>> rep3 = ct.irreps{3};
+        %   >>> rep = kron(rep2, rep3);
+        %   >>> isequal(ct.multiplicities(rep), [0 0 1])
+        %       1
+        %
+        % Example:
+        %   >>> G = replab.S(5);
+        %   >>> ct = G.characterTable;
+        %   >>> S5 = ct.group;
+        %   >>> isequal(ct.multiplicities(S5.naturalRep), [1 0 1 0 0 0 0])
+        %       1
+        %
+        % Args:
+        %   arg (`.Character` or `.Rep`): Character or representation of `.group`
+        %
+        % Returns:
+        %    (integer(1,\*)): Multiplicities of irreducible representations
+            n = self.nIrreps;
+            mults = zeros(1, n);
+            if isa(arg, 'replab.Character')
+                for i = 1:n
+                    mults(i) = self.character(i).dot(arg);
+                end
+            elseif isa(arg, 'replab.rep.TensorRep')
+                factorM = cellfun(@(f) self.multiplicities(f), arg.factors, 'uniform', 0);
+                mults = factorM{1};
+                for i = 2:length(factorM)
+                    mults = self.multiplicityProduct(mults, factorM{i});
+                end
+            elseif isa(arg, 'replab.Rep')
+                for i = 1:n
+                    mults(i) = self.character(i).dotRep(arg);
+                end
+            else
+                error('Invalid argument');
+            end
+            mults = round(mults);
+        end
+
         function n = nCharacters(self)
         % Returns the number of characters in this character table
         %
         % Returns:
         %   integer: Number of characters
-            n = self.nClasses;
+            n = size(self.values, 1);
+        end
+
+        function ind = trivialCharacterIndex(self)
+        % Returns the row index of the trivial character
+            ind = 1:self.nIrreps;
+            for i = 1:self.nClasses
+                ind = ind(self.values(ind, i) == 1);
+            end
+            assert(length(ind) == 1);
         end
 
     end
@@ -201,15 +260,73 @@ classdef CharacterTable < replab.Obj
             dec = replab.Irreducible(rep, I);
         end
 
-        function n = nIrreps(self)
-        % Returns the number of
-            n = self.;
+        function b = hasIrreps(self)
+        % Returns whether explicit constructions are available for all irreducible representations
+            b = ~any(cellfun(@isempty, self.irreps_));
         end
 
+        function b = hasIrrep(self, ind)
+        % Returns whether the irreducible representation that corresponds to the character of given index is available
+        %
+        % Args:
+        %   ind (integer): Index of the character
+        %
+        % Returns:
+        %   logical: Whether the irreducible representation is available
+            b = ~isempty(self.irreps_{ind});
+        end
+
+        function r = irrep(self, ind)
+        % Returns the irreducible representation that corresponds to the character of given index
+        %
+        % Args:
+        %   ind (integer): Index of the character
+        %
+        % Returns:
+        %   `.RepByImages`: An irreducible representation with coefficients in the cyclotomic field
+            assert(self.hasIrrep(ind), 'I do not know how to compute the %d-th irrep of this group', ind);
+            if isa(self.irreps_{ind}, 'function_handle')
+                f = self.irreps_{ind};
+                self.irreps_{ind} = f();
+            end
+            r = self.irreps_{ind};
+        end
+
+        function r = irreps(self)
+        % Returns a cell vector of the irreducible representations corresponding to the characters in this table
+        %
+        % Returns:
+        %   cell(1,nIrreps) of `.RepByImages`: Irreducible representations
+            r = arrayfun(@(i) self.irrep(i), 1:self.nIrreps, 'uniform', 0);
+        end
+
+        function n = nIrreps(self)
+        % Returns the number of
+            n = size(self.values, 1);
+        end
 
     end
 
     methods % Transformations of the character table
+
+        function res = imap(self, f)
+        % Maps the character table under an isomorphism
+        %
+        % Example:
+        %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]);
+        %   >>> D6b = replab.PermutationGroup.of([1 4 3 2], [1 3 4 2]);
+        %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
+        %   >>> Ca = D6a.characterTable;
+        %   >>> Cb = Ca.imap(f);
+        %   >>> Cb.laws.checkSilent;
+        %
+        % Args:
+        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+        %
+        % Returns:
+        %   `.CharacterTable`: The character table of the subgroup in the image of the isomorphism
+            error('Abstract');
+        end
 
 % $$$         function ct = directProduct(self, ct2)
 % $$$         % Returns the direct product of character tables
@@ -222,31 +339,174 @@ classdef CharacterTable < replab.Obj
 % $$$             ct = replab.ct.directProduct(self, ct2);
 % $$$         end
 
-        function ct = forIsomorphicGroup(self, group)
-        % Returns the character table updated to describe the representations of an isomorphic group
-        %
-        % Args:
-        %   group (`.FiniteGroup`): Group isomorphic to `.group`
-        %
-        % Returns:
-        %   `.CharacterTable`: Updated character table
+% $$$         function ct = forIsomorphicGroup(self, group)
+% $$$         % Returns the character table updated to describe the representations of an isomorphic group
+% $$$         %
+% $$$         % Args:
+% $$$         %   group (`.FiniteGroup`): Group isomorphic to `.group`
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `.CharacterTable`: Updated character table
+% $$$
+% $$$
+% $$$         % TODO
+% $$$         % TODO
+% $$$         % TODO
+% $$$         % TODO
+% $$$         % TODO
+% $$$         % TODO
+% $$$         end
 
+    end
 
-        % TODO
-        % TODO
-        % TODO
-        % TODO
-        % TODO
-        % TODO
+    methods (Access = protected) % Multiplicity helper
+
+        function mul12 = multiplicityProduct(self, mul1, mul2)
+            n = self.classes.nClasses;
+            K = self.kronecker;
+            mul12 = reshape(K, n, n*n) * reshape(mul1(:) * mul2(:)', n*n, 1);
+            mul12 = mul12(:)';
+        end
+
+    end
+
+    methods (Access = protected) % Printing helper methods
+
+        function strings = centralizerSizeTable(self)
+            primes = unique(double(factor(self.group.order)));
+            nC = self.classes.nClasses;
+            strings = cell(length(primes), nC+1);
+            for i = 1:length(primes)
+                strings{i,1} = sprintf('%d', primes(i));
+            end
+            for i = 1:nC
+                c = self.classes.classes{i};
+                f = double(factor(c.representativeCentralizer.order));
+                for j = 1:length(primes)
+                    s = sum(f == primes(j));
+                    if s == 0
+                        strings{j,i+1} = '.';
+                    else
+                        strings{j,i+1} = sprintf('%d', sum(f == primes(j)));
+                    end
+                end
+            end
+        end
+
+        function lines = gapLongStr(self, maxRows, maxColumns)
+            ct = replab.str.CyclotomicTable(self.values);
+            pp = self.classes.powerMapDefaultPrimes;
+            m = self.classes.powerMaps(pp);
+            nC = self.classes.nClasses;
+            powerMaps = cell(length(pp)+1, nC + 1);
+            powerMaps{1,1} = '';
+            powerMaps(1,2:end) = self.classNames;
+            for i = 1:length(pp)
+                powerMaps{i+1,1} = sprintf('%dP', pp(i));
+                for j = 1:nC
+                    powerMaps{i+1,j+1} = self.classNames{m(i,j)};
+                end
+            end
+            chars = horzcat(self.irrepNames(:), ct.strings);
+            cst = self.centralizerSizeTable;
+            sep = repmat({''}, 1, nC+1);
+            t = replab.str.Table(vertcat(cst, sep, powerMaps, sep, chars), 'colAlign', repmat('r', 1, nC+1));
+            lines1 = strsplit(t.format(maxRows, maxColumns), '\n');
+            lines2 = arrayfun(@(i) sprintf(' %s = %s', ct.variables{i}, num2str(ct.values(i))), 1:length(ct.variables), 'uniform', 0);
+            lines = vertcat(lines1(:), {''}, lines2(:));
+        end
+
+        function lines = plainLongStr(self, maxRows, maxColumns)
+            ct = replab.str.CyclotomicTable(self.values);
+            nC = self.classes.nClasses;
+            header = cell(2, nC + 1);
+            header{1,1} = 'Class';
+            header(1,2:end) = self.classNames;
+            header{2,1} = 'Size';
+            header(2,2:end) = cellfun(@(s) strtrim(num2str(s)), self.classes.classSizes, 'uniform', 0);
+            chars = horzcat(self.irrepNames(:), ct.strings);
+            sep = repmat({''}, 1, nC+1);
+            t = replab.str.Table(vertcat(header, sep, chars), 'colAlign', repmat('r', 1, nC+1));
+            lines1 = strsplit(t.format(maxRows, maxColumns), '\n');
+            lines2 = arrayfun(@(i) sprintf(' %s = %s', ct.variables{i}, num2str(ct.values(i))), 1:length(ct.variables), 'uniform', 0);
+            lines = vertcat(lines1(:), {''}, lines2(:));
         end
 
     end
 
     methods % Implementations
 
+        % Str
+
+        function s = headerStr(self)
+            group_str = replab.headerStr(self.group);
+            if length(group_str) > 1
+                group_str = [lower(group_str(1)), group_str(2:end)];
+            end
+            s = sprintf(['Character table for ', group_str]);
+        end
+
+        function lines = longStr(self, maxRows, maxColumns)
+            switch replab.globals.formatCharacterTable
+              case 'gap'
+                lines = self.gapLongStr(maxRows, maxColumns);
+              case 'plain'
+                lines = self.plainLongStr(maxRows, maxColumns);
+              otherwise
+                error('Unknown format %s', replab.globals.formatCharacterTable);
+            end
+        end
+
+        % Obj
+
+        function l = laws(self)
+            l = replab.laws.CharacterTableLaws(self);
+        end
+
     end
 
     methods (Static)
+
+        function names = defaultIrrepNames(n)
+        % Constructs default names for irreducible representations
+        %
+        % Args:
+        %   n (integer): Number of irreducible representations
+        %
+        % Returns:
+        %   cell(1,\*) of charstring: Irreducible representation names
+            names = arrayfun(@(i) sprintf('X.%d', i), 1:n, 'uniform', 0);
+        end
+
+        function names = defaultClassNames(elementOrders)
+        % Constructs default names for conjugacy classes
+        %
+        % Args:
+        %   elementOrders (integer(1,\*)): Orders of the conjugacy classes elements
+        %
+        % Returns:
+        %   cell(1,\*) of charstring: Conjugacy class names
+            orders = [];
+            numbers = [];
+            nClasses = length(elementOrders);
+            names = cell(1, nClasses);
+            for i = 1:nClasses
+                o = elementOrders(i);
+                j = find(orders == o);
+                if isempty(j)
+                    j = length(orders) + 1;
+                    orders(j) = o;
+                    numbers(j) = 1;
+                else
+                    numbers(j) = numbers(j) + 1;
+                end
+                names{i} = sprintf('%d%s', o, char('a' + numbers(j) - 1));
+            end
+        end
+
+% $$$         function ct = forPermutationGroup(G)
+% $$$             ct = replab.sym.PermutationCharacterTable(G);
+% $$$         end
 
     end
 

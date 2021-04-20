@@ -256,6 +256,15 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         end
 
         function c = characterTable(self)
+        % Returns the (complex) character table of this group
+        %
+        % The complex character table is the standard, textbook character table of the group.
+        %
+        % Note that randomized techniques are used to find group isomorphisms, and thus the output of this
+        % method may not be deterministic.
+        %
+        % Returns:
+        %   `.ComplexCharacterTable`: Character table
             c = self.cached('characterTable', @() self.computeCharacterTable);
         end
 
