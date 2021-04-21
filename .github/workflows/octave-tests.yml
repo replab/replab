@@ -39,8 +39,6 @@ jobs:
           #sudo apt-get -y -qq update
           sudo apt install flatpak
           sudo apt install gnome-software-plugin-flatpak
-          echo "0"
-          flatpak install flathub org.octave.Octave --user
           echo "1"
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo --user
           echo "2"
