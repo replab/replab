@@ -37,10 +37,14 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get -y -qq update
-          sudo apt-get -y install octave liboctave-dev octave-optim octave-symbolic openjdk-11-jre
+          sudo apt install flatpak
+          sudo apt install gnome-software-plugin-flatpak
+          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak install flathub org.octave.Octave
+          # commented out: sudo apt-get -y install octave liboctave-dev octave-optim octave-symbolic openjdk-11-jre
       - name: Update Octave path
         run: |
-          octave $OCTFLAGS --eval "addpath (pwd); savepath ();"
+          flatpak run org.octave.Octave $OCTFLAGS --eval "addpath (pwd); savepath ();"
       - name: before_script
         run: |
           if [ $COVERING == true ]; then
@@ -59,7 +63,7 @@ jobs:
           # ---------------------------------------------------------------------------
       - name: Run tests
         run: |
-          octave -q --eval "$ADDPATH_COMMAND $TEST_COMMAND";
+          flatpak run org.octave.Octave -q --eval "$ADDPATH_COMMAND $TEST_COMMAND";
       - name: after_success
         run: |
           # Check where we ended up and what's going on where we are
