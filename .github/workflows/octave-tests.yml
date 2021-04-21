@@ -42,9 +42,6 @@ jobs:
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo --user
           flatpak install -y flathub org.octave.Octave --user
           # commented out: sudo apt-get -y install octave liboctave-dev octave-optim octave-symbolic 
-      - name: Update Octave path
-        run: |
-          flatpak run org.octave.Octave $OCTFLAGS --eval "addpath (pwd); savepath ();"
       - name: before_script
         run: |
           if [ $COVERING == true ]; then
