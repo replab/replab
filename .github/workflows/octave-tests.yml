@@ -56,7 +56,7 @@ jobs:
           # Double-check we are still in the right directory
           pwd
           # Check what octave packages we have installed
-          octave -q --eval "ver"
+          flatpak run org.octave.Octave -q --eval "ver"
           # ---------------------------------------------------------------------------
           # Remove any cached results files from previous build, if present
           rm -f testresults.xml;
