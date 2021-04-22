@@ -37,13 +37,8 @@ jobs:
       - name: Install dependencies
         run: |
           #sudo apt-get -y -qq update
-          sudo apt -y install openjdk-11-jre
-          java -version
-          sudo apt -y install flatpak gnome-software-plugin-flatpak
-          flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo --user
-          flatpak install -y flathub org.octave.Octave --user
+          sudo apt -y install octave liboctave-dev octave-optim octave-symbolic openjdk-11-jre
           bash
-          # commented out: sudo apt-get -y install octave liboctave-dev octave-optim octave-symbolic 
       - name: before_script
         run: |
           if [ $COVERING == true ]; then
@@ -55,14 +50,14 @@ jobs:
           # Double-check we are still in the right directory
           pwd
           # Check what octave packages we have installed
-          flatpak run org.octave.Octave -q --eval "ver"
+          octave -q --eval "ver"
           # ---------------------------------------------------------------------------
           # Remove any cached results files from previous build, if present
           rm -f testresults.xml;
           # ---------------------------------------------------------------------------
       - name: Run tests
         run: |
-          flatpak run org.octave.Octave -q --eval "$ADDPATH_COMMAND $TEST_COMMAND";
+          octave -q --eval "$ADDPATH_COMMAND $TEST_COMMAND";
           # Check where we ended up and what's going on where we are
           pwd
           ls -alh
