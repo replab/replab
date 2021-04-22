@@ -39,6 +39,7 @@ jobs:
           #sudo apt-get -y -qq update
           sudo apt install flatpak
           sudo apt install gnome-software-plugin-flatpak openjdk-11-jre
+          java -version
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo --user
           flatpak install -y flathub org.octave.Octave --user
           # commented out: sudo apt-get -y install octave liboctave-dev octave-optim octave-symbolic 
