@@ -38,6 +38,7 @@ jobs:
         run: |
           #sudo apt-get -y -qq update
           sudo apt -y install octave liboctave-dev octave-optim octave-symbolic openjdk-11-jre
+          sudo ldconfig
           bash
       - name: before_script
         run: |
