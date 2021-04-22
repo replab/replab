@@ -51,6 +51,8 @@ jobs:
           pwd
           # Check what octave packages we have installed
           octave -q --eval "ver"
+          # Check that octave can access java
+          octave --eval "b = javaMethod('valueOf', 'java.math.BigInteger', 2)"
           # ---------------------------------------------------------------------------
           # Remove any cached results files from previous build, if present
           rm -f testresults.xml;
