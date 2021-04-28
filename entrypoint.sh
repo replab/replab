@@ -8,6 +8,8 @@ export COVERING=false
 pwd
 ls
 
+echo argument=$1
+
 if [ $COVERING == true ]; then
   TEST_COMMAND="exit(~replab_runtests(1,1));";
 else

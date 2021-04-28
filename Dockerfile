@@ -19,19 +19,18 @@ COPY sphinx/requirements.txt /workspace
 #RUN pip3 install -r /workspace/requirements.txt
 
 #WORKDIR /workspace/replab
-#VOLUME /workspace/replab
+VOLUME /workspace/replab
 
 CMD ["/bin/bash"]
 
 RUN pwd
 RUN ls
-RUN ls replab
 RUN ls /workspace
 RUN ls /workspace/replab
 
 # Copies your code file from your action repository to the filesystem path `/` of the container
-#COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /workspace/entrypoint.sh
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/workspace/entrypoint.sh"]
 
