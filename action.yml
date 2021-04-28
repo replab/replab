@@ -1,6 +1,6 @@
 # action.yml
-name: 'Octave runtest action'
-description: 'Runs the tests on Octave'
+name: 'docker'
+description: 'Launcher docker image'
 runs:
   using: 'docker'
   image: 'Dockerfile'
