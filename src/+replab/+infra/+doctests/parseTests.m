@@ -22,7 +22,7 @@ function doctests = parseTests(lines, errFun)
     n = length(lines);
     content = cell(1, n);
     indent = zeros(1, n);
-    % Remove leading whitespace but remember identation level for each line
+    % Remove leading whitespace but remember indentation level for each line
     for i = 1:n
         l = lines{i};
         if isempty(l)
