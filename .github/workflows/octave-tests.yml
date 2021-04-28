@@ -26,7 +26,5 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Hello world action step
         id: hello
-        uses: action@v1
-      
-      
-      
+        uses: replab/replab/action@v1
+
