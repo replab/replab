@@ -8,7 +8,7 @@ export COVERING=false
 cd /workspace/replab
 git submodule update --init
 pwd
-ls
+ls -al
 ls external/sdpt3
 
 echo argument=$1
