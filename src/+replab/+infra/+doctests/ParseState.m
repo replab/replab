@@ -18,7 +18,7 @@ classdef ParseState < replab.Str
 % See https://jayconrod.com/posts/65/how-to-build-a-parser-by-hand
 % for another example of a hand-written parser
 
-    properties
+    properties (SetAccess = protected)
         tags % row cell array of charstring: Tag describing the line type
         lines % row cell array of charstring: Content lines
         comments % row cell array of charstring: Comments
