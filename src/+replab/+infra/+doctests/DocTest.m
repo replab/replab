@@ -1,44 +1,64 @@
 classdef DocTest < replab.Str
 % Describes an executable code sample
-    properties
-        lineNumbers % row vector of integer: 1-based line numbers of first line of the command
-                    %
-                    %                        (interpretation of those line numbers depend on context)
-        commands % row cell vector of row vector of charstring: commands to be evaluated
-        outputs % row cell vector of row vector of charstring: expected output
-        flags % row cell vector of struct: flags corresponding to the command evaluation
+
+    properties (SetAccess = protected)
+        statements % (cell(1,\*) of `.DocTestStatement`): Statements parts of this doctest
+    end
+
+    methods (Static)
+
+        function d = make(lineNumbers, commands, outputs, flags)
+            n = length(lineNumbers);
+            statements = cell(1, n);
+            for i = 1:n
+                statements{i} = replab.infra.doctests.DocTestStatement(lineNumbers(i), ...
+                                                                  commands{i}, outputs{i}, flags{i});
+            end
+            d = replab.infra.doctests.DocTest(statements);
+        end
+
     end
 
     methods
 
-        function self = DocTest(lineNumbers, commands, outputs, flags)
-            self.lineNumbers = lineNumbers;
-            self.commands = commands;
-            self.outputs = outputs;
-            self.flags = flags;
+        function self = DocTest(statements)
+            self.statements = statements;
+        end
+
+        function l = lineNumbers(self)
+            l = cellfun(@(s) s.lineNumber, self.statements);
+        end
+
+        function c = commands(self)
+            c = cellfun(@(s) s.command, self.statements, 'uniform', 0);
+        end
+
+        function o = outputs(self)
+            o = cellfun(@(s) s.output, self.statements, 'uniform', 0);
+        end
+
+        function f = flags(self)
+            f = cellfun(@(s) s.flags, self.statements, 'uniform', 0);
         end
 
         function b = isSingleLineCommand(self, i)
-            b = length(self.commands{i}) == 1;
+            b = self.statements{i}.isSingleLineCommand;
         end
 
         function c = quotedCommand(self, i)
-            c = self.commands{i};
-            c = cellfun(@(x) ['''' strrep(x, '''', '''''') ''''], c, 'uniform', 0);
-            if length(c) == 1
-                c = c{1};
-            else
-                c = ['strjoin({' strjoin(c, ', ') '}, char(10))'];
-            end
+            c = self.statements{i}.quotedCommand;
         end
 
         function o = quotedOutput(self, i)
-            o = self.outputs{i};
-            o = ['{' strjoin(cellfun(@(x) ['''' strrep(x, '''', '''''') ''''], o, 'uniform', 0), ', ') '}'];
+            o = self.statements{i}.quotedOutput;
+        end
+
+        function n = nStatements(self)
+            n = length(self.statements);
         end
 
         function n = nCommands(self)
-            n = length(self.commands);
+            n = length(self.statements);
         end
 
         function newDT = mapLineNumbers(self, fun)
@@ -49,9 +69,8 @@ classdef DocTest < replab.Str
         %
         % Returns:
         %   `.DocTest`: The transformed doctest
-            newLineNumbers = arrayfun(fun, self.lineNumbers);
-            newDT = replab.infra.doctests.DocTest(newLineNumbers, ...
-                                                  self.commands, self.outputs, self.flags);
+            newStatements = cellfun(@(s) s.mapLineNumber(fun), self.statements, 'uniform', 0);
+            newDT = replab.infra.doctests.DocTest(newStatements);
         end
 
     end
@@ -65,7 +84,7 @@ classdef DocTest < replab.Str
         %   ps (`.ParseState`): Current parse state
         %   errFun (function_handle): Error context display function, see `.parseTests`
         %                             Called as ``errFun(lineNumber)``
-       %
+        %
         % Returns
         % -------
         %   ps:
@@ -170,7 +189,7 @@ classdef DocTest < replab.Str
                 errFun(lineNumber);
                 error(errId, 'End of file expected');
             end
-            dt = replab.infra.doctests.DocTest(lineNumbers, commands, outputs, flags);
+            dt = replab.infra.doctests.DocTest.make(lineNumbers, commands, outputs, flags);
         end
 
     end
