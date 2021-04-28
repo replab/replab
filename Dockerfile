@@ -18,15 +18,19 @@ COPY sphinx/requirements.txt /workspace
 #The following line produces the error: "The command '/bin/sh -c pip3 install -r /workspace/requirements.txt' returned a non-zero code: 2"
 #RUN pip3 install -r /workspace/requirements.txt
 
-WORKDIR /workspace/replab
-VOLUME /workspace/replab
+#WORKDIR /workspace/replab
+#VOLUME /workspace/replab
 
 CMD ["/bin/bash"]
 
 RUN pwd
 RUN ls
+RUN ls replab
 RUN ls /workspace
 RUN ls /workspace/replab
+
+# Copies your code file from your action repository to the filesystem path `/` of the container
+#COPY entrypoint.sh /entrypoint.sh
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/workspace/replab/entrypoint.sh"]
