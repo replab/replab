@@ -5,7 +5,7 @@ echo "Executing entrypoint.sh"
 export ADDPATH_COMMAND="replab_init('verbose', 2);"
 export COVERING=false
 
-cd replab
+cd /workspace/replab
 pwd
 ls
 
