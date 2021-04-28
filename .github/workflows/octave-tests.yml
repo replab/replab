@@ -26,5 +26,5 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Hello world action step
         id: hello
-        uses: replab/replab/action@OctaveAction3
+        uses: replab/replab/action@13212216cc8d35f56d15c65b7010ceaba23636f8
 
