@@ -723,6 +723,15 @@ classdef cyclotomic
             res = replab.cyclotomic(javaMethod('nullSpace', rr), [rows cols]);
         end
 
+        function res = rref(self)
+        % Computes the row reduced echelon form
+        %
+        % Returns:
+        %   `.cyclotomic`: The row reduced echelon form
+            rr = javaMethod('rref', 'cyclo.Lab', self.data, size(self, 1), size(self, 2));
+            res = replab.cyclotomic(javaMethod('matrix', rr), size(self));
+        end
+
         function [L, U, p] = lu(self)
         % Returns the LU decomposition of this matrix
         %
