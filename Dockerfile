@@ -15,7 +15,7 @@ RUN chmod 777 -R /workspace
 
 COPY sphinx/requirements.txt /workspace
 
-RUN pip3 install -r /workspace/requirements.txt
+#RUN pip3 install -r /workspace/requirements.txt
 
 WORKDIR /workspace/replab
 VOLUME /workspace/replab
