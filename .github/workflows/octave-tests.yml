@@ -15,9 +15,8 @@ on:
 
 # We have some environment variables
 env:
-  OCTFLAGS: --no-gui --no-window-system --silent
   ADDPATH_COMMAND: "replab_init('verbose', 2);"
-  COVERING: true
+  COVERING: false
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -26,7 +25,7 @@ jobs:
   test:
     name: Run tests on Octave
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: focal
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -36,10 +35,9 @@ jobs:
           submodules: recursive
       - name: Install dependencies
         run: |
-          #sudo apt-get -y -qq update
-          sudo apt -y install octave liboctave-dev octave-optim octave-symbolic openjdk-11-jre
-          sudo ldconfig
-          bash
+          sudo add-apt-repository universe
+          sudo apt update
+          sudo apt install octave liboctave-dev octave-optim octave-symbolic openjdk-11-jre
       - name: before_script
         run: |
           if [ $COVERING == true ]; then
