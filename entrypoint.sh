@@ -2,7 +2,7 @@
 
 echo "Executing entrypoint.sh"
 
-export ADDPATH_COMMAND="replab_init('verbose', 2, 'autoinstall');"
+export ADDPATH_COMMAND="replab_init('verbose', 2);"
 export COVERING=false
 
 cd /workspace/replab
