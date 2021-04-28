@@ -23,7 +23,13 @@ jobs:
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - id: get-sha
+        run: |
+          echo ::set-output name=sha::$( curl -u "u:${{github.token}}" https://api.github.com/repos/replab/replab/git/ref/heads/master | jq .object.sha | tr -d '"' )
       - name: Calling docker launch action
         id: dock
         uses: replab/replab@OctaveAction3
+        with:
+          commit: ${{ steps.get-sha.outputs.sha }}
+
 
