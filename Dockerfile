@@ -31,7 +31,7 @@ RUN ls /workspace/replab
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /workspace/entrypoint.sh
 
-COPY * /workspace/replab
+COPY * /workspace/replab/
 RUN ls /workspace/replab
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
