@@ -2,11 +2,10 @@
 
 echo "Executing entrypoint.sh"
 
-export ADDPATH_COMMAND="replab_init('verbose', 2);"
+export ADDPATH_COMMAND="replab_init('verbose', 2, 'autoinstall');"
 export COVERING=false
 
 cd /workspace/replab
-git submodule update --init
 pwd
 ls -al
 ls external/sdpt3
