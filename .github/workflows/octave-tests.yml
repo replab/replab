@@ -28,7 +28,7 @@ jobs:
           echo ::set-output name=sha::$( curl -u "u:${{github.token}}" https://api.github.com/repos/replab/replab/git/ref/heads/master | jq .object.sha | tr -d '"' )
       - name: Calling docker launch action
         id: dock
-        uses: replab/replab@OctaveAction3
+        uses: replab/replab@OctaveAction4
         with:
           commit: ${{ steps.get-sha.outputs.sha }}
 
