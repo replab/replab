@@ -364,6 +364,9 @@ classdef cyclotomic
     methods % Display
 
         function display(self, name)
+            if nargin < 2
+                name = 'ans';
+            end
             n = ndims(self);
             if n > 2
                 d = size(self);
