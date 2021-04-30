@@ -106,7 +106,7 @@ classdef Compiled < handle
 					        replab.init.log_(2, ['Compiling ', self.fileName]);
                             % If the program was never compiled, or the source was
                             % modified, we try to compile it
-                            mex('-largeArrayDims', [self.fileName, '_mex.', self.extension]);
+                            mex('-largeArrayDims', '-v', [self.fileName, '_mex.', self.extension])
 
                             % We save the timestamp corresponding to this
                             % compilation
