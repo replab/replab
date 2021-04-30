@@ -43,17 +43,13 @@ function [componentIndex, subsets] = connectedComponents(nbVertices, edges)
     % We want to do a dispatch with two output arguments, so we do it more
     % simply
     if nargout == 1
-    	disp('nargout == 1, calling replab.graph.burningAlgorithmFast');
         componentIndex = replab.graph.burningAlgorithmFast(nbVertices, edges);
         if isa(componentIndex, 'replab.DispatchNext')
-	    	disp('nargout == 1, calling replab.graph.burningAlgorithm');
             componentIndex = replab.graph.burningAlgorithm(nbVertices, edges);
         end
     else
         [componentIndex, subsets] = replab.graph.burningAlgorithmFast(nbVertices, edges);
-    	disp('nargout ~= 1, calling replab.graph.burningAlgorithmFast');
         if isa(componentIndex, 'replab.DispatchNext')
-	    	disp('nargout ~= 1, calling replab.graph.burningAlgorithm');
             [componentIndex, subsets] = replab.graph.burningAlgorithm(nbVertices, edges);
         end
     end

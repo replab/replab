@@ -242,13 +242,6 @@ classdef Graph < replab.Obj
             else
                 [blockIndex, blocks] = replab.graph.connectedComponents(self.nVertices, self.edges);
 
-				class(self.nVertices)
-				self.nVertices
-				class(self.edges)
-				self.edges
-				class(blocks)
-				blocks
-				
                 % If some elements are isolated, we add them
                 connectedVertices = [blocks{:}];
                 isolatedVertices = setdiff(1:self.nVertices, connectedVertices);
