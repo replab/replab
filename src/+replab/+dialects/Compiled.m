@@ -103,6 +103,7 @@ classdef Compiled < handle
                         end
 
                         if needToCompile
+					        replab.init.log_(2, ['Compiling ', self.fileName]);
                             % If the program was never compiled, or the source was
                             % modified, we try to compile it
                             mex('-largeArrayDims', [self.fileName, '_mex.', self.extension]);
@@ -128,6 +129,7 @@ classdef Compiled < handle
                         command = cat(2, command{:});
                         [varargout{1:self.nargout}] = eval(command);
                     catch
+				        replab.init.log_(2, ['Calling the compiled interface for ', self.fileName, ' failed']);
                         self.isWorking = false;
                     end
                 else
