@@ -52,7 +52,7 @@ function [componentIndex, subsets] = connectedComponents(nbVertices, edges)
     else
         [componentIndex, subsets] = replab.graph.burningAlgorithmFast(nbVertices, edges);
     	disp('nargout ~= 1, calling replab.graph.burningAlgorithmFast');
-        if isa(subsets, 'replab.DispatchNext')
+        if isa(componentIndex, 'replab.DispatchNext')
 	    	disp('nargout ~= 1, calling replab.graph.burningAlgorithm');
             [componentIndex, subsets] = replab.graph.burningAlgorithm(nbVertices, edges);
         end
