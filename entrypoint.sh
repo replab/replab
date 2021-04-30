@@ -4,6 +4,8 @@ echo "Executing entrypoint.sh"
 
 echo argument=$1
 
+ls -al
+
 mkdir -p /workspace
 git clone --recursive https://www.github.com/replab/replab
 cd /workspace/replab
