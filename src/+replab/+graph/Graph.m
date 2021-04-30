@@ -242,6 +242,10 @@ classdef Graph < replab.Obj
             else
                 [blockIndex, blocks] = replab.graph.connectedComponents(self.nVertices, self.edges);
 
+				class(self.nVertices)
+				self.nVertices
+				class(self.edges)
+				self.edges
 				class(blocks)
 				blocks
 				
