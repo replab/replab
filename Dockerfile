@@ -4,10 +4,6 @@ FROM       gnuoctave/octave:6.2.0
 # Usage:
 # docker run -it -v <your directory>:/documents/
 
-RUN pwd
-RUN ls -al .
-RUN cat .dockerignore
-
 # Install base packages
 RUN apt-get update && apt-get install -y -q python3-pip pandoc unzip curl
 
