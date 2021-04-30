@@ -15,7 +15,8 @@ RUN chmod 777 -R /workspace
 
 COPY sphinx/requirements.txt /workspace
 
-RUN pip3 install -r /workspace/requirements.txt
+#The following line used to produce the error: "ERROR: No matching distribution found for sphinx-collapse-admonitions==0.0.1 (from -r /workspace/requirements.txt (line 64))"
+#RUN pip3 install -r /workspace/requirements.txt
 
 #WORKDIR /workspace/replab
 VOLUME /workspace/replab
