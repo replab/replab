@@ -124,11 +124,16 @@ classdef Compiled < handle
                 if firstPartWorks
                     % The preparation worked, we try call the optimized method
                     self.isWorking = true;
+                    command = {self.package, '.', self.fileName, '_mex(varargin{:});'};
+                    command = cat(2, command{:});
                     try
-                        command = {self.package, '.', self.fileName, '_mex(varargin{:});'};
-                        command = cat(2, command{:});
+                        eval(command)
+                        T = evalc(command);
+                        disp(T);
                         [varargout{1:self.nargout}] = eval(command);
                     catch
+                        T = evalc(command);
+                        disp(T);
 				        replab.init.log_(2, ['Calling the compiled interface for ', self.fileName, ' failed']);
                         self.isWorking = false;
                     end
