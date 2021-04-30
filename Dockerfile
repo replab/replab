@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y -q python3-pip pandoc unzip curl
 
 # Install Python package
 
-RUN mkdir /workspace && mkdir /workspace/replab
+RUN mkdir /workspace
+#&& mkdir /workspace/replab
 
 RUN chmod 777 -R /workspace
 

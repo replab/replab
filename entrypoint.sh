@@ -4,14 +4,15 @@ echo "Executing entrypoint.sh"
 
 echo argument=$1
 
+pwd
 ls -al
 
-mkdir -p /workspace
-git clone --recursive https://www.github.com/replab/replab
-cd /workspace/replab
-git checkout $1
-git rev-parse HEAD
-git status
+#mkdir -p /workspace
+#git clone --recursive https://www.github.com/replab/replab
+#cd /workspace/replab
+#git checkout $1
+#git rev-parse HEAD
+#git status
 
 export ADDPATH_COMMAND="replab_init('verbose', 2);"
 export COVERING=true
@@ -33,6 +34,7 @@ octave --eval "b = javaMethod('valueOf', 'java.math.BigInteger', 2)"
 rm -f testresults.xml;
 
 # Run tests
+octave -q --eval "$ADDPATH_COMMAND
 #octave -q --eval "$ADDPATH_COMMAND $TEST_COMMAND";
 
 # Check where we ended up and what's going on where we are
