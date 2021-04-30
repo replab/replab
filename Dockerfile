@@ -25,6 +25,7 @@ CMD ["/bin/bash"]
 
 # Copies the whole repository
 COPY . /workspace/replab/
+COPY .git/ /workspace/replab/.git/
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/workspace/replab/entrypoint.sh"]
