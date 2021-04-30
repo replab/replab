@@ -7,6 +7,9 @@ echo argument=$1
 pwd
 ls -al
 
+git status
+git rev-parse HEAD
+
 #mkdir -p /workspace
 #git clone --recursive https://www.github.com/replab/replab
 #cd /workspace/replab
@@ -34,6 +37,7 @@ octave --eval "b = javaMethod('valueOf', 'java.math.BigInteger', 2)"
 rm -f testresults.xml;
 
 # Run tests
+octave -q --eval "$ADDPATH_COMMAND";
 octave -q --eval "$ADDPATH_COMMAND";
 #octave -q --eval "$ADDPATH_COMMAND $TEST_COMMAND";
 
