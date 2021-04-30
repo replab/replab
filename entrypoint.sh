@@ -2,12 +2,17 @@
 
 echo "Executing entrypoint.sh"
 
+echo argument=$1
+
+mkdir -p /workspace
+git clone --recursive https://www.github.com/replab/replab
+cd /workspace/replab
+git checkout $1
+git rev-parse HEAD
+git status
+
 export ADDPATH_COMMAND="replab_init('verbose', 2);"
 export COVERING=true
-
-cd /workspace/replab
-
-echo argument=$1
 
 if [ $COVERING == true ]; then
   TEST_COMMAND="exit(~replab_runtests(1,1));";
