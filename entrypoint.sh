@@ -3,12 +3,9 @@
 echo "Executing entrypoint.sh"
 
 export ADDPATH_COMMAND="replab_init('verbose', 2, 'autoinstall');"
-export COVERING=false
+export COVERING=true
 
 cd /workspace/replab
-pwd
-ls -al
-ls external/sdpt3
 
 echo argument=$1
 
@@ -19,11 +16,9 @@ else
 fi
 echo "TEST_COMMAND=$TEST_COMMAND";
 
-# Double-check we are still in the right directory
-pwd
-
 # Check what octave packages we have installed
 octave -q --eval "ver"
+
 # Check that octave can access java
 octave --eval "b = javaMethod('valueOf', 'java.math.BigInteger', 2)"
 
@@ -32,8 +27,6 @@ rm -f testresults.xml;
 
 # Run tests
 octave -q --eval "$ADDPATH_COMMAND $TEST_COMMAND";
-
-ls -alh src/+replab/+graph
 
 # Check where we ended up and what's going on where we are
 pwd
