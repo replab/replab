@@ -7,6 +7,10 @@ FROM       gnuoctave/octave:6.2.0
 # Install base packages
 RUN apt-get update && apt-get install -y -q python3-pip pandoc unzip
 
+RUN apt-get install build-essential
+RUN apt-get install liboctave-dev
+
+
 # Install Python package
 
 RUN mkdir /workspace && mkdir /workspace/replab

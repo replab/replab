@@ -5,9 +5,6 @@ echo "Executing entrypoint.sh"
 export ADDPATH_COMMAND="replab_init('verbose', 2, 'autoinstall');"
 export COVERING=false
 
-sudo apt install build-essential
-sudo apt install liboctave-dev
-
 cd /workspace/replab
 pwd
 ls -al
