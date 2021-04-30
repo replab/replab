@@ -37,9 +37,7 @@ octave --eval "b = javaMethod('valueOf', 'java.math.BigInteger', 2)"
 rm -f testresults.xml;
 
 # Run tests
-octave -q --eval "$ADDPATH_COMMAND";
-octave -q --eval "$ADDPATH_COMMAND";
-#octave -q --eval "$ADDPATH_COMMAND $TEST_COMMAND";
+octave -q --eval "$ADDPATH_COMMAND $TEST_COMMAND";
 
 # Check where we ended up and what's going on where we are
 pwd
