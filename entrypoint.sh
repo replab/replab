@@ -39,6 +39,8 @@ octave -q --eval "$ADDPATH_COMMAND"
 
 octave -q --eval "$ADDPATH_COMMAND"
 
+exit 0
+
 # Run tests
 if octave -q --eval "$ADDPATH_COMMAND $TEST_COMMAND"; then
   # Check where we ended up and what's going on where we are
