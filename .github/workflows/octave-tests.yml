@@ -1,24 +1,9 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Octave CI
 
 # Controls when the action will run. 
-on:
-  # Triggers the workflow on push or pull request events but only for the develop branch
-  push:
-    branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# We have some environment variables
-env:
-  OCTFLAGS: --no-gui --no-window-system --silent
-  ADDPATH_COMMAND: "replab_init('verbose', 2);"
-  COVERING: true
-
+on: [push, pull_request, workflow_dispatch]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -34,38 +19,13 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
-      - name: Install dependencies
-        run: |
-          sudo apt-get -y -qq update
-          sudo apt-get -y install octave liboctave-dev octave-optim octave-symbolic openjdk-11-jre
-      - name: Update Octave path
-        run: |
-          octave $OCTFLAGS --eval "addpath (pwd); savepath ();"
-      - name: before_script
-        run: |
-          if [ $COVERING == true ]; then
-            TEST_COMMAND="exit(~replab_runtests(1,1));";
-          else
-            TEST_COMMAND="exit(~replab_runtests(0,1));";
-          fi
-          echo "TEST_COMMAND| $TEST_COMMAND";
-          # Double-check we are still in the right directory
-          pwd
-          # Check what octave packages we have installed
-          octave -q --eval "ver"
-          # ---------------------------------------------------------------------------
-          # Remove any cached results files from previous build, if present
-          rm -f testresults.xml;
-          # ---------------------------------------------------------------------------
-      - name: Run tests
-        run: |
-          octave -q --eval "$ADDPATH_COMMAND $TEST_COMMAND";
-      - name: after_success
-        run: |
-          # Check where we ended up and what's going on where we are
-          pwd
-          ls -alh
-          if [ $COVERING == true ]; then
-            bash <(curl -s https://codecov.io/bash);
-          fi
+      - name: Set variable
+        id: vars
+        run: echo "::set-output name=sha::$(git rev-parse HEAD)"
+      - name: Calling docker launch action
+        id: dock
+        uses: replab/replab/.github/actions@develop
+        with:
+          commit: ${{ steps.vars.outputs.sha }}
+
 
