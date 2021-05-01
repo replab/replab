@@ -8,7 +8,7 @@ on:
   push:
     branches: '*'
   pull_request:
-    branches: [ develop ]
+    branches: [ develop, master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -33,7 +33,7 @@ jobs:
         run: echo "::set-output name=sha::$(git rev-parse HEAD)"
       - name: Calling docker launch action
         id: dock
-        uses: replab/replab@OctaveAction4
+        uses: replab/replab/.github/actions@OctaveAction4
         with:
           commit: ${{ steps.vars.outputs.sha }}
 
