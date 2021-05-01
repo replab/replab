@@ -143,11 +143,11 @@ classdef Compiled < handle
             end
 
             if ~self.isWorking
-		        replab.init.log_(2, ['Calling the compiled interface for ', self.fileName, ' failed']);
+		        disp(['Calling the compiled interface for ', self.fileName, ' failed']);
                 % Inform that the method did not succeed
                 varargout{1} = replab.DispatchNext;
             else
-		        replab.init.log_(2, ['Calling the compiled interface for ', self.fileName, ' worked']);
+		        disp(['Calling the compiled interface for ', self.fileName, ' worked']);
             end
         end
         
