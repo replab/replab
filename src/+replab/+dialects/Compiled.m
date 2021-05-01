@@ -106,22 +106,30 @@ classdef Compiled < handle
 					        replab.init.log_(2, ['Compiling ', self.fileName]);
                             % If the program was never compiled, or the source was
                             % modified, we try to compile it
+                            disp(1)
                             mex('-largeArrayDims', '-v', [self.fileName, '_mex.', self.extension])
+                            disp(2)
 
                             % We save the timestamp corresponding to this
                             % compilation
                             fileProperties = dir([self.fileName, '_mex.', self.extension]);
                             timestamp = fileProperties.date;
                             save([self.fileName, '_timestamp_', mexext, '.mat'], 'timestamp')
+                            disp(3)
                         end
+                    	disp(4)
                     catch
+                        disp(5)
                         firstPartWorks = false;
                     end
+                    disp(6)
                     % return to the previous path
                     cd(initialPath);
                     self.triedBefore = true;
                 end
+                disp(7)
                 if firstPartWorks
+                    disp(8)
                     % The preparation worked, we try call the optimized method
                     self.isWorking = true;
                     command = {self.package, '.', self.fileName, '_mex(varargin{:});'};
@@ -138,15 +146,20 @@ classdef Compiled < handle
                         self.isWorking = false;
                     end
                 else
+                    disp(9)
                     self.isWorking = false;
                 end
+                disp(10)
             end
 
+            disp(11)
             if ~self.isWorking
+                disp(12)
 		        disp(['Calling the compiled interface for ', self.fileName, ' failed']);
                 % Inform that the method did not succeed
                 varargout{1} = replab.DispatchNext;
             else
+                disp(13)
 		        disp(['Calling the compiled interface for ', self.fileName, ' worked']);
             end
         end
