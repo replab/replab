@@ -364,6 +364,9 @@ classdef cyclotomic
     methods % Display
 
         function display(self, name)
+            if nargin < 2
+                name = 'ans';
+            end
             n = ndims(self);
             if n > 2
                 d = size(self);
@@ -721,6 +724,15 @@ classdef cyclotomic
             rows = size(self, 2);
             cols = size(self, 2) - rank;
             res = replab.cyclotomic(javaMethod('nullSpace', rr), [rows cols]);
+        end
+
+        function res = rref(self)
+        % Computes the row reduced echelon form
+        %
+        % Returns:
+        %   `.cyclotomic`: The row reduced echelon form
+            rr = javaMethod('rref', 'cyclo.Lab', self.data, size(self, 1), size(self, 2));
+            res = replab.cyclotomic(javaMethod('matrix', rr), size(self));
         end
 
         function [L, U, p] = lu(self)
