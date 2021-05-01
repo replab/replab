@@ -20,7 +20,7 @@ COPY sphinx/requirements.txt /workspace
 #RUN pip3 install -r /workspace/requirements.txt
 
 #WORKDIR /workspace/replab
-VOLUME /workspace/replab
+#VOLUME /workspace/replab
 
 CMD ["/bin/bash"]
 
