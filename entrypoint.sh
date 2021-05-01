@@ -35,9 +35,11 @@ octave --eval "b = javaMethod('valueOf', 'java.math.BigInteger', 2)"
 # Remove any cached results files from previous build, if present
 rm -f testresults.xml;
 
+ls -al src/+replab/+graph
 octave -q --eval "$ADDPATH_COMMAND"
-
+ls -al src/+replab/+graph
 octave -q --eval "$ADDPATH_COMMAND"
+ls -al src/+replab/+graph
 
 exit 0
 
