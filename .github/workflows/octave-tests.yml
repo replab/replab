@@ -33,7 +33,7 @@ jobs:
         run: echo "::set-output name=sha::$(git rev-parse HEAD)"
       - name: Calling docker launch action
         id: dock
-        uses: replab/replab/.github/actions@OctaveAction4
+        uses: replab/replab/.github/actions@develop
         with:
           commit: ${{ steps.vars.outputs.sha }}
 

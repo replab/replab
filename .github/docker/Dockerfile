@@ -4,9 +4,6 @@ FROM       gnuoctave/octave:6.2.0
 # Usage:
 # docker run -it -v <your directory>:/documents/
 
-CMD pwd
-CMD ls -al
-
 # Install base packages
 RUN apt-get update && apt-get install -y -q python3-pip pandoc unzip curl
 
@@ -22,9 +19,6 @@ COPY sphinx_requirements.txt /workspace
 #RUN pip3 install -r /workspace/sphinx_requirements.txt
 
 CMD ["/bin/bash"]
-
-CMD pwd
-CMD ls -al
 
 # Copies the whole repository
 COPY entrypoint.sh .
