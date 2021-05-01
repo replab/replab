@@ -9,13 +9,6 @@ ls -al
 
 git rev-parse HEAD
 
-#mkdir -p /workspace
-#git clone --recursive https://www.github.com/replab/replab
-#cd /workspace/replab
-#git checkout $1
-#git rev-parse HEAD
-#git status
-
 export ADDPATH_COMMAND="replab_init('verbose', 2);"
 export COVERING=true
 
@@ -34,14 +27,6 @@ octave --eval "b = javaMethod('valueOf', 'java.math.BigInteger', 2)"
 
 # Remove any cached results files from previous build, if present
 rm -f testresults.xml;
-
-ls -al src/+replab/+graph
-octave -q --eval "$ADDPATH_COMMAND"
-ls -al src/+replab/+graph
-octave -q --eval "$ADDPATH_COMMAND"
-ls -al src/+replab/+graph
-
-exit 0
 
 # Run tests
 if octave -q --eval "$ADDPATH_COMMAND $TEST_COMMAND"; then
