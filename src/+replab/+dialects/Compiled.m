@@ -135,13 +135,21 @@ classdef Compiled < handle
                     command = {self.package, '.', self.fileName, '_mex(varargin{:});'};
                     command = cat(2, command{:});
                     try
+	                    disp(8.1)
+	                    disp(command)
                         eval(command)
                         T = evalc(command);
                         disp(T);
                         [varargout{1:self.nargout}] = eval(command);
+	                    disp(8.2)
                     catch
-                        T = evalc(command);
-                        disp(T);
+	                    disp(8.3)
+	                    exception = [];
+						output = evalc(['try, ', command, '; catch E, exception = E; end']);
+                        disp(output);
+                        if ~isempty(exception)
+                            disp(getReport(exception));
+                        end
 				        replab.init.log_(2, ['Calling the compiled interface for ', self.fileName, ' failed']);
                         self.isWorking = false;
                     end
