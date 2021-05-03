@@ -19,7 +19,7 @@ end
 function test_docTestParse
     src = {'>>> 2 + 2', '  ans = 4'};
     dtt = replab.infra.doctests.DocTestTokens.lex(src);
-    dt = replab.infra.doctests.DocTest.parse1(dtt, @(ln) 1);
+    dt = replab.infra.doctests.DocTest.parse(dtt, @(ln) 1);
     assert(dt.nStatements == 1);
     st = dt.statements{1};
     assertEqual(st.lineNumber, 1);
