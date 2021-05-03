@@ -18,11 +18,13 @@ end
 
 function test_docTestParse
     src = {'>>> 2 + 2', '  ans = 4'};
-    ps = replab.infra.doctests.ParseState.fromDocTestBlock(src);
-    dt = replab.infra.doctests.DocTest.parse(ps);
-    assertEqual(dt.lineNumbers, 1);
-    assertEqual(dt.commands, {{'2 + 2'}});
-    assertEqual(dt.outputs, {{'ans = 4'}});
+    dtt = replab.infra.doctests.DocTestTokens.lex(src);
+    dt = replab.infra.doctests.DocTest.parse1(dtt, @(ln) 1);
+    assert(dt.nStatements == 1);
+    st = dt.statements{1};
+    assertEqual(st.lineNumber, 1);
+    assertEqual(st.command, '2 + 2');
+    assertEqual(st.output, {'ans = 4'});
 end
 
 function test_flags
