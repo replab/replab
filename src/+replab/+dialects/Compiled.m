@@ -103,6 +103,7 @@ classdef Compiled < handle
                         end
 
                         if needToCompile
+					        replab.init.log_(2, ['Compiling ', self.fileName]);
                             % If the program was never compiled, or the source was
                             % modified, we try to compile it
                             mex('-largeArrayDims', [self.fileName, '_mex.', self.extension]);
@@ -123,11 +124,18 @@ classdef Compiled < handle
                 if firstPartWorks
                     % The preparation worked, we try call the optimized method
                     self.isWorking = true;
+                    command = {self.package, '.', self.fileName, '_mex(varargin{:});'};
+                    command = cat(2, command{:});
                     try
-                        command = {self.package, '.', self.fileName, '_mex(varargin{:});'};
-                        command = cat(2, command{:});
                         [varargout{1:self.nargout}] = eval(command);
                     catch
+                        % % Get more info on the failure origin
+                        % exception = [];
+                        % output = evalc(['try, ', command, '; catch E, exception = E; end']);
+                        % disp(output);
+                        % if ~isempty(exception)
+                        %     disp(getReport(exception));
+                        % end
                         self.isWorking = false;
                     end
                 else
