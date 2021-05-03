@@ -28,7 +28,7 @@ ipyparallel==6.2.4        # via metakernel
 ipython-genutils==0.2.0   # via ipyparallel, nbformat, traitlets
 ipython==7.13.0           # via ipykernel, ipyparallel
 jedi==0.16.0              # via ipython
-jinja2==2.11.1            # via nbconvert, nbsphinx, sphinx
+jinja2==2.11.3            # via nbconvert, nbsphinx, sphinx
 jsonschema==3.2.0         # via nbformat
 jupyter-client==6.0.0     # via -r requirements.in, ipykernel, ipyparallel, octave-kernel
 jupyter-core==4.6.3       # via jupyter-client, nbconvert, nbformat
