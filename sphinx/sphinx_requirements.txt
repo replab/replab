@@ -55,7 +55,7 @@ pyrsistent==0.15.7        # via jsonschema
 python-dateutil==2.8.1    # via ablog, ipyparallel, jupyter-client
 pytoml==0.1.21            # via flit, flit-core
 pytz==2019.3              # via babel
-pyyaml==5.3               # via jupytext
+pyyaml==5.4               # via jupytext
 pyzmq==19.0.0             # via ipyparallel, jupyter-client
 requests==2.23.0          # via flit, sphinx
 six==1.14.0               # via bleach, jsonschema, packaging, pyrsistent, python-dateutil, texext, traitlets
