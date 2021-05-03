@@ -3,7 +3,7 @@ classdef DocTestStatement < replab.Str
 
     properties (SetAccess = protected)
         lineNumber % (integer): Line number (1-based) of the first line of the command
-        command % (cell(1,\*) of charstring): Command to be evaluated, may be multiline
+        command % (charstring): Command to be evaluated
         output % (cell(1,\*) of charstring): Expected output, may be multiline
         flags % (struct): Flags corresponding to the command evaluation
     end
@@ -11,6 +11,7 @@ classdef DocTestStatement < replab.Str
     methods
 
         function self = DocTestStatement(lineNumber, command, output, flags)
+            assert(ischar(command));
             self.lineNumber = lineNumber;
             self.command = command;
             self.output = output;
@@ -23,12 +24,7 @@ classdef DocTestStatement < replab.Str
 
         function c = quotedCommand(self)
             c = self.command;
-            c = cellfun(@(x) ['''' strrep(x, '''', '''''') ''''], c, 'uniform', 0);
-            if length(c) == 1
-                c = c{1};
-            else
-                c = ['strjoin({' strjoin(c, ', ') '}, char(10))'];
-            end
+            c = ['''' strrep(c, '''', '''''') ''''];
         end
 
         function o = quotedOutput(self)
@@ -58,6 +54,7 @@ classdef DocTestStatement < replab.Str
             switch tag
               case '$'
                 pos = [];
+                flags = [];
                 return
               case {'o', 'O'}
                 errFun(lineNumber1);
@@ -65,6 +62,7 @@ classdef DocTestStatement < replab.Str
               case 's'
                 % do nothing
               case 'S'
+                command = command(1:end-3);
                 % collect command lines
                 while 1
                     [pos, tag1, line, ~, ln] = dtt.take(pos);
@@ -76,7 +74,7 @@ classdef DocTestStatement < replab.Str
                         command = [command line];
                         break
                       case 'O'
-                        command = [command line];
+                        command = [command(1:end-3) line];
                       case '$'
                         errFun(ln);
                         error(errId, 'A line ending with ... must be followed by a continuation line');
@@ -95,41 +93,21 @@ classdef DocTestStatement < replab.Str
             end
         end
 
-        function [pos, output] = parseOutput(dtt, pos, errFun)
+        function [pos, outputLines] = parseOutput(dtt, pos, errFun)
             errId = 'replab:docTestParseError';
-            [pos, tag, output, ~, lineNumber1] = dtt.take(pos);
-            switch tag
-              case '$'
-                pos = [];
-                return
-              case {'s', 'S'}
-                pos = [];
-                return
-              case 'o'
-                % do nothing
-              case 'O'
-                while 1
-                    [pos, tag1, line, ~, ln] = dtt.take(pos);
-                    switch tag1
-                      case {'s', 'S'}
-                        errFun(ln);
-                        error(errId, 'A line ending with ... cannot be followed by a line starting with >>>.');
-                      case 'o'
-                        output = [output line];
-                        break
-                      case 'O'
-                        output = [output line];
-                      case '$'
-                        errFun(ln);
-                        error(errId, 'A line ending with ... must be followed by a continuation line');
-                    end
-                end
+            outputLines = cell(1, 0);
+            [res, tag, line] = dtt.take(pos);
+            while any(tag == 'oO')
+                outputLines{1,end+1} = line;
+                pos = res;
+                [res, tag, line] = dtt.take(pos);
             end
         end
 
         function [pos, dts] = parse(dtt, pos, errFun)
             [pos, command, lineNumber, flags] = replab.infra.doctests.DocTestStatement.parseCommand(dtt, pos, errFun);
             if isempty(pos)
+                dts = [];
                 return
             end
             [res, output] = replab.infra.doctests.DocTestStatement.parseOutput(dtt, pos, errFun);

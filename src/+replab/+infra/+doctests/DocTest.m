@@ -148,6 +148,34 @@ classdef DocTest < replab.Str
             end
         end
 
+        function dt = parse1(dtt, errFun)
+        % Parses a doctest from a tokenized doctest block
+        %
+        % Args:
+        %   dtt (`.DocTestTokens`): Tokenized doctest block
+        %   errFun (function_handle, optional): Error context display function, see `.parseTests`
+        %                                       Called as ``errFun(lineNumber)``
+        %
+        % Raises:
+        %   An error if the parse is unsuccessful
+        %
+        % Returns:
+        %   `.DocTest`: Parsed doctest
+            statements = cell(1, 0);
+            pos = 1;
+            [res, dts] = replab.infra.doctests.DocTestStatement.parse(dtt, pos, errFun);
+            while ~isempty(res)
+                pos = res;
+                statements{1, end+1} = dts;
+                [res, dts] = replab.infra.doctests.DocTestStatement.parse(dtt, pos, errFun);
+            end
+            if dtt.peek(pos) ~= '$'
+                errFun(dtt.lineNumbers(pos));
+                error('Doctest not ending properly');
+            end
+            dt = replab.infra.doctests.DocTest(statements);
+        end
+
         function dt = parse(ps, errFun)
         % Parses a doctest, containing multiple command/output pairs
         %

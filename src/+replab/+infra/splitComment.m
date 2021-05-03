@@ -11,7 +11,7 @@ function [code comment] = splitComment(l)
 %   code:
 %     charstring: The code line before the '%'
 %   comment:
-%     charstring: The comment after the '%' (if there is no comment, this return value is empty)
+%     charstring: The comment after the '%' (if there is no comment, this return value is an empty string)
     q = (l == ''''); % single quotes
     insideComment = logical(bitand(cumsum(q), 1)); % boolean mask of comments, excluding final single quotes
     commentStart = and(~insideComment, l == '%');

@@ -50,9 +50,9 @@ function doctests = parseTests(lines, errFun)
             while j <= n && (isempty(content{j}) || indent(j) > indent(i))
                 j = j + 1;
             end
-            ps = replab.infra.doctests.ParseState.fromDocTestBlock(content(i+1:j-1));
+            dtt = replab.infra.doctests.DocTestTokens.lex(content(i+1:j-1));
             errFun1 = @(l) errFun(l + i);
-            dt = replab.infra.doctests.DocTest.parse(ps, errFun1);
+            dt = replab.infra.doctests.DocTest.parse1(dtt, errFun1);
             if isempty(dt)
                 errFun(i);
                 error(errId, 'Error parsing the doctest block');

@@ -87,6 +87,7 @@ classdef DocTestTokens < replab.Str
             for i = 1:length(inputLines)
                 l = strtrim(inputLines{i});
                 if isempty(l) || l(1) == '%'
+                    continue
                     % omit that line
                 elseif replab.compat.startsWith(l, '>>>')
                     [content, comment] = replab.infra.splitComment(l(4:end));
@@ -94,7 +95,6 @@ classdef DocTestTokens < replab.Str
                     comment = strtrim(comment);
                     if replab.compat.endsWith(content, '...')
                         tags(1, ind) = 'S';
-                        content = content(1:end-3);
                     else
                         tags(1, ind) = 's';
                     end
@@ -107,7 +107,6 @@ classdef DocTestTokens < replab.Str
                     comment = strtrim(comment);
                     if replab.compat.endsWith(content, '...')
                         tags(1, ind) = 'O';
-                        content = content(1:end-3);
                     else
                         tags(1, ind) = 'o';
                     end

@@ -21,7 +21,7 @@ where:
 - The command text is optionally terminated by ``...``, in which case the command text of the next line will be concatenated.
 
 - An optional comment, which will be stripped from the constructed doctest. However, only on the first line of a statement,
-  the comment may contain a ``doctest:`` substring, and the rest of the comment will be interpreted as statement flags.
+  the comment may contain a ``doctest:`` substring, and the part of the comment following that substring will be interpreted as statement flags.
 
 If a statement line representing a comment has its command part ending with ``...``, the next line is of the form:
 
