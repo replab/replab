@@ -7,6 +7,15 @@ function test_suite = DocTestTest()
     initTestSuite;
 end
 
+function test_docTestParseStatement
+    str = {'>>> 2 + ...' '    2' '    4' '>>> 3 + 3' '    9'};
+    dtt = replab.infra.doctests.DocTestTokens.lex(str);
+    assertEqual(dtt.tags, 'Sooso$');
+    [pos, dts] = replab.infra.doctests.DocTestStatement.parse(dtt, 1, @(ln) 1);
+    assertEqual(pos, 4)
+    assertEqual(dts.command, '2 + 2');
+end
+
 function test_docTestParse
     src = {'>>> 2 + 2', '  ans = 4'};
     ps = replab.infra.doctests.ParseState.fromDocTestBlock(src);
