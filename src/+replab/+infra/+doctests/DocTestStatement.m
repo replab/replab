@@ -22,12 +22,44 @@ classdef DocTestStatement < replab.Str
             b = length(self.command) == 1;
         end
 
-        function c = quotedCommand(self)
+        function [t, outs] = identifyCommand(self)
             c = self.command;
-            c = ['''' strrep(c, '''', '''''') ''''];
+            if isempty(c) || c(end) == ';'
+                t = 'silent';
+                outs = cell(1, 0);
+            else
+                T = regexp(self.command, '\[(\s*(\w(\w\d)*)(\s*,\s*(\w(\w\d)*))*)\s*\]\s*=', 'tokens');
+                if ~isempty(T)
+                    t = 'assign';
+                    outs = cellfun(@strtrim, strsplit(T{1}{1}, ','), 'uniform', 0);
+                    return
+                end
+                T = regexp(self.command, '(\w(\w\d)*)\s*=', 'tokens');
+                if ~isempty(T)
+                    t = 'assign';
+                    outs = {strtrim(T{1}{1})};
+                    return
+                end
+                outs = {'ans'};
+                t = 'repl';
+            end
+        end
+
+        function c = quotedCommand(self, addSemicolon)
+        % Returns the command sandwiched between single quotes, with quotes escaped
+            if nargin < 2
+                addSemicolon = false;
+            end
+            c = self.command;
+            if addSemicolon
+                c = ['''' strrep(c, '''', '''''') ';'''];
+            else
+                c = ['''' strrep(c, '''', '''''') ''''];
+            end
         end
 
         function o = quotedOutput(self)
+        % Returns the output lines expressed as a Matlab expression of cell type
             o = self.output;
             o = ['{' strjoin(cellfun(@(x) ['''' strrep(x, '''', '''''') ''''], o, 'uniform', 0), ', ') '}'];
         end

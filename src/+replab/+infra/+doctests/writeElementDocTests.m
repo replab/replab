@@ -41,8 +41,20 @@ function writeElementDocTests(doctestPath, el)
             v = values{j};
             for k = 1:v.nStatements
                 st = v.statements{k};
-                fprintf(fid, '  out = evalc(%s);\n', st.quotedCommand);
-                fprintf(fid, '  assertEqualEvalcOutput(out, %s, filename, %d);\n', st.quotedOutput, st.lineNumber);
+                [commandType, commandOutputs] = st.identifyCommand;
+                quotedOuts = ['{' strjoin(cellfun(@(x) ['''' x ''''], commandOutputs, 'uniform', 0), ',') '}'];
+                outs = ['{' strjoin(commandOutputs, ',') '}'];
+                switch commandType
+                  case 'silent'
+                    fprintf(fid, '  replout_ = evalc(%s);\n', st.quotedCommand);
+                    fprintf(fid, '  assertEqualEvalcOutput(replout_, {}, {}, %s, filename, %d);\n', st.quotedOutput, st.lineNumber);
+                  case 'repl'
+                    fprintf(fid, '  [replout_, replans_] = evalc(%s);\n', st.quotedCommand);
+                    fprintf(fid, '  assertEqualEvalcOutput(replout_, {''ans''}, {replans_}, %s, filename, %d);\n', st.quotedOutput, st.lineNumber);
+                  case 'assign'
+                    fprintf(fid, '  [replout_] = evalc(%s);\n', st.quotedCommand(true));
+                    fprintf(fid, '  assertEqualEvalcOutput(replout_, %s, %s, %s, filename, %d);\n', quotedOuts, outs, st.quotedOutput, st.lineNumber);
+                end
             end
             fprintf(fid, 'end\n');
             fprintf(fid, '\n');

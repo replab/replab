@@ -1,4 +1,4 @@
-function assertEqualEvalcOutput(obtainedString, expectedLines, sourceFilename, lineNumber)
+function assertEqualEvalcOutput(obtainedString, variables, values, expectedLines, sourceFilename, lineNumber)
 % expectOutput Compares output of evalc with the expected lines of output
 %
 % Args:
