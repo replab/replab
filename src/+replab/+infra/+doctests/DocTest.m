@@ -25,39 +25,7 @@ classdef DocTest < replab.Str
             self.statements = statements;
         end
 
-        function l = lineNumbers(self)
-            l = cellfun(@(s) s.lineNumber, self.statements);
-        end
-
-        function c = commands(self)
-            c = cellfun(@(s) s.command, self.statements, 'uniform', 0);
-        end
-
-        function o = outputs(self)
-            o = cellfun(@(s) s.output, self.statements, 'uniform', 0);
-        end
-
-        function f = flags(self)
-            f = cellfun(@(s) s.flags, self.statements, 'uniform', 0);
-        end
-
-        function b = isSingleLineCommand(self, i)
-            b = self.statements{i}.isSingleLineCommand;
-        end
-
-        function c = quotedCommand(self, i)
-            c = self.statements{i}.quotedCommand;
-        end
-
-        function o = quotedOutput(self, i)
-            o = self.statements{i}.quotedOutput;
-        end
-
         function n = nStatements(self)
-            n = length(self.statements);
-        end
-
-        function n = nCommands(self)
             n = length(self.statements);
         end
 
