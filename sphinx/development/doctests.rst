@@ -29,26 +29,95 @@ If a statement line representing a comment has its command part ending with ``..
 
 and such lines are concatenated to the first as long as they end with ``...``. Flags are only parsed on the first line of a statement.
 
-The ``"command-text"`` has one of the following forms:
+A statement is followed by the expected output, which can be empty. The expected test output ends
 
-- ``statement;`` or ``a = statement;`` or ``[a, b] = statement;``, in which case only the text written to the standard output/error streams is captured and compared to the data provided by the doctest; only
+1) when the next line is no longer a comment line,
+2) when another comment line starts with ``>>>``,
+3) when two blank comment lines are provided.
 
-- ``statement``, in which case it is expected that ``statement`` is a command that returns a single output,
+The ``"command-text"`` can have different forms, and the expected output is interpreted accordingly.
+
+Expected output
+---------------
+
+In expected test output, blank lines are ignored. Errors are not captured, and will crash the test handler.
+
+Test files are written in the MoXUnit format, using functions and subfunctions as the rest of the RepLAB test suite; helpers functions are used to verify the test output.
+
+Our inspiration for the framework comes from `<http://doc.sagemath.org/html/en/developer/coding_basics.html#writing-testable-examples>`_.
+
+Silent statements
+.................
+
+The command is of the form ``statement;`` or ``a = statement;`` or ``[a, b] = statement;``.
+
+In that case, the text written to the standard output/error streams is captured and compared to the data provided by the doctest.
+
+REPL statements
+...............
+
+The command is of the form ``statement``, in which case it is expected that ``statement`` is a command that returns a single output. If the command does not return any output (as would an ``assert`` do, for example), it should be followed by a semicolon in the form of a silent statement instead.
+
+There are two forms of expected output for REPL statements. The long form is used when the command displays text on the standard output::
+
+  >>> verbose_f()
+      Log: computing the f value
+      ans =
+        1
+
+where the ``ans =`` line separates what the code displays on the standard output (before the ``ans =``) line, and what the returned value is (here, ``1``).
+
+The short form is used when the code does not display anything on the standard output. In that case, the expected output is just the returned value::
+  >>> silent_f()
+      1
+
+We diverge from the Matlab output conventions in one case. When we display the value of a variable, without assignment, we do not repeat the variable name. The following would be a valid Matlab session::
+
+  >> x = 2;
+  >> x
+  x =
+       2
+
+whereas the corresponding doctest would be::
+
+  >>> x = 2;
+  >>> x
+      2
+
+Assignment statements
+.....................
+
+A command of an assignment statement is of one of the forms:
 
 - ``a = statement``, in which case the value of the variable ``a`` is captured and compared to the doctest data;
 
 - ``[a, b] = statement``, in which case several variables are captured and compared to the doctest data.
 
-Expected test output ends
+The expected output contains first the text written by the command to the standard output, if any, before the value of each of the variables, where the value of each variable is preceded by a ``varname =`` line.
 
-1) when the next line is no longer a comment line
-2) when another comment line starts with ``>>>``
-3) when two blank comment lines are provided
+For example::
+  >>> a = verbose_f()
+      Log: computing the f value
+      a =
+        1
+  >>> a = 2
+      a =
+        2
+  >>> [a, b] = deal(1, 2)
+      a =
+        1
+      b =
+        2
 
-In expected test output, blank lines are ignored. Errors are not captured, and will crash the test handler.
+Note that, in the case of a single output and no text output on the standard output, the short form is also accepted::
+  >>> a = silent_f()
+      1
 
-Test files are written in the MoXUnit format, using functions and subfunctions as the
-rest of the RepLAB test suite; the helper function ``assertEqualEvalcOutput`` is used
-to verify the test output.
+Values in expected output
+-------------------------
 
-Our inspiration for the above comes from `<http://doc.sagemath.org/html/en/developer/coding_basics.html#writing-testable-examples>`_.
+For now, we support the following types in the expected output.
+
+- Single line strings, i.e. row char vectors. In the expected output, they must be between quotes, and quotes in the string should be doubled (as in the standard Matlab string syntax).
+
+- Scalar logical or double values, which are parsed using ``eval``.
