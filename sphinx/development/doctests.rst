@@ -46,17 +46,19 @@ Test files are written in the MoXUnit format, using functions and subfunctions a
 
 Our inspiration for the framework comes from `<http://doc.sagemath.org/html/en/developer/coding_basics.html#writing-testable-examples>`_.
 
+We distinguish the following three kinds of statements.
+
 Silent statements
 .................
 
-The command is of the form ``statement;`` or ``a = statement;`` or ``[a, b] = statement;``.
+A silent statement finishes with a semicolumn. It can be of the form ``statement;`` or ``a = statement;`` or ``[a, b] = statement;``.
 
 In that case, the text written to the standard output/error streams is captured and compared to the data provided by the doctest.
 
 REPL statements
 ...............
 
-The command is of the form ``statement``, in which case it is expected that ``statement`` is a command that returns a single output. If the command does not return any output (as would an ``assert`` do, for example), it should be followed by a semicolon in the form of a silent statement instead.
+A REPL statement is a non-assigning statement which does not finish with a semicolumn: it is of the form ``statement``, and is expected to returns a single output. If the command does not return any output (as would an ``assert`` do, for example), it should be followed by a semicolon in the form of a silent statement instead.
 
 There are two forms of expected output for REPL statements. The long form is used when the command displays text on the standard output::
 
@@ -93,7 +95,7 @@ A command of an assignment statement is of one of the forms:
 
 - ``[a, b] = statement``, in which case several variables are captured and compared to the doctest data.
 
-The expected output contains first the text written by the command to the standard output, if any, before the value of each of the variables, where the value of each variable is preceded by a ``varname =`` line.
+These statements do not finish with a semicolumn. The expected output contains first the text written by the command to the standard output, if any, before the value of each of the variables, where the value of each variable is preceded by a ``varname =`` line.
 
 For example::
   >>> a = verbose_f()
@@ -109,7 +111,7 @@ For example::
       b =
         2
 
-Note that, in the case of a single output and no text output on the standard output, the short form is also accepted::
+Note that, in the case of a single output and no text output on the standard output, the short form is also accepted:
   >>> a = silent_f()
       1
 
@@ -118,6 +120,6 @@ Values in expected output
 
 For now, we support the following types in the expected output.
 
-- Single line strings, i.e. row char vectors. In the expected output, they must be between quotes, and quotes in the string should be doubled (as in the standard Matlab string syntax).
+- Single line strings, i.e. row char vectors. In the expected output, they must be between single quotes as in ``'between quotes'``, and quotes in the string should be doubled (as in the standard Matlab string syntax: ``'String with a ''double'' quote'``).
 
 - Scalar logical or double values, which are parsed using ``eval``.
