@@ -36,14 +36,14 @@ classdef DocTestStatement < replab.Str
             quotedCommand = quote(self.command);
             switch self.commandType
               case 'silent'
-                fprintf(fid, '  replout_ = evalc(%s);\n', quotedCommand);
+                fprintf(fid, '  replout_ = evalc(%s);\n', quote(self.command));
                 fprintf(fid, '  assertEqualStandardOutput(replout_, %s, filename, %d);\n', quotes(self.expectedStandardOutput), self.lineNumber);
               case 'repl'
-                fprintf(fid, '  [replout_, replans_] = evalc(%s);\n', quotedCommand);
+                fprintf(fid, '  [replout_, replans_] = evalc(%s);\n', quote(self.command));
                 fprintf(fid, '  assertEqualStandardOutput(replout_, %s, filename, %d);\n', quotes(self.expectedStandardOutput), self.lineNumber);
                 fprintf(fid, '  assertEqualValue(%s, replans_, %s, filename, %d);\n', quote(self.variableNames{1}), quotes(self.variableValues{1}), self.lineNumber);
               case 'assign'
-                fprintf(fid, '  replout_ = evalc(%s);\n', quotedCommand);
+                fprintf(fid, '  replout_ = evalc(%s);\n', quote([self.command ';']));
                 fprintf(fid, '  assertEqualStandardOutput(replout_, %s, filename, %d);\n', quotes(self.expectedStandardOutput), self.lineNumber);
                 for i = 1:length(self.variableNames)
                     fprintf(fid, '  assertEqualValue(%s, %s, %s, filename, %d);\n', quote(self.variableNames{i}), self.variableNames{i}, quotes(self.variableValues{i}), self.lineNumber);
@@ -158,13 +158,13 @@ classdef DocTestStatement < replab.Str
                 t = 'silent';
                 outs = cell(1, 0);
             else
-                T = regexp(c, '^\[(\s*(\w(\w\d)*)(\s*,\s*(\w(\w\d)*))*)\s*\]\s*=', 'tokens');
+                T = regexp(c, '^\[(\s*(\w(\w|\d)*)(\s*,\s*(\w(\w|\d)*))*)\s*\]\s*=[^=]', 'tokens');
                 if ~isempty(T)
                     t = 'assign';
                     outs = cellfun(@strtrim, strsplit(T{1}{1}, ','), 'uniform', 0);
                     return
                 end
-                T = regexp(c, '^(\w(\w\d)*)\s*=', 'tokens');
+                T = regexp(c, '^(\w(\w|\d)*)\s*=[^=]', 'tokens');
                 if ~isempty(T)
                     t = 'assign';
                     outs = {strtrim(T{1}{1})};

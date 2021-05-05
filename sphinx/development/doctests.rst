@@ -120,6 +120,19 @@ Values in expected output
 
 For now, we support the following types in the expected output.
 
-- Single line strings, i.e. row char vectors. In the expected output, they must be between single quotes as in ``'between quotes'``, and quotes in the string should be doubled (as in the standard Matlab string syntax: ``'String with a ''double'' quote'``).
+Strings
+.......
 
-- Scalar logical or double values, which are parsed using ``eval``.
+Strings are char row vectors. In the expected output, they can be described in two ways:
+
+- They are written between single quotes as in ``'between quotes'``, and quotes in the string are doubled (as in the standard Matlab string syntax: ``'String with a ''double'' quote'``). In that case, the string must not contain newline characters.
+
+- They are written without a beginning single quote, and they can be multiline.
+
+Scalars
+.......
+
+- ``double`` expected values are parsed using eval and compared for equality (the NaN case is not supported yet?)
+- `+replab.cyclotomic` expected scalars are written as expressed by the `+replab.cyclotomic.num2str` method.
+- ``vpi`` expected values are written on one line as a base 10 string
+- ``logical`` expected values are evaluated by ``eval`` and converted to the logical type
