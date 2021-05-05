@@ -245,7 +245,7 @@ classdef Graph < replab.Obj
                 connectedVertices = [blocks{:}];
                 isolatedVertices = setdiff(1:self.nVertices, connectedVertices);
                 if length(isolatedVertices) >= 1
-                    blocks = [blocks, mat2cell(isolatedVertices)];
+                    blocks = [blocks, num2cell(isolatedVertices)];
                 end
             end
 
