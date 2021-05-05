@@ -237,35 +237,20 @@ classdef Graph < replab.Obj
 
             if isempty(self.edges)
                 % Trivial case
-                blockIndex = 1:self.nVertices;
-                blocks = num2cell(1:self.nVertices, 1);
+                blocks = num2cell(1:self.nVertices);
             else
-                [blockIndex, blocks] = replab.graph.connectedComponents(self.nVertices, self.edges);
+                [~, blocks] = replab.graph.connectedComponents(self.nVertices, self.edges);
 
                 % If some elements are isolated, we add them
                 connectedVertices = [blocks{:}];
                 isolatedVertices = setdiff(1:self.nVertices, connectedVertices);
-                nbConnectedSets = length(blocks);
-
                 if length(isolatedVertices) >= 1
-                    % allocate memory
-                    blocks{nbConnectedSets + length(isolatedVertices)} = [];
-                    if length(blockIndex) < self.nVertices
-                        blockIndex(self.nVertices) = 0;
-                    end
-
-                    % assign values
-                    co = nbConnectedSets;
-                    for i = 1:length(isolatedVertices)
-                        co = co + 1;
-                        blocks{co} = isolatedVertices(i);
-                        blockIndex(isolatedVertices(i)) = co;
-                    end
+                    blocks = [blocks, mat2cell(isolatedVertices)];
                 end
             end
 
             % Construct the Partition object
-            P = replab.Partition(blockIndex, blocks);
+            P = replab.Partition.fromBlocks(blocks);
         end
         
         function L = laplacian(self)

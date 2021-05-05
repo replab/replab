@@ -17,24 +17,24 @@
   For optimal efficiency, the edges are not checked for redundency.
   Hence, it is best to provide each edge only once (in particular, the
   edge "1-2" already implies "2-1" so the latter should not be given).
-  If we wish to change the code to eliminate redundancy, the data
-  structure should be changed from vector < vector < long int > > to
-  vector < set < long int > >.
+  If we wish to change the code to eliminate redundancy, the graph data
+  structure could just be changed from vector < vector < long int > >
+  to vector < set < long int > >.
 
-<<<<<<< HEAD:src/+replab/+graph/burningAlgorithmFast2_mex.cpp
-  This implementation is optimized for dense inputs: inputs like
-  [1 2; 2 n] will trigger the creation of n vertices.
-
-  Moreover, this implementation directly encodes the result into a
-  matlab array. This is possible only for the list of orbits. The
-  corresponding cell array still needs to be copied at the end (matlab
-  does not support dynamic arrays).
-
-  Note: all vertices appearing in no edge are given the orbit number 0
-=======
   This implementation supports sparse inputs, such as [1 2; 1 n] with n
-  very large; with an overhead in memory and time much smaller than n.
->>>>>>> develop:src/+replab/+graph/burningAlgorithmFastSparse_mex.cpp
+  very large (still specified as dense matrices); with an overhead in
+  memory and time much smaller than n.
+  
+  Note: The number of vertices is not required as an input
+  
+  Note: The output only lists connected components including at least
+  two vertices (i.e. vertex numbers are seen as labels)
+
+  Args:
+    edges
+  
+  Returns:
+    subsets
 */
 
 using namespace std;
@@ -149,10 +149,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   //-//-// Algorithm //-//-//
 
   // Now we perform the actual burning algorithm
-<<<<<<< HEAD:src/+replab/+graph/burningAlgorithmFast2_mex.cpp
-=======
-  vector < Index > reached(nbVertices, 0);
->>>>>>> develop:src/+replab/+graph/burningAlgorithmFastSparse_mex.cpp
   vector < Index > neighbors [2];
   short int ptr(0);
   Index lastStart(0);    // We monitor the last starting point and begin the algorithm by reaching the first site 0.
