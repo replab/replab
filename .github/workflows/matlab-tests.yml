@@ -24,4 +24,4 @@ jobs:
       - name: Run tests
         uses: matlab-actions/run-command@v0
         with:
-          command: replab_init('verbose', 2); replab_runtests
+          command: replab_init('verbose', 2); assert(~replab_runtests)
