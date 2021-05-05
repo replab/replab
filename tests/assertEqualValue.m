@@ -9,9 +9,11 @@ function assertEqualValue(variableName, obtainedValue, expectedValue, sourceFile
 %   lineNumber (integer): Line number of the doctest
     link = sprintf('matlab: matlab.desktop.editor.openAndGoToLine(''%s'', %d)', sourceFilename, lineNumber);
     message = sprintf('Doctest failure for variable %s on <a href="%s">line %d of %s</a>', variableName, link, lineNumber, sourceFilename);
-    v = obtainedValue;
-    if ischar(v) && isrow(v)
-        % Handling strings
+    v = obtaine
+    switch class(v)
+      case 'char'
+        assert(isrow(v), 'Only row char vectors are supported in doctests. Multiline strings contain the line feed character.');
+        % Two cases: quoted or unquoted
         if length(expectedValue) == 1 && expectedValue{1}(1) == ''''
             % the string is quoted
             ev = eval(expectedValue{1});
@@ -22,37 +24,33 @@ function assertEqualValue(variableName, obtainedValue, expectedValue, sourceFile
             v = v(~cellfun(@isempty, v));
             assertEqual(expectedValue, v, message);
         end
-    elseif isa(v, 'replab.Str')
-        res = v.longStr(100, 100);
-        res = res(:).';
-        res = cellfun(@strtrim, res, 'uniform', 0);
-        res = res(~cellfun(@isempty, res));
-        assertEqual(res, expectedValue, message);
-    elseif ischar(v) && isrow(v)
+      case 'double'
+        ev = eval(['[' strjoin(expectedValue, '\n') ']']);
+        assertEqual(v, ev, message);
+      case 'logical'
+        ev = logical(eval(['[' strjoin(expectedValue, '\n') ']']));
+        assertEqual(v, ev, message);
+      case 'vpi'
+        assert(isscalar(v), 'Only scalar vpi are supported');
         assert(length(expectedValue) == 1);
-        assertEqual(eval(expectedValue{1}), v, message);
-    elseif isscalar(v)
-        switch class(v)
-          case 'vpi'
-            assert(length(expectedValue) == 1);
-            ev = expectedValue{1};
-            v = strtrim(num2str(v));
-            assertEqual(ev, v, message);
-          case 'double'
-            assert(length(expectedValue) == 1);
-            assertEqual(eval(expectedValue{1}), v, message);
-          case 'replab.cyclotomic'
-            assert(length(expectedValue) == 1);
-            ev = expectedValue{1};
-            v = strtrim(num2str(v));
-            assertEqual(ev, v, message);
-          case 'logical'
-            assert(length(expectedValue) == 1);
-            assertEqual(logical(eval(expectedValue{1})), v, message);
-          otherwise
+        ev = expectedValue{1};
+        v = strtrim(num2str(v));
+        assertEqual(ev, v, message);
+      case 'replab.cyclotomic'
+        assert(length(expectedValues) == size(v, 1));
+        for r = 1:length(expectedValues)
+            row = replab.cyclotomic(strsplit(expectedValues, ' '));
+            assertEqual(row, v(r,:));
+        end
+      otherwise
+        if isa(v, 'replab.Str')
+            res = v.longStr(100, 100);
+            res = res(:).';
+            res = cellfun(@strtrim, res, 'uniform', 0);
+res = res(~cellfun(@isempty, res));
+assertEqual(res, expectedValue, message);
+        else
             error('Unsupported');
         end
-    else
-        error('Unsupported');
     end
 end
