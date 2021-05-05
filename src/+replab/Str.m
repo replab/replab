@@ -23,17 +23,14 @@ classdef Str < handle
 %     generator(2): [2, 1, 3]
 %        recognize: AtlasResult (Dihedral group of order 6)
 %   >>> replab.longStr(P)
-%     ans =
-%     7x1 cell array
-%     {'Symmetric group acting on 3 elements'                 }
-%     {'  domainSize: 3'                                      }
-%     {'    identity: [1, 2, 3]'                              }
-%     {'        type: Symmetric group acting on 3 elements'   }
-%     {'generator(1): [2, 3, 1]'                              }
-%     {'generator(2): [2, 1, 3]'                              }
-%     {'   recognize: AtlasResult (Dihedral group of order 6)'}
+%     {'Symmetric group acting on 3 elements'
+%      '  domainSize: 3'
+%      '    identity: [1, 2, 3]'
+%      '        type: Symmetric group acting on 3 elements'
+%      'generator(1): [2, 3, 1]'
+%      'generator(2): [2, 1, 3]'
+%      '   recognize: AtlasResult (Dihedral group of order 6)'}
 %   >>> replab.shortStr(P)
-%     ans =
 %     'Symmetric group acting on 3 elements'
 
     methods % Prettyprinting

@@ -9,8 +9,17 @@ function assertEqualValue(variableName, obtainedValue, expectedValue, sourceFile
 %   lineNumber (integer): Line number of the doctest
     link = sprintf('matlab: matlab.desktop.editor.openAndGoToLine(''%s'', %d)', sourceFilename, lineNumber);
     message = sprintf('Doctest failure for variable %s on <a href="%s">line %d of %s</a>', variableName, link, lineNumber, sourceFilename);
-    v = obtaine
+    v = obtainedValue;
     switch class(v)
+      case 'cell'
+        assert(expectedValue{1}(1) == '{');
+        assert(expectedValue{end}(end) == '}');
+        expectedValue{1} = expectedValue{1}(2:end);
+        expectedValue{end} = expectedValue{end}(1:end-1);
+        for r = 1:size(v, 1)
+            valStr = strjoin(cellfun(@(c) replab.shortStr(c), v(r,:), 'uniform', 0), ' ');
+            assertEqual(valStr, expectedValue{r}, message);
+        end
       case 'char'
         assert(isrow(v), 'Only row char vectors are supported in doctests. Multiline strings contain the line feed character.');
         % Two cases: quoted or unquoted
@@ -37,9 +46,9 @@ function assertEqualValue(variableName, obtainedValue, expectedValue, sourceFile
         v = strtrim(num2str(v));
         assertEqual(ev, v, message);
       case 'replab.cyclotomic'
-        assert(length(expectedValues) == size(v, 1));
-        for r = 1:length(expectedValues)
-            row = replab.cyclotomic(strsplit(expectedValues, ' '));
+        assert(length(expectedValue) == size(v, 1));
+        for r = 1:length(expectedValue)
+            row = replab.cyclotomic(strsplit(expectedValue{r}, ' '));
             assertEqual(row, v(r,:));
         end
       otherwise
@@ -47,8 +56,8 @@ function assertEqualValue(variableName, obtainedValue, expectedValue, sourceFile
             res = v.longStr(100, 100);
             res = res(:).';
             res = cellfun(@strtrim, res, 'uniform', 0);
-res = res(~cellfun(@isempty, res));
-assertEqual(res, expectedValue, message);
+            res = res(~cellfun(@isempty, res));
+            assertEqual(res, expectedValue, message);
         else
             error('Unsupported');
         end

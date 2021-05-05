@@ -1520,8 +1520,6 @@ classdef Rep < replab.Obj
         %   >>> unitaryRep = nonUnitaryRep.unitarize;
         %   >>> U = unitaryRep.sample;
         %   >>> norm(U*U' - eye(3)) < 1e-10
-        %      ans =
-        %       logical
         %       1
         %
         % Returns:

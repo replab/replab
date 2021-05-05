@@ -169,9 +169,9 @@ classdef cyclotomic
         %
         % Example:
         %   >>> replab.cyclotomic.sqrtRational(2)
-        %       E(8) - E(8)^3
+        %       E(8)-E(8)^3
         %   >>> replab.cyclotomic.sqrtRational(1,2)
-        %       E(8)/2 - E(8)^3/2
+        %       E(8)/2-E(8)^3/2
         %
         % Args:
         %    num (integer): Numerator
