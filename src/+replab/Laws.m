@@ -152,7 +152,7 @@ classdef Laws < replab.Str
         end
 
         function res = checkSilent(self)
-        % Runs the randomized tests without usign MOxUnit, and returns whether all tests passed
+        % Runs the randomized tests without using MOxUnit, and returns whether all tests passed
         %
         % Example:
         %    >>> S10 = replab.S(10);

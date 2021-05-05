@@ -10,7 +10,6 @@ function dts = testsInElement(el)
         dts = {};
         return
     end
-    ps = replab.infra.doctests.ParseState.fromDocTestBlock(el.doc.lines);
     errFun = @(ln) replab.infra.doctests.errFunElement(el, el.doc.lineNumbers(ln));
     dts = replab.infra.doctests.parseTests(el.doc.lines, errFun);
     dts = cellfun(@(dt) dt.mapLineNumbers(@(i) el.doc.lineNumbers(i)), dts, 'uniform', 0);

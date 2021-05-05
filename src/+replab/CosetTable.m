@@ -3,7 +3,7 @@ classdef CosetTable < replab.Str
 %
 % Example:
 %   >>> ct = replab.CosetTable.fromPresentation({'x' 'y'}, {'x^2','y^3','(x*y)^3'}, {'x*y'});
-%   >>> ct.table
+%   >>> ct.table.format
 %         | x  y  inv(x)  inv(y)
 %       --------------------------
 %       1 | 2  2     2       3

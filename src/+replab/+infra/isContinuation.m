@@ -4,12 +4,8 @@ function b = isContinuation(line)
 %
 % Example:
 %   >>> replab.infra.isContinuation('function res = test(a, b, ... % function')
-%       ans =
-%       logical
 %       1
 %   >>> replab.infra.isContinuation('x = 2; % sets x to 2')
-%       ans =
-%       logical
 %       0
 %
 % Args:

@@ -28,7 +28,7 @@ classdef CodeTokens < replab.Str
 % However, DocTestParseState is closer to that example; here we don't allocate new parse states,
 % we instead mutate the line position.
 
-    properties
+    properties (SetAccess = protected)
         filename % charstring: Filename or ``[]``
         lines % row cell array of charstring: Source code lines
         tags % charstring: Tag describing the line type, one char per tag
@@ -102,11 +102,11 @@ classdef CodeTokens < replab.Str
         % Constructs a CodeTokens instance from source code lines
         %
         % Args:
+        %   filename (charstring): Source filename
         %   source (charstring): Source code
-        %   lines (row cell array of charstring): Trimmed source code lines
         %
         % Returns:
-        %   :class:`+replab.+infra.CodeTokens`: A fresh CodeTokens instance
+        %   `+replab.+infra.CodeTokens`: A fresh CodeTokens instance
             lines = cellfun(@strtrim, strsplit(source, '\n', 'CollapseDelimiters', false), 'uniform', 0);
             n = length(lines);
             tags = blanks(n+1);
