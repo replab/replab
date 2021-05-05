@@ -17,19 +17,34 @@
   For optimal efficiency, the edges are not checked for redundency.
   Hence, it is best to provide each edge only once (in particular, the
   edge "1-2" already implies "2-1" so the latter should not be given).
-  If we wish to change the code to eliminate redundancy, the data
-  structure could be changed from vector < vector < long int > > to
-  vector < set < long int > >
+  If we wish to change the code to eliminate redundancy, the graph data
+  structure could just be changed from vector < vector < long int > >
+  to vector < set < long int > >.
 
   This implementation is optimized for dense inputs: inputs like
   [1 2; 2 n] will trigger the creation of n vertices.
-
+  
   Moreover, this implementation directly encodes the result into a
   matlab array. This is possible only for the list of orbits. The
-  corresponding cell array still needs to be copied at the end (matlab
-  does not support dynamic arrays).
+  corresponding cell array is thus copied into matlab format at the
+  end (matlab does not support dynamic arrays). This operation is
+  skipped if the second output is not requested.
 
-  Note: all vertices appearing in no edge are given the orbit number 0
+  Note: The output only lists connected components including at least
+  two vertices (i.e. vertex numbers are seen as labels); all vertex 
+  numbers appearing in no edge are given the orbit number 0.
+  
+  Note: The components are constructed in the order of appearance,
+  starting from the first connected vertex. Vertices in each component
+  are not ordered.
+
+  Args:
+    nbVertices
+    edges
+  
+  Returns:
+    componentIndex
+    subsets (optional)
 */
 
 using namespace std;
@@ -142,7 +157,26 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   // Now we perform the actual burning algorithm
   vector < Index > neighbors [2];
   short int ptr(0);
-  Index lastStart(0);    // We monitor the last starting point and begin the algorithm by reaching the first site 0.
+  Index lastStart(nbVertices+1);    // We monitor the last starting point
+
+  // The initial starting point of the algorithm will be the first site which admits a connection
+  for (Index i(0); i < nbVertices; ++i) {
+    if (reached[i] == -1) {
+      lastStart = i;
+      break;
+    }
+  }
+  if (lastStart == nbVertices+1) {
+    // We have a fully disconnected graph, connected components are trivial
+    
+    if (nlhs == 2) {
+      //-//-// Preparing additional output field //-//-//
+      plhs[1] = mxCreateCellMatrix(1, 0);
+    }
+    
+    return;
+  }
+
   neighbors[ptr].push_back(lastStart);
   Index nbSets(0);       // The same set number is assigned to each vertices belonging to a connex group
 
@@ -197,8 +231,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   cout << "Orbits identified (" << delta12.count() << " s)" << endl << flush;
 #endif
 
-  if (nlhs == 2)
-  {
+  if (nlhs == 2) {
     //-//-// Preparing additional output field //-//-//
     plhs[1] = mxCreateCellMatrix(1, nbSets);
 
