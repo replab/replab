@@ -10,13 +10,13 @@ A doctest is composed of a series of statements.
 Each statement is composed of a command and its expected output.
 The first line of the statement has the following structure:
 
-``>>> "command-text" [...] [% ["comment-text"] [doctest: "flags"]]``
+``>>> command-text [...] [% [comment-text] [doctest: flags]]``
 
 where:
 
 - The first three characters, ``>>>`` define the start of a statement.
 
-- The command text ``"command-text"`` is MATLAB/Octave code.
+- The command text ``command-text`` is MATLAB/Octave code.
 
 - The command text is optionally terminated by ``...``, in which case the command text of the next line will be concatenated.
 
@@ -25,7 +25,7 @@ where:
 
 If a statement line representing a comment has its command part ending with ``...``, the next line is of the form:
 
-``    "command-text" [...] [% ["comment-text"]]``
+``    command-text [...] [% [comment-text]]``
 
 and such lines are concatenated to the first as long as they end with ``...``. Flags are only parsed on the first line of a statement.
 
@@ -35,7 +35,7 @@ A statement is followed by the expected output, which can be empty. The expected
 2) when another comment line starts with ``>>>``,
 3) when two blank comment lines are provided.
 
-The ``"command-text"`` can have different forms, and the expected output is interpreted accordingly.
+The ``command-text`` can have different forms, and the expected output is interpreted accordingly.
 
 Expected output
 ---------------
