@@ -3,7 +3,7 @@ function flags = parseFlags(s, errFun)
 %
 % Args:
 %   s (charstring): Flag string to parse
-%   errFun (function_handle): Function called before an error is thrown; 
+%   errFun (function_handle): Function called before an error is thrown;
 %                             can be used to display the error context
 %
 % Returns:

@@ -3,22 +3,24 @@ classdef Table < replab.Str
 %
 % Can take in any cell array or matrix
 %
-%   >>> replab.str.Table([1,20;300,2])
+%   >>> T = replab.str.Table([1,20;300,2]);
+%   >>> T.format
 %         1   20
 %        300   2
-%   >>> replab.str.Table({'hello', 'world'; 'world', 'hi'})
+%   >>> T = replab.str.Table({'hello', 'world'; 'world', 'hi'});
+%   >>> T.format
 %         hello  world
 %         world   hi
 
     properties
         rowSep % (cell(1,nRows+1) of charstring): Row separators
                %
-               %                                This includes a separator above the first row and
-               %                                below the last row.
+               %                                  This includes a separator above the first row and
+               %                                  below the last row.
         colSep % (cell(1,nColumns+1) of charstring): Column separators
                %
-               %                                This includes a separator on the left of the first column and
-               %                                on the right of the last column.
+               %                                  This includes a separator on the left of the first column and
+               %                                  on the right of the last column.
         colAlign % (char(1,nColumns)): Array of 'l' 'c' 'r' (default to 'c')
         omitRange % (integer(1,\*)): Range of columns that can be omitted if space is lacking
                   %
@@ -53,7 +55,8 @@ classdef Table < replab.Str
         % Example:
         %   >>> T = replab.str.Table([11,2;100,4], 'colAlign', 'rlc', 'colSep', ' | ', ...
         %                 'colName', {'one', 'two'}, 'rowName', {1, 'second'}, ...
-        %                 'omitRange', [1], 'rowSep', '-', 'title', 'Table 1')
+        %                 'omitRange', [1], 'rowSep', '-', 'title', 'Table 1');
+        %   >>> T.format
         %       Table 1
         %       ------------------------
         %        |        | one | two |
@@ -347,8 +350,7 @@ classdef Table < replab.Str
         % Example:
         %   >>> T = replab.str.Table({'one', 'two'});
         %   >>> T.setColSep(0:T.nColumns, ' | ');
-        %   >>> T
-        %       T =
+        %   >>> T.format
         %        | one | two |
         %
             if isempty(self.colSep)
@@ -376,8 +378,7 @@ classdef Table < replab.Str
         % Example:
         %   >>> T = replab.str.Table({'one'; 'two'});
         %   >>> T.setRowSep(0:T.nRows, '-');
-        %   >>> T
-        %      T =
+        %   >>> T.format
         %       -------
         %         one
         %       -------
@@ -405,9 +406,8 @@ classdef Table < replab.Str
         %
         % Example:
         %   >>> T = replab.str.Table({'one','two'; 'three','four'});
-        %   >>> T.setAlign(1:T.nColumns, 'lr')
-        %   >>> T
-        %       T =
+        %   >>> T.setAlign(1:T.nColumns, 'lr');
+        %   >>> T.format
         %         one     two
         %         three  four
         %
@@ -430,8 +430,8 @@ classdef Table < replab.Str
         %
         % Example:
         %   >>> T = replab.str.Table({1:6,1:6,1:6,1:6,1:6,1:6;1,2,3,4,5,6});
-        %   >>> T.setOmitRange([2:4])
-        %   >>> disp(T.format(5, 75))
+        %   >>> T.setOmitRange([2:4]);
+        %   >>> T.format(5, 75)
         %         [1, 2, 3, 4, 5, 6] ...  [1, 2, 3, 4, 5, 6]  [1, 2, 3, 4, 5, 6]
         %                  1                       5                   6
         %
@@ -452,9 +452,8 @@ classdef Table < replab.Str
         %
         % Example:
         %   >>> T = replab.str.Table([1,2,3]);
-        %   >>> T.addRow({'one', 'two', 'three'}, T.nRows, '-')
-        %   >>> T
-        %       T =
+        %   >>> T.addRow({'one', 'two', 'three'}, T.nRows, '-');
+        %   >>> T.format
         %          1    2     3
         %       -------------------
         %         one  two  three
@@ -487,9 +486,8 @@ classdef Table < replab.Str
         %
         % Example:
         %   >>> T = replab.str.Table([1;2;3]);
-        %   >>> T.addColumn({'one', 'two', 'three'}, T.nColumns, ': ', 'l')
-        %   >>> T
-        %       T =
+        %   >>> T.addColumn({'one', 'two', 'three'}, T.nColumns, ': ', 'l');
+        %   >>> T.format
         %         1: one
         %         2: two
         %         3: three

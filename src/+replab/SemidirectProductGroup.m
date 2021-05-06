@@ -16,7 +16,8 @@ classdef SemidirectProductGroup < replab.Group
 %   >>> A = N.innerAutomorphism([2 3 1]);
 %   >>> phi = H.morphismByImages(replab.AutomorphismGroup(N), 'images', {A});
 %   >>> sd = H.semidirectProduct(N, @(h, n) phi.imageElement(h).imageElement(n));
-%   >>> sd.laws.checkSilent;
+%   >>> sd.laws.checkSilent
+%       1
 
     properties (SetAccess = protected)
         H % (`+replab.CompactGroup`): Group acting
