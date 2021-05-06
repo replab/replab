@@ -311,13 +311,20 @@ classdef cyclotomic
         % The constructor also accepts heterogenous cell arrays:
         %
         % Example:
-        %   >>> replab.cyclotomic({'1' '1/2'; '1/2' '1'})
+        %   >>> replab.cyclotomic({'1' '1/2'; '1/2' 1})
         %         1   1/2
         %        1/2   1
         %
         % Args:
         %   array: Coefficients
-            if isa(array, 'replab.cyclotomic')
+            if isa(array, 'char')
+                res = javaMethod('parseMatrix', 'cyclo.Lab', array);
+                assert(~res.isError, 'Parse error at character %d in ''%s''', res.errorIndex + 1, array);
+                d = javaMethod('data', res);
+                s = [javaMethod('nRows', res) javaMethod('nCols', res)];
+                self.data_ = d;
+                self.size_ = s;
+            elseif isa(array, 'replab.cyclotomic')
                 self.data_ = array.data;
                 self.size_ = size(array);
             elseif isa(array, 'double') || isa(array, 'vpi') || iscell(array)
