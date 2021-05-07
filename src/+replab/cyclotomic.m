@@ -5,9 +5,74 @@ classdef cyclotomic
 %
 % The implementation is pretty slow, but values are exact.
 %
+% We can construct cyclotomic arrays in various ways.
+%
+% They can be constructed from double floating-point arrays. Note that only fractions with a power-of-two
+% denominator can be represented exactly.
+%
+% Example:
+%   >>> replab.cyclotomic(1/2)
+%       1/2
+%   >>> replab.cyclotomic(1/3)
+%       6004799503160661/18014398509481984
+%
+% Note that passing a cyclotomic array as a parameter is the identity operation. This is useful when converting
+% number types.
+%
+% Example:
+%   >>> c = replab.cyclotomic(1)
+%       1
+%   >>> replab.cyclotomic(c)
+%       1
+%
+% Cyclotomics can also be constructed from vpis:
+%
+% Example:
+%   >>> c = replab.cyclotomic(vpi('100000000000000'))
+%       100000000000000
+%
+% They can also be constructed from strings. A vector/matrix syntax is also available, but row coefficients
+% must always be separated by commas.
+%
+% Example:
+%   >>> replab.cyclotomic('2/3')
+%       2/3
+%   >>> replab.cyclotomic('[1, 0; 0, 1]')
+%       1  0
+%       0  1
+%
+% The string syntax accepts:
+%
+% - integers,
+% - the four operations ``+``, ``-``, ``*``, ``/``,
+% - powers ``^`` with integer exponents,
+% - parentheses,
+% - roots of unity as in Gap System (``E(n)`` is ``exp(2*i*pi/n)``),
+% - square roots of rational numbers,
+% - sines and cosines of rational multiples of ``pi``.
+%
+% Example:
+%   >>> replab.cyclotomic('sqrt(2)')
+%       E(8)-E(8)^3
+%   >>> replab.cyclotomic('cos(-pi/3)')
+%       -1/2
+%   >>> replab.cyclotomic('(3 + 2/3)^3')
+%       1331/27
+%   >>> replab.cyclotomic('E(3)^2')
+%       E(3)^2
+%
+% Finally, the constructor also accepts heterogenous cell arrays, where the types above can be mixed and matched
+% (except that strings must represent scalars, not matrices/vectors).
+%
+% Example:
+%   >>> replab.cyclotomic({'1' vpi(2); '1/2' 1})
+%         1    2
+%        1/2   1
+%
+% A variety of static methods is available.
+%
 % Example:
 %   >>> I = replab.cyclotomic.eye(3)
-%       I =
 %       1  0  0
 %       0  1  0
 %       0  0  1
@@ -299,25 +364,16 @@ classdef cyclotomic
         function self = cyclotomic(array, size_)
         % Constructs a cyclotomic array from an array of coefficients
         %
-        % We can construct cyclotomic from floating-point numbers. Note that only fractions with a power-of-two
-        % denominator can be represented exactly.
-        %
-        % Example:
-        %   >>> replab.cyclotomic(1/2)
-        %       1/2
-        %   >>> replab.cyclotomic(1/3)
-        %       6004799503160661/18014398509481984
-        %
-        % The constructor also accepts heterogenous cell arrays:
-        %
-        % Example:
-        %   >>> replab.cyclotomic({'1' '1/2'; '1/2' '1'})
-        %         1   1/2
-        %        1/2   1
-        %
         % Args:
         %   array: Coefficients
-            if isa(array, 'replab.cyclotomic')
+            if isa(array, 'char')
+                res = javaMethod('parseMatrix', 'cyclo.Lab', array);
+                assert(~res.isError, 'Parse error at character %d in ''%s''', res.errorIndex + 1, array);
+                d = javaMethod('data', res);
+                s = [javaMethod('nRows', res) javaMethod('nCols', res)];
+                self.data_ = d;
+                self.size_ = s;
+            elseif isa(array, 'replab.cyclotomic')
                 self.data_ = array.data;
                 self.size_ = size(array);
             elseif isa(array, 'double') || isa(array, 'vpi') || iscell(array)
