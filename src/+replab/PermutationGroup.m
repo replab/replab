@@ -424,9 +424,13 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function nc = normalClosure(self, rhs)
+            if isa(rhs, 'replab.FiniteGroup')
+                toCheck = rhs.generators;
+            else
+                toCheck = {rhs};
+            end
             chain = replab.bsgs.Chain(self.domainSize);
             generators = {};
-            toCheck = rhs.generators;
             while ~isempty(toCheck)
                 rhsg = toCheck{end};
                 toCheck = toCheck(1:end-1);

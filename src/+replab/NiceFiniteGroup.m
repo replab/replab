@@ -171,7 +171,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             if isa(obj, 'replab.FiniteGroup')
                 res = self.niceGroup.normalClosure(self.type.niceMorphism.imageGroup(obj));
             else
-                res = self.niceGroup.normalClosure(self.niceImage(obj));
+                res = self.niceGroup.normalClosure(self.type.niceImage(obj));
             end
             res1 = self.type.niceMorphism.preimageGroup(res);
         end
