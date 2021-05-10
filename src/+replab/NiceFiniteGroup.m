@@ -226,6 +226,12 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 
         % Relation to other groups
 
+        % Representations
+
+        function rep = regularRep(self)
+            rep = self.niceMorphism.andThen(self.niceGroup.regularRep);
+        end
+
     end
 
     methods (Access = protected)
