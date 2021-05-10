@@ -1333,6 +1333,12 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % The returned representation is real. Use `+replab.Rep.complexification` to obtain a complex representation.
         %
+        % Example:
+        %   >>> C3 = replab.PermutationGroup.cyclic(3);
+        %   >>> rep = C3.permutationRep(3, 'preimages', {[2 3 1]}, 'images', {[3 1 2]});
+        %   >>> rep.dimension
+        %       3
+        %
         % Args:
         %   dimension (integer): Dimension of the representation
         %
@@ -1357,6 +1363,11 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns a real signed permutation representation of this group
         %
         % The returned representation is real. Use ``rep.complexification`` to obtain a complex representation.
+        %
+        %   >>> S2 = replab.S(2);
+        %   >>> rep = S2.signedPermutationRep(1, 'preimages', {[2 1]}, 'images', {[-1]});
+        %   >>> rep.image([2 1])
+        %       -1
         %
         % Args:
         %   dimension: Dimension of the representation

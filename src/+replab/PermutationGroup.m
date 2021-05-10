@@ -522,7 +522,7 @@ classdef PermutationGroup < replab.FiniteGroup
                 end
                 perms{i} = img;
             end
-            rep = self.permutationRep(o, perms);
+            rep = self.permutationRep(o, 'preimages', self.generators, 'images', perms);
         end
 
     end
