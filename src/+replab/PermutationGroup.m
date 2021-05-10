@@ -159,8 +159,8 @@ classdef PermutationGroup < replab.FiniteGroup
                 return
             end
             C = self.conjugacyClasses;
-            for i = 1:length(C)
-                c = C{i}.representative;
+            for i = 1:C.nClasses
+                c = C.classes{i}.representative;
                 if ~self.isIdentity(c)
                     if self.normalClosure(self.subgroup({c})) ~= self
                         res = false;
