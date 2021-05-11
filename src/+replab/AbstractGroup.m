@@ -129,7 +129,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             if isequal(self.generatorNames, self.defaultGeneratorNames)
                 A = self;
             else
-                A = self.withRenamedGenerators(self.defaultGeneratorNames);
+                A = self.withGeneratorNames(self.defaultGeneratorNames);
             end
         end
 
@@ -176,7 +176,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             end
         end
 
-        function A1 = withRenamedGenerators(self, generatorNames1)
+        function A1 = withGeneratorNames(self, generatorNames1)
         % Returns a modified copy of this abstract group with the generators renamed
         %
         % Args:

@@ -997,7 +997,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             if nargin < 2 || isempty(names)
                 G = self.cached('defaultAbstractGroup', @() self.computeDefaultAbstractGroup);
             else
-                G = self.abstractGroup.withRenamedGenerators(names);
+                G = self.abstractGroup.withGeneratorNames(names);
             end
         end
 
