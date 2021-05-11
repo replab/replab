@@ -4,6 +4,7 @@ classdef FactorizationTrivial < replab.mrp.Factorization
     methods
 
         function self = FactorizationTrivial(group, useInverses)
+            assert(group.isTrivial);
             if nargin < 2 || isempty(useInverses)
                 useInverses = false;
             end
@@ -12,8 +13,17 @@ classdef FactorizationTrivial < replab.mrp.Factorization
             self.useInverses = useInverses;
         end
 
+    end
+
+    methods % Implementations
+
         function letters = factorize(self, g)
             letters = zeros(1, 0);
+        end
+
+        function [l, r] = factorizeRepresentativeOfLeftCoset(self, leftCoset)
+            l = zeros(1, 0);
+            r = self.group.identity;
         end
 
     end
