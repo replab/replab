@@ -26,7 +26,7 @@ classdef Str < handle
 %   >>> replab.longStr(P)
 %     {'Symmetric group acting on 3 elements'
 %      '    domainSize: 3'
-%      'generatorNames: {'x1', 'x2'}
+%      'generatorNames: {''x1'', ''x2''}'
 %      '      identity: [1, 2, 3]'
 %      '          type: Symmetric group acting on 3 elements'
 %      '  generator(1): [2, 3, 1]'
