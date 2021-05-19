@@ -154,7 +154,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             identity = '1';
             generators = generatorNames;
             type = 'self';
-            self@replab.NiceFiniteGroup(identity, generators, type, 'generatorNames', generatorNames, 'relators', relators, restArgs{:})
+            self@replab.NiceFiniteGroup(identity, generators, type, 'generatorNames', generatorNames, 'relators', relators, restArgs{:});
             self.groupId = replab.globals.nextUniqueId;
             if ~isempty(args.permutationGroup)
                 self.cache('permutationGroup', args.permutationGroup);

@@ -29,7 +29,7 @@ classdef AtlasResult < replab.Str
                 values{1,end+1} = self.isomorphism.imageElement(g);
             end
             names{1,end+1} = 'name';
-            values{1,end+1} = self.atlasEntry.group.name;
+            values{1,end+1} = self.atlasEntry.name;
         end
 
         function f = presentation(self)
