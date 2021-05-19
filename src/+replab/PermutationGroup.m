@@ -7,39 +7,34 @@ classdef PermutationGroup < replab.FiniteGroup
 
     methods % Constructor
 
-        function self = PermutationGroup(domainSize, generators, order, type, chain)
+        function self = PermutationGroup(domainSize, generators, varargin)
         % Constructs a permutation group
         %
         % Args:
         %   domainSize (integer): Size of the domain
         %   generators (cell(1,\*) of permutation): Group generators
+        %
+        % Keyword Args:
+        %   generatorNames (cell(1,\*) of charstring): Names of the generators
         %   order (vpi, optional): Order of the group
         %   type (`+replab.PermutationGroup`, optional): Type of this group if known,
         %                                                or ``'self'`` if this group is its own type
         %   chain (`+replab.+bsgs.Chain`): BSGS chain describing the group
-            self.domainSize = domainSize;
             identity = 1:domainSize;
-            self.identity = identity;
-            self.representative = self.identity;
-            self.generators = generators;
-            for i = 1:self.nGenerators
+            for i = 1:length(generators)
                 assert(~all(generators{i} == identity), 'Generators cannot contain the identity');
             end
-            if nargin > 2 && ~isempty(order)
-                self.cache('order', order, '==');
-            end
-            if nargin < 4
-                type = [];
-            end
-            if isempty(type)
-                self.type = replab.S(domainSize);
-            elseif isequal(type, 'self')
-                self.type = self;
+            args = struct('type', [], 'chain', []);
+            [args, restArgs] = replab.util.populateStruct(args, varargin);
+            if ~isempty(args.type)
+                type = args.type;
             else
-                self.type = type;
+                type = replab.S(domainSize);
             end
-            if nargin > 4 && ~isempty(chain)
-                self.cache('chain', chain, 'ignore');
+            self@replab.FiniteGroup(identity, generators, type, restArgs{:});
+            self.domainSize = domainSize;
+            if ~isempty(args.chain)
+                self.cache('chain', args.chain, 'ignore');
             end
         end
 
@@ -51,7 +46,7 @@ classdef PermutationGroup < replab.FiniteGroup
             if nargin < 2
                 type = [];
             end
-            pg = replab.PermutationGroup(chain.n, chain.strongGenerators, chain.order, type, chain);
+            pg = replab.PermutationGroup(chain.n, chain.strongGenerators, 'order', chain.order, 'type', type, 'chain', chain);
         end
 
     end
@@ -202,7 +197,7 @@ classdef PermutationGroup < replab.FiniteGroup
                     end
                 end
             end
-            sub = replab.PermutationGroup(self.domainSize, generators, chain.order, self.type, chain);
+            sub = replab.PermutationGroup(self.domainSize, generators, 'order', chain.order, 'type', self.type, 'chain', chain);
         end
 
         function s = computeSetProduct(self)
@@ -348,6 +343,26 @@ classdef PermutationGroup < replab.FiniteGroup
             z(x) = x(y);
         end
 
+        % FiniteGroup
+
+        function res = withGeneratorNames(self, newNames)
+        % Returns a modified copy of this finite group with renamed generators
+        %
+        % Args:
+        %   newNames (cell(1,\*) of charstring): New generator names
+        %
+        % Returns:
+        %   `.FiniteGroup`: Updated copy
+            args = cell(1, 0);
+            if self.inCache('order')
+                args = horzcat(args, {'order', self.order});
+            end
+            if self.inCache('chain')
+                args = horzcat(args, {'chain', self.chain});
+            end
+            res = replab.PermutationGroup(self.domainSize, self.generators, 'type', self.type, 'generatorNames', newNames, args{:});
+        end
+
     end
 
     methods % Group elements
@@ -444,7 +459,7 @@ classdef PermutationGroup < replab.FiniteGroup
                     end
                 end
             end
-            nc = replab.PermutationGroup(self.domainSize, generators, chain.order, self.type, chain);
+            nc = replab.PermutationGroup(self.domainSize, generators, 'order', chain.order, 'type', self.type, 'chain', chain);
         end
 
         % Subgroups
@@ -464,7 +479,7 @@ classdef PermutationGroup < replab.FiniteGroup
             if length(generators) == self.nGenerators && all(arrayfun(@(i) self.eqv(self.generator(i), generators{i}), 1:length(generators)))
                 sub = self;
             else
-                sub = replab.PermutationGroup(self.domainSize, generators, order, self.type);
+                sub = replab.PermutationGroup(self.domainSize, generators, 'order', order, 'type', self.type);
             end
         end
 

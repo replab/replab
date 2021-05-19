@@ -25,6 +25,12 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws
             self.assert(self.T.isTrivial == (self.T.nGenerators == 0));
         end
 
+        function law_withGeneratorNames_(self)
+        % Checks that renaming generators works properly
+            G = self.T.withGeneratorNames(replab.FiniteGroup.defaultGeneratorNames(self.T.nGenerators));
+            assert(G.nGenerators == self.T.nGenerators);
+        end
+
         function law_order_(self)
         % Checks that a group is trivial iff its order is 1
             self.assert(self.T.isTrivial == (self.T.order == 1));

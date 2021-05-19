@@ -1,4 +1,4 @@
-classdef DirectProductGroup_finite <  replab.DirectProductGroup & replab.NiceFiniteGroup
+classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.NiceFiniteGroup
 % External direct product of finite groups
 %
 % In particular, the permutation image of an element of a direct product group
