@@ -232,7 +232,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function R = computeFastRecognize(self)
             R = [];
-            return % TODO
             if self.niceMorphism.image.domainSize < replab.globals.fastChainDomainSize
                 c = self.niceMorphism.image.partialChain;
                 if ~c.isMutable
@@ -534,7 +533,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %   >>> G = replab.S(3);
         %   >>> G.imageWord('x1')
         %       2 3 1
-        %   >>> H = G.withGeneratorNames({'s', 't'});
+        %   >>> names = {'s', 't'};
         %   >>> G.imageWord('s', names)
         %       2 3 1
         %

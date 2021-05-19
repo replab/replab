@@ -165,7 +165,7 @@ classdef GeneralizedSymmetricSubgroup < replab.NiceFiniteGroup
             if nargin < 3
                 order = [];
             end
-            grp = replab.perm.GeneralizedSymmetricSubgroup(self.n, self.m, generators, order, self.type);
+            grp = replab.perm.GeneralizedSymmetricSubgroup(self.n, self.m, generators, 'order', order, 'type', self.type);
             if ~isempty(niceGroup)
                 grp.cache('niceGroup', niceGroup, '==');
             end

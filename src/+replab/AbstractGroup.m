@@ -84,7 +84,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         % Returns the finite group generators as additional output arguments.
         %
         % Example:
-        %   >>> [G, x] = replab.AbstractGroup.parsePresentation('< x | x^3 = 1 >');
+        %   >>> [G, x] = replab.AbstractGroup.fromPresentation('< x | x^3 = 1 >');
         %
         % Args:
         %   str (charstring): Single-line description string
@@ -179,7 +179,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         % Parses word letters from word as a string
         %
         % Example:
-        %   >>> A = replab.AbstractGroup({'x'}, {[2 3 1]}, {'x^3'});
+        %   >>> A = replab.AbstractGroup({'x'}, {'x^3'});
         %   >>> isequal(A.factorizeLetters('x^2'), [1 1])
         %       1
         %
