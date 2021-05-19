@@ -3,24 +3,17 @@ classdef NiceFiniteSubgroup < replab.NiceFiniteGroup
 
     methods
 
-        function self = NiceFiniteSubgroup(type, generators, order)
+        function self = NiceFiniteSubgroup(type, generators, varargin)
         % Constructs a subgroup of a nice finite group
         %
         % Args:
         %   type (`replab.NiceFiniteGroup`, optional): Type of this group, must not be a `NiceFiniteSubgroup`
         %   generators (cell(1,\*) of `.type` elements): Group generators
         %   order (vpi, optional): Order of the group
-            self.type = type;
-            self.representative = type.identity;
-            self.identity = type.identity;
-            % own stuff
-            if nargin > 2 && ~isempty(order)
-                self.cache('order', order, '==');
-            end
             for i = 1:length(generators)
                 assert(~type.isIdentity(generators{i}), 'Generator cannot be identity');
             end
-            self.generators = generators;
+            self@replab.NiceFiniteGroup(type.identity, generators, type, varargin{:});
         end
 
     end
@@ -43,6 +36,16 @@ classdef NiceFiniteSubgroup < replab.NiceFiniteGroup
 
         function xInv = inverse(self, x)
             xInv = self.type.inverse(x);
+        end
+
+        % FiniteGroup
+
+        function G = withGeneratorNames(self, newNames)
+            if isequal(self.generatorNames, newNames)
+                G = self;
+                return
+            end
+            G = replab.NiceFiniteSubgroup(self.type, generators, 'generatorNames', newNames);
         end
 
         % NiceFiniteGroup

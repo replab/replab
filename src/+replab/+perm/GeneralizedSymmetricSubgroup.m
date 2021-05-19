@@ -8,33 +8,29 @@ classdef GeneralizedSymmetricSubgroup < replab.NiceFiniteGroup
 
     methods
 
-        function self = GeneralizedSymmetricSubgroup(n, m, generators, order, type)
+        TODO
+        function self = GeneralizedSymmetricSubgroup(n, m, generators, varargin)
         % Constructs a subgroup of the generalized symmetric group
+        %
+        % Additional keyword args (such as order) are passed to the `.FiniteGroup` constructor.
         %
         % Args:
         %   n (integer): Number of copies of the cyclic group
         %   m (integer): Order of each cyclic group
         %   generators (cell(1,\*) of group elements): Group generators
-        %   order (vpi, optional): Order of the group
-        %   type (`+replab.SignedPermutationGroup`, optional): Type of this group if known, or ``'self'`` if this group is its own type
+        %
+        % Keyword Args:
+        %   type (`+replab.SignedPermutationGroup`): Type of this group if known, or ``'self'`` if this group is its own type
+            args = struct('type', {[]});
+            [args, restArgs] = replab.util.populateStruct(args, varargin);
+            type = args.type;
+            identity = [1:n; zeros(1, n)];
+            if isempty(type)
+                type = replab.perm.GeneralizedSymmetricGroup(n, m);
+            end
+            self@replab.NiceFiniteGroup(identity, generators, type, restArgs{:});
             self.n = n;
             self.m = m;
-            self.identity = [1:n; zeros(1, n)];
-            self.generators = generators;
-            if nargin > 2 && ~isempty(order)
-                self.cache('order', order, '==');
-            end
-            if nargin < 4
-                type = [];
-            end
-            if isempty(type)
-                self.type = replab.perm.GeneralizedSymmetricGroup(n, m);
-            elseif isequal(type, 'self')
-                self.type = self;
-            else
-                self.type = type;
-            end
-
         end
 
     end
@@ -119,6 +115,16 @@ classdef GeneralizedSymmetricSubgroup < replab.NiceFiniteGroup
             y = zeros(2, n);
             y(1,x(1,:)) = 1:n;
             y(2,x(1,:)) = mod(self.m - x(2,:), self.m);
+        end
+
+        % FiniteGroup
+
+        function G = withGeneratorNames(self, newNames)
+            if isequal(self.generatorNames, newNames)
+                G = self;
+                return
+            end
+            G = replab.GeneralizedSymmetricSubgroup(self.n, self.m, self.generators, 'generatorNames', newNames, 'type', self.type);
         end
 
         % NiceFiniteGroup

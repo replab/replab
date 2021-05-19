@@ -21,8 +21,8 @@ classdef AtlasResult < replab.Str
 
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Str(self);
-            names{1,end+1} = 'presentationString';
-            values{1,end+1} = self.presentationString;
+            names{1,end+1} = 'presentation';
+            values{1,end+1} = self.presentation;
             for i = 1:self.atlasEntry.group.nGenerators
                 g = self.atlasEntry.group.generator(i);
                 names{1,end+1} = sprintf('isomorphism.imageElement(''%s'')', g);
@@ -32,8 +32,8 @@ classdef AtlasResult < replab.Str
             values{1,end+1} = self.atlasEntry.group.name;
         end
 
-        function f = presentationString(self)
-            f = self.atlasEntry.group.presentationString;
+        function f = presentation(self)
+            f = self.atlasEntry.group.presentation;
         end
 
         function A = imap(self, m)

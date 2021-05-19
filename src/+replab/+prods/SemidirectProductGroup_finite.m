@@ -2,17 +2,13 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
 
     methods
 
-        function self = SemidirectProductGroup_finite(phi, type)
+        function self = SemidirectProductGroup_finite(phi, type, varargin)
             assert(isa(phi, 'replab.Action'));
             H = phi.G;
             N = phi.P;
             assert(isa(N, 'replab.FiniteGroup'));
             assert(isa(H, 'replab.FiniteGroup'));
-            self.phi = phi;
-            self.H = H;
-            self.N = N;
-            self.identity = {H.identity N.identity};
-            self.representative = self.identity;
+            identity = {H.identity N.identity};
             generators = cell(1, H.nGenerators + N.nGenerators);
             for i = 1:length(H.generators)
                 generators{i} = {H.generator(i) N.identity};
@@ -20,12 +16,10 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
             for i = 1:length(N.generators)
                 generators{H.nGenerators + i} = {H.identity N.generator(i)};
             end
-            self.generators = generators;
-            if isequal(type, 'self')
-                self.type = self;
-            else
-                self.type = type;
-            end
+            self@replab.NiceFiniteGroup(identity, generators, type, varargin{:});
+            self.phi = phi;
+            self.H = H;
+            self.N = N;
         end
 
     end
@@ -144,6 +138,16 @@ classdef SemidirectProductGroup_finite < replab.SemidirectProductGroup & replab.
             else
                 res = false;
             end
+        end
+
+        % FiniteGroup
+
+        function G = withGeneratorNames(self, newNames)
+            if isequal(self.generatorNames, newNames)
+                G = self;
+                return
+            end
+            G = replab.prods.SemidirectProduct_finite(self.phi, self.type, 'generatorNames', newNames);
         end
 
     end

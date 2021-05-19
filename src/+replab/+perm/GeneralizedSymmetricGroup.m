@@ -19,7 +19,7 @@ classdef GeneralizedSymmetricGroup < replab.perm.GeneralizedSymmetricSubgroup
             if m > 1
                 generators{1,end+1} = [1:n; 1 zeros(1, n-1)];
             end
-            self = self@replab.perm.GeneralizedSymmetricSubgroup(n, m, generators, o, 'self');
+            self@replab.perm.GeneralizedSymmetricSubgroup(n, m, generators, 'order', o, 'type', 'self');
         end
 
         function m = naturalMorphism(self, larger)

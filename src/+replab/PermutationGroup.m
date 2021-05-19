@@ -19,12 +19,13 @@ classdef PermutationGroup < replab.FiniteGroup
         %   order (vpi, optional): Order of the group
         %   type (`+replab.PermutationGroup`, optional): Type of this group if known,
         %                                                or ``'self'`` if this group is its own type
+        %   relators (cell(1,\*) of charstring): Relators
         %   chain (`+replab.+bsgs.Chain`): BSGS chain describing the group
             identity = 1:domainSize;
             for i = 1:length(generators)
                 assert(~all(generators{i} == identity), 'Generators cannot contain the identity');
             end
-            args = struct('type', [], 'chain', []);
+            args = struct('type', [], 'chain', [], 'relators', []);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             if ~isempty(args.type)
                 type = args.type;
@@ -228,14 +229,6 @@ classdef PermutationGroup < replab.FiniteGroup
             m = replab.FiniteIsomorphism.identity(self);
         end
 
-        function A = computeDefaultAbstractGroup(self)
-            A = replab.AbstractGroup(self.defaultGeneratorNames, self);
-        end
-
-        function m = computeDefaultAbstractMorphism(self)
-            m = self.abstractGroup.niceMorphism.inverse;
-        end
-
     end
 
     methods % Group internal description
@@ -353,6 +346,10 @@ classdef PermutationGroup < replab.FiniteGroup
         %
         % Returns:
         %   `.FiniteGroup`: Updated copy
+            if isequal(self.generatorNames, newNames)
+                res = self;
+                return
+            end
             args = cell(1, 0);
             if self.inCache('order')
                 args = horzcat(args, {'order', self.order});
@@ -361,6 +358,20 @@ classdef PermutationGroup < replab.FiniteGroup
                 args = horzcat(args, {'chain', self.chain});
             end
             res = replab.PermutationGroup(self.domainSize, self.generators, 'type', self.type, 'generatorNames', newNames, args{:});
+        end
+
+        function A = abstractGroup(self, generatorNames)
+            if nargin < 2 || isempty(generatorNames)
+                generatorNames = self.generatorNames;
+            end
+            A = replab.AbstractGroup(generatorNames, self.relators(generatorNames), 'permutationGroup', self.withGeneratorNames(generatorNames));
+        end
+
+        function m = abstractMorphism(self, generatorNames)
+            if nargin < 2 || isempty(generatorNames)
+                generatorNames = self.generatorNames;
+            end
+            m = self.abstractGroup(generatorNames).niceMorphism.inverse;
         end
 
     end
