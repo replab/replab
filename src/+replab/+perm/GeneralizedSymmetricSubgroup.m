@@ -8,7 +8,6 @@ classdef GeneralizedSymmetricSubgroup < replab.NiceFiniteGroup
 
     methods
 
-        TODO
         function self = GeneralizedSymmetricSubgroup(n, m, generators, varargin)
         % Constructs a subgroup of the generalized symmetric group
         %
