@@ -3,7 +3,7 @@ classdef WreathProductGroup_finite < replab.WreathProductGroup & replab.prods.Se
 
     methods
 
-        function self = WreathProductGroup_finite(H, A)
+        function self = WreathProductGroup_finite(H, A, varargin)
             assert(isa(H, 'replab.PermutationGroup'));
             n = H.domainSize;
             base = A.directPower(n);
@@ -13,7 +13,7 @@ classdef WreathProductGroup_finite < replab.WreathProductGroup & replab.prods.Se
             else
                 type = H.type.wreathProduct(A.type);
             end
-            self@replab.prods.SemidirectProductGroup_finite(phi, type);
+            self@replab.prods.SemidirectProductGroup_finite(phi, type, varargin{:});
             self.n = n;
             self.A = A;
         end
@@ -42,6 +42,16 @@ classdef WreathProductGroup_finite < replab.WreathProductGroup & replab.prods.Se
 
         function xInv = inverse(self, x)
             xInv = inverse@replab.prods.SemidirectProductGroup_finite(self, x);
+        end
+
+        % FiniteGroup
+
+        function G = withGeneratorNames(self, newNames)
+            if isequal(self.generatorNames, newNames)
+                G = self;
+                return
+            end
+            G = replab.prods.WreathProductGroup_finite(self.H, self.A, 'generatorNames', newNames, 'type', self.type);
         end
 
         % NiceFiniteGroup

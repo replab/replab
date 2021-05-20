@@ -107,7 +107,6 @@ classdef CosetTable < replab.Str
             end
             genIndex = [1:r -(1:r)];
             % line 5
-            m = subgroup.abstractMorphism;
             while true
                 % transpose so that it is the smallest beta
                 [x beta] = find((C.C ~= Chat.C(1:n, :))', 1);
@@ -120,7 +119,7 @@ classdef CosetTable < replab.Str
                 uhat_inG = [tbeta genIndex(x) -fliplr(tbetax)];
                 u = group.imageLetters(-fliplr(uhat_inG));
                 assert(subgroup.contains(u));
-                uhat_inH = -fliplr(m.target.factorizeLetters(m.imageElement(u))); % flip due to inverse convention
+                uhat_inH = -fliplr(subgroup.factorizeLetters(u)); % flip due to inverse convention
                 newRelator = [tbeta genIndex(x) -fliplr(tbetax) -fliplr(uhat_inH)];
                 assert(group.isIdentity(group.imageLetters(newRelator)));
                 relators{1,end+1} = newRelator;

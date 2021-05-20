@@ -2,13 +2,15 @@ classdef AtlasEntry < replab.Obj
 % Identifies a user-defined group as a standard group present in an atlas
 
     properties (SetAccess = protected)
+        name % (charstring): Group name
         group % (`.AbstractGroup`): Group
         characterTable % (`.CharacterTable` or ``[]``): Group character table
     end
 
     methods
 
-        function self = AtlasEntry(group, characterTable)
+        function self = AtlasEntry(name, group, characterTable)
+            self.name = name;
             self.group = group;
             self.characterTable = characterTable;
         end
@@ -57,7 +59,7 @@ classdef AtlasEntry < replab.Obj
             s = sprintf('Inverse(PermList([%s]))', strjoin(arrayfun(@num2str, g, 'uniform', 0), ','));
         end
 
-        function G = parseGroup(J)
+        function [G, name] = parseGroup(J)
             generatorNames = J.group.generatorNames;
             permutationGenerators = cellfun(@cell2mat, J.group.permutationGenerators, 'uniform', 0);
             relators = J.group.relators;
@@ -81,8 +83,8 @@ classdef AtlasEntry < replab.Obj
             else
                 name = [];
             end
-            P = replab.PermutationGroup.of(permutationGenerators{:});
-            G = replab.AbstractGroup(generatorNames, P, relators, name);
+            P = replab.PermutationGroup(length(permutationGenerators{1}), permutationGenerators, 'order', order, 'generatorNames', generatorNames, 'relators', relators);
+            G = replab.AbstractGroup(generatorNames, relators, 'permutationGroup', P);
         end
 
         function C = parseCharacterTable(J, group)
@@ -141,14 +143,14 @@ classdef AtlasEntry < replab.Obj
             generators = cell(1, 0);
             relators = cell(1, 0);
             % Presentation is empty
-            ag = replab.AbstractGroup(generators, prmGroup, relators, name);
+            ag = replab.AbstractGroup(generators, relators, 'permutationGroup', prmGroup);
             classes = ag.conjugacyClasses;
             characters = replab.cyclotomic.eye(1);
             classNames = {'id'};
             irrepNames = {'id'};
             irreps = {ag.trivialRep('C', 1)};
             ct = replab.CharacterTable(ag, classes, characters, 'irreps', irreps, 'classNames', classNames, 'irrepNames', irrepNames);
-            A = replab.AtlasEntry(ag, ct);
+            A = replab.AtlasEntry(name, ag, ct);
         end
 
         function A = dihedral(n)
@@ -162,10 +164,10 @@ classdef AtlasEntry < replab.Obj
             % Presentation from the groupprops wiki
             % < x, a | a^n = x^2 = 1, x a x^-1 = a^-1 >
             relators = {['a^' num2str(n)] 'x^2' 'x a x^-1 a'};
-            ag = replab.AbstractGroup({'x' 'a'}, prmGroup, relators, name);
+            ag = replab.AbstractGroup({'x', 'a'}, relators, 'permutationGroup', prmGroup);
             ct = replab.ct.DihedralCharacterTable(n);
             assert(ct.group == ag.permutationGroup);
-            A = replab.AtlasEntry(ag, ct.imap(ag.niceMorphism.inverse));
+            A = replab.AtlasEntry(name, ag, ct.imap(ag.niceMorphism.inverse));
         end
 
         function A = cyclic(n)
@@ -177,10 +179,10 @@ classdef AtlasEntry < replab.Obj
             prmGroup = replab.PermutationGroup.of(X);
             % standard presentation
             % < x | x^n = 1 >
-            ag = replab.AbstractGroup({'x'}, prmGroup, {['x^' num2str(n)]}, name);
+            ag = replab.AbstractGroup({'x'}, {['x^' num2str(n)]}, 'permutationGroup', prmGroup);
             ct = replab.ct.CyclicCharacterTable(n);
             assert(ct.group == ag.permutationGroup);
-            A = replab.AtlasEntry(ag, ct.imap(ag.niceMorphism.inverse));
+            A = replab.AtlasEntry(name, ag, ct.imap(ag.niceMorphism.inverse));
         end
 
         function A = kleinFourGroup
@@ -193,7 +195,7 @@ classdef AtlasEntry < replab.Obj
             % Presentation from the groupprops wiki
             % < x, a | a^2 = x^2 = 1, x a x^-1 = a^-1 >
             relators = {'a^2' 'x^2' 'x a x^-1 a'};
-            ag = replab.AbstractGroup({'x' 'a'}, prmGroup, relators, name);
+            ag = replab.AbstractGroup({'x' 'a'}, relators, 'permutationGroup', prmGroup);
             classes = replab.ConjugacyClasses(ag, cellfun(@(g) ag.conjugacyClass(g), {'1' 'x' 'a' 'x a'}, 'uniform', 0));
             chars = replab.cyclotomic([1 1 1 1; 1 1 -1 -1; 1 -1 1 -1; 1 -1 -1 1]);
             classNames = {'1' 'x' 'a' 'xa'};
@@ -203,7 +205,7 @@ classdef AtlasEntry < replab.Obj
                       ag.repByImages('C', 1, 'images', {replab.cyclotomic(-1) replab.cyclotomic(1)}) ...
                       ag.repByImages('C', 1, 'images', {replab.cyclotomic(-1) replab.cyclotomic(-1)})};
             ct = replab.CharacterTable(ag, classes, chars, 'classNames', classNames, 'irrepNames', irrepNames, 'irreps', irreps);
-            A = replab.AtlasEntry(ag, ct);
+            A = replab.AtlasEntry(name, ag, ct);
         end
 
         function A = symmetric(n)
@@ -220,9 +222,9 @@ classdef AtlasEntry < replab.Obj
             for j = 2:floor(n/2)
                 relators{1,end+1} = sprintf('(t^-1 s^-%d t s^%d)^2', j, j);
             end
-            ag = replab.AbstractGroup({'s' 't'}, prmGroup, relators, name);
+            ag = replab.AbstractGroup({'s' 't'}, relators, 'permutationGroup', prmGroup);
             ct = replab.sym.SymmetricGroupCharacterTable(n);
-            A = replab.AtlasEntry(ag, ct.imap(ag.niceMorphism.inverse));
+            A = replab.AtlasEntry(name, ag, ct.imap(ag.niceMorphism.inverse));
         end
 
         function A = alternating(n)
@@ -248,8 +250,8 @@ classdef AtlasEntry < replab.Obj
                     relators{1,end+1} = sprintf('(t s^-%d t s^%d)^2', k, k);
                 end
             end
-            ag = replab.AbstractGroup({'s' 't'}, prmGroup, relators, name);
-            A = replab.AtlasEntry(ag, []);
+            ag = replab.AbstractGroup({'s' 't'}, relators, 'permutationGroup', prmGroup);
+            A = replab.AtlasEntry(name, ag, []);
         end
 
     end
@@ -322,9 +324,9 @@ classdef AtlasEntry < replab.Obj
         % Returns:
         %   `.AtlasEntry`: The parsed entry
             J = replab.util.parseJSON(s);
-            G = replab.AtlasEntry.parseGroup(J);
+            [G, name] = replab.AtlasEntry.parseGroup(J);
             C = replab.AtlasEntry.parseCharacterTable(J, G);
-            A = replab.AtlasEntry(G, C);
+            A = replab.AtlasEntry(name, G, C);
         end
 
     end

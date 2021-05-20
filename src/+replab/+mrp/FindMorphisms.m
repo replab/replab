@@ -7,7 +7,7 @@ classdef FindMorphisms
 
     properties (SetAccess = protected)
         r % (integer): Number of generators in `.F`
-        F % (`+replab.AbstractGroup`): Abstract group to find homomorphisms from
+        F % (`+replab.FiniteGroup`): Group to find homomorphisms from
         G % (`+replab.FiniteGroup`): Finite group to find homomorphisms to
         A % (`+replab.FiniteGroup`): Supergroup of `.G`
         I % (cell(1,r) of cell(1,\*) of elements of `.G`): Candidates
@@ -29,7 +29,7 @@ classdef FindMorphisms
             heo = cellfun(@(g) G.elementOrder(g), h);
             I = cell(1, r);
             CI = cell(1, r);
-            relatorLetters = cellfun(@(rel) F.factorizeLetters(rel), F.relators, 'uniform', 0);
+            relatorLetters = cellfun(@(rel) F.wordToLetters(rel), F.relators, 'uniform', 0);
             relmax = cellfun(@(rl) max(abs(rl)), relatorLetters);
             for i = 1:r
                 relatorSubsets(i) = find([relmax > i, true], 1) - 1;

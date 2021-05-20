@@ -1,4 +1,4 @@
-classdef DirectProductGroup_finite <  replab.DirectProductGroup & replab.NiceFiniteGroup
+classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.NiceFiniteGroup
 % External direct product of finite groups
 %
 % In particular, the permutation image of an element of a direct product group
@@ -11,27 +11,25 @@ classdef DirectProductGroup_finite <  replab.DirectProductGroup & replab.NiceFin
 
         function self = DirectProductGroup_finite(factors)
             assert(all(cellfun(@(x) isa(x, 'replab.FiniteGroup'), factors)));
-            self.factors = factors;
-            self.identity = cellfun(@(f) f.identity, factors, 'uniform', 0);
-            self.representative = self.identity;
-            % the generators of a direct product of finite groups is
-            % the union of the generators of the factors, lifted into the
-            % proper tuples
+            identity = cellfun(@(f) f.identity, factors, 'uniform', 0);
+            % the generators of a direct product of finite groups is the union of the generators of the factors,
+            % lifted into the proper tuples
             generators = {};
             for i = 1:length(factors)
                 factor = factors{i};
                 for j = 1:factor.nGenerators
-                    generator = self.identity;
+                    generator = identity;
                     generator{i} = factor.generator(j);
                     generators{1, end+1} = generator;
                 end
             end
-            self.generators = generators;
             if all(cellfun(@(f) f.type == f, factors))
-                self.type = self;
+                type = 'self';
             else
-                self.type = replab.prods.DirectProductGroup_finite(cellfun(@(f) f.type, factors, 'uniform', 0));
+                type = replab.prods.DirectProductGroup_finite(cellfun(@(f) f.type, factors, 'uniform', 0));
             end
+            self@replab.NiceFiniteGroup(identity, generators, type);
+            self.factors = factors;
         end
 
         function res = hasSameTypeAs(self, rhs)
@@ -152,6 +150,14 @@ classdef DirectProductGroup_finite <  replab.DirectProductGroup & replab.NiceFin
                 end
             end
             l = true;
+        end
+
+        function G = withGeneratorNames(self, newNames)
+            if isequal(self.generatorNames, newNames)
+                G = self;
+                return
+            end
+            G = replab.prods.DirectProductGroup_finite(self.factors, 'generatorNames', newNames);
         end
 
         % NiceFiniteGroup

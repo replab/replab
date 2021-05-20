@@ -181,7 +181,7 @@ classdef IntegerPartition < replab.Str
             end
             order = replab.util.multiplyIntegers(orderFactors);
             % construct the group
-            G = replab.PermutationGroup(self.n, gens, order, replab.SymmetricGroup.make(self.n));
+            G = replab.PermutationGroup(self.n, gens, 'order', order, 'type', replab.SymmetricGroup.make(self.n));
         end
 
     end
