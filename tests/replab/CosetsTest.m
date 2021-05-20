@@ -19,4 +19,11 @@ function test_suite = CosetsTest()
     rightCosets = sub\SS3;
     test_suite = leftCosets.laws.addTestCases(test_suite);
     test_suite = rightCosets.laws.addTestCases(test_suite);
+
+    S5 = replab.S(5);
+    H = S5.randomProperSubgroup;
+    K = S5.randomProperSubgroup;
+    g = S5.sample;
+    doubleCoset = H * g * K;
+    test_suite = doubleCoset.laws.addTestCases(test_suite);
 end
