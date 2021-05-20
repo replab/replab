@@ -7,30 +7,26 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
 
     methods
 
-        function self = SignedPermutationGroup(domainSize, generators, order, type)
+        function self = SignedPermutationGroup(domainSize, generators, varargin)
         % Constructs a signed permutation group
+        %
+        % Additional keyword args (such as order) are passed to the `.FiniteGroup` constructor.
         %
         % Args:
         %   domainSize (integer): Size of the domain
         %   generators (cell(1,\*) of permutation): Group generators
-        %   order (vpi, optional): Order of the group
-        %   type (`+replab.SignedPermutationGroup`, optional): Type of this group if known, or ``'self'`` if this group is its own type
-            self.domainSize = domainSize;
-            self.identity = 1:domainSize;
-            self.generators = generators;
-            if nargin > 2 && ~isempty(order)
-                self.cache('order', order, '==');
-            end
-            if nargin < 4
-                type = [];
-            end
+        %
+        % Keyword Args:
+        %   type (`+replab.SignedPermutationGroup`): Type of this group if known, or ``'self'`` if this group is its own type
+            args = struct('type', {[]});
+            [args, restArgs] = replab.util.populateStruct(args, varargin);
+            type = args.type;
             if isempty(type)
-                self.type = replab.SignedSymmetricGroup(domainSize);
-            elseif isequal(type, 'self')
-                self.type = self;
-            else
-                self.type = type;
+                type = replab.SignedSymmetricGroup(domainSize);
             end
+            identity = 1:domainSize;
+            self@replab.NiceFiniteGroup(identity, generators, type, restArgs{:});
+            self.domainSize = domainSize;
         end
 
     end
@@ -66,6 +62,16 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
             y(invFlip) = -y(invFlip);
         end
 
+        % FiniteGroup
+
+        function G = withGeneratorNames(self, newNames)
+            if isequal(self.generatorNames, newNames)
+                G = self;
+                return
+            end
+            G = replab.SignedPermutationGroup(self.domainSize, self.generators, 'generatorNames', newNames, 'type', self.type);
+        end
+
         % NiceFiniteGroup
 
         function res = hasSameTypeAs(self, rhs)
@@ -96,7 +102,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
             if nargin < 3
                 order = [];
             end
-            grp = replab.SignedPermutationGroup(self.domainSize, generators, order, self.type);
+            grp = replab.SignedPermutationGroup(self.domainSize, generators, 'order', order, 'type', self.type);
             if ~isempty(niceGroup)
                 grp.cache('niceGroup', niceGroup, '==');
             end

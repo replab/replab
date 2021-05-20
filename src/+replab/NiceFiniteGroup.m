@@ -16,6 +16,15 @@ classdef NiceFiniteGroup < replab.FiniteGroup
 % and that groups having the same type (as verified by `.hasSameTypeAs`) should return the same images
 % under `.niceImage`.
 
+    methods
+
+        function self = NiceFiniteGroup(identity, generators, type, varargin)
+        % Constructs a nice finite group
+            self@replab.FiniteGroup(identity, generators, type, varargin{:});
+        end
+
+    end
+
     methods % Nice monomorphism support
 
         function g = nicePreimage(self, p)
@@ -46,7 +55,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             if nargin < 3 || isempty(order)
                 order = [];
             end
-            sub = replab.NiceFiniteSubgroup(self.type, generators, order);
+            sub = replab.NiceFiniteSubgroup(self.type, generators, 'order', order);
             if nargin > 3 && ~isempty(niceGroup)
                 sub.cache('niceGroup', niceGroup, '==');
             end
@@ -96,19 +105,16 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         function G = computeNiceGroup(self)
             gens = cellfun(@(g) self.niceImage(g), self.generators, 'uniform', 0);
             ds = length(self.niceImage(self.identity));
-            G = replab.PermutationGroup(ds, gens, self.cachedOrEmpty('order'));
+            if self.inCache('order')
+                args = {'order', self.order};
+            else
+                args = {};
+            end
+            G = replab.PermutationGroup(ds, gens, args{:});
         end
 
         function m = computeNiceMorphism(self)
             m = replab.mrp.NiceFiniteGroupIsomorphism(self, self.niceGroup);
-        end
-
-        function A = computeDefaultAbstractGroup(self)
-            A = self.niceGroup.abstractGroup;
-        end
-
-        function m = computeDefaultAbstractMorphism(self)
-            m = self.niceMorphism.andThen(self.niceGroup.abstractMorphism);
         end
 
     end
@@ -125,6 +131,20 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         % FiniteSet
 
         % FiniteGroup
+
+        function A = abstractGroup(self, generatorNames)
+            if nargin < 2 || isempty(generatorNames)
+                generatorNames = self.generatorNames;
+            end
+            A = self.niceGroup.abstractGroup(generatorNames);
+        end
+
+        function m = abstractMorphism(self, generatorNames)
+            if nargin < 2 || isempty(generatorNames)
+                generatorNames = self.generatorNames;
+            end
+            m = self.niceMorphism.andThen(self.niceGroup.abstractMorphism(generatorNames));
+        end
 
         % Group elements
 
@@ -171,7 +191,7 @@ classdef NiceFiniteGroup < replab.FiniteGroup
             if isa(obj, 'replab.FiniteGroup')
                 res = self.niceGroup.normalClosure(self.type.niceMorphism.imageGroup(obj));
             else
-                res = self.niceGroup.normalClosure(self.niceImage(obj));
+                res = self.niceGroup.normalClosure(self.type.niceImage(obj));
             end
             res1 = self.type.niceMorphism.preimageGroup(res);
         end
@@ -225,6 +245,12 @@ classdef NiceFiniteGroup < replab.FiniteGroup
         end
 
         % Relation to other groups
+
+        % Representations
+
+        function rep = regularRep(self)
+            rep = self.niceMorphism.andThen(self.niceGroup.regularRep);
+        end
 
     end
 

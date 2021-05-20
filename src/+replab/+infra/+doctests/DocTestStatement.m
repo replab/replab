@@ -112,7 +112,7 @@ classdef DocTestStatement < replab.Str
                         command = [command line];
                         break
                       case 'O'
-                        command = [command(1:end-3) line];
+                        command = [command line(1:end-3)];
                       case '$'
                         errFun(ln);
                         error(errId, 'A line ending with ... must be followed by a continuation line');

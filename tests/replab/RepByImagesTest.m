@@ -6,7 +6,7 @@ function test_suite = RepByImagesTest()
     end
     initTestSuite;
     % cyclotomics
-    G = replab.AbstractGroup.parsePresentation('<a, x | a^8 = x^2 = 1, x a x^-1 = a^-1 >');
+    G = replab.AbstractGroup.fromPresentation('<a, x | a^8 = x^2 = 1, x a x^-1 = a^-1 >');
     sqrt1_2 = replab.cyclotomic.sqrtRational(1,2);
     img_a = [sqrt1_2 -sqrt1_2
              sqrt1_2 sqrt1_2];
@@ -42,7 +42,7 @@ end
 
 function test_pauli_group_is_unitary_1_design
 % Pauli group from presentation
-    G = replab.AbstractGroup.parsePresentation('< x,y,z,i | i^4 = x^2 = y^2 = z^2 = 1, x i = i x, y i = i y, z i = i z, x y = i z, y z = i x, z x = i y>');
+    G = replab.AbstractGroup.fromPresentation('< x,y,z,i | i^4 = x^2 = y^2 = z^2 = 1, x i = i x, y i = i y, z i = i z, x y = i z, y z = i x, z x = i y>');
     images = {[0 1; 1 0], [0 -1i; 1i 0], [1 0; 0 -1], 1i*[1 0; 0 1]};
     rep = G.repByImages('C', 2, 'preimages', {'x' 'y' 'z' 'i'}, 'images', images);
     assert(rep.decomposition.nComponents == 1);
@@ -50,7 +50,7 @@ end
 
 function test_pauli_group_is_not_unitary_2_design
 % Pauli group from presentation
-    G = replab.AbstractGroup.parsePresentation('< x,y,z,i | i^4 = x^2 = y^2 = z^2 = 1, x i = i x, y i = i y, z i = i z, x y = i z, y z = i x, z x = i y>');
+    G = replab.AbstractGroup.fromPresentation('< x,y,z,i | i^4 = x^2 = y^2 = z^2 = 1, x i = i x, y i = i y, z i = i z, x y = i z, y z = i x, z x = i y>');
     images = {[0 1; 1 0], [0 -1i; 1i 0], [1 0; 0 -1], 1i*[1 0; 0 1]};
     images2 = cellfun(@(I) kron(I, I), images, 'uniform', 0);
     rep = G.repByImages('C', 4, 'preimages', {'x' 'y' 'z' 'i'}, 'images', images2);

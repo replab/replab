@@ -72,7 +72,7 @@ classdef DoubleCoset < replab.FiniteSet
                 b = false;
                 return
             end
-            dc = replab.DoubleCoset(self.H, el, self.K, self.parent);
+            dc = replab.DoubleCoset.make(self.H, el, self.K, self.parent);
             b = self.parent.eqv(self.representative, dc.representative);
         end
 
@@ -127,7 +127,7 @@ classdef DoubleCoset < replab.FiniteSet
         % Returns:
         %   integer: 1 if ``lhs > rhs``, 0 if ``lhs == rhs``, -1 if ``lhs < rhs``
             v = lhs - rhs;
-            ind = find(v ~= 0, 1)
+            ind = find(v ~= 0, 1);
             c = sign(v(ind));
         end
 

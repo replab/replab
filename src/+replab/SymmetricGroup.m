@@ -52,7 +52,7 @@ classdef SymmetricGroup < replab.PermutationGroup
             else
                 generators = {[2:domainSize 1] [2 1 3:domainSize]};
             end
-            self = self@replab.PermutationGroup(domainSize, generators, [], 'self');
+            self@replab.PermutationGroup(domainSize, generators, 'type', 'self');
         end
 
     end

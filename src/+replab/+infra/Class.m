@@ -32,13 +32,11 @@ classdef Class < replab.infra.SourceElement
             oe = struct;
             for i = 1:length(classData.ownMethods)
                 md = classData.ownMethods{i};
-                if ~isequal(md.name, classData.name) % remove this line to allow constructors to appear in methods listing
-                    kind = 'method';
-                    m = replab.infra.ConcreteClassElement(codeBase, package, self, md.name, md.declarationLineNumber, ...
-                                                          kind, md.declaration, md.attributes, ...
-                                                          md.docLines, md.docLineNumbers);
-                    oe.(m.name) = m;
-                end
+                kind = 'method';
+                m = replab.infra.ConcreteClassElement(codeBase, package, self, md.name, md.declarationLineNumber, ...
+                                                      kind, md.declaration, md.attributes, ...
+                                                      md.docLines, md.docLineNumbers);
+                oe.(m.name) = m;
             end
             for i = 1:length(classData.ownProperties)
                 pd = classData.ownProperties{i};

@@ -1,5 +1,14 @@
 function b = isNonZeroMatrix(A, tol)
-% Returns whether norm(A, 2) > tol
+% Returns whether the 2-norm of a matrix exceeds a given tolerance
+%
+% This function uses various matrix norm bounds to avoid computing the comparatively expensive 2-norm
+%
+% Args:
+%   A (double(\*,\*)): Matrix to check the norm of
+%   tol (double): Tolerance
+%
+% Returns:
+%   logical: True if norm(A, 2) > tol
     m = size(A, 1);
     n = size(A, 2);
     if m*n == 0
