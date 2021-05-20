@@ -25,7 +25,7 @@ classdef SignedPermutationGroup < replab.NiceFiniteGroup
                 type = replab.SignedSymmetricGroup(domainSize);
             end
             identity = 1:domainSize;
-            self@replab.NiceFiniteGroup(identity, generators, type, restArgs{:})
+            self@replab.NiceFiniteGroup(identity, generators, type, restArgs{:});
             self.domainSize = domainSize;
         end
 
