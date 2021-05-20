@@ -1277,8 +1277,9 @@ classdef Rep < replab.Obj
         %
         % Args:
         %   subgroup (`.CompactGroup`): Subgroup to restrict the representation to, must be a subgroup of `.group`
-            rep1 = replab.Rep.lambda(subgroup, self.field, self.dimension, @(g) self.image(g), @(g) self.inverseImage(g));
-        end
+            mu = subgroup.morphismByFunction(self.group, @(x) x, []);
+            rep1 = mu.andThen(self);
+       end
 
         function complexRep = complexification(self)
         % Returns the complexification of a real representation
