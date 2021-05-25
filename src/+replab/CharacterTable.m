@@ -66,6 +66,7 @@ classdef CharacterTable < replab.Obj
             assert(all(cellfun(@(n) ischar(n), args.classNames)));
             assert(all(cellfun(@(x) isempty(x) || isa(x, 'replab.Rep') || isa(x, 'function_handle'), args.irreps)));
             assert(isa(args.kronecker, 'double') || isa(args.kronecker, 'function_handle'));
+            self.kronecker_ = args.kronecker;
             self.group = group;
             self.field = field;
             self.classes = classes;

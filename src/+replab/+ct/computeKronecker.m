@@ -1,4 +1,4 @@
-function computeKronecker(ct)
+function K = computeKronecker(ct)
 % Computes the generalized Kronecker coefficients for the given character table
 %
 % Args:

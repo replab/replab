@@ -1,26 +1,16 @@
-classdef ComplexCharacterTable < replab.CharacterTable
-% Describes the standard character table of a group
-%
-% Example:
-%   >>> G = replab.PermutationGroup.dihedral(3);
-%   >>> G.characterTable
-%       Class  1a   3a   2a
-%        Size   1    2    3
-%
-%         X.1  1    1    1
-%         X.2  1    1   -1
-%         X.3  2   -1    0
+classdef RealCharacterTable < replab.CharacterTable
+% Describes the real character table of a group
 %
 % The character values are stored as elements of the cyclotomic field, using the `.cyclotomic` class which requires
 % external libraries and a Java Virtual Machine available.
 %
-% Instances of `.ComplexCharacterTable` are immutable.
+% Instances of `.RealCharacterTable` are immutable.
 %
-% See `.CharacterTable` for additional details.
+% For additional help, see `.CharacterTable`.
 
     methods
 
-        function self = ComplexCharacterTable(group, classes, values, varargin)
+        function self = RealCharacterTable(group, classes, values, varargin)
         % Constructs a character table
         %
         % Args:
@@ -35,18 +25,10 @@ classdef ComplexCharacterTable < replab.CharacterTable
         %   irrepNames (cell(1,\*) of charstring, optional): Names of irreducible representations
         %   kronecker (integer(\*,\*,\*), optional): Kronecker coefficients
             assert(strcmp(field, 'C'));
-            self@replab.CharacterTable(group, 'C', classes, values, varargin{:});
+            self@replab.CharacterTable(group, field, classes, values, varargin{:});
             nIrreps = size(values, 1);
             nClasses = size(values, 2);
             assert(nIrreps == nClasses, 'Complex character tables should have the same number of characters and conjugacy classes.');
-        end
-
-        function ind = conjugateCharacterIndices(self)
-        % For each character, returns the index of the character conjugate to it
-        %
-        % Returns:
-        %   integer(1,\*): Index of the conjugate character
-
         end
 
         function [R, C, H] = types(self)
