@@ -25,7 +25,6 @@ classdef ComplexCharacterTable < replab.CharacterTable
         %
         % Args:
         %   group (`.FiniteGroup`): Group represented by character table
-        %   field ({'R', 'C'}): Field over which the characters are defined
         %   classes (`.ConjugacyClasses`): Conjugacy classes of `.group`
         %   values (`.cyclotomic` (nClasses, nClasses)): Character values
         %
@@ -34,7 +33,6 @@ classdef ComplexCharacterTable < replab.CharacterTable
         %   classNames (cell(1,\*) of charstring, optional): Names of conjugacy classes
         %   irrepNames (cell(1,\*) of charstring, optional): Names of irreducible representations
         %   kronecker (integer(\*,\*,\*), optional): Kronecker coefficients
-            assert(strcmp(field, 'C'));
             self@replab.CharacterTable(group, 'C', classes, values, varargin{:});
             nIrreps = size(values, 1);
             nClasses = size(values, 2);
@@ -49,51 +47,51 @@ classdef ComplexCharacterTable < replab.CharacterTable
 
         end
 
-        function [R, C, H] = types(self)
-        % Returns the indices of the real/complex/quaternion-type irreducible representations
-        %
-        % Returns
-        % -------
-        %   R: integer(1,\*)
-        %     Indices of the real-type representations
-        %   C: integer(1/2,\*)
-        %     Indices of the complex-type representations, of conjugate pairs if `.overC` is true
-        %   H: integer(1,\*)
-        %     Indices of the quaternion-type representations
-            F = cellfun(@(C) C.frobeniusSchurIndicator, self.characters);
-            R = find(F == 1);
-            R = R(:)';
-            if self.overC
-                H = find(F == -1);
-                H = H(:)';
-            else
-                H = find(F == -2);
-                H = H(:)';
-            end
-            inds = find(F == 0);
-            if self.overR
-                C = inds;
-            else
-                C = zeros(2, 0);
-                while ~isempty(inds)
-                    ind = inds(1);
-                    inds = inds(2:end);
-                    v = self.values(ind,:);
-                    indC = [];
-                    for i = inds
-                        if self.values(i,:) == conj(v)
-                            indC = i;
-                            break
-                        end
-                    end
-                    if isempty(indC)
-                        error('Inconsistent character table');
-                    end
-                    C = [C [ind; indC]];
-                    inds = setdiff(inds, indC);
-                end
-            end
-        end
+% $$$         function [R, C, H] = types(self)
+% $$$         % Returns the indices of the real/complex/quaternion-type irreducible representations
+% $$$         %
+% $$$         % Returns
+% $$$         % -------
+% $$$         %   R: integer(1,\*)
+% $$$         %     Indices of the real-type representations
+% $$$         %   C: integer(1/2,\*)
+% $$$         %     Indices of the complex-type representations, of conjugate pairs if `.overC` is true
+% $$$         %   H: integer(1,\*)
+% $$$         %     Indices of the quaternion-type representations
+% $$$             F = cellfun(@(C) C.frobeniusSchurIndicator, self.characters);
+% $$$             R = find(F == 1);
+% $$$             R = R(:)';
+% $$$             if self.overC
+% $$$                 H = find(F == -1);
+% $$$                 H = H(:)';
+% $$$             else
+% $$$                 H = find(F == -2);
+% $$$                 H = H(:)';
+% $$$             end
+% $$$             inds = find(F == 0);
+% $$$             if self.overR
+% $$$                 C = inds;
+% $$$             else
+% $$$                 C = zeros(2, 0);
+% $$$                 while ~isempty(inds)
+% $$$                     ind = inds(1);
+% $$$                     inds = inds(2:end);
+% $$$                     v = self.values(ind,:);
+% $$$                     indC = [];
+% $$$                     for i = inds
+% $$$                         if self.values(i,:) == conj(v)
+% $$$                             indC = i;
+% $$$                             break
+% $$$                         end
+% $$$                     end
+% $$$                     if isempty(indC)
+% $$$                         error('Inconsistent character table');
+% $$$                     end
+% $$$                     C = [C [ind; indC]];
+% $$$                     inds = setdiff(inds, indC);
+% $$$                 end
+% $$$             end
+% $$$         end
 
     end
 
@@ -137,7 +135,7 @@ classdef ComplexCharacterTable < replab.CharacterTable
                     irreps1{i} = self.irreps{i}.imap(f);
                 end
             end
-            res = replab.ComplexCharacterTable(group1, self.field, classes1, values1, 'irreps', irreps1, 'classNames', self.classNames, 'irrepNames', self.irrepNames);
+            res = replab.ComplexCharacterTable(group1, classes1, values1, 'irreps', irreps1, 'classNames', self.classNames, 'irrepNames', self.irrepNames);
             if self.inCache('kronecker')
                 res.cache('kronecker', self.kronecker, 'error');
             end

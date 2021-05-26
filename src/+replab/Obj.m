@@ -52,9 +52,13 @@ classdef Obj < replab.Str
         % - ``=``: The existing value and the given value are compared for equality using ``==``
         % - ``error``: Raises an error
         %
+        % Note that function handles cannot be stored in the cache (if that is necessary, they can be wrapped in
+        % a scalar cell array); function handles are used to provide lazy evaluation of properties, and will be
+        % called once when the property is requested.
+        %
         % Args:
         %   name (charstring): Name of the property
-        %   value: Value of the property
+        %   value: Value of the property, or a function handle able to compute the value
         %   handleExisting ({'overwrite', 'ignore', 'isequal', '=='}, optional): What to do if the value is already known, default ``'ignore'``
             if isempty(self.cache_)
                 self.cache_ = struct;
@@ -70,9 +74,9 @@ classdef Obj < replab.Str
                     self.cache_.(name) = value;
                   case 'ignore'
                   case '=='
-                    assert(self.cache_.(name) == value);
+                    assert(self.cachedOrEmpty(name) == value);
                   case 'isequal'
-                    assert(isequal(self.cache_.(name), value));
+                    assert(isequal(self.cachedOrEmpty(name), value));
                   otherwise
                     error('Invalid argument handleExisting')
                 end
@@ -94,6 +98,10 @@ classdef Obj < replab.Str
         %   The property value if known, otherwise ``defaultValue``
             if self.inCache(name)
                 res = self.cache_.(name);
+                if isa(res, 'function_handle')
+                    res = res();
+                    self.cache_.(name) = res;
+                end
             else
                 res = defaultValue;
             end
@@ -129,6 +137,10 @@ classdef Obj < replab.Str
             end
             if isfield(self.cache_, name)
                 res = self.cache_.(name);
+                if isa(res, 'function_handle')
+                    res = res();
+                    self.cache_.(name) = res;
+                end
             else
                 res = fun();
                 self.cache_.(name) = res;

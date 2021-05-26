@@ -56,7 +56,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 self.type = type;
             end
             self.generators = generators;
-            args = struct('generatorNames', {cell(1, 0)}, 'order', {0}, 'relators', {[]});
+            args = struct('generatorNames', {cell(1, 0)}, 'order', 0, 'relators', 'none', 'abelianInvariants', 'none', ...
+                          'realCharacterTable', 'none', 'complexCharacterTable', 'none');
             args = replab.util.populateStruct(args, varargin);
             if args.order > 0
                 self.cache('order', args.order, '==');
@@ -69,9 +70,18 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 assert(length(args.generatorNames) == length(generators), 'Mismatch in the number of generator and names');
                 self.generatorNames = args.generatorNames;
             end
-            if ~isempty(args.relators)
+            if ~isequal(args.relators, 'none')
                 relators = cellfun(@(r) replab.fp.Letters.parse(r, self.generatorNames), args.relators, 'uniform', 0);
                 self.cache('relatorsInLetterForm', relators, 'error');
+            end
+            if ~isequal(args.abelianInvariants, 'none')
+                self.cache('abelianInvariants', args.abelianInvariants, 'error');
+            end
+            if ~isequal(args.realCharacterTable, 'none')
+                self.cache('realCharacterTable', args.realCharacterTable, 'error');
+            end
+            if ~isequal(args.complexCharacterTable, 'none')
+                self.cache('complexCharacterTable', args.complexCharacterTable, 'error');
             end
         end
 
@@ -232,6 +242,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         function R = computeFastRecognize(self)
             R = [];
+            return % TODO
             if self.niceMorphism.image.domainSize < replab.globals.fastChainDomainSize
                 c = self.niceMorphism.image.partialChain;
                 if ~c.isMutable
@@ -302,6 +313,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         %
         % It computes the decomposition of the factor group of this group by its derived subgroup
         % (which is abelian), and returns the primary decomposition of that abelian group.
+        %
+        % The abelian invariants are sorted in weakly increasing order.
         %
         % Example:
         %   >>> G = replab.PermutationGroup.cyclic(100);

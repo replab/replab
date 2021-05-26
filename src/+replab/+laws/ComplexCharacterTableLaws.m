@@ -1,5 +1,5 @@
 classdef ComplexCharacterTableLaws < replab.laws.CharacterTableLaws
-% Law checks for character tables
+% Law checks for complex character tables
 
     methods
 

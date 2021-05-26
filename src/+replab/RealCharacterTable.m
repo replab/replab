@@ -15,7 +15,6 @@ classdef RealCharacterTable < replab.CharacterTable
         %
         % Args:
         %   group (`.FiniteGroup`): Group represented by character table
-        %   field ({'R', 'C'}): Field over which the characters are defined
         %   classes (`.ConjugacyClasses`): Conjugacy classes of `.group`
         %   values (`.cyclotomic` (nClasses, nClasses)): Character values
         %
@@ -24,58 +23,54 @@ classdef RealCharacterTable < replab.CharacterTable
         %   classNames (cell(1,\*) of charstring, optional): Names of conjugacy classes
         %   irrepNames (cell(1,\*) of charstring, optional): Names of irreducible representations
         %   kronecker (integer(\*,\*,\*), optional): Kronecker coefficients
-            assert(strcmp(field, 'C'));
-            self@replab.CharacterTable(group, field, classes, values, varargin{:});
-            nIrreps = size(values, 1);
-            nClasses = size(values, 2);
-            assert(nIrreps == nClasses, 'Complex character tables should have the same number of characters and conjugacy classes.');
+            self@replab.CharacterTable(group, 'R', classes, values, varargin{:});
         end
 
-        function [R, C, H] = types(self)
-        % Returns the indices of the real/complex/quaternion-type irreducible representations
-        %
-        % Returns
-        % -------
-        %   R: integer(1,\*)
-        %     Indices of the real-type representations
-        %   C: integer(1/2,\*)
-        %     Indices of the complex-type representations, of conjugate pairs if `.overC` is true
-        %   H: integer(1,\*)
-        %     Indices of the quaternion-type representations
-            F = cellfun(@(C) C.frobeniusSchurIndicator, self.characters);
-            R = find(F == 1);
-            R = R(:)';
-            if self.overC
-                H = find(F == -1);
-                H = H(:)';
-            else
-                H = find(F == -2);
-                H = H(:)';
-            end
-            inds = find(F == 0);
-            if self.overR
-                C = inds;
-            else
-                C = zeros(2, 0);
-                while ~isempty(inds)
-                    ind = inds(1);
-                    inds = inds(2:end);
-                    v = self.values(ind,:);
-                    indC = [];
-                    for i = inds
-                        if self.values(i,:) == conj(v)
-                            indC = i;
-                            break
-                        end
-                    end
-                    if isempty(indC)
-                        error('Inconsistent character table');
-                    end
-                    C = [C [ind; indC]];
-                    inds = setdiff(inds, indC);
-                end
-            end
-        end
+% $$$         function [R, C, H] = types(self)
+% $$$         % Returns the indices of the real/complex/quaternion-type irreducible representations
+% $$$         %
+% $$$         % Returns
+% $$$         % -------
+% $$$         %   R: integer(1,\*)
+% $$$         %     Indices of the real-type representations
+% $$$         %   C: integer(1/2,\*)
+% $$$         %     Indices of the complex-type representations, of conjugate pairs if `.overC` is true
+% $$$         %   H: integer(1,\*)
+% $$$         %     Indices of the quaternion-type representations
+% $$$             F = cellfun(@(C) C.frobeniusSchurIndicator, self.characters);
+% $$$             R = find(F == 1);
+% $$$             R = R(:)';
+% $$$             if self.overC
+% $$$                 H = find(F == -1);
+% $$$                 H = H(:)';
+% $$$             else
+% $$$                 H = find(F == -2);
+% $$$                 H = H(:)';
+% $$$             end
+% $$$             inds = find(F == 0);
+% $$$             if self.overR
+% $$$                 C = inds;
+% $$$             else
+% $$$                 C = zeros(2, 0);
+% $$$                 while ~isempty(inds)
+% $$$                     ind = inds(1);
+% $$$                     inds = inds(2:end);
+% $$$                     v = self.values(ind,:);
+% $$$                     indC = [];
+% $$$                     for i = inds
+% $$$                         if self.values(i,:) == conj(v)
+% $$$                             indC = i;
+% $$$                             break
+% $$$                         end
+% $$$                     end
+% $$$                     if isempty(indC)
+% $$$                         error('Inconsistent character table');
+% $$$                     end
+% $$$                     C = [C [ind; indC]];
+% $$$                     inds = setdiff(inds, indC);
+% $$$                 end
+% $$$             end
+% $$$         end
 
     end
 
@@ -84,46 +79,46 @@ classdef RealCharacterTable < replab.CharacterTable
         % Obj
 
         function l = laws(self)
-            l = replab.laws.ComplexCharacterTableLaws(self);
+            l = replab.laws.RealCharacterTableLaws(self);
         end
 
     end
 
     methods
 
-        function res = imap(self, f)
-        % Maps the character table under an isomorphism
-        %
-        % Example:
-        %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]);
-        %   >>> D6b = replab.PermutationGroup.of([1 4 3 2], [1 3 4 2]);
-        %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
-        %   >>> Ca = D6a.characterTable;
-        %   >>> Cb = Ca.imap(f);
-        %   >>> Cb.laws.checkSilent;
-        %
-        % Args:
-        %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
-        %
-        % Returns:
-        %   `.ComplexCharacterTable`: The character table of the subgroup in the image of the isomorphism
-            if self.group.order < f.source.order
-                f = f.restrictedSource(self.group);
-            end
-            classes1 = self.classes.imap(f);
-            group1 = f.target;
-            values1 = self.values;
-            irreps1 = cell(1, self.nIrreps);
-            for i = 1:self.nIrreps
-                if ~isempty(self.irreps{i})
-                    irreps1{i} = self.irreps{i}.imap(f);
-                end
-            end
-            res = replab.ComplexCharacterTable(group1, self.field, classes1, values1, 'irreps', irreps1, 'classNames', self.classNames, 'irrepNames', self.irrepNames);
-            if self.inCache('kronecker')
-                res.cache('kronecker', self.kronecker, 'error');
-            end
-        end
+% $$$         function res = imap(self, f)
+% $$$         % Maps the character table under an isomorphism
+% $$$         %
+% $$$         % Example:
+% $$$         %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]);
+% $$$         %   >>> D6b = replab.PermutationGroup.of([1 4 3 2], [1 3 4 2]);
+% $$$         %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
+% $$$         %   >>> Ca = D6a.characterTable;
+% $$$         %   >>> Cb = Ca.imap(f);
+% $$$         %   >>> Cb.laws.checkSilent;
+% $$$         %
+% $$$         % Args:
+% $$$         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
+% $$$         %
+% $$$         % Returns:
+% $$$         %   `.ComplexCharacterTable`: The character table of the subgroup in the image of the isomorphism
+% $$$             if self.group.order < f.source.order
+% $$$                 f = f.restrictedSource(self.group);
+% $$$             end
+% $$$             classes1 = self.classes.imap(f);
+% $$$             group1 = f.target;
+% $$$             values1 = self.values;
+% $$$             irreps1 = cell(1, self.nIrreps);
+% $$$             for i = 1:self.nIrreps
+% $$$                 if ~isempty(self.irreps{i})
+% $$$                     irreps1{i} = self.irreps{i}.imap(f);
+% $$$                 end
+% $$$             end
+% $$$             res = replab.ComplexCharacterTable(group1, self.field, classes1, values1, 'irreps', irreps1, 'classNames', self.classNames, 'irrepNames', self.irrepNames);
+% $$$             if self.inCache('kronecker')
+% $$$                 res.cache('kronecker', self.kronecker, 'error');
+% $$$             end
+% $$$         end
 
     end
 

@@ -1043,12 +1043,18 @@ classdef cyclotomic
             ind = reshape(1:numel(res), size(res));
             res = res.data;
             I = ind(1:dim1(1), 1:dim2(1));
-            res(I) = lhs.data;
+            data = lhs.data;
+            for i = 1:length(I)
+                res(I(i)) = data(i);
+            end
             s1 = dim1(1);
             s2 = dim2(1);
             for i = 1:length(rhs)
                 I = ind(s1+(1:dim1(i+1)), s2+(1:dim2(i+1)));
-                res(I) = rhs{i}.data;
+                data = rhs{i}.data;
+                for j = 1:length(I)
+                    res(I(i)) = data(j);
+                end
                 s1 = s1 + dim1(i+1);
                 s2 = s2 + dim2(i+1);
             end
