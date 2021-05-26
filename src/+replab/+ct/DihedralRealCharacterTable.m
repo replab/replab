@@ -1,4 +1,4 @@
-function ct = DihedralCharacterTable(n)
+function ct = DihedralRealCharacterTable(n)
 % Generates the character table for the dihedral group Dn
 %
 % From
@@ -53,7 +53,6 @@ function ct = DihedralCharacterTable(n)
 
     % Irreps are generated first in 1D and then in 2D
     irreps = cell(1, nclasses);
-    w = replab.cyclotomic.E(n);
     irreps{1} = group.repByImages('C', 1, 'images', {1, 1});
     irreps{2} = group.repByImages('C', 1, 'images', {-1, 1});
     n1D = 2;
@@ -64,12 +63,13 @@ function ct = DihedralCharacterTable(n)
         n1D = 4;
     end
     for j = 1:stop
-        g1 = replab.cyclotomic.zeros(2, 2);
-        g1(1, 1) = w^j;
-        g1(2, 2) = w^(-j);
+        c = (w^j + w^(-j))/2;  % cos(2*pi*j/n)
+        s = (w^j - w^(-j))/2i; % sin(2*pi*j/n)
+        g1 = [c -s
+              s c];
         g2 = replab.cyclotomic.zeros(2, 2);
-        g2(1, 2) = 1;
-        g2(2, 1) = 1;
+        g2(1, 1) = 1;
+        g2(2, 2) = -1;
         irreps{n1D + j} = group.repByImages('C', 2, 'images', {g2, g1});
     end
 
