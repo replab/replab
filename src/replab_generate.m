@@ -82,7 +82,7 @@ function replab_generate(what)
 
     if isequal(what, 'sphinxbuild') || isequal(what, 'sphinx') || isequal(what, 'all')
         if ~exist(fullfile(rp, 'docs'))
-            mkdir('rp', 'docs');
+            mkdir(rp, 'docs');
         end
         replab.infra.cleanDir(fullfile(rp, 'docs'), {'.git'});
         if ~isequal(what, 'clear')
