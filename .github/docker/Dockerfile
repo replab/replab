@@ -17,7 +17,7 @@ RUN chmod 777 -R /workspace
 CMD ["/bin/bash"]
 
 # Copies the whole repository
-COPY entrypoint.sh .
+COPY entrypoint.sh /
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
