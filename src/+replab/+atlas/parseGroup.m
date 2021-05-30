@@ -1,4 +1,4 @@
-function G = parseGroup(data)
+function group = parseGroup(data)
 % Parses group information from the data from a JSON file
 %
 % Valid JSON looks like::
@@ -40,7 +40,6 @@ function G = parseGroup(data)
 % Returns:
 %   `.AbstractGroup`: Abstract group data
     generatorNames = data.generatorNames;
-    permutationGenerators = cellfun(@cell2mat, data.permutationGenerators, 'uniform', 0);
     relators = data.relators;
     for i = 1:length(relators)
         if isa(relators{i}, 'cell')
@@ -57,22 +56,17 @@ function G = parseGroup(data)
       otherwise
         error('Incorrect order type');
     end
-    P = replab.PermutationGroup(length(permutationGenerators{1}), permutationGenerators, 'order', order, 'generatorNames', generatorNames, 'relators', relators);
-    G = replab.AbstractGroup(generatorNames, relators, 'permutationGroup', P);
-
-    classRepresentatives = data.classes;
-    for i = 1:length(classRepresentatives)
-        r = classRepresentatives{i};
-        if ~isa(r, 'char')
-            r = group.
-            classes = cell(1, length(classesData));
-            for i = 1:length(classesData)
-                cd = classesData{i};
-                if isa(cd, 'char')
-                    classes{i} = replab.ConjugacyClass.make(group, cd);
-                else
-                    classes{i} = replab.ConjugacyClass.make(group, group.niceMorphism.preimageElement(cell2mat(cd)));
-                end
-            end
-            conjugacyClasses = replab.ConjugacyClasses(group, classes);
+    permutationGenerators = cellfun(@cell2mat, data.permutationGenerators, 'uniform', 0);
+    group = replab.AbstractGroup(generatorNames, relators, 'permutationGenerators', permutationGenerators);
+    nClasses = length(data.classes);
+    classes = cell(1, nClasses);
+    for i = 1:nClasses
+        cd = data.classes{i};
+        if isa(cd, 'char')
+            classes{i} = replab.ConjugacyClass.make(group, cd);
+        else
+            classes{i} = replab.ConjugacyClass.make(group, group.niceMorphism.preimageElement(cell2mat(cd)));
         end
+    end
+    group.cache('conjugacyClasses', replab.ConjugacyClasses(group, classes), 'error');
+end

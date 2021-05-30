@@ -43,6 +43,10 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 %   >>> f.imageElement([2 3 1])
 %       's'
 
+    properties (SetAccess = protected)
+       name % (charstring): Group name
+    end
+
     properties (Access = protected)
         groupId % (integer): Unique group id
     end
@@ -150,9 +154,10 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %   relators (cell(1,\*) of charstring, optional): Relators
         %
         % Keyword Args:
+        %   name (charstring, optional): Group name, optional
         %   order (integer, optional): Group order
         %   permutationGenerators (cell(1,\*) of permutation): Realization of the generators using permutations
-            args = struct('order', 0, 'permutationGenerators', 'none', 'generatorNames', 'none');
+            args = struct('order', 0, 'permutationGenerators', 'none', 'generatorNames', 'none', 'name', 'Abstract group');
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             assert(isequal(args.generatorNames, 'none'), 'Cannot provide generatorNames argument in addition');
             identity = '1';
@@ -164,6 +169,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
                 args1 = {};
             end
             self@replab.NiceFiniteGroup(identity, generators, type, 'generatorNames', generatorNames, 'relators', relators, args1{:}, restArgs{:});
+            self.name = args.name;
             self.groupId = replab.globals.nextUniqueId;
             if ~isequal(args.permutationGenerators, 'none')
                 if isempty(args.permutationGenerators)

@@ -2,16 +2,12 @@ classdef AtlasResult < replab.Str
 % Identifies a user-defined group as a standard group present in an atlas
 
     properties
-        userGroup % (`.FiniteGroup`): User-defined group
-        atlasEntry % (`.AtlasEntry`): Entry of the group in an atlas
         isomorphism % (`.FiniteIsomorphism`): Isomorphism from the abstract group in the atlas entry to the user group
     end
 
     methods
 
-        function self = AtlasResult(userGroup, atlasEntry, isomorphism)
-            self.userGroup = userGroup;
-            self.atlasEntry = atlasEntry;
+        function self = AtlasResult(isomorphism)
             self.isomorphism = isomorphism;
         end
 
