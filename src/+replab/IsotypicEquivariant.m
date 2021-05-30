@@ -38,7 +38,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
 %       1
 %   >>> R = E.R('double');
 %   >>> A = E.A('double');
-%   >>> tol = 1e-14;
+%   >>> tol = 1e-10;
 %   >>> norm(kron(M(:,:,1), kron(R(:,:,1), A(:,:,1))) - X, 'fro') <= tol
 %       1
 %   >>> norm(E.reconstruct(M) - X, 'fro') <= tol
