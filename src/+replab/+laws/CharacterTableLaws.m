@@ -20,8 +20,8 @@ classdef CharacterTableLaws < replab.Laws
                 return
             end
             for i = 1:self.C.nIrreps
-                irrep = self.C.irreps{i};
-                if ~isempty(irrep)
+                if self.C.hasIrrep(i)
+                    irrep = self.C.irrep(i);
                     for j = 1:self.C.nClasses
                         [c1, err1] = doubleApproximation(self.C.values(i, j));
                         c2 = trace(irrep.image(self.C.classes.classes{j}.representative));
@@ -40,6 +40,9 @@ classdef CharacterTableLaws < replab.Laws
                     chi2 = self.C.character(i2);
                     res(i1, i2) = dot(chi1, chi2);
                 end
+            end
+            if self.C.overR
+                res = double(res ~= 0);
             end
             self.assert(all(all(res == replab.cyclotomic.eye(n))));
         end
