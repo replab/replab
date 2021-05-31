@@ -20,6 +20,5 @@ function A = alternating(n)
             relators{1,end+1} = sprintf('(t s^-%d t s^%d)^2', k, k);
         end
     end
-    ag = replab.AbstractGroup({'s' 't'}, relators, 'permutationGenerators', {S, T}, 'order', replab.util.factorial(n)/2);
-    A = replab.AtlasEntry(name, ag, []);
+    A = replab.AbstractGroup({'s' 't'}, relators, 'permutationGenerators', {S, T}, 'order', replab.util.factorial(n)/2, 'name' , name);
 end

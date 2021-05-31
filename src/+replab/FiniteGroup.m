@@ -345,17 +345,29 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
         end
 
-        function c = characterTable(self)
-        % Returns the (complex) character table of this group
+        function c = characterTable(self, field)
+        % Returns the (real or complex) character table of this group
         %
         % The complex character table is the standard, textbook character table of the group.
         %
         % Note that randomized techniques are used to find group isomorphisms, and thus the output of this
         % method may not be deterministic.
         %
+        % Args:
+        %   field ('R', 'C', optional): Field over which to define the irreps, default 'C'
+        %
         % Returns:
-        %   `.ComplexCharacterTable`: Character table
-            c = self.cached('characterTable', @() self.computeCharacterTable);
+        %   `.CharacterTable`: Character table
+            if nargin < 2 || isempty(field)
+                field = 'C';
+            end
+            if strcmp(field, 'R')
+                c = self.cached('realCharacterTable', @() self.computeRealCharacterTable);
+            elseif strcmp(field, 'C')
+                c = self.cached('complexCharacterTable', @() self.computeComplexCharacterTable);
+            else
+                error('Incorrect field');
+            end
         end
 
         function R = fastRecognize(self)
