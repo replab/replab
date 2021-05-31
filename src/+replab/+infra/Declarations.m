@@ -51,7 +51,7 @@ classdef Declarations < replab.Str
             els = self.findAll;
             mask = cellfun(@(e) isfield(e.attributes, 'group'), els);
             groups = unique(cellfun(@(e) e.attributes.group, els(mask), 'uniform', 0));
-            if length(groups) > 1
+            if length(groups) > 1 && replab.globals.warnOnMultipleMethodGroups
                 warning('Element %s belongs to more than one group: %s', self.classElement.fullIdentifier, strjoin(groups, ' & '));
             end
             if isempty(groups)

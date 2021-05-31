@@ -28,7 +28,8 @@ classdef DirectProductGroup_compact < replab.DirectProductGroup & replab.Compact
             T = replab.T(N);
             sets = cell(1, 0);
             for i = 1:n
-                [~, Ri] = self.factor(i).reconstruction;
+                Fi = self.factor(i);
+                [~, Ri] = Fi.reconstruction;
                 e = self.injection(i);
                 sets = horzcat(sets, cellfun(@(S) cellfun(@(s) e.imageElement(s), S, 'uniform', 0), Ri.sets, 'uniform', 0));
             end
