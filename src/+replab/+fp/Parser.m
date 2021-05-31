@@ -118,6 +118,9 @@ classdef Parser
                 e = -e; % invert
                 w = fliplr(-w);
             end
+            if e == 0
+                w = zeros(1, 0);
+            end
             if e > 1
                 w = repmat(w, 1, e);
             end
