@@ -472,6 +472,7 @@ classdef PermutationGroup < replab.FiniteGroup
                     end
                 end
             end
+            chain.makeImmutable;
             nc = replab.PermutationGroup(self.domainSize, generators, 'order', chain.order, 'type', self.type, 'chain', chain);
         end
 

@@ -16,7 +16,7 @@ classdef RealCharacterTable < replab.CharacterTable
         % Args:
         %   group (`.FiniteGroup`): Group represented by character table
         %   classes (`.ConjugacyClasses`): Conjugacy classes of `.group`
-        %   values (`.cyclotomic` (nClasses, nClasses)): Character values
+        %   values (`.cyclotomic` (nIrreps, nClasses)): Character values
         %
         % Keyword Args:
         %   irreps (cell(1,\*) of ``[]`` or `+replab.RepByImages`, optional): Explicit matrix representations (can contain empty values)
@@ -86,39 +86,21 @@ classdef RealCharacterTable < replab.CharacterTable
 
     methods
 
-% $$$         function res = imap(self, f)
-% $$$         % Maps the character table under an isomorphism
-% $$$         %
-% $$$         % Example:
-% $$$         %   >>> D6a = replab.PermutationGroup.of([3 2 1], [2 3 1]);
-% $$$         %   >>> D6b = replab.PermutationGroup.of([1 4 3 2], [1 3 4 2]);
-% $$$         %   >>> f = D6a.isomorphismByImages(D6b, 'preimages', D6a.generators, 'images', D6b.generators);
-% $$$         %   >>> Ca = D6a.characterTable;
-% $$$         %   >>> Cb = Ca.imap(f);
-% $$$         %   >>> Cb.laws.checkSilent;
-% $$$         %
-% $$$         % Args:
-% $$$         %   f (`.FiniteIsomorphism`): Isomorphism with ``self.group.isSubgroupOf(f.source)``
-% $$$         %
-% $$$         % Returns:
-% $$$         %   `.ComplexCharacterTable`: The character table of the subgroup in the image of the isomorphism
-% $$$             if self.group.order < f.source.order
-% $$$                 f = f.restrictedSource(self.group);
-% $$$             end
-% $$$             classes1 = self.classes.imap(f);
-% $$$             group1 = f.target;
-% $$$             values1 = self.values;
-% $$$             irreps1 = cell(1, self.nIrreps);
-% $$$             for i = 1:self.nIrreps
-% $$$                 if ~isempty(self.irreps{i})
-% $$$                     irreps1{i} = self.irreps{i}.imap(f);
-% $$$                 end
-% $$$             end
-% $$$             res = replab.ComplexCharacterTable(group1, self.field, classes1, values1, 'irreps', irreps1, 'classNames', self.classNames, 'irrepNames', self.irrepNames);
-% $$$             if self.inCache('kronecker')
-% $$$                 res.cache('kronecker', self.kronecker, 'error');
-% $$$             end
-% $$$         end
+        function res = imap(self, f)
+            classes1 = self.classes.imap(f);
+            group1 = f.target;
+            values1 = self.values;
+            irreps1 = cell(1, self.nIrreps);
+            for i = 1:self.nIrreps
+                if ~isempty(self.irreps{i})
+                    irreps1{i} = self.irreps{i}.imap(f);
+                end
+            end
+            res = replab.RealCharacterTable(group1, classes1, values1, 'irreps', irreps1, 'classNames', self.classNames, 'irrepNames', self.irrepNames);
+            if self.inCache('kronecker')
+                res.cache('kronecker', self.kronecker, 'error');
+            end
+        end
 
     end
 

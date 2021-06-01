@@ -105,6 +105,35 @@ classdef ComplexCharacterTable < replab.CharacterTable
 
     end
 
+    methods (Static)
+
+        function C = fromRealCharacterTable(R)
+        % Creates a complex character table from a real character table
+        %
+        % This works only if its real irreducible representations are absolutely irreducible;
+        % though that fact is not checked by this method.
+        %
+        % Args:
+        %   R (`.RealCharacterTable`)
+        %
+        % Returns:
+        %   `.ComplexCharacterTable`: The corresponding complex character table
+            irreps = cell(1, R.nIrreps);
+            for i = 1:R.nIrreps
+                if R.hasIrrep(i)
+                    images = cell(1, R.group.nGenerators);
+                    for j = 1:R.group.nGenerators
+                        images{j} = R.irrep(i).image(R.group.generator(j), 'exact');
+                    end
+                    irreps{i} = R.group.repByImages('C', R.irrep(i).dimension, 'preimages', R.group.generators, 'images', images);
+                else
+                    irreps{i} = [];
+                end
+            end
+            C = replab.ComplexCharacterTable(R.group, R.classes, R.values, 'irreps', irreps, 'classNames', R.classNames, 'irrepNames', R.irrepNames);
+        end
+    end
+
     methods
 
         function res = imap(self, f)

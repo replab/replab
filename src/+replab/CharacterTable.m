@@ -24,7 +24,7 @@ classdef CharacterTable < replab.Obj
     end
 
     properties (Access = protected)
-        irreps_ % (cell(1, nClasses) of ``[]`` or `.RepByImages` or function_handle): Explicit representations (can contain empty values)
+        irreps_ % (cell(1, nClasses) of ``[]`` or `.Rep` or function_handle): Explicit representations (can contain empty values)
         kronecker_ % (integer(\*,\*,\*) or function_handle): Kronecker coefficients
     end
 
@@ -40,7 +40,7 @@ classdef CharacterTable < replab.Obj
         %   values (`.cyclotomic` (nClasses, nClasses)): Character values
         %
         % Keyword Args:
-        %   irreps (cell(1,\*) of ``[]`` or `+replab.RepByImages` or function_handle, optional): Explicit matrix representations (can contain empty values)
+        %   irreps (cell(1,\*) of ``[]`` or `+replab.Rep` or function_handle, optional): Explicit matrix representations (can contain empty values)
         %   classNames (cell(1,\*) of charstring, optional): Names of conjugacy classes
         %   irrepNames (cell(1,\*) of charstring, optional): Names of irreducible representations
         %   kronecker (integer(\*,\*,\*) or function_handle, optional): Kronecker coefficients
