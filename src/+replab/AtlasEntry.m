@@ -100,8 +100,13 @@ classdef AtlasEntry < replab.Obj
 
         function res = canMatch(self, group)
         % Returns whether this atlas entry can match the given group
-            gAE = cellfun(@(d) d.abelianInvariants, group.derivedSeries, 'uniform', 0);
-            res = isequal(gAE, self.derivedSeriesAbelianInvariants);
+            res = false;
+            x = self.derivedSeriesAbelianInvariants;
+            y = cellfun(@(d) d.abelianInvariants, group.derivedSeries, 'uniform', 0);
+            if length(x) ~= length(y)
+                return
+            end
+            res = all(arrayfun(@(i) length(x{i}) == length(y{i}) && all(x{i} == y{i}), 1:length(x)));
             % TODO: tests based on conjugacy classes
         end
 
@@ -121,7 +126,7 @@ classdef AtlasEntry < replab.Obj
                 r = [];
                 return
             end
-            r = replab.AtlasResult(group, self, m);
+            r = replab.AtlasResult(m);
         end
 
     end

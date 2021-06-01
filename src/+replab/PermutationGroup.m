@@ -35,6 +35,7 @@ classdef PermutationGroup < replab.FiniteGroup
             self@replab.FiniteGroup(identity, generators, type, restArgs{:});
             self.domainSize = domainSize;
             if ~isempty(args.chain)
+                assert(~args.chain.isMutable);
                 self.cache('chain', args.chain, 'ignore');
             end
         end
@@ -198,6 +199,7 @@ classdef PermutationGroup < replab.FiniteGroup
                     end
                 end
             end
+            chain.makeImmutable;
             sub = replab.PermutationGroup(self.domainSize, generators, 'order', chain.order, 'type', self.type, 'chain', chain);
         end
 

@@ -57,7 +57,12 @@ function group = parseGroup(data)
         error('Incorrect order type');
     end
     permutationGenerators = cellfun(@cell2mat, data.permutationGenerators, 'uniform', 0);
-    group = replab.AbstractGroup(generatorNames, relators, 'permutationGenerators', permutationGenerators);
+    if isfield(data, 'name')
+        name = data.name;
+    else
+        name = 'Abstract group';
+    end
+    group = replab.AbstractGroup(generatorNames, relators, 'permutationGenerators', permutationGenerators, 'name', name);
     nClasses = length(data.classes);
     classes = cell(1, nClasses);
     for i = 1:nClasses

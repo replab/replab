@@ -12,29 +12,30 @@ classdef AtlasResult < replab.Str
         end
 
         function s = headerStr(self)
-            s = ['AtlasResult (' self.atlasEntry.name ')'];
+            s = ['AtlasResult (' self.isomorphism.source.name ')'];
         end
 
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Str(self);
             names{1,end+1} = 'presentation';
             values{1,end+1} = self.presentation;
-            for i = 1:self.atlasEntry.group.nGenerators
-                g = self.atlasEntry.group.generator(i);
+            source = self.isomorphism.source;
+            for i = 1:source.nGenerators
+                g = source.generator(i);
                 names{1,end+1} = sprintf('isomorphism.imageElement(''%s'')', g);
                 values{1,end+1} = self.isomorphism.imageElement(g);
             end
             names{1,end+1} = 'name';
-            values{1,end+1} = self.atlasEntry.name;
+            values{1,end+1} = source.name;
         end
 
         function f = presentation(self)
-            f = self.atlasEntry.group.presentation;
+            f = self.isomorphism.source.presentation;
         end
 
         function A = imap(self, m)
         % Maps the userGroup through an isomorphism
-            A = replab.AtlasResult(m.target, self.atlasEntry, self.isomorphism.andThen(m));
+            A = replab.AtlasResult(self.isomorphism.andThen(m));
         end
 
 % $$$         function G = allStandardGenerators(self)

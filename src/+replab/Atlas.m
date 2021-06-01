@@ -14,8 +14,8 @@ classdef Atlas
                         entries{1, end+1} = replab.AtlasEntry.fromFile(file.name);
                     catch
                         err = lasterror;
-                        fprintf('Error while reading %s\n', filename);
-                        fprintf(strjoin(replab.longStr(err), '\n'));
+                        fprintf('Error while reading %s\n', file.name);
+                        fprintf(strjoin(horzcat(err.message, replab.longStr(err.stack).'), '\n'));
                     end
                 end
             end

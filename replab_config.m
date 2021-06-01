@@ -38,7 +38,7 @@ replab.globals.yolo(true);
 replab.globals.verifiedArithmetic(false);
 
 % Read additional JSON atlas entries
-replab.Atlas.readFolder(fullfile(replab.globals.replabPath, 'atlas'));
+replab.Atlas.read
 
 % If you have GAP 4 installed, set the path below
 % replab.globals.gapBinaryPath('/opt/gap4/bin/gap.sh');
