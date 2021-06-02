@@ -1,0 +1,25 @@
+{
+    "group": {
+	"name": "Trivial group",
+	"relators": [],
+	"order": "1",
+	"generatorNames": [],
+	"permutationGenerators": [],
+	"classes": ["1"],
+	"derivedSeriesAbelianInvariants": [[]]
+    },
+    "complexCharacterTable": {
+	"classNames": ["1"],
+	"characters": [[1]],
+	"irreps": [
+	    []
+	]
+    },
+    "realCharacterTable": {
+	"classNames": ["1"],
+	"characters": [[1]],
+	"irreps": [
+	    []
+	]
+    }
+}

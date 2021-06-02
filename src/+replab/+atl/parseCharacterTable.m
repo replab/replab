@@ -22,7 +22,11 @@ function C = parseCharacterTable(group, field, data)
                 img = [img{:}].';
                 images{j} = replab.cyclotomic(img);
             end
-            irreps{i} = group.repByImages(field, size(images{1}, 1), 'images', images);
+            if length(images) == 0
+                irreps{i} = group.trivialRep(field, 1);
+            else
+                irreps{i} = group.repByImages(field, size(images{1}, 1), 'images', images);
+            end
         end
         args = horzcat(args, {'irreps', irreps});
     end

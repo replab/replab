@@ -62,7 +62,7 @@ function group = parseGroup(data)
     else
         name = 'Abstract group';
     end
-    group = replab.AbstractGroup(generatorNames, relators, 'permutationGenerators', permutationGenerators, 'name', name);
+    group = replab.AbstractGroup(generatorNames, relators, 'permutationGenerators', permutationGenerators, 'name', name, 'inAtlas', true);
     nClasses = length(data.classes);
     classes = cell(1, nClasses);
     for i = 1:nClasses

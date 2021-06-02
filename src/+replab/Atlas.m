@@ -41,10 +41,10 @@ classdef Atlas
             if ~isempty(R)
                 return
             end
-            %            R = replab.atl.Dihedral.recognize(group);
-            %if ~isempty(R)
-            %    return
-            %end
+            R = replab.atl.Dihedral.recognize(group);
+            if ~isempty(R)
+                return
+            end
             R = replab.atl.Symmetric.recognize(group);
             if ~isempty(R)
                 return

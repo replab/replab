@@ -22,6 +22,7 @@ classdef FindMorphisms
 
         function self = FindMorphisms(F, G, A, filter, single)
         % Constructor
+            assert(~F.isTrivial, 'Cannot work with the trivial group as a source');
             assert(G == A); % for now, contact D. Holt to know how to compute representative of conjugacy classes in subgroups
             r = F.nGenerators;
             h = cellfun(@(c) c.representative, G.conjugacyClasses.classes, 'uniform', 0);
@@ -31,6 +32,7 @@ classdef FindMorphisms
             CI = cell(1, r);
             relatorLetters = cellfun(@(rel) F.wordToLetters(rel), F.relators, 'uniform', 0);
             relmax = cellfun(@(rl) max(abs(rl)), relatorLetters);
+            relatorSubsets = zeros(1, 0);
             for i = 1:r
                 relatorSubsets(i) = find([relmax > i, true], 1) - 1;
             end

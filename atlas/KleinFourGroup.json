@@ -6,7 +6,7 @@
 	"generatorNames": ["a", "x"],
 	"permutationGenerators": [[2,1,4,3], [3,4,1,2]],
 	"classes": ["1", "x", "a", "x a"],
-	"derivedSeriesAbelianInvariants": [[2 2], []]
+	"derivedSeriesAbelianInvariants": [[2, 2], []]
     },
     "complexCharacterTable": {
 	"classNames": ["1", "x", "a", "x a"],

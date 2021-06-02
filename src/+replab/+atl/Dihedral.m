@@ -182,7 +182,7 @@ classdef Dihedral
             % Presentation from the groupprops wiki
             % < a, x | a^n = x^2 = 1, x a x^-1 = a^-1 >
             relators = {sprintf('a^%d', n) 'x^2' 'x a x^-1 a'};
-            G = replab.AbstractGroup({'a', 'x'}, relators, 'permutationGenerators', {A, X}, 'order', vpi(2*n), 'inAtlas', true);
+            G = replab.AbstractGroup({'a', 'x'}, relators, 'permutationGenerators', {A, X}, 'order', vpi(2*n), 'name', name, 'inAtlas', true);
             [C, stop] = replab.atl.Dihedral.classReps(n);
             classList = cellfun(@(r) G.permutationGroup.conjugacyClass(r), C, 'uniform', 0);
             classes = replab.ConjugacyClasses(G.permutationGroup, classList);

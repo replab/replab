@@ -106,6 +106,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function names = hiddenFields(self)
             names = hiddenFields@replab.Group(self);
             names{1, end+1} = 'generators';
+            names{1, end+1} = 'generatorNames';
+            names{1, end+1} = 'type';
             names{1, end+1} = 'representative';
         end
 
@@ -1212,6 +1214,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             if args.single
                 args.upToConjugation = true;
             end
+            if self.isTrivial
+                if to.isTrivial
+                    res = {self.isomorphismByImages(to, 'preimages', {}, 'images', {})};
+                else
+                    res = [];
+                end
+                return
+            end
             F = self.abstractGroup;
             G = to;
             A = to;
@@ -1263,6 +1273,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 end
             else
                 filter = 'morphisms';
+            end
+            if self.isTrivial
+                res = {self.morphismByImages(to, 'preimages', {}, 'images', {})};
+                return
             end
             F = self;
             G = to;

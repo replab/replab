@@ -39,7 +39,7 @@ classdef Cyclic
             X = [2:n 1];
             % standard presentation
             % < x | x^n = 1 >
-            G = replab.AbstractGroup({'x'}, {['x^' num2str(n)]}, 'permutationGenerators', {X}, 'order', vpi(n), 'inAtlas', true);
+            G = replab.AbstractGroup({'x'}, {['x^' num2str(n)]}, 'permutationGenerators', {X}, 'order', vpi(n), 'name', name, 'inAtlas', true);
             classArray = arrayfun(@(r) G.conjugacyClass(sprintf('x^%d', r)), 0:n-1, 'uniform', 0);
             classes = replab.ConjugacyClasses(G, classArray);
 

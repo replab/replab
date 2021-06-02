@@ -301,7 +301,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         % Str
 
         function s = shortStr(self, maxColumns)
-            s = self.presentation;
+            s = [self.name ' ' self.presentation];
         end
 
         function h = headerStr(self)
