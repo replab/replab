@@ -75,7 +75,7 @@ testpath==0.4.4           # via nbconvert
 texext==0.6.5             # via -r requirements.in
 tornado==6.0.4            # via ipykernel, ipyparallel, jupyter-client
 traitlets==4.3.3          # via ipykernel, ipyparallel, ipython, jupyter-client, jupyter-core, nbconvert, nbformat, nbsphinx
-urllib3==1.25.8           # via requests
+urllib3==1.26.5           # via requests
 watchdog==0.10.2          # via ablog
 wcwidth==0.1.8            # via prompt-toolkit
 webencodings==0.5.1       # via bleach
