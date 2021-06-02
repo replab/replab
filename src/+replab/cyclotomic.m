@@ -583,6 +583,11 @@ classdef cyclotomic
             res = reshape(javaMethod('eqv', 'cyclo.Lab', lhs.data, rhs.data), size(lhs));
         end
 
+        function res = galois(self, ord)
+        % Action of the Galois group
+            res = replab.cyclotomic(javaMethod('galois', 'cyclo.Lab', self.data, ord), size(self));
+        end
+
         function res = kron(lhs, rhs)
             lhs = replab.cyclotomic(lhs);
             rhs = replab.cyclotomic(rhs);
