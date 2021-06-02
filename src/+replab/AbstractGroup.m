@@ -45,6 +45,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
     properties (SetAccess = protected)
        name % (charstring): Group name
+       inAtlas % (logical): Whether this group is already part of the atlas
     end
 
     properties (Access = protected)
@@ -135,10 +136,20 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             m = replab.FiniteIsomorphism.identity(self);
         end
 
+        function R = computeRecognize(self)
+            R = [];
+            if ~self.inAtlas
+                R = replab.Atlas.recognize(self);
+            end
+        end
+
         function R = computeFastRecognize(self)
-            R = self.niceGroup.fastRecognize;
-            if ~isempty(R)
-                R = R.imap(self.niceMorphism.inverse);
+            R = [];
+            if ~self.inAtlas
+                R = self.niceGroup.fastRecognize;
+                if ~isempty(R)
+                    R = R.andThen(self.niceMorphism.inverse);
+                end
             end
         end
 
@@ -157,7 +168,8 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %   name (charstring, optional): Group name, optional
         %   order (integer, optional): Group order
         %   permutationGenerators (cell(1,\*) of permutation): Realization of the generators using permutations
-            args = struct('order', 0, 'permutationGenerators', 'none', 'generatorNames', 'none', 'name', 'Abstract group');
+        %   inAtlas (logical, optional): Whether this group is part of the atlas
+            args = struct('order', 0, 'permutationGenerators', 'none', 'generatorNames', 'none', 'name', 'Abstract group', 'inAtlas', false);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
             assert(isequal(args.generatorNames, 'none'), 'Cannot provide generatorNames argument in addition');
             identity = '1';
@@ -171,6 +183,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             self@replab.NiceFiniteGroup(identity, generators, type, 'generatorNames', generatorNames, 'relators', relators, args1{:}, restArgs{:});
             self.name = args.name;
             self.groupId = replab.globals.nextUniqueId;
+            self.inAtlas = args.inAtlas;
             if ~isequal(args.permutationGenerators, 'none')
                 if isempty(args.permutationGenerators)
                     domainSize = 1;
@@ -298,6 +311,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         function names = hiddenFields(self)
             names = hiddenFields@replab.NiceFiniteGroup(self);
             names{1,end+1} = 'type';
+            names{1,end+1} = 'inAtlas';
         end
 
         function [names, values] = additionalFields(self)

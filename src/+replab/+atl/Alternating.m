@@ -11,7 +11,7 @@ classdef Alternating
             end
             n = double(n);
             C = G.conjugacyClasses.classes;
-            entry = replab.atlas.Alternating.make(n);
+            entry = replab.atl.Alternating.make(n);
             for i = 1:length(C)
                 S = C{i};
                 s = S.representative;
@@ -24,7 +24,7 @@ classdef Alternating
                                 t = U{k};
                                 if entry.isMorphismByImages(G, 'images', {s t})
                                     if G.subgroup({s, t}).order == G.order
-                                        R = replab.AtlasResult(entry.isomorphismByImages(G, 'images', {s t}));
+                                        R = entry.isomorphismByImages(G, 'images', {s t});
                                         return
                                     end
                                 end
@@ -57,9 +57,7 @@ classdef Alternating
                     relators{1,end+1} = sprintf('(t s^-%d t s^%d)^2', k, k);
                 end
             end
-            G = replab.AbstractGroup({'s' 't'}, relators, 'permutationGenerators', {S, T}, 'order', replab.util.factorial(n)/2, 'name' , name);
-            G.cache('realCharacterTable', @() replab.atlas.unavailable('Not available'), 'error');
-            G.cache('complexCharacterTable', @() replab.atlas.unavailable('Not available'), 'error');
+            G = replab.AbstractGroup({'s' 't'}, relators, 'permutationGenerators', {S, T}, 'order', replab.util.factorial(n)/2, 'name' , name, 'inAtlas', true);
         end
 
     end

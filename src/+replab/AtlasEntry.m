@@ -40,13 +40,13 @@ classdef AtlasEntry < replab.Obj
         function G = computeGroup(self)
         % Computes the group stored in this entry from the known JSON data
             data = self.data;
-            G = replab.atlas.parseGroup(data.group);
+            G = replab.atl.parseGroup(data.group);
             if isfield(data, 'realCharacterTable')
-                realCharacterTable = replab.atlas.parseCharacterTable(G, 'R', data.realCharacterTable);
+                realCharacterTable = replab.atl.parseCharacterTable(G, 'R', data.realCharacterTable);
                 G.cache('realCharacterTable', realCharacterTable, 'error');
             end
             if isfield(data, 'complexCharacterTable')
-                complexCharacterTable = replab.atlas.parseCharacterTable(G, 'C', data.complexCharacterTable);
+                complexCharacterTable = replab.atl.parseCharacterTable(G, 'C', data.complexCharacterTable);
                 G.cache('complexCharacterTable', complexCharacterTable, 'error');
             end
         end
@@ -110,23 +110,14 @@ classdef AtlasEntry < replab.Obj
             % TODO: tests based on conjugacy classes
         end
 
-        function m = isomorphism(self, group)
-        % Finds the isomorphism from the stored atlas group to the given group
+        function m = match(self, group)
+        % Attemps to match the given group to this group
+        %
+        % Returns, if it exists, the isomorphism from the stored atlas group to the given group
         %
         % Returns:
         %   `.FiniteIsomorphism` or ``[]``: The isomorphism if it exists or ``[]``
-
             m = self.group.findIsomorphism(group);
-        end
-
-        function r = match(self, group)
-        % Attemps to match the given group to this group
-            m = self.isomorphism(group);
-            if isempty(m)
-                r = [];
-                return
-            end
-            r = replab.AtlasResult(m);
         end
 
     end

@@ -366,7 +366,7 @@ classdef PermutationGroup < replab.FiniteGroup
             if nargin < 2 || isempty(generatorNames)
                 generatorNames = self.generatorNames;
             end
-            A = replab.AbstractGroup(generatorNames, self.relators(generatorNames), 'permutationGroup', self.withGeneratorNames(generatorNames));
+            A = replab.AbstractGroup(generatorNames, self.relators(generatorNames), 'permutationGenerators', self.generators);
         end
 
         function m = abstractMorphism(self, generatorNames)

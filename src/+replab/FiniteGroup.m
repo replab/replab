@@ -117,8 +117,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
             r = self.fastRecognize;
             if ~isempty(r)
-                names{1,end+1} = 'recognize';
-                values{1,end+1} = r;
+                names{1,end+1} = 'recognize.source';
+                values{1,end+1} = r.source;
             end
         end
 
@@ -226,13 +226,13 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-        function c = computeCharacterTable(self)
+        function c = computeCharacterTable(self, field)
         % See `.characterTable`
             r = self.recognize;
-            assert(~isempty(r), 'This group has not been recognized.');
-            c = r.atlasEntry.characterTable;
-            assert(~isempty(c), 'This group does not have a stored character table.');
-            c = c.imap(r.isomorphism);
+            assert(~isempty(r), 'No character table information available for this group.');
+            c = r.source.characterTable(field);
+            assert(~isempty(c), 'No character table information available for this group.');
+            c = c.imap(r);
         end
 
         function c = computeConjugacyClasses(self)
@@ -361,9 +361,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 field = 'C';
             end
             if strcmp(field, 'R')
-                c = self.cached('realCharacterTable', @() self.computeRealCharacterTable);
+                c = self.cached('realCharacterTable', @() self.computeCharacterTable('R'));
             elseif strcmp(field, 'C')
-                c = self.cached('complexCharacterTable', @() self.computeComplexCharacterTable);
+                c = self.cached('complexCharacterTable', @() self.computeCharacterTable('C'));
             else
                 error('Incorrect field');
             end
