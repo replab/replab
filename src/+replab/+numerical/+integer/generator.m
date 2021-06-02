@@ -39,7 +39,7 @@ function g = generator(n)
         k = nf(1);
         g = replab.numerical.integer.generatorp(p);
         if k > 1
-            if powmod(g, p-1, p^2) == 1
+            if replab.numerical.integer.powmod(g, p-1, p^2) == 1
                 % This happens first for the prime 40487,
                 % that is for $n = 40487^2 = 1639197169$.
                 % The \texttt{powmod.m} routine will then incorrectly

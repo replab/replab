@@ -5,13 +5,7 @@ function test_suite = CyclicCharacterTableTest()
     catch
     end
     initTestSuite;
-end
-
-function test_C3
-% Cyclic group or order 3
-    ct = replab.ct.CyclicCharacterTable(3);
-    %expressions = {'E(3)^0', 'E(3)^0', 'E(3)^0';
-    %               'E(3)^0', 'E(3)^1', 'E(3)^2';
-    %               'E(3)^0', 'E(3)^2', 'E(3)^1'};
-    %assert(isequal(ct.characterExpressions, expressions))
+    G = replab.atl.Cyclic.make(3);
+    test_suite = G.characterTable('R').laws.addTestCases(test_suite);
+    test_suite = G.characterTable('C').laws.addTestCases(test_suite);
 end

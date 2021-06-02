@@ -7,9 +7,9 @@ function generators = generatorsPrimeResidues(n)
 %   >>> replab.numerical.integer.generatorsPrimeResidues(1)
 %       {}
 %   >>> replab.numerical.integer.generatorsPrimeResidues(4*3)
-%       {[7], [5]}
+%       {7 5}
 %   >>> replab.numerical.integer.generatorsPrimeResidues(8*9*5)
-%       {[271, 181], [281], [217]}
+%       {[271, 181] 281 217}
 
 % Args:
 %   n (integer): Positive integer
