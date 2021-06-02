@@ -297,6 +297,11 @@ classdef PermutationGroup < replab.FiniteGroup
             end
         end
 
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.FiniteGroup(self);
+            names{1,end+1} = 'domainSize';
+        end
+
         % replab.Obj
 
         function l = laws(self)
