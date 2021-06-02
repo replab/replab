@@ -53,14 +53,6 @@ classdef Atlas
             if ~isempty(R)
                 return
             end
-        % $$$             R = replab.Atlas.recognizeTrivial(group);
-        % $$$             if ~isempty(R)
-        % $$$                 return
-        % $$$             end
-        % $$$             R = replab.Atlas.recognizeKlein(group);
-        % $$$             if ~isempty(R)
-% $$$                 return
-% $$$             end
             R = [];
         end
 
