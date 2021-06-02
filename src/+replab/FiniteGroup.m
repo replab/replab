@@ -114,7 +114,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Group(self);
             for i = 1:self.nGenerators
-                names{1, end+1} = sprintf('generator(%d)', i);
+                names{1, end+1} = sprintf('generator(%d or ''%s'')', i, self.generatorNames{i});
                 values{1, end+1} = self.generator(i);
             end
             r = self.fastRecognize;
@@ -508,10 +508,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns the i-th group generator
         %
         % Args:
-        %   i (integer): Generator index
+        %   i (integer, charstring): Generator index or name
         %
         % Returns:
         %   element: i-th group generator
+            if isa(i, 'char')
+                [b, i] = ismember(i, self.generatorNames);
+                assert(b, 'Not a valid generator name');
+            end
             p = self.generators{i};
         end
 
