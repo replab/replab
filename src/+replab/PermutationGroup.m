@@ -98,7 +98,7 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function E = computeElements(self)
-            basis = replab.util.MixedRadix(self.lexChain.orbitSizes, true, true);
+            basis = replab.util.MixedRadix(self.lexChain.orbitSizes, true, false);
             atFun = @(ind) self.lexChain.elementFromIndices(basis.ind2sub(ind));
             findFun = @(el) basis.sub2ind(self.lexChain.indicesFromElement(el));
             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);

@@ -45,17 +45,38 @@ classdef Cyclic
 
             % Generate irreps with images as increasing powers of E(n)
             w = replab.cyclotomic.E(n);
-            irreps = arrayfun(@(x) G.repByImages('C', 1, 'images', {w^x}), 0:n-1, 'uniform', 0);
-
+            irrepsC = arrayfun(@(x) G.repByImages('C', 1, 'images', {w^x}), 0:n-1, 'uniform', 0);
             % Generate characters with increasing powers of conjugacy classes and irreps
-            chars = replab.cyclotomic.zeros(n, n);
+            charsC = replab.cyclotomic.zeros(n, n);
             for i = 1:n
                 for j = 1:n
-                    chars(i, j) = w^mod((i-1) * (j-1), n);
+                    charsC(i, j) = w^mod((i-1) * (j-1), n);
                 end
             end
-            ct = replab.ComplexCharacterTable(G, classes, chars, 'irreps', irreps);
-            G.cache('complexCharacterTable', ct, 'error');
+            % Generate real irreps
+            if even(n)
+                irrepsR = {G.repByImages('R', 1, 'images', {1}) G.repByImages('R', 1, 'images', {-1})};
+            else
+                irrepsR = {G.repByImages('R', 1, 'images', {1})};
+            end
+            for j = 1:floor((n-1)/2)
+                c = (w^j + w^(-j))/2;  % cos(2*pi*j/n)
+                s = (w^j - w^(-j))/2i; % sin(2*pi*j/n)
+                img = [c -s
+                       s  c];
+                irrepsR{1,end+1} = G.repByImages('R', 2, 'images', {[c -s; s c]});
+            end
+            charsR = replab.cyclotomic.zeros(length(irrepsR), n);
+            for i = 1:length(irrepsR)
+                for j = 1:n
+                    r = classes.classes{j}.representative;
+                    charsR(i, j) = trace(irrepsR{i}.image(r, 'exact'));
+                end
+            end
+            ctR = replab.RealCharacterTable(G, classes, charsR, 'irreps', irrepsR);
+            ctC = replab.ComplexCharacterTable(G, classes, charsC, 'irreps', irrepsC);
+            G.cache('realCharacterTable', ctR, 'error');
+            G.cache('complexCharacterTable', ctC, 'error');
             G.cache('conjugacyClasses', classes, 'error');
         end
 

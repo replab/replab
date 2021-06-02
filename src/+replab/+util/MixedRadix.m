@@ -3,9 +3,11 @@ classdef MixedRadix < replab.Str
 %
 % The digits are represented using doubles, while the integer is of ``vpi`` type.
 
-    properties
+    properties (SetAccess = protected)
         n % (integer): Number of base elements
         base % (integer(1,\*)): Base
+        isOneBased % (logical): Whether digits start at 1
+        isBigEndian % (logical): Whether the subindices are written with the most significant subindex first
     end
 
     methods
@@ -17,8 +19,8 @@ classdef MixedRadix < replab.Str
         %   base (integer(1,\*)): Mixed radix basis
         %   isOneBased (logical): Whether digits start at 1 (used for 1-based indexing), must be true
         %   isBigEndian (logical): Whether the digits are written with the most significant digit first, must be true
-            assert(isBigEndian);
-            assert(isOneBased);
+            self.isOneBased = isOneBased;
+            self.isBigEndian = isBigEndian;
             self.base = base;
             self.n = length(base);
         end
@@ -33,11 +35,21 @@ classdef MixedRadix < replab.Str
         %   integer(1,\*): Digits in the mixed radix basis
             sub = zeros(1, self.n);
             base = self.base;
-            ind = ind - 1;
+            if self.isBigEndian
+                base = fliplr(base);
+            end
+            if self.isOneBased
+                ind = ind - 1;
+            end
             for i = self.n:-1:1
                 r = mod(ind, base(i));
                 ind = (ind - r)/base(i);
-                sub(i) = double(r) + 1;
+                if self.isOneBased
+                    sub(i) = double(r) + 1;
+                end
+            end
+            if self.isBigEndian
+                sub = fliplr(sub);
             end
         end
 
@@ -49,13 +61,22 @@ classdef MixedRadix < replab.Str
         %
         % Returns:
         %   vpi: Integer
+            if self.isOneBased
+                sub = sub - 1;
+            end
             ind = vpi(0);
             base = self.base;
+            if self.isBigEndian
+                base = fliplr(base);
+                sub = fliplr(sub);
+            end
             for i = 1:self.n
                 ind = ind * base(i);
-                ind = ind + vpi(sub(i) - 1);
+                ind = ind + vpi(sub(i));
             end
-            ind = ind + vpi(1);
+            if self.isOneBased
+                ind = ind + vpi(1);
+            end
         end
 
     end

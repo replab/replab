@@ -158,6 +158,7 @@ classdef CharacterTable < replab.Obj
         % Returns:
         %   integer(1,\*): Indices of the linear characters
             ind = find(self.values(:, self.identityConjugacyClassIndex) == 1);
+            ind = ind(:)';
         end
 
         function mults = multiplicities(self, arg)

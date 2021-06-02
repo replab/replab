@@ -56,8 +56,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 self.type = type;
             end
             self.generators = generators;
-            args = struct('generatorNames', {cell(1, 0)}, 'order', 0, 'relators', 'none', 'abelianInvariants', 'none', ...
-                          'realCharacterTable', 'none', 'complexCharacterTable', 'none');
+            args = struct('generatorNames', {cell(1, 0)}, 'order', {0}, 'relators', {'none'}, 'abelianInvariants', {'none'}, ...
+                          'realCharacterTable', {'none'}, 'complexCharacterTable', {'none'});
             args = replab.util.populateStruct(args, varargin);
             if args.order > 0
                 self.cache('order', args.order, '==');

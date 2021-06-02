@@ -58,7 +58,7 @@ classdef Character < replab.Obj
             values = replab.cyclotomic.zeros(1, N);
             for i = 1:N
                 r = classes.classes{i}.representative;
-                values(i) = trace(rep.image(r));
+                values(i) = trace(rep.image(r, 'exact'));
             end
             c = replab.Character(classes, values);
         end

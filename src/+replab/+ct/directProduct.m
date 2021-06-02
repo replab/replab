@@ -1,4 +1,49 @@
-function ct = directProduct(ct1, ct2)
+function ct = directProduct(group, field)
+    n = group.nFactors;
+    classes = group.conjugacyClasses;
+    tables = cellfun(@(f) f.characterTable(field), group.factors, 'uniform', 0);
+    values = replab.cyclotomic(1);
+    for i = 1:n
+        factor_ct = group.factor(i).characterTable(field);
+        val = factor_ct.values;
+        cjc_ct = factor_ct.classes;
+        grp_ct = group.factor(i).conjugacyClasses;
+        values = kron(values, val(:, cjc_ct.indicesOfClasses(grp_ct)));
+    end
+    hasIrreps = all(cellfun(@(c) c.hasIrreps, tables));
+    if ~hasIrreps
+        if field == 'R'
+            ct = replab.RealCharacterTable(group, classes, values);
+        else
+            ct = replab.ComplexCharacterTable(group, classes, values);
+        end
+    else
+        irreps_factors = replab.util.cartesian(cellfun(@(c) c.irreps, tables, 'uniform', 0));
+        nIrreps = length(irreps_factors);
+        irreps = cell(1, nIrreps);
+        for i = 1:nIrreps
+            irrep_factors = irreps_factors{i};
+            dims = cellfun(@(ir) ir.dimension, irrep_factors);
+            images = cell(1, group.nGenerators);
+            for j = 1:group.nGenerators
+                g = group.generator(j);
+                img = replab.cyclotomic(1);
+                for k = 1:n
+                    img = kron(img, irrep_factors{k}.image(g{k}, 'exact'));
+                end
+                images{j} = img;
+            end
+            irreps{i} = group.repByImages(field, prod(dims), 'preimages', group.generators, 'images', images, 'isIrreducible', true);
+        end
+        if field == 'R'
+            ct = replab.RealCharacterTable(group, classes, values, 'irreps', irreps);
+        else
+            ct = replab.ComplexCharacterTable(group, classes, values, 'irreps', irreps);
+        end
+    end
+end
+
+function ct = directProduct1(ct1, ct2)
 % Computes the character table of a direct product of two groups
 %
 % Args:
