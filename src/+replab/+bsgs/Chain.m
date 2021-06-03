@@ -1172,9 +1172,13 @@ classdef Chain < replab.Str
             for i = 1:length(generators)
                 C.stripAndAddStrongGenerator(generators{i});
             end
-            C.deterministicSchreierSims(1000);
-            if C.order > 1000
-                C.randomizedSchreierSims(order);
+            if ~isempty(order)
+                C.deterministicSchreierSims(1000);
+                if order > 1000
+                    C.randomizedSchreierSims(order);
+                end
+            else
+                C.deterministicSchreierSims;
             end
             C.makeImmutable;
         end

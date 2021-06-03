@@ -74,7 +74,11 @@ classdef PermutationGroup < replab.FiniteGroup
                 chain = replab.bsgs.Chain.make(self.domainSize, self.generators, [], self.cachedOrEmpty('order'));
             else
                 if chain.isMutable
-                    chain.randomizedSchreierSims(self.cachedOrEmpty('order'));
+                    if self.inCache('order')
+                        chain.randomizedSchreierSims(self.cachedOrEmpty('order'));
+                    else
+                        chain.deterministicSchreierSims;
+                    end
                     chain.makeImmutable;
                     self.cache('partialChain', chain, 'overwrite');
                 end
