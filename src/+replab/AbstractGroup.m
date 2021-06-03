@@ -43,6 +43,11 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 %   >>> f.imageElement([2 3 1])
 %       's'
 
+    properties (SetAccess = protected)
+       name % (charstring): Group name
+       inAtlas % (logical): Whether this group is already part of the atlas
+    end
+
     properties (Access = protected)
         groupId % (integer): Unique group id
     end
@@ -78,13 +83,16 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
     methods (Static)
 
-        function [A varargout] = fromPresentation(str)
+        function [A, varargout] = fromPresentation(str, varargin)
         % Creates an abstract group from a presentation string
         %
         % Returns the finite group generators as additional output arguments.
         %
+        % Additional arguments are passed to the `.AbstractGroup` constructor.
+        %
         % Example:
         %   >>> [G, x] = replab.AbstractGroup.fromPresentation('< x | x^3 = 1 >');
+        %   >>> [G, x, y] = replab.AbstractGroup.fromPresentation('< x, y | x^3 = y^2 = x y x y^-1 = 1 >');
         %
         % Args:
         %   str (charstring): Single-line description string
@@ -100,7 +108,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             for i = 1:length(relatorLetters)
                 relators{i} = replab.fp.Letters.print(relatorLetters{i}, generatorNames, ' ');
             end
-            A = replab.AbstractGroup(generatorNames, relators);
+            A = replab.AbstractGroup(generatorNames, relators, varargin{:});
             if nargout > 1
                 for i = 1:A.nGenerators
                     varargout{i} = A.generator(i);
@@ -128,10 +136,20 @@ classdef AbstractGroup < replab.NiceFiniteGroup
             m = replab.FiniteIsomorphism.identity(self);
         end
 
+        function R = computeRecognize(self)
+            R = [];
+            if ~self.inAtlas
+                R = replab.Atlas.recognize(self);
+            end
+        end
+
         function R = computeFastRecognize(self)
-            R = self.niceGroup.fastRecognize;
-            if ~isempty(R)
-                R = R.imap(self.niceMorphism.inverse);
+            R = [];
+            if ~self.inAtlas
+                R = self.niceGroup.fastRecognize;
+                if ~isempty(R)
+                    R = R.andThen(self.niceMorphism.inverse);
+                end
             end
         end
 
@@ -147,17 +165,33 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         %   relators (cell(1,\*) of charstring, optional): Relators
         %
         % Keyword Args:
-        %   permutationGroup (`.PermutationGroup`, optional): Permutation group realization of this abstract group
-            args = struct('permutationGroup', {[]}, 'generatorNames', {[]});
+        %   name (charstring, optional): Group name, optional
+        %   order (integer, optional): Group order
+        %   permutationGenerators (cell(1,\*) of permutation): Realization of the generators using permutations
+        %   inAtlas (logical, optional): Whether this group is part of the atlas
+            args = struct('order', 0, 'permutationGenerators', 'none', 'generatorNames', 'none', 'name', 'Abstract group', 'inAtlas', false);
             [args, restArgs] = replab.util.populateStruct(args, varargin);
-            assert(isempty(args.generatorNames), 'Cannot provide generatorNames argument in addition');
+            assert(isequal(args.generatorNames, 'none'), 'Cannot provide generatorNames argument in addition');
             identity = '1';
             generators = generatorNames;
             type = 'self';
-            self@replab.NiceFiniteGroup(identity, generators, type, 'generatorNames', generatorNames, 'relators', relators, restArgs{:});
+            if args.order > 0
+                args1 = {'order', args.order};
+            else
+                args1 = {};
+            end
+            self@replab.NiceFiniteGroup(identity, generators, type, 'generatorNames', generatorNames, 'relators', relators, args1{:}, restArgs{:});
+            self.name = args.name;
             self.groupId = replab.globals.nextUniqueId;
-            if ~isempty(args.permutationGroup)
-                self.cache('permutationGroup', args.permutationGroup);
+            self.inAtlas = args.inAtlas;
+            if ~isequal(args.permutationGenerators, 'none')
+                if isempty(args.permutationGenerators)
+                    domainSize = 1;
+                else
+                    domainSize = length(args.permutationGenerators{1});
+                end
+                permutationGroup = replab.PermutationGroup(domainSize, args.permutationGenerators, 'generatorNames', generatorNames, 'relators', relators, args1{:});
+                self.cache('permutationGroup', permutationGroup);
             end
         end
 
@@ -267,7 +301,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         % Str
 
         function s = shortStr(self, maxColumns)
-            s = self.presentation;
+            s = [self.name ' ' self.presentation];
         end
 
         function h = headerStr(self)
@@ -277,6 +311,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         function names = hiddenFields(self)
             names = hiddenFields@replab.NiceFiniteGroup(self);
             names{1,end+1} = 'type';
+            names{1,end+1} = 'inAtlas';
         end
 
         function [names, values] = additionalFields(self)
@@ -324,13 +359,7 @@ classdef AbstractGroup < replab.NiceFiniteGroup
         % Returns a modified copy of this abstract group with the generators renamed
         %
         % Note: the abstract group returned by this method is not equal to the original abstract group. This differs
-        % from the behavior of `.withGeneratorNames` called on a `.FiniteGroup` which is not an abstract group.
-        % differ
-        %   The group returne
-        %   For general `.FiniteGroup` such as ones of type `.PermutationGroup`,  `.withGeneratorNames` call
-        %   only modifies
-        % Note that contrary to the call of `.withGeneratorNames` on a generic `.FiniteGroup`, the modified abstract
-        % group is
+        % from the behavior of `.withGeneratorNames` called on any `.FiniteGroup` which is not an abstract group.
         %
         % Args:
         %   newNames (cell(1,\*) of charstring): New generator names
@@ -342,7 +371,16 @@ classdef AbstractGroup < replab.NiceFiniteGroup
                 return
             end
             rels = cellfun(@(r) replab.fp.Letters.print(self.factorizeLetters(r), newNames), self.relators, 'uniform', 0);
-            A1 = replab.AbstractGroup(newNames, rels, 'permutationGroup', self.permutationGroup.withGeneratorNames(newNames));
+            args = {};
+            if self.inCache('order')
+                args{1,end+1} = 'order';
+                args{1,end+1}=  self.order;
+            end
+            if self.inCache('permutationGroup')
+                args{1,end+1} = 'permutationGenerators';
+                args{1,end+1} = self.permutationGroup.generators;
+            end
+            A1 = replab.AbstractGroup(newNames, rels, args{:});
         end
 
         function A = abstractGroup(self, generatorNames)

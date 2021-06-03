@@ -23,12 +23,17 @@ classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.NiceFini
                     generators{1, end+1} = generator;
                 end
             end
+            generatorNames = cellfun(@(f) f.generatorNames, factors, 'uniform', 0);
+            generatorNames = [generatorNames{:}];
+            if length(unique(generatorNames)) ~= length(generatorNames) % names are not unique
+                generatorNames = [];
+            end
             if all(cellfun(@(f) f.type == f, factors))
                 type = 'self';
             else
                 type = replab.prods.DirectProductGroup_finite(cellfun(@(f) f.type, factors, 'uniform', 0));
             end
-            self@replab.NiceFiniteGroup(identity, generators, type);
+            self@replab.NiceFiniteGroup(identity, generators, type, 'generatorNames', generatorNames);
             self.factors = factors;
         end
 
@@ -76,6 +81,16 @@ classdef DirectProductGroup_finite < replab.DirectProductGroup & replab.NiceFini
             for i = 1:self.nFactors
                 o = o * self.factor(i).order;
             end
+        end
+
+        function c = computeCharacterTable(self, field)
+            c = replab.ct.directProduct(self, field);
+        end
+
+        function c = computeConjugacyClasses(self)
+            classes = cellfun(@(f) f.conjugacyClasses.classRepresentatives, self.factors, 'uniform', 0);
+            reps = replab.util.cartesian(classes);
+            c = replab.ConjugacyClasses(self, cellfun(@(r) self.conjugacyClass(r), reps, 'uniform', 0));
         end
 
         function e = computeElements(self)

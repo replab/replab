@@ -11,7 +11,7 @@ function ct = PermutationCharacterTable(group)
 %   group (`+replab.PermutationGroup`): permutation group
 %
 % Returns:
-%   ct (`+replab.CharacterTable`)
+%   ct (`+replab.ComplexCharacterTable`)
     assert(isa(group, 'replab.PermutationGroup'));
     ord = double(group.order);
     decomp = group.naturalRep.decomposition.nice;
@@ -76,5 +76,5 @@ function ct = PermutationCharacterTable(group)
         end
     end
     chars = replab.cyclotomic(round(chars));
-    ct = replab.CharacterTable(group, classes, chars, 'irreps', irreps);
+    ct = replab.ComplexCharacterTable(group, 'C', classes, chars, 'irreps', irreps);
 end

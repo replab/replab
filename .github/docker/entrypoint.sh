@@ -10,7 +10,7 @@ ls -al
 git rev-parse HEAD
 
 export ADDPATH_COMMAND="replab_init('verbose', 2);"
-export COVERING=true
+export COVERING=false
 
 if [ $COVERING == true ]; then
   TEST_COMMAND="exit(~replab_runtests(1,1));";
@@ -40,5 +40,3 @@ else
   # The tests did not pass
   exit 1
 fi
-
-

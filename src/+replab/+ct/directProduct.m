@@ -1,12 +1,60 @@
-function ct = directProduct(ct1, ct2)
+function ct = directProduct(group, field)
+    n = group.nFactors;
+    classes = group.conjugacyClasses;
+    tables = cellfun(@(f) f.characterTable(field), group.factors, 'uniform', 0);
+    values = replab.cyclotomic(1);
+    for i = 1:n
+        factor_ct = group.factor(i).characterTable(field);
+        val = factor_ct.values;
+        cjc_ct = factor_ct.classes;
+        grp_ct = group.factor(i).conjugacyClasses;
+        values = kron(values, val(:, cjc_ct.indicesOfClasses(grp_ct)));
+    end
+    hasIrreps = all(cellfun(@(c) c.hasIrreps, tables));
+    if ~hasIrreps
+        if field == 'R'
+            ct = replab.RealCharacterTable(group, classes, values);
+        else
+            ct = replab.ComplexCharacterTable(group, classes, values);
+        end
+    else
+        irreps_factors = replab.util.cartesian(cellfun(@(c) c.irreps, tables, 'uniform', 0));
+        nIrreps = length(irreps_factors);
+        irreps = cell(1, nIrreps);
+        for i = 1:nIrreps
+            irrep_factors = irreps_factors{i};
+            dims = cellfun(@(ir) ir.dimension, irrep_factors);
+            images = cell(1, group.nGenerators);
+            for j = 1:group.nGenerators
+                g = group.generator(j);
+                img = replab.cyclotomic(1);
+                for k = 1:n
+                    img = kron(img, irrep_factors{k}.image(g{k}, 'exact'));
+                end
+                images{j} = img;
+            end
+            irreps{i} = group.repByImages(field, prod(dims), 'preimages', group.generators, 'images', images, 'isIrreducible', true);
+        end
+        if field == 'R'
+            ct = replab.RealCharacterTable(group, classes, values, 'irreps', irreps);
+        else
+            ct = replab.ComplexCharacterTable(group, classes, values, 'irreps', irreps);
+        end
+    end
+end
+
+function ct = directProduct1(ct1, ct2)
 % Computes the character table of a direct product of two groups
 %
 % Args:
-%   ct1 (`+replab.CharacterTable`): First character table
-%   ct2 (`+replab.CharacterTable`): Second character table
+%   ct1 (`+replab.ComplexCharacterTable`): First character table
+%   ct2 (`+replab.ComplexCharacterTable`): Second character table
 %
 % Returns:
-%   `+replab.CharacterTable`: Character table of the product ``ct1.group.directProduct(ct2.group)``
+%   `+replab.ComplexCharacterTable`: Character table of the product ``ct1.group.directProduct(ct2.group)``
+    assert(isa(ct1, 'replab.ComplexCharacterTable'));
+    assert(isa(ct2, 'replab.ComplexCharacterTable'));
+    assert(ct1.field == 'C' && ct2.field == 'C');
     new_group = ct1.group.directProduct(ct2.group);
     % New characters are kronecker product of character matrices
     A = ct1.characters;
@@ -70,5 +118,5 @@ function ct = directProduct(ct1, ct2)
             new_irreps{j + (i-1)*length(ct2.irreps)} = new_irrep;
         end
     end
-    ct = replab.CharacterTable(new_group, new_classes, new_chars, 'irreps', new_irreps);
+    ct = replab.ComplexCharacterTable(new_group, 'C', new_classes, new_chars, 'irreps', new_irreps);
 end

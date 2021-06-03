@@ -20,8 +20,8 @@ classdef CharacterTableLaws < replab.Laws
                 return
             end
             for i = 1:self.C.nIrreps
-                irrep = self.C.irreps{i};
-                if ~isempty(irrep)
+                if self.C.hasIrrep(i)
+                    irrep = self.C.irrep(i);
                     for j = 1:self.C.nClasses
                         [c1, err1] = doubleApproximation(self.C.values(i, j));
                         c2 = trace(irrep.image(self.C.classes.classes{j}.representative));
@@ -41,39 +41,10 @@ classdef CharacterTableLaws < replab.Laws
                     res(i1, i2) = dot(chi1, chi2);
                 end
             end
+            if self.C.overR
+                res = double(res ~= 0);
+            end
             self.assert(all(all(res == replab.cyclotomic.eye(n))));
-        end
-
-        function law_orthogonality_columns_(self)
-            n = self.C.nClasses;
-            for i1 = 1:n
-                for i2 = 1:n
-                    r = dot(self.C.values(:, i1), self.C.values(:, i2));
-                    if i1 ~= i2
-                        self.assert(r == 0);
-                    else
-                        self.assert(r == replab.cyclotomic(self.C.classes.classes{i1}.representativeCentralizer.order));
-                    end
-                end
-            end
-        end
-
-        function law_group_order_(self)
-            col = self.C.values(:, self.C.identityConjugacyClassIndex);
-            order1 = sum(col.*col);
-            order2 = replab.cyclotomic(self.C.group.order);
-            self.assert(order1 == order2);
-        end
-
-        function law_commutator_subgroup_(self)
-        % The commutator subgroup of the group is the intersection of the kernels of the linear characters
-            chars = arrayfun(@(i) self.C.character(i), self.C.linearCharacterIndices, 'uniform', 0);
-            kernels = cellfun(@(c) c.kernel, chars, 'uniform', 0);
-            K = kernels{1};
-            for i = 2:length(kernels)
-                K = K.intersection(kernels{i});
-            end
-            self.assert(K == self.C.group.derivedSubgroup);
         end
 
     end

@@ -35,6 +35,7 @@ classdef PermutationGroup < replab.FiniteGroup
             self@replab.FiniteGroup(identity, generators, type, restArgs{:});
             self.domainSize = domainSize;
             if ~isempty(args.chain)
+                assert(~args.chain.isMutable);
                 self.cache('chain', args.chain, 'ignore');
             end
         end
@@ -101,7 +102,7 @@ classdef PermutationGroup < replab.FiniteGroup
         end
 
         function E = computeElements(self)
-            basis = replab.util.MixedRadix(self.lexChain.orbitSizes, true, true);
+            basis = replab.util.MixedRadix(self.lexChain.orbitSizes, true, false);
             atFun = @(ind) self.lexChain.elementFromIndices(basis.ind2sub(ind));
             findFun = @(el) basis.sub2ind(self.lexChain.indicesFromElement(el));
             E = replab.IndexedFamily.lambda(self.order, atFun, findFun);
@@ -202,6 +203,7 @@ classdef PermutationGroup < replab.FiniteGroup
                     end
                 end
             end
+            chain.makeImmutable;
             sub = replab.PermutationGroup(self.domainSize, generators, 'order', chain.order, 'type', self.type, 'chain', chain);
         end
 
@@ -299,6 +301,11 @@ classdef PermutationGroup < replab.FiniteGroup
             end
         end
 
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.FiniteGroup(self);
+            names{1,end+1} = 'domainSize';
+        end
+
         % replab.Obj
 
         function l = laws(self)
@@ -368,7 +375,7 @@ classdef PermutationGroup < replab.FiniteGroup
             if nargin < 2 || isempty(generatorNames)
                 generatorNames = self.generatorNames;
             end
-            A = replab.AbstractGroup(generatorNames, self.relators(generatorNames), 'permutationGroup', self.withGeneratorNames(generatorNames));
+            A = replab.AbstractGroup(generatorNames, self.relators(generatorNames), 'permutationGenerators', self.generators);
         end
 
         function m = abstractMorphism(self, generatorNames)
@@ -474,6 +481,7 @@ classdef PermutationGroup < replab.FiniteGroup
                     end
                 end
             end
+            chain.makeImmutable;
             nc = replab.PermutationGroup(self.domainSize, generators, 'order', chain.order, 'type', self.type, 'chain', chain);
         end
 

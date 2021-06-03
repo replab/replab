@@ -146,6 +146,14 @@ classdef ConjugacyClasses < replab.Obj
             s = cellfun(@(c) c.nElements, self.classes, 'uniform', 0);
         end
 
+        function r = classRepresentatives(self)
+        % Returns the canonical representatives of the conjugacy classes
+        %
+        % Returns:
+        %   cell(1,\*) of `.ConjugacyClass`: Representatives
+            r = cellfun(@(c) c.representative, self.classes, 'uniform', 0);
+        end
+
         function ind = classIndexRepresentative(self, rep)
         % Finds the conjugacy class where a given conjugacy class representative is located
         %

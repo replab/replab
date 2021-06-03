@@ -14,6 +14,15 @@ classdef Morphism < replab.Obj
 
     methods % Implementations
 
+        % Str
+
+        function names = hiddenFields(self)
+            names = hiddenFields@replab.Obj(self);
+            if isempty(self.torusMap)
+                names{1,end+1} = 'torusMap';
+            end
+        end
+
         % Obj
 
         function l = laws(self)

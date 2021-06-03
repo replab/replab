@@ -57,7 +57,7 @@ function assertEqualValue(variableName, obtainedValue, expectedValue, sourceFile
             res = res(:).';
             res = cellfun(@strtrim, res, 'uniform', 0);
             res = res(~cellfun(@isempty, res));
-            assertEqual(res, expectedValue, message);
+            assert(isequal(res, expectedValue), [message sprintf('\nFirst input\n') strjoin(res, '\n') sprintf('\nSecond input\n') strjoin(expectedValue, '\n')]);
         else
             error('Unsupported');
         end

@@ -56,7 +56,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 self.type = type;
             end
             self.generators = generators;
-            args = struct('generatorNames', {cell(1, 0)}, 'order', {0}, 'relators', {[]});
+            args = struct('generatorNames', {cell(1, 0)}, 'order', {0}, 'relators', {'none'}, 'abelianInvariants', {'none'}, ...
+                          'realCharacterTable', {'none'}, 'complexCharacterTable', {'none'});
             args = replab.util.populateStruct(args, varargin);
             if args.order > 0
                 self.cache('order', args.order, '==');
@@ -69,9 +70,18 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 assert(length(args.generatorNames) == length(generators), 'Mismatch in the number of generator and names');
                 self.generatorNames = args.generatorNames;
             end
-            if ~isempty(args.relators)
+            if ~isequal(args.relators, 'none')
                 relators = cellfun(@(r) replab.fp.Letters.parse(r, self.generatorNames), args.relators, 'uniform', 0);
                 self.cache('relatorsInLetterForm', relators, 'error');
+            end
+            if ~isequal(args.abelianInvariants, 'none')
+                self.cache('abelianInvariants', args.abelianInvariants, 'error');
+            end
+            if ~isequal(args.realCharacterTable, 'none')
+                self.cache('realCharacterTable', args.realCharacterTable, 'error');
+            end
+            if ~isequal(args.complexCharacterTable, 'none')
+                self.cache('complexCharacterTable', args.complexCharacterTable, 'error');
             end
         end
 
@@ -96,19 +106,21 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function names = hiddenFields(self)
             names = hiddenFields@replab.Group(self);
             names{1, end+1} = 'generators';
+            names{1, end+1} = 'generatorNames';
+            names{1, end+1} = 'type';
             names{1, end+1} = 'representative';
         end
 
         function [names values] = additionalFields(self)
             [names values] = additionalFields@replab.Group(self);
             for i = 1:self.nGenerators
-                names{1, end+1} = sprintf('generator(%d)', i);
+                names{1, end+1} = sprintf('generator(%d or ''%s'')', i, self.generatorNames{i});
                 values{1, end+1} = self.generator(i);
             end
             r = self.fastRecognize;
             if ~isempty(r)
-                names{1,end+1} = 'recognize';
-                values{1,end+1} = r;
+                names{1,end+1} = 'recognize.source';
+                values{1,end+1} = r.source;
             end
         end
 
@@ -216,13 +228,13 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-        function c = computeCharacterTable(self)
+        function c = computeCharacterTable(self, field)
         % See `.characterTable`
             r = self.recognize;
-            assert(~isempty(r), 'This group has not been recognized.');
-            c = r.atlasEntry.characterTable;
-            assert(~isempty(c), 'This group does not have a stored character table.');
-            c = c.imap(r.isomorphism);
+            assert(~isempty(r), 'No character table information available for this group.');
+            c = r.source.characterTable(field);
+            assert(~isempty(c), 'No character table information available for this group.');
+            c = c.imap(r);
         end
 
         function c = computeConjugacyClasses(self)
@@ -303,6 +315,8 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % It computes the decomposition of the factor group of this group by its derived subgroup
         % (which is abelian), and returns the primary decomposition of that abelian group.
         %
+        % The abelian invariants are sorted in weakly increasing order.
+        %
         % Example:
         %   >>> G = replab.PermutationGroup.cyclic(100);
         %   >>> isequal(G.abelianInvariants, [4 25])
@@ -332,8 +346,29 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             c = self.cached('conjugacyClasses', @() self.computeConjugacyClasses);
         end
 
-        function c = characterTable(self)
-            c = self.cached('characterTable', @() self.computeCharacterTable);
+        function c = characterTable(self, field)
+        % Returns the (real or complex) character table of this group
+        %
+        % The complex character table is the standard, textbook character table of the group.
+        %
+        % Note that randomized techniques are used to find group isomorphisms, and thus the output of this
+        % method may not be deterministic.
+        %
+        % Args:
+        %   field ('R', 'C', optional): Field over which to define the irreps, default 'C'
+        %
+        % Returns:
+        %   `.CharacterTable`: Character table
+            if nargin < 2 || isempty(field)
+                field = 'C';
+            end
+            if strcmp(field, 'R')
+                c = self.cached('realCharacterTable', @() self.computeCharacterTable('R'));
+            elseif strcmp(field, 'C')
+                c = self.cached('complexCharacterTable', @() self.computeCharacterTable('C'));
+            else
+                error('Incorrect field');
+            end
         end
 
         function R = fastRecognize(self)
@@ -473,10 +508,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns the i-th group generator
         %
         % Args:
-        %   i (integer): Generator index
+        %   i (integer, charstring): Generator index or name
         %
         % Returns:
         %   element: i-th group generator
+            if isa(i, 'char')
+                [b, i] = ismember(i, self.generatorNames);
+                assert(b, 'Not a valid generator name');
+            end
             p = self.generators{i};
         end
 
@@ -1179,6 +1218,14 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             if args.single
                 args.upToConjugation = true;
             end
+            if self.isTrivial
+                if to.isTrivial
+                    res = {self.isomorphismByImages(to, 'preimages', {}, 'images', {})};
+                else
+                    res = [];
+                end
+                return
+            end
             F = self.abstractGroup;
             G = to;
             A = to;
@@ -1230,6 +1277,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 end
             else
                 filter = 'morphisms';
+            end
+            if self.isTrivial
+                res = {self.morphismByImages(to, 'preimages', {}, 'images', {})};
+                return
             end
             F = self;
             G = to;
