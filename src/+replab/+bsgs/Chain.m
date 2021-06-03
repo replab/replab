@@ -1058,7 +1058,7 @@ classdef Chain < replab.Str
                 for k = Srange
                     x = self.S(:,k)';
                     uxb_inv = Uinv(:,iOrbit(x(b),i))';
-                    toStrip = ub(x(uxb_inv));
+                    toStrip = uxb_inv(x(ub));
                     if any(toStrip ~= 1:n)
                         y = true;
                         [h j] = self.strip(toStrip);
@@ -1091,11 +1091,11 @@ classdef Chain < replab.Str
         %
         % Args:
         %   maxOrder (integer or vpi or ``inf``): Order cutoff
-            if nargin < 2
-                maxOrder = inf;
+            if nargin < 2 || isinf(maxOrder)
+                maxOrder = [];
             end
             i = self.length;
-            while i >= 1 && self.order <= maxOrder
+            while i >= 1 && (isempty(maxOrder) || self.order <= maxOrder)
                 i = self.schreierSimsTest(i);
             end
         end
