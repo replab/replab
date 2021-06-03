@@ -426,7 +426,7 @@ classdef IsotypicEquivariant < replab.SubEquivariant
             if repR.overC || repR.irrep(1).frobeniusSchurIndicator == 1
                 ird = repR.irrepDimension;
                 R = replab.IsotypicEquivariant.kronSecondFactor(X, ird, ird);
-                R = R/(trace(R)/ird);
+                R = R/(trace(abs(R))/ird);
                 divisionAlgebraName = '';
                 switch special
                   case 'symmetric'
