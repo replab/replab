@@ -25,7 +25,7 @@ classdef Str < handle
 %      '            identity: [1, 2, 3]'
 %      'generator(1 or ''x1''): [2, 3, 1]'
 %      'generator(2 or ''x2''): [2, 1, 3]'
-%      '    recognize.source: Dihedral group of order 6 < a, x | a^3 = x^2 = x a x^-1 a = 1 >'}
+%      '    recognize.source: Dihedral group of order 6'}
 %   >>> replab.shortStr(P)
 %     'Symmetric group acting on 3 elements'
 

@@ -15,7 +15,7 @@ function iso = isotypicComponent(rep, irrep, type)
     end
     assert(rep.field == irrep.field);
     if irrep.overR
-        assert(irrep.frobeniusSchurIndicator =~ -2, 'isotypicComponent does not support real quaternion-type representations');
+        assert(irrep.frobeniusSchurIndicator == 1, 'Over the reals, isotypicComponent only support real-type/absolutely irreducible representations');
     end
     D = rep.dimension;
     d = irrep.dimension;
