@@ -158,9 +158,7 @@ classdef SymmetricGroup < replab.PermutationGroup
         %                              decreasing order (e.g ``[3 3 1]`` represents the partition of 7 elements: ``7 = 3+3+1``
         %   form ('specht', 'seminormal', or 'orthogonal'): The form the irrep takes. Default is 'specht'.
         %
-        %   Note: 'specht' is slower to construct than 'seminormal' or 'orthogonal' but, unlike them, has
-        %   integer entries
-        %   entries
+        % Note: 'specht' is slower to construct than 'seminormal' or 'orthogonal' but, unlike them, has integer entries.
         %
         % Returns:
         %   `+replab.Rep`: The corresponding irreducible representation

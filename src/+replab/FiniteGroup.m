@@ -161,6 +161,10 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
 
         % CompactGroup
 
+        function d = maximalTorusDimension(self)
+            d = 0;
+        end
+
         function b = hasReconstruction(self)
             b = true;
         end
@@ -247,7 +251,9 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             if self.niceMorphism.image.domainSize < replab.globals.fastChainDomainSize
                 c = self.niceMorphism.image.partialChain;
                 if ~c.isMutable
-                    R = replab.Atlas.recognize(self);
+                    if c.order <= replab.globals.atlasMaximalOrder
+                        R = replab.Atlas.recognize(self);
+                    end
                 end
             end
         end

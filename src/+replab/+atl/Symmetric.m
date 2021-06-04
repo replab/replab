@@ -54,10 +54,15 @@ classdef Symmetric
             partitions = replab.sym.IntegerPartition.all(n);
             classes = cellfun(@(p) p.conjugacyClass, partitions, 'uniform', 0);
             classes = replab.ConjugacyClasses.sorted(G.permutationGroup, classes);
-            irreps = cellfun(@(p) replab.sym.SymmetricSpechtIrrep(G.permutationGroup, p.partition).rep, partitions, 'uniform', 0);
+            irreps = cell(1, length(partitions));
+            for i = 1:length(partitions)
+                % TODO: use lambda
+                irreps{i} = replab.sym.SymmetricSpechtIrrep(G.permutationGroup, partitions{i}.partition).rep;
+            end
             values = zeros(length(irreps), classes.nClasses);
             for i = 1:length(irreps)
                 for j = 1:classes.nClasses
+                    % TODO: use Kronecker
                     values(i, j) = trace(irreps{i}.image(classes.classes{j}.representative));
                 end
             end
