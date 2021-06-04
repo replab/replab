@@ -26,6 +26,11 @@ The following classes are at the base of many RepLAB objects/operations.
 
 * `.dispatch`: Provides a flexible dispatch mechanism that enables the use of plugins.
 
+
+Note that some objects implement standard Matlab equality semantics (a.k.a. ``x == y``); for example cyclotomic matrices can be tested
+for equality, and finite groups of the same type as well. Other objects such as generic compact groups, representations, will be compared
+using "is this the same object in memory".
+
 Str
 +++
 

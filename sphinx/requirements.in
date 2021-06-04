@@ -2,7 +2,7 @@ sphinx
 sphinxcontrib-matlabdomain
 texext
 guzzle_sphinx_theme
-sphinx-collapse-admonitions
+sphinx-togglebutton
 sphinxcontrib-fulltoc
 ablog
 jupyter_client
