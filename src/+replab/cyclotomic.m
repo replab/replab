@@ -433,13 +433,13 @@ classdef cyclotomic
                     disp([name '(:,:,' strjoin(cellfun(@num2str, sub, 'uniform', 0), ',') ') =']);
                     slice = self.subsref(s);
                     t = replab.compat.javaArrayToCell(javaMethod('print', 'cyclo.Lab', slice.data_));
-                    t = replab.str.Table(reshape(t, size(slice)), 'uniform', 0);
+                    t = replab.str.Table(reshape(t, size(slice)));
                     disp(t);
                 end
             else
                 disp([name ' =']);
                 t = replab.compat.javaArrayToCell(javaMethod('print', 'cyclo.Lab', self.data_));
-                t = replab.str.Table(reshape(t, size(self)), 'uniform', 0);
+                t = replab.str.Table(reshape(t, size(self)));
                 disp(t);
             end
         end
