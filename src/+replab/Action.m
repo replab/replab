@@ -4,8 +4,8 @@ classdef Action < replab.Obj
 % Elements of the group ``G`` act upon elements of type ``P``.
 
     properties (SetAccess = protected)
-        G % replab.Group: Group acting
-        P % replab.Domain: Set acted upon
+        G % (`.Group`): Group acting
+        P % (`.Domain`): Set acted upon
     end
 
     methods % Implementations
@@ -31,11 +31,11 @@ classdef Action < replab.Obj
         % `` p2 = g(h(p)) = (g compose h)(p) ``
         %
         % Args:
-        %   g (element of `G`): Group element acting
-        %   p (element of `P`): Element acted upon
+        %   g (element of `.G`): Group element acting
+        %   p (element of `.P`): Element acted upon
         %
         % Returns:
-        %   element of `P`: Result of the left action
+        %   element of `.P`: Result of the left action
             error('Abstract');
         end
 
@@ -50,11 +50,11 @@ classdef Action < replab.Obj
         % ``p2 = (p^g)^h = p^(g compose h)``
         %
         % Args:
-        %   p (element of `P`): Element acted upon
-        %   g (element of `G`): Group element acting
+        %   p (element of `.P`): Element acted upon
+        %   g (element of `.G`): Group element acting
         %
         % Returns:
-        %   element of `P`: Result of the right action
+        %   element of `.P`: Result of the right action
             p1 = self.leftAction(self.G.inverse(g), p);
         end
 
@@ -66,12 +66,12 @@ classdef Action < replab.Obj
         % Constructs an action from a function handle
         %
         % Args:
-        %   G (`+replab.Group`): Group acting
-        %   P (`+replab.Domain`: Set acted upon
-        %   leftActionFun (function_handle): Handle implementing ``leftAction``
+        %   G (`.Group`): Group acting
+        %   P (`.Domain`: Set acted upon
+        %   leftActionFun (function_handle): Handle implementing `.leftAction`
         %
         % Returns:
-        %   replab.Action: The action
+        %   `.Action`: The action
             action = replab.lambda.Action(header, G, P, leftActionFun);
         end
 
