@@ -459,8 +459,12 @@ classdef cyclotomic
         % Returns:
         %   charstring: Possibly multiline string representation of the matrix
             t = replab.compat.javaArrayToCell(javaMethod('print', 'cyclo.Lab', self.data_));
-            t = replab.str.Table(reshape(t, size(self)), 'uniform', 0);
-            s = t.format(1000, 1000);
+            if self.numel == 1
+                s = t{1};
+            else
+                t = replab.str.Table(reshape(t, size(self)), 'uniform', 0);
+                s = t.format(1000, 1000);
+            end
         end
 
     end
