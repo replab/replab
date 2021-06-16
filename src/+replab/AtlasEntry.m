@@ -35,11 +35,10 @@ classdef AtlasEntry < replab.Obj
 
     end
 
-    methods (Access = protected)
+    methods (Static)
 
-        function G = computeGroup(self)
+        function G = groupFromJSONData(data)
         % Computes the group stored in this entry from the known JSON data
-            data = self.data;
             G = replab.atl.parseGroup(data.group);
             if isfield(data, 'realCharacterTable')
                 realCharacterTable = replab.atl.parseCharacterTable(G, 'R', data.realCharacterTable);
@@ -95,7 +94,7 @@ classdef AtlasEntry < replab.Obj
         %
         % Returns:
         %   `.AbstractGroup`: Group
-            G = self.cached('group', @() self.computeGroup);
+            G = self.cached('group', @() replab.AtlasEntry.groupFromJSONData(self.data));
         end
 
         function res = canMatch(self, group)
@@ -117,7 +116,8 @@ classdef AtlasEntry < replab.Obj
         %
         % Returns:
         %   `.FiniteIsomorphism` or ``[]``: The isomorphism if it exists or ``[]``
-            m = self.group.findIsomorphism(group);
+            m = self.group.niceGroup.findIsomorphism(group);
+            m = self.group.niceMorphism.andThen(m);
         end
 
     end
