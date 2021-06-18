@@ -280,8 +280,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function R = computeRelatorsInLetterForm(self)
         % See `.relators`
             R = replab.fp.relatorsForPermutationGroup(self.niceGroup);
-            % fliplr because conversion between left and right action
-            R = cellfun(@(w) fliplr(w), R, 'uniform', 0);
         end
 
         function s = computeSetProduct(self)

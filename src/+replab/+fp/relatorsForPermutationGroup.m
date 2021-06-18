@@ -1,7 +1,7 @@
 function relators = relatorsForPermutationGroup(group)
 % Computes relators for a finite group
 %
-% Note: calls the GAP system internally
+% The relators are already given in the RepLAB form (left action-type)
 %
 % Args:
 %   group (`+replab.PermutationGroup`): Permutation group to find the relators of
