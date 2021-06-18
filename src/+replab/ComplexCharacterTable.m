@@ -114,7 +114,7 @@ classdef ComplexCharacterTable < replab.CharacterTable
         % though that fact is not checked by this method.
         %
         % Args:
-        %   R (`.RealCharacterTable`)
+        %   R (`.RealCharacterTable`): Real character table
         %
         % Returns:
         %   `.ComplexCharacterTable`: The corresponding complex character table
@@ -132,6 +132,30 @@ classdef ComplexCharacterTable < replab.CharacterTable
             end
             C = replab.ComplexCharacterTable(R.group, R.classes, R.values, 'irreps', irreps, 'classNames', R.classNames, 'irrepNames', R.irrepNames);
         end
+
+        function C = fromIrreps(group, irreps)
+        % Creates a complex character table from a complete list of irreducible exact representations
+        %
+        % Args:
+        %   group (`.FiniteGroup`): Finite group
+        %   irreps (cell(1,\*) of `.Rep`): Irreducible representations
+        %
+        % Returns:
+        %   `.ComplexCharacterTable`: The corresponding complex character table
+            assert(all(cellfun(@(r) isa(r, 'replab.Rep') && r.overC, irreps)));
+            nIrreps = length(irreps);
+            cc = group.conjugacyClasses;
+            nClasses = cc.nClasses;
+            values = replab.cyclotomic.zeros(nIrreps, nClasses);
+            for i = 1:nIrreps
+                for j = 1:nClasses
+                    r = cc.classes{j}.representative;
+                    values(i,j) = trace(irreps{i}.image(r, 'exact'));
+                end
+            end
+            C = replab.ComplexCharacterTable(group, cc, values, 'irreps', irreps);
+        end
+
     end
 
     methods

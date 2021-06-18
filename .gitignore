@@ -133,4 +133,3 @@ tests/doctest
 
 ## Jupyter checkpoints
 .ipynb_checkpoints
-*.g

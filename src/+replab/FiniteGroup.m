@@ -280,8 +280,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function R = computeRelatorsInLetterForm(self)
         % See `.relators`
             R = replab.fp.relatorsForPermutationGroup(self.niceGroup);
-            % fliplr because conversion between left and right action
-            R = cellfun(@(w) fliplr(w), R, 'uniform', 0);
         end
 
         function s = computeSetProduct(self)
@@ -644,6 +642,25 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         % Returns:
         %   vpi: The order of ``g``, i.e. the smallest ``o`` such that ``g^o == identity``
             error('Abstract');
+        end
+
+        function gens = smallGeneratingSet(self)
+        % Returns a small set of elements generating the group
+        %
+        % Returns:
+        %   cell(1,\*) of group elements: Generating set
+            gens = self.generators;
+            i = 1;
+            while i <= length(gens)
+                test = horzcat(gens(1:i-1), gens(i+1:end));
+                G = self.subgroupWithGenerators(test);
+                if G.order == self.order
+                    gens = test;
+                    % this throws the i-th element, so i is the new i+1
+                else
+                    i = i + 1;
+                end
+            end
         end
 
         function l = wordToLetters(self, word, generatorNames)
@@ -1232,7 +1249,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 end
                 return
             end
-            F = self.abstractGroup;
+            F = self;
             G = to;
             A = to;
             if F.order ~= G.order
@@ -1245,7 +1262,6 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             else
                 res = fm.searchAll;
             end
-            res = cellfun(@(m) self.abstractMorphism.andThen(m), res, 'uniform', 0);
             res = cellfun(@(m) m.toIsomorphism, res, 'uniform', 0);
         end
 
@@ -1464,10 +1480,25 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function l = isMorphismByImages_(self, target, preimages, images)
         % Implements the `.isMorphismByImages` method
         %
-        % Does not perform checks; preimages must not contain the identity
-            source = self.subgroupWithGenerators(preimages);
-            assert(source.order == self.order, 'The morphism preimages do not generate the source group');
-            l = source.abstractGroup.isMorphismByImages(target, 'images', images);
+        % Preimages must not contain the identity (this is not checked)
+            hasSameGenerators = length(preimages) == self.nGenerators && ...
+                all(arrayfun(@(i) self.eqv(preimages{i}, self.generator(i)), 1:self.nGenerators));
+            if hasSameGenerators
+                source = self;
+            else
+                source = self.subgroupWithGenerators(preimages);
+            end
+            assert(source == self, 'The morphism preimages do not generate the source group');
+            relators = source.relators;
+            for i = 1:length(relators)
+                r = replab.fp.Letters.parse(relators{i}, self.generatorNames);
+                g = target.composeLetters(images, r);
+                if ~target.isIdentity(g)
+                    l = false;
+                    return
+                end
+            end
+            l = true;
         end
 
     end
