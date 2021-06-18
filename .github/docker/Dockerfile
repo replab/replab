@@ -8,17 +8,22 @@ USER root
 # Install base packages
 RUN apt-get update && apt-get install -y -q python3-pip pandoc unzip curl
 
-# Install Python package
-
 RUN mkdir /workspace
 
 RUN chmod 777 -R /workspace
 
+# Install Python package
+RUN apt-get install -y -q python3-pip pandoc
+RUN mkdir -p /workspace/replab/docs
+#cd replab/sphinx
+pip3 install -r ../../sphinx/requirements.txt
+
+
 CMD ["/bin/bash"]
 
-# Copies the whole repository
+# Copies the entrypoint script
 COPY entrypoint.sh /
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
-ENTRYPOINT ["/entrypoint.sh"]
+#ENTRYPOINT ["/entrypoint.sh"]
 
