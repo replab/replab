@@ -116,8 +116,7 @@ classdef AtlasEntry < replab.Obj
         %
         % Returns:
         %   `.FiniteIsomorphism` or ``[]``: The isomorphism if it exists or ``[]``
-            m = self.group.niceGroup.findIsomorphism(group);
-            m = self.group.niceMorphism.andThen(m);
+            m = self.group.findIsomorphism(group);
         end
 
     end
