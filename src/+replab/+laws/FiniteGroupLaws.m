@@ -96,9 +96,11 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws
         end
 
         function law_relators_are_satisfied_(self)
-            for i = 1:length(self.T.relators)
-                g = self.T.imageWord(self.T.relators{i});
-                assert(self.T.isIdentity(g));
+            if self.T.inCache('relators')
+                for i = 1:length(self.T.relators)
+                    g = self.T.imageWord(self.T.relators{i});
+                    assert(self.T.isIdentity(g));
+                end
             end
         end
 
