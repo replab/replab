@@ -12,7 +12,7 @@ function S = getGAPScript(G, irreps)
     else
         scriptName = 'AtlasEntry_noirreps.g';
     end
-    firstLine = sprintf('G := Group(%s);;', strjoin(cellfun(@(g) replab.atl.permToGap(g), G.generators, 'uniform', 0), ', '));
+    line1 = sprintf('G := Group(%s);;', strjoin(cellfun(@(g) replab.atl.permToGap(g), G.generators, 'uniform', 0), ', '));
     rest = fileread(fullfile(replab.globals.replabPath, 'src', '+replab', '+atl', scriptName));
-    S = [firstLine char(10) rest];
+    S = [line1 char(10) rest];
 end

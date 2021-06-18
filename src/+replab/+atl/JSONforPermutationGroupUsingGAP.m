@@ -1,4 +1,4 @@
-function result = forPermutationGroupUsingGAP(G, irreps)
+function json = JSONforPermutationGroupUsingGAP(G, irreps)
 % Runs GAP System to compute the character table/representation information about a permutation group
 %
 % Args:
@@ -6,12 +6,11 @@ function result = forPermutationGroupUsingGAP(G, irreps)
 %   irreps (logical): Whether to compute irreducible representations
 %
 % Returns:
-%   `+replab.AbstractGroup`: The computed abstract group with character table
+%   charstring: The JSON data corresponding to the group
     tfile = tempname();
     fid = fopen(tfile, 'wt');
     fprintf(fid, replab.atl.getGAPScript(G, irreps));
     fclose(fid);
-    [status, result] = system([replab.globals.gapBinaryPath ' -q <' tfile]);
+    [status, json] = system([replab.globals.gapBinaryPath ' -q <' tfile]);
     delete(tfile);
-    %A = replab.AtlasEntry.groupFromJSONData(replab.util.parseJSON(result));
 end

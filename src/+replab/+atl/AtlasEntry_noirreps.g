@@ -1,43 +1,75 @@
 LoadPackage( "repsn" );;
 LoadPackage( "json" );;
 
-Iprm1 := IsomorphismPermGroup(G);;
-Iprm2 := SmallerDegreePermutationRepresentation(Image(Iprm1));;
-Iprm := CompositionMapping(Iprm2, Iprm1);;
+Assert(0, IsBound(G));;
 
-Ifp1 := IsomorphismFpGroup(G);;
-Ifp2 := IsomorphismSimplifiedFpGroup(Image(Ifp1));;
+# This script assumes that:
+# - The group is given as the variable "G", without making further assumptions on it.
+#   It can be a permutation group, a pc-group, etc.
 
-rels := List(RelatorsOfFpGroup(Range(Ifp2)), LetterRepAssocWord);;
+# We use the following letters:
+# - G: the original group
+# - P: the permutation group isomorphic to G
+# - F: the finitely presented group isomorphic to G
+# - mu_*: Isomorphisms
 
-derivedSeriesAbelianInvariants := List(DerivedSeriesOfGroup(G), g -> AbelianInvariants(g));;
+# We identify the group
 
-FP_gens := List(GeneratorsOfGroup(Range(Ifp2)), g -> PreImageElm(Ifp2, g));;
-G_gens := List(FP_gens, g -> PreImageElm(Ifp1, g));;
-prm_gens :=  List(G_gens, g -> ImageElm(Iprm, g));;
-prm_grp := Group(prm_gens);;
-n := LargestMovedPoint(prm_gens);;
-prm_img_gens := List(prm_gens, g -> ListPerm(Inverse(g), n));;
+id := IdGroup(G);;
 
-tbl := CharacterTable(G);;
-chars := Irr(tbl);;
-C := List(ConjugacyClasses(tbl), c -> ListPerm(Inverse(ImageElm(Iprm, Representative(c))), n));;
+# First, we reduce the number of generators
 
-values := List(chars, c -> List(ValuesOfClassFunction(c), String));;
+Ggens := SmallGeneratingSet(G);;
 
-auto := AutomorphismGroup(prm_grp);;
-innerAuto := InnerAutomorphismsAutomorphismGroup(auto);;
-outerAuto := NaturalHomomorphismByNormalSubgroup(auto, innerAuto);;
-outerImg := IsomorphismPermGroup(Image(outerAuto));;
-outerImg1 := SmallerDegreePermutationRepresentation(Range(outerImg));;
+# Then we find a permutation group with a small degree
 
-generatorNames := List([ 1 .. Size(prm_img_gens) ], i -> Concatenation("x", String(i)));;
-permutationGenerators := prm_img_gens;;
-classes := C;;
-characters := values;;
+mu_G_P1 := IsomorphismPermGroup(G);;
+mu_P1_P := SmallerDegreePermutationRepresentation(Image(mu_G_P1));;
+mu_G_P := CompositionMapping(mu_P1_P, mu_G_P1);;
+P := Range(mu_G_P);;
+
+# Then we find the finitely presented group
+mu_G_F1 := IsomorphismFpGroupByGenerators(G, Ggens);;
+mu_F1_F := IsomorphismSimplifiedFpGroup(Image(mu_G_F1));;
+mu_G_F := CompositionMapping(mu_F1_F, mu_G_F1);;
+F := Range(mu_G_F);;
+
+# Compute relators of F
+F_rels := List(RelatorsOfFpGroup(F), LetterRepAssocWord);;
+
+# Compute generators of P, which match the generators of P
+F_gens := GeneratorsOfGroup(F);;
+nGens := Size(F_gens);;
+G_gens := List(F_gens, f -> PreImageElm(mu_G_F, f));;
+P_gens := List(G_gens, f -> ImageElm(mu_G_P, f));;
+P_degree := LargestMovedPoint(P_gens);;
+permimg := g -> ListPerm(Inverse(g), P_degree);;
+P_gen_images := List(P_gens, permimg);;
+
+# Group properties
+derivedSeriesAbelianInvariants := List(DerivedSeriesOfGroup(G), AbelianInvariants);;
+
+# Character table
+G_ct := CharacterTable(G);;
+G_chars := Irr(G_ct);;
+G_cc_images := List(ConjugacyClasses(G_ct), c -> permimg(ImageElm(mu_G_P, Representative(c))));;
+G_generatorNames := List([ 1 .. nGens ], i -> Concatenation("x", String(i)));;
+G_char_values := List(G_chars, c -> List(ValuesOfClassFunction(c), String));;
+
+# G_auto := AutomorphismGroup(prm_grp);;
+# innerAuto := InnerAutomorphismsAutomorphismGroup(auto);;
+# outerAuto := NaturalHomomorphismByNormalSubgroup(auto, innerAuto);;
+# outerImg := IsomorphismPermGroup(Image(outerAuto));;
+# outerImg1 := SmallerDegreePermutationRepresentation(Range(outerImg));;
+
+permutationGenerators := P_gen_images;;
+classes := G_cc_images;;
+characters := G_char_values;;
 order := String(Size(G));;
 
-group := rec( generatorNames := generatorNames, permutationGenerators := permutationGenerators, relators := rels, order := order, classes := classes, derivedSeriesAbelianInvariants := derivedSeriesAbelianInvariants );;
+name := StringFormatted("SmallGroup({},{})", id[1], id[2]);;
+
+group := rec( name := name, generatorNames := G_generatorNames, permutationGenerators := permutationGenerators, relators := F_rels, order := order, classes := classes, derivedSeriesAbelianInvariants := derivedSeriesAbelianInvariants );;
 complexCharacterTable := rec( characters := characters );;
 data := rec( group := group, complexCharacterTable := complexCharacterTable );;
 GapToJsonStream(OutputTextUser(), data);;

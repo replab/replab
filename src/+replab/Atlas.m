@@ -3,6 +3,26 @@ classdef Atlas
 
     methods (Static)
 
+        function computeAndAdd(G)
+        % Computes the irreps of the given group and write the corresponding JSON file to the atlas
+        %
+        % If the group is already recognized by RepLAB, an error is thrown.
+        %
+        % Note that the `.FiniteGroup.recognize` result is cached, so to be recognized,
+        % the given group ``G`` must be constructed again in user code for the new atlas
+        % entry to be found.
+        %
+        % Args:
+        %   G (`.FiniteGroup`): Finite group not present in the atlas
+            assert(~isempty(replab.globals.gapBinaryPath), 'The GAP binary path must be set in replab_config.m');
+            assert(isempty(G.recognize), 'The group is already in the atlas');
+            filename = replab.atl.writeAtlasForPermutationGroupUsingGAP(G.niceGroup, true);
+            entry = replab.AtlasEntry.fromFile(filename);
+            entries = replab.globals.atlasEntries;
+            entries{1,end+1} = entry;
+            replab.globals.atlasEntries(entries);
+        end
+
         function read
             folderPath = fullfile(replab.globals.replabPath, 'atlas');
             files = dir(folderPath);
