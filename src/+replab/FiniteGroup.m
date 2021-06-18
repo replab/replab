@@ -1201,7 +1201,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-        function res = findIsomorphisms(self, to, varargin)
+        function res1 = findIsomorphisms(self, to, varargin)
         % Finds all the isomorphisms from this finite group to another finite group
         %
         % Example:
@@ -1232,7 +1232,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
                 end
                 return
             end
-            F = self.abstractGroup;
+            F = self;
             G = to;
             A = to;
             if F.order ~= G.order
@@ -1245,8 +1245,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             else
                 res = fm.searchAll;
             end
-            res = cellfun(@(m) self.abstractMorphism.andThen(m), res, 'uniform', 0);
-            res = cellfun(@(m) m.toIsomorphism, res, 'uniform', 0);
+            res1 = cellfun(@(m) m.toIsomorphism, res, 'uniform', 0);
         end
 
         function res = findMorphisms(self, to, varargin)
@@ -1464,10 +1463,25 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
         function l = isMorphismByImages_(self, target, preimages, images)
         % Implements the `.isMorphismByImages` method
         %
-        % Does not perform checks; preimages must not contain the identity
-            source = self.subgroupWithGenerators(preimages);
-            assert(source.order == self.order, 'The morphism preimages do not generate the source group');
-            l = source.abstractGroup.isMorphismByImages(target, 'images', images);
+        % Preimages must not contain the identity (this is not checked)
+            hasSameGenerators = length(preimages) == self.nGenerators && ...
+                all(arrayfun(@(i) self.eqv(preimages{i}, self.generator(i)), 1:self.nGenerators));
+            if hasSameGenerators
+                source = self;
+            else
+                source = self.subgroupWithGenerators(preimages);
+            end
+            assert(source == self, 'The morphism preimages do not generate the source group');
+            relators = source.relators;
+            for i = 1:length(relators)
+                r = replab.fp.Letters.parse(relators{i}, self.generatorNames);
+                g = target.composeLetters(images, r);
+                if ~target.isIdentity(g)
+                    l = false;
+                    return
+                end
+            end
+            l = true;
         end
 
     end

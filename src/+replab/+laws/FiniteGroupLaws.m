@@ -95,6 +95,13 @@ classdef FiniteGroupLaws < replab.laws.GroupLaws
             self.T.assertEqv(t, t1);
         end
 
+        function law_relators_are_satisfied_(self)
+            for i = 1:length(self.T.relators)
+                g = self.T.imageWord(self.T.relators{i});
+                assert(self.T.isIdentity(g));
+            end
+        end
+
     end
 
 end

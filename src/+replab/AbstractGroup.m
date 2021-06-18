@@ -415,27 +415,4 @@ classdef AbstractGroup < replab.NiceFiniteGroup
 
     end
 
-    methods (Access = protected)
-
-        function l = isMorphismByImages_(self, target, preimages, images)
-            hasSameGenerators = length(preimages) == self.nGenerators && ...
-                all(arrayfun(@(i) self.eqv(preimages{i}, self.generator(i)), 1:self.nGenerators));
-            if hasSameGenerators
-                nR = length(self.relators);
-                for i = 1:nR
-                    r = self.factorizeLetters(self.relators{i});
-                    g = target.composeLetters(images, r);
-                    if ~target.isIdentity(g)
-                        l = false;
-                        return
-                    end
-                end
-                l = true;
-            else
-                l = isMorphismByImages_@replab.FiniteGroup(self, target, preimages, images);
-            end
-        end
-
-    end
-
 end
