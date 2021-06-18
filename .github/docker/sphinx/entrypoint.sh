@@ -2,7 +2,7 @@
 
 # This script builds the sphinx documentation
 
-echo "Executing entrypoint_sphinx.sh"
+echo "Executing entrypoint.sh"
 
 echo argument=$1
 
