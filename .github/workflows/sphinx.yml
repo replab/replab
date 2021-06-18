@@ -22,7 +22,8 @@ jobs:
       - name: Check out doc repository
         uses: actions/checkout@v2
         with:
-          repository: replab/replab@gh-pages
+          repository: replab/replab
+          ref: gh-pages
           path: docs
       - name: Set variable
         id: vars
