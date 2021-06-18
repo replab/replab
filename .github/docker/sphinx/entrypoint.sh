@@ -30,7 +30,7 @@ octave --eval "b = javaMethod('valueOf', 'java.math.BigInteger', 2)"
 if octave -q --eval "$ADDPATH_COMMAND $GENERATE_COMMAND"; then
   # Check where we ended up and what's going on where we are
   pwd
-  ls -alh
+  ls -alh docs
 else
   # The commands failed
   exit 1
