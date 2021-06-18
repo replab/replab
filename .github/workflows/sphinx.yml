@@ -9,7 +9,7 @@ on: [workflow_dispatch]
 jobs:
   # This workflow contains a single job called "test"
   test:
-    name: Builds the Sphinx documentation
+    name: Build the Sphinx documentation
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -47,4 +47,5 @@ jobs:
         with:
           directory: docs
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
 
