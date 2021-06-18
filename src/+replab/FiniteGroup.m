@@ -644,6 +644,25 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             error('Abstract');
         end
 
+        function gens = smallGeneratingSet(self)
+        % Returns a small set of elements generating the group
+        %
+        % Returns:
+        %   cell(1,\*) of group elements: Generating set
+            gens = self.generators;
+            i = 1;
+            while i <= length(gens)
+                test = horzcat(gens(1:i-1), gens(i+1:end));
+                G = self.subgroupWithGenerators(test);
+                if G.order == self.order
+                    gens = test;
+                    % this throws the i-th element, so i is the new i+1
+                else
+                    i = i + 1;
+                end
+            end
+        end
+
         function l = wordToLetters(self, word, generatorNames)
         % Parses a word into generator letters
         %
