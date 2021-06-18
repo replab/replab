@@ -17,6 +17,7 @@ RUN apt-get install -y -q python3-pip pandoc
 RUN mkdir -p /workspace/replab/docs
 #cd replab/sphinx
 RUN pip3 install -r ../../sphinx/requirements.txt
+RUN echo "Here indeed"
 
 
 CMD ["/bin/bash"]
