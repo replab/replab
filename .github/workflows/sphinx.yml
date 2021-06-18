@@ -37,6 +37,7 @@ jobs:
           commit: ${{ steps.vars.outputs.sha }}
       - name: Commit files
         run: |
+          cd docs
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add .
