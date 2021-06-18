@@ -1199,7 +1199,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             end
         end
 
-        function res1 = findIsomorphisms(self, to, varargin)
+        function res = findIsomorphisms(self, to, varargin)
         % Finds all the isomorphisms from this finite group to another finite group
         %
         % Example:
@@ -1243,7 +1243,7 @@ classdef FiniteGroup < replab.CompactGroup & replab.FiniteSet
             else
                 res = fm.searchAll;
             end
-            res1 = cellfun(@(m) m.toIsomorphism, res, 'uniform', 0);
+            res = cellfun(@(m) m.toIsomorphism, res, 'uniform', 0);
         end
 
         function res = findMorphisms(self, to, varargin)
