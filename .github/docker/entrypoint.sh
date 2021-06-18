@@ -1,5 +1,7 @@
 #!/bin/bash -l
 
+# This script runs the tests with or without covering
+
 echo "Executing entrypoint.sh"
 
 echo argument=$1
