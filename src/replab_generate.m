@@ -1,4 +1,4 @@
-function replab_generate(what)
+function result = replab_generate(what)
 % Code generation function
 %
 % Depending on the value of the argument ``what``:
@@ -23,11 +23,16 @@ function replab_generate(what)
 %
 % Args:
 %   what ({'clear', 'sphinx*', 'sphinx', 'doctests', 'all'}, optional): What to generate, default ``'all'``
+%
+% Results:
+%     logical: True unless an error was detected
 
     if nargin < 1
         what = 'all';
     end
-
+    
+    result = true;
+    
     % Make sure we are in the correct path
     initialPath = pwd;
     [pathStr, name, extension] = fileparts(which(mfilename));
@@ -91,7 +96,10 @@ function replab_generate(what)
             cd(rp);
             cmd = 'sphinx-build -b html sphinx docs';
             disp(['Running ' cmd]);
-            system(cmd);
+            status = system(cmd);
+            if status ~= 0
+                result = false;
+            end
             cd(lastPath);
         end
     end
