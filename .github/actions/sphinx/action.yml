@@ -8,7 +8,7 @@ inputs:
     default: 'master'
 runs:
   using: 'docker'
-  image: '../docker/Dockerfile'
+  image: '../../docker/sphinx/Dockerfile'
   args:
    - ${{ inputs.commit }}
 

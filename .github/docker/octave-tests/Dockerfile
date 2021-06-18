@@ -8,15 +8,13 @@ USER root
 # Install base packages
 RUN apt-get update && apt-get install -y -q python3-pip pandoc unzip curl
 
-# Install Python package
-
 RUN mkdir /workspace
 
 RUN chmod 777 -R /workspace
 
 CMD ["/bin/bash"]
 
-# Copies the whole repository
+# Copies the entrypoint script
 COPY entrypoint.sh /
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)

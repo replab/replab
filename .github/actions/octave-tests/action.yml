@@ -1,0 +1,14 @@
+# action.yml
+name: 'docker'
+description: 'Launcher docker image'
+inputs:
+  commit: # git commit to checkout
+    description: 'git hash'
+    required: true
+    default: 'master'
+runs:
+  using: 'docker'
+  image: '../../docker/octave-tests/Dockerfile'
+  args:
+   - ${{ inputs.commit }}
+
