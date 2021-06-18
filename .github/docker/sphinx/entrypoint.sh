@@ -12,7 +12,7 @@ ls -al
 git rev-parse HEAD
 
 # Prepare doc folder and install python requirements
-mkdir docs
+ls -al docs
 pip3 install -r sphinx/requirements.txt
 
 # prepare commands
