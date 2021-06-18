@@ -55,6 +55,7 @@ classdef AtlasEntry < replab.Obj
     methods
 
         function self = AtlasEntry(filename, md5, order, derivedSeriesAbelianInvariants, varargin)
+            assert(isa(order, 'vpi'));
             args = struct('group', [], 'data', [], 'json', []);
             args = replab.util.populateStruct(args, varargin);
             self.filename = filename;
@@ -100,6 +101,9 @@ classdef AtlasEntry < replab.Obj
         function res = canMatch(self, group)
         % Returns whether this atlas entry can match the given group
             res = false;
+            if group.order ~= self.order
+                return
+            end
             x = self.derivedSeriesAbelianInvariants;
             y = cellfun(@(d) d.abelianInvariants, group.derivedSeries, 'uniform', 0);
             if length(x) ~= length(y)

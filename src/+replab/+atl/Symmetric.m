@@ -82,8 +82,14 @@ classdef Symmetric
                 return
             end
             n = double(n);
-            C = G.conjugacyClasses.classes;
             entry = replab.atl.Symmetric.make(n);
+            if isa(G, 'replab.PermutationGroup') && G.domainSize == n
+                s = [2:n 1];
+                t = [2 1 3:n];
+                R = entry.isomorphismByImages(G, 'images', {s, t});
+                return
+            end
+            C = G.conjugacyClasses.classes;
             for i = 1:length(C)
                 S = C{i};
                 s = S.representative;
