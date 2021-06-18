@@ -15,8 +15,8 @@ RUN chmod 777 -R /workspace
 CMD ["/bin/bash"]
 
 # Copies the entrypoint script
-COPY entrypoint.sh /
+COPY entrypoint_sphinx.sh /
 
-# Code file to execute when the docker container starts up (`entrypoint.sh`)
-ENTRYPOINT ["/entrypoint.sh"]
+# Code file to execute when the docker container starts up (`entrypoint_sphinx.sh`)
+ENTRYPOINT ["/entrypoint_sphinx.sh"]
 

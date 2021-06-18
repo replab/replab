@@ -3,7 +3,7 @@
 name: Octave CI
 
 # Controls when the action will run. 
-on: [push, pull_request, workflow_dispatch]
+on: [workflow_dispatch]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,7 +24,7 @@ jobs:
         run: echo "::set-output name=sha::$(git rev-parse HEAD)"
       - name: Calling docker launch action
         id: dock
-        uses: replab/replab/.github/actions@develop
+        uses: replab/replab/.github/actions/actions_sphinx@SphinxDocker
         with:
           commit: ${{ steps.vars.outputs.sha }}
 

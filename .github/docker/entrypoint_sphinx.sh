@@ -20,7 +20,7 @@ echo "Here indeed"
 
 export ADDPATH_COMMAND="replab_init('verbose', 2);"
 GENERATE_COMMAND="exit(~replab_generate('sphinx'));";
-echo "TEST_COMMAND=$TEST_COMMAND";
+echo "GENERATE_COMMAND=$GENERATE_COMMAND";
 
 # Check what octave packages we have installed
 octave -q --eval "ver"
