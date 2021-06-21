@@ -190,6 +190,56 @@ classdef cyclotomic
             c = replab.cyclotomic(ja, size(orders));
         end
 
+        function M = rand(varargin)
+        % Random cyclotomic matrix
+        %
+        % Keyword Args:
+        %   maximalNumberOfTerms (integer): Maximal number of terms
+        %   field ('R', 'C', 'Q'): Whether to sample from real or complex cyclotomics
+        %   maximalOrder (integer): Maximal root-of-unity order
+        %   maximalDenominator (integer): Largest denominator for rational numbers
+        %   maximalAbsoluteValue (integer): Approximate largest absolute value
+            args = struct('maximalNumberOfTerms', 5, 'field', 'C', 'maximalOrder', 12, 'maximalDenominator', 12, 'maximalAbsoluteValue', 5);
+            mask = cellfun(@(x) isa(x, 'double'), varargin);
+            startKWargs = find(~mask);
+            if ~isempty(startKWargs)
+                args = replab.util.populateStruct(args, varargin(startKWargs:end));
+                dims = varargin(1:startKWargs-1);
+            else
+                dims = varargin;
+            end
+            if length(dims) == 0
+                dims = [1 1];
+            elseif length(dims) == 1
+                dims = dims{1};
+                if length(dims) == 1
+                    dims = [dims dims];
+                end
+            else
+                assert(all(cellfun(@length, dims) == 1))
+                dims = cell2mat(dims);
+            end
+            if args.field == 'Q'
+                args.field = 'R';
+                args.maximalOrder = 1;
+            end
+            M = replab.cyclotomic.zeros(dims);
+            maximalNumerator = args.maximalAbsoluteValue * args.maximalDenominator;
+            for i = 1:args.maximalNumberOfTerms
+                order = randi([1 args.maximalOrder]);
+                exponent = randi([0 order]);
+                root = replab.cyclotomic.E(order)^exponent;
+                numerator = randi([-maximalNumerator maximalNumerator], dims);
+                numerator = numerator .* (randi([1 args.maximalNumberOfTerms], dims) <= 2);
+                numerator = replab.cyclotomic(numerator);
+                denominator = randi([1 args.maximalDenominator]);
+                M = M + (root*numerator)/denominator;
+            end
+            if args.field == 'R'
+                M = (M + conj(M))/2;
+            end
+        end
+
     end
 
     methods (Static) % Cyclotomic constructions
