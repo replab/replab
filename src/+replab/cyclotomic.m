@@ -802,7 +802,7 @@ classdef cyclotomic
         end
 
         function res = transpose(self)
-        % Complex conjugate transpose
+        % Transpose
         %
         % Fully compatible with MATLAB's transpose
             assert(ndims(self) == 2);
