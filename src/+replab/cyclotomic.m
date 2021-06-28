@@ -895,7 +895,7 @@ classdef cyclotomic
     methods % Indexing
 
         function varargout = find(self, varargin)
-        % Find indives of nonzero elements
+        % Find indices of nonzero elements
         %
         % Compatible with MATLAB's find
             mask = self ~= 0;
